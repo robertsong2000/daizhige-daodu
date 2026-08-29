@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>酉阳杂俎 · 唐朝人的奇闻档案柜</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #262523;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --blue: #5e8fbb; --blue-dim: rgba(94,143,187,0.16); --blue-faint: rgba(94,143,187,0.35);
+    --hairline: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 30px; }
+
+  /* 首屏：月夜横卷 */
+  .hero { position: relative; min-height: 88dvh; display: flex; align-items: center; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(2px 2px at 12% 22%, rgba(232,228,220,0.5), transparent 60%),
+      radial-gradient(1.5px 1.5px at 28% 62%, rgba(232,228,220,0.35), transparent 60%),
+      radial-gradient(2px 2px at 47% 14%, rgba(232,228,220,0.4), transparent 60%),
+      radial-gradient(1.5px 1.5px at 66% 40%, rgba(232,228,220,0.3), transparent 60%),
+      radial-gradient(2px 2px at 83% 74%, rgba(232,228,220,0.35), transparent 60%);
+  }
+  .moon {
+    position: absolute; top: 9dvh; right: 7vw;
+    width: clamp(150px, 21vw, 250px); height: clamp(150px, 21vw, 250px);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 32% 30%, rgba(25,25,23,0.10) 0 9%, transparent 10%),
+      radial-gradient(circle at 63% 55%, rgba(25,25,23,0.09) 0 7%, transparent 8%),
+      radial-gradient(circle at 46% 74%, rgba(25,25,23,0.08) 0 5%, transparent 6%),
+      radial-gradient(circle at 50% 50%, #efe9dd 0 58%, #d9d2c4 100%);
+    box-shadow: 0 0 70px rgba(232,228,220,0.14);
+  }
+  .hero-inner { position: relative; width: 100%; }
+  .dredge { font-size: 13px; letter-spacing: 0.5em; color: var(--paper-faint); }
+  .hero h1 {
+    font-size: clamp(58px, 10.5vw, 128px); font-weight: 700; letter-spacing: 0.1em;
+    margin: 20px 0 8px; line-height: 1.15;
+  }
+  .hero h1 em { font-style: normal; color: var(--blue); }
+  .who { font-size: 16px; color: var(--paper-dim); letter-spacing: 0.34em; }
+  .tagline {
+    margin-top: 26px; max-width: 34em; color: var(--paper-dim); font-size: clamp(15px, 1.5vw, 18px);
+    border-left: 2px solid var(--blue-faint); padding-left: 18px;
+  }
+  .tagline b { color: var(--paper); font-weight: 600; }
+  .scroll-hint { position: absolute; bottom: 4dvh; left: 30px; font-size: 12px; letter-spacing: 0.4em; color: var(--paper-faint); }
+
+  /* 卷宗式正文：左侧索引 */
+  .dossier { display: grid; grid-template-columns: 150px 1fr; gap: 34px; padding: 84px 0; border-top: 1px solid var(--hairline); }
+  .dossier .idx { position: sticky; top: 40px; align-self: start; }
+  .idx .no { font-size: 30px; color: var(--blue); letter-spacing: 0.08em; }
+  .idx .tab { display: inline-block; margin-top: 12px; font-size: 13px; letter-spacing: 0.3em; color: var(--paper-faint); writing-mode: vertical-rl; border-left: 1px solid var(--hairline); padding-left: 12px; height: 120px; }
+  .dossier h2 { font-size: 26px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 20px; }
+  .dossier h2 small { display: block; font-size: 13.5px; font-weight: 400; color: var(--paper-faint); letter-spacing: 0.18em; margin-top: 6px; }
+  .dossier p { color: var(--paper-dim); font-size: 15.5px; max-width: 62ch; margin-bottom: 14px; }
+  .dossier p b { color: var(--paper); font-weight: 600; }
+
+  /* 引言大字块 */
+  .pull {
+    margin: 30px 0; padding: 26px 30px; background: var(--ink-2);
+    border-left: 3px solid var(--blue); font-size: clamp(17px, 2vw, 21px); line-height: 2.1;
+  }
+  .pull .src { display: block; margin-top: 14px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.22em; }
+
+  /* 开卷自白：纸面块 */
+  .selfnote { background: var(--paper); color: var(--ink); padding: 40px 38px; margin: 28px 0; }
+  .selfnote .big { font-size: clamp(19px, 2.4vw, 25px); line-height: 2; font-weight: 600; }
+  .selfnote .note { margin-top: 20px; padding-top: 18px; border-top: 1px solid rgba(25,25,23,0.16); font-size: 14.5px; color: #4a463f; line-height: 1.9; }
+  .selfnote .note b { color: var(--ink); }
+  .selfnote .mchap { float: right; font-size: 13px; letter-spacing: 0.3em; color: #8a8478; margin-left: 20px; }
+
+  /* 博物架：四十四格 */
+  .shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; margin-top: 26px; }
+  .tile {
+    border: 1px solid var(--hairline); padding: 12px 8px 10px; text-align: center;
+    font-size: 14px; letter-spacing: 0.06em; color: var(--paper-dim);
+    transition: all 0.22s ease; position: relative;
+  }
+  .tile:hover { background: var(--ink-3); color: var(--paper); }
+  .tile.marked { border-color: var(--blue-faint); color: var(--paper); }
+  .tile.marked::after { content: ""; position: absolute; right: 7px; top: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
+  .tile .tno { display: block; font-size: 10px; color: var(--paper-faint); letter-spacing: 0.12em; margin-bottom: 4px; }
+  .shelf-note { margin-top: 16px; font-size: 13px; color: var(--paper-faint); }
+  .shelf-note i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); margin-right: 7px; vertical-align: middle; }
+
+  /* 月下双联 */
+  .moonpair { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 28px; }
+  .mooncard { border: 1px solid var(--hairline); padding: 28px 26px; position: relative; background: linear-gradient(180deg, var(--blue-dim), transparent 70%); }
+  .mooncard .wm { position: absolute; right: 14px; top: 2px; font-size: 74px; color: rgba(94,143,187,0.10); font-weight: 700; }
+  .mooncard h3 { font-size: 16px; letter-spacing: 0.16em; color: var(--blue); margin-bottom: 14px; }
+  .mooncard q { quotes: "「" "」"; display: block; font-size: 16.5px; line-height: 2.05; }
+  .mooncard .ann { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--hairline); font-size: 13.5px; color: var(--paper-dim); }
+
+  /* 刺青档案 */
+  .case { border-top: 1px solid var(--hairline); padding: 24px 0; display: grid; grid-template-columns: 64px 1fr; gap: 22px; }
+  .case .tag { font-size: 22px; color: var(--blue); text-align: center; border: 1px solid var(--blue-faint); height: 46px; line-height: 44px; }
+  .case p { color: var(--paper-dim); font-size: 15px; }
+  .case q { quotes: "「" "」"; color: var(--paper); font-size: 16.5px; }
+  .case .cite { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.2em; }
+
+  /* 叶限六拍对照 */
+  .beats { margin-top: 28px; border: 1px solid var(--hairline); }
+  .beat { display: grid; grid-template-columns: 46px 1.2fr 1fr; gap: 0; border-bottom: 1px solid var(--hairline); }
+  .beat:last-child { border-bottom: none; }
+  .beat .k { padding: 18px 10px; font-size: 13px; color: var(--blue); border-right: 1px solid var(--hairline); text-align: center; }
+  .beat .cn, .beat .we { padding: 18px 20px; font-size: 14.5px; color: var(--paper-dim); }
+  .beat .cn { border-right: 1px solid var(--hairline); color: var(--paper); }
+  .beat .cn q { quotes: "「" "」"; color: var(--blue); }
+  .beat .we { color: var(--paper-dim); }
+  .beathead { display: grid; grid-template-columns: 46px 1.2fr 1fr; background: var(--ink-2); border-bottom: 1px solid var(--hairline); }
+  .beathead div { padding: 12px 20px; font-size: 12.5px; letter-spacing: 0.24em; color: var(--paper-faint); }
+  .beathead div:first-child { padding: 12px 10px; }
+  .beathead div:nth-child(2) { border-right: 1px solid var(--hairline); color: var(--blue); }
+
+  @media (max-width: 860px) {
+    .dossier { grid-template-columns: 1fr; gap: 12px; padding: 60px 0; }
+    .dossier .idx { position: static; display: flex; align-items: baseline; gap: 16px; }
+    .idx .tab { writing-mode: horizontal-tb; height: auto; border-left: none; padding-left: 0; }
+    .moonpair { grid-template-columns: 1fr; }
+    .beat { grid-template-columns: 34px 1fr; }
+    .beat .k { border-right: none; }
+    .beat .cn { grid-column: 1 / -1; border-right: none; border-top: 1px dashed var(--hairline); margin: 0 10px; padding: 12px 10px; }
+    .beat .we { grid-column: 1 / -1; padding: 4px 10px 16px; }
+    .beathead { display: none; }
+    .moon { opacity: 0.5; }
+  }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 40px 0 60px; color: var(--paper-faint); font-size: 13px; line-height: 2.1; }
+  footer.page b { color: var(--paper-dim); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="moon" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <div class="dredge">殆知阁导读之十九　子藏笔记部</div>
+    <h1>酉阳<em>杂俎</em></h1>
+    <div class="who">唐　段成式</div>
+    <p class="tagline">一座唐朝人的<b>奇闻档案柜</b>：皇宫秘事、月面地理、满身刺青的市民、会飞的长安剑客。而全世界最早的<b>灰姑娘</b>，写在它的续集第一篇里，比佩罗早了八百多年。</p>
+  </div>
+  <div class="scroll-hint mono">SCROLL</div>
+</header>
+
+<main class="wrap">
+
+  <section class="dossier" id="kaijuan">
+    <div class="idx"><div class="no mono">01</div><div class="tab">开卷自白</div></div>
+    <div>
+      <h2>先替自己辩护<small>序</small></h2>
+      <p>唐朝写怪谈是要挨白眼的。段成式在开篇把圣贤书比作一桌大菜：经是大羹，史是折俎，子是酰醢，全是端正的主食。然后他问，满桌都是这些，<b>炙羞鳖，岂容下箸乎？</b>总得有一碟野味吧。</p>
+      <div class="selfnote">
+        <div class="mchap">序</div>
+        <div class="big">固役而不耻者，抑志怪小说之书也。</div>
+        <div class="note">书名自注：「号《酉阳杂俎》，凡三十篇，为二十卷」。酉阳用的是<b>小酉山石穴藏千卷书的典故</b>，俎是砧板上杂陈的肴馔：合起来，就是<b>从一座秘密藏书洞里端出来的一桌杂拌野味</b>。序里自数三十篇，实际他越写越多，库内文本实测前集二十卷、续集十卷，篇目合计四十四目，约十三万五千字。</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dossier" id="jia">
+    <div class="idx"><div class="no mono">02</div><div class="tab">博物架</div></div>
+    <div>
+      <h2>四十四格的架子<small>前集二十卷　续集十卷</small></h2>
+      <p>这部书没有主线，就是把听到见到的全装进来：<b>忠志</b>记宫闱，<b>天咫</b>记天象，<b>黥</b>专收刺青，<b>盗侠</b>记异人剑客，<b>广动植</b>四卷是动植物博物志，<b>诺皋记</b>记鬼神，续集的<b>寺塔记</b>则是他亲手踏查长安佛寺的笔记。标了蓝点的八格，本页往下都会翻开。</p>
+      <div class="shelf">
+        <div class="tile"><span class="tno mono">卷一</span>忠志</div>
+        <div class="tile"><span class="tno mono">卷一</span>礼异</div>
+        <div class="tile marked"><span class="tno mono">卷一</span>天咫</div>
+        <div class="tile"><span class="tno mono">卷二</span>玉格</div>
+        <div class="tile"><span class="tno mono">卷二</span>壶史</div>
+        <div class="tile"><span class="tno mono">卷三</span>贝编</div>
+        <div class="tile"><span class="tno mono">卷四</span>境异</div>
+        <div class="tile"><span class="tno mono">卷四</span>喜兆</div>
+        <div class="tile"><span class="tno mono">卷四</span>祸兆</div>
+        <div class="tile"><span class="tno mono">卷四</span>物革</div>
+        <div class="tile"><span class="tno mono">卷五</span>诡习</div>
+        <div class="tile"><span class="tno mono">卷五</span>怪术</div>
+        <div class="tile"><span class="tno mono">卷六</span>艺绝</div>
+        <div class="tile"><span class="tno mono">卷六</span>器奇</div>
+        <div class="tile"><span class="tno mono">卷六</span>乐</div>
+        <div class="tile"><span class="tno mono">卷七</span>酒食</div>
+        <div class="tile"><span class="tno mono">卷七</span>医</div>
+        <div class="tile marked"><span class="tno mono">卷八</span>黥</div>
+        <div class="tile"><span class="tno mono">卷八</span>雷</div>
+        <div class="tile"><span class="tno mono">卷八</span>梦</div>
+        <div class="tile"><span class="tno mono">卷九</span>事感</div>
+        <div class="tile marked"><span class="tno mono">卷九</span>盗侠</div>
+        <div class="tile"><span class="tno mono">卷十</span>物异</div>
+        <div class="tile"><span class="tno mono">卷十一</span>广知</div>
+        <div class="tile"><span class="tno mono">卷十二</span>语资</div>
+        <div class="tile"><span class="tno mono">卷十三</span>冥迹</div>
+        <div class="tile"><span class="tno mono">卷十三</span>尸穸</div>
+        <div class="tile marked"><span class="tno mono">卷十四</span>诺皋记上</div>
+        <div class="tile marked"><span class="tno mono">卷十五</span>诺皋记下</div>
+        <div class="tile"><span class="tno mono">卷十六</span>广动植之一</div>
+        <div class="tile"><span class="tno mono">卷十七</span>广动植之二</div>
+        <div class="tile"><span class="tno mono">卷十八</span>广动植之三</div>
+        <div class="tile"><span class="tno mono">卷十九</span>广动植类之四</div>
+        <div class="tile"><span class="tno mono">卷二十</span>肉攫部</div>
+        <div class="tile marked"><span class="tno mono">续一</span>支诺皋上</div>
+        <div class="tile"><span class="tno mono">续二</span>支诺皋中</div>
+        <div class="tile"><span class="tno mono">续三</span>支诺皋下</div>
+        <div class="tile"><span class="tno mono">续四</span>贬误</div>
+        <div class="tile marked"><span class="tno mono">续五</span>寺塔记上</div>
+        <div class="tile marked"><span class="tno mono">续六</span>寺塔记下</div>
+        <div class="tile"><span class="tno mono">续七</span>金刚经鸠异</div>
+        <div class="tile"><span class="tno mono">续八</span>支动</div>
+        <div class="tile"><span class="tno mono">续九</span>支植上</div>
+        <div class="tile"><span class="tno mono">续十</span>支植下</div>
+      </div>
+      <div class="shelf-note"><i></i>标蓝点的八格在后文展开：天咫、黥、盗侠、诺皋记、支诺皋上、寺塔记。篇目与卷次依库内文本原样抄录，序言自数三十篇，实际多出十余目。</div>
+    </div>
+  </section>
+
+  <section class="dossier" id="tianzhi">
+    <div class="idx"><div class="no mono">03</div><div class="tab">天咫</div></div>
+    <div>
+      <h2>月面报告<small>卷一　天咫</small></h2>
+      <p>「天咫」意为天的高度近在咫尺。这一卷里有两个月故事，后来都成了中国人共同的记忆源头。吴刚伐桂，最早就写在下面这段里。</p>
+      <div class="moonpair">
+        <div class="mooncard">
+          <div class="wm">斫</div>
+          <h3>罚不死的树</h3>
+          <q>月桂高五百丈，下有一人常斫之，树创随合。人姓吴名刚，西河人，学仙有过，谪令伐树。</q>
+          <div class="ann">砍不倒的月桂，永远愈合的创口，一段西西弗斯式的唐代刑罚记录。此后词曲里的吴刚，全部从这里来。</div>
+        </div>
+        <div class="mooncard">
+          <div class="wm">丸</div>
+          <h3>月球是球</h3>
+          <q>君知月乃七宝合成乎？月势如丸，其影，日烁其凸处也。常有八万二千户修之，予即一数。</q>
+          <div class="ann">嵩山迷路的两个书生撞见一位修月工人：月亮是个球体，地上看见的阴影，是日光照亮它凸起处的结果。这是 <b>九世纪三十年代的月面描述</b>，伽利略举起望远镜看到同样的东西，还要再等七百多年。修月人临别还请他们吃了玉屑饭，「虽不足长生，可一生无疾耳」。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dossier" id="qing">
+    <div class="idx"><div class="no mono">04</div><div class="tab">黥</div></div>
+    <div>
+      <h2>刺青档案<small>卷八　黥</small></h2>
+      <p>黥本是古代在犯人脸上刺字的刑罚，段成式却用它来记长安市民主动往身上刺的花样，顺手留下了一份九世纪的<b>城市刺青社会档案</b>：京兆尹薛公奏请收捕，一次杖杀刺青恶少约三千人，市人皮肤上有点青的都赶紧灸掉。档案里挑三件读。</p>
+      <div class="case">
+        <div class="tag">甲</div>
+        <div>
+          <p>大宁坊一位力士，左右臂各刺一句硬话。<q>左膊曰『生不怕京兆尹』，右膊曰『死不畏阎罗王』。</q></p>
+          <div class="cite">卷八　黥</div>
+        </div>
+      </div>
+      <div class="case">
+        <div class="tag">乙</div>
+        <div>
+          <p>荆州街坊葛清，脖子以下刺满了<b>白居易的诗</b>，一共三十多首，每句配一幅针刺的画。段成式亲自去参观，让葛清背对众人、反手指认刺在哪儿。<q>凡刻三十余处，首体无完肤，陈至呼为『白舍人行诗图』也。</q></p>
+          <div class="cite">卷八　黥</div>
+        </div>
+      </div>
+      <div class="case">
+        <div class="tag">丙</div>
+        <div>
+          <p>蜀中人赵高满背刺毗沙门天王，衙役要打他背，看见天王像就不敢下手，他于是靠这张背在市场上横行。观察使李夷简把他抓来，用新棒照着天王像打了三十多棒，直到图像打尽。十天后，<b>他袒着背挨家挨户叫门，募捐修天王像的钱</b>。</p>
+          <div class="cite">卷八　黥（叙事概述）</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dossier" id="yexian">
+    <div class="idx"><div class="no mono">05</div><div class="tab">支诺皋上</div></div>
+    <div>
+      <h2>叶限，最早的灰姑娘<small>续集卷一　支诺皋上</small></h2>
+      <p>续集第一篇，讲南方海边洞主吴氏家的故事：孤女叶限，养得一尾金目神鱼，鱼被后母杀了吃掉，有位披发粗衣的人自天而降，教她把鱼骨藏好，要什么对骨头祈求就有。洞节那天，她穿上翠纺衣、蹑金履赴会，被后母认出，慌忙逃回家，<b>丢下了一只鞋</b>。鞋被卖到海岛强国陀汗，国王让全国妇人试穿，无一人合脚。</p>
+      <div class="pull">陀汗王意其洞人以非道得之，遂禁锢而栲掠之，竟不知所从来。……乃搜其室，得叶限，令履之而信。<span class="src">续集卷一　支诺皋上</span></div>
+      <p>叶限「衣翠纺上衣，蹑金履」，色若天人，随王而去。故事的后半比童话狠：后母与亲女被飞石击死；一年后陀汗王贪求无度，鱼骨不再显灵，他把鱼骨葬于海岸，以百斛珠珍藏，<b>后来军中要叛变，他想去挖宝劳军，一夜之间，海潮把它卷走了</b>。神力兑现完毕，谁贪谁失。</p>
+      <div class="beats">
+        <div class="beathead"><div></div><div>酉阳杂俎　九世纪中叶</div><div>欧洲灰姑娘　1697 年</div></div>
+        <div class="beat"><div class="k mono">一</div><div class="cn">受后母苛待，日常被逼去险处打柴、深潭汲水</div><div class="we">继母苛待，沦为灶下女仆</div></div>
+        <div class="beat"><div class="k mono">二</div><div class="cn">神鱼被害，藏骨祈求，金玉衣食要什么有什么</div><div class="we">仙女教母施法相助</div></div>
+        <div class="beat"><div class="k mono">三</div><div class="cn">洞节赴会，被认出后仓皇逃归，遗落一只金履</div><div class="we">舞会午夜出逃，掉落水晶鞋</div></div>
+        <div class="beat"><div class="k mono">四</div><div class="cn">陀汗王命全国妇人试履，无一人合脚</div><div class="we">王子持鞋遍访，逐一试穿</div></div>
+        <div class="beat"><div class="k mono">五</div><div class="cn">叶限为王所娶；后母与亲女被飞石击死</div><div class="we">灰姑娘入宫，恶母姐妹受罚</div></div>
+        <div class="beat"><div class="k mono">六</div><div class="cn">国王贪求无度，鱼骨失灵；葬骨海岸，一夜被海潮卷走</div><div class="we">童话没有这一拍：<b>魔力因贪而枯竭</b></div></div>
+      </div>
+      <p style="margin-top:22px">故事末尾，段成式照例交代消息来源：<q style="quotes:'「' '」'; color:var(--paper)">成式旧家人李士元听说。士元本邕州洞中人，多记得南中怪事。</q>他的旧仆李士元是邕州（今广西一带）土人，故事是从岭南口头传来的。也就是说，<b>这个故事在唐代中后期的南方已经流传</b>，距佩罗出版《灰姑娘》，还差八百三十余年。</p>
+    </div>
+  </section>
+
+  <section class="dossier" id="taidu">
+    <div class="idx"><div class="no mono">06</div><div class="tab">记怪的态度</div></div>
+    <div>
+      <h2>他不装<small>全书的底色</small></h2>
+      <p>志怪笔记最容易写成一本正经的谎话集。段成式的可贵在于<b>处处留痕</b>：月里蛤蟆是工部员外郎周封说的，叶限出自旧仆李士元口述，剑客砍树是韦行规的自述，序言里写明的口碑一律注明。遇到离谱的，他直接摊牌。</p>
+      <div class="pull">成式以此事颇怪，然大传众口，不得不着之。<span class="src">卷一　天咫　一行法师北斗失踪故事之后的按语</span></div>
+      <p>这句按语，几乎是一切志怪写作里最诚实的一句：<b>我也不信，但人人都这么讲，只好记下来</b>。四大名著之前，中国小说的种子多半就埋在这种「不得不着之」里。他同时把长安六十八座佛寺的壁画、题记逐座踏查写成寺塔记，把四百余种动植物的传闻形态记进广动植：一半是童话，一半是唐代博物院，两半合起来，才是完整的唐朝。</p>
+      <p style="color:var(--paper-faint); font-size:14px">盗侠卷里，韦行规夜行遇风雨，见空中电光相逐，落地尽是木屑，须臾积到膝盖，大树只剩光干。次日返店，箍桶老人笑道：「客勿持弓矢，须知剑术。」随后取出一片桶板，昨夜所有箭矢都钉在上面。库内原文：「韦视之，乃木札也。须臾，积札埋至膝。」</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <b>文本来源</b>　殆知阁简体库子藏笔记部《酉阳杂俎》（github.com/robertsong2000/daizhigev20），库内文件约十三万五千字。<br>
+    <b>引文核验</b>　本篇直引原文十六处，均与库内文件逐字比对通过；叙事概述为编者转写。<br>
+    <b>阅读提醒</b>　本书为九世纪志怪博物笔记，其中方术、鬼神、刑罚等记述均属时代局限，请以文献与想象力视之。
+  </div>
+</footer>
+
+</body>
+</html>
