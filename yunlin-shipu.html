@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云林石谱 · 一百一十六块石头里的南宋</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --bam: #5f9270; --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 26px; }
+
+  /* ===== 标本牌式开场 ===== */
+  .plate { min-height: 78dvh; display: grid; grid-template-columns: 200px 1fr 150px;
+           align-items: center; gap: 30px; padding: 60px 0 40px; }
+  .tagcard { border: 1px solid var(--hairline); padding: 22px 20px; font-size: 13px; }
+  .tagcard .row { display: flex; justify-content: space-between; gap: 10px;
+                  padding: 7px 0; border-top: 1px dotted rgba(232,228,220,0.14); }
+  .tagcard .row:first-child { border-top: none; padding-top: 0; }
+  .tagcard .k { color: var(--paper-faint); letter-spacing: 0.3em; }
+  .tagcard .v { color: var(--paper); text-align: right; }
+  .tagcard .v em { font-style: normal; color: var(--bam); }
+  .specimen { justify-self: center; text-align: center; }
+  .stone {
+    width: 230px; height: 185px; margin: 0 auto; position: relative;
+    background:
+      radial-gradient(circle at 68% 34%, rgba(25,25,23,0.95) 0 7px, transparent 8px),
+      radial-gradient(circle at 40% 62%, rgba(25,25,23,0.95) 0 5px, transparent 6px),
+      radial-gradient(circle at 60% 76%, rgba(25,25,23,0.9) 0 4px, transparent 5px),
+      radial-gradient(circle at 30% 22%, #3d4739 0%, #262922 45%, #1b1c17 100%);
+    border-radius: 56% 44% 52% 48% / 50% 58% 42% 50%;
+    box-shadow: inset 0 1px 0 rgba(232,228,220,0.10), 0 22px 44px rgba(0,0,0,0.55);
+  }
+  .stone::after {
+    content: "灵璧 · 扣之铿然"; position: absolute; right: -30px; bottom: 26px;
+    writing-mode: vertical-rl; font-size: 11px; letter-spacing: 0.3em; color: var(--paper-faint);
+  }
+  .stand { width: 120px; height: 9px; margin: 14px auto 0; border: 1px solid var(--hairline);
+           border-top-color: rgba(232,228,220,0.35); }
+  .standline { width: 340px; max-width: 90%; height: 1px; margin: 0 auto;
+               background: var(--hairline); }
+  .vtitle { writing-mode: vertical-rl; font-size: clamp(58px, 8vw, 92px); font-weight: 700;
+            letter-spacing: 0.18em; line-height: 1.15; }
+  .vtitle em { font-style: normal; color: var(--bam); }
+  .plate-kicker { writing-mode: vertical-rl; font-size: 12px; letter-spacing: 0.5em;
+                  color: var(--paper-faint); margin-right: 18px; }
+
+  /* ===== 序 ===== */
+  .preface { text-align: center; padding: 26px 0 60px; color: var(--paper-dim); }
+  .preface .pf { font-size: 19px; max-width: 32em; margin: 0 auto; letter-spacing: 0.05em; }
+  .preface .pfrom { font-size: 12.5px; color: var(--paper-faint); margin-top: 14px; letter-spacing: 0.2em; }
+
+  /* ===== 品章 ===== */
+  .sec { padding: 46px 0; border-top: 1px solid var(--hairline); }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+  .seal { width: 40px; height: 40px; flex: none; display: grid; place-items: center;
+          background: var(--bam); color: #17211a; font-size: 20px; font-weight: 700;
+          transform: translateY(6px); }
+  .sec-head h2 { font-size: 26px; letter-spacing: 0.1em; font-weight: 600; }
+  .sec-head .sub { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.25em; }
+  .prose { color: var(--paper-dim); font-size: 15.5px; margin: 18px 0; }
+  .prose b, .prose strong { color: var(--paper); font-weight: 600; }
+  .prose .num { color: var(--bam); }
+
+  .qi { border-left: 2px solid var(--bam); background: rgba(232,228,220,0.035);
+        padding: 16px 20px; margin: 22px 0; font-size: 16px; color: var(--paper); }
+  .qi .src { display: block; margin-top: 10px; font-size: 12px; color: var(--paper-faint);
+             letter-spacing: 0.2em; }
+  .qi .src i { font-style: normal; color: var(--bam); }
+
+  /* ===== 采石两法 ===== */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 26px; }
+  .duo .card { border: 1px solid var(--hairline); padding: 24px 22px 20px; position: relative; }
+  .duo .where { font-size: 11.5px; letter-spacing: 0.3em; color: var(--bam); }
+  .duo h3 { font-size: 21px; margin: 6px 0 12px; letter-spacing: 0.08em; }
+  .duo .card p { font-size: 14px; color: var(--paper-dim); }
+  .steps { margin-top: 16px; padding-top: 14px; border-top: 1px dotted rgba(232,228,220,0.16);
+           font-size: 12.5px; color: var(--paper-faint); line-height: 2.1; }
+  .steps .ar { color: var(--bam); padding: 0 4px; }
+
+  /* ===== 地层剖面 ===== */
+  .strata-box { margin: 30px 0 8px; border: 1px solid var(--hairline); padding: 26px 24px 20px; }
+  .strata-cap { font-size: 12px; letter-spacing: 0.28em; color: var(--paper-faint); margin-bottom: 18px; }
+  .layer { display: grid; grid-template-columns: 118px 1fr; gap: 18px; align-items: stretch; }
+  .layer + .layer { margin-top: 5px; }
+  .layer .lab { font-size: 12.5px; color: var(--paper-dim); display: flex; flex-direction: column;
+                justify-content: center; }
+  .layer .lab i { font-style: normal; color: var(--paper-faint); font-size: 11px; }
+  .band { border: 1px solid rgba(232,228,220,0.10); }
+  .b-cover { height: 54px; background: linear-gradient(180deg, #2c3129, #22251e); }
+  .b-fish  { height: 40px; background: #38402f; display: flex; align-items: center;
+             gap: 26px; padding-left: 22px; }
+  .b-fish span { width: 17px; height: 7px; background: rgba(232,228,220,0.30);
+                 border-radius: 50% 60% 60% 50%; transform: rotate(-4deg); flex: none; }
+  .b-fish span:nth-child(even) { transform: rotate(6deg); opacity: 0.65; }
+  .b-load  { height: 46px; background: linear-gradient(180deg, #2c3129, #23261f); }
+  .b-sand  { height: 26px;
+             background: repeating-linear-gradient(45deg, #242620 0 7px, #1d1f1a 7px 14px); }
+  .layer-note { font-size: 12.5px; color: var(--paper-faint); margin: 8px 0 22px; }
+  .layer-note i { font-style: normal; color: var(--bam); }
+
+  /* ===== 石燕五步 ===== */
+  .chain { display: flex; gap: 0; margin-top: 28px; }
+  .chain .step { flex: 1; border-top: 1px solid var(--hairline); padding: 14px 14px 0 0; }
+  .chain .n { font-size: 12px; color: var(--bam); letter-spacing: 0.15em; }
+  .chain .t { font-size: 14.5px; color: var(--paper); margin-top: 5px; line-height: 1.7; }
+  .chain .d { font-size: 12px; color: var(--paper-faint); margin-top: 4px; line-height: 1.7; }
+  .verdict { margin-top: 24px; font-size: 16.5px; color: var(--paper); }
+  .verdict i { font-style: normal; color: var(--bam); }
+
+  /* ===== 石与人 ===== */
+  .drawers { margin-top: 26px; }
+  .drawer { display: grid; grid-template-columns: 130px 1fr; gap: 22px;
+            padding: 22px 0; border-top: 1px dotted rgba(232,228,220,0.16); }
+  .drawer:first-child { border-top: none; padding-top: 6px; }
+  .drawer .who b { display: block; font-size: 18px; letter-spacing: 0.08em; }
+  .drawer .who small { font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .drawer p { font-size: 14.5px; color: var(--paper-dim); }
+  .drawer p i { font-style: normal; color: var(--bam); }
+
+  /* ===== 道傍结尾 ===== */
+  .roads { padding: 60px 0 30px; border-top: 1px solid var(--hairline); }
+  .roads .big { font-size: clamp(21px, 2.6vw, 27px); line-height: 2.1; color: var(--paper);
+                max-width: 30em; margin: 22px 0; }
+  .roads .big i { font-style: normal; color: var(--bam); }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 40px; padding: 34px 0 54px;
+                font-size: 13px; color: var(--paper-faint); line-height: 2.1; }
+  footer.page a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px dotted var(--paper-faint); }
+  footer.page .foot-marks { margin-bottom: 14px; }
+  footer.page .fm { display: inline-block; font-size: 11.5px; letter-spacing: 0.1em;
+                    border: 1px solid var(--hairline); padding: 4px 10px; margin: 0 8px 8px 0;
+                    color: var(--paper-dim); }
+  footer.page .fm i { font-style: normal; color: var(--bam); }
+
+  @media (max-width: 760px) {
+    .plate { grid-template-columns: 1fr; min-height: auto; padding-top: 46px; gap: 36px; }
+    .vtitle { writing-mode: horizontal-tb; font-size: 52px; }
+    .plate-kicker { writing-mode: horizontal-tb; margin: 0 0 10px; }
+    .tagcard { max-width: 340px; }
+    .duo { grid-template-columns: 1fr; }
+    .chain { flex-direction: column; gap: 18px; }
+    .drawer { grid-template-columns: 1fr; gap: 6px; }
+    .layer { grid-template-columns: 92px 1fr; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap plate">
+  <div class="tagcard">
+    <div class="row"><span class="k">书名</span><span class="v">云林石谱</span></div>
+    <div class="row"><span class="k">撰者</span><span class="v">宋 杜绾<br><small style="color:var(--paper-faint)">字季扬，号云林居士</small></span></div>
+    <div class="row"><span class="k">卷数</span><span class="v">上中下 三卷</span></div>
+    <div class="row"><span class="k">石品</span><span class="v"><em>一百一十有六</em></span></div>
+    <div class="row"><span class="k">成书</span><span class="v">绍兴癸丑，1133</span></div>
+    <div class="row"><span class="k">门类</span><span class="v">艺藏 · 器物</span></div>
+  </div>
+  <div class="specimen">
+    <div class="stone"></div>
+    <div class="stand"></div>
+    <div class="standline"></div>
+  </div>
+  <div style="justify-self:end; display:flex;">
+    <div class="plate-kicker">殆知阁导读 之十九</div>
+    <div class="vtitle">云林<em>石谱</em></div>
+  </div>
+</header>
+
+<section class="preface wrap">
+  <p class="pf">「圣人常曰仁者乐山，好石乃乐山之意，盖所谓静而寿者。」</p>
+  <p class="pfrom">孔传序，绍兴三年五月　「陆羽之于茶……欧阳永叔之于牡丹，蔡君谟之于荔枝，亦皆有谱，而惟石独无，为可恨也」</p>
+</section>
+
+<main class="wrap">
+
+  <section class="sec">
+    <div class="sec-head"><div class="seal">谱</div><h2>石头在等一部谱</h2><div class="sub">成书</div></div>
+    <p class="prose">写它的人叫杜绾，山阴人，祖父杜衍做过仁宗朝的宰相，封祁国公。孔传在序里又给他攀了一门更老的亲：杜甫之后。这一条被五百年后的四库馆臣毫不客气地拆穿，「殊附会无理」，杜甫那句「水落鱼龙夜」写于由秦州入蜀途中，根本没到过湖南。</p>
+    <p class="prose">可以记住的是年份。绍兴三年，1133。东京陷落已经六年，北方是金国的了。琴棋书画诗酒茶，宋人的雅事每一件都有专书，偏偏供在案头的石头没人写。杜绾数了<span class="num">一百一十六</span>种石头，一种一种写清产在哪里、怎么采、什么质地、什么颜色，还排了高下。灵璧排在第一品。</p>
+    <div class="qi">「是书汇载石品凡一百一十有六，各具出产之地、采取之法，详其形状色泽，而第其高下。」<span class="src">四库提要　<i>石谱</i></span></div>
+    <p class="prose">这份清单里有很多石头，此刻已经在敌国境内：陇西的鱼龙石、兰州的黄河石、登州海岛的砣矶石、燕山的夺玉。一个失去了北方的人在南方写石头，把丢掉的山川一样一样记下来。</p>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><div class="seal">采</div><h2>好石头是怎么到手的</h2><div class="sub">两法</div></div>
+    <p class="prose">宋人玩石，讲的是瘦、皱、漏、透，可石头不会自己走到案头。这本书最结实的地方，是把每一品石的采法写得像施工记录。</p>
+    <div class="duo">
+      <div class="card">
+        <div class="where">山土之中</div>
+        <h3>灵璧石</h3>
+        <div class="qi" style="margin:0 0 6px;">「既露石色，即以黄蓓帚或竹帚兼磁末刷治，清润，扣之铿然有声。」</div>
+        <div class="steps">穴地数丈<span class="ar">→</span>铁刃遍刮三两次<span class="ar">→</span>箒兼磁末刷治<span class="ar">→</span>露处日久，色转白声亦减</div>
+      </div>
+      <div class="card">
+        <div class="where">洞庭水中</div>
+        <h3>太湖石</h3>
+        <div class="qi" style="margin:0 0 6px;">「采人携锤錾入深水中，颇艰辛，度奇巧取凿，贯以巨索，浮大舟设木架绞而出之。」</div>
+        <div class="steps">深水寻奇巧<span class="ar">→</span>凿下<span class="ar">→</span>贯巨索<span class="ar">→</span>大舟木架绞出<span class="ar">→</span>复沉水中，经久冲刷</div>
+      </div>
+    </div>
+    <p class="prose">太湖石满身坳坎，「盖因风浪中冲激而成，谓之弹子窝」，这是说清了它的成因；灵璧石则怕晒，「若露处日久，即色转白，声亦随减」，保养说明都写到了。为了一块案头清供，有人要带着锤錾潜到湖底。美这个东西，从来自带成本。</p>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><div class="seal">鱼</div><h2>石中有鱼</h2><div class="sub">眼力</div></div>
+    <p class="prose">潭州湘乡的山里，挖地数尺会先碰到一层青石，挖石人叫它「盖石」；揭开盖石，下面的石片两侧有鱼。「类鳅鲫，鳞鬣悉如墨描」，像墨笔画上去的，还常有几尾首尾相随，石纹斑剥处「全然如藻荇」，连水草都有。杜绾把这套地层的顺序记了下来：</p>
+    <div class="strata-box">
+      <div class="strata-cap">鱼龙石 采法示意 · 据原文绘制</div>
+      <div class="layer"><div class="lab">盖石<i>青石</i></div><div class="band b-cover"></div></div>
+      <div class="layer-note">穴地数尺，见青石即揭去，谓之盖石</div>
+      <div class="layer"><div class="lab">鱼石层<i>微青或灰白</i></div>
+        <div class="band b-fish"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+      <div class="layer-note">重重揭取，<i>两边石面有鱼形</i>；穴深三二丈，复见青石，谓之载鱼石</div>
+      <div class="layer"><div class="lab">载鱼石<i>青石</i></div><div class="band b-load"></div></div>
+      <div class="layer"><div class="lab">沙土</div><div class="band b-sand"></div></div>
+      <div class="layer-note">载鱼石之下，即着沙土</div>
+    </div>
+    <p class="prose">然后是这个南宋人给出的解释，一句话，把这件事想通了：</p>
+    <div class="qi">「岂非古之陂泽，鱼生其中，因山颓塞，岁久土凝为石而致然。」<span class="src">卷中　<i>鱼龙石</i></span></div>
+    <p class="prose">这里从前是池塘，鱼活在里面，山体塌下来把它们埋住，年深日久，土凝成了石头。山被水淹没，生物被沉积物封存，再压实成岩，这正是化石成因的正确叙述。欧洲要到三百多年后，达芬奇才在笔记本里写下同类的判断，驳斥那种把山中贝壳当成天降之物的成见。而杜绾的这条记录比他还早三百六十多年。</p>
+    <p class="prose">鱼石是好买卖，于是有假货。杜绾顺手留下了鉴定法：「土人多作伪，以生漆点缀成形，但刮取烧之，有鱼腥气，乃可辨所产真者。」真化石烧起来有鱼的腥气，漆点出来的只会有一股漆味。一枚假鱼石，就这样被鼻子破了案。</p>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><div class="seal">燕</div><h2>一个传说，被他当场拆掉</h2><div class="sub">实证</div></div>
+    <p class="prose">零陵产石燕，「昔传遇雨则飞」，志怪书里一记就是几百年。杜绾不信，他上了山，做了一场实验：</p>
+    <div class="chain">
+      <div class="step"><div class="n mono">壹</div><div class="t">昔传遇雨则飞</div><div class="d">旧说：石燕遇雨化为燕子飞走</div></div>
+      <div class="step"><div class="n mono">贰</div><div class="t">因以笔识之</div><div class="d">在石上如燕形者逐一做记号</div></div>
+      <div class="step"><div class="n mono">叁</div><div class="t">烈日所曝</div><div class="d">让太阳把石头晒透</div></div>
+      <div class="step"><div class="n mono">肆</div><div class="t">偶遇骤雨过</div><div class="d">等一场雨，正好淋下来</div></div>
+      <div class="step"><div class="n mono">伍</div><div class="t">凡所识者一一坠地</div><div class="d">做记号的石头，一块块滚落</div></div>
+    </div>
+    <p class="verdict">结论：「盖寒热相激坠落，不然飞尔。」<i>不是飞，是晒热的石头遇雨骤冷，崩下来的。</i></p>
+    <div class="qi">「永州零陵石燕，昔传遇雨则飞。……因以笔识之，石为烈日所曝，偶遇骤雨过，凡所识者一一坠地，盖寒热相激坠落，不然飞尔。」<span class="src">卷中　<i>零陵石燕</i></span></div>
+    <p class="prose">先记录传说，再设计对照，用记号排除混淆，最后给出物理机制。这是一套完整的科学方法，写在1133年的湖南山头上。同卷的松化石条，杜绾就老实得多：「一夕大风雨，松忽化为石」，只照录永康县人的说法，还补了一句实话，「但未见偶者」，没见过第二块。信的和不信的，都记下来了，交给读者。</p>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><div class="seal">人</div><h2>石头背面的名单</h2><div class="sub">石与人</div></div>
+    <p class="prose">谱录是物的名单，翻到背面全是人。米芾、苏轼、李德裕，都在这本书里领到了自己的条目。</p>
+    <div class="drawers">
+      <div class="drawer">
+        <div class="who"><b>米芾</b><small>无为军 · 拜石</small></div>
+        <p>「又米芾为太守，获异石拜者」。他在无为军任上得了块怪石，备了衣冠，唤它石兄，作揖就拜。拜石从此成了执拗的代名词，米颠的颠，一半拜给了石头。</p>
+      </div>
+      <div class="drawer">
+        <div class="who"><b>苏轼</b><small>仇池 · 怪石供</small></div>
+        <p>英州溪水里他得了一绿一白两块，「目为仇池石」，取的是梦中仇池洞天之意；贬谪路上「常往山中采一石，置于燕处，目之为雪浪石」，纹如浪，就当浪看。在黄州更阔气，「以饼饵易于小儿，得大小百余枚，作怪石供」，拿饼干跟小孩换石头，换了满满一盘供在佛前。书里还记了李正臣一块壶中之景，「大为东坡称赏」，留下「百金归买小玲珑」的话头。</p>
+      </div>
+      <div class="drawer">
+        <div class="who"><b>李德裕</b><small>平泉庄 · 镌道</small></div>
+        <p>唐相李德裕营平泉山庄，天下奇石聚于一园，「每获一奇，皆镌有道二字」。杜绾在颍昌人家里亲眼见过一块，「双峰高下，有渲道挺然，长数寸许」，石罅里那两个字还在。园与人都早已不在，字还在石头上。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="roads wrap">
+    <div class="sec-head"><div class="seal">道</div><h2>留在道傍</h2><div class="sub">尾声</div></div>
+    <p class="prose">书里有一条冷冷的记录。湖州卞山出石，嵌空险怪，颜色比灵璧还清润。宣和年间，朝廷派人去采，「重不可致，今有数块留道傍」。太重了，运不走，扔在路边。</p>
+    <p class="prose">宣和是徽宗的年号。那几十年，东京城里的艮岳正越修越大，天下的奇石沿运河一纲一纲往汴京运，船队首尾相衔，地方叫它花石纲。太湖石「浮大舟设木架绞而出之」，就是那场运输的施工现场。一石一户倾家，一园一县伤筋动骨，江南的怨气最后烧成了方腊的旗号。而这本书的附录里，一度附有一部《宣和石谱》，四库馆臣形容它八个字：「皆记艮岳诸石，有名无说」。一座皇家园林的石头清单，有名，无说。</p>
+    <p class="big">艮岳没等到它的盛世。东京被围的那一年，假山拆下来，填了炮石。一百一十六块石头里，最响的一声不是灵璧的「扣之铿然」，是那几块<i>运不走的，留在道傍</i>。</p>
+    <p class="prose">六年后，绍兴三年的山阴，杜绾把石头们一样一样写进谱里，产地、采法、质地、声音。他只是爱石头，喜欢到觉得它们值得一簿户口。他大概没有想过，这份户口簿里，藏着一块石头怎么压垮一个王朝的完整卷宗。</p>
+  </section>
+
+  <footer class="page">
+    <div class="foot-marks">
+      <span class="fm">引文核验 <i>27 / 27 通过</i></span>
+      <span class="fm">去标点 · 异体字归一后逐字比对</span>
+      <span class="fm">殆知阁导读 之十九</span>
+    </div>
+    <p>文本来源：殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）艺藏 · 器物《云林石谱》，引文均与库内文件逐字核验。</p>
+    <p>本书成于八百年前，所载松化石、鹳巢矾石之类博物旧说为时代所限，科学判断（如化石成因、石燕不飞）亦以今日认知为准，读者鉴察。<a href="mulu.html">返回总目</a></p>
+  </footer>
+
+</main>
+
+</body>
+</html>
