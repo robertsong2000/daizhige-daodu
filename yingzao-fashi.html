@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>营造法式 · 一部写给皇帝查账用的建筑国家标准</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --paper: #e8e4dc;
+    --dim: #a39e93;
+    --faint: #6e6a61;
+    --bamboo: #5f9270;
+    --bamboo-dim: rgba(95,146,112,0.32);
+    --bamboo-faint: rgba(95,146,112,0.14);
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 26px; }
+
+  /* 顶部验尺：整页共用的一把尺 */
+  .ruler {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9;
+    height: 44px; background: rgba(25,25,23,0.92); backdrop-filter: blur(4px);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .ruler .ticks { position: absolute; inset: 0; display: flex; padding: 0 6vw; }
+  .ruler .tick { flex: 1; position: relative; }
+  .ruler .tick::before {
+    content: ""; position: absolute; left: 0; bottom: 0;
+    width: 1px; height: 14px; background: var(--faint);
+  }
+  .ruler .tick:nth-child(4n+1)::before { height: 22px; background: var(--dim); }
+  .ruler .tick i {
+    position: absolute; left: 4px; bottom: 24px;
+    font-style: normal; font-size: 10px; color: var(--faint); letter-spacing: 0.08em;
+  }
+  .ruler .cursor {
+    position: absolute; bottom: 0; left: 6vw; width: 2px; height: 100%;
+    background: var(--bamboo); box-shadow: 0 0 8px var(--bamboo-dim);
+    transition: left 0.1s linear;
+  }
+  .ruler .cursor::after {
+    content: "验"; position: absolute; top: 3px; left: 5px;
+    font-size: 10px; color: var(--bamboo);
+  }
+
+  /* 开篇：一等材，九寸乘六寸的 3:2 框 */
+  .hero { min-height: 82dvh; display: flex; align-items: center; padding: 120px 0 72px; position: relative; }
+  .cai {
+    position: relative; border: 1.5px solid var(--bamboo);
+    padding: clamp(36px, 6vw, 64px) clamp(28px, 5vw, 56px);
+    aspect-ratio: 3 / 2; max-width: 620px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .cai::before {
+    content: "第一等　广九寸　厚六寸"; position: absolute; top: -1px; right: -1px;
+    font-size: 11px; color: var(--bamboo); background: var(--ink);
+    padding: 3px 10px; letter-spacing: 0.2em; border-left: 1px solid var(--bamboo); border-bottom: 1px solid var(--bamboo);
+  }
+  .cai::after {
+    content: ""; position: absolute; inset: 10px; border: 1px solid var(--bamboo-faint); pointer-events: none;
+  }
+  .kicker { font-size: 13px; letter-spacing: 0.4em; color: var(--faint); }
+  h1 { font-size: clamp(52px, 9vw, 96px); font-weight: 700; letter-spacing: 0.18em; margin: 14px 0 6px; line-height: 1.15; }
+  .sub { font-size: clamp(15px, 1.7vw, 19px); color: var(--dim); margin-top: 14px; max-width: 26em; }
+  .sub b { color: var(--paper); font-weight: 600; }
+  .meta { margin-top: 22px; font-size: 13px; color: var(--faint); letter-spacing: 0.12em; }
+  .meta em { font-style: normal; color: var(--bamboo); }
+
+  /* 图纸分节：每节一张图，带图签 */
+  figure.sheet { border: 1px solid var(--hairline); margin: 0 0 30px; position: relative; }
+  figure.sheet > .tag {
+    position: absolute; top: -1px; left: -1px; z-index: 2;
+    font-size: 11.5px; letter-spacing: 0.24em; color: var(--bamboo);
+    background: var(--ink); border: 1px solid var(--bamboo-dim);
+    padding: 4px 12px 4px 10px;
+  }
+  figure.sheet > .body { padding: 54px clamp(22px, 4vw, 44px) 40px; }
+  figure.sheet h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 700; letter-spacing: 0.1em; margin-bottom: 18px; }
+  figure.sheet h2 small { display: block; font-size: 13px; font-weight: 400; color: var(--faint); letter-spacing: 0.3em; margin-top: 4px; }
+  figure.sheet p { color: var(--dim); font-size: 15.5px; margin: 0 0 14px; max-width: 44em; }
+  figure.sheet p b { color: var(--paper); font-weight: 600; }
+  figure.sheet p .n { color: var(--bamboo); }
+
+  blockquote {
+    border-left: 2px solid var(--bamboo); margin: 22px 0; padding: 6px 0 6px 20px;
+  }
+  blockquote .qt { font-size: 17.5px; color: var(--paper); }
+  blockquote .qt i { font-style: normal; color: var(--bamboo); }
+  blockquote cite { display: block; font-style: normal; font-size: 12.5px; color: var(--faint); margin-top: 6px; letter-spacing: 0.14em; }
+
+  /* 八等材阶梯 */
+  .ladder { margin: 26px 0 8px; }
+  .ladder .row { display: grid; grid-template-columns: 52px 1fr; gap: 14px; align-items: center; padding: 7px 0; border-top: 1px solid var(--hairline); }
+  .ladder .row:last-child { border-bottom: 1px solid var(--hairline); }
+  .ladder .lv { font-size: 12.5px; color: var(--faint); letter-spacing: 0.1em; }
+  .ladder .bar { position: relative; height: 24px; }
+  .ladder .bar i {
+    display: block; height: 100%; background: var(--bamboo-faint);
+    border: 1px solid var(--bamboo-dim); border-left: 3px solid var(--bamboo);
+  }
+  .ladder .bar span {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    font-size: 12px; color: var(--dim); white-space: nowrap;
+  }
+  .ladder-note { font-size: 13px; color: var(--faint); margin-top: 10px; }
+
+  /* 功限月历 */
+  .calendar { margin: 24px 0 6px; border: 1px solid var(--hairline); }
+  .calendar .head, .calendar .cells { display: grid; grid-template-columns: repeat(12, 1fr); }
+  .calendar .head div { font-size: 11px; color: var(--faint); text-align: center; padding: 8px 0; border-left: 1px solid var(--hairline); }
+  .calendar .head div:first-child { border-left: 0; }
+  .calendar .cells div { height: 34px; border-left: 1px solid var(--hairline); position: relative; }
+  .calendar .cells div:first-child { border-left: 0; }
+  .calendar .long  { background: rgba(95,146,112,0.55); }
+  .calendar .mid   { background: rgba(95,146,112,0.28); }
+  .calendar .short { background: rgba(95,146,112,0.10); }
+  .calendar .leg { display: flex; gap: 22px; margin-top: 10px; font-size: 12.5px; color: var(--faint); flex-wrap: wrap; }
+  .calendar .leg i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; }
+
+  /* 望火楼账单 */
+  .bill { border: 1px solid var(--hairline); margin: 24px 0; }
+  .bill .bill-head { padding: 10px 18px; border-bottom: 1px solid var(--hairline); font-size: 13px; letter-spacing: 0.18em; color: var(--bamboo); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
+  .bill .bill-head span:last-child { color: var(--faint); letter-spacing: 0.04em; }
+  .bill table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  .bill td { padding: 9px 18px; border-top: 1px solid var(--hairline); color: var(--dim); }
+  .bill td:last-child { text-align: right; color: var(--paper); }
+  .bill tr.total td { color: var(--bamboo); font-weight: 600; }
+
+  /* 看详词条 */
+  .spec { border-top: 1px solid var(--hairline); display: grid; grid-template-columns: 130px 1fr; gap: 18px; padding: 18px 0; }
+  .spec dt { font-size: 13px; color: var(--bamboo); letter-spacing: 0.2em; padding-top: 4px; }
+  .spec dd { font-size: 15px; color: var(--dim); }
+  .spec dd .qt { color: var(--paper); font-size: 15.5px; }
+  .spec dd .note { display: block; font-size: 13px; color: var(--faint); margin-top: 4px; }
+
+  /* 缺页与补图 */
+  .lostfound { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+  .frame { aspect-ratio: 4 / 3; position: relative; display: grid; place-items: center; font-size: 15px; }
+  .frame.lost { border: 1px dashed var(--faint); color: var(--faint); }
+  .frame.found { border: 1px solid var(--bamboo-dim); color: var(--dim); background: var(--bamboo-faint); }
+  .frame small { position: absolute; bottom: 8px; left: 12px; font-size: 11.5px; letter-spacing: 0.16em; opacity: 0.75; }
+
+  /* 卷尾落款 */
+  .colophon { border: 1px solid var(--hairline); padding: 26px clamp(20px, 4vw, 40px); margin-bottom: 30px; }
+  .colophon .qt { font-size: 16px; color: var(--paper); }
+  .colophon .sign { margin-top: 12px; font-size: 13px; color: var(--faint); letter-spacing: 0.06em; }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 60px; padding: 34px 0 60px; color: var(--faint); font-size: 13px; line-height: 2; }
+  footer.page b { color: var(--dim); font-weight: 600; }
+  footer.page a { color: var(--bamboo); text-decoration: none; }
+
+  @media (max-width: 640px) {
+    .spec { grid-template-columns: 1fr; gap: 4px; }
+    .lostfound { grid-template-columns: 1fr; }
+    .calendar .head div, .calendar .cells div { font-size: 9px; }
+    .ladder .row { grid-template-columns: 40px 1fr; }
+    .ruler .tick i { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ruler" aria-hidden="true">
+  <div class="ticks" id="ticks"></div>
+  <div class="cursor" id="cursor"></div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="cai">
+      <div class="kicker">殆知阁导读 · 第二十四篇</div>
+      <h1>营造法式</h1>
+      <p class="sub">1103 年颁行的建筑国家标准，把工地上的口诀写成<b>可以查账的定额</b>。它的第一目的不是盖好房子，是防止经手的人把钱装进自己口袋。</p>
+      <p class="meta">北宋　李诫 奉敕撰　崇宁二年（<em class="mono">1103</em>）小字镂版颁行　今本三十四卷　约 <em class="mono">12.7</em> 万字</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <figure class="sheet">
+    <div class="tag">图一 · 缘起</div>
+    <div class="body">
+      <h2>查账查不出来<small>关防无术</small></h2>
+      <p>故事从一次失败的验收开始。熙宁年间，朝廷下令将作监编一部营造法式，到元祐六年（<span class="n mono">1091</span>）成书。用了六年编出来的东西，六年之后被皇帝一句话否定，理由写得很直白。</p>
+      <blockquote>
+        <div class="qt">「元祐营造法式只是料状，别无变造用材制度，其间工料太宽，<i>关防无术</i>。」</div>
+        <cite>李诫劄子，崇宁二年正月</cite>
+      </blockquote>
+      <p>翻译成今天的话：这本旧法式只是材料清单，没有变通用材的制度；定额定得太松，审计上没有抓手。工料太宽四个字，说的不是宽以待人，是<b>报价虚高无从核减</b>。绍圣四年（<span class="n mono">1097</span>），李诫接手重修。</p>
+      <blockquote>
+        <div class="qt">「斫轮之手，巧或失真；董役之官，才非兼技。不知以材而定分，乃或倍斗而取长。」</div>
+        <cite>进新修营造法式序</cite>
+      </blockquote>
+      <p>他看到的病灶有两层：工匠手艺参差，监工的官员又多半是外行，于是材料被成倍地多领多耗。<b>倍斗而取长</b>，一倍的料当一斗用，浪费与贪墨在账本上是同一个数字。</p>
+    </div>
+  </figure>
+
+  <figure class="sheet">
+    <div class="tag">图二 · 编法</div>
+    <div class="body">
+      <h2>文献加工地<small>两头都要问</small></h2>
+      <p>李诫的编法是两条腿。一条查文献，一条问工匠。</p>
+      <blockquote>
+        <div class="qt">「臣考究经史群书，并勒人匠逐一讲说，编修海行营造法式。」</div>
+        <cite>李诫劄子</cite>
+      </blockquote>
+      <p>全书三百五十七篇，构成一条清楚的比例：四十九篇从经史群书中检寻考究，其余三百零八篇，用他自己的话说：</p>
+      <blockquote>
+        <div class="qt">「三百八篇系自来工作相传经久可用之法」</div>
+        <cite>四库提要转引李诫总看详</cite>
+      </blockquote>
+      <p>占总数八成以上的内容，来自<b>工地上口耳相传、经久可用</b>的老规矩。一个国家级标准的权威，一半来自典籍，一半来自无名工匠。元符三年（<span class="n mono">1100</span>）成书，崇宁二年请旨用小字镂版，按法令通用文书的规格颁行天下：</p>
+      <blockquote>
+        <div class="qt">「臣今欲乞用小字镂版依海行敕令颁降。」</div>
+        <cite>李诫劄子</cite>
+      </blockquote>
+      <div class="ladder-note" style="font-size:14px;color:var(--dim)">357 篇的来源结构　<span class="mono n">49</span> 篇经史群书 ＋ <span class="mono n">308</span> 篇工匠相传</div>
+      <div class="ladder">
+        <div class="row">
+          <div class="lv">经史群书</div>
+          <div class="bar"><i style="width:13.7%"></i><span class="mono">49 / 357</span></div>
+        </div>
+        <div class="row">
+          <div class="lv">工匠相传</div>
+          <div class="bar"><i style="width:86.3%"></i><span class="mono">308 / 357</span></div>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <figure class="sheet">
+    <div class="tag">图三 · 制度</div>
+    <div class="body">
+      <h2>以材为祖<small>一套模数走天下</small></h2>
+      <p>全书的技术核心是一句话。</p>
+      <blockquote>
+        <div class="qt">「凡构屋之制，皆以材为祖。材有八等，度屋之大小，因而用之。」</div>
+        <cite>卷四 · 大木作制度一</cite>
+      </blockquote>
+      <p>「材」是一根标准拱料的断面，也是整套尺寸体系的公共单位。梁多粗、柱多高、拱多长，不再各说各话，全部折算成材的倍数与分数。它像极了今天字号系统里的基准字距，或螺丝世界里统一的螺距：<b>换任何工匠、换任何工地，同一个数说出来就是同一个尺寸</b>。八等材从大到小，广与厚一律三比二，按房子等级对号入座。</p>
+      <div class="ladder">
+        <div class="row"><div class="lv">一等</div><div class="bar"><i style="width:100%"></i><span class="mono">广九寸　厚六寸　以六分为一分</span></div></div>
+        <div class="row"><div class="lv">二等</div><div class="bar"><i style="width:91.7%"></i><span class="mono">广八寸二分五厘　厚五寸五分</span></div></div>
+        <div class="row"><div class="lv">三等</div><div class="bar"><i style="width:83.3%"></i><span class="mono">广七寸五分　厚五寸</span></div></div>
+        <div class="row"><div class="lv">四等</div><div class="bar"><i style="width:80%"></i><span class="mono">广七寸二分　厚四寸八分</span></div></div>
+        <div class="row"><div class="lv">五等</div><div class="bar"><i style="width:73.3%"></i><span class="mono">广六寸六分　厚四寸四分</span></div></div>
+        <div class="row"><div class="lv">六等</div><div class="bar"><i style="width:66.7%"></i><span class="mono">广六寸　厚四寸</span></div></div>
+        <div class="row"><div class="lv">七等</div><div class="bar"><i style="width:58.3%"></i><span class="mono">广五寸二分五厘　厚三寸五分</span></div></div>
+        <div class="row"><div class="lv">八等</div><div class="bar"><i style="width:50%"></i><span class="mono">广四寸五分　厚三寸　以三分为一分</span></div></div>
+      </div>
+      <p class="ladder-note">一等材给殿身九间至十一间的大殿，八等材给小殿亭榭。条的宽度即用材的广，按九寸等比缩放。</p>
+      <p>模数之下，各种构件各有定分。地下的第一根构件也一样：</p>
+      <blockquote>
+        <div class="qt">「造柱础之制，其方倍柱之径。谓柱径二尺，即础方四尺之类。」</div>
+        <cite>卷三 · 石作制度</cite>
+      </blockquote>
+    </div>
+  </figure>
+
+  <figure class="sheet">
+    <div class="tag">图四 · 功限</div>
+    <div class="body">
+      <h2>把人工算到厘<small>十一世纪的劳动定额学</small></h2>
+      <p>制度管用多大的料，功限管用多少个工。功是计量单位，一个功是一个标准工作日的量。四季日照不同，李诫把全年分了三档：</p>
+      <blockquote>
+        <div class="qt">「诸称长功者，谓四月、五月、六月、七月；中功，谓二月、三月、八月、九月；短功，谓十月、十一月、十二月、正月。」</div>
+        <cite>卷二 · 总例</cite>
+      </blockquote>
+      <div class="calendar">
+        <div class="head">
+          <div>正月</div><div>二月</div><div>三月</div><div>四月</div><div>五月</div><div>六月</div><div>七月</div><div>八月</div><div>九月</div><div>十月</div><div>十一月</div><div>十二月</div>
+        </div>
+        <div class="cells">
+          <div class="short"></div><div class="mid"></div><div class="mid"></div><div class="long"></div><div class="long"></div><div class="long"></div><div class="long"></div><div class="mid"></div><div class="mid"></div><div class="short"></div><div class="short"></div><div class="short"></div>
+        </div>
+      </div>
+      <div class="calendar leg">
+        <span><i class="long"></i>长功（四月至七月）</span>
+        <span><i class="mid"></i>中功（二月三月八月九月）</span>
+        <span><i class="short"></i>短功（十月至正月）</span>
+      </div>
+      <p>为什么这样分？看详里他自己交代了依据，白昼时长是查过的：</p>
+      <blockquote>
+        <div class="qt">「夏至日长有至六十刻者，冬至日短有止四十刻者。若一等定功，则枉弃日刻甚多。今谨按《唐六典》修立下条。」</div>
+        <cite>卷末 · 看详</cite>
+      </blockquote>
+      <p>定额随季节浮动：长功加一分，短功减一分。进书序里一句话概括了这套设计。</p>
+      <blockquote>
+        <div class="qt">「功分三等，第为精粗之差；役辨四时，用度短长之晷。」</div>
+        <cite>进新修营造法式序</cite>
+      </blockquote>
+      <p>落到具体工程，账能细到什么程度？看这座消防瞭望塔的预算单。</p>
+      <div class="bill">
+        <div class="bill-head"><span>望火楼功限</span><span>卷十九 · 大木作功限三</span></div>
+        <table>
+          <tr><td>望火楼一座，四柱各高三十尺，基高十尺。上方五尺，下方一丈一尺</td><td class="mono">规格</td></tr>
+          <tr><td>柱四条</td><td class="mono">共一十六功</td></tr>
+          <tr><td>榥三十六条</td><td class="mono">共二功八分八厘</td></tr>
+          <tr><td>梯脚二条</td><td class="mono">共六分功</td></tr>
+          <tr><td>风版二片</td><td class="mono">右各共六厘功</td></tr>
+        </table>
+      </div>
+      <p>两片挡风板，折六厘功。<b>任何一根料都对应可核减的工时</b>，虚报人工从此有了数学上的障碍。</p>
+    </div>
+  </figure>
+
+  <figure class="sheet">
+    <div class="tag">图五 · 看详</div>
+    <div class="body">
+      <h2>数学、水平与比例尺<small>编者自己写的说明书</small></h2>
+      <p>卷末的看详是李诫亲手写的编纂说明，暴露了这部书理性的一面。旧例圆周率取三，他嫌不够用。</p>
+      <blockquote>
+        <div class="qt">「若用旧例，以围三径一、方五斜七为据，则疏略颇多。今谨按《九章算经》及约斜长等密率修立下条。」</div>
+        <cite>卷末 · 看详</cite>
+      </blockquote>
+      <p>放线之前，先造基准面。</p>
+      <blockquote>
+        <div class="qt">「凡有兴建，须先以水平望基四角所立之柱，定地平面，然后可以安置柱石。」</div>
+        <cite>卷末 · 看详</cite>
+      </blockquote>
+      <p>墙体的高厚比有定式，收分也有定式。</p>
+      <blockquote>
+        <div class="qt">「筑墙之制，每墙厚三尺则高九尺，其上斜收比厚减半。若高增三尺，则厚加一尺，减亦如之。」</div>
+        <cite>卷三 · 壕寨制度</cite>
+      </blockquote>
+      <p>最惊人的是举折：画屋架侧样时，以尺为丈、以寸为尺，逐级缩小，把整座建筑按比例画在平正的墙面上。一千年前的施工图，讲的是同一件事。</p>
+      <blockquote>
+        <div class="qt">「侧画所建之屋于平正壁上，定其举之峻慢、折之圜和。然后可见屋内梁柱之高下、卯眼之远近。」</div>
+        <cite>卷五 · 大木作制度二</cite>
+      </blockquote>
+    </div>
+  </figure>
+
+  <figure class="sheet">
+    <div class="tag">图六 · 图样</div>
+    <div class="body">
+      <h2>缺页与归还<small>一部书的漂流</small></h2>
+      <p>李诫原目共三十六卷，今天看到的本子只有三十四卷：制度一门少了两卷，四库馆臣怀疑是后人把卷帙并省了。更险的是卷三十一，木作制度图样的上篇，在四库馆臣用的底本里已经缺失，他们从《永乐大典》所录版本里把丢失的二十多幅图逐一找回来补足，看详则移到卷末。四库本不是完璧，但差一点就是残卷。</p>
+      <div class="lostfound">
+        <div class="frame lost">卷三十一　木作制度图样上篇<small>原本已缺</small></div>
+        <div class="frame found">据《永乐大典》补足二十余图<small>四库馆臣辑补</small></div>
+      </div>
+      <p>宋刻原本后来在中国失传。1919 年，朱启钤在南京江南图书馆找到一部南宋绍定年间重刊本的残卷；1925 年陶湘据以精刊的仿宋本印出，正在美国学建筑的梁思成收到这部书，如获天书又读不通天书，从此用了大半辈子去逐句破译它，1930 年朱启钤创办中国营造学社，这部书成了整个学科的出发点。一本防贪手册，等了近百年才等来真正读懂它的读者。</p>
+    </div>
+  </figure>
+
+  <figure class="sheet">
+    <div class="tag">图七 · 局限</div>
+    <div class="body">
+      <h2>它的本意<small>不是给百姓盖房的</small></h2>
+      <p>最后要把它放回原位。这是一部为皇家工程写的预算控制手册：八等材里最大的一等只给殿身九间至十一间的建筑，用材等级就是身份等级，制度本身写着森严的秩序。它的理性是为了关防，不是为了普及；他给工匠立法定分，却没打算让他们识字。至于序言里那套节俭修辞，读来更要打个折扣。</p>
+      <blockquote>
+        <div class="qt">「丹楹刻桷，淫巧既除；菲食卑宫，淳风斯复。」</div>
+        <cite>进新修营造法式序</cite>
+      </blockquote>
+      <p>红漆柱子雕花椽，过度精巧已革除；吃粗食住低宫，淳厚风气又回来了。写这句子的时候，李诫的官衔是监管皇弟宅第、提举修盖禁军营房的营造总管，一句反话都不用说，工程清单自己会说话。</p>
+      <div class="colophon">
+        <div class="qt">「通直郎管修盖皇弟外第，专一提举修盖班直诸军营房等，编修臣李诫谨昧死上。」</div>
+        <div class="sign">进新修营造法式序落款，字明仲。四库提要称其另著有续山海经、古篆说文、琵琶录、马经、六博经等，是个写完工程标准还写琴谱棋经的人</div>
+      </div>
+    </div>
+  </figure>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <b>文本来源</b>　殆知阁简体库（github.com/robertsong2000/daizhigev20）史藏政书《营造法式》，四库全书本，实测 127,077 字。本文所有引文均与库内文件逐字核对（去标点、异体字归一后比对），核验通过方才发布。<br>
+    <b>时代局限</b>　本书为十一年世纪初的官修文献，其中建筑等级制度服务于皇权秩序，术数禁忌与工艺谬误并存，请以历史文献视之。<br>
+    <b>系列</b>　殆知阁导读第二十四篇 · <a href="mulu.html">返回总目</a>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var ticks = document.getElementById('ticks');
+    for (var i = 0; i < 48; i++) {
+      var t = document.createElement('div');
+      t.className = 'tick';
+      if (i % 4 === 0) t.innerHTML = '<i>' + (i / 4 + 1) + '</i>';
+      ticks.appendChild(t);
+    }
+    var cursor = document.getElementById('cursor');
+    function upd() {
+      var h = document.documentElement;
+      var p = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
+      var zone = 88 * p;
+      cursor.style.left = 'calc(6vw + ' + zone + 'vw)';
+    }
+    addEventListener('scroll', upd, {passive: true});
+    upd();
+  })();
+</script>
+
+</body>
+</html>
