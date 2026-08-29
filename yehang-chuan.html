@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>夜航船 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --ink-3: #232220;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --tea: #5f9270;
+    --tea-dim: rgba(95,146,112,0.35);
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 26px; }
+
+  /* 开场：船舱夜话。题名藏到最后 */
+  .cabin {
+    position: relative;
+    min-height: 92dvh;
+    display: flex; flex-direction: column; justify-content: center;
+    overflow: hidden;
+  }
+  .water {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 46px, rgba(232,228,220,0.045) 46px 47px);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 34%, #000 72%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 34%, #000 72%, transparent 100%);
+  }
+  .scene { position: relative; }
+  .beats { display: flex; flex-direction: column; gap: 26px; }
+  .beat { display: grid; grid-template-columns: 34px 1fr; gap: 16px; align-items: start; }
+  .who {
+    width: 30px; height: 30px; margin-top: 7px;
+    display: grid; place-items: center;
+    font-size: 14px; color: var(--paper);
+    background: var(--ink-3); border: 1px solid var(--hairline);
+  }
+  .beat.shi .who { color: var(--paper-dim); }
+  .beat.seng .who { background: var(--tea); border-color: var(--tea); color: #10130f; font-weight: 700; }
+  .line { font-size: clamp(17px, 2.4vw, 21px); max-width: 34em; }
+  .beat.seng .line { color: #cfe0d2; }
+  .line .narr { color: var(--paper-faint); font-size: 15px; letter-spacing: 0.06em; }
+  .punch .line {
+    font-size: clamp(21px, 3.4vw, 30px); font-weight: 700; color: var(--tea);
+    letter-spacing: 0.04em;
+  }
+
+  .title-reveal { position: relative; margin-top: 76px; padding-top: 44px; border-top: 1px solid var(--hairline); }
+  .title-reveal .smallnote { font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.14em; margin-bottom: 14px; }
+  .title-reveal h1 { font-size: clamp(52px, 9vw, 96px); font-weight: 700; letter-spacing: 0.16em; line-height: 1.15; }
+  .title-reveal h1 em { font-style: normal; color: var(--tea); }
+  .title-reveal .idline { margin-top: 12px; color: var(--paper-dim); font-size: 15px; letter-spacing: 0.22em; }
+  .title-reveal .idline b { color: var(--paper); font-weight: 400; }
+
+  /* 通用节 */
+  section { padding: 74px 0; }
+  section + section { border-top: 1px solid var(--hairline); }
+  .kicker { font-size: 13px; letter-spacing: 0.4em; color: var(--tea); margin-bottom: 26px; }
+  .prose { max-width: 40em; color: var(--paper-dim); font-size: 16.5px; }
+  .prose p + p { margin-top: 1.1em; }
+  .prose b { color: var(--paper); font-weight: 600; }
+  .prose a { color: var(--tea); text-decoration: none; border-bottom: 1px solid var(--tea-dim); }
+
+  .q {
+    color: var(--paper); font-size: 17px;
+    padding-left: 16px; border-left: 2px solid var(--tea);
+  }
+  .note { color: var(--paper-faint); font-size: 14.5px; margin-top: 10px; }
+  .note::before { content: "注"; margin-right: 8px; color: var(--tea); font-size: 12px; border: 1px solid var(--tea-dim); padding: 0 5px; }
+
+  /* 二十部：舱牌 */
+  .holds { display: grid; grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); margin-top: 34px; }
+  .hold { background: var(--ink); padding: 20px 20px 18px; transition: background 0.25s ease; }
+  .hold:hover { background: var(--ink-2); }
+  .hold .no { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .hold:hover .no { color: var(--tea); }
+  .hold h3 { font-size: 19px; font-weight: 700; letter-spacing: 0.1em; margin: 6px 0 8px; }
+  .hold .tags { font-size: 12.5px; color: var(--paper-faint); line-height: 1.8; }
+
+  /* 考校抽屉 */
+  .quiz { margin-top: 36px; display: flex; flex-direction: column; gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); }
+  details { background: var(--ink); }
+  details:hover, details[open] { background: var(--ink-2); }
+  summary {
+    list-style: none; cursor: pointer;
+    display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: baseline;
+    padding: 22px 24px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary .ask { font-size: 18.5px; font-weight: 600; letter-spacing: 0.03em; }
+  summary .dep { font-size: 12px; color: var(--paper-dim); letter-spacing: 0.18em; white-space: nowrap; }
+  details[open] summary .ask { color: var(--tea); }
+  .answer { padding: 4px 24px 26px; border-top: 1px dashed var(--hairline); }
+  .answer .head { margin: 16px 0 10px; color: var(--paper-dim); font-size: 14px; letter-spacing: 0.12em; }
+  .answer .head b { color: var(--paper); font-size: 17px; font-weight: 700; letter-spacing: 0.06em; margin-right: 10px; }
+  .answer .q { display: block; margin: 10px 0; }
+
+  /* 身后 */
+  .afterlife .yr { color: var(--tea); }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 40px 0 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page p + p { margin-top: 8px; }
+
+  @media (max-width: 640px) {
+    .beat { grid-template-columns: 26px 1fr; gap: 12px; }
+    .who { width: 24px; height: 24px; font-size: 12px; }
+    summary { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="cabin">
+  <div class="water"></div>
+  <div class="wrap scene">
+    <div class="beats">
+      <div class="beat">
+        <div class="who">序</div>
+        <div class="line"><span class="narr">昔有一僧人，与一士子同宿夜航船。</span></div>
+      </div>
+      <div class="beat">
+        <div class="who">序</div>
+        <div class="line"><span class="narr">士子高谈阔论，僧畏慑，拳足而寝。</span></div>
+      </div>
+      <div class="beat">
+        <div class="who">序</div>
+        <div class="line"><span class="narr">僧人听其语有破绽，乃曰：</span></div>
+      </div>
+      <div class="beat seng">
+        <div class="who">僧</div>
+        <div class="line">请问相公，澹台灭明是一个人、两个人？</div>
+      </div>
+      <div class="beat shi">
+        <div class="who">士</div>
+        <div class="line">是两个人。</div>
+      </div>
+      <div class="beat seng">
+        <div class="who">僧</div>
+        <div class="line">这等尧舜是一个人、两个人？</div>
+      </div>
+      <div class="beat shi">
+        <div class="who">士</div>
+        <div class="line">自然是一个人！</div>
+      </div>
+      <div class="beat seng punch">
+        <div class="who">僧</div>
+        <div class="line">这等说起来，且待小僧伸伸脚。</div>
+      </div>
+      <div class="beat">
+        <div class="who">注</div>
+        <div class="line" style="font-size:15px; color: var(--paper-faint);">澹台灭明是一个人，孔子的学生；尧与舜是两个人，前后两代帝王。士子两问全答反。船舱窄，谁输谁蜷脚。</div>
+      </div>
+    </div>
+
+    <div class="title-reveal">
+      <div class="smallnote">「余所记载，皆眼前极肤浅之事，吾辈聊且记取，但勿使僧人伸脚则可已矣。」此书由此得名。</div>
+      <h1>夜航<em>船</em></h1>
+      <div class="idline"><b>张岱</b>　类书　二十部　约二十七万字</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <div class="kicker">一本什么书</div>
+      <div class="prose">
+        <p>明亡之后，张岱隐居山中著书，顺手编了这样一部杂纂：天文地理、人物考古、选举兵刑、宝玩方术，共二十部，把一个读书人该开口的场合都备了货。他给自己定的门槛低得惊人，序里说，收的都是<b>眼前极肤浅之事</b>，目的只有一个：别在船上被人问倒。</p>
+        <p>但他在序里真正瞧不上的，是另一路人。他家乡余姚的风俗，后生小子无不读书，二十岁学不出名堂，就去习手艺，于是<b>凡百工贱业</b>，都能把《性理》《纲鉴》整部背熟，问起一件事，人名、官爵、年号、地方枚举不误。张岱给这路人起了个名字：</p>
+      </div>
+      <p class="q" style="margin-top: 26px;">学问之富，真是两脚书厨，而其无益于文理考校，与彼目不识丁之人无以异也。</p>
+      <div class="prose" style="margin-top: 26px;">
+        <p>矛盾也在这里。他一边笑两脚书厨，一边亲手编了一部更大的备货单。他的辩解写在序里：姓名有<b>不关于文理</b>的，不记不妨；有关于文理的，不可不记。哪条界线其实划不清，所以二十部里塞满了泽及昆虫草木的名目。下面这部书，就是那晚船舱的账：你也在船上，先考考自己，记不得的，且缩脚。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">二十部舱位</div>
+      <div class="prose">全书二十部，部下分小类，卷帙依库内文件实测。每一块舱牌，都是一排可能被问到的题目。</div>
+      <div class="holds">
+        <div class="hold"><div class="no mono">卷一</div><h3>天文部</h3><div class="tags">象纬　日月　星　风云　雨　雷电虹霓　雪霜　时令　历律</div></div>
+        <div class="hold"><div class="no mono">卷二</div><h3>地理部</h3><div class="tags">疆域　建都　地名　古迹　山川　泉石　景致</div></div>
+        <div class="hold"><div class="no mono">卷三</div><h3>人物部</h3><div class="tags">帝王　仪制　名臣（附奸佞大臣）</div></div>
+        <div class="hold"><div class="no mono">卷四</div><h3>考古部</h3><div class="tags">姓氏　辨疑　析类</div></div>
+        <div class="hold"><div class="no mono">卷五</div><h3>伦类部</h3><div class="tags">君臣　父子　夫妇　兄弟　师徒先辈　朋友　奴婢</div></div>
+        <div class="hold"><div class="no mono">卷六</div><h3>选举部</h3><div class="tags">制科　乡试　会试　殿试　官制　谏官　郡守　学官</div></div>
+        <div class="hold"><div class="no mono">卷七</div><h3>政事部</h3><div class="tags">经济　烛奸　识断　清廉　遗爱　贪鄙</div></div>
+        <div class="hold"><div class="no mono">卷八</div><h3>文学部</h3><div class="tags">经史　书籍　博洽　勤学　诗词　书画　文具</div></div>
+        <div class="hold"><div class="no mono">卷九</div><h3>礼乐部</h3><div class="tags">婚姻　丧事　祭祀　律吕　乐律</div></div>
+        <div class="hold"><div class="no mono">卷十</div><h3>兵刑部</h3><div class="tags">军旅　刑法</div></div>
+        <div class="hold"><div class="no mono">卷十一</div><h3>日用部</h3><div class="tags">宫室　衣冠　衣裳　饮食</div></div>
+        <div class="hold"><div class="no mono">卷十二</div><h3>宝玩部</h3><div class="tags">金玉　珍宝　玩器</div></div>
+        <div class="hold"><div class="no mono">卷十三</div><h3>容貌部</h3><div class="tags">形体　妇女</div></div>
+        <div class="hold"><div class="no mono">卷十四</div><h3>九流部</h3><div class="tags">道教　佛教　医　相　葬　卜算　拆字　杂技</div></div>
+        <div class="hold"><div class="no mono">卷十五</div><h3>外国部</h3><div class="tags">夷语　外译</div></div>
+        <div class="hold"><div class="no mono">卷十六</div><h3>植物部</h3><div class="tags">草木　花卉</div></div>
+        <div class="hold"><div class="no mono">卷十七</div><h3>四灵部</h3><div class="tags">飞禽　走兽　鳞介　虫豸</div></div>
+        <div class="hold"><div class="no mono">卷十八</div><h3>荒唐部</h3><div class="tags">鬼神　怪异</div></div>
+        <div class="hold"><div class="no mono">卷十九</div><h3>物理部</h3><div class="tags">物类相感　身体　衣服　饮食　器用　文房　鸟兽</div></div>
+        <div class="hold"><div class="no mono">卷二十</div><h3>方术部</h3><div class="tags">符咒　方法</div></div>
+        <div class="hold" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">上船考校</div>
+      <div class="prose">六道题，全部出自库内原文。先自己作答，再点开对条目；答不出的，且缩脚。</div>
+      <div class="quiz">
+        <details>
+          <summary><span class="ask">管书之神，叫什么名字？</span><span class="dep">荒唐部</span></summary>
+          <div class="answer">
+            <div class="head"><b>司书鬼</b>鬼神</div>
+            <span class="q">名曰长恩。除夕呼其名而祭之，鼠不敢啮，蠹鱼不生。</span>
+            <div class="note">藏书人家除夕祭他一声，鼠不啃书，蠹鱼不生。一部百科杂纂，先给书自己请了保安。</div>
+          </div>
+        </details>
+        <details>
+          <summary><span class="ask">深夜鬼物进屋，嵇康怎么办？</span><span class="dep">荒唐部</span></summary>
+          <div class="answer">
+            <div class="head"><b>耻与魑魅争光</b>鬼神</div>
+            <span class="q">嵇中散灯下弹琴。有一人入室，初来时，面甚小，斯须转大，遂长丈余，颜色甚黑，单衣革带。嵇熟视良久，乃吹火灭，曰："耻与魑魅争光！"</span>
+            <div class="note">不驱不惧，吹灭灯：不屑与鬼怪抢这点亮。六朝人的气度，被张岱收进考题。</div>
+          </div>
+        </details>
+        <details>
+          <summary><span class="ask">哪座楼，真神仙进去也会迷路？</span><span class="dep">日用部</span></summary>
+          <div class="answer">
+            <div class="head"><b>迷楼</b>宫室</div>
+            <span class="q">隋炀帝无日不治宫室，浙人项陛进新宫图，大悦，即日召有司庀材鸠工，经岁而就，帑藏为之一空。帝幸之，大喜曰："使真仙游其中，亦当自迷也。"因署之曰"迷楼"。</span>
+            <div class="note">名字是皇帝亲笔题的。楼成经岁，国库搬空，随后便是运河上的一连串事。</div>
+          </div>
+        </details>
+        <details>
+          <summary><span class="ask">哪种鸡，胸口藏着一个寿字？</span><span class="dep">四灵部</span></summary>
+          <div class="answer">
+            <div class="head"><b>吐绶鸡</b>飞禽</div>
+            <span class="q">形状、毛色俱如大鸡。天睛淑景，颔下吐绶，方一尺，金碧晃曜，花纹如蜀锦，中有一字，乃篆文"寿"字，阴晦则不吐。一名"寿字鸡"，一名"锦带功曹"。</span>
+            <div class="note">即今所谓火鸡，求偶时展开胸前彩囊。古人看它是天晴才肯展开的一幅寿字锦。</div>
+          </div>
+        </details>
+        <details>
+          <summary><span class="ask">大禹葬在会稽，哪种鸟替他耕田？</span><span class="dep">四灵部</span></summary>
+          <div class="answer">
+            <div class="head"><b>鸟社</b>飞禽</div>
+            <span class="q">有鸟来为之耘，春拔草根，秋啄芜秽，谓之鸟社。县官禁民不得妄害此鸟，犯则无赦。</span>
+            <div class="note">春拔草根、秋啄秽草，官方下文保护。传说照进土产志，便成了一条禁令。</div>
+          </div>
+        </details>
+        <details>
+          <summary><span class="ask">芽茶加什么，不苦反甜？</span><span class="dep">物理部</span></summary>
+          <div class="answer">
+            <div class="head"><b>物类相感</b>物理部首类</div>
+            <span class="q">磁石引针。琥珀摄芥。</span>
+            <span class="q">芽茶得盐，不苦而甜。</span>
+            <span class="q">柳絮经宿，即为浮萍。</span>
+            <div class="note">这一类三百余条，一部明末生活实验记录：磁石吸针属实，柳絮变浮萍则属想当然，对错掺半，正是它可爱处。</div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="afterlife">
+    <div class="wrap">
+      <div class="kicker">书的命运</div>
+      <div class="prose">
+        <p>序末署<b>古剑陶庵老人张岱书</b>，是国亡家破之后的别号。此人本系列已在<a href="yimin-shujia.html">遗民书架</a>里出现过：这里收的，是他晚年随身的那件防身行李。书成之后三百年没有刻本，全靠抄本流转；今知两部抄本皆藏宁波天一阁，一九八七年才第一次点校出版。一部防人伸脚的书，自己险些没能上岸。</p>
+      </div>
+      <p class="q" style="margin-top: 30px;">故即命其名曰《夜航船》。</p>
+    </div>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库　github.com/robertsong2000/daizhigev20　子藏类书夜航船</p>
+    <p>本页引文已与库内文件逐字核对（去标点比对）；二十部卷次与字数（约二十六万八千，去空白实测）均自库内文件统计。</p>
+    <p>书中鬼神报应、符咒方术诸条杂陈，皆三百年前之见闻，是时代的局限，读者鉴之。</p>
+  </div>
+</footer>
+
+</body>
+</html>
