@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>徐霞客游记 · 一条断在半句的路</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --gold: #c9963f;
+    --hairline: rgba(232,228,220,0.12);
+    --gold-dim: rgba(201,150,63,0.4);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 28px; }
+
+  .top {
+    border-bottom: 1px solid var(--hairline);
+    padding: 20px 0; font-size: 12px; color: var(--paper-faint);
+    letter-spacing: 0.28em;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+  .top .mono { letter-spacing: 0.1em; }
+
+  /* 开卷即日记首行 */
+  .first { padding: 76px 0 30px; display: flex; gap: 26px; align-items: flex-start; }
+  .seal {
+    flex: 0 0 auto; width: 52px; height: 88px;
+    background: var(--gold); color: var(--ink);
+    writing-mode: vertical-rl; display: grid; place-items: center;
+    font-size: 21px; font-weight: 700; letter-spacing: 0.3em;
+  }
+  .first h1 {
+    font-size: clamp(28px, 5vw, 50px); font-weight: 700;
+    letter-spacing: 0.05em; line-height: 1.5;
+  }
+  .first .second {
+    font-size: clamp(17px, 2.4vw, 23px); color: var(--paper-dim);
+    letter-spacing: 0.14em; margin-top: 10px;
+  }
+  .meta {
+    margin-top: 34px; font-size: 13px; color: var(--paper-faint);
+    letter-spacing: 0.18em;
+  }
+  .lede { max-width: 37em; color: var(--paper-dim); font-size: 16px; margin-top: 14px; }
+  .lede b { color: var(--paper); font-weight: 600; }
+
+  /* 驿路轴 */
+  .walk { position: relative; margin-top: 64px; padding-bottom: 6px; }
+  .walk::before {
+    content: ''; position: absolute; left: 45px; top: 0; bottom: 12px;
+    border-left: 2px dashed var(--gold-dim);
+  }
+  .st { display: grid; grid-template-columns: 90px 1fr; gap: 28px; padding: 40px 0 6px; }
+  .nodecol { position: relative; }
+  .node {
+    position: absolute; left: 38px; top: 14px;
+    width: 14px; height: 14px; border: 2px solid var(--gold);
+    border-radius: 50%; background: var(--ink);
+  }
+  .node.sq { border-radius: 0; }
+  .vtag {
+    position: absolute; left: 33px; top: 44px;
+    writing-mode: vertical-rl; font-size: 13px; color: var(--gold);
+    letter-spacing: 0.34em; border: 1px solid var(--gold-dim);
+    background: var(--ink-2); padding: 9px 3px 11px;
+  }
+  .date { font-size: 13px; color: var(--gold); letter-spacing: 0.3em; }
+  .st h2 { font-size: 21px; font-weight: 700; letter-spacing: 0.06em; margin: 6px 0 10px; }
+  .st h2 small { font-weight: 400; color: var(--paper-dim); font-size: 15px; letter-spacing: 0.04em; margin-left: 10px; }
+  blockquote.q {
+    font-size: 21px; line-height: 2.05; color: var(--paper);
+    letter-spacing: 0.03em;
+  }
+  blockquote.q .qm { color: var(--gold); }
+  .gap { color: var(--paper-faint); font-size: 15px; letter-spacing: 0.3em; }
+  .gloss {
+    margin-top: 12px; font-size: 15px; color: var(--paper-dim);
+    border-left: 2px solid var(--gold-dim); padding-left: 16px; max-width: 42em;
+  }
+
+  /* 断点 */
+  .que {
+    display: inline-block; margin-top: 18px;
+    border: 1px dashed var(--gold-dim); color: var(--gold);
+    padding: 8px 20px; font-size: 15px; letter-spacing: 0.34em;
+  }
+  .noend { color: var(--paper-dim); font-size: 16px; margin-top: 16px; max-width: 40em; }
+  .noend b { color: var(--paper); }
+
+  /* 后话 */
+  .after { border-top: 1px solid var(--hairline); margin-top: 74px; padding-top: 44px; }
+  .after h3 {
+    font-size: 14px; color: var(--gold); font-weight: 400;
+    letter-spacing: 0.5em; margin-bottom: 22px;
+  }
+  .after p { color: var(--paper-dim); font-size: 15.5px; max-width: 42em; margin-bottom: 14px; }
+  .after blockquote.q { font-size: 18px; margin: 4px 0 18px; }
+
+  footer.page {
+    border-top: 1px solid var(--hairline); margin-top: 64px;
+    padding: 34px 0 60px; font-size: 13px; color: var(--paper-faint); line-height: 2.3;
+  }
+  footer.page b { color: var(--paper-dim); font-weight: 600; }
+
+  @media (max-width: 640px) {
+    .st { grid-template-columns: 56px 1fr; gap: 18px; }
+    .walk::before { left: 27px; }
+    .node { left: 20px; }
+    .vtag { left: 16px; }
+    .first { padding-top: 54px; }
+    blockquote.q { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap top">
+  <span>殆知阁导读　卷十五 · 行纪</span>
+  <span class="mono">之二十七</span>
+</div>
+
+<header class="wrap first">
+  <div class="seal">癸丑</div>
+  <div>
+    <h1 class="q"><span class="qm">「</span><span class="t">癸丑之三月晦，自宁海出西门。</span><span class="qm">」</span></h1>
+    <p class="second q"><span class="qm">「</span><span class="t">云散日朗，人意山光，并有喜态。</span><span class="qm">」</span></p>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="meta">徐霞客游记　明　徐宏祖撰　四库全书本十二卷　库内约三十五万字</p>
+  <p class="lede">三十余年，一个人把出门走路当正业：山怎么爬，水往哪流，洞里有什么，全按当天所见逐日入账。卷一是名山诸记，卷二以下是万里西南行。它最惊人的地方在结尾：<b>全书没有写完，最后一句停在半截。</b>下面这条路，从第一节日记出发，走到它断掉的地方。</p>
+</div>
+
+<div class="wrap walk">
+
+  <section class="st">
+    <div class="nodecol"><div class="node"></div><div class="vtag">黄山</div></div>
+    <div>
+      <p class="date mono">丙辰　一六一六　二月</p>
+      <h2>听雪<small>大雪封山</small></h2>
+      <blockquote class="q"><span class="qm">「</span><span class="t">初四日兀坐听雪溜竟日</span><span class="qm">」</span></blockquote>
+      <p class="gloss">大雪封山，哪也去不了。他坐了一整天，听雪化的滴水声。三十五万字里最短的一则日记之一，也是一种少见的旅行：不赶路，把等待也记进去。</p>
+    </div>
+  </section>
+
+  <section class="st">
+    <div class="nodecol"><div class="node"></div><div class="vtag">太和山</div></div>
+    <div>
+      <p class="date mono">癸亥　一六二三</p>
+      <h2>偷榔梅<small>替母亲带手信</small></h2>
+      <blockquote class="q"><span class="qm">「</span><span class="t">暮返宫贿其小徒复得榔梅六枚再索之不可得矣</span><span class="qm">」</span><span class="gap">……</span><span class="qm">「</span><span class="t">以太和榔梅为老母寿</span><span class="qm">」</span></blockquote>
+      <p class="gloss">武当榔梅是禁物，曾有人携出几枚，弄得道流破家。道观不敢给，他傍晚贿赂道童又得了六枚。爬了半座武当山，惦记的是回家给老母亲祝寿。</p>
+    </div>
+  </section>
+
+  <section class="st">
+    <div class="nodecol"><div class="node"></div><div class="vtag">江阴</div></div>
+    <div>
+      <p class="date mono">丙子　一六三六　九月十九日</p>
+      <h2>万里遐征<small>出发那夜</small></h2>
+      <blockquote class="q"><span class="qm">「</span><span class="t">余久拟西南游迁延二载老至不能待遂以崇祯九年九月十九日为万里遐征计</span><span class="qm">」</span><span class="gap">……</span><span class="qm">「</span><span class="t">束装未就适杜若叔至饮至子夜乘醉放舟天未明抵锡邑</span><span class="qm">」</span></blockquote>
+      <p class="gloss">五十岁，等了两年，等不动了。行李没收拾完，朋友来了，喝到半夜，醉着开船。同行的静闻是一位僧人，发愿把刺血写成的经送上鸡足山。</p>
+    </div>
+  </section>
+
+  <section class="st">
+    <div class="nodecol"><div class="node"></div><div class="vtag">新塘站</div></div>
+    <div>
+      <p class="date mono">丁丑　一六三七　二月</p>
+      <h2>湘江遇盗<small>一锅粥</small></h2>
+      <blockquote class="q"><span class="qm">「</span><span class="t">静闻没水取得一铁铫漉取江底湿米煮粥遍食诸难者</span><span class="qm">」</span></blockquote>
+      <p class="gloss">夜里盗船上江，行李锅具烧沉一空，仆人受了重伤。静闻潜进江里，捞回一口铁铫，又从江底滤出泡烂的米，煮了一锅粥，分给所有一起落难的人。</p>
+    </div>
+  </section>
+
+  <section class="st">
+    <div class="nodecol"><div class="node"></div><div class="vtag">南宁</div></div>
+    <div>
+      <p class="date mono">丁丑　一六三七　十月</p>
+      <h2>死讯<small>约期五日</small></h2>
+      <blockquote class="q"><span class="qm">「</span><span class="t">有僧自南宁崇善寺来谓静闻以前月二十八日子时故去予别时裁五日为之哀悼终夜不寐</span><span class="qm">」</span></blockquote>
+      <p class="gloss">九月二十二日他别静闻下舟，六天后静闻在崇善寺去世；再过十天，报丧的僧人才追上他。分别时只约了五天就回，再见已是死讯。</p>
+    </div>
+  </section>
+
+  <section class="st">
+    <div class="nodecol"><div class="node"></div><div class="vtag">崇善寺</div></div>
+    <div>
+      <p class="date mono">丁丑　一六三七　十一月</p>
+      <h2>拣骨<small>背着他走完全程</small></h2>
+      <blockquote class="q"><span class="qm">「</span><span class="t">闻静闻讣音必窆骨鸡足山遂至崇善寺拜拣骨起置大竹撞间</span><span class="qm">」</span></blockquote>
+      <p class="gloss">静闻的心愿是归骨鸡足山。他亲自到寺里拣骨，装进一节大竹筒，背着它继续往西。次年入滇，鸡足山上，友人唐大来为这节骨写了《瘗静闻骨记》，三易其稿。</p>
+    </div>
+  </section>
+
+  <section class="st">
+    <div class="nodecol"><div class="node"></div><div class="vtag">鸡足山</div></div>
+    <div>
+      <p class="date mono">己卯　一六三九　九月</p>
+      <h2>最后的日记<small>病</small></h2>
+      <blockquote class="q"><span class="qm">「</span><span class="t">初五日雨浃日买土参洗而烘之</span><span class="qm">」</span></blockquote>
+      <p class="gloss">久涉瘴地的身体垮了，日记越写越短，短到只剩这种句子：下雨，买参，洗了，烘干。</p>
+      <blockquote class="q" style="margin-top:18px"><span class="qm">「</span><span class="t">盖史君乃厥兄明空有约而来</span><span class="qm">」</span></blockquote>
+      <p class="noend">下一句没有了。</p>
+      <div class="que">【以下阙】</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="wrap after">
+  <h3>稿本下落</h3>
+  <blockquote class="q"><span class="qm">「</span><span class="t">迹没后手稿散逸其友季梦良求得之而中多阙失</span><span class="qm">」</span></blockquote>
+  <p>人没之后，手稿散逸，好友季梦良把残稿求辑回来，仍多缺失；宜兴史氏抄本又讹异更甚。今天通行的十二卷本，是清初杨名时重新编订的，也就是本库所收的四库底本。</p>
+  <blockquote class="q"><span class="qm">「</span><span class="t">洵山经之别乘而地记之外篇</span><span class="qm">」</span></blockquote>
+  <p>四库馆臣把它的价值说得很平实：山川脉络，剖析详明。三百多年后回头看，这部逐日行程账成了地理学的源头文献，而它最初只是一个人的习惯：走到哪，当天记到哪。</p>
+</div>
+
+<footer class="page wrap">
+  <p><b>文本来源</b>　殆知阁简体库 史藏/地理/徐霞客游记.txt <span class="mono">github.com/robertsong2000/daizhigev20</span></p>
+  <p><b>引文核验</b>　全部引文与库内文件逐字比对（去标点、异体字归一）</p>
+  <p><b>时代局限</b>　明末行纪对沿途族群与风土的记述带着那个时代的眼光，阅读时请保留这份距离</p>
+</footer>
+
+</body>
+</html>
