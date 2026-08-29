@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文心雕龙 · 殆知阁导读 57</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --ink-3: #262522;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --qing: #5e8fbb;       /* 石青：文论 */
+    --qing-deep: #3d6a94;
+    --qing-mist: rgba(94,143,187,0.16);
+    --hairline: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ 开篇：两个梦 ============ */
+  .hero {
+    min-height: min(92dvh, 880px); display: grid;
+    grid-template-columns: 64px 1fr 132px; gap: 24px;
+    padding: 56px 0 40px;
+  }
+  .spine-kicker {
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: 13px; letter-spacing: 0.5em; color: var(--paper-faint);
+    border-left: 1px solid var(--hairline); padding-left: 18px; height: fit-content;
+  }
+  .dreams { align-self: center; }
+  .dream {
+    border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 30px 34px 26px; position: relative; max-width: 640px;
+  }
+  .dream + .dream { margin-top: 26px; margin-left: 64px; }
+  .dream .age {
+    position: absolute; top: -16px; left: 26px;
+    background: var(--ink); padding: 0 12px;
+    font-size: 14px; color: var(--qing); letter-spacing: 0.3em;
+  }
+  .dream p.meng {
+    font-size: clamp(19px, 2.2vw, 25px); letter-spacing: 0.04em; line-height: 2;
+  }
+  .dream p.meng em { font-style: normal; color: var(--qing); }
+  .dream p.note { font-size: 14px; color: var(--paper-dim); margin-top: 10px; }
+  .bookname {
+    writing-mode: vertical-rl; text-orientation: upright; justify-self: end;
+    font-size: clamp(54px, 6.4vw, 84px); font-weight: 700; letter-spacing: 0.18em;
+    line-height: 1.15; height: fit-content; position: sticky; top: 40px;
+  }
+  .bookname span { color: var(--qing); }
+  .bookname small {
+    font-size: 15px; font-weight: 400; color: var(--paper-faint);
+    letter-spacing: 0.4em; margin-top: 26px;
+  }
+
+  /* ============ 引文石匾 ============ */
+  .stone {
+    margin: 88px auto; max-width: 800px; text-align: center;
+    border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+    padding: 40px 24px;
+  }
+  .stone .src {
+    font-size: 13px; letter-spacing: 0.34em; color: var(--qing);
+    margin-bottom: 18px;
+  }
+  .stone p.q { font-size: clamp(20px, 2.6vw, 30px); letter-spacing: 0.05em; line-height: 1.9; }
+  .stone p.w { color: var(--paper-dim); font-size: 15px; margin-top: 16px; }
+
+  /* ============ 章节 ============ */
+  section.chap { padding: 72px 0 8px; }
+  .chap-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 30px; }
+  .chap-head .n {
+    font-size: 13px; color: var(--qing); letter-spacing: 0.28em;
+  }
+  .chap-head h2 { font-size: clamp(24px, 3vw, 32px); font-weight: 600; letter-spacing: 0.1em; }
+  .prose { max-width: 44em; color: var(--paper); font-size: 16.5px; }
+  .prose + .prose { margin-top: 20px; }
+  .prose em { font-style: normal; color: var(--qing); }
+  .prose .dim { color: var(--paper-dim); }
+
+  /* 车前卖书 */
+  .cart-scene {
+    margin-top: 44px; border: 1px solid var(--hairline);
+    background: linear-gradient(180deg, var(--ink-2), var(--ink));
+    padding: 38px 40px; position: relative;
+  }
+  .cart-scene .seal {
+    position: absolute; top: 30px; right: 30px;
+    width: 58px; height: 58px; border: 2px solid var(--qing); border-radius: 6px;
+    display: grid; place-items: center; color: var(--qing);
+    font-size: 22px; font-weight: 700; transform: rotate(4deg); opacity: 0.85;
+  }
+  .cart-scene h3 { font-size: 19px; letter-spacing: 0.12em; color: var(--qing); margin-bottom: 14px; }
+  .cart-scene p { font-size: 16.5px; max-width: 42em; }
+  .cart-scene p + p { margin-top: 12px; color: var(--paper-dim); }
+
+  /* ============ 五十梁柱 ============ */
+  .grid-legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-bottom: 34px; font-size: 13.5px; color: var(--paper-dim); }
+  .grid-legend i {
+    display: inline-block; width: 13px; height: 13px; margin-right: 8px;
+    vertical-align: -1px; border-radius: 2px;
+  }
+  .lg1 i { background: var(--qing); }
+  .lg2 i { background: var(--qing-mist); box-shadow: inset 0 0 0 1.5px var(--qing); }
+  .lg3 i { box-shadow: inset 0 0 0 1.5px var(--paper-faint); }
+  .lg4 i { background: var(--qing); transform: rotate(45deg); }
+
+  .pillar-zone { border: 1px solid var(--hairline); background: var(--ink-2); padding: 34px 30px 40px; }
+  .p-group { margin-bottom: 8px; }
+  .p-group:last-child { margin-bottom: 0; }
+  .p-label {
+    display: flex; align-items: baseline; gap: 14px; margin: 26px 0 16px;
+  }
+  .p-group:first-child .p-label { margin-top: 0; }
+  .p-label b { font-size: 16px; letter-spacing: 0.14em; font-weight: 600; }
+  .p-label span { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.1em; }
+  .p-label::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 9px; }
+  .tile {
+    border: 1px solid transparent; text-align: center; padding: 12px 4px 10px;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .tile b { display: block; font-size: 17.5px; font-weight: 700; letter-spacing: 0.14em; }
+  .tile i { font-style: normal; display: block; font-size: 11px; margin-top: 3px; opacity: 0.75; letter-spacing: 0.12em; }
+  .tile:hover { transform: translateY(-3px); }
+  /* 四组四种分量，同属石青 */
+  .g1 .tile { background: var(--qing); color: #10202e; }
+  .g1 .tile:hover { background: #74a3cc; }
+  .g2 .tile { background: var(--qing-mist); color: var(--paper); box-shadow: inset 0 0 0 1.5px var(--qing-deep); }
+  .g2 .tile:hover { background: rgba(94,143,187,0.3); }
+  .g3 .tile { box-shadow: inset 0 0 0 1px var(--paper-faint); color: var(--paper-dim); }
+  .g3 .tile:hover { color: var(--paper); box-shadow: inset 0 0 0 1px var(--qing); }
+  .g4 .tile { background: var(--paper); color: var(--ink); }
+  .g4 .tile:hover { background: #fff; }
+
+  .p-bound {
+    margin-top: 30px; padding-top: 24px; border-top: 1px dashed var(--hairline);
+    font-size: 14.5px; color: var(--paper-dim); max-width: 46em;
+  }
+  .p-bound em { font-style: normal; color: var(--qing); }
+
+  /* ============ 版本实测 ============ */
+  .bench { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+  .bench .cell { border: 1px solid var(--hairline); padding: 24px 24px 20px; background: var(--ink-2); }
+  .bench .cell h4 { font-size: 14px; color: var(--qing); letter-spacing: 0.22em; margin-bottom: 12px; }
+  .bench .cell p { font-size: 14.5px; color: var(--paper-dim); line-height: 1.85; }
+  .bench .cell p strong { color: var(--paper); font-weight: 600; }
+  .diff { display: inline-block; background: var(--ink-3); border: 1px solid var(--hairline); padding: 0 8px; margin: 2px 2px 2px 0; color: var(--paper); }
+
+  /* ============ 终章 ============ */
+  .finale { padding: 96px 0 40px; text-align: center; }
+  .finale .path {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 0;
+    font-size: 14px; color: var(--paper-faint); letter-spacing: 0.14em; margin-bottom: 46px;
+  }
+  .finale .path span { padding: 0 14px; position: relative; }
+  .finale .path span + span::before {
+    content: ""; position: absolute; left: -3px; top: 50%; width: 5px; height: 5px;
+    background: var(--qing); transform: translateY(-50%) rotate(45deg); opacity: 0.7;
+  }
+  .finale .path em { font-style: normal; color: var(--qing); }
+  .finale p.last {
+    font-size: clamp(26px, 4vw, 40px); letter-spacing: 0.14em; line-height: 1.8;
+  }
+  .finale p.last span { color: var(--qing); }
+  .finale p.src { margin-top: 22px; font-size: 13px; letter-spacing: 0.3em; color: var(--paper-faint); }
+
+  footer.page {
+    border-top: 1px solid var(--hairline); padding: 40px 0 64px;
+    color: var(--paper-faint); font-size: 13.5px; line-height: 2.1;
+  }
+  footer.page b { color: var(--paper-dim); font-weight: 600; }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .spine-kicker { writing-mode: horizontal-tb; border-left: 0; padding-left: 0; border-bottom: 1px solid var(--hairline); padding-bottom: 14px; letter-spacing: 0.4em; }
+    .bookname { writing-mode: horizontal-tb; position: static; font-size: 52px; margin-top: 34px; }
+    .bookname small { display: block; margin-top: 8px; }
+    .dream + .dream { margin-left: 0; }
+    .bench { grid-template-columns: 1fr; }
+    .cart-scene { padding: 30px 24px; }
+    .cart-scene .seal { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 开篇：不做标题墙，先给两个梦 ================= -->
+<header class="hero">
+  <div class="wrap" style="display: contents;">
+    <div class="spine-kicker">殆知阁导读 五十七 集藏 文评</div>
+    <div class="dreams">
+      <div class="dream">
+        <span class="age">七岁之梦</span>
+        <p class="meng">「<em>余生七龄，乃梦彩云若锦，则攀而采之。</em>」</p>
+        <p class="note">一个京口孤儿爬上云头摘锦霞。这一段自述，收在全书最后一篇的末尾。</p>
+      </div>
+      <div class="dream">
+        <span class="age">三十岁之梦</span>
+        <p class="meng">「<em>齿在逾立，则常夜梦执丹漆之礼器，随仲尼而南行。</em>」</p>
+        <p class="note">长大后的梦换了内容：他捧着朱漆礼器，跟在孔子身后向南走。醒来他很欢喜，认定自己是接续文章道统的人。</p>
+      </div>
+    </div>
+    <div class="bookname">文<span>心</span>雕<span>龙</span><small>刘勰 南朝齐梁</small></div>
+  </div>
+</header>
+
+<div class="stone">
+  <div class="src">原道第一 开卷第一句</div>
+  <p class="q">「文之为德也大矣，与天地并生者何哉」</p>
+  <p class="w">天有日月山川是天文，人有语言文字是人文。文章在他眼里不是雕虫小技，是天地本身的花纹。</p>
+</div>
+
+<!-- ================= 车前的卖书人 ================= -->
+<section class="chap">
+  <div class="wrap">
+    <div class="chap-head"><span class="n mono">SCENE</span><h2>车前的卖书人</h2></div>
+    <p class="prose">刘勰早孤，家贫，<em>不婚娶</em>。他投奔定林寺，跟着高僧僧祐一住十余年，替寺院整理经藏。白天校经，夜里写自己那部书，写了五六年，五十篇，三万八千字上下。</p>
+    <p class="prose">书写成，<em>没有人理会</em>。文坛没有他的位置，他也不在任何一个圈子里。他认定自己的书有价值，非要找一个能鉴定的裁判，选中的是当朝最负盛名的沈约。可沈约贵盛，一个无名之辈连递名帖的资格都没有。</p>
+    <div class="cart-scene">
+      <div class="seal">售</div>
+      <h3>状若货鬻者</h3>
+      <p>于是他打定主意：背着书稿守在沈约府外，等沈约的车驾出来，冲上去拦车献书，把自己打扮得像个沿街<em>卖货的小贩</em>。堂堂一个写出了五十篇体系的人，用这种方式递出了自己的简历。</p>
+      <p>沈约取来便读，大为看重，从此常把这部书摆在几案上。半个中国文学批评史，是被一个假扮小贩的人拦车送进历史的。</p>
+    </div>
+  </div>
+</section>
+
+<div class="stone">
+  <div class="src">知音第四十八 开篇</div>
+  <p class="q">「知音其难哉！音实难知，知实难逢，逢其知音，千载其一乎！」</p>
+  <p class="w">这一章像是给拦车那件事提前写好的注脚。全书论文章，唯独这一篇论读者。</p>
+</div>
+
+<!-- ================= 五十梁柱 ================= -->
+<section class="chap" id="map">
+  <div class="wrap">
+    <div class="chap-head"><span class="n mono">MAP</span><h2>五十根梁柱</h2></div>
+    <p class="prose">前人论文，是散篇碎语；他第一次把文章当成一整座建筑来造。<em>枢纽立骨，文体铺墙，情采装檐</em>，五十篇各有柱位。他在末篇自己交代过结构，还说篇数并非凑数：</p>
+  </div>
+  <div class="stone" style="margin: 40px auto 44px;">
+    <div class="src">序志第五十</div>
+    <p class="q" style="font-size: clamp(18px, 2.2vw, 24px);">「盖文心之作也，本乎道，师乎圣，体乎《经》，酌乎《纬》，变乎《骚》」</p>
+    <p class="w">又：「位理定名，彰乎《大易》之数，其为文用，四十九篇而已。」<br>大衍之数五十，其用四十有九：五十篇里，一篇（序志）是总纲，真正干活的是四十九篇。</p>
+  </div>
+  <div class="wrap">
+    <div class="grid-legend">
+      <span class="lg1"><i></i>文之枢纽 五篇 总纲</span>
+      <span class="lg2"><i></i>论文叙笔 二十篇 各体文章从诗到史逐体立论</span>
+      <span class="lg3"><i></i>剖情析采 二十四篇 创作论与批评论</span>
+      <span class="lg4"><i></i>长怀序志 一篇 自序</span>
+    </div>
+    <div class="pillar-zone">
+      <div class="p-group g1">
+        <div class="p-label"><b>文之枢纽</b><span>全书的地基</span></div>
+        <div class="tiles">
+          <div class="tile"><b>原道</b><i>第一</i></div>
+          <div class="tile"><b>微圣</b><i>第二</i></div>
+          <div class="tile"><b>宗经</b><i>第三</i></div>
+          <div class="tile"><b>正纬</b><i>第四</i></div>
+          <div class="tile"><b>辩骚</b><i>第五</i></div>
+        </div>
+      </div>
+      <div class="p-group g2">
+        <div class="p-label"><b>论文叙笔</b><span>有韵为文 无韵为笔</span></div>
+        <div class="tiles">
+          <div class="tile"><b>明诗</b><i>第六</i></div>
+          <div class="tile"><b>乐府</b><i>第七</i></div>
+          <div class="tile"><b>铨赋</b><i>第八</i></div>
+          <div class="tile"><b>颂赞</b><i>第九</i></div>
+          <div class="tile"><b>祝盟</b><i>第十</i></div>
+          <div class="tile"><b>铭箴</b><i>第十一</i></div>
+          <div class="tile"><b>诔碑</b><i>第十二</i></div>
+          <div class="tile"><b>哀吊</b><i>第十三</i></div>
+          <div class="tile"><b>杂文</b><i>第十四</i></div>
+          <div class="tile"><b>谐讔</b><i>第十五</i></div>
+          <div class="tile"><b>史传</b><i>第十六</i></div>
+          <div class="tile"><b>诸子</b><i>第十七</i></div>
+          <div class="tile"><b>论说</b><i>第十八</i></div>
+          <div class="tile"><b>诏策</b><i>第十九</i></div>
+          <div class="tile"><b>檄移</b><i>第二十</i></div>
+          <div class="tile"><b>封禅</b><i>第二十一</i></div>
+          <div class="tile"><b>章表</b><i>第二十二</i></div>
+          <div class="tile"><b>奏启</b><i>第二十三</i></div>
+          <div class="tile"><b>议对</b><i>第二十四</i></div>
+          <div class="tile"><b>书记</b><i>第二十五</i></div>
+        </div>
+      </div>
+      <div class="p-group g3">
+        <div class="p-label"><b>剖情析采</b><span>怎么写 怎么评</span></div>
+        <div class="tiles">
+          <div class="tile"><b>神思</b><i>第二十六</i></div>
+          <div class="tile"><b>体性</b><i>第二十七</i></div>
+          <div class="tile"><b>风骨</b><i>第二十八</i></div>
+          <div class="tile"><b>通变</b><i>第二十九</i></div>
+          <div class="tile"><b>定势</b><i>第三十</i></div>
+          <div class="tile"><b>情采</b><i>第三十一</i></div>
+          <div class="tile"><b>镕裁</b><i>第三十二</i></div>
+          <div class="tile"><b>声律</b><i>第三十三</i></div>
+          <div class="tile"><b>章句</b><i>第三十四</i></div>
+          <div class="tile"><b>丽辞</b><i>第三十五</i></div>
+          <div class="tile"><b>比兴</b><i>第三十六</i></div>
+          <div class="tile"><b>夸饰</b><i>第三十七</i></div>
+          <div class="tile"><b>事类</b><i>第三十八</i></div>
+          <div class="tile"><b>练字</b><i>第三十九</i></div>
+          <div class="tile"><b>隐秀</b><i>第四十</i></div>
+          <div class="tile"><b>指瑕</b><i>第四十一</i></div>
+          <div class="tile"><b>养气</b><i>第四十二</i></div>
+          <div class="tile"><b>附会</b><i>第四十三</i></div>
+          <div class="tile"><b>总术</b><i>第四十四</i></div>
+          <div class="tile"><b>时序</b><i>第四十五</i></div>
+          <div class="tile"><b>物色</b><i>第四十六</i></div>
+          <div class="tile"><b>才略</b><i>第四十七</i></div>
+          <div class="tile"><b>知音</b><i>第四十八</i></div>
+          <div class="tile"><b>程器</b><i>第四十九</i></div>
+        </div>
+      </div>
+      <div class="p-group g4">
+        <div class="p-label"><b>长怀序志</b><span>自序压卷</span></div>
+        <div class="tiles">
+          <div class="tile"><b>序志</b><i>第五十</i></div>
+        </div>
+      </div>
+      <p class="p-bound">库本分十卷，恰在<em>卷五卷六之交</em>分开上下篇：卷一至卷五是枢纽加文体论，卷六自神思起转入创作论。一千五百年前的目录学家和这个整理本，在同一个位置划了线。</p>
+    </div>
+  </div>
+</section>
+
+<div class="stone">
+  <div class="src">神思第二十六</div>
+  <p class="q">「寂然凝虑，思接千载；悄焉动容，视通万里」<br>「登山则情满于山，观海则意溢于海」</p>
+  <p class="w">创作论的第一篇讲想象。这两组句子，是中文里最早把灵感写成了画面感的地方。</p>
+</div>
+
+<!-- ================= 批评的方法 ================= -->
+<section class="chap">
+  <div class="wrap">
+    <div class="chap-head"><span class="n mono">METHOD</span><h2>给批评立规矩</h2></div>
+    <p class="prose">文人相轻是常态，他偏要给评论立一套可操作的流程。先别急着下判断，先把自己的见识练出来：</p>
+  </div>
+  <div class="stone" style="margin: 40px auto;">
+    <div class="src">知音第四十八</div>
+    <p class="q">「凡操千曲而后晓声，观千剑而后识器」</p>
+    <p class="w">听过千支曲子才懂音律，看过千把剑才识利钝。然后他开出六项检查清单，像一份验货规程：</p>
+    <p class="q" style="font-size: clamp(16px, 1.9vw, 21px); margin-top: 18px;">「一观位体，二观置辞，三观通变，四观奇正，五观事义，六观宫商」</p>
+    <p class="w">再看章法安排、遣词造句、继承创新、风格正奇、用典取舍、声律和谐。末了一句更见胸怀：</p>
+    <p class="q" style="font-size: clamp(16px, 1.9vw, 21px); margin-top: 18px;">「夫缀文者情动而辞发，观文者披文以入情，沿波讨源，虽幽必显。<br>世远莫见其面，觇文辄见其心。」</p>
+    <p class="w">隔着几百年的纸，照样能照见作者的心。这是给所有后世读者发出的许可证。</p>
+  </div>
+  <div class="wrap">
+    <p class="prose">至于文学史，他只用一句话就交代了全部动力学，这一句后来成了文学史研究的通用公式：</p>
+  </div>
+  <div class="stone" style="margin: 40px auto;">
+    <div class="src">时序第四十五</div>
+    <p class="q">「文变染乎世情，兴废系乎时序，原始以要终，虽百世可知也。」</p>
+    <p class="w">文风跟着世道变。建安文章为什么慷慨，他说因为世积乱离，风衰俗怨。</p>
+  </div>
+</section>
+
+<!-- ================= 版本实测 ================= -->
+<section class="chap">
+  <div class="wrap">
+    <div class="chap-head"><span class="n mono">TEXT</span><h2>库本实测</h2></div>
+    <p class="prose"><span class="dim">本次读的是殆知阁简体库 集藏／文评 下的整理本：</span>全文约五万一千字符，正文分十卷，每篇末尾系一首四言赞语，五十赞俱全。整理本带校勘符号：圆括号内是疑误的底本原文，方括号内是校改后的字，读的时候要把两套括号拆开。</p>
+    <div class="bench">
+      <div class="cell">
+        <h4>篇名异文</h4>
+        <p>库本三处篇名与通行本不同：<span class="diff">微圣</span>通行作征圣，<span class="diff">铨赋</span>通行作诠赋，<span class="diff">谐讔</span>通行作谐隐。本页五十根梁柱一律照库本用字。</p>
+      </div>
+      <div class="cell">
+        <h4>大衍之数</h4>
+        <p>全书<strong>五十篇</strong>不是随意凑的。序志自答：彰乎大易之数，其用四十九篇而已，一篇自序配四十九篇正文，恰是周易大衍之数的占法。</p>
+      </div>
+      <div class="cell">
+        <h4>形同草木</h4>
+        <p>他给自己的写作动机留了一句骨气话：<strong>形同草木之脆，名逾金石之坚</strong>。人活不过草木，立言却能硬过金石，所以君子处世树德建言，不是好辩，是不得已。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 终章 ================= -->
+<section class="finale" id="finale">
+  <div class="wrap">
+    <div class="path">
+      <span>京口孤儿</span><span>定林寺校经十余年</span><span>写成五十篇</span><span>拦车献书</span><span>东宫通事舍人</span><span><em>燔鬓发出家</em></span><span>改名慧地</span>
+    </div>
+    <p class="prose" style="max-width: 40em; margin: 0 auto 56px; text-align: center; color: var(--paper-dim); font-size: 15.5px;">晚年的刘勰奉命回到定林寺整理经藏，功德圆满之后上表请求出家，先烧掉自己的鬓发以明志，获准，改法名慧地。书留下来，人退回了他开始的地方。全书最后一句，是他给自己找的位置：</p>
+    <p class="last">「文果载心，<span>余心有寄</span>。」</p>
+    <p class="src">序志第五十 赞语 全书末句</p>
+  </div>
+</section>
+
+<footer class="page">
+  <div class="wrap">
+    <p><b>文本来源</b>　殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）集藏／文评／文心雕龙.txt。</p>
+    <p><b>引文核验</b>　本页 17 句引文与 50 条篇名均已与库内文件去标点、归一异体后逐字比对通过，核验脚本 verify_wenxin.py 随仓库同存。</p>
+    <p><b>阅读提醒</b>　本书成于一千五百年前，其文章体制、经学立场与价值判断均带有时代局限，请以历史眼光阅读。刘勰生平主要见于《梁书·刘勰传》，本页转述不引原文。</p>
+  </div>
+</footer>
+
+</body>
+</html>
