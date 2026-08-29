@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天工开物 · 殆知阁导读之十二</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #262522;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --bamboo: #5f9270; --bamboo-dim: rgba(95,146,112,0.35);
+    --hairline: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 26px; }
+
+  /* 封面：书口题签 + 四枚工牌 */
+  .cover { position: relative; min-height: 92dvh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+  .spine {
+    position: absolute; left: 30px; top: 0; height: 100%;
+    writing-mode: vertical-rl; display: flex; align-items: center; gap: 18px;
+    font-size: 13px; letter-spacing: 0.5em; color: var(--paper-faint);
+    border-left: 1px solid var(--hairline); padding-left: 14px;
+  }
+  .spine b { color: var(--bamboo); font-weight: 400; }
+  .cover-main { padding: 60px 0 0 96px; }
+  .tiles { display: flex; gap: 14px; flex-wrap: wrap; }
+  .tile {
+    width: clamp(88px, 15vw, 148px); aspect-ratio: 1;
+    display: grid; place-items: center;
+    font-size: clamp(52px, 9.5vw, 92px); font-weight: 700;
+    border: 1px solid var(--hairline); color: var(--paper);
+    transition: border-color .3s, color .3s, transform .3s;
+  }
+  .tile:hover { border-color: var(--bamboo); color: var(--bamboo); transform: translateY(-4px); }
+  .tile:first-child { border-color: var(--bamboo-dim); }
+  .tickline { display: flex; gap: 7px; margin: 34px 0 26px; align-items: center; }
+  .tickline i { width: 10px; height: 22px; background: var(--bamboo-dim); }
+  .tickline i:nth-child(7), .tickline i:nth-child(14) { width: 2px; background: var(--paper-faint); margin-right: 22px; }
+  .tickline em { font-style: normal; font-size: 12.5px; color: var(--paper-faint); letter-spacing: .3em; margin-left: 16px; white-space: nowrap; }
+  .cover-byline { color: var(--paper-dim); font-size: 16px; }
+  .cover-byline b { color: var(--paper); font-weight: 600; }
+  .cover-no { margin-top: 10px; font-size: 13px; letter-spacing: 0.34em; color: var(--bamboo); }
+
+  /* 章节 */
+  section { padding: 66px 0 30px; }
+  section + section { border-top: 1px solid var(--hairline); }
+  h2 { display: flex; align-items: baseline; gap: 16px; font-size: 25px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 26px; }
+  h2 .sno { font-size: 14px; color: var(--bamboo); border: 1px solid var(--bamboo-dim); padding: 2px 9px; letter-spacing: 0.2em; }
+  .prose { color: var(--paper-dim); font-size: 16px; max-width: 40em; }
+  .prose b { color: var(--paper); font-weight: 600; }
+  .prose p + p { margin-top: 14px; }
+
+  /* 引文 */
+  blockquote { position: relative; margin: 30px 0 10px; padding: 26px 30px 22px 58px; border-left: 3px solid var(--bamboo); background: var(--ink-2); }
+  blockquote::before { content: "引"; position: absolute; left: 16px; top: 26px; font-size: 13px; color: var(--bamboo); border: 1px solid var(--bamboo-dim); padding: 3px 5px; }
+  blockquote p { font-size: 19px; line-height: 2.0; color: var(--paper); }
+  blockquote cite { display: block; margin-top: 12px; font-style: normal; font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.12em; }
+  .gloss { font-size: 14.5px; color: var(--paper-faint); max-width: 40em; }
+  .gloss + blockquote { margin-top: 26px; }
+
+  /* 十八坊 */
+  .fang { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 30px; }
+  .card { border: 1px solid var(--hairline); padding: 16px 16px 14px; background: var(--ink-2); transition: border-color .25s, background .25s; position: relative; }
+  .card:hover { border-color: var(--bamboo-dim); background: var(--ink-3); }
+  .card .no { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  .card h3 { font-size: 21px; font-weight: 700; letter-spacing: 0.12em; margin: 4px 0 6px; }
+  .card:hover h3 { color: var(--bamboo); }
+  .card p { font-size: 13.5px; color: var(--paper-dim); line-height: 1.75; }
+  .card.head, .card.tail { border-color: var(--bamboo-dim); }
+  .card.head .tag, .card.tail .tag { position: absolute; right: 12px; top: 12px; font-size: 11.5px; color: var(--bamboo); border: 1px solid var(--bamboo-dim); padding: 1px 7px; letter-spacing: 0.2em; }
+  .fsection { margin: 26px 0 8px; display: flex; align-items: center; gap: 14px; font-size: 14px; letter-spacing: 0.3em; color: var(--bamboo); }
+  .fsection::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+  .fsection small { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.18em; }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 60px; padding: 34px 0 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page p + p { margin-top: 8px; }
+  footer.page a { color: var(--paper-dim); }
+
+  @media (max-width: 720px) {
+    .spine { display: none; }
+    .cover-main { padding-left: 0; }
+    .fang { grid-template-columns: 1fr 1fr; }
+    blockquote { padding-left: 30px; }
+    blockquote::before { position: static; display: inline-block; margin-bottom: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <div class="spine"><span>明 崇祯十年初刊</span><b>江西 分宜 学署</b></div>
+  <div class="wrap cover-main">
+    <div class="tiles" aria-label="天工开物">
+      <span class="tile">天</span><span class="tile">工</span><span class="tile">开</span><span class="tile">物</span>
+    </div>
+    <div class="tickline" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <em>全书十八卷</em>
+    </div>
+    <p class="cover-byline">明 · <b>宋应星</b> 撰</p>
+    <p class="cover-no">殆知阁导读之十二</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section>
+  <h2><span class="sno">壹</span>开卷</h2>
+  <blockquote>
+    <p>生人不能久生而五谷生之，五谷不能自生而生人生之。</p>
+    <cite>乃粒第一 · 卷首</cite>
+  </blockquote>
+  <p class="gloss">人活不长，五谷让人活下去；五谷不会自己长，人去种它们才长。全书第一卷第一段就是这个互相成全的闭环。书名叫「天工开物」，取的正是这个意思：自然的造化是「天工」，人把它开发出来是「开物」。</p>
+</section>
+
+<section>
+  <h2><span class="sno">贰</span>其人</h2>
+  <div class="prose">
+    <p>宋应星，江西奉新人，1587 年生。二十九岁那年乡试，他考中全省第三名，哥哥宋应升同榜中举，人称「奉新二宋」。看起来前途敞亮。此后十几年，他一次次北上参加会试，一次次落第，功名止步于举人。</p>
+    <p>考不上进士的他，后来到江西分宜做了县学教谕，一介冷官。也正是在这个闲职上，他把多年沿途记下的见闻整理成书：稻田怎么育秧、蚕茧怎么缫丝、砖窑怎么烧、铁锚怎么锻、珠蚌怎么采。1637 年，友人涂绍煃出资刻版，<b>《天工开物》初刊</b>。</p>
+    <p>那是一个读书人都在八股里讨生活的年代。他在书里把这股风气点破了。</p>
+  </div>
+  <blockquote>
+    <p>纨裤之子，以赭衣视笠蓑；经生之家，以农夫为诟詈。晨炊晚饷，知其味而忘其源者众矣！</p>
+    <cite>乃粒第一</cite>
+  </blockquote>
+  <p class="gloss">富家子弟把种田人当囚犯看，读书人家拿「农夫」骂人。可一日两顿饭，知道味道、忘了来路的人太多了。牢骚之外，他还有一副较真的眼睛：稻谷入仓发了热坏了苗，他不怪鬼神。</p>
+  <blockquote>
+    <p>祟在种内，反怨鬼神。</p>
+    <cite>乃粒第一 · 稻灾</cite>
+  </blockquote>
+</section>
+
+<section>
+  <h2><span class="sno">叁</span>十八坊</h2>
+  <p class="prose">全书十八卷，像一条工坊街：从田里走到织机，从织机走到窑口和炉台，最后一卷才谈珠玉。陶埏卷开头一句话，可以当整条街的门额。</p>
+  <blockquote>
+    <p>水火既济而土合。</p>
+    <cite>陶埏第七 · 卷首</cite>
+  </blockquote>
+  <div class="fang">
+    <div class="fsection">上 编 <small>衣食生民 六卷</small></div>
+    <div class="card head"><span class="tag">首</span><span class="no">其一</span><h3>乃粒</h3><p>稻麦菽粟，从浸种、插秧到防灾、灌溉。全书从一粒米讲起。</p></div>
+    <div class="card"><span class="no">其二</span><h3>乃服</h3><p>蚕桑到织造。提花机要一千八百根花本衢脚，龙袍也出自这类织机。</p></div>
+    <div class="card"><span class="no">其三</span><h3>彰施</h3><p>染色。红花、靛蓝、槐花，丝帛布衣怎么上色。</p></div>
+    <div class="card"><span class="no">其四</span><h3>粹精</h3><p>舂米磨面。收获之后的加工，讲究一个「精」字。</p></div>
+    <div class="card"><span class="no">其五</span><h3>作咸</h3><p>盐。海盐、池盐、井盐，厨下一撮，关乎国课。</p></div>
+    <div class="card"><span class="no">其六</span><h3>甘嗜</h3><p>种蔗、制糖，附蜂蜜。甜味在明代已是产业。</p></div>
+    <div class="fsection">中 编 <small>器用舟车 七卷</small></div>
+    <div class="card"><span class="no">其七</span><h3>陶埏</h3><p>砖瓦陶瓷。土坯经水火而成器，都城的基础设施。</p></div>
+    <div class="card"><span class="no">其八</span><h3>冶铸</h3><p>铸鼎、铸钱、铸钟。大件金属的浇注现场。</p></div>
+    <div class="card"><span class="no">其九</span><h3>舟车</h3><p>漕船、海船、马车。南舟北车，把帝国连成一张网。</p></div>
+    <div class="card"><span class="no">其十</span><h3>锤锻</h3><p>打铁。小到绣花针，大到千斤铁锚，都在砧上成形。</p></div>
+    <div class="card"><span class="no">其十一</span><h3>燔石</h3><p>烧石灰、煤炭、矾石、砒石。高温化学的明代现场。</p></div>
+    <div class="card"><span class="no">其十二</span><h3>膏液</h3><p>榨油。脂麻、菜菔、桐子，食用点灯两便。</p></div>
+    <div class="card"><span class="no">其十三</span><h3>杀青</h3><p>造纸。竹料楮皮，从纸槽里一张一张捞出来，焙干成帙。</p></div>
+    <div class="fsection">下 编 <small>财货兵防 五卷</small></div>
+    <div class="card"><span class="no">其十四</span><h3>五金</h3><p>采冶金、银、铜、铁、铅与倭铅。矿脉、炉火与分离之法。</p></div>
+    <div class="card"><span class="no">其十五</span><h3>佳兵</h3><p>弓弩、火药、火器。兵器一卷，写得相当克制。</p></div>
+    <div class="card"><span class="no">其十六</span><h3>丹青</h3><p>墨与朱。文房所需的色料，附胡粉、黄丹、淀花诸色。</p></div>
+    <div class="card"><span class="no">其十七</span><h3>曲蘖</h3><p>造曲酿酒。一撮曲母，决定了满瓮的方向。</p></div>
+    <div class="card tail"><span class="tag">末</span><span class="no">其十八</span><h3>珠玉</h3><p>采珠、琢玉。压卷之作，却是全书最「无用」的东西。</p></div>
+  </div>
+  <p class="gloss" style="margin-top:22px">明刊本各卷还配有版画，凡言工处几乎必有一图。本库所收为纯文本，图可另见明刊影印本。</p>
+</section>
+
+<section>
+  <h2><span class="sno">肆</span>贵贱之序</h2>
+  <div class="prose">
+    <p>十八卷的次序不是随手排的。第一卷是稻米，末一卷才是珠玉。他在序里把这层心思挑明了：民之所食为贵，玩好之物为贱。一头一尾摆在一起，全书的价值排序立在那里。</p>
+    <p>末卷收尾时，他没有赞美珠玉，反而问了一个很不客气的问题。</p>
+  </div>
+  <blockquote>
+    <p>岂中国辉山、媚水者，萃在人身，而天地菁华止有此数哉？</p>
+    <cite>珠玉第十八 · 卷首</cite>
+  </blockquote>
+  <p class="gloss">山辉水媚的精华，难道全堆在人身上，天地造化就这么点数？这是全书的最后一个问句：贵贱既然是人排的，那这排序本身就值得追问一遍。</p>
+</section>
+
+<section>
+  <h2><span class="sno">伍</span>渡海一巡</h2>
+  <div class="prose">
+    <p>这部书刻成之后，命运比它的内容曲折得多。有清一代几乎无人重刻，原版散佚，到清末民初，国内已经很难找到一部完整的《天工开物》。学者们最后是从日本把书找了回来：江户时代的和刻本与东渡的明刊本尚存，二十世纪二十年代据此重印，这部书才重新回到中国读者手里。</p>
+    <p>有意思的是，他自己在书里记过一笔类似的事。</p>
+  </div>
+  <blockquote>
+    <p>古碎器日本国极珍重，真者不惜千金。</p>
+    <cite>陶埏第七</cite>
+  </blockquote>
+  <p class="gloss">宋代碎器（开片瓷）流入日本后被视若珍宝。三百年后，轮到这部书本身：在国内散佚，被东邻珍藏，再渡海回来。一本书走了自己章节里写过的路。</p>
+</section>
+
+<section>
+  <h2><span class="sno">陆</span>佳兵一节</h2>
+  <div class="prose">
+    <p>火药火器是全书最敏感的一卷。他把兵器定性为圣人不得已而用之的东西，态度放在卷首。谈到火药技术的来路，他也不遮掩。</p>
+  </div>
+  <blockquote>
+    <p>火药机械之窍，其先凿自西番与南裔，而后乃及于中国。</p>
+    <cite>佳兵第十五 · 卷首</cite>
+  </blockquote>
+  <p class="gloss">技术先起于西番和南方，后来才传到中国。承认来路，不争发明权。他还顺手扫了一圈当时满街跑的火药「论文」。</p>
+  <blockquote>
+    <p>今时妄想进身博官者，人人张目而道，著书以献，未必尽由试验。</p>
+    <cite>佳兵第十五 · 卷首</cite>
+  </blockquote>
+  <p class="gloss">想靠火器书博官的人个个说得头头是道，可未必都动手试过。批评完，他照样把自己的几页笔记附在卷内：因为他试过，也访过。一份十七世纪的同行评议现场。</p>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库（子藏 农家），github.com/robertsong2000/daizhigev20</p>
+    <p>本篇引文已与库内文件逐字核验，核验脚本见仓库 verify_tiangong.py</p>
+    <p>本书为十七世纪著作，其中对物性、灾异的解释带有时代印记，阅读时请注意甄别</p>
+  </div>
+</footer>
+
+</body>
+</html>
