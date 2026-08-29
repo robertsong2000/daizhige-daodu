@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山海经 · 殆知阁导读五十一</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink2: #201f1d;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --qing: #5e8fbb;
+    --qing-dim: rgba(94,143,187,0.35);
+    --qing-faint: rgba(94,143,187,0.14);
+    --zhu: #c0453c;
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .q { color: var(--paper); }
+  .sealq { color: var(--qing); }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 26px; }
+
+  /* 开场：里程尺 */
+  .ruler-head { min-height: 88dvh; display: flex; flex-direction: column; justify-content: center; padding: 40px 0 24px; position: relative; }
+  .kick { font-size: 13px; letter-spacing: 0.4em; color: var(--paper-faint); margin-bottom: 34px; }
+  .kick b { color: var(--qing); font-weight: 400; }
+  .shu-ming {
+    writing-mode: vertical-rl; font-size: 30px; letter-spacing: 0.3em;
+    color: var(--paper); border: 1px solid var(--qing-dim); padding: 18px 10px;
+    position: absolute; top: 40px; right: 28px; background: var(--ink2);
+  }
+  .shu-ming small { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.2em; margin-top: 14px; }
+  .lead { font-size: clamp(21px, 2.6vw, 30px); max-width: 21em; line-height: 1.75; }
+  .lead em { font-style: normal; color: var(--qing); }
+  .ruler { margin: 52px 0 10px; overflow: hidden; white-space: nowrap; }
+  .ruler-band { display: inline-flex; align-items: flex-end; gap: 0; height: 96px; }
+  .tick { display: inline-flex; flex-direction: column; justify-content: flex-end; align-items: center; width: 78px; }
+  .tick i { display: block; width: 1px; background: var(--qing-dim); }
+  .tick span { display: block; font-size: 10px; color: var(--paper-faint); margin-top: 7px; letter-spacing: 0.02em; }
+  .tick.hot i { background: var(--qing); width: 2px; }
+  .tick.hot span { color: var(--qing); }
+  .ruler-cap { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.14em; }
+  .ruler-cap b { color: var(--paper-dim); font-weight: 400; }
+
+  /* 章节 */
+  .sec { padding: 74px 0 8px; }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 26px; }
+  .sec-no { font-size: 12px; letter-spacing: 0.3em; color: var(--qing); border: 1px solid var(--qing-dim); padding: 3px 10px; white-space: nowrap; }
+  .sec-head h2 { font-size: 23px; font-weight: 600; letter-spacing: 0.16em; }
+  .sec-head .en { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  p.prose { color: var(--paper-dim); font-size: 15.5px; margin-bottom: 18px; max-width: 62ch; }
+  p.prose b { color: var(--paper); font-weight: 600; }
+  p.prose .q { color: var(--paper); }
+
+  /* 结算单 */
+  .ledger { border: 1px solid var(--hairline); margin: 26px 0; }
+  .ledger-title { padding: 14px 20px; border-bottom: 1px solid var(--hairline); display: flex; justify-content: space-between; align-items: baseline; }
+  .ledger-title b { font-size: 15px; letter-spacing: 0.2em; font-weight: 600; }
+  .ledger-title span { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.1em; }
+  .lrow { display: grid; grid-template-columns: 92px 1fr 220px; gap: 14px; padding: 13px 20px; border-bottom: 1px solid var(--hairline); align-items: baseline; }
+  .lrow:last-child { border-bottom: none; }
+  .lrow .ln { color: var(--qing); font-size: 14px; letter-spacing: 0.2em; }
+  .lrow .lv { font-size: 15px; }
+  .lrow .lv small { color: var(--paper-faint); font-size: 12px; margin-left: 8px; }
+  .lrow .lm { text-align: right; font-size: 13.5px; color: var(--paper-dim); }
+  .lrow.note .lm { color: var(--zhu); font-size: 12.5px; }
+  .lsum { padding: 12px 20px; background: var(--ink2); font-size: 13px; color: var(--paper-dim); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+
+  /* 大引文 */
+  .grandquote { margin: 40px 0; padding: 30px 34px; border-left: 2px solid var(--qing); background: var(--qing-faint); }
+  .grandquote .q { font-size: 18.5px; line-height: 2.1; display: block; }
+  .grandquote .src { display: block; margin-top: 14px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.16em; }
+  .zhupi { margin: 26px 0 6px; padding: 18px 22px; border: 1px dashed rgba(192,69,60,0.55); font-size: 14.5px; color: var(--paper-dim); max-width: 62ch; }
+  .zhupi b { color: var(--zhu); font-weight: 600; }
+
+  /* 本草抽屉 */
+  .cabinet { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 30px 0 10px; }
+  .drawer { border: 1px solid var(--hairline); background: var(--ink2); display: flex; flex-direction: column; }
+  .drawer-front { padding: 13px 16px; border-bottom: 1px solid var(--hairline); display: flex; justify-content: space-between; align-items: baseline; }
+  .drawer-front b { font-size: 16px; letter-spacing: 0.14em; color: var(--qing); font-weight: 600; }
+  .drawer-front span { font-size: 12px; color: var(--paper-faint); }
+  .drawer-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 9px; }
+  .med { font-size: 13.5px; line-height: 1.7; padding: 7px 10px; background: rgba(232,228,220,0.045); border-left: 2px solid var(--qing-dim); }
+  .med b { color: var(--paper); font-weight: 600; }
+  .med span { color: var(--paper-dim); }
+  .cabinet-note { font-size: 12.5px; color: var(--paper-faint); margin-bottom: 8px; letter-spacing: 0.06em; }
+
+  /* 见则榜 */
+  .omen { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; border-top: 1px solid var(--hairline); margin-top: 26px; }
+  .omen-row { display: flex; justify-content: space-between; align-items: baseline; padding: 11px 4px; border-bottom: 1px solid var(--hairline); }
+  .omen-row .on { font-size: 15px; letter-spacing: 0.1em; }
+  .omen-row .oc { font-size: 13px; color: var(--qing); }
+  .omen-row.omin .oc { color: var(--zhu); }
+  .omen-row .od { font-size: 11.5px; color: var(--paper-faint); margin-left: 10px; }
+
+  /* 山形异闻卡 */
+  .peaks { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 30px 0; }
+  .peak { position: relative; border: 1px solid var(--hairline); background: var(--ink2); padding: 46px 24px 22px; }
+  .peak::before {
+    content: ""; position: absolute; top: 8px; left: 0; right: 0; height: 30px;
+    background:
+      linear-gradient(135deg, transparent 49.2%, var(--qing-dim) 49.2%) left bottom / 50% 100% no-repeat,
+      linear-gradient(-135deg, transparent 49.2%, var(--qing-dim) 49.2%) right bottom / 50% 100% no-repeat;
+    opacity: 0.9;
+  }
+  .peak::after { content: ""; position: absolute; top: 37px; left: 24px; right: 24px; height: 1px; background: var(--qing-dim); }
+  .peak .p-no { position: absolute; top: 16px; right: 18px; font-size: 11px; color: var(--zhu); letter-spacing: 0.22em; }
+  .peak .p-name { font-size: 20px; font-weight: 700; letter-spacing: 0.2em; margin-bottom: 3px; }
+  .peak .p-loc { font-size: 12px; color: var(--qing); letter-spacing: 0.18em; margin-bottom: 14px; }
+  .peak .p-quote { font-size: 14.5px; line-height: 2.0; color: var(--paper); }
+  .peak .p-say { margin-top: 13px; font-size: 13px; color: var(--paper-dim); line-height: 1.8; }
+
+  /* 战报 */
+  .warband { border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); padding: 30px 0; margin: 34px 0 8px; }
+  .warband h3 { font-size: 14px; letter-spacing: 0.3em; color: var(--paper-faint); font-weight: 400; margin-bottom: 18px; }
+  .war-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+  .war-duo .wq { font-size: 15px; line-height: 2.05; }
+  .war-duo .ws { display: block; margin-top: 10px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.16em; }
+
+  /* 尾声 */
+  .flood { margin-top: 80px; padding: 88px 0 84px; background: linear-gradient(180deg, var(--ink) 0%, var(--ink2) 55%, var(--ink) 100%); border-top: 1px solid var(--hairline); }
+  .flood .f-kick { font-size: 12.5px; letter-spacing: 0.4em; color: var(--paper-faint); margin-bottom: 26px; }
+  .flood .f-quote { font-size: clamp(17px, 2.2vw, 22px); line-height: 2.3; max-width: 34em; }
+  .flood .f-quote .big { font-size: clamp(26px, 4.2vw, 40px); letter-spacing: 0.08em; color: var(--qing); display: block; margin-top: 22px; font-weight: 700; }
+  .flood .f-say { margin-top: 30px; font-size: 13.5px; color: var(--paper-dim); max-width: 56ch; }
+
+  /* 校记 */
+  .jiaoji { margin: 60px 0 0; border: 1px solid var(--hairline); }
+  .jiaoji h3 { font-size: 13px; letter-spacing: 0.34em; color: var(--paper-dim); font-weight: 400; padding: 13px 20px; border-bottom: 1px solid var(--hairline); }
+  .jiaoji ul { list-style: none; padding: 8px 0; }
+  .jiaoji li { font-size: 13px; color: var(--paper-dim); line-height: 1.9; padding: 6px 20px 6px 20px; }
+  .jiaoji li b { color: var(--paper); font-weight: 600; }
+  .jiaoji li .q { color: var(--paper); }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 70px; padding: 34px 0 60px; color: var(--paper-faint); font-size: 13px; line-height: 2.0; }
+  footer.page b { color: var(--paper-dim); font-weight: 400; }
+
+  @media (max-width: 760px) {
+    .shu-ming { position: static; writing-mode: horizontal-tb; display: inline-block; padding: 10px 16px; margin-bottom: 20px; }
+    .ruler-head { min-height: 0; padding-top: 44px; }
+    .cabinet { grid-template-columns: 1fr 1fr; }
+    .peaks { grid-template-columns: 1fr; }
+    .war-duo { grid-template-columns: 1fr; }
+    .omen { grid-template-columns: 1fr; }
+    .lrow { grid-template-columns: 70px 1fr; }
+    .lrow .lm { grid-column: 1 / 3; text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<header class="ruler-head">
+  <div class="wrap">
+    <div class="kick">殆知阁导读 <b>其五十一</b> · 卷十 志怪</div>
+    <div class="shu-ming">山海经<small>佚名</small></div>
+    <p class="lead">它不讲故事，它记账：往东走三百里，有山；山上有草，<em>食之不饥</em>；有兽，见则天下大旱。一步一记，记了三百步。</p>
+    <div class="ruler">
+      <div class="ruler-band">
+        <div class="tick hot"><i style="height:56px"></i><span>又东三百里</span></div>
+        <div class="tick"><i style="height:66px"></i><span>又东三百八十里</span></div>
+        <div class="tick"><i style="height:64px"></i><span>又东三百七十里</span></div>
+        <div class="tick"><i style="height:56px"></i><span>又东三百里</span></div>
+        <div class="tick"><i style="height:68px"></i><span>又东四百里</span></div>
+        <div class="tick"><i style="height:56px"></i><span>又东三百里</span></div>
+        <div class="tick"><i style="height:56px"></i><span>又东三百里</span></div>
+        <div class="tick"><i style="height:61px"></i><span>又东三百五十里</span></div>
+        <div class="tick"><i style="height:60px"></i><span>又东三百四十里</span></div>
+        <div class="tick"><i style="height:64px"></i><span>又东三百七十里</span></div>
+        <div class="tick"><i style="height:68px"></i><span>又东四百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:68px"></i><span>又东四百里</span></div>
+        <div class="tick"><i style="height:68px"></i><span>又东四百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:68px"></i><span>又东四百里</span></div>
+        <div class="tick"><i style="height:68px"></i><span>又东四百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:78px"></i><span>又东五百里</span></div>
+        <div class="tick"><i style="height:68px"></i><span>又东四百里</span></div>
+        <div class="tick"><i style="height:64px"></i><span>又东三百七十里</span></div>
+      </div>
+      <div class="ruler-cap">南山经开头三十步，刻度高下按里程画出。这样的计程句，全书共 <b>三百</b> 步：又东、又西、又南、又北，一站一站，走遍五藏山经。</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-no mono">壹 · 测步</span><h2>一部国土普查的账本</h2><span class="en">开卷第一句</span></div>
+      <p class="prose">开卷不设序，不请名人作题，直接开工。<span class="q">南山经之首曰鹊山。其首曰招摇之山，临于西海之上，多桂，多金玉。</span>方位、里程、植被、矿产，四项登完，再登土产：有什么草，什么兽，吃了怎样，佩了怎样，见了怎样。</p>
+      <p class="prose">这套格式从头用到尾。全书库内白文实测 <b>四万四千一百七十七</b> 字符，分 <b>十八</b> 篇：南山、西山、北山、东山、中山五篇走陆地，海外四面、海内四面各四篇，再加大荒四面与海内一篇。后人给它归类，或归地理，或归小说；其实它最像一份<b>勘测队的原始档案</b>，只是队员一边量地，一边把听来的神话与占验也一并登记在册。</p>
+      <div class="grandquote">
+        <span class="q">禹曰：天下名山，经五千三百七十山，六万四千五十六里，居地也。</span>
+        <span class="src">卷五 中山经 末尾，大禹的验收报告</span>
+      </div>
+      <p class="prose">报告落款在全书正中间：五藏山经走完，大禹出面验收。可这句总账，和书里自己的五份分账对不上，对不上的地方，下面这页结算单原样摆出来。</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-no mono">貳 · 结算</span><h2>五藏山经结算单</h2><span class="en">每篇末尾自带的合计</span></div>
+      <p class="prose">五藏山经每篇结尾都有一行「凡几山、几里」的合计，相当于勘测队每收工一段，先报一遍总数。库本五行的原数如下。</p>
+      <div class="ledger">
+        <div class="ledger-title"><b>行程结算</b><span>据库内白文逐行摘录</span></div>
+        <div class="lrow"><span class="ln">南山经</span><span class="lv">凡四十山<small>首经至南次三经，四段</small></span><span class="lm">万六千三百八十里</span></div>
+        <div class="lrow"><span class="ln">西山经</span><span class="lv">凡七十七山<small>首经至西次四经，四段</small></span><span class="lm">一万七千五百一十七里</span></div>
+        <div class="lrow"><span class="ln">北山经</span><span class="lv">凡八十七山<small>首经至北次三经，三段</small></span><span class="lm">二万三千二百三十里</span></div>
+        <div class="lrow note"><span class="ln">东山经</span><span class="lv">凡四十六山<small>库本脱总叙行，按四段相加</small></span><span class="lm">一万八千八百六十里</span></div>
+        <div class="lrow"><span class="ln">中山经</span><span class="lv">凡百九十七山<small>薄山、济山等十二段</small></span><span class="lm">二万一千三百七十一里</span></div>
+        <div class="lsum"><span>机器相加：四百四十七山，九万七千三百五十八里</span><span>而禹曰总账：五千三百七十山，六万四千五十六里</span></div>
+      </div>
+      <p class="prose">山数差了十倍以上，里数反而变少，两笔账对不齐，是本书两千年的悬案之一，注家各有说法，卷面不动。结算单之外，大禹还顺手报了两笔矿产：</p>
+      <div class="zhupi"><span class="q">出铜之山四百六十七，出铁之山三千六百九十。</span><br><span class="q">戈矛之所发也，刀铩之所起也，能者有余，拙者不足。</span><br><b>朱批</b>　一份地质报告，写着写着写成了军备清单：铜铁在哪，战争就在哪。又说「封于太山，禅于梁父，七十二家，得失之数，皆在此内，是谓国用」，这本账，算的是国用。</div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-no mono">叁 · 本草</span><h2>四屉药柜</h2><span class="en">食之、服之、佩之、可以御</span></div>
+      <p class="prose">账本登记的每一样东西，几乎都附一句用途说明。把这些说明全部抽出来，按动词分装，正好四个抽屉：<b>食之</b>六十二条，<b>服之</b>十四条，<b>佩之</b>七条，<b>可以御</b>二十一条（机器计数，库本白文为准）。饥荒、失眠、心痛、痔疮、瘿病、狂症，各有对症之物。</p>
+      <div class="cabinet">
+        <div class="drawer">
+          <div class="drawer-front"><b>食之</b><span>62 条</span></div>
+          <div class="drawer-body">
+            <div class="med"><b>祝余</b><span>　食之不饥</span></div>
+            <div class="med"><b>文鳐鱼</b><span>　食之已狂</span></div>
+            <div class="med"><b>何罗之鱼</b><span>　食之已痈</span></div>
+            <div class="med"><b>栎</b><span>　食之已痔</span></div>
+            <div class="med"><b>萆荔</b><span>　食之已心痛</span></div>
+            <div class="med"><b>杜衡</b><span>　食之已瘿</span></div>
+            <div class="med"><b>雕棠</b><span>　食之已聋</span></div>
+          </div>
+        </div>
+        <div class="drawer">
+          <div class="drawer-front"><b>服之</b><span>14 条</span></div>
+          <div class="drawer-body">
+            <div class="med"><b>鬼草</b><span>　服之不忧</span></div>
+            <div class="med"><b>荀草</b><span>　服之美人色</span></div>
+            <div class="med"><b>女尸</b><span>　服之媚于人</span></div>
+            <div class="med"><b>无条</b><span>　服之不字</span></div>
+            <div class="med"><b>帝台之石</b><span>　服之不蛊</span></div>
+          </div>
+        </div>
+        <div class="drawer">
+          <div class="drawer-front"><b>佩之</b><span>7 条</span></div>
+          <div class="drawer-body">
+            <div class="med"><b>迷谷</b><span>　佩之不迷</span></div>
+            <div class="med"><b>鹿蜀</b><span>　佩之宜子孙</span></div>
+            <div class="med"><b>旋龟</b><span>　佩之不聋</span></div>
+            <div class="med"><b>育沛</b><span>　佩之无瘕疾</span></div>
+          </div>
+        </div>
+        <div class="drawer">
+          <div class="drawer-front"><b>可以御</b><span>21 条</span></div>
+          <div class="drawer-body">
+            <div class="med"><b>天狗</b><span>　可以御凶</span></div>
+            <div class="med"><b>窃脂</b><span>　可以御火</span></div>
+            <div class="med"><b>青耕</b><span>　可以御疫</span></div>
+            <div class="med"><b>沙棠</b><span>　可以御水</span></div>
+            <div class="med"><b>飞鱼</b><span>　可以御兵</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="cabinet-note">抽屉名与条数为机器计数；抽屉内条目均摘自库内白文。帝女死于姑媱之山，化为䔄草，「服之媚于人」，一份媚药方，登记在牺牲档案之后。</div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-no mono">肆 · 占验</span><h2>见则榜</h2><span class="en">出产征兆的灾异速查</span></div>
+      <p class="prose">草木兽鱼之外，账本还登记行情：什么东西一出现，天下要出什么事。这类「见则」句全书共 <b>五十二</b> 条，按所指归拢，是一张挂在部落门口的灾异速查榜。</p>
+      <div class="omen">
+        <div class="omen-row omin"><span class="on">天下大旱</span><span class="oc">十二见</span></div>
+        <div class="omen-row omin"><span class="on">天下大水<span class="od">并郡县、其邑、其国</span></span><span class="oc">八见</span></div>
+        <div class="omen-row omin"><span class="on">有兵<span class="od">大兵、其邑有兵</span></span><span class="oc">七见</span></div>
+        <div class="omen-row omin"><span class="on">大疫<span class="od">并其国多疫</span></span><span class="oc">四见</span></div>
+        <div class="omen-row"><span class="on">大穰<span class="od">丰年</span></span><span class="oc">三见</span></div>
+        <div class="omen-row"><span class="on">安宁</span><span class="oc">二见</span></div>
+        <div class="omen-row omin"><span class="on">天下大风</span><span class="oc">二见</span></div>
+        <div class="omen-row omin"><span class="on">多土功</span><span class="oc">二见</span></div>
+        <div class="omen-row"><span class="on">其国多狡客</span><span class="oc">一见</span></div>
+        <div class="omen-row"><span class="on">其余散条<span class="od">有恐、火、放土、螽蝗、大繇等</span></span><span class="oc">十一见</span></div>
+      </div>
+      <p class="prose" style="margin-top:20px">稳赚的行情也有：西山经的文鳐鱼，<span class="q">其味酸甘，食之已狂，见则天下大穰。</span>又能治病，又是丰年信号，这种鱼放今天是要挂牌交易的。</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-no mono">伍 · 异闻</span><h2>五张山头登记条</h2><span class="en">普查顺手记下的神话</span></div>
+      <p class="prose">精卫填海、夸父追日、刑天舞干戚、烛龙司昼夜，这些后来家喻户晓的故事，在账本里只是一段一段的登记条：有谁，在哪，什么来历，什么下场。</p>
+      <div class="peaks">
+        <div class="peak">
+          <span class="p-no">异闻之一</span>
+          <div class="p-name">精卫</div>
+          <div class="p-loc">北山经 · 发鸠之山</div>
+          <div class="p-quote"><span class="q">是炎帝之少女名曰女娃，女娃游于东海，溺而不返，故为精卫。常衔西山之木石，以堙于东海。</span></div>
+          <div class="p-say">炎帝的小女儿淹死在东海，化成鸟，衔西山的木石去填海。全书里最执拗的一笔登记。</div>
+        </div>
+        <div class="peak">
+          <span class="p-no">异闻之二</span>
+          <div class="p-name">夸父</div>
+          <div class="p-loc">海外北经</div>
+          <div class="p-quote"><span class="q">夸父与日逐走，入日。渴欲得饮，饮于河渭，河渭不足，北饮大泽。未至，道渴而死。弃其杖。化为邓林。</span></div>
+          <div class="p-say">山地里另有一座夸父之山，山北有林：<span class="q">其北有林焉，名曰桃林，是广员三百里，其中多马。</span>杖化邓林的神话，被地理坐实在一片桃林里。</div>
+        </div>
+        <div class="peak">
+          <span class="p-no">异闻之三</span>
+          <div class="p-name">形天</div>
+          <div class="p-loc">海外西经</div>
+          <div class="p-quote"><span class="q">形天与帝至此争神，帝断其首，葬之常羊之山。乃以乳为目，以脐为口，操干戚以舞。</span></div>
+          <div class="p-say">通行本作「刑天」。陶渊明读到的「刑天舞干戚，猛志固常在」，出处就是这条登记。</div>
+        </div>
+        <div class="peak">
+          <span class="p-no">异闻之四</span>
+          <div class="p-name">烛阴</div>
+          <div class="p-loc">海外北经 · 钟山</div>
+          <div class="p-quote"><span class="q">钟山之神，名曰烛阴，视为昼，瞑为夜，吹为冬，呼为夏，不饮，不食，不息，息为风。身长千里。</span></div>
+          <div class="p-say">大荒北经又登记一次：「是烛九阴，是烛龙。」睁眼是白天，闭眼是黑夜，一部账本里的昼夜开关。</div>
+        </div>
+        <div class="peak">
+          <span class="p-no">异闻之五</span>
+          <div class="p-name">西王母</div>
+          <div class="p-loc">西山经玉山 · 大荒西经昆仑之丘</div>
+          <div class="p-quote"><span class="q">西王母其状如人，豹尾虎齿而善啸，蓬发戴胜，是司天之厉及五残。</span><br><span class="q">有人戴胜，虎齿，有豹尾，穴处，名曰西王母。此山万物尽有。</span></div>
+          <div class="p-say">两处登记，同一个形象：豹尾虎齿，蓬发戴胜，掌管天灾瘟疫。后来《穆天子传》里那位在瑶池宴上唱和的西王母，账本里的这位还住在洞穴里。</div>
+        </div>
+      </div>
+      <div class="warband">
+        <h3>附 · 冀州之野战报</h3>
+        <div class="war-duo">
+          <div><span class="wq"><span class="q">应龙处南极，杀蚩尤与夸父，不得复上，故下数旱。旱而为应龙之状，乃得大雨。</span><span class="ws">大荒东经</span></span></div>
+          <div><span class="wq"><span class="q">黄帝乃下天女曰魃，雨止，遂杀蚩尤。魃不得复上，所居不雨。</span><span class="ws">大荒北经</span></span></div>
+        </div>
+        <p class="prose" style="margin:20px 0 0">黄帝打蚩尤，动用了两位神兽，战后两位都无法回天：应龙一走，地上闹旱，人学它的样子求雨；女魃所居不雨，被赶到赤水之北，农夫驱逐旱魃时喊的口令是「神北行」。旱灾的账，从这场战争记起。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="flood">
+    <div class="wrap">
+      <div class="f-kick">全书最后一段 · 海内经</div>
+      <div class="f-quote"><span class="q">洪水滔天。鲧窃帝之息壤以堙洪水，不待帝命。帝命祝融杀鲧于羽郊。鲧复生禹。</span><span class="big">帝乃命禹卒布土以定九州。</span></div>
+      <p class="f-say">账本绕了一整圈，在最后一句交回出发点：鲧偷了息壤被杀，儿子禹接手，铺土定九州。开卷那场六万四千零五十六里的普查，原来是为了治水交出来的验收单。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="jiaoji">
+        <h3>校记</h3>
+        <ul>
+          <li><b>底本</b>　殆知阁简体库史藏志存记录《山海经》白文本，十八篇齐全，无注文。</li>
+          <li><b>拆字替代</b>　库本简体转换产生拆字替代，如「狌狌」作「犭生々」、「其鸣自詨」作「其鸣自讠交」、南山经基山兽名作「犭讠也」、北山经九尾虎爪兽名作「{龙虫}侄」。此类句子引文避开；涉及者以校记申报。</li>
+          <li><b>形天</b>　海外西经库本作「形天与帝至此争神」，通行本多作「刑天」，页面正文从库本并加按语。</li>
+          <li><b>五臧</b>　中山经末禹曰「言其五臧」，臧即藏字，指五藏山经。</li>
+          <li><b>东山经总叙</b>　库本东山经末脱「凡几山几里」总叙行，结算单中东山经一行系四段分账相加（四十六山、一万八千八百六十里），非库本原文。</li>
+          <li><b>南山经讹字</b>　库本首经结算行「丸十山」，当作「四十山」，页面取总叙行「凡四十山」原数。</li>
+          <li><b>缺字符</b>　库本「姑囗之山」「化为囗草」之「囗」为缺字，通行本作姑媱之山、䔄草，页面从通行说并申报。</li>
+          <li><b>计数口径</b>　计程句三百步、「食之六十二」等功能条数、「见则五十二」条及灾异分类，均为机器计数，口径见 verify_shanhaijing.py。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <b>文本来源</b>　殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）史藏志存记录《山海经》，引文经逐字核验（去标点归一后与库本比对）。<br>
+    <b>时代局限</b>　书中占验、服食、媚药等内容反映上古至秦汉的观念，非今日知识，阅读当知其限。
+  </div>
+</footer>
+
+</body>
+</html>
