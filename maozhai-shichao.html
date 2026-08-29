@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>殆知阁导读 之五十 · 懋斋诗钞</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #26251f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --blue: #5e8fbb; --blue-dim: rgba(94,143,187,0.5); --blue-faint: rgba(94,143,187,0.16);
+    --seal: #c0453c;
+    --hairline: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 26px; }
+  em { font-style: normal; color: var(--blue); }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .q { color: inherit; }
+
+  /* ============ 开门：隔院闻声 ============ */
+  .gate {
+    min-height: 100vh; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 64px 22px 80px;
+  }
+  .gate::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(232,228,220,0.014) 3px 4px),
+      radial-gradient(ellipse 66% 42% at 72% 30%, var(--blue-faint), transparent 70%);
+  }
+  .gate-inner { position: relative; width: 100%; max-width: 760px; }
+  .scene { position: relative; height: 380px; margin-bottom: 46px; }
+  .wall {
+    position: absolute; left: 0; right: 0; top: 55%; height: 10px;
+    background: linear-gradient(90deg, rgba(232,228,220,0.85), rgba(232,228,220,0.45));
+  }
+  .wall::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 16px; height: 30px;
+    background: repeating-linear-gradient(90deg, rgba(232,228,220,0.16) 0 26px, transparent 26px 30px);
+    opacity: 0.7;
+  }
+  .court-l, .court-r { position: absolute; top: 8%; writing-mode: vertical-rl; letter-spacing: 8px; }
+  .court-l { left: 6%; color: var(--paper-dim); font-size: 15px; }
+  .court-r { right: 6%; color: var(--blue); font-size: 15px; }
+  .moon {
+    position: absolute; right: 20%; top: 6%; width: 44px; height: 44px; border-radius: 50%;
+    background: radial-gradient(circle at 38% 34%, rgba(94,143,187,0.85), rgba(94,143,187,0.25) 68%, transparent 72%);
+    filter: blur(0.4px);
+  }
+  .arcs { position: absolute; left: 22%; right: 30%; top: 16%; height: 34%; }
+  .arc {
+    position: absolute; left: 0; right: 0; border: 1.5px dashed var(--blue);
+    border-bottom: none; border-radius: 100% 100% 0 0 / 190% 190% 0 0; opacity: 0.85;
+  }
+  .arc.a1 { top: 0; height: 100%; opacity: 0.9; }
+  .arc.a2 { top: 18%; height: 72%; opacity: 0.55; }
+  .arc.a3 { top: 36%; height: 46%; opacity: 0.3; }
+  .gantan {
+    position: absolute; right: 8%; top: 20%; writing-mode: vertical-rl; color: var(--paper);
+    font-size: 21px; letter-spacing: 6px;
+  }
+  .gantan small { font-size: 13px; color: var(--paper-dim); letter-spacing: 4px; margin-top: 18px; }
+  .jiujiufang {
+    position: absolute; left: 5%; top: 60%; writing-mode: vertical-rl;
+    color: var(--paper-dim); font-size: 13px; letter-spacing: 5px;
+  }
+  .gate-title { position: absolute; right: 0; top: -34px; writing-mode: vertical-rl; }
+  .gate-title h1 {
+    writing-mode: vertical-rl; font-size: 40px; font-weight: 600; letter-spacing: 14px; color: var(--paper);
+  }
+  .gate-title .vol {
+    display: block; writing-mode: vertical-rl; font-size: 13px; letter-spacing: 6px;
+    color: var(--blue); margin-right: 16px; margin-top: 4px;
+  }
+  .gate-title .no {
+    display: block; writing-mode: vertical-rl; font-size: 12px; letter-spacing: 5px;
+    color: var(--paper-faint); margin-right: 12px;
+  }
+  .gate-lines { max-width: 560px; }
+  .gate-lines .lede { font-size: 18px; color: var(--paper); }
+  .gate-lines .lede .q { color: var(--blue); }
+  .gate-lines p.sub { font-size: 14px; color: var(--paper-dim); margin-top: 12px; }
+  .gate-foot {
+    position: absolute; bottom: 26px; left: 0; right: 0; text-align: center;
+    font-size: 12px; letter-spacing: 4px; color: var(--paper-faint);
+  }
+
+  /* ============ 通用节 ============ */
+  section { position: relative; padding: 76px 0 30px; }
+  .sec-tag {
+    display: flex; align-items: baseline; gap: 14px; margin-bottom: 8px;
+  }
+  .sec-tag .no {
+    font-size: 13px; color: var(--blue); letter-spacing: 2px;
+    border: 1px solid var(--blue-dim); padding: 2px 10px; border-radius: 2px;
+  }
+  .sec-tag h2 { font-size: 26px; font-weight: 600; letter-spacing: 6px; }
+  .sec-sub { font-size: 13.5px; color: var(--paper-faint); margin-bottom: 30px; letter-spacing: 1px; }
+
+  /* ============ 一、书缘三笺 ============ */
+  .letters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .letter {
+    background: var(--ink-2); border: 1px solid var(--hairline); border-radius: 3px;
+    padding: 22px 20px 18px; position: relative;
+  }
+  .letter::before {
+    content: ""; position: absolute; top: -7px; left: 50%; margin-left: -6px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--blue); opacity: 0.75; box-shadow: 0 0 10px rgba(94,143,187,0.5);
+  }
+  .letter .yr {
+    font-size: 12px; color: var(--blue); letter-spacing: 3px; margin-bottom: 8px;
+  }
+  .letter h3 { font-size: 16.5px; font-weight: 600; margin-bottom: 10px; letter-spacing: 1px; }
+  .letter p { font-size: 13.5px; color: var(--paper-dim); }
+  .letters-note { margin-top: 22px; font-size: 13.5px; color: var(--paper-dim); }
+  .letters-note .q { color: var(--paper); }
+
+  /* ============ 二、诗人 ============ */
+  .poet { display: grid; grid-template-columns: 300px 1fr; gap: 34px; align-items: start; }
+  .yupai {
+    background: var(--ink-2); border: 1px solid var(--hairline); border-radius: 3px;
+    padding: 26px 24px; position: relative;
+  }
+  .yupai::before {
+    content: "懋齋"; position: absolute; top: 14px; right: 14px;
+    font-size: 12px; color: var(--seal); border: 1.5px solid rgba(192,69,60,0.7);
+    padding: 3px 7px; border-radius: 2px; letter-spacing: 3px; opacity: 0.85;
+  }
+  .yupai .nm { font-size: 30px; font-weight: 600; letter-spacing: 10px; margin-bottom: 2px; }
+  .yupai .zi { font-size: 13px; color: var(--paper-dim); margin-bottom: 16px; letter-spacing: 2px; }
+  .yupai dl { display: grid; grid-template-columns: 64px 1fr; row-gap: 7px; font-size: 13.5px; }
+  .yupai dt { color: var(--paper-faint); }
+  .yupai dd { color: var(--paper-dim); }
+  .blood {
+    margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--hairline);
+    font-size: 12.5px; color: var(--paper-faint); line-height: 2;
+  }
+  .blood b { color: var(--paper-dim); font-weight: 600; }
+  .poet-r p { font-size: 14.5px; color: var(--paper-dim); margin-bottom: 14px; }
+  .poet-r p .q { color: var(--paper); }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .chip {
+    border: 1px solid var(--blue-dim); color: var(--blue); font-size: 12.5px;
+    padding: 4px 12px; border-radius: 20px; letter-spacing: 1px;
+  }
+  .chip b { font-size: 15px; font-weight: 600; }
+
+  /* ============ 三、六见雪芹：乌丝栏诗笺 ============ */
+  .bamboo-intro { font-size: 14.5px; color: var(--paper-dim); margin-bottom: 30px; max-width: 700px; }
+  .slips { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .slip {
+    background: var(--paper); color: var(--ink-3); border-radius: 2px;
+    padding: 24px 24px 20px; position: relative;
+    box-shadow: 0 8px 26px rgba(0,0,0,0.42);
+    background-image: repeating-linear-gradient(90deg, transparent 0 27px, rgba(25,25,23,0.09) 27px 28px);
+  }
+  .slip:nth-child(odd) { transform: rotate(-0.35deg); }
+  .slip:nth-child(even) { transform: rotate(0.3deg); margin-top: 22px; }
+  .slip .stamp {
+    position: absolute; top: 16px; right: 16px; font-size: 12.5px; letter-spacing: 2px;
+    color: #fff; background: var(--blue); padding: 3px 8px; border-radius: 2px;
+  }
+  .slip:nth-child(6) .stamp { background: var(--seal); }
+  .slip .sc { font-size: 14px; font-weight: 600; letter-spacing: 2px; color: var(--ink); margin-bottom: 4px; }
+  .slip .ti { font-size: 12px; color: var(--ink-3); opacity: 0.62; margin-bottom: 12px; line-height: 1.7; }
+  .slip .verse { font-size: 15.5px; line-height: 2.1; letter-spacing: 0.5px; }
+  .slip .note { margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(25,25,23,0.25); font-size: 12.5px; color: #4c483f; }
+  .slip.wide { grid-column: 1 / -1; transform: none; margin-top: 0; }
+  .slip.wide .verse { font-size: 15px; max-width: 640px; }
+
+  /* ============ 四、珠串与干支尺 ============ */
+  .beads { margin: 34px 0 8px; position: relative; padding: 10px 6px 0; }
+  .beads-row { display: flex; justify-content: space-between; position: relative; }
+  .beads-row::before {
+    content: ""; position: absolute; left: 4%; right: 4%; top: 11px; height: 0;
+    border-top: 1.5px dotted var(--blue-dim);
+  }
+  .bead { position: relative; text-align: center; width: 15%; }
+  .bead .dot {
+    width: 15px; height: 15px; border-radius: 50%; margin: 4px auto 8px;
+    background: var(--blue); box-shadow: 0 0 0 4px var(--blue-faint);
+  }
+  .bead.b5 .dot { background: var(--paper); box-shadow: 0 0 0 4px rgba(232,228,220,0.14); }
+  .bead.b6 .dot { background: var(--seal); box-shadow: 0 0 0 4px rgba(192,69,60,0.2); }
+  .bead .bn { font-size: 12.5px; color: var(--blue); letter-spacing: 2px; }
+  .bead .bt { font-size: 12px; color: var(--paper-faint); margin-top: 3px; line-height: 1.6; }
+  .ruler { margin-top: 52px; position: relative; height: 128px; }
+  .ruler-line { position: absolute; left: 0; right: 0; top: 34px; height: 2px; background: rgba(232,228,220,0.3); }
+  .ruler-gap {
+    position: absolute; top: 26px; height: 18px;
+    background: repeating-linear-gradient(135deg, rgba(192,69,60,0.4) 0 5px, transparent 5px 11px);
+    border-left: 1.5px solid var(--seal); border-right: 1.5px solid var(--seal);
+  }
+  .tick { position: absolute; top: 26px; width: 2px; height: 18px; background: rgba(232,228,220,0.4); }
+  .tick .ty { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--paper-faint); letter-spacing: 1px; white-space: nowrap; }
+  .tick .tg { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); font-size: 12px; white-space: nowrap; letter-spacing: 1px; }
+  .tick.ganzhi .tg { color: var(--paper-dim); }
+  .tick.marked .tick-flag {
+    position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+    width: 11px; height: 11px; border-radius: 50%; background: var(--blue);
+  }
+  .ruler-cap {
+    position: absolute; top: 62px; font-size: 12.5px; color: var(--paper-faint);
+    text-align: center; letter-spacing: 1px;
+  }
+
+  /* ============ 五、悬案对卡 ============ */
+  .case { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .card {
+    background: var(--ink-2); border: 1px solid var(--hairline); border-radius: 3px;
+    padding: 24px 22px 20px; position: relative;
+  }
+  .card .cseal {
+    position: absolute; top: -13px; left: 20px; font-size: 14px; letter-spacing: 3px;
+    padding: 4px 12px; border-radius: 2px; color: #fff;
+  }
+  .card.wu .cseal { background: var(--seal); }
+  .card.gui .cseal { background: var(--blue); }
+  .card h3 { font-size: 17px; font-weight: 600; letter-spacing: 2px; margin: 8px 0 12px; }
+  .card .lbl { font-size: 12px; letter-spacing: 3px; margin: 12px 0 5px; }
+  .card.wu .lbl { color: var(--seal); }
+  .card.gui .lbl { color: var(--blue); }
+  .card p, .card li { font-size: 13.5px; color: var(--paper-dim); }
+  .card .zhipi {
+    margin-top: 10px; border-left: 2px solid rgba(192,69,60,0.55); padding-left: 12px;
+    font-size: 14px; color: var(--paper); line-height: 2;
+  }
+  .card .zhipi .src { display: block; font-size: 11.5px; color: var(--paper-faint); margin-top: 6px; letter-spacing: 1px; }
+  .card ul { list-style: none; }
+  .card li { padding-left: 16px; position: relative; margin-bottom: 6px; }
+  .card li::before { content: ""; position: absolute; left: 0; top: 11px; width: 6px; height: 6px; border-radius: 50%; }
+  .card.wu li::before { background: rgba(192,69,60,0.6); }
+  .card.gui li::before { background: rgba(94,143,187,0.6); }
+  .card .q { color: var(--paper); }
+  .case-note {
+    margin-top: 22px; font-size: 13.5px; color: var(--paper-dim);
+    border-top: 1px dashed var(--hairline); padding-top: 16px;
+  }
+  .case-note .q { color: var(--paper); }
+
+  /* ============ 六、校记 ============ */
+  .jiaji { counter-reset: jj; }
+  .jiaji li {
+    list-style: none; counter-increment: jj; position: relative;
+    padding: 14px 0 14px 46px; border-bottom: 1px solid var(--hairline);
+    font-size: 14px; color: var(--paper-dim);
+  }
+  .jiaji li::before {
+    content: counter(jj, cjk-ideographic); position: absolute; left: 0; top: 16px;
+    width: 28px; height: 28px; border: 1px solid var(--blue-dim); border-radius: 50%;
+    color: var(--blue); font-size: 13px; display: flex; align-items: center; justify-content: center;
+  }
+  .jiaji li .q { color: var(--paper); font-size: 13.5px; }
+  .jiaji li b { color: var(--paper); font-weight: 600; }
+
+  footer.page {
+    margin-top: 60px; border-top: 1px solid var(--hairline);
+    padding: 30px 0 44px; font-size: 12.5px; color: var(--paper-faint);
+    line-height: 2.1;
+  }
+  footer.page a { color: var(--paper-dim); }
+
+  @media (max-width: 760px) {
+    .letters, .slips, .case, .poet { grid-template-columns: 1fr; }
+    .slip:nth-child(even) { margin-top: 0; }
+    .scene { height: 320px; }
+    .gate-title h1 { font-size: 30px; letter-spacing: 9px; }
+    .beads-row { flex-wrap: wrap; gap: 18px 0; }
+    .bead { width: 33%; }
+    .ruler { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 开门 ============ -->
+<div class="gate">
+  <div class="gate-inner">
+    <div class="scene">
+      <div class="moon"></div>
+      <div class="gate-title">
+        <span class="no">之五十</span>
+        <span class="vol">卷二十七 诗证</span>
+        <h1>懋斋诗钞</h1>
+      </div>
+      <div class="court-r">养石轩</div>
+      <div class="court-l">隔　院</div>
+      <div class="arcs">
+        <div class="arc a1"></div>
+        <div class="arc a2"></div>
+        <div class="arc a3"></div>
+      </div>
+      <div class="gantan">高谈声<small>隔墙而来</small></div>
+      <div class="wall"></div>
+      <div class="jiujiufang">急就相访</div>
+    </div>
+    <div class="gate-lines">
+      <p class="lede">乾隆某年，敦敏路过明琳的养石轩，隔着院子听见一桌高谈。<span class="q">疑是曹君</span>，他冲过墙门去，果然是那个一别年余的人。</p>
+      <p class="sub">这一嗓子被写进诗题，和另外五首诗一起，成了《红楼梦》作者留在世上的大部分行踪。本篇读敦敏《懋斋诗钞》。</p>
+    </div>
+  </div>
+  <div class="gate-foot">殆知阁导读 之五十 · 诗证</div>
+</div>
+
+<!-- ============ 一、书缘三笺 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-tag"><span class="no">一</span><h2>一索即得</h2></div>
+    <p class="sec-sub">这部诗钞在一九四七年之前，是胡适遍寻多年而不得的书。</p>
+    <div class="letters">
+      <div class="letter">
+        <div class="yr">一九四七年 春</div>
+        <h3>兄长来信</h3>
+        <p>周汝昌在燕京大学读书。四兄周祜昌来信提醒：考证曹雪芹，该去找他朋友敦敏的《懋斋诗钞》。此书传世极稀，一般目录里只存其名。</p>
+      </div>
+      <div class="letter">
+        <div class="yr">数日后</div>
+        <h3>燕大书库</h3>
+        <p>周汝昌抱着试试看的心情去燕京大学图书馆查卡片，竟一索即得，稿本就在架上。一部学界苦寻多年的秘籍，离曹雪芹最近的证词，就这样从书库里走了出来。</p>
+      </div>
+      <div class="letter">
+        <div class="yr">一九四七年 十二月</div>
+        <h3>报纸与回信</h3>
+        <p>十二月五日，周汝昌据书中六首涉曹诗考其卒年的文章刊于天津《民国日报》；两日后胡适回信，盛赞此发现。一场绵延数十年的曹雪芹卒年之争，就从这六首诗里烧起来。</p>
+      </div>
+    </div>
+    <p class="letters-note">书里涉曹的诗与周汝昌当年所数正相合：本库文件连标点一万六千五百八十五字，其中涉曹雪芹的诗六首，散布全书，后文一一见之。</p>
+  </div>
+</section>
+
+<!-- ============ 二、诗人 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-tag"><span class="no">二</span><h2>写诗的人</h2></div>
+    <p class="sec-sub">他自己家的事，比曹雪芹的更跌宕。</p>
+    <div class="poet">
+      <div class="yupai">
+        <div class="nm">敦敏</div>
+        <div class="zi">字子明，号懋斋，一七二八年生，约卒于一七九六年之后</div>
+        <dl>
+          <dt>族属</dt><dd>清宗室，太祖第十二子英亲王阿济格的五世孙</dd>
+          <dt>父</dt><dd>理事官瑚玐</dd>
+          <dt>弟</dt><dd>敦诚，字敬亭，号松堂，兄弟俱有诗名</dd>
+          <dt>宦迹</dt><dd>官宗学总管，一生近于闲置</dd>
+        </dl>
+        <div class="blood"><b>家世的底色：</b>阿济格当年争位失败，被赐死，王家从此带罪。宗室旁支的名分还在，实权与恩宠早已清零。敦敏兄弟的交游、饮酒、写诗，都发生在这片废墟般的余荫里。</div>
+      </div>
+      <div class="poet-r">
+        <p>诗集开卷是一篇自序，第一句便是<span class="q">自山海归，谢客闭门，唯时时来往东皋间</span>：从山海关差事归来，闭门谢客，常常一个人往东皋去，<span class="q">渔罾钓渚，时绘目前</span>，把小船撑进芦花深处，见着酒帘就高兴。后来检点数年旧稿，<span class="q">大约烟波渔艇之作居多</span>，索性以「东皋」名集，故此卷又名《东皋集》。</p>
+        <p>翻开正文才知道，这个钓鱼的老翁并不清闲：卷子里记弟兄、记朋友、记吊亡、记典当衣服换酒喝。他在诗题里数落自己<span class="q">典裘为春服</span>的账，也在清明夜里写<span class="q">凭吊应怜诗客杳，王园园畔问东皋</span>。而全集里被后人翻检最多的，是那个姓曹的朋友。</p>
+        <div class="chips">
+          <span class="chip">全集 <b>16585</b> 字</span>
+          <span class="chip">涉曹诗 <b>6</b> 首</span>
+          <span class="chip">「敬亭」<b>60</b> 见</span>
+          <span class="chip">「贻谋」<b>16</b> 见</span>
+          <span class="chip">「雪芹」<b>3</b> 见</span>
+          <span class="chip">「芹圃」<b>3</b> 见</span>
+        </div>
+        <p style="margin-top:18px; font-size:13px; color:var(--paper-faint);">计数说明：机器统计本库全文，敬亭（敦诚）是全集出场最密的人，贻谋次之。曹雪芹一共只被叫过两个称呼：芹圃、雪芹。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 三、六见雪芹 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-tag"><span class="no">三</span><h2>六见雪芹</h2></div>
+    <p class="sec-sub">按库本前后次序排列，六张诗笺，六次照面。除此之外，曹雪芹在这个世上几乎没有别的第一手痕迹。</p>
+    <div class="slips">
+      <div class="slip wide">
+        <span class="stamp">初见</span>
+        <div class="sc">隔院的一声</div>
+        <div class="ti q">芹圃曹君（沾）别来已一载余矣偶过明君（琳）养石轩隔院闻高谈声疑是曹君急就相访惊喜意外因呼酒话旧事感成长句</div>
+        <div class="verse q">可知野鹤在鸡群，隔院惊呼意倍殷。雅识我惭褚太傅，高谈君是孟叅军。秦淮旧梦人犹在，燕市悲歌酒易醺。忽漫相逢频把袂，年来聚散感浮云。</div>
+        <div class="note">诗题是一段小日记：一别年余，隔院闻声，疑是曹君，冲过去果然是。他把这次重逢写足了八句。「秦淮旧梦」四字，后人读作曹雪芹对江南旧家的记忆。</div>
+      </div>
+      <div class="slip">
+        <span class="stamp">二见</span>
+        <div class="sc">看他画石头</div>
+        <div class="ti">题芹圃画石</div>
+        <div class="verse q">傲骨如君世已竒，嶙峋更见此支离。醉余奋扫如椽茟，写出胸中磈礧时。</div>
+        <div class="note">芹圃会画。这幅画的对象偏偏是石头，画的是嶙峋支离的一块，醉后一挥而就。后人读这句「写出胸中磈礧」，总想起那块不肯补天的石头。</div>
+      </div>
+      <div class="slip">
+        <span class="stamp">三见</span>
+        <div class="sc">赠诗</div>
+        <div class="ti">赠芹圃</div>
+        <div class="verse q">碧水青山曲径遐，薜萝门巷足烟霞，寻诗人去留僧舍，卖画钱来付酒家。燕市哭歌悲遇合，秦淮风月忆繁华。新愁旧恨知多少，一醉酕醄白眼斜。</div>
+        <div class="note">曹雪芹晚年的活法全在这里：寻诗、卖画、酤酒，住薜萝门巷。「卖画钱来付酒家」是全集里最常被引用的他的生计记录。</div>
+      </div>
+      <div class="slip">
+        <span class="stamp">四见</span>
+        <div class="sc">白跑一趟</div>
+        <div class="ti">访曹雪芹不值</div>
+        <div class="verse q">野浦冻云深，柴扉晚烟薄。山村不见人，夕阳寒欲落。</div>
+        <div class="note">只有二十个字。冻云、柴扉、空山、落日，人没见到。这是全集里天气最冷的一首，也把曹雪芹晚年住处的样子留了下来：西郊山村，柴门。</div>
+      </div>
+      <div class="slip">
+        <span class="stamp">五见</span>
+        <div class="sc">一张请柬</div>
+        <div class="ti">小诗代简寄曹雪芹</div>
+        <div class="verse q">东风吹杏雨，又早落花辰。好枉故人驾，来看小院春。诗才忆曹植，酒盏愧陈遵。上已前三日，相劳醉碧茵。</div>
+        <div class="note">以诗代信，约他上巳前三日来家里喝酒赏春。这一张请柬落在一个麻烦的位置上：它前头第三首诗题下注着「癸未」二字。若请柬确写于癸未春，则曹雪芹其时还活着。卒年公案由此而起，见下节。</div>
+      </div>
+      <div class="slip wide">
+        <span class="stamp">末见</span>
+        <div class="sc">河干吊故人</div>
+        <div class="ti">河干集饮题壁兼吊雪芹</div>
+        <div class="verse q">花明両岸桞霏微，到眼风光春欲归。逝水不留诗客杳，登楼空忆酒徒非。河干万木飘残雪，村落千家带逺晖。凭吊无端频怅望，寒林萧寺暮鸦飞。</div>
+        <div class="note">一个「吊」字，故人已不在。集子里再没有第六次见面。春天照旧来了，河边的酒楼照旧开着，只是座中少了一人。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 四、珠串与干支尺 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-tag"><span class="no">四</span><h2>一串没有年份的珠子</h2></div>
+    <p class="sec-sub">六首诗在卷子里像珠子一样串着，可多数珠子上没有刻年份。</p>
+    <div class="beads">
+      <div class="beads-row">
+        <div class="bead b1"><div class="dot"></div><div class="bn">初见</div><div class="bt">隔院闻声<br>无纪年</div></div>
+        <div class="bead b2"><div class="dot"></div><div class="bn">二见</div><div class="bt">题画石<br>无纪年</div></div>
+        <div class="bead b3"><div class="dot"></div><div class="bn">三见</div><div class="bt">赠芹圃<br>无纪年</div></div>
+        <div class="bead b4"><div class="dot"></div><div class="bn">四见</div><div class="bt">访不值<br>无纪年</div></div>
+        <div class="bead b5"><div class="dot"></div><div class="bn">五见</div><div class="bt">寄请柬<br>癸未标记后第三首</div></div>
+        <div class="bead b6"><div class="dot"></div><div class="bn">末见</div><div class="bt">河干吊<br>无纪年</div></div>
+      </div>
+    </div>
+    <div class="ruler">
+      <div class="ruler-line"></div>
+      <div class="tick ganzhi" style="left:2%"><span class="tick-flag"></span><span class="tg">丙子 一七五六</span><span class="ty">诗题追记</span></div>
+      <div class="tick ganzhi marked" style="left:16%"><span class="tick-flag"></span><span class="tg">丁丑 一七五七</span><span class="ty">榆关之行四见</span></div>
+      <div class="tick marked" style="left:34%"><span class="tick-flag"></span><span class="tg">己夘 一七五九</span><span class="ty">题注「已下己夘」</span></div>
+      <div class="ruler-gap" style="left:40%; right:33%"></div>
+      <div class="tick marked" style="left:70%"><span class="tick-flag"></span><span class="tg">癸未 一七六三</span><span class="ty">题注「癸未」</span></div>
+      <div class="tick" style="left:88%"><span class="tg">甲申 一七六四</span><span class="ty">卷内无标记</span></div>
+      <div class="ruler-cap" style="left:37%; width:28%">此间四年，卷内无一条纪年</div>
+    </div>
+    <p class="sec-sub" style="margin-top:26px; max-width:720px;">卷子里的纪年散落在诗题与诗注里：<span class="q">丁丑榆闗除夕</span>、<span class="q">秋夜偶思丁丑岁客居锦州天桥厂</span>追记的正是序里那趟关外差事；母亲之卒也有注，<span class="q">先慈自丁丑见弃迄今七载</span>；<span class="q">清明东郊（已下己夘）</span>是第一处正式标记；到<span class="q">古刹小憇（癸未）</span>才有第二处。中间庚辰、辛巳、壬午整整四年，一条纪年也没有。编年既断，诗的先后就成了可以各说各话的悬案。</p>
+  </div>
+</section>
+
+<!-- ============ 五、悬案 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-tag"><span class="no">五</span><h2>他死在哪一年的年底</h2></div>
+    <p class="sec-sub">一部诗集的一处编排，牵出红学史上最著名的卒年之争。</p>
+    <div class="case">
+      <div class="card wu">
+        <span class="cseal">壬午说</span>
+        <h3>一七六三年初，脂砚斋的批语</h3>
+        <div class="zhipi">「壬午除夕，书未成，芹为泪尽而逝。」<span class="src">甲戌本《石头记》眉批，转引自中国作家网刊文。库外文献，此处仅短引。</span></div>
+        <div class="lbl">证　据</div>
+        <ul>
+          <li>这是唯一直接写下曹雪芹卒年的文字，胡适最早据此定为壬午除夕。</li>
+          <li>批者脂砚斋与曹家关系极深，落笔之处最接近当事人。</li>
+        </ul>
+        <div class="lbl">软　肋</div>
+        <ul>
+          <li>干支由记忆落笔，有误记一年的可能，批语本身无从复核。</li>
+        </ul>
+      </div>
+      <div class="card gui">
+        <span class="cseal">癸未说</span>
+        <h3>一七六三年春，请柬还发得出去</h3>
+        <div class="lbl">证　据</div>
+        <ul>
+          <li>本库实测：<span class="q">古刹小憇（癸未）</span>标记后，第三首即是请柬<span class="q">小诗代简寄曹雪芹</span>，按诗钞编次当在癸未春。</li>
+          <li>若癸未春人尚在席间，则「壬午除夕」已过，脂批干支必有误记。周汝昌一九四七年据此发「癸未说」，胡适后来也转向此说。</li>
+        </ul>
+        <div class="lbl">软　肋</div>
+        <ul>
+          <li>全部推论系于抄本编次可靠。而恰恰己夘至癸未之间四年无纪年，请柬完全可能写于更早的年份，被后来抄到了这里。</li>
+          <li>敦诚《挽曹雪芹》作于甲申年（见其《四松堂集》，转述），三说各有退路。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="case-note">一九六二年筹备曹雪芹逝世二百周年纪念，因为卒年差着一年，纪念该在哪一年办都成了问题，引出一场几乎全体考证派到场的论战。 直到今天，三说并存：壬午有直接文献，癸未有编次推论，甲申有挽诗旁证。争的实质不是一年，是一部抄本能被信托到什么程度。</div>
+  </div>
+</section>
+
+<!-- ============ 六、校记 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-tag"><span class="no">六</span><h2>库本校记</h2></div>
+    <p class="sec-sub">以下诸条均为库内文件原样，引文照录，读时当作提醒。</p>
+    <ul class="jiaji">
+      <li><b>诗题夹小注。</b>人名用本名加小字注出，如<span class="q">芹圃曹君（沾）</span>、<span class="q">明君（琳）</span>；<span class="q">谒三忠祠（诸葛武矦　岳武穆　文信国）</span>题下并注三位，「矦」即「侯」的俗写。</li>
+      <li><b>俗字连篇。</b>「呌」即叫，「搃」即总，「竒」即奇，「茟」即笔，「乆」即久，「淂」即得，「逺」即远，「憇」即憩，「夘」即卯。本篇引文照录原文，不作回改。</li>
+      <li><b>「上已」当作「上巳」。</b>请柬诗<span class="q">上已前三日，相劳醉碧茵</span>，「已」「巳」形近而讹，通行本作上巳。这正是那张惹出卒年公案的请柬。</li>
+      <li><b>抄手之迹。</b>自序「偶检检箧衍」叠一「检」字；赠友诗「秋冷寒毡自著书 。」句读前空一格，再接「喜淂阿戎谈共乆」。此类痕迹一律照录。</li>
+      <li><b>编次非严格编年。</b>序自记<span class="q">癸未夏，长日如年</span>检旧稿编成东皋之集，而卷内〈清明东郊〉题下又注「已下己夘」。同卷之内，标记体例不一，前后年份交错，读此卷宜以诗证诗，不宜以卷定年。</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="page">
+  <div class="wrap">
+    <div>文本来源：殆知阁简体库（<a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>）集藏/四库别集/懋斋诗钞.txt，连标点一万六千五百八十五字。全部引文经脚本与库内文件逐字核验（verify_maozhai.py）；涉脂批与敦诚挽诗两处库外转引，已在文中标明出处。</div>
+    <div>本篇为清人诗钞导读，诗中人物言行、观念均属其时代，读者宜以历史眼光观之。</div>
+    <div style="margin-top:8px;"><a href="mulu.html">返回总目</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
