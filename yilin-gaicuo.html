@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>医林改错 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #232220;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --bamboo: #5f9270; --bamboo-deep: #47775a;
+    --hairline: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 28px; }
+  a { color: var(--bamboo); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  em { font-style: normal; color: var(--bamboo); }
+
+  /* 开场：忏悔先行，书名压轴 */
+  .confess { min-height: 88dvh; display: flex; flex-direction: column; justify-content: center; padding: 64px 0 40px; }
+  .confess .no { font-size: 13px; letter-spacing: 0.4em; color: var(--paper-faint); margin-bottom: 7dvh; }
+  .confess .no b { color: var(--bamboo); font-weight: 400; }
+  .confess h1 { font-size: clamp(26px, 4.1vw, 50px); font-weight: 700; line-height: 1.65; letter-spacing: 0.04em; }
+  .confess h1 .l2 { display: inline-block; margin-left: 2.2em; }
+  .confess h1 em { border-bottom: 2px solid var(--bamboo-deep); padding-bottom: 2px; }
+  .confess .lead { color: var(--bamboo); font-size: clamp(15px, 1.5vw, 19px); letter-spacing: 0.5em; margin-bottom: 26px; }
+  .confess .sign { margin-top: 5dvh; font-size: 14px; color: var(--paper-dim); letter-spacing: 0.14em; }
+  .confess .book {
+    margin-top: 9dvh; padding-top: 26px; border-top: 1px solid var(--hairline);
+    display: flex; align-items: baseline; gap: 22px; flex-wrap: wrap;
+  }
+  .confess .book b { font-size: 30px; letter-spacing: 0.3em; font-weight: 700; }
+  .confess .book span { font-size: 14px; color: var(--paper-dim); }
+
+  section { padding: 66px 0 10px; }
+  .sno { color: var(--bamboo); font-size: 14px; letter-spacing: 0.34em; display: block; margin-bottom: 10px; }
+  h2 { font-size: clamp(24px, 2.8vw, 32px); font-weight: 700; letter-spacing: 0.1em; margin-bottom: 24px; }
+  .prose { max-width: 62ch; color: var(--paper); }
+  .prose p { margin-bottom: 18px; }
+  .prose .dim { color: var(--paper-dim); }
+  .qv { color: var(--paper); border-bottom: 1px dotted var(--bamboo-deep); }
+  .bigq {
+    margin: 34px 0; padding: 6px 0 6px 26px; border-left: 3px solid var(--bamboo);
+    font-size: clamp(18px, 2.2vw, 24px); line-height: 1.9; font-weight: 600; letter-spacing: 0.03em;
+  }
+  .bigq .src, blockquote.q .src { display: block; margin-top: 12px; font-size: 13px; font-weight: 400; color: var(--paper-faint); letter-spacing: 0.12em; }
+  blockquote.q { margin: 30px 0; padding: 6px 0 6px 26px; border-left: 3px solid var(--bamboo-deep); }
+  blockquote.q p { font-size: 17px; color: var(--paper); }
+  .notecard { margin: 26px 0; padding: 18px 22px; background: var(--ink-2); border: 1px solid var(--hairline); font-size: 15px; color: var(--paper-dim); }
+  .notecard b { color: var(--bamboo); font-weight: 600; }
+
+  /* 年表：访验账 */
+  .ledger { margin-top: 30px; border-top: 1px solid var(--hairline); }
+  .row { display: grid; grid-template-columns: 150px 1fr; gap: 24px; padding: 24px 4px; border-bottom: 1px solid var(--hairline); }
+  .row .yr { color: var(--bamboo); font-size: 15px; letter-spacing: 0.08em; line-height: 1.7; }
+  .row .yr small { display: block; color: var(--paper-faint); font-size: 12.5px; }
+  .row .ev { font-size: 15.5px; max-width: 60ch; }
+  .row .ev b { font-size: 17px; letter-spacing: 0.05em; }
+  .row .ev .qv { font-size: 14.5px; }
+
+  /* 膈膜分界线 */
+  .gemo { margin: 70px 0 6px; }
+  .gemo .line { position: relative; height: 1px; background: var(--bamboo); opacity: 0.75; }
+  .gemo .tag {
+    position: absolute; left: 0; top: 0; transform: translateY(-50%);
+    background: var(--ink); padding: 2px 14px 2px 0; color: var(--bamboo);
+    font-size: 15px; letter-spacing: 0.5em; font-weight: 600;
+  }
+  .gemo .cap { padding-top: 14px; font-size: 14px; color: var(--paper-dim); }
+  .gemo .cap .qv { color: var(--paper-dim); }
+
+  /* 看对看错：对账 */
+  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 34px; border: 1px solid var(--hairline); }
+  .duel > div { padding: 26px 26px 30px; }
+  .duel .hit { border-right: 1px solid var(--hairline); }
+  .duel h3 { font-size: 17px; letter-spacing: 0.22em; margin-bottom: 6px; }
+  .duel .hit h3 { color: var(--bamboo); }
+  .duel .miss h3 { color: var(--paper-dim); }
+  .duel .sub { font-size: 13px; color: var(--paper-faint); margin-bottom: 20px; }
+  .duel ul { list-style: none; }
+  .duel li { padding: 14px 0; border-top: 1px solid var(--hairline); }
+  .duel li b { display: block; font-size: 16px; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .duel li .qv { font-size: 14px; color: var(--paper-dim); border-color: var(--paper-faint); display: block; margin-bottom: 6px; }
+  .duel li span { font-size: 13.5px; color: var(--paper-faint); line-height: 1.75; display: block; }
+
+  /* 双症同方 */
+  .twin { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 0 26px; margin-top: 34px; align-items: stretch; }
+  .twin .sep { background: var(--hairline); }
+  .twin article { padding: 4px 2px; }
+  .twin h3 { font-size: 19px; letter-spacing: 0.14em; color: var(--bamboo); margin-bottom: 4px; }
+  .twin .one { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.1em; margin-bottom: 12px; }
+  .twin p { font-size: 15.5px; }
+
+  /* 未病之兆 */
+  .omen { columns: 2; column-gap: 44px; margin-top: 30px; list-style: none; counter-reset: om; }
+  .omen li {
+    counter-increment: om; break-inside: avoid; display: flex; gap: 14px; align-items: baseline;
+    padding: 9px 2px; border-bottom: 1px solid var(--hairline); font-size: 15.5px;
+  }
+  .omen li::before { content: counter(om, decimal-leading-zero); font-size: 12px; color: var(--bamboo); letter-spacing: 0.08em; flex: 0 0 24px; }
+  .omen-tail { margin-top: 22px; font-size: 13.5px; color: var(--paper-faint); }
+
+  /* 收束 */
+  .final { padding-bottom: 30px; }
+  .final .bigq { font-size: clamp(19px, 2.4vw, 26px); }
+  .colophon { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 46px; padding-top: 8px; }
+  .colophon h3 { font-size: 15px; letter-spacing: 0.28em; color: var(--bamboo); margin-bottom: 12px; }
+  .colophon p { font-size: 14px; color: var(--paper-dim); }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 70px; padding: 36px 0 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page p { margin-bottom: 10px; max-width: 74ch; }
+
+  @media (max-width: 760px) {
+    .row { grid-template-columns: 1fr; gap: 6px; }
+    .duel, .twin, .colophon { grid-template-columns: 1fr; }
+    .duel .hit { border-right: none; border-bottom: 1px solid var(--hairline); }
+    .twin .sep { height: 1px; width: 100%; margin: 20px 0; }
+    .omen { columns: 1; }
+    .confess h1 .l2 { margin-left: 1.2em; }
+  }
+</style>
+</head>
+<body>
+
+<header class="confess">
+  <div class="wrap">
+    <p class="no">殆知阁导读之三十三 · 医藏</p>
+    <p class="lead">自恨</p>
+    <h1>著书不明脏腑，岂不是<em>痴人说梦</em>；<span class="l2">治病不明脏腑，何异于<em>盲子夜行</em>。</span></h1>
+    <p class="sign">道光庚寅孟冬　直隶玉田　王清任　书于京邸知一堂</p>
+    <div class="book">
+      <b>医林改错</b>
+      <span>清 王清任 撰　上下两卷　本库实测 30,767 字符</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="s2">
+  <span class="sno">其一</span>
+  <h2>著书良医，无一全人</h2>
+  <div class="prose">
+    <p>王清任，字勋臣，直隶玉田人，1768 年生，武秀才出身，后来在北京行医，铺子叫知一堂。他不是儒医，也没进过太医院，一生最看不下去的，是医书里的人体。</p>
+    <p><span class="qv">「治国良相，世代皆有；著书良医，无一全人。」</span>这是他开卷第一句。理由只有一个：前人画脏腑，没亲眼看过得自画；后人照着错的图立论，病根先错了，笔再好也写不出对的方。所以他立了一条规矩：<span class="qv">「夫业医诊病，当先明脏腑。」</span></p>
+    <p>他给古人挑的错，个个是自相矛盾：说脾主静不宜动，下一句又说脾闻声则动；说肺「下无透窍」，下文又冒出二十四孔行气。最刻薄的一刀留给小肠：<span class="qv">「看小肠化食，水自阑门出一节，真是千古笑谈。」</span>按旧说，尿是从粪里渗出来的，他反问：那尿该是臭的，可人人知道童子小便只咸不臭，牛马鸡鸭皆可反证。</p>
+    <p class="dim">要改错，得先看见真的。可他没有解剖台，没有标本库，大清律也不许他开棺验人。他等的是机会，一等就是四十几年。</p>
+  </div>
+</section>
+
+<section id="s2">
+  <span class="sno" id="s3">其二</span>
+  <h2>四十二年，访一件事</h2>
+  <div class="prose">
+    <p>他自己数过三个版本：一说留心三十年，一说留心四十年，最后定笔写四十二年。可见这事缠了他半辈子。账目如下，年份皆从书中原文。</p>
+  </div>
+  <div class="ledger">
+    <div class="row">
+      <div class="yr">动念之始<small>约乾隆末</small></div>
+      <div class="ev"><b>更正之心起</b>　「虽竭思区画，无如之何。<span class="qv">十年之久，念不少忘。</span>」没有尸体，先念了十年。</div>
+    </div>
+    <div class="row">
+      <div class="yr">嘉庆二年<small>1797　三十岁</small></div>
+      <div class="ev"><b>滦州稻地镇义冢</b>　当年瘟疹痢症流行，<span class="qv">「十死八九」</span>。穷人家以席代棺，<span class="qv">「彼处乡风，更不深埋，意在犬食」</span>，义冢里<span class="qv">「破腹露脏之儿，日有百余」</span>。他每天骑马路过，起初掩鼻，后来想通：<span class="qv">「古人所以错论脏腑，皆由未尝亲见。」</span>于是每天清晨去看，狗食之余，<span class="qv">「十人之内，看全不过三人。连视十日，大约看全不下三十余人」</span>，始知医书所绘脏腑，与真人全不相合。</div>
+    </div>
+    <div class="row">
+      <div class="yr">嘉庆四年<small>1799　奉天府</small></div>
+      <div class="ev"><b>刑场初见</b>　辽阳州疯妇杀死夫与翁，判剐。他跟到西关，行刑者提心与肝肺从面前过，细看与坟场所见相同。</div>
+    </div>
+    <div class="row">
+      <div class="yr">嘉庆二十五年<small>1820　京师</small></div>
+      <div class="ev"><b>崇文门外再上刑场</b>　剐犯之刑，他这回近得前，可惜脏腑已破，<span class="qv">「膈膜已破，仍未得见」</span>。他要找的正是这一片膜。</div>
+    </div>
+    <div class="row">
+      <div class="yr">道光八年<small>1828</small></div>
+      <div class="ev"><b>张格尔伏法</b>　大逆重犯剐于市，围观如堵，他挤不进去，<span class="qv">「自思一箦未成，不能终止」</span>。</div>
+    </div>
+    <div class="row">
+      <div class="yr">道光九年腊月<small>1829　安定门</small></div>
+      <div class="ev"><b>一夜问膜</b>　板厂胡同恒宅夜诊，闲谈又提膈膜。座中有江宁布政司恒敬公，曾镇守哈密、领兵喀什噶尔，诛戮逆尸见得最多，<span class="qv">「于膈膜一事，知之最悉」</span>。王清任「闻言喜出望外，即拜叩而问之」，恒公鉴其苦衷，细细说明形状。找了三十二年没看清的一片膜，最后是问出来的。</div>
+    </div>
+    <div class="row">
+      <div class="yr">道光庚寅<small>1830　京邸知一堂</small></div>
+      <div class="ev"><b>刻成此书</b>　<span class="qv">「余将亲见诸脏腑显隐之形，绘于其后。计四十二件。」</span>次年，王清任病逝。</div>
+    </div>
+  </div>
+</section>
+
+<div class="gemo" id="s4">
+  <div class="line"><span class="tag">膈膜</span></div>
+  <p class="cap">他把这一片膜当做人身上下的分界：<span class="qv">「惟胸中隔膜一片，其薄如纸，最关紧要。」</span>这一页也照他的规矩办：线以上是人，线以下是身体。</p>
+</div>
+
+<section id="s2">
+  <span class="sno" id="s5">其三</span>
+  <h2>他看对了什么，看错了什么</h2>
+  <div class="prose">
+    <p class="dim">以下逐条对照今日解剖常识。判语是今人的，引文是他的。</p>
+  </div>
+  <div class="duel">
+    <div class="hit">
+      <h3>看对了</h3>
+      <p class="sub">五条，条条来自亲见</p>
+      <ul>
+        <li><b>灵机记性在脑，不在心</b><span class="qv">「灵机记性，不在心在脑」</span><span class="qv">「小儿无记性者，脑髓未满；高年无记性者，脑髓渐空。」</span><span>两百年后，这是常识；在他那时，是把《灵枢》以来四千年的定论掀翻。</span></li>
+        <li><b>肺无孔窍</b><span class="qv">「肺外皮实无透窍，亦无行气之二十四孔。」</span><span>旧说肺有二十四孔行气，他亲手看过：没有。</span></li>
+        <li><b>目系连脑</b><span class="qv">「两目系如线，长于脑，所见之物归于脑。」</span><span>视神经的走行，被他白描了出来。</span></li>
+        <li><b>膈膜分上下</b><span class="qv">「人身膈膜是上下界物。」</span><span>胸腔腹腔的分界，他站对了位置。</span></li>
+        <li><b>会厌遮盖气门</b><span class="qv">「舌后白片，名曰会厌，乃遮盖左右气门。」</span><span>吞咽时盖住气道的活盖，功能说对了。</span></li>
+      </ul>
+    </div>
+    <div class="miss">
+      <h3>看错了</h3>
+      <p class="sub">四条，错处也来自亲见</p>
+      <ul>
+        <li><b>心内无血</b><span class="qv">「试看杀羊者，割其颈项不刺心，心内亦无血。」</span><span>他看的多半是血流净了的死人死畜。心本有血，只是不待他看。</span></li>
+        <li><b>动脉是气管</b><span class="qv">「卫总管，行气之府，其中无血。」</span><span>尸体里动脉血流空了，他摸着一根空管，断定里面装的是气。他书里最结实的一错。</span></li>
+        <li><b>肝不藏血</b><span class="qv">「肝体坚实，非肠、胃、膀胱可比，绝不能藏血。」</span><span>句句斩钉截铁，句句错了。固执和认真，出自同一双手。</span></li>
+        <li><b>元气即火</b><span class="qv">「元气即火，火即元气，此火乃人生命之源。」</span><span>看不下去的都推给元气，这是他没能走出的时代。</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="notecard"><b>夹账一条</b>　他为这句「偷名」骂过古人：「以无凭之谈，作欺人之事，利己不过虚名，损人却属实祸。窃财犹谓之盗，偷名岂不为贼！」后来人们还给他四条：他对古人的每一句骂，几乎都能在自己书里找到一句平行的错。他自己也知道，所以在自序里先认了账。</div>
+</section>
+
+<section id="s2">
+  <span class="sno" id="s6">其四</span>
+  <h2>以约治博：几张方</h2>
+  <div class="prose">
+    <p>图是这本书的心事，方是它的生计。上卷三张逐瘀汤，通窍、血府、膈下，开列症目共三十九条（本库文本逐条数得）；下卷论半身不遂，以一方主之。他自认不是全书：「余著《医林改错》一书，非治病全书，乃记脏腑之书也」，方不过是「示人以规矩」。</p>
+  </div>
+  <div class="notecard"><b>灯笼病</b>　「身外凉，心里热，故名灯笼病，内有血瘀。认为虚热，愈补愈瘀；认为实火，愈凉愈凝。」症是古怪的症，断是干脆的断。</div>
+  <div class="twin">
+    <article>
+      <h3>胸不任物</h3>
+      <p class="one">一层布都压不得</p>
+      <p>「江西巡抚阿霖公，年七十四，夜卧露胸可睡，盖一层布压则不能睡，已经七年。召余诊之，此方五付全愈。」</p>
+    </article>
+    <div class="sep"></div>
+    <article>
+      <h3>胸任重物</h3>
+      <p class="one">要人坐在胸口才能睡</p>
+      <p>「一女二十二岁，夜卧令仆妇坐于胸，方睡，已经二年，余亦用此方，三付而愈，设一齐问病源，何以答之？」</p>
+    </article>
+  </div>
+  <div class="prose" style="margin-top:20px;">
+    <p>一轻一重，同床异梦的两个病人，同一个血府逐瘀汤，五付与三付。他记下这两案时大约自己也觉得蹊跷，所以在末尾反问：若两人一齐问病根，我拿什么答？方他信，理他存疑，这份诚实比方子更难得。</p>
+    <p>下卷那张补阳还五汤，治半身不遂，四两生黄耆领队，桃红归芍地龙随行，至今仍是中风恢复期的常用方；血府逐瘀汤更不用说，药店里的中成药一直有它。医家后来诟其图而用其方，也算各取所信。</p>
+  </div>
+  <blockquote class="q">
+    <p>补阳还五赤芍芎，归尾通经佐地龙，四两黄耆为主药，血中瘀滞用桃红。</p>
+    <span class="src">卷下 补阳还五汤方歌</span>
+  </blockquote>
+</section>
+
+<section id="s2">
+  <span class="sno" id="s7">其五</span>
+  <h2>三十四条未病之兆</h2>
+  <div class="prose">
+    <p>全书最惊人的一页，不是图，是这张单子。他问每个半身不遂的病人：病前有没有什么小毛病？一条一条攒下来，攒成一张「未病以前之形状」。书中自称四十种，本库文本实数三十四条，逐字照录如下。</p>
+  </div>
+  <ol class="omen">
+    <li>偶尔一阵头晕</li>
+    <li>头无故一阵发沉</li>
+    <li>耳内无故一阵风响</li>
+    <li>耳内无故一阵蝉呜</li>
+    <li>下眼皮长跳动</li>
+    <li>一支眼渐渐小</li>
+    <li>无故一阵眼睛发直</li>
+    <li>眼前长见旋风</li>
+    <li>长向鼻中攒冷气</li>
+    <li>上嘴唇一阵跳动</li>
+    <li>上下嘴唇相凑发紧</li>
+    <li>睡卧口流涎沫</li>
+    <li>平素聪明忽然无记性</li>
+    <li>忽然说话少头无尾</li>
+    <li>无故一阵气喘</li>
+    <li>一手长战</li>
+    <li>两手长战</li>
+    <li>手无名指每日有一时屈而不伸</li>
+    <li>手大指无故自动</li>
+    <li>胳膊无故发麻</li>
+    <li>腿无故发麻</li>
+    <li>肌肉无故跳动</li>
+    <li>手指甲缝一阵阵出冷气</li>
+    <li>脚指甲缝一阵阵出冷气</li>
+    <li>两腿膝缝出冷气</li>
+    <li>脚孤拐骨一阵发软</li>
+    <li>腿无故抽筋</li>
+    <li>脚指无故抽筋</li>
+    <li>行走两腿如拌蒜</li>
+    <li>心口一阵气堵</li>
+    <li>心口一阵发空气不接</li>
+    <li>心口一阵发忙</li>
+    <li>头项无故一阵发直</li>
+    <li>睡卧自觉身子沉</li>
+  </ol>
+  <blockquote class="q">
+    <p>皆是元气渐亏之症。因不痛不痒，无寒无热，无碍饮食起居，人最易于疏忽。</p>
+    <span class="src">卷下 记未病以前之形状</span>
+  </blockquote>
+  <div class="prose">
+    <p class="dim">今天回看，这些一阵一阵、来去无踪的小毛病，大多与脑部供血的短暂紊乱有关，医生们把它当作中风的先声。王清任不知道这些名词，他只是把病人一句一句的话记下来，然后写下那六个字：人最易于疏忽。</p>
+  </div>
+</section>
+
+<section class="final">
+  <span class="sno" id="s8">其六</span>
+  <h2>未完成的改错</h2>
+  <blockquote class="q">
+    <p>余著《医林改错》一书，非治病全书，乃记脏腑之书也。其中当尚有不实不尽之处，后人倘遇机会，亲见脏腑，精察增补，抑又幸矣！</p>
+    <span class="src">自序</span>
+  </blockquote>
+  <div class="prose">
+    <p>一部叫「改错」的书，最后一页留给的，是预言自己也会错。书成次年，道光十一年，王清任病逝，没能看到这本书被骂，也没能看到被用：咸丰癸丑（1853）广东张润坡得书重刊，说它<span class="qv">「直翻千百年旧案，正其谬误，决其瑕疵，为希世之宝也」</span>；此后翻刻不断，骂其图者众，用其方者更多。</p>
+    <p>图大半被后人改掉了，这张账他却赢了大半：他逼着医书承认，身体要先看了才能写。他的同乡后辈知非子在序里说得最准：<span class="qv">「其所以能绘诸形者，则由于亲见。其所以得亲见者，则由于稻地镇之一游也。」</span></p>
+    <p class="dim">顺便一提，这套导读里还有一位和尸体打交道的医生：<a href="xiyuan-jilu.html">洗冤集录</a>的宋慈。宋慈让尸体开口，说出凶手的名字；王清任让尸体开口，改掉医书的错。两人相隔五百年，做的是同一件事的两半。</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献 简体库（<a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>）医藏《医林改错》。本篇全部引文与库内文件逐字核对（去标点、异体字归一后比对），库本讹字如「赃腑」「丁已」等一律照录存真，断句由编者代加。</p>
+    <p>时代局限：本书含坟场验尸、刑场观察等记述，书中脏腑旧说与所载各方均为十九世纪医学认识，不构成今日医学建议，请勿照方试药，身体不适请就医。</p>
+    <p>殆知阁导读 之三十三 · <a href="mulu.html">返回总目</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
