@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>殆知阁古代文献 · 十藏总目</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --cinnabar: #c0453c;
+    --hairline: rgba(232, 228, 220, 0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono {
+    font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+
+  /* ===== hero ===== */
+  .hero { min-height: 92dvh; display: flex; align-items: center; padding: 48px 0 64px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: end; width: 100%; }
+  .seal {
+    width: 88px; height: 88px; background: var(--cinnabar); color: #f5efe6;
+    display: grid; grid-template-columns: 1fr 1fr; place-items: center;
+    font-size: 30px; font-weight: 700; line-height: 1;
+    padding: 10px; letter-spacing: 2px;
+    writing-mode: vertical-rl;
+    box-shadow: 0 0 0 1px rgba(192, 69, 60, 0.35), 0 14px 44px rgba(192, 69, 60, 0.22);
+  }
+  .hero h1 {
+    font-size: clamp(44px, 7.2vw, 96px);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.14;
+    margin: 28px 0 20px;
+  }
+  .hero h1 em { font-style: normal; color: var(--cinnabar); }
+  .hero p.sub {
+    font-size: clamp(16px, 1.6vw, 20px);
+    color: var(--paper-dim);
+    max-width: 30em;
+  }
+  .hero .kicker { font-size: 14px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  .stat-strip {
+    display: grid; grid-template-columns: repeat(4, auto);
+    gap: 48px; margin-top: 56px; padding-top: 28px;
+    border-top: 1px solid var(--hairline);
+  }
+  .stat b { display: block; font-size: clamp(26px, 3vw, 40px); font-weight: 600; letter-spacing: -0.01em; }
+  .stat span { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.18em; }
+
+  /* ===== sections ===== */
+  section { padding: 88px 0; }
+  section + section { border-top: 1px solid var(--hairline); }
+  h2 {
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+  }
+  .lede { color: var(--paper-dim); max-width: 62ch; margin-bottom: 52px; }
+
+  /* ===== 十藏 ledger ===== */
+  .cang { display: grid; grid-template-columns: 88px 200px 1fr 190px; gap: 28px; align-items: baseline;
+          padding: 26px 10px; border-top: 1px solid var(--hairline);
+          transition: background 0.25s ease; }
+  .cang:last-child { border-bottom: 1px solid var(--hairline); }
+  .cang:hover { background: var(--ink-2); }
+  .cang .no { font-size: 30px; color: var(--paper-faint); font-weight: 300; transition: color 0.25s ease; }
+  .cang:hover .no { color: var(--cinnabar); }
+  .cang .name { font-size: 30px; font-weight: 700; letter-spacing: 0.12em; }
+  .cang .name small { display: block; font-size: 12px; font-weight: 400; color: var(--paper-faint); letter-spacing: 0.3em; margin-top: 4px; }
+  .cang .desc { color: var(--paper-dim); font-size: 15px; max-width: 44em; }
+  .cang .num { text-align: right; font-size: 13px; color: var(--paper-dim); }
+  .cang .num b { display: block; font-size: 19px; color: var(--paper); font-weight: 600; }
+
+  /* ===== 藏书之最 ===== */
+  .ji {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px;
+  }
+  .ji .row { display: flex; justify-content: space-between; align-items: baseline;
+             padding: 20px 6px; border-top: 1px solid var(--hairline); gap: 24px; }
+  .ji .row .t { font-size: 18px; }
+  .ji .row .t small { display: block; font-size: 13px; color: var(--paper-faint); margin-top: 2px; }
+  .ji .row .v { font-size: 22px; font-weight: 600; color: var(--cinnabar); white-space: nowrap; }
+
+  /* ===== footer ===== */
+  footer { border-top: 1px solid var(--hairline); padding: 56px 0 72px; color: var(--paper-faint); font-size: 14px; }
+  footer .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  footer b { color: var(--paper-dim); font-weight: 600; }
+  footer a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+  footer a:hover { color: var(--cinnabar); border-color: var(--cinnabar); }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .stat-strip { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+    .cang { grid-template-columns: 56px 1fr; gap: 8px 20px; padding: 22px 6px; }
+    .cang .num { grid-column: 2; text-align: left; }
+    .cang .num b { display: inline; margin-right: 12px; }
+    .ji { grid-template-columns: 1fr; }
+    footer .cols { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .cang, .cang .no { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kicker">殆知阁古代文献 · 简体中文版</div>
+      <h1>十藏之内，<br>装下<em>整部</em>中国古代文献</h1>
+      <p class="sub">15,694 个文本，约 17.4 亿字，原始体积 4.79 GB。经史子集之外，佛道医艺俱全，收书种数约为《四库全书》的四倍。</p>
+      <div class="stat-strip">
+        <div class="stat"><b class="mono">14,185</b><span>种书（去重）</span></div>
+        <div class="stat"><b class="mono">17.4亿</b><span>字</span></div>
+        <div class="stat"><b class="mono">10</b><span>大部藏</span></div>
+        <div class="stat"><b class="mono">4.79GB</b><span>纯文本体积</span></div>
+      </div>
+    </div>
+    <div class="seal" aria-hidden="true">殆知閣藏</div>
+  </div>
+</header>
+
+<main>
+  <section id="cang">
+    <div class="wrap">
+      <h2>十藏总目</h2>
+      <p class="lede">按体积排序。文件数与体积为全库实测值，简体文本由 OpenCC 自繁体原库全量转换。</p>
+      <div>
+        <div class="cang">
+          <div class="no mono">01</div>
+          <div class="name">史藏<small>SHI CANG</small></div>
+          <div class="desc">中国之「记」。正史、别史、实录、诏令奏议俱全，《清实录·乾隆朝》40.9MB、《宋会要辑稿》26.4MB 皆在，政书地理二百余种。</div>
+          <div class="num mono"><b>1.34 GB</b>2,043 文件</div>
+        </div>
+        <div class="cang">
+          <div class="no mono">02</div>
+          <div class="name">集藏<small>JI CANG</small></div>
+          <div class="desc">历代文集之总汇。四库别集 1,279 种为最大门类，《全唐文》25.6MB；小说、演义、话本、宝卷亦归此藏，元明清名家别集大体可按图索骥。</div>
+          <div class="num mono"><b>0.97 GB</b>1,948 文件</div>
+        </div>
+        <div class="cang">
+          <div class="no mono">03</div>
+          <div class="name">佛藏<small>FO CANG</small></div>
+          <div class="desc">文件数为诸藏之最。乾隆大藏经按般若、宝积、华严等十七部分收，另有《大藏经》集成、卍续藏、嘉兴藏四套版本并存，内容互有重叠。</div>
+          <div class="num mono"><b>0.60 GB</b>5,135 文件</div>
+        </div>
+        <div class="cang">
+          <div class="no mono">04</div>
+          <div class="name">子藏<small>ZI CANG</small></div>
+          <div class="desc">诸子百家之外，类书是重头：《佩文韵府》61MB 为全库最大单书，《册府元龟》《太平御览》俱全。笔记类 863 种是本库强项，清人掌故几乎全收。</div>
+          <div class="num mono"><b>0.59 GB</b>1,463 文件</div>
+        </div>
+        <div class="cang">
+          <div class="no mono">05</div>
+          <div class="name">儒藏<small>RU CANG</small></div>
+          <div class="desc">经学与小学。十三经注疏、《说文解字注》《广雅》《集韵》等字书韵书大观；因生僻字密集，缺字率为十藏之冠（0.241%）。</div>
+          <div class="num mono"><b>0.38 GB</b>908 文件</div>
+        </div>
+        <div class="cang">
+          <div class="no mono">06</div>
+          <div class="name">诗藏<small>SHI CANG</small></div>
+          <div class="desc">《全宋诗》41.5MB 单本独占，词集、诗话、对联归此。做诗词检索与对句工具，语料一步到位。</div>
+          <div class="num mono"><b>0.31 GB</b>776 文件</div>
+        </div>
+        <div class="cang">
+          <div class="no mono">07</div>
+          <div class="name">医藏<small>YI CANG</small></div>
+          <div class="desc">《普济方》20.8MB、孙思邈《千金要方》与历代本草经方俱全，缺字率全库最低（0.005%），文本质量最干净的一藏。</div>
+          <div class="num mono"><b>0.31 GB</b>911 文件</div>
+        </div>
+        <div class="cang">
+          <div class="no mono">08</div>
+          <div class="name">道藏<small>DAO CANG</small></div>
+          <div class="desc">明《正统道藏》全帙，按三洞四辅分类：洞神部收老庄列注疏，太玄部收《参同契》《云笈七签》，正一部收符箓科仪，藏外另收清代内丹著作。</div>
+          <div class="num mono"><b>0.13 GB</b>1,721 文件</div>
+        </div>
+        <div class="cang">
+          <div class="no mono">09</div>
+          <div class="name">易藏<small>YI CANG</small></div>
+          <div class="desc">周易历代注疏与术数。《周易正义》《断易天机》《滴天髓阐微》在列，是命理类应用最难白嫖的一批语料。</div>
+          <div class="num mono"><b>0.10 GB</b>343 文件</div>
+        </div>
+        <div class="cang">
+          <div class="no mono">10</div>
+          <div class="name">艺藏<small>YI CANG</small></div>
+          <div class="desc">书画谱、琴谱、印谱、草木鸟兽考。体量最小，门类最杂，恰是经史之外的冷门趣味所在。</div>
+          <div class="num mono"><b>0.05 GB</b>446 文件</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>藏书之最</h2>
+      <p class="lede">全库体积最大的六部书。古籍部丛书类之外，这六本本身就是六座小型图书馆。</p>
+      <div class="ji">
+        <div class="row"><div class="t">御定佩文韵府<small>子藏　类书　清</small></div><div class="v mono">61.1 MB</div></div>
+        <div class="row"><div class="t">全宋诗<small>诗藏　诗集　今人辑</small></div><div class="v mono">41.5 MB</div></div>
+        <div class="row"><div class="t">清实录 · 乾隆朝实录<small>史藏　别史　清</small></div><div class="v mono">40.9 MB</div></div>
+        <div class="row"><div class="t">宋会要辑稿<small>史藏　政书　清辑</small></div><div class="v mono">26.4 MB</div></div>
+        <div class="row"><div class="t">全唐文<small>集藏　文总集　清编</small></div><div class="v mono">25.6 MB</div></div>
+        <div class="row"><div class="t">册府元龟<small>子藏　类书　宋</small></div><div class="v mono">25.3 MB</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>读数与校记</h2>
+      <p class="lede">这批文本不是扫描图，是可直接检索的纯文本。使用前值得知道的三件事。</p>
+      <div class="ji">
+        <div class="row"><div class="t">全库平均缺字率<small>底本漫漶处以「□」标记，学术惯例，非转换错误</small></div><div class="v mono">0.049%</div></div>
+        <div class="row"><div class="t">跨藏重复书<small>同一书多版本并存，按书名去重后得 14,185 种</small></div><div class="v mono">约1,500</div></div>
+        <div class="row"><div class="t">繁简状态<small>OpenCC t2s 全量转换，乾坤等特例已验证无误转</small></div><div class="v mono">全简体</div></div>
+        <div class="row"><div class="t">标点状态<small>经典多为现代点校本，档案实录类为无标点白文</small></div><div class="v mono">不统一</div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap cols">
+    <div>
+      <p><b>繁体原文</b><br>garychowcmu/daizhigev20<br>殆知阁网站文本之 GitHub 转储，2018 年上传，无许可声明，古籍正文属公有领域。</p>
+    </div>
+    <div>
+      <p><b>简体版本</b><br>robertsong2000/daizhigev20<br>OpenCC 全库转换并重写历史之上游分叉，与本页数据同源。数据实测于 2026 年 8 月。</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

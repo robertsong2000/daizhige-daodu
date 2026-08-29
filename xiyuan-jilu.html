@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>洗冤集录 · 七百年前的验尸手册</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --accent: #5f9270;  /* 卷二 名书 · 竹青 */
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.8; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 28px; }
+
+  /* ===== 案卷封面式 hero ===== */
+  .cover { min-height: 84dvh; display: flex; align-items: center; justify-content: center; padding: 56px 0; }
+  .cover-frame {
+    border: 1px solid var(--hairline); outline: 1px solid var(--hairline); outline-offset: 6px;
+    padding: 64px 72px; text-align: center; position: relative; width: 100%;
+  }
+  .slip {
+    position: absolute; top: -22px; right: 48px;
+    background: var(--accent); color: #f2efe8;
+    writing-mode: vertical-rl; font-size: 15px; font-weight: 700; letter-spacing: 6px;
+    padding: 18px 10px;
+  }
+  .cover .era { font-size: 14px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  .cover h1 { font-size: clamp(52px, 8.4vw, 108px); font-weight: 700; letter-spacing: 0.16em; margin: 20px 0 14px; }
+  .cover h1 em { font-style: normal; color: var(--accent); }
+  .cover .author { font-size: 17px; color: var(--paper-dim); letter-spacing: 0.3em; }
+  .stat-strip { display: grid; grid-template-columns: repeat(4, auto); gap: 44px; justify-content: center; margin-top: 42px; padding-top: 24px; border-top: 1px solid var(--hairline); }
+  .stat b { display: block; font-size: clamp(22px, 2.4vw, 32px); font-weight: 600; }
+  .stat span { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.12em; }
+
+  section { padding: 72px 0; border-top: 1px solid var(--hairline); }
+  h2 { font-size: clamp(24px, 2.8vw, 34px); font-weight: 600; letter-spacing: 0.08em; margin-bottom: 14px; }
+  .lede { color: var(--paper-dim); max-width: 62ch; margin-bottom: 42px; }
+  .prose { color: var(--paper-dim); font-size: 16px; max-width: 66ch; }
+  .prose strong { color: var(--paper); font-weight: 600; }
+
+  .quote {
+    margin: 28px 0; padding: 24px 30px; background: var(--ink-2);
+    border-left: 2px solid var(--accent); font-size: 17px; max-width: 62ch;
+  }
+  .quote small { display: block; margin-top: 10px; font-size: 13px; color: var(--paper-faint); }
+
+  /* ===== 验单：原文与白话双栏对照 ===== */
+  .yandan { border: 1px solid var(--hairline); margin-bottom: 26px; }
+  .yandan .yd-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 14px 22px; border-bottom: 1px solid var(--hairline); background: var(--ink-2);
+  }
+  .yandan .yd-head b { font-size: 18px; letter-spacing: 0.08em; }
+  .yandan .yd-head span { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.14em; }
+  .yandan .yd-body { display: grid; grid-template-columns: 1fr 1fr; }
+  .yandan .yd-src { padding: 24px 26px; border-right: 1px solid var(--hairline); font-size: 15.5px; }
+  .yandan .yd-src small { display: block; color: var(--accent); font-size: 12px; letter-spacing: 0.2em; margin-bottom: 8px; }
+  .yandan .yd-mod { padding: 24px 26px; font-size: 14.5px; color: var(--paper-dim); display: flex; flex-direction: column; justify-content: center; }
+  .yandan .yd-mod small { display: block; color: var(--paper-faint); font-size: 12px; letter-spacing: 0.2em; margin-bottom: 8px; }
+  .yandan .yd-mod strong { color: var(--paper); font-weight: 600; }
+  .yandan .verdict-line { padding: 0 26px 20px; font-size: 14px; color: var(--paper-dim); }
+  .yandan .verdict-line b { color: var(--accent); font-weight: 700; letter-spacing: 0.1em; }
+
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .half { border-top: 2px solid var(--accent); padding-top: 18px; }
+  .half.wrong { border-top-color: var(--paper-faint); }
+  .half h3 { font-size: 18px; margin-bottom: 10px; }
+  .half ul { list-style: none; }
+  .half li { color: var(--paper-dim); font-size: 14.5px; padding: 8px 0 8px 18px; position: relative; }
+  .half li::before { content: "·"; position: absolute; left: 4px; color: var(--accent); }
+  .half.wrong li::before { color: var(--paper-faint); }
+  .half li strong { color: var(--paper); font-weight: 600; }
+
+  .xipu { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--hairline); }
+  .xipu .node { padding: 22px 18px; border-right: 1px solid var(--hairline); }
+  .xipu .node:last-child { border-right: none; }
+  .xipu .node b { display: block; font-size: 16px; color: var(--paper); }
+  .xipu .node i { display: block; font-style: normal; font-size: 12px; color: var(--accent); margin: 4px 0 8px; }
+  .xipu .node span { font-size: 13px; color: var(--paper-dim); }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 44px 0 60px; color: var(--paper-faint); font-size: 14px; }
+  footer.page .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  footer.page b { color: var(--paper-dim); font-weight: 600; }
+
+  @media (max-width: 820px) {
+    .stat-strip { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .yandan .yd-body { grid-template-columns: 1fr; }
+    .yandan .yd-src { border-right: none; border-bottom: 1px solid var(--hairline); }
+    .twocol { grid-template-columns: 1fr; }
+    .xipu { grid-template-columns: 1fr 1fr; }
+    .xipu .node:nth-child(2n) { border-right: none; }
+    .xipu .node:nth-child(-n+2) { border-bottom: 1px solid var(--hairline); }
+    footer.page .cols { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-frame">
+    <div class="slip">宋提刑洗冤集录</div>
+    <div class="era">医藏　法家　南宋淳祐七年</div>
+    <h1>洗冤<em>集录</em></h1>
+    <div class="author">宋慈　惠父　福建建阳人</div>
+    <div class="stat-strip">
+      <div class="stat"><b class="mono">1247</b><span>成书年份</span></div>
+      <div class="stat"><b class="mono">5卷53条</b><span>通行编次</span></div>
+      <div class="stat"><b class="mono">30,487</b><span>本库字符实测</span></div>
+      <div class="stat"><b class="mono">350余年</b><span>早于西方同类书</span></div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section>
+    <div class="wrap">
+      <h2>宋慈是谁</h2>
+      <p class="lede">不是电视剧编的，是真有这个人，而且原序里自己交代了履历。</p>
+      <p class="prose">宋慈（1186-1249），字惠父，福建建阳人。四次出任提点刑狱官（主管一路司法刑狱），序中自述<strong>「慈四叨臬寄」</strong>即指此事。1247 年在湖南提刑任上写成此书。他的立场全在序的开头：</p>
+      <div class="quote">
+        狱事莫重于大辟，大辟莫重于初情，初情莫重于检验。盖死生出入之权舆，幽枉屈伸之机括，于是乎决。
+        <small>原序 · 本库文本节引。人命案里最重要的就是第一现场检验，生死出入全在这一步</small>
+      </div>
+      <p class="prose">他还写了自己的工作态度：<strong>「独于狱案，审之又审，不敢萌一毫慢易心」</strong>，「死者虚被涝漉」，意思就是死人白白被折腾一场、冤还是没申。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>验单四纸：原文与白话对照</h2>
+      <p class="lede">挑四条最有名的检验条文，左边是原话，右边是它在说什么、对不对。</p>
+
+      <div class="yandan">
+        <div class="yd-head"><b>验单壹　自缢还是勒杀</b><span>检覆总说 卷二</span></div>
+        <div class="yd-body">
+          <div class="yd-src"><small>原文</small>若自缢，即脑后分八字，索子不交。绳在喉下，舌出；喉上，舌不出，切在详细。</div>
+          <div class="yd-mod"><small>白话</small><p>上吊的绳痕在脑后呈「八」字、不交叉（提空处无痕）；被勒杀的绳痕水平环绕、必然交叉。绳压喉下则舌尖外露，压喉上则不露。</p></div>
+        </div>
+        <div class="verdict-line"><b>现代判定</b>　缢沟不交、勒沟相交，至今仍是法医学的基本鉴别点。基本正确。</div>
+      </div>
+
+      <div class="yandan">
+        <div class="yd-head"><b>验单贰　生前伤还是死后伤</b><span>检覆总说 卷二</span></div>
+        <div class="yd-body">
+          <div class="yd-src"><small>原文</small>被打若在生前，打处自有晕痕；如无晕，而骨不损，即不可指以为痕。</div>
+          <div class="yd-mod"><small>白话</small><p>活人被打，伤处会出血形成淤血晕圈；死后打的伤没有这种「生活反应」，不能算作伤痕证据。</p></div>
+        </div>
+        <div class="verdict-line"><b>现代判定</b>　「生活反应」是现代法医学区分生前伤与死后伤的核心原理之一。宋慈抓住了本质。</div>
+      </div>
+
+      <div class="yandan">
+        <div class="yd-head"><b>验单叁　烧死与溺死</b><span>检覆总说 卷二</span></div>
+        <div class="yd-body">
+          <div class="yd-src"><small>原文</small>如烧死，口内有灰。溺死，腹胀，内有水。</div>
+          <div class="yd-mod"><small>白话</small><p>烧死的人嘴里有烟灰碳末（活着才吸得进去）；淹死的人腹中有水、肚子发胀。</p></div>
+        </div>
+        <div class="verdict-line"><b>现代判定</b>　口内烟灰碳末至今是烧死的铁证；溺死的方向对，但「腹胀有水」太粗糙，尸体腐败同样会胀，现代靠硅藻检验定性。</div>
+      </div>
+
+      <div class="yandan">
+        <div class="yd-head"><b>验单肆　银钗验毒</b><span>中毒 卷四</span></div>
+        <div class="yd-body">
+          <div class="yd-src"><small>原文</small>若验服毒，用银钗皂角水揩洗过，探入死人喉内，以纸密封，良久取出，作青黑色。再用皂角水揩洗，其色不去；如无，其色鲜白。</div>
+          <div class="yd-mod"><small>白话</small><p>银钗洗净探入喉中，密封片刻，取出发青黑即为中毒，洗不掉；无毒则银钗鲜白。</p></div>
+        </div>
+        <div class="verdict-line"><b>现代判定</b>　银遇硫化物变黑。古代砒霜不纯、含硫杂质，所以「碰巧」有效；纯砒霜并不与银反应。方法碰巧可用，原理是错的。</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>他为什么不敢乱写</h2>
+      <p class="lede">书里藏着一条激励机制分析，和《晚清州县官的一天》完全同构。</p>
+      <div class="quote">
+        如有疑虑，即且捉贼。捉贼不获，犹是公过。若被人打杀，却作病死，后如获贼，不免深谴。
+        <small>检覆总说 卷二 · 本库文本节引</small>
+      </div>
+      <p class="prose">翻成白话：案子存疑就先抓贼；抓不到，上司只算你公务过失；但若把凶杀验成病亡，日后真凶落网，你就要背重责。这段话说明<strong>七百年前的检验手册已经在分析官员的激励结构</strong>：检验者错报的成本不对称，所以验尸者天然倾向于含糊。讽刺小说里的糊涂官，制度源头在这里。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>一半科学，一半时代</h2>
+      <p class="lede">既不必神化，也不该轻视。</p>
+      <div class="twocol">
+        <div class="half">
+          <h3>他验对的</h3>
+          <ul>
+            <li><strong>缢沟八字不交、勒沟相交</strong>，沿用至今</li>
+            <li><strong>生前伤有晕痕</strong>（生活反应原理）</li>
+            <li><strong>烧死口内烟灰</strong>，现代仍作铁证</li>
+            <li>窒息征象的系统观察：眼合唇黑、口鼻涎沫、大小便自出</li>
+            <li>强调检验者亲临、不可尽信仵作，程序意识领先时代</li>
+          </ul>
+        </div>
+        <div class="half wrong">
+          <h3>他翻车的</h3>
+          <ul>
+            <li><strong>银钗验毒</strong>原理错误，只对含硫杂质的老砒霜碰巧有效</li>
+            <li><strong>溺死验「腹胀有水」</strong>粗糙，无法排除腐败胀气</li>
+            <li>部分中毒症状描述混杂了当时医药观念与神秘化内容</li>
+            <li>全书没有定量概念，一切靠外观经验</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>千年检验谱系</h2>
+      <p class="lede">这条线上的前一站和后一站，你都已经在本系列见过了。</p>
+      <div class="xipu">
+        <div class="node"><b>封诊式</b><i>战国 · 前3世纪</i><span>睡虎地秦简：现场勘验程序范式，系列第 4 页</span></div>
+        <div class="node"><b>洗冤集录</b><i>南宋 · 1247</i><span>宋慈集大成，本页。后世官府检验书皆以此为祖</span></div>
+        <div class="node"><b>洗冤录体系</b><i>元明清</i><span>《平冤录》《无冤录》相继，清律例馆校正本为官定教材</span></div>
+        <div class="node"><b>现代法医学</b><i>20世纪</i><span>西法东渐，验尸从经验之学变成实验科学</span></div>
+      </div>
+      <p class="prose" style="margin-top:28px">战国到南宋隔了一千五百年：秦人已经写「如何勘验现场」，宋人才写出「为什么这样验」。而这套经验之学，又独自往前走六百年才等来实验科学的改造。<strong>你库里的这两本书，是这条谱系的两端。</strong></p>
+    </div>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap cols">
+    <div>
+      <p><b>文本来源</b><br>殆知阁古代文献 医藏 · 洗冤集录<br>github.com/robertsong2000/daizhigev20（简体版）</p>
+    </div>
+    <div>
+      <p><b>使用提醒</b><br>全部引文经本库逐字核验；「现代判定」栏为通行法医学常识的对照解读。银钗验毒等方法系历史文献记录，不可仿效。</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

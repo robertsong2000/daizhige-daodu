@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>册府元龟 · 一千卷君臣事迹库</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --cinnabar: #5f9270;
+    --hairline: rgba(232, 228, 220, 0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.75; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+  .hero { min-height: 88dvh; display: flex; align-items: center; padding: 48px 0 64px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: end; width: 100%; }
+  .seal {
+    width: 96px; height: 128px; background: var(--cinnabar); color: #f5efe6;
+    display: flex; align-items: center; justify-content: center;
+    writing-mode: vertical-rl; font-size: 34px; font-weight: 700; letter-spacing: 14px;
+    box-shadow: 0 0 0 1px rgba(95,146,112,0.35), 0 14px 44px rgba(95,146,112,0.2);
+  }
+  .kicker { font-size: 14px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  h1 { font-size: clamp(56px, 9vw, 116px); font-weight: 700; letter-spacing: 0.06em; line-height: 1.1; margin: 24px 0 18px; }
+  h1 em { font-style: normal; color: var(--cinnabar); }
+  .sub { font-size: clamp(16px, 1.6vw, 20px); color: var(--paper-dim); max-width: 30em; }
+  .epigraph {
+    margin: 36px 0 0; padding: 20px 26px; border-left: 2px solid var(--cinnabar);
+    color: var(--paper-dim); font-size: 15px; max-width: 34em;
+  }
+  .epigraph b { color: var(--paper); font-weight: 400; display: block; margin-bottom: 6px; }
+  .stat-strip {
+    display: grid; grid-template-columns: repeat(5, auto); gap: 40px;
+    margin-top: 52px; padding-top: 26px; border-top: 1px solid var(--hairline);
+  }
+  .stat b { display: block; font-size: clamp(24px, 2.6vw, 36px); font-weight: 600; }
+  .stat span { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.14em; }
+
+  section { padding: 84px 0; }
+  section + section { border-top: 1px solid var(--hairline); }
+  h2 { font-size: clamp(25px, 2.8vw, 36px); font-weight: 600; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .lede { color: var(--paper-dim); max-width: 62ch; margin-bottom: 48px; }
+  .prose { max-width: 68ch; color: var(--paper-dim); font-size: 16px; }
+  .prose p + p { margin-top: 18px; }
+  .prose strong { color: var(--paper); font-weight: 600; }
+
+  .ji { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; padding: 19px 6px; border-top: 1px solid var(--hairline); gap: 24px; }
+  .row .t { font-size: 17px; }
+  .row .t small { display: block; font-size: 13px; color: var(--paper-faint); margin-top: 2px; }
+  .row .v { font-size: 20px; font-weight: 600; color: var(--cinnabar); white-space: nowrap; }
+  .row.hl { background: var(--ink-2); }
+  .row.hl .t, .row.hl .v { color: var(--paper); }
+  .row.hl .v { color: var(--cinnabar); }
+
+  .cards3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
+  .card { border-top: 2px solid var(--cinnabar); padding-top: 22px; }
+  .card h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.04em; }
+  .card p { color: var(--paper-dim); font-size: 15px; }
+
+  .bu { display: flex; flex-wrap: wrap; gap: 10px; }
+  .bu span {
+    border: 1px solid var(--hairline); padding: 7px 16px;
+    font-size: 15px; letter-spacing: 0.1em; color: var(--paper-dim);
+  }
+  .bu span.k { border-color: rgba(95,146,112,0.5); color: var(--paper); }
+
+  blockquote {
+    margin: 44px 0 0; padding: 26px 30px; background: var(--ink-2);
+    border-left: 2px solid var(--cinnabar); color: var(--paper);
+    font-size: 16px; max-width: 62ch;
+  }
+  blockquote footer { margin-top: 10px; font-size: 13px; color: var(--paper-faint); }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 52px 0 68px; color: var(--paper-faint); font-size: 14px; }
+  footer.page .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  footer.page b { color: var(--paper-dim); font-weight: 600; }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .stat-strip { grid-template-columns: repeat(2, 1fr); gap: 26px; }
+    .ji, .cards3 { grid-template-columns: 1fr; }
+    footer.page .cols { grid-template-columns: 1fr; }
+    .seal { width: 72px; height: 96px; font-size: 26px; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kicker">子藏　类书　北宋官修</div>
+      <h1>册府<em>元龟</em></h1>
+      <p class="sub">宋真宗敕修的千卷类书：上古至五代的君臣事迹，按三十一部、一千余门编排，专供帝王治国取鉴。</p>
+      <div class="epigraph">
+        <b>「昔雒出书九章，圣人则之，以为世大法。」</b>
+        帝王部总序开篇。五德终始之说，是全书的宇宙观地基。
+      </div>
+      <div class="stat-strip">
+        <div class="stat"><b class="mono">1,000</b><span>卷</span></div>
+        <div class="stat"><b class="mono">31</b><span>部</span></div>
+        <div class="stat"><b class="mono">1,104</b><span>门（通行记载）</span></div>
+        <div class="stat"><b class="mono">906万</b><span>字（本库实测）</span></div>
+        <div class="stat"><b class="mono">1005-1013</b><span>编修年代</span></div>
+      </div>
+    </div>
+    <div class="seal" aria-hidden="true">册府元龜</div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <h2>书名什么意思</h2>
+      <p class="lede">四个字，两层比喻，都是「给皇帝用的」。</p>
+      <div class="ji">
+        <div class="row"><div class="t"><strong>册府</strong><small>典册之府库。收天下史书公文于一府之意。</small></div></div>
+        <div class="row"><div class="t"><strong>元龟</strong><small>大龟。古人以龟甲卜国家大事，引申为可供借鉴的龟鉴。</small></div></div>
+        <div class="row"><div class="t">合起来<small>一座装满治国先例的库房，一面照兴亡的大龟镜。</small></div></div>
+        <div class="row"><div class="t">写给谁<small>皇帝。这是它和一切民间类书最大的不同。</small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>宋初四大书，它排最后压轴</h2>
+      <p class="lede">宋朝立国后组织了四场国家级文献工程。前三部成于太宗朝，《册府元龟》成于真宗朝，体量与篇幅均为四书之冠。</p>
+      <div class="ji">
+        <div class="row"><div class="t">太平广记<small>500 卷，小说故事汇编，981 年成书</small></div><div class="v mono">500卷</div></div>
+        <div class="row"><div class="t">太平御览<small>1,000 卷，综合类书，983 年成书</small></div><div class="v mono">1,000卷</div></div>
+        <div class="row"><div class="t">文苑英华<small>1,000 卷，文章总集，986 年成书</small></div><div class="v mono">1,000卷</div></div>
+        <div class="row hl"><div class="t">册府元龟<small>1,000 卷，政事类书，1013 年成书</small></div><div class="v mono">1,000卷</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>它怎么编排：按人的身份，不按事情</h2>
+      <p class="lede">《太平御览》按天地万物分部，《册府元龟》独辟蹊径：全书以「人物身份」为纲，从帝王一路排到外国君长，每个身份下再按事迹立门。你要查「宰相怎么劝谏」，翻宰辅部谏诤门即可。</p>
+      <div class="bu">
+        <span class="k">帝王部</span><span>闰位部</span><span>僭伪部</span><span>列国君部</span><span>储宫部</span><span>宗室部</span><span>外戚部</span><span class="k">宰辅部</span><span class="k">将帅部</span><span>台省部</span><span>邦计部</span><span>宪官部</span><span>谏诤部</span><span>词臣部</span><span>国史部</span><span>掌礼部</span><span>学校部</span><span>刑法部</span><span>卿监部</span><span>环卫部</span><span>铨选部</span><span>贡举部</span><span>奉使部</span><span>内臣部</span><span>牧守部</span><span>令长部</span><span>宫臣部</span><span class="k">幕府部</span><span>陪臣部</span><span>总录部</span><span>外臣部</span>
+      </div>
+      <p class="prose" style="margin-top:26px">红色标签的帝王、宰辅、将帅、幕府四部，是全书使用率最高的四座库房。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>三个独特之处</h2>
+      <p class="lede">同类书很多，为什么它至今不可替代。</p>
+      <div class="cards3">
+        <div class="card">
+          <h3>只引正经正史</h3>
+          <p>编纂时定有凡例，不取小说、野史、杂传，材料几乎全部取自十七史与经部子部。在类书里是极端严格的史料纪律，因此引文可信度极高。</p>
+        </div>
+        <div class="card">
+          <h3>大量收录今已亡佚之书</h3>
+          <p>所据为宋以前古本。不少被引史籍原本失传或仅存残卷，全靠此书留其文字，是辑佚学的第一大矿。</p>
+        </div>
+        <div class="card">
+          <h3>校勘正史的对照本</h3>
+          <p>所存文本早于今本正史的传世版本。清人辑《旧五代史》，此书为主要素材来源之一；后世学者校《唐书》《魏书》也以它为对照本。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>本库里的这一部</h2>
+      <p class="lede">取自殆知阁子藏类书目录下的 25.3MB 文本，繁体底本经 OpenCC 转为简体。以下为逐项实测。</p>
+      <div class="ji">
+        <div class="row"><div class="t">全文字符数<small>含标点与编者按语</small></div><div class="v mono">9,059,305</div></div>
+        <div class="row"><div class="t">可辨识卷标记<small>通行本 1,000 卷，余 4 个卷题在底本中有损</small></div><div class="v mono">996</div></div>
+        <div class="row"><div class="t">部数<small>31 部全部在库，逐一核验</small></div><div class="v mono">31 / 31</div></div>
+        <div class="row"><div class="t">编者按语<small>正文内保留「臣钦若等曰」原注，编者互见注完整</small></div><div class="v mono">在</div></div>
+      </div>
+      <blockquote>
+        帝王之起，必承其王气。庖牺氏之王天下也，继天之统为百王先，实承木德，以建大号。……神农氏以火承木，故为炎帝；轩辕有土德之瑞，故号黄帝。
+        <footer>帝王部总序 · 本库文本实测引用</footer>
+      </blockquote>
+    </div>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap cols">
+    <div>
+      <p><b>文本来源</b><br>殆知阁古代文献 子藏 · 类书<br>github.com/robertsong2000/daizhigev20（简体版）</p>
+    </div>
+    <div>
+      <p><b>使用提醒</b><br>底本为影印录入本，间有 OCR 坏字（如将帅部总序「总序」二字有损）；门数 1,104 为通行记载，本库未做逐门核验。引用前请对照中华书局影印本。</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

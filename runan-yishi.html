@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>汝南遗事 · 一座孤城的最后一百天</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --cinnabar: #5e8fbb;
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.8; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 28px; }
+
+  .hero { min-height: 80dvh; display: flex; align-items: center; padding: 48px 0 56px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: end; width: 100%; }
+  .seal {
+    width: 96px; height: 160px; background: var(--cinnabar); color: #f5efe6;
+    display: flex; align-items: center; justify-content: center;
+    writing-mode: vertical-rl; font-size: 34px; font-weight: 700; letter-spacing: 12px;
+    box-shadow: 0 0 0 1px rgba(94,143,187,0.35), 0 14px 44px rgba(94,143,187,0.2);
+  }
+  .kicker { font-size: 14px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  h1 { font-size: clamp(48px, 8vw, 104px); font-weight: 700; letter-spacing: 0.1em; line-height: 1.15; margin: 24px 0 18px; }
+  h1 em { font-style: normal; color: var(--cinnabar); }
+  .sub { font-size: clamp(16px, 1.6vw, 20px); color: var(--paper-dim); max-width: 30em; }
+  .stat-strip { display: grid; grid-template-columns: repeat(5, auto); gap: 36px; margin-top: 48px; padding-top: 26px; border-top: 1px solid var(--hairline); }
+  .stat b { display: block; font-size: clamp(23px, 2.5vw, 34px); font-weight: 600; }
+  .stat span { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.12em; }
+
+  section { padding: 80px 0; border-top: 1px solid var(--hairline); }
+  h2 { font-size: clamp(25px, 2.8vw, 36px); font-weight: 600; letter-spacing: 0.08em; margin-bottom: 14px; }
+  .lede { color: var(--paper-dim); max-width: 62ch; margin-bottom: 44px; }
+  .prose { color: var(--paper-dim); font-size: 16px; max-width: 66ch; }
+  .prose strong { color: var(--paper); font-weight: 600; }
+
+  .quote {
+    margin: 30px 0; padding: 24px 30px; background: var(--ink-2);
+    border-left: 2px solid var(--cinnabar); font-size: 17px; max-width: 62ch;
+  }
+  .quote small { display: block; margin-top: 10px; font-size: 13px; color: var(--paper-faint); }
+
+  .timeline { display: grid; grid-template-columns: 150px 1fr; gap: 20px 32px; }
+  .timeline .yr { font-size: 18px; font-weight: 700; color: var(--cinnabar); letter-spacing: 0.04em; }
+  .timeline .yr small { display: block; font-size: 12px; color: var(--paper-faint); font-weight: 400; }
+  .timeline .ev { color: var(--paper-dim); font-size: 15px; }
+  .timeline .ev q { color: var(--paper); quotes: "「" "」"; }
+  .timeline .ev .stop { color: var(--cinnabar); font-weight: 700; }
+
+  .cards3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
+  .card { border-top: 2px solid var(--cinnabar); padding-top: 20px; }
+  .card h3 { font-size: 19px; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.04em; }
+  .card p { color: var(--paper-dim); font-size: 15px; }
+  .card p q { color: var(--paper); quotes: "「" "」"; }
+
+  .roles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
+  .role { border: 1px solid var(--hairline); padding: 24px; }
+  .role b { display: block; font-size: 18px; margin-bottom: 8px; }
+  .role span { color: var(--paper-dim); font-size: 14px; }
+
+  .ji { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; padding: 18px 6px; border-top: 1px solid var(--hairline); gap: 24px; }
+  .row .t { font-size: 16px; }
+  .row .t small { display: block; font-size: 13px; color: var(--paper-faint); margin-top: 2px; }
+  .row .v { font-size: 18px; font-weight: 600; color: var(--cinnabar); white-space: nowrap; }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 48px 0 64px; color: var(--paper-faint); font-size: 14px; }
+  footer.page .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  footer.page b { color: var(--paper-dim); font-weight: 600; }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .stat-strip { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .cards3, .roles { grid-template-columns: 1fr; }
+    .ji { grid-template-columns: 1fr; }
+    .timeline { grid-template-columns: 1fr; gap: 2px; }
+    .timeline .yr { margin-top: 16px; }
+    footer.page .cols { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kicker">史藏　志存记录　金哀宗末路</div>
+      <h1>汝南<em>遗事</em></h1>
+      <p class="sub">1233 年六月，金哀宗被蒙古与南宋联军逼进蔡州孤城。随驾的状元进士王鹗开始逐日记事：今天谁战死了，明天敌人把护城河的水放了，城里最后的力量被怎样一点点清空。日记停在城破前三天。</p>
+      <div class="stat-strip">
+        <div class="stat"><b class="mono">4卷</b><span>107 条</span></div>
+        <div class="stat"><b class="mono">逐日</b><span>天兴二年六月起</span></div>
+        <div class="stat"><b class="mono">前3天</b><span>记事戛然而止</span></div>
+        <div class="stat"><b class="mono">状元</b><span>作者王鹗</span></div>
+        <div class="stat"><b class="mono">15,700</b><span>本库字符实测</span></div>
+      </div>
+    </div>
+    <div class="seal" aria-hidden="true">汝南遺事</div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <h2>它是什么：一部亡国现场实录</h2>
+      <p class="lede">中国史学里不缺亡国史，缺的是亡国现场的逐日流水账。这本书是亲历者写在围城里的。</p>
+      <div class="quote">
+        是编即从哀宗在蔡州围城所作，故以汝南命名。所记始天兴二年六月，迄三年正月，随日编载，有纲有目，共一百七条，皆所身亲目击之事故纪载最为详确。……金史哀宗本纪及乌库哩镐、完颜仲德、张天纲等传皆全采用之，足征其言皆实录矣。
+        <small>四库全书总目提要 · 本库卷首节引</small>
+      </div>
+      <p class="prose">体例是「有纲有目」：每天先立一条事目，下注干支日期与详情，如<strong>「天兴二年六月甲戌朔六日己卯」</strong>。一百零七条，条条是作者身亲目击。四库馆臣给它下了极高的断语：<strong>「纪载最为详确」「皆实录矣」</strong>，并确认《金史》哀宗一朝的记载几乎整段从这里搬过去。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>一座孤城的最后一百天</h2>
+      <p class="lede">从入城到绝笔，日记停下来的那天，离亡国还有三天。</p>
+      <div class="timeline">
+        <div class="yr mono">1233 六月<small>天兴二年</small></div>
+        <div class="ev">哀宗自汴京辗转逃入蔡州，处决跋扈将帅，重整残兵。王鹗随驾，开始记事：<q>天兴二年六月甲戌朔六日己卯，上既诛富察固纳。</q></div>
+        <div class="yr mono">1233 十二月<small>围城合拢</small></div>
+        <div class="ev">蒙古与南宋联军会师，<q>敌人决练江，宋人决柴潭，以入汝，西南二面不复顾矣</q>。护城的水利工事被敌方两个工程动作废掉，蔡州成了瓮中之鳖。</div>
+        <div class="yr mono">1234 正月二日<small>天兴三年</small></div>
+        <div class="ev">围城中皇帝做的最后一件「国家大事」，是给护城潭水里的神赐封号：<q>诏参政天纲祭柴潭神，仍赐号曰护国灵应。</q>潭几涸而一日暴涨，城中视为神应。</div>
+        <div class="yr mono">正月四日</div>
+        <div class="ev"><q>上以将士多战殁，尽出宫中官承应人等分守四面</q>，连舍人、牌印、省部令史都被拉去拽炮，皇帝身边的使令人数只剩几个。有人乘夜缒城投降，「上亦不知也」。</div>
+        <div class="yr mono">正月初五</div>
+        <div class="ev"><span class="stop">日记到此为止。</span>后世辑录者在卷末补注：初八日戊申哀宗传位承麟后自缢，初九日己酉城破，「故王鹗纪遗事止于此」。</div>
+        <div class="yr mono">正月初九</div>
+        <div class="ev">城破。末帝完颜承麟在位不足一日，死于巷战，是中国历史上在位时间最短的皇帝。金亡，立国一百二十年。</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>细节里的末路</h2>
+      <p class="lede">大史书写战役，这本日记写的是围城里的日常颗粒。</p>
+      <div class="cards3">
+        <div class="card">
+          <h3>皇帝给河神封爵</h3>
+          <p>外城水源被宋军决堤放干，潭水一度枯见底，忽一日云雾障潭、潭水暴涨，城中视为神迹，皇帝下诏祭神赐号「护国灵应」。亡国前最后的「国政」，是封一条河的龙。</p>
+        </div>
+        <div class="card">
+          <h3>城快破了还在讲法治</h3>
+          <p>忠孝军劫粮杀人，哀宗想赦免，元帅王沙尔泣谏：<q>法者天下之公共，非人君所得以私。</q>遂诛之。城破前九天，这个政权还在为一条军法跟皇帝讲道理。</p>
+        </div>
+        <div class="card">
+          <h3>宫里的人清零那天</h3>
+          <p>正月四日那条记完，皇帝身边只剩下几个贴身使令。一支政权的人事档案，最后一栏是「舍人、牌印、令史拽炮」。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>王鹗：一个人的三重身份</h2>
+      <p class="lede">这本书的作者，本身就横跨了金元两朝。</p>
+      <div class="roles">
+        <div class="role"><b>金朝状元</b><span>正大元年（1224）进士第一，曹州东明人，哀宗朝官至左右司员外郎，随驾入蔡州</span></div>
+        <div class="role"><b>亡国目击者</b><span>围城全程在城内，逐日笔记直到无力再记。书称哀宗为「义宗」，用息州行省所上谥号</span></div>
+        <div class="role"><b>元朝文臣之首</b><span>金亡降元，为忽必烈潜邸旧臣，官至翰林学士承旨；中统二年首倡修《金史》，是金元史学的接线人</span></div>
+      </div>
+      <p class="prose" style="margin-top:28px">四库馆臣对他的评语很不客气也很公道：<strong>「鹗身事两朝，不能抗西山之节」</strong>，没有殉国，气节有亏；但紧接着承认，正因他活着，才有这部实录。上一页书架上的遗民与贰臣之分，在他身上最拧巴：救了史料的人，恰恰没守住气节。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>本库实测</h2>
+      <p class="lede">四库全书本，卷首带官修提要。以下为逐项核验。</p>
+      <div class="ji">
+        <div class="row"><div class="t">全文字符数<small>含提要与双行小注</small></div><div class="v mono">15,700</div></div>
+        <div class="row"><div class="t">卷数<small>卷一至卷四，题「元王鹗撰」</small></div><div class="v mono">4 / 4</div></div>
+        <div class="row"><div class="t">四库分类<small>史部五 · 杂史类</small></div><div class="v mono">杂史</div></div>
+        <div class="row"><div class="t">记事下限<small>正文止于天兴三年正月初五，城破前三日</small></div><div class="v mono">1234.1.5</div></div>
+      </div>
+      <div class="quote">
+        鹗身事两朝，不能抗西山之节，然本传载其祭哀宗……纪载最为详确。
+        <small>四库提要 · 节引。前半句批评气节，后半句承认史料，一条提要两个态度。</small>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap cols">
+    <div>
+      <p><b>文本来源</b><br>殆知阁古代文献 史藏 · 志存记录<br>github.com/robertsong2000/daizhigev20（简体版）</p>
+    </div>
+    <div>
+      <p><b>使用提醒</b><br>底本为清四库臣改译本，人名用乌库哩、富察等清代译写（金史今本已改回乌古论、蒲察），对读时需译名对照表；底本个别字为 OCR 占位符，已按文意补全（如提要「张天纲等传」之「传」）；纪事下限与干支经本库逐条核对。学术引用以中华书局点校本为准。</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

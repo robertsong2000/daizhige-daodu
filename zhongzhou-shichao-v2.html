@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中州集诗抄 · 雕版书叶版</title>
+<style>
+  :root {
+    --paper: #f0ebe0;
+    --paper-2: #e9e2d3;
+    --ink: #2a2620;
+    --ink-dim: #6b6355;
+    --ink-faint: #9a9182;
+    --cinnabar: #3d648c;
+    --rule: rgba(42, 38, 32, 0.22);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px; }
+
+  /* ===== 雕版书叶式开篇：右侧竖排大题，左侧小序 ===== */
+  .leaf {
+    min-height: 92dvh;
+    display: flex; align-items: stretch;
+    border-left: 3px solid var(--cinnabar);
+    border-right: 1px solid var(--rule);
+    margin: 28px 0;
+    padding: 44px 0;
+    position: relative;
+  }
+  .leaf .title-block {
+    writing-mode: vertical-rl;
+    font-size: clamp(58px, 8vw, 110px);
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    line-height: 1.2;
+    padding: 0 46px;
+    border-left: 1px solid var(--rule);
+    margin-left: auto;
+  }
+  .leaf .title-block em { font-style: normal; color: var(--cinnabar); }
+  .leaf .preface {
+    max-width: 30em;
+    padding: 0 44px;
+    align-self: center;
+    color: var(--ink-dim);
+    font-size: 15.5px;
+  }
+  .leaf .preface b { color: var(--ink); display: block; font-size: 17px; margin-bottom: 14px; letter-spacing: 0.2em; }
+  .leaf .seal-mini {
+    position: absolute; left: 34px; bottom: 40px;
+    width: 58px; height: 58px; background: var(--cinnabar); color: var(--paper);
+    display: grid; place-items: center;
+    writing-mode: vertical-rl; font-size: 19px; font-weight: 700; letter-spacing: 4px;
+  }
+
+  /* ===== 诗叶：每首一个书叶，竖排 ===== */
+  .poem-leaf {
+    margin: 34px 0;
+    border: 1px solid var(--rule);
+    background: var(--paper-2);
+    display: grid; grid-template-columns: 210px 1fr;
+    min-height: 420px;
+  }
+  .poem-leaf .meta {
+    border-right: 1px solid var(--rule);
+    padding: 34px 26px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .poem-leaf .meta .pt {
+    writing-mode: vertical-rl;
+    font-size: 30px; font-weight: 700; letter-spacing: 0.22em;
+    height: 300px;
+  }
+  .poem-leaf .meta .pa { font-size: 13px; color: var(--ink-dim); letter-spacing: 0.14em; }
+  .poem-leaf .body {
+    padding: 38px 44px;
+    display: flex; flex-direction: column; justify-content: center; gap: 30px;
+  }
+  .poem-leaf .verse-v {
+    writing-mode: vertical-rl;
+    height: 320px;
+    font-size: clamp(19px, 2.2vw, 24px);
+    line-height: 2.3;
+    letter-spacing: 0.14em;
+    color: var(--ink);
+  }
+  .poem-leaf .verse-v .hot { color: var(--cinnabar); }
+  .poem-leaf .note {
+    color: var(--ink-dim); font-size: 14.5px; max-width: 52ch;
+    border-top: 1px dashed var(--rule); padding-top: 16px;
+  }
+  .poem-leaf .note strong { color: var(--ink); font-weight: 600; }
+
+  /* 名联板块：横向居中，界栏式 */
+  .couplet-leaf {
+    margin: 34px 0;
+    border-top: 3px solid var(--cinnabar);
+    padding: 52px 20px 40px;
+    text-align: center;
+  }
+  .couplet-leaf .cl {
+    font-size: clamp(28px, 4.6vw, 52px);
+    font-weight: 700; letter-spacing: 0.16em; line-height: 1.8;
+  }
+  .couplet-leaf .cl b { color: var(--cinnabar); }
+  .couplet-leaf .ca { font-size: 13px; color: var(--ink-faint); letter-spacing: 0.3em; margin-top: 14px; }
+  .couplet-leaf .allusion {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0 56px;
+    max-width: 720px; margin: 40px auto 0; text-align: left;
+  }
+  .couplet-leaf .allusion div { border-top: 1px solid var(--rule); padding: 18px 4px; }
+  .couplet-leaf .allusion h4 { font-size: 16px; margin-bottom: 8px; letter-spacing: 0.1em; }
+  .couplet-leaf .allusion h4 b { color: var(--cinnabar); }
+  .couplet-leaf .allusion p { font-size: 14px; color: var(--ink-dim); }
+  .couplet-leaf .verdict {
+    max-width: 56ch; margin: 36px auto 0; font-size: 15.5px; color: var(--ink-dim);
+    border: 1px solid var(--rule); padding: 22px 28px;
+  }
+  .couplet-leaf .verdict strong { color: var(--ink); }
+
+  footer {
+    border-top: 3px solid var(--cinnabar);
+    margin-top: 40px; padding: 36px 0 56px;
+    color: var(--ink-faint); font-size: 13.5px;
+  }
+
+  @media (max-width: 780px) {
+    .leaf { flex-direction: column; padding: 36px 0; }
+    .leaf .title-block { writing-mode: horizontal-tb; border-left: none; margin: 0 auto; padding: 0 30px; }
+    .leaf .preface { padding: 24px 30px 0; }
+    .poem-leaf { grid-template-columns: 1fr; }
+    .poem-leaf .meta { border-right: none; border-bottom: 1px solid var(--rule); flex-direction: row; align-items: baseline; gap: 18px; padding: 20px 26px; }
+    .poem-leaf .meta .pt { writing-mode: horizontal-tb; height: auto; }
+    .poem-leaf .verse-v { writing-mode: horizontal-tb; height: auto; }
+    .couplet-leaf .allusion { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="leaf">
+    <div class="preface">
+      <b>中州集诗抄</b>
+      全部文字逐字取自本库《翰苑英华中州集》。原书无标点，断句由编者代加；一首诗一幅书叶，诗与人一起读。此版改用纸面竖排，仿雕版书叶形制。
+    </div>
+    <div class="title-block">中州<em>集</em>诗抄</div>
+    <div class="seal-mini">元好問</div>
+  </div>
+
+  <div class="couplet-leaf">
+    <div class="cl">自怜心似<b>鲁连子</b></div>
+    <div class="cl">人道面如<b>裴晋公</b></div>
+    <div class="ca">辛愿 · 时人传诵的自画像</div>
+    <div class="allusion">
+      <div>
+        <h4><b>鲁连子</b> · 战国第一高士</h4>
+        <p>鲁仲连为赵解秦围，功成拒受封赏：「宁贫贱而轻世肆志，不富贵而诎于人。」心似鲁连子，是一身傲骨：有济世的本事，没有折腰的习惯。</p>
+      </div>
+      <div>
+        <h4><b>裴晋公</b> · 还带改命的唐相</h4>
+        <p>裴度年轻时被相士断为饿死之相，香山寺拾还玉带积阴德改相，终位极人臣。关汉卿杂剧《裴度还带》正流行于辛愿的时代。</p>
+      </div>
+    </div>
+    <div class="verdict">
+      心是鲁仲连的心，脸是裴度未贵时的脸。<strong>裴度还带改了命，辛愿没改成</strong>，一家穷饿，贫饿而终。当时人读它是妙语，今天读它近乎谶语。
+    </div>
+  </div>
+
+  <div class="poem-leaf">
+    <div class="meta">
+      <div class="pt">乱后</div>
+      <div class="pa">辛愿 · 字敬之<br>自号女几野人</div>
+    </div>
+    <div class="body">
+      <div class="verse-v">
+        <p>兵去人归日，花开雪霁天。</p>
+        <p>川原荒宿草，墟落动新烟。</p>
+        <p>困鼠鸣虚壁，饥乌啄废田。</p>
+        <p>似闻人语乱，<span class="hot">县吏已催钱。</span></p>
+      </div>
+      <p class="note">前六句是兵灾后的死寂，末句突然拉回现实：兵灾过去了，压垮人的还是收税的县吏。小传记载他<strong>田五六十亩，岁入不足一牛，竟卖之以为食，众雏嗷嗷张口待哺</strong>。</p>
+    </div>
+  </div>
+
+  <div class="poem-leaf">
+    <div class="meta">
+      <div class="pt">花下墓</div>
+      <div class="pa">赵秉文 · 号闲闲<br>主盟文坛三十年</div>
+    </div>
+    <div class="body">
+      <div class="verse-v">
+        <p>山前树，今人看花昔人墓。</p>
+        <p>昔人栽花待邀宾，花开墓上人何处？</p>
+        <p>今年花尽复明年，今人复为后人怜。</p>
+        <p>酒浇墓上吃不得，<span class="hot">留与饥鸦作寒食。</span></p>
+      </div>
+      <p class="note">坟头赏花的一次轮转：看花人终成墓中人。小传说他<strong>「小诗精绝」</strong>，官居六卿而<strong>「自奉养如寒士，不知富贵为何物」</strong>。</p>
+    </div>
+  </div>
+
+  <div class="poem-leaf">
+    <div class="meta">
+      <div class="pt">效王右丞</div>
+      <div class="pa">赵秉文 · 与王维<br>竹里馆对读</div>
+    </div>
+    <div class="body">
+      <div class="verse-v">
+        <p>独坐幽林下，谈玄复观易。</p>
+        <p>西日隐半峰，返照林间石。</p>
+        <p>石上多古苔，山花间红碧。</p>
+        <p>花落人不知，<span class="hot">山空水流出。</span></p>
+      </div>
+      <p class="note">王维原作收在「深林人不知，明月来相照」，他收在「花落人不知，山空水流出」。同一份空寂，王维用月照，他用水声。</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    文本来源：殆知阁古代文献《翰苑英华中州集》（github.com/robertsong2000/daizhigev20 简体版）。原书无标点，断句为编者所加，字句未动；「柳泉」底本作「栁泉」，径改。
+  </div>
+</footer>
+
+</body>
+</html>
