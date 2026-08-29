@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>酌中志 · 死牢里递出的宫廷档案</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-hi: #f2eee6;
+    --dim: #a39e93; --faint: #6e6a61;
+    --gold: #c9963f;
+    --seal: #c0453c;
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink);
+    background-image: repeating-linear-gradient(90deg, rgba(232,228,220,0.018) 0 2px, transparent 2px 7px);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+
+  /* 封皮：案上一册竖签 */
+  .cover { max-width: 820px; margin: 0 auto; padding: 96px 30px 72px; display: flex; gap: 44px; align-items: flex-start; }
+  .spine { writing-mode: vertical-rl; font-size: clamp(64px, 11vw, 118px); font-weight: 700; letter-spacing: 0.32em; line-height: 1; border-left: 2px solid var(--gold); padding-left: 30px; height: 7.4em; }
+  .cover-body { padding-top: 8px; }
+  .kick { font-size: 13px; letter-spacing: 0.4em; color: var(--faint); }
+  .who { margin-top: 26px; font-size: 17px; letter-spacing: 0.12em; }
+  .who b { color: var(--gold); font-weight: 700; }
+  .lead { margin-top: 14px; max-width: 27em; color: var(--dim); font-size: 15.5px; }
+  .seal {
+    margin-top: 44px; width: 92px; height: 92px; background: var(--seal);
+    color: #f5efe6; display: grid; place-items: center;
+    writing-mode: vertical-rl; font-size: 34px; font-weight: 700; letter-spacing: 0.18em;
+    transform: rotate(-6deg); box-shadow: 0 0 0 3px var(--ink), 0 0 0 4.5px var(--seal);
+  }
+
+  /* 档案卡 */
+  .sheet { max-width: 820px; margin: 0 auto 26px; padding: 0 30px; }
+  .card {
+    background: var(--paper); color: var(--ink);
+    padding: 34px 38px 30px; position: relative;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.5), 0 10px 28px rgba(0,0,0,0.42);
+  }
+  .card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+    background: repeating-linear-gradient(-45deg, var(--seal) 0 12px, transparent 12px 22px);
+  }
+  .card-label {
+    position: absolute; top: 20px; right: 30px; border: 1.5px solid var(--seal); color: var(--seal);
+    font-size: 13px; letter-spacing: 0.3em; padding: 4px 10px 4px 13px; transform: rotate(2deg);
+  }
+  .card h2 { font-size: 15px; letter-spacing: 0.34em; color: var(--faint); font-weight: 400; margin-bottom: 20px; }
+  .card dl { display: grid; grid-template-columns: 5.5em 1fr; row-gap: 9px; font-size: 15px; }
+  .card dt { color: var(--faint); letter-spacing: 0.5em; }
+  .card dd b { color: var(--seal); font-weight: 700; }
+
+  /* 叙事三节（墨底） */
+  .story { max-width: 820px; margin: 0 auto; padding: 40px 30px 8px; }
+  .sec { margin-bottom: 40px; max-width: 40em; }
+  .sec h3 { font-size: 22px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 12px; }
+  .sec h3 span { color: var(--gold); font-size: 14px; letter-spacing: 0.3em; margin-right: 16px; font-weight: 400; }
+  .sec p { color: var(--dim); font-size: 15.5px; }
+  .sec p b { color: var(--paper); font-weight: 700; }
+
+  /* 夹单：斜贴的小纸条 */
+  .clip-wrap { max-width: 820px; margin: 6px auto 46px; padding: 0 30px; display: flex; justify-content: center; }
+  .clip {
+    background: var(--paper-hi); color: var(--ink); max-width: 560px;
+    padding: 24px 30px 20px; transform: rotate(-1.4deg);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.45);
+  }
+  .clip .ctag { font-size: 12px; letter-spacing: 0.28em; color: var(--gold); }
+  .clip p { font-size: 16.5px; margin-top: 8px; }
+  .clip small { display: block; margin-top: 10px; color: var(--faint); font-size: 13px; }
+
+  /* 供单 */
+  .gongdan-head { max-width: 820px; margin: 0 auto; padding: 26px 30px 6px; }
+  .gongdan-head h2 { font-size: 24px; font-weight: 700; letter-spacing: 0.14em; }
+  .gongdan-head p { color: var(--faint); font-size: 14px; margin-top: 6px; }
+  .gd {
+    background: var(--paper); color: var(--ink);
+    max-width: 820px; margin: 0 auto 22px; padding: 30px 38px 26px;
+    border-left: 7px solid var(--gold);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.5), 0 10px 28px rgba(0,0,0,0.42);
+  }
+  .gd .vtag { font-size: 12.5px; letter-spacing: 0.22em; color: var(--faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+  .gd .vtag em { font-style: normal; color: var(--gold); }
+  .gd blockquote { font-size: 18.5px; line-height: 2; margin-top: 14px; }
+  .gd blockquote + blockquote { margin-top: 12px; }
+  .gd .note { margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(25,25,23,0.25); font-size: 13.5px; color: var(--faint); }
+  .gd .note b { color: var(--seal); font-weight: 700; }
+  .gd.q6 { border-left-color: var(--seal); }
+
+  /* 卷宗目录 */
+  .mulu { max-width: 820px; margin: 0 auto; padding: 46px 30px 10px; }
+  .mulu h2 { font-size: 24px; font-weight: 700; letter-spacing: 0.14em; }
+  .mulu .msub { color: var(--faint); font-size: 14px; margin: 8px 0 24px; }
+  .vol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 44px; }
+  .vol-item { display: flex; gap: 14px; padding: 8px 2px; border-top: 1px solid var(--hairline); font-size: 15px; }
+  .vol-item .vn { color: var(--gold); font-size: 13px; min-width: 4.5em; letter-spacing: 0.06em; }
+  .vol-item.ft { color: var(--dim); }
+  .endnote { max-width: 40em; color: var(--dim); font-size: 14.5px; margin-top: 26px; }
+
+  footer.page { max-width: 820px; margin: 0 auto; padding: 44px 30px 64px; color: var(--faint); font-size: 13.5px; border-top: 1px solid var(--hairline); }
+  footer.page p + p { margin-top: 6px; }
+
+  @media (max-width: 640px) {
+    .cover { flex-direction: column; gap: 30px; padding-top: 72px; }
+    .spine { height: auto; border-left: none; padding-left: 0; }
+    .card, .gd { padding: 26px 24px 22px; }
+    .card dl { grid-template-columns: 4.5em 1fr; font-size: 14px; }
+    .vol-grid { grid-template-columns: 1fr; }
+    .gd blockquote { font-size: 16.5px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <div class="spine">酌中志</div>
+  <div class="cover-body">
+    <div class="kick">殆知阁导读 其六十一</div>
+    <p class="who">明 宦官<b>刘若愚</b> 狱中自述</p>
+    <p class="lead">一部从死牢里递出来的紫禁城档案。作者在等待处决的年月里，把大明宫墙之内四十余年的耳闻目见写成二十四卷：权阉的底细、妃嫔的死法、宫里的年节，和一桩没有证据的死刑判决。</p>
+    <div class="seal">累臣</div>
+  </div>
+</header>
+
+<section class="sheet">
+  <div class="card">
+    <div class="card-label">犯官档案</div>
+    <h2>案 卷 摘 要</h2>
+    <dl>
+      <dt>姓名</dt><dd>刘若愚，囚中自称「累臣」，累臣者，系囚之臣</dd>
+      <dt>生年</dt><dd>万历甲申（1584）</dd>
+      <dt>家世</dt><dd>南直定远军户，始祖从太祖起兵，八世祖刘应祺官至京营左副将，为辽东帅所忌，郁郁而终</dd>
+      <dt>入宫</dt><dd>万历辛丑（1601）选入皇城，拨司礼监掌印陈矩名下，做抄誊雠校的文墨差事</dd>
+      <dt>案由</dt><dd>魏党逆案牵连，坐「主使杀人」</dd>
+      <dt>原判</dt><dd><b>斩，秋后处决</b>，崇祯八年改绞</dd>
+      <dt>狱况</dt><dd>崇祯元年入狱，书中纪事至十四年春，其时仍在狱中</dd>
+      <dt>成书</dt><dd>二十四卷，追记万历末年至崇祯初年宫府之事</dd>
+    </dl>
+  </div>
+</section>
+
+<main>
+  <section class="story">
+    <div class="sec">
+      <h3><span>其一</span>感异梦而自宫</h3>
+      <p>他生在军功世家，本该袭职吃粮。十四岁那年，悖父兄之教，「感异梦而自宫」，从此废儒业，读医书。三年后选入皇城，拨在司礼监掌印太监陈矩名下。陈矩是万历朝少有的清谨权宦，妖书案的大狱里委曲调救，中外始安。跟着这样的师父，他下班习字读书，即师生父子。入宫七年陈矩去世，此后二十年他升奉御，做的仍是文书房里的文墨活计，日子太平得一眼望得到头。</p>
+    </div>
+    <div class="sec">
+      <h3><span>其二</span>傻子当国</h3>
+      <p>天启年间换了一副朝局。魏忠贤，市井亡赖出身，赌钱吃酒，鲜衣驰马，不识字，人称傻子，就这样做了司礼监秉笔、提督东厂。识字的宦官不肯依附，日子反而难过：刘若愚先被从司礼监退到御马监，又被魏党亲信李永贞唤去直房当差，设法羁防，进退不得，气郁痰火，不食八九日，濒死者数次。他在李永贞直房里经管文书，这份差事，日后恰恰成了他的罪名。</p>
+    </div>
+    <div class="sec">
+      <h3><span>其三</span>以血泪和墨</h3>
+      <p>崇祯元年，魏党倒台，清算开始。三月，刘若愚被逮入刑部狱；六月会审，不容分讯，各夹打一顿，律拟斩。他辩白那件「空印本」并非他填写，「主使」二字更是悬坐，无人肯听。此后秋审年年过案：五年奉旨另审，屡改未允；八年改拟绞罪；十四年春大赦，覆奏名单里仍没有他。狱中岁月长，他索性把万历末年以来宫墙之内耳目所及写成二十四卷，直吐肺肝，不加装饰。书名「酌中」，取斟酌大内之中。其后获释与否，行迹无考。</p>
+    </div>
+  </section>
+
+  <div class="clip-wrap">
+    <div class="clip">
+      <div class="ctag">夹单 · 卷十七 大内规制纪略</div>
+      <p>内书堂楹联：「学未到孔圣门墙，须努力趱行几步；做不尽家庭事业，且开怀丢在一边。」</p>
+      <small>宦官学堂的圣人位旁，挂着这样一副对联。识字与不识字之间，隔着一座皇宫的兴亡。</small>
+    </div>
+  </div>
+
+  <section class="gongdan-head">
+    <h2>六张供单</h2>
+    <p>以下引文均与库内文本逐字核对。</p>
+  </section>
+
+  <section class="gd">
+    <div class="vtag"><em>供单一</em><span>卷二十三 累臣自叙略节</span></div>
+    <blockquote>累臣若愚，生于万历甲申二月，至戊戌七月悖父兄之教，感异梦而自宫，废儒业，读医书，习养生家言。</blockquote>
+    <div class="note">自宫之年十四岁。官宦世家子弟的一生，在这四十五个字里改了道。</div>
+  </section>
+
+  <section class="gd">
+    <div class="vtag"><em>供单二</em><span>卷十四 客魏始末纪略</span></div>
+    <blockquote>忠贤少孤贫好色，赌博能饮，啖嬉笑喜，鲜衣驰马，右手执弓，左手彀弦，射多奇中，不识文字，人多以傻子称之。</blockquote>
+    <div class="note">权倾天下的九千岁，在同时代宦官笔下是这样一个市井画像。作者补了一句：担当能断，猜狠自用。</div>
+  </section>
+
+  <section class="gd">
+    <div class="vtag"><em>供单三</em><span>卷八 两朝椒难纪略</span></div>
+    <blockquote>独将妃封闭宫墙之内，无所饮食，经数日。后天雨，尚力疾匍匐于产溜之次，伏啖雨水数口气绝。</blockquote>
+    <div class="note">裕妃有孕，得罪客氏与魏忠贤，被绝其水火。宫门看守奏知先帝，得到的处置只是革去封号，照宫人例焚化。</div>
+  </section>
+
+  <section class="gd">
+    <div class="vtag"><em>供单四</em><span>卷八 两朝椒难纪略</span></div>
+    <blockquote>先时成妃见裕妃生生饿死，遂平居时，凡櫩瓦砖缝之中，多暗蓄食物，至此暗得窃食数日。</blockquote>
+    <div class="note">成妃提前在砖缝藏食，仅仅得幸存。宫闱之事写到此等细节，这一卷几乎没有遮掩。</div>
+  </section>
+
+  <section class="gd">
+    <div class="vtag"><em>供单五</em><span>卷二十 饮食好尚纪略</span></div>
+    <blockquote>饮椒柏酒，吃水点心，即「扁食」也。或暗包银钱一二于内，得之者以卜一年之吉。</blockquote>
+    <blockquote>吃元宵，其制法用糯米细面，内用核桃仁、白糖为果馅，洒水滚成，如核桃大，即江南所称汤圆者。</blockquote>
+    <div class="note">宫眷内臣的正旦节：将门闩或木杠于院地上抛掷三度，名曰「跌千金」；至次日立春，无贵贱皆嚼萝卜，曰「咬春」。紫禁城里的饺子，也包钱。</div>
+  </section>
+
+  <section class="gd q6">
+    <div class="vtag"><em>供单六</em><span>卷二十三 累臣自叙略节</span></div>
+    <blockquote>敬于席藁苟活之际，以柙楞代砚，以血泪和墨谨将《忧危竑议》以来及先帝甲乙丙丁四年之内，耳目所及，最真最确实者，直吐肺肝，不加装饰。</blockquote>
+    <div class="note">柙楞是囚床的木栏。全书最后落在这一卷，写完的时候，作者仍在狱中。</div>
+  </section>
+
+  <section class="mulu">
+    <h2>卷宗目录</h2>
+    <p class="msub">今本二十四卷，前十卷纪事，后十四卷记制度、饮食、服饰、见闻，末卷附自叙。</p>
+    <div class="vol-grid">
+      <div class="vol-item"><span class="vn mono">卷一</span>忧危竑义前纪第一</div>
+      <div class="vol-item"><span class="vn mono">卷二</span>忧危竑议后纪第二</div>
+      <div class="vol-item"><span class="vn mono">卷三</span>恭纪先帝诞生第三</div>
+      <div class="vol-item"><span class="vn mono">卷四</span>恭纪今上瑞征第四</div>
+      <div class="vol-item"><span class="vn mono">卷五</span>三朝典礼之臣纪略</div>
+      <div class="vol-item"><span class="vn mono">卷六</span>大审平反纪略</div>
+      <div class="vol-item"><span class="vn mono">卷七</span>先监遗事纪略</div>
+      <div class="vol-item"><span class="vn mono">卷八</span>两朝椒难纪略</div>
+      <div class="vol-item"><span class="vn mono">卷九</span>正监蒙难纪略</div>
+      <div class="vol-item"><span class="vn mono">卷十</span>逆贤乱政纪略</div>
+      <div class="vol-item"><span class="vn mono">卷十一</span>外廷线索纪略</div>
+      <div class="vol-item"><span class="vn mono">卷十二</span>各家经管纪略</div>
+      <div class="vol-item"><span class="vn mono">卷十三</span>本章经手次第</div>
+      <div class="vol-item"><span class="vn mono">卷十四</span>客魏始末纪略</div>
+      <div class="vol-item"><span class="vn mono">卷十五</span>逆贤羽翼纪略</div>
+      <div class="vol-item"><span class="vn mono">卷十六</span>内府衙门识掌</div>
+      <div class="vol-item"><span class="vn mono">卷十七</span>大内规制纪略</div>
+      <div class="vol-item"><span class="vn mono">卷十八</span>内板经书纪略</div>
+      <div class="vol-item"><span class="vn mono">卷十九</span>内臣佩服纪略</div>
+      <div class="vol-item"><span class="vn mono">卷二十</span>饮食好尚纪略</div>
+      <div class="vol-item"><span class="vn mono">卷廿一</span>辽左弃地</div>
+      <div class="vol-item"><span class="vn mono">卷廿二</span>见闻琐事杂记</div>
+      <div class="vol-item"><span class="vn mono">卷廿三</span>累臣自叙略节</div>
+      <div class="vol-item ft"><span class="vn mono">卷廿四</span>黑头爰立纪略（附）</div>
+    </div>
+    <p class="endnote">《酌中志》的特别在于位置：写宫墙之内的人，是被那座宫墙判了死刑的囚徒。记饮食、记规制、记年节的笔墨越平静，卷八的饿殍和卷二十三的冤狱就越刺眼。它是史料，也是一份从来没递出去的申诉状。</p>
+  </section>
+</main>
+
+<footer class="page">
+  <p>文本来源：殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）。本篇引文已与库内文本逐字核验。</p>
+  <p>作者身在缧绁，笔下多为自辩与宫闱见闻，立场与见识皆囿于其时代与身份，书中酷虐、祯祥、灾异诸说，读者当以历史视之。</p>
+</footer>
+
+</body>
+</html>
