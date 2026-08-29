@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>影梅庵忆语 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #26251f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --st: #5e8fbb; --st-dim: rgba(94,143,187,0.4); --st-faint: rgba(94,143,187,0.14);
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 26px; }
+
+  /* 开场：竖排引文，题名后置 */
+  .hero { position: relative; min-height: 96dvh; display: flex; flex-direction: column; overflow: hidden; }
+  .hero .water { position: absolute; right: -4vw; bottom: -14vh; font-size: 56vh; line-height: 1; color: var(--st-faint); font-weight: 700; pointer-events: none; user-select: none; }
+  .hero .kicker { padding: 30px 34px 0; font-size: 13px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  .hero .stage { flex: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; padding: 0 34px 8vh; }
+  .vq {
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: clamp(30px, 5.4vw, 58px); font-weight: 700; line-height: 1.9;
+    letter-spacing: 0.32em; height: min(62dvh, 620px);
+  }
+  .vq span { display: block; }
+  .vq em { font-style: normal; color: var(--st); }
+  .vq .lead { color: var(--paper-dim); font-size: 0.72em; font-weight: 400; }
+  .htext { max-width: 400px; }
+  .htext h1 { font-size: clamp(40px, 6vw, 66px); font-weight: 700; letter-spacing: 0.16em; line-height: 1.25; }
+  .htext .by { margin-top: 14px; color: var(--paper-dim); font-size: 15px; letter-spacing: 0.22em; }
+  .htext .what { margin-top: 22px; color: var(--paper-faint); font-size: 14px; border-left: 1px solid var(--st-dim); padding-left: 14px; max-width: 30em; }
+
+  /* 章节头：章字外框印 */
+  section { border-top: 1px solid var(--hairline); }
+  .sec { padding: 74px 0 66px; }
+  .sh { display: flex; align-items: center; gap: 20px; margin-bottom: 34px; }
+  .seal {
+    flex: none; width: 58px; height: 58px; display: grid; place-items: center;
+    border: 1.5px solid var(--st); color: var(--st);
+    font-size: 26px; font-weight: 700; transform: rotate(-4deg);
+  }
+  .sh h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 700; letter-spacing: 0.1em; }
+  .sh .sy { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.24em; margin-top: 4px; }
+
+  p.tx { font-size: 16.5px; color: var(--paper-dim); margin: 0 0 20px; max-width: 38em; }
+  p.tx b { color: var(--paper); font-weight: 600; }
+  p.tx .st { color: var(--st); }
+
+  blockquote.q {
+    margin: 30px 0; padding: 4px 0 4px 20px; border-left: 1px solid var(--st-dim);
+    font-size: 18.5px; line-height: 2.1; color: var(--paper); max-width: 34em;
+  }
+  blockquote.q .src { display: block; text-align: right; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.18em; margin-top: 8px; }
+  blockquote.q.big { font-size: clamp(21px, 2.8vw, 27px); line-height: 1.9; padding-left: 0; border-left: none; }
+  blockquote.q.big::before { content: "「"; color: var(--st); }
+  blockquote.q.big::after { content: "」"; color: var(--st); }
+
+  /* 九年时间轴 */
+  .spine { display: grid; grid-template-columns: repeat(11, 1fr); column-gap: 10px; }
+  .spine .s { border-top: 2px solid var(--hairline); padding: 16px 0 0 0; position: relative; }
+  .spine .s::before { content: ""; position: absolute; top: -5px; left: 0; width: 8px; height: 8px; background: var(--paper-faint); }
+  .spine .s.hot::before { background: var(--st); }
+  .spine .gz { font-size: 19px; font-weight: 700; letter-spacing: 0.08em; }
+  .spine .s.hot .gz { color: var(--st); }
+  .spine .yr { font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.14em; margin: 2px 0 8px; }
+  .spine .lb { font-size: 12.5px; color: var(--paper-dim); line-height: 1.7; }
+  .spine-note { margin-top: 26px; font-size: 13px; color: var(--paper-faint); }
+
+  /* 对影：两栏对话 */
+  .talk { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); margin: 30px 0; }
+  .talk > div { background: var(--ink-2); padding: 24px 22px 20px; }
+  .talk .who { font-size: 13px; letter-spacing: 0.34em; color: var(--st); margin-bottom: 12px; }
+  .talk .who small { display: block; letter-spacing: 0.1em; color: var(--paper-faint); font-size: 11.5px; margin-top: 4px; }
+  .talk blockquote.q { margin: 0; padding: 0 0 0 0; border-left: none; font-size: 16.5px; line-height: 2; }
+  .talk blockquote.q + blockquote.q { margin-top: 14px; }
+  .talk blockquote.q .src { text-align: left; margin-top: 6px; }
+
+  /* 终句回声 */
+  .finale { padding: 84px 0 30px; border-top: 1px solid var(--hairline); }
+  .finale .fq {
+    font-size: clamp(26px, 4.6vw, 44px); font-weight: 700; line-height: 1.85; letter-spacing: 0.06em;
+    max-width: 22em; text-shadow: 10px 10px 0 var(--st-faint);
+  }
+  .finale .fq em { font-style: normal; color: var(--st); }
+  .finale .after { margin-top: 40px; color: var(--paper-dim); font-size: 16px; max-width: 36em; }
+
+  footer { border-top: 1px solid var(--hairline); padding: 40px 0 64px; color: var(--paper-faint); font-size: 13.5px; line-height: 2.1; }
+  footer a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px dotted var(--paper-faint); }
+  footer .warn { margin-top: 14px; padding-top: 14px; border-top: 1px dotted var(--hairline); }
+
+  @media (max-width: 760px) {
+    .hero .stage { flex-direction: column-reverse; align-items: flex-start; justify-content: flex-end; padding-top: 40px; }
+    .vq { height: 300px; }
+    .talk { grid-template-columns: 1fr; }
+    .sec { padding: 56px 0 50px; }
+    .spine { grid-template-columns: repeat(3, 1fr); row-gap: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="water">忆</div>
+  <div class="kicker">殆知阁导读 · 之二十四</div>
+  <div class="stage">
+    <div class="htext">
+      <h1>影梅庵忆语</h1>
+      <div class="by">清　冒襄 撰　四卷</div>
+      <p class="what">一部悼亡之书。顺治八年正月，二十八岁的董小宛死在如皋，她的丈夫把九年一笔一笔默写回来，无意间开创了一种文体：忆语。</p>
+    </div>
+    <div class="vq">
+      <span class="lead">余一生清福</span>
+      <span><em>九年</em>占尽</span>
+      <span><em>九年</em>折尽矣</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap sec">
+      <div class="sh">
+        <div class="seal">书</div>
+        <div>
+          <h2>先立一条规矩，再开始回忆</h2>
+          <div class="sy">卷一 · 开篇</div>
+        </div>
+      </div>
+      <p class="tx">历来的美人故事，冒襄都不信。书写亡妾之前，他先声明：世人写佳人，无非文人描摹、好事侈谈，把西施文君写成人人阁中皆有。他要反着来，只记实事，不作一语粉饰。</p>
+      <blockquote class="q">爱生于昵，昵则无所不饰。缘饰著爱，天下鲜有真可爱者矣。<span class="src">卷一</span></blockquote>
+      <blockquote class="q">此亦闺秀之奇冤，而啖名之恶习已。<span class="src">卷一</span></blockquote>
+      <p class="tx">于是一开卷便见到亡人的底细，不写容色，先写姓名籍贯与年月。</p>
+      <blockquote class="q">亡妾董氏，原名白，字小宛，复字青莲。籍秦淮，徙吴门。<span class="src">卷一</span></blockquote>
+      <p class="tx">这部书后世的文名盖过了它本来的名目：此后《香畹楼忆语》《秋灯琐忆》一路仿作络绎，文体史里称作<span class="st">忆语体</span>，源头就是影梅庵下这一卷泪笔。而它的特别之处在于：书里那个女子的每一句话，都是经过他的笔才留下来的。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap sec">
+      <div class="sh">
+        <div class="seal">年</div>
+        <div>
+          <h2>九年</h2>
+          <div class="sy">己卯 至 辛卯 · 1639 至 1651</div>
+        </div>
+      </div>
+      <div>
+        <div class="spine">
+          <div class="s hot"><div class="gz">己卯</div><div class="yr">1639</div><div class="lb">初夏曲栏一晤，姬年十六</div></div>
+          <div class="s"><div class="gz">庚辰</div><div class="yr">1640</div><div class="lb">欲访不遇</div></div>
+          <div class="s hot"><div class="gz">辛巳</div><div class="yr">1641</div><div class="lb">陈姬之约成空，病榻重见小宛</div></div>
+          <div class="s hot"><div class="gz">壬午</div><div class="yr">1642</div><div class="lb">金山誓江，钱谦益为之下千金落籍</div></div>
+          <div class="s"><div class="gz">癸未</div><div class="yr">1643</div><div class="lb">门内岁月，学书抄诗</div></div>
+          <div class="s hot"><div class="gz">甲申</div><div class="yr">1644</div><div class="lb">北京陷，碎金布囊，举家避难</div></div>
+          <div class="s hot"><div class="gz">乙酉</div><div class="yr">1645</div><div class="lb">剃发令下，百日流离</div></div>
+          <div class="s"><div class="gz">丙戌</div><div class="yr">1646</div><div class="lb">客海陵，两人手制香百丸</div></div>
+          <div class="s hot"><div class="gz">丁亥</div><div class="yr">1647</div><div class="lb">冒襄垂死，一百五十日病榻</div></div>
+          <div class="s hot"><div class="gz">己丑</div><div class="yr">1649</div><div class="lb">疽发于背，又一百日</div></div>
+          <div class="s hot"><div class="gz">辛卯</div><div class="yr">1651</div><div class="lb">正月初二，姬逝</div></div>
+        </div>
+      </div>
+      <p class="spine-note">初见时她十六岁，死去时虚岁二十八，扣除别离与战乱，同处的岁月，他在书里只肯称作九年。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap sec">
+      <div class="sh">
+        <div class="seal">遇</div>
+        <div>
+          <h2>三次错过，一次病榻</h2>
+          <div class="sy">卷一 · 己卯 至 壬午</div>
+        </div>
+      </div>
+      <p class="tx">己卯年冒襄落第游吴门，朋友推荐秦淮的新人，他一次次过门而不得见。将归棹时再往，才在花径曲栏边见到一个倦极的女子。</p>
+      <blockquote class="q">面晕浅春，缬眼流视，香姿五色，神韵天然，懒慢不交一语。余惊爱之，惜其倦，遂别归，此良晤之始也。时姬年十六。<span class="src">卷一 · 初见</span></blockquote>
+      <p class="tx">此后三年，书里另有一条几乎被讲坏的线索：辛巳年有人引他见一位擅梨园的陈姬，两人订下八月之约，冒襄因父亲被困危城，匆匆别去；秋日再访，那女子已被势家劫去。后世考订，这位陈姬多认为就是陈圆圆。缘分错到尽头，才轮到书的主角。壬午年他在半塘再遇小宛，其时她母新丧，自己危病十八日，药饵满榻。病一好，她便自己追上了他的船，二十七日里，他辞了二十七次。</p>
+      <blockquote class="q big">委此身如江水东下，断不复返吴门<span class="src">卷一 · 登金山誓江流</span></blockquote>
+      <p class="tx">要从良，先得替她赎身落籍。吴门的债主群集，事情僵了近一年，最后是钱谦益出手：这位人称虞山宗伯的前礼部尚书亲自到半塘，把人接入自己船中，三日之内替她把债契钱粮料理干净，再派人驰书门生，立办落籍，一路楼船送到如皋。</p>
+      <blockquote class="q">越十月，愿始毕，然后往返葛藤，则万斛心血所灌注而成也。<span class="src">卷一 · 落籍始末</span></blockquote>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap sec">
+      <div class="sh">
+        <div class="seal">居</div>
+        <div>
+          <h2>门内的九年</h2>
+          <div class="sy">卷二 · 壬午 之后</div>
+        </div>
+      </div>
+      <p class="tx">进了冒家，她把秦淮关在门外：却管弦，洗铅华，学女红。学书法，先临钟繇，后写《曹娥碑》，日写数千字，不讹不落。两人合编历代女子的服食器用、才藻技艺，续成一部《奁艳》，细字红笺，类分条析，此书后来未见传本。他又想编一部足本的唐诗，购全集、集众评，她终日替他稽查抄写。</p>
+      <blockquote class="q">归来与姬遍搜诸书，续成之，名曰《奁艳》。<span class="src">卷二</span></blockquote>
+      <blockquote class="q">午夜衾枕间，犹拥数十家《唐书》而卧。<span class="src">卷二 · 编唐诗</span></blockquote>
+      <p class="tx">闲居的日子有一段写秋菊。病中的她把一盆名贵的剪桃红移到榻右，每晚烧烛，扇子围出三面，把菊影安在花间，然后自己走进去坐着。</p>
+      <blockquote class="q">始以身入，人在菊中，菊与人俱在影中。<span class="src">卷三 · 菊影</span></blockquote>
+      <blockquote class="q">菊之意态足矣，其如人瘦何？<span class="src">卷三 · 回视屏上语</span></blockquote>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap sec">
+      <div class="sh">
+        <div class="seal">难</div>
+        <div>
+          <h2>甲申乙酉</h2>
+          <div class="sy">卷三 · 1644 至 1645</div>
+        </div>
+      </div>
+      <p class="tx">甲申三月十九，北京陷，崇祯自缢的消息传到如皋已是四月。城中豺虎踞守，溃兵声言焚劫，大户一日鸟兽散。冒襄一家觅小舟出逃，黑夜行船，父亲忽然发现身边没有零钱打点。</p>
+      <blockquote class="q">途行需碎金，无从办。<span class="src">卷三 · 家君语</span></blockquote>
+      <blockquote class="q">姬出一布囊，自分许至钱许，每十两可数百小块，皆小书轻重于其上，以便仓卒随手取用。<span class="src">卷三 · 碎金布囊</span></blockquote>
+      <p class="tx">她早把银两剪碎，每一小块标好轻重。乱世逃难，这位明大义、达权变的女子预判了所有人的仓卒。乙酉年清兵南下，剃发令下，城中自相残杀，冒襄决意把家眷托付年友，自己轻身侍亲。他对她说的话，是书里最冷的一段。</p>
+      <div class="talk">
+        <div>
+          <div class="who">冒襄曰<small>卷三</small></div>
+          <blockquote class="q">我有年友，信义多才，以子托之，此后如复相见，当结平生欢，否则听子自裁，毋以我为念。</blockquote>
+        </div>
+        <div>
+          <div class="who">姬曰<small>她的回答，全凭他转述</small></div>
+          <blockquote class="q">君言善。举室皆倚君为命，复命不自君出，君堂上膝下，有百倍重于我者，乃以我牵君之臆。非徒无益，而又害之。</blockquote>
+          <blockquote class="q">前与君纵观大海，狂澜万顷，是否葬身处也！</blockquote>
+        </div>
+      </div>
+      <blockquote class="q">自此百日，皆展转深林僻路、茅屋渔艇。或一月徙，或一日徙，或一日数徙，饥寒风雨，苦不具述<span class="src">卷三</span></blockquote>
+      <p class="tx">马鞍山遇兵，杀掠奇惨，一家八口靠一条小舟飞渡得全。书里说，经此一役，她的惊悸憔悴，至矣尽矣。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap sec">
+      <div class="sh">
+        <div class="seal">病</div>
+        <div>
+          <h2>她护理了他的死亡</h2>
+          <div class="sy">卷四 · 丁亥 至 己丑</div>
+        </div>
+      </div>
+      <p class="tx">丁亥年冒襄染痢疾疟疾，自重阳后溃乱沉迷，冬至前一度僵死，一夜复苏。此后病榻一百五十日，她卷一条破席睡在榻边。</p>
+      <blockquote class="q">此百五十日，姬仅卷一破席，横陈榻边，寒则拥抱，热则被拂，痛则抚摩。或枕其身，或卫其足，或欠伸起伏，为之左右翼，凡病骨之所适，皆以身就之。<span class="src">卷四</span></blockquote>
+      <p class="tx">病中的冒襄性情失常，动辄暴怒。</p>
+      <blockquote class="q">余病失常性，时发暴怒，诡谇三至，色不少忤，越五月如一日。<span class="src">卷四</span></blockquote>
+      <p class="tx">家人怜她，愿替她守一夜，她不肯。</p>
+      <blockquote class="q">竭我心力，以殉夫子。夫子生而余死犹生也；脱夫子不测，余留此身于兵燹间，将安寄托？<span class="src">卷四 · 姬曰</span></blockquote>
+      <p class="tx">这之后还有背疽百日。他自己算过总账：五年之内三次危疾，都是必死之症，全靠不死之心硬撑，而撑住他的，是昼夜坐在药炉旁、在他枕边足畔守了六十昼夜的人。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap sec">
+      <div class="sh">
+        <div class="seal">逝</div>
+        <div>
+          <h2>签、镯与梦</h2>
+          <div class="sy">卷四 · 辛卯</div>
+        </div>
+      </div>
+      <p class="tx">十年前壬午年，他在关帝前求过一支签，签头第一个字是「忆」，词里早写了「到底谁知事不谐」。金山誓江那日，小宛茹素再卜，得的正是同一支。他后来写道，那一签竟两度应验。</p>
+      <blockquote class="q">余有生之年，皆长相忆之年也。<span class="src">卷四 · 忆字签</span></blockquote>
+      <p class="tx">戊子年七夕，两人看着天上流霞，把一只黄铜跳脱（手镯）摹着霞色镌了字，先镌「乞巧」，一年后镌「比翼」「连理」。辛卯正月初一，她弥留，求见婆婆一面才肯闭眼。临终身上不用一粒金珠，只有那只镯子没有离手。</p>
+      <blockquote class="q">死能弥留，元旦次日，求见老母，始瞑目。<span class="src">卷二 · 追记</span></blockquote>
+      <blockquote class="q">姬临终时，自顶至踵，不用一金珠纨绮，独留跳脱不去手<span class="src">卷四</span></blockquote>
+      <p class="tx">她死前两月，冒襄客居外地，夜里梦见回家，举室皆见，独不见姬，梦中大呼而醒。信到，人才知道那夜的梦是什么。</p>
+      <blockquote class="q">岂死耶？<span class="src">卷四 · 梦中语</span></blockquote>
+      <blockquote class="q">讵知梦真而诗谶咸来先告哉？<span class="src">卷四</span></blockquote>
+    </div>
+  </section>
+
+  <div class="finale">
+    <div class="wrap">
+      <div class="fq">今忽死，余不知<em>姬死</em>而<em>余死</em>也！</div>
+      <p class="after">书末他还记着一笔：她死前新春，替他抄《全唐五七言绝句》，读到七岁女子「所嗟人异雁，不作一行归」，凄然下泪，当夜和成八绝。他一见不怿，夺过稿子烧了。她死的日子，正是那一日。此后冒襄又独自活了四十余年，八十三岁卒。</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>文本来源：殆知阁古代文献简体库 史藏 志存记录 <a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>，全文四卷约一万二千八百字，库内实测 12,827 字符。</div>
+    <div>本篇引文均与库内文件逐字核验（去标点归一比对），核验脚本见同目录 verify_yingmei.py；系列总目见 <a href="mulu.html">mulu.html</a>。</div>
+    <div class="warn">文中纳妾、落籍、以死相殉等情节与观念皆系时代局限之产物，本页仅作史料与文体观察，不为张目。</div>
+  </div>
+</footer>
+
+</body>
+</html>
