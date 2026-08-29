@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>殆知阁导读 之四十三 · 名公书判清明集</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #26251f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --ochre: #c9963f; --ochre-dim: rgba(201,150,63,0.55);
+    --cinnabar: #c0453c;
+    --hairline: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 26px; }
+  em { font-style: normal; color: var(--ochre); }
+  a { color: var(--ochre); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ============ 封套 ============ */
+  .cover {
+    min-height: 96vh; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    padding: 60px 20px 80px; overflow: hidden;
+  }
+  .cover::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(232,228,220,0.016) 3px 4px),
+      radial-gradient(ellipse 90% 70% at 50% 40%, rgba(201,150,63,0.05), transparent 65%);
+    pointer-events: none;
+  }
+  .docket {
+    position: relative; background: var(--paper); color: var(--ink);
+    width: min(340px, 82vw); aspect-ratio: 3 / 4.3;
+    transform: rotate(-1.2deg);
+    box-shadow: 0 22px 60px rgba(0,0,0,0.55), 0 4px 14px rgba(0,0,0,0.4);
+    padding: 26px 22px;
+  }
+  .docket::after {
+    content: ""; position: absolute; inset: 10px;
+    border: 1px solid rgba(25,25,23,0.28); pointer-events: none;
+  }
+  .docket .vtitle {
+    writing-mode: vertical-rl; position: absolute;
+    top: 40px; right: 34px; bottom: 40px;
+    font-size: clamp(30px, 7vw, 44px); font-weight: 700;
+    letter-spacing: 0.24em; line-height: 1.28;
+  }
+  .docket .seal {
+    position: absolute; left: 30px; bottom: 34px;
+    width: 74px; height: 74px; border: 3px solid var(--cinnabar);
+    color: var(--cinnabar); display: grid; place-items: center;
+    writing-mode: vertical-rl; font-size: 24px; font-weight: 700;
+    letter-spacing: 0.18em; transform: rotate(6deg); opacity: 0.88;
+  }
+  .docket .corner-no {
+    position: absolute; left: 26px; top: 22px;
+    font-size: 12px; color: rgba(25,25,23,0.55); letter-spacing: 0.3em;
+  }
+  .tag {
+    position: absolute; background: #f2eee6; color: var(--ink);
+    border: 1px solid rgba(25,25,23,0.35);
+    padding: 7px 13px; font-size: 13px; letter-spacing: 0.14em;
+    box-shadow: 0 5px 14px rgba(0,0,0,0.45);
+  }
+  .tag.t1 { top: 9%; right: 6%; transform: rotate(3.5deg); }
+  .tag.t2 { bottom: 16%; right: 9%; transform: rotate(-2.4deg); }
+  .tag.t3 { bottom: 7%; left: 7%; transform: rotate(1.8deg); color: rgba(25,25,23,0.78); }
+  .tag .who { display: block; font-size: 11px; color: rgba(25,25,23,0.55); margin-top: 2px; }
+
+  .lede { padding: 8px 0 30px; }
+  .lede .kicker { font-size: 13px; letter-spacing: 0.4em; color: var(--paper-faint); margin-bottom: 20px; }
+  .lede p { max-width: 44em; color: var(--paper-dim); font-size: 16.5px; margin-bottom: 16px; }
+  .lede p b { color: var(--paper); font-weight: 600; }
+
+  /* ============ 章节标题 ============ */
+  section { padding: 58px 0 30px; }
+  section + section { border-top: 1px solid var(--hairline); }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+  .sec-head .sno { font-size: 12px; color: var(--ochre-dim); letter-spacing: 0.28em; }
+  .sec-head h2 { font-size: clamp(23px, 3.4vw, 30px); font-weight: 700; letter-spacing: 0.1em; }
+  .sec-note { color: var(--paper-faint); font-size: 14px; margin-bottom: 30px; max-width: 58em; }
+
+  /* ============ 架阁库 ============ */
+  .shelf { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .cell {
+    border: 1px solid var(--hairline); padding: 16px 15px 13px;
+    position: relative; transition: background 0.25s ease;
+  }
+  .cell:hover { background: var(--ink-2); }
+  .cell::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--ochre); opacity: 0; transition: opacity 0.25s ease;
+  }
+  .cell:hover::before { opacity: 0.8; }
+  .cell .gname { font-size: 19px; font-weight: 700; letter-spacing: 0.08em; }
+  .cell .gvols { font-size: 11.5px; color: var(--ochre-dim); margin: 3px 0 7px; }
+  .cell .gdesc { font-size: 12.5px; color: var(--paper-faint); line-height: 1.7; }
+
+  /* ============ 点卯簿 ============ */
+  .roster { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 40px; }
+  .pai {
+    border: 1px solid var(--hairline); padding: 13px 12px 11px; background: var(--ink-2);
+  }
+  .pai .hao { font-size: 17px; font-weight: 700; color: var(--ochre); letter-spacing: 0.06em; }
+  .pai .ming { font-size: 12px; color: var(--paper-dim); margin-top: 4px; line-height: 1.6; }
+  .pai.ci {
+    border-color: var(--cinnabar); box-shadow: inset 0 0 0 1px rgba(192,69,60,0.35);
+  }
+  .pai.ci .hao { color: var(--cinnabar); }
+  .pai .note { font-size: 11.5px; color: var(--cinnabar); margin-top: 6px; line-height: 1.6; }
+  .pai .note.dim { color: var(--paper-faint); }
+  .roster-note { font-size: 13px; color: var(--paper-faint); margin-bottom: 14px; }
+
+  /* ============ 署名榜 ============ */
+  .bars { border-top: 1px solid var(--hairline); padding-top: 18px; }
+  .bar-row { display: grid; grid-template-columns: 76px 1fr 44px; gap: 12px; align-items: center; padding: 5px 0; }
+  .bar-row .bn { font-size: 14.5px; color: var(--paper-dim); text-align: right; }
+  .bar-row .btrack { height: 15px; background: rgba(232,228,220,0.05); position: relative; }
+  .bar-row .bfill { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, rgba(201,150,63,0.45), var(--ochre)); }
+  .bar-row .bv { font-size: 12px; color: var(--paper-faint); }
+  .bars .mnote { font-size: 12px; color: var(--paper-faint); margin-top: 12px; }
+
+  /* ============ 户婚账单 ============ */
+  .bill { display: grid; grid-template-columns: 1fr 1fr; gap: 0 44px; }
+  .bill .bitem {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 7px 0; border-bottom: 1px dotted rgba(232,228,220,0.16); font-size: 15.5px;
+  }
+  .bill .bitem .bl { color: var(--paper); }
+  .bill .bitem .blead { flex: 1; }
+  .bill .bitem .bc { color: var(--ochre); font-size: 13.5px; white-space: nowrap; }
+  .bill-note { font-size: 13.5px; color: var(--paper-faint); margin-top: 16px; }
+
+  /* ============ 案牍叶 ============ */
+  .ye {
+    border: 1px solid var(--hairline); background: var(--ink-2);
+    position: relative; padding: 24px 26px 20px 30px; margin-bottom: 22px;
+  }
+  .ye::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: linear-gradient(180deg, var(--ochre), rgba(201,150,63,0.2));
+  }
+  .ye-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 14px; margin-bottom: 14px; }
+  .ye-head .mchip {
+    font-size: 11.5px; letter-spacing: 0.2em; color: var(--ink);
+    background: var(--ochre); padding: 2px 9px 1px; font-weight: 700;
+  }
+  .ye-head .mchip.dark { background: transparent; color: var(--ochre); border: 1px solid var(--ochre-dim); font-weight: 400; }
+  .ye-head .ytitle { font-size: 19.5px; font-weight: 700; letter-spacing: 0.04em; }
+  .ye-head .yjudge { font-size: 13.5px; color: var(--paper-faint); margin-left: auto; }
+  .ye .q {
+    display: block; font-size: 17px; line-height: 2.05; color: var(--paper);
+    padding: 2px 0 4px; margin-bottom: 12px;
+  }
+  .ye .q em { border-bottom: 1px solid var(--ochre-dim); padding-bottom: 1px; }
+  .ye .yan { font-size: 14.5px; color: var(--paper-dim); max-width: 52em; }
+  .ye .gou { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 14px; }
+  .ye .gou svg { opacity: 0.85; transform: rotate(-3deg); }
+  .ye .gou .glabel { font-size: 11px; color: var(--paper-faint); letter-spacing: 0.24em; }
+  .jiadai {
+    border: 1px dashed rgba(201,150,63,0.4); padding: 18px 22px 16px; margin-top: 6px;
+  }
+  .jiadai .jt { font-size: 13px; letter-spacing: 0.26em; color: var(--ochre-dim); margin-bottom: 8px; }
+  .jiadai .ytitle { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .jiadai .q { display: block; font-size: 15.5px; line-height: 1.95; margin-bottom: 8px; }
+  .jiadai .yan { font-size: 14px; color: var(--paper-dim); }
+
+  /* ============ 流传递条 ============ */
+  .relay { position: relative; padding-left: 26px; }
+  .relay::before {
+    content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(180deg, var(--ochre-dim), transparent);
+  }
+  .die {
+    position: relative; border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 18px 22px 15px; margin-bottom: 18px; max-width: 56em;
+  }
+  .die::before {
+    content: ""; position: absolute; left: -24px; top: 24px; width: 9px; height: 9px;
+    background: var(--ochre); transform: rotate(45deg);
+  }
+  .die .dyear { font-size: 12.5px; letter-spacing: 0.22em; color: var(--ochre); margin-bottom: 6px; }
+  .die p { font-size: 14.5px; color: var(--paper-dim); }
+  .die .q { display: block; font-size: 15.5px; line-height: 1.95; color: var(--paper); margin-top: 8px; padding-left: 14px; border-left: 2px solid var(--ochre-dim); }
+  .die .qwho { display: block; font-size: 12px; color: var(--paper-faint); margin-top: 5px; padding-left: 16px; }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 40px 0 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page p { margin-bottom: 7px; }
+  footer.page .back { margin-bottom: 20px; }
+
+  @media (max-width: 760px) {
+    .shelf { grid-template-columns: 1fr 1fr; }
+    .roster { grid-template-columns: 1fr 1fr; }
+    .bill { grid-template-columns: 1fr; }
+    .tag.t1 { top: 4%; right: 3%; }
+    .tag.t2 { bottom: 20%; right: 3%; }
+    .tag.t3 { bottom: 5%; left: 3%; }
+    .ye-head .yjudge { margin-left: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 封套 ============ -->
+<header class="cover">
+  <div class="docket">
+    <div class="corner-no mono">宋 · 书判</div>
+    <div class="vtitle">名公书判清明集</div>
+    <div class="seal">清明</div>
+  </div>
+  <div class="tag t1">南宋 · 判词汇编<br><span class="who">近百位名公亲笔的判决书</span></div>
+  <div class="tag t2">笥藏中秘，世所希遘覩也<br><span class="who">盛时选《清明集后序》</span></div>
+  <div class="tag t3">明隆庆三年自《永乐大典》辑出刻行<br><span class="who">库内本实测 302,839 字，十四卷七门</span></div>
+</header>
+
+<div class="wrap lede">
+  <div class="kicker">殆知阁导读 · 之四十三</div>
+  <p><b>名公</b>，是知名士大夫；<b>书判</b>，是他们亲手写下的判决书。南宋人把近百位名公的判词搜为一编，按官吏、赋役、文事、户婚、人伦、人品、惩恶七门排开，起于真德秀告诫同僚，止于惩恶诸禁。它不是文学，也不是抽象法典，而是最接近宋代社会现场的一层记录：谁在争田，谁在骗婚，谁霸着渡口，谁在贩人，判官怎么引法，怎么骂人，怎么落笔，全在一纸之内。</p>
+  <p>书名里那个「清明」，是判词的准绳：察情之明，用法之公。下面先看这部书的架子，再看写判的人，最后读几道判词原件。</p>
+</div>
+
+<main class="wrap">
+
+<!-- ============ 一 · 架阁库 ============ -->
+<section id="shelf">
+  <div class="sec-head"><span class="sno mono">壹</span><h2>架阁库 · 七门十四卷</h2></div>
+  <p class="sec-note">架阁库是宋代的官府档案库。这部书本身就按档案的理路编排：十四卷，分属七门，每门收一类公事。盛时选概括为「自真文忠公申儆官吏，讫于惩恶」。点击任一格，可在库内本中按门寻读。</p>
+  <div class="shelf">
+    <a class="cell" href="#ye1"><div class="gname">官吏门</div><div class="gvols mono">卷一至二</div><div class="gdesc">诫饬同僚，弹劾贪庸。全书开卷不办案，先立官箴。</div></a>
+    <a class="cell" href="#ye2"><div class="gname">赋役门</div><div class="gvols mono">卷三</div><div class="gdesc">催科、差役、限田。税出于田，一岁一收，可使一岁至再税乎。</div></a>
+    <div class="cell"><div class="gname">文事门</div><div class="gvols mono">卷三</div><div class="gdesc">学校、书院、祠堂、科举。学舍士人不许耕佃武职之田。</div></div>
+    <a class="cell" href="#bill"><div class="gname">户婚门</div><div class="gvols mono">卷四至九</div><div class="gdesc">田产、婚姻、继承、坟墓，六卷之重，全书重心所在。</div></a>
+    <div class="cell"><div class="gname">人伦门</div><div class="gvols mono">卷十</div><div class="gdesc">母子、兄弟、夫妇之讼，孝与不孝，宗族相争。</div></div>
+    <div class="cell"><div class="gname">人品门</div><div class="gvols mono">卷十一</div><div class="gdesc">僧道妄诉、公吏赃私、军兵横行，兼及厢牢。</div></div>
+    <a class="cell" href="#ye4"><div class="gname">惩恶门</div><div class="gvols mono">卷十二至十四</div><div class="gdesc">奸恶、赌博、假伪生药、淫祠、霸渡、贩生口，禁令所在。</div></a>
+    <div class="cell"><div class="gname">附 录</div><div class="gvols mono">卷末</div><div class="gdesc">黄幹、刘克庄、文天祥、朱熹别集中的判词，别集为辅。</div></div>
+  </div>
+</section>
+
+<!-- ============ 二 · 点卯簿 ============ -->
+<section id="roster">
+  <div class="sec-head"><span class="sno mono">贰</span><h2>点卯簿 · 判词出自谁手</h2></div>
+  <p class="sec-note">书首存《清明集名氏》一纸，开列二十八家，起于晦庵朱熹，讫于臞轩王迈。此录十家：九家有判存于今本，晦庵一家见录而判不存。</p>
+  <div class="roster">
+    <div class="pai"><div class="hao">石壁</div><div class="ming">胡颖<br>字叔献，潭州人</div></div>
+    <div class="pai"><div class="hao">久轩</div><div class="ming">蔡抗<br>字仲节，建安人</div></div>
+    <div class="pai"><div class="hao">浩堂</div><div class="ming">翁甫<br>字景山，建安人</div></div>
+    <div class="pai"><div class="hao">雨岩</div><div class="ming">吴势卿<br>字安道，建安人</div></div>
+    <div class="pai"><div class="hao">西堂</div><div class="ming">范应铃<br>字旗叟，南昌人</div></div>
+    <div class="pai"><div class="hao">后村</div><div class="ming">刘克庄<br>字潜夫，莆阳人</div></div>
+    <div class="pai"><div class="hao">秋崖</div><div class="ming">方岳<br>字巨山，三衢人</div></div>
+    <div class="pai"><div class="hao">西山</div><div class="ming">真德秀<br>字希元，建安人</div></div>
+    <div class="pai ci"><div class="hao">自牧</div><div class="ming">宋慈<br>字惠父，建安人</div><div class="note">《洗冤集录》作者，其判词亦收此书。<br>参见本系列 <a href="xiyuan-jilu.html">之五</a></div></div>
+    <div class="pai"><div class="hao">晦庵</div><div class="ming">朱熹<br>字仲晦，新安人</div><div class="note dim">名列宋本名氏录之首，判词未见今存</div></div>
+  </div>
+  <div class="bars">
+    <div class="bar-row"><span class="bn">胡石壁</span><div class="btrack"><div class="bfill" style="width:100%"></div></div><span class="bv mono">76</span></div>
+    <div class="bar-row"><span class="bn">蔡久轩</span><div class="btrack"><div class="bfill" style="width:93%"></div></div><span class="bv mono">71</span></div>
+    <div class="bar-row"><span class="bn">翁浩堂</span><div class="btrack"><div class="bfill" style="width:37%"></div></div><span class="bv mono">28</span></div>
+    <div class="bar-row"><span class="bn">吴雨岩</span><div class="btrack"><div class="bfill" style="width:33%"></div></div><span class="bv mono">25</span></div>
+    <div class="bar-row"><span class="bn">范西堂</span><div class="btrack"><div class="bfill" style="width:32%"></div></div><span class="bv mono">24</span></div>
+    <div class="bar-row"><span class="bn">刘后村</span><div class="btrack"><div class="bfill" style="width:29%"></div></div><span class="bv mono">22</span></div>
+    <div class="bar-row"><span class="bn">叶岩峰</span><div class="btrack"><div class="bfill" style="width:18%"></div></div><span class="bv mono">14</span></div>
+    <div class="bar-row"><span class="bn">宋自牧</span><div class="btrack"><div class="bfill" style="width:16%"></div></div><span class="bv mono">12</span></div>
+    <div class="bar-row"><span class="bn">方秋崖</span><div class="btrack"><div class="bfill" style="width:12%"></div></div><span class="bv mono">9</span></div>
+    <div class="bar-row"><span class="bn">真西山</span><div class="btrack"><div class="bfill" style="width:11%"></div></div><span class="bv mono">8</span></div>
+    <p class="mnote">机器计数：库内正文二十五万七千字中各号出现次数。胡、蔡两家相加约当诸家之半，判词多出其笔下。</p>
+  </div>
+</section>
+
+<!-- ============ 三 · 户婚账单 ============ -->
+<section id="bill">
+  <div class="sec-head"><span class="sno mono">叁</span><h2>户婚门的一张账单</h2></div>
+  <p class="sec-note">宋刻本残卷里存着一页《析类目录》，把户婚门判词分作二十二类。这是一张宋人为什么上公堂的清单：分家、立嗣、遗嘱、接脚夫、女儿份额、坟地、赎田，一户人家的全部筋节都在上面。机器合计，一百一十七条。</p>
+  <div class="bill">
+    <div class="bitem"><span class="bl">争业</span><span class="blead"></span><span class="bc mono">二十五条</span></div>
+    <div class="bitem"><span class="bl">立继</span><span class="blead"></span><span class="bc mono">十八条</span></div>
+    <div class="bitem"><span class="bl">婚嫁</span><span class="blead"></span><span class="bc mono">十一条</span></div>
+    <div class="bitem"><span class="bl">违法交易</span><span class="blead"></span><span class="bc mono">九条</span></div>
+    <div class="bitem"><span class="bl">坟墓</span><span class="blead"></span><span class="bc mono">九条</span></div>
+    <div class="bitem"><span class="bl">伪冒交易</span><span class="blead"></span><span class="bc mono">九条</span></div>
+    <div class="bitem"><span class="bl">取赎</span><span class="blead"></span><span class="bc mono">八条</span></div>
+    <div class="bitem"><span class="bl">孤幼</span><span class="blead"></span><span class="bc mono">四条</span></div>
+    <div class="bitem"><span class="bl">遗嘱</span><span class="blead"></span><span class="bc mono">三条</span></div>
+    <div class="bitem"><span class="bl">归宗</span><span class="blead"></span><span class="bc mono">三条</span></div>
+    <div class="bitem"><span class="bl">检校</span><span class="blead"></span><span class="bc mono">三条</span></div>
+    <div class="bitem"><span class="bl">雇妾</span><span class="blead"></span><span class="bc mono">三条</span></div>
+    <div class="bitem"><span class="bl">库本</span><span class="blead"></span><span class="bc mono">二条</span></div>
+    <div class="bitem"><span class="bl">争财</span><span class="blead"></span><span class="bc mono">二条</span></div>
+    <div class="bitem"><span class="bl">女承分</span><span class="blead"></span><span class="bc mono">一条</span></div>
+    <div class="bitem"><span class="bl">别宅子</span><span class="blead"></span><span class="bc mono">一条</span></div>
+    <div class="bitem"><span class="bl">接脚夫</span><span class="blead"></span><span class="bc mono">一条</span></div>
+    <div class="bitem"><span class="bl">户绝</span><span class="blead"></span><span class="bc mono">一条</span></div>
+    <div class="bitem"><span class="bl">分析</span><span class="blead"></span><span class="bc mono">一条</span></div>
+    <div class="bitem"><span class="bl">义子</span><span class="blead"></span><span class="bc mono">一条</span></div>
+    <div class="bitem"><span class="bl">屋宇</span><span class="blead"></span><span class="bc mono">一条</span></div>
+    <div class="bitem"><span class="bl">离</span><span class="blead"></span><span class="bc mono">一条</span></div>
+  </div>
+  <p class="bill-note">按类名为原目，条数为原目所记，合计为机器复算。争业一居其五分之一强：宋代家产之讼，十件里有两件在争田。</p>
+</section>
+
+<!-- ============ 四 · 案牍叶 ============ -->
+<section id="ye">
+  <div class="sec-head"><span class="sno mono">肆</span><h2>案牍叶 · 判词六道</h2></div>
+  <p class="sec-note">以下六道判词按卷次排开，皆从库内本逐字取出。每叶末尾照宋代公案旧例，落一个朱勾：判讫。</p>
+
+  <div class="ye" id="ye1">
+    <div class="ye-head"><span class="mchip">官吏门</span><span class="ytitle">谕州县官僚</span><span class="yjudge">真德秀　号西山　卷一开篇</span></div>
+    <span class="q">「<em>律己以廉，抚民以仁，存心以公，莅事以勤。</em>」</span>
+    <span class="q">「何谓十害？曰<em>断狱不公，狱者，民之大命，岂可少有私曲。听讼不审，讼有实有虚，听之不审，则实者反虚，虚者反实矣</em>，其可苟哉！」</span>
+    <p class="yan">全书第一卷不办案，先立官箴。真德秀再帅长沙，以四事勉同僚，又开列十害：断狱不公、听讼不审、淹延囚系、惨酷用刑，一件件数下去。这一页相当于全书的序言：判词写得清明，先要官做得清明。</p>
+    <div class="gou"><span class="glabel mono">判讫</span><svg width="34" height="30" viewBox="0 0 40 36"><path d="M4 20 C 11 23, 16 29, 20 32 C 24 24, 32 11, 38 4" stroke="#c0453c" fill="none" stroke-width="3.4" stroke-linecap="round"/></svg></div>
+  </div>
+
+  <div class="ye" id="ye2">
+    <div class="ye-head"><span class="mchip">户婚门</span><span class="ytitle">女婿不应中分妻家财产</span><span class="yjudge">刘克庄　号后村　卷八</span></div>
+    <span class="q">「在法：<em>父母已亡，儿女分产，女合得男之半。</em>遗腹之男，亦男也，周丙身后财产合作三分，遗腹子得二分，细乙娘得一分，如此分析，方合法意。」</span>
+    <span class="q">「天下岂有女婿中分妻家财产之理哉？」</span>
+    <p class="yan">鄱阳周丙身后无子，女婿李应龙勾结周氏族人，把岳父的膏腴田产冒称岳父母生前摽拨，侵吞孤女幼子之业。刘克庄引法条驳回：女儿分产得男之半，遗腹子亦算男丁。南宋条法明文写进女儿的份额，此判常为法制史征引。判词末句的反问，八百年后读来仍旧干脆。</p>
+    <div class="gou"><span class="glabel mono">判讫</span><svg width="34" height="30" viewBox="0 0 40 36"><path d="M4 20 C 11 23, 16 29, 20 32 C 24 24, 32 11, 38 4" stroke="#c0453c" fill="none" stroke-width="3.4" stroke-linecap="round"/></svg></div>
+  </div>
+
+  <div class="ye" id="ye3">
+    <div class="ye-head"><span class="mchip">户婚门</span><span class="ytitle">处分孤遗田产</span><span class="yjudge">范应铃　号西堂　卷八</span></div>
+    <span class="q">「<em>死者可慰舐犊之念，生者可远兼并之嫌</em>，纵有健讼，奚所容喙。」</span>
+    <span class="q">「能欺于人，而不能欺于天。」</span>
+    <p class="yan">解汝霖夫妇死于兵祸，全家被掳。数年后幼女七姑、孙女秀娘逃归，侄解懃代管家业，渐渐视作己产。判词查清原委，当厅把田产均分四份：一份给所立继子承祧，两女各得一份，余一份存为二女出嫁之用；又令秀娘回襄阳完婚，当年全家被掳，是将官王璋把这个孤女收留下来养了八年。判到最后，范应铃给解懃留下一句评语，刻薄而克制。</p>
+    <div class="gou"><span class="glabel mono">判讫</span><svg width="34" height="30" viewBox="0 0 40 36"><path d="M4 20 C 11 23, 16 29, 20 32 C 24 24, 32 11, 38 4" stroke="#c0453c" fill="none" stroke-width="3.4" stroke-linecap="round"/></svg></div>
+  </div>
+
+  <div class="ye" id="ye4">
+    <div class="ye-head"><span class="mchip">惩恶门</span><span class="ytitle">不为刘舍人庙保奏加封</span><span class="yjudge">胡颖　号石壁　卷十四</span></div>
+    <span class="q">「彼其生尚不能自给其口腹，而衣食于人，其顽不灵，亦可想见，<em>焉有既死之后，反能为生民捍大患，御大灾者哉！盖万万无是理。</em>」</span>
+    <span class="q">「焚之庙中，使此等淫昏之鬼有所愧惧，榜之庙前，使世间蠢愚之人有所觉悟。」</span>
+    <p class="yan">湘中舟人立庙祀一位刘舍人，号称能救护纲船，地方申报请加封号。胡颖验以常理：此人死去不过六七十年，老船商还有认得他面目的，生前连自己的口腹都不能自给，死后反倒保佑一方？于是驳回请封，并命焚之庙中，榜文贴在庙前。一纸判词，就是一篇以常理驳神怪的短论。</p>
+    <div class="gou"><span class="glabel mono">判讫</span><svg width="34" height="30" viewBox="0 0 40 36"><path d="M4 20 C 11 23, 16 29, 20 32 C 24 24, 32 11, 38 4" stroke="#c0453c" fill="none" stroke-width="3.4" stroke-linecap="round"/></svg></div>
+  </div>
+
+  <div class="ye" id="ye5">
+    <div class="ye-head"><span class="mchip">惩恶门</span><span class="ytitle">竞渡死者十三人</span><span class="yjudge">蔡抗　号久轩　卷十四</span></div>
+    <span class="q">「两舟既散之后，赤龙舟却为李辛一、杨童所激，遂固舟求鬬，而舟道相遇，小人一朝之忿忘其身，刃石交下，<em>赤龙舟偶以人多，舟覆，死者一十三人。</em>」</span>
+    <span class="q">「张万二所伤两人，<em>决脊杖二十，刺配三千里岭南恶州军，拘锁土牢，月具存亡申</em>；余万一所伤一人，决脊二十，刺配三千里，拘锁土牢，永不放还。」</span>
+    <p class="yan">汭口镇赤白两龙舟求斗成仇，十三条人命。判词逐一记下每具尸身的伤痕部位、何物所伤，再按条分判：持刃的刺配恶州军锁进土牢，按月申报存亡；敛钱的、持杖的、以刃下船而未用的，各有等差。末了念及岁暮，各家老小奔走道路，饥寒可念，催促结案。一场地方骚乱从起衅到量刑的全貌，尽在一纸之内。</p>
+    <div class="gou"><span class="glabel mono">判讫</span><svg width="34" height="30" viewBox="0 0 40 36"><path d="M4 20 C 11 23, 16 29, 20 32 C 24 24, 32 11, 38 4" stroke="#c0453c" fill="none" stroke-width="3.4" stroke-linecap="round"/></svg></div>
+  </div>
+
+  <div class="ye" id="ye6">
+    <div class="ye-head"><span class="mchip">惩恶门</span><span class="ytitle">霸渡</span><span class="yjudge">蔡抗　号久轩　卷十四</span></div>
+    <span class="q">「<em>法令所载，昭如日星。奸民无状，輙敢冒犯。</em>」</span>
+    <span class="q">「决脊杖十五，配一千里，<em>以为霸渡害民者之戒。</em>」</span>
+    <p class="yan">渡口是宋人的日常险处。郑在九在深阔湍险之处勒索过渡钱，抢去麻布一疋，缚打客人，又累代豪占津渡，多取渡钱八十贯。判词引敕律：津渡吓乞取财，以持杖窃盗论。脊杖十五，配一千里，判词末尾命人把榜文贴遍各处津渡，等于把这一纸判词变成了告示。</p>
+    <div class="gou"><span class="glabel mono">判讫</span><svg width="34" height="30" viewBox="0 0 40 36"><path d="M4 20 C 11 23, 16 29, 20 32 C 24 24, 32 11, 38 4" stroke="#c0453c" fill="none" stroke-width="3.4" stroke-linecap="round"/></svg></div>
+  </div>
+
+  <div class="jiadai">
+    <div class="jt">夹袋一叶 · 市井小案</div>
+    <div class="ytitle">卖卦人打刀镊妇（胡石壁）</div>
+    <span class="q">「王震自号曰时运先生，<em>亦须稍识义理</em>。」</span>
+    <p class="yan">旅舍之中，卖卦的王震喝醉了，要刀镊妇阿张替他缴面，阿张不肯，遂至交争。判词先讲男女之嫌，再驳他：自号时运先生，也该稍识义理。末了量决竹篦十二，押出门了事。一桩市井口角，判得像一篇短文。</p>
+  </div>
+</section>
+
+<!-- ============ 五 · 流传 ============ -->
+<section id="relay">
+  <div class="sec-head"><span class="sno mono">伍</span><h2>递条 · 这部书怎么活下来</h2></div>
+  <p class="sec-note">判词是官府文书，不入文集便随衙署散佚。这部书能到今天，靠的是一次抄藏、一次辑出、一次刻印。</p>
+  <div class="relay">
+    <div class="die">
+      <div class="dyear mono">宋 · 编成</div>
+      <p>书成于南宋。今存书首有《宋版残序》与《析类目录》，知宋刻本残卷尚在人间；名氏一纸开列二十八家，起于晦庵朱熹，讫于臞轩王迈，皆是当日号称「名公」的人物。</p>
+    </div>
+    <div class="die">
+      <div class="dyear mono">明隆庆三年 · 一五六九</div>
+      <p>张四维校录《永乐大典》，于清字编见《清明集》，先录得二卷，再校判字韵，所得更多。书由他手授门生盛时选，于隆庆三年冬刻成，即今传明刻本之祖。张四维号凤磐，即盛时选后序里尊称的凤盘先生。</p>
+      <span class="q">「曩余校录永乐大典，于清字编见有清明集二卷者，皆宋以来名公书判，其原情定罚，比物引类，可谓曲尽矣。」</span>
+      <span class="qwho">张四维《刻清明集叙》</span>
+      <span class="q">「笥藏中秘，世所希遘覩也。吾师凤盘先生校永乐大典，自群集中表出之。」</span>
+      <span class="qwho">盛时选《清明集后序》</span>
+    </div>
+    <div class="die">
+      <div class="dyear mono">今 · 合两本为一</div>
+      <p>通行点校本以明刻本为底，合宋刻残卷的名氏录、析类目录与残序整理成书。殆知阁简体库所收即此本：正文十四卷七门，卷末附黄幹、刘克庄、文天祥、朱熹诸别集中的判词，附录目中另有介绍明刻本的一篇专文。</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p class="back"><a href="mulu.html">返回总目</a></p>
+    <p>文本来源：殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）史藏 / 职官 / 名公书判清明集</p>
+    <p>本页引文均经与库内文件逐字核验（去标点、归一异体后比对），门类卷次与计数为库内实测</p>
+    <p>书中刺配、脊杖、锁土牢、人口买卖及对女性、仆隶的处置，皆八百年前之法度与偏见，存录以见其真，不以今律古</p>
+  </div>
+</footer>
+
+</body>
+</html>
