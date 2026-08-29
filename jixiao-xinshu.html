@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>殆知阁导读 之五十四 · 纪效新书</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #26251f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --zhu: #c0453c; --zhu-dim: #8f4038;
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 28px; }
+
+  /* 开场：左为竖排公文纸条，右为题名 */
+  .hero { padding: 54px 0 34px; }
+  .hero-grid { display: grid; grid-template-columns: 168px 1fr; gap: 54px; align-items: start; }
+  .gongwen {
+    writing-mode: vertical-rl; text-orientation: upright;
+    background: var(--paper); color: #26241f;
+    height: 400px; padding: 26px 20px; letter-spacing: 0.16em;
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.35);
+    display: flex; gap: 16px;
+  }
+  .gongwen .ti { font-size: 17px; font-weight: 700; line-height: 1.5; }
+  .gongwen .meta { font-size: 11.5px; color: #6b665c; line-height: 1.9; letter-spacing: 0.1em; }
+  .gongwen .pi { font-size: 12px; color: var(--zhu); border: 1px solid var(--zhu);
+    padding: 6px 3px; margin-top: 4px; line-height: 1.7; }
+  .kicker { font-size: 13px; letter-spacing: 0.4em; color: var(--paper-faint); }
+  h1 { font-size: clamp(52px, 8.6vw, 96px); font-weight: 700; letter-spacing: 0.12em;
+    margin: 20px 0 6px; line-height: 1.15; }
+  h1 em { font-style: normal; color: var(--zhu); }
+  .hero-sub { color: var(--paper-dim); font-size: 16.5px; max-width: 34em; margin-top: 14px; }
+  .hero-meta { margin-top: 18px; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.14em; }
+  .hero-meta b { color: var(--zhu); font-weight: 700; }
+
+  /* 卷目带：十八枚军牌 */
+  .juanband { display: grid; grid-template-columns: repeat(9, 1fr); gap: 8px; margin-top: 34px; }
+  .juan {
+    border: 1px solid var(--hairline); padding: 9px 6px 7px; text-align: center;
+    background: var(--ink-2); transition: border-color 0.2s ease;
+  }
+  .juan:hover { border-color: var(--zhu); }
+  .juan .n { display: block; font-size: 11px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .juan .t { display: block; font-size: 12px; margin-top: 4px; color: var(--paper-dim); line-height: 1.4; }
+  .juan.hot { border-color: var(--zhu-dim); }
+  .juan.hot .t { color: var(--paper); }
+
+  /* 章节 */
+  section { padding: 58px 0 10px; }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 22px; }
+  .sec-no { font-size: 30px; color: var(--zhu); font-weight: 700; }
+  .sec-head h2 { font-size: 24px; letter-spacing: 0.1em; font-weight: 700; }
+  .sec-head .line { flex: 1; border-top: 1px solid var(--hairline); transform: translateY(-6px); }
+  .prose { max-width: 44em; color: var(--paper); font-size: 16px; }
+  .prose p { margin-bottom: 14px; }
+  .prose .note { color: var(--paper-dim); font-size: 14.5px; }
+  .q { color: var(--paper); background: var(--ink-2); padding: 1px 6px; border-left: 2px solid var(--zhu); }
+  .qzhu { color: #e9b7b1; background: var(--ink-2); padding: 1px 6px; border-left: 2px solid var(--zhu); }
+
+  /* 贰：兵源地帖 */
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 26px; }
+  .card { border: 1px solid var(--hairline); background: var(--ink-2); }
+  .card header { background: var(--ink-3); border-bottom: 1px solid var(--hairline);
+    padding: 8px 12px; display: flex; justify-content: space-between; align-items: baseline; }
+  .card header b { font-size: 16px; letter-spacing: 0.1em; }
+  .card header span { font-size: 11px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  .card .bd { padding: 12px 14px 14px; font-size: 13.5px; color: var(--paper-dim); }
+  .card .bd .q { font-size: 13px; line-height: 1.8; display: inline; }
+  .card .fa { border-top: 1px dashed var(--hairline); margin: 10px -14px -14px; padding: 9px 14px 12px;
+    font-size: 12.5px; color: var(--paper-faint); }
+  .card .fa b { color: var(--zhu); font-weight: 700; }
+  .rank { margin-top: 16px; border: 1px solid var(--hairline); padding: 14px 18px;
+    display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: baseline;
+    font-size: 14px; color: var(--paper-dim); }
+  .rank .q { font-size: 14px; }
+
+  /* 叁：阵图 */
+  .zhen-grid { display: grid; grid-template-columns: 380px 1fr; gap: 40px; margin-top: 26px; align-items: start; }
+  .zhen-fig { border: 1px solid var(--hairline); background: var(--ink-2); padding: 18px 12px 10px; }
+  .zhen-fig figcaption { font-size: 12px; color: var(--paper-faint); text-align: center;
+    letter-spacing: 0.2em; margin-top: 8px; }
+  .duiwu { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 6px; }
+  .duiwu .chip { border: 1px solid var(--hairline); padding: 5px 11px; font-size: 13px;
+    color: var(--paper-dim); background: var(--ink-2); }
+  .duiwu .chip b { color: var(--paper); font-weight: 700; }
+  .duiwu .sum { border-color: var(--zhu-dim); color: var(--zhu); }
+  .jiuchain { margin-top: 18px; border-left: 2px solid var(--zhu); padding: 4px 0 4px 18px; }
+  .jiuchain .step { font-size: 14px; color: var(--paper-dim); margin: 3px 0; }
+  .jiuchain .step b { color: var(--paper); }
+  .wufang { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; align-items: center; }
+  .wufang .flag { width: 44px; text-align: center; }
+  .wufang .flag i { display: block; height: 30px; border: 1px solid var(--hairline); }
+  .wufang .flag span { font-size: 12px; color: var(--paper-dim); }
+  .wufang .cap { font-size: 12.5px; color: var(--paper-faint); max-width: 20em; }
+
+  .lvlist { margin-top: 12px; }
+  /* 肆：账与刑 */
+  .shang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 26px; }
+  .zhang { border: 1px solid var(--hairline); background: var(--ink-2); }
+  .zhang h3 { font-size: 15px; letter-spacing: 0.16em; background: var(--ink-3);
+    padding: 10px 16px; border-bottom: 1px solid var(--hairline); }
+  .zhang h3 b { color: var(--zhu); }
+  .zhang .row { display: flex; justify-content: space-between; align-items: baseline;
+    padding: 10px 16px; border-bottom: 1px dashed var(--hairline); font-size: 14.5px; }
+  .zhang .row:last-child { border-bottom: none; }
+  .zhang .row .who { color: var(--paper-dim); }
+  .zhang .row .val { color: var(--paper); font-weight: 700; }
+  .zhang .head-row { background: rgba(192,69,60,0.10); }
+  .zhang .head-row .who { color: var(--paper); }
+  .zhang .head-row .val { color: var(--zhu); }
+  .erlang { border-left: 2px solid var(--zhu); padding-left: 18px; margin-top: 2px; }
+  .erlang .lv { padding: 6px 0; font-size: 14.5px; color: var(--paper-dim);
+    border-bottom: 1px dashed var(--hairline); }
+  .erlang .lv:last-of-type { border-bottom: none; }
+  .erlang .lv b { color: var(--paper); }
+  .cut { color: var(--zhu); font-weight: 700; }
+
+  /* 伍：武林名录 */
+  .wulin { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 24px; }
+  .wulin .pai { border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 7px 14px; font-size: 14px; color: var(--paper-dim); }
+  .wulin .pai:hover { border-color: var(--zhu-dim); color: var(--paper); }
+  .bigquote { margin: 30px 0 4px; font-size: clamp(22px, 3.4vw, 32px); line-height: 1.7;
+    font-weight: 700; letter-spacing: 0.06em; }
+  .bigquote .qzhu { background: none; border: none; padding: 0; }
+
+  /* 陆：练力四则 */
+  .li4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 24px; }
+  .li4 .li { border: 1px solid var(--hairline); background: var(--ink-2); padding: 14px 15px; }
+  .li4 .li b { display: block; font-size: 15px; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .li4 .li b i { font-style: normal; color: var(--zhu); }
+  .li4 .li p { font-size: 13px; color: var(--paper-dim); }
+  .li4 .li p .q { font-size: 12.5px; padding: 0 4px; }
+
+  /* 柒：福船 */
+  .chuan { display: grid; grid-template-columns: 1fr 300px; gap: 40px; margin-top: 24px; align-items: start; }
+  .jiesuan { border: 1px solid var(--zhu-dim); padding: 16px 20px; background: var(--ink-2); }
+  .jiesuan h4 { font-size: 14px; letter-spacing: 0.2em; color: var(--zhu); margin-bottom: 8px; }
+  .jiesuan .ln { display: flex; justify-content: space-between; font-size: 14px;
+    color: var(--paper-dim); padding: 4px 0; border-bottom: 1px dashed var(--hairline); }
+  .jiesuan .ln.total { border-bottom: none; padding-top: 10px; }
+  .jiesuan .ln.total b { font-size: 24px; color: var(--zhu); }
+
+  /* 捌：收束 */
+  .coda { padding: 58px 0 20px; }
+  .coda .end { margin-top: 34px; border-top: 1px solid var(--hairline); padding-top: 30px; }
+  .coda .end .bigquote { font-size: clamp(26px, 4vw, 40px); }
+
+  /* 校记 */
+  .jiaoji { margin-top: 44px; border: 1px solid var(--hairline); background: var(--ink-2); padding: 18px 22px; }
+  .jiaoji h3 { font-size: 13px; letter-spacing: 0.3em; color: var(--paper-faint); margin-bottom: 10px; }
+  .jiaoji li { list-style: none; font-size: 13.5px; color: var(--paper-dim); padding: 4px 0; }
+  .jiaoji li b { color: var(--paper); font-weight: 700; }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 46px; padding: 32px 0 54px;
+    color: var(--paper-faint); font-size: 13.5px; }
+  footer.page b { color: var(--paper-dim); }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 26px; }
+    .gongwen { height: 320px; }
+    .juanband { grid-template-columns: repeat(3, 1fr); }
+    .cards, .li4 { grid-template-columns: repeat(2, 1fr); }
+    .zhen-grid, .shang-grid, .chuan { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">殆知阁导读 · 之五十四</div>
+    <div class="hero-grid" style="margin-top:26px;">
+      <aside class="gongwen" aria-label="卷首公移">
+        <div class="ti">呈为处练陆兵以便图报事</div>
+        <div class="meta">嘉靖三十五年<br>十一月十五日<br>参将戚继光呈</div>
+        <div class="pi">蒙批<br>兵备道行府<br>照数处办缴</div>
+      </aside>
+      <div>
+        <h1>纪效<em>新书</em></h1>
+        <p class="hero-sub">一部写在抗倭前线的练兵手册。戚继光把选兵、军法、武艺、阵法写成一条条可照办的条款：不谈玄理，只回答一个问题，怎样把矿工和农夫练成一支能打赢的军队。</p>
+        <p class="hero-meta">子藏 · 兵家　十八卷　<span class="q">岁己末，以义乌尹赵公之集兵，予奉命会选而教练之为部伍，于是而始有义乌之名。</span></p>
+      </div>
+    </div>
+    <div class="juanband" id="juanband">
+      <span class="juan"><span class="n mono">卷一</span><span class="t">束伍篇</span></span>
+      <span class="juan"><span class="n mono">卷二</span><span class="t">紧要操敌号令简明条款篇</span></span>
+      <span class="juan"><span class="n mono">卷三</span><span class="t">临阵连坐军法篇</span></span>
+      <span class="juan"><span class="n mono">卷四</span><span class="t">论兵紧要禁令篇</span></span>
+      <span class="juan"><span class="n mono">卷五</span><span class="t">教官兵法令禁约篇</span></span>
+      <span class="juan hot"><span class="n mono">卷六</span><span class="t">比较武艺赏罚篇</span></span>
+      <span class="juan"><span class="n mono">卷七</span><span class="t">行营野营军令禁约篇</span></span>
+      <span class="juan hot"><span class="n mono">卷八</span><span class="t">操练营阵旗鼓篇</span></span>
+      <span class="juan"><span class="n mono">卷九</span><span class="t">出征起程在途行营篇</span></span>
+      <span class="juan hot"><span class="n mono">卷十</span><span class="t">长兵短用说篇</span></span>
+      <span class="juan"><span class="n mono">卷十一</span><span class="t">藤牌总说篇</span></span>
+      <span class="juan hot"><span class="n mono">卷十二</span><span class="t">短兵长用说</span></span>
+      <span class="juan"><span class="n mono">卷十三</span><span class="t">射法篇</span></span>
+      <span class="juan hot"><span class="n mono">卷十四</span><span class="t">拳经捷要篇</span></span>
+      <span class="juan"><span class="n mono">卷十五</span><span class="t">布城诸器图说篇</span></span>
+      <span class="juan"><span class="n mono">卷十六</span><span class="t">旌旗金鼓图说篇</span></span>
+      <span class="juan"><span class="n mono">卷十七</span><span class="t">守哨篇</span></span>
+      <span class="juan hot"><span class="n mono">卷十八</span><span class="t">治水兵篇</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="s1">
+  <div class="sec-head"><span class="sec-no">壹</span><h2>开卷先是一份公文</h2><div class="line"></div></div>
+  <div class="prose">
+    <p>兵书多以总叙开场，这部书的第一页却是一份公文：嘉靖三十五年冬，分守浙江宁绍台的参将戚继光向军门呈文，要一块专责练兵的编制。他在呈文里把旧军的底子翻开给人看：<span class="q">兵将睽违，虚声冗众，士心未附，军令不知</span>。练兵的必要，他用一句话说完：<span class="q">又况浙兵俱系赤体赴敌，身无甲胄之蔽，而当惯战必死之寇；手无素习之艺，而较精熟巧之技</span>。</p>
+    <p>他的对手也非同寻常。卷首记倭寇形貌：<span class="q">其盔上饰以金银牛角之状，五色长丝，类如神鬼，以骇士气</span>。呈文递上去，批文下来：<span class="qzhu">蒙批：兵备道行府照数处办缴</span>。练兵这件事，从一纸公文办起。</p>
+    <p class="note">练什么，他先立了一条总纲，反对花架子：<span class="q">杀人的勾当，岂是好看的？</span>观操的人爱看<span class="q">看武艺，但要周旋左右，满片花草</span>，他的判词是：<span class="q">此是花法胜，而对手工夫渐迷，武艺之病也；虚文张，而真营却废，制阵之病也。</span></p>
+  </div>
+</section>
+
+<section id="s2">
+  <div class="sec-head"><span class="sec-no">贰</span><h2>兵从何处来</h2><div class="line"></div></div>
+  <div class="prose">
+    <p>练兵先挑人。戚继光把浙江各县的乡兵挨个评了一遍，写成一份少见的人心档案。嘉靖三十八年，<span class="q">岁己末，以义乌尹赵公之集兵，予奉命会选而教练之为部伍，于是而始有义乌之名。</span>四地兵性，他各下了一句断语。</p>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <header><b>处州</b><span>山矿之夫</span></header>
+      <div class="bd"><span class="q">处兵性悍，生产山中，尚守信义</span>，约定明日出战，力不能敌就直说不能。但只用得一战，再用就疲。</div>
+      <div class="fa"><b>操法</b>　操其坚耐，使之屡阵，不销其气。</div>
+    </div>
+    <div class="card">
+      <header><b>绍兴</b><span>沿海伶俐人</span></header>
+      <div class="bd">心虽畏怯，门面可观。<span class="q">驱之则前，见敌辄走，敌回又追，敌返又走。</span>挖壕守城倒不推辞。</div>
+      <div class="fa"><b>操法</b>　重令劫其心，决令立其信，须能短兵交刃而后可用。</div>
+    </div>
+    <div class="card">
+      <header><b>台州</b><span>虚实之间</span></header>
+      <div class="bd"><span class="q">盖台兵以太守谭公之严，初集即有以慑其心</span>，谭纶用之著绩，他人则未必。</div>
+      <div class="fa"><b>操法</b>　须又加严一等。</div>
+    </div>
+    <div class="card">
+      <header><b>义乌</b><span>本部主力</span></header>
+      <div class="bd"><span class="q">义乌之人性杂于机诈勇锐之间，尤事血气。</span><span class="q">然一战之外尤能再奋，一阵之间尤能反戈</span>，只是不听号令。</div>
+      <div class="fa"><b>操法</b>　破格恩威并称，<span class="q">不患其不强，而患其不驯；不患其不胜，而患其骄。</span></div>
+    </div>
+  </div>
+  <div class="rank">
+    <span>四地排名：</span>
+    <span class="q">毕竟处州为第一，义乌次之，台温又次之，绍兴又次之</span>
+    <span class="note">他不讳言义乌兵冲锋尚有惧心，在处兵之下，选它只因能再奋、能反戈。</span>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="sec-head"><span class="sec-no">叁</span><h2>十二人的鸳鸯阵</h2><div class="line"></div></div>
+  <div class="prose">
+    <p>全书的核心是一件小事：把十二个人绑成一个互保的单位。<span class="q">凡鸳鸯阵，乃杀贼必胜屡效者，此是紧要束伍第一战法。</span></p>
+  </div>
+  <div class="zhen-grid">
+    <figure class="zhen-fig">
+      <svg viewBox="0 0 320 470" width="100%" role="img" aria-label="鸳鸯阵布阵图">
+        <defs>
+          <style>
+            .gln { stroke: rgba(232,228,220,0.09); stroke-width: 1; }
+            .lbl { fill: #a39e93; font-size: 13px; font-family: "Songti SC","Noto Serif SC","SimSun",serif; }
+            .lblq { fill: #e8e4dc; font-size: 13px; font-weight: bold; }
+            .cap { fill: #6e6a61; font-size: 12px; }
+          </style>
+        </defs>
+        <line class="gln" x1="160" y1="60" x2="160" y2="450"/>
+        <line class="gln" x1="30" y1="130" x2="290" y2="130"/>
+        <line class="gln" x1="30" y1="220" x2="290" y2="220"/>
+        <line class="gln" x1="30" y1="330" x2="290" y2="330"/>
+        <text class="cap" x="160" y="20" text-anchor="middle">敌　面</text>
+        <line x1="160" y1="46" x2="160" y2="30" stroke="#c0453c" stroke-width="2"/>
+        <polygon points="160,26 155,38 165,38" fill="#c0453c"/>
+        <circle cx="160" cy="58" r="13" fill="#c0453c"/>
+        <text class="lblq" x="160" y="63" text-anchor="middle">队</text>
+        <text class="lbl" x="186" y="63">队长</text>
+        <rect x="96" y="108" width="30" height="36" fill="none" stroke="#e8e4dc" stroke-width="2"/>
+        <text class="lblq" x="111" y="131" text-anchor="middle">牌</text>
+        <text class="lbl" x="60" y="102">长牌</text>
+        <rect x="194" y="108" width="30" height="36" fill="none" stroke="#e8e4dc" stroke-width="2"/>
+        <text class="lblq" x="209" y="131" text-anchor="middle">牌</text>
+        <text class="lbl" x="232" y="102">藤牌</text>
+        <g stroke="#e8e4dc" stroke-width="2" fill="none">
+          <path d="M96 214 l14,-26 l14,26 z"/>
+          <path d="M196 214 l14,-26 l14,26 z"/>
+        </g>
+        <text class="lbl" x="64" y="196">狼筅</text>
+        <text class="lbl" x="232" y="196">狼筅</text>
+        <rect x="80" y="296" width="7" height="52" fill="#a39e93"/>
+        <rect x="130" y="296" width="7" height="52" fill="#a39e93"/>
+        <rect x="184" y="296" width="7" height="52" fill="#a39e93"/>
+        <rect x="234" y="296" width="7" height="52" fill="#a39e93"/>
+        <text class="lbl" x="56" y="326">长枪</text>
+        <text class="lbl" x="250" y="326">长枪</text>
+        <rect x="100" y="386" width="22" height="22" fill="#26251f" stroke="#a39e93"/>
+        <rect x="198" y="386" width="22" height="22" fill="#26251f" stroke="#a39e93"/>
+        <text class="lbl" x="52" y="402">短兵</text>
+        <text class="lbl" x="232" y="402">短兵</text>
+        <circle cx="160" cy="440" r="9" fill="none" stroke="#6e6a61" stroke-dasharray="3 3"/>
+        <text class="lbl" x="176" y="445">火兵</text>
+      </svg>
+      <figcaption>鸳鸯阵一面　前锋向上</figcaption>
+    </figure>
+    <div>
+      <p class="prose">一队的编成，库本一句写定：<span class="q">今法：长牌一面、藤牌一面、狼筅二把、长枪四枝、短兵二件、火兵一名为一队</span>，队长居前，<span class="q">伍长执挨牌在前，馀兵照鸳鸯阵紧随牌后</span>。</p>
+      <div class="duiwu">
+        <span class="chip">队长 <b>1</b></span><span class="chip">长牌 <b>1</b></span><span class="chip">藤牌 <b>1</b></span><span class="chip">狼筅 <b>2</b></span><span class="chip">长枪 <b>4</b></span><span class="chip">短兵 <b>2</b></span><span class="chip">火兵 <b>1</b></span>
+        <span class="chip sum mono">合 12 人</span>
+      </div>
+      <div class="jiuchain">
+        <div class="step">阵形的要害是一条互救链：<span class="q">二牌平列，狼筅各跟一牌，以防拿牌人后身。长枪每二枝各分管一牌一筅。</span></div>
+        <div class="step"><b>筅以救牌</b>，狼筅护住执牌人侧后。</div>
+        <div class="step"><b>长枪救筅</b>，每二枝枪分管一牌一筅。</div>
+        <div class="step"><b>短兵救长枪</b>，防长枪进老，即便杀上。</div>
+        <div class="step">链子末端是军法：<span class="q">筅以救牌，长枪救筅，短兵救长枪，牌手阵亡，伍下兵通斩。</span></div>
+      </div>
+      <p class="prose" style="margin-top:16px;">变阵也预置在内：<span class="q">方而为九，直之为二，伍分而为三才、为五花</span>，路窄摆大鸳鸯阵，路宽再分三才阵。战场上它要经得起诱惑：<span class="q">恁贼掷来金银，只是厮杀，再不须顾。</span></p>
+      <div class="wufang">
+        <div class="flag"><i style="background:#a03a33"></i><span>前　红</span></div>
+        <div class="flag"><i style="background:#26262a"></i><span>后　黑</span></div>
+        <div class="flag"><i style="background:#3f6d78"></i><span>左　青</span></div>
+        <div class="flag"><i style="background:#d8d4ca"></i><span>右　白</span></div>
+        <div class="flag"><i style="background:#c9963f"></i><span>中　黄</span></div>
+        <p class="cap">旗号不按东南西北，按人身上下左右定。理由写在书里：<span class="q">凡人一身，皆有左手、右手、前面、背后、中央，此人人可晓。</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s4">
+  <div class="sec-head"><span class="sec-no">肆</span><h2>赏格算到钱，军法算到肉</h2><div class="line"></div></div>
+  <div class="prose">
+    <p>卷三立了一条临阵第一禁约：不许带解首刀，当先的人只管杀去。首级另有专人处置，价值与分法写得像一张账单：<span class="q">每颗首级以三十两论之，当先牌枪筅分二十两，砍首兵二两，余兵无分者分一两，火兵虽不上阵，本队有功，亦分五钱；每颗本队鸟铳手亦分二两。</span></p>
+  </div>
+  <div class="shang-grid">
+    <div class="zhang">
+      <h3>首级<b>三十两</b>分账</h3>
+      <div class="row head-row"><span class="who">每颗首级</span><span class="val">三十两</span></div>
+      <div class="row"><span class="who">当先牌、枪、筅</span><span class="val">二十两</span></div>
+      <div class="row"><span class="who">砍首兵</span><span class="val">二两</span></div>
+      <div class="row"><span class="who">本队鸟铳手</span><span class="val">二两</span></div>
+      <div class="row"><span class="who">余兵无分者</span><span class="val">一两</span></div>
+      <div class="row"><span class="who">火兵（不上阵）</span><span class="val">五钱</span></div>
+    </div>
+    <div class="erlang">
+      <p class="prose" style="margin-bottom:12px;">撤退的处罚，是一道层层下刀的连坐阶梯：</p>
+      <span class="q">凡临阵退缩，许甲长割兵耳，队长割甲长耳，哨官哨长割队长耳，把总割哨官哨长耳。回兵，查无耳者，斩。</span>
+      <div class="lvlist">
+        <div class="lv">甲长　查退卒，<span class="cut">割耳</span></div>
+        <div class="lv">队长　查甲长，<span class="cut">割耳</span></div>
+        <div class="lv">哨官哨长　查队长，<span class="cut">割耳</span></div>
+        <div class="lv">把总　查哨官哨长，<span class="cut">割耳</span></div>
+        <div class="lv">回兵查无耳者，<span class="cut">斩</span></div>
+      </div>
+      <p class="prose note" style="margin-top:14px;">救人同样连坐：<span class="q">凡每甲，一人当先，八人不救，致令阵亡者，八人俱斩。</span>阵亡一人，队里斩得一级真贼，八人免罪。</p>
+    </div>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="sec-head"><span class="sec-no">伍</span><h2>拳经：武艺之源</h2><div class="line"></div></div>
+  <div class="prose">
+    <p>第十四卷收进一篇看似不相干的东西：拳谱。他自己先作了辩护：<span class="q">拳法似无预于大战之技，然活动手足，惯勤肢体，此为初学入艺之门也。</span>紧接一句总评：<span class="q">其拳也，为武艺之源。</span>篇里顺手记下了一份明代武林名录：<span class="q">古今拳家，宋太祖有三十二势长拳，又有六步拳、猴拳、囵拳</span>，以下各家的名号也都一一在册。</p>
+    <p>他记名家的标准很实用，各家各有偏长，兼而习之，如常山蛇阵，击首则尾应。口诀只有两层：</p>
+  </div>
+  <p class="bigquote"><span class="qzhu">不招不架，只是一下；犯了招架，就有十下。</span></p>
+  <div class="wulin">
+    <span class="pai">三十二势长拳</span><span class="pai">六步拳</span><span class="pai">猴拳</span><span class="pai">囵拳</span><span class="pai">温家七十二行拳</span><span class="pai">三十六合锁</span><span class="pai">二十四弃探马</span><span class="pai">八闪番</span><span class="pai">十二短</span><span class="pai">吕红八下</span><span class="pai">绵张短打</span><span class="pai">山东李半天之腿</span><span class="pai">鹰爪王之拿</span><span class="pai">千跌张之跌</span><span class="pai">张伯敬之打</span><span class="pai">少林寺之棍</span><span class="pai">青田棍法</span><span class="pai">杨氏枪法</span><span class="pai">巴子拳棍</span>
+  </div>
+  <p class="prose note" style="margin-top:14px;">十九家，各家所传有上而无下，有下而无上，他都要。书里还给三十二势各绘一图、各注一诀，后世拳派的谱系，多要从这一篇数起。</p>
+</section>
+
+<section id="s6">
+  <div class="sec-head"><span class="sec-no">陆</span><h2>练力四则</h2><div class="line"></div></div>
+  <div class="prose">
+    <p>平时练什么，他开了四味药，一味比一味朴素。</p>
+  </div>
+  <div class="li4">
+    <div class="li"><b>练兵之力<i>　气血</i></b><p><span class="q">凡人之血气，用则坚，怠惰则脆。劳其筋骨，饿其体肤，君相亦然，况于兵乎？但不宜过于太苦，是谓练兵之力。</span></p></div>
+    <div class="li"><b>练手之力<i>　重械</i></b><p><span class="q">凡兵平时所用器械，轻重分两当重交锋所用之器，重者既熟，则临阵用轻者自然手捷，不为器所欺矣。是谓练手之力。</span></p></div>
+    <div class="li"><b>练足之力<i>　沙囊</i></b><p><span class="q">凡平时各兵须学趋跑，一气跑得一里，不气喘才好。如古人足囊以沙，渐渐加之，临敌去沙，自然轻便。是练足之力。</span></p></div>
+    <div class="li"><b>练身之力<i>　重甲</i></b><p><span class="q">凡平时习战，人必重甲，荷以重物，勉强加之，庶临战身轻，进退自速。是谓练身之力。</span></p></div>
+  </div>
+</section>
+
+<section id="s7">
+  <div class="sec-head"><span class="sec-no">柒</span><h2>末卷给了水兵</h2><div class="line"></div></div>
+  <div class="prose">
+    <p>十八卷读到末尾，兵书把最后一卷交给水军。福船的编制一句话报全：<span class="q">每福船一只，捕盗一名，舵工二名，缭手二名，扳招一名，上斗一名，碇手二名。上用甲长五名，每甲兵十名。</span>船队编组：<span class="q">福船二只，海沧船一只，艟乔船二只，为一哨</span>。战时全船五个甲分四面而立，<span class="q">如遇打贼，随贼所在之面并力动手，无贼之面亦留每面二人防看。</span></p>
+  </div>
+  <div class="chuan">
+    <div class="prose">
+      <p>陆上的鸳鸯阵到了船上换了一种摆法，道理没换：把人绑在固定的位置上，各管一段，谁的环节丢了，全船知道该找谁。</p>
+      <p class="note">五甲分居四面，船头另设铳一架，第一甲四名专管船头闸板，第二甲四名专管两水仓门，闲散之人，书里一个不留。</p>
+    </div>
+    <div class="jiesuan">
+      <h4>福船一艘结算</h4>
+      <div class="ln"><span>捕盗</span><span class="mono">1</span></div>
+      <div class="ln"><span>舵工</span><span class="mono">2</span></div>
+      <div class="ln"><span>缭手</span><span class="mono">2</span></div>
+      <div class="ln"><span>扳招</span><span class="mono">1</span></div>
+      <div class="ln"><span>上斗</span><span class="mono">1</span></div>
+      <div class="ln"><span>碇手</span><span class="mono">2</span></div>
+      <div class="ln"><span>甲长</span><span class="mono">5</span></div>
+      <div class="ln"><span>甲兵　五甲每甲十名</span><span class="mono">50</span></div>
+      <div class="ln total"><span>全船</span><b class="mono">64 人</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="coda" id="s8">
+  <div class="sec-head"><span class="sec-no">捌</span><h2>台州之后</h2><div class="line"></div></div>
+  <div class="prose">
+    <p>这部书的效力，两年后兑现：<span class="q">夫义乌兵自隶予部下二年，遂有台州辛酉数捷</span>。辛酉是嘉靖四十年，台州九战，他对战果的自述克制得近乎冷：<span class="q">每起必胜，每胜必全师，每战无逾一时</span>。但转头他就把功劳分了出去：<span class="q">台州之捷，人也，予可继也；台州之全师，非人也，天也，不可必也。</span></p>
+    <p>真正让他害怕的是胜利本身。台州捷后四方争募义乌兵，<span class="q">今纷而应四方之募者二万有余矣</span>，他算的是另一笔账：一县能出几个壮士，用滥之后，<span class="q">东村痛子，西村哭夫，于此之后，一邑夺气</span>。</p>
+    <p class="note">书首或问里，有人问他北方御边之策。他答得很直：北方须兴十万之师，如卫公之法而不泥其迹。</p>
+  </div>
+  <div class="end">
+    <p class="bigquote"><span class="qzhu">十万之才，非余所及，但当别有十万作用，长叹而作。</span></p>
+  </div>
+</section>
+
+<div class="jiaoji">
+  <h3>校记</h3>
+  <ul>
+    <li><b>己末</b>　库本作「岁己末」，干支当作己未，即嘉靖三十八年（1559），义乌集兵之年，照录原文。</li>
+    <li><b>利渺</b>　卷首评乡兵叉钯条有「以一尺无刃之物，而当一二丈利渺之锋」，「利渺」二字疑有讹，库本如此。</li>
+    <li><b>短兵长用说</b>　库本卷十二篇题无「篇」字，与他卷体例不一，照录。</li>
+  </ul>
+</div>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <b>文本来源</b>　殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）子藏兵家《纪效新书》，引文经逐字核验（去标点归一后与库本比对）。<br>
+    <b>时代局限</b>　书中连坐军法、割耳、斩首与首级赏格等内容，是十六世纪军制的实录，非今日价值，阅读当知其限。
+  </div>
+</footer>
+
+</body>
+</html>
