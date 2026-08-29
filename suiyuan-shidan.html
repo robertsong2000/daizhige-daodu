@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>随园食单 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --blue: #5e8fbb;
+    --blue-dim: rgba(94,143,187,0.35);
+    --hairline: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 26px; }
+
+  .pagehead {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 22px 0 14px; border-bottom: 1px solid var(--hairline);
+    font-size: 13px; letter-spacing: 0.28em; color: var(--paper-faint);
+  }
+  .pagehead b { color: var(--paper-dim); font-weight: 400; }
+
+  .epigraph { padding: 88px 0 72px; position: relative; }
+  .epigraph .seal {
+    position: absolute; top: 92px; right: 4px;
+    width: 64px; height: 64px; border: 2px solid var(--blue);
+    color: var(--blue); display: grid; place-items: center;
+    font-size: 24px; letter-spacing: 0.1em; font-weight: 700;
+    transform: rotate(4deg);
+  }
+  .epigraph p.big {
+    font-size: clamp(30px, 5.6vw, 54px); font-weight: 700;
+    letter-spacing: 0.16em; line-height: 1.6; max-width: 14em;
+  }
+  .epigraph p.big em { font-style: normal; color: var(--blue); }
+  .epigraph p.note { margin-top: 30px; color: var(--paper-dim); font-size: 15px; max-width: 34em; }
+  .epigraph p.note b { color: var(--paper); font-weight: 600; }
+
+  section { padding: 56px 0; border-top: 1px solid var(--hairline); }
+  .secline { display: flex; align-items: baseline; gap: 16px; margin-bottom: 30px; }
+  .secline .no { font-size: 13px; color: var(--blue); letter-spacing: 0.3em; }
+  .secline h2 { font-size: 24px; font-weight: 600; letter-spacing: 0.14em; }
+  .secline .tail { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.16em; margin-left: auto; }
+
+  .person { display: grid; grid-template-columns: 74px 1fr; gap: 30px; }
+  .person .vname {
+    writing-mode: vertical-rl; font-size: 25px; font-weight: 700;
+    letter-spacing: 0.5em; color: var(--blue);
+    border-right: 1px solid var(--hairline); padding-right: 18px;
+    height: fit-content;
+  }
+  .person .vname small { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.3em; margin-top: 18px; }
+  .person p { color: var(--paper-dim); font-size: 15.5px; margin-bottom: 16px; max-width: 36em; }
+  .person p b { color: var(--paper); font-weight: 600; }
+
+  blockquote.sq {
+    margin: 26px 0; padding: 20px 26px;
+    border-left: 2px solid var(--blue); background: var(--ink-2);
+    font-size: 16.5px; color: var(--paper); max-width: 40em;
+  }
+  blockquote.sq .who { display: block; margin-top: 10px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  p gloss, p.gloss { color: var(--paper-dim); font-size: 14.5px; margin-bottom: 14px; max-width: 36em; }
+  p.gloss b { color: var(--paper); font-weight: 600; }
+
+  .paiban {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(146px, 1fr)); gap: 12px;
+    margin: 30px 0 8px;
+  }
+  .pai {
+    border: 1px solid var(--blue-dim); padding: 15px 15px 13px;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+  .pai:hover { background: var(--ink-2); border-color: var(--blue); }
+  .pai h3 { font-size: 17px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 7px; }
+  .pai h3::before { content: "戒 "; color: var(--blue); font-size: 13px; letter-spacing: 0; }
+  .pai p { font-size: 13px; color: var(--paper-dim); line-height: 1.7; }
+
+  .story { margin: 40px 0 0; display: grid; grid-template-columns: 1fr; gap: 6px; }
+  .story h3 { font-size: 17px; letter-spacing: 0.12em; color: var(--blue); font-weight: 700; margin-top: 18px; }
+  .story p { color: var(--paper-dim); font-size: 15px; max-width: 37em; }
+
+  .xuzhi { margin: 8px 0; }
+  .xuzhi .item { padding: 20px 0; border-top: 1px dashed var(--hairline); }
+  .xuzhi .item:last-child { border-bottom: 1px dashed var(--hairline); }
+  .xuzhi h3 { font-size: 17px; font-weight: 700; letter-spacing: 0.12em; }
+  .xuzhi h3 small { font-size: 13px; color: var(--blue); margin-left: 12px; font-weight: 400; letter-spacing: 0.2em; }
+  .xuzhi p { color: var(--paper-dim); font-size: 15px; margin-top: 8px; max-width: 37em; }
+
+  .ticket {
+    background: var(--paper); color: var(--ink);
+    padding: 34px 36px 30px; margin: 30px 0 10px;
+    position: relative; font-size: 15.5px;
+  }
+  .ticket::before, .ticket::after {
+    content: ""; position: absolute; left: 0; right: 0; height: 12px;
+    background-image: radial-gradient(circle at 12px 6px, var(--ink) 6px, transparent 6.5px);
+    background-size: 36px 12px;
+  }
+  .ticket::before { top: -6px; }
+  .ticket::after { bottom: -6px; }
+  .ticket .thead { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 6px; }
+  .ticket .thead h3 { font-size: 21px; font-weight: 700; letter-spacing: 0.34em; }
+  .ticket .thead span { font-size: 12px; letter-spacing: 0.2em; color: #55524b; }
+  .ticket .row { display: grid; grid-template-columns: 1fr auto; gap: 18px; padding: 11px 2px; border-bottom: 1px dashed rgba(25,25,23,0.28); }
+  .ticket .row:last-of-type { border-bottom: none; }
+  .ticket .row .nm { font-weight: 700; letter-spacing: 0.06em; }
+  .ticket .row .nm small { font-weight: 400; color: #55524b; margin-left: 10px; font-size: 12.5px; }
+  .ticket .row .cat { font-size: 12px; color: #55524b; letter-spacing: 0.16em; white-space: nowrap; }
+  .ticket .tfoot { margin-top: 14px; padding-top: 12px; border-top: 2px solid var(--ink); display: flex; justify-content: space-between; font-size: 12.5px; color: #55524b; letter-spacing: 0.1em; }
+  .ticket .tfoot b { color: var(--ink); }
+  .tixiang { text-align: right; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.24em; margin-top: 22px; }
+
+  footer.page {
+    border-top: 1px solid var(--hairline);
+    padding: 40px 0 60px; color: var(--paper-faint); font-size: 13.5px;
+  }
+  footer.page p { margin-bottom: 8px; max-width: 44em; }
+  footer.page a { color: var(--paper-dim); }
+  footer.page b { color: var(--paper-dim); font-weight: 600; }
+
+  @media (max-width: 640px) {
+    .person { grid-template-columns: 1fr; }
+    .person .vname { writing-mode: horizontal-tb; border-right: none; border-bottom: 1px solid var(--hairline); padding: 0 0 14px; letter-spacing: 0.3em; }
+    .epigraph .seal { position: static; margin-bottom: 26px; transform: rotate(3deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="pagehead">
+    <b>随园食单</b>
+    <span>清 · 袁枚 撰</span>
+  </div>
+</div>
+
+<header class="epigraph">
+  <div class="wrap">
+    <div class="seal">知味</div>
+    <p class="big">人莫不饮食也，<br>鲜能<em>知味</em>也。</p>
+    <p class="note"><b>人人都吃饭，很少人懂得味道。</b>袁枚从《中庸》里取出这九个字，当作一整部食谱的出发点。他写的不只是怎么做饭，而是一个人肯不肯在最日常的事上认真。</p>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <div class="secline"><span class="no mono">壹</span><h2>写单子的人</h2><span class="tail">随园主人</span></div>
+      <div class="person">
+        <div class="vname">袁枚<small>一七一六至一七九七</small></div>
+        <div>
+          <p>钱塘人，少年得志，二十多岁中进士点了翰林，却因为满文考试不合格被外放江南做知县。做了几年，他索性辞官，在江宁城西买下一座荒废的园子，改「隋」为「随」，从此以卖文为生，五十年不再出仕。这座随园，是他后半生全部生活的舞台。</p>
+          <p>一个退隐的才子，把日子过成了两件事：写诗，和吃。《随园食单》是他吃了一辈子的账本。在序里他交代了自己的方法：</p>
+          <blockquote class="sq">余雅慕此旨，每食于某氏而饱，必使家厨往彼灶觚，执弟子之礼。四十年来，颇集众美。有学就者，有十分中得六七者，有仅得二三者，亦有竟失传者。<span class="who">随园食单 · 序</span></blockquote>
+          <p>在谁家吃到了好菜，就派自家厨子登门拜师，把人家的手艺学回来。四十年下来，学全的有，学个六七成的有，只学到两三成的有，还有彻底失传的。他给每一道菜都记下出处，于是这本食单成了一个朋友圈：蒋侍郎的豆腐、杨中丞的西洋饼、尹文端公家的风肉、杭州王三房的火腿。他还专门为家厨王小余写过一篇传记，在十八世纪，肯给厨师立传的文人，普天下大概只有他一个。</p>
+          <p>全书十四单：<b>须知单、戒单</b>讲原理，后面<b>十二单</b>从海鲜一路开到茶酒。他自嘲是「好学」：「自觉好学之心，理宜如是。」把吃饭当学问做，做得理直气壮。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="secline"><span class="no mono">貳</span><h2>十四戒</h2><span class="tail">为政者兴一利，不如除一弊</span></div>
+      <p class="gloss">戒单开头一句，把厨政当政务讲：「为政者兴一利，不如除一弊，能除饮食之弊则思过半矣。」十四块戒牌，是袁枚给清代餐桌立的规矩。</p>
+      <div class="paiban">
+        <div class="pai"><h3>外加油</h3><p>俗厨制菜，动熬猪油一锅，临上菜时勺取而分浇之</p></div>
+        <div class="pai"><h3>同锅熟</h3><p>一汤同滚，遂令千手雷同，味同嚼蜡</p></div>
+        <div class="pai"><h3>耳餐</h3><p>不知豆腐得味，远胜燕窝</p></div>
+        <div class="pai"><h3>目食</h3><p>多盘叠碗，是以目食，非口食也</p></div>
+        <div class="pai"><h3>穿凿</h3><p>物有本性，不可穿凿为之</p></div>
+        <div class="pai"><h3>停顿</h3><p>物味取鲜，全在起锅时极锋而试</p></div>
+        <div class="pai"><h3>暴殄</h3><p>使之死可也，使之求死不得不可也</p></div>
+        <div class="pai"><h3>纵酒</h3><p>味之美恶，亦惟醒人能知之</p></div>
+        <div class="pai"><h3>火锅</h3><p>对客喧腾，已属可厌</p></div>
+        <div class="pai"><h3>强让</h3><p>客非无手无目之人</p></div>
+        <div class="pai"><h3>走油</h3><p>总要使其油在肉中，不落汤中</p></div>
+        <div class="pai"><h3>落套</h3><p>种种俗名皆恶厨陋习</p></div>
+        <div class="pai"><h3>混浊</h3><p>如缸中搅浑之水</p></div>
+        <div class="pai"><h3>苟且</h3><p>厨者偷安，吃者随便</p></div>
+      </div>
+
+      <div class="story">
+        <h3>戒耳餐：你是来吃的，还是来贩的</h3>
+        <p>什么菜是给耳朵吃的？袁枚的定义干脆：为名贵之名而点的菜，就是耳餐。某太守宴客，大碗如缸，白煮燕窝四两，丝毫无味，客人争相夸赞，袁枚当场笑出声。</p>
+        <blockquote class="sq">不知豆腐得味，远胜燕窝；海菜不佳，不如蔬笋。余尝谓鸡、猪、鱼、鸭豪杰之士也，各有本味，自成一家；海参、燕窝庸陋之人也，全无性情，寄人篱下。……我辈来吃燕窝，非来贩燕窝也。可贩不可吃，虽多奚为？<span class="who">随园食单 · 戒单</span></blockquote>
+        <p>鸡猪鱼鸭是豪杰，海参燕窝是庸人。两句拟人，把一句饮食批评说成了人物品藻。若只夸体面，他补了一刀：不如在碗里放一百粒明珠，价值万金，只是吃不得。</p>
+
+        <h3>戒目食：吃不完的四十多种</h3>
+        <p>耳餐贪贵，目食贪多。袁枚亲历过一场：上菜三次撤席，点心十六道，食品共四十多种，主人欣欣得意。</p>
+        <blockquote class="sq">主人自觉欣欣得意，而我散席还家，仍煮粥充饥。可想见其席之丰而不洁矣。<span class="who">随园食单 · 戒单</span></blockquote>
+        <p>赴一场豪华宴席，回家还得给自己煮碗粥。两百多年后，「拍照五分钟，吃饭两小时」的席面，这句仍然成立。</p>
+
+        <h3>戒火锅：袁枚的黑名单</h3>
+        <p>十四戒里今天读来最意外的一条，是火锅。</p>
+        <blockquote class="sq">冬日宴客，惯用火锅，对客喧腾，已属可厌；且各菜之味，有一定火候，宜文宜武，宜撤宜添，瞬息难差。今一例以火逼之，其味尚可问哉？<span class="who">随园食单 · 戒单</span></blockquote>
+        <p>他的理由贯彻全书：每样菜的火候是精密的，文火武火各有分寸，火锅「一例以火逼之」，是给所有菜判同一个刑。他还替读者设想过反驳：「菜冷奈何？」答得更狠：一锅滚热的菜你们竟留到冷，可见其味恶劣到什么地步。现代人冬天涮锅子的快乐，袁枚不批准。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="secline"><span class="no mono">叄</span><h2>须知选抄</h2><span class="tail">先知而后行</span></div>
+      <p class="gloss">须知单二十条，是全书的技术内核：先天、作料、洗刷、调剂、配搭、独用、火候、色臭、迟速、变换、器具、上菜、时节、多寡、洁净、用纤、选用、疑似、补救、本分。选四条。</p>
+      <div class="xuzhi">
+        <div class="item">
+          <h3>先天<small>买菜比掌勺重要</small></h3>
+          <blockquote class="sq">大抵一席佳肴，司厨之功居其六，买办之功居其四。<span class="who">随园食单 · 须知单</span></blockquote>
+          <p>食材是先天的，厨艺只占六成。猪要皮薄，鸡要骟嫩，鲫鱼要扁身白肚，笋要节少甘鲜。这条账今天所有讲究食材的馆子仍在算。</p>
+        </div>
+        <div class="item">
+          <h3>火候<small>几于道</small></h3>
+          <blockquote class="sq">道人以丹成九转为仙，儒家以无过、不及为中。司厨者，能知火候而谨伺之，则几于道矣。<span class="who">随园食单 · 须知单</span></blockquote>
+          <p>煎炒须武火，煨煮须文火；腰子愈煮愈嫩，鲜鱼略煮即老。他最后把看火候抬到了丹道与中庸的高度，一个厨房里的哲学家。</p>
+        </div>
+        <div class="item">
+          <h3>时节<small>成功者退</small></h3>
+          <blockquote class="sq">所谓四时之序，成功者退，精华已竭，褰裳去之也。<span class="who">随园食单 · 须知单</span></blockquote>
+          <p>萝卜过时则心空，山笋过时则味苦。从时令里退出场的东西，就该提起衣裳快走，别赖在餐桌上。一句饮食时令论，读起来像人生格言。</p>
+        </div>
+        <div class="item">
+          <h3>强让<small>一个段子</small></h3>
+          <p>主人不许，用筷子夹菜硬堆到客人面前，袁枚骂完「村妪小家子之见解」，讲了个段子收尾：有位客人问主人，咱们算相好吧？主人答，相好。客人跪下来求：<b>既然相好，往后你家宴客，求你放过我，别再请我。</b>满座大笑。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="secline"><span class="no mono">肆</span><h2>菜单摘抄</h2><span class="tail">每道菜后面站着一个人</span></div>
+      <p class="gloss">十二张菜单三百多种吃法里，挑九样。票面式样，取食单原文各一句。</p>
+      <div class="ticket">
+        <div class="thead"><h3>随园菜单</h3><span>摘自 艺藏 · 饮馔</span></div>
+        <div class="row"><span class="nm">蒋侍郎豆腐<small>甜酒一茶杯，大虾米一百二十个；细葱半寸许长，一百二十段</small></span><span class="cat">杂素菜单</span></div>
+        <div class="row"><span class="nm">王太守八宝豆腐<small>用瓢不用箸，此圣祖赐徐健庵尚书方也，御膳房费一千两</small></span><span class="cat">杂素菜单</span></div>
+        <div class="row"><span class="nm">云林鹅<small>竹箸架之不使鹅身近水，灶内山茅二束缓缓烧尽为度</small></span><span class="cat">羽族单</span></div>
+        <div class="row"><span class="nm">茶叶蛋<small>鸡蛋百个，用盐一两，粗茶叶煮两枝线香为度</small></span><span class="cat">水族无鳞单</span></div>
+        <div class="row"><span class="nm">全壳甲鱼<small>原壳覆之，每客前献一甲鱼，见者悚然，犹虑其动</small></span><span class="cat">水族无鳞单</span></div>
+        <div class="row"><span class="nm">萧美人点心<small>仪真南门外，馒头糕饺小巧可爱，洁白如雪</small></span><span class="cat">点心单</span></div>
+        <div class="row"><span class="nm">杨中丞西洋饼<small>白如雪，明如绵纸</small></span><span class="cat">点心单</span></div>
+        <div class="row"><span class="nm">萝卜汤圆<small>萝卜刨丝滚熟去臭气，麻油灼之，汤滚亦可</small></span><span class="cat">点心单</span></div>
+        <div class="row"><span class="nm">溧阳乌饭酒<small>生一女必造酒一坛，俟嫁此女才饮，极早亦须十五六年</small></span><span class="cat">茶酒单</span></div>
+        <div class="tfoot"><span>录 <b>九味</b></span><span>原单十二张 · 三百余种</span></div>
+      </div>
+      <p class="tixiang">食单内注 袁枚 记</p>
+
+      <div class="story">
+        <h3>一千两白银的豆腐方</h3>
+        <p>九味里头一味豆腐，来历最大。王太守的八宝豆腐，腐脑配鸡屑火腿屑松子仁屑，入口即化。孟亭太守说，这是康熙皇帝赐给徐健庵尚书的方子，尚书去御膳房取方，付了一千两。太守的祖父是尚书门生，才辗转传出来。一道家常豆腐，身后站着皇帝、尚书、御膳房的账本，和一句「用瓢不用箸」的讲究。</p>
+        <blockquote class="sq">此圣祖师赐徐健庵尚书方也。尚书取方时，御膳房费一千两。<span class="who">随园食单 · 杂素菜单</span></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="secline"><span class="no mono">伍</span><h2>本味</h2><span class="tail">饭粥单 · 茶酒单</span></div>
+      <p class="gloss">十四单以饭粥、茶酒收尾，袁枚把压轴位置给了最平常的东西。他说「饭者，百味之本」，骂富贵人家讲菜不讲饭是逐末忘本，又说：</p>
+      <blockquote class="sq">见水不见米，非粥也；见米不见水，非粥也。必使水米融洽，柔腻如一，而后谓之粥。<span class="who">随园食单 · 饭粥单</span></blockquote>
+      <p class="gloss">一碗粥的标准定义，至今没有写得比这更好的。茶酒两单他同样毒舌：绍兴酒如清官廉吏，不参一毫假；烧酒是人中光棍、县中酷吏，驱风寒消积滞非它不可。而全书写茶最好的段落，是他承认自己错了的那次。他本嫌武夷茶浓苦如药，丙午年游武夷，僧道争相献茶：</p>
+      <blockquote class="sq">杯小如胡桃，壶小如香橼，每斟无一两。上口不忍遽咽，先嗅其香，再试其味，徐徐咀嚼而体贴之。果然清芬扑鼻，舌有余甘。<span class="who">随园食单 · 茶酒单</span></blockquote>
+      <p class="gloss">小杯、嗅香、慢啜，这段被后来研究茶史的人视为工夫茶式品法的早期现场记录。写下它的笔，是那个在杭州士大夫里独醒的人。有山西官员说「余昨日过随园，才吃一杯好茶」，袁枚记下这句，然后叹息：生在杭州、长在杭州的士大夫，一入官场便喝熬茶，其苦如药，其色如血。</p>
+      <p class="gloss">末了还是那九个字。人人吃饭，鲜能知味。袁枚用一辈子去知，然后把账本留了下来。</p>
+    </div>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p><b>文本来源</b>　殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）艺藏 · 饮馔《随园食单》，实测三万零四百二十四字符。回<a href="mulu.html">总目</a>。</p>
+    <p><b>引文核验</b>　本页所有引用均经脚本与库内文本逐字比对（去标点、异体字归一），核验脚本 verify_suiyuan.py 随仓库存档。</p>
+    <p><b>时代局限</b>　书中食材、满汉之分的表述与人身品评皆是十八世纪旧观念，果子狸、野禽等野味记载今人不宜效仿；袁枚本人亦明言「使之死可也，使之求死不得不可也」。阅读时请以史料视之。</p>
+  </div>
+</footer>
+
+</body>
+</html>
