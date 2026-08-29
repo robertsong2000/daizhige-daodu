@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>殆知阁导读 之四七 · 穆天子传</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #262523;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --gold: #c9963f; --gold-dim: rgba(201,150,63,0.35);
+    --fire: #c0453c;
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 26px; }
+
+  /* hero: the book opens mid-sentence */
+  .hero { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; padding: 60px 0 48px; position: relative; }
+  .kick { font-size: 13px; letter-spacing: 0.4em; color: var(--paper-faint); margin-bottom: 40px; }
+  .kick b { color: var(--gold); font-weight: 400; }
+  .halffrag { position: relative; display: inline-block; }
+  .halffrag .t {
+    font-size: clamp(44px, 8.6vw, 96px); font-weight: 700; letter-spacing: 0.1em; line-height: 1.35;
+  }
+  .burn {
+    position: absolute; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, var(--ink) 0 58%, var(--ink-2) 66%, rgba(25,25,23,0) 74%);
+  }
+  .b1 { width: 0.62em; height: 0.62em; left: 1.35em; top: 0.24em; }
+  .b2 { width: 0.42em; height: 0.42em; left: 3.6em; bottom: 0.5em; }
+  .b3 { width: 0.5em; height: 0.5em; right: 0.9em; top: 0.1em; }
+  .heronote { margin-top: 34px; color: var(--paper-dim); font-size: clamp(15px, 1.7vw, 18px); max-width: 34em; }
+  .heronote em { font-style: normal; color: var(--gold); }
+  .firesig { margin-top: 26px; display: flex; gap: 9px; align-items: center; color: var(--paper-faint); font-size: 12.5px; letter-spacing: 0.18em; }
+  .firesig i { width: 7px; height: 7px; border-radius: 50%; background: var(--fire); opacity: 0.85; }
+
+  /* section chrome: scorched slip edge */
+  section.juan { padding: 74px 0 10px; }
+  .sliphead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 8px; }
+  .slipno {
+    font-size: 13px; letter-spacing: 0.34em; color: var(--gold); white-space: nowrap;
+    border-top: 3px solid var(--gold); padding-top: 10px;
+  }
+  .slipname { font-size: clamp(26px, 3.4vw, 34px); font-weight: 700; letter-spacing: 0.1em; }
+  .slipsub { color: var(--paper-faint); font-size: 13.5px; letter-spacing: 0.14em; }
+  .sliprule { height: 1px; background: linear-gradient(90deg, var(--gold-dim), rgba(232,228,220,0.04) 70%); margin: 16px 0 30px; }
+  .prose { color: var(--paper-dim); max-width: 62ch; margin-bottom: 22px; }
+  .prose b { color: var(--paper); font-weight: 600; }
+  .prose .gold { color: var(--gold); }
+
+  /* quotes */
+  .qbox { margin: 30px 0; padding: 22px 26px; background: var(--ink-2); border-left: 2px solid var(--gold); }
+  .qbox p.src { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.16em; margin-bottom: 10px; }
+  .q { color: var(--paper); font-size: 17.5px; display: block; }
+  .q i { font-style: normal; color: var(--fire); }
+  .qnote { margin-top: 10px; font-size: 13px; color: var(--paper-faint); }
+
+  /* the fire ledger: 100 cells */
+  .fireledger { margin: 34px 0 10px; border: 1px solid var(--hairline); padding: 24px 24px 20px; background: var(--ink-2); }
+  .fireledger h3 { font-size: 14px; letter-spacing: 0.28em; color: var(--gold); font-weight: 400; margin-bottom: 6px; }
+  .fireledger .sum { font-size: 13.5px; color: var(--paper-faint); margin-bottom: 18px; }
+  .cells { display: grid; grid-template-columns: repeat(25, 1fr); gap: 5px; margin-bottom: 14px; }
+  .cells i { aspect-ratio: 1; background: rgba(232,228,220,0.13); }
+  .cells i.burnt { background: var(--fire); }
+  .firecap { font-size: 13px; color: var(--paper-dim); }
+  .firecap .gold { color: var(--gold); }
+
+  /* calendar ruler of ganzhi day-tags */
+  .rulerwrap { margin: 36px 0 8px; }
+  .rulertitle { font-size: 13px; letter-spacing: 0.3em; color: var(--paper-faint); margin-bottom: 16px; }
+  .ruler { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 14px; }
+  .daytag {
+    flex: 0 0 auto; width: 118px; background: var(--ink-2); border: 1px solid var(--hairline);
+    padding: 12px 14px 12px; position: relative;
+  }
+  .daytag::after { content: ""; position: absolute; right: -7px; top: 50%; width: 7px; height: 1px; background: var(--gold-dim); }
+  .daytag:last-child::after { display: none; }
+  .daytag .gz { font-size: 19px; font-weight: 700; color: var(--gold); letter-spacing: 0.1em; }
+  .daytag .ev { font-size: 13px; color: var(--paper-dim); margin-top: 6px; line-height: 1.6; }
+
+  /* eight steeds as name plates */
+  .steeds { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 8px; }
+  .steed {
+    border: 1px solid var(--gold-dim); color: var(--paper); font-size: 16px;
+    padding: 8px 18px; letter-spacing: 0.22em; background: var(--ink-2);
+  }
+  .steed small { color: var(--paper-faint); font-size: 11px; letter-spacing: 0.1em; display: block; text-align: center; }
+
+  /* stone duet for the two songs at Yaochi */
+  .duet { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin: 34px 0 10px; }
+  .stele { background: var(--ink-3); border: 1px solid rgba(232,228,220,0.09); padding: 30px 26px 24px; position: relative; box-shadow: inset 0 0 34px rgba(0,0,0,0.5); }
+  .stele .st-head { text-align: center; font-size: 12.5px; letter-spacing: 0.32em; color: var(--gold); border-bottom: 1px solid var(--hairline); padding-bottom: 12px; margin-bottom: 18px; }
+  .stele .q { text-align: center; font-size: 17px; line-height: 2.2; }
+  .stele .who { text-align: center; margin-top: 16px; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.2em; }
+
+  /* distance ribbon, segment widths proportional to li; narrow-leg labels staggered inline */
+  .ribwrap { margin: 36px 0 6px; border: 1px solid var(--hairline); background: var(--ink-2); padding: 28px 24px 20px; }
+  .ribtitle { font-size: 13px; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 24px; }
+  .ribbon { display: flex; align-items: stretch; height: 150px; }
+  .leg { position: relative; border-bottom: 3px solid var(--gold); }
+  .leg.ret { border-bottom-style: dashed; }
+  .leg .to { position: absolute; left: 0; bottom: 12px; font-size: 13.5px; color: var(--paper); white-space: nowrap; line-height: 1.5; }
+  .leg .li { position: absolute; left: 0; top: 12px; font-size: 12.5px; color: var(--paper-faint); white-space: nowrap; }
+  .leg::before { content: ""; position: absolute; left: 0; bottom: -7px; width: 9px; height: 9px; border-radius: 50%; background: var(--ink); border: 2px solid var(--gold); }
+  .ribtotal { margin-top: 30px; display: flex; gap: 16px; align-items: baseline; flex-wrap: wrap; }
+  .ribtotal .q { display: inline; font-size: 16.5px; }
+  .ribtotal .cap { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.1em; }
+
+  /* mourning ladder, juan six */
+  .ladder { margin: 30px 0 8px; border-left: 2px solid var(--gold); padding-left: 0; }
+  .rung { display: grid; grid-template-columns: 150px 1fr; gap: 14px; padding: 10px 18px; border-bottom: 1px solid var(--hairline); font-size: 15px; }
+  .rung:last-child { border-bottom: none; background: rgba(201,150,63,0.07); }
+  .rung .who2 { color: var(--paper-dim); }
+  .rung .doubling { color: var(--gold); font-weight: 700; }
+  .rung .doubling small { color: var(--paper-faint); font-weight: 400; font-size: 12px; }
+
+  /* ending: what to believe */
+  .verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 30px 0; }
+  .vcard { border: 1px solid var(--hairline); padding: 24px 24px 20px; background: var(--ink-2); }
+  .vcard h4 { font-size: 15px; letter-spacing: 0.22em; color: var(--gold); font-weight: 400; margin-bottom: 12px; }
+  .vcard p { font-size: 14px; color: var(--paper-dim); }
+  .vcard p b { color: var(--paper); font-weight: 600; }
+
+  /* two copies in the library */
+  .copies { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 26px 0 8px; }
+  .copy { border: 1px dashed var(--gold-dim); padding: 16px 18px; font-size: 13.5px; color: var(--paper-dim); }
+  .copy b { color: var(--paper); display: block; font-size: 14.5px; margin-bottom: 4px; letter-spacing: 0.06em; }
+  .copy .gold { color: var(--gold); }
+
+  /* collation table */
+  .collate { margin: 30px 0 8px; border: 1px solid var(--hairline); }
+  .collate .row { display: grid; grid-template-columns: 170px 1fr; gap: 14px; padding: 12px 18px; border-top: 1px solid var(--hairline); font-size: 13.5px; }
+  .collate .row:first-child { border-top: none; }
+  .collate .k { color: var(--fire); }
+  .collate .v { color: var(--paper-dim); }
+  .collate .v b { color: var(--paper); font-weight: 600; }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 80px; padding: 36px 0 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page p + p { margin-top: 8px; }
+
+  @media (max-width: 720px) {
+    .duet, .verdict, .copies { grid-template-columns: 1fr; }
+    .cells { grid-template-columns: repeat(20, 1fr); }
+    .rung { grid-template-columns: 1fr; gap: 2px; }
+    .collate .row { grid-template-columns: 1fr; gap: 2px; }
+    .ribbon { height: 190px; }
+    .leg .to { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">殆知阁导读　卷二十 汲冢　<b>之四七</b>　赭金</div>
+    <div class="halffrag"><span class="t">饮天子山之上。</span>
+      <i class="burn b1"></i><i class="burn b2"></i><i class="burn b3"></i>
+    </div>
+    <p class="heronote">全书的第一句就从半截开始：第一个字之前的那片竹简，已在墓火里烧掉了。这一页照原样开篇，<em>不替它补一个字</em>。</p>
+    <div class="firesig"><i></i><span>战国竹简　西晋出土　带火痕的书</span></div>
+  </div>
+</header>
+
+<main>
+
+<section class="juan">
+  <div class="wrap">
+    <div class="sliphead"><span class="slipno">案卷</span><span class="slipname">一座墓，两部书，一把火</span></div>
+    <div class="sliprule"></div>
+    <p class="prose">西晋初年，汲郡一个叫<b>不准</b>的盗墓贼凿进战国魏墓，竹片又厚又硬，正好引火。他抽出几根点着照明，金银拿走，竹简留下。后来官府收缴，整理出七十五篇，其中一部编年为<b>竹书纪年</b>，另一部，记周穆王驾八骏向西走了三万五千里。同穴而出，本库各占一卷：纪年在前，此篇在后。</p>
+    <div class="qbox">
+      <p class="src">晋书 · 束皙传</p>
+      <span class="q" data-src="jinshu">初，太康二年，汲郡人不准盗发魏襄王墓，或言安厘王冢，得竹书数十车。</span>
+      <span class="q" data-src="jinshu">初发冢者烧策照取宝物，及官收之，多烬简断札，文既残缺，不复诠次。</span>
+      <p class="qnote">系年一说咸宁五年（279），一说太康二年（281）。汲冢二篇导读统一取前说，与竹书纪年篇同。简既被烧，整理者面对的就是一堆断札。</p>
+    </div>
+    <div class="qbox">
+      <p class="src">晋书 束皙传 · 书目所见</p>
+      <span class="q" data-src="jinshu">《穆天子传》五篇，言周穆王游行四海，见帝台、西王母。</span>
+      <span class="q" data-src="jinshu">大凡七十五篇，七篇简书折坏，不识名题。</span>
+      <p class="qnote">今本第六卷盛姬之丧，晋书著录为杂书《周穆王美人盛姬死事》，本是单独一篇，后世合入穆传。</p>
+    </div>
+
+    <div class="fireledger">
+      <h3>火的账</h3>
+      <p class="sum mono">库本正文 8,342 字，缺字符号 338 处：□ 230、● 85、■ 23。约合每 100 字 4 个字，永远拿不回来了。</p>
+      <div class="cells" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="burnt"></i>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="burnt"></i>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="burnt"></i>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="burnt"></i>
+      </div>
+      <p class="firecap">一百格代表一百个字，<span class="gold">红点</span>是烧掉的位置。本页所有引文里的 □●■ 都照库本原样保留，那是这本书自己的样子。</p>
+    </div>
+  </div>
+</section>
+
+<section class="juan">
+  <div class="wrap">
+    <div class="sliphead"><span class="slipno">体例</span><span class="slipname">一部拿干支记日的手账</span></div>
+    <div class="sliprule"></div>
+    <p class="prose">全书六卷，几乎每一段都从一个干支日起头：<b>戊寅、庚辰、癸未</b>，走到哪记到哪，像一本随行史官的历日。卷一到卷四是西征与东归，卷五折回中原田猎，卷六整卷是盛姬的病与葬。下面是卷一开篇连续八天的行程，字照抄，缺字照缺。</p>
+    <div class="rulerwrap">
+      <p class="rulertitle">卷一 · 从绝漳水到阳纡之山</p>
+      <div class="ruler">
+        <div class="daytag"><div class="gz">戊寅</div><div class="ev">天子北征，乃绝漳水</div></div>
+        <div class="daytag"><div class="gz">庚辰</div><div class="ev">至于□觞</div></div>
+        <div class="daytag"><div class="gz">癸未</div><div class="ev">雨雪，猎于并山之西阿</div></div>
+        <div class="daytag"><div class="gz">乙酉</div><div class="ev">北征于犬戎</div></div>
+        <div class="daytag"><div class="gz">庚寅</div><div class="ev">北风雨雪，命王属休</div></div>
+        <div class="daytag"><div class="gz">甲午</div><div class="ev">西征，绝□之关■</div></div>
+        <div class="daytag"><div class="gz">丙午</div><div class="ev">饮于河水之阿</div></div>
+        <div class="daytag"><div class="gz">戊寅</div><div class="ev">鹜行至于阳纡之山</div></div>
+      </div>
+    </div>
+    <p class="qnote">逐条对得上库内原文：「戊寅，天子北征，乃绝漳水」「癸未，雨雪，天子猎于并山之西阿」「庚寅，北风雨雪。天子以寒之故，命王属休」。两个戊寅不是抄重，行程四十余日，干支轮回了一轮。</p>
+  </div>
+</section>
+
+<section class="juan">
+  <div class="wrap">
+    <div class="sliphead"><span class="slipno">卷之一</span><span class="slipname">八骏与一个清醒的人</span><span class="slipsub">北征 · 绝漳水</span></div>
+    <div class="sliprule"></div>
+    <p class="prose">出发先报家当。天子的马、狗、御者各有名籍，八个马名后来成了中国绘画史上的一个题材，八骏图画的永远是这一栏名单。御者排第一的<b>造父</b>，记住这个名字，页尾有他的下场。</p>
+    <div class="steeds" aria-hidden="true">
+      <span class="steed">赤骥<small>骏</small></span>
+      <span class="steed">盗骊<small>骏</small></span>
+      <span class="steed">白义<small>骏</small></span>
+      <span class="steed">逾轮<small>骏</small></span>
+      <span class="steed">山子<small>骏</small></span>
+      <span class="steed">渠黄<small>骏</small></span>
+      <span class="steed">华骝<small>骏</small></span>
+      <span class="steed">绿耳<small>骏</small></span>
+    </div>
+    <div class="qbox">
+      <p class="src">穆天子传 · 卷一</p>
+      <span class="q" data-src="mtz">天子之骏：赤骥、盗骊、白义、逾轮、山子、渠黄、华骝、绿耳。</span>
+      <span class="q" data-src="mtz">天子之御：造父、三百、耿□、芍及。</span>
+      <p class="qnote">「三百」是人名。第三位御者的名字，已经在墓火里烧掉了。</p>
+    </div>
+    <p class="prose">猎于渗泽、饮于河阿之间，天子忽然自问了一句。发问的是天下共主，答话的是七萃之士，禁军卫官。一问一答像预演：<b>玩乐这件事，后世会怎么记我？</b></p>
+    <div class="qbox">
+      <p class="src">穆天子传 · 卷一</p>
+      <span class="q" data-src="mtz">于乎！予一人不盈于德，而辨于乐，后世亦追数吾过乎！</span>
+      <span class="q" data-src="mtz">后世所望无失天常，农工既得，男女衣食，百姓徧绌，官人执事。</span>
+      <span class="q" data-src="mtz">何谋于乐？何意之忘？与民共利，以为常也。</span>
+      <p class="qnote">问句两千年后仍不过时。七萃之士的回答落在「与民共利」，赐左佩玉华，再拜顿首。</p>
+    </div>
+  </div>
+</section>
+
+<section class="juan">
+  <div class="wrap">
+    <div class="sliphead"><span class="slipno">卷之二</span><span class="slipname">昆仑之丘，黄帝之宫</span><span class="slipsub">西征 · 观四野</span></div>
+    <div class="sliprule"></div>
+    <p class="prose">向西，路过的部族一个接一个献马献酒，天子回赐金环贝带，受赐者「膜拜而受」。至昆仑，登丘，看的是<b>黄帝之宫</b>；再北登舂山，那片高山草甸有更老的名字。</p>
+    <div class="qbox">
+      <p class="src">穆天子传 · 卷二</p>
+      <span class="q" data-src="mtz">吉日辛酉，天子升于昆仑之丘，以观黄帝之宫</span>
+      <span class="q" data-src="mtz">舂山之泽，清水出泉，温和无风，飞鸟百兽之所饮食，先王所谓县圃。</span>
+      <p class="qnote">县圃即悬圃，昆仑神话里天帝的下都花园。这句几乎无缺字，是全书风景写得最完整的一段。</p>
+    </div>
+    <div class="qbox">
+      <p class="src">穆天子传 卷二 · 群玉之山</p>
+      <span class="q" data-src="mtz">群玉田山，□知阿平无险，四彻中绳，先王之所谓策府，寡草木而无鸟兽。</span>
+      <p class="qnote">策府，藏书之府。一座玉山被叫作国家档案馆，取玉三乘，载玉万只。后世学者多把这座山比在今和田一带，只这半句里确凿。</p>
+    </div>
+  </div>
+</section>
+
+<section class="juan">
+  <div class="wrap">
+    <div class="sliphead"><span class="slipno">卷之三</span><span class="slipname">瑶池</span><span class="slipsub">吉日甲子 · 宾于西王毋</span></div>
+    <div class="sliprule"></div>
+    <p class="prose">全书最有名的一天。吉日甲子，天子带着白圭玄璧做见面礼，去见<b>西王毋</b>。她宴他于瑶池之上，席间唱了一支歌，天子答了一支。这两支歌后来被画进无数祝寿图，是《瑶池会仙》的标准脚本。歌辞刻在这里，缺字照缺。</p>
+    <div class="duet">
+      <div class="stele">
+        <div class="st-head">西王毋谣</div>
+        <span class="q" data-src="mtz">白云在天，山<i>●</i>自出。道里悠远，山川间之。将子无死，尚能复来。</span>
+        <div class="who">西王毋为天子谣</div>
+      </div>
+      <div class="stele">
+        <div class="st-head">天子之答</div>
+        <span class="q" data-src="mtz">予归东土，和治诸夏。万民平均，吾顾见汝。比及三年，将复而野。</span>
+        <div class="who">天子答之曰</div>
+      </div>
+    </div>
+    <div class="qbox">
+      <p class="src">穆天子传 · 卷三</p>
+      <span class="q" data-src="mtz">吉日甲子，天子宾于西王毋。乃执白圭玄璧以见西王毋</span>
+      <p class="qnote">一个「宾」字，是国礼。她不是被征服的对象，也不是纯然的神，是能和天子对唱讨承诺的邦君。她问：还能再来吗。他答：三年后回到你的原野。</p>
+    </div>
+    <p class="prose">对唱之后天子在山上刻石树槐，把这场见面钉进地理。再往北是旷原，六师大猎九日，<span class="gold">鸟兽绝群</span>，载羽百车。回程在沙衍断水，出了全书最狠的一笔。</p>
+    <div class="qbox">
+      <p class="src">穆天子传 卷三 · 沙衍</p>
+      <span class="q" data-src="mtz">辛丑，天子渴于沙衍，求饮未至。七萃之士高奔戎，剌其左骖之颈，取其青血以饮天子。</span>
+      <p class="qnote">库本作「剌」。御马的脖子救了天子的命，天子「美之」，赐奔戎佩玉一只，再拜稽首。水分明没找到，将军放倒了左骖，接血奉上。这是行军实录的写法，不是神话的写法。</p>
+    </div>
+  </div>
+</section>
+
+<section class="juan">
+  <div class="wrap">
+    <div class="sliphead"><span class="slipno">卷之四</span><span class="slipname">三万五千里对账</span><span class="slipsub">东归 · 里西土之数</span></div>
+    <div class="sliprule"></div>
+    <p class="prose">回到宗周，天子在太庙里把全程里数报了一遍账。这是全书最像公文的一页，一段一段全是里程。下面这条带子按各段里数拉出比例，虚线是归程。</p>
+    <div class="ribwrap">
+      <p class="ribtitle">卷四 · 里西土之数（段宽按里数比例）</p>
+      <div class="ribbon" aria-hidden="true">
+        <div class="leg" style="width: 24.5%"><div class="li">三千有四百里</div><div class="to">宗周<br>河宗之邦</div></div>
+        <div class="leg" style="width: 18%"><div class="li">二千又五百里</div><div class="to">西夏氏</div></div>
+        <div class="leg" style="width: 10.8%"><div class="li">千又五百里</div><div class="to">河首襄山</div></div>
+        <div class="leg" style="width: 6.4%"><div class="li">七百里</div><div class="to">昆仑之丘</div></div>
+        <div class="leg" style="width: 3.2%"><div class="li">三百里</div><div class="to" style="bottom: 58px">赤乌氏舂山</div></div>
+        <div class="leg" style="width: 21.6%"><div class="li" style="top: 46px">三千里</div><div class="to">群玉之山<br>西王毋之邦</div></div>
+        <div class="leg" style="width: 15.5%"><div class="li">千有九百里</div><div class="to">旷原之野</div></div>
+      </div>
+      <p class="qnote">西段据原文：「自宗周□水以西，至于河宗之邦，阳纡之山，三千有四百里」「自阳纡西至于西夏氏，二千又五百里」「自群玉之山以西，至于西王毋之邦，三千里」「自西王毋之邦，北至于旷原之野，飞鸟之所解其羽，千有九百里」。</p>
+    </div>
+    <div class="qbox">
+      <p class="src">穆天子传 卷四 · 旷原</p>
+      <span class="q" data-src="mtz">自西王毋之邦，北至于旷原之野，飞鸟之所解其羽，千有九百里。</span>
+      <p class="qnote">解羽，候鸟换羽之地。极北的大泽，鸟飞到这里把翅膀卸下来。全书最好的五个字。</p>
+    </div>
+    <div class="ribtotal">
+      <span class="q" data-src="mtz">乃里西土之数。</span>
+      <span class="q" data-src="mtz">各行兼数，三万有五千里。</span>
+      <span class="cap mono">周尺里数，不能按今天的里换算；但记账这件事本身，是全书最硬的一块骨头。</span>
+    </div>
+  </div>
+</section>
+
+<section class="juan">
+  <div class="wrap">
+    <div class="sliphead"><span class="slipno">卷之五</span><span class="slipname">中原：一虎一诗</span><span class="slipsub">东巡 · 圃田</span></div>
+    <div class="sliprule"></div>
+    <p class="prose">卷五画风骤变：不出远门了，在中原的圃田之薮钓鱼、观桑、射兽，和许男饮酒，和井公下棋下了三天。两件事值得单独记住。先是路遇一只老虎，禁军卫士高奔戎又一次出场，这次的命令是<b>活的</b>。</p>
+    <div class="qbox">
+      <p class="src">穆天子传 卷五 · 虎牢的来历</p>
+      <span class="q" data-src="mtz">有虎在乎葭中。天子将至，七萃之士高奔戎，请生捕虎，必全之。乃生捕虎而献之天子，命之为柙，而畜之东虞，是为虎牢。</span>
+      <p class="qnote">虎牢关，后来洛阳虎牢之战的虎牢。地名由一只被活捉的老虎得名，出处在这卷里，比三国早了一千三百年。</p>
+    </div>
+    <p class="prose">然后是一场倒春寒。北风雨雪，路上有冻死的人，天子作诗三章哀民，诗名叫<b>黄竹</b>。三章里有两句是天子骂自己的。</p>
+    <div class="qbox">
+      <p class="src">穆天子传 卷五 · 黄竹诗</p>
+      <span class="q" data-src="mtz">日中大寒，北风雨雪，有冻人，天子作诗三章以哀民</span>
+      <span class="q" data-src="mtz">我徂黄竹，□员□寒，帝收九行。</span>
+      <span class="q" data-src="mtz">余一人则淫，不皇万民。</span>
+      <p class="qnote">诗起句就有缺字，「□员□寒」，唱到一半的地方烧穿了。结句不打折扣：是我一人纵逸，顾不上万民。八骏的主人，在诗里自己把案翻了。</p>
+    </div>
+  </div>
+</section>
+
+<section class="juan">
+  <div class="wrap">
+    <div class="sliphead"><span class="slipno">卷之六</span><span class="slipname">盛姬</span><span class="slipsub">美人盛姬死事</span></div>
+    <div class="sliprule"></div>
+    <p class="prose">最后一卷换了一个骨头：盛姬随行，途中染病，病了，死了。天子先是把她葬成皇后规格，然后一路东行，走一段哭一段，每一处停留都被赐了名字。整卷读下来像一份礼制档案，又像一个人不肯办完的丧事。</p>
+    <div class="qbox">
+      <p class="src">穆天子传 · 卷六</p>
+      <span class="q" data-src="mtz">天子永念伤心，乃思淑人盛姬，于是流涕。</span>
+      <span class="q" data-src="mtz">自古有死有生，岂独淑人？天子不乐，出于永思；永思有益，莫忘其新。</span>
+      <span class="q" data-src="mtz">为盛姬谥曰哀淑人，天子丘人，是曰淑人之丘。</span>
+      <p class="qnote">又是七萃之士劝的，和卷一劝乐是同一批人：死是常事，别把自己搭进去。葬地成了淑人之丘，山因人得名。</p>
+    </div>
+    <p class="prose">丧仪的哭，是按建制扩大的。送葬队伍一路加一倍，最后总数翻了七倍。</p>
+    <div class="ladder">
+      <div class="rung"><span class="who2">周室父兄子孙</span><span class="doubling">倍之 <small>加一倍</small></span></div>
+      <div class="rung"><span class="who2">诸侯属子王吏</span><span class="doubling">倍之</span></div>
+      <div class="rung"><span class="who2">外官王属七萃之士</span><span class="doubling">倍之</span></div>
+      <div class="rung"><span class="who2">姬姓子弟</span><span class="doubling">倍之</span></div>
+      <div class="rung"><span class="who2">执职之人</span><span class="doubling">倍之</span></div>
+      <div class="rung"><span class="who2">百官众人</span><span class="doubling">倍之</span></div>
+      <div class="rung"><span class="who2">合计</span><span class="doubling">哭者七倍之 <small>踊者三十行，行萃百人</small></span></div>
+    </div>
+    <div class="qbox">
+      <p class="src">穆天子传 · 卷六</p>
+      <span class="q" data-src="mtz">百官众人倍之，哭者七倍之。踊者三十行，行萃百人。</span>
+      <p class="qnote">哭声按编制翻倍，顿足的队列三十行、每行一百人。用行政力量组织的悲伤，史料价值在礼制，动人之处在它假装这是礼制。</p>
+    </div>
+  </div>
+</section>
+
+<section class="juan">
+  <div class="wrap">
+    <div class="sliphead"><span class="slipno">尾声</span><span class="slipname">信什么</span></div>
+    <div class="sliprule"></div>
+    <div class="verdict">
+      <div class="vcard">
+        <h4>当神话读的人</h4>
+        <p>八骏、县圃、西王母，全是<b>山海经</b>谱系的地理想象。三万五千里按周里折算远超人类徒步极限，对唱、刻石、载羽百车，都是故事的写法。</p>
+      </div>
+      <div class="vcard">
+        <h4>当实录读的人</h4>
+        <p>干支、部族、献赐清单、里程账，密得像档案；沙衍饮血、黄竹哀民，又不像编出来的。<b>有人拿它对照河西走廊与昆仑河源，一步步比附</b>，至今没有定论。一个折中：故事是周人的，骨头里可能包着某次真实西行的行程账。</p>
+      </div>
+    </div>
+    <p class="prose">有一件事是确凿的：<b>史记</b>为这个行程背了书。赵世家追述自家祖先，说造父善御，得四骏献给缪王，随后便是那次西巡。</p>
+    <div class="qbox">
+      <p class="src">史记 · 赵世家</p>
+      <span class="q" data-src="shiji">造父以善御幸于周缪王</span>
+      <span class="q" data-src="shiji">西巡狩，乐而忘归。</span>
+      <span class="q" data-src="shiji">缪王以赵城封造父</span>
+      <span class="q" data-src="shiji">造父族由此为赵氏</span>
+      <p class="qnote">卷一那位御者，因这一趟车封了赵城，族人才姓赵。战国赵氏、下至三家分晋，祖源系在八骏车上。为尊者讳，「乐而忘归」四字太史公写得很客气。</p>
+    </div>
+    <p class="prose">到唐代，司马贞给史记作索隐，注到这里直接引了这本书。唐人读到的瑶池，和今天读到的是同一场酒。</p>
+    <div class="qbox">
+      <p class="src">史记索隐</p>
+      <span class="q" data-src="suoyin">穆王与西王母觞于瑶池之上</span>
+      <p class="qnote">索隐原注引穆传为证，紧跟着记了一句：<b>谯周不信此事</b>。汉末就有人不信，两千年的公案从那时吵到今天。</p>
+    </div>
+
+    <div class="copies">
+      <div class="copy"><b>本页底本 · 史藏 / 志存记录 / 穆天子传</b><span class="gold">8,342 字</span>，晋郭璞注、明范钦订系统的白文，无注。本页引文与缺字符号均照此本。</div>
+      <div class="copy"><b>库内另一本 · 道藏 / 正统道藏洞真部 / 记传类</b><span class="gold">15,714 字</span>，郭璞注随文混排。另有子藏 / 笔记一部。三本同书，讹字与缺字互有出入。</div>
+    </div>
+
+    <div class="collate">
+      <div class="row"><span class="k">毋 / 母</span><span class="v">库本通作<b>西王毋</b>，通行本多作西王母。引文照库本，标题从俗。</span></div>
+      <div class="row"><span class="k">● 的位置</span><span class="v">瑶池谣「山●自出」，缺一字。道藏本此处字序有乱（「山际陵字自出」），通行本作「山陵自出」；本页不补。</span></div>
+      <div class="row"><span class="k">剌 / 刺</span><span class="v">沙衍段库本作「剌其左骖之颈」，照录。</span></div>
+      <div class="row"><span class="k">巳未</span><span class="v">卷一「巳未，天子大朝于黄之山」，通行本多作己未。干支异写照录，不归一。</span></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20），底本史藏志存记录部，并校子藏、道藏两部。</p>
+    <p>本页全部引文经脚本与库内文件逐字核验（含缺字符号照录）；排版经机器检查。</p>
+    <p>书成于战国，想象的成分与记事的成分混在一起；西王母、县圃诸节是神话地理，请勿当作实际行程或医卜之据。</p>
+  </div>
+</footer>
+
+</body>
+</html>
