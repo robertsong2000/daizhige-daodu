@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>开元占经 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --cinnabar: #c0453c;
+    --hairline: rgba(232,228,220,0.12);
+    --zhiline: rgba(192,69,60,0.55);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 26px; }
+
+  /* 星幕：用多层渐变铺出细小星点，另撒几粒朱砂色 */
+  .sky {
+    position: fixed; inset: 0; z-index: -1;
+    background-color: var(--ink);
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, rgba(232,228,220,0.8) 50%, transparent 51%),
+      radial-gradient(1px 1px at 34% 64%, rgba(232,228,220,0.55) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 58% 28%, rgba(232,228,220,0.7) 50%, transparent 51%),
+      radial-gradient(1px 1px at 72% 78%, rgba(232,228,220,0.5) 50%, transparent 51%),
+      radial-gradient(1px 1px at 86% 42%, rgba(232,228,220,0.65) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 22% 86%, rgba(192,69,60,0.75) 50%, transparent 51%),
+      radial-gradient(1px 1px at 64% 90%, rgba(192,69,60,0.6) 50%, transparent 51%),
+      radial-gradient(1px 1px at 92% 8%, rgba(232,228,220,0.45) 50%, transparent 51%);
+    background-size: 520px 520px, 610px 610px, 480px 480px, 700px 700px, 560px 560px, 640px 640px, 580px 580px, 760px 760px;
+  }
+
+  /* 第一屏：只有一句竖排的占辞 */
+  .omen {
+    min-height: 92dvh; display: flex; align-items: center; justify-content: center;
+  }
+  .omen .verse {
+    writing-mode: vertical-rl; letter-spacing: 0.5em;
+    font-size: clamp(20px, 3.4vw, 30px); color: var(--cinnabar);
+    height: min(58vh, 460px);
+  }
+  .omen .who {
+    writing-mode: vertical-rl; margin-left: 30px; align-self: center;
+    font-size: 13px; letter-spacing: 0.4em; color: var(--paper-faint);
+  }
+
+  /* 书名牌 */
+  .plate { text-align: center; padding: 40px 0 96px; }
+  .plate .tag { font-size: 13px; letter-spacing: 0.5em; color: var(--paper-faint); }
+  .plate h1 {
+    font-size: clamp(44px, 8vw, 86px); font-weight: 700; letter-spacing: 0.16em;
+    margin: 22px 0 14px; color: var(--paper);
+  }
+  .plate h1 em { font-style: normal; color: var(--cinnabar); }
+  .plate .line { width: 66px; height: 2px; background: var(--cinnabar); margin: 0 auto 22px; }
+  .plate p { color: var(--paper-dim); max-width: 34em; margin: 0 auto; font-size: 16px; }
+
+  /* 卷宗节 */
+  .juan { padding: 66px 0 30px; }
+  .juan-head { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+  .seal {
+    width: 40px; height: 40px; flex: none; display: grid; place-items: center;
+    background: var(--cinnabar); color: #f5efe6; font-size: 17px; font-weight: 700;
+  }
+  .juan-head h2 { font-size: 25px; font-weight: 600; letter-spacing: 0.1em; }
+  .juan-head .no { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.22em; }
+  .juan > .lead { color: var(--paper-dim); font-size: 15.5px; max-width: 56ch; margin-bottom: 26px; }
+  .juan p.body { margin: 0 0 18px; font-size: 15.5px; color: var(--paper); }
+  .juan p.body b { color: var(--cinnabar); font-weight: 600; }
+  .juan .note { font-size: 13.5px; color: var(--paper-faint); }
+
+  /* 纸卡引文：纸白底，左缘朱砂双界，右上角卷次签 */
+  .zhi {
+    position: relative; background: var(--paper); color: #2a2825;
+    border-left: 3px solid var(--cinnabar);
+    box-shadow: inset 6px 0 0 -3px rgba(192,69,60,0.28);
+    padding: 26px 30px 24px; margin: 26px 0 30px; font-size: 15.5px; line-height: 2.05;
+  }
+  .zhi::after {
+    content: attr(data-juan); position: absolute; top: -11px; right: 16px;
+    background: var(--ink); border: 1px solid var(--zhiline); color: var(--cinnabar);
+    font-size: 12px; letter-spacing: 0.18em; padding: 3px 12px;
+  }
+  .zhi .src { display: block; margin-top: 12px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.08em; }
+  .zhi em { font-style: normal; color: var(--cinnabar); font-weight: 600; }
+
+  /* 石氏星表：纸面界格账页 */
+  .ledger {
+    background: var(--paper); color: #2a2825; margin: 26px 0 30px; padding: 24px 26px 20px;
+    border: 1px solid var(--zhiline);
+  }
+  .ledger h3 { font-size: 16px; letter-spacing: 0.14em; margin-bottom: 4px; color: #7a3a33; }
+  .ledger .cap { font-size: 12.5px; color: var(--paper-faint); margin-bottom: 16px; }
+  .ledger table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  .ledger th, .ledger td { border: 1px solid rgba(42,40,37,0.28); padding: 9px 12px; text-align: left; }
+  .ledger th { font-weight: 600; background: rgba(192,69,60,0.08); letter-spacing: 0.06em; }
+  .ledger td.deg { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; white-space: nowrap; }
+  .ledger .tail { margin-top: 14px; font-size: 13.5px; color: var(--paper-faint); line-height: 1.8; }
+
+  /* 九个字：黑底数字格 */
+  .digits { background: #10100f; border: 1px solid var(--hairline); margin: 26px 0 30px; padding: 30px 26px 24px; }
+  .digits .cap { text-align: center; font-size: 13px; letter-spacing: 0.3em; color: var(--paper-faint); margin-bottom: 22px; }
+  .digits .grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); }
+  .digits .cell { background: var(--ink-2); text-align: center; padding: 14px 0 10px; }
+  .digits .cell .deva { font-size: 26px; color: var(--paper); line-height: 1.2; }
+  .digits .cell .zh { display: block; font-size: 11.5px; color: var(--paper-faint); margin-top: 6px; }
+  .digits .cell.dot .deva { color: var(--cinnabar); font-size: 30px; }
+  .digits .foot { margin-top: 16px; font-size: 13px; color: var(--paper-faint); text-align: center; }
+  @media (max-width: 620px) {
+    .digits .grid { grid-template-columns: repeat(5, 1fr); }
+    .digits .cell .deva { font-size: 22px; }
+  }
+
+  /* 书的一生：左线节点 */
+  .life { margin: 26px 0 10px; border-left: 1px solid rgba(232,228,220,0.2); padding-left: 30px; }
+  .life .node { position: relative; padding-bottom: 30px; }
+  .life .node::before {
+    content: ""; position: absolute; left: -35px; top: 9px;
+    width: 9px; height: 9px; background: var(--ink); border: 2px solid var(--cinnabar); border-radius: 50%;
+  }
+  .life .year { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; color: var(--cinnabar); letter-spacing: 0.1em; }
+  .life .what { font-size: 15px; margin-top: 3px; }
+  .life .why { font-size: 13.5px; color: var(--paper-faint); margin-top: 3px; }
+
+  .coda { padding: 40px 0 70px; text-align: center; }
+  .coda .re {
+    writing-mode: vertical-rl; display: inline-block; height: 150px;
+    letter-spacing: 0.42em; font-size: 19px; color: var(--paper-dim);
+  }
+  footer.page { border-top: 1px solid var(--hairline); padding: 34px 0 60px; color: var(--paper-faint); font-size: 13px; line-height: 2; }
+  footer.page a { color: var(--paper-dim); }
+  footer.page .fine { margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="sky"></div>
+
+<div class="omen wrap">
+  <div class="verse">翩翩归妹，独将西行，逢天晦芒，毋惊毋恐，后且大昌</div>
+  <div class="who">有黄之占</div>
+</div>
+
+<div class="plate wrap">
+  <div class="tag">唐 开元 六年 至 十六年 前 太史监奉敕编成</div>
+  <h1>开元<em>占经</em></h1>
+  <div class="line"></div>
+  <p>一百二十卷，把整个天空编成档案：每一颗星的坐标，每一种天象，配上历代占辞，再配上一整套人间的吉凶。编书的人不姓李不姓杜，他家从天竺来。</p>
+</div>
+
+<main class="wrap">
+
+  <section class="juan">
+    <div class="juan-head">
+      <div class="seal">壹</div>
+      <h2>编书的是位印度裔大臣</h2>
+      <div class="no mono">JUAN 1 / 5</div>
+    </div>
+    <p class="lead">瞿昙，是梵语 Gautama 的音译，印度的大姓。这个家族几代人先后在唐朝皇家天文机构太史监做官，悉达官至太史监，"悉达"也就是悉达多的悉达。开元六年，皇帝下诏让他翻译九执历，即印度的历法。全书卷首至今盖着"奉敕撰"三个字的衔。</p>
+    <p class="body">所以这部中国占星总集里，天然住进了一组印度的神。其中最有名的一位，管日月食。</p>
+    <blockquote class="zhi q" data-juan="卷一百零四">
+      <em>承前或译为风，或译为蚀神，梵之日呼为罗睺。</em>……又诸曜则巡宿顺行，其阿修则巡宿逆转，掩蔽日月，以亦交蚀。
+      <span class="src">《九执历》注，卷一百零四。罗睺，今天印度占星里还在用这个名字。</span>
+    </blockquote>
+    <p class="body">月亮跑得快，星星走得慢，唯独这位蚀神逆着走，追上了谁，谁就被吞一口。用一颗看不见的隐曜解释日月食，是印度天文学的想象；唐朝官方历法为它留了一整节的计算位置，是这份档案的胸怀。</p>
+  </section>
+
+  <section class="juan">
+    <div class="juan-head">
+      <div class="seal">貳</div>
+      <h2>天空的判例集</h2>
+      <div class="no mono">JUAN 2 / 5</div>
+    </div>
+    <p class="lead">体例很像一部判例汇编：一个星官底下，先摆石氏怎么说，再摆甘氏、巫咸氏怎么说，后面跟着郗萌、韩杨、荆州占、《黄帝占》……汉代以来各家占辞并排陈案，编者不加按语，只管收录。</p>
+    <blockquote class="zhi q" data-juan="卷首提要">
+      自一卷"天占"至一百十卷"星图"，均占天象。自一百十一卷"八谷占"至一百二十卷"龙鱼虫蛇占"，均占物异。
+      <span class="src">卷首提要。前十之九在天上，最后一卷落到地上的虫蛇草木。</span>
+    </blockquote>
+    <p class="body">这些占辞常常好玩得不像"迷信"两个字装得下的。天上有座监狱，叫贯索，九星连成一个圈，圈里星多，说明囚徒多；圈开了口，说明要大赦。织女三星，管人间的丝价。</p>
+    <blockquote class="zhi q" data-juan="卷六十五">
+      <em>贯索，贼人之牢；中星实，则囚多；虚、则开出。</em>
+      <span class="src">《春秋纬》，卷六十五。抬头数星星，低头算牢房。</span>
+    </blockquote>
+    <p class="body">而书里也确实留了一条今日看来极准的注脚：地上大乱，天上先乱。秦亡那年，据说是这样的。</p>
+    <blockquote class="zhi q" data-juan="卷六十五">
+      大角不明，王者失天心，强臣凌主，天下有忧；<em>秦之亡也，摄提不动，而大角亡去。</em>
+      <span class="src">石氏占辞，卷六十五"大角占"。亡去的星宿，自然无从复核。</span>
+    </blockquote>
+  </section>
+
+  <section class="juan">
+    <div class="juan-head">
+      <div class="seal">叄</div>
+      <h2>藏在括号里的一张老星表</h2>
+      <div class="no mono">JUAN 3 / 5</div>
+    </div>
+    <p class="lead">真正的宝贝藏在占辞的括号里。每颗星的占文开头，都夹着一小段坐标：入某宿几度，去北极几度。这就是所谓石氏星表，战国石申一系传下来的恒星位置记录，被唐朝人当作占辞的附注抄了下来。</p>
+    <blockquote class="zhi q" data-juan="卷六十五">
+      <em>摄提六星，夹大角；</em>（入角八度少，去北极五十九度半，在黄帝道内三十二度太。）一名环枢，一名天枢，一名阙丘，一名致法，一名三老，一名天𫓧，一名天狱，一名天楯；一名天武；一名天兵。
+      <span class="src">卷六十五"摄提占"。"去北极"即赤纬方向的极距，正是现代星表的行话。</span>
+    </blockquote>
+    <div class="ledger">
+      <h3>摄提六星 · 档案页</h3>
+      <div class="cap">抄自卷六十五，原文夹在占辞括号内</div>
+      <table>
+        <tr><th>项目</th><th>记录</th><th>今日读法</th></tr>
+        <tr><td>入宿度</td><td class="deg">入角八度少</td><td>黄经方向的量，以角宿为起点</td></tr>
+        <tr><td>去极度</td><td class="deg">去北极五十九度半</td><td>极距，365.25 度制</td></tr>
+        <tr><td>黄道内外</td><td class="deg">黄帝道内三十二度太</td><td>离黄道的南北距离</td></tr>
+      </table>
+      <div class="tail">天上的星星会随地球自转轴摆动而缓慢挪位，即岁差。后世学者正是拿这套"去极度"做岁差回推，发现其中相当一部分坐标比唐朝古老得多，可能追溯到战国至西汉。一张附注，成了世界最古老的恒星坐标表之一。</div>
+    </div>
+  </section>
+
+  <section class="juan">
+    <div class="juan-head">
+      <div class="seal">肆</div>
+      <h2>九个字，和一个点</h2>
+      <div class="no mono">JUAN 4 / 5</div>
+    </div>
+    <p class="lead">卷一百零四整卷收着《九执历》，印度历法的唐朝译本。历法开头先教认字：九个数字符号，和一个表示空位的点。原书的符号，今天已不可见，库内本把它们译成了"一字"至"九字"，点就是空位的记号。</p>
+    <div class="digits">
+      <div class="cap">天竺算字示意 · 原图已佚，以天城体字样补绘</div>
+      <div class="grid">
+        <div class="cell"><div class="deva">१</div><span class="zh">一字</span></div>
+        <div class="cell"><div class="deva">२</div><span class="zh">二字</span></div>
+        <div class="cell"><div class="deva">३</div><span class="zh">三字</span></div>
+        <div class="cell"><div class="deva">४</div><span class="zh">四字</span></div>
+        <div class="cell"><div class="deva">५</div><span class="zh">五字</span></div>
+        <div class="cell"><div class="deva">६</div><span class="zh">六字</span></div>
+        <div class="cell"><div class="deva">७</div><span class="zh">七字</span></div>
+        <div class="cell"><div class="deva">८</div><span class="zh">八字</span></div>
+        <div class="cell"><div class="deva">९</div><span class="zh">九字</span></div>
+        <div class="cell dot"><div class="deva">·</div><span class="zh">空位之点</span></div>
+      </div>
+      <div class="foot">逢十进位，空位安点：这就是十进位值制与"零"的记号传入汉文文献的最早实物之一</div>
+    </div>
+    <blockquote class="zhi q" data-juan="卷一百零四">
+      右天竺算法，用上件九个字，乘除其字，皆一举礼而成。<em>凡数至十，进入前位，每空位处，恒安一点</em>，有间咸记，无由辄错，运算便眼，趁须先及历度。
+      <span class="src">卷一百零四"算字法样"。符号没有留下来，这句话留下来了。</span>
+    </blockquote>
+    <p class="body">整部《九执历》因此只活在这一处：正史目录里没有它，别的书只抄了个大意，全本算法只在这里。今天研究印度历法东传，绕不开这一卷。</p>
+  </section>
+
+  <section class="juan">
+    <div class="juan-head">
+      <div class="seal">伍</div>
+      <h2>书比术长</h2>
+      <div class="no mono">JUAN 5 / 5</div>
+    </div>
+    <p class="lead">清代四库馆臣面对这部书，态度很直白：占验是术家异学，不值得信；可是书要留着。</p>
+    <blockquote class="zhi q" data-juan="卷首提要">
+      所言占验之法，大抵术家之异学，本不足存。……然则<em>其术可废，其书则有可采也</em>。
+      <span class="src">卷首提要。占辞靠不住，但占辞里抄着的书，句句都算数。</span>
+    </blockquote>
+    <p class="body">靠它留到今天的，不止《九执历》。汉代以来大量纬书、纬注早已成片亡佚，提要数过一笔账：隋志所著录的纬书八十一篇，此书尚存其七八。一部占卜总集，意外成了古籍的诺亚方舟，船舱里装着它要用来算命的那些书。</p>
+    <p class="body">而这部方舟自己，也在宋代以后慢慢沉了下去。</p>
+    <div class="life">
+      <div class="node">
+        <div class="year">唐 开元初</div>
+        <div class="what">瞿昙悉达任太史监，奉敕编集</div>
+        <div class="why">开元六年又奉诏译《九执历》</div>
+      </div>
+      <div class="node">
+        <div class="year">约 728 年前</div>
+        <div class="what">成书一百二十卷</div>
+        <div class="why">书中历法只记到《麟德历》并称其"见行"，一行的《大衍历》开元十六年颁行后即被取代，故知成书在此之前</div>
+      </div>
+      <div class="node">
+        <div class="year">宋</div>
+        <div class="what">全书渐散，官目录仅存残卷</div>
+        <div class="why">《国史志》著录四卷，《崇文目》著录三卷，一百二十卷只剩个零头</div>
+      </div>
+      <div class="node">
+        <div class="year">明 万历丁巳（1617）</div>
+        <div class="what">全帙复出于人间</div>
+        <div class="why">民间另有得自佛像腹中的传说，卷首张熙识语只说到：得之于一位挹元道人</div>
+      </div>
+      <div class="node">
+        <div class="year">今</div>
+        <div class="what">殆知阁简体库收录全本</div>
+        <div class="why">库内实测 669,557 字，一百二十卷</div>
+      </div>
+    </div>
+    <blockquote class="zhi q" data-juan="卷首识语">
+      卷首有万历丁巳张熙识语，谓是书历唐迄明，约数百年，始得之挹元道人。<em>钩沉起滞，非偶然已。</em>
+      <span class="src">卷首张熙识语，转见提要。一部书沉了八九百年，又浮上来。</span>
+    </blockquote>
+    <p class="body">回到开头那句占辞。后羿从西王母那里求来不死之药，嫦娥吞药之前不安，先去算了一卦。卦辞说她独身西行，前途晦暗，但只要不惊不恐，后面会大昌。张衡把这个故事写进《灵宪》，唐朝人把它收进占经的第一卷，于是中国文学里最早的嫦娥奔月全文，被一个算命的场合保存了下来。</p>
+    <blockquote class="zhi q" data-juan="卷一">
+      其后有冯焉者，羿请无死之药于西王母，姮娥以之奔月。将往，枚筮之于有黄，有黄占之曰：'吉，翩翩归妹，独将西行，逢天晦芒，毋惊毋恐，后且大昌。'姮娥遂托身于月，是为蟾蜍。
+      <span class="src">张衡《灵宪》，卷一。卦师有黄也许说对了：她至今还是最亮的传说之一。</span>
+    </blockquote>
+  </section>
+
+  <section class="coda">
+    <div class="re">宇之表无极，宙之端无穷</div>
+  </section>
+
+  <section class="juan">
+    <div class="juan-head">
+      <div class="seal">附</div>
+      <h2>同卷还能读到什么</h2>
+    </div>
+    <p class="lead">如果占完星星想接着翻：卷九十八前后收山崩地动，连"未央宫前殿钟无故自鸣"都有东方朔的一整段断案；卷一百零五起列古今天文历法积年；最后一卷龙鱼虫蛇占，给马牛羊鸡都留了篇幅。星光按不到的地方，就按到牲口棚里。</p>
+    <blockquote class="zhi q" data-juan="卷一">
+      夫日譬犹火，月譬犹水，火则外光，水则含景。故月光生于日之所照，魄生于日之所蔽，当日则光盈，就日则光尽也。
+      <span class="src">张衡《灵宪》，卷一。公元二世纪的月亮不发光论，也是被这册档案保住的。</span>
+    </blockquote>
+  </section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    本文引文均取自殆知阁简体库《开元占经》（易藏/术数），逐字核验通过：github.com/robertsong2000/daizhigev20　<a href="mulu.html">返回总目</a>
+    <div class="fine">时代局限提醒：占辞属于术数时代的世界观，以天象附会人事，并无因果之效，阅读时请保持这份警觉。书的价值不在灵验，而在它替我们保管了那些真正可靠的东西。</div>
+    <div class="fine">殆知阁导读 · 第四十一篇</div>
+  </div>
+</footer>
+
+</body>
+</html>
