@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>世说新语 · 殆知阁导读之四十六</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --st: #5e8fbb;          /* 石青 */
+    --st-dim: rgba(94,143,187,0.35);
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 26px; }
+
+  /* 门厅 */
+  .threshold { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px 50px; position: relative; }
+  .kickers { display: flex; gap: 28px; align-items: baseline; margin-bottom: 34px; font-size: 13px; letter-spacing: 0.34em; color: var(--paper-faint); }
+  .kickers .vol-tag { color: var(--st-dim); }
+  .lintel {
+    border: 1px solid var(--hairline); border-width: 2px 1px;
+    padding: 16px 44px 20px; position: relative; background: var(--ink-2);
+  }
+  .lintel h1 { font-size: clamp(34px, 6vw, 52px); font-weight: 700; letter-spacing: 0.38em; text-indent: 0.38em; line-height: 1.2; }
+  .lintel .by { text-align: center; font-size: 13px; color: var(--paper-dim); letter-spacing: 0.3em; margin-top: 8px; }
+  .lintel .nail { position: absolute; width: 7px; height: 7px; background: var(--paper-faint); border-radius: 50%; top: 10px; }
+  .lintel .nail.l { left: 10px; } .lintel .nail.r { right: 10px; }
+  .lintel .nail.bl { top: auto; bottom: 10px; } .lintel .nail.br { top: auto; bottom: 10px; }
+
+  .doorstage { position: relative; width: min(430px, 86vw); height: min(480px, 62vh); margin-top: 30px; perspective: 1300px; }
+  .dleaf {
+    position: absolute; top: 0; bottom: 0; width: 46%;
+    background: linear-gradient(160deg, #232220, #1c1b19);
+    border: 1px solid var(--hairline);
+    box-shadow: 0 0 40px rgba(0,0,0,0.55) inset;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dleaf.l { left: 0; transform: rotateY(-16deg); transform-origin: left center; }
+  .dleaf.r { right: 0; transform: rotateY(16deg); transform-origin: right center; }
+  .carved { writing-mode: vertical-rl; color: rgba(232,228,220,0.22); font-size: 15px; letter-spacing: 0.62em; line-height: 2.2; height: 84%; overflow: hidden; }
+  .slit {
+    position: absolute; left: 50%; transform: translateX(-50%); top: 3%; bottom: 0; width: 96px;
+    background: linear-gradient(180deg, #efece5, #d8d3c8);
+    box-shadow: 0 0 34px 6px rgba(232,228,220,0.28), 0 0 90px 18px rgba(232,228,220,0.10);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .slit .vq {
+    writing-mode: vertical-rl; color: #191917;
+    font-size: clamp(15px, 2.4vw, 19px); font-weight: 700; letter-spacing: 0.3em; line-height: 2.4;
+  }
+  .doorstep { margin-top: 34px; text-align: center; font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.22em; }
+  .doorstep .d2 { margin-top: 6px; color: var(--st-dim); }
+
+  section { padding: 84px 0 30px; border-top: 1px solid var(--hairline); }
+  section.first { border-top: none; }
+  .chap { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; margin-bottom: 8px; }
+  .chap .t { font-size: 25px; font-weight: 700; letter-spacing: 0.16em; color: var(--st); }
+  .chap .s { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.22em; }
+  .prose { max-width: 620px; color: var(--paper); font-size: 16.5px; margin-top: 18px; }
+  .prose b { color: #fff; font-weight: 700; }
+  .prose .acc { color: var(--st); }
+  .aside { max-width: 620px; color: var(--paper-dim); font-size: 14.5px; margin-top: 16px; }
+
+  /* 竖排引文条 */
+  .vrow { display: flex; gap: 40px; align-items: flex-start; margin-top: 40px; }
+  .vstrip {
+    flex: 0 0 auto; writing-mode: vertical-rl;
+    background: var(--ink-2); border: 1px solid var(--st-dim);
+    padding: 26px 18px; max-height: 340px;
+    font-size: 18px; letter-spacing: 0.28em; line-height: 2.6; color: var(--paper);
+  }
+  .vstrip .src { display: block; font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.2em; margin-top: 14px; }
+  .vrow .prose { margin-top: 4px; }
+
+  /* 引文卡 */
+  .qcard {
+    margin: 26px 0 0; max-width: 660px;
+    background: rgba(232,228,220,0.045);
+    border-left: 2px solid var(--st);
+    padding: 22px 26px 20px;
+    font-size: 17px; line-height: 2.15;
+  }
+  .qcard .who { display: block; font-size: 12.5px; letter-spacing: 0.24em; color: var(--st); margin-bottom: 8px; }
+  .qcard .src { display: block; margin-top: 10px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.08em; }
+  .zhu { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--hairline); font-size: 13.5px; color: var(--paper-dim); line-height: 1.9; }
+  .zhu::before { content: "孝标注"; font-size: 10.5px; color: var(--st-dim); border: 1px solid var(--st-dim); padding: 1px 6px; margin-right: 10px; letter-spacing: 0.2em; vertical-align: 2px; }
+  .lost {
+    display: inline-block; width: 0.92em; height: 0.98em; margin: 0 2px; vertical-align: -0.12em;
+    border: 1px dashed var(--st); background: transparent;
+  }
+
+  /* 三十六门墙 */
+  .wall { margin-top: 40px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  .dw {
+    position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    height: 118px; text-decoration: none; color: var(--paper);
+    border: 1px solid var(--hairline); border-top-width: 3px; border-radius: 3px 3px 0 0;
+    background: var(--ink-2); overflow: hidden; padding-bottom: 6px;
+    transition: border-color 0.25s;
+  }
+  .dw:hover { border-color: var(--st-dim); }
+  .dw .fill { position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--h) * 1%); background: rgba(94,143,187,0.16); border-top: 1px solid var(--st-dim); }
+  .dw.lit .fill { background: rgba(94,143,187,0.34); border-top: 2px solid var(--st); }
+  .dw .dname { position: relative; font-size: 16.5px; font-weight: 700; letter-spacing: 0.1em; }
+  .dw .dno { position: relative; font-size: 10px; color: var(--paper-faint); letter-spacing: 0.1em; margin-top: 1px; }
+  .dw .dcount { position: relative; font-size: 10.5px; color: var(--paper-dim); margin-top: 2px; }
+  .dw.lit .dname { color: var(--st); }
+  .wcap { margin-top: 14px; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.06em; max-width: 660px; }
+
+  /* 门牌章 */
+  .mhead { display: inline-flex; align-items: baseline; gap: 14px; border: 1px solid var(--st-dim); padding: 8px 20px 10px; margin: 44px 0 6px; }
+  .mhead .mt { font-size: 21px; font-weight: 700; letter-spacing: 0.14em; color: var(--st); }
+  .mhead .mc { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.18em; }
+
+  /* 书脊 */
+  .spines { margin-top: 36px; display: flex; gap: 14px; flex-wrap: wrap; }
+  .spine {
+    writing-mode: vertical-rl; padding: 20px 12px; min-height: 210px;
+    background: var(--ink-2); border: 1px solid var(--hairline); border-left: 3px solid var(--st-dim);
+    font-size: 16px; letter-spacing: 0.3em; color: var(--paper);
+  }
+  .spine small { font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.22em; margin-top: 16px; }
+
+  /* 校记 */
+  table.jj { margin-top: 26px; border-collapse: collapse; font-size: 14.5px; max-width: 660px; width: 100%; }
+  table.jj th, table.jj td { border: 1px solid var(--hairline); padding: 7px 14px; text-align: left; }
+  table.jj th { color: var(--st); font-weight: 400; letter-spacing: 0.14em; font-size: 13px; }
+  table.jj td { color: var(--paper-dim); }
+  table.jj td:first-child { color: var(--paper); }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 90px; padding: 40px 0 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page a { color: var(--paper-dim); }
+  footer.page p { margin-top: 8px; max-width: 680px; }
+  footer.page .back { margin-top: 18px; display: inline-block; }
+
+  @media (max-width: 700px) {
+    .wall { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .dw { height: 100px; }
+    .dw .dcount { display: none; }
+    .vrow { flex-direction: column-reverse; }
+    .vstrip { writing-mode: horizontal-tb; max-height: none; max-width: 620px; }
+    .doorstage { height: 400px; }
+    .slit { width: 84px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="threshold">
+  <div class="kickers">
+    <span>殆知阁导读 · 之四十六</span>
+    <span class="vol-tag">卷二十五 风流</span>
+  </div>
+  <div class="lintel">
+    <span class="nail l"></span><span class="nail r"></span>
+    <span class="nail l bl"></span><span class="nail r br"></span>
+    <h1>世说新语</h1>
+    <div class="by">宋 临川王 刘义庆 撰　梁 刘孝标 注</div>
+  </div>
+  <div class="doorstage">
+    <div class="dleaf l"><div class="carved">德行第一　言语第二　政事第三　文学第四　方正第五</div></div>
+    <div class="dleaf r"><div class="carved">识鉴第七　赏誉第八　品藻第九　容止第十四　仇隟第三十六</div></div>
+    <div class="slit"><span class="vq">吾本<span class="q">乗兴而行，兴尽而返，何必见戴？</span></span></div>
+  </div>
+  <div class="doorstep">
+    <div>三卷六册　三十六门　968 个片段</div>
+    <div class="d2">子藏 小说家　库本约十五万九千字　门内皆六朝人物</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="first" id="zhuren">
+  <div class="chap"><span class="t">主人</span><span class="s">不再骑马的亲王</span></div>
+  <div class="vrow">
+    <div class="prose">
+      <p>刘义庆是刘宋宗室，袭封临川王，多年外任地方大员。《宋书》给他立的传很短，其中最出名的不是功业，是两件小事：他<b>文章写得不算多，却是宗室里的第一支笔</b>；他年轻时善骑马，长大后却再也不骑了。</p>
+      <p>为什么不再骑马？本传自己交了底：<span class="acc">世路艰难</span>。那是宋文帝在位、宗室大臣动辄得咎的年代。王爷的姿势放得越低越好，最好整天跟文人待在一起，谈学问，不谈别的。</p>
+      <p>于是他<b>招聚文学之士，近远必至</b>。班底里有文冠当时的太尉袁淑，有后来以乐府诗名世的鲍照。这一群人替他做的活计里，留下来的就是这部书：把后汉到东晋的人物言谈，一条一条收进门里。</p>
+      <p class="aside">库内《宋书》在史藏正史部，本传原文俱在，可对读。</p>
+    </div>
+    <blockquote class="vstrip">
+      <span class="q">为性简素，寡嗜欲，爱好文义，文词虽不多，然足为宗室之表。</span><span class="src">宋书 本传</span>
+    </blockquote>
+    <blockquote class="vstrip">
+      <span class="q">少善骑乘，及长以世路艰难，不复跨马。</span><span class="src">宋书 本传</span>
+    </blockquote>
+  </div>
+  <blockquote class="qcard">
+    <span class="who">宋书 · 临川烈武王道规传附</span>
+    <span class="q">太尉袁淑文冠当时</span>。其余吴郡陆展、东海何长瑜、<span class="q">鲍照等并为辞章之美引为佐史国臣</span>。
+    <span class="src">写作班子的名单，正史记得清清楚楚。</span>
+  </blockquote>
+</section>
+
+<section id="shuming">
+  <div class="chap"><span class="t">书名</span><span class="s">从新书到新语，改口的人没有留名</span></div>
+  <div class="prose">
+    <p>这本书原来叫<b>世说新书</b>。汉末刘向有一部《世说》，早已亡了，临川王捡起这个旧名，添「新书」二字以示区别。后来不知是哪一位，嫌它啰嗦，砍成「世说新语」，叫顺了口，正版的名字反而丢了。</p>
+  </div>
+  <blockquote class="qcard">
+    <span class="who">四库全书总目提要（库内卷首）</span>
+    <span class="q">黄伯思东观余论谓世说之名肇于刘向其书已亡故义庆所集名世说新书</span>。<span class="q">叚成式酉阳杂爼引王敦澡豆事尚作世说新书可证</span>。<span class="q">不知何人改为新语</span>。
+    <span class="src">段成式是唐代人，他引书时还写全名。本系列第二十篇正是《酉阳杂俎》，可对照。<a href="youyang-zazu.html" style="color:var(--st)">点此回看</a></span>
+  </blockquote>
+  <p class="aside">提要又说他「<span class="q">所记分三十八门</span>」。翻到正文，最后一扇门自己编着号：仇隟第三十六。四库馆臣的算术，跟正文书打了一架。</p>
+</section>
+
+<section id="men">
+  <div class="chap"><span class="t">三十六门</span><span class="s">每扇门是一种活法</span></div>
+  <div class="prose">
+    <p>全书的骨架不是人物，也不是年代，是<b>门</b>。德行、言语、政事、文学打头，雅量、容止、任诞、简傲居中，俭啬、汰侈、忿狷、谗险收尾。每个人物的事迹被拆开，按性质分装进三十六扇门：王徽之雪夜访戴在任诞门，嵇康刑场弹琴在雅量门，同一批人，从不同的门里看出去是不同的活法。</p>
+    <p>门与门宽度悬殊。<b>言语门 102 段</b>，赏誉门上下加起来 123 段；而自新门，全书只有 2 段。</p>
+  </div>
+  <div class="wall" id="wall">
+    <a class="dw lit" style="--h:34" href="#m-dexing" data-n="42" data-name="德行"><span class="dname">德行</span><span class="dno">第一</span><span class="dcount">42段</span><i class="fill"></i></a>
+    <a class="dw lit" style="--h:83" href="#m-yanyu" data-n="102" data-name="言语"><span class="dname">言语</span><span class="dno">第二</span><span class="dcount">102段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:18" data-n="22" data-name="政事"><span class="dname">政事</span><span class="dno">第三</span><span class="dcount">22段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:76" data-n="93" data-name="文学"><span class="dname">文学</span><span class="dno">第四</span><span class="dcount">93段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:47" data-n="58" data-name="方正"><span class="dname">方正</span><span class="dno">第五</span><span class="dcount">58段</span><i class="fill"></i></a>
+    <a class="dw lit" style="--h:31" href="#m-yaliang" data-n="38" data-name="雅量"><span class="dname">雅量</span><span class="dno">第六</span><span class="dcount">38段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:18" data-n="22" data-name="识鉴"><span class="dname">识鉴</span><span class="dno">第七</span><span class="dcount">22段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:100" data-n="123" data-name="赏誉"><span class="dname">赏誉</span><span class="dno">第八上下</span><span class="dcount">123段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:55" data-n="68" data-name="品藻"><span class="dname">品藻</span><span class="dno">第九</span><span class="dcount">68段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:18" data-n="22" data-name="规箴"><span class="dname">规箴</span><span class="dno">第十</span><span class="dcount">22段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:6" data-n="7" data-name="捷悟"><span class="dname">捷悟</span><span class="dno">第十一</span><span class="dcount">7段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:5" data-n="6" data-name="夙惠"><span class="dname">夙惠</span><span class="dno">第十二</span><span class="dcount">6段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:9" data-n="11" data-name="豪爽"><span class="dname">豪爽</span><span class="dno">第十三</span><span class="dcount">11段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:27" data-n="33" data-name="容止"><span class="dname">容止</span><span class="dno">第十四</span><span class="dcount">33段</span><i class="fill"></i></a>
+    <a class="dw lit" style="--h:2" href="#m-zixin" data-n="2" data-name="自新"><span class="dname">自新</span><span class="dno">第十五</span><span class="dcount">2段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:3" data-n="4" data-name="企羡"><span class="dname">企羡</span><span class="dno">第十六</span><span class="dcount">4段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:12" data-n="15" data-name="伤逝"><span class="dname">伤逝</span><span class="dno">第十七</span><span class="dcount">15段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:12" data-n="15" data-name="栖逸"><span class="dname">栖逸</span><span class="dno">第十八</span><span class="dcount">15段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:24" data-n="30" data-name="贤媛"><span class="dname">贤媛</span><span class="dno">第十九</span><span class="dcount">30段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:7" data-n="9" data-name="术解"><span class="dname">术解</span><span class="dno">第二十</span><span class="dcount">9段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:11" data-n="13" data-name="巧艺"><span class="dname">巧艺</span><span class="dno">第二十一</span><span class="dcount">13段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:3" data-n="4" data-name="宠礼"><span class="dname">宠礼</span><span class="dno">第二十二</span><span class="dcount">4段</span><i class="fill"></i></a>
+    <a class="dw lit" style="--h:39" href="#m-rendan" data-n="48" data-name="任诞"><span class="dname">任诞</span><span class="dno">第二十三</span><span class="dcount">48段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:9" data-n="11" data-name="简傲"><span class="dname">简傲</span><span class="dno">第二十四</span><span class="dcount">11段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:45" data-n="55" data-name="排调"><span class="dname">排调</span><span class="dno">第二十五</span><span class="dcount">55段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:23" data-n="28" data-name="轻诋"><span class="dname">轻诋</span><span class="dno">第二十六</span><span class="dcount">28段</span><i class="fill"></i></a>
+    <a class="dw lit" style="--h:9" href="#m-jiajue" data-n="11" data-name="假谲"><span class="dname">假谲</span><span class="dno">第二十七</span><span class="dcount">11段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:7" data-n="8" data-name="黜免"><span class="dname">黜免</span><span class="dno">第二十八</span><span class="dcount">8段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:7" data-n="9" data-name="俭啬"><span class="dname">俭啬</span><span class="dno">第二十九</span><span class="dcount">9段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:11" data-n="13" data-name="汰侈"><span class="dname">汰侈</span><span class="dno">第三十</span><span class="dcount">13段</span><i class="fill"></i></a>
+    <a class="dw lit" style="--h:6" href="#m-fenjuan" data-n="7" data-name="忿狷"><span class="dname">忿狷</span><span class="dno">第三十一</span><span class="dcount">7段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:3" data-n="4" data-name="谗险"><span class="dname">谗险</span><span class="dno">第三十二</span><span class="dcount">4段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:13" data-n="16" data-name="尤悔"><span class="dname">尤悔</span><span class="dno">第三十三</span><span class="dcount">16段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:5" data-n="6" data-name="纰漏"><span class="dname">纰漏</span><span class="dno">第三十四</span><span class="dcount">6段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:5" data-n="6" data-name="惑溺"><span class="dname">惑溺</span><span class="dno">第三十五</span><span class="dcount">6段</span><i class="fill"></i></a>
+    <a class="dw" style="--h:6" data-n="7" data-name="仇隟"><span class="dname">仇隟</span><span class="dno">第三十六</span><span class="dcount">7段</span><i class="fill"></i></a>
+  </div>
+  <p class="wcap">每格高度按库本自然段实测绘制（共 968 段）。石青的门，下文推开看。自新门只有两条缝，是全书最窄的一扇。</p>
+</section>
+
+<section id="m-dexing">
+  <div class="mhead"><span class="mt">德行第一</span><span class="mc">库本四十二段</span></div>
+  <div class="prose"><p>德行门讲做人的底线。最有名的一条，管宁连割两次：见金不动，见官不动，然后宣布绝交。</p></div>
+  <blockquote class="qcard">
+    <span class="who">管宁割席</span>
+    <span class="q">管宁华歆共园中锄菜，见地有片金，管挥锄与瓦石不异，华捉而掷去之。</span><span class="q">又尝同席读书，有乘轩冕过门者，宁读如故，歆废书出看。</span><span class="q">宁割席分坐，曰：「子非吾友也。」</span>
+    <span class="src">后来华歆官至司徒。管宁终身不肯出仕。这扇门里的价值观：朋友是按定力挑的。</span>
+  </blockquote>
+</section>
+
+<section id="m-yanyu">
+  <div class="mhead"><span class="mt">言语第二</span><span class="mc">库本一百零二段　全书第二宽的门</span></div>
+  <div class="prose"><p>言语门收说话的艺术。谢安家的家庭作文课，出了全书最轻灵的一句诗评；孔融十岁那年，出了最锋利的一句反唇。而最沉的一句，是桓温对着一排老树说的。</p></div>
+  <blockquote class="qcard">
+    <span class="who">咏絮之才</span>
+    <span class="q">谢太傅寒雪日内集，与儿女讲论文义。俄而雪骤，公欣然曰：「白雪纷纷何所似？」</span><span class="q">兄子胡儿曰：「撒盐空中差可拟。」</span><span class="q">兄女曰：「未若栁絮因风起。」</span><span class="q">公大笑乐。</span>
+    <span class="zhu"><span class="q">胡儿谢朗小字也</span>「谢女」即谢道韫。盐是下坠的，絮是飞的：一字之差，是一整个审美的差别。</span>
+    <span class="src">即公大兄无奕女，左将军王凝之妻也。那句「柳絮」令，「咏絮之才」从此成了才女的代称。</span>
+  </blockquote>
+  <blockquote class="qcard">
+    <span class="who">小时了了</span>
+    <span class="q">韪曰：「小时了了，大未必佳。」</span><span class="q">文举曰：「想君小时，必当了了。」</span><span class="q">韪大踧踖。</span>
+    <span class="src">孔文举十岁，随父到洛阳。陈韪迟到了，听人转述他的聪明，随口泼了冷水。十岁的孩子一句话把冷水泼了回去。成语「小时了了」从此出生，出生即带刺。</span>
+  </blockquote>
+  <blockquote class="qcard">
+    <span class="who">木犹如此</span>
+    <span class="q">桓公北征，经金城，见前为琅邪时种栁，皆已十围，慨然曰：「木犹如此，人何以堪！」</span><span class="q">攀枝执条</span><span class="lost" title="库本此字为私有区占位，字形已佚，通行本作泫"></span><span class="q">然流泪。</span>
+    <span class="src">北伐路过自己三十年前手植的柳树。树已十围，人过中年。这八个字后来成了中国文学里叹时光的母题，庾信《枯树赋》整篇都在接它。</span>
+  </blockquote>
+  <blockquote class="qcard">
+    <span class="who">支公好<span class="lost" title="库本此字为私有区占位，通行本作鹤"></span></span>
+    库本这一条开头两处缺字，正文存目而字形已佚：<b>支公好<span class="lost"></span>，住剡东<span class="lost"></span>山</b>。好什么，住在哪座山，库本只留了空位。好在注里把话留下来了：
+    <span class="q">既有凌霄之姿，何肻为人作耳目近玩？</span><span class="q">养令翮成，置使飞去。</span>
+    <span class="src">支道林养鹤，铩其翮，鹤垂头丧气。等翅膀长好，放了。圈养爱好者的一句话劝退指南，出自一千六百多年前。</span>
+  </blockquote>
+</section>
+
+<section id="m-yaliang">
+  <div class="mhead"><span class="mt">雅量第六</span><span class="mc">库本三十八段</span></div>
+  <div class="prose"><p>雅量门考的是泰山崩于前时的脸色。它收了全书最安静的婚姻面试，和最响的一场告别。</p></div>
+  <blockquote class="qcard">
+    <span class="who">东床坦腹</span>
+    <span class="q">王家诸郎亦皆可嘉，闻来觅壻，咸自矜持。</span><span class="q">唯有一郎在东床上坦腹卧，如不闻。</span><span class="q">郗公云：「正此好。」</span><span class="q">访之，乃是逸少，因嫁女与焉。</span>
+    <span class="src">郗鉴遣人到王家挑女婿，别人都端着，只有王羲之躺着。成语「东床快婿」的出处，入选标准是不装。</span>
+  </blockquote>
+  <blockquote class="qcard">
+    <span class="who">广陵散</span>
+    <span class="q">嵇中散临刑东市，神气不变，索琴弹之，奏广陵散。</span>曲终，曰：「<span class="lost" title="库本此字为私有区占位，通行本作袁"></span><span class="q">孝尼尝请学此散，吾靳固不与，广陵散于今绝矣。</span>」<span class="q">太学生三千人上书请以为师，不许。</span>
+    <span class="src">刑场上三千太学生求情无用。嵇康要走的不是命，是曲子：我不教你，这曲子跟着我死。「广陵散于今绝矣」七个字，是中国音乐史最重的一句遗言。</span>
+  </blockquote>
+</section>
+
+<section id="m-zixin">
+  <div class="mhead"><span class="mt">自新第十五</span><span class="mc">库本两段　全书最窄的门</span></div>
+  <div class="prose"><p>改过自新，全书只给了两条。第一条就足够后人讲一千多年：周处。年少时是乡里三害之一，他自己排第三，排在前两条蛟和虎后面。</p></div>
+  <blockquote class="qcard">
+    <span class="who">周处除三害</span>
+    <span class="q">义兴人谓为三横，而处尤剧。</span><span class="q">蛟或浮或没，行数十里，处与之俱，经三日三夜。</span><span class="q">乡里皆谓已死，更相庆。</span>
+    <span class="src">杀完虎，斗完蛟，三天三夜没上来。乡里开庆功会，庆祝的是他死定了。他从水里出来，看见的是自己的葬礼。这才有后话：</span>
+  </blockquote>
+  <blockquote class="qcard">
+    <span class="q">清河曰：「古人贵朝闻夕死，况君前途尚可。」</span><span class="q">且人患志之不立，亦何忧令名不彰耶？</span><span class="q">处遂改励，终为忠臣孝子。</span>
+    <span class="src">陆云接住了这个看见自己葬礼的人。全书最窄的门里，装的是它最宽的一次转身。</span>
+  </blockquote>
+</section>
+
+<section id="m-rendan">
+  <div class="mhead"><span class="mt">任诞第二十三</span><span class="mc">库本四十八段</span></div>
+  <div class="prose"><p>任诞门是纵酒放达的登记处。王徽之雪夜乘船去朋友家，到了门口转身回家；刘伶在家裸着，反问客人为什么走进他裤子。</p></div>
+  <blockquote class="qcard">
+    <span class="who">雪夜访戴</span>
+    <span class="q">王子猷居山隂，夜大雪，眠觉，开室，命酌酒，四望皎然，因起彷徨，咏左思招隐诗。</span><span class="q">忽忆戴安道。</span><span class="q">时戴在剡，即便夜乗小船就之。</span><span class="q">经宿方至，造门不前而返。</span>人问其故，王曰：「<span class="q">吾本乗兴而行，兴尽而返，何必见戴？</span>」
+    <span class="src">山阴到剡县，小船走一整夜。走了一夜，门口不进。快乐的主体是过程，不是见面。页首门缝里透出的那句光，就是它。</span>
+  </blockquote>
+  <blockquote class="qcard">
+    <span class="who">刘伶病酒</span>
+    <span class="q">刘伶恒纵酒放逹，或脱衣裸形在屋中，人见讥之。</span>伶曰：「<span class="q">我以天地为栋宇，屋室为防衣，诸君何为入吾防中！</span>」
+    <span class="src">防字库本两见，通行本作「裈」，裤子。天地是房子，房屋是裤子，你们怎么自己钻进我裤子里来了。醉酒的逻辑链，严丝合缝。</span>
+  </blockquote>
+</section>
+
+<section id="m-jiajue">
+  <div class="mhead"><span class="mt">假谲第二十七</span><span class="mc">库本十一段</span></div>
+  <div class="prose"><p>假谲门登记的是骗术。这一门只开了十一条缝，其中一条是每个中国人都背过的成语的出生证明。</p></div>
+  <blockquote class="qcard">
+    <span class="who">望梅止渴</span>
+    <span class="q">魏武行役，失汲道，军皆渇，</span><span class="q">乃令曰：「前有大梅林，饶子，甘酸可以解渇。」</span><span class="q">士卒闻之，口皆出水，乘此得及前源。</span>
+    <span class="src">曹操拿一句谎话给全军续航。这一门里曹操还用假梦杀过人、用假心动杀过刺客，全书对政治人物的手段不作评价，只登记。</span>
+  </blockquote>
+</section>
+
+<section id="m-fenjuan">
+  <div class="mhead"><span class="mt">忿狷第三十一</span><span class="mc">库本七段</span></div>
+  <div class="prose"><p>忿狷门是脾气档案。最有名的一段实拍，主角吃一个鸡蛋用尽了全身解数。</p></div>
+  <blockquote class="qcard">
+    <span class="who">王蓝田性急</span>
+    <span class="q">王蓝田性急。甞食鸡子，以筯刺之，不得，便大怒，举以掷地。</span><span class="q">鸡子于地圆转未止，仍下地以屐齿蹍之，又不得。</span>瞠甚，复于地取内口中，<span class="q">啮破即吐之。</span>
+    <span class="src">筷子刺、掷地、木屐碾、整个吞、嚼碎吐掉：五连招对付一枚鸡蛋。王右军听后大笑。慢性格的王蓝田其实「以性急为累」，一条段子管了他一生的人设。</span>
+  </blockquote>
+</section>
+
+<section id="zhu">
+  <div class="chap"><span class="t">注比正文金贵</span><span class="s">刘孝标注 一千六百一十四块</span></div>
+  <div class="prose">
+    <p>库本每一段正文里，都夹着梁代刘孝标的注。全书 968 段正文，注有 <b>1614 块</b>：所引之书到今天亡了十之八九，<b>大批晋代史料，只活在这些注里</b>。四库馆臣把它跟裴松之《三国志注》、郦道元《水经注》、李善《文选注》并列为考证家的四大靠山。</p>
+    <p>正文自己也惹过官司。唐代刘知几拿史书的标准嫌它不严肃；明代吴郡袁褧翻刻此书时，在序里替清谈翻案。</p>
+  </div>
+  <blockquote class="qcard">
+    <span class="who">四库提要</span>
+    <span class="q">所引诸书今已佚其十之九惟頼是注以传</span>。<span class="q">与裴松之三国志注郦道元水经注李善文选注同为考证家所引据</span>。
+    <span class="src">提要原文。又曰「<span class="q">义庆本小说家言</span>」，替刘知几那场官司做了结案陈词。</span>
+  </blockquote>
+  <blockquote class="qcard">
+    <span class="who">袁褧刻书序 · 嘉靖乙未</span>
+    <span class="q">世言江左善清谭，今阅新语，信乎其言之也。</span>
+    <span class="q">昔人论司马氏之祚亡于清谈，斯言也无乃过甚矣乎。</span>
+    <span class="src">前人把西晋亡国算在清谈头上，袁褧在序里回了一句。亡国的锅，别甩给聊天。</span>
+  </blockquote>
+</section>
+
+<section id="shenhou">
+  <div class="chap"><span class="t">身后</span><span class="s">一门生出一架书</span></div>
+  <div class="prose">
+    <p>这本书开创了一种体裁，后世叫「世说体」：拿门类装人物，拿段子写历史。仿作历代不绝，<b>库内就立着一整架</b>，从明代排到民国：</p>
+  </div>
+  <div class="spines">
+    <div class="spine">何氏语林<small>明 何良俊</small></div>
+    <div class="spine">续世说<small>明 王世贞</small></div>
+    <div class="spine">今世说<small>清 王晫</small></div>
+    <div class="spine">明语林<small>清 吴肃公</small></div>
+    <div class="spine">新世说<small>民国 易宗夔</small></div>
+  </div>
+  <p class="aside">另有余嘉锡《世说新语笺疏》（民国）在库，是今人集大成的校注本。一门书养出一千五百年的续写，中国古籍里不多见。</p>
+</section>
+
+<section id="jiaochi">
+  <div class="chap"><span class="t">校记</span><span class="s">库本用字与缺字</span></div>
+  <p class="aside">库本为四库全书本，用字与今通行本有别，页面引文一仍库本之旧。</p>
+  <table class="jj">
+    <tr><th>库本作</th><th>通行作</th><th>见处</th></tr>
+    <tr><td>栁</td><td>柳</td><td>咏雪、木犹</td></tr>
+    <tr><td>隂</td><td>阴</td><td>雪夜访戴</td></tr>
+    <tr><td>乗</td><td>乘</td><td>雪夜访戴</td></tr>
+    <tr><td>肻</td><td>肯</td><td>支公好鹤</td></tr>
+    <tr><td>渇</td><td>渴</td><td>望梅止渴</td></tr>
+    <tr><td>甞</td><td>尝</td><td>王蓝田</td></tr>
+    <tr><td>逹</td><td>达</td><td>刘伶</td></tr>
+    <tr><td>壻</td><td>婿</td><td>东床坦腹</td></tr>
+    <tr><td>隟</td><td>隙</td><td>门名第三十六</td></tr>
+    <tr><td>爼</td><td>俎</td><td>提要引酉阳杂爼</td></tr>
+    <tr><td>叚</td><td>假</td><td>提要</td></tr>
+    <tr><td>頼</td><td>赖</td><td>提要</td></tr>
+    <tr><td>防</td><td>裈</td><td>刘伶条两见</td></tr>
+  </table>
+  <p class="aside" style="margin-top:22px">另有五处缺字，库本以私有区符号占位，页面以虚框示之：广陵散条「曲终曰」后当为<b>袁</b>字；「支公好鹤」条的<b>鹤</b>字与其所居山名中一字（通行本作岇）俱佚；木犹条「攀枝执条」后当为<b>泫</b>字；提要「皆轶事语」中佚一字。原序署名「吴郡褧撰」，所佚正是刻书人<b>袁褧</b>之姓，是全书最不该缺的一个字。</p>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库（子藏 笔记部《世说新语》，辅证《宋书》），github.com/robertsong2000/daizhigev20</p>
+    <p>本篇全部引文经脚本逐字核验（verify_shishuo.py），门数段数为库本实测。</p>
+    <p>《世说新语》为六朝人物轶事集，假谲、汰侈、惑溺诸门所记权术与风气，皆时代产物，读时自鉴。</p>
+    <p class="back"><a href="mulu.html">返回总目</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
