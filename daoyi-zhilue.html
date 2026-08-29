@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>岛夷志略 · 殆知阁导读之四十五</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #1e1d1a; --ink-3: #232119;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --gold: #c9963f;
+    --gold-dim: rgba(201,150,63,0.55);
+    --gold-faint: rgba(201,150,63,0.18);
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ 海图开场 ============ */
+  .chart { display: block; width: 100%; height: auto; background: var(--ink); }
+  .masthead { padding: 34px 0 10px; }
+  .kicker {
+    font-size: 13.5px; letter-spacing: 0.42em; color: var(--paper-faint);
+    display: flex; align-items: center; gap: 18px;
+  }
+  .kicker .needle { color: var(--gold); letter-spacing: 0; font-size: 15px; }
+  h1 {
+    font-size: clamp(52px, 9vw, 112px); font-weight: 700; letter-spacing: 0.1em;
+    line-height: 1.15; margin: 20px 0 8px;
+  }
+  h1 .seal {
+    display: inline-block; vertical-align: 0.5em; margin-left: 22px;
+    font-size: clamp(14px, 1.6vw, 18px); font-weight: 400; letter-spacing: 0.3em;
+    color: var(--gold); border: 1px solid var(--gold-dim); padding: 6px 12px 5px 15px;
+  }
+  .byline { color: var(--paper-dim); font-size: 15px; letter-spacing: 0.12em; }
+  .lede { color: var(--paper-dim); font-size: clamp(15.5px, 1.7vw, 19px); max-width: 34em; margin-top: 14px; }
+  .lede b { color: var(--gold); font-weight: 600; }
+
+  /* ============ 罗盘刻度分隔 ============ */
+  .tickline {
+    height: 9px; margin: 0 0 44px;
+    background: repeating-linear-gradient(90deg,
+      var(--gold-faint) 0 1px, transparent 1px 26px);
+    border-bottom: 1px solid var(--gold-faint);
+  }
+  .sec { padding: 54px 0 30px; }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 8px; }
+  .sec-head .dial {
+    width: 40px; height: 40px; flex: none; border: 1px solid var(--gold-dim); border-radius: 50%;
+    display: grid; place-items: center; font-size: 16px; color: var(--gold);
+    position: relative; align-self: center;
+  }
+  .sec-head .dial::before, .sec-head .dial::after {
+    content: ""; position: absolute; background: var(--gold-faint);
+  }
+  .sec-head .dial::before { width: 1px; height: 100%; left: 50%; }
+  .sec-head .dial::after { height: 1px; width: 100%; top: 50%; }
+  .sec-head h2 { font-size: 25px; font-weight: 600; letter-spacing: 0.14em; }
+  .sec-head .en { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.28em; }
+  .sec p.note { color: var(--paper-dim); max-width: 62ch; margin-bottom: 22px; }
+
+  /* ============ 正文散文 ============ */
+  .prose { max-width: 44em; color: var(--paper); font-size: 16.5px; }
+  .prose p + p { margin-top: 1.1em; }
+  .prose .lead-in { color: var(--gold); letter-spacing: 0.3em; font-size: 13.5px; display: block; margin-bottom: 10px; }
+  .prose em { font-style: normal; color: var(--gold); }
+
+  /* ============ 百站站牌墙 ============ */
+  .wall { margin-top: 26px; }
+  .wall b {
+    font-weight: 500; display: inline-block; font-size: 14.5px; letter-spacing: 0.06em;
+    color: var(--paper-dim); border: 1px solid var(--hairline); border-radius: 2px;
+    padding: 3px 10px; margin: 0 6px 8px 0; text-decoration: none; transition: all 0.2s ease;
+  }
+  .wall a b:hover { color: var(--ink); background: var(--gold); border-color: var(--gold); }
+  .wall b.hot { color: var(--gold); border-color: var(--gold-dim); }
+  .wall b.last { color: var(--paper-faint); border-style: dashed; }
+  .wall-cap { font-size: 13px; color: var(--paper-faint); margin-top: 12px; letter-spacing: 0.08em; }
+
+  /* ============ 船牌 ============ */
+  .cards { display: grid; grid-template-columns: 148px 1fr; gap: 0; }
+  .card {
+    grid-column: 1 / -1; display: grid; grid-template-columns: 148px 1fr;
+    border: 1px solid var(--gold-faint); background: var(--ink-2);
+    margin-bottom: 26px; position: relative;
+  }
+  .card::before, .card::after {
+    content: ""; position: absolute; width: 14px; height: 14px; border-color: var(--gold-dim); border-style: solid;
+  }
+  .card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .card::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+  .card .rail {
+    border-right: 1px solid var(--hairline); padding: 20px 14px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 10px; background: rgba(201,150,63,0.05);
+  }
+  .card .pos { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.06em; }
+  .card .rname { font-size: 26px; font-weight: 700; letter-spacing: 0.14em; color: var(--gold); writing-mode: vertical-rl; }
+  .card .rtag { font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .card .body { padding: 22px 26px 20px; }
+  .card .body p { font-size: 15.5px; color: var(--paper-dim); }
+  .card .body p + p, .card .body .q + p, .card .body p + .q { margin-top: 14px; }
+
+  .q {
+    display: block; font-size: 17.5px; color: var(--paper); line-height: 1.95;
+    padding: 4px 0 4px 18px; border-left: 2px solid var(--gold-dim);
+  }
+  .q .src { display: block; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.14em; margin-top: 6px; }
+
+  /* ============ 货单 chips ============ */
+  .goods { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+  .goods .glabel {
+    font-size: 12px; letter-spacing: 0.24em; color: var(--gold); border: 1px solid var(--gold-dim);
+    padding: 3px 8px 2px 11px; margin-right: 4px;
+  }
+  .goods .chip {
+    font-size: 13.5px; color: var(--paper-dim); border: 1px solid var(--hairline);
+    border-radius: 999px; padding: 2px 12px;
+  }
+  .goods .none { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.1em; }
+
+  /* ============ 失事档案 ============ */
+  .wrecks { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .wreck { border: 1px solid var(--hairline); background: var(--ink-3); padding: 22px 22px 18px; }
+  .wreck h3 { font-size: 19px; letter-spacing: 0.12em; color: var(--paper); font-weight: 600; }
+  .wreck .wpos { font-size: 12px; color: var(--paper-faint); margin-left: 8px; letter-spacing: 0.06em; }
+  .wreck p { font-size: 14.5px; color: var(--paper-dim); margin-top: 12px; }
+
+  /* ============ 脚印 ============ */
+  .steps { display: grid; grid-template-columns: 1fr; }
+  .step { display: grid; grid-template-columns: 86px 1fr; gap: 22px; padding: 22px 0; border-top: 1px solid var(--hairline); }
+  .step:first-child { border-top: none; }
+  .step .yu {
+    width: 72px; height: 72px; border: 1px solid var(--gold-dim); border-radius: 50%;
+    display: grid; place-items: center; font-size: 34px; color: var(--gold); justify-self: start;
+  }
+  .step h3 { font-size: 16px; letter-spacing: 0.16em; color: var(--gold); font-weight: 600; }
+  .step h3 span { color: var(--paper-faint); font-weight: 400; font-size: 12.5px; letter-spacing: 0.08em; margin-left: 10px; }
+  .step p { font-size: 14.5px; color: var(--paper-dim); margin-top: 8px; max-width: 56ch; }
+
+  /* ============ 底本校勘 ============ */
+  .collate { border: 1px dashed var(--gold-faint); padding: 24px 26px; background: var(--ink-2); }
+  .collate p { font-size: 15px; color: var(--paper-dim); max-width: 58ch; }
+  .collate .ex { display: flex; flex-wrap: wrap; gap: 26px; margin-top: 18px; }
+  .collate .pair { font-size: 21px; letter-spacing: 0.08em; }
+  .collate .pair .w { color: var(--paper-faint); text-decoration: line-through; text-decoration-color: rgba(201,150,63,0.5); }
+  .collate .pair .r { color: var(--gold); }
+  .collate .pair .arr { color: var(--paper-faint); font-size: 14px; margin: 0 6px; }
+  .collate .small { font-size: 13px; color: var(--paper-faint); margin-top: 16px; }
+
+  /* ============ 归航 ============ */
+  .coda { padding: 64px 0 30px; }
+  .coda-big {
+    font-size: clamp(21px, 3vw, 30px); line-height: 2.1; letter-spacing: 0.06em;
+    color: var(--paper); max-width: 34em;
+  }
+  .coda-big .hl { color: var(--gold); }
+  .last-line {
+    margin: 52px auto 10px; text-align: center; font-size: clamp(19px, 2.6vw, 26px);
+    letter-spacing: 0.12em; color: var(--gold); max-width: 26em;
+  }
+  .last-sub { text-align: center; font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.22em; }
+
+  /* ============ 页脚 ============ */
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 70px; padding: 36px 0 60px; }
+  footer.page .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+  footer.page h4 { font-size: 12.5px; letter-spacing: 0.3em; color: var(--gold); font-weight: 600; margin-bottom: 10px; }
+  footer.page p { font-size: 13.5px; color: var(--paper-faint); }
+  footer.page a { color: var(--paper-dim); }
+  footer.page .fine { margin-top: 26px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.06em; }
+
+  @media (max-width: 760px) {
+    .cards, .card { grid-template-columns: 1fr; }
+    .card .rail { flex-direction: row; border-right: none; border-bottom: 1px solid var(--hairline); padding: 14px; justify-content: center; }
+    .card .rname { writing-mode: horizontal-tb; font-size: 22px; }
+    .wrecks { grid-template-columns: 1fr; }
+    footer.page .frow { grid-template-columns: 1fr; }
+    .step { grid-template-columns: 64px 1fr; gap: 14px; }
+    .step .yu { width: 56px; height: 56px; font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== 海图开场 ==================== -->
+<svg class="chart" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <rect width="1200" height="400" fill="#191917"/>
+  <!-- 波纹 -->
+  <g stroke="rgba(232,228,220,0.07)" fill="none" stroke-width="1.4">
+    <path d="M-20,330 q60,-14 120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0"/>
+    <path d="M-20,356 q60,-12 120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0"/>
+    <path d="M-20,60 q60,-10 120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0 t120,0" opacity="0.55"/>
+  </g>
+  <!-- 针路 -->
+  <path d="M70,268 C240,238 300,252 420,222 S700,150 860,150 S1090,128 1160,108"
+        fill="none" stroke="rgba(201,150,63,0.6)" stroke-width="1.6" stroke-dasharray="7 6"/>
+  <!-- 泉州 -->
+  <circle cx="70" cy="268" r="5" fill="#c9963f"/>
+  <text x="84" y="262" font-size="15" fill="#e8e4dc" letter-spacing="2">泉州</text>
+  <text x="84" y="282" font-size="11" fill="#6e6a61">发舶</text>
+  <!-- 彭湖：三十六屿 -->
+  <g fill="rgba(201,150,63,0.5)">
+    <circle cx="248" cy="246" r="2.4"/><circle cx="262" cy="240" r="1.8"/><circle cx="272" cy="250" r="2.1"/><circle cx="255" cy="258" r="1.6"/><circle cx="240" cy="236" r="1.9"/><circle cx="266" cy="262" r="1.7"/><circle cx="282" cy="244" r="1.5"/><circle cx="234" cy="252" r="1.6"/><circle cx="250" cy="232" r="1.4"/><circle cx="286" cy="256" r="1.8"/><circle cx="228" cy="262" r="1.4"/><circle cx="276" cy="232" r="1.5"/><circle cx="244" cy="268" r="1.3"/><circle cx="292" cy="240" r="1.4"/><circle cx="236" cy="244" r="1.2"/><circle cx="258" cy="270" r="1.5"/><circle cx="270" cy="238" r="1.3"/><circle cx="224" cy="240" r="1.4"/><circle cx="288" cy="266" r="1.3"/><circle cx="230" cy="230" r="1.2"/><circle cx="262" cy="252" r="1.2"/><circle cx="246" cy="240" r="1.1"/><circle cx="274" cy="258" r="1.2"/><circle cx="254" cy="222" r="1.2"/><circle cx="296" cy="248" r="1.2"/><circle cx="222" cy="250" r="1.1"/><circle cx="282" cy="226" r="1.1"/><circle cx="238" cy="226" r="1.1"/><circle cx="266" cy="272" r="1.1"/><circle cx="304" cy="254" r="1.1"/><circle cx="214" cy="244" r="1"/><circle cx="290" cy="232" r="1"/><circle cx="252" cy="248" r="1"/><circle cx="268" cy="226" r="1"/><circle cx="230" cy="236" r="1"/><circle cx="278" cy="246" r="1"/>
+  </g>
+  <text x="234" y="292" font-size="12" fill="#a39e93" letter-spacing="2">彭湖：岛分三十有六</text>
+  <!-- 途中泊点 -->
+  <circle cx="420" cy="222" r="3.4" fill="none" stroke="rgba(201,150,63,0.8)" stroke-width="1.2"/>
+  <text x="404" y="208" font-size="12" fill="#6e6a61" letter-spacing="1">龙牙门</text>
+  <circle cx="860" cy="150" r="3.4" fill="none" stroke="rgba(201,150,63,0.8)" stroke-width="1.2"/>
+  <text x="844" y="136" font-size="12" fill="#6e6a61" letter-spacing="1">古里佛</text>
+  <circle cx="1160" cy="108" r="3.4" fill="none" stroke="rgba(201,150,63,0.8)" stroke-width="1.2"/>
+  <text x="1096" y="94" font-size="12" fill="#6e6a61" letter-spacing="1">天堂</text>
+  <!-- 舶 -->
+  <g transform="translate(530,196) rotate(-8)">
+    <path d="M0,10 L34,10 L28,17 L6,17 Z" fill="rgba(201,150,63,0.85)"/>
+    <path d="M17,10 L17,-14 L31,4 Z" fill="rgba(232,228,220,0.5)"/>
+  </g>
+  <text x="478" y="232" font-size="11" fill="#6e6a61" letter-spacing="1">挂四帆，海上若飞</text>
+  <!-- 子午针 -->
+  <g transform="translate(1030,300)">
+    <circle r="46" fill="none" stroke="rgba(201,150,63,0.35)" stroke-width="1"/>
+    <circle r="34" fill="none" stroke="rgba(232,228,220,0.1)" stroke-width="1"/>
+    <line x1="0" y1="-46" x2="0" y2="46" stroke="rgba(201,150,63,0.3)" stroke-width="1"/>
+    <line x1="-46" y1="0" x2="46" y2="0" stroke="rgba(201,150,63,0.3)" stroke-width="1"/>
+    <g stroke="rgba(232,228,220,0.25)" stroke-width="1">
+      <line x1="0" y1="-40" x2="0" y2="-34"/><line x1="0" y1="34" x2="0" y2="40"/>
+      <line x1="-40" y1="0" x2="-34" y2="0"/><line x1="34" y1="0" x2="40" y2="0"/>
+      <line x1="28" y1="-28" x2="24" y2="-24"/><line x1="-28" y1="28" x2="-24" y2="24"/>
+      <line x1="-28" y1="-28" x2="-24" y2="-24"/><line x1="28" y1="28" x2="24" y2="24"/>
+    </g>
+    <polygon points="0,-22 5,0 0,5 -5,0" fill="#c9963f"/>
+    <text y="-52" text-anchor="middle" font-size="13" fill="#a39e93">子</text>
+    <text y="62" text-anchor="middle" font-size="13" fill="#a39e93">午</text>
+  </g>
+</svg>
+
+<header class="masthead wrap">
+  <div class="kicker"><span class="needle mono">◆</span>殆知阁导读 · 之四十五</div>
+  <h1>岛夷志略<span class="seal">卷十八 海程</span></h1>
+  <div class="byline">[元] 汪大渊 撰，库内本一百条，一万九千一百八十一字</div>
+  <p class="lede">九十九个港口，一条针路。这不是一部抄来的海外志，是一本<b>条条记账的风物调查表</b>：泊在哪，看见什么，拿什么换什么货。写它的那年，作者三十几岁，航海经验是二十岁上下两次附舶攒下来的。</p>
+</header>
+
+<main>
+  <div class="wrap"><div class="tickline"></div></div>
+
+  <!-- ==================== 壹 · 开卷 ==================== -->
+  <section class="sec wrap">
+    <div class="sec-head"><span class="dial">壹</span><h2>舶人开卷</h2><span class="en">WHO SAILED</span></div>
+    <div class="prose">
+      <p>元代泉州是当时世界级的大港，番舶云集。至顺元年（1330），南昌青年汪大渊二十岁，搭上商船出海；七年后再走一趟。两次航行归来，他把到过的地方一站一站写成条目：地理、气候、风俗、物产，末尾缀一句固定的「贸易之货，用某某之属」，像一张给后来舶商用的<span style="color:var(--gold)">进货参考单</span>。</p>
+      <p>至正九年（1349），他应《清源续志》之请把稿子交出，附在志后；后单刻行世，题《岛夷志》。原书后来亡佚，今天看到的是节略本《岛夷志略》，清修四库时著录于史部地理类，靠官书把这个年轻人的航程存了下来。</p>
+      <p>它不是孤证。一百多年后，随郑和船队下西洋的通事马欢亲历诸国，回来对照此书，说汪大渊记载的与亲眼所见相符。一部私人航海账，先给船队当过参考，又被后来人验过货。</p>
+    </div>
+  </section>
+
+  <!-- ==================== 贰 · 百站墙 ==================== -->
+  <section class="sec wrap">
+    <div class="sec-head"><span class="dial">貳</span><h2>针路百站</h2><span class="en">99 PORTS + 1</span></div>
+    <p class="note">库内本从家门口的彭湖起，到末一条「异闻类聚」终，共一百条。次第依原文之序，一条不敢乱排。金色的站，下文有船牌细看。</p>
+    <div class="wall">
+      <b class="hot"><a href="#p01" style="color:inherit;text-decoration:none">彭湖</a></b><b class="hot"><a href="#p02" style="color:inherit;text-decoration:none">琉球</a></b><b>三岛</b><b>麻逸</b><b>无枝拔</b><b class="hot"><a href="#p06" style="color:inherit;text-decoration:none">龙涎屿</a></b><b>交趾</b><b>占城</b><b>民多朗</b><b>宾童龙</b><b>真腊</b><b>丹马令</b><b>日丽</b><b>麻里噜</b><b>遐来勿</b><b>彭坑</b><b>吉兰丹</b><b>丁家卢</b><b>戎</b><b>罗卫</b><b>罗斛</b><b>东冲古剌</b><b>苏洛鬲</b><b>针路</b><b>八都马</b><b>淡邈</b><b>尖山</b><b>八节那间</b><b>三佛齐</b><b>啸喷</b><b>勃泥</b><b>明家罗</b><b>暹</b><b>爪哇</b><b>重迦罗</b><b>都督崖</b><b>文诞</b><b>苏禄</b><b>龙牙犀角</b><b>苏门傍</b><b>旧港</b><b>龙牙菩提</b><b>毗舍耶</b><b>班卒</b><b>蒲奔</b><b>假里马打</b><b class="hot"><a href="#p47" style="color:inherit;text-decoration:none">文老古</a></b><b class="hot"><a href="#wreck" style="color:inherit;text-decoration:none">古里地闷</a></b><b>龙牙门</b><b>昆仑</b><b>灵山</b><b>东西竺</b><b class="hot"><a href="#wreck" style="color:inherit;text-decoration:none">急水湾</a></b><b>花面</b><b>淡洋</b><b>须文答剌</b><b>僧加剌</b><b class="hot"><a href="#p58" style="color:inherit;text-decoration:none">交栏山</a></b><b>特番里</b><b>班达里</b><b>曼陀郎</b><b>喃巫哩</b><b>北溜</b><b>下里</b><b>高郎步</b><b>沙里八丹</b><b>金塔</b><b>东淡邈</b><b>大八丹</b><b>加里那</b><b class="hot"><a href="#p71" style="color:inherit;text-decoration:none">土塔</a></b><b>第三港</b><b>华罗</b><b>麻那里</b><b>加将门里</b><b>波斯离</b><b>挞吉那</b><b>千里马</b><b class="hot"><a href="#p79" style="color:inherit;text-decoration:none">大佛山</a></b><b>须文那</b><b class="hot"><a href="#coda" style="color:inherit;text-decoration:none">万里石塘</a></b><b>小具喃</b><b>古里佛</b><b>朋加剌</b><b>巴南巴西</b><b>放拜</b><b>大乌爹</b><b>万年港</b><b>马八儿屿</b><b>阿思里</b><b>哩伽塔</b><b>天堂</b><b>天竺</b><b>层摇罗</b><b>马鲁涧</b><b>甘埋里</b><b>麻呵斯离</b><b>罗婆斯</b><b class="hot"><a href="#p99" style="color:inherit;text-decoration:none">乌爹</a></b><b class="last">异闻类聚</b>
+    </div>
+    <div class="wall-cap">首站彭湖在泉州门外，顺风二昼夜可至；末站不出海，在书斋里抄书。</div>
+  </section>
+
+  <!-- ==================== 叁 · 八面船牌 ==================== -->
+  <section class="sec wrap">
+    <div class="sec-head"><span class="dial">叄</span><h2>八面船牌</h2><span class="en">EIGHT PLACARDS</span></div>
+    <p class="note">从一百条里挑八条细看。每面船牌挂站号、站名，抄原文，缀货单；货单是书里的固定句式，逐字截取。</p>
+
+    <div class="cards">
+      <article class="card" id="p01">
+        <div class="rail"><span class="pos mono">01／100</span><span class="rname">彭湖</span><span class="rtag">家门口</span></div>
+        <div class="body">
+          <blockquote class="q">岛分三十有六，巨细相间，坡陇相望，乃有七澳居其间，各得其名。自泉州顺风二昼夜可至。</blockquote>
+          <p>全书第一条不在万里之外，在泉州门口。这里记下了一件后来被反复引用的事：</p>
+          <blockquote class="q">地隶泉州晋江县，至元年间，立巡检司。</blockquote>
+          <p>澎湖设官，白纸黑字。一部讲番邦异域的书，把第一块版面留给了自己家门口的一座设司档案。</p>
+          <div class="goods"><span class="glabel">货单</span><span class="none">本条不载「贸易之货」，只记「土商兴贩，以乐其利」</span></div>
+        </div>
+      </article>
+
+      <article class="card" id="p02">
+        <div class="rail"><span class="pos mono">02／100</span><span class="rname">琉球</span><span class="rtag">他登了山</span></div>
+        <div class="body">
+          <blockquote class="q">余登此山，则观海潮之消长，夜半则望晹谷之〔日〕出，红光烛天，山顶为之俱明。</blockquote>
+          <p>这条里有一个「余」字。全书九十九个港口，多数是转述舶人商谈，像这样亲脚爬上山、亲眼看日出的，只在少数几条里出现。引用保留底本原样的校勘记：〔日〕字是后人补的正字。</p>
+          <div class="goods"><span class="glabel">贸易之货</span><span class="chip">土珠</span><span class="chip">玛瑙</span><span class="chip">金珠</span><span class="chip">粗碗</span><span class="chip">处州瓷器</span></div>
+        </div>
+      </article>
+
+      <article class="card" id="p06">
+        <div class="rail"><span class="pos mono">06／100</span><span class="rname">龙涎屿</span><span class="rtag">香之引子</span></div>
+        <div class="body">
+          <blockquote class="q">每值天清气和，风作浪涌，群龙游戏，出没海濵，时吐涎沬于其屿之上，故以得名。</blockquote>
+          <p>屿以此得名，货以此发香：书里说众香「必待此以发之」。今天我们知道，龙涎香是抹香鲸的分泌物；当年舟人望见的，是一群想象出来的龙。元人的解释框架和事实的轮廓，在同一条里叠在一起。</p>
+          <div class="goods"><span class="glabel">货用</span><span class="chip">金银</span><span class="none">此条原文仅一句「货用金银之属博之」</span></div>
+        </div>
+      </article>
+
+      <article class="card" id="p47">
+        <div class="rail"><span class="pos mono">47／100</span><span class="rname">文老古</span><span class="rtag">鸡雏占</span></div>
+        <div class="body">
+          <blockquote class="q">地每岁望唐舶贩其地，往往以五枚鸡雏出，必唐船一只来；二鸡雏出，必有二只，以此占之，如响斯应。</blockquote>
+          <p>当地人孵鸡占卜，鸡雏出几枚，唐船就来几只，「如响斯应」。番俗志里少见的一则：被占卜的不是自己，而是中国商船的到港班次。</p>
+          <div class="goods"><span class="glabel">贸易之货</span><span class="chip">银</span><span class="chip">铁</span><span class="chip">水绫</span><span class="chip">丝布</span><span class="chip">巫仑</span><span class="chip">八节那间布</span><span class="chip">土印布</span><span class="chip">象齿</span><span class="chip">烧珠</span><span class="chip">青瓷器</span><span class="chip">埕器</span></div>
+        </div>
+      </article>
+
+      <article class="card" id="p58">
+        <div class="rail"><span class="pos mono">58／100</span><span class="rname">交栏山</span><span class="rtag">沉舟造船</span></div>
+        <div class="body">
+          <blockquote class="q">国初，军士征阇婆，遭风于山下，辄损舟，一舟幸免，唯存钉灰。见其山多木，故于其地造舟一十余只，若樯柁、若帆、若篙，靡不具备，飘然长往。</blockquote>
+          <p>一支元军船队在此折损，只剩一船，用岛上木料现造十余只扬长而去。故事的结尾落在留在山里的一百多个病卒身上：</p>
+          <blockquote class="q">今唐人与番人丛杂而居之。</blockquote>
+          <p>一场事故，变成一个海外华人聚落的起源传说。</p>
+          <div class="goods"><span class="glabel">贸易之货</span><span class="chip">谷米</span><span class="chip">五色绢</span><span class="chip">青布</span><span class="chip">铜器</span><span class="chip">青器</span></div>
+        </div>
+      </article>
+
+      <article class="card" id="p71">
+        <div class="rail"><span class="pos mono">71／100</span><span class="rname">土塔</span><span class="rtag">汉字在西天</span></div>
+        <div class="body">
+          <blockquote class="q">汉字书云：咸淳三年八月，毕工。传闻中国之人其年贩彼，为书于石以刻之，至今不磨灭焉。</blockquote>
+          <p>印度西岸一座高数丈的砖塔上，刻着汉字。咸淳三年是宋度宗年号（1268），比汪大渊到访早六十余年：到那里的中国商人把竣工日期刻进了异国的塔身。这一条是书里最硬的一枚「到此一游」。</p>
+          <div class="goods"><span class="glabel">贸易之货</span><span class="chip">糖霜</span><span class="chip">五色绢</span><span class="chip">青鞋</span><span class="chip">苏木</span></div>
+        </div>
+      </article>
+
+      <article class="card" id="p79">
+        <div class="rail"><span class="pos mono">79／100</span><span class="rname">大佛山</span><span class="rtag">一夜月明</span></div>
+        <div class="body">
+          <blockquote class="q">至顺庚午冬十月有二日，因卸帆于山下，是夜，月明如昼，海波不兴，水清彻底。</blockquote>
+          <p>至顺庚午即至顺元年，1330 年：全书在自己身上盖了一枚日期戳，与文献所记首航之年相合。这一夜他在水底看见盘结的红树，童子下水采来，舟人围观雀跃：</p>
+          <blockquote class="q">此琼树开花也。诚海中之稀有，亦中国之异闻。</blockquote>
+          <p>随后他作诗记事，诗稿后来被一位豫章的虞先生见过、赋诗、留在君子堂传玩。一条港口志，写成了月夜小品。</p>
+          <div class="goods"><span class="glabel">货单</span><span class="none">本条不载货单，载的是一株水底琼树</span></div>
+        </div>
+      </article>
+
+      <article class="card" id="p99">
+        <div class="rail"><span class="pos mono">99／100</span><span class="rname">乌爹</span><span class="rtag">十去九不还</span></div>
+        <div class="body">
+          <blockquote class="q">每个银钱重二钱八分，准中统钞一十两，易汃子计一万一千五百二十有余，折钱使用。</blockquote>
+          <p>末段第二个港（第九十九站）给了整套汇率与米价折算，最后算出一笔账：一个银钱换的米够两人吃一年有余。然后是全书最冷的一句收梢：</p>
+          <blockquote class="q">故贩其地者，十去九不还也。</blockquote>
+          <p>不还，不是死了，是不回来了：利厚到让人落地生根。</p>
+          <div class="goods"><span class="glabel">贸易之货</span><span class="chip">金</span><span class="chip">银</span><span class="chip">五色鞋</span><span class="chip">白丝</span><span class="chip">丁香</span><span class="chip">豆蔻</span><span class="chip">茅香</span><span class="chip">青白花器</span><span class="chip">鼓瑟</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ==================== 肆 · 失事档案 ==================== -->
+  <section class="sec wrap" id="wreck">
+    <div class="sec-head"><span class="dial">肆</span><h2>失事档案</h2><span class="en">TWO WRECKS</span></div>
+    <p class="note">货单的甜头背后是海。书里收了两桩失事，一桩账死人数，一桩只账命大。</p>
+    <div class="wrecks">
+      <div class="wreck">
+        <h3>古里地闷<span class="wpos mono">48／100</span></h3>
+        <blockquote class="q">昔泉之吴宅，发舶梢众百有余人，到彼贸易。既毕，死者十八九，间存一二</blockquote>
+        <p>泉州吴宅发船，百余人去檀香岛贸易，回来的十不存一二。幸存者夜里驾船回航，「狂魂荡唱」，书里引柳宗元的话叹：海贾以生易利。这是全书最暗的一条，也提醒百站货单每一格的代价。</p>
+      </div>
+      <div class="wreck">
+        <h3>急水湾<span class="wpos mono">53／100</span></h3>
+        <blockquote class="q">失风，针迷舵折，舶遂阁浅。人船货物，俱各漂荡。</blockquote>
+        <p>一船卷进漩涡一月不得出，针迷舵折。三个人被遗在礁上，枵腹五日，抱住两根浮海而来的大木，漂到须门答剌，「幸而免溺」。针路与失事，是同一枚罗盘的两面。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 伍 · 脚印 ==================== -->
+  <section class="sec wrap">
+    <div class="sec-head"><span class="dial">伍</span><h2>书里的脚印</h2><span class="en">THREE「余」</span></div>
+    <p class="note">在转述与抄录占多数的文本里，「余」字出现的位置就是作者本人站过的位置。三个脚印，机器可数。</p>
+    <div class="steps">
+      <div class="step">
+        <span class="yu">余</span>
+        <div>
+          <h3>登上了山<span class="mono">琉球 · 02／100</span></h3>
+          <p>「余登此山，则观海潮之消长」，夜半在山顶看日出。见前船牌。</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="yu">余</span>
+        <div>
+          <h3>指舟人而问<span class="mono">大佛山 · 79／100</span></h3>
+          <p>「余指舟人而问」，又「余次日作古体诗一首，以记其实」：看见了，问了，还写了诗。同一夜他留下全书唯一的自报日期。</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="yu">余</span>
+        <div>
+          <h3>推了一遍地脉<span class="mono">万里石塘 · 81／100</span></h3>
+          <p>「俗云万里石塘，以余推之，岂止万里而已哉？」听说的俗云，他偏要自己推算一遍。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 陆 · 底本的字 ==================== -->
+  <section class="sec wrap">
+    <div class="sec-head"><span class="dial">陸</span><h2>底本的字</h2><span class="en">COLLATION MARKS</span></div>
+    <div class="collate">
+      <p>殆知阁库内这份底本带着四库式校勘记：花括号里是原文的误字，六角括号里是校补的正字。本页引用一律原样保留这两套符号，核验脚本按「去符号归一」比对，一个字都不动。</p>
+      <div class="ex">
+        <span class="pair"><span class="w">峙</span><span class="arr">〔〕</span><span class="r">崎</span></span>
+        <span class="pair"><span class="w">葬</span><span class="arr">〔〕</span><span class="r">丧</span></span>
+        <span class="pair"><span class="w">麦</span><span class="arr">〔〕</span><span class="r">黍</span></span>
+        <span class="pair"><span class="w">传</span><span class="arr">〔〕</span><span class="r">博</span></span>
+      </div>
+      <p class="small">四例均出库内本：琉球、麻逸两条。读这份文件，等于同时读到元人的书和清代校书人的笔。</p>
+    </div>
+  </section>
+
+  <!-- ==================== 柒 · 归航 ==================== -->
+  <section class="sec coda wrap" id="coda">
+    <div class="sec-head"><span class="dial">柒</span><h2>归航</h2><span class="en">HOMEWARD</span></div>
+    <p class="coda-big">第八十一站万里石塘，是全书最有现代回声的一条。「石塘之骨，由潮州而生，迤逦如长蛇，横亘海中，越海诸国」：今天读来，这是一份对南海海底地形与航路的早期记录。他给走这条路的舟人留了两句话：<span class="hl">避之则吉，遇之则凶</span>。</p>
+    <blockquote class="q" style="max-width:38em;margin-top:26px">舶由玳屿门挂四帆，乘风破浪，海上若飞。</blockquote>
+    <p class="prose" style="margin-top:26px">末站「异闻类聚」不出海：飞车、鸟葬、女人国，一条条注明出处，「能为飞车，从风远行；见于博物志矣」。九十九条用脚，一条用书。这条结构本身就是一句自我介绍：这本账的信誉，是拿航程换的。</p>
+    <p class="last-line">得意之地勿再往，岂可以风涛为径路也哉？</p>
+    <p class="last-sub">万里石塘条末句，代全书留言</p>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <div class="frow">
+      <div>
+        <h4>文本来源</h4>
+        <p>殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>）史藏地理部《岛夷志略》，一百条、一万九千一百八十一字实测。页内引文均经脚本与库内文件逐字核验。</p>
+      </div>
+      <div>
+        <h4>读它之前</h4>
+        <p>此书成于十四世纪，记海外风俗多用华夷之别与猎奇笔调：殉葬、纹身、食人皆被当作「异」来录。风物是史料，评判须带着今天的眼光；占候、地脉诸说属时代局限，姑妄听之。</p>
+      </div>
+    </div>
+    <p class="fine">殆知阁导读系列之四十五 · <a href="mulu.html">返回总目</a> · 同卷参观：<a href="yingya-shenglan.html">瀛涯胜览</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
