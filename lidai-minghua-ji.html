@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>历代名画记 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #232220;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --bamboo: #5f9270;
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 26px; }
+
+  /* ============ 开场：一堵空墙 ============ */
+  .wall {
+    min-height: 88dvh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 44px;
+    padding: 60px 20px 70px; text-align: center; position: relative;
+  }
+  .wall::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(120% 90% at 50% 0%, rgba(95,146,112,0.05), transparent 55%),
+      radial-gradient(80% 60% at 50% 100%, rgba(0,0,0,0.5), transparent 70%);
+  }
+  .tombstone {
+    position: relative; background: var(--paper); color: #23221f;
+    padding: 30px 42px 26px; max-width: 420px; text-align: left;
+    box-shadow: 0 22px 60px rgba(0,0,0,0.55);
+  }
+  .tombstone::after {
+    content: ""; position: absolute; left: 42px; right: 42px; bottom: -18px;
+    height: 1px; background: rgba(232,228,220,0.22);
+  }
+  .tombstone h1 {
+    font-size: 30px; font-weight: 700; letter-spacing: 0.12em; line-height: 1.4;
+  }
+  .tombstone .meta { margin-top: 12px; font-size: 13.5px; color: #55524b; line-height: 2; }
+  .tombstone .gone {
+    margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(35,34,31,0.18);
+    font-size: 13.5px; color: var(--bamboo); letter-spacing: 0.06em;
+  }
+  .walltext {
+    position: relative; font-size: clamp(17px, 2.3vw, 22px);
+    color: rgba(232,228,220,0.30); max-width: 30em; letter-spacing: 0.08em; line-height: 2.3;
+  }
+  .walltext b { color: rgba(232,228,220,0.52); font-weight: 600; }
+
+  /* ============ 导语 ============ */
+  .lead { padding: 30px 0 70px; }
+  .lead p { max-width: 38em; margin: 0 auto 22px; font-size: 16.5px; color: var(--paper-dim); }
+  .lead p b { color: var(--paper); font-weight: 600; }
+  .lead .drop { font-size: 44px; float: left; line-height: 1; padding: 8px 12px 0 0; color: var(--bamboo); font-weight: 700; }
+
+  /* ============ 章节骨架 ============ */
+  section { padding: 76px 0 30px; border-top: 1px solid var(--hairline); }
+  .kick {
+    display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px;
+  }
+  .kick .bookvol { font-size: 12.5px; letter-spacing: 0.3em; color: var(--bamboo); }
+  .kick .bookname { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  h2 { font-size: clamp(26px, 3.6vw, 36px); font-weight: 700; letter-spacing: 0.1em; margin-bottom: 14px; }
+  h2 small { display: block; font-size: 13px; font-weight: 400; color: var(--paper-faint); letter-spacing: 0.14em; margin-top: 6px; }
+  .prose { max-width: 40em; color: var(--paper-dim); font-size: 16px; margin-bottom: 26px; }
+  .prose b { color: var(--paper); font-weight: 600; }
+  .cite { display: block; margin-top: 6px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.08em; }
+
+  /* ============ 壹 报损单 ============ */
+  .ledger { border-top: 2px solid var(--hairline); margin-top: 30px; }
+  .row {
+    display: grid; grid-template-columns: 30px 1fr; gap: 18px;
+    padding: 20px 4px; border-bottom: 1px solid var(--hairline);
+  }
+  .row .idx { font-size: 13px; color: var(--paper-faint); padding-top: 6px; }
+  .row h3 { font-size: 16.5px; font-weight: 700; letter-spacing: 0.05em; }
+  .row h3 span.when { font-weight: 400; color: var(--paper-faint); font-size: 13px; margin-right: 10px; letter-spacing: 0.1em; }
+  .row p { font-size: 14.5px; color: var(--paper-dim); margin-top: 6px; max-width: 36em; }
+  q { quotes: "「" "」"; color: var(--paper); font-style: normal; }
+  q:before { content: open-quote; color: var(--bamboo); }
+  q:after { content: close-quote; color: var(--bamboo); }
+  .row.own { background: linear-gradient(90deg, rgba(95,146,112,0.07), transparent 70%); }
+  .row.own h3 { color: #cfe0d2; }
+  .ledger-note {
+    margin-top: 22px; font-size: 14px; color: var(--paper-faint);
+    border-left: 2px solid var(--bamboo); padding: 4px 0 4px 16px; max-width: 36em;
+  }
+
+  /* ============ 貳 观画须知 ============ */
+  .duo { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 34px; align-items: start; margin-top: 30px; }
+  .rules {
+    background: var(--ink-2); border: 1px solid var(--hairline);
+    padding: 30px 30px 24px; position: sticky; top: 24px;
+  }
+  .rules h3 {
+    font-size: 15px; letter-spacing: 0.5em; color: var(--paper);
+    border-bottom: 1px solid var(--hairline); padding-bottom: 14px; margin-bottom: 6px;
+    text-align: center;
+  }
+  .rules h3 em { font-style: normal; color: var(--bamboo); }
+  .rules ol { list-style: none; }
+  .rules li {
+    padding: 13px 2px; border-bottom: 1px dashed rgba(232,228,220,0.12);
+    font-size: 14.5px; color: var(--paper-dim); display: grid;
+    grid-template-columns: 26px 1fr; gap: 10px; line-height: 1.8;
+  }
+  .rules li:last-child { border-bottom: none; }
+  .rules li .rn { color: var(--bamboo); font-size: 12px; padding-top: 3px; }
+  .rules .fine { margin-top: 14px; font-size: 12.5px; color: var(--paper-faint); line-height: 1.9; }
+
+  /* ============ 大引文墙 ============ */
+  .bigwall {
+    margin: 66px 0 10px; padding: 70px 24px; text-align: center;
+    background:
+      radial-gradient(90% 120% at 50% 0%, rgba(95,146,112,0.06), transparent 60%),
+      var(--ink-2);
+    border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+  }
+  .bigwall .line {
+    font-size: clamp(21px, 3.2vw, 31px); letter-spacing: 0.1em; line-height: 2.1;
+    color: var(--paper); font-weight: 600;
+  }
+  .bigwall .line em { font-style: normal; color: var(--bamboo); }
+  .bigwall .who { margin-top: 20px; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.18em; }
+
+  /* ============ 叁 画圣 ============ */
+  .sage { display: grid; grid-template-columns: 240px 1fr; gap: 38px; margin-top: 34px; }
+  .sagecard {
+    border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 26px 22px; height: fit-content;
+  }
+  .sagecard .nm { font-size: 26px; font-weight: 700; letter-spacing: 0.16em; }
+  .sagecard .nm small { display: block; font-size: 12.5px; font-weight: 400; color: var(--paper-faint); letter-spacing: 0.2em; margin-top: 4px; }
+  .sagecard dl { margin-top: 16px; font-size: 13.5px; line-height: 2.1; color: var(--paper-dim); }
+  .sagecard dt { float: left; clear: left; width: 4.5em; color: var(--bamboo); }
+  .sagecard dd { margin-left: 4.5em; }
+  .sagecard .seal {
+    margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--hairline);
+    font-size: 14px; color: var(--paper); letter-spacing: 0.06em;
+  }
+  .sagecard .seal b { color: var(--bamboo); }
+  .qa { border-left: 2px solid var(--hairline); padding-left: 22px; margin: 30px 0; }
+  .qa .ask { font-size: 14.5px; color: var(--paper-faint); margin-bottom: 10px; }
+  .qa .ask b { color: var(--bamboo); font-weight: 400; margin-right: 8px; }
+  .qa .ans { font-size: 16.5px; color: var(--paper); letter-spacing: 0.04em; max-width: 34em; }
+  .qa .ans em { font-style: normal; color: var(--bamboo); }
+
+  /* ============ 肆品第 ============ */
+  .steps { margin: 36px 0 10px; }
+  .step { display: grid; grid-template-columns: 120px 1fr; align-items: center; gap: 18px; margin-bottom: 10px; }
+  .step .grade { font-size: 17px; font-weight: 700; letter-spacing: 0.2em; text-align: right; }
+  .step .bar { height: 34px; background: linear-gradient(90deg, rgba(95,146,112,0.55), rgba(95,146,112,0.16)); }
+  .step .cap { font-size: 12.5px; color: var(--paper-faint); align-self: center; }
+  .step .cell { display: grid; grid-template-columns: 1fr 110px; gap: 18px; align-items: center; }
+  .steps-note { font-size: 13.5px; color: var(--paper-faint); margin-top: 14px; }
+  .swatchline { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 26px 0 8px; font-size: 13.5px; color: var(--paper-dim); }
+  .swatchline span { display: inline-flex; align-items: center; gap: 8px; }
+  .swatchline i { width: 13px; height: 13px; display: inline-block; border: 1px solid rgba(232,228,220,0.25); }
+
+  /* ============ 肆 壁账 ============ */
+  .mural { border-top: 2px solid var(--hairline); margin-top: 30px; }
+  .mrow {
+    display: grid; grid-template-columns: 118px 1fr 96px; gap: 16px;
+    padding: 18px 4px; border-bottom: 1px solid var(--hairline); align-items: baseline;
+  }
+  .mrow .temple { font-size: 15.5px; font-weight: 700; letter-spacing: 0.08em; }
+  .mrow .desc { font-size: 14.5px; color: var(--paper-dim); }
+  .mrow .desc q { color: var(--paper); }
+  .mrow .state {
+    font-size: 12px; letter-spacing: 0.14em; color: #d8b07a;
+    border: 1px solid rgba(216,176,122,0.4); padding: 3px 8px; justify-self: end; white-space: nowrap;
+  }
+  .mrow .state.ok { color: var(--bamboo); border-color: rgba(95,146,112,0.45); }
+  .void {
+    margin: 60px auto 0; display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; max-width: 720px;
+  }
+  .frame { border: 1px solid rgba(232,228,220,0.2); position: relative; }
+  .frame .inner {
+    position: absolute; inset: 10px;
+    background:
+      radial-gradient(70% 70% at 50% 45%, rgba(232,228,220,0.045), transparent 75%),
+      linear-gradient(160deg, rgba(0,0,0,0.25), rgba(0,0,0,0.05));
+  }
+  .frame.tall { aspect-ratio: 3 / 4.1; }
+  .frame.wide { aspect-ratio: 1 / 1; align-self: end; }
+  .frame .tag {
+    position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%);
+    background: var(--paper); color: #23221f; font-size: 12px;
+    padding: 6px 12px; white-space: nowrap; letter-spacing: 0.05em;
+  }
+  .voidnote { text-align: center; font-size: 13px; color: var(--paper-faint); margin-top: 18px; letter-spacing: 0.1em; }
+
+  /* ============ 尾声 ============ */
+  .fin { padding: 90px 0 60px; text-align: center; border-top: 1px solid var(--hairline); }
+  .fin .line { font-size: clamp(20px, 3vw, 28px); color: var(--paper); letter-spacing: 0.1em; line-height: 2.2; max-width: 26em; margin: 0 auto; }
+  .fin .line em { font-style: normal; color: var(--bamboo); }
+  .fin .src { margin-top: 22px; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.16em; }
+
+  footer.page {
+    border-top: 1px solid var(--hairline); padding: 40px 0 64px;
+    color: var(--paper-faint); font-size: 13.5px;
+  }
+  footer.page p { max-width: 44em; margin-bottom: 10px; line-height: 2; }
+  footer.page b { color: var(--paper-dim); }
+
+  @media (max-width: 760px) {
+    .duo { grid-template-columns: 1fr; }
+    .rules { position: static; }
+    .sage { grid-template-columns: 1fr; }
+    .mrow { grid-template-columns: 90px 1fr; }
+    .mrow .state { grid-column: 2; justify-self: start; }
+    .void { grid-template-columns: 1fr; }
+    .frame.wide { display: none; }
+    .step { grid-template-columns: 86px 1fr; gap: 10px; }
+    .step .cap { display: none; }
+    .step .cell { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 开场：一堵空墙，一只展签 -->
+<header class="wall">
+  <div class="tombstone">
+    <h1>历代名画记</h1>
+    <p class="meta">
+      张彦远 纂<br>
+      唐大中元年（八四七）成书<br>
+      十卷，记自古能画者三百七十馀人
+    </p>
+    <p class="gone">本卷所著录之画，几无一件存世</p>
+  </div>
+  <p class="walltext">夫画者，<b>成教化，助人伦</b>，穷神变，测幽微，与六籍同功，四时并运。</p>
+</header>
+
+<!-- 导语 -->
+<div class="lead wrap">
+  <p><span class="drop">这</span>是存世<b>第一部中国绘画通史</b>。可它偏偏是一部关于「失去」的书：张彦远动笔时，他记录的画大半已经毁了，剩下的正在他眼前继续毁。</p>
+  <p>张家是收藏世家，高祖河东公、曾祖魏国公相继鸠集名迹，三代攒下的书画号称富有。元和十三年，宪宗听信监军一句「张氏富有书画」，一道手诏，家藏精华尽数进献内库，从此世不复见。那一年张彦远还没到换牙的年纪，后来他写下：<q>彦远时未龀岁，恨不见家内所宝</q>。</p>
+  <p>于是这部书有了双重身份：它既是画史，也是一份<b>不断被划掉的名录</b>。下面的路线照着原书目次走：兴废、阅玩、画圣、品第，最后停在那批被毁掉的墙前面。</p>
+</div>
+
+<!-- 壹 报损单 -->
+<section id="loss">
+  <div class="wrap">
+    <div class="kick"><span class="bookvol">原书卷一</span><span class="bookname">叙画之兴废</span></div>
+    <h2>报损单<small>从董卓到朱克融，六百年间图画历劫清单</small></h2>
+    <p class="prose">「叙画之兴废」是全书第一章里最像档案的一篇：历朝内府藏画的下落，一场一场数下来。多数条目以焚、没、散、弃收尾。最后两笔，记到他自己家里。</p>
+
+    <div class="ledger">
+      <div class="row"><span class="idx mono">01</span>
+        <div><h3><span class="when">汉末</span>董卓之乱</h3>
+        <p>山阳西迁，<q>图画缣帛，军人皆取为帷囊</q>。所收而西七十馀乘，遇雨道艰，半皆遗弃。</p></div>
+      </div>
+      <div class="row"><span class="idx mono">02</span>
+        <div><h3><span class="when">西晋末</span>胡寇入洛</h3>
+        <p>魏晋之代固多藏蓄，洛阳陷落，一时焚烧。</p></div>
+      </div>
+      <div class="row"><span class="idx mono">03</span>
+        <div><h3><span class="when">梁末</span>侯景之乱</h3>
+        <p>太子纲数梦秦皇更欲焚天下书，既而<q>内府图画数百函，果为景所焚也</q>。</p></div>
+      </div>
+      <div class="row"><span class="idx mono">04</span>
+        <div><h3><span class="when">梁末</span>江陵焚书</h3>
+        <p>城陷将降，元帝<q>乃聚名画法书及典籍二十四万卷，遣后阁舍人高善宝焚之</q>，帝欲投火俱焚，宫嫔牵衣得免。叹曰：萧世诚遂至于此，<q>儒雅之道，今夜穷矣</q>。西魏军在煨烬中抢出书画四千馀轴。</p></div>
+      </div>
+      <div class="row"><span class="idx mono">05</span>
+        <div><h3><span class="when">隋末</span>炀帝东幸</h3>
+        <p>妙楷、宝迹二台所藏尽随驾东行，中道船覆，大半沦弃，馀者辗转归入乱军之手。</p></div>
+      </div>
+      <div class="row"><span class="idx mono">06</span>
+        <div><h3><span class="when">唐初</span>砥柱漂没</h3>
+        <p>武德五年克平僭逆，宋遵贵载两京故藏溯河西上，<q>行经砥柱，忽遭漂没，所存十亡一二</q>。</p></div>
+      </div>
+      <div class="row"><span class="idx mono">07</span>
+        <div><h3><span class="when">武周</span>张易之奏修内库</h3>
+        <p>奏召画工修库，<q>因使工人各推所长，锐意模写，仍旧装背，一毫不差，其真者多归易之</q>。一批真迹就这样悄悄换了主人。</p></div>
+      </div>
+      <div class="row"><span class="idx mono">08</span>
+        <div><h3><span class="when">天宝</span>禄山之乱</h3>
+        <p>耗散颇多。肃宗不甚保持，颁之贵戚，贵戚不好，鬻于不肖之手。</p></div>
+      </div>
+      <div class="row own"><span class="idx mono">09</span>
+        <div><h3><span class="when">元和十三年</span>宪宗索张家藏</h3>
+        <p>监军使魏弘简忌恨高平公，进言「张氏富有书画」。惶骇不敢缄藏，钟张卫索、二王真迹并顾陆张吴名手画合三十卷表上内府，世不复见。</p></div>
+      </div>
+      <div class="row own"><span class="idx mono">10</span>
+        <div><h3><span class="when">长庆初</span>幽州兵乱</h3>
+        <p>高平公出镇幽州，遇朱克融之乱，家藏失坠。进奉之外，存者才二三轴而已。</p></div>
+      </div>
+    </div>
+    <p class="ledger-note">十行报损，前八行是天下之画，后两行是自家之画。少年张彦远从此只能在这份清单上认识他家的收藏。</p>
+  </div>
+</section>
+
+<!-- 貳 观画须知 -->
+<section id="rules">
+  <div class="wrap">
+    <div class="kick"><span class="bookvol">原书卷二</span><span class="bookname">论鉴识收藏购求阅玩</span></div>
+    <h2>张氏馆规<small>一千二百年前的书画保存条例</small></h2>
+    <p class="prose">报损单写完，张彦远反过来讲「怎么留住」。他写鉴识、装褫、购求、阅玩，等于立了一部收藏操作手册。最生动的是几条观看禁令，今天抄进任何美术馆的参观须知都不违和：</p>
+
+    <div class="duo">
+      <div class="rules">
+        <h3>观画<em>须知</em></h3>
+        <ol>
+          <li><span class="rn mono">壹</span><span>近火烛不可观书画。烟火气熏染，绢帛先坏。</span></li>
+          <li><span class="rn mono">貳</span><span>向风日不可观书画。风日燥吹，颜色易褪。</span></li>
+          <li><span class="rn mono">叁</span><span>正飡饮唾涕，不洗手，并不可观书画。</span></li>
+          <li><span class="rn mono">肆</span><span>人家要置一平安床褥，拂拭舒展观之；大卷轴宜造一架，观则悬之。</span></li>
+          <li><span class="rn mono">伍</span><span>凡书画时时舒展，即免蠹湿。</span></li>
+        </ol>
+        <p class="fine">条例来源：原书论鉴识收藏购求阅玩篇。前两条禁令的因果关系为本页译述。</p>
+      </div>
+      <div>
+        <p class="prose">禁令背后有个真实的翻车现场。桓玄爱重图书，每出示宾客，有位客人正吃着寒具（酥油煮的环饼）就伸手去抓书画：</p>
+        <p class="prose"><q>以手捉书画，大点污，玄惋惜移时。自后每出法书，辄令洗手。</q></p>
+        <p class="prose">一条洗手规矩，从此写进了中国收藏史。而张彦远自己的收藏状态，是另一幅画面：<q>可致者必货弊衣，减粝食。妻子僮仆切切嗤笑</q>。为买一卷画，不惜典当衣服、省减饭食，全家上下都笑他痴。</p>
+        <p class="prose">痴得值不值，他记下了当时的市场行情作参照：董伯仁、展子虔以下名手，<q>屏风一片，值金二万，次者售一万五千</q>。但全书的结论恰恰落在价格之外：</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bigwall">
+    <p class="line">「若复不为<em>无益之事</em>，<br>则安能悦有涯之生？」</p>
+    <p class="who">论鉴识收藏购求阅玩篇末，张彦远自述</p>
+  </div>
+</section>
+
+<!-- 叁 画圣 -->
+<section id="sage">
+  <div class="wrap">
+    <div class="kick"><span class="bookvol">原书卷九</span><span class="bookname">叙历代能画人名</span></div>
+    <h2>画圣的工作方式<small>吴道玄小传，附一场问答</small></h2>
+
+    <div class="sage">
+      <div class="sagecard">
+        <div class="nm">吴道玄<small>本名道子，阳翟人</small></div>
+        <dl>
+          <dt>师承</dt><dd>学书于张旭、贺知章，学书不成，因工画</dd>
+          <dt>出身</dt><dd>曾事逍遥公韦嗣立为小吏，写蜀道山水，始创山水之体</dd>
+          <dt>官历</dt><dd>兖州瑕丘县尉，召入禁中授内教博士，官至宁王友</dd>
+          <dt>规矩</dt><dd>非有诏不得画</dd>
+        </dl>
+        <p class="seal">张既号『书颠』，<b>吴宜为『画圣』</b>，神假天造，英灵不穷。</p>
+      </div>
+      <div>
+        <p class="prose">三百七十人的名录里，张彦远给吴道玄的考语是八个字：<b>古今独步，前不见顾陆，后无来者</b>。传文却从喝酒写起：<q>好酒使气，每欲挥毫，必须酣饮</q>。</p>
+        <p class="prose">他记下画圣的三种创作现场。其一是观摩：开元中将军裴旻善舞剑，<q>道玄观旻舞剑，见出没神怪，既毕，挥毫益进</q>。同一段里张旭看公孙大娘舞剑器而草书大进，张彦远的结论：书画之艺，皆须意气而成，亦非懦夫所能作也。</p>
+        <p class="prose">其二是徒手。有人问他：吴生何以不用界笔直尺，而能弯弧挺刃，植柱构梁？他答得分明：</p>
+        <div class="qa">
+          <p class="ask"><b>问</b>不用界笔直尺，凭什么？</p>
+          <p class="ans">夫用界笔直尺，是<em>死画</em>也；守其神，专其一，是<em>真画</em>也。死画满壁，曷如污墁？真画一划，见其生气。</p>
+        </div>
+        <p class="prose">其三是疏体。顾恺之、陆探微笔迹周密，是密体；张僧繇与吴道玄是疏体：<q>张、吴之妙，笔才一二，象已应焉，离披点画，时见缺落，此虽笔不周而意周也</q>。画得少，反而画得全。</p>
+        <p class="prose">吴道玄还有一位地狱变的老师。张孝师曾死而复苏，<q>具见冥中事，故备得之</q>，所画地狱气韵幽深；吴道玄见其画，因号为地狱变。两京寺观里那些令人不敢直视的墙壁，谱系要追到这位死过一回的画家身上。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 肆品第 -->
+<section id="grade">
+  <div class="wrap">
+    <div class="kick"><span class="bookvol">原书卷二</span><span class="bookname">论画体工用拓写</span></div>
+    <h2>五等与一锭墨<small>中国画的品第，从自然到谨细</small></h2>
+    <p class="prose">谢赫立六法，张彦远嫌数百年品评家各执一词，索性另立五等，一把尺子量到底。等级不在画得像不像，而在离「自然」有多远：</p>
+
+    <div class="steps">
+      <div class="step"><span class="grade">自然</span><div class="cell"><div class="bar" style="width:100%"></div><span class="cap">上品之上</span></div></div>
+      <div class="step"><span class="grade">神</span><div class="cell"><div class="bar" style="width:80%"></div><span class="cap">上品之中</span></div></div>
+      <div class="step"><span class="grade">妙</span><div class="cell"><div class="bar" style="width:60%"></div><span class="cap">上品之下</span></div></div>
+      <div class="step"><span class="grade">精</span><div class="cell"><div class="bar" style="width:40%"></div><span class="cap">中品之上</span></div></div>
+      <div class="step"><span class="grade">谨细</span><div class="cell"><div class="bar" style="width:22%"></div><span class="cap">中品之中</span></div></div>
+    </div>
+    <p class="steps-note">公式：<q>夫失于自然而后神，失于神而后妙，失于妙而后精，精之为病也而成谨细</q>。每降一等，都是因为多了一分刻意。画得最卖力，排在倒数。</p>
+
+    <p class="prose" style="margin-top:40px">支撑这套品第的颜料观，是一句千古名言：<q>是故运墨而五色具，谓之得意</q>。意在五色，则物象乖矣。但真正动笔时他又极较真，卷末开出一份颜料产地清单，像矿产报告：</p>
+    <p class="prose"><q>武陵水井之丹，磨嵯之沙，越嶲之空青，蔚之曾青，武昌之扁青</q>，以下还有蜀郡铅华、始兴解锡、林邑昆仓之黄、南海之紫矿，胶则云中鹿胶、吴中鳔胶、东阿牛胶，逐一注明产地与等第。</p>
+    <div class="swatchline">
+      <span><i style="background:#a5453c"></i>水井之丹</span>
+      <span><i style="background:#2e6e8e"></i>越嶲空青</span>
+      <span><i style="background:#4b8f6b"></i>武昌扁青</span>
+      <span><i style="background:#c8b07a"></i>林邑昆仓之黄</span>
+      <span><i style="background:#e8e4dc"></i>铅华之白</span>
+    </div>
+    <p class="steps-note" style="margin-top:10px">色块为本页示意，非原书所载色样。</p>
+
+    <p class="prose" style="margin-top:34px">品第的根子在用笔。全书论画的名句其实是一句创作论：<q>意存笔先，画尽意在，所以全神气也</q>。他举的正面标本是顾恺之的维摩诘像，<q>有清羸示病之容，隐几忘言之状</q>，看画的人凝神遐想，妙悟自然，物我两忘。另有一条冷僻的注脚，记于阗画师尉迟乙僧：<q>小则用笔紧劲，如屈铁盘丝，大则洒落有气概</q>，域外之笔，同样收进体系。</p>
+  </div>
+</section>
+
+<!-- 肆 壁账 -->
+<section id="mural">
+  <div class="wrap">
+    <div class="kick"><span class="bookvol">原书卷三</span><span class="bookname">记两京外州寺观画壁</span></div>
+    <h2>壁账<small>一座城市名画的最后清单</small></h2>
+    <p class="prose">卷三是全书最像现场记录的一篇：两京寺观，一处一处登记壁上是谁画的、画了什么、现状如何。唐代没有美术馆，长安洛阳的大寺观就是公共展厅，而这份展厅清单里的每一项，今天都只剩这行字。卷首自注先记下一笔：<q>会昌中多毁拆，今亦具载</q>。</p>
+
+    <div class="mural">
+      <div class="mrow"><span class="temple">景公寺</span>
+        <span class="desc">中门之东，<q>吴画地狱并题</q>。西门内西壁，吴画帝释并题。</span>
+        <span class="state">壁不存</span>
+      </div>
+      <div class="mrow"><span class="temple">福先寺</span>
+        <span class="desc">三阶院，<q>吴画地狱变，有病龙最妙</q>。</span>
+        <span class="state">壁不存</span>
+      </div>
+      <div class="mrow"><span class="temple">菩提寺</span>
+        <span class="desc">佛殿东西壁，吴画神鬼。<q>其东壁有菩萨转目视人，法师文溆亡何令工人布色，损矣</q>。</span>
+        <span class="state">损</span>
+      </div>
+      <div class="mrow"><span class="temple">慈恩寺</span>
+        <span class="desc">塔之东南中门外偏，张孝师画地狱变，已剥落。</span>
+        <span class="state">已剥落</span>
+      </div>
+      <div class="mrow"><span class="temple">荐福寺</span>
+        <span class="desc">西南院佛殿内东壁及廊下行僧，并吴画，未了。</span>
+        <span class="state">未了</span>
+      </div>
+      <div class="mrow"><span class="temple">慈恩寺</span>
+        <span class="desc">大殿东轩廊北壁，吴画，未了。<q>旧传是吴，细看不是</q>。</span>
+        <span class="state">存疑</span>
+      </div>
+    </div>
+    <p class="ledger-note">「旧传是吴，细看不是」，鉴定意见写得像便条。这份清单里张彦远是活的：他在逐壁看，逐壁断真伪。东都敬爱寺一节他细到开出工匠名单：塑像的窦弘果、描壁的刘行臣、成色的赵龛、贴金的李安，一一记名。神英法师想请何长寿扫掉旧神重画，洛阳众僧不答应，争到最后让刘行臣之子续完父画。唐朝的壁画背后，站着一整个有师承、有派系、有父子相传的工匠行业。</p>
+
+    <div class="void">
+      <div class="frame tall"><div class="inner"></div><span class="tag">景公寺 中门之东壁</span></div>
+      <div class="frame wide"><div class="inner"></div><span class="tag">福先寺 三阶院</span></div>
+    </div>
+    <p class="voidnote">框内为空。壁迹无存，名目赖此页以传。</p>
+
+    <p class="prose" style="margin-top:50px">终局写在卷末：<q>会昌五年，武宗毁天下寺塔，两京各留三两所，故名画在寺壁者，唯存一二</q>。天下寺壁连带名画一起拆毁，只有一处例外：宰相李德裕镇浙西时早有预感，<q>创立甘露寺，唯甘露寺不毁。取管内诸寺画壁置于寺内</q>，把辖区名壁集中保管。抢救下来的名目里有一条：<q>吴道子僧二躯，在释迦道场外壁</q>。整场浩劫，留下来的就是这样一个个条目。</p>
+    <p class="prose">会昌法难之后两年，张彦远写完全书，落款大中元年。他登记这些名目的理由只有一句：<q>已前所记者，存之盖寡</q>。纸上的名录，成了那些墙存在过的唯一证据。</p>
+  </div>
+</section>
+
+<!-- 尾声 -->
+<section class="fin">
+  <div class="wrap">
+    <p class="line">自古忠孝义烈，湮没不称者，曷胜记哉，<em>况书画耶</em>！</p>
+    <p class="src">叙画之兴废篇末，全书写作动机的自白</p>
+  </div>
+</section>
+
+<footer class="page">
+  <div class="wrap">
+    <p><b>文本来源</b>　殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）艺藏／绘画／历代名画记.txt，全书五万六千馀字。</p>
+    <p><b>引文核验</b>　本页引文均已与库内文件去标点、归一异体后逐字比对通过，核验脚本 verify_lidai.py 随仓库同存。吴道玄本名道子、入禁中改名道玄，张孝师、尉迟乙僧诸传均出原书卷九；会昌五年毁佛与甘露寺事出原书卷三。</p>
+    <p><b>阅读提醒</b>　本书成于唐大中元年（八四七），其教化观、品第观与对佛寺的记录方式均带有时代局限；画壁诸条为唐人见闻，真伪得失请以考古与传世文物研究为据。页中色块为示意，非原书色样。</p>
+  </div>
+</footer>
+
+</body>
+</html>
