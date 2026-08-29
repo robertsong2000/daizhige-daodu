@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>洛阳伽蓝记 · 殆知阁导读之三十</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #26241f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --gold: #c9963f; --gold-dim: #8a6a35;
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ 城图开场 ============ */
+  .city-head { padding: 56px 0 0; }
+  .city-head .kicker {
+    font-size: 13px; letter-spacing: 0.4em; color: var(--paper-faint); margin-bottom: 40px;
+  }
+  .city-head .kicker b { color: var(--gold); font-weight: 400; }
+  .plan {
+    display: grid; grid-template-columns: 1fr 96px; gap: 34px; align-items: stretch;
+  }
+  .map {
+    position: relative; border: 1px solid rgba(201,150,63,0.55);
+    background:
+      linear-gradient(rgba(201,150,63,0.05), rgba(201,150,63,0.02));
+    aspect-ratio: 4 / 3.4;
+  }
+  .map .wall { position: absolute; inset: 26px; border: 1px solid rgba(201,150,63,0.75); }
+  .map .luoshui {
+    position: absolute; left: 6%; right: 6%; bottom: 6px; height: 20px;
+    border-bottom: 1px solid rgba(163,158,147,0.5);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .map .luoshui span { font-size: 11px; letter-spacing: 0.5em; color: var(--paper-faint); padding-bottom: 3px; }
+  .map .gate {
+    position: absolute; width: 14px; height: 14px;
+    background: var(--ink); border: 1px solid var(--gold);
+    transform: rotate(45deg);
+  }
+  .map .gate i {
+    position: absolute; font-style: normal; font-size: 10.5px; color: var(--paper-dim);
+    letter-spacing: 0.18em; white-space: nowrap;
+  }
+  .map .palace {
+    position: absolute; left: 34%; top: 15%; width: 20%; height: 16%;
+    border: 1px dashed rgba(232,228,220,0.35);
+  }
+  .map .palace span {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    font-size: 11px; color: var(--paper-faint); letter-spacing: 0.3em;
+  }
+  .map .yongning {
+    position: absolute; left: 47%; top: 37%;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--gold); box-shadow: 0 0 0 5px rgba(201,150,63,0.18);
+  }
+  .map .yongning i {
+    position: absolute; left: 16px; top: -4px; font-style: normal;
+    font-size: 12px; color: var(--gold); letter-spacing: 0.2em; white-space: nowrap;
+  }
+  .zone {
+    position: absolute; text-decoration: none; text-align: center; line-height: 1.3;
+  }
+  .zone b { display: block; font-size: 15px; font-weight: 700; color: var(--paper); letter-spacing: 0.3em; }
+  .zone small { display: block; font-size: 10.5px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .zone:hover b { color: var(--gold); }
+  .zt-in  { left: 41%; top: 56%; }
+  .zt-e   { right: 3%;  top: 44%; }
+  .zt-s   { left: 44%; bottom: 15%; }
+  .zt-w   { left: 2.5%; top: 44%; }
+  .zt-n   { left: 44%; top: 4%; }
+
+  .titlecol {
+    writing-mode: vertical-rl; display: flex; align-items: flex-start; justify-content: space-between;
+    padding: 4px 0;
+  }
+  .titlecol .t {
+    font-size: clamp(40px, 6vw, 62px); font-weight: 700; letter-spacing: 0.28em; line-height: 1.3;
+  }
+  .titlecol .m {
+    font-size: 12px; color: var(--paper-faint); letter-spacing: 0.34em;
+  }
+  .planline { display: flex; gap: 26px; align-items: baseline; margin: 30px 0 0; flex-wrap: wrap; }
+  .planline .who { font-size: 14.5px; color: var(--paper-dim); letter-spacing: 0.1em; }
+  .planline .why { font-size: 15.5px; color: var(--paper); }
+  .planline .why em { font-style: normal; color: var(--gold); }
+
+  /* ============ 通用节 ============ */
+  section.juan { padding: 84px 0 0; }
+  .jhead { display: flex; align-items: flex-start; gap: 22px; margin-bottom: 34px; }
+  .jtab {
+    flex: none; writing-mode: vertical-rl; text-align: center;
+    border: 1px solid var(--gold-dim); color: var(--gold);
+    padding: 14px 8px; font-size: 15px; letter-spacing: 0.3em; line-height: 1;
+  }
+  .jhead h2 { font-size: 30px; font-weight: 700; letter-spacing: 0.1em; }
+  .jhead .jsub { font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.16em; margin-top: 6px; }
+  .prose { max-width: 46em; color: var(--paper-dim); font-size: 15.5px; }
+  .prose b { color: var(--paper); font-weight: 700; }
+  .prose em { font-style: normal; color: var(--gold); }
+  .prose + .prose { margin-top: 1em; }
+
+  blockquote.q {
+    margin: 30px 0; padding: 22px 26px;
+    border-left: 2px solid var(--gold);
+    background: rgba(201,150,63,0.06);
+    font-size: 17px; line-height: 2.1; color: var(--paper);
+  }
+  blockquote.q cite {
+    display: block; margin-top: 10px; font-style: normal;
+    font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.18em;
+  }
+
+  /* 墟·开场对 */
+  .ruin-open { padding-top: 64px; }
+  .ruin-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--hairline); }
+  .ruin-grid > div { padding: 30px 26px; }
+  .ruin-grid > div + div { border-left: 1px solid var(--hairline); }
+  .ruin-grid .k { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.3em; margin-bottom: 12px; }
+  .ruin-grid .v { font-size: clamp(24px, 3.4vw, 34px); font-weight: 700; letter-spacing: 0.06em; }
+  .ruin-grid .then .v { color: var(--gold); }
+  .ruin-grid .now .v { color: var(--paper-dim); }
+  .ruin-grid .s { display: block; font-size: 12.5px; font-weight: 400; color: var(--paper-faint); margin-top: 8px; letter-spacing: 0.06em; }
+
+  /* 营造账 */
+  .ledger { margin: 34px 0 6px; border-top: 1px solid var(--hairline); }
+  .ledger .row {
+    display: grid; grid-template-columns: 200px 1fr auto; gap: 18px; align-items: baseline;
+    padding: 13px 6px; border-bottom: 1px solid var(--hairline);
+  }
+  .ledger .row .lk { font-size: 14px; color: var(--paper-dim); letter-spacing: 0.14em; }
+  .ledger .row .lv { font-size: 15px; color: var(--paper); }
+  .ledger .row .ln { font-size: 26px; font-weight: 700; color: var(--gold); letter-spacing: 0.04em; }
+  .ledger .row .ln small { font-size: 13px; font-weight: 400; color: var(--paper-dim); margin-left: 4px; }
+
+  /* 拓片·白纸段 */
+  .rubbing { background: var(--paper); color: var(--ink); margin-top: 84px; }
+  .rubbing .wrap { padding-top: 72px; padding-bottom: 72px; }
+  .rubbing .k { font-size: 13px; letter-spacing: 0.4em; color: #7a7466; margin-bottom: 26px; }
+  .rubbing .k b { color: #8a6a35; font-weight: 400; }
+  .rubbing .prose { color: #4a463e; }
+  .rubbing .prose b { color: var(--ink); }
+  .rubbing .prose em { font-style: normal; color: #8a6a35; }
+  .rubbing blockquote.q { border-left-color: #8a6a35; background: rgba(138,106,53,0.08); color: #26241f; }
+  .rubbing blockquote.q cite { color: #8b8577; }
+  .elegy { text-align: center; margin: 40px auto 6px; max-width: 30em; }
+  .elegy p { font-size: 18.5px; line-height: 2.3; color: #26241f; letter-spacing: 0.1em; }
+  .elegy .cap { font-size: 12.5px; color: #8b8577; letter-spacing: 0.2em; margin-top: 14px; }
+
+  /* 年表 */
+  .timeline { margin: 40px 0 0; border-left: 1px solid rgba(201,150,63,0.5); padding-left: 26px; }
+  .timeline .tstep { position: relative; padding-bottom: 22px; }
+  .timeline .tstep:last-child { padding-bottom: 0; }
+  .timeline .tstep::before {
+    content: ""; position: absolute; left: -31px; top: 9px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--ink); border: 1px solid var(--gold);
+  }
+  .timeline .tstep.hot::before { background: var(--gold); }
+  .timeline .ty { font-size: 13px; color: var(--gold); letter-spacing: 0.14em; }
+  .timeline .tx { font-size: 15px; color: var(--paper-dim); }
+  .timeline .tx b { color: var(--paper); }
+
+  /* 大市十里 */
+  .streets { margin: 36px 0 0; display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid var(--hairline); }
+  .streets a { text-decoration: none; }
+  .street { padding: 20px 14px; text-align: center; border-right: 1px solid var(--hairline); }
+  .street:last-child { border-right: none; }
+  .street .sn { font-size: 15.5px; font-weight: 700; letter-spacing: 0.12em; color: var(--paper); }
+  .street .str { font-size: 12px; color: var(--gold); letter-spacing: 0.2em; margin-top: 6px; }
+  .street .sd { font-size: 12.5px; color: var(--paper-faint); margin-top: 8px; line-height: 1.7; }
+
+  /* 西行 */
+  .route { margin: 34px 0 0; display: flex; flex-wrap: wrap; gap: 8px 0; align-items: center; font-size: 13.5px; color: var(--paper-dim); }
+  .route b { color: var(--paper); font-weight: 700; }
+  .route i { font-style: normal; color: var(--gold); margin: 0 12px; }
+
+  /* 尾声 */
+  .colophon { margin-top: 84px; border-top: 1px solid var(--hairline); padding: 56px 0 8px; }
+  .colophon .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .colophon h3 { font-size: 19px; letter-spacing: 0.1em; margin-bottom: 14px; color: var(--paper); }
+  .colophon p { font-size: 14.5px; color: var(--paper-dim); }
+  .colophon a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,150,63,0.4); }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 72px; padding: 36px 0 60px; }
+  footer.page p { font-size: 13px; color: var(--paper-faint); max-width: 52em; }
+  footer.page p + p { margin-top: 8px; }
+  footer.page a { color: var(--paper-dim); }
+
+  @media (max-width: 760px) {
+    .plan { grid-template-columns: 1fr; }
+    .titlecol { writing-mode: horizontal-tb; flex-direction: column; gap: 8px; padding: 0; }
+    .titlecol .t { font-size: 44px; letter-spacing: 0.18em; }
+    .ruin-grid, .colophon .duo { grid-template-columns: 1fr; }
+    .ruin-grid > div + div { border-left: none; border-top: 1px solid var(--hairline); }
+    .streets { grid-template-columns: repeat(2, 1fr); }
+    .street { border-bottom: 1px solid var(--hairline); }
+    .ledger .row { grid-template-columns: 1fr; gap: 2px; }
+    .map .gate i { display: none; }
+    .zt-n { top: 1%; }
+  }
+</style>
+</head>
+<body>
+
+<header class="city-head wrap">
+  <div class="kicker">殆知阁导读 卷八城郭 · <b>之三十</b></div>
+  <div class="plan">
+    <div class="map">
+      <div class="wall"></div>
+      <div class="palace"><span>宫城</span></div>
+      <div class="yongning"><i>永宁寺</i></div>
+      <div class="gate" style="left: 24%; top: -8px;"><i style="left: -14px; top: 16px; writing-mode: vertical-rl;">大夏门</i></div>
+      <div class="gate" style="left: 55%; top: -8px;"><i style="left: -12px; top: 16px; writing-mode: vertical-rl;">广莫门</i></div>
+      <div class="gate" style="left: -8px; top: 30%;"><i style="left: 18px; top: -4px;">西明门</i></div>
+      <div class="gate" style="left: -8px; top: 55%;"><i style="left: 18px; top: -4px;">西阳门</i></div>
+      <div class="gate" style="right: -8px; top: 26%;"><i style="right: 18px; top: -4px;">建春门</i></div>
+      <div class="gate" style="right: -8px; top: 58%;"><i style="right: 18px; top: -4px;">东阳门</i></div>
+      <div class="gate" style="left: 18%; bottom: -8px;"><i style="left: -8px; top: -20px;">开阳门</i></div>
+      <a class="zone zt-n" href="#juan-5"><b>城北</b><small>卷五</small></a>
+      <a class="zone zt-e" href="#juan-2"><b>城东</b><small>卷二</small></a>
+      <a class="zone zt-in" href="#juan-1"><b>城内</b><small>卷一</small></a>
+      <a class="zone zt-w" href="#juan-4"><b>城西</b><small>卷四</small></a>
+      <a class="zone zt-s" href="#juan-3"><b>城南</b><small>卷三</small></a>
+      <div class="luoshui"><span>洛水</span></div>
+    </div>
+    <div class="titlecol">
+      <div class="t">洛阳伽蓝记</div>
+      <div class="m">后魏 · 杨炫之 撰</div>
+      <div class="m">库本五卷 · 并序跋</div>
+    </div>
+  </div>
+  <div class="planline">
+    <span class="why">一座城被毁掉之后，有人不写赋，不写祭文，按<em>方位</em>把它默写了一遍：先城内，次城外，<em>以远近为五篇</em>。</span>
+    <span class="who">武定五年（547）· 抚军府司马杨炫之因行役重览洛阳</span>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ==================== 序 · 墟 ==================== -->
+<section class="ruin-open">
+  <div class="prose">
+    北魏太和十七年（493），孝文帝迁都洛阳，营建四十年。佛风最盛时，本书自述「京城表里凡有一千余寺」。永熙多难，皇舆迁邺，诸寺僧尼亦与时徙。武定五年（547），一个姓杨的小官出差路过旧都，看到的东西，他原样写了下来。
+  </div>
+  <div class="ruin-grid" style="margin-top: 34px;">
+    <div class="then">
+      <div class="k">盛时</div>
+      <div class="v">一千余寺<span class="s">王侯贵臣弃象马如脱屣，庶士豪家舍资财若遗迹</span></div>
+    </div>
+    <div class="now">
+      <div class="k">武定五年</div>
+      <div class="v">钟声罕闻<span class="s">今日寮廓，恐后世无传，故撰斯记</span></div>
+    </div>
+  </div>
+  <blockquote class="q">城郭崩毁，宫室倾覆，寺观灰烬，庙塔丘墟。墙被蒿艾，巷罗荆棘，野兽穴于荒阶，山鸟巢于庭树。游儿牧竖踯躅于九逵，农夫耕稼艺黍于双阙。麦秀之感非独殷墟，黍离之悲信哉。
+    <cite>序 · 武定五年重览洛阳</cite>
+  </blockquote>
+  <div class="prose">他先把盛景也写给你：「<b>昭提栉比，宝塔骈罗</b>，争写天上之姿，竞摸山中之影，金刹与灵台比高，广殿共阿房等壮。」然后才递上这张清单。书的体例也在这里交代：寺数太多写不完，「今之所录，上大伽蓝」，先城内，次城外，以远近为五篇。</div>
+</section>
+
+<!-- ==================== 卷一 城内 ==================== -->
+<section class="juan" id="juan-1">
+  <div class="jhead">
+    <div class="jtab">卷一 · 城内</div>
+    <div>
+      <h2>永宁寺</h2>
+      <div class="jsub">灵太后胡氏所立，宫前阊阖门南一里御道西，熙平元年（516）</div>
+    </div>
+  </div>
+  <div class="prose">全书第一座寺，也是全书最高的一件东西。开篇先给一笔账：挖地基挖到黄泉之下，挖出金像三千躯，太后认定这是佛法保佑的凭证，「是以营建过度也」。接着是这座塔的营造账。</div>
+
+  <div class="ledger">
+    <div class="row"><div class="lk">塔身</div><div class="lv">九层浮图一所，架木为之</div><div class="ln">九十<small>丈</small></div></div>
+    <div class="row"><div class="lk">塔刹</div><div class="lv">宝瓶容二十五石，承露金盘三十重，周匝皆垂金铎</div><div class="ln">复高十<small>丈</small></div></div>
+    <div class="row"><div class="lk">总高</div><div class="lv">去京师百里，已遥见之</div><div class="ln">一千<small>尺</small></div></div>
+    <div class="row"><div class="lk">金铎</div><div class="lv">浮图九级，角角悬铎，上下合</div><div class="ln">一百二十<small>枚</small></div></div>
+    <div class="row"><div class="lk">金钉</div><div class="lv">四面，面有三户六窗，扉上有五行金钉，合</div><div class="ln">五千四百<small>枚</small></div></div>
+    <div class="row"><div class="lk">声级</div><div class="lv">高风永夜，宝铎和鸣，铿锵之声</div><div class="ln">闻及十余<small>里</small></div></div>
+  </div>
+
+  <blockquote class="q">中有九层浮图一所，架木为之，举高九十丈，有刹复高十丈，合去地一千尺，去京师百里已遥见之。
+    <cite>卷一 · 永宁寺</cite>
+  </blockquote>
+  <div class="prose">库本记的是书的数字，不必折算成米也能懂：这是当时人认为<b>从百里外就能看见</b>的东西，是一个王朝把自己立到天上的高度。</div>
+</section>
+
+<!-- ==================== 白纸拓片 · 河阴 ==================== -->
+<section class="rubbing">
+  <div class="wrap">
+    <div class="k">卷一城内 · <b>永宁寺的另一个身份</b></div>
+    <div class="prose">永宁寺不只是一座塔。建义元年（528），太原王尔朱荣兵向京师，就在这本书的第一卷里，记下了北魏最血腥的一页。</div>
+    <blockquote class="q">十二日荣军于芒山之北河阴之野。十三日召百官赴驾，至者尽诛之。王公卿土及诸朝臣死者三千余人。
+      <cite>卷一 永宁寺 · 建义元年</cite>
+    </blockquote>
+    <div class="prose">两年后庄帝诛尔朱荣，尔朱兆起兵复仇，渡河擒帝，「锁帝于寺门楼上」。十二月，帝患寒，向兆讨一块头巾，兆不给。随后囚帝还晋阳，缢于三级寺。帝临崩礼佛，「愿不为国王」，又作五言。</div>
+    <div class="elegy">
+      <p>权去生道促，忧来死路长。<br>怀恨出国门，含悲入鬼乡。<br>隧门一时闭，幽庭岂复光。<br>思鸟吟青松，哀风吹白杨。<br>昔来闻死苦，何言身自当。</p>
+      <div class="cap">孝庄帝五言 · 后为挽歌词，朝野闻之莫不悲恸</div>
+    </div>
+    <div class="prose">杨炫之在这里忍不住现身说话。写尔朱兆不由舟楫、凭流而渡黄河时，他插了一句「炫之曰」，把史书里的天命典故数落了一遍：蜂目豺声，行穷枭獍，「易称大道祸淫，鬼神福谦，以此验之信为虚说」。写书的人信因果，但他的因果站在被杀的人那边。</div>
+  </div>
+</section>
+
+<!-- ==================== 塔焚 ==================== -->
+<section class="juan">
+  <div class="jhead">
+    <div class="jtab">卷一 · 城内</div>
+    <div>
+      <h2>塔焚</h2>
+      <div class="jsub">永熙三年（534）二月 · 塔立十八年之后</div>
+    </div>
+  </div>
+  <blockquote class="q">永熙三年二月，浮图为火所烧。帝登凌云台望火，遣南阳王宝炬、录尚书长孙椎将羽林一千救赴火所，莫不悲惜垂泪而去。火初从第八级中平旦大发，当时雷雨晦冥，杂下霰雪。百姓道俗咸来观火，悲哀之声振动京邑，时有三比丘赴火而死。火经三月不灭，有火入地寻柱，周年犹有烟气。
+    <cite>卷一 · 永宁寺</cite>
+  </blockquote>
+  <div class="prose">三个月不灭，一年犹有烟。当年五月，就有人报说在海中看见了它。</div>
+  <blockquote class="q">其年五月中，有人从象郡来云，见浮图于海中，光明照耀俨然如新。海上之民咸皆见之，俄然雾起，浮图遂隐。
+    <cite>卷一 · 永宁寺</cite>
+  </blockquote>
+
+  <div class="timeline">
+    <div class="tstep"><div class="ty">太和十七年 · 493</div><div class="tx">孝文帝迁都洛阳，「诏司空公穆亮营造宫室」</div></div>
+    <div class="tstep"><div class="ty">熙平元年 · 516</div><div class="tx">灵太后立永宁寺，九层浮图去地一千尺</div></div>
+    <div class="tstep hot"><div class="ty">建义元年 · 528</div><div class="tx">河阴之野，朝臣死者三千余人</div></div>
+    <div class="tstep hot"><div class="ty">永熙三年 · 534</div><div class="tx">塔焚，火经三月不灭；同年皇舆迁邺</div></div>
+    <div class="tstep hot"><div class="ty">武定五年 · 547</div><div class="tx">杨炫之因行役重览洛阳，故撰斯记</div></div>
+  </div>
+</section>
+
+<!-- ==================== 卷二 城东 ==================== -->
+<section class="juan" id="juan-2">
+  <div class="jhead">
+    <div class="jtab">卷二 · 城东</div>
+    <div>
+      <h2>景宁寺</h2>
+      <div class="jsub">南朝将军陈庆之的洛阳一课</div>
+    </div>
+  </div>
+  <div class="prose">卷二记城东。南朝名将陈庆之兵败北奔，被杨元慎用一口含水的咒语整治了一场，数日后还病了，只好服软。回江南后，他成了洛阳最好的宣传员。</div>
+  <blockquote class="q">自晋宋以求，号洛阳为荒土，此中谓长江以北尽是夷狄。昨至洛阳，始知衣冠士族并在中原，礼仪富盛，人物殷阜，目所不识，口不能传。
+    <cite>卷二 景宁寺 · 陈庆之语</cite>
+  </blockquote>
+  <div class="prose">书里补了一句后果：「因此<b>羽仪服式悉如魏法</b>」，江表士庶竞相模楷，被及秣陵。写北朝的书替北朝赢了一局嘴仗。</div>
+</section>
+
+<!-- ==================== 卷三 城南 ==================== -->
+<section class="juan" id="juan-3">
+  <div class="jhead">
+    <div class="jtab">卷三 · 城南</div>
+    <div>
+      <h2>景明寺</h2>
+      <div class="jsub">宣武皇帝所立，宣阳门外一里御道东，一年一度的行像大会</div>
+    </div>
+  </div>
+  <div class="prose">卷三记城南。景明寺「前望嵩山少室，却负帝城」，寺里造七层浮图，「妆饰华丽，侔于永宁」。每年四月七日，全城佛像在这里集合。</div>
+  <blockquote class="q">四月七日，京师诸像皆来此寺，尚书祠曹录像，凡有一千余躯。至八月节，以次入宣阳门，向阊阖宫前，受皇帝散花。于时金花映日，宝盖浮云，幡幢若林，香烟似雾，梵乐法音，聒动天地。
+    <cite>卷三 · 景明寺</cite>
+  </blockquote>
+  <div class="prose">队伍散时，「车骑填咽，繁衍相倾」，有个西域胡沙门看呆了，<b>见此唱言佛国</b>。一千余躯像，一千余寺，盛世的洛阳把自己活成了一座道场。</div>
+</section>
+
+<!-- ==================== 卷四 城西 ==================== -->
+<section class="juan" id="juan-4">
+  <div class="jhead">
+    <div class="jtab">卷四 · 城西</div>
+    <div>
+      <h2>洛阳大市</h2>
+      <div class="jsub">西阳门外四里，周回八里，十里十坊</div>
+    </div>
+  </div>
+  <div class="prose">卷四是全书最热闹的一卷。大市周回八里，市东市南市北市北，十个里各干一行。</div>
+  <div class="streets">
+    <div class="street"><div class="sn">通商 达货</div><div class="str">市东二里</div><div class="sd">尽皆工巧，屠贩为生，资财巨万</div></div>
+    <div class="street"><div class="sn">调音 乐律</div><div class="str">市南二里</div><div class="sd">丝竹讴歌，天下妙伎出焉</div></div>
+    <div class="street"><div class="sn">退酤 治觞</div><div class="str">市西二里</div><div class="sd">多酝酒为业，河东人刘白堕善能酿酒</div></div>
+    <div class="street"><div class="sn">慈孝 奉终</div><div class="str">市北二里</div><div class="sd">以卖棺椁为业，赁轜车为事</div></div>
+    <div class="street"><div class="sn">准财 金肆</div><div class="str">市内</div><div class="sd">富人在焉</div></div>
+  </div>
+  <blockquote class="q">凡此十里，多诸工商货殖之民。千金比屋，层楼对出，重门启扇，阁道交通，迭相临望。
+    <cite>卷四 · 洛阳大市</cite>
+  </blockquote>
+
+  <div class="prose" style="margin-top: 40px;">退酤治觞二里的刘白堕，酿一种会杀人的酒。六月酷暑，罂贮日暴十天，味道不变，饮之香美，「而醉经月不醒」。刺史毛鸿宾带着它上任，路上遇劫，<b>盗饮之即醉，皆被擒获</b>，从此这酒得名擒奸酒。游侠语曰：</div>
+  <blockquote class="q">不畏张弓拔刀，唯畏白堕春醪。
+    <cite>卷四 · 退酤治觞二里</cite>
+  </blockquote>
+
+  <div class="prose">大市西边是寿丘里，皇宗所居，「民间号为王子坊」。比阔比到河间王元琛这里，宴席上摆完西域来的水晶钵、玛瑙琉璃碗，他忽然对章武王元融说：</div>
+  <blockquote class="q">不恨我不见石崇，恨石崇不见我。
+    <cite>卷四 王子坊 · 河间王琛</cite>
+  </blockquote>
+  <div class="prose">元融嫉妒得回家卧病三日。后来灵太后赐百官负绢，任意自取，元融和李崇背得过多，<b>蹶倒伤裸</b>。侍中崔光只拿两匹，太后问他何少，答曰：</div>
+  <blockquote class="q">臣有两手，唯堪两匹，所获多矣。
+    <cite>卷四 王子坊 · 崔光</cite>
+  </blockquote>
+  <div class="prose">「朝贵服其清廉」。这一卷写尽豪奢，也留下了这句话当镜子。</div>
+</section>
+
+<!-- ==================== 卷五 城北 ==================== -->
+<section class="juan" id="juan-5">
+  <div class="jhead">
+    <div class="jtab">卷五 · 城北</div>
+    <div>
+      <h2>闻义里</h2>
+      <div class="jsub">敦煌人宋云宅 · 附一段西域行纪</div>
+    </div>
+  </div>
+  <div class="prose">卷五记城北。闻义里住着宋云，他和比丘惠生奉太后之命去天竺取经，这一卷顺手把行纪也收了进来，成为全书最远的一截。</div>
+  <blockquote class="q">神龟元年十一月冬，太后遣崇立寺比丘惠生向西域取经，凡得一百七十部，皆是大乘妙典。
+    <cite>卷五 · 闻义里</cite>
+  </blockquote>
+  <div class="route">
+    <b>洛阳</b><i>→</i>赤岭<i>→</i>吐谷浑<i>→</i>鄯善<i>→</i>左末<i>→</i>末城<i>→</i>……<b>天竺</b>
+  </div>
+  <div class="prose" style="margin-top: 22px;">沿途逐程计里，记山记水记佛迹。一座被写成「五篇」的城，最北一卷尽头，通向的是整个西域。</div>
+</section>
+
+<!-- ==================== 尾声 ==================== -->
+<section class="colophon">
+  <div class="duo">
+    <div>
+      <h3>书的命运</h3>
+      <p>传世各本互有脱文。卷末跋语记明如隐堂刻为最古，而有「第二卷中脱三纸」之说，好事者传写补入，人各不同。库内本收于佛藏大藏经史传部，五卷、序、跋俱全，实测 35,195 字符，是这套导读里少见的完本。</p>
+    </div>
+    <div>
+      <h3>同一座城</h3>
+      <p>这套导读里还有一册 <a href="luoyang-mingyuanji.html">洛阳名园记</a>：北宋末李格非写洛阳园池，说园圃之废兴可知洛阳之盛衰，书成约三十年，靖康火至。那是一份火起之前的预言；这一本，是火起之后十三年的清点。两册对读，就是一座城被记住的两种方式。</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献 简体库（<a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>）佛藏 大藏经 杂藏 史传部《洛阳伽蓝记》。本篇全部引文与库内文件逐字核对（去标点、异体归一后比对），断句由编者代加。</p>
+    <p>时代局限：书中佛法感应、灵异祥瑞、狐魅咒术等内容系当时信仰与传闻，河阴之变等记叙亦带作者立场，均为史料而非事实认定，请以历史眼光阅读。</p>
+    <p>殆知阁导读 之三十 · <a href="mulu.html">返回总目</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
