@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>桂海虞衡志 · 殆知阁导读 103</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #262420;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --ochre: #c9963f; --ochre-dim: #8f6c2e;
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 26px; }
+
+  /* 签条页眉 */
+  .slip {
+    display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+    padding: 18px 0 16px; border-bottom: 1px solid var(--hairline);
+    font-size: 12.5px; letter-spacing: 0.28em; color: var(--paper-faint);
+  }
+  .slip b { color: var(--ochre); font-weight: 400; }
+
+  /* 序厅：送行酒对质 */
+  .hall { padding: 64px 0 40px; }
+  .hall .kicker {
+    font-size: 12.5px; letter-spacing: 0.42em; color: var(--ochre);
+    margin-bottom: 26px;
+  }
+  .hall h1 {
+    font-size: clamp(46px, 8vw, 84px); font-weight: 700; letter-spacing: 0.06em;
+    line-height: 1.15; margin-bottom: 8px;
+  }
+  .hall h1 span { color: var(--ochre); }
+  .hall .who { font-size: 15px; color: var(--paper-dim); letter-spacing: 0.2em; margin-bottom: 40px; }
+  .versus {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: stretch;
+    margin: 30px 0 38px;
+  }
+  .versus .card {
+    border: 1px solid var(--hairline); background: var(--ink-2); padding: 24px 24px 20px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .versus .card.now { border-color: var(--ochre-dim); background: var(--ink-3); }
+  .versus .cap { font-size: 12px; letter-spacing: 0.3em; color: var(--paper-faint); }
+  .versus .q { font-size: 17px; color: var(--paper); }
+  .versus .q b { color: var(--ochre); font-weight: 600; }
+  .versus .note { font-size: 13.5px; color: var(--paper-dim); margin-top: auto; }
+  .versus .vs {
+    align-self: center; writing-mode: vertical-rl; text-orientation: upright;
+    font-size: 13px; letter-spacing: 0.5em; color: var(--paper-faint);
+    border-left: 1px solid var(--hairline); border-right: 1px solid var(--hairline);
+    padding: 0 8px;
+  }
+  .lead { max-width: 46em; font-size: 16px; color: var(--paper-dim); }
+  .lead p { margin-bottom: 14px; }
+  .lead p b { color: var(--paper); font-weight: 600; }
+
+  /* 十三志导览 */
+  .gate { border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); padding: 30px 0; }
+  .gate .cap { font-size: 12px; letter-spacing: 0.4em; color: var(--paper-faint); margin-bottom: 18px; }
+  .gate .map { display: flex; flex-wrap: wrap; gap: 10px; }
+  .gate .map a {
+    display: block; text-decoration: none; border: 1px solid var(--hairline);
+    padding: 8px 16px; font-size: 14.5px; color: var(--paper-dim); letter-spacing: 0.12em;
+  }
+  .gate .map a b { color: var(--ochre); font-weight: 600; margin-right: 8px; font-size: 12px; }
+  .gate .map a:hover { border-color: var(--ochre-dim); color: var(--paper); }
+
+  /* 展厅 */
+  .room { padding: 58px 0 10px; }
+  .room-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 8px; flex-wrap: wrap; }
+  .seal {
+    flex: none; width: 46px; height: 46px; border: 1px solid var(--ochre);
+    color: var(--ochre); display: flex; align-items: center; justify-content: center;
+    font-size: 17px; transform: rotate(-3deg); letter-spacing: 0;
+  }
+  .room-head h2 { font-size: clamp(26px, 4vw, 36px); font-weight: 700; letter-spacing: 0.1em; }
+  .room-head .alias { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .room-intro { max-width: 46em; font-size: 15px; color: var(--paper-dim); margin: 6px 0 30px; }
+  .room-intro b { color: var(--ochre); font-weight: 600; }
+
+  /* 标本卡 */
+  .specimens { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-bottom: 26px; }
+  .sp {
+    border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 20px 20px 16px; position: relative; display: flex; flex-direction: column; gap: 10px;
+  }
+  .sp .tag {
+    font-size: 11.5px; letter-spacing: 0.3em; color: var(--paper-faint);
+    border-bottom: 1px solid var(--hairline); padding-bottom: 8px;
+    display: flex; justify-content: space-between;
+  }
+  .sp .tag i { font-style: normal; color: var(--ochre); }
+  .sp h3 { font-size: 19px; font-weight: 700; letter-spacing: 0.08em; }
+  .sp p { font-size: 14px; color: var(--paper-dim); }
+  .sp .q {
+    font-size: 14.5px; color: var(--paper); border-left: 2px solid var(--ochre-dim);
+    padding: 2px 0 2px 12px;
+  }
+  .sp .q b { color: var(--ochre); font-weight: 600; }
+  .sp .stamp {
+    position: absolute; right: 14px; top: 14px; font-size: 10.5px; color: var(--ochre);
+    border: 1px solid var(--ochre-dim); padding: 2px 6px; letter-spacing: 0.18em;
+    transform: rotate(4deg); opacity: 0.75;
+  }
+  .sp.wide { grid-column: 1 / -1; }
+
+  /* 场景块（大引文叙事） */
+  .scene {
+    border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 30px 30px 26px; margin: 0 0 26px; max-width: 100%;
+  }
+  .scene .cap { font-size: 12px; letter-spacing: 0.36em; color: var(--ochre); margin-bottom: 16px; }
+  .scene p { font-size: 15.5px; color: var(--paper-dim); max-width: 44em; margin-bottom: 12px; }
+  .scene p b { color: var(--paper); font-weight: 600; }
+  .scene .q {
+    display: block; font-size: 17px; color: var(--paper); margin: 6px 0;
+    border-left: 2px solid var(--ochre-dim); padding-left: 14px;
+  }
+
+  /* 雪线与瘴历 */
+  .bars { border: 1px solid var(--hairline); background: var(--ink-2); padding: 26px 26px 20px; margin-bottom: 26px; }
+  .bars .cap { font-size: 12px; letter-spacing: 0.36em; color: var(--paper-faint); margin-bottom: 16px; }
+  .snowline { position: relative; height: 54px; border-bottom: 1px solid var(--hairline); margin-bottom: 8px; }
+  .snowline .seg { position: absolute; top: 18px; height: 8px; background: linear-gradient(90deg, rgba(232,228,220,0.85), rgba(232,228,220,0.25)); }
+  .snowline .dot { position: absolute; top: 8px; font-size: 12.5px; color: var(--paper); }
+  .snowline .dot i { font-style: normal; display: block; color: var(--paper-faint); font-size: 11px; letter-spacing: 0.1em; }
+  .snowline .cap-line { position: absolute; top: 0; bottom: 0; left: 58%; width: 1px; background: var(--ochre); }
+  .snowline .cap-tag { position: absolute; top: 30px; left: 58%; margin-left: -26px; font-size: 12px; color: var(--ochre); letter-spacing: 0.2em; }
+  .zhang { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 18px; }
+  .zhang .z { border: 1px solid var(--hairline); padding: 12px 14px; }
+  .zhang .z .season { font-size: 11.5px; letter-spacing: 0.24em; color: var(--paper-faint); }
+  .zhang .z .name { font-size: 16.5px; color: var(--paper); }
+  .zhang .z.hot { border-color: var(--ochre-dim); }
+  .zhang .z.hot .name { color: var(--ochre); }
+
+  /* 采珠人暗场 */
+  .dark {
+    background: #131311; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+    margin: 40px 0 0; padding: 56px 0 50px;
+  }
+  .dark .cap { font-size: 12px; letter-spacing: 0.4em; color: var(--ochre); margin-bottom: 22px; }
+  .dark h2 { font-size: clamp(26px, 4vw, 36px); font-weight: 700; letter-spacing: 0.12em; margin-bottom: 22px; }
+  .dark p { font-size: 15.5px; color: var(--paper-dim); max-width: 44em; margin-bottom: 14px; }
+  .dark .q {
+    display: block; font-size: 16.5px; color: var(--paper); margin: 8px 0;
+    border-left: 2px solid var(--ochre-dim); padding-left: 14px;
+  }
+  .rope { margin: 30px 0 8px; max-width: 640px; }
+  .rope .surface {
+    display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 0.3em;
+    color: var(--paper-faint); margin-bottom: 4px;
+  }
+  .rope .line { width: 1px; height: 84px; background: linear-gradient(180deg, var(--paper-faint), rgba(110,106,97,0.2)); margin-left: 34px; position: relative; }
+  .rope .line i { position: absolute; left: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--paper-faint); }
+  .rope .depth { font-size: 12px; color: var(--paper-faint); margin-left: 52px; letter-spacing: 0.16em; }
+  .rope .blood { height: 1px; background: #a03a30; margin: 6px 0 0 34px; max-width: 130px; }
+  .rope .blood-tag { font-size: 12.5px; color: #b8544a; margin-left: 52px; letter-spacing: 0.14em; }
+
+  /* 跋 */
+  .postscript { border-top: 1px solid var(--hairline); margin-top: 54px; padding: 46px 0 30px; }
+  .postscript .cap { font-size: 12px; letter-spacing: 0.4em; color: var(--paper-faint); margin-bottom: 18px; }
+  .postscript p { font-size: 16px; color: var(--paper-dim); max-width: 46em; margin-bottom: 14px; }
+  .postscript p b { color: var(--paper); font-weight: 600; }
+  .postscript .q {
+    display: block; font-size: 19px; color: var(--paper); margin: 18px 0;
+    border-left: 3px solid var(--ochre); padding-left: 16px;
+  }
+
+  /* 页脚 */
+  .cols { display: flex; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--hairline); margin-top: 20px; padding: 26px 0 40px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.06em; }
+  .cols p { max-width: 30em; }
+  .cols a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+  .cols b { color: var(--ochre); font-weight: 400; }
+
+  @media (max-width: 760px) {
+    .versus { grid-template-columns: 1fr; }
+    .versus .vs { writing-mode: horizontal-tb; border: 0; padding: 0; letter-spacing: 0.4em; }
+    .zhang { grid-template-columns: repeat(2, 1fr); }
+    .scene, .bars { padding: 22px 18px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap slip">
+  <span>殆知阁导读 <b>之一百零三</b></span>
+  <span>史藏地理 · 风土志</span>
+  <span>宋淳熙二年成书</span>
+</header>
+
+<main>
+  <section class="hall wrap">
+    <div class="kicker">归舟追记 · 一部写给桂林的情书</div>
+    <h1>桂海<span>虞衡志</span></h1>
+    <div class="who">宋 范成大 撰，一卷十三志：岩洞金石香酒器禽兽虫鱼花果草木杂蛮</div>
+
+    <div class="versus">
+      <div class="card">
+        <div class="cap">乾道八年春 · 松江饯行的酒桌上</div>
+        <div class="q">「姻亲故人张饮松江，皆以<b>炎荒风土为戚</b>」</div>
+        <div class="note">范成大奉命出知静江府、广南西路经略安抚使。在亲友眼里，这不是赴任，是发配岭南瘴乡。</div>
+      </div>
+      <div class="vs">两说并陈</div>
+      <div class="card now">
+        <div class="cap">同年三月 · 到任之后</div>
+        <div class="q">「乾道八年三月，既至郡，则<b>风气清淑</b>，果如所闻」</div>
+        <div class="note">他临行就翻唐人诗反击：「少陵谓之宜人，乐天谓之无瘴」。到了桂林发现，比诗里写的还要好。</div>
+      </div>
+    </div>
+
+    <div class="lead">
+      <p>范成大在桂林待了两年，岁比稔，幕府少文书。两年后朝廷调他入蜀，桂民送出城外，又留了两日才放行。</p>
+      <p>从桂林到成都，走了半年。他在船上把桂林的山、香、酒、鸟兽虫鱼草木，一样一样追记下来，汇成十三志，自比周官<b>「土训」</b>之职：把一方风物原原本本呈报给天下。落款：淳熙二年长至日。</p>
+    </div>
+  </section>
+
+  <nav class="gate">
+    <div class="wrap">
+      <div class="cap">十三志陈列导览</div>
+      <div class="map">
+        <a href="#yandong"><b>壹</b>岩洞</a>
+        <a href="#jinshi"><b>贰</b>金石</a>
+        <a href="#xiang"><b>叁</b>香</a>
+        <a href="#jiu"><b>肆</b>酒</a>
+        <a href="#qi"><b>伍</b>器</a>
+        <a href="#qin"><b>陆</b>禽</a>
+        <a href="#shou"><b>柒</b>兽</a>
+        <a href="#chongyu"><b>捌</b>虫鱼</a>
+        <a href="#huacao"><b>玖拾</b>花 果 草木</a>
+        <a href="#zazhi"><b>杂</b>杂志</a>
+        <a href="#man"><b>蛮</b>志蛮</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="room wrap" id="yandong">
+    <div class="room-head">
+      <div class="seal">壹</div>
+      <h2>志岩洞</h2>
+      <span class="alias">桂山之奇，宜为天下第一</span>
+    </div>
+    <p class="room-intro">他先下一句断语，再补一条硬证据：天下名山皆「因重冈复岭之势，盘亘而起」，唯独桂林的山，从平地上光秃秃拔起来，不讲道理。</p>
+    <div class="scene">
+      <span class="q">「余尝评桂山之奇，<b>宜为天下第一</b>。」</span>
+      <span class="q">「桂之千峰，皆旁无延缘，<b>悉自平地崛然特立</b>」</span>
+      <p>为了说服吴中故人，他还画了真形图寄回去，「盖无深信者，此未易以口舌争也」。九百年后所有见过桂林的人，都会替他把这口气争回来。</p>
+    </div>
+    <div class="specimens">
+      <div class="sp">
+        <div class="stamp">验讫</div>
+        <div class="tag"><i>岩洞</i><span>宜山之麓</span></div>
+        <h3>水月洞</h3>
+        <p>今日象鼻山的象鼻与象身之间。他记山顶与洞形，只用了十一个字。</p>
+        <div class="q">「其形正员，望之端整<b>如大月轮</b>，江别派流贯洞中」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>岩洞</i><span>七星山</span></div>
+        <h3>栖霞洞</h3>
+        <p>洞下有洞，钟乳累累，他在黑暗里听出了地质学。</p>
+        <div class="q">「如行通衢中，顿足曳杖，<b>铿然有声，如鼓钟声</b>，盖洞之下又有洞焉」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>岩洞</i><span>伏波岩</span></div>
+        <h3>试剑石</h3>
+        <p>一根悬空石柱，与地面只隔一线，底下就是漓江，浪日夜冲刷。</p>
+        <div class="q">「有悬石如柱，<b>去地一线</b>」</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="room wrap" id="jinshi">
+    <div class="room-head">
+      <div class="seal">贰</div>
+      <h2>志金石</h2>
+      <span class="alias">只录方药所需，却录下了两件奇物</span>
+    </div>
+    <p class="room-intro">开篇声明此篇「专主药物」，但写到结尾，他忍不住收了两件海里的东西：一根石化的梅枝，一株石化的柏苗。</p>
+    <div class="specimens">
+      <div class="sp">
+        <div class="stamp">验讫</div>
+        <div class="tag"><i>金石</i><span>生海中</span></div>
+        <h3>石梅</h3>
+        <p>海底捞起来的枯梅，形色逼真到工匠自愧不如，他记下了当时的猜想。</p>
+        <div class="q">「横斜瘦硬形色，真枯梅也。虽巧工造作所不能及」</div>
+        <p>「或云木质为海水所化」，九百年前的化石学，就差一个名字。</p>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>金石</i><span>邕州溪洞</span></div>
+        <h3>水银铫</h3>
+        <p>水银以百两为一铫，装它的容器透着宋人的手艺。</p>
+        <div class="q">「以猪胞为骨，外糊厚纸数重，<b>贮之不漏</b>」</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="room wrap" id="xiang">
+    <div class="room-head">
+      <div class="seal">叁</div>
+      <h2>志香</h2>
+      <span class="alias">一牛换一担的沉水香</span>
+    </div>
+    <p class="room-intro">天下皆言二广出香，他辨析得更细：广东的香是舶来品，海南黎峒的才是「悉冠诸蕃」的上品。省民牵着牛进山，跟黎人做一笔他亲自核算过的买卖。</p>
+    <div class="scene">
+      <span class="q">「省民以牛博之于黎，<b>一牛博香一担</b>，归自差择，得沈水十不一二。」</span>
+      <p>一整担香里，能沉水的不到两成，运到中原便是贵人案头的清物。好香什么味道？他给了一串准确的通感。</p>
+      <span class="q">「气皆清淑，<b>如莲花、梅英、鹅梨、蜜脾</b>之类」</span>
+      <span class="q">「焚一博投许，<b>氛翳弥室</b>，翻之，四面悉香」</span>
+      <p>烧到灰烬也不带焦气，这是他定的海南香标准。至于聚在钦州的交趾香，他只给了四个字的评价：「南人贱之」。</p>
+    </div>
+  </section>
+
+  <section class="room wrap" id="jiu">
+    <div class="room-head">
+      <div class="seal">肆</div>
+      <h2>志酒</h2>
+      <span class="alias">两杯名酒的隔空对决</span>
+    </div>
+    <p class="room-intro">他自认「性不能酒」，却是出色的酒评人：喝过金国皇帝宫中的「金兰」，也喝过桂林帅司公厨的「瑞露」，然后给出了一个桂林人爱听的结论。</p>
+    <div class="versus">
+      <div class="card">
+        <div class="cap">金 · 燕山宫中</div>
+        <div class="q">「使金至燕山，得其宫中酒号金兰者，<b>乃大佳</b>」</div>
+        <div class="note">金兰山泉水所酿，是他出使金国带回来的味觉记忆。</div>
+      </div>
+      <div class="vs">孰胜</div>
+      <div class="card now">
+        <div class="cap">宋 · 桂林帅司公厨</div>
+        <div class="q">「及来桂林而饮瑞露，<b>乃尽酒之妙，声震湖广</b>」</div>
+        <div class="note">结论一句：「虽金兰之胜，未必能颉颃也」。桂林酒赢了金宫酒，这是他替桂林记下的战绩。</div>
+      </div>
+    </div>
+    <div class="specimens">
+      <div class="sp wide">
+        <div class="tag"><i>酒</i><span>宾横之间</span></div>
+        <h3>古辣泉酒：埋进土里的熟酒</h3>
+        <div class="q">「以墟中泉酿酒，既熟不煮，<b>埋之地中，日足取出</b>」</div>
+        <p>不煮不杀菌，用地温代替窖藏。另有老酒一节：士人家腊月酿酒，「婚娶亦以老酒为厚礼」，一坛酒就是一份聘礼的分量。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="room wrap" id="qi">
+    <div class="room-head">
+      <div class="seal">伍</div>
+      <h2>志器</h2>
+      <span class="alias">诡异什器，与一件开怀的事</span>
+    </div>
+    <p class="room-intro">这一志收边地兵器与日常器物：大理的象皮甲「坚厚与铁等」，云南刀一鞘两室，峒人药箭「中者立死」。但全志最出名的，是一只杯子。</p>
+    <div class="specimens">
+      <div class="sp">
+        <div class="stamp">验讫</div>
+        <div class="tag"><i>器</i><span>邕州</span></div>
+        <h3>鼻饮杯</h3>
+        <p>陶杯旁伸出一根小管，喝酒不用嘴。</p>
+        <div class="q">「暑月以饮水，云<b>水自鼻入，咽快不可言</b>」</div>
+        <p>他自己也承认记下它是为了逗乐：「以发览者一胡卢也」，让读者笑出声。</p>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>器</i><span>大理国</span></div>
+        <h3>蛮甲</h3>
+        <p>整片象皮做胸背甲，朱地间黄黑漆，画满百花虫兽，缀上小白贝。</p>
+        <div class="q">「甲胄皆用象皮，胸背各一大片，<b>如龟壳，坚厚与铁等</b>」</div>
+        <p>他猜这是「古贝胄朱绶遗制」，一副甲上留着上古的影子。</p>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>器</i><span>南中</span></div>
+        <h3>槟榔合</h3>
+        <p>南人嗜槟榔，讲究到随身带一只三室的银锡小盒。</p>
+        <div class="q">「中为三室，<b>一贮灰，一贮藤，一贮槟榔</b>」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>器</i><span>南边土中</span></div>
+        <h3>铜鼓</h3>
+        <p>田里掘出来的古物，时人托名于马伏波。鼓面细花纹极工致，四角还蹲着小蟾蜍。</p>
+        <div class="q">「相传为马伏波所遗」</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="room wrap" id="qin">
+    <div class="room-head">
+      <div class="seal">陆</div>
+      <h2>志禽</h2>
+      <span class="alias">鹦鹉是儿女，吉了是丈夫</span>
+    </div>
+    <p class="room-intro">岭南的珍禽多到什么程度？民间拿鹦鹉做鱼酱、孔雀做腊肉，只因太多、太易得。他特意注明：这两件事书里从没记过，「自余始志之」。</p>
+    <div class="specimens">
+      <div class="sp">
+        <div class="stamp">验讫</div>
+        <div class="tag"><i>禽</i><span>邕州溪峒</span></div>
+        <h3>秦吉了</h3>
+        <p>会说话，比鹦鹉更聪明。他给两种学舌鸟分了声部，一句定评。</p>
+        <div class="q">「大抵<b>鹦鹉如儿女，吉了声则如丈夫</b>」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>禽</i><span>两江深林</span></div>
+        <h3>山凤凰</h3>
+        <p>最温柔也最残忍的孵卵制度：雄鸟用木枝拌桃胶把雌鸟封在巢里，只留一个取食的孔。</p>
+        <div class="q">「雄者以木枝杂桃胶，<b>封其雌于巢，独留一窍</b>」</div>
+        <p>雏成发封；孵不成，「窒窍杀之」。他自己也没见过，只说「此亦异物，然未之见也」。</p>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>禽</i><span>近海郡</span></div>
+        <h3>白鹦鹉</h3>
+        <p>大如小鹅，羽毛玉雪。他摸过，写下指尖的感受。</p>
+        <div class="q">「以手抚之，有粉粘著指掌，<b>如蛱蝶翅</b>」</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="room wrap" id="shou">
+    <div class="room-head">
+      <div class="seal">柒</div>
+      <h2>志兽</h2>
+      <span class="alias">抱着树枯死的山獭</span>
+    </div>
+    <p class="room-intro">兽部第一句给象和马：「兽莫巨于象，莫有用于马」。但他真正写得动人的是那些小兽：离地会死的猿，抱树而枯的山獭，被一台织机吓退的懒妇。</p>
+    <div class="specimens">
+      <div class="sp">
+        <div class="stamp">验讫</div>
+        <div class="tag"><i>兽</i><span>山中</span></div>
+        <h3>猿</h3>
+        <p>三种猿：金丝、玉面、纯黑。金丝玉面难得，而它们的死法奇怪得像一条禁忌。</p>
+        <div class="q">「猿性不耐著地，<b>著地辄泻以死</b>，煎附子汁饮之即愈」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>兽</i><span>宜州溪洞</span></div>
+        <h3>山獭</h3>
+        <p>俗传的壮阳要药，一枚值金一两。洞人说出它的性情，像一句寓言。</p>
+        <div class="q">「獭性淫毒。山中有此物，凡牝兽悉避去。<b>獭无偶，抱木而枯</b>」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>兽</i><span>邕州</span></div>
+        <h3>风狸</h3>
+        <p>白天蜷成一团刺猬，起风就上天，宋人的飞行怪兽。</p>
+        <div class="q">「昼则拳曲如猬，<b>遇风则飞行空中</b>」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>兽</i><span>安平七源</span></div>
+        <h3>懒妇</h3>
+        <p>一种偷吃禾苗的小兽，山民防它的办法温柔得不像话：在田头挂一架织布机，它就不敢再来。传闻不必当真，想象力是真的。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="room wrap" id="chongyu">
+    <div class="room-head">
+      <div class="seal">捌</div>
+      <h2>志虫鱼</h2>
+      <span class="alias">红娘子猎蟒记</span>
+    </div>
+    <p class="room-intro">合浦的珠、漓水的虾鱼都好，但全志最好看的一场戏，是寨兵捕蟒。整场狩猎没有一句废话，像一幕布置精密的舞台剧。</p>
+    <div class="scene">
+      <div class="cap">第一幕 · 以花引蛇</div>
+      <p>蟒常出来吃鹿，寨兵捕它有章法：先在蛇常出没处布好阵，然后猎人们头上插满鲜花，朝蛇走过去。</p>
+      <span class="q">「数辈满头插花，趋赴蛇。<b>蛇喜花，必驻视</b>」</span>
+      <div class="cap">第二幕 · 大呼红娘子</div>
+      <p>越走越近，众人一齐按住蛇头，放声大喊「红娘子」。蛇头低伏不动，壮士大刀断首，众人立刻散开躲远。</p>
+      <div class="cap">第三幕 · 力竭乃毙</div>
+      <p>过一阵蛇惊觉，翻腾掷跳，「傍小木尽拔，力竭乃毙」。结尾三个字收束全场。</p>
+      <span class="q">「数十人舁之，<b>一村饱其肉</b>」</span>
+    </div>
+    <div class="specimens">
+      <div class="sp wide">
+        <div class="tag"><i>虫鱼</i><span>合浦海中</span></div>
+        <h3>珠池</h3>
+        <p>合浦珠民入海采珠，采的只是外围小蚌。他记下了珠民口中海底的样子。</p>
+        <div class="q">「相传海底有处所，如城郭，大蚌居其中，<b>有怪物守之，不可近</b>」</div>
+        <p>核心是传说，外围是生计：这八个字里有一个行业的全部结构。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="room wrap" id="huacao">
+    <div class="room-head">
+      <div class="seal">玖</div>
+      <h2>志花 志果 志草木</h2>
+      <span class="alias">三志合陈</span>
+    </div>
+    <p class="room-intro">果志一口气录了五十五种果子，花志里有一日三色的芙蓉，草木志里藏着一个反讽：桂林以桂为名，桂林却不产桂。</p>
+    <div class="specimens">
+      <div class="sp">
+        <div class="stamp">验讫</div>
+        <div class="tag"><i>草木</i><span>南方奇木</span></div>
+        <h3>桂</h3>
+        <div class="q">「桂林以桂名，<b>地实不产</b>，而出于宾宜州」</div>
+        <p>城市名号里的那棵树，本地偏偏没有。它的叶子还有专属特征：「凡木叶心皆一纵理，独桂有两纹，形如圭制字者」。</p>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>草木</i><span>易生之木</span></div>
+        <h3>榕</h3>
+        <p>气根从半身垂下入土，寄生的榕树长大后反客为主。</p>
+        <div class="q">「故有榕木<b>倒生根</b>之语」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>花</i><span>南中</span></div>
+        <h3>添色芙蓉</h3>
+        <p>一朵花的一天，九个字记完。</p>
+        <div class="q">「晨开，正白，午后微红，<b>夜深红</b>」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>果</i><span>南州名臭柚</span></div>
+        <h3>臭柚</h3>
+        <p>臭柚皮厚，打碑工人拿它当毡刷蘸墨拓碑，他为此专门立案。</p>
+        <div class="q">「打碑者卷皮蘸墨以代毡刷，宜墨而不损纸，<b>极便于用，此法可传</b>」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>果</i><span>壳如小荔枝</span></div>
+        <h3>龙荔</h3>
+        <p>壳像荔枝，肉像龙眼，好吃，但生吃有后果。</p>
+        <div class="q">「可蒸食，不可生啖，<b>令人发痫，或见鬼物</b>」</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="room wrap" id="zazhi">
+    <div class="room-head">
+      <div class="seal">拾</div>
+      <h2>杂志</h2>
+      <span class="alias">不可以部居的桂北常识</span>
+    </div>
+    <p class="room-intro">这一志全是「宜录以备博闻」的杂项：雪的边界、风的成因、四季瘴气的时刻表、民间自造的方块字、抢婚的风俗，和一场他直接驳斥的巫术治疗。</p>
+    <div class="bars">
+      <div class="cap">雪线 · 朔雪南下的终点</div>
+      <div class="snowline">
+        <span class="dot" style="left:6%">严关<i>朔雪至关辄止</i></span>
+        <span class="dot" style="left:74%; top:auto; bottom:0">桂林城下<i>大盛则度送至此</i></span>
+        <span class="cap-line"></span>
+        <span class="cap-tag">雪界</span>
+      </div>
+      <p style="font-size:13.5px;color:var(--paper-dim);margin-top:6px">「朔雪至关辄止，大盛则度送至桂林城下，不复南矣。」严关在灵川兴安之间，两山夹一马道，是宋人心里的雪的国境线。</p>
+      <div class="zhang">
+        <div class="z"><div class="season">春</div><div class="name">青草瘴</div></div>
+        <div class="z"><div class="season">夏</div><div class="name">黄梅瘴</div></div>
+        <div class="z"><div class="season">六七月</div><div class="name">新禾瘴</div></div>
+        <div class="z hot"><div class="season">八九月</div><div class="name">黄茅瘴 尤毒</div></div>
+      </div>
+      <p style="font-size:13.5px;color:var(--paper-dim);margin-top:10px">桂林是二广唯一无瘴之地，「自是而南，皆瘴乡矣」。他把瘴气按农时排成一张表，黄茅瘴标红。</p>
+    </div>
+    <div class="specimens">
+      <div class="sp">
+        <div class="tag"><i>杂志</i><span>风</span></div>
+        <h3>桂林为什么多风</h3>
+        <p>土人不知其说，他自己给了一个海拔解释。</p>
+        <div class="q">「桂林地势视长沙、番禺，在千丈之上，<b>高而多风，理固然也</b>」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>杂志</i><span>俗字</span></div>
+        <h3>讼牒里的方块字</h3>
+        <p>边地文书专用土俗字，上「不」下「长」读若「矮」，「门」中坐「坐」读若「稳」。他从哪里认全的？</p>
+        <div class="q">「余阅讼牒二年，<b>习见之</b>」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>杂志</i><span>卷伴</span></div>
+        <h3>抢婚，以及抢来的再被抢</h3>
+        <div class="q">「村落强暴，窃入妻女以逃，转移他所，<b>安居自若</b>」</div>
+        <p>更荒唐的是循环：「往往所谓前夫，亦是卷伴得之复为后人所卷」，「至有历数卷未已者」。</p>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>杂志</i><span>草子</span></div>
+        <h3>挑草子：他直接说没用</h3>
+        <p>南中人不问病源，头痛体不佳就说是草子，用小锥刺唇舌放血。</p>
+        <div class="q">「实无加损于病，<b>必服药乃愈</b>」</div>
+        <p>十二世纪的地方官，在志书里公开拆民间巫术的台。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="room wrap" id="man">
+    <div class="room-head">
+      <div class="seal">拾壹</div>
+      <h2>志蛮</h2>
+      <span class="alias">羁縻、绣面与水上人家</span>
+    </div>
+    <p class="room-intro">广西经略使领二十五郡，郡外皆是蛮。他把郡外诸族分作羁縻州洞、獠、蛮、黎、蜒数种，通谓之蛮；写制度时是个能吏，写人时却有罕见的体贴。</p>
+    <div class="specimens">
+      <div class="sp">
+        <div class="tag"><i>志蛮</i><span>羁縻州洞</span></div>
+        <h3>不能绳治，姑羁縻之</h3>
+        <p>对化外部落，朝廷的制度设计只有一句话。</p>
+        <div class="q">「其人物犷悍，风俗荒怪，不可尽以中国教法绳治，<b>姑羁縻之而已</b>」</div>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>志蛮</i><span>侬氏</span></div>
+        <h3>侬姓的消失</h3>
+        <p>侬智高之乱后，朝廷给侬氏开了改姓的口子。</p>
+        <div class="q">「智高乱后，侬氏善良，许从国姓。<b>今多姓赵氏</b>」</div>
+        <p>一个姓氏从此被统计抹平，「有举洞纯一姓者」，整洞整洞地改。</p>
+      </div>
+      <div class="sp">
+        <div class="tag"><i>志蛮</i><span>黎</span></div>
+        <h3>绣面</h3>
+        <p>海南黎女成年礼：刺出细花纹，然后庆贺。</p>
+        <div class="q">「女及笄，即黥颊，为细花纹，<b>谓之绣面</b>」</div>
+        <p>他记下「女既黥，集亲客相庆贺」，纹面在他笔下是一场喜事，不是猎奇。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dark">
+    <div class="wrap">
+      <div class="cap">志蛮 · 蜒</div>
+      <h2>采珠人</h2>
+      <p>蜒是「海上水居蛮」，以舟为家，「入水能视」。合浦珠池的蚌蛤，只有他们能没水取珠。船上的人能做的，是在他们下水后盯着那根绳。</p>
+      <span class="q">「榜人以绳系其腰，<b>绳动摇，则引而上</b>」</span>
+      <p>出水的那一刻是一场与体温的赛跑：先把毛毡衣煮得滚烫，人一上来立刻裹住，「不然寒栗而死」。而更大的风险在水下。</p>
+      <span class="q">「或遇大鱼蛟鼍诸海怪，为鬣所触，往往溃腹，折支」</span>
+      <p>水面上的人如何知道绳下发生了什么？他写下这个行业的信号灯，一行字，读完很难忘。</p>
+      <div class="rope">
+        <div class="surface">海面 · 绳与毡衣</div>
+        <div class="line"><i style="top:0"></i><i style="top:40%"></i><i style="top:80%"></i></div>
+        <div class="depth">绳在，人在。绳动，起绞盘。</div>
+        <div class="blood"></div>
+        <div class="blood-tag">「人见血一缕浮水面，知蜒死矣。」</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="postscript wrap">
+    <div class="cap">跋 · 名都乐国，犹弗忘之</div>
+    <p>半年船程写完此书，他到达了成都。锦城是天下闻名的「名都乐国」，可他还是把桂林写满了全书，并在序里交代了原因：他要让故人知道，自己从没有看不起那片土地和那里的人。</p>
+    <p>到任之初他就与桂林人做过一次交换：他「不鄙夷其民」，桂林人则「矜予之拙，而信其诚，相戒毋欺侮」。两年官守，换来的是桂民送出城外又留两日的情分，和一部把边地风物当正经学问来写的书。</p>
+    <span class="q">「虽去之远且在名都乐国，<b>而犹弗忘之也</b>。」</span>
+  </section>
+
+  <footer class="wrap">
+    <div class="cols">
+      <p><b>文本来源</b>　殆知阁简体库（github.com/robertsong2000/daizhigev20）史藏地理部，桂海虞衡志。全部引文经与库内原文逐字核验。</p>
+      <p><b>时代局限</b>　本书成于十二世纪，所记山獭、风狸、飞头之属多采传闻，于南方族群语多贬抑， 请以文献史料的姿态存分辨读之。</p>
+      <p><b>导航</b>　<a href="mulu.html">返回总目</a></p>
+    </div>
+  </footer>
+</main>
+
+</body>
+</html>
