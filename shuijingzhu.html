@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>水经注 · 殆知阁导读之九十七</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --gold: #c9963f;
+    --slip: rgba(232,228,220,0.045);
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+    position: relative; overflow-x: hidden;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+
+  /* 全页河道：页首虚线是伏流，浮出后转实线，一路流到页尾入海 */
+  #river { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  #river path { fill: none; stroke: rgba(232,228,220,0.34); vector-effect: non-scaling-stroke; stroke-width: 1.6; }
+  #river .under { stroke-dasharray: 7 9; stroke: rgba(232,228,220,0.2); }
+  #river .sea { stroke: rgba(232,228,220,0.1); stroke-width: 10; }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 30px; position: relative; z-index: 1; }
+  section { position: relative; z-index: 1; }
+
+  .kicker { font-size: 13px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  .gold { color: var(--gold); }
+
+  /* 源头：不是数据条，是一股从页顶渗出来的水 */
+  .hero { min-height: 94vh; display: flex; align-items: center; }
+  .hero h1 { font-size: clamp(72px, 13vw, 158px); font-weight: 700; letter-spacing: 0.16em; line-height: 1.15; margin: 26px 0 8px; }
+  .hook { font-size: clamp(19px, 2.4vw, 25px); color: var(--gold); letter-spacing: 0.06em; margin-bottom: 30px; }
+  .hero .sub { color: var(--paper-dim); max-width: 34em; font-size: 16px; }
+  .flow { margin-top: 58px; font-size: 13px; letter-spacing: 0.3em; color: var(--paper-faint); }
+  .flow b { color: var(--gold); font-weight: 400; }
+
+  /* 章名：一枚渡口界碑，斜插在正文左边 */
+  .stone { display: flex; align-items: baseline; gap: 18px; margin: 110px 0 34px; }
+  .stone .bi { width: 14px; height: 14px; background: var(--gold); transform: rotate(45deg) translateY(2px); flex: none; }
+  .stone h2 { font-size: clamp(24px, 3.2vw, 31px); font-weight: 700; letter-spacing: 0.22em; }
+  .stone .cap { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  p.body { font-size: 16.5px; color: var(--paper-dim); max-width: 42em; }
+  p.body + p.body { margin-top: 16px; }
+  p.body b { color: var(--paper); font-weight: 600; }
+  p.body em { font-style: normal; color: var(--gold); }
+
+  /* 档案纸条：引文都用同一张薄纸，出处压在左上角 */
+  .slip { position: relative; background: var(--slip); border: 1px solid var(--hairline); padding: 40px 42px 30px; margin: 30px 0; }
+  .slip .from { position: absolute; top: -10px; left: 22px; background: var(--ink); padding: 0 10px; font-size: 12px; letter-spacing: 0.22em; color: var(--paper-faint); }
+  .slip .from i { font-style: normal; color: var(--gold); }
+  .slip q { quotes: none; display: block; font-size: 20px; line-height: 2.05; letter-spacing: 0.05em; color: #f0ece3; }
+  .slip q + q { margin-top: 14px; }
+  .slip .an { margin-top: 20px; font-size: 14px; color: var(--paper-dim); border-top: 1px solid var(--hairline); padding-top: 14px; }
+
+  /* 经注对照：一层薄，一层厚 */
+  .strata { margin: 34px 0 8px; border: 1px solid var(--hairline); }
+  .strata .jing { padding: 22px 30px; border-bottom: 1px solid var(--hairline); }
+  .strata .zhu { padding: 26px 30px; background: var(--slip); }
+  .strata .tag { font-size: 12px; letter-spacing: 0.3em; margin-bottom: 8px; }
+  .strata .jing .tag { color: var(--paper-faint); }
+  .strata .zhu .tag { color: var(--gold); }
+  .strata .jing q { quotes: none; font-size: 18px; color: var(--paper-dim); letter-spacing: 0.05em; }
+  .strata .zhu q { quotes: none; display: block; font-size: 19px; line-height: 2; color: #f0ece3; letter-spacing: 0.04em; }
+  .strata .scale { display: flex; height: 10px; margin-top: 20px; }
+  .strata .scale i { display: block; height: 100%; }
+  .scale-note { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.12em; margin-top: 8px; }
+
+  /* 水系图 */
+  .atlas { border: 1px solid var(--hairline); background: var(--ink-2); padding: 18px 10px 6px; margin: 34px 0; }
+  .atlas svg { display: block; width: 100%; height: auto; }
+  .atlas figcaption { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.1em; padding: 10px 18px 12px; }
+  .atlas .lab { font-family: "Songti SC", "Noto Serif SC", "SimSun", serif; font-size: 15px; fill: var(--paper); }
+  .atlas .lab.s { font-size: 12.5px; fill: var(--paper-dim); }
+  .atlas .lab.j { font-size: 11px; fill: var(--gold); letter-spacing: 0.1em; }
+  .atlas path, .atlas line { fill: none; stroke: rgba(232,228,220,0.5); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+  .atlas path.main { stroke: var(--paper); stroke-width: 2.6; }
+  .atlas .dot { fill: var(--gold); }
+
+  /* 版本谱系：一条打捞链 */
+  .chain { margin: 40px 0 10px; border-left: 1px solid var(--hairline); }
+  .chain .link { position: relative; padding: 4px 0 26px 34px; }
+  .chain .link::before { content: ""; position: absolute; left: -6px; top: 13px; width: 11px; height: 11px; border-radius: 50%; background: var(--ink); border: 2px solid var(--gold); }
+  .chain .era { font-size: 12.5px; letter-spacing: 0.26em; color: var(--gold); }
+  .chain .what { font-size: 16px; color: var(--paper); margin-top: 3px; }
+  .chain .note { font-size: 14px; color: var(--paper-dim); margin-top: 3px; max-width: 40em; }
+
+  /* 库本档案：把伤疤原样裱起来 */
+  .scar { border: 1px dashed rgba(192,69,60,0.55); background: rgba(192,69,60,0.05); padding: 26px 30px; margin: 30px 0; }
+  .scar .lab { font-size: 12px; letter-spacing: 0.28em; color: #c0453c; margin-bottom: 12px; }
+  .scar code { display: block; font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; font-size: 13px; color: var(--paper-dim); word-break: break-all; line-height: 1.9; }
+  .scar p { font-size: 14px; color: var(--paper-dim); margin-top: 12px; }
+
+  .shelves { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0; }
+  .shelves span { border: 1px solid var(--hairline); padding: 7px 16px; font-size: 14px; color: var(--paper-dim); }
+  .shelves span b { color: var(--paper); font-weight: 600; }
+
+  /* 入海 */
+  .estuary { padding: 130px 0 90px; text-align: center; }
+  .estuary .wave { width: 66px; height: 1px; background: var(--gold); margin: 0 auto 42px; }
+  .estuary p { font-size: clamp(18px, 2.2vw, 22px); color: var(--paper); max-width: 30em; margin: 0 auto; line-height: 2.2; }
+  .estuary p.small { font-size: 14.5px; color: var(--paper-faint); margin-top: 22px; }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 40px 0 64px; color: var(--paper-faint); font-size: 13.5px; position: relative; z-index: 1; }
+  footer.page a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px dotted var(--paper-faint); }
+  footer.page p + p { margin-top: 8px; }
+
+  @media (max-width: 760px) {
+    #river { display: none; }
+    .slip { padding: 32px 24px 24px; }
+    .slip q { font-size: 17.5px; }
+    .stone { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<svg id="river" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+  <path class="under" d="M 13 0 C 13 2.5, 9.5 3.5, 9.5 6 C 9.5 8.5, 13.5 9, 13.5 11.5 C 13.5 14, 10 14.5, 10 17" />
+  <path d="M 10 17 C 10 20, 15 21, 15 24 C 15 27, 9 28.5, 9 32 C 9 35.5, 16 36.5, 16 40 C 16 43.5, 8.5 44.5, 8.5 48 C 8.5 51.5, 15.5 52.5, 15.5 56 C 15.5 59.5, 8 60.5, 8 64 C 8 67.5, 15 68.5, 15 72 C 15 75.5, 9 77, 9 80.5 C 9 84, 14 85, 14 88 C 14 91, 10.5 92.5, 10.5 95 L 10.5 100" />
+  <path class="sea" d="M 0 99.2 L 100 99.2" />
+</svg>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">殆知阁导读 · 九十七</div>
+    <h1>水经注</h1>
+    <div class="hook">为天下之水立传的人，死在一口挖不出来的井边。</div>
+    <p class="sub">北魏郦道元给一部薄薄的水经写下三十七万余字的注。本篇从昆仑源头起程，经孟门悬流、洛阳太学、三峡渔歌，到钱塘入海；末了再看这本书自己，是怎样被后人从散乱里一勺一勺捞回来的。</p>
+    <div class="flow">▼ <b>顺流而下</b></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section>
+    <div class="stone"><div class="bi"></div><h2>立传的人</h2><div class="cap">源头</div></div>
+    <p class="body">郦道元，字善长，范阳人，北魏官至御史中尉。史书说他<b>素有严猛之称</b>，办案不留情面，得罪的人从亲王排到边地豪强。他一生的仕宦不出北朝疆界：南北分裂，江水以南他没有去过。可是他写的书里，南方的水一条不少。</p>
+    <div class="slip">
+      <div class="from"><i>魏书</i> 酷吏传</div>
+      <q>郦道元，字善长，范阳人也。</q>
+    </div>
+    <div class="slip">
+      <div class="from"><i>北史</i> 郦道元传</div>
+      <q>道元好学，历览奇书，撰注《水经》四十卷，《本志》十三篇。又为《七聘》及诸文皆行于世。</q>
+    </div>
+    <p class="body">北史本传替他记下了最后一站。孝昌年间，雍州刺史萧宝夤反状渐露，朝廷派郦道元为关右大使巡察，走到阴盘驿亭，被萧宝夤的兵围住。亭在一处旱冈上，吃水靠冈下的一口井。</p>
+    <div class="slip">
+      <div class="from"><i>北史</i> 郦道元传</div>
+      <q>亭在冈下，常食冈下之井。既被围，穿井十余丈不得水。水尽力屈，贼遂逾墙而入。</q>
+      <q>道元瞋目叱贼，厉声而死。</q>
+      <div class="an">公元五二七年。史书没有记他死前说了什么，只记了这七个字的神情。</div>
+    </div>
+    <p class="body">写尽天下水的人，被断水困死在旱地上。他的书比他命长，而且书里的水，两千年没有断过流。</p>
+  </section>
+
+  <section>
+    <div class="stone"><div class="bi"></div><h2>经与注</h2><div class="cap">一本书的两层</div></div>
+    <p class="body">水经本身是一部骨架书：旧题汉人桑钦作，四库馆臣已疑其非，今多认为出于三国魏人之手。唐人称它记水<b>一百三十七</b>条，旧说全文一万余字。郦道元在每一条经文之下铺开自己的注：引《山海经》《穆天子传》，引地方图经、碑刻、歌谣、父老传言，把每条水连同沿岸的山、城、庙、陵、物产、传说一并登记。今人统计，注里出现的水有一千二百五十余条。</p>
+    <p class="body">《水经》的单行本后来亡佚了，经文全靠注文的一句句引带才保存下来。所以读这本书要分层：经文是纲，注文才是血肉。</p>
+    <div class="strata">
+      <div class="jing">
+        <div class="tag">经</div>
+        <q>昆仑墟在西北，三成为昆仑丘。</q>
+      </div>
+      <div class="zhu">
+        <div class="tag">注</div>
+        <q>《昆仑记》曰：昆仑之山三级，下曰樊桐，一名板桐；二曰玄圃，一名阆风；上曰层城，一名天庭，是谓太帝之居。</q>
+        <div class="scale" aria-hidden="true"><i style="width:2.5%;background:rgba(232,228,220,0.35)"></i><i style="width:97.5%;background:rgba(201,150,63,0.5)"></i></div>
+        <div class="scale-note">粗略的比例：旧说经文一万余字，库本注本三十七万余字</div>
+      </div>
+    </div>
+    <p class="body">全书从这句话开始。一座三层的天柱山，河水从山脚下潜入地下，伏流万里。这一回的版式也照着这句话做：你现在看到的页边那条线，在页首是虚线，因为郦道元的河是从地底下开始的。</p>
+  </section>
+
+  <section>
+    <div class="stone"><div class="bi"></div><h2>四十卷水系</h2><div class="cap">把目录当地图画</div></div>
+    <p class="body">四十卷不是四十个章节，是四十段水域。河水独占前五卷，渭水三卷，沔水三卷，江水三卷，其余诸水按水系归并。目录本身就是一张水系图，这里照着画了一张。</p>
+    <figure class="atlas">
+      <svg viewBox="0 0 860 470" role="img" aria-label="水经注四十卷水系示意">
+        <path class="main" d="M 60 20 C 60 80, 45 120, 45 190 C 45 260, 70 300, 70 360 C 70 410, 55 440, 55 460"/>
+        <line x1="45" y1="95" x2="150" y2="95"/><text class="lab" x="158" y="100">汾水　卷六</text>
+        <line x1="46" y1="140" x2="150" y2="140"/><text class="lab" x="158" y="145">济水　卷七至八</text>
+        <line x1="50" y1="185" x2="150" y2="185"/><text class="lab" x="158" y="190">漳水　卷十</text>
+        <line x1="55" y1="225" x2="150" y2="225"/><text class="lab" x="158" y="230">易水滱水　卷十一</text>
+        <line x1="60" y1="262" x2="150" y2="262"/><text class="lab" x="158" y="267">漯水　卷十三</text>
+        <line x1="52" y1="300" x2="150" y2="300"/><text class="lab" x="158" y="305">洛水　卷十五</text>
+        <line x1="70" y1="335" x2="150" y2="335"/><text class="lab" x="158" y="340">渭水　卷十七至十九</text>
+        <text class="lab j" x="18" y="240" transform="rotate(-90 18 240)">河水　卷一至五</text>
+        <path class="main" d="M 480 30 C 470 90, 500 140, 495 210 C 490 280, 460 330, 465 400 C 467 430, 480 450, 480 460"/>
+        <line x1="485" y1="120" x2="580" y2="120"/><text class="lab" x="588" y="125">沔水　卷二十七至二十九</text>
+        <line x1="478" y1="200" x2="580" y2="200"/><text class="lab" x="588" y="205">湘水资水　卷三十八</text>
+        <line x1="473" y1="255" x2="580" y2="255"/><text class="lab" x="588" y="260">赣水庐江水　卷三十九</text>
+        <line x1="470" y1="310" x2="580" y2="310"/><text class="lab" x="588" y="315">渐江水　卷四十</text>
+        <text class="lab j" x="430" y="120" transform="rotate(-90 430 120)">江水　卷三十三至三十五</text>
+        <path d="M 700 60 L 700 150"/><text class="lab" x="712" y="80">淮水　卷三十</text>
+        <text class="lab s" x="712" y="102">独流入海</text>
+        <text class="lab s" x="158" y="392">卷二十一至二十六　汝颍泗沂诸水</text>
+        <text class="lab s" x="588" y="392">卷二十漾水丹水　卷三十六至三十七　西南诸水</text>
+        <circle class="dot" cx="45" cy="190" r="4"/><text class="lab s" x="30" y="178">孟门</text>
+        <circle class="dot" cx="70" cy="320" r="4"/><text class="lab s" x="52" y="310">太学</text>
+        <circle class="dot" cx="495" cy="180" r="4"/><text class="lab s" x="505" y="172">三峡</text>
+        <circle class="dot" cx="480" cy="440" r="4"/><text class="lab s" x="492" y="432">钱塘</text>
+      </svg>
+      <figcaption>示意：诸水归系，不按真实地理位置。四个赭金点，是下文要停的渡口。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="stone"><div class="bi"></div><h2>五个渡口</h2><div class="cap">顺流停船</div></div>
+
+    <div class="slip">
+      <div class="from">卷四 <i>河水</i> 孟门</div>
+      <q>其水尚崩浪万寻，悬流千丈，浑洪赑怒，鼓若山腾，濬波颓叠，迄于下口。</q>
+      <div class="an">黄河被龙门两山夹住的地方，郦道元写出了汉语里最凶的一段水。同一段里还记着鲤鱼跳龙门的旧说：「三月则上渡龙门，得渡为龙矣，否则点额而还」，成语点额而还，出处在此。</div>
+    </div>
+
+    <div class="slip">
+      <div class="from">卷十六 <i>谷水</i> 太学</div>
+      <q>邕乃自书丹于碑，使工镌刻，立于太学门外。于是后儒晚学，咸取正焉。及碑始立，其观视及笔写者，车乘日千馀两，填塞街陌矣。</q>
+      <div class="an">蔡邕书丹的熹平石经立在洛阳太学门前，摹写的人每天上千车，堵满街道。一部水道注，顺手保住了中国刻经现场的围观人潮。</div>
+    </div>
+
+    <div class="slip">
+      <div class="from">卷三十四 <i>江水</i> 三峡</div>
+      <q>自三峡七百里中，两岸连山，略无阙处，重岩叠嶂，隐天蔽日，自非停午夜分，不见曦月。</q>
+      <q>或王命急宣，有时朝发白帝，暮到江陵，其间千二百里，虽乘奔御风，不以疾也。</q>
+      <q>每至晴初霜旦，林寒涧肃，常有高猿长啸，属引凄异，空谷传响，哀转久绝。故渔者歌曰：巴东三峡巫峡长，猿鸣三声泪沾裳。</q>
+      <div class="an">全书最著名的一段山水文，后世选本千年不落。研究者多指出它大半承自刘宋盛弘之的荆州记：郦道元终生没有见过三峡，这三百里是默写的。</div>
+    </div>
+
+    <div class="slip">
+      <div class="from">卷三十四 <i>江水</i> 黄牛滩</div>
+      <q>朝发黄牛，暮宿黄牛，三朝三暮，黄牛如故。言水路纡深，回望如一矣。</q>
+      <div class="an">十六字的行船谣被钉在江边。一句「黄牛如故」，把三峡里走不出去的三天写尽了。</div>
+    </div>
+
+    <div class="slip">
+      <div class="from">卷四十 <i>渐江水</i> 钱塘</div>
+      <q>始开募，有能致一斛土石者，即与钱一千。旬日之间，来者云集，塘未成而不复取。于是载土石者皆弃而去，塘以之成，故改名钱塘焉。</q>
+      <div class="an">华信筑海塘的雇工骗局：出一千钱收一斛土，等人运到却说不要了，土弃满地，塘就此筑成，杭州从此叫钱塘。全书的旅程在这里入海。</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="stone"><div class="bi"></div><h2>打捞史</h2><div class="cap">这本书自己也是被捞起来的</div></div>
+    <p class="body">书比人更险。宋代已残，五卷亡佚，今本四十卷是后人拆分三十五卷凑齐的架子；传抄日久，经文注文互相窜乱，经里混进注语，注里混进经文，两层长成了一层。明万历间朱谋㙔作笺，才有一个像样的本子；清人再从用字的细缝里找规律，把经和注重新拆开。拆开之后，一场更大的官司开始了。</p>
+    <div class="chain">
+      <div class="link"><div class="era">北魏 · 五二七年</div><div class="what">作者死于阴盘驿亭</div><div class="note">书成，随后进入南北分裂与漫长传抄。</div></div>
+      <div class="link"><div class="era">宋</div><div class="what">残本五卷</div><div class="note">今本四十卷，是后人拆分凑齐的架子。</div></div>
+      <div class="link"><div class="era">明 · 万历</div><div class="what">朱谋㙔水经注笺</div><div class="note">第一个可读的刻本。</div></div>
+      <div class="link"><div class="era">清 · 乾隆</div><div class="what">赵一清水经注释，戴震四库馆校本</div><div class="note">殿本刊行后，世人发现它与赵本文字多同，抄袭公案由此而起。</div></div>
+      <div class="link"><div class="era">清至民国</div><div class="what">杨守敬熊会贞水经注疏</div><div class="note">集大成之作，官司打到今天没有终审判决：攻戴的有杨守敬、王国维，民国胡适晚年入场为戴震辩护，一桩学术案打了两百年。</div></div>
+    </div>
+    <div class="shelves">
+      <span>库藏 <b>水经注</b>　郦道元</span>
+      <span>库藏 <b>水经注释</b>　赵一清</span>
+      <span>库藏 <b>水经注集释订讹</b>　沈炳巽</span>
+      <span>库藏 <b>水经注疏</b>　杨守敬熊会贞</span>
+    </div>
+    <p class="body">这场官司的三方，就站在同一座书架上。</p>
+    <div class="scar">
+      <div class="lab">库本档案</div>
+      <code>新闻　网页　贴吧　知道　MP3　图片　国学　帮助　全文 书名 作者　　卷三十七</code>
+      <p>这座库的水经注只有一处伤：卷三十七的卷题行，被爬库时代的网页导航残留占住了，正文完好。四库馆时代的残缺换成了互联网时代的残缺，性质一样：书经过每一双手，都会留下那双手的指纹。</p>
+    </div>
+  </section>
+
+  <div class="estuary">
+    <div class="wave"></div>
+    <p>他死在缺水的冈上，<br>书里的水还在流。</p>
+    <p class="small">从昆仑到钱塘，四十卷水路一次走完。</p>
+  </div>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20），史藏地理部水经注；魏书北史引文同出该库。</p>
+    <p>本篇引文已与库内文件逐字核验；库本实测三十七万余字（不含空白）、四十卷。</p>
+    <p>古籍成书有其时代局限，内容仅作文献与文史研读之用。<a href="mulu.html">返回总目</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
