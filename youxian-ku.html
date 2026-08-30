@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游仙窟 · 殆知阁导读之一百零一</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --blue: #5e8fbb; --blue-dim: rgba(94,143,187,0.35); --blue-faint: rgba(94,143,187,0.14);
+    --hairline: rgba(232,228,220,0.14); --hairline-dark: rgba(25,25,23,0.16);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ hero：一双门 ============ */
+  .hero { min-height: 92dvh; display: flex; flex-direction: column; justify-content: center; padding: 56px 0 64px; }
+  .kicker { font-size: 14px; letter-spacing: 0.42em; color: var(--paper-faint); text-align: center; }
+  .gates { display: flex; justify-content: center; align-items: flex-end; gap: 56px; margin: 44px 0 8px; }
+  .gate { position: relative; width: 236px; height: 330px; border: 1px solid var(--blue-dim); border-bottom: none;
+          border-radius: 118px 118px 0 0; padding-top: 74px; text-align: center; }
+  .gate::before { content: ""; position: absolute; inset: 10px 10px 0 10px; border: 1px solid var(--blue-faint);
+          border-bottom: none; border-radius: 108px 108px 0 0; }
+  .gate .door-word { writing-mode: vertical-rl; margin: 0 auto; height: 200px; font-size: 25px; font-weight: 700;
+          letter-spacing: 0.18em; }
+  .gate .door-from { position: absolute; bottom: 16px; left: 0; right: 0; font-size: 12px; color: var(--paper-faint);
+          letter-spacing: 0.14em; }
+  .gate.g1 { color: var(--paper); }
+  .gate.g2 { color: var(--blue); border-color: var(--blue); }
+  .gate.g2::before { border-color: var(--blue-dim); }
+  .title-col { display: flex; flex-direction: column; align-items: center; gap: 18px; padding-bottom: 40px; }
+  .title-col h1 { writing-mode: vertical-rl; font-size: 64px; font-weight: 700; letter-spacing: 0.3em; height: 264px; }
+  .title-col .attribution { writing-mode: vertical-rl; height: 200px; font-size: 15px; color: var(--paper-dim);
+          letter-spacing: 0.32em; }
+  .hero-meta { text-align: center; font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.12em; }
+  .hero-line { text-align: center; color: var(--paper-dim); font-size: 16px; margin-top: 26px; max-width: 34em;
+          margin-left: auto; margin-right: auto; }
+  .hero-line b { color: var(--paper); font-weight: 700; }
+
+  /* ============ 纸白章节 ============ */
+  .light { background: var(--paper); color: var(--ink); }
+  .light .sec-head .no { color: var(--blue); }
+  .light .sec-head .rule { background: var(--hairline-dark); }
+  .sec { padding: 76px 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 10px; }
+  .sec-head .no { font-size: 14px; letter-spacing: 0.3em; color: var(--paper-faint); }
+  .sec-head h2 { font-size: 27px; font-weight: 600; letter-spacing: 0.14em; }
+  .sec-head .rule { flex: 1; height: 1px; background: var(--hairline); }
+  .lede { font-size: 16px; max-width: 44em; margin-bottom: 34px; }
+  .dark .lede { color: var(--paper-dim); }
+
+  .q { color: inherit; }
+  .dark .q { color: var(--paper); }
+  .light .q { color: var(--ink); }
+
+  /* 引文卡（纸白区） */
+  .quotebar { border-left: 3px solid var(--blue); padding: 10px 20px; margin: 22px 0; font-size: 17px; }
+  .quotebar .src { display: block; margin-top: 8px; font-size: 12.5px; color: var(--paper-dim); letter-spacing: 0.1em; }
+  .light .quotebar .src { color: var(--paper-faint); }
+
+  /* 窟的户口：双牍 */
+  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin: 30px 0; }
+  .duel .leaf { border: 1px solid var(--hairline-dark); padding: 24px 22px; position: relative; }
+  .duel .leaf h3 { font-size: 15px; letter-spacing: 0.26em; color: var(--blue); margin-bottom: 14px; font-weight: 700; }
+  .duel .leaf p { font-size: 15.5px; }
+  .duel .leaf .src { display: block; margin-top: 12px; font-size: 12.5px; color: var(--paper-faint); }
+  .midnote { text-align: center; max-width: 36em; margin: 34px auto 0; font-size: 16px; color: var(--ink-2); }
+  .midnote b { color: var(--blue); }
+
+  /* ============ 诗笺往还 ============ */
+  .turn { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 26px 0 8px; align-items: start; }
+  .jwrap { position: relative; }
+  .jwrap.right { grid-column: 2; justify-self: start; margin-right: 12%; }
+  .jwrap.left { grid-column: 1; justify-self: end; margin-left: 12%; }
+  .jwrap .who { position: absolute; top: -13px; font-size: 12px; letter-spacing: 0.3em; padding: 2px 10px;
+          background: var(--ink); color: var(--paper); z-index: 2; }
+  .jwrap .who.r { right: 14px; }
+  .jwrap .who.l { left: 14px; background: var(--blue); }
+  .jian { writing-mode: vertical-rl; height: 216px; padding: 20px 16px; font-size: 17.5px; line-height: 2.1;
+          letter-spacing: 0.12em; }
+  .jian span { display: block; }
+  .dark .jian { background: var(--paper); color: var(--ink); }
+  .light .jian { background: var(--ink); color: var(--paper); }
+  .chatnote { font-size: 14.5px; color: var(--paper-dim); max-width: 44em; margin: 20px 0; }
+  .light .chatnote { color: var(--ink-2); }
+  .chatnote b { color: var(--blue); }
+
+  /* 半面 */
+  .halfface { display: flex; justify-content: center; margin: 40px 0 8px; }
+  .halfface .disc { width: 148px; height: 148px; border-radius: 50%; position: relative; overflow: hidden;
+          border: 1px solid var(--hairline-dark); }
+  .halfface .disc::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg,
+          var(--ink) 0 50%, var(--blue) 50% 100%); }
+  .halfface .disc::after { content: "半面"; position: absolute; inset: 0; display: grid; place-items: center;
+          color: var(--paper); font-size: 21px; letter-spacing: 0.3em; text-shadow: 0 0 6px rgba(25,25,23,0.7); }
+  .halfnote { text-align: center; font-size: 13.5px; color: var(--paper-faint); margin-bottom: 26px; }
+
+  /* ============ 墨底节目单 ============ */
+  .dark { background: var(--ink); color: var(--paper); }
+  .bill { display: flex; justify-content: center; gap: 34px; margin: 38px 0 20px; flex-wrap: wrap; }
+  .bill .tab { writing-mode: vertical-rl; height: 128px; padding: 14px 9px; border: 1px solid var(--hairline);
+          font-size: 15.5px; letter-spacing: 0.24em; color: var(--paper-dim); }
+  .bill .tab:nth-child(odd) { transform: translateY(10px); }
+  .bill .tab b { color: var(--blue); font-weight: 700; }
+  .stages { margin-top: 34px; }
+  .stage { display: grid; grid-template-columns: 54px 1fr; gap: 22px; padding: 30px 0;
+          border-top: 1px solid var(--hairline); }
+  .stage .stagetab { writing-mode: vertical-rl; height: 118px; margin: 0 auto; border: 1px solid var(--blue-dim);
+          padding: 12px 7px; font-size: 15px; letter-spacing: 0.22em; color: var(--blue); text-align: center; }
+  .stage h3 { font-size: 19px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 10px; }
+  .stage p { font-size: 15.5px; color: var(--paper-dim); max-width: 46em; }
+  .stage .qline { margin-top: 12px; font-size: 17px; color: var(--paper); }
+  .stage .qline .who-tag { font-size: 12px; color: var(--blue); letter-spacing: 0.24em; margin-right: 12px; }
+  .stage .qline.alt .who-tag { color: var(--paper-dim); }
+
+  /* 通名双牍 */
+  .names { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin: 26px 0; }
+  .names .card { border: 1px solid var(--hairline); padding: 22px 20px; }
+  .names .card h4 { font-size: 13.5px; letter-spacing: 0.3em; color: var(--blue); margin-bottom: 12px; }
+  .names .card p { font-size: 15px; color: var(--paper-dim); }
+
+  /* 四果 */
+  .fruits { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 24px 0; }
+  .fruit { border: 1px solid var(--hairline); padding: 18px 14px 16px; text-align: center; }
+  .fruit .zi { font-size: 40px; font-weight: 700; color: var(--paper); line-height: 1.2; }
+  .fruit .hom { font-size: 13px; color: var(--blue); letter-spacing: 0.2em; margin: 4px 0 10px; }
+  .fruit .say { font-size: 14.5px; color: var(--paper-dim); line-height: 1.7; }
+
+  /* 咏物环 */
+  .objects { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 22px 0; }
+  .object { border-left: 2px solid var(--blue-dim); padding: 10px 16px; }
+  .object .nm { font-size: 14px; letter-spacing: 0.26em; color: var(--blue); }
+  .object .say { font-size: 15.5px; color: var(--paper-dim); margin-top: 6px; }
+
+  /* 算筹 */
+  .score { margin: 40px auto 0; max-width: 640px; border: 1px solid var(--hairline); padding: 24px 28px; }
+  .score h4 { font-size: 14px; letter-spacing: 0.34em; color: var(--blue); text-align: center; margin-bottom: 14px; }
+  .score .row { display: flex; justify-content: space-between; gap: 16px; font-size: 15px; color: var(--paper-dim);
+          padding: 7px 0; border-top: 1px dashed var(--hairline); }
+  .score .row:first-of-type { border-top: none; }
+  .score .row b { color: var(--paper); font-weight: 700; }
+
+  /* ============ 嵌名暗块 ============ */
+  .darkblock { background: var(--ink); color: var(--paper); margin: 34px 0; padding: 34px 30px 30px; }
+  .darkblock .db-title { text-align: center; font-size: 15px; letter-spacing: 0.5em; color: var(--blue);
+          margin-bottom: 18px; font-weight: 700; }
+  .darkblock .coda-note { color: var(--paper-dim); }
+
+  /* ============ 嵌名 ============ */
+  .duet { display: grid; grid-template-columns: 1fr auto 1fr; gap: 30px; align-items: center; margin: 40px 0 10px; }
+  .duet .jwrap { justify-self: center; }
+  .duet .jwrap.left { grid-column: 1; margin-left: 0; }
+  .duet .jwrap.right { grid-column: 3; margin-right: 0; }
+  .duet .jian { height: 240px; }
+  .duet .bigname { writing-mode: vertical-rl; font-size: 50px; font-weight: 700; color: var(--blue);
+          letter-spacing: 0.16em; height: 360px; display: flex; align-items: center; justify-content: center; }
+  .darkblock .q { color: var(--paper); }
+  .coda-note { max-width: 42em; margin: 26px auto 0; font-size: 16px; color: var(--paper-dim); text-align: center; }
+  .coda-note b { color: var(--paper); }
+
+  /* ============ 赠物账 ============ */
+  .ledger { margin: 30px 0; border-top: 2px solid var(--ink); }
+  .ledger .lrow { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 16px 4px;
+          border-bottom: 1px solid var(--hairline-dark); align-items: baseline; }
+  .ledger .route { font-size: 14.5px; letter-spacing: 0.06em; }
+  .ledger .route b { font-size: 16px; }
+  .ledger .route .arrow { color: var(--blue); padding: 0 8px; }
+  .ledger .gift { font-size: 15.5px; }
+  .ledger .gift .item { font-weight: 700; margin-right: 10px; }
+
+  /* ============ 书架 ============ */
+  .shelves { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 8px; margin: 40px 0 10px; align-items: stretch; }
+  .shelfcol h3 { text-align: center; font-size: 17px; letter-spacing: 0.3em; margin-bottom: 16px; font-weight: 700; }
+  .shelfcol.cn h3 { color: var(--paper-dim); }
+  .shelfcol.jp h3 { color: var(--blue); }
+  .shelfcol .cell { border: 1px solid var(--hairline); padding: 15px 18px; margin-bottom: 12px; font-size: 14.5px;
+          color: var(--paper-dim); }
+  .shelfcol .cell .era { font-size: 12px; letter-spacing: 0.26em; color: var(--paper-faint); display: block;
+          margin-bottom: 6px; }
+  .shelfcol .cell.full { color: var(--paper); border-color: var(--blue-dim); background: var(--blue-faint); }
+  .shelfcol .cell.full .era { color: var(--blue); }
+  .shelfcol .cell.empty { border-style: dashed; text-align: center; color: var(--paper-faint); padding: 22px 18px; }
+  .shelfcol .cell .src { display: block; margin-top: 8px; font-size: 12px; color: var(--paper-faint); }
+  .sea { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+  .sea .wave { writing-mode: vertical-rl; font-size: 13px; letter-spacing: 0.4em; color: var(--paper-faint); }
+  .backarrow { font-size: 20px; color: var(--blue); }
+  .shelfnote { max-width: 46em; margin: 26px auto 0; font-size: 15.5px; color: var(--paper-dim); }
+  .shelfnote b { color: var(--paper); }
+  .verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin: 34px 0; }
+  .verdict .vcard { border: 1px solid var(--hairline); padding: 22px 20px; }
+  .verdict .vcard h4 { font-size: 13.5px; letter-spacing: 0.3em; color: var(--blue); margin-bottom: 12px; }
+  .verdict .vcard p { font-size: 15px; color: var(--paper-dim); }
+  .nine { text-align: center; margin: 38px auto 0; max-width: 40em; font-size: 17px; color: var(--paper); }
+  .nine .rank { font-size: 15px; color: var(--blue); letter-spacing: 0.3em; display: block; margin-top: 10px; }
+
+  /* ============ 出山 ============ */
+  .exitverse { text-align: center; padding: 30px 0 10px; }
+  .exitverse .v { font-size: 21px; letter-spacing: 0.14em; color: var(--ink); }
+  .exitverse .cap { font-size: 13px; color: var(--paper-faint); margin-top: 14px; letter-spacing: 0.2em; }
+
+  /* ============ 校记 ============ */
+  .jiaoji { counter-reset: jk; }
+  .jiaoji p { position: relative; padding-left: 34px; font-size: 14.5px; color: var(--ink-2); margin-bottom: 12px; }
+  .jiaoji p::before { counter-increment: jk; content: counter(jk, cjk-ideographic); position: absolute; left: 0; top: 0;
+          width: 22px; height: 22px; border: 1px solid var(--blue); border-radius: 50%; display: grid;
+          place-items: center; font-size: 12px; color: var(--blue); }
+  .jiaoji b { color: var(--ink); }
+
+  /* 页脚 */
+  footer.page { border-top: 1px solid var(--hairline); padding: 40px 0 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page p { margin-bottom: 8px; }
+  .seal { display: inline-block; border: 1.5px solid #c0453c; color: #c0453c; font-size: 12px; letter-spacing: 0.3em;
+          padding: 4px 10px 4px 13px; margin-bottom: 14px; }
+
+  @media (max-width: 720px) {
+    .gates { gap: 18px; flex-wrap: wrap; }
+    .title-col { order: -1; width: 100%; padding-bottom: 6px; }
+    .gate { width: 150px; height: 250px; padding-top: 50px; border-radius: 75px 75px 0 0; }
+    .gate .door-word { height: 150px; font-size: 18px; }
+    .title-col h1 { font-size: 44px; height: 190px; }
+    .duel, .names, .verdict { grid-template-columns: 1fr; }
+    .turn { gap: 12px; }
+    .jian.right { margin-right: 0; }
+    .jian.left { margin-left: 0; }
+    .fruits { grid-template-columns: repeat(2, 1fr); }
+    .objects { grid-template-columns: 1fr; }
+    .duet { grid-template-columns: 1fr; justify-items: center; }
+    .duet .jwrap.left, .duet .jwrap.right { grid-column: auto; }
+    .shelves { grid-template-columns: 1fr; }
+    .sea { flex-direction: row; padding: 10px 0; }
+    .sea .wave { writing-mode: horizontal-tb; }
+    .ledger .lrow { grid-template-columns: 1fr; gap: 6px; }
+    .stage { grid-template-columns: 40px 1fr; gap: 12px; }
+    .stage .stagetab { height: 96px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HERO 一双门 ================= -->
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">殆知阁导读 · 之一百零一</p>
+    <div class="gates">
+      <div class="gate g1">
+        <div class="door-word q">此是神仙窟也</div>
+        <div class="door-from"><span class="q">向见称扬，谓言虚假</span></div>
+      </div>
+      <div class="title-col">
+        <h1>游仙窟</h1>
+        <div class="attribution">唐　张文成</div>
+      </div>
+      <div class="gate g2">
+        <div class="door-word q">此是文章窟也</div>
+        <div class="door-from"><span class="q">向见诗篇，谓言凡俗</span></div>
+      </div>
+    </div>
+    <p class="hero-meta">库本去空白 10,719 字　全篇一宿　诗回合 58　笑声 32 见</p>
+    <p class="hero-line">一场官差投宿的艳遇，从头到尾用诗交谈。书里人夸对方<b>「<span class="q">却是神仙</span>」「<span class="q">更胜文章</span>」</b>，一句话把书名拆成两扇门。这卷书在中土失传了几百年，在日本被当教科书读了几百年，清末又渡海回来。</p>
+  </div>
+</header>
+
+<!-- ================= 一 窟的户口 ================= -->
+<section class="light sec">
+  <div class="wrap">
+    <div class="sec-head"><span class="no">一</span><h2>窟的户口</h2><span class="rule"></span></div>
+    <p class="lede">小说开口先装正经，引《尚书》讲地理，像一篇河源考察报告的开头。臣子奉使，路上投宿，这是唐人公文里最常见的框架。</p>
+    <div class="quotebar">
+      <span class="q">若夫积石山者，在乎金城西南，河所经也。《书》云：“导河积石，至于龙门。”即此山是也。</span>
+      <span class="src">开卷第一句　次句自述行程，自陇西出发、<span class="q">奉使河源</span>（汧字库本作拆字，见校记）</span>
+    </div>
+    <p class="chatnote">但这座山有真实的户口。同一带黄河峡口的悬崖上真有两座名窟，郦道元记过账：羌语管鬼叫「唐述」，石窟因此得名；旁边一座时亮窟，据说<b>藏过古书五卷</b>。</p>
+    <div class="duel">
+      <div class="leaf">
+        <h3>小说里的窟</h3>
+        <p><span class="q">古老相传云：“此是神仙窟也；人踪罕及，鸟路才通，每有香果琼枝，天衣锡钵，自然浮出，不知从何而至。”</span></p>
+        <span class="src">游仙窟　库本</span>
+      </div>
+      <div class="leaf">
+        <h3>地理书里的窟</h3>
+        <p><span class="q" data-src="水经注">彼羌目鬼曰唐述，复因名之为唐述山，指其堂密之居，谓之唐述窟。</span>又引《秦州记》：<span class="q" data-src="水经注">河峡崖傍有二窟：一曰唐述窟，高四十丈。</span>西二里的<span class="q" data-src="水经注">时亮窟，高百丈，广二十丈，深三十丈，藏古书五卷</span>。</p>
+        <span class="src">水经注　河水篇（跨库辅证）</span>
+      </div>
+    </div>
+    <p class="midnote">神仙窟的原型立在黄河峡口，本是一座鬼窟的名字。<b>水经注说有一窟藏古书五卷</b>，张文成这一卷，后来确实是从另一个方向的窟里，也就是海东的藏书楼里，回到人间的那一卷。</p>
+  </div>
+</section>
+
+<!-- ================= 二 半面 ================= -->
+<section class="light sec">
+  <div class="wrap">
+    <div class="sec-head"><span class="no">二</span><h2>半面</h2><span class="rule"></span></div>
+    <p class="lede">投宿要经三道门：浣衣女子引路，草亭等候，然后隔着门帘，先闻筝声，再见半面。全书的调情从这里开始，也全靠诗来递话。</p>
+    <div class="turn">
+      <div class="jwrap right"><div class="who r">下官　咏</div>
+        <div class="jian q"><span>自隐多姿则</span><span>欺他独自眠</span><span>故故将纤手</span><span>时时弄小弦</span></div>
+      </div>
+      <div class="jwrap left"><div class="who l">十娘　答</div>
+        <div class="jian q"><span>面非他舍面</span><span>心是自家心</span><span>何处关天事</span><span>辛苦漫追寻</span></div>
+      </div>
+    </div>
+    <div class="halfface"><div class="disc"></div></div>
+    <p class="halfnote"><span class="q">举头门中，忽见十娘半面</span></p>
+    <div class="turn">
+      <div class="jwrap right"><div class="who r">下官　咏</div>
+        <div class="jian q"><span>敛笑偷残靥</span><span>含羞露半唇</span><span>一眉犹叵耐</span><span>双眼定伤人</span></div>
+      </div>
+      <div class="jwrap left"><div class="who l">十娘　答</div>
+        <div class="jian q"><span>好是他家好</span><span>人非着意人</span><span>何须漫相弄</span><span>几许费精神</span></div>
+      </div>
+    </div>
+    <p class="chatnote">隔帘四首，一来一往，口气全是拒绝，句句在收网。夜里下官递进去一封长笺，末句几乎在喊救命：<span class="q">无情明月，故故临窗；多事春风，时时动帐。愁人对此，将何自堪！</span>十娘把笺收了，回给婢女一句话，算是把门开了一条缝：<span class="q">向来剧戏相弄，真成欲逼人。</span></p>
+  </div>
+</section>
+
+<!-- ================= 三 一夜的节目单 ================= -->
+<section class="dark sec">
+  <div class="wrap">
+    <div class="sec-head"><span class="no">三</span><h2>一夜的节目单</h2><span class="rule"></span></div>
+    <p class="lede">进了中堂，天亮之前是一场接一场的游戏。五嫂是席上的司仪，酒令、赌局、果局、咏物、歌舞，每个节目都押着诗句进行。</p>
+    <div class="bill">
+      <div class="tab"><b>壹</b>　行酒</div>
+      <div class="tab"><b>贰</b>　酒令</div>
+      <div class="tab"><b>叁</b>　双六</div>
+      <div class="tab"><b>肆</b>　果子</div>
+      <div class="tab"><b>伍</b>　咏物</div>
+      <div class="tab"><b>陆</b>　歌舞</div>
+    </div>
+
+    <div class="stages">
+      <div class="stage">
+        <div class="stagetab">先通名</div>
+        <div>
+          <h3>互换家门</h3>
+          <p>落座之前先报户口。这一报，报出了全书最容易被笑声盖过的两件事：十娘不是寻常女子，下官也不是寻常客。</p>
+          <div class="names">
+            <div class="card">
+              <h4>十娘自述</h4>
+              <p><span class="q">儿是清河崔公之末孙，适弘农杨府君之长子。即成大礼，随父住于河西。蜀生狡猾，屡侵边境，兄及夫主，弃笔从戎，身死寇场，茕魂莫返。儿年十七，死守一夫；嫂年十九，誓不再醮。</span></p>
+            </div>
+            <div class="card">
+              <h4>下官自述</h4>
+              <p><span class="q">前被宾贡，已入甲科；后属搜扬，又蒙高第。奉敕授关内道小县尉，见宛河源道行军总管记室。</span></p>
+            </div>
+          </div>
+          <p>一位是十七岁守寡的边军遗孀，一位是初入仕途的九品县尉。书里所有的调笑，都垫在这两句身世之上。</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stagetab">壹</div>
+        <div>
+          <h3>行酒</h3>
+          <p>换香取酒，三升大钵端上来，谁先提杯成了难题。五嫂一句戏言定了席上的座次，也定了这一夜的走向。</p>
+          <div class="qline"><span class="who-tag">五嫂　笑曰</span><span class="q">娘子既是主人母，少府须作主人公。</span></div>
+          <div class="qline alt"><span class="who-tag">五嫂　又笑</span><span class="q">只恐张郎不能禁此事。</span>　众人皆大笑。</div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stagetab">贰</div>
+        <div>
+          <h3>酒令　赋诗</h3>
+          <p>行令不用俗句，轮咏诗经，断章取意，各人借古人说话。十娘起令，五嫂作伐柯之辞，十娘再接一篇被弃女子的怨词压阵，五嫂当场判词。</p>
+          <div class="qline"><span class="who-tag">十娘　令</span><span class="q">关关雎鸠，在河之洲。窈窕淑女，君子好仇。</span></div>
+          <div class="qline alt"><span class="who-tag">五嫂　接</span><span class="q">折薪如之何？匪斧不克。娶妻如之何？匪媒不得。</span></div>
+          <div class="qline"><span class="who-tag">十娘　压</span><span class="q">女也不爽，士二其行。士也罔极，二三其德。</span></div>
+          <div class="qline alt"><span class="who-tag">五嫂　判</span><span class="q">张郎心专，赋诗大有道理。俗谚曰：‘心欲专，凿石穿。’</span></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stagetab">叁</div>
+        <div>
+          <h3>双六　赌宿</h3>
+          <p>取双六局来赌酒，下官当场改了赌注。十娘笑着讲了个胡汉骑驴的绕口令，意思是换着来总归是他输；五嫂干脆把结局预告了。</p>
+          <div class="qline"><span class="who-tag">下官　曰</span><span class="q">下官不能赌酒，共娘子赌宿。</span></div>
+          <div class="qline alt"><span class="who-tag">下官　立法</span><span class="q">十娘输筹，则共下官卧一宿；下官输筹，则共十娘卧一宿。</span></div>
+          <div class="qline"><span class="who-tag">十娘　笑</span><span class="q">汉骑驴则胡步行，胡步行则汉骑驴，总悉输他便点。</span></div>
+          <div class="qline alt"><span class="who-tag">十娘　又笑</span><span class="q">遮三不得一，觅两都卢失。</span></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stagetab">肆</div>
+        <div>
+          <h3>果子机警</h3>
+          <p>席上拿果子行令，四句话四个谐音，把一场心事全塞进果盘里。这是唐人谈话艺术的展品，也是全书最要紧的四句机锋。</p>
+          <div class="fruits">
+            <div class="fruit"><div class="zi">枣</div><div class="hom">谐　早</div><div class="say"><span class="q">但问意如何，相知不在枣。</span></div></div>
+            <div class="fruit"><div class="zi">梨</div><div class="hom">谐　离</div><div class="say"><span class="q">儿今正意密，不忍即分梨。</span></div></div>
+            <div class="fruit"><div class="zi">杏</div><div class="hom">谐　幸</div><div class="say"><span class="q">忽遇深恩，一生有杏。</span></div></div>
+            <div class="fruit"><div class="zi">柰</div><div class="hom">谐　奈</div><div class="say"><span class="q">当此之时，谁能忍柰！</span></div></div>
+          </div>
+          <p>不早、不离、有幸、奈何。果子传了一轮，四个人心照不宣。</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stagetab">伍</div>
+        <div>
+          <h3>咏物环</h3>
+          <p>随手拈起席上器物就咏，咏物全是双关。刀与鞘一问一答，是全卷最露骨也最漂亮的一组。</p>
+          <div class="objects">
+            <div class="object"><div class="nm">刀子　下官咏</div><div class="say"><span class="q">自怜胶漆重，相思意不穷。可惜尖头物，终日在皮中。</span></div></div>
+            <div class="object"><div class="nm">刀鞘　十娘答</div><div class="say"><span class="q">数捺皮应缓，频磨快转多。渠今拔出后，空鞘欲如何！</span></div></div>
+            <div class="object"><div class="nm">破铜熨斗　十娘咏</div><div class="say"><span class="q">旧来心肚热，无端强熨他。即今形势冷，谁肯重相磨！</span></div></div>
+            <div class="object"><div class="nm">笔砚　下官咏</div><div class="say"><span class="q">摧毛任便点，爱色转须磨。所以研难竟，良由水太多。</span></div></div>
+            <div class="object"><div class="nm">尺八　十娘咏</div><div class="say"><span class="q">眼多本自令渠爱，口少由来每被侵；无事风声彻他耳，教人气满自填心。</span></div></div>
+          </div>
+          <p>后园散步，李子落怀、蜂子上脸，也各成一诗：<span class="q">问李树：如何意不同，应来主手里，翻入客怀中？</span>　<span class="q">问蜂子：蜂子太无情，飞来蹈人面，欲似意相轻？</span></p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stagetab">陆</div>
+        <div>
+          <h3>歌舞</h3>
+          <p>婢女奏乐，五嫂与十娘起舞，下官也舞了一场。笑闹之间，两句诗文把全场的戏份都点破了。</p>
+          <div class="qline"><span class="who-tag">下官　自嘲</span><span class="q">不是百兽率舞，乃是凤凰来仪。</span>　一时大笑。</div>
+          <div class="qline alt"><span class="who-tag">桂心　歌</span><span class="q">不辞歌者苦，但伤知音稀。</span></div>
+          <p style="margin-top:12px">曛黄之后，五嫂起身收场：</p>
+          <div class="qline"><span class="who-tag">五嫂　曰</span><span class="q">向来调谑，无处不佳；时既曛黄，且还房室。庶张郎共娘子安置。</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="score">
+      <h4>宴罢算筹　脚本复算</h4>
+      <div class="row"><span>一席之间</span><b>笑 32 见　酒巡 2 见</b></div>
+      <div class="row"><span>谁被叫得最多</span><b>十娘 110 见　下官 70 见　五嫂 68 见　张郎 15 见</b></div>
+      <div class="row"><span>诗回合 58</span><b>咏曰 53＋答咏 1＋报诗曰 2＋报咏 2</b></div>
+      <div class="row"><span>全帙</span><b>去空白 10,719 字</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 四 晓别 ================= -->
+<section class="light sec">
+  <div class="wrap">
+    <div class="sec-head"><span class="no">四</span><h2>晓别　赠物账</h2><span class="rule"></span></div>
+    <p class="lede">一夜欢场，散场写得比欢场更重。吵醒他们的不是鸡，是两只没眼色的禽鸟。随后是一场结账：诗一笔，物一笔，两清。</p>
+    <div class="quotebar">
+      <span class="q">谁知可憎病鹊，夜半惊人；薄媚狂鸡，三更唱晓。</span>
+    </div>
+    <p class="chatnote">下官拭泪道<span class="q">所恨别易会难，去留乖隔，王事有限，不敢稽停。每一寻思，痛深骨髓。</span>十娘的回话把一夜的分量压平了：<span class="q">他道愁胜死，儿言死胜愁。愁来百处痛，死去一时休。</span>三首别诗之后，还有一幕最安静的戏。</p>
+    <div class="turn" style="margin-bottom:30px">
+      <div class="jwrap left"><div class="who l">十娘　别诗</div>
+        <div class="jian q"><span>别时终是别</span><span>春心不值春</span><span>羞见孤鸾影</span><span>悲看一骑尘</span></div>
+      </div>
+      <div class="jwrap right"><div class="who r">五嫂　别诗</div>
+        <div class="jian q" style="height:256px"><span>此时经一去</span><span>谁知隔几年</span><span>双凫伤别绪</span><span>独鹤惨离弦</span><span>怨起移酲后</span><span>愁生落醉前</span><span>若使人心密</span><span>莫惜马蹄穿</span></div>
+      </div>
+    </div>
+
+    <div class="darkblock">
+      <p class="db-title">嵌名</p>
+      <p class="chatnote" style="color:var(--paper-dim)">十娘自报小名琼英（<span class="q">十娘小名琼英</span>），下官借卞和献玉的典故咏她，十娘回敬的织锦诗里，藏着一件让下官瞿然的东西。</p>
+      <div class="duet">
+        <div class="jwrap left"><div class="who l">下官　咏琼英</div>
+          <div class="jian q" style="background:var(--paper);color:var(--ink)"><span>卞和山未斫</span><span>羊雍地不耕</span><span>自怜无玉子</span><span>何日见琼英</span></div>
+        </div>
+        <div class="bigname q">何日见文成</div>
+        <div class="jwrap right"><div class="who r" style="background:var(--ink)">十娘　答</div>
+          <div class="jian q" style="background:var(--blue);color:var(--paper)"><span>凤锦行须赠</span><span>龙梭久绝声</span><span>自恨无机杼</span><span>何日见文成</span></div>
+        </div>
+      </div>
+      <p class="coda-note">库本卷尾不署通行考订的名字，署的正是这两个字。十娘一句机锋喊出作者的名号，<span class="q">下官瞿然，破愁成笑。</span>是书中人在喊作者，还是作者借书中人喊自己，书没有说。随后，赠物开账。</p>
+    </div>
+
+    <div class="ledger">
+      <div class="lrow"><div class="route"><b>张郎</b><span class="arrow">赠</span>十娘</div><div class="gift"><span class="item">相思枕</span><span class="q">聊将代左腕，长夜枕渠头。</span></div></div>
+      <div class="lrow"><div class="route"><b>张郎</b><span class="arrow">赠</span>十娘</div><div class="gift"><span class="item">扬州青铜镜</span><span class="q">若道人心变，从渠照胆看。</span></div></div>
+      <div class="lrow"><div class="route"><b>十娘</b><span class="arrow">报</span>张郎</div><div class="gift"><span class="item">双履</span><span class="q">聊以当儿心，竟日承君足。</span></div></div>
+      <div class="lrow"><div class="route"><b>十娘</b><span class="arrow">赠</span>张郎</div><div class="gift"><span class="item">手中扇</span><span class="q">希君掌中握，勿使恩情歇！</span></div></div>
+      <div class="lrow"><div class="route"><b>十娘</b><span class="arrow">奉</span>五嫂</div><div class="gift"><span class="item">益州新样锦一匹</span><span class="q">裁为八幅被，时复一相思。</span></div></div>
+      <div class="lrow"><div class="route"><b>五嫂</b><span class="arrow">送</span>张郎</div><div class="gift"><span class="item">金钗</span><span class="q">莫言钗意小，可以挂渠冠。</span></div></div>
+      <div class="lrow"><div class="route"><b>众婢</b><span class="arrow">白送</span>张郎</div><div class="gift"><span class="q">桂心已下，或脱银钗，落金钏，解帛子，施罗巾，皆白送张郎</span>，临别一句<span class="q">好去。若因行李，时复相过。</span></div></div>
+    </div>
+    <p class="chatnote">张郎回赠下官的那句口信，把两世路人写透了：<span class="q">两剑俄分匣，双凫忽异林。</span>十娘最后的话是全书的底色：<span class="q">天涯地角知何处，玉体红颜难再遇！但令翅羽为人生，会些高飞共君去。</span></p>
+    <div class="quotebar">
+      <span class="q">可行至二三里，回头看数人，犹在旧处立。</span>
+      <span class="src">出山之前　最后一眼</span>
+    </div>
+    <div class="exitverse">
+      <p class="v"><span class="q">望神仙兮不可见，普天地兮知余心；思神仙兮不可得，觅十娘兮断知闻</span></p>
+      <p class="cap">卷末骚体　书尽于此</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 五 书的两条命 ================= -->
+<section class="dark sec">
+  <div class="wrap">
+    <div class="sec-head"><span class="no">五</span><h2>书的两条命</h2><span class="rule"></span></div>
+    <p class="lede">这本书活着的时候名满天下。两唐书里的记载互相补台：考功员外郎赞它万中无一，突厥可汗替它抱屈，而新罗与日本的使臣，是拿着金宝来买的。</p>
+    <div class="verdict">
+      <div class="vcard">
+        <h4>青钱学士</h4>
+        <p>员半千评：<span class="q" data-src="旧唐书">张子之文如青钱，万简万中，未闻退时。</span></p>
+        <span class="src" style="display:block;margin-top:10px;font-size:12px;color:var(--paper-faint)">旧唐书　张荐传附</span>
+      </div>
+      <div class="vcard">
+        <h4>敌国的叹</h4>
+        <p>默啜可汗问使者：<span class="q" data-src="旧唐书">国有此人而不用，汉无能为也。</span>又记：<span class="q" data-src="新唐书">新罗、日本使至，必出金宝购其文。</span></p>
+        <span class="src" style="display:block;margin-top:10px;font-size:12px;color:var(--paper-faint)">旧唐书　新唐书（跨库辅证）</span>
+      </div>
+    </div>
+
+    <div class="shelves">
+      <div class="shelfcol cn">
+        <h3>中土书架</h3>
+        <div class="cell full"><span class="era">唐</span>文名满天下，贩书的事业做到了海外。</div>
+        <div class="cell empty">宋　架上一格　空</div>
+        <div class="cell empty">元　架上一格　空</div>
+        <div class="cell empty">明　架上一格　空</div>
+        <div class="cell full"><span class="era">清光绪间</span><span class="q" data-src="日本访书志">此书中土著录家皆未之及，首题“宁州襄乐县尉张文成作”。</span><span class="src">杨守敬在日本访书时重新发现　记入日本访书志</span></div>
+      </div>
+      <div class="sea">
+        <div class="wave">一段海</div>
+        <div class="backarrow">⟵</div>
+      </div>
+      <div class="shelfcol jp">
+        <h3>海东书架</h3>
+        <div class="cell full"><span class="era">九世纪初</span><span class="q" data-src="日本访书志">嵯峨天皇书卷之中，撰得《游仙窟》，召纪传儒者，欲传受也。诸家皆无传，学士伊时深愁叹。</span><span class="src">入唐使臣携归后　宫廷里已无人能授此书</span></div>
+        <div class="cell full"><span class="era">日本传说</span>学士洁斋七日求教于木岛社头老翁，翁曰<span class="q" data-src="日本访书志">我幼少自吝受此书，年阑倦事，仅所学诵而已。</span><span class="src">杨守敬抄录的日本古序　称老翁几为神明化现</span></div>
+        <div class="cell full"><span class="era">文保三年　1319</span><span class="q" data-src="日本访书志">文保三年四月十四日授申圆禅庵序毕。文章生英房。</span><span class="src">卷尾传授记　纪年换算由本页标注</span></div>
+        <div class="cell full"><span class="era">江户以来</span><span class="q" data-src="日本访书志">此书日本别有刻本，分为五卷</span>；清人辑全唐诗时，已有从日本抄回的篇章。</div>
+        <div class="cell full"><span class="era">清末民国</span><span class="q" data-src="思无邪小记">序谓此书系自日本抄传者，内有张文成崔五嫂赠答之诗数章。</span>杨守敬访得全书，民国笔记还在记它借不到。</div>
+      </div>
+    </div>
+    <p class="shelfnote">杨守敬拿它和元稹的莺莺传对读，说<span class="q" data-src="日本访书志">男女姓氏并同《会真记》，而情事稍疏，以骈丽之辞，写猥亵之状</span>，并把张君瑞的原型追到这里。旧唐书还留下一句怪评，说作者性褊躁不持士行，为端士所恶。一卷书凭什么丢了，两边的说法其实是同一句。</p>
+    <div class="verdict">
+      <div class="vcard">
+        <h4>官方判词</h4>
+        <p>新唐书：<span class="q" data-src="新唐书">浮艳少理致，其论著率诋诮芜猥，然大行一时，晚进莫不传记。</span></p>
+        <span class="src" style="display:block;margin-top:10px;font-size:12px;color:var(--paper-faint)">新唐书　张荐传附</span>
+      </div>
+      <div class="vcard">
+        <h4>一千两百年后</h4>
+        <p>民国人给香艳书分九品，它列中上，<span class="q" data-src="思无邪小记">《西厢记》、《红楼梦》、《绿野仙踪》、《游仙窟》，此中上也。</span>又说<span class="q" data-src="思无邪小记">此书原本藏日本图书馆，今尚存。</span></p>
+        <span class="src" style="display:block;margin-top:10px;font-size:12px;color:var(--paper-faint)">思无邪小记（跨库辅证）</span>
+      </div>
+    </div>
+    <p class="shelfnote" style="text-align:center">「浮艳少理致」与「然大行一时」写在同一行。让它被士大夫丢开的理由，和让它被天下人抄写的理由，是同一个。</p>
+  </div>
+</section>
+
+<!-- ================= 校记 ================= -->
+<section class="light sec">
+  <div class="wrap">
+    <div class="sec-head"><span class="no">附</span><h2>校记</h2><span class="rule"></span></div>
+    <div class="jiaoji">
+      <p>库本题「游仙窟　唐　张文成」，不署鷟名；张鷟为通行考订名，两唐书本传附见其孙张荐传。《日本访书志》记所见本首题宁州襄乐县尉张文成作。</p>
+      <p>库本拆字括注多处：氵开（汧）、〈辶屯〉、〈石登〉、衤玄、白敫（皦）、女冥等，涉句本页均未引。</p>
+      <p>缺字□八见，如「缘细葛，□轻舟」「南有□木」（通行作乔），涉句未引。</p>
+      <p>半角逗号一处：五嫂曰「无可散情,且游后园,暂释怀抱」，照录未引。</p>
+      <p>「士二其行」通行本作士贰其行，「园裹华开」之裹当作里，本页均照库本。</p>
+      <p>「欲竟升头」句疑有脱字，未引。诗回合 58 与各机数由脚本按库本全文复算。</p>
+      <p>书史诸事皆以库内文献互证：旧唐书、新唐书、水经注、日本访书志、思无邪小记；文保三年换算公元由本页标注。本轮未联网复核。</p>
+    </div>
+  </div>
+</section>
+
+<footer class="page">
+  <div class="wrap">
+    <div class="seal">引文核验讫</div>
+    <p>文本来源：殆知阁简体库子藏笔记（github.com/robertsong2000/daizhigev20）；窟的户口与书史辅证同库水经注、旧唐书、新唐书、日本访书志、思无邪小记。</p>
+    <p>本页全部引文经与库本逐字核对（去标点异体归一后比对，跨库引文分源核验）；机数条目均由脚本复算。</p>
+    <p>全书为男性视角的冶游文字，将倚门调笑与寡妇再醮当作风流来欣赏；十娘「儿年十七，死守一夫」的自述与满纸笑声并置，皆时代产物，读者自鉴。</p>
+  </div>
+</footer>
+
+</body>
+</html>
