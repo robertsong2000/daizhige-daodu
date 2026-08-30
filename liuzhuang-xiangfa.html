@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>柳庄相法 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --cinnabar: #c0453c; --cinnabar-soft: rgba(192,69,60,0.14);
+    --hairline: rgba(232,228,220,0.13);
+    --hairline-ink: rgba(25,25,23,0.16);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 26px; }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+
+  /* hero: two night torches + guard plaques */
+  .hero { position: relative; min-height: 92dvh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+  .torch { position: absolute; top: 8%; width: 340px; height: 340px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,150,63,0.34) 0%, rgba(192,69,60,0.16) 38%, transparent 70%);
+    filter: blur(6px); animation: breathe 5.2s ease-in-out infinite; }
+  .torch.tl { left: -120px; }
+  .torch.tr { right: -120px; animation-delay: 2.4s; }
+  @keyframes breathe { 0%,100% { opacity: 0.75; transform: scale(1); } 50% { opacity: 1; transform: scale(1.07); } }
+  .hero-inner { position: relative; z-index: 2; padding: 88px 0 60px; }
+  .kicker { font-size: 13.5px; letter-spacing: 0.4em; color: var(--paper-faint); }
+  .guard-row { display: flex; gap: 10px; justify-content: center; margin: 54px 0 30px; flex-wrap: nowrap; }
+  .plaque { writing-mode: vertical-rl; width: 44px; height: 208px; display: grid; place-items: center;
+    background: var(--ink-2); border: 1px solid var(--hairline); color: var(--paper-dim);
+    font-size: 15px; letter-spacing: 0.28em; position: relative; }
+  .plaque::after { content: ""; position: absolute; top: 7px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px;
+    border-radius: 50%; background: var(--paper-faint); opacity: 0.5; }
+  .plaque.king { background: var(--paper); color: var(--ink); border-color: var(--paper); font-weight: 700; }
+  .plaque.king::before { content: "殿下"; position: absolute; top: 9px; right: -13px; width: 27px; height: 27px;
+    background: var(--cinnabar); color: #f5efe6; font-size: 11px; letter-spacing: 0.1em;
+    writing-mode: horizontal-tb; display: grid; place-items: center; border-radius: 3px;
+    transform: rotate(8deg); box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+  .plaque.king::after { background: var(--cinnabar); opacity: 1; }
+  .hero-grid { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; }
+  .hero-lede { max-width: 30em; color: var(--paper-dim); font-size: 16px; }
+  .hero-lede b { color: var(--paper); font-weight: 700; }
+  .bookplate { writing-mode: vertical-rl; height: 300px; font-size: 54px; font-weight: 700; letter-spacing: 0.3em;
+    border-right: 1px solid var(--hairline); padding-right: 22px; position: relative; flex: none; }
+  .bookplate small { position: absolute; bottom: 0; right: -14px; font-size: 15px; letter-spacing: 0.2em;
+    color: var(--paper-dim); font-weight: 400; }
+  .seal { display: inline-grid; place-items: center; background: var(--cinnabar); color: #f5efe6;
+    font-size: 15px; padding: 8px 10px; letter-spacing: 0.18em; border-radius: 3px; margin-top: 18px; }
+
+  section { padding: 72px 0 30px; }
+  section.onpaper { background: var(--paper); color: var(--ink); }
+  section.onpaper .kicker { color: var(--paper-faint); }
+  .stitle { font-size: 30px; font-weight: 700; letter-spacing: 0.1em; margin: 14px 0 8px; }
+  section.onpaper .stitle { color: var(--ink); }
+  .slede { color: var(--paper-dim); max-width: 44em; font-size: 15.5px; }
+  section.onpaper .slede { color: #57534a; }
+  .k { font-size: 12.5px; letter-spacing: 0.36em; color: var(--paper-faint); }
+  section.onpaper .k { color: #8a8478; }
+
+  .q { color: inherit; }
+  section .q { background: var(--cinnabar-soft); box-shadow: inset 3px 0 0 var(--cinnabar); padding: 0.05em 0.4em; }
+  section.onpaper .q { background: rgba(192,69,60,0.09); }
+  .q[data-src]::after { content: "据《明史》"; display: inline-block; font-size: 11px; color: var(--paper-faint);
+    margin-left: 8px; letter-spacing: 0.12em; vertical-align: 0.22em; }
+  section.onpaper .q[data-src]::after { color: #8a8478; }
+
+  .prose { max-width: 46em; }
+  .prose p { margin: 14px 0; text-indent: 2em; }
+  .prose p.noind { text-indent: 0; }
+  .bigquote { font-size: clamp(26px, 3.6vw, 40px); font-weight: 700; letter-spacing: 0.08em; line-height: 1.6; margin: 30px 0 6px; }
+  .bigquote .q { background: none; box-shadow: none; padding: 0; color: var(--cinnabar); }
+  .attr { font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.14em; }
+
+  /* three eye-training cards */
+  .tri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 34px 0 8px; }
+  .tri .card { border: 1px solid var(--hairline); padding: 26px 22px; position: relative; }
+  .tri .card .n { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.3em; }
+  .tri .card h3 { font-size: 21px; font-weight: 700; margin: 10px 0 8px; letter-spacing: 0.1em; }
+  .tri .card p { font-size: 14px; color: var(--paper-dim); }
+
+  /* face map */
+  .facewrap { display: grid; grid-template-columns: minmax(300px, 430px) 1fr; gap: 44px; align-items: center; margin-top: 40px; }
+  .facebox { border: 1px solid var(--hairline-ink); background: #efebe3; padding: 18px; position: relative; }
+  .facebox .cap { font-size: 12.5px; color: #8a8478; letter-spacing: 0.2em; margin-top: 12px; text-align: center; }
+  .legend .lg { display: grid; grid-template-columns: 92px 1fr; gap: 14px; padding: 13px 0; border-top: 1px solid var(--hairline-ink); font-size: 14.5px; align-items: baseline; }
+  .legend .lg b { font-size: 16.5px; letter-spacing: 0.08em; }
+  .legend .lg span { color: #57534a; }
+  .chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
+  .chip { border: 1px solid var(--hairline-ink); font-size: 13px; padding: 7px 13px; color: #57534a; letter-spacing: 0.08em; }
+  .chip b { color: var(--cinnabar); }
+
+  /* 百问 */
+  .qa { margin-top: 34px; display: grid; gap: 20px; }
+  .qa .item { border: 1px solid var(--hairline-ink); background: #efebe3; color: var(--ink); }
+  .qa .ask { padding: 15px 22px; border-bottom: 1px dashed var(--hairline-ink); font-weight: 700; letter-spacing: 0.04em; }
+  .qa .ask .tag, .qa .ans .tag { display: inline-grid; place-items: center; min-width: 26px; height: 26px; margin-right: 12px;
+    background: var(--cinnabar); color: #f5efe6; font-size: 13.5px; border-radius: 3px; vertical-align: 0.15em; }
+  .qa .ans .tag { background: var(--ink); }
+  .qa .ans { padding: 15px 22px; font-size: 15.5px; }
+  .qa .ans .who { color: #8a8478; font-size: 12.5px; letter-spacing: 0.16em; margin-left: 10px; }
+
+  /* three books */
+  .shelves { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 38px 0 10px; }
+  .tome { writing-mode: vertical-rl; height: 250px; background: var(--paper); color: var(--ink); padding: 24px 20px;
+    display: flex; align-items: flex-start; justify-content: center; gap: 14px; border: 1px solid var(--hairline);
+    font-size: 16px; letter-spacing: 0.14em; position: relative; }
+  .tome h4 { font-size: 20px; font-weight: 700; color: var(--cinnabar); }
+  .tome p { color: #57534a; font-size: 14px; }
+  .tome::before { content: ""; position: absolute; left: 10px; top: 10px; bottom: 10px; width: 1px; background: var(--hairline-ink); }
+
+  /* father & son */
+  .duet { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 26px; margin-top: 36px; align-items: stretch; }
+  .duet .mid { background: var(--hairline-ink); }
+  .duet h3 { font-size: 22px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 4px; }
+  .duet .role { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.24em; margin-bottom: 14px; }
+  .duet p { font-size: 14.5px; color: var(--paper-dim); margin: 10px 0; }
+  .eyecard { margin-top: 18px; border: 1px solid var(--hairline); padding: 16px 18px; font-size: 15px; }
+  .eyecard b { color: var(--cinnabar); letter-spacing: 0.1em; }
+
+  /* duelling colophons on the name */
+  .vs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 22px; align-items: stretch; margin-top: 36px; }
+  .vs .col { border: 1px solid var(--hairline-ink); padding: 22px 24px; background: #efebe3; }
+  .vs .col h4 { font-size: 14px; letter-spacing: 0.2em; color: #8a8478; margin-bottom: 12px; }
+  .vs .col p { font-size: 15px; color: #35322c; }
+  .vs .mid { writing-mode: vertical-rl; display: grid; place-items: center; font-size: 34px; font-weight: 700;
+    letter-spacing: 0.3em; color: var(--cinnabar); padding: 6px 0; }
+
+  /* appendix lists */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 30px; }
+  .jots { border-top: 2px solid var(--cinnabar); padding-top: 14px; }
+  .jots h3 { font-size: 19px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 12px; }
+  .jots li { list-style: none; font-size: 14.5px; color: #57534a; padding: 9px 0 9px 22px; position: relative; border-top: 1px dashed var(--hairline-ink); }
+  .jots li::before { content: "※"; position: absolute; left: 0; color: var(--cinnabar); font-size: 12px; top: 12px; }
+  .jots.dark li { color: var(--paper-dim); }
+  .jots.dark { border-top-color: var(--cinnabar); }
+
+  .band { background: var(--cinnabar); color: #f5efe6; margin-top: 60px; }
+  .band .wrap { padding-top: 40px; padding-bottom: 40px; }
+  .band h3 { font-size: 22px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 10px; }
+  .band p { font-size: 15px; max-width: 46em; color: rgba(245,239,230,0.92); }
+
+  /* coda */
+  .coda { padding: 110px 0 90px; text-align: center; position: relative; }
+  .coda .q { background: none; box-shadow: none; color: var(--paper); }
+  .coda .verse { font-size: clamp(22px, 3vw, 30px); font-weight: 700; letter-spacing: 0.14em; line-height: 2.3; }
+  .coda .verse .hot { color: var(--cinnabar); }
+  .coda .after { margin-top: 30px; color: var(--paper-dim); font-size: 15px; }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 34px 0 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page p { margin: 4px 0; }
+
+  @media (max-width: 760px) {
+    .guard-row { transform: scale(0.72); margin: 30px 0 6px; }
+    .hero-grid { flex-direction: column; align-items: flex-start; }
+    .bookplate { height: 210px; font-size: 40px; }
+    .tri, .shelves, .duet, .duo { grid-template-columns: 1fr; }
+    .duet .mid { height: 1px; width: 100%; }
+    .facewrap { grid-template-columns: 1fr; }
+    .vs { grid-template-columns: 1fr; }
+    .vs .mid { writing-mode: horizontal-tb; padding: 4px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="torch tl"></div>
+  <div class="torch tr"></div>
+  <div class="wrap hero-inner">
+    <p class="kicker">殆知阁导读<span class="mono">　107</span>　相术　袁珙　明</p>
+    <div class="guard-row">
+      <div class="plaque">卫士</div>
+      <div class="plaque">卫士</div>
+      <div class="plaque">卫士</div>
+      <div class="plaque">卫士</div>
+      <div class="plaque">卫士</div>
+      <div class="plaque king">燕王</div>
+      <div class="plaque">卫士</div>
+      <div class="plaque">卫士</div>
+      <div class="plaque">卫士</div>
+      <div class="plaque">卫士</div>
+    </div>
+    <div class="hero-grid">
+      <div class="hero-lede">
+        洪武年间，北平街市。十个人披一样的甲、操一样的弓，坐进酒肆。相士进门扫了一眼，径直跪在其中一人面前。九个人笑他看走了眼，他越说越笃定。这一跪，跪出了永乐朝，也跪出了这部书：<b>相面的给皇帝看过相，皇帝再把相面的一条条问回来</b>，问满一册，是为《永乐百问》。
+      </div>
+      <div class="bookplate">柳庄相法<small>明 · 袁珙</small></div>
+    </div>
+    <div class="seal">夜中燃两炬</div>
+  </div>
+</header>
+
+<main>
+
+<section class="onpaper" id="renzhu">
+  <div class="wrap">
+    <p class="k">卷一　认主</p>
+    <h2 class="stitle">一眼，从九个替身里跪出真王</h2>
+    <p class="slede">袁珙，字廷玉，鄞县人。相术是他在海外洛伽山从异僧别古崖手里学的，但这家人的底色不是术数，是死节。</p>
+    <div class="prose">
+      <p>他的高祖袁镛是宋末进士。<span class="q" data-src="ms">元兵至，不屈，举家十七人皆死。</span>国破之后第四代，这个家族出了个看脸的人。看脸看到什么程度，《明史》记了他的训练法：</p>
+      <p class="noind"><span class="q" data-src="ms">先仰视皎日，目尽眩，布赤黑豆暗室中，辨之，又悬五色缕窗外，映月别其色，皆无讹，然后相人。</span></p>
+      <p>盯太阳盯到眼瞎，再进暗室分辨撒了一地的红豆黑豆，又隔着窗在月光下认五色丝线，全不出错，才算出师。出师之后，正式看相反而不在白天：</p>
+      <p class="noind"><span class="q" data-src="ms">其法以夜中燃两炬视人形状气色，而参以所生年月，百无一谬。</span></p>
+    </div>
+    <p class="bigquote"><span class="q" data-src="ms">龙行虎步，日角插天，太平天子也。</span></p>
+    <p class="attr">明史 · 袁珙传　燕王宫中，谛视之后</p>
+    <div class="prose">
+      <p>嵩山寺里，他先对一个法号道衍的青年僧人下过断语：<span class="q" data-src="ms">公，刘秉忠之俦也，幸自爱。</span>刘秉忠是元世祖忽必烈的开国谋僧，一句话把道衍和帝师之路焊在了一起。后来道衍（即姚广孝）把他荐给燕王朱棣。燕王不直接露面，先设了一道考场：<span class="q" data-src="ms">王杂卫士类己者九人，操弓矢，饮肆中。</span>十个身量相仿的人混坐市井酒馆，看相人跪谁。他跪对了，喊出了那句<span class="q" data-src="ms">殿下何轻身至此。</span>入宫详看，才有上面那十四个字。他还补了时间表：<span class="q" data-src="ms">年四十，须过脐，即登大宝矣。</span></p>
+      <p>预演成真之后，这对君臣把相术用到了帝国最要命的地方。立太子久议不决，皇帝让袁珙看储君与圣孙的两张脸，<span class="q" data-src="ms">珙相仁宗曰：天子也。相宣宗曰：万岁天子。储位乃定。</span>一场接班人之争，被两句评语终结。</p>
+    </div>
+  </div>
+</section>
+
+<section id="xunyan">
+  <div class="wrap">
+    <p class="k">卷二　训眼</p>
+    <h2 class="stitle">眼睛是仪器　先校准再上岗</h2>
+    <div class="tri">
+      <div class="card">
+        <p class="n">第一关</p>
+        <h3>仰视皎日</h3>
+        <p>盯着太阳看到目尽眩，先把自己这双眼睛逼到极限。</p>
+      </div>
+      <div class="card">
+        <p class="n">第二关</p>
+        <h3>暗室辨豆</h3>
+        <p>赤黑二色撒进暗室，摸黑分拣，练的是色的分辨率。</p>
+      </div>
+      <div class="card">
+        <p class="n">第三关</p>
+        <h3>月下认缕</h3>
+        <p>五色丝线悬在窗外借月光辨认，练的是弱光下的色准。</p>
+      </div>
+    </div>
+    <p class="slede">三关全过，「皆无讹，然后相人」。这套流程像给仪器做标定：不是玄学开头，是质检开头。</p>
+  </div>
+</section>
+
+<section class="onpaper" id="miantu">
+  <div class="wrap">
+    <p class="k">卷三　面图</p>
+    <h2 class="stitle">一面山河：把人生铺在脸上</h2>
+    <p class="slede">《柳庄相法》的底层设计，是把一个人的一生拆成网格，铺在脸和身上。骨格、部位、形神、气色四层，各管一摊。</p>
+    <div class="facewrap">
+      <div class="facebox">
+        <svg viewBox="0 0 300 390" width="100%" role="img" aria-label="面图示意">
+          <g fill="none" stroke="#191917" stroke-width="1.6">
+            <path d="M150 22 C 96 22 66 66 64 128 C 63 176 74 232 96 286 C 112 326 128 356 150 356 C 172 356 188 326 204 286 C 226 232 237 176 236 128 C 234 66 204 22 150 22 Z"/>
+            <path d="M100 118 C 112 106 134 106 142 114" />
+            <path d="M200 118 C 188 106 166 106 158 114" />
+            <path d="M108 150 C 118 143 136 143 144 150 C 136 156 118 156 108 150 Z"/>
+            <path d="M192 150 C 182 143 164 143 156 150 C 164 156 182 156 192 150 Z"/>
+            <circle cx="126" cy="150" r="3.4" fill="#191917" stroke="none"/>
+            <circle cx="174" cy="150" r="3.4" fill="#191917" stroke="none"/>
+            <path d="M150 128 L 150 196" stroke-width="1.3"/>
+            <path d="M138 196 C 142 214 146 224 150 224 C 154 224 158 214 162 196" />
+            <path d="M128 268 C 140 258 160 258 172 268 C 160 276 140 276 128 268 Z" />
+            <path d="M96 96 L 204 96" stroke-dasharray="5 5" stroke-width="1"/>
+            <path d="M84 230 L 216 230" stroke-dasharray="5 5" stroke-width="1"/>
+          </g>
+          <g font-family="Songti SC, Noto Serif SC, SimSun, serif" font-size="13" fill="#c0453c" text-anchor="middle">
+            <text x="30" y="60">上停</text>
+            <text x="272" y="60">额主初限</text>
+            <text x="30" y="176">中停</text>
+            <text x="272" y="176">鼻主中限</text>
+            <text x="30" y="292">下停</text>
+            <text x="272" y="292">颌主未限</text>
+          </g>
+          <g font-family="Songti SC, Noto Serif SC, SimSun, serif" font-size="12.5" fill="#57534a" text-anchor="middle">
+            <text x="150" y="86">官禄宫</text>
+            <text x="150" y="112">命宫</text>
+            <text x="150" y="216">财帛宫</text>
+            <text x="150" y="252">男女宫</text>
+            <text x="150" y="304">奴仆宫</text>
+            <text x="86" y="140">田宅</text>
+            <text x="214" y="140">妻妾</text>
+          </g>
+          <g stroke="#c0453c" stroke-width="1.2">
+            <line x1="52" y1="56" x2="76" y2="62"/><line x1="248" y1="56" x2="224" y2="62"/>
+            <line x1="52" y1="172" x2="140" y2="176"/><line x1="248" y1="172" x2="162" y2="176"/>
+            <line x1="52" y1="288" x2="140" y2="262"/><line x1="248" y1="288" x2="160" y2="262"/>
+          </g>
+        </svg>
+        <p class="cap">面图示意　三停为带　宫位为点　皆依本书部位置排</p>
+      </div>
+      <div class="legend">
+        <div class="lg"><b>五官</b><span>各挂一个官职，各管一段人生。<span class="q">眉为保寿官，眼为监察官，鼻为审判官，耳为采听官，口为出纳官。</span>成色有价目表：<span class="q">一官成十年贵，显一府明十栽富贵，五官俱成终身富贵。</span></span></div>
+        <div class="lg"><b>三停</b><span>额头、鼻子、地阁把脸切成三段，也把人生切成三段：<span class="q">额主初限，鼻主中限，水星地阁主未限。</span>哪一段陷了，哪一程就难走。</span></div>
+        <div class="lg"><b>十二宫</b><span>命宫、财帛、兄弟、田宅、男女、奴仆、妻妾、疾厄、迁移、官禄、福德、相貌，十二个户口，落在中国家庭最操心的十二件事上。命宫开篇诗就这么写：<span class="q">眉眼中间是命宫，光莹润净学须通，若还纹乱多寒滞，破尽家财辱祖宗。</span></span></div>
+        <div class="lg"><b>妻妾宫</b><span>写在眼角鱼尾。判词冷得像账房：<span class="q">奸门深陷，常作新郎。鱼尾多纹，妻防恶死。</span>婚姻状况，被简化成两条纹路的深度测量。</span></div>
+        <div class="chips">
+          <span class="chip">五官 <b>五</b> 员</span>
+          <span class="chip">六府 <b>三</b> 对</span>
+          <span class="chip">三停 <b>三</b> 段</span>
+          <span class="chip">十二宫 <b>十二</b> 户</span>
+          <span class="chip">星曜 <b>十一</b> 位</span>
+        </div>
+      </div>
+    </div>
+    <div class="prose">
+      <p>四层之外还有一条总纲，答永乐第五十九问时说得最整：</p>
+      <p class="noind"><span class="q">骨格定一世贫富，部位定一世消长，形神定更改，气色定当年吉凶，四件俱准，各有一用。</span></p>
+      <p>骨格是一辈子的户型，部位是户型里的房间，形神是装修，气色是当月的天气。越靠前的越不动，越靠后的越要常看。看相这门生意真正的产品，其实是这套分层模型。</p>
+    </div>
+  </div>
+</section>
+
+<section id="baiwen">
+  <div class="wrap">
+    <p class="k">卷四　永乐百问</p>
+    <h2 class="stitle">皇帝把相师问成了面试官</h2>
+    <p class="slede">中册整卷是问答体，皇帝发问，柳庄先生作答。问的第一条就是自己的脸；问到第十八问，露出了一点不愿明说的东西。</p>
+    <div class="qa">
+      <div class="item">
+        <div class="ask"><span class="tag">问</span><span class="q">朕居王位，出于何相，而得万民之王？</span></div>
+        <div class="ans"><span class="tag">对</span><span class="q">王乃龙生凤长，身长六尺，面大腰圆，能步开三尺。</span>答完龙相还不忘量胡须：须长一尺八寸，以合龙相。<span class="who">永乐百问第一问</span></div>
+      </div>
+      <div class="item">
+        <div class="ask"><span class="tag">问</span><span class="q">眉长寿不长何说？</span></div>
+        <div class="ans"><span class="tag">对</span><span class="q">书云：眉毫不如鼻毫，鼻毫不如耳毫，耳毫不如枕骨高。</span>长寿的计分板从眉毛一路排到后脑勺。<span class="who">第十二问</span></div>
+      </div>
+      <div class="item">
+        <div class="ask"><span class="tag">问</span><span class="q">朕自为君以来，不脱忧心何说？</span></div>
+        <div class="ans"><span class="tag">对</span><span class="q">山根仓库长青青，准赤腮黄气不匀，纵此为君也愁闷，庶人得此百无成。必待此色一开，圣心自安矣。</span>被相成太平天子的人，坐上龙椅后失眠了，来找相师看气色。答语先安君心，再安天下。<span class="who">第十八问　本篇戏眼</span></div>
+      </div>
+      <div class="item">
+        <div class="ask"><span class="tag">问</span><span class="q">病况反生，无病反死何说？</span></div>
+        <div class="ans"><span class="tag">对</span><span class="q">黑绕太阳，卢医难救。青遮口角，扁鹊难医。</span>这一卷的气色学，混着真正的观察经验：气色确是健康的窗口，只是解读体系整个压在了命运上。<span class="who">第五十三问</span></div>
+      </div>
+    </div>
+    <div class="prose">
+      <p>百问里还有一条与相术无关的妙处。永乐问宫中女子为何多不出子，袁珙答了体质，又引了一句谚：<span class="q">古人言美女无肩，将军无项。</span>问的是后宫，答的是全天下。同一册里，袁珙还交代过自己的工作量：<span class="q">后来都下过美色异相数十万矣</span>，在京城看过的脸，几十万张。</p>
+    </div>
+  </div>
+</section>
+
+<section class="onpaper" id="tiandiren">
+  <div class="wrap">
+    <p class="k">卷五　天地人</p>
+    <h2 class="stitle">三册书的设计图</h2>
+    <p class="slede">书末先生自述成书经过：<span class="q">在窗下几年作此三册，分为天、地、人。</span></p>
+    <div class="shelves">
+      <div class="tome"><h4>天</h4><p class="q">上本<br>可知人贵贱穷通</p></div>
+      <div class="tome"><h4>地</h4><p class="q">中本<br>可知人当年吉凶祸福</p></div>
+      <div class="tome"><h4>人</h4><p class="q">下本<br>可知未来休咎　子孙之盛衰</p></div>
+    </div>
+    <div class="prose">
+      <p>三册分工明确：上册管一辈子，中册管今年，下册管子孙。今天的版面所见，正是三册合一的合订本。书里还留着同行切磋的痕迹：一位高公数出全书三十六法只写三十三，问为何漏了三样，袁子答得理直气壮：</p>
+      <p class="noind"><span class="q">恐泄天机，故将小便鬃舌隐而不言也。</span></p>
+      <p>怕泄天机，所以把三样按下不表。这一问一答像两位老师傅对账，也像合伙人对着产品清单抠细节。书的来历被他们自己说得极有派头：相法出自<span class="q">麻衣祖师在石室中授陈翁</span>，历代先贤<span class="q">共有七十三家相法</span>，柳庄是第七十四家注脚。十八上贵的第一条，可以当这派头的样品看：<span class="q">头圆一尺，面如满月，背厚腰圆，封侯万里。</span></p>
+    </div>
+  </div>
+</section>
+
+<section id="fuzi">
+  <div class="wrap">
+    <p class="k">卷六　父与子</p>
+    <h2 class="stitle">同一门手艺　两种用法</h2>
+    <div class="duet">
+      <div>
+        <h3>袁珙</h3>
+        <p class="role">柳庄居士　一三三五至一四一〇</p>
+        <p>明史说他<span class="q" data-src="ms">珙相人即知其心术善恶。人不畏义，而畏祸患，往往因其不善导之于善，从而改行者甚多。</span>看相的人不吓人，把祸福说在前头，劝人改过。《明史》给他的性格判词是孝友端厚。退休生活也安稳：<span class="q" data-src="ms">所居鄞城西，绕舍种柳，自号柳庄居士，有《柳庄集》。</span>永乐八年卒，年七十有六。</p>
+      </div>
+      <div class="mid"></div>
+      <div>
+        <h3>袁忠彻</h3>
+        <p class="role">其子　字静思</p>
+        <p><span class="q" data-src="ms">幼传父术</span>，跟着父亲在燕王宴席上给满座武文大臣逐一看相，断语是<span class="q" data-src="ms">于法皆当刑死。王大喜，起兵意益决。</span>靖难之役的起兵决心，有相法的一份推荐信。后来他给两位名臣看过相：</p>
+        <div class="eyecard">相王文，<span class="q" data-src="ms">面无人色，法曰沥血头</span>　相于谦，<span class="q" data-src="ms">目常上视，法曰望刀眼</span></div>
+        <p>沥血头，望刀眼，两条术语像验尸报告，而且都应验了。明史对他的结语毫不含糊：<span class="q" data-src="ms">然性阴险，不如其父</span>，与群臣有隙，就当着皇帝的面拿相法下刀。父亲用相术劝善，儿子用相术整人。皇帝倒是真怕他哭：一次进谏触怒成祖，忠彻叩首痛哭，皇帝甩出一句<span class="q" data-src="ms">忠彻哭我，我遂死耶？</span>泪水的政治学，袁家父子都是内行。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="onpaper" id="cihao">
+  <div class="wrap">
+    <p class="k">卷七　柳庄之名</p>
+    <h2 class="stitle">「柳庄」两个字是谁给的</h2>
+    <div class="vs">
+      <div class="col">
+        <h4>库本自述</h4>
+        <p><span class="q">先生欲归田里，不受爵绿金帛。永乐赐以绿柳百株，肥田百亩，归隐浙越，赐号柳庄先生。</span>柳庄是御赐的：柳树、田亩、名号，一整套退休大礼包。</p>
+      </div>
+      <div class="mid">柳庄</div>
+      <div class="col">
+        <h4>明史本传</h4>
+        <p><span class="q" data-src="ms">所居鄞城西，绕舍种柳，自号柳庄居士，有《柳庄集》。</span>柳庄是自封的：只是他家西边绕宅种了柳树，自己取的雅号。</p>
+      </div>
+    </div>
+    <div class="prose">
+      <p>两个说法摆在同一页，赐号的故事显然更体面，也更像后人替祖师爷添的彩。名号归属这件小事，恰好是这个行当的自我写照：真实不够用时，气色来补。</p>
+    </div>
+  </div>
+</section>
+
+<section id="jiaokan" style="background: var(--paper); color: var(--ink);">
+  <div class="wrap">
+    <p class="k">卷八　校记与申明</p>
+    <h2 class="stitle">核验所得</h2>
+    <div class="duo">
+      <div class="jots">
+        <h3>库本七则</h3>
+        <ul>
+          <li>全卷「日」字为零见，凡二百一十六处皆作「曰」：节名「三曰知一生」当「三日」，「曰月」当「日月」，系系统性讹代，引文避用，节名照录于此存证。</li>
+          <li>五星说条「一府明十栽富贵」，「栽」当作「载」。</li>
+          <li>永乐百问第八问「曰月交锋，反得善终，为何」之后径接第九问，此问无答。</li>
+          <li>第四十七、四十八两问文字全同，均作「一世禄好则不如何说」，重出。</li>
+          <li>上册节号编至九十五，实得九十四节，缺第七十六。</li>
+          <li>卷末口诀一百六十三条，为全书最密的部分，一句一断。</li>
+          <li>本册系现代整理本，节名用汉字编号，条目用阿拉伯数字，与明清刻本体例不同。</li>
+        </ul>
+      </div>
+      <div class="jots">
+        <h3>申明三则</h3>
+        <ul>
+          <li>《柳庄相法》托名袁珙，成书与流传细节无早期版本可考，明史本传亦未列此书名，页面取库本自述与正史分列，两说并存。</li>
+          <li>袁珙生平、靖难故事、父子相术诸条均据《明史》卷二百九十九方伎传，跨库引文皆已逐字核验。</li>
+          <li>文中「永乐百问」问答体例系库本原貌，问答真伪古人已疑，本篇照录不论。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="band">
+      <div class="wrap" style="padding: 0;">
+        <div style="padding: 34px 0 8px;">
+          <h3>时代的局限　须当面说清</h3>
+        </div>
+        <p style="padding-bottom: 34px;">库本设「女人有三十六刑伤」及女有七贤、女有四德等整卷条目，把女性的命运折算成颧骨高低、发色黄黑，把改嫁、无子一律判为「刑」「贱」；观相判词里充斥以貌取人的贫贱断语。这些内容是旧时代对女性与穷人的系统性冒犯，本篇引述仅作史料呈现，不代表其成立。看脸识人，今天只配给健康体检当参考，不配给人生当判决。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="coda">
+  <div class="wrap">
+    <p class="k">卷终</p>
+    <p class="verse" style="margin-top: 26px;">
+      <span class="q">妙法只须三五句，</span><br>
+      <span class="q">无师传授枉劳心，</span><br>
+      <span class="q">自徒识得玄中理，</span><br>
+      <span class="q hot">笑杀江湖卖术人。</span>
+    </p>
+    <p class="after">下册总论卷尾诗。看相的这一行，最看不起的是看相的这一行。<br>而真正笑到最后的，是那本写下了几十万张脸的账簿。</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库（易藏　术数）《柳庄相法》，辅证《明史》（史藏　正史）。仓库：github.com/robertsong2000/daizhigev20。</p>
+    <p>本篇引文均经逐字核验（引文经核验，与库内文件比对一致；跨库引文注明据《明史》）。</p>
+    <p>本篇含相术命理内容，属历史文献与民俗文化范畴，不含任何科学依据；涉及性别与身份的旧时代断语，请以「时代的局限」一节为准。</p>
+    <p class="mono" style="margin-top: 10px;">殆知阁导读　之一百零七　2026 年 8 月</p>
+  </div>
+</footer>
+
+</body>
+</html>
