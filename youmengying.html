@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>幽梦影 · 殆知阁导读之八十七</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #211f1c;
+    --paper: #e8e4dc; --paper2: #f1ede4; --paper3: #ddd7cb;
+    --dim: #6e6a61; --mid: #a39e93; --faint: #8d887c;
+    --qing: #5e8fbb; --qing-deep: #41729e; --zhu: #c0453c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 2; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 0 26px; }
+
+  /* 每个标题都拖着自己的影子 */
+  .yt { position: relative; display: inline-block; font-weight: 700; letter-spacing: .14em; z-index: 0; }
+  .yt::before {
+    content: attr(data-t); position: absolute; left: .1em; top: .14em; z-index: -1;
+    filter: blur(6px); opacity: .32; color: var(--faint); white-space: nowrap;
+  }
+
+  .q { color: inherit; }
+
+  /* ================= hero：月光穿窗 ================= */
+  .hero {
+    position: relative; min-height: 92vh; overflow: hidden;
+    background: var(--ink); color: var(--paper);
+    display: flex; align-items: center;
+  }
+  .moon {
+    position: absolute; right: 16%; top: 9%;
+    width: 250px; height: 250px; border-radius: 50%;
+    background: radial-gradient(circle at 42% 40%, #e9eef5 0%, #c8d3e2 46%, #aab8cc 100%);
+    box-shadow: 0 0 90px 26px rgba(180,196,220,.24);
+    opacity: .82;
+  }
+  .moon::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    background: radial-gradient(circle at 64% 68%, rgba(25,25,23,.18) 0 8%, transparent 9%),
+                radial-gradient(circle at 38% 30%, rgba(25,25,23,.12) 0 5%, transparent 6%);
+  }
+  .cloud {
+    position: absolute; border-radius: 999px;
+    background: #131211; filter: blur(14px); opacity: .8;
+  }
+  .cloud.c1 { width: 420px; height: 74px; right: 6%; top: 17%; transform: rotate(-3deg); }
+  .cloud.c2 { width: 300px; height: 56px; right: 26%; top: 24%; transform: rotate(2deg); opacity: .65; }
+  .window {
+    position: absolute; right: 13%; top: 7%;
+    width: 320px; height: 440px;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 86px, rgba(200,212,229,.10) 86px 88px),
+      repeating-linear-gradient(90deg, transparent 0 78px, rgba(200,212,229,.10) 78px 80px);
+    border: 1px solid rgba(200,212,229,.12);
+  }
+  /* 窗投在地板上的斜影 */
+  .spill {
+    position: absolute; right: 6%; bottom: -6%;
+    width: 520px; height: 300px;
+    background: linear-gradient(103deg, rgba(200,212,229,.07), transparent 62%);
+    transform: skewX(-14deg); filter: blur(4px);
+  }
+  .hero-in { position: relative; width: 100%; }
+  .kicker { font-size: 13px; letter-spacing: .4em; color: var(--mid); }
+  .kicknum { color: var(--qing); letter-spacing: .3em; }
+  .hero-main { display: flex; align-items: flex-end; gap: 44px; margin-top: 34px; }
+  .hero-left { flex: 1; min-width: 0; }
+  .h-title { font-size: clamp(54px, 7.4vw, 96px); font-weight: 700; letter-spacing: .16em; line-height: 1.22; }
+  .h-title .ye {
+    color: transparent; -webkit-text-stroke: 2px var(--qing);
+    text-shadow: 10px 12px 26px rgba(94,143,187,.28);
+  }
+  .h-author { margin-top: 14px; font-size: 15px; color: var(--mid); letter-spacing: .24em; }
+  .h-quote {
+    margin-top: 34px; max-width: 21em; font-size: clamp(19px, 2.1vw, 25px);
+    line-height: 2.1; color: var(--paper);
+    border-left: 3px solid var(--qing); padding-left: 20px;
+  }
+  .h-quote small { display: block; margin-top: 10px; font-size: 13px; color: var(--mid); letter-spacing: .18em; }
+  /* 竖排题签 */
+  .tq {
+    flex: none; width: 96px; height: 380px;
+    background: var(--paper2); color: var(--ink);
+    border-radius: 5px; position: relative;
+    box-shadow: 14px 18px 34px rgba(0,0,0,.5);
+    writing-mode: vertical-rl; text-align: center;
+    padding: 30px 0; font-size: 30px; font-weight: 700; letter-spacing: .3em;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tq::before, .tq::after {
+    content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+    width: 116px; height: 15px; border-radius: 4px;
+    background: linear-gradient(180deg, #3a382f, #26241d);
+  }
+  .tq::before { top: -9px; } .tq::after { bottom: -9px; }
+  .tq .seal {
+    writing-mode: horizontal-tb; position: absolute; bottom: 34px; left: 50%;
+    transform: translateX(-50%); width: 42px; height: 42px;
+    background: var(--zhu); color: #f5efe6; font-size: 15px; font-weight: 700;
+    display: grid; place-items: center; border-radius: 6px; letter-spacing: .05em; line-height: 1.15;
+  }
+
+  /* ================= 正文区块 ================= */
+  section { padding: 74px 0 10px; }
+  .s-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 8px; }
+  .s-head h2 { font-size: clamp(26px, 3vw, 34px); }
+  .s-no { font-size: 13px; color: var(--qing-deep); letter-spacing: .34em; border: 1px solid var(--qing); padding: 3px 10px 2px 13px; border-radius: 3px; }
+  .s-sub { color: var(--dim); font-size: 15px; margin-bottom: 30px; max-width: 44em; }
+  .s-sub b { color: var(--qing-deep); font-weight: 700; }
+
+  /* 影一 四季读法 */
+  .ji { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .ji-card {
+    background: var(--paper2); border-radius: 5px; text-align: center;
+    padding: 26px 12px 20px; position: relative;
+    box-shadow: 0 14px 22px rgba(25,25,23,.16);
+  }
+  .ji-card:nth-child(odd) { transform: rotate(-1.1deg); }
+  .ji-card:nth-child(even) { transform: rotate(1deg); }
+  .ji-card::before {
+    content: ""; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--paper); border: 2px solid var(--qing-deep);
+  }
+  .ji-card::after {
+    content: ""; position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+    width: 1px; height: 16px; background: var(--faint);
+  }
+  .ji-big { font-size: 44px; font-weight: 700; color: var(--qing-deep); margin-top: 8px; line-height: 1.4; }
+  .ji-q { display: block; font-size: 15.5px; color: var(--ink); }
+  .ji-note { text-align: center; margin-top: 26px; color: var(--dim); font-size: 15.5px; }
+  .ji-note .q { color: var(--ink); }
+
+  /* 影二 语签墙 */
+  .wall { columns: 3; column-gap: 20px; }
+  .slip {
+    break-inside: avoid; background: var(--paper2);
+    margin-bottom: 20px; padding: 20px 20px 16px; position: relative;
+    border-radius: 3px;
+    box-shadow: 7px 11px 20px rgba(25,25,23,.17);
+    font-size: 15.5px; line-height: 2.05;
+  }
+  .slip:nth-child(3n) { transform: rotate(.9deg); }
+  .slip:nth-child(3n+1) { transform: rotate(-.8deg); }
+  .slip:nth-child(4n) { transform: rotate(.4deg); }
+  .slip .cat {
+    position: absolute; top: -11px; right: 12px;
+    background: var(--qing); color: #f5efe6; font-size: 12px;
+    padding: 1px 9px; border-radius: 999px; letter-spacing: .2em;
+  }
+
+  /* 影三 十恨（墨底横带） */
+  .band { background: var(--ink); color: var(--paper); margin: 64px 0 0; padding: 58px 0 52px; }
+  .band .yt::before { color: #57534a; }
+  .band .s-sub { color: var(--mid); }
+  .hen { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  .hen span {
+    background: #26241f; border: 1px solid #3c382f; border-radius: 3px;
+    padding: 7px 14px; font-size: 15px; letter-spacing: .06em;
+  }
+  .hen span i { font-style: normal; color: var(--zhu); font-weight: 700; margin-right: 6px; font-size: 13px; }
+  .band .tail { margin-top: 24px; color: var(--mid); font-size: 15.5px; }
+  .band .tail .q { color: var(--paper); }
+
+  /* 影四 知己簿 聘嫁册 */
+  .zy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 26px; margin-top: 24px; }
+  .zy {
+    background: var(--paper2); border-radius: 999px; padding: 6px 20px;
+    font-size: 15px; display: flex; align-items: center; gap: 10px;
+    box-shadow: 4px 6px 12px rgba(25,25,23,.13);
+  }
+  .zy b { color: var(--qing-deep); font-size: 17px; }
+  .zy .lost { border: 1.5px dashed var(--zhu); border-radius: 4px; padding: 0 4px; color: var(--zhu); }
+  .zy .xz { font-size: 11.5px; color: var(--dim); letter-spacing: 0; }
+  .zy-end { margin-top: 22px; font-size: 16.5px; color: var(--dim); }
+  .zy-end .q { color: var(--ink); }
+  .neg { display: flex; gap: 18px; margin-top: 26px; }
+  .neg .np {
+    flex: 1; border: 1px dashed var(--mid); border-radius: 4px;
+    padding: 12px 18px; color: var(--dim); font-size: 15px; position: relative;
+  }
+  .neg .np em { font-style: normal; color: var(--zhu); font-size: 12.5px; letter-spacing: .2em; margin-right: 10px; }
+  .neg .np .q { color: var(--ink); }
+  .hun-title { margin-top: 60px; display: flex; align-items: baseline; gap: 16px; }
+  .hun-title h3 { font-size: 21px; letter-spacing: .14em; color: var(--zhu); }
+  .hun-title p { color: var(--dim); font-size: 14px; }
+  .hun { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 20px; }
+  .hcard {
+    border: 2px solid var(--zhu); border-radius: 6px; background: var(--paper2);
+    text-align: center; padding: 18px 6px 14px; position: relative;
+    box-shadow: 6px 9px 16px rgba(25,25,23,.15);
+  }
+  .hcard:nth-child(odd) { transform: rotate(-1.2deg); }
+  .hcard:nth-child(even) { transform: rotate(1.1deg); }
+  .hcard .q { display: block; font-size: 16px; font-weight: 700; letter-spacing: .08em; }
+  .hcard small { display: block; margin-top: 6px; font-size: 12px; color: var(--dim); letter-spacing: .18em; }
+  .hun-joke { margin-top: 24px; border-left: 3px solid var(--zhu); padding: 6px 0 6px 18px; color: var(--dim); font-size: 15.5px; }
+  .hun-joke .q { color: var(--ink); }
+
+  /* 影五 韵学公案 */
+  .yun-panel {
+    background: var(--paper2); border: 1px solid var(--paper3); border-radius: 6px;
+    padding: 34px 36px 30px; margin-top: 24px; position: relative;
+    box-shadow: 10px 14px 24px rgba(25,25,23,.14);
+  }
+  .yun-cols { display: flex; gap: 12px; justify-content: center; margin-bottom: 26px; }
+  .yun-cols span {
+    writing-mode: vertical-rl; background: var(--qing-deep); color: #f5efe6;
+    padding: 16px 8px; border-radius: 4px; font-size: 17px; letter-spacing: .3em; font-weight: 700;
+  }
+  .yun-cols span:last-child { background: var(--zhu); }
+  .yun-panel .q { display: block; font-size: 16px; margin-bottom: 14px; }
+  .yun-panel .q + .q { margin-top: 0; }
+  .pan {
+    margin-top: 20px; padding: 14px 18px; border-radius: 4px;
+    background: rgba(94,143,187,.1); border-left: 3px solid var(--qing-deep);
+    font-size: 14.5px; color: var(--dim);
+  }
+  .pan b { color: var(--qing-deep); }
+  .pan .q { display: inline; color: var(--ink); font-size: 14.5px; }
+
+  /* 影六 借前世 */
+  .qians { margin-top: 30px; position: relative; padding-left: 34px; }
+  .qians::before {
+    content: ""; position: absolute; left: 9px; top: 8px; bottom: 8px;
+    width: 1px; background: linear-gradient(var(--qing) 60%, var(--paper3));
+  }
+  .qs { position: relative; margin-bottom: 30px; }
+  .qs::before {
+    content: ""; position: absolute; left: -31px; top: 12px;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--paper); border: 3px solid var(--qing-deep);
+  }
+  .qs .dyn {
+    display: inline-block; background: var(--qing-deep); color: #f5efe6;
+    font-size: 12.5px; letter-spacing: .26em; padding: 2px 12px 1px 15px;
+    border-radius: 3px; margin-bottom: 6px;
+  }
+  .qs .q { font-size: 17.5px; }
+  .qs.alt .dyn { background: var(--zhu); }
+  .longwan {
+    margin-top: 42px; background: var(--paper2); border-radius: 6px;
+    padding: 28px 30px; box-shadow: 8px 12px 20px rgba(25,25,23,.15);
+  }
+  .longwan .q { display: block; font-size: 16px; }
+  .longwan .big { font-size: clamp(21px, 2.4vw, 27px); font-weight: 700; margin-top: 12px; color: var(--qing-deep); }
+  .longwan .names { margin-top: 14px; color: var(--dim); font-size: 14px; }
+
+  /* 影七 书命 */
+  .life { margin-top: 30px; position: relative; }
+  .step { display: flex; gap: 22px; margin-bottom: 26px; }
+  .step .tag {
+    flex: none; width: 84px; height: 84px; border-radius: 5px;
+    background: var(--ink); color: var(--paper);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 6px 8px 16px rgba(25,25,23,.24);
+  }
+  .step .tag b { font-size: 20px; letter-spacing: .1em; color: var(--qing); }
+  .step .tag span { font-size: 11px; color: var(--mid); letter-spacing: .2em; margin-top: 2px; }
+  .step .bd {
+    flex: 1; background: var(--paper2); border-radius: 6px; padding: 20px 26px 16px;
+    box-shadow: 8px 11px 18px rgba(25,25,23,.13);
+  }
+  .step .bd h4 { font-size: 17.5px; letter-spacing: .1em; margin-bottom: 6px; }
+  .step .bd h4 small { color: var(--dim); font-weight: 400; font-size: 13px; margin-left: 12px; letter-spacing: .14em; }
+  .step .bd p { font-size: 15px; color: var(--dim); }
+  .step .bd .q { font-size: 15px; color: var(--ink); }
+  .step.risk .bd { border: 1.5px dashed var(--zhu); background: transparent; box-shadow: none; }
+  .step.risk .bd h4 { color: var(--zhu); }
+  .step.out .tag { background: var(--paper3); color: var(--ink); }
+  .step.out .tag b { color: var(--qing-deep); }
+  .bio {
+    margin-top: 40px; border-top: 1px solid var(--paper3); padding-top: 22px;
+    color: var(--dim); font-size: 14.5px;
+  }
+
+  /* 影八 点勘 */
+  .kan { margin-top: 26px; }
+  .kan li {
+    list-style: none; display: flex; gap: 14px; padding: 13px 0;
+    border-bottom: 1px dashed var(--paper3); font-size: 15px; color: var(--dim);
+  }
+  .kan li b { flex: none; color: var(--qing-deep); font-family: "SF Mono", Menlo, monospace; font-size: 13px; padding-top: 3px; }
+  .kan li .q { color: var(--ink); }
+
+  /* 时代局限 */
+  .limit {
+    margin: 56px 0 0; border: 1px solid rgba(192,69,60,.5); border-radius: 6px;
+    background: rgba(192,69,60,.05); padding: 24px 28px;
+  }
+  .limit h3 { color: var(--zhu); font-size: 16px; letter-spacing: .24em; margin-bottom: 10px; }
+  .limit p { font-size: 14.5px; color: var(--dim); margin-bottom: 8px; }
+  .limit .q { color: var(--ink); }
+
+  /* coda */
+  .coda { background: var(--ink); color: var(--paper); margin-top: 76px; padding: 88px 0 70px; text-align: center; }
+  .coda .yt::before { color: #57534a; }
+  .coda .q { display: block; font-size: clamp(19px, 2.3vw, 25px); max-width: 30em; margin: 0 auto; line-height: 2.2; }
+  .coda .hui { margin-top: 30px; font-size: 14px; color: var(--mid); letter-spacing: .3em; }
+  .coda .big {
+    margin-top: 44px; font-size: clamp(22px, 2.8vw, 31px); font-weight: 700; line-height: 2;
+  }
+  .coda .big .q { display: inline; font-size: inherit; }
+  .coda .big em { font-style: normal; color: var(--qing); }
+  .coda .seal2 {
+    margin: 40px auto 0; width: 58px; height: 58px; background: var(--zhu);
+    color: #f5efe6; display: grid; place-items: center; font-size: 26px; font-weight: 700;
+    border-radius: 7px; transform: rotate(3deg);
+  }
+
+  footer.page { background: var(--ink); color: var(--mid); padding: 34px 0 46px; border-top: 1px solid rgba(232,228,220,.1); }
+  footer.page p { font-size: 13.5px; line-height: 2.1; }
+  footer.page a { color: var(--qing); text-decoration: none; }
+
+  @media (max-width: 860px) {
+    .wall { columns: 2; }
+    .ji { grid-template-columns: repeat(2, 1fr); }
+    .zy-grid { grid-template-columns: 1fr; }
+    .hun { grid-template-columns: repeat(2, 1fr); }
+    .hero-main { flex-direction: column-reverse; align-items: flex-start; gap: 30px; }
+    .tq { height: 300px; width: 84px; font-size: 26px; }
+    .window, .moon, .spill { opacity: .5; }
+  }
+  @media (max-width: 560px) {
+    .wall { columns: 1; }
+    .ji { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ hero ============ -->
+<header class="hero">
+  <div class="moon"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="window"></div>
+  <div class="spill"></div>
+  <div class="wrap hero-in">
+    <div class="kicker">殆知阁导读 <span class="kicknum">之八十七</span>　清言卷</div>
+    <div class="hero-main">
+      <div class="hero-left">
+        <div class="h-title">幽梦<span class="ye">影</span></div>
+        <div class="h-author">清 · 张潮 撰</div>
+        <div class="h-quote">
+          <span class="q">心斋之《幽梦影》，非病也，非梦也，影也。</span>
+          <small>卷末江之兰跋，题与正文粘连成一行</small>
+        </div>
+      </div>
+      <div class="tq">幽梦影<span class="seal">心斋</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <p class="s-sub" style="padding-top:44px; margin-bottom:0;">
+      一本把生活过成格言的书：两百余段隽语，谈读书、谈花月、谈朋友，也谈音韵和鬼富。
+      康熙年间写成，差点只剩一部残钞本，光绪五年被同乡从旧刊本里救回来重刻。
+      库里这本是<b>无评语的洁本</b>：序跋俱在，朋友们刻在书页上的批语一条也没有。
+    </p>
+
+    <!-- 影一 -->
+    <section>
+      <div class="s-head"><span class="s-no">影一</span><h2 class="yt" data-t="四季读法">四季读法</h2></div>
+      <p class="s-sub">开卷第一条就把一年排给四部书。</p>
+      <div class="ji">
+        <div class="ji-card"><div class="ji-big">经</div><span class="q ji-q">读经宜冬，其神专也</span></div>
+        <div class="ji-card"><div class="ji-big">史</div><span class="q ji-q">读史宜夏，其时久也</span></div>
+        <div class="ji-card"><div class="ji-big">子</div><span class="q ji-q">读诸子宜秋，其致别也</span></div>
+        <div class="ji-card"><div class="ji-big">集</div><span class="q ji-q">读诸集宜春，其机畅也</span></div>
+      </div>
+      <p class="ji-note">还有一句配套的：<span class="q">经传宜独坐读，史鉴宜与友共读。</span></p>
+    </section>
+
+    <!-- 影二 -->
+    <section>
+      <div class="s-head"><span class="s-no">影二</span><h2 class="yt" data-t="弄影：语签十八枚">弄影：语签十八枚</h2></div>
+      <p class="s-sub">全书正文本体按空行分段机算 <b>222 段</b>、去空白一万字，几乎段段可摘。下面十八枚纸签各拖着自己的影子，按原样摘自库本。</p>
+      <div class="wall">
+        <div class="slip"><span class="cat">癖</span><span class="q">花不可以无蝶，山不可以无泉，石不可以无苔，水不可以无藻，乔木不可以无藤萝，人不可以无癖。</span></div>
+        <div class="slip"><span class="cat">读</span><span class="q">少年读书，如隙中窥月；中年读书，如庭中望月；老年读书，如台上玩月。皆以阅历之浅深，为所得之浅深耳。</span></div>
+        <div class="slip"><span class="cat">听</span><span class="q">春听鸟声，夏听蝉声，秋听虫声，冬听雪声；白昼听棋声，月下听箫声；山中听松声，水际听欸乃声，方不虚生此耳。若恶少斥辱，悍妻诟谇，真不若耳聋也。</span></div>
+        <div class="slip"><span class="cat">想</span><span class="q">因雪想高士，因花想美人，因酒想侠客，因月想好友，因山水想得意诗文。</span></div>
+        <div class="slip"><span class="cat">情才</span><span class="q">情必近于痴而始真；才必兼乎趣而始化。</span></div>
+        <div class="slip"><span class="cat">读</span><span class="q">藏书不难，能看为难；看书不难，能读为难；读书不难，能用为难；能用不难，能记为难。</span></div>
+        <div class="slip"><span class="cat">闲</span><span class="q">人莫乐于闲，非无所事事之谓也。闲则能读书，闲则能游名胜，闲则能交益友，闲则能饮酒，闲则能著书。天下之乐，孰大于是？</span></div>
+        <div class="slip"><span class="cat">奇书</span><span class="q">《水浒传》是一部怒书，《西游记》是一部悟书，《金瓶梅》是一部哀书。</span></div>
+        <div class="slip"><span class="cat">文章</span><span class="q">文章是案头之山水，山水是地上之文章。</span></div>
+        <div class="slip"><span class="cat">不平</span><span class="q">胸中小不平，可以酒消之；世间大不平，非剑不能消也。</span></div>
+        <div class="slip"><span class="cat">雨</span><span class="q">春雨如恩诏，夏雨如赦书，秋雨如挽歌。</span></div>
+        <div class="slip"><span class="cat">雨</span><span class="q">雨之为物，能令昼短，能令夜长。</span></div>
+        <div class="slip"><span class="cat">风骨</span><span class="q">傲骨不可无，傲心不可有；无傲骨则近于鄙夫，有傲心不得为君子。</span></div>
+        <div class="slip"><span class="cat">闲</span><span class="q">能闲世人之所忙者，方能忙世人之所闲。</span></div>
+        <div class="slip"><span class="cat">忘</span><span class="q">万事可忘，难忘者名心一段；千般易淡，未淡者美酒三杯。</span></div>
+        <div class="slip"><span class="cat">菩萨</span><span class="q">为月忧云，为书忧蠹，为花忧风雨，为才子佳人忧命薄，真是菩萨心肠。</span></div>
+        <div class="slip"><span class="cat">律</span><span class="q">律己宜带秋气，处事宜带春气。</span></div>
+        <div class="slip"><span class="cat">草木</span><span class="q">梅令人高，兰令人幽，菊令人野，莲令人淡，春海棠令人艳，牡丹令人豪，蕉与竹令人韵，秋海棠令人媚，松令人逸，桐令人清，柳令人感。</span></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 影三 十恨 -->
+  <div class="band">
+    <div class="wrap">
+      <div class="s-head"><span class="s-no" style="color:var(--qing); border-color:var(--qing);">影三</span><h2 class="yt" data-t="十恨">十恨</h2></div>
+      <p class="s-sub">风雅也有售后服务清单。连数十件，一件比一件具体。</p>
+      <div class="hen">
+        <span><i>一</i><span class="q">一恨书囊易蛀</span></span>
+        <span><i>二</i><span class="q">二恨夏夜有蚊</span></span>
+        <span><i>三</i><span class="q">三恨月台易漏</span></span>
+        <span><i>四</i><span class="q">四恨菊叶多焦</span></span>
+        <span><i>五</i><span class="q">五恨松多大蚁</span></span>
+        <span><i>六</i><span class="q">六恨竹多落叶</span></span>
+        <span><i>七</i><span class="q">七恨桂、荷易谢</span></span>
+        <span><i>八</i><span class="q">八恨薜、萝藏虺</span></span>
+        <span><i>九</i><span class="q">九恨架花生刺</span></span>
+        <span><i>十</i><span class="q">十恨河豚多毒</span></span>
+      </div>
+      <p class="tail">同一段里还藏着一句预算表：<span class="q">值太平世，生湖山郡，官长廉静，家道优裕，娶妇贤淑，生子聪慧。人生如此，可云全福。</span>　全福的门槛，一样都不便宜。</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- 影四 -->
+    <section>
+      <div class="s-head"><span class="s-no">影四</span><h2 class="yt" data-t="知己簿与聘嫁册">知己簿与聘嫁册</h2></div>
+      <p class="s-sub">书里最著名的一段：十七件物色，各认一位隔代知己。库本在「鲈」字前留了一个空框并加夹注，生僻字丢了。</p>
+      <div class="zy-grid">
+        <div class="zy"><b>菊</b><span class="q">菊以渊明为知己</span></div>
+        <div class="zy"><b>梅</b><span class="q">梅以和靖为知己</span></div>
+        <div class="zy"><b>竹</b><span class="q">竹以子猷为知己</span></div>
+        <div class="zy"><b>莲</b><span class="q">莲以濂溪为知己</span></div>
+        <div class="zy"><b>桃</b><span class="q">桃以避秦人为知己</span></div>
+        <div class="zy"><b>杏</b><span class="q">杏以董奉为知己</span></div>
+        <div class="zy"><b>石</b><span class="q">石以米颠为知己</span></div>
+        <div class="zy"><b>荔</b><span class="q">荔枝以太真为知己</span></div>
+        <div class="zy"><b>茶</b><span class="q">茶以卢仝、陆羽为知己</span></div>
+        <div class="zy"><b>香</b><span class="q">香草以灵均为知己</span></div>
+        <div class="zy"><b><span class="lost">□</span></b><span class="q"><span class="lost">□</span><span class="xz">上草下专</span>鲈以季鹰为知己</span></div>
+        <div class="zy"><b>蕉</b><span class="q">蕉以怀素为知己</span></div>
+        <div class="zy"><b>瓜</b><span class="q">瓜以邵平为知己</span></div>
+        <div class="zy"><b>鸡</b><span class="q">鸡以处宗为知己</span></div>
+        <div class="zy"><b>鹅</b><span class="q">鹅以右军为知己</span></div>
+        <div class="zy"><b>鼓</b><span class="q">鼓以祢衡为知己</span></div>
+        <div class="zy"><b>琵</b><span class="q">琵琶以明妃为知己</span></div>
+      </div>
+      <p class="zy-end">定契之后是这八个字：<span class="q">一与之订，千秋不移。</span>　但名单外也有落选的：<span class="q">若松之于秦始，鹤之于卫懿，正所谓不可与作缘者也。</span></p>
+      <div class="neg">
+        <div class="np"><em>错配一</em>松之于秦始：求仙的皇帝配耐寒的树，<span class="q">不可与作缘</span></div>
+        <div class="np"><em>错配二</em>鹤之于卫懿：好鹤亡国的国君配闲云的鸟，同上</div>
+      </div>
+      <div class="hun-title">
+        <h3>聘嫁册</h3>
+        <p>同书还有一份植物婚配名单，张潮亲点五桩，全按品格门当户对。</p>
+      </div>
+      <p class="s-sub" style="margin-bottom:16px;">原判：<span class="q">不若梅聘梨花，海棠嫁杏，橼臣佛手，荔枝臣樱桃，秋海棠嫁雁来红，庶几相称耳。</span></p>
+      <div class="hun">
+        <div class="hcard"><span class="q">梅聘梨花</span><small>清高配素净</small></div>
+        <div class="hcard"><span class="q">海棠嫁杏</span><small>艳色配春色</small></div>
+        <div class="hcard"><span class="q">橼臣佛手</span><small>香对香称臣</small></div>
+        <div class="hcard"><span class="q">荔枝臣樱桃</span><small>果中君臣</small></div>
+        <div class="hcard"><span class="q">秋海棠嫁雁来红</span><small>同时同凋</small></div>
+      </div>
+      <p class="hun-joke">名单末尾还不忘拆一桩：<span class="q">至若以芥嫁笋，笋如有知，必受河东狮子之累矣。</span>　芥是辣的，笋是嫩的，这是一句关于婚姻性格学的判词。</p>
+    </section>
+
+    <!-- 影五 -->
+    <section>
+      <div class="s-head"><span class="s-no">影五</span><h2 class="yt" data-t="韵学公案">韵学公案</h2></div>
+      <p class="s-sub">别以为清言家只会赏花。书里藏着两段音韵论文，用婚姻打比方讲四声，是他最较真的地方。</p>
+      <div class="yun-panel">
+        <div class="yun-cols"><span>平</span><span>上</span><span>去</span><span>入</span></div>
+        <span class="q">平、上、去、入，乃一定之至理。然入声之为字也少，不得谓凡字有四声也。</span>
+        <span class="q">为所隶者，苟无平、上、去之三声，则是以寡妇配鳏夫，犹之可也。若所隶之字，自有其平、上、去三声，而欲强以从我，则是干有夫之妇矣，其可乎？</span>
+        <span class="q">今梨园演《苏秦剧》，必读「六」为溜，读「国」为鬼，从无读入声者。</span>
+        <div class="pan"><b>库内夹注</b>　正文里留着一条现代整理者的小注：<span class="q">此则之协，原文为左口右十口十，协的古字</span>。整理者直接把拆字说明写进了正文，这也是判断库本性质的证据之一。</div>
+      </div>
+    </section>
+
+    <!-- 影六 -->
+    <section>
+      <div class="s-head"><span class="s-no">影六</span><h2 class="yt" data-t="借前世">借前世</h2></div>
+      <p class="s-sub">全书最像「时间旅行」的一段：他一连问了五个朝代。</p>
+      <div class="qians">
+        <div class="qs"><span class="dyn">起手</span><br><span class="q">我不知我之生前，</span></div>
+        <div class="qs"><span class="dyn">春秋</span><br><span class="q">当春秋之季，曾一识西施否？</span></div>
+        <div class="qs alt"><span class="dyn">典午</span><br><span class="q">当典午之时，曾一看卫玠否？</span></div>
+        <div class="qs"><span class="dyn">义熙</span><br><span class="q">当义熙之世，曾一醉渊明否？</span></div>
+        <div class="qs alt"><span class="dyn">天宝</span><br><span class="q">当天宝之代，曾一睹太真否？</span></div>
+        <div class="qs"><span class="dyn">元丰</span><br><span class="q">当元丰之朝，曾一晤东坡否？</span></div>
+      </div>
+      <div class="longwan">
+        <span class="q">我又不知在隆万时，曾于旧院中交几名妓？眉公、伯虎、若士、赤水诸君，曾共我谈笑几回？</span>
+        <div class="big"><span class="q">茫茫宇宙，我今当向谁问之耶？</span></div>
+        <p class="names">眉公是陈继儒，伯虎是唐寅，若士是汤显祖，赤水是屠隆：都是万历朝的名字，隔着一个天崩地解的明清之交，他只能问宇宙。</p>
+      </div>
+    </section>
+
+    <!-- 影七 -->
+    <section>
+      <div class="s-head"><span class="s-no">影七</span><h2 class="yt" data-t="书命：四次救援">书命：四次救援</h2></div>
+      <p class="s-sub">这本书差点死在钞本手里。库本卷末的出版识语，把每一次转手都记了下来。</p>
+      <div class="life">
+        <div class="step">
+          <div class="tag"><b>成书</b><span>康熙间</span></div>
+          <div class="bd">
+            <h4>书写成，朋友们排队作序<small>库本存四序</small></h4>
+            <p>作序者之一是写《板桥杂记》的余怀，他在序里说：</p>
+            <span class="q">其《幽梦影》一书，尤多格言妙论。言人之所不能言，道人之所未经道。</span>
+          </div>
+        </div>
+        <div class="step risk">
+          <div class="tag"><b>救一</b><span>钞本</span></div>
+          <div class="bd">
+            <h4>顾耐圃出示钞本<small>残阙</small></h4>
+            <p>葛元煦识语追记：</p>
+            <span class="q">客秋南沙顾耐圃茂才示以钞本，展玩之余，爱不释手。所惜尚有残阙，不无余憾。</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="tag"><b>救二</b><span>原刊</span></div>
+          <div class="bd">
+            <h4>刘式亭赠袁翔甫原刊本<small>带评语</small></h4>
+            <span class="q">今从同里袁翔甫大令处见有刘君式亭所赠原刊之本，一无遗漏，且有同学诸君评语，尤足令人寻绎。</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="tag"><b>救三</b><span>重刻</span></div>
+          <div class="bd">
+            <h4>光绪五年，葛元煦刻入啸园丛书<small>1879</small></h4>
+            <span class="q">爰乞重付手民，冀可流传久远。</span>
+            <p style="margin-top:6px;">识语落款：<span class="q">光绪五年岁次已卯冬十月仁和葛元煦理斋氏识。</span>光绪五年当己卯，库本写作「已卯」，这是它自己的错字。</p>
+          </div>
+        </div>
+        <div class="step out">
+          <div class="tag"><b>救四</b><span>出海</span></div>
+          <div class="bd">
+            <h4>林语堂把它译给西方<small>页外流转，据通说</small></h4>
+            <p>1937 年林语堂《生活的艺术》专设「张潮的警句」一章向欧美读者推介；1960 年又出中英对照全本。今天英文世界知道张潮，多半从那条路来。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="tag"><b>今日</b><span>库本</span></div>
+          <div class="bd">
+            <h4>库里这一本：有跋，无评</h4>
+            <p>葛识明明说原刊<b>有同学诸君评语</b>，库里这本却一条批语都没有：序、跋、识语俱全，评语被人整层剥掉了。世传的批点本长什么样，只能去看别家。</p>
+          </div>
+        </div>
+      </div>
+      <p class="bio">张潮，字山来，号心斋，安徽歙县人，清顺治八年（1650）生，卒年不详；另辑有小说选本《虞初新志》（此段生平为页外通说）。序四里那句评语，像是给全书起的注脚：<span class="q">张子以一人而兼众妙，其殆瀛木之影欤？</span></p>
+    </section>
+
+    <!-- 影八 -->
+    <section>
+      <div class="s-head"><span class="s-no">影八</span><h2 class="yt" data-t="库本点勘">库本点勘</h2></div>
+      <p class="s-sub">全帙去空白 <b>12,022</b> 字（机算）。这个整理本毛病不少，逐条录出。</p>
+      <ol class="kan">
+        <li><b>01</b><span>序三的署名与序一完全相同，都作<span class="q">曼持老人余怀广霞制</span>，一序一署，两序同署，必有一误。</span></li>
+        <li><b>02</b><span>序四署名只剩一个姓：<span class="q">同学弟松溪王 拜题</span>，王字后带一个空格，名字脱落（通行本此序署王晫，页外通说）。</span></li>
+        <li><b>03</b><span>跋的标题与首句粘成一行：<span class="q">幽梦影跋一抱异疾者多奇梦</span>，「跋一」直接接上了正文。库本也只有这一枚「跋一」，未见跋二。</span></li>
+        <li><b>04</b><span>识语纪年错字：光绪五年当己卯（1879），库本作「已卯」。</span></li>
+        <li><b>05</b><span>序三「<span class="q">杜枚之「廿四桥头」</span>」：杜枚当作杜牧。</span></li>
+        <li><b>06</b><span>「<span class="q">一赌其貌，则美恶判然矣</span>」：赌当作睹。</span></li>
+        <li><b>07</b><span>「<span class="q">物之樨者，皆不可厌。为驴独否。</span>」：樨同稚。顺带一提，这是全书唯一拉黑一种动物的地方。</span></li>
+        <li><b>08</b><span>正文夹现代整理注：<span class="q">此则之协，原文为左口右十口十，协的古字</span>，拆字说明直接写进经文。</span></li>
+        <li><b>09</b><span>知己条生僻字以空框代字并加夹注：<span class="q">□（上草下专）鲈以季鹰为知己</span>，鲈前脱一「莼」字。</span></li>
+        <li><b>10</b><span>序一「有害于世谓之恶人。」句后残留一枚半角问号；跋文整段标点带空格，与正文的标点风格两副面孔。</span></li>
+        <li><b>11</b><span>通行批点本有「同学诸君评语」（葛识自言），库本全无评语：有跋无评，是这本最大的怪相。</span></li>
+      </ol>
+      <div class="limit">
+        <h3>时代局限</h3>
+        <p><span class="q">女子自十四、五岁，至二十四、五岁，此十年中，无论燕、秦、吴、越，其音大都娇媚动人；一赌其貌，则美恶判然矣。</span>　以年岁与相貌论女子。</p>
+        <p><span class="q">看晓妆宜于傅粉之后。</span>　把女性当陈设的审美，正是他的时代底色。</p>
+        <p><span class="q">婢可以当奴，奴不可以当婢。</span>　一句谈名分的俏皮话，底下是整个主仆制度。请以历史语境阅读。</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- coda -->
+  <div class="coda">
+    <div class="wrap">
+      <h2 class="yt" data-t="未开成的法会" style="font-size:24px; margin-bottom:30px;">未开成的法会</h2>
+      <span class="q">予尝欲建一无遮大会，一祭历代才子，一祭历代佳人。俟遇有真正高僧，即当为之。</span>
+      <div class="hui">法会一直没开成。三百年后，这一页替他把名单念完。</div>
+      <div class="big"><span class="q">情之一字，所以维持世界；<em>才之一字，所以粉饰乾坤。</em></span></div>
+      <div class="seal2">影</div>
+    </div>
+  </div>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20），本页所有引文经脚本与库内文件逐字核验。</p>
+    <p>导读系列总目见 <a href="mulu.html">mulu.html</a>，本篇为第八十七篇，属清言卷。</p>
+    <p>古籍内容含时代局限，请以历史语境阅读。</p>
+  </div>
+</footer>
+
+</body>
+</html>
