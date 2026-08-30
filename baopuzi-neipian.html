@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>抱朴子内篇 · 殆知阁导读之八十</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #201f1d; --ink3: #232220;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --jade: #5f9270; --jade-dk: rgba(95,146,112,0.16);
+    --hair: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.95; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 26px; }
+  a { color: var(--jade); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  /* 开场：左边一列竖排的问，右边作答 */
+  .open { min-height: 92dvh; position: relative; display: flex; align-items: center; overflow: hidden; }
+  .ask-rail {
+    position: absolute; left: max(18px, 4vw); top: 50%; transform: translateY(-50%);
+    writing-mode: vertical-rl; font-size: clamp(17px, 2.2vw, 24px);
+    color: var(--dim); letter-spacing: 0.34em; border-right: 1px solid var(--hair);
+    padding-right: 22px; height: min(64dvh, 560px);
+  }
+  .ask-rail b { color: var(--paper); font-weight: 700; }
+  .open-body { margin-left: clamp(90px, 16vw, 220px); max-width: 560px; }
+  .kick { font-size: 13px; letter-spacing: 0.42em; color: var(--faint); }
+  h1 { font-size: clamp(52px, 9vw, 96px); font-weight: 700; letter-spacing: 0.12em; margin: 26px 0 8px; }
+  h1 span { color: var(--jade); }
+  .who { color: var(--faint); font-size: 15px; letter-spacing: 0.22em; margin-bottom: 26px; }
+  .pitch { color: var(--dim); font-size: clamp(15px, 1.7vw, 17.5px); }
+  .pitch b { color: var(--paper); font-weight: 600; }
+  .open-meta {
+    margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--hair);
+    color: var(--faint); font-size: 13px; letter-spacing: 0.08em; line-height: 2.1;
+  }
+  .open-meta i { font-style: normal; color: var(--jade); }
+
+  /* 章节骨架 */
+  section { padding: 74px 0 12px; }
+  .shead { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+  .sno { font-size: 13px; color: var(--jade); letter-spacing: 0.3em; }
+  h2 { font-size: clamp(24px, 3.4vw, 33px); font-weight: 700; letter-spacing: 0.1em; }
+  .slede { color: var(--dim); font-size: 15.5px; max-width: 40em; margin: 10px 0 30px; }
+  .slede b { color: var(--paper); font-weight: 600; }
+
+  p.q {
+    font-size: clamp(16.5px, 2vw, 19.5px); margin: 0 0 18px; padding-left: 20px;
+    border-left: 2px solid var(--jade); color: var(--paper);
+  }
+  p.q i { display: block; font-style: normal; color: var(--faint); font-size: 14.5px; margin-top: 4px; }
+  p.say { color: var(--dim); font-size: 15.5px; margin: 0 0 20px; }
+  p.say b { color: var(--paper); font-weight: 600; }
+
+  /* 问答体 */
+  .debate { display: grid; gap: 14px; }
+  .turn { border: 1px solid var(--hair); padding: 20px 22px; background: var(--ink2); }
+  .turn .role { font-size: 12px; letter-spacing: 0.3em; color: var(--faint); margin-bottom: 8px; }
+  .turn.ans { border-left: 3px solid var(--jade); }
+  .turn.ans .role { color: var(--jade); }
+  .turn p { font-size: 16px; color: var(--paper); }
+  .turn p i { font-style: normal; color: var(--faint); font-size: 14px; }
+
+  /* 二十卷：四枚印 */
+  .vols { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .volgrp { border: 1px solid var(--hair); background: var(--ink2); padding: 20px; }
+  .volgrp .vh { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .volgrp .seal {
+    width: 40px; height: 40px; display: grid; place-items: center; flex: none;
+    background: var(--jade); color: #14201a; font-size: 19px; font-weight: 700;
+  }
+  .volgrp .vh h3 { font-size: 18px; letter-spacing: 0.12em; font-weight: 700; }
+  .volgrp .vh small { color: var(--faint); font-size: 12.5px; margin-left: auto; letter-spacing: 0.18em; }
+  .volgrp p { color: var(--dim); font-size: 13.5px; line-height: 1.8; margin-bottom: 12px; }
+  .vchips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .vchips span {
+    font-size: 13.5px; color: var(--paper); border: 1px solid var(--hair);
+    padding: 3px 11px; letter-spacing: 0.1em;
+  }
+
+  /* 炉火：往返反应式 */
+  .react { border: 1px solid var(--hair); background: var(--ink2); padding: 30px 26px; margin-bottom: 18px; }
+  .react .lab { font-size: 12px; letter-spacing: 0.3em; color: var(--faint); margin-bottom: 16px; }
+  .rt { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 4vw, 38px); flex-wrap: wrap; }
+  .rt .sub { font-size: clamp(30px, 6vw, 54px); font-weight: 700; letter-spacing: 0.14em; }
+  .rt .sub small { display: block; font-size: 12px; font-weight: 400; color: var(--faint); letter-spacing: 0.24em; text-align: center; margin-top: 2px; }
+  .arrow { position: relative; width: clamp(58px, 12vw, 120px); height: 2px; background: var(--jade); }
+  .arrow::after {
+    content: ""; position: absolute; top: -4px; border: 5px solid transparent;
+  }
+  .arrow.fwd::after { right: -2px; border-left-color: var(--jade); }
+  .arrow.rev { background: var(--faint); }
+  .arrow.rev::after { left: -2px; border-right-color: var(--faint); top: -4px; }
+  .rt-cap { text-align: center; color: var(--faint); font-size: 12.5px; letter-spacing: 0.2em; margin-top: 14px; }
+  .react p.q { margin: 22px 0 0; }
+  .note { color: var(--dim); font-size: 14.5px; margin-top: 16px; }
+  .note b { color: var(--jade); font-weight: 600; }
+
+  /* 我命：账本 */
+  .fate { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: 34px; align-items: start; }
+  .fate-q {
+    font-size: clamp(27px, 4.6vw, 44px); font-weight: 700; line-height: 1.7;
+    letter-spacing: 0.08em; padding-left: 18px; border-left: 3px solid var(--jade);
+  }
+  .fate-q small { display: block; font-size: 14px; font-weight: 400; color: var(--faint); letter-spacing: 0.1em; margin-top: 14px; }
+  .ledger { border: 1px solid var(--hair); }
+  .ledger .row { display: grid; grid-template-columns: 88px 1fr; border-top: 1px solid var(--hair); }
+  .ledger .row:first-child { border-top: 0; }
+  .ledger .k { padding: 16px 14px; color: var(--faint); font-size: 13px; letter-spacing: 0.2em; border-right: 1px solid var(--hair); }
+  .ledger .v { padding: 16px; color: var(--dim); font-size: 14.5px; }
+  .ledger .v b { color: var(--paper); font-weight: 600; }
+
+  /* 尸解三品：三级阶 */
+  .rungs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; align-items: end; }
+  .rung { border: 1px solid var(--hair); border-bottom: 3px solid var(--jade); background: var(--ink2); padding: 18px; }
+  .rung:nth-child(1) { min-height: 128px; }
+  .rung:nth-child(2) { min-height: 158px; }
+  .rung:nth-child(3) { min-height: 188px; }
+  .rung .rk { font-size: 12px; letter-spacing: 0.3em; color: var(--jade); }
+  .rung h4 { font-size: 20px; font-weight: 700; margin: 6px 0 8px; letter-spacing: 0.1em; }
+  .rung p { color: var(--dim); font-size: 14px; line-height: 1.8; }
+
+  /* 遐览书墙 */
+  .shelf {
+    border: 1px solid var(--hair); background: var(--ink2); padding: 22px;
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px;
+  }
+  .bk { font-size: 13.5px; color: var(--paper); background: var(--ink3); border: 1px solid var(--hair); padding: 4px 12px; letter-spacing: 0.06em; }
+  .bk em { font-style: normal; color: var(--jade); }
+  .master { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 26px; margin-top: 26px; }
+
+  /* 祛惑名刺 */
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .card { border: 1px solid var(--hair); background: var(--ink2); padding: 20px 16px; display: flex; flex-direction: column; }
+  .card .nm { writing-mode: vertical-rl; font-size: 23px; font-weight: 700; letter-spacing: 0.3em; height: 108px; margin: 0 auto 12px; border-left: 1px solid var(--hair); padding-left: 10px; }
+  .card .claim { text-align: center; margin-bottom: 12px; }
+  .card .claim b { font-size: 30px; color: var(--jade); letter-spacing: 0.04em; }
+  .card .claim small { display: block; color: var(--faint); font-size: 12px; letter-spacing: 0.2em; }
+  .card p.q { font-size: 13.5px; line-height: 1.8; padding-left: 12px; margin-bottom: 12px; border-left-width: 1px; }
+  .card p.q i { font-size: 12.5px; }
+  .card .hole { margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--hair); color: var(--faint); font-size: 12.5px; line-height: 1.8; }
+  .card .hole b { color: var(--dim); font-weight: 600; }
+
+  /* 四难 */
+  .chain { display: grid; gap: 8px; margin-top: 26px; }
+  .link { display: flex; align-items: baseline; gap: 18px; border-top: 1px solid var(--hair); padding: 14px 0 14px var(--ind, 0px); }
+  .link b { font-size: clamp(19px, 2.6vw, 25px); font-weight: 700; letter-spacing: 0.08em; }
+  .link span { color: var(--faint); font-size: 13px; letter-spacing: 0.14em; }
+
+  /* 尾声 */
+  .epilog { border: 1px solid var(--hair); background: var(--ink2); padding: 30px; margin-top: 34px; }
+  .epilog .src { font-size: 12px; letter-spacing: 0.3em; color: var(--jade); margin-bottom: 14px; }
+  .epilog p { font-size: 16.5px; }
+  .epilog p + p { margin-top: 12px; }
+  .epilog .cmt { color: var(--dim); font-size: 14.5px; margin-top: 16px; }
+
+  footer.page { border-top: 1px solid var(--hair); margin-top: 80px; padding: 34px 0 60px; color: var(--faint); font-size: 13px; line-height: 2.1; }
+  footer.page a { color: var(--dim); }
+
+  @media (max-width: 760px) {
+    .ask-rail { display: none; }
+    .open-body { margin-left: 0; }
+    .vols { grid-template-columns: 1fr; }
+    .fate { grid-template-columns: 1fr; }
+    .rungs { grid-template-columns: 1fr; }
+    .rung:nth-child(n) { min-height: 0; }
+    .cards { grid-template-columns: 1fr 1fr; }
+    .master { grid-template-columns: 1fr; }
+    .link { --ind: 0px !important; }
+    .rt { gap: 9px; flex-wrap: nowrap; }
+    .arrow { width: 34px; min-width: 34px; }
+    .rt .sub { font-size: 24px; }
+    .rt .sub small { font-size: 10px; letter-spacing: 0.1em; }
+  }
+</style>
+</head>
+<body>
+
+<header class="open">
+  <div class="ask-rail">或问曰，<b>神仙不死</b>，信可得乎？</div>
+  <div class="wrap">
+    <div class="open-body">
+      <div class="kick">殆知阁导读 八十</div>
+      <h1>抱朴子<span>内篇</span></h1>
+      <div class="who">晋 葛洪 撰</div>
+      <p class="pitch">写《肘后备急方》救命的那个人，用另一只手写了这部求不死的书。一部书两只手：一只伸向病榻上的穷人，一只伸向炉火里的金石。<b>全书的骨架是一问一答</b>：世俗者问，抱朴子答，二十卷吵到底。</p>
+      <div class="open-meta mono">
+        正统道藏太清部底本 / 参校王明校释<br>
+        实测 <i>78,214</i> 汉字 / 二十卷 / 库本夹校记 <i>454</i> 处
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="form">
+    <div class="shead"><span class="sno mono">壹</span><h2>先吵第一句</h2></div>
+    <p class="slede">全书的开卷不是立论，是抬杠。一个「或问」替所有不信的人发问，抱朴子接招。这个格式贯穿二十卷，像一场开了二十年没散的答辩会。</p>
+    <div class="debate">
+      <div class="turn">
+        <div class="role">或问</div>
+        <p>神仙不死，信可得乎？</p>
+      </div>
+      <div class="turn ans">
+        <div class="role">抱朴子答</div>
+        <p>谓夏必长，而荠菱枯焉。谓冬必凋，而竹栢茂焉。谓始必终，而天地无穷焉。谓生必死，而龟鹤长存焉。<i>或问一方的「有始者必有卒」这个大前提，先被四个反例拆掉了。</i></p>
+      </div>
+      <div class="turn">
+        <div class="role">或问</div>
+        <p>世间不见仙人，便云天下必无此事。</p>
+      </div>
+      <div class="turn ans">
+        <div class="role">抱朴子答</div>
+        <p>夫所见少，则所怪多，世之常也。<i>这八个字「所见少则所怪多」，是全书论证的地基，放在今天也是一句好话。</i></p>
+      </div>
+    </div>
+    <p class="say" style="margin-top:22px">他明白这部书说服不了当世的人，所以序言里把读者直接写成了「来世」。</p>
+    <p class="q">贵使来世好长生者，有以释其惑，岂求信于不信者乎。<i>写下来是为了让后世疑惑的人解开疑惑，不求今天的人相信。</i></p>
+  </section>
+
+  <section id="vols">
+    <div class="shead"><span class="sno mono">贰</span><h2>二十卷在忙什么</h2></div>
+    <p class="slede">库本卷前目录已佚，编者留了一句注：<b>「目录原缺，据正文标题补。」</b>按内容另分，二十卷其实干着四样活。</p>
+    <div class="vols">
+      <div class="volgrp">
+        <div class="vh"><div class="seal">论</div><h3>与世俗抬杠</h3><small>八卷</small></div>
+        <p>哲学根据地与答辩现场：神仙有无论、儒道之争、要不要忠孝。</p>
+        <div class="vchips"><span>畅玄</span><span>论仙</span><span>对俗</span><span>塞难</span><span>释滞</span><span>道意</span><span>明本</span><span>辨问</span></div>
+      </div>
+      <div class="volgrp">
+        <div class="vh"><div class="seal">丹</div><h3>炉火与药</h3><small>五卷</small></div>
+        <p>全书的心脏：为什么必须服金丹，草木药为什么不够，怎么求方访师。</p>
+        <div class="vchips"><span>金丹</span><span>至理</span><span>微旨</span><span>仙药</span><span>勤求</span></div>
+      </div>
+      <div class="volgrp">
+        <div class="vh"><div class="seal">方</div><h3>随身手册</h3><small>五卷</small></div>
+        <p>从避蛇入山到点石成金，从守一到极言，是能揣进袖子的操作卷。</p>
+        <div class="vchips"><span>杂应</span><span>黄白</span><span>登涉</span><span>地真</span><span>极言</span></div>
+      </div>
+      <div class="volgrp">
+        <div class="vh"><div class="seal">终</div><h3>收官两卷</h3><small>二卷</small></div>
+        <p>一卷开书目，一卷抓骗子。压轴的两件事，开单与打假。</p>
+        <div class="vchips"><span>遐览</span><span>祛惑</span></div>
+      </div>
+    </div>
+    <p class="say" style="margin-top:20px">序里的分工说得直白：他的文章另编为外篇一百余卷谈世俗，这一部专谈长生，而且不修饰。</p>
+    <p class="q">且此内篇，皆直语耳，无藻饰也。<i>内篇用的都是直话，没有文采修饰。</i></p>
+  </section>
+
+  <section id="fire">
+    <div class="shead"><span class="sno mono">叁</span><h2>炉火旁的两条往返</h2></div>
+    <p class="slede">他的核心逻辑只有一步：草木烧完是灰，金石烧不掉，所以不朽之物必能托付不朽之身。这套推法今天不成立，<b>但他顺手记下的两条反应，是真的</b>。</p>
+
+    <div class="react">
+      <div class="lab">金丹卷 炼丹实录</div>
+      <div class="rt">
+        <div class="sub">丹砂<small>硫化汞矿物</small></div>
+        <div class="arrow fwd"></div>
+        <div class="sub">水银<small>加热分解</small></div>
+        <div class="arrow rev"></div>
+        <div class="sub">丹砂<small>积变复还</small></div>
+      </div>
+      <div class="rt-cap">一条可逆反应的四世纪记录</div>
+      <p class="q">凡草木烧之即烬，而丹砂烧之成水银，积变又还成丹砂，其去凡草亦远矣。<i>草木一烧就成灰，丹砂烧成水银，反复变化又能变回丹砂，和凡草差得远了。</i></p>
+      <p class="note">他还发现别人不信这条：<b>「世人少所识，多所怪，或不知水银出于丹砂，告之终不肯信。」</b>说水银是丹砂烧出来的，当时就有人当他是骗子。</p>
+    </div>
+
+    <div class="react">
+      <div class="lab">黄白卷 点化之物</div>
+      <div class="rt">
+        <div class="sub">铅<small>色白</small></div>
+        <div class="arrow fwd"></div>
+        <div class="sub">丹<small>赤之则变</small></div>
+        <div class="arrow rev"></div>
+        <div class="sub">铅<small>白之复还</small></div>
+      </div>
+      <div class="rt-cap">铅与丹的化学往返，同卷记下</div>
+      <p class="q">铅性白也，而赤之以为丹。丹性赤也，而白之而为铅。<i>铅本来是白的，烧红了就变成丹；丹本来是红的，还原又变回铅。</i></p>
+    </div>
+
+    <div class="react">
+      <div class="lab">金丹卷 立论根基</div>
+      <p class="q" style="margin-top:0">夫金丹之为物，烧之愈久，变化愈妙。黄金入火，二百炼不消，埋之，毕天不朽。<i>金丹这种东西，越烧变化越妙；黄金进火，烧两百次不熔化，埋在地下永不朽坏。库本作「二百炼」。</i></p>
+      <p class="q">此盖假求于外物以自坚固，有如脂之养火而可不灭<i>这是借助外物来坚固自己，就像油脂养着火，火可以不灭。</i></p>
+      <p class="note">「假求于外物以自坚固」，<b>整座丹房的哲学就这九个字</b>。把不朽的金石吃进身体，让身体分得它们的永久。药理是错的，物质不灭的直觉是真的。</p>
+    </div>
+  </section>
+
+  <section id="fate">
+    <div class="shead"><span class="sno mono">肆</span><h2>我命在我不在天</h2></div>
+    <p class="slede">这句话不是葛洪的原创，是黄白卷里引的一句「龟甲文」。他引完加了一句自己的反问：「古人岂欺我哉」。<b>后世道士把这句当成道教最有骨气的一句话，出处就在这一卷。</b></p>
+    <div class="fate">
+      <div class="fate-q">我命在我不在天，还丹成金亿万年。<small>「龟甲文曰」句，黄白卷引。性命在我自己手里，不在天上。</small></div>
+      <div class="ledger">
+        <div class="row"><div class="k">丹房经济</div><div class="v">道士普遍穷，炼丹要花钱。书里记了句当行谚语：<b>「然道士率皆贫，故谚云，无有肥仙人富道士也。」</b>没有胖仙人富道士，所以买不起真金银，只好自己点化。</div></div>
+        <div class="row"><div class="k">自嘲</div><div class="v">他会点金术却穷着，自己把话说破：<b>「余今告人言，我晓作金银，而躬自饥寒，何异自不能行，而卖治躄之药，求人信之，诚不可得。」</b>我声称会造金银，自己却挨饿受冻，这和瘸子卖治瘸的药有什么区别。</div></div>
+        <div class="row"><div class="k">底线</div><div class="v">丹房不是免德之所。对俗卷把话说在前头：<b>「欲求仙者，要当以忠孝和顺仁信为本，若德行不修，而但务方术，皆不得长生也。」</b>想求仙，先做人；德行不修，光练方术，长生免谈。</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sanpin">
+    <div class="shead"><span class="sno mono">伍</span><h2>成仙的三条路</h2></div>
+    <p class="slede">论仙卷引仙经给神仙分了三等。这个「尸解」的说法后来统治了整个道教想象：死后蜕壳，也算成仙，<b>等于给所有没能验证的案例留了接口</b>。</p>
+    <div class="rungs">
+      <div class="rung"><div class="rk">下士</div><h4>尸解仙</h4><p>先死后蜕，谓之尸解仙。人已入棺，棺中无尸，只剩衣冠或杖履。</p></div>
+      <div class="rung"><div class="rk">中士</div><h4>地仙</h4><p>游于名山，谓之地仙。留在人间名山里，长生而不升天。</p></div>
+      <div class="rung"><div class="rk">上士</div><h4>天仙</h4><p>举形升虚，谓之天仙。连人带形，白日飞升。</p></div>
+    </div>
+    <p class="q" style="margin-top:22px">上士举形升虚，谓之天仙。中士游于名山，谓之地仙。下士先死后蜕，谓之尸解仙。<i>三品原文。记下这三句话的那段，正在讲汉武帝开李少君的棺：发其棺，无尸，唯衣冠在焉。</i></p>
+  </section>
+
+  <section id="xialan">
+    <div class="shead"><span class="sno mono">陸</span><h2>遐览：一份道藏的源头</h2></div>
+    <p class="slede">第十九卷几乎不谈道理，只做一件事：<b>开书单</b>。葛洪自报从师郑隐处见过的道书名目，几百种，一条条登录在册。这是存世最早的道教丛书目录之一，后来道藏的编目源头就在这里。</p>
+    <div class="shelf">
+      <span class="bk">太平经<em>五十卷</em></span>
+      <span class="bk">甲乙经<em>一百七十卷</em></span>
+      <span class="bk">墨子枕中五行记<em>五卷</em></span>
+      <span class="bk">三皇文</span>
+      <span class="bk">五岳真形图</span>
+      <span class="bk">黄庭经</span>
+      <span class="bk">素女经</span>
+      <span class="bk">彭祖经</span>
+      <span class="bk">胎息经</span>
+      <span class="bk">食六气经</span>
+      <span class="bk">按摩经</span>
+      <span class="bk">道引经十卷</span>
+      <span class="bk">三十六水经</span>
+      <span class="bk">黄白要经</span>
+      <span class="bk">尸解经</span>
+      <span class="bk">五岳经<em>五卷</em></span>
+    </div>
+    <p class="say">每一条都照库本逐字摘出。书单开到末尾，还夹着一部「李先生口诀肘后二卷」：肘后两个字，他后来用在了自己那部急救方上。</p>
+    <div class="master">
+      <div>
+        <p class="q">郑君时年出八十，先发鬓斑白，数年间又黑，颜色丰悦，能引强弩射百步，步行日数百里，饮酒二斗不醉。<i>师父郑隐：八十岁头发由白转黑，能拉强弓百步，日行数百里，喝两斗不醉。</i></p>
+        <p class="q">余晚充郑君门人，请见方书<i>葛洪入师门晚，向师父求看方书。</i></p>
+      </div>
+      <div>
+        <p class="q">要道不过尺素，上足以度世，不用多也。<i>郑隐的回答：要紧的道写满一尺素绢就够了，足够度世，不必贪多。</i></p>
+        <p class="q">故谚曰，书三写，鱼成鲁，虚成虎<i>可是书一抄再抄就坏了：抄三遍，鱼写成鲁，虚写成虎。所以符箓失灵，先怪传抄。成语「鲁鱼亥豕」的前身。</i></p>
+      </div>
+    </div>
+    <p class="say">书单开完，师门的结局也交待了：</p>
+    <p class="q">太安元年，知季世之乱，江南将鼎沸<i>太安元年，他预感天下将乱、江南即将鼎沸。</i></p>
+    <p class="say">于是把藏书和药囊背在背上，带着入室弟子进山。</p>
+    <p class="q">东投霍山，莫知所在焉。<i>往东投霍山去，从此没有人知道他去了哪里。</i></p>
+  </section>
+
+  <section id="quhuo">
+    <div class="shead"><span class="sno mono">柒</span><h2>祛惑：末卷是打假办</h2></div>
+    <p class="slede">一部求仙的书，末卷专门抓自称仙人的骗子，四张名刺，各有自称，各有破绽。<b>他连自己行当里的水分一起打</b>。</p>
+    <div class="cards">
+      <div class="card">
+        <div class="nm">古强</div>
+        <div class="claim"><b>四千岁</b><small>自称年岁</small></div>
+        <p class="q">自言已四千岁，敢为虚言，言之不怍。<i>自称活了四千岁，撒谎撒得面不改色。</i></p>
+        <div class="hole"><b>破绽</b> 长年只服一味草药天门冬，「则知其体中未尝有金丹大药也」，身体里根本没有金丹大药。</div>
+      </div>
+      <div class="card">
+        <div class="nm">蔡诞</div>
+        <div class="claim"><b>仙道成</b><small>自称功成</small></div>
+        <p class="q">于是弃家，言仙道成矣。<i>书读魔怔了，索性弃家出走，宣称仙道已成。</i></p>
+        <div class="hole"><b>破绽</b> 进山不会采药辟谷，「但行卖薪以易衣食，如是三年，饥冻辛苦」，只能砍柴换衣，冻饿三年。</div>
+      </div>
+      <div class="card">
+        <div class="nm">项□都</div>
+        <div class="claim"><b>上过天</b><small>自称履历</small></div>
+        <p class="q">仙人但以流霞一杯与我，饮之辄不饥渴。<i>仙人只给我一杯流霞，喝下去就不饥不渴。名字中间的字库本缺，作方框。</i></p>
+        <div class="hole"><b>破绽</b> 故事讲到天帝面前「谒拜失仪，见斥来还」，因为拜错了礼仪，被呵斥遣返。天庭的罪名，地上的编法。</div>
+      </div>
+      <div class="card">
+        <div class="nm">白和</div>
+        <div class="claim"><b>八千七百岁</b><small>传言年岁</small></div>
+        <p class="q">传言已八千七百岁<i>洛阳有位真人白和，传言八千七百岁。后来河北出现一个冒名的。</i></p>
+        <div class="hole"><b>破绽</b> 真弟子听说师父再出，跑去一看，「乃定非也」，当场认定是假的。冒名者卷款跑了。</div>
+      </div>
+    </div>
+    <p class="q" style="margin-top:24px">好事者省余此书，可以少加沙汰其善否矣。<i>读这部书的人，可以拿它当筛子，筛一筛真假。</i></p>
+  </section>
+
+  <section id="ending">
+    <div class="shead"><span class="sno mono">捌</span><h2>四难</h2></div>
+    <p class="slede">极言卷把长生这件事拆成四级台阶，一句比一句近，一句比一句难。全书最像格言的二十几个字：</p>
+    <div class="chain">
+      <div class="link" style="--ind:0px"><b>非长生难也，闻道难也</b><span>长生不难，难在听到正道</span></div>
+      <div class="link" style="--ind:36px"><b>非闻道难也，行之难也</b><span>听到不难，难在去行</span></div>
+      <div class="link" style="--ind:72px"><b>非行之难也，终之难也</b><span>去行不难，难在走到头</span></div>
+    </div>
+    <div class="epilog">
+      <div class="src mono">晋书 卷七十二 本传</div>
+      <p class="q">洪坐至日中，兀然若睡而卒<i>他给朋友留信说当远行寻师，约期便发。朋友赶到时，他已端坐到正午，安安静静像睡着了一样故去。年八十一。</i></p>
+      <p class="q">视其颜色如生，体亦柔软，举尸入棺，甚轻，如空衣，世以为尸解得仙云。<i>面色如生，身体柔软，抬尸入棺，轻得像空衣服。世人说他尸解成仙了。</i></p>
+      <p class="cmt">论仙卷刚给「先死后蜕」留好了接口，史书就按这个格式给他收了尾。他最终把自己活成了内篇里的一则案例。至于那只救人的手，急救方的故事在<a href="zhouhou-beijifang.html">第 23 篇《肘后备急方》</a>；青蒿冷水绞汁那一条，就从他这座丹房旁边的药囊里来。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库 道藏 正统道藏太清部（github.com/robertsong2000/daizhigev20）。去空白 78,214 汉字，库本夹校记 454 处；引文中的库本缺字以方框照录。</p>
+    <p>本页引文已与库内文件逐字核验（去标点比对），另与《晋书》库本核对卒年一条，脚本见 verify_baopuzi.py。</p>
+    <p>本书为四世纪神仙方术文献，服食丹砂金石有毒，炼丹服食诸说均不可仿效，请仅作思想史与化学史料阅读。</p>
+  </div>
+</footer>
+
+</body>
+</html>
