@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>几何原本 · 殆知阁导读之九十八</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #141412; --ink-3: #10100e;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --green: #5f9270; --green-dim: rgba(95,146,112,0.55);
+    --hairline: rgba(232,228,220,0.13);
+    --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--ink); color: var(--paper); font-family: var(--serif); line-height: 1.9; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 30px; }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+
+  /* 引文 */
+  .q { display: block; color: var(--paper); background: rgba(232,228,220,0.045);
+       border-left: 2px solid var(--green-dim); padding: 12px 18px; margin: 14px 0; font-size: 16.5px; }
+  .q.inl { display: inline; background: rgba(232,228,220,0.07); border: none;
+           padding: 1px 6px; margin: 0 2px; font-size: inherit; }
+  .q .who { display: block; margin-top: 6px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  .lost { display: inline-block; min-width: 1.15em; text-align: center; color: var(--paper-faint);
+          border: 1px dashed var(--paper-faint); margin: 0 2px; font-size: 0.9em; padding: 0 2px; }
+
+  /* 开场：一具规、一个圆 */
+  .hero { position: relative; padding: 108px 0 96px; overflow: hidden; }
+  .orb { position: absolute; right: -190px; top: -60px; width: 640px; height: 640px;
+         border: 1px solid rgba(232,228,220,0.14); border-radius: 50%; }
+  .orb2 { position: absolute; right: 40px; top: 190px; width: 210px; height: 210px;
+          border: 1px dashed var(--green-dim); border-radius: 50%; }
+  .rad { position: absolute; right: 145px; top: 295px; width: 210px; height: 1px;
+         background: linear-gradient(90deg, rgba(232,228,220,0.5), rgba(232,228,220,0.08));
+         transform: rotate(-38deg); transform-origin: left center; }
+  .cdot { position: absolute; right: 145px; top: 291px; width: 8px; height: 8px; border-radius: 50%;
+          background: var(--green); box-shadow: 0 0 18px rgba(95,146,112,0.8); }
+  .kick { font-size: 13.5px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  .heroline { display: flex; gap: 40px; align-items: flex-start; margin-top: 34px; }
+  .lead { flex: 1; max-width: 30em; }
+  .tag { font-size: clamp(19px, 2.3vw, 25px); line-height: 1.7; }
+  .tag2 { margin-top: 16px; color: var(--paper-dim); font-size: 15.5px; max-width: 27em; }
+  .vtitle { writing-mode: vertical-rl; font-size: clamp(44px, 5vw, 62px); font-weight: 700;
+            letter-spacing: 0.16em; line-height: 1.16; height: 330px; flex: none; margin-right: 130px; }
+  .sealbox { flex: none; margin-top: 8px; }
+  .seal { width: 46px; height: 46px; border: 2px solid var(--green); color: var(--green);
+          display: grid; place-items: center; font-size: 17px; font-weight: 700; letter-spacing: 0.1em; }
+  .heroq { margin-top: 60px; max-width: 34em; }
+  .heroq .q { font-size: 19px; padding: 16px 22px; }
+
+  /* 节 */
+  section { padding: 74px 0 30px; border-top: 1px solid var(--hairline); }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 12px; }
+  .sec-head .tick { width: 30px; height: 8px; background: var(--green); flex: none; align-self: center; }
+  .sec-head h2 { font-size: 27px; font-weight: 700; letter-spacing: 0.14em; }
+  .sec-head .ann { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .prose { color: var(--paper-dim); font-size: 16px; max-width: 40em; margin: 14px 0; }
+  .prose b { color: var(--paper); font-weight: 600; }
+
+  /* 卷首：序笺 */
+  .qianrow { display: grid; grid-template-columns: 1.2fr 1fr; gap: 26px; margin-top: 26px; }
+  .qian { border: 1px solid var(--hairline); background: rgba(232,228,220,0.03); padding: 20px 22px; }
+  .qian.tilt { transform: rotate(0.8deg); }
+  .qian h3 { font-size: 15px; letter-spacing: 0.3em; color: var(--green); font-weight: 600; margin-bottom: 10px; }
+  .qian p { font-size: 15px; color: var(--paper-dim); }
+
+  /* 界说阶梯 */
+  .ladder { margin-top: 34px; border-left: 1px solid var(--hairline); padding-left: 34px; }
+  .rung { display: grid; grid-template-columns: 220px 1fr; gap: 34px; align-items: center; padding: 26px 0; }
+  .rung + .rung { border-top: 1px dashed rgba(232,228,220,0.09); }
+  .rung .fig { height: 150px; display: grid; place-items: center; }
+  .rung .zi { font-size: 21px; font-weight: 700; letter-spacing: 0.2em; color: var(--green); margin-bottom: 4px; }
+  .rung .cap { font-size: 13.5px; color: var(--paper-faint); margin-top: 8px; }
+  .fig-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--paper); }
+  .fig-line { width: 200px; height: 68px; position: relative;
+              background: linear-gradient(90deg, #232220, #dcd7cd 50%, #232220); }
+  .fig-line::after { content: ""; position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--ink); }
+  .fig-plane { width: 170px; height: 74px; border: 1px dashed var(--green-dim);
+               background: rgba(95,146,112,0.1); transform: skewX(-26deg); position: relative; }
+  .fig-plane::before { content: ""; position: absolute; top: -18px; left: 6%; width: 88%;
+                       border-top: 1px dotted rgba(232,228,220,0.65); }
+  .chip { display: inline-block; font-size: 13px; color: var(--paper-faint); border: 1px solid var(--hairline);
+          padding: 3px 10px; margin: 8px 8px 0 0; }
+  .chip.warn { color: #cbb8a6; border-color: rgba(201,150,63,0.5); }
+
+  /* 求作与公论 */
+  .reqgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 30px; }
+  .req { border: 1px solid var(--hairline); padding: 18px 16px; background: rgba(232,228,220,0.03); }
+  .req .no { font-size: 12.5px; letter-spacing: 0.28em; color: var(--green); }
+  .req p { font-size: 14.5px; color: var(--paper-dim); margin-top: 10px; min-height: 5.4em; }
+  .req .mini { height: 44px; margin-top: 12px; display: flex; align-items: center; }
+  .mini-line { width: 100%; height: 1px; background: var(--paper-dim); position: relative; }
+  .mini-line::before, .mini-line::after { content: ""; position: absolute; top: -3px; width: 7px; height: 7px;
+        border-radius: 50%; background: var(--paper-dim); }
+  .mini-line::after { right: 0; }
+  .mini-arrow { width: 100%; height: 1px; background: linear-gradient(90deg, var(--paper-dim) 78%, transparent 78%);
+                position: relative; }
+  .mini-circle { width: 40px; height: 40px; border: 1px solid var(--paper-dim); border-radius: 50%; }
+  .mini-scale { width: 100%; height: 10px; border-left: 1px solid var(--paper-dim); border-right: 1px solid var(--paper-dim);
+                border-bottom: 1px solid var(--paper-dim); position: relative; }
+  .mini-scale::before { content: ""; position: absolute; left: 32%; top: -6px; width: 1px; height: 17px; background: var(--green); }
+  .axrow { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .ax { border: 1px solid var(--hairline); padding: 8px 16px; font-size: 15px; color: var(--paper-dim); }
+  .ax b { color: var(--paper); font-weight: 600; }
+  .ax .q { background: none; border: none; padding: 0; margin: 0; color: var(--paper); }
+  .req .q { background: none; border: none; padding: 0; margin: 0; color: var(--paper); }
+
+  /* 公论十一：平行线暗板 */
+  .paradox { margin-top: 44px; background: var(--ink-3); border: 1px solid rgba(95,146,112,0.28); padding: 38px 36px 30px; }
+  .paradox .lab { font-size: 13px; letter-spacing: 0.32em; color: var(--green); }
+  .paradox .q { background: none; border-left-color: var(--green); font-size: 17px; margin-top: 14px; }
+  .paradox svg { display: block; margin: 18px auto 6px; max-width: 100%; }
+  .paradox .cap { font-size: 14px; color: var(--paper-faint); max-width: 44em; margin-top: 14px; }
+  .paradox .cap b { color: var(--paper-dim); }
+
+  /* 设题：第一题 */
+  .construct { display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; margin-top: 30px; align-items: center; }
+  .construct .plate { border: 1px solid var(--hairline); background: rgba(232,228,220,0.03); padding: 24px; }
+  .construct .plate svg { display: block; width: 100%; height: auto; }
+  .plate-cap { font-size: 13px; color: var(--paper-faint); margin-top: 12px; letter-spacing: 0.08em; }
+  .goldseg { margin-top: 54px; border-top: 1px dashed rgba(232,228,220,0.09); padding-top: 30px; }
+  .goldline { position: relative; height: 14px; margin: 46px 0 10px; }
+  .goldline .whole { position: absolute; left: 0; right: 0; top: 6px; height: 2px; background: rgba(232,228,220,0.25); }
+  .goldline .big { position: absolute; left: 0; width: 61.8%; top: 6px; height: 2px; background: var(--green); }
+  .goldline::before { content: ""; position: absolute; left: 61.8%; top: -4px; width: 1px; height: 22px; background: var(--paper); }
+  .goldline::after { content: ""; position: absolute; left: 0; top: -4px; width: 1px; height: 22px; background: var(--paper-dim); }
+  .goldlabels { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--paper-faint); }
+
+  /* 六卷账 */
+  .vols { display: flex; gap: 14px; margin: 34px 0 8px; flex-wrap: wrap; }
+  .vol-tag { flex: 1; min-width: 118px; border: 1px solid var(--hairline); border-top: 3px solid var(--green);
+             padding: 16px 14px 14px; text-align: center; }
+  .vol-tag .vn { font-size: 12px; letter-spacing: 0.3em; color: var(--paper-faint); }
+  .vol-tag .vt { font-size: 19px; font-weight: 700; letter-spacing: 0.16em; margin-top: 8px; }
+  .vol-tag.duo { border-top-color: rgba(95,146,112,0.4); }
+  .factrow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 30px; }
+  .fact { border: 1px solid var(--hairline); padding: 18px; font-size: 14.5px; color: var(--paper-dim); }
+  .fact b { display: block; color: var(--paper); font-size: 15.5px; font-weight: 600; margin-bottom: 6px; }
+
+  /* 结尾 */
+  .later { background: var(--ink-2); margin-top: 74px; border-top: 1px solid var(--hairline);
+           border-bottom: 1px solid var(--hairline); padding: 52px 0; }
+  .outerbox { border: 1px dashed rgba(232,228,220,0.25); padding: 18px 22px; margin-top: 24px; }
+  .outerbox .ot { font-size: 12.5px; letter-spacing: 0.3em; color: var(--paper-faint); margin-bottom: 8px; }
+  .outerbox p { font-size: 14.5px; color: var(--paper-dim); }
+  .finale { text-align: center; padding: 84px 0 66px; }
+  .finale .q { background: none; border: none; padding: 0; margin: 0; }
+  .finale .big { font-size: clamp(30px, 4.6vw, 46px); font-weight: 700; letter-spacing: 0.12em; }
+  .finale .sub { margin-top: 18px; color: var(--paper-faint); font-size: 14.5px; }
+  .finale .sub a { color: var(--green); text-decoration: none; border-bottom: 1px solid rgba(95,146,112,0.4); }
+
+  /* 机数与校记 */
+  .stats { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.06em; padding: 26px 0 6px;
+           border-top: 1px solid var(--hairline); }
+  .jiaoji { padding: 22px 0 40px; }
+  .jiaoji h3 { font-size: 14px; letter-spacing: 0.32em; color: var(--paper-faint); font-weight: 600; margin-bottom: 14px; }
+  .jiaoji ol { list-style: none; counter-reset: jj; }
+  .jiaoji li { counter-increment: jj; font-size: 14px; color: var(--paper-faint); padding: 7px 0 7px 34px;
+               position: relative; border-top: 1px dotted rgba(232,228,220,0.08); }
+  .jiaoji li::before { content: counter(jj, cjk-ideographic); position: absolute; left: 4px; color: var(--green-dim); }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 34px 0 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page p { margin: 4px 0; }
+
+  @media (max-width: 760px) {
+    .heroline { flex-direction: column-reverse; }
+    .vtitle { height: 240px; margin-right: 0; }
+    .orb { right: -260px; }
+    .qianrow, .construct, .factrow { grid-template-columns: 1fr; }
+    .reqgrid { grid-template-columns: 1fr 1fr; }
+    .rung { grid-template-columns: 1fr; gap: 8px; }
+    .rung .fig { height: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="orb"></div><div class="orb2"></div><div class="rad"></div><div class="cdot"></div>
+  <div class="wrap">
+    <div class="kick">殆知阁导读　之九十八</div>
+    <div class="heroline">
+      <div class="lead">
+        <p class="tag">明万历三十五年，利玛窦口译，徐光启笔受，欧几里得第一次说汉语。</p>
+        <p class="tag2">从一条没有宽窄的线出发，靠四条求作、十九条公论，搭起整座方圆的世界。库本为四库全书本，止六卷，卷一之首的界说三十六则，是全书最像诗的地方。</p>
+      </div>
+      <h1 class="vtitle">几何原本</h1>
+      <div class="sealbox"><div class="seal">量法</div></div>
+    </div>
+    <blockquote class="heroq"><span class="q">「几何原本者，度数之宗，所以穷方圆平直之情，尽规矩准绳之用也。」<span class="who">徐光启　几何原本序</span></span></blockquote>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="xu">
+  <div class="sec-head"><span class="tick"></span><h2>卷首　为什么要先译这本书</h2><span class="ann">序 · 徐光启</span></div>
+  <p class="prose">万历年间，徐光启向利玛窦提出：把西洋象数之书译成中文。利玛窦的回答毫不含糊：</p>
+  <span class="q">「因请其象数诸书，更以华文，独谓<span class="q inl">此书未译，则他书俱不可得论</span>。」<span class="who">几何原本序</span></span>
+  <p class="prose">这本书在他眼里是中国数学的源头活水。序文里，徐光启把这门学问的师承断在秦火：</p>
+  <div class="qianrow">
+    <div class="qian tilt">
+      <h3>一脉的断裂</h3>
+      <span class="q">「盛有元元本本师曹习之学，而<span class="q inl">毕丧于祖龙之<span class="lost">火</span></span>。」<span class="who">序（库本缺字，虚框示通行本「火」）</span></span>
+      <p>秦火之后，是两段他极不看好的传统：</p>
+      <span class="q">「汉以来多任意揣摩，如盲人射的，虚发无效；或依儗形似，如持萤烛象，得首失尾。」</span>
+    </div>
+    <div class="qian">
+      <h3>利玛窦的用意</h3>
+      <p>译书时利玛窦说过译它的真正目的：</p>
+      <span class="q">「将以习人之灵才，令细而确也。」<span class="who">几何原本序</span></span>
+      <p>徐光启的回答更大方：学问像邓林之材，各人自取所需。</p>
+      <span class="q">「余以为小用大用，实在其人。如邓林伐材，栋梁榱桷，恣所取之耳。」</span>
+    </div>
+  </div>
+  <p class="prose">译完重读，他的评语是<span class="q inl">「由显入微，从疑得信」</span>，又许为<span class="q inl">「真可谓万象之形囿，百家之学海」</span>。</p>
+  <p class="prose">利玛窦的学问有三层，<span class="q inl">「大者修身事天，小者格物穷理」</span>。徐光启挑了最「小」的一层先译，理由是<span class="q inl">「趋欲先其易信」</span>：先给一件无从怀疑的东西，让人顺着文字想见其意理，再回头信其余。</p>
+</section>
+
+<section id="jieshuo">
+  <div class="sec-head"><span class="tick"></span><h2>界说三十六则　从点开始</h2><span class="ann">卷一之首</span></div>
+  <p class="prose">造论先当分别解说论中所用名目。整座大厦的地基只有一句话：</p>
+  <span class="q">「凡论几何先从一防始，<span class="q inl">自防引之为线，线展为靣，靣积为体，是名三度</span>。」<span class="who">卷一之首 · 第一界前引</span></span>
+  <p class="prose">沿着这条「三度」往上走，就是界说三十六则的顺序：</p>
+
+  <div class="ladder">
+    <div class="rung">
+      <div class="fig"><div class="fig-dot"></div></div>
+      <div>
+        <div class="zi">点</div>
+        <span class="q">「防者无分。」<span class="cap">无长短广狭厚薄。库本「防」即「点」之讹（全帙防一百六十九见、点十七见并存），引文照录。</span></span>
+      </div>
+    </div>
+    <div class="rung">
+      <div class="fig"><div class="fig-line"></div></div>
+      <div>
+        <div class="zi">线</div>
+        <span class="q">「线有长无广。」<span class="cap">界说二如此给出光与影：</span></span>
+        <span class="q">「试如一平靣光照之，有光无光之间，不容一物，是线也。」</span>
+        <div class="cap">直线之所以名直：<span class="q inl">「两防之间至径者直线也，稍曲则绕而长矣」</span>。</div>
+      </div>
+    </div>
+    <div class="rung">
+      <div class="fig"><div class="fig-plane"></div></div>
+      <div>
+        <div class="zi">面</div>
+        <span class="q">「靣者止有长有广。」<span class="cap">面从哪里来？让一条线走起来：</span></span>
+        <span class="q">「想一线横行所留之迹，即成靣也。」</span>
+      </div>
+    </div>
+    <div class="rung">
+      <div class="fig">
+        <svg width="150" height="140" viewBox="0 0 150 140" fill="none">
+          <path d="M30 45 L95 20 L135 42 L70 68 Z" stroke="#a39e93" stroke-width="1"/>
+          <path d="M30 45 L30 100 L70 126 L70 68" stroke="#5f9270" stroke-width="1"/>
+          <path d="M70 126 L135 96 L135 42" stroke="#a39e93" stroke-width="1" stroke-dasharray="3 3"/>
+        </svg>
+      </div>
+      <div>
+        <div class="zi">体</div>
+        <span class="q">「界者一物之终始。」<span class="cap">界说十三把万物收官：</span></span>
+        <span class="q">「防为线之界，线为靣之界，靣为体之界，体不可为界。」</span>
+      </div>
+    </div>
+    <div class="rung">
+      <div class="fig">
+        <svg width="150" height="150" viewBox="0 0 150 150" fill="none">
+          <circle cx="75" cy="75" r="60" stroke="#a39e93" stroke-width="1"/>
+          <circle cx="75" cy="75" r="2.5" fill="#5f9270"/>
+          <path d="M75 75 L75 15 M75 75 L127 45 M75 75 L23 45 M75 75 L75 135" stroke="#5f9270" stroke-width="1" opacity="0.7"/>
+        </svg>
+      </div>
+      <div>
+        <div class="zi">圜</div>
+        <span class="q">「圜者一形，于平地居一界之间，自界至中心作直线俱等。」<span class="cap">提要：卷三论圆。</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="gonglun">
+  <div class="sec-head"><span class="tick"></span><h2>求作与公论　不可疑的根基</h2><span class="ann">卷一之首</span></div>
+  <p class="prose">界说之后是四条「求作」，规矩准绳在这里交底：</p>
+  <div class="q" style="font-size:20px; padding:18px 22px;">「求作者不得言不可作。」<span class="who">求作四则 · 总说</span></div>
+  <div class="reqgrid">
+    <div class="req"><div class="no">第一求</div><p><span class="q inl">「自此防至彼防，求作一直线。」</span></p><div class="mini"><div class="mini-line"></div></div></div>
+    <div class="req"><div class="no">第二求</div><p><span class="q inl">「有界直线，求从彼界直行引长之。」</span></p><div class="mini"><div class="mini-arrow"></div></div></div>
+    <div class="req"><div class="no">第三求</div><p><span class="q inl">「不论大小，以防为心，求作一圜。」</span></p><div class="mini"><div class="mini-circle"></div></div></div>
+    <div class="req"><div class="no">第四求</div><p><span class="q inl">「设一度于此，求作彼度较此度或大或小。」</span></p><div class="mini"><div class="mini-scale"></div></div></div>
+  </div>
+  <div class="axrow">
+    <span class="chip">第四求夹注引庄子<span class="q inl">「尝见庄子称一尺之棰，日取其半，万世不竭」</span>，以证度可分而无尽</span>
+    <span class="chip">此注在讲「数可长不可短，度长短皆无尽」</span>
+  </div>
+  <p class="prose" style="margin-top:34px;">求作是许可，公论是断言。卷一之首自题<span class="q inl">「公论十九则」</span>，卷首一句定调：</p>
+  <span class="q">「公论者不可疑。」</span>
+  <div class="axrow">
+    <span class="ax"><b>第九论</b>　<span class="q inl">「全大于其分」</span></span>
+    <span class="ax"><b>第十论</b>　<span class="q inl">「直角俱相等」</span></span>
+    <span class="ax"><b>第十八论</b>　<span class="q inl">「全与诸分之并等」</span></span>
+  </div>
+
+  <div class="paradox">
+    <div class="lab">公论第十一</div>
+    <span class="q">「有二横直线，或正或偏，任加一纵线，若三线之间同方两角小于两直角，则此二横直线愈长愈相近，必至相遇。」</span>
+    <svg width="640" height="190" viewBox="0 0 640 190" fill="none">
+      <path d="M20 40 L620 84" stroke="#a39e93" stroke-width="1.2"/>
+      <path d="M20 92 L620 86" stroke="#a39e93" stroke-width="1.2"/>
+      <path d="M250 30 L250 110" stroke="#5f9270" stroke-width="1.4"/>
+      <path d="M250 30 A26 26 0 0 1 276 40" stroke="#5f9270" stroke-width="1"/>
+      <path d="M250 110 A26 26 0 0 0 224 103" stroke="#5f9270" stroke-width="1"/>
+      <circle cx="616" cy="85" r="3" fill="#e8e4dc"/>
+      <text x="262" y="34" fill="#5f9270" font-size="13">同方两角</text>
+      <text x="262" y="118" fill="#5f9270" font-size="13">小于两直角</text>
+      <text x="560" y="70" fill="#e8e4dc" font-size="13">相遇</text>
+    </svg>
+    <p class="cap">欧几里得全书最著名的一条公理，在中文里成了「愈长愈相近，必至相遇」。库本自注还替它补了一步论证：<span class="q inl">「欲明此理宜察平行线不得相遇者【界说卅四】加一垂线即三线之间定为直角」</span>。<b>两千多年后，有人不改其余公理、只改这一条，造出过线外一点可作不止一条平行线的世界：非欧几何。此事为库外通说，本书自成一国，页内只转述。</b></p>
+  </div>
+</section>
+
+<section id="sheti">
+  <div class="sec-head"><span class="tick"></span><h2>设题　第一题</h2><span class="ann">卷一 · 三角形</span></div>
+  <p class="prose">根基立毕，全书第一个动手的活，是作出一个等边三角形：</p>
+  <div class="construct">
+    <div class="plate">
+      <svg viewBox="0 0 600 380" fill="none">
+        <circle cx="200" cy="190" r="200" stroke="rgba(232,228,220,0.22)" stroke-width="1"/>
+        <circle cx="400" cy="190" r="200" stroke="rgba(232,228,220,0.22)" stroke-width="1"/>
+        <path d="M200 190 L300 17 L400 190 Z" stroke="#5f9270" stroke-width="1.6"/>
+        <path d="M200 190 L300 363 L400 190" stroke="rgba(95,146,112,0.4)" stroke-width="1" stroke-dasharray="4 4"/>
+        <circle cx="200" cy="190" r="2.5" fill="#e8e4dc"/>
+        <circle cx="400" cy="190" r="2.5" fill="#e8e4dc"/>
+        <circle cx="300" cy="17" r="2.5" fill="#5f9270"/>
+        <circle cx="300" cy="363" r="2.5" fill="rgba(95,146,112,0.5)"/>
+        <text x="182" y="212" fill="#e8e4dc" font-size="16">甲</text>
+        <text x="408" y="212" fill="#e8e4dc" font-size="16">乙</text>
+        <text x="292" y="10" fill="#5f9270" font-size="16">丙</text>
+        <text x="292" y="352" fill="rgba(95,146,112,0.6)" font-size="16">丁</text>
+      </svg>
+      <div class="plate-cap">甲为心、乙为界作圜，乙为心、甲为界作圜，两圜相交于丙于丁。乙丙丁圜与丙甲丁圜之名，俱从库本。</div>
+    </div>
+    <div>
+      <span class="q">「于有界直线上，求立平边三角形。」<span class="who">卷一 · 第一题</span></span>
+      <span class="q">「先以甲为心，乙为界作丙乙丁圜；次以乙为心，甲为界作丙甲丁圜，两圜相交于丙于丁。」<span class="who">法曰</span></span>
+      <p class="prose">证明只用了两件东西：<span class="q inl">「凡为圜，自心至界，各线俱等。」</span>（界说十五），与<span class="q inl">「彼此俱与他等，则彼与此自相等」</span>（公论一）。四百年前的一个中国读者，在这里第一次看见「证明」二字如何运作。</p>
+    </div>
+  </div>
+  <div class="goldseg">
+    <p class="prose">六卷的终点处还有一题，专断一条线：</p>
+    <span class="q">「一直线求作理分中末线。」<span class="who">卷六</span></span>
+    <div class="goldline"><div class="whole"></div><div class="big"></div></div>
+    <div class="goldlabels"><span>全线</span><span>大分</span><span>小分</span></div>
+    <p class="cap" style="font-size:13.5px; color:var(--paper-faint);">理分中末：全线与大分之比，等于大分与小分之比。后世称黄金分割，此名为库外通说。</p>
+  </div>
+</section>
+
+<section id="juanzhang">
+  <div class="sec-head"><span class="tick"></span><h2>六卷账　书的骨架</h2><span class="ann">提要</span></div>
+  <p class="prose">四库馆臣把这本书的构造讲得干净利落：</p>
+  <span class="q">「其书每卷有界说，有公论，有设题。」<span class="cap">设题之法：<span class="q inl">「先其易者，次其难者，由浅而深，由简而繁，推之至于无以复加而后已。」</span></span></span>
+  <div class="vols">
+    <div class="vol-tag"><div class="vn">卷一</div><div class="vt">三角形</div></div>
+    <div class="vol-tag"><div class="vn">卷二</div><div class="vt">线</div></div>
+    <div class="vol-tag"><div class="vn">卷三</div><div class="vt">圆</div></div>
+    <div class="vol-tag"><div class="vn">卷四</div><div class="vt">圆内外形</div></div>
+    <div class="vol-tag duo"><div class="vn">卷五</div><div class="vt">比例</div></div>
+    <div class="vol-tag duo"><div class="vn">卷六</div><div class="vt">比例</div></div>
+  </div>
+  <span class="q">「卷一论三角形，卷二论线，卷三论圆，卷四论圆内外形，卷五卷六俱论比例。」<span class="who">提要</span></span>
+  <div class="factrow">
+    <div class="fact"><b><span class="q inl">「欧几里得未详何时人」</span></b>四库提要照录的坦率：这位作者连馆臣也说不清生平，<span class="q inl">「原书十三卷，五百余题」</span>。</div>
+    <div class="fact"><b>十五卷与六卷</b>利玛窦之师丁氏集解其书，续补二卷，共十五卷；<span class="q inl">「今止六卷者，徐光启自谓译受是书，此其最要者也」</span>。</div>
+    <div class="fact"><b>口译与笔受</b><span class="q inl">「西洋欧几里得撰，利玛窦译而徐光启所笔受也。」</span>序末自署<span class="q inl">「吴淞徐光启书」</span>。</div>
+  </div>
+</section>
+
+<div class="later">
+  <div class="wrap">
+    <div class="sec-head"><span class="tick"></span><h2>后来</h2><span class="ann">书命</span></div>
+    <p class="prose">库本这一部，是四库全书本：卷末一行<span class="q inl">「乾隆四十六年十二月恭校上」</span>，把它的后半生登记在官书里。这件事的另一半，发生在库外：</p>
+    <div class="outerbox">
+      <div class="ot">库外事实　仅转述，未落引文</div>
+      <p>万历三十五年（一六零七）北京初刻即此六卷；咸丰七年（一八五七）李善兰与伟烈亚力续译后九卷，十五卷全帙方成，距徐光启搁笔已两个半世纪。「几何」二字，从此成了这门学问本身的汉名。</p>
+    </div>
+  </div>
+</div>
+
+<div class="finale">
+  <div class="wrap">
+    <div class="big"><span class="q inl">「不用为用，众用所基。」</span></div>
+    <p class="sub">同库算学姊妹篇：<a href="shuxue-jiuzhang.html">数书九章导读</a>　卷五十六 量法</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="stats mono">库本去空白 102,185 字　汉字 95,778　界说 36　公论 19　求作 4　卷六（机数均由脚本复算）</div>
+  <div class="jiaoji">
+    <h3>校记</h3>
+    <ol>
+      <li>库本「防」多为「点」之讹：全帙防一百六十九见、点十七见并存，页内引文照录库本原字。</li>
+      <li>俗讹与两形并存照录：靣（三十三见）即面，圜八百八十六见与圆九见、邉三百一十七见与边三百四十三见各随所出。</li>
+      <li>序文「毕丧于祖龙之」后库本为一枚私有区缺字符号（通行本此字作「火」）；又「师」「曹」二字之间亦夹一枚缺字符号，页内引文按缺符径连，不复原补字。</li>
+      <li>四库白文无句读，页内标点为笔者所加，核验以去标点归一比对。</li>
+      <li>各卷卷头行在库内每卷两见，系四库版心行混入正文，卷次计数取首见。</li>
+      <li>提要称利玛窦之师丁氏集解并续补二卷共十五卷，今库本止六卷；「欧几里得未详何时人」为提要原语。</li>
+    </ol>
+  </div>
+</div>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库子藏算法（github.com/robertsong2000/daizhigev20）。</p>
+    <p>本页全部引文经与库本逐字核对（去标点归一后比对）；界说、公论、求作之数及字数等机数均由脚本复算。</p>
+    <p>序文以西洋之学补唐虞三代之阙的抱负与「修身事天」的传教语境，皆时代产物，读者自鉴。</p>
+  </div>
+</footer>
+
+</body>
+</html>
