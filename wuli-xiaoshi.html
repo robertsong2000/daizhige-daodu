@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物理小识 · 殆知阁导读 之八十五</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --zhu: #5f9270;
+    --zhu-deep: #2c4a36;
+    --zhu-pale: #cfe0d4;
+    --hairline: rgba(25,25,23,0.16);
+    --hairline-inv: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 28px; }
+  b { color: var(--zhu-deep); }
+
+  /* ============ hero：暗室 ============ */
+  .hero {
+    background: var(--ink); color: var(--paper);
+    height: 660px; position: relative; overflow: hidden;
+  }
+  .beam-a, .beam-b { position: absolute; pointer-events: none; }
+  .beam-a {
+    top: -140px; right: 6%; width: 300px; height: 980px;
+    background: linear-gradient(90deg, transparent, rgba(232,228,220,0.10) 45%, rgba(232,228,220,0.16) 55%, transparent);
+    transform: rotate(21deg); filter: blur(7px);
+  }
+  .beam-b {
+    top: -80px; right: 20%; width: 90px; height: 900px;
+    background: linear-gradient(90deg, transparent, rgba(232,228,220,0.15) 50%, transparent);
+    transform: rotate(21deg); filter: blur(3px);
+  }
+  .motes {
+    position: absolute; top: 140px; right: 19%; width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(232,228,220,0.5);
+    box-shadow:
+      26px 60px 0 0 rgba(232,228,220,0.34),
+      60px 150px 0 -1px rgba(232,228,220,0.28),
+      6px 240px 0 0 rgba(232,228,220,0.30),
+      44px 330px 0 -1px rgba(232,228,220,0.26),
+      18px 430px 0 0 rgba(232,228,220,0.24),
+      58px 520px 0 -1px rgba(232,228,220,0.20),
+      30px 600px 0 0 rgba(232,228,220,0.18),
+      8px 120px 0 -1px rgba(232,228,220,0.24);
+  }
+  .hero .wrap { height: 100%; position: relative; }
+  .hero-kicker {
+    position: absolute; left: 28px; top: 54px;
+    font-size: 13px; letter-spacing: 0.4em; color: var(--paper-faint);
+  }
+  .hero-title {
+    position: absolute; right: 56px; top: 66px;
+    writing-mode: vertical-rl; height: 480px;
+    font-size: 84px; font-weight: 700; letter-spacing: 0.24em;
+    color: var(--paper);
+  }
+  .hero-seal {
+    position: absolute; right: 200px; top: 70px;
+    width: 58px; height: 58px; background: var(--zhu);
+    display: grid; place-items: center;
+    font-size: 22px; font-weight: 700; color: #f2efe7;
+    letter-spacing: 2px; line-height: 1.15;
+    box-shadow: 0 0 0 1px rgba(232,228,220,0.25) inset;
+  }
+  .hero-no {
+    position: absolute; left: 28px; top: 96px;
+    font-size: 12px; color: var(--paper-faint); letter-spacing: 0.2em;
+  }
+  .hero-quote {
+    position: absolute; left: 28px; bottom: 92px; max-width: 520px;
+    font-size: 21px; color: var(--paper);
+  }
+  .hero-quote .q { color: var(--paper); }
+  .hero-src { font-size: 13px; color: var(--paper-faint); margin-top: 10px; letter-spacing: 0.14em; }
+  .hero-bottom {
+    position: absolute; left: 28px; bottom: 40px; right: 56px;
+    border-top: 1px solid var(--hairline-inv); padding-top: 12px;
+    font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.08em;
+  }
+
+  /* ============ 通用节 ============ */
+  section.sec { padding: 74px 0 26px; }
+  .kicker { font-size: 13px; letter-spacing: 0.36em; color: var(--zhu); }
+  h2.stitle { font-size: 34px; font-weight: 700; letter-spacing: 0.1em; margin: 14px 0 10px; }
+  .lead { color: #4a4740; max-width: 44em; font-size: 16px; }
+  .q {
+    color: var(--zhu-deep);
+    background: linear-gradient(transparent 62%, rgba(95,146,112,0.22) 62%);
+  }
+  .sec-body { margin-top: 26px; font-size: 16px; max-width: 46em; }
+  .sec-body p + p { margin-top: 14px; }
+  .num-big { font-family: "SF Mono", Menlo, monospace; color: var(--zhu-deep); }
+
+  /* ============ 质测通几字卡 ============ */
+  .pair { display: flex; gap: 30px; margin-top: 38px; align-items: stretch; }
+  .pair .zi {
+    flex: 0 0 150px; min-height: 150px; background: var(--ink); color: var(--paper);
+    display: grid; place-items: center; font-size: 62px; font-weight: 700;
+  }
+  .pair .zhu-desc {
+    flex: 1; border-top: 3px solid var(--zhu); background: #f2efe9;
+    padding: 16px 20px; font-size: 15px;
+  }
+  .pair .zhu-desc h3 { font-size: 17px; margin-bottom: 6px; color: var(--zhu-deep); }
+
+  /* ============ 十二卷下坡 ============ */
+  .stair-wrap { overflow-x: auto; padding: 30px 0 10px; }
+  .stair { display: flex; gap: 13px; min-width: 900px; align-items: flex-start; }
+  .stag {
+    writing-mode: vertical-rl; height: 216px;
+    border: 1px solid var(--zhu-deep); background: #f2efe9;
+    padding: 14px 9px; font-size: 16px; letter-spacing: 0.18em;
+    color: var(--ink); display: flex; gap: 6px;
+  }
+  .stag .vn { color: var(--zhu); font-size: 13px; }
+  .stag.duo { background: var(--zhu-deep); color: var(--paper); }
+  .stag.duo .vn { color: var(--zhu-pale); }
+  .stair-note { font-size: 13.5px; color: var(--paper-faint); margin-top: 14px; }
+  .sec.dark { background: var(--ink); color: var(--paper); padding: 74px 0 60px; }
+  .sec.dark .lead { color: var(--paper-dim); }
+  .sec.dark .stair-note { color: var(--paper-dim); }
+  .sec.dark .q { color: var(--zhu-pale); background: rgba(95,146,112,0.16); }
+  .sec.dark .kicker { color: var(--zhu); }
+
+  /* ============ 批注现场 ============ */
+  .voices { display: flex; gap: 14px; margin: 30px 0 34px; flex-wrap: wrap; }
+  .voice {
+    border: 1px solid var(--zhu-deep); padding: 10px 18px 12px;
+    min-width: 128px; text-align: center; background: #f2efe9;
+  }
+  .voice .vname { font-size: 17px; font-weight: 700; color: var(--zhu-deep); }
+  .voice .vcnt { font-size: 30px; font-weight: 700; font-family: "SF Mono", Menlo, monospace; }
+  .voice.silent { background: transparent; border-style: dashed; color: var(--paper-faint); }
+  .voice.silent .vname, .voice.silent .vcnt { color: var(--paper-faint); }
+  .demo-card { background: #f2efe9; border: 1px solid var(--hairline); padding: 26px 30px; margin-top: 8px; }
+  .demo-tag { font-size: 13px; letter-spacing: 0.3em; color: var(--paper-faint); margin-bottom: 14px; }
+  .demo-main { font-size: 16.5px; }
+  .anno {
+    margin-top: 18px; padding: 12px 16px; border-left: 3px solid var(--zhu);
+    background: rgba(95,146,112,0.08); font-size: 15px;
+  }
+  .anno .who { color: var(--zhu); font-weight: 700; }
+  .gap-line { margin-top: 22px; font-size: 14px; color: #4a4740; }
+
+  /* ============ 光学二则 ============ */
+  .opt { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 34px; }
+  .opt-card { border: 1px solid var(--hairline); background: #f2efe9; padding: 24px 26px; }
+  .opt-card h3 { font-size: 19px; margin-bottom: 12px; color: var(--zhu-deep); letter-spacing: 0.08em; }
+  .opt-card p { font-size: 15px; }
+  .opt-card .q { font-size: 16.5px; }
+  .opt-card svg { display: block; margin: 18px auto 6px; }
+  .opt-cap { font-size: 12.5px; color: var(--paper-faint); text-align: center; margin-top: 6px; }
+
+  /* ============ 格物架 ============ */
+  .shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 34px; }
+  .vitrine {
+    border-top: 4px solid var(--zhu); background: #f2efe9;
+    padding: 22px 26px 24px; position: relative;
+  }
+  .vitrine .vt { font-size: 13px; letter-spacing: 0.26em; color: var(--paper-faint); }
+  .vitrine h3 { font-size: 21px; margin: 6px 0 12px; letter-spacing: 0.06em; }
+  .vitrine p { font-size: 14.5px; margin-top: 10px; }
+  .vitrine .q { font-size: 15.5px; }
+  .ext {
+    display: inline-block; font-size: 11px; color: var(--paper-faint);
+    border: 1px solid var(--paper-faint); padding: 0 6px; margin-left: 8px;
+    vertical-align: 2px; letter-spacing: 0.1em;
+  }
+
+  /* ============ 双牍 ============ */
+  .duel { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0; margin-top: 36px; align-items: stretch; }
+  .doc { padding: 26px 28px; }
+  .doc.paper-doc { background: #f2efe9; border: 1px solid var(--hairline); }
+  .doc.ink-doc { background: var(--ink); color: var(--paper); }
+  .doc .doc-h { font-size: 13px; letter-spacing: 0.3em; color: var(--paper-faint); margin-bottom: 12px; }
+  .doc.ink-doc .doc-h { color: var(--paper-dim); }
+  .doc p { font-size: 15px; }
+  .doc .q { font-size: 16px; }
+  .duel .spine { position: relative; }
+  .duel .spine::before {
+    content: ""; position: absolute; left: 50%; top: 12px; bottom: 12px;
+    border-left: 1px dashed var(--paper-faint);
+  }
+  .duel .spine span {
+    position: absolute; left: 50%; top: 50%;
+    writing-mode: vertical-rl; height: 170px; transform: translate(-50%,-50%);
+    background: var(--paper); padding: 10px 2px; font-size: 13px; color: var(--zhu-deep);
+    letter-spacing: 0.24em;
+  }
+
+  /* ============ 命运线 ============ */
+  .fate { display: flex; gap: 0; margin-top: 40px; }
+  .fstop { flex: 1; padding: 0 14px 0 0; position: relative; }
+  .fstop::before {
+    content: ""; position: absolute; top: 7px; left: 0; right: 0;
+    border-top: 1px solid var(--zhu-deep);
+  }
+  .fstop::after {
+    content: ""; position: absolute; top: 3px; left: 0;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--zhu);
+  }
+  .fstop .fy { font-family: "SF Mono", Menlo, monospace; font-weight: 700; font-size: 19px; margin: 22px 0 8px; color: var(--zhu-deep); }
+  .fstop p { font-size: 13.5px; color: #4a4740; padding-right: 16px; }
+
+  /* ============ 校记 ============ */
+  .jiaoke { background: var(--ink-2); color: var(--paper); padding: 64px 0 56px; }
+  .jiaoke .kicker { color: var(--zhu); }
+  .jiaoke h2 { font-size: 27px; margin: 12px 0 18px; }
+  .jiaoke ol { margin-left: 24px; }
+  .jiaoke li { font-size: 14.5px; margin-bottom: 10px; color: var(--paper-dim); max-width: 62em; }
+  .jiaoke li b { color: var(--paper); }
+
+  /* ============ coda ============ */
+  .coda { background: var(--ink); color: var(--paper); padding: 96px 0 90px; }
+  .coda .q { color: var(--paper); background: none; }
+  .coda-big { font-size: clamp(34px, 5.4vw, 58px); font-weight: 700; letter-spacing: 0.12em; line-height: 1.6; }
+  .coda-sub { margin-top: 26px; color: var(--paper-dim); font-size: 15px; max-width: 40em; }
+  .coda-rule { width: 74px; border-top: 3px solid var(--zhu); margin-bottom: 30px; }
+
+  footer.page { background: var(--ink-2); color: var(--paper-faint); padding: 44px 0 54px; font-size: 13px; }
+  footer.page p { margin-bottom: 8px; max-width: 68em; }
+
+  @media (max-width: 760px) {
+    .hero-title { font-size: 60px; height: 400px; right: 34px; }
+    .hero-seal { right: 150px; }
+    .pair, .opt, .shelf, .duel { grid-template-columns: 1fr; display: grid; }
+    .pair { display: flex; flex-direction: column; }
+    .duel .spine { min-height: 70px; }
+    .fate { flex-wrap: wrap; }
+    .fstop { flex: 1 1 46%; margin-bottom: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ hero 暗室 ============ -->
+<header class="hero">
+  <div class="beam-a"></div>
+  <div class="beam-b"></div>
+  <div class="motes"></div>
+  <div class="wrap">
+    <p class="hero-kicker">殆知阁导读 · 卷四十五 格物</p>
+    <p class="hero-no">之八十五</p>
+    <div class="hero-title">物理小识</div>
+    <div class="hero-seal">格物</div>
+    <div class="hero-quote">
+      <span class="q">晦夜昏黒，地虽遮日，空自有光。人卧暗室，忽然开目，目自有光。</span>
+      <p class="hero-src">卷一 · 光论</p>
+    </div>
+    <div class="hero-bottom">明　方以智　撰　　四子编录　　十二卷　　桐城方氏格物笔记，自序于甲申国变前夜</div>
+  </div>
+</header>
+
+<!-- ============ 一 天地皆物 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <p class="kicker">壹 · 自序</p>
+    <h2 class="stitle">盈天地间皆物也</h2>
+    <p class="lead">崇祯十六年冬至，方以智在自序里写下这本书的纲领。四个月后，甲申之变。</p>
+    <div class="sec-body">
+      <p><span class="q">盈天地间皆物也。</span>开篇第一句，把天地、人身、心性、性命一并收进「物」字里。他不许人绕开东西去谈道理：空谈性命的人，在他看来是把学问说丢了。</p>
+      <p>怎么办？他造了两个词。<b>质测</b>，是对一件东西打破问底；<b>通几</b>，是从万物里看出那个贯穿的所以然。他给的次序很硬：先质测，后通几，且前者藏在后者里。</p>
+      <p><span class="q">物有其故，实考究之，大而元会，小而草木螽蠕，类其性情，徴其好恶，推其常变，是曰质测。</span></p>
+      <div class="pair">
+        <div class="zi">质测</div>
+        <div class="zhu-desc">
+          <h3>实物考察</h3>
+          大到天体运行，小到虫草习性，类其性情、推其常变。全书十二卷，天文、雷雨、人身、医药、饮食、金石、器用、草木、鸟兽、鬼神，全是这一路的账。
+        </div>
+      </div>
+      <div class="pair">
+        <div class="zi">通几</div>
+        <div class="zhu-desc">
+          <h3>贯通的所以然</h3>
+          质测里藏着通几，反过来不行。他看万历以后传入的西学，评语收在一句里：
+          <span class="q">万厯年间，逺西学入，详于质测，而拙于言通几。</span>
+          承认它观测扎实，又嫌它讲不出总道理。这个判断，他放在国变前夜的冬至夜里。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 二 十二卷下坡 ============ -->
+<section class="sec dark">
+  <div class="wrap">
+    <p class="kicker">贰 · 全图</p>
+    <h2 class="stitle" style="color:var(--paper)">一条从天到鬼的下坡</h2>
+    <p class="lead">十二卷的排法自成一条路：从天象出发，经雷雨、人身、医药、饮食、金石、器用、草木、鸟兽，最后两站停在神鬼方术。格物格到头，连鬼神也要问一句为什么。</p>
+    <div class="stair-wrap">
+      <div class="stair">
+        <div class="stag"><span class="vn">卷一</span>天</div>
+        <div class="stag" style="margin-top:16px"><span class="vn">卷二</span>风雷雨旸</div>
+        <div class="stag" style="margin-top:32px"><span class="vn">卷三</span>人身</div>
+        <div class="stag" style="margin-top:48px"><span class="vn">卷四</span>医要</div>
+        <div class="stag" style="margin-top:64px"><span class="vn">卷五</span>医药</div>
+        <div class="stag" style="margin-top:80px"><span class="vn">卷六</span>饮食</div>
+        <div class="stag" style="margin-top:96px"><span class="vn">卷七</span>金石</div>
+        <div class="stag" style="margin-top:112px"><span class="vn">卷八</span>器用</div>
+        <div class="stag" style="margin-top:128px"><span class="vn">卷九</span>草木</div>
+        <div class="stag duo" style="margin-top:144px"><span class="vn">卷十</span>鸟兽</div>
+        <div class="stag duo" style="margin-top:160px"><span class="vn">卷十一</span>鸟兽</div>
+        <div class="stag" style="margin-top:176px"><span class="vn">卷十二</span>神鬼方术</div>
+      </div>
+    </div>
+    <p class="stair-note">卷头十二见，鸟兽类独占两卷，类名十一种；提要却说<span class="q">中分十五门</span>，两套口径，库本如此。卷八卷头把「卷」刻成了异体的「巻」。</p>
+  </div>
+</section>
+
+<!-- ============ 三 批注现场 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <p class="kicker">叁 · 声部</p>
+    <h2 class="stitle">一册书，四代人的声音</h2>
+    <p class="lead">这不是一个人写的书。正文之外，全书写满标注，父子、兄弟、师徒在同一页纸上接话。</p>
+    <div class="voices">
+      <div class="voice"><div class="vname">方以智</div><div class="vcnt">正文</div></div>
+      <div class="voice"><div class="vname">中通曰</div><div class="vcnt">97</div></div>
+      <div class="voice"><div class="vname">暄曰</div><div class="vcnt">66</div></div>
+      <div class="voice"><div class="vname">中履曰</div><div class="vcnt">43</div></div>
+      <div class="voice"><div class="vname">中徳曰</div><div class="vcnt">22</div></div>
+      <div class="voice silent"><div class="vname">中发曰</div><div class="vcnt">0</div></div>
+    </div>
+    <div class="sec-body">
+      <p>提要举出编录的四子：中通、中徳、中发、中履。落到书里，<b>【曰】式批注二百二十八见</b>，中通一人占九十七；弟弟中发在三处被提名，却没有留下一句署名的话。另一个开口的「暄」，是弟子揭暄，后来自己写成天文书的人。</p>
+    </div>
+    <div class="demo-card">
+      <p class="demo-tag">卷八 器用类 · 玻瓈琉璃 条</p>
+      <p class="demo-main">父亲记工艺：<span class="q">三保大监，曽携西洋烧玻瓈人来。</span>三保太监即郑和，永乐年间把西洋玻璃匠带回过中国。「外纪」说勿搦祭亚国玻璃极佳，勿搦祭亚即威尼斯。</p>
+      <div class="anno">
+        <span class="who">【中通曰】</span><span class="q">讯薛仪甫果然往日所烧有泡星以不知重滤也。</span>
+        儿子接话：去问过薛仪甫（薛凤祚，通历算），果然老琉璃有泡有星，是当年不懂得重滤。
+      </div>
+      <p class="gap-line">一条工艺史，两个声音，中间隔着一场亡国。这册书就是用这种口气写完的。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 四 光学二则 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <p class="kicker">肆 · 实验条</p>
+    <h2 class="stitle">两只碗，一面镜</h2>
+    <p class="lead">卷一里最好的段落，都是可以当场重做的：一只碗、一枚钱，一面镜子、一根蜡烛。</p>
+    <div class="opt">
+      <div class="opt-card">
+        <h3>气暎差 · 盌水见钱</h3>
+        <p><span class="q">置钱于盌，逺立者视之不见。注水溢盌，钱浮于水面矣。</span></p>
+        <svg width="300" height="150" viewBox="0 0 300 150">
+          <defs>
+            <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#5f9270" stop-opacity="0.35"/>
+              <stop offset="1" stop-color="#2c4a36" stop-opacity="0.55"/>
+            </linearGradient>
+          </defs>
+          <path d="M 90 55 A 62 58 0 0 0 214 55 L 214 55 L 90 55 Z" fill="url(#water)" stroke="#2c4a36" stroke-width="2"/>
+          <path d="M 90 55 A 62 58 0 0 0 214 55" fill="none" stroke="#2c4a36" stroke-width="2.5"/>
+          <ellipse cx="152" cy="53" rx="62" ry="6" fill="#5f9270" opacity="0.5"/>
+          <circle cx="152" cy="90" r="9" fill="#c9963f" stroke="#8a6a25" stroke-width="1.5"/>
+          <circle cx="152" cy="53" r="9" fill="none" stroke="#c9963f" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <line x1="152" y1="90" x2="258" y2="26" stroke="#c0453c" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <line x1="152" y1="53" x2="258" y2="26" stroke="#c0453c" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.45"/>
+          <circle cx="262" cy="24" r="6" fill="none" stroke="#191917" stroke-width="2"/>
+          <circle cx="264" cy="24" r="1.8" fill="#191917"/>
+          <text x="152" y="128" font-size="11" fill="#6e6a61" text-anchor="middle">钱在水底，像浮在水面</text>
+          <text x="258" y="140" font-size="11" fill="#6e6a61" text-anchor="middle">立逺则不见</text>
+        </svg>
+        <p class="opt-cap">光的折射实验：弯折的视线被方以智称作「气暎差」。他顺势算江面宽度、量日出大小，把错觉当仪器用。</p>
+      </div>
+      <div class="opt-card">
+        <h3>转光 · 梁上悬镜</h3>
+        <p>术士的「见祖先」戏法，他拆穿了机关：</p>
+        <p><span class="q">暗县一镜于衣襟，或袖口，列灯烛香烟于地，引人拜祝，烛照镜光，摇镜则光见于壁。</span></p>
+        <p>还记下一件家传亲历：<span class="q">知其转光梁上射入暗室之镜，使男女自照镜中见其前身以惑人云。</span>万历戊午，「老父」在蜀中审这桩案子，梁上悬镜的人被当庭拆穿。按全书体例，正文里的「老父」即其父方孔炤。</p>
+        <p>法不灵时怎么办？书里的答案是冷的一句：灵在人心，不在镜。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 五 格物架 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <p class="kicker">伍 · 四格</p>
+    <h2 class="stitle">格物架上的四件东西</h2>
+    <p class="lead">珍珠、雷石、药方、偶像。四件东西摆在一格架上，就是这本书的胃口。</p>
+    <div class="shelf">
+      <div class="vitrine">
+        <p class="vt">卷七 金石类</p>
+        <h3>养珠法</h3>
+        <p><span class="q">以蚌质作圆珠，复取大蚌，清水盆浸，俟大蚌口开而投之。频换清水，夜置月中，蚌蛤采玩月华，数月即成真珠。</span></p>
+        <p>人工养珠的做法，写得像菜谱：做珠胎，候蚌开口，夜里搬到月亮底下。顺带记了当时的洋货：广东有玻璃珠，大如豆，看着像夜光珠，但易碎又轻。</p>
+      </div>
+      <div class="vitrine">
+        <p class="vt">卷二 风雷雨旸类</p>
+        <h3>雷电铁索</h3>
+        <p>雷雨大作，电光如金蛇绕案，一声喝斥，雷收了，地上只剩一条铁索。这桩怪事被「当为格物者立一案」，而书里跟了一条亲历注脚：<span class="q">余游凌云寺雷电中，忽飞一石长七尺，乃信火气腾迅，常遇物与挟而来。</span></p>
+        <p>雷能挟着石头飞。怪事不当凶兆，当物性立案。</p>
+      </div>
+      <div class="vitrine">
+        <p class="vt">卷四 医要类</p>
+        <h3>代杖</h3>
+        <p>崇祯庚辰，黄道周等直臣当廷受杖，士大夫四处求蚺蛇胆止痛。方以智说那东西大寒绝嗣，不如：<span class="q">地龙蜡丸酒服，则杖不知痛。</span></p>
+        <p>他随即引《中州集》金人旧事作证，末了抄下那首诗：<span class="q">嚼蜡谁知味最长，一杯丣酒地龙香。年来纸价长安贵，不重新诗重药方。</span>直臣挨打的时代，药方比诗贵。</p>
+      </div>
+      <div class="vitrine">
+        <p class="vt">卷十二 神鬼方术类</p>
+        <h3>心神自灵</h3>
+        <p>全书最后一卷，格物格到鬼神头上。香灰撮药为什么灵验？他的解释：</p>
+        <p><span class="q">造一像焉，专祀之，众祷之，其效归此，则自灵矣。</span>香火是众人合力喂出来的。进一步：</p>
+        <p><span class="q">积想不已，能生胜气，人心无形，其力最大。</span>在今天，这叫集体暗示；在康熙初年，这是一句要担干系的话。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 六 双牍 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <p class="kicker">陆 · 双牍</p>
+    <h2 class="stitle">两个冬至之间</h2>
+    <p class="lead">自序与四库提要之间，隔着一百三十三年。</p>
+    <div class="duel">
+      <div class="doc ink-doc">
+        <p class="doc-h">癸未冬至　一六四三　自序</p>
+        <p>落款只有十五个字：<span class="q">岁在昭昜汁洽，日至箕三。浮山愚者记。</span>岁阳「昭阳」写作「昭昜」，岁名「汁洽」当未，合为癸未；日至箕三，是冬至。四个月后北京城破，书稿随他流亡。</p>
+      </div>
+      <div class="spine"><span>一百三十三年</span></div>
+      <div class="doc paper-doc">
+        <p class="doc-h">乾隆四十一年五月　一七七六　提要</p>
+        <p>馆臣定位是「通雅之绪余，掇拾以成编」，嫌它<span class="q">虽所录不免冗杂，未必一一尽确</span>。末了还是留了余地：<span class="q">中流失船，一壶千金。</span>识小之言，未可尽废。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 七 命运线 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <p class="kicker">柒 · 书外</p>
+    <h2 class="stitle">写书人自己，也成了一条格物案</h2>
+    <div class="fate">
+      <div class="fstop">
+        <p class="fy">1611</p>
+        <p>生于桐城，曾祖、祖父、外祖皆仕明，家学是易学与象数。<span class="ext">库外</span></p>
+      </div>
+      <div class="fstop">
+        <p class="fy">1640</p>
+        <p><span class="q">崇祯庚辰进士官翰林院检讨。</span>提要为他定的出身。</p>
+      </div>
+      <div class="fstop">
+        <p class="fy">1643</p>
+        <p>冬至写自序，落款十五字（见下节双牍）。此刻的姿态是：<span class="q">以俟后日之会通。</span></p>
+      </div>
+      <div class="fstop">
+        <p class="fy">1644</p>
+        <p>甲申之变，此后流亡两广，永历朝中遭构陷下狱，脱身后弃家为僧。<span class="ext">库外</span></p>
+      </div>
+      <div class="fstop">
+        <p class="fy">晚年</p>
+        <p>驻锡青原山净居寺，讲学著书；四子与弟子揭暄替他批注、编录此书。<span class="ext">库外</span></p>
+      </div>
+      <div class="fstop">
+        <p class="fy">1671</p>
+        <p>「粤案」发作被逮，押解广东途中，囚船行至赣江万安惶恐滩，文天祥写过「惶恐滩头说惶恐」的地方，病卒；一作自沉殉节，两说并存。<span class="ext">库外</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 校记 ============ -->
+<section class="jiaoke">
+  <div class="wrap">
+    <p class="kicker">库本点勘</p>
+    <h2>校记六则</h2>
+    <ol>
+      <li>库本<b>白文无句读</b>，页面标点为整理所加；核验按去标点、异体归一比对。</li>
+      <li>卷头十二见，<b>卷八卷头作「巻」</b>；鸟兽类占两卷，类名十一种，与提要以「门」计数的口径不合，照录两说。</li>
+      <li>批注者用字不一：<b>「中徳」十二见、「中德」十见</b>两形并存；提要所举四子，中发全书<b>无一句署名批注</b>（「中发」三见皆他文）。</li>
+      <li>缺字与讹替：<b>私有区缺字符号一百二十九种</b>、扩展 B 区生僻字五十七种；「防」为库本讹替字，全书<b>四百五十六见</b>。所在句一律避开不引。</li>
+      <li>异体照录：<b>盌</b>＝碗、<b>曽</b>＝曾、<b>厯</b>＝历、<b>黒</b>＝黑、<b>丣</b>＝酉之古文（代杖条「一杯丣酒」）、「三保<b>大监</b>」不作太监。</li>
+      <li>「昭昜汁洽」据《尔雅·释天》岁阳岁名通说解读为癸未（1643）；方以智卒况、郑和携玻璃匠、勿搦祭亚即威尼斯，皆库外通说，页内已分别标注。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ coda ============ -->
+<section class="coda">
+  <div class="wrap">
+    <div class="coda-rule"></div>
+    <p class="coda-big"><span class="q">质测即藏通几者也。</span></p>
+    <p class="coda-sub">把这句话倒过来读一遍，就是他一生的路线：先数清每一样东西，再谈天地。数到最后，连自己也成了被数的一样东西，停在惶恐滩。</p>
+  </div>
+</section>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库 子藏笔记（github.com/robertsong2000/daizhigev20）。全帙 161,604 字，去空白 157,628 字（含标点）。</p>
+    <p>本页引文二十二段已与库内文件逐字核验（去标点、异体归一比对），缺字、讹替处均已标注绕开。</p>
+    <p>本书含炼丹、占候、鬼神方术与旧时医药内容，多为当时认知框架下的记录，请以科学史与史料视之，勿据以自医自用。</p>
+  </div>
+</footer>
+
+</body>
+</html>
