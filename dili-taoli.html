@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>地理套利七百年 · 十去九不还</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --accent: #c9963f;  /* 海程卷 · 赭金 */
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.8; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 28px; }
+
+  /* ===== hero：一行算术当门面 ===== */
+  .hero { min-height: 76dvh; display: flex; align-items: center; text-align: center; }
+  .hero .wrap { width: 100%; }
+  .kicker { font-size: 14px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  .formula {
+    margin: 34px 0 10px;
+    font-size: clamp(19px, 2.6vw, 28px);
+    color: var(--paper-dim);
+    letter-spacing: 0.12em;
+  }
+  .formula b { color: var(--accent); font-weight: 600; }
+  .bigword {
+    font-size: clamp(52px, 9vw, 118px);
+    font-weight: 700; letter-spacing: 0.14em; line-height: 1.25;
+    margin: 6px 0 26px;
+  }
+  .bigword em { font-style: normal; color: var(--accent); }
+  .sub { color: var(--paper-dim); font-size: clamp(15px, 1.5vw, 18px); max-width: 34em; margin: 0 auto; }
+
+  section { padding: 74px 0; border-top: 1px solid var(--hairline); }
+  h2 { font-size: clamp(24px, 2.8vw, 34px); font-weight: 600; letter-spacing: 0.08em; margin-bottom: 14px; }
+  .lede { color: var(--paper-dim); max-width: 62ch; margin-bottom: 42px; }
+  .prose { color: var(--paper-dim); font-size: 16px; max-width: 66ch; }
+  .prose strong { color: var(--paper); font-weight: 600; }
+
+  /* 算式表 */
+  .math { border: 1px solid var(--hairline); margin: 34px 0 0; }
+  .math .mrow {
+    display: grid; grid-template-columns: 1fr auto; gap: 24px;
+    padding: 15px 24px; border-top: 1px solid var(--hairline);
+  }
+  .math .mrow:first-child { border-top: none; }
+  .math .mrow .k { font-size: 15px; color: var(--paper-dim); }
+  .math .mrow .n { font-size: 16px; white-space: nowrap; color: var(--paper); }
+  .math .mrow.total { background: var(--ink-2); }
+  .math .mrow.total .n { color: var(--accent); font-weight: 700; }
+
+  /* 三张账页 */
+  .ledger { display: grid; gap: 30px; }
+  .page-card { border: 1px solid var(--hairline); }
+  .page-card .pc-year {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 14px 24px; background: var(--ink-2); border-bottom: 1px solid var(--hairline);
+  }
+  .page-card .pc-year b { font-size: 20px; letter-spacing: 0.12em; }
+  .page-card .pc-year span { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.16em; }
+  .page-card .pc-body { padding: 26px 30px; }
+  .page-card .pc-body .eq { font-size: 18px; margin-bottom: 14px; letter-spacing: 0.04em; }
+  .page-card .pc-body .eq b { color: var(--accent); }
+  .page-card .pc-body p { font-size: 14.5px; color: var(--paper-dim); }
+  .page-card .pc-body p strong { color: var(--paper); font-weight: 600; }
+
+  /* 三条常数 */
+  .three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .three .t { border-top: 2px solid var(--accent); padding-top: 16px; }
+  .three .t b { display: block; font-size: 17px; margin-bottom: 8px; }
+  .three .t p { font-size: 14px; color: var(--paper-dim); }
+
+  .ending {
+    margin: 46px auto 0; padding: 28px 32px; background: var(--ink-2);
+    border-left: 2px solid var(--accent); font-size: 16.5px; max-width: 62ch;
+  }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 44px 0 60px; color: var(--paper-faint); font-size: 14px; }
+  footer.page .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  footer.page b { color: var(--paper-dim); font-weight: 600; }
+
+  @media (max-width: 820px) {
+    .three { grid-template-columns: 1fr; }
+    .math .mrow { grid-template-columns: 1fr; gap: 2px; }
+    footer.page .cols { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">殆知阁导读　卷十八 海程　之外篇　<b style="color:var(--accent)">之七十七</b></div>
+    <div class="formula">一枚银钱（约十克白银）<b>＝</b> 两人一年的口粮</div>
+    <div class="bigword">十去九<em>不还</em></div>
+    <p class="sub">1349 年，汪大渊在《岛夷志略》里记下印度东海岸一个叫乌爹的地方，和一道让中国商人集体留在海外的算术题。七百年后，这道题还在被人做。</p>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <h2>先看题面</h2>
+      <p class="lede">乌爹条原文给出的完整算式，一步不缺。下表为换算示意，原文引块随后。</p>
+      <div class="math">
+        <div class="mrow"><span class="k">一个银钱，重二钱八分（约十克白银），官价「准中统钞一十两」</span><span class="n mono">1 枚银钱</span></div>
+        <div class="mrow"><span class="k">在乌爹兑当地铜钱汃子</span><span class="n mono">= 汃子 11,520 有余</span></div>
+        <div class="mrow"><span class="k">当地米价：二百五十汃子籴一尖箩熟米，折官斗一斗六升</span><span class="n mono">250 汃子 = 1 箩</span></div>
+        <div class="mrow total"><span class="k">一个银钱收汃子，可得米</span><span class="n mono">四十六箩 = 73 斗 6 升 ≈ 两人一年之食有余</span></div>
+      </div>
+      <div class="quote">
+        每个银钱重二钱八分，准中统钞一十两，易汃子计一万一千五百二十有余，折钱使用。以二百五十汃子籴一尖箩熟米，折官斗有一斗六升。每钱收汃子，可得四十六箩米，通计七十三斗六升，可供二人一岁之食有余。
+        <small>岛夷志略 乌爹 · 本库文本节引（上表即此段之换算示意）</small>
+      </div>
+      <div class="quote" style="margin-top:20px">
+        故贩其地者，十去九不还也。
+        <small>岛夷志略 乌爹 · 本库文本节引</small>
+      </div>
+      <p class="prose">汪大渊怕读者误会，紧接着补了注脚式的上下文：乌爹「田沃稼茂，岁凡三稔」，而邻国古里（卡利卡特）「<strong>每岁藉乌爹米至</strong>」，这不是血泪故事，是一边倒的物价差。不还的人不是死了，是<strong>落地生根了</strong>。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>套利的解剖：为什么总会有人不还</h2>
+      <p class="lede">把七百年的案例摆在一起，条件始终是三条。</p>
+      <div class="three">
+        <div class="t"><b>产出差</b><p>同一份劳动或同一笔资本，在两地换到的东西完全不同。乌爹一年三熟，米贱如土；货物与白银在这里是稀缺品。</p></div>
+        <div class="t"><b>需求差</b><p>你带来的东西恰是当地缺的：瓷器、丝绸、手艺、供应链。你是「有用的外来者」，不只是过客。</p></div>
+        <div class="t"><b>身份重估</b><p>乌爹「道不拾遗，乡里和睦」；在今天则是另一种节奏与体面。回去等于放弃在当地已经重算过的阶层。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>三张账页</h2>
+      <p class="lede">同一道算术题，三个时代的解法。</p>
+      <div class="ledger">
+        <div class="page-card">
+          <div class="pc-year"><b>1349 · 乌爹</b><span>岛夷志略 · 亲历</span></div>
+          <div class="pc-body">
+            <p class="eq">银钱一枚 <b>→</b> 米七斗三升六合 <b>→</b> 两人一年</p>
+            <p>自由商贩的黄金版本：官府「税收十分之一也」，市面听任珍宝互市；利厚、民泰、无饥寒之忧，于是<strong>十去九不还</strong>。</p>
+          </div>
+        </div>
+        <div class="page-card">
+          <div class="pc-year"><b>明清 · 下南洋</b><span>通行史实 · 详略有别</span></div>
+          <div class="pc-body">
+            <p class="eq">一纸契约 <b>→</b> 南洋的种植园与码头 <b>→</b> 侨批寄回闽粤</p>
+            <p>海禁与移民浪潮交替。自由商贩之外，出现了契约华工，套利一度<strong>变形为血汗</strong>：人不为自己套利，是为中间的招募者套利。但侨批网络与侨乡，正是「不还的人」反向养活故乡的证据。</p>
+          </div>
+        </div>
+        <div class="page-card">
+          <div class="pc-year"><b>二十世纪末至今 · 非洲与东南亚</b><span>通行现象 · 不作统计断言</span></div>
+          <div class="pc-body">
+            <p class="eq">一个货柜 <b>→</b> 当地的门面与仓 <b>→</b> 当地的生活</p>
+            <p>从广州、义乌出发的中国商人散布在拉各斯、约翰内斯堡、金边的市场里；反向的非洲采购商也常驻义乌。汪大渊的算式还在，只是银钱换成了货柜与现金流。<strong>不还，依然是常态。</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>第四个变量</h2>
+      <p class="lede">算术能解释出发，解释不了留下。</p>
+      <p class="prose">钱的问题解决之后，真正留住人的是乌爹条里那句不动声色的八个字：<strong>「道不拾遗，乡里和睦」</strong>。在外地重新获得的体面与安全感，是汇率表上不出现的那一项。这也是为什么每一次「十去九不还」都伴随代价：留下的人，把故乡让渡给了汇款单。</p>
+      <div class="ending">
+        最后一个注脚属于汪大渊自己。他两次随船走遍东西洋，见识了全天下最划算的这道算术题，然后二十八岁归国，从此再未出海，转身把见闻写成书。计算套利的人，和被套利留在外面的人，是两种命运。而他选择了第三种：把利润率写下来，留给七百年后的我们继续算。
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap cols">
+    <div>
+      <p><b>文本来源</b><br>殆知阁古代文献《岛夷志略》（github.com/robertsong2000/daizhigev20 简体版）<br>乌爹、古里佛、小具喃诸条引文均经逐字核验</p>
+    </div>
+    <div>
+      <p><b>体例说明</b><br>1349 年部分为库内原文；明清与当代两页为通行史实与现象描述，不涉统计断言；白银折合按文中「二钱八分」原样陈述，不另作度量衡换算。</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
