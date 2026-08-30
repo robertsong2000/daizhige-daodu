@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蟹谱 · 殆知阁导读之一百零五</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #201f1d;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --green: #5f9270; --green-soft: rgba(95,146,112,0.16);
+    --seal: #c0453c;
+    --hair: rgba(232,228,220,0.12);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 26px; }
+  .q { color: var(--paper); }
+  .accent { color: var(--green); }
+  .dim { color: var(--dim); }
+  .sealtext { color: var(--seal); }
+
+  /* ============ hero：星图 · 潮线 · 蟹迹 ============ */
+  .hero { position:relative; padding: 54px 0 0; overflow:hidden; }
+  .hero .slip { display:flex; justify-content:space-between; font-size:12.5px; color:var(--faint); letter-spacing:0.18em; margin-bottom:26px; }
+  .hero .slip b { color: var(--green); font-weight:600; }
+  .starmap { display:block; margin: 6px auto 0; }
+  .starcap { text-align:center; font-size:12.5px; color:var(--faint); letter-spacing:0.3em; margin-top:6px; }
+  .tideline { position:relative; margin-top:34px; height:150px; }
+  .tide {
+    position:absolute; left:0; right:0; top:64px; height:2px;
+    background: linear-gradient(90deg, rgba(95,146,112,0) 0%, rgba(95,146,112,0.75) 12%, rgba(95,146,112,0.75) 88%, rgba(95,146,112,0) 100%);
+  }
+  .tide::after {
+    content:""; position:absolute; left:0; right:0; top:10px; height:44px;
+    background: repeating-linear-gradient(90deg, rgba(95,146,112,0.14) 0 2px, transparent 2px 14px);
+    mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+  }
+  .vtitle {
+    position:absolute; right:26px; top:-64px;
+    writing-mode: vertical-rl; height: 320px;
+    font-size: 58px; font-weight:700; letter-spacing: 0.3em; color: var(--paper);
+  }
+  .vtitle small { font-size:15px; letter-spacing:0.4em; color:var(--dim); margin-top:18px; }
+  .stamp {
+    position:absolute; left:26px; top:-30px;
+    width:74px; height:74px; border:2px solid var(--seal); color:var(--seal);
+    display:grid; grid-template-columns:1fr 1fr; place-items:center;
+    font-size:19px; font-weight:700; line-height:1.1; padding:7px;
+    transform: rotate(-4deg); opacity:0.9;
+  }
+  .tracks { position:absolute; left:0; right:0; top:74px; display:flex; gap:34px; padding:0 40px; }
+  .tracks i { position:relative; width:16px; height:7px; flex:none; }
+  .tracks i::before, .tracks i::after {
+    content:""; position:absolute; top:0; width:5px; height:5px; border-radius:50%;
+    background: rgba(232,228,220,0.55);
+  }
+  .tracks i::before { left:0; } .tracks i::after { right:0; top:2px; }
+  .tracks i:nth-child(3n)::before { background: rgba(95,146,112,0.85); }
+  .tracks i:nth-child(4n) { transform: translateY(5px); }
+  .tracks i:nth-child(5n) { transform: translateY(-4px); }
+  .heroquote { position:relative; max-width:560px; margin: -30px auto 0; text-align:center; }
+  .heroquote .pos { font-size:14px; letter-spacing:0.34em; color:var(--dim); }
+  .heroquote .big {
+    font-size: clamp(19px, 2.4vw, 24px); margin-top:14px; letter-spacing:0.06em;
+  }
+  .herofact { margin-top:26px; padding-bottom:34px; display:flex; justify-content:center; gap:34px; font-size:12.5px; color:var(--faint); letter-spacing:0.14em; flex-wrap:wrap; }
+  .herofact b { color: var(--green); font-weight:600; }
+
+  /* ============ 通用分节 ============ */
+  .sec { padding: 64px 0 12px; border-top:1px solid var(--hair); }
+  .sechead { display:flex; align-items:baseline; gap:16px; margin-bottom:8px; }
+  .secno { font-size:13px; color:var(--green); letter-spacing:0.3em; }
+  .secti { font-size:24px; font-weight:600; letter-spacing:0.14em; }
+  .secsub { font-size:13px; color:var(--faint); letter-spacing:0.16em; margin-left:auto; }
+  .lead { color: var(--dim); font-size:14.5px; max-width:62ch; margin-bottom:26px; }
+  .lead b { color:var(--paper); font-weight:600; }
+
+  /* ============ 自序 ============ */
+  .preface { display:grid; grid-template-columns: 1.35fr 1fr; gap:28px; align-items:stretch; }
+  .prefq {
+    background: var(--paper); color: var(--ink); padding: 30px 30px 24px; position:relative;
+  }
+  .prefq .src { font-size:12px; letter-spacing:0.3em; color:#7a756b; }
+  .prefq .q { color: inherit; }
+  .prefq .qt { font-size:17.5px; line-height:2.05; margin-top:12px; }
+  .prefq .datestamp {
+    margin-top:20px; display:inline-block; border:1.5px solid var(--ink);
+    padding: 4px 14px; font-size:14.5px; letter-spacing:0.2em; font-weight:600;
+  }
+  .spec { border:1px solid var(--hair); padding:22px 22px 16px; }
+  .spec h4 { font-size:13px; letter-spacing:0.3em; color:var(--green); font-weight:600; margin-bottom:14px; }
+  .spec table { width:100%; border-collapse:collapse; font-size:13.5px; }
+  .spec td { padding:7px 2px; border-top:1px solid var(--hair); color:var(--dim); }
+  .spec td:first-child { color:var(--faint); width:44%; }
+  .spec td b { color:var(--paper); font-weight:600; }
+  .spec .note { margin-top:12px; font-size:12.5px; color:var(--faint); line-height:1.8; }
+
+  /* ============ 断代疑案 ============ */
+  .case { margin-top:26px; }
+  .casegrid { display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--hair); }
+  .casecol { padding:24px 26px 20px; }
+  .casecol + .casecol { border-left:1px solid var(--hair); }
+  .casecol .tag { font-size:12.5px; letter-spacing:0.26em; color:var(--green); }
+  .casecol .yr { font-size:30px; font-weight:700; letter-spacing:0.06em; margin:8px 0 4px; }
+  .casecol .yr span { font-size:14px; color:var(--faint); font-weight:400; }
+  .casecol p { font-size:14px; color:var(--dim); }
+  .casecol .q { font-size:14.5px; }
+  .midlabel {
+    margin: 18px auto 0; width:max-content; max-width:92%;
+    border:1px dashed rgba(95,146,112,0.55); color:var(--green);
+    padding:6px 20px; font-size:13.5px; letter-spacing:0.2em;
+  }
+  .verdicts { margin-top:22px; display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .verdict { border-top:2px solid var(--green); padding-top:12px; }
+  .verdict .vh { font-size:13px; letter-spacing:0.2em; color:var(--green); }
+  .verdict p { font-size:14px; color:var(--dim); margin-top:6px; }
+  .crosslib { margin-top:20px; border:1px solid var(--hair); padding:16px 20px; font-size:13.5px; color:var(--dim); }
+  .crosslib b { color:var(--paper); font-weight:600; }
+  .crosslib .srctag { font-size:11.5px; color:var(--faint); letter-spacing:0.2em; margin-right:10px; }
+  .crosslib .row { padding:7px 0; border-top:1px solid var(--hair); }
+  .crosslib .row:first-child { border-top:none; }
+
+  /* ============ 六十六目 ============ */
+  .ribbon { margin-top:24px; }
+  .ribbonhead { display:flex; align-items:baseline; gap:14px; margin-bottom:12px; }
+  .ribbonhead .rt { font-size:15px; letter-spacing:0.22em; color:var(--paper); font-weight:600; }
+  .ribbonhead .rc { font-size:12.5px; color:var(--faint); letter-spacing:0.18em; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip {
+    font-size:13.5px; padding:5px 12px; border:1px solid var(--hair); color:var(--dim);
+    letter-spacing:0.1em; position:relative;
+  }
+  .chip sup { font-size:9px; color:var(--faint); margin-left:3px; }
+  .chip.hot { border-color: rgba(95,146,112,0.65); color:var(--paper); }
+  .chip.hot::after { content:""; position:absolute; right:4px; top:4px; width:4px; height:4px; border-radius:50%; background:var(--green); }
+  .ribbonnote { margin-top:12px; font-size:12.5px; color:var(--faint); }
+
+  /* ============ 蟹事六则 ============ */
+  .stories { display:grid; gap:30px; margin-top:26px; }
+  .story {
+    display:grid; grid-template-columns: 132px 1fr; gap:26px;
+    border:1px solid var(--hair); padding:26px 28px 24px; position:relative;
+  }
+  .story:nth-child(even) { grid-template-columns: 1fr 132px; }
+  .story:nth-child(even) .stitle { order:2; }
+  .stitle { border-right:1px solid var(--hair); padding-right:18px; }
+  .story:nth-child(even) .stitle { border-right:none; border-left:1px solid var(--hair); padding-right:0; padding-left:18px; }
+  .stitle .eno { font-size:12px; color:var(--green); letter-spacing:0.3em; }
+  .stitle .et { font-size:24px; font-weight:700; letter-spacing:0.14em; margin-top:8px; }
+  .stitle .es { font-size:12.5px; color:var(--faint); margin-top:10px; line-height:1.7; }
+  .sbody { font-size:14.5px; color:var(--dim); }
+  .sbody .q { display:block; font-size:16px; color:var(--paper); line-height:2; margin:10px 0; }
+  .sbody .q.wide { font-size:17.5px; }
+  .sbody .who { font-size:12px; color:var(--faint); letter-spacing:0.24em; display:block; margin-top:2px; }
+  .sbody b { color:var(--paper); font-weight:600; }
+  .steps { display:flex; gap:10px; margin:14px 0 4px; flex-wrap:wrap; }
+  .steps span { font-size:12.5px; border:1px solid var(--hair); padding:3px 10px; color:var(--dim); }
+  .steps span em { font-style:normal; color:var(--green); margin-right:6px; }
+  .trio { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:14px; }
+  .trio div { border:1px solid var(--hair); padding:10px 12px; font-size:12.5px; color:var(--dim); }
+  .trio div b { display:block; color:var(--green); font-size:12px; letter-spacing:0.2em; margin-bottom:4px; font-weight:600; }
+
+  /* ============ 蟹历 ============ */
+  .yearruler { margin-top:30px; position:relative; padding-left:118px; }
+  .yearruler .rail { position:absolute; left:84px; top:6px; bottom:6px; width:2px;
+    background: linear-gradient(180deg, rgba(95,146,112,0.15), rgba(95,146,112,0.8) 30%, rgba(95,146,112,0.8) 70%, rgba(95,146,112,0.15)); }
+  .month { position:relative; padding: 0 0 30px 34px; }
+  .month:last-child { padding-bottom:6px; }
+  .month::before {
+    content:""; position:absolute; left:-40px; top:12px; width:10px; height:10px;
+    background:var(--ink); border:2px solid var(--green); border-radius:50%;
+  }
+  .month .mtag { position:absolute; left:-104px; top:6px; width:58px; text-align:right;
+    font-size:13.5px; letter-spacing:0.16em; color:var(--green); font-weight:600; }
+  .month .mtext { font-size:14.5px; color:var(--dim); max-width:56ch; }
+  .month .q { display:block; font-size:15.5px; color:var(--paper); margin-top:4px; }
+  .month .mnote { font-size:12.5px; color:var(--faint); margin-top:4px; }
+
+  /* ============ 蟹王（墨底暗幕） ============ */
+  .king { border-top:none; background:var(--ink2); margin-top:64px; padding:64px 0 58px; }
+  .king .secno { color:var(--green); }
+  .kinggrid { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:26px; align-items:start; }
+  .kingq .q { display:block; font-size:18px; line-height:2.1; color:var(--paper); }
+  .kingq .src { display:block; margin-top:12px; font-size:12px; color:var(--faint); letter-spacing:0.26em; }
+  .triblade { margin-top:22px; display:grid; gap:10px; }
+  .triblade .blade { border-left:3px solid var(--green); background:rgba(95,146,112,0.08); padding:10px 16px; font-size:14.5px; color:var(--dim); }
+  .triblade .blade b { color:var(--green); font-weight:600; margin-right:8px; }
+  .kingnote { font-size:14px; color:var(--dim); border-top:1px solid var(--hair); padding-top:18px; }
+  .kingnote b { color:var(--paper); font-weight:600; }
+
+  /* ============ 名物志三行 ============ */
+  .museum { margin-top:26px; display:grid; gap:26px; }
+  .mrow .mh { display:flex; align-items:baseline; gap:12px; margin-bottom:12px; }
+  .mrow .mh b { font-size:15px; letter-spacing:0.22em; font-weight:600; }
+  .mrow .mh span { font-size:12.5px; color:var(--faint); letter-spacing:0.16em; }
+  .cards3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .cards4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .mcard { border:1px solid var(--hair); padding:16px 16px 13px; }
+  .mcard .n { font-size:15.5px; font-weight:600; letter-spacing:0.1em; color:var(--paper); }
+  .mcard .n small { font-size:11px; color:var(--green); letter-spacing:0.2em; margin-left:8px; font-weight:400; }
+  .mcard .q { display:block; font-size:13px; color:var(--dim); margin-top:8px; line-height:1.9; }
+  .mcard p { font-size:13px; color:var(--dim); margin-top:8px; }
+  .namesline { border:1px solid var(--hair); padding:14px 18px; font-size:14px; color:var(--dim); line-height:2.1; }
+  .namesline b { color:var(--paper); font-weight:600; }
+  .namesline i { font-style:normal; color:var(--faint); font-size:12.5px; }
+
+  /* ============ 诗笺 ============ */
+  .duet { margin-top:28px; display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--hair); position:relative; }
+  .duet::after { content:""; position:absolute; left:50%; top:10px; bottom:10px; width:1px;
+    background:repeating-linear-gradient(180deg, var(--hair) 0 6px, transparent 6px 12px); }
+  .side { padding:26px 28px 22px; }
+  .side:first-child { padding-right:34px; }
+  .side:last-child { padding-left:34px; }
+  .side .pt { font-size:13px; color:var(--green); letter-spacing:0.2em; }
+  .side .pa { font-size:15px; color:var(--paper); font-weight:600; margin-top:4px; letter-spacing:0.1em; }
+  .side .verse { margin-top:14px; }
+  .side .verse .q { display:block; font-size:15px; line-height:2.15; color:var(--paper); }
+  .side .pnote { margin-top:12px; font-size:12.5px; color:var(--faint); }
+  .couplets { margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .couplets .cp { border:1px solid var(--hair); padding:12px 16px; }
+  .couplets .cp .q { font-size:14.5px; color:var(--paper); }
+  .couplets .cp i { font-style:normal; display:block; font-size:11.5px; color:var(--faint); letter-spacing:0.2em; margin-top:4px; }
+
+  /* ============ 校记 ============ */
+  .proof { margin-top:26px; border:1px solid var(--hair); }
+  .proof .row { display:grid; grid-template-columns:200px 1fr; gap:18px; padding:13px 20px; border-top:1px solid var(--hair); font-size:13.5px; }
+  .proof .row:first-child { border-top:none; }
+  .proof .k { color:var(--green); letter-spacing:0.14em; }
+  .proof .v { color:var(--dim); }
+  .proof .v b { color:var(--paper); font-weight:600; }
+
+  /* ============ 书命 ============ */
+  .life { margin-top:26px; display:grid; grid-template-columns:repeat(4,1fr); gap:0; border:1px solid var(--hair); }
+  .life .st { padding:18px 18px 15px; border-left:1px solid var(--hair); }
+  .life .st:first-child { border-left:none; }
+  .life .st .y { font-size:12px; color:var(--green); letter-spacing:0.24em; }
+  .life .st .t { font-size:14.5px; font-weight:600; margin-top:6px; }
+  .life .st p { font-size:12.5px; color:var(--faint); margin-top:6px; line-height:1.8; }
+  .kins { margin-top:22px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:13px; color:var(--faint); }
+  .kins .kchip { border:1px solid var(--hair); padding:4px 12px; color:var(--dim); }
+  .kins .kchip b { color:var(--paper); font-weight:600; }
+
+  /* ============ coda ============ */
+  .coda { margin-top:70px; background:var(--ink2); padding:70px 0 62px; text-align:center; }
+  .coda .cst { font-size:14px; color:var(--faint); letter-spacing:0.3em; }
+  .coda .cline { font-size:clamp(21px,3vw,30px); line-height:2; max-width:34em; margin:22px auto 0; }
+  .coda .cline b { color:var(--green); font-weight:600; }
+  .coda .tail { margin-top:26px; font-size:13.5px; color:var(--dim); max-width:56ch; margin-left:auto; margin-right:auto; }
+
+  footer { border-top:1px solid var(--hair); padding:30px 0 44px; font-size:12.5px; color:var(--faint); line-height:2.1; }
+  footer a { color:var(--dim); }
+
+  @media (max-width: 760px) {
+    .preface, .casegrid, .verdicts, .kinggrid, .cards3, .cards4, .duet, .couplets { grid-template-columns:1fr; }
+    .casecol + .casecol { border-left:none; border-top:1px solid var(--hair); }
+    .duet::after { display:none; }
+    .side:first-child { padding-right:28px; } .side:last-child { padding-left:28px; }
+    .story, .story:nth-child(even) { grid-template-columns:1fr; }
+    .stitle, .story:nth-child(even) .stitle { border:none; padding:0; order:0; }
+    .vtitle { font-size:40px; height:230px; right:18px; top:-40px; }
+    .yearruler { padding-left:96px; } .yearruler .rail { left:62px; }
+    .month .mtag { left:-82px; }
+    .life { grid-template-columns:1fr 1fr; }
+    .life .st:nth-child(3) { border-left:none; }
+    .life .st:nth-child(n+3) { border-top:1px solid var(--hair); }
+    .proof .row { grid-template-columns:1fr; gap:4px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ hero：星图 · 潮线 · 蟹迹 ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="slip mono">
+      <span>殆知阁导读 <b>之一百零五</b></span>
+      <span>艺藏 · 草木鸟兽虫鱼</span>
+      <span>北宋 · 嘉祐年间成书</span>
+    </div>
+  </div>
+  <svg class="starmap" width="620" height="180" viewBox="0 0 620 180" fill="none">
+    <g stroke="rgba(232,228,220,0.28)" stroke-width="1">
+      <line x1="238" y1="118" x2="308" y2="96"/>
+      <line x1="308" y1="96" x2="380" y2="118"/>
+      <line x1="308" y1="96" x2="296" y2="40"/>
+      <line x1="296" y1="40" x2="256" y2="22"/>
+      <line x1="296" y1="40" x2="338" y2="26"/>
+    </g>
+    <g fill="#e8e4dc">
+      <circle cx="238" cy="118" r="4"/>
+      <circle cx="308" cy="96" r="3"/>
+      <circle cx="380" cy="118" r="4"/>
+      <circle cx="296" cy="40" r="3.5"/>
+      <circle cx="256" cy="22" r="2.5"/>
+      <circle cx="338" cy="26" r="2.5"/>
+    </g>
+    <g fill="rgba(95,146,112,0.9)" font-size="12" font-family="Songti SC,SimSun,serif" letter-spacing="2">
+      <text x="404" y="123">巨蟹宫</text>
+    </g>
+  </svg>
+  <div class="starcap">释典有言，十二星宫有巨蟹焉（星点连线为示意）</div>
+  <div class="wrap">
+    <div class="tideline">
+      <div class="tide"></div>
+      <div class="tracks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="stamp">横行<br>介士</div>
+      <div class="vtitle">蟹谱<small>宋　怪山　傅肱</small></div>
+    </div>
+    <div class="heroquote">
+      <div class="pos">一部写给螃蟹的北宋百科</div>
+      <div class="big"><span class="q">「蟹之为物，虽非登俎之贵，然见于经、引于传、着于子史、志于隠逸，歌咏于诗人，杂岀于小说，皆有意谓焉。」</span></div>
+    </div>
+    <div class="herofact mono">
+      <span>库本 <b>6,989</b> 字</span>
+      <span>汉字 <b>5,133</b></span>
+      <span>上篇 <b>42</b> 目</span>
+      <span>下篇 <b>24</b> 目</span>
+      <span>「蟹」 <b>156</b> 见</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ 一 · 自序 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sechead"><span class="secno">壹</span><span class="secti">为蟹立传的人</span><span class="secsub">自序</span></div>
+    <p class="lead">绍兴城里的飞来山，古称怪山。山上住着一位自号怪山的读书人傅肱，他觉得天下书都在写人的事，没有一本正经写给螃蟹，于是动手补上这个缺。<b>《蟹谱》成书之前，陆龟蒙写过一部《蟹志》，已经亡佚</b>；傅肱在这部书里把可考的旧文一条条钉牢，再把自己见闻的新事写在后篇，等于替一只水虫重修了一次家谱。</p>
+    <div class="preface">
+      <div class="prefq">
+        <div class="src">自序</div>
+        <div class="qt"><span class="q">「故因益以今之所见闻，次而谱之。自总论而列为上下二篇，又叙其后，聊亦以补博览者所阙也。」</span></div>
+        <div class="datestamp mono"><span class="q">「神宋嘉佑四年冬序。」</span></div>
+      </div>
+      <div class="spec">
+        <h4>库本账</h4>
+        <table class="mono">
+          <tr><td>库本全帙</td><td><b>6,989</b> 字</td></tr>
+          <tr><td>去空白</td><td><b>6,310</b> 字</td></tr>
+          <tr><td>汉字</td><td><b>5,133</b></td></tr>
+          <tr><td>上篇（采旧文）</td><td><b>42</b> 目</td></tr>
+          <tr><td>下篇（自记新事）</td><td><b>24</b> 目</td></tr>
+          <tr><td>「呉」字</td><td><b>9</b> 见，「吴」零见</td></tr>
+        </table>
+        <div class="note">四库提要在卷首替他定了调：<span class="q">「上篇多采旧文，下篇则其所自记。」</span>一条旧闻一条新闻，蟹事的两个来源分得干干净净。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 二 · 断代疑案 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sechead"><span class="secno">贰</span><span class="secti">序言比内容早三十年</span><span class="secsub">戏眼 · 一桩文本悬案</span></div>
+    <p class="lead">自序落款<b>嘉祐四年</b>，也就是公元一〇五九年。可是卷下有一条「贪化」，讲的是<b>神宗朝</b>的朝政笑话。神宗一〇六七年才即位，序却在一〇五九年就写好了：这本书的序，比它的内容早出生了至少八年。</p>
+    <div class="case">
+      <div class="casegrid">
+        <div class="casecol">
+          <div class="tag">序言落款</div>
+          <div class="yr">嘉祐四年<span>　1059</span></div>
+          <p class="q">「神宋嘉佑四年冬序。」</p>
+          <p>提要把这条序记为嘉佑四年，《直斋书录解题》著录此书时也照抄了「嘉祐四年序」。</p>
+        </div>
+        <div class="casecol">
+          <div class="tag">卷内纪事</div>
+          <div class="yr">神宗朝<span>　1067 起</span></div>
+          <p class="q">「神宗朝，有大臣赵氏者【名某】，虽于国功高，然其性贪墨，私门子弟苞苴，上特优容之。」</p>
+          <p>一条朝政段子，写进了「嘉祐四年」写成的书里。</p>
+        </div>
+      </div>
+      <div class="midlabel">同一本书的两个年份，只能对上一个</div>
+      <div class="verdicts">
+        <div class="verdict">
+          <div class="vh">提要的判法一</div>
+          <p>那个赵姓大臣是谁？提要按图索骥：<span class="q">「考《宋史》惟神宗熙宁初枢密使参知政事赵概尝出知徐州，似即其事，则嘉佑当为元佑之讹。」</span>序的落款抄错了字，嘉佑本该是元佑（1086 起），如此全书纪事才顺。</p>
+        </div>
+        <div class="verdict">
+          <div class="vh">提要的判法二</div>
+          <p>可是他又退了半步：<span class="q">「然《书录解题》亦载是序为嘉佑四年，而赵概为北宋名臣，亦不容着贪墨声，或刊本神宗字误也。」</span>赵概是名臣，不该背贪墨的名声，错的也许是正文里的「神宗」二字。两说并陈，悬而不决。</p>
+        </div>
+      </div>
+      <div class="crosslib mono">
+        <div class="row"><span class="srctag">跨库 · 直斋书录解题</span><b class="q" data-src="zhizhai">「称怪山傅肱子翼撰。嘉祐四年序。」</b>紧挨着下一条，就是南宋高似孙的《蟹略》四卷：宋人为蟹写的书，至少有两部。</div>
+        <div class="row"><span class="srctag">跨库 · 宋史</span>提要猜的赵概实有其人：<b class="q" data-src="songshi">「赵概罢知徐州」</b>，事在神宗熙宁初，与提要的推断对得上。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 三 · 六十六目 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sechead"><span class="secno">叁</span><span class="secti">六十六个条目</span><span class="secsub">上篇采旧文 · 下篇自记</span></div>
+    <p class="lead">上篇四十二目，从《易》《礼》《尔雅》一路抄到《食疗本草》，是把前人写过蟹的字句全部归档；下篇二十四目，才是傅肱自己的见闻。条目名与库本原目<strong>逐字核对</strong>，一字未改。亮着竹青的十目，下文各有去处。</p>
+    <div class="ribbon">
+      <div class="ribbonhead"><span class="rt">卷上</span><span class="rc">四十二目</span></div>
+      <div class="chips">
+        <span class="chip">离象<sup>01</sup></span><span class="chip">有匡<sup>02</sup></span><span class="chip">仄行<sup>03</sup></span><span class="chip">螖蠌<sup>04</sup></span><span class="chip">走迟<sup>05</sup></span><span class="chip">虫孽<sup>06</sup></span><span class="chip">性躁<sup>07</sup></span><span class="chip hot">左持<sup>08</sup></span><span class="chip">捕鼠<sup>09</sup></span><span class="chip">不啖<sup>10</sup></span><span class="chip">郭索<sup>11</sup></span><span class="chip hot">蟚蜝<sup>12</sup></span><span class="chip">诛解系<sup>13</sup></span><span class="chip">蛙矜<sup>14</sup></span><span class="chip">龟长<sup>15</sup></span><span class="chip">侈味<sup>16</sup></span><span class="chip">琐□〈王吉〉<sup>17</sup></span><span class="chip">介虫之孽<sup>18</sup></span><span class="chip">无肠公子<sup>19</sup></span><span class="chip">天文<sup>20</sup></span><span class="chip">食证<sup>21</sup></span><span class="chip">异名<sup>22</sup></span><span class="chip">诫嗜<sup>23</sup></span><span class="chip">兵异<sup>24</sup></span><span class="chip">集鼠<sup>25</sup></span><span class="chip">鲎类<sup>26</sup></span><span class="chip">浦名<sup>27</sup></span><span class="chip">画<sup>28</sup></span><span class="chip hot">输芒<sup>29</sup></span><span class="chip">蛉腹<sup>30</sup></span><span class="chip">同鼠孽<sup>31</sup></span><span class="chip">为菑<sup>32</sup></span><span class="chip">玉篇<sup>33</sup></span><span class="chip">月令<sup>34</sup></span><span class="chip">图经<sup>35</sup></span><span class="chip">琴声<sup>36</sup></span><span class="chip">唐韵<sup>37</sup></span><span class="chip">说文<sup>38</sup></span><span class="chip">长生<sup>39</sup></span><span class="chip">食莨<sup>40</sup></span><span class="chip">斩王摅<sup>41</sup></span><span class="chip">药证<sup>42</sup></span>
+      </div>
+      <div class="ribbonhead" style="margin-top:22px"><span class="rt">卷下</span><span class="rc">二十四目</span></div>
+      <div class="chips">
+        <span class="chip hot">孝报<sup>43</sup></span><span class="chip hot">殊类<sup>44</sup></span><span class="chip hot">贪化<sup>45</sup></span><span class="chip">采捕<sup>46</sup></span><span class="chip hot">泉比<sup>47</sup></span><span class="chip">兵证<sup>48</sup></span><span class="chip">贡评<sup>49</sup></span><span class="chip">风虫<sup>50</sup></span><span class="chip">郁洲<sup>51</sup></span><span class="chip hot">食品<sup>52</sup></span><span class="chip">恠状<sup>53</sup></span><span class="chip">断弊<sup>54</sup></span><span class="chip">蟹杯<sup>55</sup></span><span class="chip">令旨<sup>56</sup></span><span class="chip">蟹戸<sup>57</sup></span><span class="chip hot">兵权<sup>58</sup></span><span class="chip">蟹征<sup>59</sup></span><span class="chip">螺化<sup>60</sup></span><span class="chip">食珍<sup>61</sup></span><span class="chip">蟹浪<sup>62</sup></span><span class="chip">酒蟹<sup>63</sup></span><span class="chip hot">白蟹<sup>64</sup></span><span class="chip">荡浦摇江<sup>65</sup></span><span class="chip">纪赋咏<sup>66</sup></span>
+      </div>
+      <div class="ribbonnote">第十七目条名琐字之后库本缺字并附拆字括注；第五十三目恠为怪之异体，第五十七目戸为户之异体，均照库本原样挂出。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 四 · 蟹事六则 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sechead"><span class="secno">肆</span><span class="secti">蟹事七则</span><span class="secsub">从字书里游出来的故事</span></div>
+    <div class="stories">
+
+      <div class="story">
+        <div class="stitle">
+          <div class="eno">上篇 · 第十二目</div>
+          <div class="et">蟚蜝</div>
+          <div class="es">被书害死的吃法</div>
+        </div>
+        <div class="sbody">
+          东晋蔡谟渡江，见一种八足二螯的水虫，想起《尔雅》里读过，判定是蟹，烹而食之。
+          <span class="steps"><span><em>一</em>误认</span><span><em>二</em>下锅</span><span><em>三</em>吐下委顿</span><span><em>四</em>友人大笑</span></span>
+          <span class="q">「既食，吐下委顿，方知非蟹。后诣谢尚而说之。尚曰：卿读《尔雅》不熟，几为劝学死。」</span>
+          书读得半生不熟，是要命的。这是中国书里最有名的一次吃错螃蟹。
+        </div>
+      </div>
+
+      <div class="story">
+        <div class="sbody">
+          西晋毕卓放旷，酒盅与蟹螯并举，一句话给此后一千年的秋天定了调子。后人画蟹、咏蟹、吃蟹，端出来的都是这一桌。
+          <span class="q wide">「左手持蟹螯，右手执酒杯，拍浮酒池中，足乐一生哉。」</span>
+          <span class="who">晋 · 毕卓　上篇第八目「左持」</span>
+        </div>
+        <div class="stitle">
+          <div class="eno">上篇 · 第八目</div>
+          <div class="et">左持</div>
+          <div class="es">千古蟹文第一句</div>
+        </div>
+      </div>
+
+      <div class="story">
+        <div class="stitle">
+          <div class="eno">上篇第二十四目<br>下篇第六、第四十八目</div>
+          <div class="et">兵权</div>
+          <div class="es">蟹出现在军营里的三种方式</div>
+        </div>
+        <div class="sbody">
+          打仗的营地忽然爬进一只蟹，士气要看它给不给面子，于是给它改一个吉利的名字。
+          <span class="q">「出师下砦之际，忽见蟹则当呼为横行介士，权以安众。」</span>
+          <div class="trio">
+            <div><b>谶</b>《军畧灾篇》：<span class="q">「地忽生蟹，当急迁砦栅，不迁，将士亡。」</span></div>
+            <div><b>乱</b>呉俗有<span class="q inl">虾荒蟹乱</span>之语，蟹群暴至，乡人当作征兵的兆头。</div>
+            <div><b>权</b>横行介士：甲胄之「介」正好接住蟹壳，一只蟹被当场编入行伍。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="story">
+        <div class="sbody">
+          神宗朝有位功高性贪的赵姓大臣，皇帝不便明说，召来伶人，在御前演了一出戏：盘子里钓起一只蟹。
+          <span class="q">「十五郎见而惊曰：好手脚长，我欲烹汝，又念汝是同姓，且释汝。」「翌日，赵果出镇近辅。」</span>
+          蟹横行、多脚、钳子长，全写在这句戏词里；一场玩笑唱罢，贪官第二天就被外放。御史不敢说的话，由一只蟹在戏台上说了。
+          <span class="who">下篇第三目「贪化」　提要由此考出成书年代疑案</span>
+        </div>
+        <div class="stitle">
+          <div class="eno">下篇 · 第三目</div>
+          <div class="et">贪化</div>
+          <div class="es">御前的一场蟹戏</div>
+        </div>
+      </div>
+
+      <div class="story">
+        <div class="stitle">
+          <div class="eno">下篇 · 第二目</div>
+          <div class="et">殊类</div>
+          <div class="es">放生一只巨蟹</div>
+        </div>
+        <div class="sbody">
+          震泽渔人一网捞起斗大的蟹，螯剪断网眼，渔人恼了要下锅，被老渔夫拦住。
+          <span class="q">「不可，吾尝闻龟蟹之殊类甚者，必江湖之使也，烹之不祥。」</span>
+          于是放回水里。
+          <span class="q">「蟹至水面，横行里许方没。」</span>
+          一只蟹横着走完一里路才沉下去。傅肱把这句写得很平静，画面却一直是活的。
+        </div>
+      </div>
+
+      <div class="story">
+        <div class="sbody">
+          杭州人原不吃蟹。农夫田彦升的母亲嗜蟹，怕邻人笑话，他常常远赴苏州湖州买蟹，煮熟了装在布囊里背回家。
+          <span class="steps"><span><em>一</em>母嗜蟹</span><span><em>二</em>远市苏湖</span><span><em>三</em>布囊负归</span><span><em>四</em>战乱至</span></span>
+          杨行密的兵打来，乡人逃散饿死者众，只有他背着蟹囊、带着母亲走脱。时人不说是蟹救了人，说是孝心救了人。
+          <span class="q">「独彦升挈囊负母竟以解免，时人以为纯孝之报焉。」</span>
+        </div>
+        <div class="stitle">
+          <div class="eno">下篇 · 第一目</div>
+          <div class="et">孝报</div>
+          <div class="es">一囊蟹走过兵乱</div>
+        </div>
+      </div>
+
+      <div class="story">
+        <div class="stitle">
+          <div class="eno">下篇 · 第二十二目</div>
+          <div class="et">白蟹</div>
+          <div class="es">一年吃绝一个新种</div>
+        </div>
+        <div class="sbody">
+          秀州华亭的亭林湖，天圣末年忽然生出白色的新种，人称白蟹。沿江的人疯了一样出价收购，只一年，就再找不到一只。
+          <span class="q">「于天圣末忽生白蟹」</span><span class="q">「濒江之人以价倍常，靡有孑遗，止一年而种绝。」</span>
+          没有禁捕令，没有保护意识，一场为口腹而起的收购战，把这个变异的种群在十二个月里吃到了零。傅肱把它当作一桩物候异闻记下，今天读来，是一份千年前的灭绝档案。
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 五 · 蟹历 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sechead"><span class="secno">伍</span><span class="secti">一只蟹的一年</span><span class="secsub">总论　食茛　输芒　酒蟹</span></div>
+    <p class="lead">把总论和各目的时令记号抽出来，能拼出北宋人眼中一只蟹的完整年历：什么时候有毒，什么时候蜕壳，什么时候最好吃，什么时候朝拜蟹王。</p>
+    <div class="yearruler">
+      <div class="rail"></div>
+      <div class="month">
+        <div class="mtag">未霜</div>
+        <div class="mtext">霜降之前别碰它，它吃过的东西让它自己带毒。</div>
+        <span class="q">「蟹未被霜者，甚有毒，以其食水茛也。人或中之，不即疗则多死。」</span>
+      </div>
+      <div class="month">
+        <div class="mtag">八月</div>
+        <div class="mtext">蜕一次壳，随后开始衔稻芒。</div>
+        <span class="q">「瘠小而味腥，至八月则蜕形。已蜕而形浸大」</span>
+        <span class="q">「蟹至八月即啖芒，两茎长寸许。」</span>
+      </div>
+      <div class="month">
+        <div class="mtag">秋冬之交</div>
+        <div class="mtext">稻梁足食，蟹肥了，成群顺流入江。</div>
+        <span class="q">「秋冬之交稻梁已足，各腹芒走江，俗呼为乐蟹，最号肥美。」</span>
+      </div>
+      <div class="month">
+        <div class="mtag">冰雪</div>
+        <div class="mtext">最大的那一只从此消失，伏在淤泥里，谁也捉不到。</div>
+        <span class="q">「中之魁遇冰雪则自伏淤淀，不可得矣。」</span>
+      </div>
+      <div class="month">
+        <div class="mtag">十二月</div>
+        <div class="mtext">糟蟹的法定月份，盐酒浸一夜，椒盐压实，隔宿候冷。</div>
+        <span class="q">「酒蟹须十二月间作，于酒瓮间撇清酒，不得近糟，和盐浸蟹一宿。」</span>
+      </div>
+      <div class="month">
+        <div class="mtag">二月三月</div>
+        <div class="mtext">小蟹蟚蚎盛于海涂，呉人的春天以它为节令。</div>
+        <span class="q">「岁或不至，则指目禁烟，谓非佳节也。」</span>
+        <div class="mnote">禁烟即寒食，一年蟹事从春天重新开始。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 六 · 蟹王 ============ -->
+<section class="king">
+  <div class="wrap">
+    <div class="sechead"><span class="secno">陆</span><span class="secti">给蟹王的贡物</span><span class="secsub">输芒 · 三种自然</span></div>
+    <div class="kinggrid">
+      <div class="kingq">
+        <span class="q">「蟹至八月即啖芒，两茎长寸许。东向至海，输送蟹王之所。」</span>
+        <span class="src">食疗本草 · 上篇第二十九目「输芒」</span>
+        <div class="triblade">
+          <div class="blade"><b>礼</b><span class="q">「至于腹芒以朝其魁，其得自然之礼欤。」</span></div>
+          <div class="blade"><b>智</b><span class="q">「舍陂港而之江海，其得自然之智欤。」</span></div>
+          <div class="blade"><b>正</b><span class="q">「虽外刚躁而内无他肠，其得自然之正欤。」</span></div>
+        </div>
+      </div>
+      <div class="kingnote">
+        <p>傅肱与唐人一样相信：蟹腹里的稻芒不是食物残渣，是<b>带给蟹王的贡物</b>，每年八月衔着，一路向东送进海里。</p>
+        <p>这条迷信有它自己的「证据」：<span class="q">「陶隠居亦云：今开蟹腹中，犹有海水，乃是其证。」</span>剖开蟹腹见到海水，就是朝海的凭证。</p>
+        <p>于是他在总论里替蟹翻了案，连用三个「自然」：螃蟹东行朝王是<b>礼</b>，离开臭水沟奔向大江大海是<b>智</b>，壳硬而心肠干净是<b>正</b>。<span class="q">「与夫羔羊跪乳，蜂房会衙，俱得自然之礼。」</span></p>
+        <p style="margin-top:10px">一只横行的水虫，被写成了懂礼的进贡使。「蟹王」二字全书恰此一处。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 七 · 名物志 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sechead"><span class="secno">柒</span><span class="secti">名物志</span><span class="secsub">蟹名　蟹制　蟹馔</span></div>
+    <div class="museum">
+
+      <div class="mrow">
+        <div class="mh"><b>蟹有多少名字</b><span>总论　异名　兵权　蟹浪　白蟹</span></div>
+        <div class="namesline">
+          按个头：<b class="q">小者谓之蟚蚎，中者谓之蟹匡，长而锐者谓之蠞</b><i>【音截】</i><b class="q">甚大者谓之蝤蛑</b>。按行迹：<b>郭索</b><i>（《太玄》<span class="q inl">锐前一蟹之郭索，后蚓黄泉</span>，状其爬行有声）</i>、<b>无肠公子</b><i>（《抱朴子》语）</i>、<b>横行介士</b><i>（军中之讳）</i>。按产地与吃法：<b>洗手蟹</b>、<b>蟹奴</b>、<b>乐蟹</b>、<b>芦根蟹</b>、<b>石蟹</b>、<b>泖蟹</b>、<b>白蟹</b>、<b>黄甲</b>。名与号加起来，一部蟹的名物学。
+        </div>
+      </div>
+
+      <div class="mrow">
+        <div class="mh"><b>蟹在制度里</b><span>蟹户　蟹征　贡评　断弊</span></div>
+        <div class="cards4">
+          <div class="mcard"><div class="n">蟹戸<small>户籍</small></div><p class="q">「钱氏间置鱼户、蟹户，专掌捕鱼蟹」</p><p>吴越国有世代捕蟹的专业户，与药户、漆户同列。</p></div>
+          <div class="mcard"><div class="n">蟹征<small>税目</small></div><p>连虾蟹都要立税，二浙转运使沈公奏罢之，<span class="q">「议者谓其识体。」</span></p></div>
+          <div class="mcard"><div class="n">贡评<small>御膳</small></div><p class="q">「御食经中亦有煑蟹法，但不常御，锡命则进耳」</p><p>御厨房有煮蟹的规程，只在内宴时上桌。</p></div>
+          <div class="mcard"><div class="n">断弊<small>水利</small></div><p>编帘截江拦蟹，水不能畅流，官府禁而不绝。<span class="q">「噫！水之病呉久矣，又非蛟蜃之比」</span></p></div>
+        </div>
+      </div>
+
+      <div class="mrow">
+        <div class="mh"><b>蟹在餐桌上</b><span>食品　食珍　泉比　画</span></div>
+        <div class="cards4">
+          <div class="mcard"><div class="n">洗手蟹<small>生食</small></div><p class="q">「北人以蟹生析之，酤以盐梅，芼以椒橙，盥手毕，即可食，目为洗手蟹。」</p><p>洗个手的工夫，蟹已上桌。</p></div>
+          <div class="mcard"><div class="n">糟蟹<small>藏鲜</small></div><p class="q">「凡糟蟹，用茱萸一粒置厣中，经岁不沙。」</p><p>脐里放一粒茱萸，一年不沙不散黄。</p></div>
+          <div class="mcard"><div class="n">蟹目<small>候汤</small></div><p class="q">「煎茶之法，视其泉若蟹目然，鱼鳞然，第一法。」</p><p>煮水候汤，蟹眼一样的气泡是第一等火候。</p></div>
+          <div class="mcard"><div class="n">画蟹<small>入画</small></div><p>画《五牛图》的韩滉，<span class="q">「善状人物、异兽、水牛等，尤妙于螃蠏。」</span></p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 八 · 诗笺 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sechead"><span class="secno">捌</span><span class="secti">海蟹唱和</span><span class="secsub">纪赋咏 · 皮陆往还</span></div>
+    <p class="lead">全书末目「纪赋咏」收的是唐人写蟹的句子。皮日休病中得到一只海蟹，转寄给陆龟蒙；陆龟蒙回诗相谢。两位松江诗人，用一只蟹完成了一次唱和。</p>
+    <div class="duet">
+      <div class="side">
+        <div class="pt">寄出 · 皮日休</div>
+        <div class="pa">病中有人惠海蟹转寄鲁望</div>
+        <div class="verse">
+          <span class="q">「绀甲青筐染菭衣，岛夷初寄北人时。」</span>
+          <span class="q">「病中无用双螯处，寄与夫君左手持。」</span>
+        </div>
+        <div class="pnote">青壳如染，病中无福消受，转赠老友，成全你那左手持螯的旧愿。</div>
+      </div>
+      <div class="side">
+        <div class="pt">答回 · 陆龟蒙</div>
+        <div class="pa">詶袭美见寄海蟹</div>
+        <div class="verse">
+          <span class="q">「药杯应阻蟹螯香，却乞江边采捕郎。」</span>
+          <span class="q">「骨清犹是含春霭，沫白还疑带海霜。」</span>
+          <span class="q">「强作南朝风雅客，夜来偷醉早梅傍。」</span>
+        </div>
+        <div class="pnote">药杯在侧不敢领蟹，只好学南朝人偷一回风雅。</div>
+      </div>
+    </div>
+    <div class="couplets">
+      <div class="cp"><span class="q">「蟹奴晴上临湘槛，燕婢秋随过海船。」</span><i>皮日休</i></div>
+      <div class="cp"><span class="q">「蟹因霜重金膏溢，橘为风多玉脑圆。」</span><i>皮日休</i></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 九 · 校记 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sechead"><span class="secno">玖</span><span class="secti">校记</span><span class="secsub">库本原样 · 核验申报</span></div>
+    <div class="proof">
+      <div class="row"><div class="k">贪花，还是贪化</div><div class="v">卷首提要引下篇条目作<b>「贪花」</b>，正文条目实作<b>「贪化」</b>，一书之内两形并存，本篇引文从正文。</div></div>
+      <div class="row"><div class="k">食莨，还是食茛</div><div class="v">上篇目录行作<b>「食莨」</b>，条目标题作<b>「食茛」</b>，正文所记毒草亦作「水茛」。两字各指一物（莨菪、毛茛），目录与条目至少有一处误字。</div></div>
+      <div class="row"><div class="k">自翼，还是子翼</div><div class="v">库本提要云<span class="q">「肱字自翼」</span>，直斋书录解题作<span class="q" data-src="zhizhai">「傅肱子翼撰」</span>，两源各执一字，并存不判。</div></div>
+      <div class="row"><div class="k">呉字九见</div><div class="v">通篇「呉」九见而「吴」零见，「恠状」之「恠」、「煑蟹法」之「煑」、「螃蠏」之「蠏」、「杂岀」之「岀」均为异体或讹形，照录不改。</div></div>
+      <div class="row"><div class="k">缺字与拆字</div><div class="v">全书<b>□</b>缺字号三十处、尖括号拆字括注三十处；另有六枚集外生僻字，分居孝报条（杨行密部将名）、不啖条（虾之古文）、蟹杯条注（鲎壳角名）、纪赋咏陆诗与唐韵条。本篇引文已全部避开，仅第十七目条名「琐□〈王吉〉」照原样挂墙。</div></div>
+      <div class="row"><div class="k">引自他书者</div><div class="v">上篇多录《国语》《晋书》《荀子》《食疗本草》等旧文，均经傅肱之手转抄；跨库辅证《直斋书录解题》《宋史》各一条，已在页内标明出处。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 十 · 书命 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sechead"><span class="secno">拾</span><span class="secti">书命与同门</span><span class="secsub">南宋著录 · 清代收入</span></div>
+    <div class="life">
+      <div class="st"><div class="y">约嘉祐</div><div class="t">怪山傅肱成书</div><p>自序落款嘉佑四年冬；卷下收有神宗朝事，成书年代遂成疑案。</p></div>
+      <div class="st"><div class="y">南宋</div><div class="t">直斋著录</div><p>陈振孙记<span class="q" data-src="zhizhai">「《蟹谱》二卷，称怪山傅肱子翼撰」</span>，紧邻著录高似孙《蟹略》四卷。</p></div>
+      <div class="st"><div class="y">清</div><div class="t">四库收录</div><p>卷首提要考辨<span class="q">「嘉佑当为元佑之讹」</span>，并评其书<span class="q">「铨次颇见雅驯」</span>。</p></div>
+      <div class="st"><div class="y">今日</div><div class="t">殆知阁简体库</div><p>艺藏草木鸟兽虫鱼类，全文六千九百余字，一部完整宋谱。</p></div>
+    </div>
+    <div class="kins">
+      <span>宋人一物一谱，库内同门皆在：</span>
+      <span class="kchip"><b>荔枝谱</b>　蔡襄</span>
+      <span class="kchip"><b>糖霜谱</b>　王灼</span>
+      <span class="kchip"><b>橘录</b>　韩彦直</span>
+      <span class="kchip"><b>笋谱</b>　赞宁</span>
+      <span class="kchip"><b>蟹谱</b>　傅肱</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ coda ============ -->
+<section class="coda">
+  <div class="wrap">
+    <div class="cst">结 语</div>
+    <div class="cline">蟹灾、蟹谶、蟹税、蟹戏、蟹馔、蟹王，<br>一样水虫，写尽了宋朝人的<b>经、史、子、集</b>与一日三餐。</div>
+    <div class="tail">自序说蟹事「皆有意谓焉」，这册小书用了六十六个条目来兑现这句话。至于蟹是否真的东行朝王、是否预兆兵灾，读者自会有今日的答案。</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    文本来源：殆知阁简体库（github.com/robertsong2000/daizhigev20）艺藏草木鸟兽虫鱼类《蟹谱》。
+    本篇全部引文已与库内文件逐字核验，讹字异体照录并见校记。
+    书中占验、灾祥、仙方诸说皆古人闻见与迷信，属时代局限，请以今日知识裁量。
+  </div>
+</footer>
+
+</body>
+</html>
