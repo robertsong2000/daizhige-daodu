@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>河防一览 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #262522;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --gold: #c9963f;
+    --hair: rgba(232,228,220,0.14);
+    --hair-soft: rgba(232,228,220,0.07);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background:
+      repeating-linear-gradient(0deg, transparent 0 63px, var(--hair-soft) 63px 64px),
+      repeating-linear-gradient(90deg, transparent 0 63px, var(--hair-soft) 63px 64px),
+      var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 30px; }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .topbar { display: flex; justify-content: space-between; padding: 20px 0 0; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  .topbar a { color: var(--paper-dim); }
+
+  /* 剖面图 */
+  .sheet { border: 1px solid var(--hair); background: var(--ink-2); margin: 26px 0 0; position: relative; }
+  .sheet svg { display: block; width: 100%; height: auto; }
+  .sheet .corner { position: absolute; top: 10px; left: 14px; font-size: 12px; letter-spacing: 0.3em; color: var(--paper-faint); }
+
+  .titleblock { padding: 44px 0 8px; }
+  h1 { font-size: clamp(52px, 8vw, 96px); font-weight: 700; letter-spacing: 0.12em; line-height: 1.15; }
+  .deco { color: var(--gold); }
+  .positioning { font-size: clamp(16px, 2vw, 21px); color: var(--paper-dim); margin: 14px 0 6px; max-width: 34em; }
+  .meta { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.12em; margin-bottom: 10px; }
+  .meta b { color: var(--paper-dim); font-weight: 400; }
+
+  /* 细部小节 */
+  section { border-top: 1px solid var(--hair); padding: 54px 0 40px; }
+  .kicker { font-size: 12.5px; letter-spacing: 0.34em; color: var(--gold); }
+  section h2 { font-size: clamp(24px, 3.4vw, 34px); font-weight: 600; letter-spacing: 0.1em; margin: 10px 0 18px; }
+  section h2 small { font-size: 14px; font-weight: 400; color: var(--paper-faint); letter-spacing: 0.08em; margin-left: 14px; }
+  .prose { max-width: 44em; color: var(--paper-dim); font-size: 15.5px; }
+  .prose p + p { margin-top: 12px; }
+  .prose b { color: var(--paper); font-weight: 600; }
+
+  blockquote {
+    margin: 26px 0; padding: 4px 0 4px 22px;
+    border-left: 2px solid var(--gold);
+    font-size: 17.5px; color: var(--paper); line-height: 2.05;
+  }
+  blockquote cite { display: block; font-style: normal; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.14em; margin-top: 10px; }
+  .q { color: var(--paper); }
+  .prose .q, .aside .q, .dike p .q { border-bottom: 1px dotted var(--gold); }
+
+  .aside {
+    border: 1px dashed var(--hair); background: var(--ink-2);
+    padding: 18px 22px; margin: 24px 0; font-size: 14.5px; color: var(--paper-dim); max-width: 44em;
+  }
+  .aside .tag { color: var(--gold); font-size: 12px; letter-spacing: 0.26em; display: block; margin-bottom: 6px; }
+
+  /* 总纲大字 */
+  .zonggang { display: flex; gap: clamp(24px, 6vw, 80px); margin: 34px 0 8px; flex-wrap: wrap; }
+  .zg { text-align: center; }
+  .zg .zi { font-size: clamp(44px, 7vw, 76px); font-weight: 700; letter-spacing: 0.18em; line-height: 1.3; }
+  .zg .zhu { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.2em; margin-top: 8px; }
+
+  /* 斗 */
+  .dou { display: flex; gap: 46px; margin: 30px 0 6px; flex-wrap: wrap; }
+  .dou figure { text-align: center; }
+  .dou figcaption { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.14em; margin-top: 10px; }
+  .dou svg { display: block; }
+
+  /* 堤的名单 */
+  .dikes { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--hair); border: 1px solid var(--hair); margin: 28px 0; }
+  .dike { background: var(--ink); padding: 20px 20px 14px; }
+  .dike h3 { font-size: 19px; letter-spacing: 0.14em; font-weight: 600; }
+  .dike h3 span { color: var(--gold); }
+  .dike p { font-size: 13.5px; color: var(--paper-faint); margin-top: 6px; line-height: 1.8; }
+  .dike svg { display: block; margin: 14px auto 4px; }
+
+  /* 四防二守 */
+  .fangs { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px; background: var(--hair); border: 1px solid var(--hair); margin: 28px 0; }
+  .fang { background: var(--ink); padding: 20px 22px 16px; }
+  .fang h3 { font-size: 17px; letter-spacing: 0.16em; font-weight: 600; }
+  .fang h3 i { font-style: normal; color: var(--gold); font-size: 12.5px; letter-spacing: 0.2em; margin-right: 10px; }
+  .fang p { font-size: 13.5px; color: var(--paper-dim); margin-top: 8px; line-height: 1.85; }
+  .fang .q { display: block; margin-top: 10px; font-size: 13.5px; color: var(--paper); border-left: 2px solid var(--gold); padding-left: 12px; line-height: 1.9; }
+  .fang cite { display: block; font-style: normal; font-size: 11.5px; color: var(--paper-faint); margin-top: 6px; letter-spacing: 0.1em; }
+
+  /* 年表 */
+  .timeline { margin: 30px 0 8px; border-left: 1px solid var(--hair); padding-left: 26px; }
+  .timeline li { list-style: none; position: relative; padding: 7px 0; font-size: 15px; color: var(--paper-dim); max-width: 40em; }
+  .timeline li::before { content: ""; position: absolute; left: -30px; top: 20px; width: 7px; height: 7px; background: var(--gold); transform: rotate(45deg); }
+  .timeline .t { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; color: var(--gold); font-size: 13px; letter-spacing: 0.08em; margin-right: 14px; }
+
+  .gongshi { text-align: center; margin: 30px 0 10px; }
+  .gongshi .q { display: block; font-size: clamp(16px, 2.2vw, 20px); line-height: 2.2; letter-spacing: 0.06em; }
+  .gongshi cite { font-style: normal; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.16em; }
+
+  footer.page { border-top: 1px solid var(--hair); padding: 36px 0 64px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page p + p { margin-top: 8px; }
+
+  @media (max-width: 640px) {
+    .dou { gap: 26px; }
+    blockquote { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="topbar">
+    <a href="mulu.html">殆知阁导读总目</a>
+    <span>史藏 地理 河渠之属</span>
+  </nav>
+
+  <!-- 全剖面：一张堤防图纸 -->
+  <figure class="sheet">
+    <span class="corner">图一 · 两河堤防全剖面</span>
+    <svg viewBox="0 0 1200 430" role="img" aria-label="黄河堤防剖面示意图：遥堤、格堤、缕堤、减水坝与河槽">
+      <rect x="0" y="330" width="1200" height="100" fill="#232220"/>
+      <line x1="0" y1="330" x2="1200" y2="330" stroke="#e8e4dc" stroke-opacity="0.35"/>
+      <!-- 河槽 -->
+      <polygon points="480,330 520,392 720,392 760,330" fill="#191917" stroke="#e8e4dc" stroke-opacity="0.35"/>
+      <polygon points="540,378 700,378 720,392 520,392" fill="#c9963f" fill-opacity="0.16" stroke="#c9963f" stroke-opacity="0.5" stroke-dasharray="3 4"/>
+      <text x="620" y="412" font-size="13" fill="#c9963f" text-anchor="middle" letter-spacing="2">河底 · 沙</text>
+      <!-- 水体 -->
+      <polygon points="497,352 743,352 720,378 540,378" fill="#e8e4dc" fill-opacity="0.10"/>
+      <line x1="497" y1="352" x2="743" y2="352" stroke="#e8e4dc" stroke-opacity="0.5" stroke-dasharray="5 5"/>
+      <text x="452" y="357" font-size="12.5" fill="#a39e93" text-anchor="end">常水位</text>
+      <line x1="488" y1="336" x2="752" y2="336" stroke="#c9963f" stroke-opacity="0.8" stroke-dasharray="2 5"/>
+      <text x="452" y="341" font-size="12.5" fill="#c9963f" text-anchor="end">伏秋暴涨</text>
+      <!-- 流速箭头 -->
+      <g stroke="#e8e4dc" stroke-opacity="0.75">
+        <line x1="530" y1="366" x2="566" y2="366"/><polygon points="566,362 574,366 566,370" fill="#e8e4dc" fill-opacity="0.75"/>
+        <line x1="592" y1="366" x2="628" y2="366"/><polygon points="628,362 636,366 628,370" fill="#e8e4dc" fill-opacity="0.75"/>
+        <line x1="654" y1="366" x2="690" y2="366"/><polygon points="690,362 698,366 690,370" fill="#e8e4dc" fill-opacity="0.75"/>
+      </g>
+      <text x="620" y="349" font-size="12.5" fill="#e8e4dc" fill-opacity="0.8" text-anchor="middle" letter-spacing="2">水合则势猛</text>
+      <!-- 缕堤 -->
+      <polygon points="462,296 502,296 495,330 469,330" fill="#262522" stroke="#e8e4dc" stroke-opacity="0.8"/>
+      <text x="482" y="284" font-size="14" fill="#e8e4dc" text-anchor="middle">缕堤</text>
+      <text x="482" y="268" font-size="12" fill="#a39e93" text-anchor="middle">近河滨 · 束水</text>
+      <!-- 格堤 -->
+      <rect x="382" y="252" width="9" height="78" fill="none" stroke="#e8e4dc" stroke-opacity="0.6" stroke-dasharray="4 4"/>
+      <text x="386" y="242" font-size="14" fill="#e8e4dc" text-anchor="middle">格堤</text>
+      <text x="386" y="226" font-size="12" fill="#a39e93" text-anchor="middle">截横流</text>
+      <!-- 遥堤 -->
+      <polygon points="150,226 242,226 264,330 128,330" fill="#c9963f" fill-opacity="0.13" stroke="#c9963f" stroke-opacity="0.9"/>
+      <text x="196" y="214" font-size="14" fill="#e8e4dc" text-anchor="middle">遥堤</text>
+      <text x="196" y="198" font-size="12" fill="#a39e93" text-anchor="middle">容蓄 · 堤自易保</text>
+      <!-- 距离标注 -->
+      <line x1="196" y1="248" x2="482" y2="248" stroke="#6e6a61" stroke-dasharray="3 4"/>
+      <line x1="196" y1="242" x2="196" y2="254" stroke="#6e6a61"/>
+      <line x1="482" y1="242" x2="482" y2="254" stroke="#6e6a61"/>
+      <text x="339" y="180" font-size="12" fill="#6e6a61" text-anchor="middle">或一里余，或二三里</text>
+      <!-- 减水坝 -->
+      <polygon points="872,296 952,296 976,330 848,330" fill="#262522" stroke="#e8e4dc" stroke-opacity="0.8"/>
+      <rect x="905" y="288" width="18" height="14" fill="#191917" stroke="#c9963f"/>
+      <path d="M 914 288 C 940 250 1000 262 1044 300" fill="none" stroke="#c9963f" stroke-dasharray="5 4"/>
+      <polygon points="1040,290 1052,304 1032,306" fill="#c9963f"/>
+      <text x="914" y="354" font-size="14" fill="#e8e4dc" text-anchor="middle">减水坝</text>
+      <text x="914" y="372" font-size="12" fill="#a39e93" text-anchor="middle">异常暴涨 · 宣泄杀怒</text>
+      <!-- 图签 -->
+      <rect x="946" y="24" width="230" height="86" fill="none" stroke="#6e6a61"/>
+      <line x1="946" y1="53" x2="1176" y2="53" stroke="#6e6a61" stroke-opacity="0.6"/>
+      <line x1="946" y1="82" x2="1176" y2="82" stroke="#6e6a61" stroke-opacity="0.6"/>
+      <text x="958" y="44" font-size="12.5" fill="#e8e4dc" letter-spacing="2">黄河 · 束水攻沙剖面</text>
+      <text x="958" y="73" font-size="11.5" fill="#6e6a61">出自 明 潘季驯 河防一览</text>
+      <text x="958" y="102" font-size="11.5" fill="#6e6a61">图号 殆导七八 · 示意无比例</text>
+    </svg>
+  </figure>
+
+  <header class="titleblock">
+    <h1>河防一览<span class="deco">。</span></h1>
+    <p class="positioning">一个人四次被派去面对同一条河，把毕生奏议、问答与守则编成一部治河宪章。</p>
+    <p class="meta mono">明 潘季驯 撰，十四卷，全帙去空白 <b>220,160</b> 字，库本为四库全书本</p>
+    <p class="meta mono">万历七年黄河大工告成，始辑〈塞断大工录〉，继而增削成编</p>
+  </header>
+
+  <section id="s1">
+    <span class="kicker">细部一 · 卷二</span>
+    <h2>问神<small>治河之书，从一场审查迷信的对话写起</small></h2>
+    <div class="prose">
+      <p>〈河议辨惑〉一卷，一万一千余字，四十五问。第一问就很怪：<b>河有神吗？</b>他答得干脆：有。神是什么？</p>
+    </div>
+    <blockquote>
+      <span class="q">神非他，即水之性也。</span>
+      <cite>卷二 河议辨惑</cite>
+    </blockquote>
+    <div class="prose">
+      <p>水性就下：西高东下，便不欲决而西；北上南下，便不欲决而北。决口不是神怒，是流缓沙垫。问的人仍不甘心，把天抬出来，他的回答很短：</p>
+    </div>
+    <blockquote>
+      <span class="q">归天归神，误事最大。</span>
+      <cite>卷二 河议辨惑</cite>
+    </blockquote>
+    <div class="prose">
+      <p>一部工程书的第一个动作，是把治河从祭祀手里拿回来，交还给工程本身。</p>
+    </div>
+  </section>
+
+  <section id="s2">
+    <span class="kicker">细部二 · 卷二</span>
+    <h2>一本沙账<small>黄河的问题，先是算术问题</small></h2>
+    <div class="prose">
+      <p>有人建议多开支河分杀水势，潘季驯先报账。他说河水最浑，用斗来量：</p>
+    </div>
+    <blockquote>
+      <span class="q">黄流最浊，以斗计之，沙居其六；若至伏秋，则水居其二矣。以二升之水载八升之沙，非极汛溜必致停滞。</span>
+      <cite>卷二 河议辨惑</cite>
+    </blockquote>
+    <div class="dou">
+      <figure>
+        <svg width="150" height="170" viewBox="0 0 150 170" aria-label="斗量示意：常时沙六水四">
+          <defs>
+            <pattern id="sha" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="7" stroke="#c9963f" stroke-opacity="0.85" stroke-width="1.6"/>
+            </pattern>
+          </defs>
+          <rect x="25" y="20" width="100" height="120" fill="none" stroke="#e8e4dc" stroke-opacity="0.7" stroke-width="2"/>
+          <rect x="27" y="68" width="96" height="70" fill="url(#sha)"/>
+          <rect x="27" y="22" width="96" height="46" fill="#e8e4dc" fill-opacity="0.10"/>
+          <line x1="27" y1="68" x2="123" y2="68" stroke="#e8e4dc" stroke-opacity="0.7"/>
+          <text x="75" y="47" font-size="14" fill="#e8e4dc" text-anchor="middle">水四</text>
+          <text x="75" y="110" font-size="14" fill="#c9963f" text-anchor="middle">沙六</text>
+        </svg>
+        <figcaption class="mono">斗一 · 常时</figcaption>
+      </figure>
+      <figure>
+        <svg width="150" height="170" viewBox="0 0 150 170" aria-label="斗量示意：伏秋水二沙八">
+          <rect x="25" y="20" width="100" height="120" fill="none" stroke="#e8e4dc" stroke-opacity="0.7" stroke-width="2"/>
+          <rect x="27" y="92" width="96" height="46" fill="url(#sha)"/>
+          <rect x="27" y="22" width="96" height="70" fill="#e8e4dc" fill-opacity="0.10"/>
+          <line x1="27" y1="92" x2="123" y2="92" stroke="#e8e4dc" stroke-opacity="0.7"/>
+          <text x="75" y="63" font-size="14" fill="#e8e4dc" text-anchor="middle">水二</text>
+          <text x="75" y="122" font-size="14" fill="#c9963f" text-anchor="middle">沙八</text>
+        </svg>
+        <figcaption class="mono">斗二 · 伏秋</figcaption>
+      </figure>
+    </div>
+    <div class="prose">
+      <p>汛期水更少、沙更多，靠的已不是水量，是流速。沙账算完，四字总纲就立起来了。</p>
+    </div>
+  </section>
+
+  <section id="s3">
+    <span class="kicker">细部三 · 卷二</span>
+    <h2>四字总纲<small>与千年以来的分流方案反着来</small></h2>
+    <div class="zonggang">
+      <div class="zg"><div class="zi">筑堤束水</div><div class="zhu">以堤为工具</div></div>
+      <div class="zg"><div class="zi deco">以水攻沙</div><div class="zhu">让河自己冲自己</div></div>
+    </div>
+    <blockquote>
+      <span class="q">水分则势缓，势缓则沙停，沙停则河饱；尺寸之水皆由沙面，止见其髙。水合则势猛，势猛则沙刷，沙刷则河深；寻丈之水皆由河底，止见其卑。</span>
+      <cite>卷二 河议辨惑</cite>
+    </blockquote>
+    <blockquote>
+      <span class="q">筑堤束水，以水攻沙；水不奔溢于両旁，则必直刷乎河底。一定之理，必然之势。</span>
+      <cite>卷二 河议辨惑</cite>
+    </blockquote>
+    <div class="prose">
+      <p>合流还是分流，是他与全部旧方案的分水岭：<span class="q">支河一开，正河必夺</span>；挑浚百万斛沙，堤不筑则沙复停塞，都不如<span class="q">以水刷沙，如汤沃雪</span>。四库提要替他找了先声：汉书里王莽时的治河者张戎已说过<span class="q">水自刮除成空</span>，古人已露其意，只是从未见诸行事，潘季驯把它变成了工程。有意思的是，全书点题的四字连写只出现一次，反复出现的是它们的展开式。</p>
+    </div>
+    <div class="aside">
+      <span class="tag">实测</span>
+      「束水攻沙」四字连用全书仅 1 见，「筑堤束水」2 见，皆在卷二；「埽」字 194 见，散在险要与修守各卷。理念是一句话，工程是另外二十二万字。
+    </div>
+  </section>
+
+  <section id="s4">
+    <span class="kicker">细部四 · 卷二与卷三</span>
+    <h2>堤的名单<small>四件工具，各司其职</small></h2>
+    <div class="dikes">
+      <div class="dike">
+        <h3>缕堤<span> · 束</span></h3>
+        <p>贴着河岸的第一道，任务是收窄河身逼水快走，因此也最受伤。</p>
+        <svg width="180" height="54" viewBox="0 0 180 54"><polygon points="30,10 66,10 60,44 36,44" fill="none" stroke="#e8e4dc" stroke-opacity="0.8"/><line x1="80" y1="27" x2="150" y2="27" stroke="#e8e4dc" stroke-opacity="0.4" stroke-dasharray="4 4"/><text x="118" y="20" font-size="10.5" fill="#6e6a61">大河</text></svg>
+        <blockquote style="margin:12px 0 0">
+          <span class="q">缕堤即近河濵，束水太急，怒涛湍溜，必至伤堤。</span>
+          <cite>卷二</cite>
+        </blockquote>
+      </div>
+      <div class="dike">
+        <h3>遥堤<span> · 容</span></h3>
+        <p>退到二三里外的第二道，放洪水出岸漫行，水浅势缓，堤自然保得住。</p>
+        <svg width="180" height="54" viewBox="0 0 180 54"><polygon points="18,6 54,6 64,44 8,44" fill="#c9963f" fill-opacity="0.16" stroke="#c9963f" stroke-opacity="0.9"/><line x1="90" y1="27" x2="170" y2="27" stroke="#e8e4dc" stroke-opacity="0.4" stroke-dasharray="4 4"/></svg>
+        <blockquote style="margin:12px 0 0">
+          <span class="q">遥堤离河颇逺，或一里余，或二三里；伏秋暴涨之时，难保水不至堤，然出岸之水必浅，既逺且浅，其势必缓，缓则堤自易保也。</span>
+          <cite>卷二</cite>
+        </blockquote>
+      </div>
+      <div class="dike">
+        <h3>格堤<span> · 截</span></h3>
+        <p>在缕遥之间横着接几道，截住顺堤漫流的洪水，替遥堤挡住直下之势。</p>
+        <svg width="180" height="54" viewBox="0 0 180 54"><line x1="30" y1="8" x2="30" y2="46" stroke="#e8e4dc" stroke-opacity="0.8" stroke-dasharray="5 4"/><line x1="30" y1="27" x2="170" y2="27" stroke="#e8e4dc" stroke-opacity="0.4" stroke-dasharray="4 4"/></svg>
+        <p>问者担心两堤相夹、积潦无由宣泄，他答：<span class="q">积水顺堤直下，仍归大河</span>。</p>
+      </div>
+      <div class="dike">
+        <h3>减水坝<span> · 泄</span></h3>
+        <p>留一个有闸门的口子，平时闭着，异常暴涨时放水出去，替大堤泄压。</p>
+        <svg width="180" height="54" viewBox="0 0 180 54"><polygon points="20,14 82,14 94,44 8,44" fill="none" stroke="#e8e4dc" stroke-opacity="0.8"/><rect x="46" y="8" width="12" height="10" fill="#191917" stroke="#c9963f"/><path d="M 52 8 C 90 0 130 14 160 36" fill="none" stroke="#c9963f" stroke-dasharray="4 4"/><polygon points="152,24 166,38 146,40" fill="#c9963f"/></svg>
+        <blockquote style="margin:12px 0 0">
+          <span class="q">异常暴涨之水，则任其宣泄，少杀河伯之怒。</span>
+          <cite>卷二</cite>
+        </blockquote>
+      </div>
+    </div>
+    <div class="aside">
+      <span class="tag">图纸外的人</span>
+      缕堤之内住着人家。潘季驯让他们汛期迁去遥堤，九月再搬回来，还要补一句<span class="q">从否固难强之</span>：听不听随他们，反正大水真来时，<span class="q">彼亦不得不以遥堤为家也</span>。图纸管河，不管不服管的人。
+    </div>
+    <div class="prose">
+      <p>在这四件工具之外，还有前人留下的超长防线：太行堤自武陟詹家店直抵砀沛，取其<span class="q">耸峙蜿蜒如山之状</span>；两岸旧堤首尾相接，<span class="q">両堤延亘一千五百余里</span>，是河南省的屏翰。</p>
+    </div>
+  </section>
+
+  <section id="s5">
+    <span class="kicker">细部五 · 卷四</span>
+    <h2>守堤的人<small>四防二守：一部堤上的值班制度</small></h2>
+    <div class="prose">
+      <p>堤筑好了，人得上堤。〈修守事宜〉把汛期拆成四防，把责任拆成二守，每一条都落到器物和动作上。</p>
+    </div>
+    <div class="fangs">
+      <div class="fang">
+        <h3><i>防之一</i>昼防</h3>
+        <p>大水刷坏哪里就补哪里，闲时取土堆在堤面，像加一层子堤备着。</p>
+        <span class="q">但有刷损者随刷随补，毋使崩卸；少暇则督令取土堆积堤上，若子堤然。</span>
+        <cite>卷四 修守事宜</cite>
+      </div>
+      <div class="fang">
+        <h3><i>防之二</i>夜防</h3>
+        <p>怕人睡死，发明了更牌接力：一更从天字铺发牌，二更牌未到日字铺，就顺着铺挨查是谁延误，实时拿究。</p>
+        <span class="q">湏置立五更牌面，分发南北两岸恊守官并管工委官，照更挨发各铺传逓；如天字铺发一更牌，至二更时前牌未到日字铺，即差人挨查系何铺稽迟。</span>
+        <cite>卷四 修守事宜</cite>
+      </div>
+      <div class="fang">
+        <h3><i>防之三</i>风防</h3>
+        <p>大风起浪撞堤，提前把龙尾小埽捆好摆在堤面，风浪一来就放下去贴着堤面随起随落。</p>
+        <span class="q">须督堤夫捆札龙尾小埽摆列堤面，如遇风浪大作，将前埽用绳桩悬系附堤水面，纵有风浪，随起随落，足以护卫。</span>
+        <cite>卷四 修守事宜</cite>
+      </div>
+      <div class="fang">
+        <h3><i>防之四</i>雨防</h3>
+        <p>骤雨最易空堤：人一跑去避雨，堤面刷坏了没人看见。于是雨具成了公家装备。</p>
+        <span class="q">须督各铺夫役毎名各置斗笠蓑衣，遇有大雨，各夫穿带堤面摆立，时时巡视。</span>
+        <cite>卷四 修守事宜</cite>
+      </div>
+      <div class="fang">
+        <h3><i>守之一</i>官守</h3>
+        <p>汛期加派协守官分岸督查，每铺置灯笼一个，夜里人在铺里栖止，专等传牌。</p>
+        <span class="q">毎堤三里原设铺一座，毎铺夫三十名，计毎夫分守堤一十八丈。</span>
+        <cite>卷四 修守事宜</cite>
+      </div>
+      <div class="fang">
+        <h3><i>守之二</i>民守</h3>
+        <p>官夫三十名仍怕调用无常，堤边村庄每铺再添乡夫十名，水发上堤，与铺夫同守。</p>
+        <p>一张汛期值班表：堤上灯火、更牌、蓑衣斗笠，和一座不断人行的长堤。</p>
+      </div>
+    </div>
+    <figure style="margin:30px 0 0">
+      <svg width="640" height="86" viewBox="0 0 640 86" style="max-width:100%" aria-label="五更牌面接力示意">
+        <g font-size="12.5" fill="#a39e93" text-anchor="middle">
+          <text x="40" y="20">天字铺</text><text x="180" y="20">铺二</text><text x="320" y="20">铺三</text>
+          <text x="460" y="20">铺四</text><text x="600" y="20">日字铺</text>
+        </g>
+        <g fill="none" stroke="#e8e4dc" stroke-opacity="0.8">
+          <rect x="28" y="32" width="24" height="34" rx="3"/><rect x="168" y="32" width="24" height="34" rx="3"/>
+          <rect x="308" y="32" width="24" height="34" rx="3"/><rect x="448" y="32" width="24" height="34" rx="3"/>
+          <rect x="588" y="32" width="24" height="34" rx="3"/>
+        </g>
+        <g fill="#c9963f">
+          <circle cx="40" cy="44" r="4"/><circle cx="180" cy="44" r="4"/><circle cx="320" cy="44" r="4"/>
+          <circle cx="460" cy="44" r="4"/><circle cx="600" cy="44" r="4"/>
+        </g>
+        <g stroke="#c9963f" stroke-opacity="0.85">
+          <line x1="56" y1="49" x2="158" y2="49"/><polygon points="158,45 166,49 158,53" fill="#c9963f"/>
+          <line x1="196" y1="49" x2="298" y2="49"/><polygon points="298,45 306,49 298,53" fill="#c9963f"/>
+          <line x1="336" y1="49" x2="438" y2="49"/><polygon points="438,45 446,49 438,53" fill="#c9963f"/>
+          <line x1="476" y1="49" x2="578" y2="49"/><polygon points="578,45 586,49 578,53" fill="#c9963f"/>
+        </g>
+        <text x="320" y="82" font-size="11.5" fill="#6e6a61" text-anchor="middle">一更自天字铺发牌，逐铺传逓；二更牌未到日字铺，即挨查何铺稽迟</text>
+      </svg>
+    </figure>
+    <div class="aside">
+      <span class="tag">复算</span>
+      铺制的账是闭合的：一里一百八十丈，三里得五百四十丈；五百四十丈分给三十人，恰是<span class="q">毎夫分守堤一十八丈</span>。一纸制度，能对得上算术。
+      <svg width="560" height="56" viewBox="0 0 560 56" style="margin-top:12px" aria-label="三里一铺平面示意：铺与铺相距三里，每夫分守十八丈">
+        <line x1="10" y1="28" x2="550" y2="28" stroke="#e8e4dc" stroke-opacity="0.5"/>
+        <g fill="#c9963f">
+          <rect x="18" y="20" width="16" height="16"/><rect x="188" y="20" width="16" height="16"/>
+          <rect x="358" y="20" width="16" height="16"/><rect x="528" y="20" width="16" height="16"/>
+        </g>
+        <g font-size="11.5" fill="#a39e93" text-anchor="middle">
+          <text x="26" y="50">铺一</text><text x="196" y="50">铺二</text><text x="366" y="50">铺三</text><text x="536" y="50">铺四</text>
+          <text x="107" y="16">三里</text><text x="277" y="16">三里</text><text x="447" y="16">三里</text>
+          <text x="107" y="40" fill="#e8e4dc">三十人各十八丈</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <section id="s6">
+    <span class="kicker">细部六 · 卷四</span>
+    <h2>定额与验收<small>治河的钱，从土方算起</small></h2>
+    <div class="prose">
+      <p>〈修守事宜〉也是一本定额手册。筑堤取老土，每高五寸夯杵三二遍；土方论方计价，验收抽勘。堤式贵坡，坡到马能上下，就叫走马堤。验堤不用目测：</p>
+    </div>
+    <blockquote>
+      <span class="q">验堤之法，用铁锥筒探之，或间一掘试。堤式贵坡，切忌陡峻；如根六丈顶止须二丈，俾马可上下，故谓之走马堤。</span>
+      <cite>卷四 修守事宜</cite>
+    </blockquote>
+    <blockquote>
+      <span class="q">毎方广一丈高一尺为一方，计四工，土近者毎工银三分。</span>
+      <cite>卷四 修守事宜</cite>
+    </blockquote>
+    <figure style="margin:30px 0 0">
+      <svg width="440" height="150" viewBox="0 0 440 150" style="max-width:100%" aria-label="走马堤断面示意：根六丈顶二丈，坡缓可容马上下">
+        <line x1="10" y1="118" x2="430" y2="118" stroke="#e8e4dc" stroke-opacity="0.35"/>
+        <polygon points="150,44 230,44 290,118 90,118" fill="#c9963f" fill-opacity="0.13" stroke="#c9963f" stroke-opacity="0.9"/>
+        <line x1="240" y1="20" x2="240" y2="104" stroke="#e8e4dc" stroke-opacity="0.8"/>
+        <path d="M 240 104 L 235 96 M 240 104 L 245 96" stroke="#e8e4dc" stroke-opacity="0.8" fill="none"/>
+        <g stroke="#e8e4dc" stroke-opacity="0.55">
+          <line x1="236" y1="34" x2="244" y2="34"/><line x1="236" y1="48" x2="244" y2="48"/>
+          <line x1="236" y1="62" x2="244" y2="62"/><line x1="236" y1="76" x2="244" y2="76"/><line x1="236" y1="90" x2="244" y2="90"/>
+        </g>
+        <text x="254" y="30" font-size="12" fill="#a39e93">铁锥筒探之</text>
+        <path d="M 168 62 L 128 104" fill="none" stroke="#e8e4dc" stroke-opacity="0.8" stroke-dasharray="5 4"/>
+        <polygon points="122,100 124,112 134,106" fill="#e8e4dc" fill-opacity="0.8"/>
+        <text x="128" y="60" font-size="12" fill="#a39e93">马可上下</text>
+        <g font-size="12" fill="#c9963f" text-anchor="middle">
+          <text x="190" y="34">顶二丈</text>
+          <text x="190" y="136">根六丈</text>
+          <text x="330" y="70">故谓之走马堤</text>
+        </g>
+        <line x1="150" y1="40" x2="230" y2="40" stroke="#6e6a61"/>
+        <line x1="90" y1="126" x2="290" y2="126" stroke="#6e6a61"/>
+      </svg>
+    </figure>
+    <div class="prose">
+      <p>尺寸、工序、单价、抽验，四个数一钉，工账就赖不掉。这与两百年后各县河工奏销册里的伎俩，是同一组对手。</p>
+    </div>
+  </section>
+
+  <section id="s7">
+    <span class="kicker">细部七 · 卷首与卷六至十四</span>
+    <h2>一部宪章<small>治河、治漕、治淮，在他手里是同一件事</small></h2>
+    <div class="gongshi">
+      <span class="q">通漕于河，则治河即以治漕；会河于淮，则治淮即以治河；合河淮而同入于海，则治河淮即以治海。</span>
+      <p><cite>卷首 提要</cite></p>
+    </div>
+    <ul class="timeline">
+      <li><span class="t">嘉靖四十四年</span>十一月十一日敕：初奉治河之命，总理河道，敕书里连<span class="q">权豪势要之家侵占阻截违例盗决河防</span>的拿问权都交给了他。</li>
+      <li><span class="t">隆庆四年</span>再奉敕，敕书末尾照例是那句<span class="q">责有所归，尔其慎之</span>。</li>
+      <li><span class="t">万历七年</span>大工告成，彚集前后章奏及诸人赠言成〈塞断大工录〉；<span class="q">既而以其犹未赅备，复加増削</span>，辑为是编。</li>
+      <li><span class="t">万历十七年</span>计筑完堤坝共长四万八千一百二十二丈，以明营造尺折算，约一百五十四公里。</li>
+      <li><span class="t">生平</span>凡四奉治河之命，任事二十七年。卷六以后九卷，收关系河务的前人文章与诸臣奏议八十余篇，是全书的档案柜。</li>
+    </ul>
+    <blockquote>
+      <span class="q">故生平规画，总以束水攻沙为第一义。</span>
+      <cite>卷首 提要</cite>
+    </blockquote>
+    <blockquote>
+      <span class="q">后来虽时有变通，而言治河者终以是书为凖的。</span>
+      <cite>卷首 提要</cite>
+    </blockquote>
+    <div class="prose">
+      <p>清人阎若璩住在山阳，河渠利病得之目睹，他的评价被四库提要整段引来：万历六年的大工近比陈瑄、远比贾鲁，其后历次决溢都不算成规之失：</p>
+    </div>
+    <blockquote>
+      <span class="q">大抵司空成规具在，纵有天灾，纵有小通变，治法不出其范围之外，故曰河防一览为平成之书。</span>
+      <cite>卷首 提要 引阎若璩〈潜邱札记〉</cite>
+    </blockquote>
+    <div class="prose">
+      <p>书名里那两个字倒是谦逊的：一览。河防千头万绪，他要给后来者看的，只是这一张剖面。</p>
+    </div>
+  </section>
+
+  <footer class="page">
+    <div class="wrap" style="padding:0">
+      <p>文本来源：殆知阁简体库（github.com/robertsong2000/daizhigev20）史藏地理类河防一览。库本为四库全书本，卷首附提要。</p>
+      <p>本页全部引文经 verify_hefang.py 与库内文件逐字核验（去标点、存异体），统计数字均实测自库本。</p>
+      <p>时代局限：本书为明代漕运、祖陵与堤防而作，水情、河势与河工制度四百年来已面目全非；书中方略与数字是那个时代的答卷，不是今天的施工手册。</p>
+      <p><a href="mulu.html">返回总目</a></p>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
