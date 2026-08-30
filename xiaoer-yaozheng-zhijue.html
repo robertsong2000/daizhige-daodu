@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小儿药证直诀 · 殆知阁导读之七十八</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --b: #5f9270; --b-soft: rgba(95,146,112,0.16); --b-line: rgba(95,146,112,0.45);
+    --hair: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 26px; }
+
+  /* 顶栏 */
+  .top { padding: 22px 0 0; }
+  .top .bar { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--faint); letter-spacing: 0.18em; }
+  .top .bar b { color: var(--b); font-weight: 400; }
+
+  /* 开场：一张抄方纸 */
+  .stage { min-height: 78dvh; display: grid; place-items: center; padding: 40px 0 56px; }
+  .sheet {
+    background: var(--paper); color: #23221f;
+    width: min(560px, 88vw); min-height: 420px;
+    padding: 34px 30px 30px; position: relative;
+    box-shadow: 0 22px 60px rgba(0,0,0,0.5);
+  }
+  .sheet::before { content: ""; position: absolute; left: 0; right: 0; top: 10px; height: 1px; background: var(--b); opacity: 0.55; }
+  .sheet::after { content: ""; position: absolute; left: 0; right: 0; top: 12px; height: 1px; background: var(--b); opacity: 0.25; }
+  .sheet .hole { position: absolute; top: 24px; left: 26px; width: 9px; height: 9px; border-radius: 50%; background: var(--ink); opacity: 0.18; }
+  .sheet .vtxt {
+    writing-mode: vertical-rl; margin: 0 auto; height: 400px;
+    font-size: clamp(26px, 4.6vw, 36px); font-weight: 700; letter-spacing: 0.3em; line-height: 1.9;
+  }
+  .sheet .vtxt .g { color: var(--b); }
+  .sheet .sign {
+    position: absolute; left: 86px; bottom: 22px; writing-mode: vertical-rl;
+    font-size: 13px; color: #6f6a5f; letter-spacing: 0.24em; height: 150px;
+  }
+  .sheet .stamp {
+    position: absolute; left: 24px; bottom: 20px; width: 44px; height: 44px; display: grid; place-items: center;
+    background: var(--b); color: #f2efe8; font-size: 22px; font-weight: 700;
+  }
+  .stage .cap { text-align: center; color: var(--faint); font-size: 13px; letter-spacing: 0.3em; margin-top: 34px; }
+
+  /* 正文节 */
+  .prose { font-size: 16.5px; color: var(--paper); }
+  .prose p { margin: 0 0 20px; }
+  .prose .lead { color: var(--dim); }
+
+  .jie { display: flex; gap: 22px; align-items: flex-start; margin: 72px 0 26px; }
+  .jie .liang { flex: 0 0 auto; display: flex; gap: 12px; }
+  .jie .ruler { width: 14px; height: 92px; background: repeating-linear-gradient(to bottom, var(--b-line) 0 1px, transparent 1px 12px); border-left: 1px solid var(--b-line); }
+  .jie .dw { writing-mode: vertical-rl; font-size: 24px; font-weight: 700; letter-spacing: 0.3em; color: var(--b); }
+  .jie h2 { font-size: 25px; font-weight: 700; letter-spacing: 0.1em; margin-top: 2px; }
+  .jie .sub { font-size: 13.5px; color: var(--faint); letter-spacing: 0.16em; margin-top: 6px; }
+
+  /* 引文 */
+  .q {
+    display: block; margin: 22px 0; padding: 14px 20px;
+    background: var(--ink-2); border-left: 3px solid var(--b);
+    color: var(--paper); font-size: 16px; line-height: 2.0;
+  }
+  .q i { font-style: normal; color: var(--faint); font-size: 13px; display: block; margin-top: 6px; letter-spacing: 0.1em; }
+  .q em { font-style: normal; color: var(--b); }
+  .plain { color: var(--dim); font-size: 14.5px; margin-top: -8px; margin-bottom: 20px; }
+  .note { font-size: 13.5px; color: var(--faint); border-top: 1px dashed var(--hair); padding-top: 10px; margin-top: 26px; }
+
+  /* 五难 */
+  .nans { margin: 26px 0 6px; }
+  .nans .row { display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--hair); align-items: baseline; }
+  .nans .row:last-child { border-bottom: 1px solid var(--hair); }
+  .nans .tag { color: var(--b); font-size: 15px; letter-spacing: 0.14em; }
+  .nans .say { font-size: 15.5px; }
+  .nans .say small { display: block; color: var(--dim); font-size: 13.5px; margin-top: 2px; }
+
+  /* 变蒸刻度 */
+  .bian { margin: 30px 0 8px; padding: 20px 18px 14px; background: var(--ink-2); border: 1px solid var(--hair); }
+  .bian .bt { font-size: 13px; color: var(--faint); letter-spacing: 0.2em; margin-bottom: 16px; }
+  .bian .track { display: grid; grid-template-columns: repeat(10, 1fr); }
+  .bian .t { position: relative; border-left: 1px solid var(--b-line); height: 58px; }
+  .bian .t:last-child { border-right: 1px solid var(--b-line); }
+  .bian .t b { position: absolute; top: -4px; left: 6px; font-size: 12.5px; font-weight: 400; color: var(--b); }
+  .bian .t i { position: absolute; bottom: -2px; left: 6px; font-style: normal; font-size: 11px; color: var(--faint); }
+  .bian .axis { display: flex; justify-content: space-between; font-size: 12px; color: var(--faint); margin-top: 8px; letter-spacing: 0.08em; }
+
+  /* 五脏章 */
+  .zhang { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 26px 0 10px; }
+  .zhang .z { border: 1px solid var(--b-line); padding: 14px 6px 10px; text-align: center; }
+  .zhang .z b { display: block; font-size: 26px; font-weight: 700; color: var(--b); }
+  .zhang .z span { display: block; font-size: 13px; color: var(--dim); margin-top: 6px; }
+  .zhang .z small { display: block; font-size: 11.5px; color: var(--faint); margin-top: 2px; }
+
+  /* 医案卡 */
+  .an { border: 1px solid var(--hair); background: var(--ink-2); padding: 24px 26px 12px; margin: 26px 0; }
+  .an .ah { display: flex; align-items: baseline; gap: 14px; margin-bottom: 4px; }
+  .an .no { color: var(--b); font-size: 14px; letter-spacing: 0.2em; }
+  .an h3 { font-size: 18.5px; font-weight: 700; letter-spacing: 0.06em; }
+  .an .who { font-size: 13px; color: var(--faint); }
+
+  /* 断裂卡 */
+  .break { display: grid; grid-template-columns: 1fr 44px 1fr; align-items: stretch; margin: 28px 0; border: 1px solid var(--hair); }
+  .break .half { padding: 20px 18px; font-size: 14.5px; }
+  .break .half .lab { font-size: 12px; letter-spacing: 0.22em; margin-bottom: 10px; }
+  .break .l { background: var(--ink-2); }
+  .break .r { background: rgba(95,146,112,0.07); }
+  .break .crack { background: var(--ink); position: relative; }
+  .break .crack::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, var(--faint) 0 7px, transparent 7px 16px); width: 1px; left: 50%; opacity: 0.6; }
+
+  /* 六味 */
+  .liuwei { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 26px 0 8px; }
+  .liuwei .w { border-top: 2px solid var(--b); background: var(--ink-2); padding: 14px 6px 10px; text-align: center; }
+  .liuwei .w b { display: block; font-size: 16.5px; font-weight: 700; }
+  .liuwei .w span { display: block; font-size: 13px; color: var(--b); margin-top: 5px; }
+  .liuwei .w small { display: block; font-size: 11px; color: var(--faint); margin-top: 3px; }
+  .minus { display: flex; gap: 10px; align-items: center; margin: 18px 0; font-size: 14px; color: var(--dim); }
+  .minus .cut { border: 1px dashed rgba(192,69,60,0.6); color: #c98079; padding: 8px 16px; font-size: 15px; }
+  .minus .arr { color: var(--b); font-size: 18px; }
+
+  /* 尾声 */
+  .flow { margin: 30px 0 8px; border-left: 1px solid var(--b-line); }
+  .flow .step { position: relative; padding: 0 0 26px 26px; }
+  .flow .step::before { content: ""; position: absolute; left: -5px; top: 9px; width: 9px; height: 9px; background: var(--ink); border: 2px solid var(--b); border-radius: 50%; }
+  .flow .step b { display: block; font-size: 15.5px; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .flow .step p { font-size: 14.5px; color: var(--dim); }
+
+  footer.page { border-top: 1px solid var(--hair); padding: 30px 0 54px; margin-top: 70px; color: var(--faint); font-size: 13.5px; }
+  footer.page p { margin: 0 0 6px; }
+  footer.page a { color: var(--dim); }
+
+  @media (max-width: 640px) {
+    .zhang { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .zhang .z b { font-size: 20px; }
+    .liuwei { grid-template-columns: repeat(3, 1fr); }
+    .bian .t i { display: none; }
+    .break { grid-template-columns: 1fr; }
+    .break .crack { height: 30px; }
+    .break .crack::before { width: 1px; height: 100%; left: 50%; background: repeating-linear-gradient(to bottom, var(--faint) 0 7px, transparent 7px 16px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap bar">
+    <span>殆知阁导读 · 之七十八</span>
+    <b>医方卷</b>
+  </div>
+</div>
+
+<header class="stage">
+  <div>
+    <div class="sheet">
+      <div class="hole"></div>
+      <div class="vtxt">医之为艺诚难矣<br>而<span class="g">治小儿</span>为尤难</div>
+      <div class="stamp">钱</div>
+      <div class="sign">大梁 阎季忠 序</div>
+    </div>
+    <div class="cap">小儿药证直诀 · 北宋钱乙</div>
+  </div>
+</header>
+
+<main class="wrap prose">
+
+  <p class="lead">公元十二世纪初，一个叫阎季忠的官员在汝海做官。他五六岁时病危，是一个民间医生把他救回来的。这个医生姓钱，名乙，字仲阳，郓州人，也就是今天山东东平一带。阎季忠后来到处搜罗他的医方，攒成一部三卷的小书，宣和元年（1119）刻行。全书在殆知阁库里去空白三万一千余字，是中医儿科的立派之作。四库馆臣后来给过一个断语：幼科冠绝一代。</p>
+  <p class="lead">你要是在药店的柜台里见过六味地黄丸：那粒黑药丸的配方，第一次被人用减法改出来，就在这本书的卷下。</p>
+
+  <div class="jie">
+    <div class="liang"><div class="ruler"></div><div class="dw">一钱</div></div>
+    <div><h2>五难</h2><div class="sub">原序 · 给小孩看病为什么难</div></div>
+  </div>
+
+  <p>给大人看病有一整套办法，给新生儿呢？阎季忠在序里说，六岁以下的孩子，<span class="q">自六岁以下，黄帝不载其说</span>。他从第二难数起。库本恰好在这里脱了第一难一整段，通行本里才补得齐，这个漏洞本页照实记账。</p>
+
+  <div class="nans">
+    <div class="row">
+      <span class="tag">难三</span>
+      <span class="say">脉摸不出，只能靠看。<span class="q">脉既难凭，必资外证。而其骨气未成，形声未正，悲啼喜笑，变态不常，其难三也。</span><small>骨头没长成，声音体态没定型，哭笑无常。</small></span>
+    </div>
+    <div class="row">
+      <span class="tag">难四</span>
+      <span class="say">问诊失灵。<span class="q">问而知之，医之工也。而小儿多未能言，言亦未足取信，其难四也。</span><small>孩子不会说哪里疼，说了也没法采信。</small></span>
+    </div>
+    <div class="row">
+      <span class="tag">难五</span>
+      <span class="say">脏腑太软，药又太猛。<span class="q">脏腑柔弱，易虚易实，易寒易热，又所用多犀、珠、龙、麝，医苟难辨，何以已疾？其难五也。</span><small>虚证实证说变就变，用的偏偏又是犀角珍珠龙脑麝香这类贵重猛药。</small></span>
+    </div>
+  </div>
+
+  <p class="q">目见庸医妄施方药而杀之者，十常四五，良可哀也！<i>阎季忠写在序里，十个孩子里被他亲眼见到被治死的，常到四五个。</i></p>
+
+  <p>易虚易实四个字，是全书的轴心。下药轻一分不济事，重一分出人命。钱乙一生医术，都在这一杆秤上。</p>
+
+  <div class="jie">
+    <div class="liang"><div class="ruler"></div><div class="dw">二钱</div></div>
+    <div><h2>寻父</h2><div class="sub">卷首 · 钱仲阳传</div></div>
+  </div>
+
+  <p>钱乙的身世记在卷首《钱仲阳传》，是大学者刘跂写的，也是本卷最完整的一篇故事。三岁上，这个家散了。</p>
+
+  <p class="q">父颢，善针医，然嗜酒喜游。一旦匿姓名，东游海上，不复返。乙时三岁。母前亡，父同产姑，嫁医吕氏，哀其孤，收养为子。<i>父亲钱颢是针医，嗜酒，某天改名换姓东游出海，再没回来。母亲早亡，姑父姓吕，也是医生，收养了这个孤儿。</i></p>
+
+  <p>他在吕家长大，学医。养父临终才告诉他的家世。他哭着去找父亲。</p>
+
+  <p class="q">乙号泣，请返迹父。凡五六返，乃得所在。又积数岁，乃迎以归。是时乙年三十余。乡人惊叹，感慨为泣下，多赋诗咏其事。<i>跑了五六趟才打听到下落，又过几年才把父亲接回来，那年他三十多岁。乡里人写诗夸这件事。</i></p>
+
+  <p>七年之后父亲寿终，他办了丧事。养父吕家无后，他也一样替对方收葬、嫁女、年年祭祀。然后靠一部唐代小儿书《颅囟方》在山东出了名。</p>
+
+  <p class="q">乙始以《颅囟方》着山东。元丰中，长公主女有疾，召使视之，有功，奏授翰林医学，赐绯。<i>元丰年间他给长公主的女儿看病，得了官身。</i></p>
+
+  <div class="break">
+    <div class="half l">
+      <div class="lab" style="color: var(--dim)">库本 · 钱仲阳传</div>
+      传文讲到这里只剩三个字：明年，皇。按通行本，接下去是长公主入朝举荐，皇子仪国公抽搐，国医束手，钱乙进黄土汤而愈，神宗擢他为太医丞，赐紫衣金鱼。
+    </div>
+    <div class="crack"></div>
+    <div class="half r">
+      <div class="lab" style="color: var(--b)">混入的纸 · 周学海跋</div>
+      <p class="q" style="margin: 0 0 8px; font-size: 14px;">夫当诸臣搜采之日，天下藏书之家，莫不争献秘籍。卒未得是书真本，而今乃复见于世，岂非古人精气有不可磨灭者欤？</p>
+      这是光绪年间刻书人周学海的跋语，不知何故接在了传文中断处。
+    </div>
+  </div>
+
+  <p class="note">库本此处传文中断、跋语混入，黄土汤一段恰好脱落。本页据通行本刘跂传叙述，不引库外原文入引文区。</p>
+
+  <div class="jie">
+    <div class="liang"><div class="ruler"></div><div class="dw">三钱</div></div>
+    <div><h2>望诊</h2><div class="sub">卷上 · 脉证治法</div></div>
+  </div>
+
+  <p>脉摸不得，话问不得，钱乙的诊断只剩一条路：看。卷上是他的观察手册，几十个条目全在教人看什么。</p>
+
+  <div class="zhang">
+    <div class="z"><b>惊</b><span>心主惊</span><small>叫哭发热</small></div>
+    <div class="z"><b>风</b><span>肝主风</span><small>目直项急</small></div>
+    <div class="z"><b>困</b><span>脾主困</span><small>困睡泄泻</small></div>
+    <div class="z"><b>喘</b><span>肺主喘</span><small>闷乱喘促</small></div>
+    <div class="z"><b>虚</b><span>肾主虚</span><small>无实也</small></div>
+  </div>
+
+  <p>五枚章各管一摊，而脸本身就是一张记录纸。</p>
+
+  <p class="q">左腮为肝，右腮为肺，额上为心，鼻为脾，颏为肾。赤者，热也，随证治之。<i>哪里发红，火就在哪一脏。</i></p>
+
+  <p>卷上还立了一条奇怪的时间表。钱乙相信婴儿每三十二天发一次小热，叫变蒸，是长身体的节气，十变凑成三百二十日，长出牙齿，学会说话。</p>
+
+  <p class="q">故以生之日后，三十二日一变。</p>
+
+  <div class="bian">
+    <div class="bt">变蒸十变 · 三百二十日</div>
+    <div class="track">
+      <div class="t"><b>一变</b><i>32日</i></div><div class="t"><b>二变</b><i>64</i></div><div class="t"><b>三变</b><i>96</i></div><div class="t"><b>四变</b><i>128</i></div><div class="t"><b>五变</b><i>160</i></div><div class="t"><b>六变</b><i>192</i></div><div class="t"><b>七变</b><i>224</i></div><div class="t"><b>八变</b><i>256</i></div><div class="t"><b>九变</b><i>288</i></div><div class="t"><b>十变</b><i>320</i></div>
+    </div>
+    <div class="axis"><span>生之日</span><span>每格三十二日</span><span>一蒸毕</span></div>
+  </div>
+
+  <p class="q">脱齿者，如花之易苗。<i>换牙这件事，他说得像换苗的花。</i></p>
+
+  <p>抽风的两种，急惊与慢惊，一热一冷，治法相反。钱乙在这里立了全书最有名的一条界碑。</p>
+
+  <p class="q">凡急慢惊，阴阳异证，切宜辨而治之，急惊合凉泻，慢惊合温补。世间俗方，多不分别，误小儿甚多。<i>急惊用凉药泻，慢惊用温药补。世上通行的方子不分这个，耽误的孩子太多。</i></p>
+
+  <p>另一种病叫疳，大致是长期营养不良一类的消耗症，面黄肌瘦，肚子大。病因他讲得不留情面，板子打在同行身上。</p>
+
+  <p class="q">疳皆脾胃病，亡津液之所作也。</p>
+  <p class="q">且小儿病疳，皆愚医之所坏病。</p>
+
+  <p class="q">故小儿之脏腑柔弱，不可痛击，大下必亡津液而成疳。<i>孩子的脏腑经不起猛泻，泻狠了津液耗干，反成了疳。把小孩当小号大人治，正是庸医的路数。</i></p>
+
+  <p>卷上还有一张按叫声分类的抽风分类表：犬痫属肝、羊痫属心、牛痫属脾、鸡痫属肺、猪痫属肾。今天听是玄学，当时是把抽搐的姿态、叫声、眼神当成五脏的报文在读。</p>
+
+  <div class="jie">
+    <div class="liang"><div class="ruler"></div><div class="dw">四钱</div></div>
+    <div><h2>医案</h2><div class="sub">卷中 · 记尝所治病二十三证</div></div>
+  </div>
+
+  <p>卷中是二十三份病历，库本里钱曰二字二十八见。大部分案子是同一个结构：前面的医生下错了药，钱乙当众拆解。挑两案。</p>
+
+  <div class="an">
+    <div class="ah"><span class="no">案一</span><h3>东都药铺杜氏之子</h3><span class="who">五岁 · 咳嗽半年</span></div>
+    <p>从十一月咳到第二年三月，几个医生轮番用泻药泻肺，泻到肺虚。春三月钱乙接手，泻肝、补肺来回三次，病不退，孩子嘴唇白得像练。他当着家属下了死亡判断。</p>
+    <p class="q">钱曰：此病必死，不可治也。</p>
+    <p class="q">今三泻肝而肝病不退，三补肺而肺证犹虚，此不久生，故言死也。<i>三次泻肝肝病不退，三次补肺肺还是虚，活不久了。</i></p>
+    <p class="q">果大喘而死。</p>
+    <p>敢当面说治不了，记录的人也敢照实收进书里。医案史上，这样的坦白不算多。</p>
+  </div>
+
+  <div class="an">
+    <div class="ah"><span class="no">案二</span><h3>朱监簿之子</h3><span class="who">五岁 · 夜热晨退</span></div>
+    <p>夜里发热，天亮退烧。众医或作伤寒、或用凉药，全不愈。钱乙开一味白术散，剂量大得吓人。</p>
+    <p class="q">其白术散末煎一两，汁三升，使任其意取足服。<i>三升药汁，让孩子想喝多少喝多少。</i></p>
+    <p class="q">朱生曰：饮多不作泻否？钱曰：无生水不能作泻，纵荡不足怪也，但不可下耳。<i>家长急了：喝这么多不拉肚子吗。他说药里没有生水，泻一点不要紧，只是绝不可用泻药。</i></p>
+    <p class="q">至晚服尽。钱看之曰：更可服三升。</p>
+    <p class="q">钱曰：止渴治痰，退热清里，皆此药也。</p>
+    <p>一天六升白术散，热退病愈。同卷另一案里，他把分寸说成了口诀。</p>
+    <p class="q">钱曰：凡吐泻，五月内，九分下而一分补；八月内，十分补而无一分下。</p>
+    <p>夏秋之间，补泻的比例精确到月份、精确到十分之一。这一杆秤，他称了一辈子。</p>
+  </div>
+
+  <div class="jie">
+    <div class="liang"><div class="ruler"></div><div class="dw">五钱</div></div>
+    <div><h2>六味</h2><div class="sub">卷下诸方 · 地黄丸</div></div>
+  </div>
+
+  <p>卷下从大青膏开到蚵皮丸，一百多首方子，是整本医案背后的弹药库。其中一首，今天还躺在药店的柜台里。</p>
+
+  <p class="q">治肾怯失音，囟开不合，神不足，目中白睛多，面色□白等方。<i>治孩子肾气不足：说话晚、囟门不闭合、眼神发呆。方名那一行里，库本缺了一个字，通行本作晄。</i></p>
+
+  <div class="liuwei">
+    <div class="w"><b>熟地黄</b><span>八钱</span><small>君</small></div>
+    <div class="w"><b>山萸肉</b><span>四钱</span><small></small></div>
+    <div class="w"><b>干山药</b><span>四钱</span><small></small></div>
+    <div class="w"><b>泽泻</b><span>三钱</span><small></small></div>
+    <div class="w"><b>牡丹皮</b><span>三钱</span><small></small></div>
+    <div class="w"><b>白茯苓</b><span>三钱</span><small>去皮</small></div>
+  </div>
+
+  <p class="q">熟地黄（八钱）　山萸肉　干山药（各四钱）　泽泻　牡丹皮　白茯苓（去皮各三钱）</p>
+  <p class="q">上为末，炼蜜丸，如梧子大，空心，温水化下三丸。</p>
+
+  <div class="minus">
+    <span class="cut">肾气丸 · 八味</span>
+    <span class="arr">钱乙减去桂枝、附子两味热药</span>
+    <span style="color: var(--b)">六味地黄丸 · 六味</span>
+  </div>
+
+  <p>汉代医书《金匮要略》里的肾气丸本是八味，配比八比四比四比三比三比三，外加桂枝附子两味热药。钱乙把那两味去掉，专给孩子用：孩子是纯阳之体，受不得大热。减法一做，六味地黄丸从此自立门户。</p>
+
+  <p>这张小方后来长成一个家族：加知母黄柏是知柏地黄丸，加枸杞菊花是杞菊地黄丸，加麦冬五味子是麦味地黄丸，单加五味子是都气丸。明清的滋补一派奉他为源头。儿科的一张方子，成了后世药柜的祖方。</p>
+
+  <p>顺带一说，配伍里写的钱，是药秤的单位，一钱约合今天三克上下。这位钱乙的钱，和他药方里的钱，在这本书里恰好是同一个字。本页的节号，就是从他的药秤上借来的。</p>
+
+  <div class="jie">
+    <div class="liang"><div class="ruler"></div><div class="dw">尾声</div></div>
+    <div><h2>书怎么活下来的</h2><div class="sub">原序 · 光绪重刻</div></div>
+  </div>
+
+  <p>钱乙不肯轻易传书。阎季忠手里最初只有十几个方子，剩下的全靠几十年里一点一点捡。</p>
+
+  <p class="q">余五六岁时，病惊疳癖瘕，屡至危殆，皆仲阳拯之良愈。是时仲阳年尚少，不肯轻传其书。余家所传者，才十余方耳！</p>
+  <p class="q">大观初，余筮仕汝海，而仲阳老矣。于亲旧间，始得说证数十条。后六年，又得杂方。<i>大观初年他到汝海做官，钱乙已老。从亲戚朋友间搜到证治几十条，六年后又得杂方一批。</i></p>
+
+  <p>三路残稿拼成一书，他给自己定的编辑规矩只有十六个字。</p>
+
+  <p class="q">其先后则次之，重复则削之，讹谬则正之，俚语则易之。上卷脉证治法，中卷记尝所治病，下卷诸方，而书以全。</p>
+
+  <p class="q">使幼者免横夭之苦，老者无哭子之悲，此余之志也。<i>让小孩免于夭折，让老人不必哭自己的孩子。序到末尾，他其实说明了为什么非刻这本书不可。</i></p>
+
+  <div class="flow">
+    <div class="step"><b>宣和元年 · 1119</b><p>阎氏刻本行世。原刻作者署名作孝忠，书名作真诀。</p></div>
+    <div class="step"><b>宋史 · 方技传</b><p>钱乙入正史方技传，刘跂传附于书首，是后世知其生平的几乎全部来路。</p></div>
+    <div class="step"><b>光绪十七年 · 1891</b><p>江阴周学海重刻，校语二十九处。库本传文的中断与跋语的混入，正是这一路翻刻留下的伤。</p></div>
+    <div class="step"><b>今天</b><p>六味地黄丸仍在药柜里。钱乙减出来的那六味，九百年没有变过配比。</p></div>
+  </div>
+
+  <p class="q">是书原刻阎名作「孝忠」，「真诀」作「直诀」，今未敢易也。<i>周学海把两个名字都留在了原样，只在小注里说破。今天通行的直诀二字，就是从这一脉定下来的。</i></p>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库 · 医藏（github.com/robertsong2000/daizhigev20）。去空白 31,062 字。</p>
+    <p>本页引文已与库内文件逐字核验（去标点、异体归一比对），库本脱文与缺字处均已标注。</p>
+    <p>本书是九百年前的医学文献，五脏配属、变蒸、五痫诸说均为时代产物，请勿作为现代医疗依据。</p>
+  </div>
+</footer>
+
+</body>
+</html>
