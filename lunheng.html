@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>论衡 · 殆知阁导读之七十五</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #201f1d; --ink3: #262521;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --zhu: #5f9270; --zhu-dim: rgba(95,146,112,.16);
+    --yu: #c0453c;
+    --hairline: rgba(232,228,220,.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 28px; }
+  .q { color: var(--paper); }
+  small.src { display: block; color: var(--faint); font-size: 12.5px; letter-spacing: .06em; margin-top: 6px; }
+
+  /* ---- hero : 雷雨夜 ---- */
+  .hero { position: relative; min-height: 92dvh; overflow: hidden; display: flex; align-items: flex-end; }
+  .rain, .rain2 { position: absolute; inset: -80px 0 0 0; pointer-events: none; }
+  .rain {
+    background: repeating-linear-gradient(112deg, transparent 0 14px, rgba(232,228,220,.045) 14px 15px);
+    animation: fall 1.1s linear infinite;
+  }
+  .rain2 {
+    background: repeating-linear-gradient(104deg, transparent 0 26px, rgba(232,228,220,.03) 26px 27px);
+    animation: fall 1.9s linear infinite;
+  }
+  @keyframes fall { from { transform: translateY(-80px); } to { transform: translateY(80px); } }
+  .bolt { position: absolute; top: 0; left: 50%; margin-left: -260px; opacity: .95; animation: flash 6.5s ease-in-out infinite; }
+  @keyframes flash { 0%,78%,100% { opacity: .18; } 82%,90% { opacity: .95; } 86% { opacity: .35; } }
+  .heroglow { position: absolute; inset: 0; background: radial-gradient(700px 380px at 62% 12%, rgba(95,146,112,.13), transparent 65%); pointer-events: none; }
+  .vtitle {
+    position: absolute; top: 48px; right: 34px; writing-mode: vertical-rl; height: 400px;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .vtitle .bt { font-size: 54px; font-weight: 700; letter-spacing: .34em; }
+  .vtitle .ba { font-size: 15px; color: var(--dim); letter-spacing: .3em; }
+  .seal-ill {
+    writing-mode: vertical-rl; background: var(--zhu); color: #f2ede3;
+    font-size: 22px; font-weight: 700; padding: 14px 8px; letter-spacing: .28em;
+  }
+  .hero-main { position: relative; width: 100%; padding-bottom: 72px; }
+  .kicker { font-size: 13px; letter-spacing: .42em; color: var(--faint); margin-bottom: 26px; }
+  .verdict-open { font-size: clamp(46px, 9vw, 96px); font-weight: 700; letter-spacing: .1em; line-height: 1.25; }
+  .verdict-open em { font-style: normal; color: var(--zhu); }
+  .hero-sub { margin-top: 22px; max-width: 34em; color: var(--dim); font-size: 16.5px; }
+  .hero-sub .q { color: var(--paper); }
+
+  /* ---- nav ---- */
+  .fnav { border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+  .fnav .wrap { display: flex; flex-wrap: wrap; }
+  .fnav a {
+    flex: 1 1 0; min-width: 96px; text-align: center; padding: 14px 4px 12px;
+    text-decoration: none; color: var(--dim); border-left: 1px solid var(--hairline);
+    transition: color .2s;
+  }
+  .fnav a:first-child { border-left: 0; }
+  .fnav a:hover { color: var(--zhu); }
+  .fnav .fc { display: block; font-size: 26px; font-weight: 700; color: var(--paper); }
+  .fnav a:hover .fc { color: var(--zhu); }
+  .fnav .fl { display: block; font-size: 12px; letter-spacing: .22em; margin-top: 2px; }
+
+  section { padding: 78px 0 30px; position: relative; }
+  .shead { display: flex; align-items: baseline; gap: 16px; margin-bottom: 30px; }
+  .shead .stag { font-size: 12.5px; letter-spacing: .3em; color: var(--faint); white-space: nowrap; }
+  .shead .stitle { font-size: clamp(24px, 3.4vw, 34px); font-weight: 700; letter-spacing: .12em; }
+  .shead .spiece { font-size: 13.5px; color: var(--zhu); letter-spacing: .18em; margin-left: auto; white-space: nowrap; }
+  .lead { color: var(--dim); max-width: 44em; margin-bottom: 34px; font-size: 15.5px; }
+  .lead .q { color: var(--paper); }
+
+  /* ---- 传书链 ---- */
+  .chain { display: flex; align-items: stretch; margin-top: 40px; }
+  .cnode { flex: 1 1 0; border: 1px solid var(--hairline); padding: 18px 16px 16px; position: relative; background: var(--ink2); }
+  .cnode + .cnode { margin-left: 34px; }
+  .cnode .who { font-size: 17px; font-weight: 700; letter-spacing: .08em; }
+  .cnode .when { font-size: 12px; color: var(--faint); letter-spacing: .1em; margin: 2px 0 10px; }
+  .cnode .q { font-size: 14px; line-height: 1.85; color: var(--dim); display: block; }
+  .cnode .q b { color: var(--paper); font-weight: 600; }
+  .clink { width: 34px; align-self: center; border-top: 1px dashed rgba(232,228,220,.28); }
+  .clink.broken { border-top-style: dotted; border-top-color: rgba(95,146,112,.55); position: relative; }
+  .clink.broken::after { content: "线断"; position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--zhu); letter-spacing: .12em; white-space: nowrap; }
+
+  /* ---- 五场对质 ---- */
+  .duel { border-top: 1px solid var(--hairline); }
+  .duel .bigchar {
+    position: absolute; z-index: 0; top: 26px; font-size: clamp(150px, 26vw, 300px); line-height: 1;
+    font-weight: 700; color: transparent; -webkit-text-stroke: 1px rgba(95,146,112,.14); pointer-events: none;
+  }
+  .duel:nth-child(odd) .bigchar { right: -8px; }
+  .duel:nth-child(even) .bigchar { left: -8px; }
+  .duel .wrap { position: relative; z-index: 1; }
+  .claim {
+    background: var(--paper); color: #24221d; padding: 30px 30px 26px; position: relative;
+    max-width: 640px; margin-top: 6px;
+  }
+  .claim .tag {
+    position: absolute; top: -13px; left: 22px; background: #24221d; color: var(--paper);
+    font-size: 12.5px; letter-spacing: .34em; padding: 3px 12px 3px 15px;
+  }
+  .claim .q { display: block; font-size: 18.5px; line-height: 2; font-weight: 600; }
+  .claim p { margin-top: 10px; font-size: 14.5px; color: #55524a; }
+  .seal-fake {
+    position: absolute; top: 14px; right: 16px; width: 62px; height: 62px; display: grid; place-items: center;
+    border: 2.5px solid var(--zhu); color: var(--zhu); font-size: 34px; font-weight: 700;
+    transform: rotate(10deg); opacity: .88; background: rgba(95,146,112,.05);
+  }
+  .howbox { margin: 34px 0 8px; }
+  .howbox .hlabel { font-size: 13px; letter-spacing: .3em; color: var(--faint); margin-bottom: 12px; }
+  .howbox .hmain { font-size: clamp(23px, 3.4vw, 32px); font-weight: 700; letter-spacing: .06em; color: var(--paper); }
+  .howbox .hmain em { font-style: normal; color: var(--zhu); }
+  .evgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 22px; }
+  .ev { border: 1px solid var(--hairline); background: var(--ink2); padding: 16px 18px 14px; }
+  .ev .no { font-size: 26px; font-weight: 700; color: var(--zhu); display: block; margin-bottom: 6px; }
+  .ev .q { font-size: 14.5px; color: var(--dim); display: block; line-height: 1.95; }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+  .duo .ev .no { font-size: 17px; }
+  .chainviz { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 26px; }
+  .chainviz .step {
+    border: 1px solid rgba(95,146,112,.5); color: var(--paper); font-size: 16px; font-weight: 600;
+    padding: 8px 18px; letter-spacing: .12em; background: var(--zhu-dim);
+  }
+  .chainviz .arr { color: var(--zhu); font-size: 17px; }
+  .verdict { margin-top: 34px; font-size: clamp(19px, 2.6vw, 26px); font-weight: 700; line-height: 1.9; color: var(--paper); }
+  .verdict .q { color: var(--zhu); }
+  .verdict-note { color: var(--faint); font-size: 14px; margin-top: 10px; max-width: 44em; }
+  .sidefact { margin-top: 30px; border-left: 2px solid rgba(95,146,112,.45); padding-left: 18px; max-width: 40em; }
+  .sidefact .q { color: var(--dim); font-size: 15px; display: block; }
+  .sidefact small.src { margin-top: 4px; }
+
+  /* ---- 御批 ---- */
+  .yu-wrap {
+    margin-top: 10px; border: 1px solid rgba(192,69,60,.55); position: relative;
+    background: linear-gradient(180deg, rgba(192,69,60,.075), rgba(192,69,60,.015) 55%);
+    padding: 40px 34px 34px;
+  }
+  .yu-wrap .yu-seal {
+    position: absolute; top: -20px; right: 26px; background: var(--ink); color: var(--yu);
+    border: 2px solid var(--yu); font-size: 17px; font-weight: 700; letter-spacing: .26em;
+    padding: 6px 12px 6px 15px; transform: rotate(4deg);
+  }
+  .yu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 6px; }
+  .yu-grid .q { display: block; font-size: 16.5px; line-height: 2.05; }
+  .yu-grid .ycol .q { color: var(--paper); }
+  .ycol .ytag { font-size: 12.5px; letter-spacing: .3em; color: var(--yu); margin-bottom: 12px; }
+  .ycol p { color: var(--dim); font-size: 14px; margin-top: 10px; }
+  .ycol p .q { display: inline; font-size: 14px; color: var(--paper); }
+  .yu-fan { margin-top: 30px; border-top: 1px dashed rgba(192,69,60,.4); padding-top: 24px; }
+  .yu-fan .q { display: block; font-size: 18px; color: var(--paper); font-weight: 600; }
+  .yu-fan p { color: var(--dim); font-size: 14px; margin-top: 8px; }
+
+  /* ---- 实测 ---- */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-top: 1px solid var(--hairline); }
+  .stat { border-bottom: 1px solid var(--hairline); padding: 18px 14px 14px; }
+  .stat .n { font-size: clamp(24px, 3vw, 32px); font-weight: 700; color: var(--zhu); }
+  .stat .n small { font-size: 14px; color: var(--dim); font-weight: 400; }
+  .stat .l { font-size: 12.5px; color: var(--faint); letter-spacing: .14em; margin-top: 4px; }
+  .stats-note { color: var(--faint); font-size: 13.5px; margin-top: 16px; }
+
+  /* ---- coda ---- */
+  .coda { text-align: center; padding: 96px 0 70px; border-top: 1px solid var(--hairline); }
+  .coda .big { font-size: clamp(30px, 5.4vw, 52px); font-weight: 700; letter-spacing: .16em; color: var(--paper); }
+  .coda .big em { font-style: normal; color: var(--zhu); }
+  .coda .from { margin-top: 14px; font-size: 13px; color: var(--faint); letter-spacing: .2em; }
+  .coda .tail { margin-top: 34px; color: var(--dim); font-size: 15px; max-width: 36em; display: inline-block; }
+  .coda .tail .q { color: var(--paper); }
+  .coda .mani { font-size: 15px; color: var(--dim); margin-bottom: 30px; }
+  .coda .mani .q { color: var(--paper); margin: 0 10px; }
+
+  /* ---- 校记 / footer ---- */
+  .jiaogi { border-top: 1px solid var(--hairline); padding: 44px 0 20px; }
+  .jiaogi h3 { font-size: 14px; letter-spacing: .3em; color: var(--dim); margin-bottom: 16px; font-weight: 600; }
+  .jiaogi ol { list-style: none; max-width: 60em; }
+  .jiaogi li { color: var(--faint); font-size: 13.5px; padding: 7px 0 7px 26px; position: relative; }
+  .jiaogi li::before { content: counter(jg, cjk-ideographic); counter-increment: jg; position: absolute; left: 0; color: var(--zhu); }
+  .jiaogi ol { counter-reset: jg; }
+  footer.page { border-top: 1px solid var(--hairline); padding: 36px 0 56px; color: var(--faint); font-size: 13.5px; }
+  footer.page p { margin-bottom: 8px; }
+  footer.page a { color: var(--dim); }
+
+  @media (max-width: 760px) {
+    .vtitle { display: none; }
+    .chain { flex-direction: column; gap: 12px; }
+    .cnode + .cnode { margin-left: 0; }
+    .clink { display: none; }
+    .duo, .yu-grid { grid-template-columns: 1fr; }
+    .claim { max-width: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="rain"></div>
+  <div class="rain2"></div>
+  <div class="heroglow"></div>
+  <svg class="bolt" width="520" height="430" viewBox="0 0 520 430" fill="none" aria-hidden="true">
+    <polyline points="300,0 262,118 292,124 224,268 258,274 170,430" stroke="rgba(95,146,112,.5)" stroke-width="7" stroke-linejoin="round" fill="none"/>
+    <polyline points="300,0 262,118 292,124 224,268 258,274 170,430" stroke="#e8e4dc" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
+    <polyline points="330,40 352,96 336,100 372,178" stroke="rgba(95,146,112,.4)" stroke-width="2" fill="none"/>
+  </svg>
+  <div class="vtitle">
+    <span class="seal-ill">疾虚妄</span>
+    <span class="ba">汉 王充 撰</span>
+    <span class="bt">论衡</span>
+  </div>
+  <div class="hero-main">
+    <div class="wrap">
+      <div class="kicker">殆知阁导读 · 之七十五</div>
+      <div class="verdict-open">雷者，<em>火也</em>。</div>
+      <p class="hero-sub">一声雷劈死人，世俗听见天怒，一个东汉人蹲下去验尸：头发烧燋，皮肤灼燌，尸身有火气。他把这条断语写进《论衡》，又用同样的姿势，把鬼神、圣人、国运、经书挨个搬上了秤。</p>
+    </div>
+  </div>
+</header>
+
+<nav class="fnav">
+  <div class="wrap">
+    <a href="#chuan"><span class="fc">书</span><span class="fl">递书链</span></a>
+    <a href="#lei"><span class="fc">雷</span><span class="fl">雷虚篇</span></a>
+    <a href="#gui"><span class="fc">鬼</span><span class="fl">论死 订鬼</span></a>
+    <a href="#sheng"><span class="fc">圣</span><span class="fl">实知篇</span></a>
+    <a href="#guo"><span class="fc">国</span><span class="fl">治期篇</span></a>
+    <a href="#jing"><span class="fc">经</span><span class="fl">问孔篇</span></a>
+    <a href="#yu"><span class="fc">批</span><span class="fl">御制怒</span></a>
+  </div>
+</nav>
+
+<section id="chuan">
+  <div class="wrap">
+    <div class="shead">
+      <span class="stag">卷外</span>
+      <span class="stitle">一部没人抄的书，怎么活下来</span>
+      <span class="spiece">递书链</span>
+    </div>
+    <p class="lead">书成之后，中土无人传抄。它靠两个人偷偷收藏续上第一口气，靠一次宋代校勘续上第二口气，最后挨了一顿御批，反倒坐进了官修丛书。链条上每个节点，库本都有原话。</p>
+    <div class="chain">
+      <div class="cnode">
+        <div class="who">王充</div>
+        <div class="when mono">东汉 · 章和二年罢州家居</div>
+        <span class="q">王充者，<b>防稽上虞人也，字仲任</b>。</span>
+        <span class="q">乃闭门潜思，礼绝庆吊，<b>戸牖墙壁各置刀笔</b>，著《论衡》八十五篇，二十余万言。</span>
+        <small class="src">卷末后序引范晔《后汉书》本传；「防稽」即会稽</small>
+      </div>
+      <div class="clink broken"></div>
+      <div class="cnode">
+        <div class="who">蔡邕</div>
+        <div class="when mono">汉末 · 入吴始得</div>
+        <span class="q">中土未有传者，蔡邕入吴，防始得之，<b>常秘玩以为谈助</b>。</span>
+        <span class="q">或捜求其帐中隠处，果得《论衡》，<b>抱数卷持去</b>。</span>
+        <span class="q">邕丁宁之曰：「<b>惟我与尔共之，勿广也</b>。」</span>
+        <small class="src">异书藏在帐中，被人搜走几卷</small>
+      </div>
+      <div class="clink"></div>
+      <div class="cnode">
+        <div class="who">王朗</div>
+        <div class="when mono">汉末 · 守防稽得书</div>
+        <span class="q">其后王郎来守防稽，又得其书。</span>
+        <span class="q">或曰：「<b>不见异人，当得异书</b>。」</span>
+        <span class="q">问之，果以《论衡》之益，<b>繇是遂见传焉</b>。</span>
+        <small class="src">才进得反常，同僚猜他偷读了什么</small>
+      </div>
+      <div class="clink"></div>
+      <div class="cnode">
+        <div class="who">杨文昌</div>
+        <div class="when mono">宋 · 庆历五年刊印</div>
+        <span class="q">改正涂注，<b>凡一万一千二百五十九字</b>。</span>
+        <span class="q">即募工刋印，<b>庶传不泯</b>。</span>
+        <small class="src">自述一纪中得俗本七、史馆本二，是今传本的共同祖本</small>
+      </div>
+      <div class="clink"></div>
+      <div class="cnode">
+        <div class="who">四库馆</div>
+        <div class="when mono">清 · 乾隆四十三年进呈</div>
+        <span class="q">其书凡八十五篇，而第四十四招致篇有录无书，实八十四篇。</span>
+        <small class="src">著录杂家类；卷首另附御制批语一则，见下文</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="duel" id="lei">
+  <div class="bigchar">雷</div>
+  <div class="wrap">
+    <div class="shead">
+      <span class="stag">第一场 · 对质</span>
+      <span class="stitle">雷是天怒，还是火</span>
+      <span class="spiece">雷虚篇</span>
+    </div>
+    <p class="lead">传闻会长个儿：<span class="q">或颇有而增其语，或无有而空生其言，虚妄之俗，好造怪竒。</span>王充先给这个过程画了像，再受理这桩案子。</p>
+    <div class="claim">
+      <span class="tag">俗 曰</span>
+      <span class="seal-fake">妄</span>
+      <span class="q">盛夏之时，雷电迅疾，击折树木，坏败室屋，时犯杀人。</span>
+      <p>隆隆之声，天怒之音，若人之呴吁矣。<span class="q">世无愚智，莫不谓然。</span></p>
+    </div>
+    <div class="howbox">
+      <div class="hlabel">验 官 问 案</div>
+      <div class="hmain"><span class="q">何以验之？雷者，<em>火也</em>。</span></div>
+    </div>
+    <div class="evgrid">
+      <div class="ev"><span class="no mono">一</span><span class="q">以人中雷而死，即询其身：中头则须髪烧燋，中身则皮肤灼燌，临其尸上，闻火气，一验也。</span></div>
+      <div class="ev"><span class="no mono">二</span><span class="q">道术之家以为雷烧石色赤，投于井中，石燋井寒，激声大鸣，若雷之状，二验也。</span></div>
+      <div class="ev"><span class="no mono">三</span><span class="q">人伤于寒，寒气入腹，腹中素温，温寒分争，激气雷鸣，三验也。</span></div>
+      <div class="ev"><span class="no mono">四</span><span class="q">当雷之时，电光时见，大若火之耀，四验也。</span></div>
+      <div class="ev"><span class="no mono">五</span><span class="q">当雷之击时，或燔人室屋及地草木，五验也。</span></div>
+    </div>
+    <div class="sidefact">
+      <span class="q">难曰：《论语》云：「迅雷风烈必变。」</span>
+      <small class="src">反对派搬出经书：君子闻雷变色，敬天罚也。王充答：<span class="q">天之与人，犹父子；有父为之变，子安能忽。</span>郑重其事是礼，不必是真有罚。</small>
+    </div>
+    <div class="verdict">
+      <span class="q">夫论雷之为火，有五验；言雷为天怒，无一效。</span>
+      <span class="q">然则雷为天怒，虚妄之言。</span>
+    </div>
+    <p class="verdict-note"><span class="q">推人道以论之，虚妄之言也。</span>五比零。验尸、烧石、腹鸣、电光、野火，五条证据全部指向物理成因；天怒一条实证都拿不出来。结案。</p>
+  </div>
+</section>
+
+<section class="duel" id="gui">
+  <div class="bigchar">鬼</div>
+  <div class="wrap">
+    <div class="shead">
+      <span class="stag">第二场 · 对质</span>
+      <span class="stitle">鬼是死人来，还是心里生</span>
+      <span class="spiece">论死篇 订鬼篇</span>
+    </div>
+    <div class="claim">
+      <span class="tag">俗 曰</span>
+      <span class="seal-fake">妄</span>
+      <span class="q">世谓死人为鬼，有知，能害人。</span>
+    </div>
+    <div class="howbox">
+      <div class="hlabel">验 官 问 案</div>
+      <div class="hmain">先验物类，再验人心。</div>
+    </div>
+    <div class="evgrid">
+      <div class="ev"><span class="no">物</span><span class="q">试以物类验之：死人不为鬼，无知，不能害人。</span><span class="q">人，物也；物亦物也。物死不为鬼，人死何故独能为鬼？</span></div>
+      <div class="ev"><span class="no">心</span><span class="q">凡天地之间有鬼，非人死精神为之也，皆人思念存想之所致也。</span><span class="q">致之何由？由于疾病。人病则忧惧，忧惧见鬼出。</span></div>
+    </div>
+    <div class="chainviz">
+      <span class="step">疾病</span><span class="arr">→</span>
+      <span class="step">忧惧</span><span class="arr">→</span>
+      <span class="step">见鬼出</span>
+      <span class="arr mono" style="margin:0 14px; color:var(--faint)">‖</span>
+      <span class="step">畏惧</span><span class="arr">→</span>
+      <span class="step">存想</span><span class="arr">→</span>
+      <span class="step">目虚见</span>
+    </div>
+    <p class="verdict-note"><span class="q">畏惧则存想，存想则目虚见。</span>两条链是同一台机器，见鬼与做梦共用零件：<span class="q">昼日则鬼见，暮卧则梦。</span></p>
+    <div class="duo">
+      <div class="ev"><span class="no">伯乐</span><span class="q">伯乐学相马，顾玩所见，无非马者。</span></div>
+      <div class="ev"><span class="no">庖丁</span><span class="q">宋之庖丁学解牛，三年不见生牛，所见皆死牛也。</span></div>
+    </div>
+    <p class="verdict-note">相马解牛的行家尚且被念头改写眼睛，<span class="q">思念存想，自见异物也。</span>病人床边那一位，同理。</p>
+    <div class="verdict">
+      <span class="q">皆存想虚致，未必有其实也。</span>
+    </div>
+  </div>
+</section>
+
+<section class="duel" id="sheng">
+  <div class="bigchar">圣</div>
+  <div class="wrap">
+    <div class="shead">
+      <span class="stag">第三场 · 对质</span>
+      <span class="stitle">圣人是生而知之，还是学而知之</span>
+      <span class="spiece">实知篇</span>
+    </div>
+    <div class="claim">
+      <span class="tag">俗 曰</span>
+      <span class="seal-fake">妄</span>
+      <span class="q">儒者论圣人，以为前知千岁，后知万世。</span>
+      <p><span class="q">事来则名，不学自知，不问自晓。</span>圣人出厂自带全部答案。</p>
+    </div>
+    <div class="howbox">
+      <div class="hlabel">验 官 问 案</div>
+      <div class="hmain">知识有没有出厂设置。</div>
+    </div>
+    <div class="evgrid">
+      <div class="ev"><span class="no">学</span><span class="q">人才有髙下，知物由学，学之乃知，不问不识。</span></div>
+      <div class="ev"><span class="no">神</span><span class="q">所谓神者，不学而知；所谓圣者，须学以圣。</span></div>
+      <div class="ev"><span class="no">类</span><span class="q">天地之间，含血之类，无性知者。</span></div>
+    </div>
+    <div class="verdict">
+      神话里的圣人被拆成一条学习曲线：会答，是因为问过。
+    </div>
+    <p class="verdict-note">「无性知者」之「性」，通行本作「生」，生而知之之谓。库本用字照录。</p>
+  </div>
+</section>
+
+<section class="duel" id="guo">
+  <div class="bigchar">国</div>
+  <div class="wrap">
+    <div class="shead">
+      <span class="stag">第四场 · 对质</span>
+      <span class="stitle">治乱在君德，还是在年成</span>
+      <span class="spiece">治期篇</span>
+    </div>
+    <div class="claim">
+      <span class="tag">俗 曰</span>
+      <span class="seal-fake">妄</span>
+      <span class="q">世谓古人君贤则道德施行，施行则功成治安。</span>
+      <p>太平是明君的功德簿，乱世是昏君的罪己诏。</p>
+    </div>
+    <div class="howbox">
+      <div class="hlabel">验 官 问 案</div>
+      <div class="hmain">把账算到收成头上。</div>
+    </div>
+    <div class="evgrid">
+      <div class="ev"><span class="no">时</span><span class="q">世之治乱，在时不在政；国之安危，在数不在教。</span></div>
+      <div class="ev"><span class="no">君</span><span class="q">贤不贤之君，明不明之政，无能损益。</span></div>
+      <div class="ev"><span class="no">谷</span><span class="q">为善恶之行，不在人质性，在于岁之饥穰。</span></div>
+    </div>
+    <div class="verdict">
+      仓廪实而知礼节：道德叙事背后，是一条收成曲线。
+    </div>
+    <p class="verdict-note">这是全书最冷的一刀，砍向一切把治乱归于个人品德的史观。</p>
+  </div>
+</section>
+
+<section class="duel" id="jing">
+  <div class="bigchar">经</div>
+  <div class="wrap">
+    <div class="shead">
+      <span class="stag">第五场 · 对质</span>
+      <span class="stitle">圣人的话，句句是非</span>
+      <span class="spiece">问孔篇</span>
+    </div>
+    <div class="claim">
+      <span class="tag">俗 曰</span>
+      <span class="seal-fake">妄</span>
+      <span class="q">世儒学者，好信师而是古，以为贤圣所言皆无非。</span>
+      <p>经书上每一个字都自带免检标志。</p>
+    </div>
+    <div class="howbox">
+      <div class="hlabel">验 官 问 案</div>
+      <div class="hmain">给孔子的语录也做笔迹鉴定。</div>
+    </div>
+    <div class="evgrid">
+      <div class="ev"><span class="no">难</span><span class="q">夫贤圣下笔造文，用意详审，尚未可谓尽得实；况仓卒吐言，安能皆是？</span></div>
+      <div class="ev"><span class="no">验</span><span class="q">何以验之？以学于孔子，不能极问也。</span></div>
+    </div>
+    <div class="verdict">
+      一篇之内逐条发难，问的全是语录里互相打架的地方。孔子被从不可问的位置上请了下来。
+    </div>
+    <p class="verdict-note">后来挨的所有骂，源头几乎都在这一篇和它的姊妹篇〈刺孟〉。</p>
+  </div>
+</section>
+
+<section id="yu">
+  <div class="wrap">
+    <div class="shead">
+      <span class="stag">尾声</span>
+      <span class="stitle">一千六百年后的读者</span>
+      <span class="spiece">御制批语</span>
+    </div>
+    <p class="lead">四库馆臣把书送上御案。这位读者先说喜欢，再看全书，怒了。库本卷首至今留着他的批语。</p>
+    <div class="yu-wrap">
+      <span class="yu-seal">御 批</span>
+      <div class="yu-grid">
+        <div class="ycol">
+          <div class="ytag">先 喜</div>
+          <span class="q">向偶翻阅诸书，见有王充《论衡》，喜其识博而言辩，颇具出俗之识。</span>
+          <p>同一段里自己承认：<span class="q">其全书则未之览也。</span>喜欢的时候，还没读完。</p>
+        </div>
+        <div class="ycol">
+          <div class="ytag">后 怒</div>
+          <span class="q">乃知其为背经离道，好竒立异之人，而欲以言传者也。</span>
+          <span class="q">充则刺孟而且问孔矣，此与明末李贽之邪说何异？</span>
+          <p>怒点集中在一处：问孔、刺孟。皇帝替第五场对质补了判词。</p>
+        </div>
+      </div>
+      <div class="yu-fan">
+        <span class="q">大抵订讹砭俗，中理者多，亦殊有禆于风教。</span>
+        <p>同一年，同一部书，四库提要里馆臣的缓颊。御批归御批，书照旧著录杂家类，一篇没删。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="shi">
+  <div class="wrap">
+    <div class="shead">
+      <span class="stag">实测</span>
+      <span class="stitle">库内文件结账</span>
+      <span class="spiece">脚本机算</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n">213,814</div><div class="l">库内字数（去空白）</div></div>
+      <div class="stat"><div class="n">三十<small>卷</small></div><div class="l">提要自记</div></div>
+      <div class="stat"><div class="n">85<small>目</small></div><div class="l">目录实数（内一目标阙）</div></div>
+      <div class="stat"><div class="n">84<small>篇</small></div><div class="l">正文实数</div></div>
+      <div class="stat"><div class="n">43</div><div class="l">何以验之</div></div>
+      <div class="stat"><div class="n">35</div><div class="l">何以明之</div></div>
+      <div class="stat"><div class="n">14</div><div class="l">何以效之</div></div>
+      <div class="stat"><div class="n">33</div><div class="l">虚妄</div></div>
+    </div>
+    <p class="stats-note">「何以验之、何以明之、何以效之」三连合计九十二见，另有「验也」五十四见：这本书说话的方式是法庭式的。招致篇有目无书，正文止八十四篇；八十五之数是它自报的户口。</p>
+  </div>
+</section>
+
+<section class="coda">
+  <div class="wrap">
+    <p class="mani"><span class="q">诗三百，一言以蔽之，曰：思无邪。</span><span class="q">《论衡》篇以十数，亦一言也，曰：疾虚妄。</span></p>
+    <div class="big"><span class="q">如<em>衡</em>之平，如鉴之开。</span></div>
+    <div class="from">东汉 自纪篇</div>
+    <p class="tail">衡，就是秤。论衡，给传闻称重的秤。称完雷电鬼神圣人国运经书，王充把自己也称了进去，留下八个字的老境：<span class="q">年渐七十，时可悬舆。</span>秤挂起来，砝码还在。</p>
+  </div>
+</section>
+
+<div class="jiaogi">
+  <div class="wrap">
+    <h3>校 记</h3>
+    <ol>
+      <li>库本为白文无标点四库本，页内所有句读、书名号为编者所加；引文经去标点、归一空白后与库内文件逐字比对。</li>
+      <li>库本用字照录：戸（户）、隠（隐）、竒（奇）、捜（搜）、刋（刊）、髪（发）、髙（高）、燌（焚）、防（会，如「防稽」即会稽、「防始得之」）、王郎（王朗）。</li>
+      <li>目录「招致第四十四」标【阙】，正文无其文；另有「变动」篇题行尾粘连「招致篇」三字，实无内容。</li>
+      <li>卷头篇目列表与正文篇题次序互有交错，若干篇题行下先接后篇标题（如「吉验篇」行下接「幸偶篇」）；本页篇名归属按正文内容核定。</li>
+      <li>「无性知者」之「性」，通行本作「生」；递书链一节引卷末杨文昌后序及其中所引范晔《后汉书》本传文，均库本卷内原文。</li>
+      <li>御制批语与四库提要均库本卷首原文，二说相左处照录并存。</li>
+    </ol>
+  </div>
+</div>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20），子藏 笔记 论衡，白文无标点四库本，卷首御制并提要、卷末宋刊后序。</p>
+    <p>本页全部引文已与库内文件逐字核验（去标点、归一空白后比对），机算数字均由脚本复核。王充破鬼神破圣人，却仍信命禄、骨相与时令，书中论命、相、日禁诸篇同为时代产物，读者鉴之。</p>
+    <p>系列书目见<a href="mulu.html">总目</a>。</p>
+  </div>
+</footer>
+
+</body>
+</html>
