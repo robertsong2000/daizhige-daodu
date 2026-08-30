@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>猫苑 · 殆知阁导读 95</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #24231f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --moss: #5f9270;        /* 竹青 · 玩物谱录 */
+    --moss-dim: #4a7458;
+    --amber: #c9963f;       /* 猫睛 · 仅作眼与金丝毛色用 */
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 26px; }
+
+  /* 页眉签条 */
+  .slip {
+    display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+    padding: 18px 0 16px; border-bottom: 1px solid var(--hairline);
+    font-size: 12.5px; letter-spacing: 0.28em; color: var(--paper-faint);
+  }
+  .slip b { color: var(--moss); font-weight: 400; }
+
+  /* 开卷：竖排书名 + 猫眼时辰仪 */
+  .open {
+    display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.9fr);
+    gap: 48px; padding: 58px 0 30px; align-items: stretch;
+  }
+  .spine { display: flex; gap: 26px; min-height: 420px; }
+  .spine .title {
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: clamp(88px, 13vw, 150px); font-weight: 700; letter-spacing: 0.12em;
+    line-height: 1; color: var(--paper);
+  }
+  .spine .title span { color: var(--moss); }
+  .spine .side {
+    writing-mode: vertical-rl; text-orientation: mixed;
+    font-size: 15px; color: var(--paper-dim); letter-spacing: 0.32em;
+    border-right: 1px solid var(--hairline); padding-right: 20px; display: flex; gap: 18px;
+  }
+  .spine .side em { font-style: normal; color: var(--paper-faint); }
+  .colophon { align-self: flex-end; margin-top: auto; max-width: 34em; }
+  .colophon p { font-size: 15px; color: var(--paper-dim); }
+  .colophon p b { color: var(--paper); font-weight: 600; }
+
+  .dial {
+    border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 26px 26px 20px; display: flex; flex-direction: column; gap: 14px;
+  }
+  .dial .cap { font-size: 12.5px; letter-spacing: 0.3em; color: var(--paper-faint); }
+  .dial .cap b { color: var(--moss); font-weight: 400; }
+  .eye-stage { display: grid; place-items: center; padding: 6px 0 2px; }
+  svg.eye { width: 210px; height: 150px; display: block; }
+  .dial .now { text-align: center; font-size: 15px; color: var(--paper); }
+  .dial .now small { display: block; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.2em; margin-top: 2px; }
+  .hours { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  .hours button {
+    appearance: none; background: transparent; border: 1px solid var(--hairline);
+    color: var(--paper-dim); font: inherit; font-size: 14px; padding: 5px 0; cursor: pointer;
+    transition: all 0.2s ease; border-radius: 2px;
+  }
+  .hours button:hover { color: var(--paper); border-color: var(--paper-faint); }
+  .hours button.on { background: var(--moss); border-color: var(--moss); color: #f2f0e9; }
+  .dial .src { font-size: 13px; color: var(--paper-faint); border-top: 1px solid var(--hairline); padding-top: 12px; }
+  .dial .src i { font-style: normal; color: var(--moss-dim); }
+
+  /* 引文 */
+  .qv {
+    border-left: 2px solid var(--moss); padding: 2px 0 2px 18px; margin: 26px 0;
+    font-size: 17.5px; color: var(--paper);
+  }
+  .qv .who { display: block; margin-top: 6px; font-size: 12.5px; letter-spacing: 0.24em; color: var(--paper-faint); }
+  .qv.center { border-left: 0; text-align: center; padding: 2px 0; }
+
+  /* 段落 */
+  .sect { padding: 44px 0 10px; }
+  .sect-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+  .sect-head .no {
+    font-size: 12px; letter-spacing: 0.3em; color: var(--moss);
+    border: 1px solid var(--moss-dim); padding: 2px 10px 1px; border-radius: 2px; white-space: nowrap;
+  }
+  .sect-head h2 { font-size: clamp(24px, 3.2vw, 34px); font-weight: 700; letter-spacing: 0.1em; }
+  .sect-lead { color: var(--paper-dim); font-size: 15px; max-width: 56em; margin-bottom: 8px; }
+  .sect-lead b { color: var(--paper); font-weight: 600; }
+
+  /* 十二要 · 签条墙 */
+  .yao {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--hairline); border: 1px solid var(--hairline); margin-top: 20px;
+  }
+  .yao .t {
+    background: var(--ink); padding: 18px 18px 16px; position: relative;
+    display: flex; flex-direction: column; gap: 8px; transition: background 0.25s ease;
+  }
+  .yao .t:hover { background: var(--ink-2); }
+  .yao .t .idx {
+    position: absolute; top: 10px; right: 12px; font-size: 11px; color: var(--paper-faint);
+  }
+  .yao .t h3 { font-size: 18px; font-weight: 700; color: var(--moss); letter-spacing: 0.06em; }
+  .yao .t h3 small { font-size: 12px; font-weight: 400; color: var(--paper-faint); margin-left: 8px; letter-spacing: 0.1em; }
+  .yao .t p { font-size: 14px; color: var(--paper-dim); }
+  .yao .t p i { font-style: normal; color: var(--paper); }
+  .yao-note {
+    margin-top: 14px; font-size: 13.5px; color: var(--paper-faint); max-width: 62em;
+  }
+  .yao-note b { color: var(--paper-dim); font-weight: 600; }
+
+  /* 毛色品第阶 */
+  .rank { margin-top: 22px; display: flex; flex-direction: column; gap: 8px; }
+  .rank .step {
+    display: grid; grid-template-columns: 66px 150px 1fr; gap: 16px; align-items: center;
+    border: 1px solid var(--hairline); padding: 12px 16px; background: var(--ink);
+  }
+  .rank .step .grade {
+    font-size: 13px; letter-spacing: 0.3em; color: var(--moss); text-align: center;
+  }
+  .rank .step .sw {
+    display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700;
+  }
+  .rank .step .sw u {
+    text-decoration: none; width: 26px; height: 26px; border-radius: 50%;
+    border: 1px solid rgba(232,228,220,0.25); flex: none;
+  }
+  .rank .step .why { font-size: 13.5px; color: var(--paper-faint); }
+  .rank .step.lite { margin-left: 34px; }
+  .rank .step.lite2 { margin-left: 68px; }
+  .rank .step.bad { margin-left: 102px; opacity: 0.75; }
+  .rank-note { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .rank-note .nb {
+    border: 1px dashed var(--hairline); padding: 14px 16px; font-size: 13.5px; color: var(--paper-dim);
+  }
+  .rank-note .nb b { color: var(--paper); font-weight: 600; }
+
+  /* 卷中事 · 叶子 */
+  .leafs { margin-top: 24px; display: flex; flex-direction: column; gap: 34px; }
+  .leaf { max-width: 46em; position: relative; padding-left: 54px; }
+  .leaf:nth-child(even) { margin-left: auto; padding-left: 0; padding-right: 54px; text-align: right; }
+  .leaf:nth-child(even) .leaf-src { justify-content: flex-end; }
+  .leaf .fold {
+    position: absolute; left: 0; top: 6px; width: 34px; height: 34px;
+    background: var(--ink-2); border: 1px solid var(--hairline); border-radius: 50%;
+    display: grid; place-items: center; font-size: 15px; color: var(--moss);
+  }
+  .leaf:nth-child(even) .fold { left: auto; right: 0; }
+  .leaf h3 { font-size: 19px; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .leaf .leaf-src { display: flex; gap: 10px; font-size: 12px; letter-spacing: 0.22em; color: var(--paper-faint); margin-bottom: 8px; }
+  .leaf .leaf-src i { font-style: normal; color: var(--moss-dim); }
+  .leaf p { font-size: 14.5px; color: var(--paper-dim); }
+  .leaf p b { color: var(--paper); font-weight: 600; }
+
+  /* 聘猫 · 仪注 */
+  .rites { margin-top: 22px; border: 1px solid var(--hairline); background: var(--ink-2); }
+  .rites .rline {
+    display: grid; grid-template-columns: 130px 1fr; gap: 18px; padding: 16px 20px;
+    border-bottom: 1px solid var(--hairline); font-size: 14.5px;
+  }
+  .rites .rline:last-child { border-bottom: 0; }
+  .rites .rline .rk { color: var(--moss); letter-spacing: 0.24em; font-size: 13px; padding-top: 3px; }
+  .rites .rline p { color: var(--paper-dim); }
+  .rites .rline p i { font-style: normal; color: var(--paper); }
+  .duplex { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); margin-top: 18px; }
+  .duplex .d { background: var(--ink); padding: 20px 22px; }
+  .duplex .d .tag { font-size: 12px; letter-spacing: 0.28em; color: var(--moss); margin-bottom: 8px; }
+  .duplex .d p { font-size: 15.5px; }
+  .duplex .d p small { display: block; font-size: 12.5px; color: var(--paper-faint); margin-top: 6px; letter-spacing: 0.14em; }
+
+  /* 编书人 */
+  .editor { margin-top: 22px; display: grid; grid-template-columns: 220px 1fr; gap: 26px; }
+  .editor .plate {
+    border: 1px solid var(--hairline); background: var(--ink-2); padding: 22px 18px; text-align: center;
+    align-self: start;
+  }
+  .editor .plate .nm { font-size: 30px; font-weight: 700; letter-spacing: 0.3em; margin-bottom: 4px; }
+  .editor .plate .zi { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .editor .plate .seal {
+    margin: 14px auto 0; width: 44px; height: 44px; display: grid; place-items: center;
+    background: var(--moss); color: #f2f0e9; font-size: 17px; font-weight: 700; border-radius: 3px;
+  }
+  .editor .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); }
+  .editor .facts .f { background: var(--ink); padding: 16px 18px; }
+  .editor .facts .f b { display: block; font-size: 21px; font-weight: 700; color: var(--moss); }
+  .editor .facts .f span { font-size: 13px; color: var(--paper-faint); }
+
+  /* 七门 */
+  .gates { margin-top: 22px; display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); }
+  .gates .g { background: var(--ink); padding: 14px 6px 12px; text-align: center; }
+  .gates .g b { display: block; font-size: 17px; font-weight: 700; letter-spacing: 0.14em; }
+  .gates .g span { font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.12em; }
+  .gates .g.up { border-top: 3px solid var(--moss-dim); }
+  .gates .g.down { border-top: 3px solid var(--hairline); }
+  .gates .g.addon { border-top: 3px dashed var(--hairline); opacity: 0.8; }
+
+  /* 终卷 */
+  .fin { padding: 54px 0 30px; text-align: center; }
+  .fin .pre { font-size: 12.5px; letter-spacing: 0.34em; color: var(--paper-faint); margin-bottom: 18px; }
+  .fin .poem { font-size: clamp(20px, 3vw, 27px); line-height: 2.1; letter-spacing: 0.12em; }
+  .fin .poem span { color: var(--moss); }
+  .fin .after { margin-top: 22px; font-size: 14.5px; color: var(--paper-dim); max-width: 40em; display: inline-block; }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 40px; padding: 30px 0 54px; }
+  footer.page .fgrid { display: grid; gap: 7px; font-size: 13px; color: var(--paper-faint); }
+  footer.page a { color: var(--moss-dim); text-decoration: none; }
+  footer.page a:hover { color: var(--moss); }
+
+  @media (max-width: 880px) {
+    .open { grid-template-columns: 1fr; }
+    .spine { min-height: 340px; }
+    .yao { grid-template-columns: repeat(2, 1fr); }
+    .rank .step { grid-template-columns: 52px 120px 1fr; gap: 10px; }
+    .rank .step.lite { margin-left: 0; } .rank .step.lite2 { margin-left: 0; } .rank .step.bad { margin-left: 0; }
+    .rank-note { grid-template-columns: 1fr; }
+    .duplex { grid-template-columns: 1fr; }
+    .editor { grid-template-columns: 1fr; }
+    .gates { grid-template-columns: repeat(4, 1fr); }
+    .leaf:nth-child(even) { margin-left: 0; padding-right: 0; text-align: left; }
+    .leaf:nth-child(even) .fold { right: auto; left: 0; }
+    .leaf:nth-child(even) .leaf-src { justify-content: flex-start; }
+    .leaf { padding-left: 0; padding-top: 40px; }
+    .leaf .fold { top: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="slip mono">
+    <span>殆知阁导读 · <b>九十七</b></span>
+    <span>艺藏 · 草木鸟兽虫鱼</span>
+    <span>清 · 咸丰二年至三年</span>
+  </div>
+</div>
+
+<header class="wrap">
+  <div class="open">
+    <div class="spine">
+      <div class="title">猫<span>苑</span></div>
+      <div class="side">
+        <span>永嘉黄汉辑<em>　鹤楼</em></span>
+        <span>咸丰壬子长至日自序</span>
+      </div>
+      <div class="colophon">
+        <p>猫事本无专书。经史子集里的猫，散在群籍两千多年，直到咸丰二年冬天，一个客居广东的温州诗人才把它们收进同一册书里：相法、毛色、灵异、掌故、诗章，凡有关于猫者，一一录之。</p>
+        <p style="margin-top:10px">这是中国第一部猫学专书。旁边那只眼睛，是书里的一条冷知识：猫眼可以定时。</p>
+      </div>
+    </div>
+
+    <div class="dial">
+      <div class="cap mono">猫眼定时 · <b>十二时辰</b></div>
+      <div class="eye-stage">
+        <svg class="eye" viewBox="0 0 210 150" aria-label="猫眼">
+          <defs>
+            <radialGradient id="iris" cx="50%" cy="46%" r="60%">
+              <stop offset="0%" stop-color="#e8c877"/>
+              <stop offset="55%" stop-color="#c9963f"/>
+              <stop offset="100%" stop-color="#6e4f1c"/>
+            </radialGradient>
+            <radialGradient id="ball" cx="42%" cy="38%" r="72%">
+              <stop offset="0%" stop-color="#3a382f"/>
+              <stop offset="70%" stop-color="#23221d"/>
+              <stop offset="100%" stop-color="#15140f"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="105" cy="75" rx="98" ry="66" fill="url(#ball)" stroke="rgba(232,228,220,0.18)" stroke-width="1"/>
+          <circle cx="105" cy="75" r="52" fill="url(#iris)"/>
+          <path id="pupil" d="" fill="#12110d"/>
+          <circle cx="86" cy="55" r="7" fill="rgba(242,240,233,0.55)"/>
+          <circle cx="121" cy="90" r="4" fill="rgba(242,240,233,0.25)"/>
+        </svg>
+      </div>
+      <div class="now"><span id="hourName">子</span><small id="hourShape">一条线</small></div>
+      <div class="hours" id="hours"></div>
+      <div class="src">猫眼定时，甚验，盖云<i>「子午卯酉一条线，寅申己亥枣核形，辰戌丑未圆如镜」</i>。灵异门引通书选择书，黄汉按：初生猫血气未足，瞬息无常，以之定时，仍属无验。</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="sect">
+    <div class="sect-head"><span class="no mono">缘起</span><h2>为什么给猫写一部书</h2></div>
+    <p class="sect-lead">黄汉自序里先给猫算了一笔「异数」账：这种兽不进六畜，却被叫过将军、官员、王爷、神仙，还叫过姑、叫过兄、叫过奴。待遇比群兽高出一截，由头全是人事。</p>
+    <blockquote class="qv">或以其猛，则命之曰将；或以其德，则予之以官；或以其有威制，则推之为王，凡此，皆猫之异数也。<span class="who">自序 · 咸丰壬子长至日</span></blockquote>
+    <p class="sect-lead">序末一句交代了动机，也交代了书名：养猫人爱猫，爱的是它的灵、它的猛、它的媚，还有那份「为公为婆为儿之名实相副」。此余《猫苑》之所由作也。</p>
+  </section>
+
+  <section class="sect">
+    <div class="sect-head"><span class="no mono">形相门</span><h2>相猫十二要</h2></div>
+    <p class="sect-lead">形相门开卷抄了一部《相猫经》：<b>「猫之相有十二要，皆出《相猫经》，兹备录之。」</b>从头面到睡姿，十二张签条就是一份清代选猫标准，背后是一套相牲口的行话：面长则绝鸡种，鼻钩则一网收尽鸡鸭，黑白须则「屙尿满神炉」。</p>
+    <div class="yao">
+      <div class="t"><span class="idx mono">01</span><h3>头面贵圆</h3><p>经云<i>「面长鸡种绝」</i>。脸太长的猫，家里鸡种保不住。</p></div>
+      <div class="t"><span class="idx mono">02</span><h3>耳贵小贵薄</h3><p>经云<i>「耳薄毛繵不畏寒」</i>。又云<i>「耳小头圆尾又尖，胸膛无旋值千钱」</i>。</p></div>
+      <div class="t"><span class="idx mono">03</span><h3>眼贵金银色</h3><p>忌黑痕入眼，忌泪湿。经云<i>「金眼夜明灯」</i>，又云<i>「乌龙入眼懒如蛇」</i>。</p></div>
+      <div class="t"><span class="idx mono">04</span><h3>鼻贵平直</h3><p>宜干，忌钩及高耸。经云<i>「面长鼻梁钩，鸡鸭一网收」</i>，钩鼻是家禽劫。</p></div>
+      <div class="t"><span class="idx mono">05</span><h3>须贵硬</h3><p>不宜黑白兼色。经云<i>「须劲虎威多」</i>，又云<i>「猫儿黑白须，屙尿满神炉」</i>。</p></div>
+      <div class="t"><span class="idx mono">06</span><h3>腰贵短</h3><p>经云<i>「腰长会过家」</i>。腰太长，心不在家。</p></div>
+      <div class="t"><span class="idx mono">07</span><h3>后脚贵高</h3><p>经云<i>「尾小后脚高，金褐最威豪」</i>。</p></div>
+      <div class="t"><span class="idx mono">08</span><h3>爪贵藏</h3><p>又贵油。经云<i>「小露能翻瓦」</i>，又云<i>「油爪滑生光」</i>。行地有爪痕者名油爪，为上品。</p></div>
+      <div class="t"><span class="idx mono">09</span><h3>尾贵长细尖</h3><p>尾节贵短，又贵常摆。经云<i>「尾长节短多伶俐」</i>，又云<i>「尾大懒如蛇」</i>。</p></div>
+      <div class="t"><span class="idx mono">10</span><h3>声贵喊</h3><p>喊者，猛之谓也。经云<i>「眼带金光身要短，面要虎威声要喊」</i>。</p></div>
+      <div class="t"><span class="idx mono">11</span><h3>口贵有坎</h3><p>九坎为上，七坎次之。经云<i>「上腭生九坎，周年断鼠声」</i>。</p></div>
+      <div class="t"><span class="idx mono">12</span><h3>睡要蟠而圆</h3><p>藏头而掉尾。经云<i>「身屈神固，一枪自护」</i>。</p></div>
+    </div>
+    <p class="yao-note"><b>附</b>　十二要之外有「五长」：头尾身足耳无一不长，名蛇相猫亦良；五者皆短名五秃，能镇三五家。桐城姚百徴又补一说：猫口上腭的坎分阴阳，雄猫九七五奇数，雌猫八六四偶数，故雌者每佳，「此说发前人所未言」。粤人验猫更直接：提耳而四脚与尾随即缩上为优；湘潭张博斋则把猫掷向墙壁，四爪能坚握墙壁而不脱者为最上品。</p>
+  </section>
+
+  <section class="sect">
+    <div class="sect-head"><span class="no mono">毛色门</span><h2>品第</h2></div>
+    <p class="sect-lead">毛色门给天下猫定了品级，像给贡品定等：贵在色纯，驳色另列，黄汉自注里还藏着一句广东行情。</p>
+    <div class="rank">
+      <div class="step"><span class="grade">上</span><span class="sw"><u style="background:#c98f3a"></u>纯黄</span><span class="why">纯黄为金丝，宜母猫</span></div>
+      <div class="step lite"><span class="grade">次</span><span class="sw"><u style="background:#e8e4dc"></u>纯白</span><span class="why">皆贵乎色之纯也</span></div>
+      <div class="step lite2"><span class="grade">又次</span><span class="sw"><u style="background:#23211d"></u>纯黑</span><span class="why">纯黑为铁色，宜公猫</span></div>
+      <div class="step bad"><span class="grade">驳色</span><span class="sw"><u style="background:#3c3a33"></u><u style="background:#dfd9cc"></u>乌云盖雪</span><span class="why">以乌云盖雪为上，玳瑁斑次之，若貍而驳，斯为下矣</span></div>
+    </div>
+    <div class="rank-note">
+      <div class="nb"><b>行情</b>　「然黄者多牡，黑者多牝，故粤人云：金丝难得母，铁色难得公。」纯黄的多是公猫，纯黑的多是母猫，配得上品级的正好稀缺。</div>
+      <div class="nb"><b>奇品</b>　阳江县深坭村孙姓盐丁家一只纯白猫，冬至后渐长黑毛，交夏至则纯黑矣，过冬至复又黑白相间，次年夏至仍为纯白，「是年年换色者也，可称瑞物」。另据张心田：狮猫眼有一金一银者，其外祖守镇江时畜过一对；黄汉按注「金银眼又名阴阳眼」。</div>
+    </div>
+  </section>
+
+  <section class="sect">
+    <div class="sect-head"><span class="no mono">故事门</span><h2>卷中事</h2></div>
+    <p class="sect-lead">故事门是全书的掌故库，上起孔丛子，下逮道光年间朋友圈见闻。选五件，按时代排。</p>
+    <div class="leafs">
+      <div class="leaf">
+        <div class="fold">壹</div>
+        <h3>老鼠的咒</h3>
+        <div class="leaf-src mono"><i>旧唐书</i><span>永淳前后</span></div>
+        <p>武后杀王皇后及萧良娣，萧临死立誓：「愿武为鼠我为猫，生生世世扼其喉！」此后「后乃诏六宫毋畜猫」。后世干脆给萧妃封了个别号：猫别名天子妃。</p>
+      </div>
+      <div class="leaf">
+        <div class="fold">貳</div>
+        <h3>宰相家的寻猫启事</h3>
+        <div class="leaf-src mono"><i>老学庵笔记</i><span>南宋</span></div>
+        <p>秦桧小女名童夫人，爱一狮猫，忽亡之。相府一只猫丢了，「立限命临安府访求，凡狮猫悉捕至，而皆非也」。官府只好贿赂相府老卒问清毛色，「图百本于茶肆张之」，画了一百张寻猫像贴满杭州茶馆。黄汉按语里补了另一版本：府尹曹泳最后用金猫打点，才算了结。</p>
+      </div>
+      <div class="leaf">
+        <div class="fold">叁</div>
+        <h3>染出来的红猫</h3>
+        <div class="leaf-src mono"><i>智囊补</i><span>南宋临安</span></div>
+        <p>熟肉铺孙三每天出门前叮嘱妻子照管猫儿：「都城并无此种，莫令外人闻见，或被窃去，绝吾命矣。我老无子，此与吾子无异也。」吊足邻里胃口后，一只干红色的怪猫终于露面，内侍以钱三百千买走，半月后红色褪尽，全成白猫。「盖用染马缨法，积日为伪，前之告戒箠怒，悉奸计也。」一本假货营销教案。</p>
+      </div>
+      <div class="leaf">
+        <div class="fold">肆</div>
+        <h3>御前有职衔</h3>
+        <div class="leaf-src mono"><i>野获编</i><span>明万历</span></div>
+        <p>万历时御前最重猫，宫中猫有官阶：「牝者曰某丫头，牡者谓某小厮。若已骟者，则呼为某老爹」，有封号的直接叫某管事，随内官同领赏赐。黄香铁补记：明熹宗好猫，猫儿房所饲十五成群，天启宫词「红罽无尘白昼长，丫头日日侍君王」，丫头即指此。</p>
+      </div>
+      <div class="leaf">
+        <div class="fold">伍</div>
+        <h3>狮猫斗鼠</h3>
+        <div class="leaf-src mono"><i>聊斋志异</i><span>清</span></div>
+        <p>万历宫中一只大鼠与猫等大，遍求佳猫辄被食。异国贡狮猫毛白如雪，鼠扑来它就躲上几案，往复百次，众人都笑它怯。「然后知猫之避，非怯也，待其惰也，彼出则归，彼归则复，用此智耳。」蒲松龄写下这段时大概没想过，它会成为后世讲后发制人的标准教材。</p>
+      </div>
+      <div class="leaf">
+        <div class="fold">陸</div>
+        <h3>十三只猫</h3>
+        <div class="leaf-src mono"><i>子不语</i><span>乾隆己酉</span></div>
+        <p>江宁王御史家有位七十多岁老妾，畜十三猫，爱如儿子，各有乳名，呼之即至。乾隆己酉老妾亡故，「十三猫儿绕棺哀鸣，喂以鱼飧，流泪不食，饿三日，竟同死」。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sect">
+    <div class="sect-head"><span class="no mono">名物门</span><h2>聘猫的规矩</h2></div>
+    <p class="sect-lead">要一只猫，不能白拿。名物门记下的这套礼数，在江南民间一直用到近代：像聘新娘子一样下聘，像嫁女儿一样送嫁。</p>
+    <div class="rites">
+      <div class="rline"><span class="rk">聘 礼</span><p><i>「穿柳裹盐聘迎，不苟铜铃金锁，雅饰可观，食有鲜鱼，眠有暖毯。」</i>盐或裹于篛叶，或穿柳枝送去，自序里这八个字「穿柳裹盐」后来成了养猫人的成语。</p></div>
+      <div class="rline"><span class="rk">音 义</span><p>张孟仙刺史考：<i>「吴音读盐为缘，故婚嫁以盐与头发为赠，言有缘法，俗例相沿。」</i>聘猫用盐，取的是「有缘」的口彩。</p></div>
+      <div class="rline"><span class="rk">嫁 猫</span><p>猫既用聘，亦可言嫁。张孟仙客居江西时，官场真以「嫁猫」二字征过诗，他交的句子里有一句<i>「人家养猫如养女」</i>，送嫁要先期装点，抱持不舍。</p></div>
+    </div>
+    <div class="duplex">
+      <div class="d">
+        <div class="tag mono">宋 · 黄庭坚</div>
+        <p>闻道貍奴将数子，买鱼穿柳聘啣蝉。<small>乞猫诗，品藻门引委巷丛谈</small></p>
+      </div>
+      <div class="d">
+        <div class="tag mono">宋 · 陆游</div>
+        <p>裹盐迎得小貍奴，尽护山房万卷书。<small>赠猫诗，同门引全浙诗话</small></p>
+      </div>
+    </div>
+    <p class="yao-note" style="margin-top:16px"><b>同名物门可看的</b>　四川简州出四耳猫，「四耳者，耳中有耳也，州官每岁以之贡送宾僚，所费猫价不少」；南澳出歧尾猫，「其尾卷，形若如意头，呼为麒麟尾」；京师紫猫皮做裘，穷翰林买不起真貂，「戏称紫猫为翰林貂」。丁雨生另有一条格致观察：「物各有所喜，如诗传马喜风、犬喜雪、豕喜雨，而猫独喜月，故月夜常登屋背。」</p>
+  </section>
+
+  <section class="sect">
+    <div class="sect-head"><span class="no mono">其书</span><h2>编书的人</h2></div>
+    <div class="editor">
+      <div class="plate">
+        <div class="nm">黄 汉</div>
+        <div class="zi">字鹤楼 · 自署瓯滨逸客</div>
+        <div class="seal">猫</div>
+      </div>
+      <div class="facts">
+        <div class="f"><b>两阅暑寒</b><span>「是辑因作客余闲采录以成，两阅暑寒」，在广东潮州衙署做幕客的间隙编了两年</span></div>
+        <div class="f"><b>111 处按语</b><span>「汉按」散在全书每一条尾巴上，考名物、纠讹传、记粤俗，八卦后面都站着一个较真的辑者</span></div>
+        <div class="f"><b>十三位供稿人</b><span>凡例逐一点名：潮州太守吴云帆、翰林侍诏黄香铁、连平刺史张孟仙等，凡说一事献一义，姓氏不可遗</span></div>
+        <div class="f"><b>一位日昌</b><span>供稿人里的「丰顺丁雨生茂才（日昌）」，当时还是个生员，后来官至江苏巡抚，办江南制造局的就是他</span></div>
+      </div>
+    </div>
+    <p class="sect-lead" style="margin-top:18px">全书剞劂将成时还出过一桩急件：丁雨生忽然提起黄庭坚写过一篇《蓄貍说》，黄汉立刻托人从澄海张浦云明府处把抄本讨来，「亟为补入」，附在补遗卷末。凡例里自己交代了这套机制：<b>「全书剞劂将峻，续有后故事不能按门增入，拟列之补遗，附于卷末。」</b>一部猫书的出版流程，和一部经书一样一丝不苟。</p>
+  </section>
+
+  <section class="sect">
+    <div class="sect-head"><span class="no mono">体例</span><h2>七门</h2></div>
+    <p class="sect-lead">凡例第一条学的是《虎荟》《蟹谱》的旧例，第二条立新例：「今分门为七，曰种类，曰形相，曰毛色，曰灵异，曰名物，曰故事，曰品藻。」卷上四门辨物，卷下三门记事，补遗收尾。</p>
+    <div class="gates">
+      <div class="g up"><b>种类</b><span>卷上</span></div>
+      <div class="g up"><b>形相</b><span>卷上</span></div>
+      <div class="g up"><b>毛色</b><span>卷上</span></div>
+      <div class="g up"><b>灵异</b><span>卷上</span></div>
+      <div class="g down"><b>名物</b><span>卷下</span></div>
+      <div class="g down"><b>故事</b><span>卷下</span></div>
+      <div class="g down"><b>品藻</b><span>卷下</span></div>
+    </div>
+    <p class="yao-note" style="margin-top:14px"><b>灵异门一笔账</b>　这一门里猫眼定时、杭州人祀隆鼠将军、真腊国王手嵌猫睛石、唐人祭五方之猫、安南有猫首人身的猫将军庙，祀典与巫术同架。品藻门则是历代猫诗总账：黄山谷、陆放翁、刘伯温、文徵明各有一句，连明人骂猫的檄文和替猫写的弹章都全文收录。</p>
+  </section>
+
+  <section class="fin">
+    <div class="pre mono">编者自题 · 品藻门末</div>
+    <div class="poem">驱除鼠耗平生志，何必争言豢养恩。<br>大用不能成虎变，<span>空撑牙爪向黄昏</span>。</div>
+    <p class="after">黄汉自注说有人把这首诗读成怀才不遇，「其知余哉」。一个考不上功名的温州诗人，在别人的衙门里替猫编了一部经，把一生志向安放在黄昏的屋脊上。</p>
+  </section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <div class="fgrid">
+      <span>文本来源：殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20），艺藏《猫苑》，全书三万四千八百余字。</span>
+      <span>本篇引文均与库内文件逐字核对（去标点比对），库本文字一仍其旧，讹字未改。</span>
+      <span>本书成于咸丰年间，所录相法、征验、报应诸说皆是时代局限，聊备一格，勿信为真。</span>
+      <span>导读系列：<a href="mulu.html">殆知阁导读总目</a> · 第九十七篇</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var pupil = document.getElementById('pupil');
+  var SHAPES = {
+    line:  'M105,39 C106,51 107,63 107,75 C107,87 106,99 105,111 C104,99 103,87 103,75 C103,63 104,51 105,39 Z',
+    lens:  'M71,75 C82,64 94,59 105,59 C116,59 128,64 139,75 C128,86 116,91 105,91 C94,91 82,86 71,75 Z',
+    round: 'M105,41 C124,41 139,56 139,75 C139,94 124,109 105,109 C86,109 71,94 71,75 C71,56 86,41 105,41 Z'
+  };
+  var HOURS = [
+    ['子','line','一条线'],['丑','round','圆如镜'],['寅','lens','枣核形'],['卯','line','一条线'],
+    ['辰','round','圆如镜'],['巳','lens','枣核形'],['午','line','一条线'],['未','round','圆如镜'],
+    ['申','lens','枣核形'],['酉','line','一条线'],['戌','round','圆如镜'],['亥','lens','枣核形']
+  ];
+  function parseD(d) { return d.match(/-?\d+(\.\d+)?/g).map(Number); }
+  function buildD(a, b, t) {
+    var pa = parseD(a), pb = parseD(b), out = [];
+    for (var i = 0; i < pa.length; i++) out.push(pa[i] + (pb[i] - pa[i]) * t);
+    var c = 0;
+    return a.replace(/-?\d+(\.\d+)?/g, function () { return out[c++].toFixed(1); });
+  }
+  var cur = SHAPES.round, raf = null;
+  function tween(to) {
+    var b = SHAPES[to];
+    if (typeof requestAnimationFrame !== 'function') { pupil.setAttribute('d', b); cur = b; return; }
+    var start = null, a = cur;
+    cancelAnimationFrame(raf);
+    function step(ts) {
+      if (!start) start = ts;
+      var t = Math.min((ts - start) / 380, 1);
+      pupil.setAttribute('d', buildD(a, b, t * t * (3 - 2 * t)));
+      if (t < 1) raf = requestAnimationFrame(step); else cur = b;
+    }
+    raf = requestAnimationFrame(step);
+  }
+  var grid = document.getElementById('hours');
+  var nameEl = document.getElementById('hourName'), shapeEl = document.getElementById('hourShape');
+  var btns = [];
+  HOURS.forEach(function (h, i) {
+    var b = document.createElement('button');
+    b.textContent = h[0];
+    b.addEventListener('click', function () { setHour(i); });
+    grid.appendChild(b); btns.push(b);
+  });
+  function setHour(i) {
+    btns.forEach(function (b, j) { b.classList.toggle('on', j === i); });
+    nameEl.textContent = HOURS[i][0];
+    shapeEl.textContent = HOURS[i][2];
+    var target = SHAPES[HOURS[i][1]];
+    if (cur === null) { pupil.setAttribute('d', target); cur = target; }
+    else tween(HOURS[i][1]);
+  }
+  function nowIndex() {
+    var h = new Date().getHours();
+    return Math.floor(((h + 1) % 24) / 2);
+  }
+  cur = null;
+  setHour(nowIndex());
+})();
+</script>
+
+</body>
+</html>
