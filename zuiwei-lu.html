@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>罪惟录 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #232220;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --acc: #c9963f; --acc-dim: rgba(201,150,63,.55); --acc-faint: rgba(201,150,63,.22);
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 26px; }
+
+  /* 左侧封条 */
+  .tape {
+    position: fixed; left: 20px; top: 50%; transform: translateY(-50%);
+    writing-mode: vertical-rl; letter-spacing: .5em; font-size: 13px;
+    color: var(--paper-faint); border: 1px solid var(--hairline);
+    padding: 26px 8px; background: var(--ink-2);
+    z-index: 5;
+  }
+  .tape b { color: var(--acc-dim); font-weight: 400; }
+  @media (max-width: 1180px) { .tape { display: none; } }
+
+  /* 开场：椟 */
+  .hero { padding: 84px 0 30px; text-align: center; }
+  .kicker { font-size: 13px; letter-spacing: .42em; color: var(--paper-faint); }
+  .chest-zone { margin: 52px auto 40px; position: relative; width: 320px; }
+  .chest {
+    height: 132px; border: 1px solid rgba(232,228,220,.2);
+    background: linear-gradient(178deg, #242220 0%, #1d1c1a 62%, #171614 100%);
+    box-shadow: 0 18px 44px rgba(0,0,0,.5), inset 0 1px 0 rgba(232,228,220,.07);
+    position: relative;
+  }
+  .chest::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 31px; height: 1px;
+    background: rgba(232,228,220,.14);
+  }
+  .hasp {
+    position: absolute; left: 50%; top: 31px; transform: translateX(-50%);
+    width: 26px; height: 34px; border: 1px solid var(--acc-dim);
+    border-top: none; background: var(--ink);
+  }
+  .hasp::after {
+    content: ""; position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%);
+    width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--acc-dim);
+  }
+  .label-slip {
+    position: absolute; left: 50%; top: -17px; transform: translateX(-50%) rotate(-2deg);
+    background: #ddd6c8; color: #23211d; padding: 9px 26px 10px;
+    font-size: 26px; letter-spacing: .34em; text-indent: .34em; font-weight: 700;
+    box-shadow: 0 6px 18px rgba(0,0,0,.45);
+    white-space: nowrap; z-index: 2;
+  }
+  .label-slip::before, .label-slip::after {
+    content: ""; position: absolute; top: 8px; width: 3px; height: 3px; border-radius: 50%;
+    background: #19191733;
+  }
+  .label-slip::before { left: 9px; } .label-slip::after { right: 9px; }
+  .old-title {
+    position: absolute; right: -74px; top: 44px; transform: rotate(3deg);
+    background: #d4cdbd; color: #4b463c; opacity: .5;
+    font-size: 15px; letter-spacing: .2em; padding: 5px 12px;
+  }
+  @media (max-width: 480px) { .old-title { right: -30px; font-size: 12px; padding: 4px 8px; } }
+  .old-title::after {
+    content: ""; position: absolute; left: 4px; right: 4px; top: 50%;
+    border-top: 1.5px solid #6b2620; transform: rotate(-4deg);
+  }
+  .chest-note { font-size: 15px; color: var(--paper-dim); max-width: 40em; margin: 0 auto; }
+  .chest-note b { color: var(--paper); font-weight: 400; }
+  .span-line { color: var(--acc); margin: 0 .5em; }
+
+  /* 姓名签 */
+  .nameplate { margin: 64px auto 0; max-width: 34em; }
+  .np-hint { font-size: 13px; letter-spacing: .3em; color: var(--paper-faint); }
+  .alias {
+    font-size: clamp(26px, 4.4vw, 40px); letter-spacing: .12em; margin: 14px 0 6px;
+    font-weight: 700;
+  }
+  .alias i { font-style: normal; font-size: .5em; color: var(--paper-dim); margin: 0 .55em; letter-spacing: .2em; }
+  .rnt { display: none; }
+  .patch {
+    display: inline-block; cursor: pointer; margin-top: 10px;
+    background: #ddd6c8; color: #3c382f; font-size: 13.5px; letter-spacing: .28em;
+    padding: 7px 20px 7px 24px; position: relative;
+  }
+  .patch::before {
+    content: ""; position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
+    width: 8px; height: 8px; background: var(--acc); border-radius: 1px;
+  }
+  .real {
+    display: block; font-size: 17px; color: var(--paper); margin-top: 14px;
+    opacity: 0; filter: blur(7px); transition: opacity .6s ease, filter .6s ease;
+  }
+  .rnt:checked ~ .real { opacity: 1; filter: blur(0); }
+  .rnt:checked ~ .patch { display: none; }
+
+  /* 章节头 */
+  .sec { padding: 78px 0 8px; }
+  .sec + .sec { border-top: 1px solid var(--hairline); margin-top: 64px; }
+  .sec-no { font-size: 13px; letter-spacing: .34em; color: var(--acc-dim); }
+  .sec h2 { font-size: 26px; font-weight: 600; letter-spacing: .16em; margin: 10px 0 8px; }
+  .sec .lead { color: var(--paper-dim); font-size: 15px; max-width: 42em; }
+  .sec .lead b { color: var(--paper); font-weight: 400; }
+
+  /* 引文 */
+  .q {
+    border-left: 2px solid var(--acc-dim); padding: 4px 0 4px 18px;
+    margin: 26px 0; font-size: 16.5px; color: var(--paper);
+  }
+  .q .src { display: block; font-size: 12px; color: var(--paper-faint); margin-top: 8px; letter-spacing: .14em; }
+  .q.big { font-size: clamp(19px, 2.6vw, 24px); line-height: 2; border-left-width: 3px; }
+
+  /* 修书档：四厄 */
+  .trackwrap { overflow-x: auto; padding: 92px 0 6px; margin: 10px -26px 0; }
+  .track { min-width: 620px; position: relative; margin: 0 40px; }
+  .ticks { display: flex; justify-content: space-between; border-bottom: 1px solid var(--acc-dim); padding-bottom: 0; }
+  .ticks i { width: 1px; height: 14px; background: rgba(232,228,220,.3); }
+  .ticks i:nth-child(5n+1) { height: 22px; background: rgba(232,228,220,.5); }
+  .haz { position: absolute; bottom: 64px; text-align: center; width: 60px; margin-left: -30px; }
+  .haz i { display: block; width: 9px; height: 9px; margin: 0 auto 4px; background: var(--ink); border: 1.5px solid var(--acc); border-radius: 50%; }
+  .haz::after { content: ""; position: absolute; left: 50%; bottom: -26px; width: 1px; height: 24px; background: var(--acc-faint); }
+  .haz span { font-size: 14.5px; letter-spacing: .18em; color: var(--paper); }
+  .haz small { display: block; font-size: 11.5px; color: var(--paper-faint); letter-spacing: .1em; }
+  .haz.h1 { left: 15%; } .haz.h2 { left: 40%; bottom: 80px; } .haz.h3 { left: 63%; } .haz.h4 { left: 87%; bottom: 80px; }
+  .haz::after { height: 40px; }
+  .haz.h2::after, .haz.h4::after { height: 56px; }
+  .ends { display: flex; justify-content: space-between; margin-top: 12px; font-size: 13.5px; letter-spacing: .18em; color: var(--paper-dim); }
+  .ends b { color: var(--acc); font-weight: 400; }
+  .track-cap { text-align: center; font-size: 13px; color: var(--paper-faint); margin-top: 34px; letter-spacing: .12em; }
+
+  /* 六特 */
+  .six { display: flex; flex-wrap: wrap; gap: 10px; margin: 30px 0 4px; }
+  .six span {
+    border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 6px 14px; font-size: 14px; color: var(--paper-dim); letter-spacing: .06em;
+  }
+  .six span b { color: var(--acc); font-weight: 400; }
+
+  /* 五枚玺 */
+  .sealwrap { margin-top: 26px; }
+  .sealwrap input { display: none; }
+  .sealrow { display: flex; flex-wrap: wrap; gap: 14px; }
+  .seal {
+    display: inline-grid; place-items: center; width: 76px; height: 76px;
+    border: 1.5px solid var(--acc-dim); cursor: pointer; user-select: none;
+    color: var(--acc); font-size: 19px; letter-spacing: .1em; font-weight: 700;
+    background: var(--ink); transition: background .2s ease, color .2s ease;
+  }
+  .seal small { display: block; font-size: 11px; color: var(--paper-faint); letter-spacing: .2em; font-weight: 400; margin-top: 2px; }
+  #s1:checked ~ .sealrow label[for=s1],
+  #s2:checked ~ .sealrow label[for=s2],
+  #s3:checked ~ .sealrow label[for=s3],
+  #s4:checked ~ .sealrow label[for=s4],
+  #s5:checked ~ .sealrow label[for=s5] { background: var(--acc); color: var(--ink); }
+  #s1:checked ~ .sealrow label[for=s1] small,
+  #s2:checked ~ .sealrow label[for=s2] small,
+  #s3:checked ~ .sealrow label[for=s3] small,
+  #s4:checked ~ .sealrow label[for=s4] small,
+  #s5:checked ~ .sealrow label[for=s5] small { color: rgba(25,25,23,.72); }
+  .pane { display: none; padding: 34px 4px 6px; }
+  #s1:checked ~ .panes .p1, #s2:checked ~ .panes .p2, #s3:checked ~ .panes .p3,
+  #s4:checked ~ .panes .p4, #s5:checked ~ .panes .p5 { display: block; }
+  .pane p { font-size: 15.5px; color: var(--paper-dim); max-width: 44em; margin-bottom: 4px; }
+  .pane p b { color: var(--paper); font-weight: 400; }
+  .pane p + p { margin-top: 14px; }
+  .gud { display: inline-block; border: 1px solid var(--acc-dim); color: var(--acc); font-size: 12px; letter-spacing: .3em; padding: 3px 10px 3px 13px; margin-bottom: 16px; }
+  .verdict {
+    margin: 40px 0 8px; display: flex; align-items: baseline; gap: 18px;
+    border-top: 1px solid var(--hairline); padding-top: 26px;
+  }
+  .verdict .vl { font-size: 14px; letter-spacing: .3em; color: var(--paper-faint); }
+  .verdict .vc { font-size: clamp(44px, 6vw, 62px); color: var(--acc); font-weight: 700; letter-spacing: .08em; line-height: 1; }
+  .verdict .vc small { font-size: .38em; color: var(--paper-dim); font-weight: 400; }
+  .verdict .note { font-size: 13px; color: var(--paper-faint); max-width: 20em; }
+
+  /* 抗运名册 */
+  .ledger { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 30px; }
+  .card {
+    border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 16px 16px 14px; position: relative;
+  }
+  .card::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 2px; background: var(--acc-faint); }
+  .card .cn { font-size: 17px; font-weight: 700; letter-spacing: .05em; }
+  .card .ce { font-size: 12.5px; color: var(--paper-faint); margin-top: 3px; letter-spacing: .04em; }
+  .card .cq { font-size: 13.5px; color: var(--paper-dim); margin-top: 10px; border-top: 1px dashed var(--hairline); padding-top: 9px; }
+  .card .cq b { color: var(--acc); font-weight: 400; font-size: 11.5px; letter-spacing: .18em; display: block; margin-bottom: 2px; }
+  @media (max-width: 720px) { .ledger { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .ledger { grid-template-columns: 1fr; } }
+  .deep {
+    margin-top: 30px; border: 1px solid var(--acc-faint); background: var(--ink-3);
+    padding: 30px 30px 22px;
+  }
+  .deep h3 { font-size: 21px; letter-spacing: .1em; font-weight: 700; }
+  .deep h3 small { font-size: 13px; color: var(--paper-faint); font-weight: 400; letter-spacing: .1em; margin-left: 14px; }
+  .deep p { font-size: 15.5px; color: var(--paper-dim); margin-top: 16px; max-width: 44em; }
+  .deep p b { color: var(--paper); font-weight: 400; }
+
+  /* 复题之日 */
+  .retitle-open {
+    margin: 40px 0 8px; text-align: center;
+  }
+  .retitle-open .patch { cursor: default; }
+  .retitle-open .real { opacity: 1; filter: none; margin-top: 16px; font-size: 19px; }
+
+  /* 页脚 */
+  footer.page {
+    border-top: 1px solid var(--hairline); margin-top: 84px; padding: 36px 0 60px;
+    color: var(--paper-faint); font-size: 13.5px; line-height: 2.1;
+  }
+  footer.page a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+</style>
+</head>
+<body>
+
+<aside class="tape">得复原题之日<b>◇</b>即得复原姓名之日</aside>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">殆知阁导读 · 卷四 鼎革</div>
+
+    <div class="chest-zone">
+      <div class="chest">
+        <div class="label-slip">罪惟录</div>
+        <div class="old-title">明书</div>
+        <div class="hasp"></div>
+      </div>
+    </div>
+
+    <p class="chest-note">原题「明书」。纪传体明史一百零二卷：纪二十二、志三十二、列传三十六。<b>库本存其选辑，约七万四千字</b>：一纸自序，南明一纪四附纪，抗运诸臣列传。<br>写它的人，一生换了三个名字。</p>
+
+    <div class="nameplate">
+      <input type="checkbox" id="rn" class="rnt">
+      <div class="np-hint">署名</div>
+      <div class="alias">左尹<i>字</i>非人<i>号</i>东山钓史</div>
+      <label class="patch" for="rn">按此揭签</label>
+      <span class="real">查继佐，字伊璜，浙江海宁人。明亡时四十四岁。</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="sec" style="border-top:none;">
+    <div class="sec-no">壹</div>
+    <h2>修书档</h2>
+    <p class="lead">自序里有一笔工程账：起笔于<b>甲申国变</b>之年，收笔于壬子，前后二十九年。书稿在这二十九年里遇过四厄：水淹过，火燎过，拖进过泥涂，也被老鼠啃过。每一次都修了回来。</p>
+
+    <div class="trackwrap">
+      <div class="track">
+        <div class="haz h1"><i></i><span>水溢</span><small>稿溃于水</small></div>
+        <div class="haz h2"><i></i><span>火焦</span><small>稿燎于火</small></div>
+        <div class="haz h3"><i></i><span>泥涂</span><small>稿陷于涂</small></div>
+        <div class="haz h4"><i></i><span>鼠啮</span><small>稿毁于鼠</small></div>
+        <div class="ticks">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="ends"><span><b>甲申</b>　一六四四　起笔</span><span>一六七二　<b>壬子</b>　成书</span></div>
+      </div>
+      <p class="track-cap">二十九年，二十九格。四厄的年月，自序没有记，只记了它们都被修了回来。</p>
+    </div>
+
+    <blockquote class="q">此书之作，始于甲申、成于壬子。中二十九年，寒暑晦明、风雨霜雪、舟车寝食、疾痛患难、水溢火焦、泥涂鼠啮，零落破损、整饬补修，手草易数十次、耳采经数千人；
+      <span class="src">自序</span>
+    </blockquote>
+
+    <p class="lead">二十九年里他采访了数千人，重写数十遍，把书里每一处「初讳」「初疑」「初误」都逐个处理掉：</p>
+    <blockquote class="q">初讳为特昭之、初疑为特信之、初误为特正之、初轶为特存之、初彼此厄为特合之、初是非淆为特决之，所为取义在此
+      <span class="src">自序</span>
+    </blockquote>
+
+    <p class="lead">至于书名为什么改成这两个字，他说得极轻：</p>
+    <blockquote class="q">改书名为「罪惟」，天下之大，或犹有深原其故者。
+      <span class="src">自序</span>
+    </blockquote>
+  </section>
+
+  <section class="sec">
+    <div class="sec-no">貳</div>
+    <h2>五枚玺</h2>
+    <p class="lead">选辑的正文，是原书最末五篇帝纪：一个王朝的五种死法。其中四篇的史论，各落在一个单字上。</p>
+
+    <div class="sealwrap">
+      <input type="radio" name="seal" id="s1" checked>
+      <input type="radio" name="seal" id="s2">
+      <input type="radio" name="seal" id="s3">
+      <input type="radio" name="seal" id="s4">
+      <input type="radio" name="seal" id="s5">
+      <div class="sealrow">
+        <label class="seal" for="s1">弘光<small>甲申</small></label>
+        <label class="seal" for="s2">监国<small>乙酉</small></label>
+        <label class="seal" for="s3">隆武<small>乙酉</small></label>
+        <label class="seal" for="s4">永历<small>丙戌</small></label>
+        <label class="seal" for="s5">定武<small>丙戌</small></label>
+      </div>
+      <div class="panes">
+
+        <section class="pane p1">
+          <p>在位一年。立国后第一场朝争不是北伐，是起复逆案里的阮大铖。给事中罗万象一句话点破：</p>
+          <blockquote class="q">大铖未必知兵；恐「燕子笺」、「春灯谜」，即枕上之阴符、袖中之黄石也
+            <span class="src">「纪」安宗 · 罗万象语</span>
+          </blockquote>
+          <p>南京城里同时流传的民谣，把国库的去向唱得明明白白：</p>
+          <blockquote class="q">扫尽江南钱，填塞马家口
+            <span class="src">「纪」安宗 · 时谣</span>
+          </blockquote>
+          <p>这一年还出了一串自称亲王宗室的骗子。安宗纪的末尾干脆做成一份总账：</p>
+          <blockquote class="q">夫终明之世，有十四伪。
+            <span class="src">「纪」安宗</span>
+          </blockquote>
+          <p>结账那天他说：<b>已伪皆尽，而尚有伪姓者掉头海外，兴波上下。</b>这一纪无论，因为要论的话太长。</p>
+        </section>
+
+        <section class="pane p2">
+          <p>鲁王以海，<b>王天姿粹朗，性慈易，能书法，谙歌吟</b>。袭封才四个月，家乡就没了：</p>
+          <blockquote class="q">甲申甫袭封四月，而北师入兖州
+            <span class="src">「附纪」鲁王监国</span>
+          </blockquote>
+          <p>监国绍兴，江上诸屯兵力不下二十万。书中有一位监军，名字叫左尹：</p>
+          <blockquote class="q">以左尹为兵部职方主事，监义兴之师。
+            <span class="src">「附纪」鲁王监国</span>
+          </blockquote>
+          <p>主将拥兵不进，是他露章弹劾，刺血写檄文去各营乞师：</p>
+          <blockquote class="q">尹乃刺血草檄乞师诸屯，得七千余人，奉楚将军华堞为盟主。
+            <span class="src">「附纪」鲁王监国</span>
+          </blockquote>
+          <p>监军左尹，就是执笔人自己。他把化名写进了国史。</p>
+          <div class="verdict"><span class="vl">论曰</span><span class="vc">天</span><span class="vc"><small>。</small></span><span class="note">库本原样：句号，不是叹号。</span></div>
+        </section>
+
+        <section class="pane p3">
+          <p>唐王聿键，坐过八年宗人府的高墙，出狱时带出来的书稿堆了一丈高。登极郊天那天，出了事：</p>
+          <blockquote class="q">郊，大风拔木飞，瓦还半道；尚宝司马蹶，玺堕地折一角。
+            <span class="src">「附纪」唐主</span>
+          </blockquote>
+          <p>登极、分封、亲征三道诏书都出自亲裁，读到的人无不落泪：</p>
+          <blockquote class="q">首下登极、分封、亲征三诏，皆出亲裁；语痛切，远近捧读，无不挟泪。
+            <span class="src">「附纪」唐主</span>
+          </blockquote>
+          <p>一年后，郑芝龙尽撤仙霞关守军，闽败。</p>
+          <div class="verdict"><span class="vl">论曰</span><span class="vc">天</span><span class="vc"><small>！</small></span><span class="note">这回是叹号。</span></div>
+        </section>
+
+        <section class="pane p4">
+          <p>永明王由榔出阁前，梧州王府里有一段旧闻：</p>
+          <blockquote class="q">相传有巨蛇为祟。永明出，蛇当座不惧，跨蛇而出
+            <span class="src">「附纪」桂主</span>
+          </blockquote>
+          <p>这位末帝的性格底色，自序式的四字一句：</p>
+          <blockquote class="q">主谦仁浑大，丰姿冲逸。
+            <span class="src">「纪」卷之二十一</span>
+          </blockquote>
+          <p>十六年颠沛，从肇庆到昆明到缅甸。辛丑年被劫入滇营，纪年到此停摆，库本只肯写十个字：</p>
+          <blockquote class="q">而于是桂之年，禅于东宁
+            <span class="src">「纪」卷之二十一</span>
+          </blockquote>
+          <div class="verdict"><span class="vl">论曰</span><span class="vc">天</span><span class="vc"><small>！</small></span><span class="note">十六年，一声叹。</span></div>
+        </section>
+
+        <section class="pane p5">
+          <div class="gud">孤本</div>
+          <p>韩王本铉，李自成陷平凉时被执过，逃脱。他的部将郝摇旗奉他为主，闽事坏后随即称帝，年号<b>定武</b>：</p>
+          <blockquote class="q">自闽事坏，韩便称尊，改元定武。尝移书桂主，叙长幼不称臣。北抗，保陨西乱山之中；驻房山，自为号令。
+            <span class="src">「附纪」卷之二十二</span>
+          </blockquote>
+          <p>与李来亨、刘二虎等声势遥相倚，在郧西乱山里立了十七年。癸卯，清军全力合围：</p>
+          <blockquote class="q">房山旋败。韩主不终。
+            <span class="src">「附纪」卷之二十二</span>
+          </blockquote>
+          <p>「定武」是否实有其政权，史家至今存疑；把它记下来的，普天之下只有这一部书。</p>
+          <div class="verdict"><span class="vl">论曰</span><span class="vc">亦天</span><span class="vc"><small>！</small></span><span class="note">四个单字论的最后一个，多了一个「亦」。</span></div>
+        </section>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-no">叄</div>
+    <h2>抗运名册</h2>
+    <p class="lead">选辑的后半，是<b>抗运诸臣列传</b>：给一个已经不存在的朝廷抬棺的人。十二传，一人一条考语。</p>
+
+    <div class="ledger">
+      <div class="card"><div class="cn">史可法</div><div class="ce">扬州 · 附任民育等十二人</div><div class="cq"><b>论曰</b>不周倾，天柱折；二百七十八年之运始之金陵、终之金陵</div></div>
+      <div class="card"><div class="cn">杨廷麟、万元吉</div><div class="ce">赣州</div><div class="cq"><b>论曰</b>徒使「忠诚」二字寿千古</div></div>
+      <div class="card"><div class="cn">陈子壮、陈邦彦</div><div class="ce">广州举义，同月死</div></div>
+      <div class="card"><div class="cn">张家玉</div><div class="ce">东莞，沉水死</div><div class="cq"><b>曰</b>摧玉一毛，即都九五尊不乐也</div></div>
+      <div class="card"><div class="cn">瞿式耜、张同敞</div><div class="ce">桂林留守</div><div class="cq"><b>论曰</b>临桂合别山遗刻，题曰「浩气」</div></div>
+      <div class="card"><div class="cn">何腾蛟</div><div class="ce">督师湖广</div><div class="cq"><b>论曰</b>诚无愧汉武侯二表</div></div>
+      <div class="card"><div class="cn">姜曰广</div><div class="ce">阁部，弘光朝去位</div></div>
+      <div class="card"><div class="cn">王祁</div><div class="ce">布衣，据建宁，举家自焚</div></div>
+      <div class="card"><div class="cn">李定国</div><div class="ce">晋王 · 附刘文秀、白文选</div><div class="cq"><b>论曰</b>复严关、殒定南、恢粤西、摧敬谨</div></div>
+      <div class="card"><div class="cn">李来亨</div><div class="ce">附郝摇旗、刘二虎</div><div class="cq"><b>论曰</b>戊申历益算三年，谁延之</div></div>
+      <div class="card"><div class="cn">张煌言</div><div class="ce">临门，被执不屈</div></div>
+      <div class="card"><div class="cn">郑成功</div><div class="ce">延平 · 附鸿逵、彩、甘辉</div></div>
+    </div>
+
+    <div class="deep">
+      <h3>郑成功<small>「列传」卷之九（下）</small></h3>
+      <p>己亥年北伐，<b>舟师大小八千余号</b>顺江而上，兵临南京城下。他与清军有一条军约：</p>
+      <blockquote class="q">与北师约：但战满兵，不战汉兵；遇汉兵，则曰『吾一家，毋自残』！
+        <span class="src">「列传」卷之九（下）</span>
+      </blockquote>
+      <p>他有十个儿子，除郑经外，其余八个的名字连起来是一部《中庸》：<b>聪、明、睿、知、宽、裕、温、柔</b>。聪明睿知，宽裕温柔。</p>
+      <blockquote class="q">成功有子十人；经而外，有聪、明、睿、知、宽、裕、温、柔等号，皆贤。
+        <span class="src">「列传」卷之九（下）</span>
+      </blockquote>
+      <p>他父亲郑芝龙降清，他拒父抗清。这一传的论曰，是一连串没有答案的问句：</p>
+      <blockquote class="q">郑芝龙无子，郑芝龙有子非其子；非其子，非其姓也。地上已无姓，问之水滨。
+        <span class="src">「列传」卷之九（下）</span>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-no">肆</div>
+    <h2>复题之日</h2>
+    <p class="lead">书成之前，先出了一桩差点让人和书一起消失的案子。</p>
+    <p class="lead">康熙二年，同郡庄廷鑨私修明史案发，查继佐名列卷首参订，被械送京师。相传他早年雪夜里留饭过的一个铁丐，后来做到广东提督，名叫吴六奇，全力营救，得免。自序里对此只有半句：</p>
+    <blockquote class="q">兼以他注误而连狱
+      <span class="src">自序</span>
+    </blockquote>
+    <p class="lead">此后他把姓氏收起，把书锁进箱底。终清之世此书未刻，以稿本在查氏子孙手中秘传两百六十余年；民国间稿本归浙江图书馆，一九三六年商务印书馆影印收入《四部丛刊》三编，书面题的是：<b>罪惟录</b>。旧题「明书」，从此没有再用。</p>
+
+    <blockquote class="q big">若夫「罪惟录」得复原题之日，是即左尹得复原姓名之日；静听之天而已！
+      <span class="src">自序 · 全书最后一句</span>
+    </blockquote>
+
+    <div class="retitle-open">
+      <span class="patch">签已揭</span>
+      <span class="real">那一天真的来了。书复原题，人复姓名：查继佐。</span>
+    </div>
+  </section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    文本来源：殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），本篇据「史藏/志存记录/罪惟录选辑.txt」（库本约七万四千字）。<br>
+    引文均经与库内文件逐字核验（去标点、异体归一后比对）。成书于明清之际，持明遗民立场；文中「贼」「伪」等称谓与正统史观皆属时代局限，读者鉴之。
+  </div>
+</footer>
+
+</body>
+</html>
