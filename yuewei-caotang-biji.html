@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阅微草堂笔记 · 殆知阁导读之一百一十九</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #201f1d; --ink3: #242320;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --shih: #5e8fbb;
+    --shih-soft: rgba(94,143,187,0.16);
+    --flame: #d9b36a;
+    --hair: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 2.0; -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--shih); color: var(--ink); }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 28px; }
+
+  /* 头部：诗笺竖排，题名压角 */
+  header.hero { padding: 76px 0 30px; position: relative; overflow: hidden; }
+  .hero-grid { display: flex; gap: 44px; align-items: flex-start; }
+  .hero-main { flex: 1; min-width: 0; }
+  .kick {
+    display: inline-block; font-size: 12.5px; letter-spacing: 3px;
+    color: var(--dim); border: 1px solid var(--hair); padding: 5px 14px; margin-bottom: 30px;
+  }
+  h1.title { font-size: clamp(38px, 6.4vw, 64px); font-weight: 700; letter-spacing: 8px; line-height: 1.25; }
+  .title .seal {
+    display: inline-block; vertical-align: 12px; margin-left: 14px;
+    font-size: 15px; letter-spacing: 2px; color: var(--ink);
+    background: var(--shih); padding: 4px 10px; border-radius: 2px; line-height: 1.5;
+  }
+  .hero-lede { margin-top: 26px; max-width: 34em; color: var(--dim); font-size: 15.5px; }
+  .hero-lede b { color: var(--paper); font-weight: 600; }
+  .poem-row { display: flex; gap: 18px; padding-top: 8px; flex-shrink: 0; }
+  .poem-strip {
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: 17px; letter-spacing: 7px; line-height: 1;
+    color: var(--paper); background: var(--ink2);
+    border: 1px solid var(--hair); padding: 26px 13px 20px; position: relative;
+  }
+  .poem-strip::before {
+    content: "觀弈道人自題"; position: absolute; bottom: 8px; left: 50%;
+    transform: translateX(-50%); writing-mode: vertical-rl; text-orientation: upright;
+    font-size: 10px; letter-spacing: 3px; color: var(--faint);
+  }
+  .poem-strip.hi { color: var(--ink); background: var(--shih); border-color: var(--shih); }
+  .poem-strip.hi::before { color: rgba(25,25,23,0.62); }
+
+  /* 灯下五书 */
+  section.lamp { padding: 66px 0 20px; border-top: 1px solid var(--hair); }
+  .sec-tag {
+    font-size: 12.5px; letter-spacing: 4px; color: var(--shih);
+    display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+  }
+  .sec-tag::after { content: ""; flex: 1; height: 1px; background: var(--hair); }
+  h2.sec { font-size: 27px; letter-spacing: 4px; font-weight: 700; margin-bottom: 18px; }
+  .sec-note { color: var(--dim); font-size: 15px; max-width: 40em; margin-bottom: 44px; }
+
+  .candle-row { display: flex; gap: 0; align-items: flex-end; justify-content: space-between; overflow-x: auto; padding: 8px 4px 0; }
+  .candle-box { flex: 1; min-width: 104px; text-align: center; position: relative; }
+  .candle-box + .candle-box::before {
+    content: ""; position: absolute; right: 50%; top: 46px; width: 100%; height: 1px;
+    background: var(--hair); z-index: 0;
+  }
+  .candle-btn {
+    position: relative; z-index: 1; background: none; border: none; cursor: pointer;
+    color: inherit; font: inherit; padding: 0; display: inline-block;
+  }
+  .candle-btn:focus-visible { outline: 1px dashed var(--shih); outline-offset: 6px; }
+  .candle-btn svg { display: block; margin: 0 auto; }
+  .candle-body { fill: var(--ink3); stroke: var(--hair); }
+  .candle-wick { stroke: var(--faint); stroke-width: 1.4; }
+  .flame { opacity: 0; transition: opacity 0.5s; transform-origin: 40px 30px; }
+  .glow { opacity: 0; transition: opacity 0.5s; }
+  .lit .flame { opacity: 1; }
+  .lit .glow { opacity: 0.9; }
+  .lit .candle-body { fill: #2b2925; }
+  .candle-year { display: block; margin-top: 2px; font-size: 12px; color: var(--faint); letter-spacing: 1px; }
+  .candle-name { display: block; margin-top: 6px; font-size: 14.5px; letter-spacing: 2px; color: var(--dim); }
+  .candle-box.is-lit .candle-name { color: var(--paper); }
+  .candle-box.is-lit .candle-year { color: var(--shih); }
+  .candle-box.pseudo .candle-name { color: var(--faint); font-size: 13px; }
+
+  .lamp-pane {
+    margin-top: 40px; border: 1px solid var(--hair); background: var(--ink2);
+    padding: 30px 34px 26px; min-height: 240px; position: relative;
+  }
+  .lamp-pane::before {
+    content: "卷首語"; position: absolute; top: -11px; left: 26px;
+    background: var(--ink2); color: var(--shih); font-size: 12px; letter-spacing: 4px; padding: 0 10px;
+  }
+  .pane-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px; margin-bottom: 14px; }
+  .pane-book { font-size: 21px; font-weight: 700; letter-spacing: 3px; }
+  .pane-date { font-size: 13px; color: var(--shih); letter-spacing: 2px; }
+  .pane-vol { font-size: 12.5px; color: var(--faint); margin-left: auto; letter-spacing: 1px; }
+  .pane-quote { font-size: 16.5px; }
+  .pane-quote .q { color: var(--paper); }
+  .pane-quote .q::before { content: "「"; color: var(--shih); }
+  .pane-quote .q::after { content: "」"; color: var(--shih); }
+  .pane-gloss { margin-top: 14px; font-size: 13.8px; color: var(--dim); }
+
+  /* 说鬼的人 */
+  section.person { padding: 70px 0 10px; }
+  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 40px; }
+  .card { border: 1px solid var(--hair); padding: 28px 30px 24px; background: var(--ink2); }
+  .card .tag { font-size: 12px; letter-spacing: 3px; color: var(--shih); margin-bottom: 16px; }
+  .card p.qx { font-size: 16px; }
+  .card p.src { margin-top: 14px; font-size: 12.5px; color: var(--faint); letter-spacing: 1px; }
+  .card.inverse { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .card.inverse .tag { color: #4c6d8e; }
+  .card.inverse p.qx { color: var(--ink); }
+  .card.inverse p.src { color: #7b766c; }
+  .card.inverse p.qx b { color: #4c6d8e; }
+  .person-note { margin-top: 26px; color: var(--dim); font-size: 14.5px; max-width: 44em; }
+
+  /* 讲理的鬼：三问三答 */
+  section.reason { padding: 70px 0 10px; }
+  .trial { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 40px 0 26px; }
+  .stance { border-top: 3px solid var(--hair); padding: 18px 20px 20px; background: var(--ink2); }
+  .stance.who { border-top-color: var(--faint); }
+  .stance.scholar { border-top-color: var(--dim); }
+  .stance.soldier { border-top-color: var(--shih); }
+  .stance .role { font-size: 13px; letter-spacing: 3px; color: var(--dim); margin-bottom: 10px; }
+  .stance.soldier .role { color: var(--shih); }
+  .stance p { font-size: 15px; color: var(--paper); }
+  .verdict { border: 1px dashed var(--hair); padding: 22px 28px; font-size: 17px; }
+  .verdict em { font-style: normal; color: var(--shih); }
+  .fox-card { margin-top: 34px; border: 1px solid var(--hair); background: var(--ink2); padding: 26px 30px; }
+  .fox-card h3 { font-size: 18px; letter-spacing: 3px; margin-bottom: 12px; }
+  .fox-card p { font-size: 15.5px; color: var(--paper); }
+  .fox-card p.dim { color: var(--dim); font-size: 13.8px; margin-top: 12px; }
+  .fox-card .punch { margin-top: 14px; font-size: 17px; }
+  .fox-card .punch em { font-style: normal; color: var(--shih); }
+
+  /* 鬼书的家法 */
+  section.family { padding: 70px 0 10px; }
+  .law { display: flex; flex-wrap: wrap; gap: 14px; margin: 36px 0 30px; }
+  .law-item {
+    border: 1px solid var(--hair); padding: 12px 20px; font-size: 15px;
+    letter-spacing: 1px; color: var(--paper); position: relative;
+  }
+  .law-item span { color: var(--shih); margin-right: 10px; font-size: 13px; }
+  .family-quote { font-size: 18px; max-width: 40em; }
+  .family-quote em { font-style: normal; color: var(--shih); }
+  .family-src { margin-top: 12px; font-size: 12.5px; color: var(--faint); letter-spacing: 1px; }
+
+  /* 库本现场 */
+  section.corner { padding: 70px 0 80px; }
+  .ledger { border-top: 1px solid var(--hair); }
+  .row { display: flex; gap: 26px; padding: 17px 4px; border-bottom: 1px solid var(--hair); font-size: 14.5px; }
+  .row .k { flex: 0 0 168px; color: var(--shih); letter-spacing: 1px; }
+  .row .v { color: var(--dim); flex: 1; }
+  .row .v b { color: var(--paper); font-weight: 600; }
+
+  footer.foot { border-top: 1px solid var(--hair); padding: 34px 0 46px; }
+  footer.foot p { font-size: 12.5px; color: var(--faint); line-height: 2.1; }
+  footer.foot a { color: var(--dim); text-decoration: none; border-bottom: 1px dotted var(--faint); }
+
+  @media (max-width: 760px) {
+    .hero-grid { flex-direction: column-reverse; }
+    .poem-row { padding-top: 0; }
+    .poem-strip { font-size: 14.5px; letter-spacing: 5px; padding: 18px 10px 16px; }
+    .duel { grid-template-columns: 1fr; }
+    .trial { grid-template-columns: 1fr; }
+    .row { flex-direction: column; gap: 4px; }
+    .row .k { flex: none; }
+    .candle-box { min-width: 92px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-main">
+      <span class="kick">殆知阁古代文献导读 之一百一十九</span>
+      <h1 class="title">阅微草堂笔记<span class="seal">清 纪昀</span></h1>
+      <p class="hero-lede">
+        《四库全书》总纂官，一生替皇帝编天下之书；乾隆五十四年夏天，在承德校书之余开始
+        <b>说鬼</b>。此后十年，五部笔记陆续写成，二十四卷，库内去标点约三十万九千字。
+        他在卷前的自题诗里给自己定了位：<b>只应说鬼以东坡</b>。
+      </p>
+    </div>
+    <div class="poem-row" aria-hidden="true">
+      <div class="poem-strip hi">千生心力坐销磨 纸上烟云过眼多</div>
+      <div class="poem-strip">拟筑书仓今老矣 只应说鬼以东坡</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="lamp">
+  <div class="wrap">
+    <div class="sec-tag">灯下五书</div>
+    <h2 class="sec">十年点五盏灯</h2>
+    <p class="sec-note">
+      五部笔记各有卷首语，等于五份开工自白：在哪里写、为什么写、写到第几卷。逐一点灯，读一读他每次动笔时说了什么。第六盏是合刻，第七盏是六十年后的岭南重刊。
+    </p>
+
+    <div class="candle-row" id="candles">
+      <div class="candle-box">
+        <button class="candle-btn" data-i="0" aria-label="点灯：滦阳消夏录">
+          <svg width="80" height="86" viewBox="0 0 80 86" aria-hidden="true">
+            <circle class="glow" cx="40" cy="30" r="22" fill="rgba(217,179,106,0.13)"/>
+            <path class="flame" d="M40 18 C45 26 47 30 47 34 A7 7 0 0 1 33 34 C33 30 35 26 40 18 Z" fill="#d9b36a"/>
+            <line class="candle-wick" x1="40" y1="40" x2="40" y2="47"/>
+            <rect class="candle-body" x="26" y="47" width="28" height="32" rx="2"/>
+          </svg>
+          <span class="candle-year">己酉 1789</span>
+          <span class="candle-name">滦阳消夏录</span>
+        </button>
+      </div>
+      <div class="candle-box">
+        <button class="candle-btn" data-i="1" aria-label="点灯：如是我闻">
+          <svg width="80" height="86" viewBox="0 0 80 86" aria-hidden="true">
+            <circle class="glow" cx="40" cy="30" r="22" fill="rgba(217,179,106,0.13)"/>
+            <path class="flame" d="M40 18 C45 26 47 30 47 34 A7 7 0 0 1 33 34 C33 30 35 26 40 18 Z" fill="#d9b36a"/>
+            <line class="candle-wick" x1="40" y1="40" x2="40" y2="47"/>
+            <rect class="candle-body" x="26" y="47" width="28" height="32" rx="2"/>
+          </svg>
+          <span class="candle-year">辛亥 1791</span>
+          <span class="candle-name">如是我闻</span>
+        </button>
+      </div>
+      <div class="candle-box">
+        <button class="candle-btn" data-i="2" aria-label="点灯：槐西杂志">
+          <svg width="80" height="86" viewBox="0 0 80 86" aria-hidden="true">
+            <circle class="glow" cx="40" cy="30" r="22" fill="rgba(217,179,106,0.13)"/>
+            <path class="flame" d="M40 18 C45 26 47 30 47 34 A7 7 0 0 1 33 34 C33 30 35 26 40 18 Z" fill="#d9b36a"/>
+            <line class="candle-wick" x1="40" y1="40" x2="40" y2="47"/>
+            <rect class="candle-body" x="26" y="47" width="28" height="32" rx="2"/>
+          </svg>
+          <span class="candle-year">壬子 1792</span>
+          <span class="candle-name">槐西杂志</span>
+        </button>
+      </div>
+      <div class="candle-box">
+        <button class="candle-btn" data-i="3" aria-label="点灯：姑妄听之">
+          <svg width="80" height="86" viewBox="0 0 80 86" aria-hidden="true">
+            <circle class="glow" cx="40" cy="30" r="22" fill="rgba(217,179,106,0.13)"/>
+            <path class="flame" d="M40 18 C45 26 47 30 47 34 A7 7 0 0 1 33 34 C33 30 35 26 40 18 Z" fill="#d9b36a"/>
+            <line class="candle-wick" x1="40" y1="40" x2="40" y2="47"/>
+            <rect class="candle-body" x="26" y="47" width="28" height="32" rx="2"/>
+          </svg>
+          <span class="candle-year">癸丑 1793</span>
+          <span class="candle-name">姑妄听之</span>
+        </button>
+      </div>
+      <div class="candle-box">
+        <button class="candle-btn" data-i="4" aria-label="点灯：滦阳续录">
+          <svg width="80" height="86" viewBox="0 0 80 86" aria-hidden="true">
+            <circle class="glow" cx="40" cy="30" r="22" fill="rgba(217,179,106,0.13)"/>
+            <path class="flame" d="M40 18 C45 26 47 30 47 34 A7 7 0 0 1 33 34 C33 30 35 26 40 18 Z" fill="#d9b36a"/>
+            <line class="candle-wick" x1="40" y1="40" x2="40" y2="47"/>
+            <rect class="candle-body" x="26" y="47" width="28" height="32" rx="2"/>
+          </svg>
+          <span class="candle-year">嘉庆戊午 1798</span>
+          <span class="candle-name">滦阳续录</span>
+        </button>
+      </div>
+      <div class="candle-box pseudo">
+        <button class="candle-btn" data-i="5" aria-label="点灯：合刻">
+          <svg width="80" height="86" viewBox="0 0 80 86" aria-hidden="true">
+            <circle class="glow" cx="40" cy="30" r="22" fill="rgba(217,179,106,0.13)"/>
+            <path class="flame" d="M40 18 C45 26 47 30 47 34 A7 7 0 0 1 33 34 C33 30 35 26 40 18 Z" fill="#d9b36a"/>
+            <line class="candle-wick" x1="40" y1="40" x2="40" y2="47"/>
+            <rect class="candle-body" x="26" y="47" width="28" height="32" rx="2"/>
+          </svg>
+          <span class="candle-year">嘉庆庚申 1800</span>
+          <span class="candle-name">五书合刻</span>
+        </button>
+      </div>
+      <div class="candle-box pseudo">
+        <button class="candle-btn" data-i="6" aria-label="点灯：岭南重刊">
+          <svg width="80" height="86" viewBox="0 0 80 86" aria-hidden="true">
+            <circle class="glow" cx="40" cy="30" r="22" fill="rgba(217,179,106,0.13)"/>
+            <path class="flame" d="M40 18 C45 26 47 30 47 34 A7 7 0 0 1 33 34 C33 30 35 26 40 18 Z" fill="#d9b36a"/>
+            <line class="candle-wick" x1="40" y1="40" x2="40" y2="47"/>
+            <rect class="candle-body" x="26" y="47" width="28" height="32" rx="2"/>
+          </svg>
+          <span class="candle-year">道光乙未 1835</span>
+          <span class="candle-name">岭南重刊</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="lamp-pane" id="pane" aria-live="polite">
+      <div class="pane-head">
+        <span class="pane-book" id="pBook">滦阳消夏录</span>
+        <span class="pane-date" id="pDate"></span>
+        <span class="pane-vol" id="pVol"></span>
+      </div>
+      <p class="pane-quote" id="pQuote"></p>
+      <p class="pane-gloss" id="pGloss"></p>
+    </div>
+  </div>
+</section>
+
+<section class="person">
+  <div class="wrap">
+    <div class="sec-tag">说鬼的人</div>
+    <h2 class="sec">书里藏着两段自己的事</h2>
+    <p class="sec-note">
+      纪昀字晓岚，直隶献县人。乾隆三十三年，他把盐引案的查抄消息透露给亲家，事泄革职，戍乌鲁木齐三年；被召还后主持四库全书馆。流放这件事，他不另写文章交代，只是让鬼故事顺手带出来。
+    </p>
+    <div class="duel">
+      <div class="card">
+        <div class="tag">西城的鬼，火铳打得散</div>
+        <p class="qx">「鬼亦畏火器，余在乌鲁木齐，曾以铳击厉鬼，不能复聚成形，语详滦阳消夏录。」</p>
+        <p class="src">槐西杂志谈火器一段，顺笔把流放地点写进了鬼话</p>
+      </div>
+      <div class="card inverse">
+        <div class="tag">最沉的一条：他儿子</div>
+        <p class="qx">「会余从军西域，乃自从诗社才士游……见聊斋志异抄本，时是书尚未刻，<b>又误堕其窠臼，竟沈沦不返，以讫于亡故</b>。」</p>
+        <p class="src">卷二十四记亡儿汝佶。父亲在戍途，儿子误堕两部当时最流行的写法</p>
+      </div>
+    </div>
+    <p class="person-note">
+      这一条是全书最疼的地方：他怪儿子先学公安竟陵、又迷聊斋，两头都走岔了。可他自己写的正是鬼狐笔记，只是立了另一套家法，见下节。说鬼的资格与说鬼的担忧，在同一个人身上并存，书才有后面那句「姑妄听之」的分寸。
+    </p>
+  </div>
+</section>
+
+<section class="reason">
+  <div class="wrap">
+    <div class="sec-tag">讲理的鬼</div>
+    <h2 class="sec">河中石兽：一桩拉锯三个答案</h2>
+    <p class="sec-note">
+      库内流传最广的一则，几乎不含鬼气，是一堂物理论证课。沧州寺庙山门连一对石兽沉进河里，三种人给出三种找法。
+    </p>
+    <div class="trial">
+      <div class="stance who">
+        <div class="role">寺僧</div>
+        <p>「以为顺流下矣。棹数小舟，曳铁钯寻十余里，无迹。」</p>
+      </div>
+      <div class="stance scholar">
+        <div class="role">讲学家</div>
+        <p>「乃石性坚重，沙性松浮，湮于沙上，渐沉渐深耳。沿河求之，不亦颠乎？」</p>
+      </div>
+      <div class="stance soldier">
+        <div class="role">老河兵</div>
+        <p>「凡河中失石，当求之于上流。」</p>
+      </div>
+    </div>
+    <p class="verdict">
+      老河兵算的是水冲沙掏的倒转：「石必倒掷坎穴中」，「转转不已，遂反溯流逆上」，「如其言，果得于数里外」。结案的一句也是全书的方法论：
+      <em>「然则天下之事，但知其一，不知其二者多矣，可据理臆断欤？」</em>
+    </p>
+    <div class="fox-card">
+      <h3>另有一条，是拿聊斋开涮</h3>
+      <p>
+        东昌书生夜行郊外，「稔闻聊斋志异青凤、水仙诸事，冀有所遇」，见华屋车马大喜过望；狐家是真请他进门了，请他干的事是
+        <em>替人家婚礼当傧相</em>。事后满座拊掌，送他八个字。
+      </p>
+      <p class="punch"><em>「非狐戏君，乃君自戏也。」</em></p>
+      <p class="dim">他笑的是读志怪读出一厢情愿的人，也是给自家书立边界：狐鬼可以有，情节不许替读者做梦。这句判词前脚立完，后脚他就用「姑妄听之」四个字给自己也上了同一道锁。</p>
+    </div>
+  </div>
+</section>
+
+<section class="family">
+  <div class="wrap">
+    <div class="sec-tag">鬼书的家法</div>
+    <h2 class="sec">虽小说，犹正史也</h2>
+    <p class="family-quote">
+      道光十五年，纪昀之孙树馥宦游岭南，求书者众，重刊此书；龙溪郑开僖作跋，替他总结写作纪律。四条自律印成一排，
+      <em>「虽小说，犹正史也」</em>是郑开僖给的考语，也是这部书能从志怪堆里站出来的原因。
+    </p>
+    <div class="law">
+      <div class="law-item"><span>其一</span>不颠是非，如碧云霞</div>
+      <div class="law-item"><span>其二</span>不挟恩怨，如周秦行纪</div>
+      <div class="law-item"><span>其三</span>不描摹才子佳人，如会真记</div>
+      <div class="law-item"><span>其四</span>不绘画横陈，如秘辛</div>
+    </div>
+    <p class="family-src">郑开僖跋并引纪昀自述：「冀不见摈于君子」。</p>
+    <p class="person-note">
+      门人盛时彦嘉庆五年合刻五书时的概括更直白：<b>「俶诡奇谲无所不载，洸洋恣肆无所不言，而大旨要归于醇正，欲使人知所劝惩。」</b>
+      鬼是话头，劝惩是靶心；一千多个故事各带一条街谈巷议的道理，这是它与聊斋分道的地方。
+    </p>
+  </div>
+</section>
+
+<section class="corner">
+  <div class="wrap">
+    <div class="sec-tag">库本现场</div>
+    <h2 class="sec">这一册电子文本的几处现场</h2>
+    <p class="sec-note">简体库此本自带一份小目录、卷前诗与两篇序，几处错位正好当书版指纹看。</p>
+    <div class="ledger">
+      <div class="row"><span class="k">目录自报二十三卷</span><span class="v">卷首目录只列到<b>卷二十三滦阳续录（五）</b>，正文却一路编到<b>卷二十四滦阳续录六</b>；目录自报各卷则数加总一千一百七十八则，未含卷二十四。</span></div>
+      <div class="row"><span class="k">走失的卷十八</span><span class="v">正文卷十八的卷标没有另起一行，粘在卷十七末条故事的句尾，还比别卷少「笔记」二字：「盖用此术矣，<b>阅微草堂卷十八姑妄听之四</b>」。</span></div>
+      <div class="row"><span class="k">「五十七刚」</span><span class="v">目录卷十五条写作姑妄听之（一）五十七<b>刚</b>，同页上下全是「则」字，独此一枚刻走了样。</span></div>
+      <div class="row"><span class="k">观弈还是观奕</span><span class="v">卷前诗署<b>观弈道人</b>，槐西杂志自题同；滦阳续录末行却作<b>观奕道人</b>。同一枚号，两种写法。</span></div>
+      <div class="row"><span class="k">己酉与巳酉</span><span class="v">消夏录卷首语作乾隆<b>己酉</b>夏，正文卷一开篇同句却作<b>巳酉</b>，一笔之差。</span></div>
+      <div class="row"><span class="k">两篇序的位置</span><span class="v">目录处标「郑序（盛序巳贴出）」，实际郑开僖跋、盛时彦序都在，盛序还被夹在卷标与正文之间。</span></div>
+      <div class="row"><span class="k">挥尘与挥麈</span><span class="v">槐西卷首语自比「<b>挥尘</b>之三录」。所拟即王明清挥麈三录，麈从主、尘从小，形近而讹。</span></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>
+      文本来源：殆知阁简体库（github.com/robertsong2000/daizhigev20）子藏笔记部〈阅微草堂笔记〉，库内去标点约三十万九千字。
+      本篇引文均与库内文件逐字核验通过（核验脚本 verify_yuewei.py），卷数、则数为库内目录实测加总。
+    </p>
+    <p>
+      纪昀身处乾隆朝文网最密的年代，书中的因果报应与劝惩框架是那个时代的书写策略，鬼神之说不可作事实读；
+      流放乌鲁木齐、四库编书等背景为史载常识，非出自本书原文。
+    </p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var DATA = [
+    {
+      book: "滦阳消夏录", date: "乾隆己酉 1789", vol: "六卷",
+      quote: "昼长无事，追录见闻，忆及即书，都无体例，小说稗官，知无关于著述。街谈巷议，或有益于劝惩，聊付抄胥存之，命曰：滦阳消夏录云尔。",
+      gloss: "在承德避暑山庄一带校书，昼长无事，把见闻当街谈巷议随手抄存。第一盏灯，点在公务的缝隙里。"
+    },
+    {
+      book: "如是我闻", date: "乾隆辛亥 1791", vol: "四卷",
+      quote: "曩撰滦阳消夏录属草未定，遽为书肆所窃刊，非所愿也。然博雅君子，或不以为纰缪，且有以新续告者。因补缀旧闻，又成四卷。",
+      gloss: "草稿没定就被书商盗印了。他索性接着写，还给续编起了个佛经开头的名字。同年又补一句题记：欧阳公曰，物尝聚于所好，岂不信哉。"
+    },
+    {
+      book: "槐西杂志", date: "乾隆壬子 1792", vol: "四卷",
+      quote: "借得袁氏婿数楹，榜曰槐西老屋，公余退食，辄憩息其间。自今以往，或竟懒而辍笔欤？则以为挥尘之三录可也，或老不能闲，又有所缀欤？则以为夷坚之丙志亦可也。",
+      gloss: "这本写在他值宿的槐西老屋，友朋轮番来讲异闻，他放一册在屋里，值班日就记几条。自比挥麈三录与夷坚丙志，把进退都想好了。"
+    },
+    {
+      book: "姑妄听之", date: "乾隆癸丑 1793", vol: "四卷",
+      quote: "三十以前，讲考证之学；三十以后，以文章与天下相驰骤；五十以后，领修秘籍，复折而讲考证。今老矣，无复当年之意兴，惟时拈纸墨，追录旧闻，姑以消遣岁月而已。",
+      gloss: "自序把一生切成三段：考证、文章、再回考证，晚来只剩纸墨消遣。书名采庄子语，也定下全书的姿态：姑妄言之，姑妄听之。"
+    },
+    {
+      book: "滦阳续录", date: "嘉庆戊午 1798", vol: "六卷",
+      quote: "今岁五月，扈从滦阳，退直之余，昼长多暇，乃连缀成书，命曰滦阳续录。嘉庆戊午七夕后三日观奕道人书于礼部直庐。时年七十有五。",
+      gloss: "九年后再扈从滦阳，七十五岁，在礼部值班房里收束五书。落款连坐标和年龄都写明，像给自己盖章。"
+    },
+    {
+      book: "合刻", date: "嘉庆庚申 1800", vol: "总名自此始",
+      quote: "乃请于先生，合五书为一编，而仍各存其原第，篝灯手校不敢惮劳，又请先生检视一过，然后摹印。",
+      gloss: "门人盛时彦把五书合为一编，各存原第，请先生亲自过目一遍。阅微草堂笔记这个名字，从这次合刻立起来。"
+    },
+    {
+      book: "岭南重刊", date: "道光乙未 1835", vol: "跋",
+      quote: "公之孙树馥，来宦岭南。从索是书者众。因重浸板……虽小说，犹正史也。",
+      gloss: "三十五年后，孙子在岭南做官，求书的人多，重刻一次。龙溪郑开僖作跋，给这部鬼书下了考语：虽小说，犹正史也。"
+    }
+  ];
+  var pane = {
+    book: document.getElementById("pBook"),
+    date: document.getElementById("pDate"),
+    vol: document.getElementById("pVol"),
+    quote: document.getElementById("pQuote"),
+    gloss: document.getElementById("pGloss")
+  };
+  var btns = Array.prototype.slice.call(document.querySelectorAll(".candle-btn"));
+  function show(i) {
+    var d = DATA[i];
+    pane.book.textContent = d.book;
+    pane.date.textContent = d.date;
+    pane.vol.textContent = d.vol;
+    pane.quote.textContent = "";
+    var q = document.createElement("span");
+    q.className = "q";
+    q.textContent = d.quote;
+    pane.quote.appendChild(q);
+    pane.gloss.textContent = d.gloss;
+    btns.forEach(function (b, j) {
+      b.classList.toggle("lit", j === i);
+      b.parentElement.classList.toggle("is-lit", j === i);
+    });
+  }
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () { show(parseInt(b.dataset.i, 10)); });
+  });
+  show(0);
+})();
+</script>
+
+</body>
+</html>
