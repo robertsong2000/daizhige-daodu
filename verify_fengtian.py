@@ -6,7 +6,7 @@ from html.parser import HTMLParser
 
 PAGE = '/home/robertsong/workspace/claude/daizhige-daodu/fengtian-jingnan-ji.html'
 LIB  = '/home/robertsong/workspace/claude/daizhige-simplified/史藏/志存记录/奉天靖难记.txt'
-NO = 133
+NO = 135
 
 html = open(PAGE, encoding='utf-8').read()
 lib  = open(LIB, encoding='utf-8').read()
@@ -140,8 +140,8 @@ print(f'[num] 机数断言 {len(checks)} 项')
 
 # ---------- 页面结构 ----------
 for anchor, label in [
-    ('殆知阁导读　之一百三十三　卷四鼎革', 'kicker'),
-    ('<title>奉天靖难记 · 殆知阁导读之一百三十三</title>', 'title'),
+    ('殆知阁导读　之一百三十五　卷四鼎革', 'kicker'),
+    ('<title>奉天靖难记 · 殆知阁导读之一百三十五</title>', 'title'),
     ('github.com/robertsong2000/daizhigev20', '来源'),
     ('全帙 54,955 字', '字数'),
     ('class="lost"', '缺字虚框'),
@@ -154,7 +154,7 @@ for anchor, label in [
     ('批判眼光', '时代局限提醒'),
 ]:
     if anchor not in html: fails.append(f'结构缺: {label}')
-if html.count('之一百三十三') < 3: fails.append('页内序号出现不足 3 处')
+if html.count('之一百三十五') < 3: fails.append('页内序号出现不足 3 处')
 
 # ---------- 输出 ----------
 print()
