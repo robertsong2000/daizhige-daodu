@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方言 · 輶轩使者的问话簿</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #26251f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --silk: #ded8cc;
+    --green: #5f9270;
+    --green-dim: rgba(95,146,112,0.45);
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+
+  /* 左侧油素：二十七节的绢带 */
+  .silk-rail {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 14px; z-index: 5;
+    background: var(--silk);
+    background-image:
+      repeating-linear-gradient(180deg,
+        transparent 0, transparent 26px,
+        rgba(25,25,23,0.32) 26px, rgba(25,25,23,0.32) 29px),
+      repeating-linear-gradient(90deg,
+        rgba(25,25,23,0.10) 0, rgba(25,25,23,0.10) 1px,
+        transparent 1px, transparent 4px);
+    box-shadow: 1px 0 0 rgba(25,25,23,0.5);
+  }
+  .silk-rail::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(95,146,112,0.0) 0%, rgba(95,146,112,0.35) 50%, rgba(95,146,112,0.0) 100%);
+    mix-blend-mode: multiply;
+  }
+  @media (max-width: 960px) { .silk-rail { display: none; } }
+
+  .page { max-width: 880px; margin: 0 auto; padding: 0 26px 0 64px; }
+  @media (max-width: 960px) { .page { padding-left: 26px; } }
+
+  /* 开卷素笺 */
+  .opening { padding: 84px 0 10px; }
+  .slip {
+    position: relative; background: var(--ink-2);
+    border: 1px solid var(--hairline);
+    padding: 44px 40px 38px;
+  }
+  .slip::before {
+    content: ""; position: absolute; top: 16px; left: 50%; width: 5px; height: 5px;
+    margin-left: -2px; border-radius: 50%; background: var(--paper-faint);
+  }
+  .slip .q {
+    display: block; font-size: clamp(20px, 3.1vw, 30px);
+    letter-spacing: 0.10em; line-height: 1.9;
+  }
+  .slip .q + .q { margin-top: 26px; padding-top: 26px; border-top: 1px solid var(--hairline); }
+  .slip .q b { color: var(--green); font-weight: 700; }
+  .slip .from {
+    margin-top: 30px; text-align: right;
+    font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.22em;
+  }
+  .slip .from em { font-style: normal; color: var(--green-dim); }
+
+  /* 题名 */
+  .titleblock { padding: 66px 0 10px; }
+  .kicker { font-size: 13px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  h1 { font-size: clamp(44px, 7vw, 78px); font-weight: 700; letter-spacing: 0.16em; margin: 18px 0 8px; }
+  h1 span { color: var(--green); }
+  .full-name {
+    font-size: 15.5px; color: var(--paper-dim); letter-spacing: 0.30em; margin-bottom: 26px;
+  }
+  .full-name small { display: block; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.12em; margin-top: 4px; }
+  .lede { font-size: 16.5px; color: var(--paper-dim); max-width: 34em; }
+  .lede b { color: var(--paper); font-weight: 600; }
+
+  /* 章节骨架 */
+  section { padding: 72px 0 8px; }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+  .sec-no { font-size: 12.5px; color: var(--green); letter-spacing: 0.30em; }
+  h2 { font-size: 24px; font-weight: 600; letter-spacing: 0.12em; }
+  .sec-sub { font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.14em; }
+  .prose { margin-top: 18px; color: var(--paper-dim); font-size: 15.5px; }
+  .prose p + p { margin-top: 14px; }
+  .prose b { color: var(--paper); font-weight: 600; }
+  .prose .in-q { color: var(--paper); }
+
+  /* 四件随身工具 */
+  .tools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 26px; }
+  .tool {
+    background: var(--ink-2); border: 1px solid var(--hairline);
+    border-top: 3px solid var(--green-dim);
+    padding: 16px 14px 13px; text-align: center;
+  }
+  .tool .glyph { font-size: 26px; color: var(--green); letter-spacing: 0; }
+  .tool .name { font-size: 16px; font-weight: 700; margin-top: 6px; letter-spacing: 0.14em; }
+  .tool .role { font-size: 12.5px; color: var(--paper-faint); margin-top: 3px; }
+  @media (max-width: 640px) { .tools { grid-template-columns: repeat(2, 1fr); } }
+
+  /* 问话簿 */
+  .ledger { margin-top: 30px; border-top: 1px solid var(--hairline); }
+  .row { display: grid; grid-template-columns: 108px 1fr; gap: 22px; padding: 24px 4px; border-bottom: 1px solid var(--hairline); }
+  .row .head-word {
+    align-self: center; text-align: center;
+    background: var(--ink-2); border: 1px solid var(--hairline);
+    padding: 14px 0 12px;
+  }
+  .row .head-word .w { font-size: 34px; font-weight: 700; letter-spacing: 0; }
+  .row .head-word .gloss { font-size: 12px; color: var(--green); letter-spacing: 0.2em; margin-top: 2px; }
+  .row .src { font-size: 12.5px; color: var(--paper-faint); margin-bottom: 10px; letter-spacing: 0.04em; }
+  .tags { display: flex; flex-wrap: wrap; gap: 9px; }
+  .tag {
+    display: inline-flex; align-items: baseline; gap: 8px;
+    background: var(--ink-3); border: 1px solid var(--hairline);
+    padding: 5px 12px 5px 10px; position: relative;
+  }
+  .tag::before {
+    content: ""; width: 4px; height: 4px; border-radius: 50%;
+    background: var(--paper-faint); align-self: center; flex: none;
+  }
+  .tag .place { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.06em; }
+  .tag .word { font-size: 16.5px; font-weight: 700; color: var(--green); letter-spacing: 0.04em; }
+  .tag .word.plain { color: var(--paper); }
+  .tag .note { font-size: 12px; color: var(--paper-faint); }
+  @media (max-width: 560px) { .row { grid-template-columns: 84px 1fr; gap: 14px; } }
+
+  /* 两封信 */
+  .letters { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 30px; }
+  @media (max-width: 760px) { .letters { grid-template-columns: 1fr; } }
+  .letter { background: var(--ink-2); border: 1px solid var(--hairline); padding: 26px 24px 24px; position: relative; }
+  .letter::before {
+    content: ""; position: absolute; top: -1px; left: 24px; width: 46px; height: 5px;
+    background: var(--green-dim);
+  }
+  .letter .who { font-size: 15px; font-weight: 700; letter-spacing: 0.18em; color: var(--green); }
+  .letter .who small { display: block; font-size: 12px; font-weight: 400; color: var(--paper-faint); letter-spacing: 0.08em; margin-top: 3px; }
+  .letter .line { margin-top: 16px; font-size: 15px; color: var(--paper); }
+  .letter .line + .line { margin-top: 12px; }
+  .letter .line em { font-style: normal; color: var(--green); }
+  .letter .aside { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--hairline); font-size: 13px; color: var(--paper-faint); }
+
+  .verdict-line {
+    margin: 34px 0 0; text-align: center;
+    font-size: clamp(19px, 2.6vw, 25px); letter-spacing: 0.14em; color: var(--paper);
+  }
+  .verdict-line small { display: block; margin-top: 8px; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.10em; }
+
+  /* 卷宗：作者公案 */
+  .dockets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 30px; }
+  @media (max-width: 760px) { .dockets { grid-template-columns: 1fr; } }
+  .docket { position: relative; background: var(--ink-2); border: 1px solid var(--hairline); padding: 30px 22px 20px; }
+  .docket .tab {
+    position: absolute; top: -12px; left: 16px;
+    background: var(--ink); border: 1px solid var(--hairline); border-bottom: none;
+    padding: 3px 12px; font-size: 12.5px; color: var(--green); letter-spacing: 0.22em;
+  }
+  .docket .era { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.26em; }
+  .docket p { margin-top: 8px; font-size: 14.5px; color: var(--paper-dim); }
+  .docket p b { color: var(--paper); font-weight: 600; }
+  .docket .cite { margin-top: 10px; font-size: 13.5px; color: var(--paper); border-left: 2px solid var(--green-dim); padding-left: 10px; }
+
+  /* 递修链 */
+  .chain { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 30px; position: relative; }
+  .chain::before {
+    content: ""; position: absolute; top: 26px; left: 4%; right: 4%; height: 1px;
+    background: var(--hairline);
+  }
+  @media (max-width: 760px) { .chain { grid-template-columns: 1fr; } .chain::before { display: none; } }
+  .hop { position: relative; background: var(--ink-2); border: 1px solid var(--hairline); padding: 20px 16px 16px; }
+  .hop .seal {
+    width: 34px; height: 34px; display: grid; place-items: center;
+    border: 1px solid var(--green-dim); color: var(--green);
+    font-size: 15px; font-weight: 700; margin-bottom: 10px; background: var(--ink);
+    position: relative; z-index: 1;
+  }
+  .hop .h-name { font-size: 15.5px; font-weight: 700; letter-spacing: 0.06em; }
+  .hop p { margin-top: 6px; font-size: 13.5px; color: var(--paper-dim); }
+  .hop p b { color: var(--paper); font-weight: 600; }
+
+  /* 尾声 */
+  .tongyu { text-align: center; padding: 86px 0 20px; }
+  .tongyu .big {
+    font-size: clamp(30px, 5vw, 46px); font-weight: 700; letter-spacing: 0.2em;
+  }
+  .tongyu .big span { color: var(--green); }
+  .tongyu p { margin: 26px auto 0; max-width: 36em; font-size: 15.5px; color: var(--paper-dim); text-align: left; }
+  .tongyu p b { color: var(--paper); font-weight: 600; }
+
+  footer.page-foot {
+    border-top: 1px solid var(--hairline); margin-top: 60px; padding: 34px 0 62px;
+    color: var(--paper-faint); font-size: 13.5px; line-height: 2;
+  }
+  footer.page-foot a { color: var(--paper-dim); }
+</style>
+</head>
+<body>
+
+<div class="silk-rail" title="一条四尺油素，二十七年攒成一卷"></div>
+
+<div class="page">
+
+  <header class="opening">
+    <div class="slip">
+      <span class="q">「<b>雄常把三寸弱翰，赍油素四尺</b>」</span>
+      <span class="q">「以问其异语，归即以铅摘次之于椠，<b>二十七岁于今矣</b>」</span>
+      <div class="from">扬雄《答刘歆书》<em>　库内原句，无标点</em></div>
+    </div>
+  </header>
+
+  <div class="titleblock">
+    <div class="kicker">殆知阁导读 · 词典卷</div>
+    <h1>方<span>言</span></h1>
+    <div class="full-name">輶轩使者绝代语释别国方言，十三卷
+      <small>书名十三字。輶轩，轻车；库本卷头以生僻之字记之，今从通行写法。</small>
+    </div>
+    <p class="lede">两千年前的一桩官方差事：每年八月，派<b>坐轻车的使者</b>巡行天下，把各地方言带回朝廷存档。秦亡之后，差事没了，档案烧了。西汉末年，一个蜀来的人在长安每年拦住进京的公务员和戍卒，一个词一个词地问，问了<b>二十七年</b>，问出中国第一部方言词典。</p>
+  </div>
+
+  <section id="sec-job">
+    <div class="sec-head"><span class="sec-no">壹</span><h2>先有差事，后有书</h2><span class="sec-sub">弱翰、油素、铅、椠</span></div>
+    <div class="prose">
+      <p>书名里那桩差事，汉代应劭讲得最完整：<span class="in-q">「周秦常以岁八月，遣輶轩之使，求异代方言，还奏籍之，藏于秘室。」</span>坐轻车出去，采方言回来，登记造册，藏在禁中。这是周秦的旧制。秦一亡，<b>档案散尽</b>，郭璞序里只剩一句干巴巴的清单：<span class="in-q">「盖闻方言之作，出乎輶轩之使，所以巡游万国，采览异言。」</span></p>
+      <p>扬雄做的是接续：先从两位蜀中前辈手里接过残稿，<span class="in-q">「严君平有千余言」「林闾翁孺才有梗概之法」</span>，然后自备工具，把没有使者再做的事，做成了一个人一辈子的功课。他的全部行头，四样。</p>
+    </div>
+    <div class="tools">
+      <div class="tool"><div class="glyph">笔</div><div class="name">三寸弱翰</div><div class="role">一支小毛笔</div></div>
+      <div class="tool"><div class="glyph">素</div><div class="name">四尺油素</div><div class="role">一匹白绢</div></div>
+      <div class="tool"><div class="glyph">铅</div><div class="name">铅</div><div class="role">粉笔，随手记</div></div>
+      <div class="tool"><div class="glyph">椠</div><div class="name">椠</div><div class="role">木牍，回家誊</div></div>
+    </div>
+    <div class="prose" style="margin-top:24px">
+      <p>问谁？<b>每年进京述职的上计吏、孝廉，和轮戍到京师的士兵</b>。他们从帝国每一个郡国来，聚在长安，再散回去。扬雄拿着笔和绢去拦人问话，问完晚上用铅笔记在木牍上。一个人，就是那架已经不存在的輶轩。</p>
+    </div>
+  </section>
+
+  <section id="sec-ledger">
+    <div class="sec-head"><span class="sec-no">貳</span><h2>问话簿</h2><span class="sec-sub">同一个词，五六个家乡</span></div>
+    <div class="ledger">
+
+      <div class="row">
+        <div class="head-word"><div class="w">知</div><div class="gloss">懂得</div></div>
+        <div>
+          <div class="src">「党晓哲知也，楚谓之党」……「或曰晓，齐宋之闲谓之哲」（卷一）</div>
+          <div class="tags">
+            <span class="tag"><span class="place">楚</span><span class="word">党</span></span>
+            <span class="tag"><span class="place">未详何地</span><span class="word plain">晓</span></span>
+            <span class="tag"><span class="place">齐宋之闲</span><span class="word">哲</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="head-word"><div class="w">往</div><div class="gloss">出去</div></div>
+        <div>
+          <div class="src">「嫁逝徂适往也。自家而出谓之嫁，由女而出为嫁也。逝秦晋语也，徂齐语也，适宋鲁语也，往凡语也」（卷一）</div>
+          <div class="tags">
+            <span class="tag"><span class="place">自家而出</span><span class="word">嫁</span><span class="note">专说女子</span></span>
+            <span class="tag"><span class="place">秦晋</span><span class="word">逝</span></span>
+            <span class="tag"><span class="place">齐</span><span class="word">徂</span></span>
+            <span class="tag"><span class="place">宋鲁</span><span class="word">适</span></span>
+            <span class="tag"><span class="place">通行</span><span class="word plain">往</span><span class="note">凡语</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="head-word"><div class="w">老</div><div class="gloss">年迈</div></div>
+        <div>
+          <div class="src">「睂棃耊鲐老也。东齐曰睂」……「燕代之北鄙曰棃」……「宋卫兖豫之内曰耊」……「秦晋之郊陈兖之会曰耇鲐」（卷二，郭璞注随文）</div>
+          <div class="tags">
+            <span class="tag"><span class="place">东齐</span><span class="word">睂</span><span class="note">言秀睂也</span></span>
+            <span class="tag"><span class="place">燕代北鄙</span><span class="word">棃</span><span class="note">面色似冻棃</span></span>
+            <span class="tag"><span class="place">宋卫兖豫</span><span class="word">耊</span><span class="note">八十为耊</span></span>
+            <span class="tag"><span class="place">秦晋陈兖</span><span class="word">耇鲐</span><span class="note">背皮如鲐鱼</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="head-word"><div class="w">大</div><div class="gloss">壮大</div></div>
+        <div>
+          <div class="src">「秦晋之闲凡人之大谓之奘或谓之壮，燕之北鄙齐楚之郊或曰京或曰将」「自关而西秦晋之闲凡物之壮大者而爱伟之谓之夏」（卷二）</div>
+          <div class="tags">
+            <span class="tag"><span class="place">秦晋</span><span class="word">奘</span><span class="note">用于人</span></span>
+            <span class="tag"><span class="place">秦晋</span><span class="word">壮</span></span>
+            <span class="tag"><span class="place">燕北鄙齐楚郊</span><span class="word">京</span><span class="note">或曰将</span></span>
+            <span class="tag"><span class="place">关西秦晋</span><span class="word">夏</span><span class="note">壮大而爱伟之</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="head-word"><div class="w">疾</div><div class="gloss">快</div></div>
+        <div>
+          <div class="src">「速逞摇扇疾也。东齐海岱之闲曰速，燕之外鄙朝鲜洌水之闲曰摇扇，楚曰逞」（卷二）</div>
+          <div class="tags">
+            <span class="tag"><span class="place">东齐海岱</span><span class="word">速</span></span>
+            <span class="tag"><span class="place">朝鲜洌水</span><span class="word">摇扇</span></span>
+            <span class="tag"><span class="place">楚</span><span class="word">逞</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="head-word"><div class="w">汁</div><div class="gloss">汤汁</div></div>
+        <div>
+          <div class="src">「斟协汁也」……「北燕朝鲜洌水之闲曰斟，自关而东曰协，关西曰汁」（卷二）</div>
+          <div class="tags">
+            <span class="tag"><span class="place">北燕朝鲜</span><span class="word">斟</span><span class="note">今天还用于斟酒</span></span>
+            <span class="tag"><span class="place">关东</span><span class="word">协</span></span>
+            <span class="tag"><span class="place">关西</span><span class="word plain">汁</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="head-word"><div class="w">虎</div><div class="gloss">大虫</div></div>
+        <div>
+          <div class="src">「虎陈魏宋楚之闲或谓之李父，江淮南楚之闲谓之李耳」「自关东西或谓之伯都」（卷八）</div>
+          <div class="tags">
+            <span class="tag"><span class="place">陈魏宋楚</span><span class="word">李父</span></span>
+            <span class="tag"><span class="place">江淮南楚</span><span class="word">李耳</span></span>
+            <span class="tag"><span class="place">关东西</span><span class="word">伯都</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="head-word"><div class="w">舟</div><div class="gloss">船</div></div>
+        <div>
+          <div class="src">「舟自关而西谓之船自关而东或谓之舟或谓之航」「南楚江湘凡船大者谓之舸」（卷九）</div>
+          <div class="tags">
+            <span class="tag"><span class="place">关西</span><span class="word">船</span></span>
+            <span class="tag"><span class="place">关东</span><span class="word plain">舟</span><span class="note">或曰航</span></span>
+            <span class="tag"><span class="place">南楚江湘</span><span class="word">舸</span><span class="note">大者</span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="prose" style="margin-top:24px">
+      <p>每个词条的写法都是一台<b>同义词的地理簿</b>：先立通语，再记各地叫法，郭璞注再往里填晋代的活证据，比如好字条下的<span class="in-q">「今关西人呼好为媌」</span>，舟字条下的<span class="in-q">「今江东呼艖小底者也」</span>。汉人问来的词，晋人再核一遍。朝鲜洌水、燕代北鄙反复出现，说明这份问话簿的采集网一直铺到帝国的最北端。</p>
+    </div>
+  </section>
+
+  <section id="sec-letters">
+    <div class="sec-head"><span class="sec-no">叄</span><h2>两封信</h2><span class="sec-sub">有人来要稿子了</span></div>
+    <div class="prose">
+      <p>书写到第二十七年，长安城里另一位学者坐不住了。刘歆接手父亲刘向的皇家校书工程，发现别国殊语这一块是空的，听说扬雄手里正好有一部，写信去要。两封信来来回回，一封索稿，一封婉拒，<b>从隋唐以来就附在书末</b>，成了这部书自己的一部分。</p>
+    </div>
+    <div class="letters">
+      <div class="letter">
+        <div class="who">刘歆书<small>站在皇家藏书的角度：交出来，是功名</small></div>
+        <div class="line">「欲以验考四方之事，<em>不劳戎马高车之使，坐知傜俗</em>。」</div>
+        <div class="line">不出去跑，坐在帷幕里就能知道四方风俗。这是他为皇家算的账。</div>
+        <div class="aside">信首他先交代了一桩钦案的查办，才转入正题；末尾连书「歆叩头叩头」。汉人的书仪，也是催稿的礼貌。</div>
+      </div>
+      <div class="letter">
+        <div class="who">扬雄答书<small>站在二十七年的角度：还没写完，不能给</small></div>
+        <div class="line">信里转述同僚张伯松看过未成稿后的评语：「<em>是悬诸日月不刋之书也</em>。」</div>
+        <div class="line">他领情，但稿子<b>未定</b>：「即君必欲胁之以威，陵之以武」……「则缢死以从命也。」</div>
+        <div class="aside">话说得极重：逼我，我就死。末句却又软下来：「不可以遗，不可以怠」「而可且宽假延期，必不敢有爱」。书要写完的，只是别催。四库馆臣点破：当时刘歆已是王莽新朝的国师，这句狠话是冲着权势说的。</div>
+      </div>
+    </div>
+    <div class="verdict-line">
+      「非子云澹雅之才，沈郁之思，不能经年锐精以成此书」
+      <small>刘歆信中语。要稿子的人，先认了这二十七年。</small>
+    </div>
+  </section>
+
+  <section id="sec-author">
+    <div class="sec-head"><span class="sec-no">肆</span><h2>书是谁的</h2><span class="sec-sub">一桩没有判决书的公案</span></div>
+    <div class="dockets">
+      <div class="docket"><span class="tab">东汉</span>
+        <div class="era">两百年沉默</div>
+        <p>《汉书》给扬雄列过完整著录，<b>没有这部书</b>。东汉一百九十年，也没有人提。第一部线索出现在汉末。</p>
+      </div>
+      <div class="docket"><span class="tab">汉末</span>
+        <div class="era">应劭首倡</div>
+        <p>应劭在《风俗通义》序里第一次把书归到扬雄名下，连他注《汉书》都引过「扬雄方言」。著作权从这里开始挂在他名下。</p>
+      </div>
+      <div class="docket"><span class="tab">南宋</span>
+        <div class="era">洪迈发难</div>
+        <p>《容斋随笔》挑出书信里的漏洞：既称成帝时，怎么又称孝成皇帝？断言<b>断非雄作</b>。四库馆臣复核后认为他所举两条「未深中其要领」。</p>
+      </div>
+      <div class="docket"><span class="tab">清</span>
+        <div class="era">四库判词</div>
+        <p>馆臣给出的裁决是一句软话：<b>存疑，不除名</b>。</p>
+        <div class="cite">「反复推求其真伪皆无显据，姑从旧本仍题雄名，亦疑以传疑之义也。」</div>
+      </div>
+      <div class="docket"><span class="tab">补案</span>
+        <div class="era">残稿说</div>
+        <p>馆臣自己也给了最可能的答案：扬雄确有一部未成之稿，刘歆借观而未得，所以皇家书目不载。</p>
+        <div class="cite">「侯芭之流收其残稿，私相传述。」</div>
+        <p>学生把老师的遗稿传下去，传抄两百年，字多了三千，卷少了两卷。</p>
+      </div>
+      <div class="docket"><span class="tab">账目</span>
+        <div class="era">两个对不上的数</div>
+        <p>应劭说九千字，今本一万二千九百余，<span class="cite">「字数较原本几溢三千」</span>。往返书信都说十五卷，隋唐志以下都是十三卷，<span class="cite">「卷数较原本阙其二」</span>。每一代传抄，都在这本书身上留下了指纹。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-rescue">
+    <div class="sec-head"><span class="sec-no">伍</span><h2>四手接力</h2><span class="sec-sub">一部书怎么活到今天</span></div>
+    <div class="prose">
+      <p>扬雄的手之后，这本书又换了三只手。每一只手接住它的时候，它都比上一站更破一点，也更接近散掉一点。</p>
+    </div>
+    <div class="chain">
+      <div class="hop"><div class="seal">晋</div>
+        <div class="h-name">郭璞注</div>
+        <p>东晋训诂家给全书作注，顺手记下自己时代的口语。没有他，这本书可能读不成句。</p>
+      </div>
+      <div class="hop"><div class="seal">宋</div>
+        <div class="h-name">李孟传刻本</div>
+        <p>庆元庚申年，他在寻阳郡斋刻书。书少人不知，他自己感慨：<b>「此书世所有，而无与是正，知好之者少也。」</b></p>
+      </div>
+      <div class="hop"><div class="seal">明</div>
+        <div class="h-name">明刻妄改</div>
+        <p>坊刻改窜错落，四库馆臣下了重话：<b>「是书虽存而实亡。」</b>字形都在，书已经死了。</p>
+      </div>
+      <div class="hop"><div class="seal">清</div>
+        <div class="h-name">四库复元</div>
+        <p>靠《永乐大典》所收宋本回改：<b>「凡改正二百八十一字，删衍文十七字，补脱文二十七字」</b>，馆臣自评四字：顿还旧观。</p>
+      </div>
+    </div>
+    <div class="prose" style="margin-top:24px">
+      <p>宋刻那一段还留下一桩词的小命案。江西诗人吕居仁有一句「记我今年病不斟」，用的是《方言》里斟字添益的古义：病轻了又加重，谓之不斟。后来的刻书人不懂，顺手改成了「病不禁」。李孟传在书里记下这笔：<span class="in-q">「今所在镂板，辄误作病不禁。」</span>一个方言词，就是这样从一块一块木刻版上悄悄死掉的。</p>
+    </div>
+  </section>
+
+  <div class="tongyu">
+    <div class="big">往，<span>凡语也</span></div>
+    <p>问话簿里最不起眼的一条：逝、徂、适各占一方，最后落在一个通行无碍的字上。扬雄拦住上计吏和戍卒问了二十七年，问的就是这张地图，和地图中央那条汇合线。今天我们说斟酒、说舸、说艇、说妍，都是在用那张地图上没有烧掉的部分。书末的两封信还坐在十三卷之后，一封讨要，一封没给。这是全库最安静的一次拒绝。</p>
+  </div>
+
+  <footer class="page-foot">
+    文本来源：殆知阁简体库 儒藏/小学/方言.txt（github.com/robertsong2000/daizhigev20），四库本含郭璞注、馆臣案语及卷首提要、刘扬二书。引文均与库内文件逐字核验，异体字归一后比对，标点为导读所加。<br>
+    书中地物人情皆两汉旧观，虎名李父李耳、老名冻梨云云，是名物之异而非怪谈；其训诂结论亦受汉代小学局限，宜批判地看。<br>
+    殆知阁导读·第 126 篇（2026 年 8 月）
+  </footer>
+
+</div>
+</body>
+</html>
