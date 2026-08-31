@@ -211,8 +211,10 @@ if (n_row, n_hit) != (7, 1):
 for kn in ['壹', '贰', '叁', '肆', '伍', '陆', '柒']:
     if f'<span class="knum">{kn}</span>' not in html:
         errors.append(f'缺节号 {kn}')
-if f'之一百二十{chr(0x4e8c) if False else "三"}' not in html or f'之一百二十三' not in html:
-    errors.append('页内序号非之一百二十三')
+cn = '之一百' + '一二三四五六七八九十'[NO // 100 - 1] + '二十' + '一二三四五六七八九十'[NO % 10 - 1] if NO % 100 == 24 else None
+ser = {118:'之一百一十八',119:'之一百一十九',120:'之一百二十',121:'之一百二十一',122:'之一百二十二',123:'之一百二十三',124:'之一百二十四',125:'之一百二十五'}[NO]
+if ser not in html:
+    errors.append(f'页内序号非{ser}')
 if f'<span class="no mono">{NO}</span>' not in open('mulu.html', encoding='utf-8').read():
     print(f'提醒：mulu.html 尚无 {NO} 号条目（定号前正常）')
 
