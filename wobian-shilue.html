@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>倭变事略 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --gold: #c9963f;
+    --gold-dim: rgba(201,150,63,0.35);
+    --hairline: rgba(232,228,220,0.12);
+    --seal: #c0453c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 26px; }
+
+  /* 开场：海平线 */
+  .hai { min-height: 94dvh; display: flex; flex-direction: column; position: relative; }
+  .sky { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 56px; position: relative; }
+  .kicker { font-size: 13px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  h1 { font-size: clamp(46px, 8vw, 92px); font-weight: 700; letter-spacing: 0.14em; margin: 20px 0 14px; }
+  h1 span { color: var(--gold); }
+  .sub { font-size: clamp(15px, 1.6vw, 18px); color: var(--paper-dim); max-width: 34em; }
+  .epi { margin-top: 30px; max-width: 30em; color: var(--paper); }
+  .ta { position: absolute; right: 14%; bottom: 0; width: 2px; height: 78px; background: var(--gold-dim); }
+  .ta::before { content: ""; position: absolute; top: -14px; left: -5px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 15px solid var(--gold-dim); }
+  .ta::after { content: ""; position: absolute; top: 18px; left: -8px; width: 18px; height: 1px; background: var(--gold-dim); box-shadow: 0 16px 0 -2px rgba(201,150,63,0.32), 0 32px 0 -4px rgba(201,150,63,0.26); }
+  .sea { height: 30dvh; min-height: 150px; position: relative;
+    background: repeating-linear-gradient(180deg, rgba(232,228,220,0.05) 0 1px, transparent 1px 26px);
+    border-top: 1px solid var(--gold-dim); }
+  .sea .note { position: absolute; right: 26px; bottom: 18px; font-size: 12.5px; letter-spacing: 0.2em; color: var(--paper-faint); }
+  .sea .note b { color: var(--gold-dim); font-weight: 400; }
+
+  /* 潮痕分隔 */
+  .beacon { height: 1px; border: 0; margin: 0;
+    background: repeating-linear-gradient(90deg, var(--gold-dim) 0 12px, transparent 12px 30px); opacity: 0.6; }
+
+  /* 年章 */
+  section.year { padding: 84px 0 30px; }
+  .yrrow { display: flex; align-items: flex-end; gap: 26px; margin-bottom: 14px; }
+  .yr { font-size: clamp(58px, 9vw, 104px); line-height: 1; font-weight: 700; letter-spacing: 0.08em; color: var(--gold); opacity: 0.92; }
+  .yrside { padding-bottom: 8px; }
+  .yrside .gz { font-size: 13px; letter-spacing: 0.3em; color: var(--paper-faint); }
+  .yrside h2 { font-size: 21px; font-weight: 600; letter-spacing: 0.1em; margin-top: 6px; }
+  .lede { color: var(--paper-dim); font-size: 15.5px; max-width: 40em; margin-bottom: 8px; }
+
+  /* 引文 */
+  .qwrap { margin: 26px 0; }
+  .src { display: inline-block; font-size: 12px; letter-spacing: 0.18em; color: var(--paper-faint); margin-bottom: 6px; }
+  .q {
+    background: rgba(232,228,220,0.045); border-left: 2px solid var(--gold);
+    padding: 16px 20px; font-size: 16.5px; color: var(--paper);
+  }
+  .q em { font-style: normal; color: var(--gold); }
+  p.t { margin: 18px 0; font-size: 16px; color: rgba(232,228,220,0.88); max-width: 42em; }
+  p.t b { color: var(--paper); font-weight: 600; }
+
+  /* 庙壁诗 */
+  .poem { margin: 30px auto; max-width: 26em; text-align: center; padding: 26px 18px;
+    border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); position: relative; }
+  .poem .plabel { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); background: var(--ink); padding: 0 14px; font-size: 12px; letter-spacing: 0.3em; color: var(--gold); }
+  .poem .v { font-size: 17.5px; letter-spacing: 0.12em; }
+
+  /* 点闸册 */
+  .ledger { margin: 28px 0; border: 1px solid var(--hairline); }
+  .ledger h3 { font-size: 13px; letter-spacing: 0.32em; color: var(--gold); font-weight: 400; padding: 12px 18px; border-bottom: 1px solid var(--hairline); }
+  .ledger li { list-style: none; display: flex; gap: 14px; align-items: baseline; padding: 11px 18px; font-size: 15px; }
+  .ledger li + li { border-top: 1px dashed rgba(232,228,220,0.1); }
+  .ledger li .dn { color: var(--gold); flex: 0 0 auto; font-size: 13.5px; }
+  .ledger li .dt { color: rgba(232,228,220,0.85); }
+
+  /* 诡道对垒 */
+  .duelh { margin: 40px 0 6px; font-size: 13px; letter-spacing: 0.32em; color: var(--gold); font-weight: 400; }
+  .duels { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0 8px; }
+  .card { border: 1px solid var(--hairline); padding: 16px 16px 18px; position: relative; background: var(--ink-2); }
+  .card .who { font-size: 11.5px; letter-spacing: 0.24em; color: var(--paper-faint); }
+  .card h4 { font-size: 17px; font-weight: 600; letter-spacing: 0.08em; margin: 6px 0 4px; }
+  .card .when { font-size: 12px; color: var(--paper-faint); margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--paper-dim); }
+  .card .q { font-size: 14.5px; padding: 10px 14px; margin-top: 10px; }
+  .stamp { position: absolute; top: 12px; right: 12px; font-size: 12px; letter-spacing: 0.18em; color: var(--seal);
+    border: 1.5px solid var(--seal); padding: 3px 7px; transform: rotate(8deg); opacity: 0.9; border-radius: 2px; }
+
+  /* 首级账 */
+  .shouji { margin: 30px 0 10px; border: 1px solid var(--hairline); }
+  .shouji .row { display: grid; grid-template-columns: 9em 1fr auto; gap: 16px; padding: 13px 18px; align-items: baseline; }
+  .shouji .row + .row { border-top: 1px dashed rgba(232,228,220,0.1); }
+  .shouji .e { color: var(--paper); font-size: 15px; }
+  .shouji .d { color: var(--paper-dim); font-size: 14px; }
+  .shouji .n { color: var(--gold); font-size: 15px; text-align: right; }
+  .shouji .head { display: grid; grid-template-columns: 9em 1fr auto; gap: 16px; padding: 10px 18px; font-size: 12px; letter-spacing: 0.22em; color: var(--paper-faint); border-bottom: 1px solid var(--hairline); }
+
+  /* 金簪收束 */
+  .fin { padding: 70px 0 40px; text-align: center; }
+  .pin { width: 210px; height: 1.5px; margin: 26px auto 0; background: linear-gradient(90deg, transparent, var(--gold)); position: relative; }
+  .pin::before { content: ""; position: absolute; left: -4px; top: -4.5px; width: 9px; height: 9px; border-radius: 50%; background: var(--gold); box-shadow: 0 -6px 0 -2px var(--gold-dim); }
+
+  /* 核验 */
+  .heyan { border: 1px solid var(--hairline); padding: 26px 28px; margin: 30px 0 40px; }
+  .heyan h3 { font-size: 14px; letter-spacing: 0.3em; color: var(--gold); font-weight: 400; margin-bottom: 12px; }
+  .heyan p { font-size: 13.8px; color: var(--paper-dim); margin-bottom: 10px; }
+  .heyan a { color: var(--gold); text-decoration: none; }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 26px 0 40px; font-size: 13px; color: var(--paper-faint); }
+  footer.page .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  footer.page a { color: var(--paper-dim); text-decoration: none; }
+
+  @media (max-width: 720px) {
+    .duels { grid-template-columns: 1fr; }
+    .yrrow { gap: 16px; }
+    .shouji .row, .shouji .head { grid-template-columns: 7em 1fr auto; gap: 10px; }
+    .ta { right: 8%; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hai">
+  <div class="sky">
+    <div class="wrap">
+      <div class="kicker">殆知阁导读 · 第一百六十二篇</div>
+      <h1>倭变<span>事略</span></h1>
+      <p class="sub">明 采九德 撰。嘉靖三十二年夏天，一条倭船靠上海盐滩头；这本小书从那一天记起，一直记到七年之后王直的刑场。全篇的引文，都出自一个守城士绅的逐日笔录。</p>
+      <div class="epi">
+        <span class="src">癸丑四月，全书第一段</span>
+        <div class="q">时承平久，邑人相携往观，嘻然莫为虞。</div>
+      </div>
+    </div>
+    <div class="ta"></div>
+  </div>
+  <div class="sea">
+    <div class="note">海上望见的第一样东西是塔顶 · 倭人叫这城 <b>尖头村</b></div>
+  </div>
+</header>
+
+<main>
+  <hr class="beacon">
+
+  <section class="year">
+    <div class="wrap">
+      <div class="yrrow">
+        <div class="yr">癸丑</div>
+        <div class="yrside">
+          <div class="gz">嘉靖三十二年 · 公元一五五三</div>
+          <h2>一条船，六十个人，一座不设防的城</h2>
+        </div>
+      </div>
+      <p class="lede">四月二日，海盐演武场北边的滩上泊来一条八九丈的海船，贼约六十余人。官兵上前询问，语言不通，对方递出一只小木柜，柜里有一封信。</p>
+      <div class="qwrap">
+        <span class="src">倭船递出的信</span>
+        <div class="q">吾日本人也，来自吾地，以失舵，愿假粮食，修吾舵，即返。幸无吾逼，逼则我尔死生未判也。</div>
+      </div>
+      <p class="t">信里说只是借粮修舵。当天日头偏西，带兵的指挥逼近倭船，船上的人一齐站起，箭无虚发。看热闹的人才开始跑，城门就此堵死。第二天放火烧船，火里跳出一个人来。</p>
+      <div class="qwrap">
+        <span class="src">火中的酋长</span>
+        <div class="q">酋长有八大王者，从火中奋跃，眉毛尽焦，独举二刀拂火飞斫我军，跳掷数四而倒。</div>
+      </div>
+      <p class="t">书里给这一战留了一句话，当作全篇的起点：<b>海上兵与倭交锋之始也</b>。此后三年，这座县城的日子被改写。</p>
+    </div>
+  </section>
+
+  <section class="year">
+    <div class="wrap">
+      <div class="yrrow">
+        <div class="yr">壁诗</div>
+        <div class="yrside">
+          <div class="gz">癸丑五月 · 白马庙</div>
+          <h2>一首诗，戳破了「倭寇」这个词</h2>
+        </div>
+      </div>
+      <p class="lede">四十二个失风的贼被围在白马庙里，里头居然有个每天早晨占卜的，还在墙上题了一首诗。</p>
+      <div class="poem">
+        <div class="plabel">贼题庙壁</div>
+        <div class="v">海雾晓开合，海风春复寒；<br>衰颜欢薄酒，老眼傲惊湍；<br>丛市人家近，平沙客路宽；<br>明朝晴更好，飞翠泼征鞍。</div>
+      </div>
+      <p class="t">作者抄下这首诗，随后记下当时人郑晓的判断：倭患里多的是国内不得志的人，衣冠失职书生，投进贼中做奸细。</p>
+      <div class="qwrap">
+        <span class="src">作者的按语</span>
+        <div class="q">观此四十贼，亦有能题咏者，则倡乱者岂真倭党哉？</div>
+      </div>
+      <p class="t">这是全书的眼。所谓倭寇，头目多半是中国人：后来书里出场的徐海是还俗的僧人，王直是徽州海商，叶麻、陈东各带一党。海上来的刀，刃口向着沿海的县城，握刀的手却分不清是哪一国的。作者在按语后补了一句：徐海、王直、毛烈等并皆华人，可信矣。</p>
+    </div>
+  </section>
+
+  <section class="year">
+    <div class="wrap">
+      <div class="yrrow">
+        <div class="yr">守城</div>
+        <div class="yrside">
+          <div class="gz">癸丑五月 · 海盐</div>
+          <h2>三十七艘船围城，一本点闸册应敌</h2>
+        </div>
+      </div>
+      <p class="lede">五月，倭船大队到了。汤克宽带三百邳兵来守海盐，成了书里最亮的一个人物。</p>
+      <div class="qwrap">
+        <span class="src">五月廿五</span>
+        <div class="q">倭船三十七只泊龙王塘，如蔽天之山，其帆亦如浮空之云。</div>
+      </div>
+      <div class="qwrap">
+        <span class="src">攻城当日的箭</span>
+        <div class="q">城外隔河而射，中城内屋，钉瓦入椽，而没镞矢。</div>
+      </div>
+      <p class="t">汤克宽把全城人头一样样点过，谁在哪一段墙，出了事找谁。书里把这份名册原样抄了下来。</p>
+      <div class="ledger">
+        <h3>守城点闸册（汤公手订）</h3>
+        <ul>
+          <li><span class="dn mono">垛</span><span class="dt">计城垛共二千有奇，每垛军一民二，及乡绅举监生员之家丁一</span></li>
+          <li><span class="dn mono">督</span><span class="dt">每五垛督一邳兵，每十垛监一甲长</span></li>
+          <li><span class="dn mono">铺</span><span class="dt">每窝铺城楼屯以兵民二三十人及千百户一二员</span></li>
+          <li><span class="dn mono">门</span><span class="dt">每城门一指挥、一千户，一县僚属守之，四门皆然</span></li>
+          <li><span class="dn mono">册</span><span class="dt">守城兵民册籍，诸衙门各一册，或差官或亲自点闸</span></li>
+        </ul>
+      </div>
+      <p class="t">县令郑茂管的是另一本账，守城民夫按贫富给口粮：城守民贫者，日给米二升，夜给烛五枝，夜半给饼五枚；他自己在城上过夜，自称余每夜巡逻，绕城走七匝，天始辨曙。围城三夜，贼没有进去，转头去攻乍浦。乍浦没有汤克宽。</p>
+      <div class="qwrap">
+        <span class="src">乍浦陷落</span>
+        <div class="q">会大雨，下令曰：「毋击梆柝，试静听之。」有顷，贼遂弥漫四入，而城陷矣。屠戮淫劫，不胜其惨。伤哉此城！谁之咎耶？</div>
+      </div>
+      <p class="t">但倭寇也怕东西。乍浦城陷那天，有人躲在神祠屋上，看见贼黎明在神前问卦。</p>
+      <div class="qwrap">
+        <span class="src">屋上人所见</span>
+        <div class="q">问：「许我住城数日否？」不许；问：「许我尽杀否？」卜，又不许。遂传令止杀，仅掠一日而去。</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="year">
+    <div class="wrap">
+      <div class="duelh">诡道对垒 · 七年间的计与破</div>
+      <p class="lede" style="margin-top:10px">这本书的一半是仗，另一半是骗。两边都在骗，胜负往往不取决于刀，而取决于谁先信了谁。</p>
+      <div class="duels">
+        <div class="card">
+          <span class="stamp">得逞</span>
+          <div class="who">彼计</div>
+          <h4>神前长幡</h4>
+          <div class="when mono">癸丑五月 · 乍浦</div>
+          <p>被围的贼拆下天妃宫神幡编成帆索，然后向阵前讨一条生路。</p>
+          <div class="q">我等不敢与将军战，乞退舍，俟海潮至，各愿自投海死，是为两全，勿作刀下鬼。</div>
+        </div>
+        <div class="card">
+          <span class="stamp">被破</span>
+          <div class="who">彼计 · 我应</div>
+          <h4>蝴蝶阵 · 石榴花</h4>
+          <div class="when mono">癸丑 · 钱塘</div>
+          <p>红袍二大王摇扇惑众，谓之蝴蝶阵。一个受过万鹿园恩惠的行脚僧带着铁棍来破，令军中各簪一榴花。</p>
+          <div class="q">乃令军中各簪一榴花。僧手撑一伞以行，但作采花状。</div>
+        </div>
+        <div class="card">
+          <span class="stamp">得逞</span>
+          <div class="who">彼计</div>
+          <h4>悬羊擂鼓</h4>
+          <div class="when mono">甲寅二月 · 南沙</div>
+          <p>夜里大雨，贼趁雨遁走，怕官军发觉，把羊蹄悬在栅楼上打鼓。</p>
+          <div class="q">会夜大雨，贼乘之遁，虑为我兵所觉，悬羊蹄擂鼓栅楼以愚我云。</div>
+        </div>
+        <div class="card">
+          <span class="stamp">奏效</span>
+          <div class="who">我应</div>
+          <h4>衔墨涂面</h4>
+          <div class="when mono">甲寅三月 · 嘉兴</div>
+          <p>贼多穿乡民和官军的衣服，阵前敌我难辨，常吃这个亏。两主帅想出的办法土得可爱。</p>
+          <div class="q">卢、丁二帅令军中各衔墨块，临阵涂面，以相别识，贼始骇惧。</div>
+        </div>
+        <div class="card">
+          <span class="stamp">奏效</span>
+          <div class="who">我计</div>
+          <h4>毒酒百罂</h4>
+          <div class="when mono">丙辰 · 嘉兴</div>
+          <p>胡宗宪把一百多坛酒下了毒，装成劳军的船，故意丢给贼。</p>
+          <div class="q">胡公取酒百余罂，投以毒，载之两舟，选卒之有胆而慧者，衣冠坐舟上，作饷军状，载向贼所，遇贼即弃舟而走，贼信不疑，取饮之，多死。</div>
+        </div>
+        <div class="card">
+          <span class="stamp">奏效</span>
+          <div class="who">我计</div>
+          <h4>犬阵</h4>
+          <div class="when mono">丙辰八月 · 沈庄</div>
+          <p>总攻徐海那天的最后一层壳：几百条民家的狗，披上军服，火种夹在狗群里赶进贼巢。</p>
+          <div class="q">军门令取民家犬数百为群，被以戒服……贼但击前犬，不知火已发矣，焚溺无算。</div>
+        </div>
+        <div class="card">
+          <span class="stamp">奏效</span>
+          <div class="who">我计</div>
+          <h4>蔬船定交</h4>
+          <div class="when mono">丁巳 · 宁波</div>
+          <p>为了见王直，一个叫王千户的人装成卖菜的，天天把菜船摇到王直船边，卖了一年多的菜。</p>
+          <div class="q">王冒为鬻蔬人，载蔬至直所，直见与之语，识其非种蔬者，因厚礼之，久而定交焉。</div>
+        </div>
+        <div class="card">
+          <span class="stamp">未用</span>
+          <div class="who">我备</div>
+          <h4>乌鸦竹节阵</h4>
+          <div class="when mono">甲寅四月 · 嘉兴</div>
+          <p>嘉兴守军的方法：兵伏屋脊，瓦石堆在檐口，市肆半掩门。贼进街，瓦飞如乌鸦，栅绝如竹节，百姓至今叫它乌鸦竹节阵。</p>
+          <div class="q">在上者掷石如雨，在下者如户隙中发矢石，贼奔栅楞，俟出，如羊触藩，不能脱。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="beacon">
+
+  <section class="year">
+    <div class="wrap">
+      <div class="yrrow">
+        <div class="yr">甲寅</div>
+        <div class="yrside">
+          <div class="gz">嘉靖三十三年 · 公元一五五四</div>
+          <h2>敌我难辨的一年</h2>
+        </div>
+      </div>
+      <p class="lede">四月初五，一条双桅大船泊在教场东，贼登岸后自己烧了船，摆出有进无退的架势。</p>
+      <div class="qwrap">
+        <span class="src">四月初五</span>
+        <div class="q">至龙王塘，数之，五百六十六人。吹螺整队，绕城外扬旗来攻，城上戒严。</div>
+      </div>
+      <p class="t">这一年最惨的一败在孟家堰。阵前有漳州籍的兵通贼，伏兵四起，掌印指挥、千总当场战死。书里一笔一笔记下人数。</p>
+      <div class="qwrap">
+        <span class="src">孟家堰之后</span>
+        <div class="q">是役官兵战溺死者，共计一千四百七十五人。</div>
+      </div>
+      <p class="t">败仗之间也有微光。乡官孙家被占，主人出逃避贼，仆人挡在前面替死，贼竟然放走了主人。书里抄下这一句，没有评论。</p>
+      <div class="qwrap">
+        <span class="src">西门外孙宅</span>
+        <div class="q">孙出避，遇贼，欲加害，仆以身蔽主，哀言乞代，延颈迎刃，贼义之释主而去。</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="year">
+    <div class="wrap">
+      <div class="yrrow">
+        <div class="yr">乙卯</div>
+        <div class="yrside">
+          <div class="gz">嘉靖三十四年 · 公元一五五五</div>
+          <h2>账</h2>
+        </div>
+      </div>
+      <p class="lede">正月初一，贼趁年关无备出巢焚掠。这一年的苦难，书里用两句并排放着。</p>
+      <div class="qwrap">
+        <span class="src">正月初三 · 西浦桥</span>
+        <div class="q">有避寇村妇数百，襁负幼小，齐渡西浦桥，值天雨桥滑，皆弃儿匍匐以渡。河畔积孩尸甚多，悲号震野。</div>
+      </div>
+      <div class="qwrap">
+        <span class="src">甲寅冬 · 兵饷</span>
+        <div class="q">师旅征发，额外增税，每田一亩出兵饷至一分三厘，沿海之民，膏血为之罄尽。</div>
+      </div>
+      <p class="t">也是这一年，广西田州的瓦氏夫人带俍兵来到沿海。她是土司岑彭的妾，以妇人将兵，颇有纪律，秋毫无犯；金山被围时诸将观望，是她纵马冲进重围把白都司救出来。书里记她数请出战，诸将总说固守为上，最后侄儿战死，她郁郁不得志，思归。</p>
+      <div class="qwrap">
+        <span class="src">金山</span>
+        <div class="q">瓦氏奋身独援，纵马冲击，破重围，白乃得脱。</div>
+      </div>
+      <p class="t">四月，王江泾。这一仗斩首两千余级，献捷军门，是东南转向的标志。书里写得很克制，只留一句战果。</p>
+      <div class="qwrap">
+        <span class="src">王江泾大捷</span>
+        <div class="q">斩获二千余级，献捷军门。</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="beacon">
+
+  <section class="year">
+    <div class="wrap">
+      <div class="yrrow">
+        <div class="yr">丙辰</div>
+        <div class="yrside">
+          <div class="gz">嘉靖三十五年 · 公元一五五六</div>
+          <h2>两个首领，一封回信</h2>
+        </div>
+      </div>
+      <p class="lede">倭寇最大的两股，头目是徐海与叶麻。胡宗宪没有强攻，先让他们自己咬起来。咬起来的由头，是一个女人。</p>
+      <p class="t">叶麻早年掳了杭州祝氏为妻，后来怜她思乡，放她回去。徐海听说这女子貌美，酒席上问起，叶麻说早走了。徐海说，佳人不易得，汝弃吾当取之。</p>
+      <div class="qwrap">
+        <span class="src">席间反目</span>
+        <div class="q">叶怒曰：「闻汝六、七妻妾，肯与人否？」徐亦怒，二酋交恶，自是有隙。</div>
+      </div>
+      <p class="t">徐海随即给军门递了话，说愿收叶麻的部属，再图其主。回信只有两个字。</p>
+      <div class="qwrap">
+        <span class="src">军门回书</span>
+        <div class="q">军门得书大喜，报曰：「如约。」</div>
+      </div>
+      <p class="t">七月，叶麻等八贼应邀进嘉兴城赴宴，酒酣之际被缚。他们说了最后一句流传下来的话。</p>
+      <div class="qwrap">
+        <span class="src">缚后之言</span>
+        <div class="q">予等悔坠徐海计，至此，海不足有为，我当致其偕来同死耳。</div>
+      </div>
+      <p class="t">八月初一，徐海入平湖城请降。书里记下了这位海上枭雄叩头的样子，还有在场官员各不相同的反应。</p>
+      <div class="qwrap">
+        <span class="src">平湖城中</span>
+        <div class="q">海顿首口呼：「天星爷！死罪！死罪！」</div>
+      </div>
+      <p class="t">总督摸着他的头顶说，毋更作孽；侍御赵公不肯还礼，只说他害了无数百姓，当服何罪。徐海伏在地上很久。半个月后大军围巢，犬阵破庄，书里给他的结局只有八个字。</p>
+      <div class="qwrap">
+        <span class="src">八月二十五</span>
+        <div class="q">是日徐为仇党逼杀。</div>
+      </div>
+      <div class="qwrap">
+        <span class="src">九月初八</span>
+        <div class="q">九月初八日，军门斩叶麻等五酉于嘉兴北教场。</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="year">
+    <div class="wrap">
+      <div class="yrrow">
+        <div class="yr">附录</div>
+        <div class="yrside">
+          <div class="gz">丁巳至己未 · 公元一五五七至一五五九</div>
+          <h2>一根金簪</h2>
+        </div>
+      </div>
+      <p class="lede">正文到斩叶麻为止。后面另起一卷附录，记最后一个人：徽州海商王直，即汪五峰。他不是倭，他比谁都清楚这盘生意该怎么做。</p>
+      <p class="t">嘉靖三十六年九月，王直泊舟江口，向军门递上一道疏。这道疏是全附录的核心，一个被称作海寇首的人，自陈的却是另一本账。</p>
+      <div class="qwrap">
+        <span class="src">王直上疏</span>
+        <div class="q">窃臣直觅利商海，卖货浙福，与人同利，为国捍边，绝无勾引党贼侵扰事情，此天地神人所共知者。</div>
+      </div>
+      <p class="t">疏里他历数自己擒贼解民的旧功，请求朝廷通关纳税，许他宣谕诸岛、约束倭人，说这才是所谓不战而屈人之兵。军门要的是他这个人，于是有菜船定交，有宾礼纵归，有金碧舆青楼宴。他在狱中住了近两年，始终不肯低头。</p>
+      <div class="qwrap">
+        <span class="src">按察司狱</span>
+        <div class="q">直强项不屈曰：「吾何罪！吾何罪！死吾一人，恐苦两浙百姓。」</div>
+      </div>
+      <p class="t">嘉靖三十八年十二月二十五日，诏斩王直于省城宫港口。临刑他叫来儿子，把头上金簪取下来交给孩子。</p>
+      <div class="qwrap">
+        <span class="src">刑场</span>
+        <div class="q">直以支髻金簪授其子叹曰：「不意典刑兹土！」若不胜其怨恨者。遂伸颈受刃，至死不挠。</div>
+      </div>
+      <div class="fin">
+        <p class="lede" style="margin:0 auto">书到这里收笔。开篇是滩头上的一封诈书，结尾是刑场上的一根簪。七年，一个县城，就这么从承平走到了疲惫。</p>
+        <div class="pin"></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="beacon">
+
+  <section class="year">
+    <div class="wrap">
+      <div class="yrrow">
+        <div class="yr">首级账</div>
+        <div class="yrside">
+          <div class="gz">卷末 · 官府验首之法</div>
+          <h2>这本书记住的数字</h2>
+        </div>
+      </div>
+      <p class="lede">书里另有附胡总督奏捷疏，末尾一句值得抄在这里：纪验讫。每个数字都要经推官验看。以下都出自原文。</p>
+      <div class="shouji">
+        <div class="head"><span>事</span><span>时</span><span>数</span></div>
+        <div class="row"><span class="e">吾盐被寇</span><span class="d">癸丑一年四被寇</span><span class="n mono">死者约三千七百有奇</span></div>
+        <div class="row"><span class="e">孟家堰之败</span><span class="d">甲寅四月 · 漳兵通贼</span><span class="n mono">官兵战溺死一千四百七十五人</span></div>
+        <div class="row"><span class="e">石墩一党</span><span class="d">甲寅 · 留居吾士四旬有三日</span><span class="n mono">杀害数千人，荡民产数万家</span></div>
+        <div class="row"><span class="e">王江泾</span><span class="d">乙卯四月</span><span class="n mono">斩获二千余级</span></div>
+        <div class="row"><span class="e">兵饷摊派</span><span class="d">甲寅冬 · 按田亩</span><span class="n mono">每亩一分三厘</span></div>
+      </div>
+      <p class="t">书的好处在于不肯只记一边。它记官军的溃败，也记客兵扰民：山东兵过境，掠奸索食，不灭于贼；记斩首计功的荒唐，说追贼的兵争夺首级，至有自相杀伤者；记乡民如何在城头点闸册里被当成垛口的一部分，也如何在桥上扔下自己的孩子。所谓倭变，是这所有账目的总名。</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="heyan">
+      <h3>核验与说明</h3>
+      <p>文本来源:殆知阁简体库 史藏/志存记录/倭变事略.txt,共 23,496 字符(去空白 22,770 字)。撰人署采九德,catalog.csv 该行作者栏作佚名,以库本卷端题署为准。结构:正文编年,起嘉靖三十二年(1553)四月二日,讫三十五年(1556)九月初八;此后另出附录,记王直事,起三十六年(1557)九月,讫三十八年(1559)十二月。导读仓库:<a href="https://github.com/robertsong2000/daizhige-daodu">github.com/robertsong2000/daizhige-daodu</a></p>
+      <p>本页所有引文均经脚本与库本逐字比对(去标点、异体字归一)通过;干支纪年均见于库本原文,公元换算:癸丑为一五五三,甲寅一五五四,乙卯一五五五,丙辰一五五六,丁巳一五五七,戊午一五五八,己未一五五九。文中郑晓官至兵部尚书,谥襄敏,库本称郑端简公;瓦氏夫人、汤克宽、胡宗宪(库本称胡梅林公)、徐海、叶麻、陈东、王直诸人事迹,本页仅据库内文本。库本偶有舛字及■〈〉形缺字,引文遇缺字段落已避开;斩获数字沿录原文,未作考订。</p>
+      <p>时代局限:此书是守城士绅的战时笔录,立场天然在官与城一方;斩首计功的军功制贯穿全书,凡斩获若干级的记载都应在这套制度下理解。书中所谓倭,经作者自己考证,大头目多为漳州、徽州等处的中国人,但通篇仍以倭名之,身份的笼统与敌意的笼统互为表里。记妇女掳掠诸段是记录者的转述,笔法冷,读来沉痛;客兵、狼兵、俍兵扰民的记载同样直录,不为此书讳,这是它的价值,也是读它时需要一直拎着的秤。</p>
+    </div>
+  </div>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <span>殆知阁导读 之一百六十二,倭变事略</span>
+    <a href="mulu.html">返回总目</a>
+  </div>
+</footer>
+
+</body>
+</html>
