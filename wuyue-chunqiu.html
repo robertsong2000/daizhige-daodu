@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>吴越春秋 · 殆知阁导读</title>
+<style>
+  :root{
+    --ink:#191917;
+    --ink2:#201f1c;
+    --ink3:#262521;
+    --paper:#e8e4dc;
+    --paper-dim:#b7b1a4;
+    --gold:#c9963f;
+    --gold-dim:rgba(201,150,63,.55);
+    --hair:rgba(232,228,220,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",STSong,SimSun,serif;
+    line-height:1.9;
+    font-size:16px;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--gold);color:var(--ink);}
+
+  /* ---------- 开卷：题签与江面 ---------- */
+  .head{
+    position:relative;
+    max-width:1060px;
+    margin:0 auto;
+    padding:72px 28px 40px;
+    min-height:520px;
+  }
+  .qiantie{
+    position:absolute;
+    top:56px;
+    right:8%;
+    writing-mode:vertical-rl;
+    background:var(--paper);
+    color:var(--ink);
+    padding:26px 10px 22px;
+    font-size:30px;
+    letter-spacing:14px;
+    font-weight:700;
+    border-radius:2px;
+    box-shadow:0 0 0 1px var(--paper),0 0 0 4px var(--ink),0 0 0 5px var(--hair);
+  }
+  .qiantie small{
+    writing-mode:vertical-rl;
+    font-size:11px;
+    letter-spacing:5px;
+    font-weight:400;
+    color:#6d675c;
+    margin-top:16px;
+  }
+  .weizhi{
+    position:absolute;
+    top:56px;
+    right:calc(8% + 74px);
+    writing-mode:vertical-rl;
+    font-size:12px;
+    letter-spacing:6px;
+    color:var(--paper-dim);
+  }
+  .shouju{
+    max-width:560px;
+    margin-top:56px;
+  }
+  .shouju .di{
+    font-size:12px;
+    letter-spacing:4px;
+    color:var(--gold);
+    margin-bottom:18px;
+  }
+  .shouju h1{
+    font-size:clamp(30px,5vw,44px);
+    font-weight:700;
+    letter-spacing:6px;
+    line-height:1.4;
+    margin-bottom:26px;
+  }
+  .shouju h1 em{
+    font-style:normal;
+    color:var(--gold);
+  }
+  .shouju p{
+    color:var(--paper-dim);
+    margin-bottom:16px;
+    text-align:justify;
+  }
+  .shouju p strong{color:var(--paper);font-weight:400;}
+  .mingju{
+    margin-top:38px;
+    display:flex;
+    gap:22px;
+    align-items:flex-start;
+  }
+  .mingju .v{
+    writing-mode:vertical-rl;
+    height:240px;
+    font-size:20px;
+    letter-spacing:8px;
+    color:var(--paper);
+    border-right:1px solid var(--hair);
+    padding-right:20px;
+  }
+  .mingju .note{
+    font-size:13px;
+    color:var(--paper-dim);
+    max-width:300px;
+    padding-top:8px;
+  }
+  .mingju .note b{
+    display:block;
+    color:var(--gold);
+    font-weight:400;
+    letter-spacing:3px;
+    margin-bottom:8px;
+  }
+
+  /* ---------- 江轴 ---------- */
+  .jiang{
+    position:relative;
+    max-width:1060px;
+    margin:40px auto 0;
+    padding:40px 28px 10px;
+  }
+  .jiang::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:0;
+    bottom:0;
+    width:1px;
+    background:linear-gradient(to bottom,transparent,var(--gold-dim) 6%,var(--gold-dim) 94%,transparent);
+  }
+  .jiang-head{
+    text-align:center;
+    margin-bottom:52px;
+    position:relative;
+  }
+  .jiang-head span{
+    display:inline-block;
+    background:var(--ink);
+    padding:0 22px;
+    font-size:13px;
+    letter-spacing:6px;
+    color:var(--gold);
+  }
+
+  /* ---------- 渡口（每折戏） ---------- */
+  .du{
+    position:relative;
+    width:46%;
+    margin-bottom:84px;
+  }
+  .du.left{margin-right:auto;}
+  .du.right{margin-left:auto;}
+  .du .dian{
+    position:absolute;
+    top:14px;
+    width:11px;
+    height:11px;
+    background:var(--ink);
+    border:2px solid var(--gold);
+    transform:rotate(45deg);
+  }
+  .du.left .dian{right:calc(-8.7% - 5px);}
+  .du.right .dian{left:calc(-8.7% - 5px);}
+  .zhe{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:6px;
+  }
+  .zhe .no{
+    font-size:12px;
+    letter-spacing:3px;
+    color:var(--gold);
+    border:1px solid var(--gold-dim);
+    padding:2px 9px;
+    white-space:nowrap;
+  }
+  .zhe h2{
+    font-size:24px;
+    letter-spacing:8px;
+    font-weight:700;
+  }
+  .du p.xu{
+    color:var(--paper-dim);
+    font-size:15px;
+    text-align:justify;
+    margin-bottom:18px;
+  }
+  .du p.xu strong{color:var(--paper);font-weight:400;}
+  .jin{
+    font-size:19px;
+    letter-spacing:2px;
+    line-height:2;
+    color:var(--paper);
+    padding:14px 0 14px 18px;
+    border-left:2px solid var(--gold);
+    background:linear-gradient(to right,rgba(201,150,63,.08),transparent 70%);
+    margin-bottom:18px;
+  }
+  .jin i{
+    display:block;
+    font-style:normal;
+    font-size:12px;
+    color:var(--gold);
+    letter-spacing:2px;
+    margin-top:8px;
+  }
+  .jian{ /* 竖排简册引文 */
+    display:flex;
+    gap:18px;
+    justify-content:flex-start;
+    padding:6px 0 2px;
+    overflow-x:auto;
+  }
+  .jian .ce{
+    writing-mode:vertical-rl;
+    max-height:270px;
+    font-size:15px;
+    letter-spacing:4px;
+    line-height:2;
+    color:var(--paper);
+    background:var(--ink2);
+    border:1px solid var(--hair);
+    border-top:2px solid var(--gold-dim);
+    padding:18px 12px 16px;
+    white-space:nowrap;
+  }
+  .jian .zhu{
+    writing-mode:vertical-rl;
+    max-height:270px;
+    font-size:11px;
+    letter-spacing:3px;
+    color:var(--paper-dim);
+    padding-top:4px;
+    white-space:nowrap;
+  }
+
+  /* ---------- 剑形分隔 ---------- */
+  .jianse{
+    display:flex;
+    align-items:center;
+    gap:0;
+    max-width:520px;
+    margin:-30px auto 84px;
+  }
+  .jianse .ren{flex:1;height:1px;background:var(--hair);}
+  .jianse .feng{
+    width:8px;
+    height:8px;
+    background:var(--gold);
+    transform:rotate(45deg);
+    margin:0 10px;
+  }
+  .jianse .jianwen{
+    font-size:11px;
+    letter-spacing:5px;
+    color:var(--paper-dim);
+    margin:0 16px;
+    white-space:nowrap;
+  }
+
+  /* ---------- 合卷账簿 ---------- */
+  .hejuan{
+    max-width:760px;
+    margin:30px auto 0;
+    padding:0 28px 30px;
+  }
+  .hejuan h2{
+    text-align:center;
+    font-size:22px;
+    letter-spacing:10px;
+    margin-bottom:10px;
+  }
+  .hejuan .yin{
+    text-align:center;
+    font-size:13px;
+    color:var(--gold);
+    letter-spacing:3px;
+    margin-bottom:34px;
+  }
+  table.zhang{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+  }
+  table.zhang th{
+    font-weight:400;
+    font-size:12px;
+    letter-spacing:3px;
+    color:var(--gold);
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--gold-dim);
+  }
+  table.zhang td{
+    padding:13px 12px;
+    border-bottom:1px solid var(--hair);
+    color:var(--paper-dim);
+    vertical-align:top;
+  }
+  table.zhang td:first-child{color:var(--paper);white-space:nowrap;}
+  table.zhang td:last-child{color:var(--paper);}
+  .hejuan p.zhui{
+    margin-top:30px;
+    color:var(--paper-dim);
+    font-size:15px;
+    text-align:justify;
+  }
+  .hejuan p.zhui strong{color:var(--paper);font-weight:400;}
+
+  /* ---------- 页脚 ---------- */
+  footer{
+    margin-top:50px;
+    border-top:1px solid var(--hair);
+    padding:36px 28px 60px;
+  }
+  footer .in{
+    max-width:760px;
+    margin:0 auto;
+    font-size:12.5px;
+    color:#8a857a;
+    line-height:2.1;
+  }
+  footer .in b{color:var(--paper-dim);font-weight:400;}
+  footer .in a{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-dim);}
+  .back{
+    display:block;
+    width:fit-content;
+    margin:26px auto 0;
+    font-size:13px;
+    letter-spacing:4px;
+    color:var(--gold);
+    text-decoration:none;
+    border:1px solid var(--gold-dim);
+    padding:8px 26px;
+  }
+  .back:hover{background:var(--gold);color:var(--ink);}
+
+  /* ---------- 窄屏 ---------- */
+  @media (max-width:760px){
+    .qiantie{position:static;writing-mode:horizontal-tb;letter-spacing:8px;font-size:24px;display:inline-block;padding:14px 18px;}
+    .qiantie small{letter-spacing:3px;margin-top:0;margin-left:12px;}
+    .weizhi{display:none;}
+    .head{padding-top:46px;min-height:0;}
+    .shouju{margin-top:30px;}
+    .mingju .v{height:210px;font-size:17px;}
+    .jiang::before{left:10px;}
+    .du{width:auto;margin-left:34px !important;margin-right:0 !important;}
+    .du .dian{left:-29px !important;right:auto !important;}
+    .jian .ce{max-height:none;writing-mode:horizontal-tb;white-space:normal;letter-spacing:2px;line-height:2;}
+    .jian .zhu{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="head">
+  <div class="weizhi">殆知阁简体库 史藏 载记</div>
+  <div class="qiantie">吴越春秋<small>东汉 赵晔 撰</small></div>
+  <div class="shouju">
+    <p class="di">导读 第151篇</p>
+    <h1>一江水，<br>两笔<em>血账</em>，六折戏</h1>
+    <p>正史里，吴越争霸只有《史记》中的寥寥数页。东汉初年，蜀地学者赵晔把这几页抻开、上色、配乐，写成一部半史半小说的传奇。此后两千年，中国人讲这段故事：伍子胥一夜白头过昭关、渔丈人渡客覆船、勾践尝粪、西施习礼、文种赐剑，讲的几乎全是赵晔的版本。</p>
+    <p>这部书的引擎只有一个字：<strong>雠，就是仇。</strong>楚人伍子胥带着家仇入吴，吴人专诸、要离替新主杀人偿命，越王勾践把国耻腌进胆里。六折戏，笔笔都是利息。连我们熟悉的「卧薪尝胆」，一半也是从这本书里长出来的。</p>
+    <div class="mingju">
+      <div class="v">此鸟不飞，飞则冲天；不鸣，鸣则惊人。</div>
+      <div class="note"><b>成语出生地之一</b>这句话出自卷三楚庄王的故事，是书中插叙的一则旧典。一鸣惊人的鸟、三千越甲的船，都在这条江上。以下六折，沿江而下。</div>
+    </div>
+  </div>
+</header>
+
+<main class="jiang">
+  <div class="jiang-head"><span>江轴 六渡</span></div>
+
+  <section class="du left">
+    <span class="dian"></span>
+    <div class="zhe"><span class="no">第一折</span><h2>渡</h2></div>
+    <p class="xu">楚平王杀了伍子胥的父亲和兄长，又画影图形追捕他。逃到江边，前有大水，后有追兵。一位渔父远远唱着歌，把船摇到芦苇丛边接他；渡完江，看他面有饥色，又去取饭。伍子胥疑心有埋伏，藏进深苇，渔父提着麦饭鲍鱼羹回来，找不到人，就对着芦苇唱：</p>
+    <div class="jian">
+      <div class="ce">日月昭昭乎侵已驰，与子期乎芦之漪。</div>
+      <div class="ce">日已夕兮，予心忧悲；月已驰兮，何不渡为？事寖急兮，当奈何？</div>
+      <div class="zhu">卷第三 渔父渡歌</div>
+    </div>
+    <p class="xu">吃完饭，伍子胥解下价值百金的佩剑相谢。渔父不要：楚国的悬赏是粟五万石、爵执圭，谁稀罕你这把剑。他只提醒了一句「富贵莫相忘」。伍子胥走出几步，回头再看，渔父已<strong>覆船自沉，灭口于自己</strong>。同一条路线上，他还遇到一个在濑水边浣纱的女子，讨了一餐饭；女子以未婚女子馈食男子为失节，等他走远，也投水了。赵晔在此按不住笔：</p>
+    <div class="jin">于乎！贞明执操，其丈夫女哉！<i>卷第三 论濑水女子</i></div>
+    <p class="xu">开篇两死，都不是战场上的死。赵晔先立下全书的秤：复仇的账，要旁人用命来平。</p>
+  </section>
+
+  <div class="jianse"><div class="ren"></div><div class="feng"></div><div class="jianwen">过昭关一夜白头，是后世戏文加的</div><div class="feng"></div><div class="ren"></div></div>
+
+  <section class="du right">
+    <span class="dian"></span>
+    <div class="zhe"><span class="no">第二折</span><h2>匕</h2></div>
+    <p class="xu">伍子胥到了吴国，投在公子光门下，献上第一位刺客。<strong>专诸</strong>，市井屠夫出身，伍子胥在逃亡路上见他与人将斗，怒气万夫莫当，其妻一呼即还。伍子胥奇怪，他答：</p>
+    <div class="jin">夫屈一人之下，必伸万人之上。<i>卷第三 专诸语</i></div>
+    <p class="xu">吴王僚好烤鱼。专诸专程去太湖学了三个月炙鱼。公子光设宴，甲士埋伏于地下室，王僚的卫队从王宫一路排到席前，人人持长戟。酒酣，公子光托词足疾离席，专诸把匕首藏进烤鱼腹中端上去，擘开鱼腹，抽出匕首刺出：</p>
+    <div class="jin">匕首如故，以刺王僚，贯甲达背。<i>卷第三 刺王僚</i></div>
+    <p class="xu">鱼肠剑穿透三层甲。专诸当场被卫队格杀，公子光的伏兵尽灭王僚之众，自立为王，就是阖闾。这是「鱼肠剑」三个字在中文里的第一个出场。</p>
+  </section>
+
+  <div class="jianse"><div class="ren"></div><div class="feng"></div><div class="jianwen">鱼肠，一名匕首耳</div><div class="feng"></div><div class="ren"></div></div>
+
+  <section class="du left">
+    <span class="dian"></span>
+    <div class="zhe"><span class="no">第三折</span><h2>手</h2></div>
+    <p class="xu">阖闾还有个心腹之患：王僚的儿子庆忌，能走追奔兽、手接飞鸟，驷马追不上。伍子胥荐了<strong>要离</strong>。此人细瘦如柴，自己介绍：</p>
+    <div class="jian">
+      <div class="ce">臣国东千里之人，臣细小无力，迎风则僵，负风则伏。</div>
+      <div class="zhu">卷第四 要离自状</div>
+    </div>
+    <p class="xu">刺庆忌没有方案，只有价码：要离请吴王当众砍断自己的右手、烧死自己的妻儿，诈为罪人出奔，去庆忌那里骗信任。庆忌信了，练兵三个月，同船渡江，行至中流，要离借风势一矛刺去。庆忌回手把他拎起来三次按进水里，却不杀，说：</p>
+    <div class="jin">此是天下勇士。岂可一日而杀天下勇士二人哉？<i>卷第四 庆忌语</i></div>
+    <p class="xu">庆忌放他回吴，自己伤重而死。要离坐到江陵不肯走，从者问为什么，他算自己的账：</p>
+    <div class="jin">杀吾妻子，以事吾君，非仁也；为新君而杀故君之子，非义也。<i>卷第四 要离语</i></div>
+    <p class="xu">说完投身于江，被救起，最后<strong>自断手足而死</strong>。妻子烧了，右手断了，恩人杀了，自己也死了：这一折没有赢家，是全书道德上最黑的一页，后世却把它当忠义故事传了一千多年。</p>
+  </section>
+
+  <div class="jianse"><div class="ren"></div><div class="feng"></div><div class="jianwen">庆忌遗言：可令还吴，以旌其忠</div><div class="feng"></div><div class="ren"></div></div>
+
+  <section class="du right">
+    <span class="dian"></span><div class="zhe"><span class="no">第四折</span><h2>斩</h2></div>
+    <p class="xu">阖闾问伍子胥：如何安君治民、兴霸成王。答：先立城郭、设守备、实仓廪。于是伍子胥<strong>相土尝水，象天法地</strong>，筑起周回四十七里的阖闾大城，八陆门象天八风，八水门法地八聪，今天的苏州城就压在这张图上。城有了，还要两样东西：兵法和剑。</p>
+    <p class="xu">兵法是孙武。吴王不信，让他拿后宫宫女试阵，选宠姬二人为队长。三令五申，宫女大笑。孙武要斩两个队长，吴王在台上急了，驰使下令：寡人没有这两位爱姬，吃饭都不香，别斩。孙武的回答成了后世将权的教科书：</p>
+    <div class="jin">臣既已受命为将，将法在军，君虽有令，臣不受之。<i>卷第四 孙武语</i></div>
+    <p class="xu">斩讫，再操鼓，二队寂然。吴王不悦，孙武丢下一句：</p>
+    <div class="jin">王徒好其言，而不用其实。<i>卷第四 孙武语</i></div>
+    <p class="xu">剑则是<strong>干将莫耶</strong>。干将采五山铁精、六合金英，候天伺地，百神临观，金铁却熔不动。妻子莫耶说：神物之化，须人而成。当年你师父是夫妻双双跳进炉子才铸成的。于是干将妻断发剪爪，投于炉中，三百童男童女鼓橐装炭，金铁乃濡，阳曰干将，阴曰莫耶。以人殉剑，从此成了中文里所有宝剑需血祭故事的源头。</p>
+  </section>
+
+  <div class="jianse"><div class="ren"></div><div class="feng"></div><div class="jianwen">断发剪爪，是取人身的替身</div><div class="feng"></div><div class="ren"></div></div>
+
+  <section class="du left">
+    <span class="dian"></span><div class="zhe"><span class="no">第五折</span><h2>舌</h2></div>
+    <p class="xu">夫差即位，誓报阖闾之仇，两年后败越。勾践带着残部入吴为奴：住石室，养马，夫差出行，他执鞭步行在马前。三个月后夫差病了，勾践在范蠡的指导下求见问疾，正逢太宰嚭端着夫差的便溺出来，勾践拜而尝之，出来道贺：大王之病，某日当愈。道理是：</p>
+    <div class="jin">闻粪者顺榖味，逆时气者死，顺时气者生。今者臣窃尝大王之粪，其恶味苦且楚酸。是味也，应春夏之气。<i>卷第七 勾践语</i></div>
+    <p class="xu">夫差大悦，认为仁人，放勾践归国。满朝只有伍子胥看穿了这套表演，他说勾践连尝粪都是进攻：</p>
+    <div class="jin">下饮王之溲者，是上食王之心也；下尝王之恶者，是上食王之肝也。<i>卷第七 伍子胥语</i></div>
+    <p class="xu">勾践归国后的账目在卷九：大夫文种献九术，其中第四术是献美女。于是有了全书最著名的一次选角：</p>
+    <div class="jian">
+      <div class="ce">饰以罗榖，教以容步，习于土城，临于都巷。三年学服而献于吴。</div>
+      <div class="zhu">卷第九 西施郑旦</div>
+    </div>
+    <p class="xu">苎萝山卖柴人家的两位女子，被包装、培训三年，作为战备物资送进吴宫。尝粪的人还没走，糖衣已经上路。勾践自己那本苦账，赵晔记的是：</p>
+    <div class="jian">
+      <div class="ce">苦身劳心，夜以接日。目卧则攻之以蓼，足寒则渍之以水。</div>
+      <div class="ce">愁心苦志，悬胆于户，出入尝之，不绝于口。</div>
+      <div class="zhu">卷第九 勾践自苦</div>
+    </div>
+    <p class="xu">连上山采葛的织妇都会唱他的苦：「尝胆不苦甘如饴」。<strong>尝胆确凿在此，「卧薪」二字是后人添的码。</strong></p>
+  </section>
+
+  <div class="jianse"><div class="ren"></div><div class="feng"></div><div class="jianwen">九术之四：遗美女以惑其心而乱其谋</div><div class="feng"></div><div class="ren"></div></div>
+
+  <section class="du right">
+    <span class="dian"></span><div class="zhe"><span class="no">第六折</span><h2>薪</h2></div>
+    <p class="xu">卷十，账单到期。勾践的动员令是全书最冷的一段民生条陈：</p>
+    <div class="jin">女子十七未嫁，其父母有罪；丈夫二十不娶，其父母有罪。<i>卷第十 生聚之令</i></div>
+    <p class="xu">生男赏酒犬，生女赏酒豚，七年不收国税。二十年生聚，等夫差北上黄池会盟、国内空虚，越军一击而入，焚姑胥台。吴亡前，夫差赐死了不肯停谏的伍子胥。子胥受剑，赤脚走到中庭，仰天先报自己的账：</p>
+    <div class="jin">吾始为汝父忠臣立吴，设谋破楚，南服劲越，威加诸侯，有霸王之功。<i>卷第五 伍子胥临死语</i></div>
+    <p class="xu">再撂下一句预言：</p>
+    <div class="jin">吾今日死，吴宫为墟，庭生蔓草，越人掘汝社稷。<i>卷第五 伍子胥遗言</i></div>
+    <p class="xu">句句应验。而故事最狠的一笔在最后：越国胜利的庆功宴上，范蠡悄然退场，留书给文种：</p>
+    <div class="jin">高鸟已散，良弓将藏；狡兔已尽，良犬就烹。<i>卷第九 范蠡遗大夫种书</i></div>
+    <p class="xu">文种不信，果然被勾践赐剑。<strong>吴的剧本，一字不改在越重演。</strong>范蠡自己则「乘扁舟，出三江，入五湖，人莫知其所适」，全书在一片水面上下幕。</p>
+  </section>
+
+  <div class="jianse"><div class="ren"></div><div class="feng"></div><div class="jianwen">出三江，入五湖</div><div class="feng"></div><div class="ren"></div></div>
+</main>
+
+<section class="hejuan">
+  <h2>合卷账簿</h2>
+  <p class="yin">全书以「雠」字点火，以「雠」字收束：报仇的人，没有一个能全身而退。</p>
+  <table class="zhang">
+    <tr><th>账主</th><th>所报之雠</th><th>代价</th></tr>
+    <tr><td>渔丈人</td><td>无</td><td>覆船自沉，只求灭口</td></tr>
+    <tr><td>濑水女子</td><td>无</td><td>一餐饭，一条命</td></tr>
+    <tr><td>专诸</td><td>代主行刺</td><td>鱼肠剑出，当场格杀</td></tr>
+    <tr><td>要离</td><td>代主除患</td><td>妻儿焚市，右手自断，伏剑</td></tr>
+    <tr><td>伍子胥</td><td>父兄之雠</td><td>破楚成功，赐属镂之剑</td></tr>
+    <tr><td>文种</td><td>国之雠</td><td>九术功成，赐剑重演伍子胥</td></tr>
+  </table>
+  <p class="zhui">《隋书》经籍志著录赵晔此书十二卷，今本十卷，篇题皆作「传」：吴太伯传、王僚使公子光传、阖闾内传、夫差内传、越王无余外传、勾践入臣外传……名义是史传，笔法是小说家：它给渔父和浣纱女各写了一场完整的死亡戏，给剑写了出身，给便溺写了诊断学。唐人编《艺文类聚》，宋人编《太平御览》，抄它的最多；明清戏曲里所有的西施、要离、干将莫耶，底本都在这里。<strong>读它，不是读吴越史，是读中国人怎样把自己的历史，讲成戏。</strong></p>
+</section>
+
+<footer>
+  <div class="in">
+    <b>文本来源</b>：殆知阁简体库（github.com/garychowcmu/daizhigev20），史藏 载记《吴越春秋》，实测正文约三万九千字，十卷，卷末附大德十年音注刊记。<br>
+    <b>引文核验</b>：本页所有引文均与库内文件逐字比对通过（去标点、异体字归一）；库本此处有缺字，凡引文涉及处均已避开。<br>
+    <b>时代局限</b>：本书成于一千九百年前，尝粪、殉剑、焚妻诸事反映古人的道德与叙事逻辑，不代表本站立场。<br>
+    <a class="back" href="mulu.html">返回总目</a>
+  </div>
+</footer>
+
+</body>
+</html>
