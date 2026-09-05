@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>张协状元 · 殆知阁导读</title>
+<style>
+  :root{
+    --ink:#191917;
+    --ink2:#201f1c;
+    --paper:#e8e4dc;
+    --dim:#8a8578;
+    --dim2:#5d594e;
+    --b:#5e8fbb;
+    --b-deep:#3d6285;
+    --line:#3a3833;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+    font-size:17px;line-height:1.95;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px}
+
+  /* 台侧栏：出将 / 入相 */
+  .rail{
+    position:fixed;top:0;bottom:0;width:44px;
+    display:flex;align-items:center;justify-content:center;
+    writing-mode:vertical-rl;letter-spacing:.9em;
+    color:var(--dim2);font-size:15px;z-index:5;
+  }
+  .rail.up{left:0;border-right:1px solid var(--line)}
+  .rail.down{right:0;border-left:1px solid var(--line)}
+  @media (max-width:1180px){.rail{display:none}}
+
+  /* 帐额 */
+  .zhang-e{
+    margin:52px auto 0;max-width:880px;
+    border:2px solid var(--b);
+    outline:1px solid var(--line);outline-offset:5px;
+    background:linear-gradient(180deg,#232220,#1c1b19);
+    padding:38px 34px 30px;position:relative;
+  }
+  .zhang-e::before,.zhang-e::after{
+    content:"";position:absolute;left:50%;transform:translateX(-50%);
+    width:120px;height:10px;border:1px solid var(--line);border-top:none;
+  }
+  .zhang-e::before{top:-11px}
+  .zhang-e::after{bottom:-11px}
+  .ze-grid{display:flex;gap:34px;align-items:stretch}
+  .ze-title{
+    writing-mode:vertical-rl;font-size:58px;font-weight:700;
+    letter-spacing:.18em;color:var(--paper);
+    border-left:1px solid var(--line);padding-left:26px;flex:none;
+  }
+  .ze-title em{font-style:normal;color:var(--b)}
+  .ze-right{flex:1;min-width:0}
+  .timu{
+    color:var(--dim);font-size:15.5px;line-height:2.1;
+    border-bottom:1px dashed var(--line);padding-bottom:14px;margin-bottom:14px;
+  }
+  .timu b{color:var(--paper);font-weight:400}
+  .timu .gap{letter-spacing:.4em}
+  .ze-meta{font-size:14px;color:var(--dim);line-height:2}
+  .ze-meta .yin{color:var(--b)}
+  .baichang{
+    margin-top:16px;background:var(--paper);color:#26241f;
+    padding:16px 20px;font-size:15.5px;line-height:2;
+  }
+  .baichang i{font-style:normal;color:var(--b-deep)}
+  @media (max-width:640px){
+    .ze-grid{flex-direction:column}
+    .ze-title{writing-mode:horizontal-tb;border-left:none;padding-left:0;
+      border-bottom:1px solid var(--line);padding-bottom:12px;font-size:40px}
+  }
+
+  /* 出目与科介标题 */
+  section{margin-top:72px}
+  .kejie{
+    color:var(--dim);font-size:15px;letter-spacing:.06em;margin-bottom:2px;
+  }
+  .kejie::before{content:"";display:inline-block;width:26px;height:1px;
+    background:var(--b);vertical-align:middle;margin-right:10px}
+  h2{font-size:25px;font-weight:700;letter-spacing:.08em;margin-bottom:14px}
+  h2 small{font-size:14px;color:var(--dim);font-weight:400;margin-left:12px;letter-spacing:.05em}
+  p+p{margin-top:12px}
+  .note{color:var(--dim);font-size:15px}
+
+  /* 引文块 */
+  .q{
+    background:var(--paper);color:#26241f;
+    border-left:3px solid var(--b);
+    padding:14px 20px 13px;margin:16px 0;
+    font-size:16px;line-height:2.05;
+  }
+  .q .src{
+    display:block;margin-top:6px;color:var(--b-deep);
+    font-size:13px;letter-spacing:.08em;
+  }
+  .qkuang{
+    border:1px solid var(--line);border-left:3px solid var(--b);
+    padding:12px 18px;margin:16px 0;color:var(--paper);
+  }
+  .qkuang .src{display:block;margin-top:6px;color:var(--dim);font-size:13px;letter-spacing:.08em}
+
+  /* 说唱与搬演 双联 */
+  .duo{display:grid;grid-template-columns:1fr 92px 1fr;align-items:center;gap:0;margin:20px 0}
+  .duo .side{border:1px solid var(--line);padding:16px 18px;font-size:15.5px;line-height:2}
+  .duo .side h3{font-size:15px;color:var(--b);letter-spacing:.15em;margin-bottom:8px;font-weight:400}
+  .duo .mid{position:relative;height:100%;display:flex;align-items:center;justify-content:center}
+  .duo .mid::before{content:"";position:absolute;left:50%;top:-8px;bottom:-8px;
+    border-left:1px dashed var(--line)}
+  .duo .mid span{
+    position:relative;background:var(--b);color:var(--ink);
+    padding:10px 6px;writing-mode:vertical-rl;letter-spacing:.35em;
+    font-size:14px;border:1px solid var(--ink);
+    outline:1px solid var(--b);outline-offset:2px;
+  }
+  @media (max-width:640px){
+    .duo{grid-template-columns:1fr}
+    .duo .mid{height:64px;margin:6px 0}
+    .duo .mid::before{left:0;right:0;top:50%;bottom:auto;border-left:none;border-top:1px dashed var(--line)}
+    .duo .mid span{writing-mode:horizontal-tb;padding:6px 16px;letter-spacing:.25em}
+  }
+
+  /* 庙门 */
+  .menliang{
+    border:1px solid var(--line);border-bottom:none;background:var(--ink2);
+    text-align:center;padding:6px 0 5px;font-size:14px;color:var(--dim);letter-spacing:.5em;
+  }
+  .doors{display:flex;gap:14px;border:1px solid var(--line);background:var(--ink2);padding:22px}
+  .door{
+    flex:1;position:relative;min-height:190px;
+    background:#242320;border:1px solid #4a4740;
+    background-image:
+      linear-gradient(45deg,transparent 47%,#3a3833 47%,#3a3833 53%,transparent 53%),
+      linear-gradient(-45deg,transparent 47%,#3a3833 47%,#3a3833 53%,transparent 53%);
+    padding:18px 16px 12px;
+  }
+  .door::before{
+    content:attr(data-name);position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+    background:var(--ink);border:1px solid var(--b);color:var(--b);
+    font-size:13px;padding:1px 12px;letter-spacing:.2em;
+  }
+  .door p{font-size:15px;line-height:2;color:var(--paper)}
+  .door .guan{position:absolute;right:10px;bottom:8px;width:16px;height:16px;
+    border:1px solid var(--dim2);border-radius:50%}
+  details.knock{border:1px solid var(--line);border-top:none;background:var(--ink2)}
+  details.knock summary{
+    cursor:pointer;padding:9px 18px;font-size:14.5px;color:var(--b);
+    letter-spacing:.4em;list-style:none;
+  }
+  details.knock summary::-webkit-details-marker{display:none}
+  details.knock summary::before{content:"◇ "}
+  details.knock[open] summary::before{content:"◆ "}
+  details.knock .body{padding:2px 18px 14px;font-size:15px;color:var(--dim)}
+  details.knock .body .q{font-size:15px}
+  @media (max-width:560px){.doors{flex-direction:column}}
+
+  /* 戏房声音 */
+  .xifang{
+    margin:14px 0 2px;text-align:right;color:var(--dim);
+    font-size:15px;letter-spacing:.04em;
+  }
+  .xifang .fang{
+    display:inline-block;border:1px solid var(--b);color:var(--b);
+    font-size:12px;padding:0 7px;margin-right:9px;vertical-align:1px;letter-spacing:.15em;
+  }
+
+  /* 大字引 */
+  .pull{
+    margin:34px 0;text-align:center;
+    font-size:27px;letter-spacing:.14em;color:var(--paper);line-height:1.8;
+  }
+  .pull b{color:var(--b);font-weight:400}
+  .pull .src{display:block;margin-top:10px;font-size:13px;color:var(--dim);letter-spacing:.1em}
+
+  /* 脚色表 */
+  .roles{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    gap:12px;margin:18px 0;
+  }
+  .role{border:1px solid var(--line);padding:12px 15px;background:var(--ink2)}
+  .role h3{
+    font-size:19px;color:var(--b);font-weight:700;letter-spacing:.1em;
+    display:inline-block;margin-bottom:4px;
+  }
+  .role p{font-size:14.5px;color:var(--dim);line-height:1.9}
+
+  /* 存亡：一册书 */
+  .cang{border:1px solid var(--line);display:flex;margin:20px 0;background:var(--ink2)}
+  .cang .qian{
+    writing-mode:vertical-rl;flex:none;width:52px;
+    border-right:1px solid var(--line);border-left:6px solid var(--b);
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;letter-spacing:.3em;color:var(--paper);padding:14px 0;
+  }
+  .cang .ct{padding:16px 20px;font-size:15.5px;line-height:2.05;color:var(--paper)}
+  .cang .ct p+p{margin-top:10px}
+  .cang .ct .note{font-size:14px}
+
+  ul.du{margin:12px 0 0 0;list-style:none}
+  ul.du li{padding-left:20px;position:relative;margin-bottom:8px;font-size:15.5px}
+  ul.du li::before{content:"";position:absolute;left:2px;top:.85em;width:8px;height:1px;background:var(--b)}
+
+  .close-line{
+    margin:64px 0 30px;text-align:center;color:var(--dim);font-size:15px;letter-spacing:.1em;
+  }
+
+  footer{border-top:1px solid var(--line);margin-top:70px;padding:26px 0 46px}
+  .fnav{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px}
+  .fnav span{color:var(--dim);font-size:14.5px;letter-spacing:.08em}
+  .fnav a{color:var(--b);text-decoration:none;font-size:14.5px;border-bottom:1px solid var(--b-deep)}
+  .fnote{margin-top:14px;color:var(--dim2);font-size:13.5px;line-height:2}
+</style>
+</head>
+<body>
+
+<div class="rail up">出将</div>
+<div class="rail down">入相</div>
+
+<div class="wrap">
+
+<header class="zhang-e">
+  <div class="ze-grid">
+    <div class="ze-title">张协<em>状元</em></div>
+    <div class="ze-right">
+      <p class="timu">
+        题目四句，库本照录：<br>
+        <b>张秀才应举往长安，王贫女古庙受饥寒。</b><br>
+        <b>呆小二村<span class="gap">　　</span>调风月，莽强人大闹五鸡山。</b>
+        <span class="note">（第三句中间库本空两格，原刻当缺一字）</span>
+      </p>
+      <p class="ze-meta">
+        <span class="yin">九山书会</span>编演，东瓯盛事，五十三出<br>
+        《永乐大典》卷一三九九一收录<br>
+        现存最早的完整南戏剧本
+      </p>
+      <div class="baichang">
+        （末上白）列位看官：今日不唱新戏，开一只旧箱。箱里是一册台本，鼓板在哪里、门扇是谁扮、状元从哪个门缝里唱，都白纸黑字写在上面。请看。
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <p class="kejie">（末上白，先唱一段诸宫调，唱罢自问）</p>
+  <h2>说唱与搬演之间<small>第一出</small></h2>
+  <p>戏是这样开场的：一个「末」走上台，先不扮张协，也不扮贫女，而是以说书人的身份，把强人劫道的故事从头唱了一遍。唱到张叶倒地，他忽然停下来，当着观众的面问：</p>
+  <div class="q">以恁唱说诸宫调，何如把此话文敷演？后行脚色，力齐鼓儿，饶个撺掇，末泥色饶个踏场。
+    <span class="src">第一出 · 末</span>
+  </div>
+  <p>一句话，说唱变成戏。后世戏曲史家把这一段反复引用，因为它把南戏的来历演在了戏里：南戏正是从说唱诸宫调里长出来的，而这册台本把这个出生过程原样搬上了台。开场的报目里，书会自己打了广告：</p>
+  <div class="q">《状元张协传》，前回曾演，汝辈搬成。这番书会，要夺魁名。占断东瓯盛事，诸宫调唱出来因。
+    <span class="src">第一出 · 满庭芳</span>
+  </div>
+  <div class="duo">
+    <div class="side">
+      <h3>诸宫调</h3>
+      末色抱鼓，一人到底：虎皮磕脑的强人、五矶山的大雪，全在他的唱词里。第二出里还有一句「九山书会，近目翻腾，别是风味」，书会名字就藏在唱词里。
+    </div>
+    <div class="mid"><span>敷演</span></div>
+    <div class="side">
+      <h3>搬演</h3>
+      话音一落，乐队齐动，末泥踏场，生旦各归各位。从下一出起，故事不再被讲述，而被扮演。这是全剧真正的一次开场。
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kejie">（丑作强人出，林浪里假装猛兽）</p>
+  <h2>五鸡山劫案<small>第八出 · 第九出</small></h2>
+  <p>书生张叶，成都府人，上京应举，路遇一座大山。库本正文多写作「张叶」，题目里才是「张协」，一人两名，书中混用。山的气派是唱出来的：</p>
+  <div class="q">巍巍侵碧汉，望望入青天。鸿鹄飞不过，猿狖怕扳缘。
+    <span class="src">第一出 · 末白</span>
+  </div>
+  <p>山里等着他的，先是一头「猛兽」，然后猛兽站起来说话。强人上场先自报家门，把营生念得理直气壮：</p>
+  <div class="q">风高时放火烧山；欲逞难容，月黑夜偷牛过水。贩私盐，卖私茶，是我时常道业；剥人牛，杀人犬，是我日逐营生。
+    <span class="src">第八出 · 丑白</span>
+  </div>
+  <div class="q">左手捽住张叶头稍，右手扯住一把光霍霍冷搜搜鼠尾样刀，番过刀背，去张叶左肋上劈，右肋上打。
+    <span class="src">第一出 · 末说诸宫调</span>
+  </div>
+  <p>劫完盘缠，还留一句吓人的地名：</p>
+  <div class="q">一半金珠便放行，此山唤做万人坑。阎王注定三更死，不许留人到四更。
+    <span class="src">第九出 · 丑白</span>
+  </div>
+  <p>张叶倒雪地里，是山神把他叫醒的。神道现身，只留下一副联语下场：</p>
+  <div class="q">从空伸出拿云手，提起天罗地网人。
+    <span class="src">第九出 · 末作土地</span>
+  </div>
+  <p>顺带一提，第八出还有一场好笑的戏：两个过路客商吹嘘枪棒，强人还没现身，两人先自己拆起招来，行李反倒被同伴看见的「猛兽」一并劫去，末了两人对唱，只愁雪夜没处睡。</p>
+  <div class="q">雪儿又飞，今夜两人在那里睡！
+    <span class="src">第八出 · 福州歌合</span>
+  </div>
+</section>
+
+<section>
+  <p class="kejie">（净白：差你变作，不得稽迟。末、丑做门）</p>
+  <h2>人做门<small>第十出</small></h2>
+  <p>张叶雪夜投宿古庙，庙里只有神像。山神吩咐殿下判官和小鬼：外面门破不好看，你们两个权化作两片门。神的原话是下了军令状的：</p>
+  <div class="qkuang">判官在左汝在右，各家缚了一只手。有人到此忽扣门，两人不得要开口。
+    <span class="src">第十出 · 净白</span>
+  </div>
+  <div class="menliang">五鸡山古庙</div>
+  <div class="doors">
+    <div class="door" data-name="判官">
+      <p>左扇。台上无门，全凭两个人站定：判官扮左，小鬼扮右，各缚一手，权当门闩。</p>
+      <span class="guan"></span>
+    </div>
+    <div class="door" data-name="小鬼">
+      <p>右扇。小鬼领命前还嘀咕，怕人把这扇门拆去当东司门，神骂它「甚般薰头」。</p>
+      <span class="guan"></span>
+    </div>
+  </div>
+  <details class="knock">
+    <summary>叩门</summary>
+    <div class="body">
+      <p>贫女踏雪回来，见门开着，抬手就打那「门」。</p>
+      <div class="q">（叫）开门！（打丑背）（丑）蓬，蓬，蓬！（末）恰好打着二更。
+        <span class="src">第十出 · 科介与白</span>
+      </div>
+      <div class="q">换手打那一边也得！
+        <span class="src">第十出 · 丑叫</span>
+      </div>
+      <p>门会疼，也会抱怨。三个神鬼躲在门后低声拌嘴，怕贫女听见：</p>
+      <div class="q">低声！门也会说话。
+        <span class="src">第十出 · 净白</span>
+      </div>
+      <div class="q">低声！神也会唱曲。
+        <span class="src">第十出 · 丑白</span>
+      </div>
+      <p>这一段常被当作南戏舞台机关的活标本：没有布景，没有机关布彩，一扇门就是两个演员的身子。</p>
+    </div>
+  </details>
+</section>
+
+<section>
+  <p class="kejie">（安盘在丑背上、净执杯、旦执瓶、丑偷吃、有介）</p>
+  <h2>人做桌子<small>第十六出 · 第二十一出</small></h2>
+  <p>贫女本是富室之女，父母双亡，独守古庙。张叶伤重投宿，她供衣供食，经李大公大婆说合，两人在神前成了亲。婚礼上管香火的土地神，一直在偷吃供品：</p>
+  <div class="q">肥个我不嫌，精个我最忺。从头至脚板，件件味都甜。
+    <span class="src">第十六出 · 净唱</span>
+  </div>
+  <p>贫女对着神道许愿，字字都好，只是台下观众后来再听，字字扎心：</p>
+  <div class="q">神若灵异，赐照杯许妾同连理，若不是匆匆分散无终始。
+    <span class="src">第十六出 · 旦唱</span>
+  </div>
+  <p>新郎也有一句誓愿，末句由众人合唱。后来再听，同样扎心：</p>
+  <div class="q">愿得前意镇如初，团圆到底。
+    <span class="src">第十六出 · 生唱与合</span>
+  </div>
+  <p>成亲要摆酒，村里没有桌子。小二自告奋勇，弯下腰去，盘碗就安在他背上。题目那句科介，把这一幕原样写进了台本：</p>
+  <div class="q">做卓底，腰屈又头低。有酒把一盏，与卓子吃。
+    <span class="src">第十六出 · 丑接唱</span>
+  </div>
+  <p>人做门，人做桌，后面还有人做交椅。汴京城里枢密使相王德用升厅，坐物一时讨不来，堂后官便被他拽倒当了椅子。这个国家的达官贵人，在台上统归「丑」扮。</p>
+  <div class="q">没交椅，且把你做交椅。
+    <span class="src">第二十一出 · 丑白</span>
+  </div>
+</section>
+
+<section>
+  <p class="kejie">（净在戏房作犬吠；又在戏房作马嘶）</p>
+  <h2>戏房里的声音<small>第二十三、三十五、五十二出</small></h2>
+  <p>七个脚色，五十三出戏，人手当然不够。凡是不必露面的活物，都归「戏房」：演员在后台学什么，台上就是什么。狗叫是真的狗：</p>
+  <p class="xifang"><span class="fang">戏房</span>（净在戏房作犬吠）</p>
+  <p>马也是真的马。状元赴任，谭节使骑马来和事，后台一声马嘶，人未到，声先到：</p>
+  <p class="xifang"><span class="fang">戏房</span>（净在戏房作马嘶）</p>
+  <p>最要紧的一次，是第三十五出。贫女千里寻夫找到行衙，张叶躲在里面不肯出来，声音直接从戏房里传上台，隔着一道台帘骂人：</p>
+  <p class="xifang"><span class="fang">戏房</span>（生在戏房里唱）甚么妇人直入厅前？门子当何不止约！</p>
+  <p>台本把这些声口一一记下，等于把后台也写进了剧本。看戏的人听得见后台，这在后来的戏里几乎绝迹。</p>
+</section>
+
+<section>
+  <p class="kejie">（旦剪发，换几两盘缠；生怒，打旦）</p>
+  <h2>剪发<small>第十八、十九、二十出</small></h2>
+  <p>张叶伤愈要上京，没有盘缠。贫女想起李大婆平日念叨要头发做头髭，提出剪发换钱。她看得极轻：</p>
+  <div class="q">而今剪一捻头发在此，怕婆要做头髭。若得些钱，便十分好。
+    <span class="src">第十九出 · 旦白</span>
+  </div>
+  <div class="q">一杯杜酒，感你把头发剪。
+    <span class="src">第十九出 · 添字尹令</span>
+  </div>
+  <p>李大婆收发借钱那天，李大公送客，随口唱了八个字。当时没人多想：</p>
+  <div class="q">夫妻本是同林鸟。（合）大限来时各自飞。
+    <span class="src">第十九出 · 末白与合</span>
+  </div>
+  <p>张叶见妻子半日不归，回来就打，认定她在外吃酒。公堂不在这里，神堂就是公堂，贫女挨着打喊出的这句话，是全剧她最硬的一声：</p>
+  <div class="q">一堂神道你须知：我门非别底，你不是男儿！
+    <span class="src">第二十出 · 临江仙</span>
+  </div>
+  <p>李大公赶到，说明原委。张叶也只得认错，自嘲一句：</p>
+  <div class="q">几乎错认了定盘星。
+    <span class="src">第二十出 · 生白</span>
+  </div>
+  <p>然后照旧上京。送别的合唱里留了两句话，后来都应了验：</p>
+  <div class="q">这般人活短命！（合）举头三尺有神明。
+    <span class="src">第二十出 · 尾声</span>
+  </div>
+  <div class="q">马蝗丁住鹭鸶脚。（合）你上天时我上天。
+    <span class="src">第三十出 · 旦白与合</span>
+  </div>
+  <p>初见那年，她说过一句话，彼时是自嘲，此时像谶语：</p>
+  <div class="q">古庙荒芜怕见归，几番独自泪双垂。黄河尚有澄清日，岂可人无得运时。
+    <span class="src">第三出 · 旦白下场诗</span>
+  </div>
+</section>
+
+<section>
+  <p class="kejie">（生在戏房里唱：甚么妇人直入厅前）</p>
+  <h2>拒认<small>第二十七出 · 第三十五出</small></h2>
+  <p>张叶中了状元。当朝王德用彩楼抛丝鞭招婿，他辞了，辞得堂堂正正：</p>
+  <div class="q">不为求妻只为名。
+    <span class="src">第二十七出 · 生白</span>
+  </div>
+  <p>相公大怒，骂人的话编排得像货单：</p>
+  <div class="q">才着绿衫，出东门外，便是破荷叶。
+    <span class="src">第二十七出 · 丑白</span>
+  </div>
+  <div class="q">才系腰带，出东华门外，便是乌梢蛇。
+    <span class="src">第二十七出 · 丑白</span>
+  </div>
+  <p>同一时间，江陵府有人卖登科记，三文钱一份，五百个名字带州县。贫女托小二买回一本，看见丈夫中了魁首，变卖余财，千里上京。她找到行衙，门子先笑她脚：</p>
+  <div class="q">三文买着状元，五百姓名及州县。两本直你六文钱，要千本交五贯文。
+    <span class="src">第二十八出 · 花儿</span>
+  </div>
+  <div class="q">妇人如何不扎脚？
+    <span class="src">第三十五出 · 净白</span>
+  </div>
+  <p>有研究者把这句玩笑当材料，说宋代民间缠足未普遍，村妇天足。台本不议论，只让门子叫她高叫万福。状元在戏房里听见，隔帘下令，门子挨了十三杖，随即关公文办：不认。</p>
+  <div class="qkuang">辱莫于不知耻辱。貌陋身卑，家贫世薄。不晓苹蘩之礼，岂谐箕帚之婚。吾乃贵豪，女名贫女，敢来冒渎，称是我妻！闭上衙门，不去打出！
+    <span class="src">第三十五出 · 生白</span>
+  </div>
+  <p>她千里而来，落得挨打出门，投宿无路。骂到极处，她那句祝辞才真正吓人：不咒你死，咒你亏心着富贵。</p>
+  <div class="q">买柱好香祝苍天，愿你亏心，长长荣贵。
+    <span class="src">第三十五出 · 同前</span>
+  </div>
+  <div class="q">人善人欺天不欺，人恶人怕天不怕。
+    <span class="src">第三十五出 · 旦白下场诗</span>
+  </div>
+  <p>她还记得庙门当初开错了方向。那年她若闭门不纳，雪地里早冻死了他：</p>
+  <div class="q">我当初闭门不留伊，你及第应是无分。
+    <span class="src">第三十五出 · 同前</span>
+  </div>
+</section>
+
+<section>
+  <p class="kejie">（生讨剑随身，不许庙宇寺观止宿；看剑，旦倒）</p>
+  <h2>一剑<small>第三十六、四十、四十一出</small></h2>
+  <p>状元领梓州佥判，走马上任，路上正要经过五鸡山。他先想到的不是避路，是灭口。第二十六出他刚说过「不为求妻只为名」，此刻的原话是：</p>
+  <div class="q">张叶走马上任，五鸡山必须经过，剪草除根，与它烧了古庙。
+    <span class="src">第三十六出 · 生白</span>
+  </div>
+  <p>上任前下令：沿途不许庙宇寺观止宿，免得旧事重提。行到山前，他把话说得更白：</p>
+  <div class="q">恨消非君子，无毒不丈夫。
+    <span class="src">第四十出 · 生白</span>
+  </div>
+  <div class="q">稍更无知，一剑教死。
+    <span class="src">第四十出 · 生白</span>
+  </div>
+  <div class="q">这回铲草不除根，惟恐萌芽春再发。
+    <span class="src">第四十出 · 生白</span>
+  </div>
+  <p>恰逢贫女采茶。山高处个人，山脚下个人，十年前雪夜的两个人在山坡上打了个照面。她还在问他为何心偏，他拔了剑。台本只记了六个字：</p>
+  <div class="q">（生）看剑！（旦倒）（生）一剑教伊死了休，黄泉路上必知羞。
+    <span class="src">第四十一出 · 科介与生唱</span>
+  </div>
+  <p>这一剑没有杀死她。李大婆赶到，她怕牵连，把剑伤说成跌伤，跌在坑里，断了一臂。公婆扶她回庙，从此只说：</p>
+  <div class="q">只因去采茶，跌却一臂。
+    <span class="src">第四十五出 · 旦唱</span>
+  </div>
+  <p>另一头，王德用的女儿胜花为丝鞭之事死了。相公赴梓州报仇，路过古庙歇脚，夫人庙里撞见断臂的贫女，一言不发看了半晌，只说了七个字。</p>
+  <div class="q">活脱似胜花娘子！
+    <span class="src">第四十五出 · 后白</span>
+  </div>
+  <p>容貌像亡女，便收作养女，带走医伤。仇人到了梓州，仇人的妻子成了梓州相公的女儿。戏到这里，刀已经在鞘里，只等一个和事老人来递。</p>
+</section>
+
+<section>
+  <p class="kejie">（盖头试待都揭起；旦：张叶记得斩却奴一臂）</p>
+  <h2>团圆的水<small>第五十一出 · 第五十三出</small></h2>
+  <p>梓州府里，王德用立誓不见张叶：不要我女儿便是你。谭节使来回说合，出的主意竟是现成的：相公新收的养女，招状元为婿，两下作亲，仇怨自解。养女低头应了，只说：</p>
+  <div class="q">看爹妈心意转。
+    <span class="src">第五十一出 · 旦唱</span>
+  </div>
+  <p>洞房揭盖头，她终于把话说明。全剧她只这一次当面讨债：</p>
+  <div class="q">张叶记得斩却奴一臂？如今怎得成匹配！
+    <span class="src">第五十三出 · 旦唱</span>
+  </div>
+  <p>状元答辩，通篇没有一字认罪，只有身不由己：</p>
+  <div class="q">张叶本意无心娶你，在穷途身自不由己。况天寒举目又无亲，乱与伊家相娶。
+    <span class="src">第五十三出 · 生唱</span>
+  </div>
+  <p>众人反倒一齐责备她：「听着你恁说，读书人甚张志！」于是一句合唱收束全剧，怨语、剑痕、官司，统统付水：</p>
+  <p class="pull">如今尽撇在<b>东流水</b>，如今尽撇在东流水。
+    <span class="src">第五十三出 · 合唱</span>
+  </p>
+  <p>收尾一场极热闹：花幞头、伞、灯笼，丑扮的幞头挑得高高的，众人唱「好似傀儡门前，一个鲍老」，把自家比作傀儡戏。最后四个脚色各唱一句下场，把这场婚姻钉进戏文的老套：</p>
+  <div class="qkuang">（生、旦白）古庙相逢结契姻。（丑夫）才登甲第没前程。（净贴）梓州重合鸾凤偶。（末合）一段姻缘冠古今。
+    <span class="src">第五十三出 · 下场联句</span>
+  </div>
+  <p>后人读到这里多有不平：断臂之仇，一句「尽撇在东流水」就算了结？可是细看台本，作者把两句话都留在了纸上：她讨债的那一问，他抵赖的那一答，全都在，只是被合唱歌过。团圆是演出来的，账本记在台侧。</p>
+</section>
+
+<section>
+  <p class="kejie">（台下无人，册页犹存）</p>
+  <h2>一只箱子<small>存亡</small></h2>
+  <div class="cang">
+    <div class="qian">永乐大典</div>
+    <div class="ct">
+      <p>这出戏没有名流传世，九山书会编演，东瓯即温州，宋元南戏的故乡。它能在今天被读，靠的是一部大书：《永乐大典》卷一三九九一，抄收了三个南戏剧本，后世称《永乐大典戏文三种》，《张协状元》居首，另两种是《宦门子弟错立身》《小孙屠》。原大典正本、副本散亡殆尽，这一卷的抄本经影印流布，成为宋元南戏存世最完整的底本。</p>
+      <p class="note">库本即据此抄本整理，书名《张协状元》，正文人名多作张叶。</p>
+    </div>
+  </div>
+  <p>它最珍贵的不是故事，故事是负心婚变的老套；最珍贵的是它把一个戏班的全部家当记在了纸上。读这册台本，等于看了一眼宋代戏班的后台：</p>
+  <ul class="du">
+    <li>开头是副末开场加一段诸宫调，说唱如何变成戏，演给你看；</li>
+    <li>题目四句、五十三出的分出，脚色在每出开头挂牌；</li>
+    <li>生旦净末丑外后（贴一见），七副肩膀撑起全部人物，宰相归丑扮，养娘与亡女同由一人连扮；</li>
+    <li>门是判官小鬼，桌子是小二，交椅是堂后官，马嘶犬吠都在戏房；</li>
+    <li>曲牌一首接一首，科介简到只剩六个字：看剑，旦倒。</li>
+  </ul>
+  <p class="note">门子那句「妇人如何不扎脚」，也被研究者引来谈宋代缠足未遍及民间。一句玩笑，被后来八百年认真打量。</p>
+</section>
+
+<section>
+  <p class="kejie">（开戏先看单，脚色如下）</p>
+  <h2>脚色单<small>据库本科介实测</small></h2>
+  <div class="roles">
+    <div class="role"><h3>生</h3><p>张协，库本多作张叶。成都府秀才，五鸡山遇劫，古庙成亲，及第后负心，梓州团圆。</p></div>
+    <div class="role"><h3>旦</h3><p>贫女，王姓富室孤女。古庙供张叶衣食，剪发助其赶考，上京被拒，采茶遭剑，末收养女重嫁。</p></div>
+    <div class="role"><h3>丑</h3><p>强人、员梦先生、小二、小鬼、王德用。枢密使相也归丑扮，升厅讨坐物，拽堂后官当交椅。</p></div>
+    <div class="role"><h3>净</h3><p>客商、山神土地、李大婆、店婆、柳屯田、谭节使。婚礼偷吃供品的是他，说了和的也是他。</p></div>
+    <div class="role"><h3>末</h3><p>开场说诸宫调的副末，又扮判官、土地、李大公、堂后官、门子。一人进出故事内外。</p></div>
+    <div class="role"><h3>外</h3><p>张叶之父、王德用之妻。两家父母，一副肩膀。</p></div>
+    <div class="role"><h3>后（贴一见）</h3><p>王胜花，丝鞭不接病亡；第四十二出起「后假装野方」，同一肩膀改扮养娘。</p></div>
+  </div>
+</section>
+
+<p class="close-line">台已扫净，出将入相。戏文最老的一份台本，抄在《永乐大典》里，等你翻到第一出。</p>
+
+</main>
+
+<footer>
+  <div class="fnav"><span>殆知阁导读 之一百六十八 张协状元</span><a href="mulu.html">返回总目</a></div>
+  <p class="fnote">文本来源：殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）。本篇引文已与库内文本逐字核验。剧中劫掠、负心、弃杀等情节均为宋元戏文旧套，婚恋观、女性观带有鲜明时代印记，研究者对剧中人名、脚色、史事另有考订，读者当以历史视之。</p>
+</footer>
+
+</div>
+</body>
+</html>
