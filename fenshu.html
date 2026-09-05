@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>焚书 · 殆知阁导读之一百九十三</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #121210;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --vc: #c0453c; --vc-dim: rgba(192,69,60,0.55); --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 28px; }
+  a { color: inherit; }
+
+  /* 眉批栏: sticky seal rail */
+  .pi-rail { position: sticky; top: 0; z-index: 40; background: rgba(25,25,23,0.92); border-bottom: 1px solid var(--hairline); backdrop-filter: blur(4px); }
+  .pi-rail .wrap { display: flex; align-items: center; gap: 4px; padding-top: 10px; padding-bottom: 10px; overflow-x: auto; }
+  .pi-seal {
+    flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    text-decoration: none; padding: 0 9px; color: var(--paper-faint); font-size: 12px; letter-spacing: 0.12em;
+  }
+  .pi-seal i {
+    font-style: normal; width: 26px; height: 26px; border-radius: 4px; display: grid; place-items: center;
+    border: 1px solid var(--paper-faint); font-size: 13px; transition: all 0.25s;
+  }
+  .pi-seal.on { color: var(--paper); }
+  .pi-seal.on i { background: var(--vc); border-color: var(--vc); color: var(--paper); }
+
+  /* 卷首 */
+  .juan { padding: 58px 0 46px; }
+  .juan-grid { display: grid; grid-template-columns: 1fr 132px; gap: 42px; align-items: start; }
+  .kicker { font-size: 13px; letter-spacing: 0.4em; color: var(--vc); margin-bottom: 24px; }
+  .lead { font-size: 17px; max-width: 620px; }
+  .lead em { font-style: normal; color: var(--vc); }
+  .meta { margin-top: 22px; font-size: 13px; color: var(--paper-dim); max-width: 620px; }
+  .meta b { color: var(--paper); font-weight: 700; }
+  .slips { display: flex; gap: 10px; justify-content: flex-end; }
+  .slip { writing-mode: vertical-rl; background: var(--paper); color: var(--ink); padding: 20px 11px; font-size: 28px; letter-spacing: 0.22em; font-weight: 700; box-shadow: 3px 3px 0 rgba(0,0,0,0.35); }
+  .slip.dim { background: transparent; border: 1px solid var(--hairline); color: var(--paper-dim); font-size: 13px; font-weight: 400; letter-spacing: 0.3em; padding: 16px 8px; box-shadow: none; }
+  .slip.faint { background: transparent; border: 1px dashed var(--hairline); color: var(--paper-faint); font-size: 11px; font-weight: 400; letter-spacing: 0.22em; padding: 12px 6px; box-shadow: none; }
+
+  section { padding: 56px 0; border-top: 1px solid var(--hairline); }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 26px; flex-wrap: wrap; }
+  .sec-no { font-size: 13px; color: var(--vc); letter-spacing: 0.3em; }
+  .sec-title { font-size: 22px; letter-spacing: 0.14em; font-weight: 700; }
+  .sec-src { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.1em; margin-left: auto; }
+
+  .prose { font-size: 15px; color: var(--paper-dim); max-width: 760px; }
+  .prose + .prose { margin-top: 12px; }
+
+  .q { line-height: 2; }
+  .attr { display: block; margin-top: 6px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.12em; }
+
+  /* 印框对峙 */
+  .yin-grid { display: grid; grid-template-columns: 1fr 92px 1fr; gap: 22px; align-items: stretch; margin: 26px 0; }
+  .yin { background: var(--ink-2); border: 1px solid var(--hairline); padding: 22px 20px; position: relative; }
+  .yin-tag { position: absolute; top: -14px; left: 16px; background: var(--paper); color: var(--ink); font-weight: 700; font-size: 17px; padding: 2px 12px; letter-spacing: 0.2em; }
+  .yin.tag-burn .yin-tag { background: var(--vc); color: var(--paper); }
+  .yin p { font-size: 14px; color: var(--paper-dim); margin-top: 10px; }
+  .yin .q { font-size: 14px; color: var(--paper); }
+  .yin-mid { display: grid; place-items: center; }
+  .yin-mid button { writing-mode: vertical-rl; background: transparent; border: 1px solid var(--vc-dim); color: var(--vc); font-family: inherit; font-size: 16px; letter-spacing: 0.3em; padding: 14px 8px; cursor: pointer; }
+  .yin-mid button:hover { background: rgba(192,69,60,0.12); }
+  .ke-reveal { display: none; margin-top: 8px; border-left: 2px solid var(--vc); padding: 4px 0 4px 16px; font-size: 14px; color: var(--paper); }
+  .ke-reveal.show { display: block; }
+
+  /* 童心灯 */
+  .deng-grid { display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: center; margin-top: 8px; }
+  .deng-box { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 26px 12px; background: var(--ink-3); border: 1px solid var(--hairline); position: relative; overflow: hidden; }
+  .lamp { position: relative; width: 120px; height: 120px; }
+  .lamp .glow { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle, rgba(232,216,170,0.95) 0%, rgba(232,200,140,0.35) 45%, transparent 70%); transition: opacity 0.6s; }
+  .lamp .core { position: absolute; inset: 42px; border-radius: 50%; background: #f2e6c4; box-shadow: 0 0 24px 6px rgba(242,230,196,0.8); transition: all 0.6s; }
+  .zao { position: absolute; left: 50%; transform: translateX(-50%); background: rgba(232,228,220,0.16); border: 1px solid rgba(232,228,220,0.25); color: var(--paper-dim); font-size: 12px; letter-spacing: 0.2em; padding: 3px 10px; white-space: nowrap; transition: all 0.5s; opacity: 0; }
+  .deng-steps { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .deng-steps button { font-family: inherit; background: transparent; border: 1px solid var(--hairline); color: var(--paper-dim); font-size: 12px; letter-spacing: 0.14em; padding: 6px 10px; cursor: pointer; }
+  .deng-steps button.on { border-color: var(--vc-dim); color: var(--vc); }
+  .deng-steps .shao { border-color: var(--vc-dim); color: var(--vc); }
+  .deng-cap { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.1em; }
+
+  /* 化工画工 */
+  .hua-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 26px 0; }
+  .hua { border: 1px solid var(--hairline); background: var(--ink-2); padding: 22px 20px; }
+  .hua h3 { font-size: 17px; letter-spacing: 0.2em; margin-bottom: 12px; }
+  .hua.hg h3 { color: var(--vc); }
+  .hua.hh h3 { color: var(--paper); }
+  .hua p { font-size: 14px; color: var(--paper-dim); margin-top: 8px; }
+  .shu-strip { margin-top: 26px; background: var(--ink-2); border: 1px solid var(--hairline); padding: 26px 20px; }
+  .shu-cols { writing-mode: vertical-rl; height: 320px; max-width: 100%; margin: 0 auto; font-size: 15px; line-height: 2.2; letter-spacing: 0.08em; }
+  .shu-cols .say { color: var(--paper); }
+  .shu-cols .gap { color: var(--paper-faint); font-size: 12px; }
+  .shu-cols .note { color: var(--paper-faint); font-size: 12px; }
+
+  /* 纸烛 */
+  .zhi { background: var(--ink-3); border: 1px solid var(--hairline); padding: 44px 30px 38px; text-align: center; }
+  .yeju { font-size: 26px; letter-spacing: 0.24em; color: #4a473f; transition: color 0.9s, text-shadow 0.9s; }
+  .zhi.lit .yeju { color: var(--paper); text-shadow: 0 0 18px rgba(232,216,170,0.35); }
+  .zhu-tie { position: relative; width: 20px; height: 108px; margin: 30px auto 8px; background: linear-gradient(#d8d2c4, #c9c2b2); border: 1px solid #55524a; cursor: pointer; }
+  .zhu-tie::after { content: "火"; position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 15px; color: var(--vc); opacity: 0; transition: opacity 0.7s; text-shadow: 0 0 12px rgba(192,69,60,0.9); }
+  .zhi.lit .zhu-tie::after { opacity: 1; animation: f 1.1s infinite alternate; }
+  @keyframes f { from { transform: translateX(-50%) scale(1); } to { transform: translateX(-52%) scale(1.18); } }
+  .zhi-cap { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.14em; }
+  .zhi-retort { display: none; margin-top: 26px; font-size: 19px; letter-spacing: 0.14em; color: var(--vc); }
+  .zhi.lit .zhi-retort { display: block; animation: in 1.2s; }
+  @keyframes in { from { opacity: 0; } to { opacity: 1; } }
+  .zhi-note { margin-top: 22px; font-size: 13px; color: var(--paper-dim); max-width: 640px; margin-left: auto; margin-right: auto; }
+
+  /* 楹联 */
+  .lian { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 26px 0; }
+  .lian-item { writing-mode: vertical-rl; margin: auto; height: 250px; font-size: 19px; letter-spacing: 0.28em; color: var(--paper); padding: 18px 14px; border: 1px solid var(--hairline); background: var(--ink-2); }
+  .lian-item b { color: var(--vc); font-weight: 700; }
+
+  /* 竹筹 */
+  .chou { display: flex; gap: 18px; margin: 28px 0 8px; flex-wrap: wrap; }
+  .chou-item { writing-mode: vertical-rl; padding: 22px 14px; background: var(--paper); color: var(--ink); font-size: 18px; font-weight: 700; letter-spacing: 0.24em; box-shadow: 3px 3px 0 rgba(0,0,0,0.35); }
+  .chou-item small { font-size: 12px; font-weight: 400; letter-spacing: 0.16em; color: #6e6a61; margin-top: 10px; }
+  .chou-item.ghost { background: transparent; border: 1px dashed var(--paper-faint); color: var(--paper-faint); box-shadow: none; }
+
+  /* 五死 */
+  .si-rows { border: 1px solid var(--hairline); margin: 26px 0; }
+  .si-row { display: grid; grid-template-columns: 108px 1fr; border-bottom: 1px solid var(--hairline); }
+  .si-row:last-child { border-bottom: none; }
+  .si-row .rk { padding: 14px 10px 14px 16px; font-size: 13px; color: var(--vc); letter-spacing: 0.16em; border-right: 1px solid var(--hairline); display: flex; align-items: center; }
+  .si-row .bd { padding: 14px 18px; font-size: 14px; color: var(--paper-dim); }
+  .si-row .bd b { color: var(--paper); font-weight: 400; }
+  .si-row.top { background: rgba(192,69,60,0.08); }
+  .si-row.top .bd { color: var(--paper); }
+
+  .yizhu { margin: 40px auto 0; max-width: 540px; background: var(--paper); color: var(--ink); padding: 30px 26px 24px; position: relative; box-shadow: 4px 4px 0 rgba(0,0,0,0.4); }
+  .yizhu::before { content: "嘱"; position: absolute; top: -16px; right: 18px; background: var(--vc); color: var(--paper); font-size: 15px; padding: 4px 10px; letter-spacing: 0.2em; }
+  .yizhu .q { font-size: 15px; color: var(--ink); display: block; margin-top: 10px; }
+  .yizhu .big { display: block; text-align: center; font-size: 24px; font-weight: 700; letter-spacing: 0.18em; color: var(--vc); margin-top: 16px; }
+  .yizhu .attr { color: var(--paper-faint); }
+
+  /* 焚后 */
+  .fenhou { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; margin-top: 10px; }
+  .fenhou .big-q { font-size: 30px; letter-spacing: 0.14em; line-height: 1.7; color: var(--paper); }
+  .fenhou .big-q em { font-style: normal; color: var(--vc); }
+
+  /* 校字记 */
+  .bricks { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .brick { border: 1px dashed var(--paper-faint); color: var(--paper-dim); font-size: 13px; padding: 6px 12px; letter-spacing: 0.08em; }
+  .brick b { color: var(--paper); font-weight: 700; }
+  .brick i { font-style: normal; color: var(--vc); margin-left: 8px; font-size: 12px; }
+
+  footer { border-top: 1px solid var(--hairline); padding: 40px 0 56px; }
+  .fnav { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--paper-dim); letter-spacing: 0.12em; margin-bottom: 18px; }
+  .fnote { font-size: 13px; color: var(--paper-faint); line-height: 2; }
+  .fnote b { color: var(--paper-dim); font-weight: 700; margin-right: 10px; }
+
+  .duan { margin-top: 30px; text-align: center; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.3em; }
+
+  @media (max-width: 760px) {
+    .juan-grid { grid-template-columns: 1fr; }
+    .slips { justify-content: flex-start; }
+    .yin-grid { grid-template-columns: 1fr; }
+    .yin-mid { padding: 6px 0; }
+    .deng-grid { grid-template-columns: 1fr; }
+    .hua-grid, .lian, .fenhou { grid-template-columns: 1fr; }
+    .lian-item { writing-mode: horizontal-tb; height: auto; letter-spacing: 0.14em; }
+    .si-row { grid-template-columns: 84px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="pi-rail">
+  <div class="wrap">
+    <a class="pi-seal" href="#s1"><i>焚</i><span>焚藏</span></a>
+    <a class="pi-seal" href="#s2"><i>心</i><span>童心灯</span></a>
+    <a class="pi-seal" href="#s3"><i>工</i><span>化工</span></a>
+    <a class="pi-seal" href="#s4"><i>烛</i><span>纸烛</span></a>
+    <a class="pi-seal" href="#s5"><i>见</i><span>见短</span></a>
+    <a class="pi-seal" href="#s6"><i>胆</i><span>才胆</span></a>
+    <a class="pi-seal" href="#s7"><i>死</i><span>五死账</span></a>
+    <a class="pi-seal" href="#s8"><i>传</i><span>焚后</span></a>
+  </div>
+</div>
+
+<header class="juan">
+  <div class="wrap juan-grid">
+    <div>
+      <div class="kicker">殆知阁导读 之一百九十三 集藏</div>
+      <p class="lead">书名是作者自己下的判词：一部答知己的书信杂文，自认句句戳到世道学人的痛处，既中其痼疾，则必欲杀之，所以取名《焚书》，「言当焚而弃之，不可留」。他给自己把话说尽：焚，是逆耳；刻，是入心。十余年后，诏毁其书，逮其人，火与狱都如约而至；而这一部，恰恰是他生前流传最广、身后禁不胜禁的一部。</p>
+      <p class="meta"><b>库本实测</b> 去空白十五万九千四百四十九字，凡六卷又增补：书答二卷，杂述二卷，读史一卷，诗一卷。卷首自序一篇，又冠焦竑序，序作于李贽身后，开口即是「乃卒以笔舌杀身」。</p>
+    </div>
+    <div class="slips">
+      <span class="slip">李氏焚书</span>
+      <span class="slip dim">温陵李贽著</span>
+      <span class="slip faint">自序题湖上聚佛楼</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="s1">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">眉批一</span><span class="sec-title">焚与藏</span><span class="sec-src">自序</span></div>
+    <p class="prose">李贽给自己的著作开过一张清单：四种书，两种下落，藏着，或者烧掉。他替自己的命运把话都说尽了。</p>
+    <div class="yin-grid">
+      <div class="yin">
+        <span class="yin-tag">藏</span>
+        <p class="q">自有书四种：一曰《藏书》，上下数千年是非，未易肉眼视也，故欲藏之，言当藏于山中以待后世子云也。</p>
+        <p>评千古是非的书，自认当藏之名山，等一个扬子云。</p>
+      </div>
+      <div class="yin-mid"><button id="keBtn" type="button">已刻</button></div>
+      <div class="yin tag-burn">
+        <span class="yin-tag">焚</span>
+        <p class="q">一曰《焚书》，则答知己书问，所言颇切近世学者膏肓，既中其痼疾，则必欲杀之，言当焚而弃之，不可留</p>
+        <p>答朋友的书信，句句切中学人的病根，病根恼了，是要杀人的。</p>
+      </div>
+    </div>
+    <div class="ke-reveal" id="keBox">欲焚者，谓其逆人之耳也；欲刻者，谓其入人之心也。逆耳者必杀，是可惧也。然余年六十四矣，倘一入人之心，则知我者或庶几乎！余幸其庶几也，故刻之。</div>
+    <p class="prose" style="margin-top:18px">名之曰焚，其实照刻。自序末行署着书斋的名字，那一点侥幸，写得又可怜又坦白。</p>
+  </div>
+</section>
+
+<section id="s2">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">眉批二</span><span class="sec-title">童心灯</span><span class="sec-src">卷三 杂述 童心说</span></div>
+    <p class="prose">全书最响亮的一篇，只有一盏灯：人人本来有一颗绝假纯真的心，然后被四样东西一层层罩住。点一层，灯暗一层，四层罩满，言语不由衷，事皆成假。</p>
+    <div class="deng-grid">
+      <div class="deng-box">
+        <div class="lamp">
+          <div class="glow" id="glow"></div>
+          <div class="core" id="core"></div>
+          <span class="zao" id="z1" style="top:6px">耳目入闻见</span>
+          <span class="zao" id="z2" style="top:32px">闻见入道理</span>
+          <span class="zao" id="z3" style="top:58px">扬美名</span>
+          <span class="zao" id="z4" style="top:84px">掩丑名</span>
+        </div>
+        <div class="deng-steps">
+          <button type="button" data-z="1">闻见入</button>
+          <button type="button" data-z="2">道理入</button>
+          <button type="button" data-z="3">美名动</button>
+          <button type="button" data-z="4">丑名惧</button>
+          <button type="button" class="shao" id="shaoBtn">焚罩复初</button>
+        </div>
+        <div class="deng-cap">童心说四罩，逐层压灯</div>
+      </div>
+      <div>
+        <p class="q">夫童心者，真心也。若以童心为不可，是以真心为不可也。夫童心者，绝假纯真，最初一念之本心也。若失却童心，便失却真心，失却真心，便失却真人。<span class="attr">童心说</span></p>
+        <p class="q" id="zaoQ" style="margin-top:14px; color:var(--paper-dim)">盖方其始也，有闻见从耳目而入，而以为主于其内而童心失。</p>
+        <p class="prose" style="margin-top:14px">四罩之后，人人拿从外入的道理当自己的心，假人不自知其假，正所谓「满场是假，矮人何辩也」。于是连书也成了障，他给天下人翻案的功夫，全用在这里。</p>
+        <p class="q" style="margin-top:14px">然则《六经》《语》《孟》，乃道学之口实，假人之渊蔽也，断断乎其不可以语于童心之言明矣。<span class="attr">童心说</span></p>
+      </div>
+    </div>
+    <p class="prose" style="margin-top:26px">这篇文章的后半段顺势放倒了文学史的高墙：「诗何必古选，文何必先秦」，一路变到院本杂剧、《西厢》《水浒》，凡出于童心的都是至文，「天下之至文，未有不出于童心焉者也」。晚明的性灵、言情、小说戏曲评点，都能在这里找到那盏灯。</p>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">眉批三</span><span class="sec-title">化工与画工</span><span class="sec-src">卷三 杂说</span></div>
+    <p class="prose">拿三部戏打擂台，李贽判得干脆：天造地设不着痕迹的是化工，穷巧极工痕迹宛然的是画工。这一对词，后来成了中国文学批评的固定度量衡。</p>
+    <div class="hua-grid">
+      <div class="hua hg">
+        <h3>化工</h3>
+        <p class="q">《拜月》、《西厢》，化工也；《琵琶》，画工也。</p>
+        <p>「天之所生，地之所长，百卉具在」，天然的东西「至觅其工，了不可得」，所以入人之深。</p>
+      </div>
+      <div class="hua hh">
+        <h3>画工</h3>
+        <p class="q">吾尝揽《琵琶》而弹之矣：一弹而叹，再弹而怨，三弹而向之怨叹无复存者。</p>
+        <p>「语尽而意亦尽，词竭而味索然亦随以竭」。工到十分，也就只剩十分。</p>
+      </div>
+    </div>
+    <div class="shu-strip">
+      <div class="shu-cols">
+        <span class="note">杂说论至文</span>
+        <span class="say">且夫世之真能文者，比其初，皆非有意于为文也。</span>
+        <span class="say">其胸中有如许无状可怪之事，其喉间有如许欲吐而不敢吐之物，其口头又时时有许多欲语而莫可所以告语之处，蓄极积久，势不能遏。</span>
+        <span class="say">一旦见景生情，触目兴叹，夺他人之酒杯，浇自己之垒块；诉心中之不平，感数奇于千载。</span>
+        <span class="gap">遂亦自负，发狂大叫．流涕恸哭，不能自止。</span>
+        <span class="say">宁使见者闻者切齿咬牙，欲杀欲割，而终不忍藏于名山，投之水火。</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s4">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">眉批四</span><span class="sec-title">纸烛照长夜</span><span class="sec-src">卷三 赞刘谐</span></div>
+    <div class="zhi" id="zhiBox">
+      <div class="yeju" id="yeju">天不生仲尼，万古如长夜</div>
+      <div class="zhu-tie" id="zhuTie" role="button" tabindex="0" aria-label="点火"></div>
+      <div class="zhi-cap" id="zhiCap">一道学先生变色而起，点纸烛</div>
+      <div class="zhi-retort" id="retort">怪得羲皇以上圣人尽日燃纸烛而行也</div>
+      <p class="zhi-note">刘谐者，聪明士，见而哂曰：「是未知我仲尼兄也」。一句玩笑，把孔夫子从神龛里请回人间。李贽把这条材料郑重收进集子，批曰：「简而当，约而有余，可以破疑网而昭中天矣」，又许它「盖虽出于一时调笑之语，然其至者百世不能易」。</p>
+    </div>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">眉批五</span><span class="sec-title">见短不短</span><span class="sec-src">卷二 答以女人学道为见短书</span></div>
+    <p class="prose">有人写信来劝：「妇人见短，不堪学道」。李贽回了一封长信，先把见短的定义接过来拆掉，再请出邑姜、文母、薛涛、庞婆灵照一干人证。万历年间，这是要赔上名声的题目，他答得兴致勃勃。</p>
+    <div class="lian">
+      <div class="lian-item">故谓人有男女则可，<b>谓见有男女岂可乎</b></div>
+      <div class="lian-item">谓见有长短则可，<b>谓男子之见尽长女人之见尽短又岂可乎</b></div>
+    </div>
+    <p class="q">余谓此等远见女子，正人家吉祥善瑞，非数百年积德未易生也。<span class="attr">答以女人学道为见短书</span></p>
+    <p class="prose" style="margin-top:14px">信里的尺度不止于礼貌，他说，「设使女人其身而男子其见」，若真如此，「则恐当世男子视之，皆当羞愧流汗，不敢出声矣」。晚明那座麻城芝佛院里，确实有一群士族女性在跟他问佛，招来的物议，后来成了烧向他自己的一场大火。</p>
+  </div>
+</section>
+
+<section id="s6">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">眉批六</span><span class="sec-title">才与胆</span><span class="sec-src">卷四 因记往事</span></div>
+    <p class="prose">朋友拿闽广海盗林道干跟他开玩笑，他认了真，写成一篇让清官脸上发烫的文章。</p>
+    <div class="chou">
+      <span class="chou-item">才<small>二十分</small></span>
+      <span class="chou-item">胆<small>二十分</small></span>
+      <span class="chou-item ghost">识<small>库本此句讹字，不入引</small></span>
+    </div>
+    <p class="q" style="margin-top:18px">夫道干横行海上，三十余年矣。</p>
+    <p class="q" style="margin-top:12px">攻城陷邑，杀戮官吏</p>
+    <p class="q" style="margin-top:12px">平居无事，只解打恭作揖，终日匡坐，同于泥塑<span class="attr">以上因记往事，写承平日久的衮衮诸公</span></p>
+    <p class="q" style="margin-top:12px">唯举世颠倒，故使豪杰抱不平之恨，英雄怀罔措之戚，直驱之使为盗也。</p>
+    <p class="q" style="margin-top:12px">必如林道干，乃可谓有二十分才，二十分胆者也。<span class="attr">因记往事</span></p>
+    <p class="prose" style="margin-top:14px">这篇的狠，不在替海盗说话，而在把贼的账算到养贼的体制头上：有才有胆有识的人被弃置不用，还要防备禁锢，认定留著必乱天下。</p>
+  </div>
+</section>
+
+<section id="s7">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">眉批七</span><span class="sec-title">五死账</span><span class="sec-src">卷四 五死篇</span></div>
+    <p class="prose">李贽给死分了五等，像账房先生盘点货色。盘点完，他说自己老了，头一等轮不上，末两等不屑做，那么剩下什么生意可做。</p>
+    <div class="si-rows">
+      <div class="si-row top"><span class="rk">第一等好死</span><span class="bd"><b>人有五死，唯是程婴、公孙杵臼之死，纪信、奕布之死，聂政之死，屈平之死，乃为天下第一等好死。</b></span></div>
+      <div class="si-row"><span class="rk">其次</span><span class="bd">临阵而死勇也，未免有不量敌之进，同乎季路。不屈而死义也，未免有制于人之恨，同乎睢阳。</span></div>
+      <div class="si-row"><span class="rk">又其次</span><span class="bd">尽忠被谗而死：伍子胥、晁错之伦，作者许其忠而讥其不智。</span></div>
+      <div class="si-row"><span class="rk">又其次</span><span class="bd">功成名遂而死：商君、吴起、大夫种之伦，是为不知止足。</span></div>
+      <div class="si-row"><span class="rk">所不屑</span><span class="bd">卧病房榻之间，徘徊妻孥之侧，滔滔者天下皆是也。</span></div>
+    </div>
+    <div class="yizhu">
+      <span class="q">第余老矣，欲如以前五者，又不可得矣。</span>
+      <span class="q">计唯有做些小买卖耳。大买卖如公孙杵臼、聂政者，既不见买主来到，则岂可徒死而死于床褥之间乎？且我已离乡井，捐童仆，直来求买主于此矣</span>
+      <span class="q">既无知已可死，吾将死于不知己者以泄怒也。</span>
+      <span class="q">谨书此以告诸貌称相知者，闻死来视我，切勿收我尸！是嘱。</span>
+      <span class="big">切勿收我尸</span>
+      <span class="attr">五死篇</span>
+    </div>
+    <p class="prose" style="margin-top:26px">这是一张提前立下的字据。他把自己后半生的死当作一桩等待买主的买卖来经营，地点、时辰、买主，一一写明。书成十余年后，通州狱中那把剃刀落下，这篇文字成了全书最准的一句预言。</p>
+  </div>
+</section>
+
+<section id="s8">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">眉批八</span><span class="sec-title">焚后</span><span class="sec-src">李氏焚书序</span></div>
+    <div class="fenhou">
+      <p class="big-q" id="bigQ">今焚后而<br>宏甫之传<em>乃愈广</em></p>
+      <div>
+        <p class="q">宏甫快口直肠，目空一世，愤激过甚，不顾人有忤者；然犹虑人必忤，而托言于焚，亦可悲矣！<span class="attr">焦竑序</span></p>
+        <p class="q" style="margin-top:12px">乃卒以笔舌杀身，诛求者竟以其所著付之烈焰，抑何虐也！岂遂成其谶乎？<span class="attr">焦竑序</span></p>
+        <p class="prose" style="margin-top:14px">序作者焦竑是李贽的至交。他引一桩宋朝旧案作答：禁苏轼笔墨，「家藏墨妙抄割殆尽，见者若祟」，「不逾时而征求鼎沸，断管残沈，等于吉光片羽」。「焚不焚，何关于宏甫」。</p>
+      </div>
+    </div>
+    <p class="prose" style="margin-top:26px">据通行记载，万历三十年，言官张问达疏劾李贽壮岁为官、晚年削发、近倡谬说，有司以敢倡乱道、惑世诬民逮之下狱；同年，麻城芝佛院被官绅烧毁，李贽在狱中自刭死，年七十六，库本皆未收。明清两代，这部书屡次列入禁毁书目，屡禁屡刻，正是序里那句判词的反面注脚：书烧得掉，入过人心的烧不掉。</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">附</span><span class="sec-title">校字记</span><span class="sec-src">底本 OCR 形讹，引文照录</span></div>
+    <p class="prose">库本系扫描转录，形讹字在所难免，本页引文一律照录。拟改之字开列如下。</p>
+    <div class="bricks">
+      <span class="brick">假人之渊<b>蔽</b><i>蔽通行作薮</i></span>
+      <span class="brick">政事无根<b>抵</b><i>抵通行作柢</i></span>
+      <span class="brick">既无知<b>已</b>可死<i>已通行作己，同句下文正作己</i></span>
+      <span class="brick">发狂<b>大叫</b>．流涕<i>点号讹作半角点，照录</i></span>
+    </div>
+    <div class="duan">一盏童心灯，烧过了四百年</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fnav">
+      <span>殆知阁导读 之一百九十三 焚书</span>
+      <a href="mulu.html">返回总目</a>
+    </div>
+    <p class="fnote"><b>文本来源</b>殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）集藏别集部，明李贽撰，凡六卷又增补：书答二卷、杂述二卷、读史一卷、诗一卷，卷首自序并焦竑序，库本去空白十五万九千四百四十九字。<b>引文核验</b>本页所有引号内文字及引文块均与库本逐字核验（脚本 verify_fenshu.py，去空白双侧比对加反扫，句读小异者去标点复核），底本系 OCR 转录，讹字在所难免，引文一仍底本照录，拟改之字已在校字记中标注；李贽被捕、狱中自刭、芝佛院被毁、张问达疏劾及初刻年代等，库本未收，据《明史》及袁中道《李温陵传》通行记载转述，随文申报。<b>时代局限</b>书中论女人学道仍以出世学道为前提，五死篇以烈死为美、轻病榻之终，因记往事对盗首才胆的激赏回避了劫掠之害，其是非评骘皆晚明狂禅与佛老立场的产物；读者当以思想史与文学批评史的材料视之，取其童心、化工诸说的锋芒与诚实，明其历史语境，勿以今律古。</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var glow = document.getElementById('glow'), core = document.getElementById('core');
+  var zaoQ = document.getElementById('zaoQ');
+  var zqs = [
+    '盖方其始也，有闻见从耳目而入，而以为主于其内而童心失。',
+    '其长也，有道理从闻见而入，而以为主于其内而童心失。',
+    '于是焉又知美名之可好也，而务欲以扬之而童心失。',
+    '知不美之名之可丑也，而务欲以掩之而童心失。'
+  ];
+  var btns = [].slice.call(document.querySelectorAll('.deng-steps button[data-z]'));
+  function setStage(n) {
+    btns.forEach(function (b) { b.classList.toggle('on', +b.dataset.z <= n); });
+    [1,2,3,4].forEach(function (i) {
+      var z = document.getElementById('z' + i);
+      z.style.opacity = i <= n ? 1 : 0;
+      z.style.transform = 'translateX(-50%) scale(' + (i <= n ? 1 : 1.6) + ')';
+    });
+    glow.style.opacity = [1, 0.62, 0.36, 0.16, 0.05][n];
+    core.style.boxShadow = '0 0 ' + (24 - n * 5) + 'px ' + Math.max(6 - n, 0) + 'px rgba(242,230,196,' + (0.8 - n * 0.18) + ')';
+    zaoQ.textContent = n ? zqs[n - 1] : '';
+    zaoQ.style.color = n ? 'var(--paper)' : 'var(--paper-dim)';
+  }
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var cur = btns.filter(function (x) { return x.classList.contains('on'); }).length;
+      setStage(+b.dataset.z === cur ? +b.dataset.z - 1 : +b.dataset.z);
+    });
+  });
+  document.getElementById('shaoBtn').addEventListener('click', function () { setStage(0); });
+
+  var keBtn = document.getElementById('keBtn'), keBox = document.getElementById('keBox');
+  keBtn.addEventListener('click', function () { keBox.classList.toggle('show'); });
+
+  var zhi = document.getElementById('zhiBox');
+  function lit() { zhi.classList.add('lit'); }
+  document.getElementById('zhuTie').addEventListener('click', lit);
+  document.getElementById('zhuTie').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); lit(); } });
+
+  var links = [].slice.call(document.querySelectorAll('.pi-seal'));
+  var secs = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  function spy() {
+    var y = window.scrollY + 140, cur = 0;
+    secs.forEach(function (s, i) { if (s.offsetTop <= y) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+  }
+  window.addEventListener('scroll', spy, { passive: true });
+  spy();
+})();
+</script>
+
+</body>
+</html>
