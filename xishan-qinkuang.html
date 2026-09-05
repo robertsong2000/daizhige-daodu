@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>溪山琴况 · 殆知阁导读之一百八十三</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #232220;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --c: #5e8fbb; --c-dim: rgba(94,143,187,0.32); --c-faint: rgba(94,143,187,0.12);
+    --red: #c0453c;
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 26px; }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  q { quotes: none; color: var(--c); }
+  .qcard q { color: var(--ink); }
+
+  /* 开卷：律盘 */
+  .hero { text-align: center; padding: 64px 0 30px; }
+  .kicker { font-size: 13px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  .pan { width: min(560px, 88vw); margin: 26px auto 8px; display: block; }
+  .pan text { font-family: inherit; }
+  .pan .gw { fill: var(--paper); font-size: 27px; letter-spacing: 0px; cursor: pointer; }
+  .pan .gw:hover { fill: var(--c); }
+  .pan .dot { fill: var(--c-dim); }
+  .pan a:hover .dot { fill: var(--c); }
+  .pan .ctitle { fill: var(--paper); font-size: 56px; font-weight: 700; letter-spacing: 0.14em; }
+  .pan .cauthor { fill: var(--paper-faint); font-size: 16px; letter-spacing: 0.3em; }
+  .pan .oring { fill: none; stroke: var(--c-dim); stroke-width: 1.4; stroke-dasharray: 3 9; }
+  .pan .midring { fill: none; stroke: var(--hairline); stroke-width: 1; }
+  .pan .gtick { stroke: var(--ink); stroke-width: 7; }
+  .spin { animation: spin 140s linear infinite; transform-origin: 360px 360px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+  .pannote { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.12em; margin-top: 4px; }
+  .tlead { max-width: 34em; margin: 30px auto 0; text-align: left; color: var(--paper-dim); font-size: 16.5px; }
+  .tlead b { color: var(--paper); font-weight: 600; }
+  .tlead .jump { color: var(--c); text-decoration: none; border-bottom: 1px solid var(--c-dim); }
+
+  /* 节头：一条弦 + 徽点 */
+  .sec { padding: 58px 0 10px; }
+  .shead { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; }
+  .shead .str { flex: 1; height: 1px; background: var(--hairline); position: relative; }
+  .shead .str::before { content: ""; position: absolute; left: 0; top: -2.5px; width: 6px; height: 6px; border-radius: 50%; background: var(--c-dim); }
+  .shead h2 { font-size: 21px; font-weight: 600; letter-spacing: 0.16em; white-space: nowrap; }
+  .shead h2 em { font-style: normal; color: var(--c); margin-right: 10px; }
+  .sec p.note { color: var(--paper-dim); font-size: 15.5px; max-width: 46em; margin-bottom: 18px; }
+  .sec p.note b { color: var(--paper); font-weight: 600; }
+
+  /* 三合阶 */
+  .sanhe { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 8px 0 20px; }
+  .sanhe .step { background: var(--ink-2); border: 1px solid var(--hairline); padding: 20px 20px 16px; position: relative; }
+  .sanhe .step:nth-child(2) { margin-top: 16px; }
+  .sanhe .step:nth-child(3) { margin-top: 32px; }
+  .sanhe .no { font-size: 12px; color: var(--c); letter-spacing: 0.24em; display: block; margin-bottom: 8px; }
+  .sanhe .gt { font-size: 24px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .sanhe .step p { font-size: 14.5px; color: var(--paper-dim); }
+  .sanhe .step p q { color: var(--c); }
+
+  /* 引文纸卡 */
+  .qcard { background: var(--paper); color: var(--ink); padding: 26px 28px; font-size: 16px; }
+  .qcard .src { display: block; font-size: 12.5px; color: var(--paper-dim); letter-spacing: 0.2em; margin-top: 10px; }
+  .duo { display: grid; grid-template-columns: 1.25fr 1fr; gap: 14px; align-items: stretch; margin-bottom: 20px; }
+  .qcard.v { writing-mode: vertical-rl; text-orientation: upright; height: 300px; padding: 26px 22px; font-size: 15.5px; line-height: 2.4; display: flex; justify-content: center; }
+  .qcard.v .src { writing-mode: horizontal-tb; text-orientation: mixed; align-self: flex-end; margin-top: 0; margin-right: 12px; }
+
+  .warn { border: 1px solid var(--c-dim); background: var(--c-faint); padding: 18px 22px; font-size: 15.5px; margin-bottom: 20px; }
+  .warn q { color: var(--paper); }
+  .warn b { color: var(--c); font-weight: 600; }
+
+  /* 听之三：深色卡 */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .dcard { background: var(--ink-2); border: 1px solid var(--hairline); padding: 22px; }
+  .dcard .gw2 { font-size: 46px; font-weight: 700; color: var(--ink-3); -webkit-text-stroke: 1.2px var(--c); letter-spacing: 0; line-height: 1; display: block; margin-bottom: 12px; }
+  .dcard p { font-size: 14.5px; color: var(--paper-dim); margin-bottom: 8px; }
+  .list5 { border-top: 1px solid var(--hairline); margin-top: 10px; padding-top: 10px; }
+  .list5 li { list-style: none; font-size: 14px; color: var(--paper-dim); padding: 2px 0; }
+  .list5 li::before { content: "○"; color: var(--c-dim); margin-right: 8px; font-size: 11px; }
+
+  /* 四况组带 */
+  .band { border-top: 1px solid var(--hairline); padding: 34px 0 8px; }
+  .band .blab { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.3em; margin-bottom: 16px; }
+  .bgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .bgrid.ya { grid-template-columns: 1.7fr 1fr 1fr 1fr; }
+  .bcard { background: var(--ink-2); border: 1px solid var(--hairline); padding: 20px 18px; }
+  .bcard .gw2 { font-size: 34px; font-weight: 700; color: var(--c); line-height: 1; display: block; margin-bottom: 10px; }
+  .bcard p { font-size: 14px; color: var(--paper-dim); margin-bottom: 8px; }
+  .bcard p q { color: var(--c); }
+  .chips8 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .chip8 { border: 1px solid rgba(192,69,60,0.4); color: var(--paper); font-size: 13.5px; padding: 7px 10px; text-align: center; }
+  .chip8 q { color: #d9837b; }
+  .antidote { display: flex; gap: 10px; margin-top: 12px; }
+  .anti { width: 44px; height: 44px; display: grid; place-items: center; background: var(--c); color: #f5efe6; font-size: 22px; font-weight: 700; }
+  .fix { display: inline-block; margin-top: 8px; font-size: 12.5px; color: var(--paper-faint); border-bottom: 1px dashed var(--paper-faint); text-decoration: none; }
+  .fix:hover { color: var(--c); border-color: var(--c); }
+
+  /* 手法 2x2 */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* 轻重 */
+  .zhonghe { text-align: center; padding: 20px 0 26px; }
+  .zhonghe .zh { display: inline-block; background: var(--paper); color: var(--ink); font-size: 17px; padding: 12px 26px; margin: 0 8px; }
+  .zhonghe .zhl { display: block; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.3em; margin-bottom: 12px; }
+
+  /* 气候尺 */
+  .ruler { position: relative; margin: 26px 0 30px; height: 84px; }
+  .ruler .bar { position: absolute; left: 0; right: 0; top: 40px; height: 2px; background: repeating-linear-gradient(90deg, var(--paper-faint) 0 1px, transparent 1px 14px), var(--hairline); }
+  .ruler .lab { position: absolute; font-size: 13px; color: var(--paper-dim); letter-spacing: 0.2em; top: 6px; }
+  .ruler .lab.r { top: auto; bottom: 8px; }
+  .ruler .mark { position: absolute; top: 34px; width: 1px; height: 14px; background: var(--c); }
+  .ruler .mark.slow { background: var(--paper-dim); height: 10px; top: 36px; }
+
+  /* 成连海浪 */
+  .sea { margin: 30px 0 20px; border: 1px solid var(--hairline); background: var(--ink-2); padding: 30px 26px 24px; }
+  .sea svg { width: 100%; height: 110px; display: block; }
+  .sea .w1 { fill: none; stroke: var(--c); stroke-width: 1.6; stroke-dasharray: 5 7; animation: drift 26s linear infinite; }
+  .sea .w2 { fill: none; stroke: var(--c-dim); stroke-width: 1.2; stroke-dasharray: 4 9; animation: drift 40s linear infinite reverse; }
+  .sea .w3 { fill: none; stroke: var(--hairline); stroke-width: 1; }
+  @keyframes drift { to { stroke-dashoffset: -600; } }
+  @media (prefers-reduced-motion: reduce) { .sea .w1, .sea .w2 { animation: none; } }
+  .sea .cap { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; margin-top: 14px; flex-wrap: wrap; }
+  .sea .cap .big { font-size: 24px; font-weight: 700; letter-spacing: 0.12em; color: var(--paper); }
+  .sea .cap .sm { font-size: 14px; color: var(--paper-dim); }
+
+  /* 校字记 */
+  .jz { border-top: 1px solid var(--hairline); padding: 40px 0 10px; }
+  .jzgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .jcard { background: var(--ink-2); border: 1px solid var(--hairline); padding: 20px; }
+  .jcard .lab { display: inline-block; font-size: 11.5px; color: var(--red); border: 1px solid rgba(192,69,60,0.5); padding: 1px 8px; letter-spacing: 0.2em; margin-bottom: 10px; }
+  .jcard .was { font-size: 15px; margin-bottom: 6px; }
+  .jcard .now { font-size: 14px; color: var(--paper-dim); }
+  .jcard .now b { color: var(--c); font-weight: 600; }
+  .jcard .why { font-size: 13px; color: var(--paper-faint); margin-top: 8px; }
+  .jtail { font-size: 14px; color: var(--paper-dim); margin-top: 16px; max-width: 46em; }
+
+  /* 页脚 */
+  footer { border-top: 1px solid var(--hairline); margin-top: 60px; padding: 30px 0 44px; }
+  .fnav { display: flex; justify-content: space-between; font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.14em; margin-bottom: 16px; }
+  .fnav a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+  .fnote { font-size: 13px; color: var(--paper-faint); max-width: 60em; }
+  .fnote b { color: var(--paper-dim); font-weight: 600; margin-right: 8px; }
+
+  @media (max-width: 760px) {
+    .sanhe, .trio { grid-template-columns: 1fr; }
+    .sanhe .step:nth-child(2), .sanhe .step:nth-child(3) { margin-top: 0; }
+    .duo { grid-template-columns: 1fr; }
+    .bgrid, .bgrid.ya { grid-template-columns: 1fr 1fr; }
+    .grid2, .jzgrid { grid-template-columns: 1fr; }
+    .qcard.v { height: 240px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">殆知阁导读 之一百八十三</div>
+    <svg class="pan" viewBox="0 0 720 720" role="img" aria-label="二十四况律盘">
+      <circle class="oring spin" cx="360" cy="360" r="284"></circle>
+      <circle class="midring" cx="360" cy="360" r="228"></circle>
+      <text class="ctitle" x="360" y="352" text-anchor="middle">溪山琴况</text>
+      <text class="cauthor" x="360" y="404" text-anchor="middle">明 · 徐上瀛</text>
+            <line class="gtick" x1="547.2" y1="216.3" x2="591.7" y2="182.2"></line>
+      <line class="gtick" x1="578.0" y1="450.3" x2="629.8" y2="471.7"></line>
+      <line class="gtick" x1="390.8" y1="594.0" x2="398.1" y2="649.5"></line>
+      <line class="gtick" x1="172.8" y1="503.7" x2="128.3" y2="537.8"></line>
+      <a href="#s-he" aria-label="和况"><circle class="dot" cx="360.0" cy="106.0" r="4.6"></circle><text class="gw" x="360.0" y="58.0" text-anchor="middle" dominant-baseline="middle">和</text></a>
+      <a href="#s-jing" aria-label="静况"><circle class="dot" cx="425.7" cy="114.7" r="4.6"></circle><text class="gw" x="438.2" y="68.3" text-anchor="middle" dominant-baseline="middle">静</text></a>
+      <a href="#s-qing" aria-label="清况"><circle class="dot" cx="487.0" cy="140.0" r="4.6"></circle><text class="gw" x="511.0" y="98.5" text-anchor="middle" dominant-baseline="middle">清</text></a>
+      <a href="#s-yuan" aria-label="远况"><circle class="dot" cx="539.6" cy="180.4" r="4.6"></circle><text class="gw" x="573.5" y="146.5" text-anchor="middle" dominant-baseline="middle">远</text></a>
+      <a href="#s-gu" aria-label="古况"><circle class="dot" cx="580.0" cy="233.0" r="4.6"></circle><text class="gw" x="621.5" y="209.0" text-anchor="middle" dominant-baseline="middle">古</text></a>
+      <a href="#s-dan" aria-label="淡况"><circle class="dot" cx="605.3" cy="294.3" r="4.6"></circle><text class="gw" x="651.7" y="281.8" text-anchor="middle" dominant-baseline="middle">淡</text></a>
+      <a href="#s-tian" aria-label="恬况"><circle class="dot" cx="614.0" cy="360.0" r="4.6"></circle><text class="gw" x="662.0" y="360.0" text-anchor="middle" dominant-baseline="middle">恬</text></a>
+      <a href="#s-yi" aria-label="逸况"><circle class="dot" cx="605.3" cy="425.7" r="4.6"></circle><text class="gw" x="651.7" y="438.2" text-anchor="middle" dominant-baseline="middle">逸</text></a>
+      <a href="#s-ya" aria-label="雅况"><circle class="dot" cx="580.0" cy="487.0" r="4.6"></circle><text class="gw" x="621.5" y="511.0" text-anchor="middle" dominant-baseline="middle">雅</text></a>
+      <a href="#s-li" aria-label="丽况"><circle class="dot" cx="539.6" cy="539.6" r="4.6"></circle><text class="gw" x="573.5" y="573.5" text-anchor="middle" dominant-baseline="middle">丽</text></a>
+      <a href="#s-liang" aria-label="亮况"><circle class="dot" cx="487.0" cy="580.0" r="4.6"></circle><text class="gw" x="511.0" y="621.5" text-anchor="middle" dominant-baseline="middle">亮</text></a>
+      <a href="#s-cai" aria-label="采况"><circle class="dot" cx="425.7" cy="605.3" r="4.6"></circle><text class="gw" x="438.2" y="651.7" text-anchor="middle" dominant-baseline="middle">采</text></a>
+      <a href="#s-jie" aria-label="洁况"><circle class="dot" cx="360.0" cy="614.0" r="4.6"></circle><text class="gw" x="360.0" y="662.0" text-anchor="middle" dominant-baseline="middle">洁</text></a>
+      <a href="#s-run" aria-label="润况"><circle class="dot" cx="294.3" cy="605.3" r="4.6"></circle><text class="gw" x="281.8" y="651.7" text-anchor="middle" dominant-baseline="middle">润</text></a>
+      <a href="#s-yuan2" aria-label="圆况"><circle class="dot" cx="233.0" cy="580.0" r="4.6"></circle><text class="gw" x="209.0" y="621.5" text-anchor="middle" dominant-baseline="middle">圆</text></a>
+      <a href="#s-jian" aria-label="坚况"><circle class="dot" cx="180.4" cy="539.6" r="4.6"></circle><text class="gw" x="146.5" y="573.5" text-anchor="middle" dominant-baseline="middle">坚</text></a>
+      <a href="#s-hong" aria-label="宏况"><circle class="dot" cx="140.0" cy="487.0" r="4.6"></circle><text class="gw" x="98.5" y="511.0" text-anchor="middle" dominant-baseline="middle">宏</text></a>
+      <a href="#s-xi" aria-label="细况"><circle class="dot" cx="114.7" cy="425.7" r="4.6"></circle><text class="gw" x="68.3" y="438.2" text-anchor="middle" dominant-baseline="middle">细</text></a>
+      <a href="#s-liu" aria-label="溜况"><circle class="dot" cx="106.0" cy="360.0" r="4.6"></circle><text class="gw" x="58.0" y="360.0" text-anchor="middle" dominant-baseline="middle">溜</text></a>
+      <a href="#s-jian2" aria-label="健况"><circle class="dot" cx="114.7" cy="294.3" r="4.6"></circle><text class="gw" x="68.3" y="281.8" text-anchor="middle" dominant-baseline="middle">健</text></a>
+      <a href="#s-qing1" aria-label="轻况"><circle class="dot" cx="140.0" cy="233.0" r="4.6"></circle><text class="gw" x="98.5" y="209.0" text-anchor="middle" dominant-baseline="middle">轻</text></a>
+      <a href="#s-zhong" aria-label="重况"><circle class="dot" cx="180.4" cy="180.4" r="4.6"></circle><text class="gw" x="146.5" y="146.5" text-anchor="middle" dominant-baseline="middle">重</text></a>
+      <a href="#s-chi" aria-label="迟况"><circle class="dot" cx="233.0" cy="140.0" r="4.6"></circle><text class="gw" x="209.0" y="98.5" text-anchor="middle" dominant-baseline="middle">迟</text></a>
+      <a href="#s-su" aria-label="速况"><circle class="dot" cx="294.3" cy="114.7" r="4.6"></circle><text class="gw" x="281.8" y="68.3" text-anchor="middle" dominant-baseline="middle">速</text></a>
+    </svg>
+    <p class="pannote">二十四况环列如上，照库本首行的四、四、四、四、八分瓣，点况字即入该节</p>
+    <p class="tlead">这是一本教你<b>怎么听</b>的书。明亡前夕，娄东琴人徐上瀛把一炉琴音拆成二十四个字：和静清远，古淡恬逸，雅丽亮采，洁润圆坚，宏细溜健轻重迟速。一况一论，后来附刻进《大还阁琴谱》卷首，成了虞山琴派的审美总纲，后人常拿它比司空图的《二十四诗品》。只是诗品品的是句子，琴况品的是声音；声音落进文字，总难免被听错几处，库本恰好留了几处听错的字，这一页末尾立了<a class="jump" href="#jiaoziji">校字记</a>，有账可查。</p>
+  </header>
+
+  <section class="sec" id="s-he">
+    <div class="shead"><span class="str"></span><h2><em>和</em>纲 · 三合</h2><span class="str"></span></div>
+    <p class="note">首况曰和。和不是一团和气，先是一条调弦的技术流程：正调品弦，循徽叶声，<q>散和为上，按和为次</q>，按弦不准就用泛音来验，一按一泛，互相参究。调完弦，和还要往深处走三层。</p>
+    <div class="sanhe">
+      <div class="step">
+        <span class="no">第一合</span>
+        <span class="gt">弦与指合</span>
+        <p>弦有脾气，<q>欲顺而忌逆，浅实而忌虚</q>。指下过弦慎勿松起，弦上递指尤欲无迹，往来动宕，恰如胶漆。</p>
+      </div>
+      <div class="step">
+        <span class="no">第二合</span>
+        <span class="gt">指与音合</span>
+        <p>音有律有候，<q>篇中有度，句中有候，字中有肯</q>。细辨吟猱以叶之，绰注以适之，轻重缓急以节之。</p>
+      </div>
+      <div class="step">
+        <span class="no">第三合</span>
+        <span class="gt">音与意合</span>
+        <p><q>音从意转，意先乎音</q>。练其音而后能洽其意，到了这一层，琴声才装得下山水。</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="qcard">
+        <q>暑可变也，虚堂凝雪；寒可回也，草阁流春。</q>
+        <span class="src">音与意合的弦外之境，库本和况</span>
+      </div>
+      <div class="qcard v">
+        <q>与山相映发，而巍巍影现；与水相涵濡，而洋洋徜恍。</q>
+      </div>
+    </div>
+    <div class="warn"><b>末了警告一句</b>：<q>太音希声，古道难复，不以性情中和相遇，而以为是技也，斯愈久而愈失其传矣。</q>把琴当成一门手艺，它就真只剩手艺了。</div>
+  </section>
+
+  <section class="sec" id="s-jing">
+    <div class="shead"><span class="str"></span><h2><em>静 清 远</em>听之三况</h2><span class="str"></span></div>
+    <div class="trio">
+      <div class="dcard" id="s-jing2">
+        <span class="gw2">静</span>
+        <p>难的不是找间静室，<q>余则曰，政在声中求静耳</q>。声音厉就知道指头躁，声音希就知道指头静，审音即审人。</p>
+        <p><q>雪其躁气，释其竞心，指下扫尽炎嚣，弦上恰存贞洁</q>，故虽急而不乱，多而不繁。</p>
+      </div>
+      <div class="dcard" id="s-qing">
+        <span class="gw2">清</span>
+        <p>语云<q>弹琴不清，不如弹筝</q>。清有五道门槛：</p>
+        <ul class="list5">
+          <li><q>地而不僻则不清</q></li>
+          <li><q>琴不实则不清</q></li>
+          <li><q>弦不洁则不清</q></li>
+          <li><q>心不静则不清</q></li>
+          <li><q>气不肃则不清</q></li>
+        </ul>
+        <p>过了五关还有指之清为最。试一听之，<q>澄然秋潭，皎然寒月，湱然山涛，幽然谷应</q>，<q>心骨俱冷，体气欲仙</q>。</p>
+      </div>
+      <div class="dcard" id="s-yuan">
+        <span class="gw2">远</span>
+        <p>远与迟像，其实不是一回事：<q>迟以气用，远以神行</q>。气有候，神无候。</p>
+        <p>时为岑寂，若游峨眉之雪；时为流逝，若在洞庭之波。所以他说：<q>求之弦中如不足，得之弦外则有余也。</q></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="band">
+    <p class="blab">库本首行第二组</p>
+    <div class="bgrid">
+      <div class="bcard" id="s-gu">
+        <span class="gw2">古</span>
+        <p>《乐志》分琴声为正声间声，他接着断代：<q>声争而媚耳者，吾知其时也。音淡而会心者，吾知其古也。</q></p>
+        <p>但粗率疏慵也常被误认作古，病于古与病于时没有分别。要紧的是融其粗率，振其疏慵，于是<q>一室之中，宛在深山空邃谷，老木寒泉，风声簌簌，令人有遗世独立之思</q>。</p>
+      </div>
+      <div class="bcard" id="s-dan">
+        <span class="gw2">淡</span>
+        <p>琴不入歌舞场，音不杂丝竹伴。山居深静，清风入弦，他禁不住唱起来：</p>
+        <p><q>吾爱此情，不求不竞；吾爱此味，如雪如冰；吾爱此响，松之风而竹之雨，涧之滴而波之涛也。</q></p>
+      </div>
+      <div class="bcard" id="s-tian">
+        <span class="gw2">恬</span>
+        <p>诸声澹则无味，琴声澹则益有味，这味就是恬。工夫在四个不自纵：</p>
+        <p><q>兴到而不自纵。气到而不自豪。情到而不自扰。意到而不自浓</q>，于是<q>不味而味，则为水中之乳泉。不馥而馥，则为蕊中之兰茞</q>。</p>
+      </div>
+      <div class="bcard" id="s-yi">
+        <span class="gw2">逸</span>
+        <p>先正云：<q>以无累之神合有道之器</q>。人有超逸之品，才发得出超逸之音。</p>
+        <p>朱紫阳说诚实人弹琴便雍容平淡，他引完补一句：<q>道人弹琴，琴不清亦清</q>。先养其琴度，次养其手指。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="band">
+    <p class="blab">库本首行第三组</p>
+    <div class="bgrid ya">
+      <div class="bcard" id="s-ya">
+        <span class="gw2">雅</span>
+        <p>大雅之归先讲俗。他一口气数出八种俗态，条条扎在弹琴人身上：</p>
+        <div class="chips8">
+          <span class="chip8"><q>喜工柔媚则俗</q></span>
+          <span class="chip8"><q>落指重浊则俗</q></span>
+          <span class="chip8"><q>性好炎闹则俗</q></span>
+          <span class="chip8"><q>指拘局促则俗</q></span>
+          <span class="chip8"><q>取音粗厉则俗</q></span>
+          <span class="chip8"><q>入弦仓卒则俗</q></span>
+          <span class="chip8"><q>指法不式则俗</q></span>
+          <span class="chip8"><q>气质浮躁则俗</q></span>
+        </div>
+        <p>解药只有四个字，静、远、淡、逸，体认得这四字，斯俗情悉去。</p>
+        <div class="antidote"><span class="anti">静</span><span class="anti">远</span><span class="anti">淡</span><span class="anti">逸</span></div>
+      </div>
+      <div class="bcard" id="s-li">
+        <span class="gw2">丽</span>
+        <p><q>丽从古淡出，而非从妖冶出也</q>。譬诸西子，天下之至美，而具有冰雪之资，岂效颦者可与同语。</p>
+        <p><q>美与媚判若秦越，而辨在深微</q>，一线之差，审音者自知。</p>
+      </div>
+      <div class="bcard" id="s-liang">
+        <span class="gw2">亮</span>
+        <p>清后取亮，<q>犹夫水之至清者，得日而益明</q>。沉细之际更发其光明，游神于无声之表，其音亦悠悠而自存。</p>
+        <p>至于<q>弦声断而意不断</q>，那是无声之妙，亮字管不到那里。</p>
+      </div>
+      <div class="bcard" id="s-cai">
+        <span class="gw2">采</span>
+        <p>清以生亮，亮以生采，跳过前两步直接求采，先后之功就舛了。指下有神气，如古玩有宝色：<q>商彝周鼎自有暗然之光，不可掩抑</q>。</p>
+        <p>那是经岁锻练，始融其粗迹，露其光芒。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="band">
+    <p class="blab">库本首行第四组</p>
+    <div class="bgrid">
+      <div class="bcard" id="s-jie">
+        <span class="gw2">洁</span>
+        <p>贝经云<q>若无妙指，不以发妙音</q>，坡仙接着问：<q>若言声在指头上，何不于君指上听？</q>要言妙道，固在指也。</p>
+        <p>初学怕取音不多，渐渐陶熔，又怕取音过多，从有而无，一尘不染。所以他收束道：<q>欲修妙音者，本于指。欲修指者，必先本于洁也。</q></p>
+      </div>
+      <div class="bcard" id="s-run">
+        <span class="gw2">润</span>
+        <p>润者纯也泽也，左芟其荆棘，右熔其暴甲，弦若滋，<q>温兮如玉</q>，满弦皆生气氤氲。</p>
+        <p><q>古人有以名其琴者，曰云和，曰泠泉</q>，他猜也是润的意思。</p>
+      </div>
+      <div class="bcard" id="s-yuan2">
+        <span class="gw2">圆</span>
+        <p>五音活泼之趣半在吟猱，吟猱之妙处全在圆满：<q>其趣如水之兴澜，其体如珠之走盘</q>。</p>
+        <p>不独吟猱，一弹一按一转一折之间亦有圆音，<q>天然之妙犹若水滴荷心</q>，不能定拟，神哉圆乎。</p>
+      </div>
+      <div class="bcard" id="s-jian">
+        <span class="gw2">坚</span>
+        <p>古语云<q>按弦如入木</q>，形其坚而实。大指坚易，名指坚难，靠别指来帮，外虽似坚，实胶而不灵。</p>
+        <p>坚之本全凭筋力，一指卓然立于弦中，<q>重如山岳，动如风发，清响如击金石</q>，至音出焉。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="band">
+    <p class="blab">库本首行第五组 · 手法四况</p>
+    <div class="grid2">
+      <div class="bcard" id="s-hong">
+        <span class="gw2">宏</span>
+        <p>调无大度则不得古。琴本是清庙明堂之器，声调理当廓然旷远；可他立刻补一句实话：<q>旷远之音落落难听，遂流为江湖派</q>。所以宏要拓其冲和闲雅之度，猱绰之用极其宏大，宏大则音老，音老则入古。</p>
+      </div>
+      <div class="bcard" id="s-xi">
+        <span class="gw2">细</span>
+        <p>音有细缈处，妙在丝毫之际。指既缜密，<q>音若茧抽</q>；章句转折时更不可草草放过。他引韩愈听琴诗<q>昵昵儿女语，恩恩相尔汝。忽然变轩昂，勇士赴敌场。</q>说是宏细互用之意。库本此处把节奏抄成了节秦，见文末校字记。<a class="fix" href="#jiaoziji">校字记 其一</a></p>
+      </div>
+      <div class="bcard" id="s-liu">
+        <span class="gw2">溜</span>
+        <p>溜者滑也，左指治涩之法。指节炼至坚实，极其灵活，动必神速，于是<q>吟猱绰注之间当若泉之滚滚，而往来上下之际更如风之发发</q>。他引刘随州诗<q>溜溜表丝上，静听松风寒</q>，这两句也被库本抄得走了音，校字记里有原诗。<a class="fix" href="#jiaoziji">校字记 其二</a></p>
+      </div>
+      <div class="bcard" id="s-jian2">
+        <span class="gw2">健</span>
+        <p>琴尚冲和大雅，慢音者得其似而未得其真，所以<q>愚故提一键字，为导滞之砭</q>。右指靠弦则音钝而木，要响如金石，动如风发。要知<q>健处即指之灵处</q>，冲和之调从此无疏慵之病。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="band">
+    <p class="blab">同上组 · 轻重</p>
+    <div class="grid2">
+      <div class="bcard" id="s-qing1">
+        <span class="gw2">轻</span>
+        <p>不轻不重者，中和之音也。轻最难，工夫未到则浮而不实；轻之中不爽清实，一丝一忽指到音绽，<q>如落花流水，幽趣无限</q>。要知<q>轻不浮，轻中之中和也</q>。</p>
+      </div>
+      <div class="bcard" id="s-zhong">
+        <span class="gw2">重</span>
+        <p>古人抚琴曰<q>弹欲断弦，按如入木</q>，专言用力，但妙在用力不觉。练指养气，重抵轻出，<q>指虽重如击石，而毫无刚暴杀伐之疚</q>。及其鼓宫叩角，轻重间出，则岱岳江河。</p>
+      </div>
+    </div>
+    <div class="zhonghe">
+      <span class="zhl">两者归一处</span>
+      <span class="zh"><q>轻重者，中和之变音</q></span>
+      <span class="zh"><q>而所以轻重者，中和之正音也</q></span>
+    </div>
+  </div>
+
+  <section class="sec" id="s-chi">
+    <div class="shead"><span class="str"></span><h2><em>迟 速</em>终章 · 气候</h2><span class="str"></span></div>
+    <p class="note">压轴两况是一对。迟况讲希声：未按弦先肃其气澄其心，从万籁俱寂中冷然音生，章句舒徐，断而复续，直到<q>候至而下</q>。速况立刻接住：只知一迟，等于只识半部琴。书眼在速况自己写的那把尺子上。</p>
+    <div class="ruler" aria-hidden="true">
+      <span class="lab">迟 · 候至而下</span>
+      <span class="lab r">速 · 行云流水</span>
+      <span class="bar"></span>
+      <span class="mark slow" style="left:8%"></span>
+      <span class="mark slow" style="left:19%"></span>
+      <span class="mark" style="left:31%"></span>
+      <span class="mark slow" style="left:42%"></span>
+      <span class="mark" style="left:50%"></span>
+      <span class="mark" style="left:57%"></span>
+      <span class="mark slow" style="left:66%"></span>
+      <span class="mark" style="left:76%"></span>
+      <span class="mark" style="left:84%"></span>
+      <span class="mark slow" style="left:92%"></span>
+    </div>
+    <div class="grid2">
+      <div class="bcard">
+        <span class="gw2">迟</span>
+        <p>他亲口引严天池的诗：<q>几回拈出阳春调，月满西楼下指迟</q>，说其于迟意大有得了。可转头就敲打徒众：<q>若不知气候两字，指一入弦惟知忙忙连下</q>，迨欲放慢，竟然无味。深于气候，则迟速俱得，不迟不速亦得。</p>
+      </div>
+      <div class="bcard" id="s-su">
+        <span class="gw2">速</span>
+        <p>结构上<q>迟为速之纲，速为迟之纪</q>。琴操大体贵迟，疏疏淡淡是正音；但<q>忽然变急，其音又系最精最妙者，是为奇音</q>，正音备而奇音不可偏废。小速要有行云流水之趣，大速贵急而不乱，<q>泻出崩崖飞瀑之声</q>。速以意用，更以意神。</p>
+      </div>
+    </div>
+    <div class="sea">
+      <svg viewBox="0 0 900 110" preserveAspectRatio="none" aria-hidden="true">
+        <path class="w3" d="M0,66 C90,40 180,92 270,66 C360,40 450,92 540,66 C630,40 720,92 810,66 C860,52 890,72 900,66"></path>
+        <path class="w1" d="M0,72 C110,34 210,104 320,70 C430,36 520,100 630,68 C740,38 830,96 900,64"></path>
+        <path class="w2" d="M0,58 C120,86 240,30 360,60 C480,90 590,34 710,58 C800,76 860,48 900,58"></path>
+      </svg>
+      <div class="cap">
+        <span class="big"><q>先生将移我情矣</q></span>
+        <span class="sm">成连教伯牙：蓬莱山中，<q>群峰互峙，海水崩折，林木幽冥，百鸟哀号</q>，情性一动，速不再是快，是山水自己涌上弦来。子期听其音，遂得其情于山水。</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="jz" id="jiaoziji">
+    <div class="shead"><span class="str"></span><h2><em>校字记</em>听错的字</h2><span class="str"></span></div>
+    <p class="note">一部讲听的书，靠眼睛传抄活下来，总有几处听岔。以下各条，库本照录，拟改之字皆属推断，仅供对读，不入引文。</p>
+    <div class="jzgrid">
+      <div class="jcard">
+        <span class="lab">其一</span>
+        <p class="was">库本细况：<q>乃在节秦间</q></p>
+        <p class="now">秦当为<b>奏</b>，节奏间。</p>
+        <p class="why">上下文正说节拍转折，秦字于此无解，形近而讹。</p>
+      </div>
+      <div class="jcard">
+        <span class="lab">其二</span>
+        <p class="was">库本溜况引刘随州诗：<q>溜溜表丝上，静听松风寒</q></p>
+        <p class="now">刘长卿《听弹琴》通行本作<b>泠泠七弦上</b>，静听松风寒。</p>
+        <p class="why">泠泠七弦正是琴之七弦，抄成溜溜表丝，声音就真的溜走了。</p>
+      </div>
+      <div class="jcard">
+        <span class="lab">其三</span>
+        <p class="was">库本细况引昌黎诗：<q>恩恩相尔汝</q></p>
+        <p class="now">韩愈《听颖师弹琴》通行本作<b>恩怨相尔汝</b>；同句忽然变轩昂，通行本作<b>划然</b>。</p>
+        <p class="why">儿女语与恩怨情正相对，怨字讹成恩字，诗就平了一半。</p>
+      </div>
+      <div class="jcard">
+        <span class="lab">其四</span>
+        <p class="was">库本雅况<q>苦思耱售</q>，采况又见<q>耱精神发现</q></p>
+        <p class="now">前者通行本多拟作<b>沽售</b>，后者拟作<b>求</b>精神发现。</p>
+        <p class="why">耱是一种农具，两处皆讲不通；同一错字两番出现，像同一只手两次听岔。</p>
+      </div>
+    </div>
+    <p class="jtail">另存一照：库本溜况起句<q>左指洽涩之法也</q>前后连抄两遍，原样保留，不强改。凡此种种，皆电子库本转录之痕；本页引文一仍底本，讹字照登，正是要让人看见声音落进文字时的那一声闷响。</p>
+  </section>
+
+  <footer>
+    <div class="fnav">
+      <span>殆知阁导读 之一百八十三 溪山琴况</span>
+      <a href="mulu.html">返回总目</a>
+    </div>
+    <p class="fnote"><b>文本来源</b>殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）艺藏音乐部，明徐上瀛撰，一卷二十四况，库本去空白六千二百四十字。<b>引文核验</b>本页所有引号内文字均与库内文本逐字核验（脚本 verify_xishan.py，去标点并归一后比对），底本系 OCR 转录，讹字在所难免，引文一仍底本，拟改之字在校字记中均已标注推断；著者籍里与附刻大还阁琴谱之说据通行记载。<b>时代局限</b>书中以郑卫之音斥俗乐、以琵琶声喻浅躁，雅俗高下之辨带着明季士大夫的等级眼光，读者当以历史视之，取其对声音的精微体察，勿泥其雅俗门户。</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
