@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>酌中志：紫禁城里面看出去的手记</title>
+<style>
+  :root {
+    --mo: #191917;
+    --zhi: #e8e4dc;
+    --jin: #c9963f;
+    --zhi62: rgba(232, 228, 220, 0.62);
+    --zhi30: rgba(232, 228, 220, 0.30);
+    --zhi12: rgba(232, 228, 220, 0.12);
+    --zhi06: rgba(232, 228, 220, 0.06);
+    --jin40: rgba(201, 150, 63, 0.40);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--mo);
+    color: var(--zhi);
+    font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.95;
+    font-size: 17px;
+  }
+  h1, h2, h3 { font-weight: normal; }
+
+  /* 左侧竖签：书名如宫中牙牌，通栏到底 */
+  .spine {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 76px;
+    border-right: 1px dashed var(--jin40);
+    background: #161514;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: space-between; padding: 22px 0 18px;
+    z-index: 10;
+  }
+  .spine .pai {
+    width: 44px; height: 44px; background: var(--jin); color: #191917;
+    font-size: 24px; display: flex; align-items: center; justify-content: center;
+    border-radius: 4px; letter-spacing: 0;
+  }
+  .spine h1 {
+    writing-mode: vertical-rl; letter-spacing: 0.42em;
+    font-size: 30px; color: var(--zhi);
+  }
+  .spine .lable {
+    writing-mode: vertical-rl; font-size: 12px; letter-spacing: 0.34em;
+    color: var(--zhi62);
+  }
+
+  main { margin-left: 76px; }
+  .juan { max-width: 880px; margin: 0 auto; padding: 0 34px 70px; }
+  section { padding: 52px 0 10px; }
+
+  /* 贴签节头：竖排小签横挂 */
+  .tiehead { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 26px; }
+  .tiehead .qian {
+    writing-mode: vertical-rl; font-size: 13px; letter-spacing: 0.3em;
+    color: var(--jin); border: 1px solid var(--jin40);
+    padding: 10px 3px; border-radius: 3px; min-height: 88px;
+  }
+  .tiehead h2 { font-size: 25px; padding-top: 4px; }
+  .tiehead .tsub { font-size: 13.5px; color: var(--zhi62); margin-top: 6px; letter-spacing: 0.06em; }
+
+  p.shen { text-indent: 2em; margin: 14px 0; color: var(--zhi); }
+  p.shou { margin: 14px 0; color: var(--zhi); }
+  em.dian { font-style: normal; color: var(--jin); }
+
+  /* 引文与批语 */
+  .quote {
+    margin: 26px 0 6px; padding: 20px 24px 18px 26px;
+    border-left: 3px solid var(--jin);
+    background: var(--zhi06);
+    font-size: 16.5px; line-height: 2.05;
+  }
+  .quote .src { display: block; font-size: 12.5px; color: var(--zhi62); margin-top: 10px; letter-spacing: 0.1em; }
+  .pi {
+    margin: 6px 0 22px; padding-left: 26px;
+    font-size: 14px; color: var(--jin); letter-spacing: 0.05em;
+  }
+  .pi::before {
+    content: "批"; display: inline-block; font-size: 11px;
+    border: 1px solid var(--jin40); border-radius: 2px;
+    padding: 0 4px; margin-right: 8px; transform: translateY(-1px);
+  }
+
+  q { quotes: "「" "」"; color: var(--zhi); }
+  .quote q, p q { color: var(--zhi); }
+
+  /* 题记区：叩首开卷 */
+  .timian { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: end; }
+  .timian .zhubian { padding-top: 34px; }
+  .koujian {
+    font-size: 23px; line-height: 2.2; letter-spacing: 0.05em;
+    color: var(--zhi); margin-bottom: 24px;
+  }
+  .koujian b { font-weight: normal; color: var(--jin); }
+  .qianbiao { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .qianbiao span {
+    font-size: 13px; color: var(--zhi62);
+    border: 1px solid var(--zhi30); border-radius: 3px; padding: 3px 12px;
+    letter-spacing: 0.08em;
+  }
+  .qianbiao span b { font-weight: normal; color: var(--jin); }
+  .shuqian {
+    writing-mode: vertical-rl; font-size: 14px; color: var(--zhi62);
+    border-left: 1px solid var(--zhi12); padding-left: 20px;
+    letter-spacing: 0.3em; height: 300px; line-height: 2.4;
+  }
+
+  /* 卷签墙 */
+  .juanqiang {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(186px, 1fr));
+    gap: 8px; margin-top: 20px;
+  }
+  .juanqiang .qie {
+    display: flex; gap: 10px; align-items: baseline;
+    border: 1px solid var(--zhi12); border-radius: 3px; padding: 7px 12px;
+    font-size: 14px; color: var(--zhi62);
+  }
+  .juanqiang .qie i { font-style: normal; font-size: 12px; color: var(--jin); white-space: nowrap; }
+  .juanqiang .qie.hot { color: var(--zhi); border-color: var(--jin40); }
+
+  /* 二十四衙门花名册 */
+  .yasi { margin-top: 22px; display: flex; flex-direction: column; gap: 16px; }
+  .yasi .zu { display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: start; }
+  .yasi .zu .ming {
+    font-size: 13px; color: var(--jin); text-align: center;
+    border: 1px solid var(--jin40); border-radius: 3px; padding: 8px 0;
+    letter-spacing: 0.15em;
+  }
+  .yasi .wei { display: flex; flex-wrap: wrap; gap: 8px; }
+  .yasi .wei span {
+    font-size: 15px; border: 1px solid var(--zhi30); border-radius: 3px;
+    padding: 4px 12px; color: var(--zhi);
+  }
+
+  /* 宫中岁记 */
+  .suiji { margin-top: 20px; border-top: 1px solid var(--zhi12); }
+  .yue {
+    display: grid; grid-template-columns: 52px 1fr; gap: 18px;
+    padding: 15px 0; border-bottom: 1px solid var(--zhi12);
+  }
+  .yue .yzh {
+    font-size: 15px; color: var(--jin); text-align: center;
+    border: 1px solid var(--jin40); border-radius: 3px;
+    padding: 6px 0; height: fit-content; letter-spacing: 0.1em;
+  }
+  .yue p { font-size: 15.5px; color: var(--zhi); line-height: 2; }
+  .yue p .fan { color: var(--zhi62); }
+
+  /* 累臣年表 */
+  .nianbiao { margin: 24px 0 8px; padding-left: 22px; border-left: 1px dashed var(--jin40); }
+  .nianbiao .jie { position: relative; padding-bottom: 22px; }
+  .nianbiao .jie::before {
+    content: ""; position: absolute; left: -27px; top: 9px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--mo); border: 2px solid var(--jin);
+  }
+  .nianbiao .jie .gn { font-size: 15px; color: var(--jin); letter-spacing: 0.08em; }
+  .nianbiao .jie p { font-size: 15.5px; margin-top: 3px; }
+
+  footer.page {
+    margin-left: 76px; border-top: 1px solid var(--zhi12);
+    padding: 34px 34px 48px; font-size: 13px; color: var(--zhi62);
+    line-height: 2.1;
+  }
+  footer.page .wrap { max-width: 880px; margin: 0 auto; }
+  footer.page b { color: var(--zhi); font-weight: normal; }
+  footer.page .src { color: var(--jin); }
+
+  @media (max-width: 720px) {
+    .spine { position: static; width: 100%; height: auto; flex-direction: row; padding: 12px 18px; border-right: none; border-bottom: 1px dashed var(--jin40); gap: 14px; }
+    .spine h1 { writing-mode: horizontal-tb; font-size: 21px; letter-spacing: 0.28em; }
+    .spine .pai { width: 34px; height: 34px; font-size: 18px; }
+    .spine .lable { writing-mode: horizontal-tb; }
+    main, footer.page { margin-left: 0; }
+    .timian { grid-template-columns: 1fr; }
+    .shuqian { display: none; }
+    .juan { padding: 0 20px 50px; }
+  }
+</style>
+</head>
+<body>
+
+<aside class="spine">
+  <div class="pai">累</div>
+  <h1>酌中志</h1>
+  <div class="lable">明 刘若愚 撰</div>
+</aside>
+
+<main>
+<div class="juan">
+
+  <!-- 题记 -->
+  <section class="timian">
+    <div class="zhubian">
+      <p class="koujian">累臣若愚，<b>死罪死罪</b>，叩首叩首。</p>
+      <p class="shou">一部从紫禁城里面往外看的手记。作者刘若愚是万历到崇祯年间司礼监系统里少有的读书宦官，魏忠贤倒台后受牵连下狱，狱中自号累臣，把二十多年宫中见闻写成二十四卷：衙门职掌、宫规岁俗、饮食服饰、阉党倾轧，全出自一支在场的笔。开卷即是请罪的口吻，落笔却是「知我罪我，后世自有公论」。</p>
+      <div class="qianbiao">
+        <span>万历十二年生 <b>1584</b></span>
+        <span>万历二十九年入宫 <b>1601</b></span>
+        <span>库本实测 <b>126,676</b> 字</span>
+        <span>卷目 <b>24</b> 卷</span>
+        <span>殆知阁简体库 史藏·志存记录</span>
+      </div>
+    </div>
+    <div class="shuqian">内府二十四衙门，宫中一岁节令，皆出累臣狱底之笔</div>
+  </section>
+
+  <!-- 卷目 -->
+  <section>
+    <div class="tiehead">
+      <div class="qian">卷目</div>
+      <div>
+        <h2>二十四卷签</h2>
+        <div class="tsub">前二十二卷记人记事记制度，卷二十三是作者自叙，卷二十四为附卷。书成狱中，自序却称「兹略具二十三篇」，正与目录相合。</div>
+      </div>
+    </div>
+    <div class="juanqiang">
+      <div class="qie"><i>卷一</i>忧危竑义前纪</div>
+      <div class="qie"><i>卷二</i>忧危竑议后纪</div>
+      <div class="qie"><i>卷三</i>恭纪先帝诞生</div>
+      <div class="qie"><i>卷四</i>恭纪今上瑞征</div>
+      <div class="qie"><i>卷五</i>三朝典礼之臣</div>
+      <div class="qie"><i>卷六</i>大审平反纪略</div>
+      <div class="qie hot"><i>卷七</i>先监遗事</div>
+      <div class="qie"><i>卷八</i>两朝椒难</div>
+      <div class="qie"><i>卷九</i>正监蒙难</div>
+      <div class="qie hot"><i>卷十</i>逆贤乱政</div>
+      <div class="qie"><i>卷十一</i>外廷线索</div>
+      <div class="qie"><i>卷十二</i>各家经管</div>
+      <div class="qie"><i>卷十三</i>本章经手次第</div>
+      <div class="qie hot"><i>卷十四</i>客魏始末</div>
+      <div class="qie"><i>卷十五</i>逆贤羽翼</div>
+      <div class="qie hot"><i>卷十六</i>内府衙门识掌</div>
+      <div class="qie hot"><i>卷十七</i>大内规制</div>
+      <div class="qie"><i>卷十八</i>内板经书</div>
+      <div class="qie"><i>卷十九</i>内臣佩服</div>
+      <div class="qie hot"><i>卷二十</i>饮食好尚</div>
+      <div class="qie"><i>卷二十一</i>辽左弃地</div>
+      <div class="qie"><i>卷二十二</i>见闻琐事杂记</div>
+      <div class="qie hot"><i>卷二十三</i>累臣自叙略节</div>
+      <div class="qie"><i>卷二十四</i>黑头爰立纪略附</div>
+    </div>
+  </section>
+
+  <!-- 批红 -->
+  <section>
+    <div class="tiehead">
+      <div class="qian">卷十六</div>
+      <div>
+        <h2>谁在替皇帝写朱批</h2>
+        <div class="tsub">票拟由内阁拟好，批红落在司礼监。国家最高层的一支朱笔，长期握在一群宦官手里，这一卷是当事人自己交出的运作细则。</div>
+      </div>
+    </div>
+    <div class="quote">
+      凡每日奏文书，自御笔亲批数本外，皆众太监分批。遵炤阁中票来字样，用朱笔楷书批之。
+      <span class="src">卷十六 · 内府衙门识掌</span>
+    </div>
+    <div class="pi">照抄内阁票拟，偶有笔画小错还顺手改正。制度化代笔，说得坦坦荡荡。</div>
+    <div class="quote">
+      最有宠者一人，以秉笔掌东厂，掌印秩尊，视元辅；掌东厂权重，视总宪兼次辅。
+      <span class="src">卷十六 · 内府衙门识掌</span>
+    </div>
+    <div class="pi">地位比内阁首辅，实权比都御史兼次辅，权力地图由内官亲口画出。</div>
+    <p class="shen">交接班也有信物：司礼监设象牙小牌一面，长寸余，<q>每日申时交接，轮流该正</q>。傍晚三四点，一块象牙牌从这双手移到那双手，皇城的批语机轮就此换班。</p>
+  </section>
+
+  <!-- 二十四衙门 -->
+  <section>
+    <div class="tiehead">
+      <div class="qian">卷十六</div>
+      <div>
+        <h2>二十四衙门花名册</h2>
+        <div class="tsub">皇帝家里另有一套政府。十二监掌机要，四司办杂务，八局做工匠，名目全按卷十六原文照录。</div>
+      </div>
+    </div>
+    <div class="yasi">
+      <div class="zu">
+        <div class="ming">十二监</div>
+        <div class="wei"><span>司礼</span><span>御用</span><span>内官</span><span>御马</span><span>司设</span><span>尚宝</span><span>神宫</span><span>尚膳</span><span>尚衣</span><span>印绶</span><span>直殿</span><span>都知</span></div>
+      </div>
+      <div class="zu">
+        <div class="ming">四司</div>
+        <div class="wei"><span>惜薪</span><span>宝钞</span><span>钟鼓</span><span>混堂</span></div>
+      </div>
+      <div class="zu">
+        <div class="ming">八局</div>
+        <div class="wei"><span>兵仗</span><span>巾帽</span><span>针工</span><span>内织染</span><span>酒醋面</span><span>司苑</span><span>浣衣</span><span>银作</span></div>
+      </div>
+    </div>
+    <div class="pi">司礼监批红，御马监掌兵符，惜薪司管柴炭，混堂司管澡堂。一个衙门管烧水洗澡，也堂堂正正记进国家职掌。</div>
+  </section>
+
+  <!-- 宫中岁记 -->
+  <section>
+    <div class="tiehead">
+      <div class="qian">卷二十</div>
+      <div>
+        <h2>宫墙内的一年</h2>
+        <div class="tsub">饮食好尚纪略按月排开，是全书最好读的一卷：宫里人吃什么、玩什么、忌什么，逐月记账。</div>
+      </div>
+    </div>
+    <div class="suiji">
+      <div class="yue"><div class="yzh">正月</div><p>初一门旁植桃符、贴门神，五更焚香放纸炮，<q>将门闩或木杠于院地上抛掷三度，名曰跌千金</q>；吃扁食，<q>或暗包银钱一二于内，得之者以卜一年之吉</q>。灯市至十六更盛，<q>天下繁华，咸萃于此</q>。开年珍味单里有冬笋、银鱼、鸽蛋、麻辣活兔，天启帝（书中称先帝）最喜炙蛤蜊、炒鲜虾、田鸡腿，又海参、鳆鱼、鲨鱼筋、肥鸡、猪蹄筋<q>共烩一处，恒喜用焉</q>。</p></div>
+      <div class="yue"><div class="yzh">二月</div><p>清明前收皮衣，<q>食河豚，饮芦芽汤，以解其热</q><span class="fan">。河豚配芦芽，文人诗句落进了宫中食单</span>。</p></div>
+      <div class="yue"><div class="yzh">四月</div><p>尝樱桃，进苇叶方包的不落夹；初夏新麦下来，<q>取新麦穗煮熟，剁去芒壳，磨成细条食之</q>，名曰稔转，以尝一年五谷之始。</p></div>
+      <div class="yue"><div class="yzh">五月</div><p>端午前后宫眷内臣穿<q>五毒艾虎补子蟒衣</q>，门旁安菖蒲艾盆，悬天师降毒吊屏一月方撤。</p></div>
+      <div class="yue"><div class="yzh">七月</div><p>七夕穿鹊桥补子，中元放河灯；此月斗促织成风，<q>善斗者一枚可值十余两不等</q>，秉笔太监里有最识促织、好蓄斗为乐的。</p></div>
+      <div class="yue"><div class="yzh">八月</div><p>月饼瓜果互馈，剩月饼收至岁暮合家分用，曰团圆饼。蟹肥时最热闹：<q>凡宫眷内臣吃蟹，活洗净，蒸熟，五六成群，攒坐共食，嬉嬉笑笑</q>，揭脐盖、指甲剔、蘸醋蒜，食毕苏叶汤洗手。</p></div>
+      <div class="yue"><div class="yzh">十月</div><p>天冷夜长，内臣烧地炕，三五成朋<q>饮酒、掷骰、看纸牌、耎骨牌、下棋、打双陆，至三四更始散，方睡得着</q>；斗鸡押注，雇人夜里加食调驯，名曰贴鸡，须燃灯数它啄了多少口。</p></div>
+      <div class="yue"><div class="yzh">十一月</div><p>司礼监刷印九九消寒诗图，每九诗四句，自<q>一九初寒才是冬</q>起，至<q>日月星辰不住忙</q>止。作者补一句：皆瞽词俚语，不知如何相传，久遵而不改。</p></div>
+      <div class="yue"><div class="yzh">十二月</div><p>初八腊八粥，红枣槌破泡汤，加粳米、核桃仁、菱米煮成，供佛施树，户牖井灶各分布一份；干清宫丹墀自廿四日起日日放花炮，直到次年正月十七。</p></div>
+    </div>
+  </section>
+
+  <!-- 先监 -->
+  <section>
+    <div class="tiehead">
+      <div class="qian">卷七</div>
+      <div>
+        <h2>先监陈矩：另一种宦官</h2>
+        <div class="tsub">作者入宫即隶司礼监掌印陈矩名下，师生父子。全书为这位老太监立传，与魏忠贤各卷正好一明一暗。</div>
+      </div>
+    </div>
+    <div class="quote">
+      先监学术醇正，每向人曰：我只守八个字，曰：祖宗法度，圣贤道理。
+      <span class="src">卷七 · 先监遗事纪略</span>
+    </div>
+    <div class="pi">掌东厂、任司礼监掌印的人，一生守的口诀朴素得像蒙童功课。</div>
+    <p class="shen">万历三十一年妖书案起，九重震怒，重赏购作书之人，告密之门大开，凡书内有名者人人自危。其时陈矩掌东厂，<q>委曲调救，中外始安</q>。他生前押解获罪藩王路过家乡，沿途廉静宽恬，驿递感悦，<q>皆以佛称之</q>。卷七末尾那句叹息，作者留给了整个内官群体：宦官里也分两种人，而史书惯于只写一种。</p>
+  </section>
+
+  <!-- 累臣 -->
+  <section>
+    <div class="tiehead">
+      <div class="qian">卷二十三</div>
+      <div>
+        <h2>累臣自叙：写书的人</h2>
+        <div class="tsub">书名来处在这一卷。作者自述从自宫、入宫、被裹挟到下狱的全过程，是明代宦官留给后世的唯一一份第一人称履历。</div>
+      </div>
+    </div>
+    <div class="nianbiao">
+      <div class="jie"><div class="gn">万历十二年（1584）</div><p>生于二月。</p></div>
+      <div class="jie"><div class="gn">万历二十六年（1598）</div><p>「至戊戌七月悖父兄之教，感异梦而自宫，废儒业，读医书，习养生家言。」一个读书人家的少年，自断尘缘。</p></div>
+      <div class="jie"><div class="gn">万历二十九年（1601）</div><p>选入皇城，隶司礼监陈矩名下。该班抄誊，下班习字读书，蒙陈矩耳提面命，「即师生父子也」。</p></div>
+      <div class="jie"><div class="gn">天启年间</div><p>被李永贞自高公宅内唤令答应，「不敢不应承趋赴」；自辩道：永贞自登枢要，顿忘布衣，设法羁防，「使人进退不得」，气郁到八九日不食，濒死者数次。</p></div>
+      <div class="jie"><div class="gn">崇祯初</div><p>魏党败，受牵连下狱。狱中著书，自称累臣。书写成之后他的结局，书里没有记载。</p></div>
+    </div>
+    <div class="quote">
+      愧黔技止此，未敢侈为完书，而知我罪我，后世自有公论。
+      <span class="src">自序</span>
+    </div>
+    <div class="pi">囚徒向后世递交的答辩状。全书由此立住：不是掌权者回忆权力，是被卷入者交代权力如何碾过自己。</div>
+  </section>
+
+</div>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p><b class="src">文本来源</b>　殆知阁古代文献数据库（简体版）史藏·志存记录《酌中志》，github.com/robertsong2000/daizhigev20；全部引文经脚本与库本逐字核验，字数卷数为库本实测。</p>
+    <p><b>读前须知</b>　底本系残存辑录，个别缺字以「■」占位；书中对君父多颂语，宦官视角的自辩与门户之见随处可见，节令制度可采，人物褒贬需自察其时代局限。学术引用请以中华书局点校本《酌中志》为准。</p>
+  </div>
+</footer>
+
+</body>
+</html>
