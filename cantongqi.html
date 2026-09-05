@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>周易参同契 · 殆知阁导读之一百七十二</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-deep: #101010;
+    --paper: #e8e4dc;
+    --paper-dim: rgba(232,228,220,.66);
+    --paper-faint: rgba(232,228,220,.38);
+    --hair: rgba(232,228,220,.15);
+    --hair2: rgba(232,228,220,.28);
+    --ac: #5f9270;
+    --ac-dim: rgba(95,146,112,.55);
+    --ac-faint: rgba(95,146,112,.16);
+    --moon: #cfcabd;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  q { quotes: none; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", SimSun, serif;
+    line-height: 1.9;
+    letter-spacing: .02em;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Consolas, "Courier New", monospace; }
+  a { color: inherit; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+
+  /* ============ 开卷：月相纳甲横轴 ============ */
+  .hero {
+    position: relative;
+    height: 660px;
+    border-bottom: 1px solid var(--hair);
+    overflow: hidden;
+  }
+  .kick {
+    display: flex; justify-content: space-between;
+    padding: 22px 30px 0;
+    font-size: 12.5px; letter-spacing: .18em;
+    color: var(--paper-faint);
+  }
+  .sky {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 900px 380px at 70% 30%, rgba(95,146,112,.07), transparent 65%),
+      var(--ink-deep);
+  }
+  .st { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: rgba(232,228,220,.32); }
+
+  .vtitle {
+    position: absolute; right: 30px; top: 90px;
+    writing-mode: vertical-rl;
+    display: flex; gap: 18px;
+  }
+  .vtitle .bookname {
+    font-size: 54px; font-weight: 700; letter-spacing: .28em;
+    color: var(--paper);
+  }
+  .vtitle .sub {
+    font-size: 14px; letter-spacing: .3em; color: var(--paper-dim);
+    border-right: 1px solid var(--hair2); padding-right: 16px;
+  }
+  .vtitle .seal {
+    align-self: flex-start;
+    background: var(--ac); color: var(--ink);
+    font-size: 12px; padding: 5px 6px; letter-spacing: .1em;
+    writing-mode: vertical-rl; margin-top: 8px;
+  }
+
+  .moonband {
+    position: absolute; left: 0; right: 120px; top: 300px;
+    padding-left: 30px;
+  }
+  .bandline { height: 1px; background: var(--hair2); margin: 0 0 26px; position: relative; }
+  .bandline::after {
+    content: ""; position: absolute; right: -1px; top: -3px;
+    border-left: 7px solid var(--hair2);
+    border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent;
+  }
+  .moons { display: flex; align-items: flex-start; gap: 34px; }
+  .mcell { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .moon {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: #0c0d0c;
+    border: 1px solid var(--hair2);
+    position: relative;
+    transition: transform .25s;
+  }
+  .mcell:hover .moon { transform: translateY(-4px); border-color: var(--ac-dim); }
+  .moon.full { background: var(--moon); box-shadow: 0 0 22px rgba(207,202,189,.28); }
+  .moon.half-r { background: linear-gradient(90deg, transparent 50%, var(--moon) 50%); }
+  .moon.half-l { background: linear-gradient(90deg, var(--moon) 50%, transparent 50%); }
+  .moon.cres-r { box-shadow: inset 13px -3px 0 0 var(--moon); }
+  .moon.gib { background: var(--moon); box-shadow: inset -11px 1px 0 0 #0c0d0c; }
+  .moon.void { border-style: dashed; }
+  .mname { font-size: 15px; color: var(--ac); letter-spacing: .1em; }
+  .mdate { font-size: 11.5px; color: var(--paper-faint); letter-spacing: .08em; }
+  .herocap {
+    position: absolute; left: 30px; bottom: 44px;
+    font-size: 15.5px; color: var(--paper-dim); letter-spacing: .14em;
+  }
+  .herocap .q { color: var(--paper); border-bottom: 1px solid var(--ac-dim); padding-bottom: 2px; }
+  .heronote {
+    position: absolute; left: 30px; top: 96px; max-width: 330px;
+    font-size: 14.5px; color: var(--paper-dim); line-height: 2.1;
+  }
+  .heronote b { color: var(--paper); font-weight: 700; }
+
+  /* ============ 消息卦节头 ============ */
+  .sec { padding: 72px 0 30px; position: relative; }
+  .sechead { display: flex; align-items: flex-start; gap: 22px; margin-bottom: 8px; }
+  .gua { display: flex; flex-direction: column; gap: 5px; padding-top: 7px; }
+  .yao { width: 38px; height: 6px; }
+  .yao.yang { background: var(--ac); }
+  .yao.yin { background: linear-gradient(90deg, var(--ac) 0 15px, transparent 15px 23px, var(--ac) 23px 38px); }
+  .sechead h2 { font-size: 25px; font-weight: 700; letter-spacing: .06em; line-height: 1.4; }
+  .sechead .guanote {
+    display: block; margin-top: 6px;
+    font-size: 13px; color: var(--paper-faint); letter-spacing: .12em; font-weight: 400;
+  }
+  .sechead .guanote .q { color: var(--paper-dim); }
+
+  p.body { font-size: 16.5px; margin: 18px 0; color: var(--paper-dim); }
+  p.body b { color: var(--paper); }
+  .q {
+    color: var(--paper);
+    border-left: 2px solid var(--ac-dim);
+    padding: 2px 0 2px 14px;
+    margin: 14px 0;
+    font-size: 17px;
+    letter-spacing: .05em;
+  }
+  .q .src { display: block; font-size: 12px; color: var(--paper-faint); margin-top: 6px; letter-spacing: .12em; }
+
+  /* ============ 三道由一 ============ */
+  .threeways { display: flex; align-items: stretch; gap: 0; margin: 34px 0 10px; }
+  .way { flex: 1; border: 1px solid var(--hair); border-right: none; padding: 20px 18px 16px; }
+  .way:last-child { border-right: 1px solid var(--hair); }
+  .way h3 { font-size: 17px; color: var(--ac); letter-spacing: .14em; margin-bottom: 8px; }
+  .way p { font-size: 13.8px; color: var(--paper-faint); line-height: 1.9; }
+  .way p b { color: var(--paper-dim); font-weight: 400; }
+  .joinline { height: 1px; background: linear-gradient(90deg, transparent, var(--ac-dim), transparent); margin: 26px auto; width: 70%; position: relative; }
+  .joinline::after {
+    content: "一"; position: absolute; left: 50%; top: -14px; transform: translateX(-50%);
+    background: var(--ink); color: var(--ac); padding: 2px 12px; font-size: 15px;
+  }
+
+  /* ============ 纳甲对照表 ============ */
+  table.najia { width: 100%; border-collapse: collapse; margin: 26px 0 8px; font-size: 15px; }
+  table.najia th {
+    font-weight: 400; font-size: 12.5px; letter-spacing: .2em; color: var(--paper-faint);
+    border-bottom: 1px solid var(--hair2); padding: 8px 10px; text-align: left;
+  }
+  table.najia td { padding: 11px 10px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+  table.najia td.g { color: var(--ac); font-size: 16px; }
+  table.najia td .q, table.najia .q { border: none; padding: 0; margin: 0; font-size: 15px; }
+  table.najia tr:hover td { background: var(--ac-faint); }
+  .moon-mini { display: inline-block; width: 15px; height: 15px; border-radius: 50%; border: 1px solid var(--hair2); vertical-align: -2px; margin-right: 7px; background: #0c0d0c; }
+  .moon-mini.full { background: var(--moon); }
+  .moon-mini.half-r { background: linear-gradient(90deg, transparent 50%, var(--moon) 50%); }
+  .moon-mini.half-l { background: linear-gradient(90deg, var(--moon) 50%, transparent 50%); }
+  .moon-mini.cres-r { box-shadow: inset 5px -1px 0 0 var(--moon); }
+  .moon-mini.gib { background: var(--moon); box-shadow: inset -4px 1px 0 0 #0c0d0c; }
+
+  /* ============ 名物词典 ============ */
+  .dict { margin: 26px 0; }
+  .drow { display: flex; gap: 0; border: 1px solid var(--hair); border-bottom: none; }
+  .drow:last-child { border-bottom: 1px solid var(--hair); }
+  .dterm {
+    width: 150px; flex: none; padding: 16px 14px;
+    border-right: 1px solid var(--hair);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .dterm .t { font-size: 18px; color: var(--ac); letter-spacing: .08em; }
+  .dterm .g { font-size: 12.5px; color: var(--paper-faint); line-height: 1.7; }
+  .dquot { flex: 1; padding: 14px 18px; font-size: 15.5px; color: var(--paper-dim); line-height: 2; }
+  .dquot .q { border-left: none; padding: 0; margin: 0; color: var(--paper); font-size: 15.5px; }
+
+  /* ============ 反白：千举万败 ============ */
+  .sec.rev { background: var(--paper); color: var(--ink); margin-top: 60px; padding: 66px 0 60px; }
+  .sec.rev .yao.yang { background: #3f6e50; }
+  .sec.rev .yao.yin { background: linear-gradient(90deg, #3f6e50 0 15px, transparent 15px 23px, #3f6e50 23px 38px); }
+  .sec.rev p.body { color: rgba(25,25,23,.74); }
+  .sec.rev p.body b { color: var(--ink); }
+  .sec.rev .q, .sec.rev .dquot .q { color: var(--ink); border-left-color: rgba(25,25,23,.4); }
+  .sec.rev .sechead .guanote { color: rgba(25,25,23,.55); }
+  .sec.rev .sechead .guanote .q { color: rgba(25,25,23,.75); }
+  .failrows { margin: 30px 0 8px; }
+  .failrow { display: flex; gap: 18px; padding: 15px 4px; border-bottom: 1px dashed rgba(25,25,23,.3); }
+  .failrow .fno { font-size: 13px; color: #8a3c33; flex: none; width: 62px; padding-top: 4px; letter-spacing: .08em; }
+  .failrow .ftxt { font-size: 15.5px; color: rgba(25,25,23,.82); line-height: 2; }
+  .failrow .ftxt .q { border-left: none; padding: 0; margin: 0; }
+  .failrow .fwhy { display: block; font-size: 13px; color: rgba(25,25,23,.55); margin-top: 3px; }
+
+  /* ============ 鼎器图纸 ============ */
+  .furnace { display: flex; gap: 40px; align-items: flex-start; margin: 34px 0 12px; }
+  .dingbox { flex: none; width: 300px; height: 300px; position: relative; }
+  .ding { position: absolute; left: 50%; top: 96px; transform: translateX(-50%); width: 170px; height: 118px;
+          border: 2px solid var(--ac); border-top: none;
+          border-radius: 0 0 70px 70px / 0 0 46px 46px; }
+  .ding::before, .ding::after {
+    content: ""; position: absolute; top: -16px; width: 16px; height: 16px;
+    border: 2px solid var(--ac); border-radius: 50% 50% 0 0; background: var(--ink);
+  }
+  .ding::before { left: 26px; }
+  .ding::after { right: 26px; }
+  .leg { position: absolute; top: 208px; width: 8px; height: 52px; background: var(--ac); }
+  .leg.l1 { left: 62px; transform: rotate(8deg); }
+  .leg.l2 { left: 146px; }
+  .leg.l3 { right: 62px; transform: rotate(-8deg); }
+  .flame { position: absolute; left: 50%; top: 272px; transform: translateX(-50%);
+           width: 120px; height: 16px;
+           background: radial-gradient(ellipse 60px 14px at 50% 100%, var(--ac-dim), transparent 70%); }
+  .dimline { position: absolute; border-top: 1px dashed var(--hair2); font-size: 11.5px; color: var(--paper-faint); letter-spacing: .1em; }
+  .dimline span { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+  .specrows { flex: 1; font-size: 15px; color: var(--paper-dim); }
+  .specrows .q { font-size: 16px; }
+  .firebar { margin: 28px 0 6px; height: 34px; display: flex; border: 1px solid var(--hair2); }
+  .firebar .wen { flex: 1; background: repeating-linear-gradient(45deg, var(--ac-faint), var(--ac-faint) 6px, transparent 6px 12px);
+                  display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--paper-dim); letter-spacing: .3em; }
+  .firebar .wu { flex: 1; background: var(--ac-dim); display: flex; align-items: center; justify-content: center;
+                 font-size: 13px; color: var(--ink); letter-spacing: .3em; font-weight: 700; }
+  .firecap { font-size: 13px; color: var(--paper-faint); letter-spacing: .1em; }
+
+  /* ============ 藏名三卡 ============ */
+  .acrostic { display: flex; gap: 22px; margin: 32px 0 10px; }
+  .acard { flex: 1; border: 1px solid var(--hair); padding: 24px 20px 20px; text-align: center; position: relative; }
+  .acard .aquote { font-size: 16.5px; color: var(--paper-dim); line-height: 2; min-height: 78px; }
+  .acard .aquote .q { border: none; padding: 0; margin: 0; color: var(--paper); font-size: 16.5px; }
+  .acard .aplus { font-size: 20px; color: var(--paper-faint); margin: 12px 0 6px; }
+  .acard .aout { font-size: 40px; color: var(--ac); font-weight: 700; line-height: 1.2; }
+  .acard .ahint { font-size: 12.5px; color: var(--paper-faint); margin-top: 8px; letter-spacing: .1em; }
+  .acard:hover { border-color: var(--ac-dim); }
+
+  /* ============ 校记 ============ */
+  .jiaji { border: 1px dashed var(--hair2); padding: 22px 26px; margin: 44px 0 8px; font-size: 14px; color: var(--paper-faint); line-height: 2.1; }
+  .jiaji b { color: var(--paper-dim); font-weight: 400; letter-spacing: .2em; }
+  .jiaji .q { border: none; padding: 0; margin: 0; font-size: 14px; color: var(--paper-dim); }
+
+  /* ============ 库本速览 ============ */
+  .stats { display: flex; flex-wrap: wrap; gap: 0; border: 1px solid var(--hair); margin: 30px 0 10px; }
+  .stat { flex: 1 1 20%; padding: 18px 14px; border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+  .stat .n { font-size: 24px; color: var(--ac); }
+  .stat .n small { font-size: 13px; color: var(--paper-faint); }
+  .stat .l { font-size: 12.5px; color: var(--paper-faint); letter-spacing: .14em; margin-top: 4px; }
+
+  /* ============ 尾声 ============ */
+  .finale { text-align: center; padding: 80px 0 70px; border-top: 1px solid var(--hair); margin-top: 60px; }
+  .finale .q { border-left: none; padding: 0; margin: 0 0 14px; font-size: 20px; letter-spacing: .1em; }
+  .finale .loop {
+    width: 54px; height: 54px; margin: 26px auto 18px; border-radius: 50%;
+    border: 1px dashed var(--ac-dim); position: relative;
+  }
+  .finale .loop::after {
+    content: ""; position: absolute; inset: 12px; border-radius: 50%;
+    background: linear-gradient(90deg, var(--ac) 50%, transparent 50%); opacity: .5;
+  }
+  .finale p { font-size: 14.5px; color: var(--paper-faint); max-width: 560px; margin: 0 auto; line-height: 2.1; }
+  .backlink { display: inline-block; margin-top: 26px; font-size: 13.5px; color: var(--ac); border-bottom: 1px solid var(--ac-dim); text-decoration: none; letter-spacing: .08em; }
+
+  footer.page { border-top: 1px solid var(--hair); padding: 34px 0 46px; font-size: 13px; color: var(--paper-faint); line-height: 2.1; }
+  footer.page b { color: var(--paper-dim); }
+
+  @media (max-width: 760px) {
+    .vtitle .bookname { font-size: 38px; }
+    .moonband { right: 60px; top: 330px; }
+    .moons { gap: 16px; flex-wrap: wrap; }
+    .threeways, .acrostic, .furnace { flex-direction: column; }
+    .way { border-right: 1px solid var(--hair); }
+    .drow { flex-direction: column; }
+    .dterm { width: auto; border-right: none; border-bottom: 1px solid var(--hair); }
+    .dingbox { margin: 0 auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="sky"></div>
+  <div class="st" style="left:12%;top:18%"></div>
+  <div class="st" style="left:22%;top:34%"></div>
+  <div class="st" style="left:31%;top:12%"></div>
+  <div class="st" style="left:44%;top:26%"></div>
+  <div class="st" style="left:56%;top:14%"></div>
+  <div class="st" style="left:63%;top:38%"></div>
+  <div class="st" style="left:74%;top:22%"></div>
+  <div class="st" style="left:83%;top:44%"></div>
+  <div class="st" style="left:90%;top:16%"></div>
+  <div class="kick">
+    <span>殆知阁导读 · 之一百七十二</span>
+    <span>卷六　工造卷　竹青</span>
+  </div>
+  <div class="vtitle">
+    <span class="sub">东汉　丹经之祖　八千字天书</span>
+    <span class="bookname">周易参同契</span>
+    <span class="seal">不署名</span>
+  </div>
+  <div class="heronote">
+    现存最早的炼丹理论书。它自称只是<b>大纲</b>，把要紧的地方全部藏起来；
+    它把卦爻、月相、天干排成一张<b>火候时刻表</b>；
+    开卷先讲天上的月亮，收卷留下一个拆开才见得到的名字。
+  </div>
+  <div class="moonband">
+    <div class="bandline"></div>
+    <div class="moons">
+      <div class="mcell">
+        <div class="moon cres-r"></div>
+        <span class="mname">震</span>
+        <span class="mdate mono">三日 · 庚</span>
+      </div>
+      <div class="mcell">
+        <div class="moon half-r"></div>
+        <span class="mname">兑</span>
+        <span class="mdate mono">八日 · 丁</span>
+      </div>
+      <div class="mcell">
+        <div class="moon full"></div>
+        <span class="mname">干</span>
+        <span class="mdate mono">十五 · 甲</span>
+      </div>
+      <div class="mcell">
+        <div class="moon gib"></div>
+        <span class="mname">巽</span>
+        <span class="mdate mono">十六 · 辛</span>
+      </div>
+      <div class="mcell">
+        <div class="moon half-l"></div>
+        <span class="mname">艮</span>
+        <span class="mdate mono">廿三 · 丙</span>
+      </div>
+      <div class="mcell">
+        <div class="moon void"></div>
+        <span class="mname">坤</span>
+        <span class="mdate mono">三十 · 乙</span>
+      </div>
+      <div class="mcell">
+        <div class="moon void"></div>
+        <span class="mname">晦朔</span>
+        <span class="mdate">合符行中</span>
+      </div>
+    </div>
+  </div>
+  <div class="herocap"><q class="q">晦至朔旦。震来受符。</q>　月亮圆一次，炉子烧一遍。</div>
+</header>
+
+<main>
+
+  <!-- ============ 一 · 写还是不写 ============ -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="gua" title="复">
+          <span class="yao yin"></span><span class="yao yin"></span><span class="yao yin"></span>
+          <span class="yao yin"></span><span class="yao yin"></span><span class="yao yang"></span>
+        </div>
+        <h2>先交代作者的心虚
+          <span class="guanote">消息卦「复」，一阳在下：复卦建始萌。长子继父体。因母立兆基。</span>
+        </h2>
+      </div>
+      <p class="body">这本书只有八千字，却先花了一段告诉你：它差一点不存在。作者说，讲炉火的前人写下过六百篇，道理其实相通，可惜<b>「火记六百篇。所趣等不殊。文字郑重说。世人不熟思。」</b>写的人苦口婆心，读的人不肯细想。于是他陷入两难：</p>
+      <div class="q">若遂结舌喑。绝道获罪诛。写情着竹帛。又符泄天符。犹豫增叹息。俛仰缀斯愚。
+        <span class="src">闭口不写，是对道失职；落笔成书，又怕泄露天机。犹豫再三，叹息提笔。</span>
+      </div>
+      <p class="body">他的折中办法，是写一份<b>压缩包</b>：</p>
+      <div class="q">陶冶有法度。未忍悉陈敷。略述其纲纪。枝条见扶疏。
+        <span class="src">只给主干，不给枝叶；懂的人自会看出树形。</span>
+      </div>
+      <p class="body">同时发一个毒誓、留一句售后期：<b>「吾不敢虚说。仿效圣人文。」</b>以及书中的「至要言甚露。昭昭不我欺」：关键的话都摆在明处，我不骗你。天书与诚实的混搭，从第一段就开始了。</p>
+    </div>
+  </section>
+
+  <!-- ============ 二 · 三道由一 ============ -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="gua" title="泰">
+          <span class="yao yin"></span><span class="yao yin"></span><span class="yao yin"></span>
+          <span class="yao yang"></span><span class="yao yang"></span><span class="yao yang"></span>
+        </div>
+        <h2>一本书的三种语言
+          <span class="guanote">消息卦「泰」，天地相交：仰以成泰。刚柔并隆。</span>
+        </h2>
+      </div>
+      <p class="body">书名三个字是作者自己的说明书。全书的自白浓缩在四个句子里：</p>
+      <div class="q">大易情性。各如其度。黄老用究。较而可御。炉火之事。真有所据。三道由一。俱出径路。
+        <span class="src">大易给出刻度，黄老给出心法，炉火给出实证；三条路，一个终点。</span>
+      </div>
+      <div class="threeways">
+        <div class="way">
+          <h3>大易</h3>
+          <p><b>卦爻是语法。</b>开篇第一句「乾坤者易之门户。众卦之父母。坎离匡郭。运毂正轴。」，把宇宙说成一台车，乾坤是轮轴，坎离是两只轮子。</p>
+        </div>
+        <div class="way">
+          <h3>黄老</h3>
+          <p><b>清静是操作台。</b>「内以养己。安静虚无」：养生的那一套，被安排来管火候的节奏。</p>
+        </div>
+        <div class="way">
+          <h3>炉火</h3>
+          <p><b>丹炉是实验室。</b>铢两、寒温、文武，全是可查验的手上功夫，作者特意强调「炉火之事。真有所据」。</p>
+        </div>
+      </div>
+      <div class="joinline"></div>
+      <p class="body">但他也顺手给自己留了后门：<b>「参同契者。敷陈梗概。不能纯一。泛滥而说。纤微未备。阔略仿佛。」</b>翻译过来：这本书只是梗概，别指望它齐全。一部经书在正文里自曝其短，这在古籍里并不多见。</p>
+    </div>
+  </section>
+
+  <!-- ============ 三 · 天上的钟表 ============ -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="gua" title="干">
+          <span class="yao yang"></span><span class="yao yang"></span><span class="yao yang"></span>
+          <span class="yao yang"></span><span class="yao yang"></span><span class="yao yang"></span>
+        </div>
+        <h2>把月亮装进炉子
+          <span class="guanote">消息卦「干」，满月当空：干健盛明。广被四邻。</span>
+        </h2>
+      </div>
+      <p class="body">全书最漂亮的一套设计，是用<b>月相给一个月计时</b>。月亮三天显出新月，交给震卦，配上天干庚；八日上弦，交给兑，配丁；十五满月，交给干，配甲。作者的原话是一首月历诗：</p>
+      <div class="q">三日出为爽。震庚受西方。八日兑受丁。上弦平如绳。十五干体就。盛满甲东方。蟾蜍与兔魄。日月气双明。
+        <span class="src">上半月：震、兑、干依次接棒，天干是刻度，方位是钟面。</span>
+      </div>
+      <p class="body">下半月照原路退回去：</p>
+      <div class="q">十六转受统。巽辛见平明。艮直于丙南。下弦二十三。坤乙三十日。东北丧其朋。节尽相禅与。继体复生龙。
+        <span class="src">巽、艮、坤接力收尾；一月走完，交回震卦，周而复始。</span>
+      </div>
+      <table class="najia">
+        <tr><th>卦</th><th>月相</th><th>日数</th><th>天干</th><th>库本方位</th></tr>
+        <tr><td class="g">震</td><td><span class="moon-mini cres-r"></span>蛾眉月</td><td class="mono">三日</td><td class="mono">庚</td><td>西方</td></tr>
+        <tr><td class="g">兑</td><td><span class="moon-mini half-r"></span>上弦</td><td class="mono">八日</td><td class="mono">丁</td><td>南方</td></tr>
+        <tr><td class="g">干</td><td><span class="moon-mini full"></span>望</td><td class="mono">十五</td><td class="mono">甲</td><td>东方</td></tr>
+        <tr><td class="g">巽</td><td><span class="moon-mini gib"></span>亏起</td><td class="mono">十六</td><td class="mono">辛</td><td>平明</td></tr>
+        <tr><td class="g">艮</td><td><span class="moon-mini half-l"></span>下弦</td><td class="mono">二十三</td><td class="mono">丙</td><td>南方</td></tr>
+        <tr><td class="g">坤</td><td><span class="moon-mini"></span>晦</td><td class="mono">三十</td><td class="mono">乙</td><td>东北丧其朋</td></tr>
+      </table>
+      <p class="body">这张表是干嘛的？后世通读认为：炉中的火候按这个时刻表增减：月亮涨，火也涨；月亮亏，火也收。丹炉由此有了一座<b>看得见的钟</b>。至于炉里到底发生了什么，得先认识几位主角。</p>
+    </div>
+  </section>
+
+  <!-- ============ 四 · 名物词典 ============ -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="gua" title="坤">
+          <span class="yao yin"></span><span class="yao yin"></span><span class="yao yin"></span>
+          <span class="yao yin"></span><span class="yao yin"></span><span class="yao yin"></span>
+        </div>
+        <h2>主角们的小词典
+          <span class="guanote">消息卦「坤」，万物归藏：道穷则反。归乎坤元。</span>
+        </h2>
+      </div>
+      <p class="body">这本书不肯直说任何东西的名字。好在它自己给了词典的钥匙：<b>「名者以定情。字者缘性言。金来归性初。乃得称还丹。」</b>名号是按性情起的。下面六个名号，是全书出场最多的一批。</p>
+      <div class="dict">
+        <div class="drow">
+          <div class="dterm"><span class="t">河上姹女</span><span class="g">后世通读作水银（汞）</span></div>
+          <div class="dquot"><q class="q">河上姹女。灵而最神。得火则飞。不见埃尘。鬼隐龙匿。莫知所存。将欲制之。黄芽为根。</q>见热就蒸发，抓不住、看不见；书里明确说过丹砂的本源「金以砂为主。禀和于水银」。</div>
+        </div>
+        <div class="drow">
+          <div class="dterm"><span class="t">太阳流珠</span><span class="g">水银的又一绰号</span></div>
+          <div class="dquot"><q class="q">太阳流珠。常欲去人。卒得金华。转而相因。</q>一粒粒滚来滚去、总想离开你的银珠；要靠金花（铅）才肯安定下来。</div>
+        </div>
+        <div class="drow">
+          <div class="dterm"><span class="t">黄芽</span><span class="g">铅，或铅中所发精华</span></div>
+          <div class="dquot"><q class="q">故铅外黑。内怀金华。被褐怀玉。外为狂夫。</q>铅黑皮糙，像穿破袄的狂人，怀里却揣着玉；「知白守黑。神明自来。白者金精。黑者水基。」黑是它的外衣，白是它的芯。</div>
+        </div>
+        <div class="drow">
+          <div class="dterm"><span class="t">还丹</span><span class="g">炼成的终极产品</span></div>
+          <div class="dquot"><q class="q">色转更为紫。赫然成还丹。粉提以一丸。刀圭最为神。</q>判断炼成的标志写得很具体：颜色转紫。服用的剂量也有单位：一丸、一刀圭。</div>
+        </div>
+        <div class="drow">
+          <div class="dterm"><span class="t">龙虎</span><span class="g">后世通读作汞与铅一对</span></div>
+          <div class="dquot"><q class="q">丹砂木精。得金乃并。金水合处。木火为侣。四者混沌。列为龙虎。</q>青龙白虎不是动物，是两路药物的名号；龙呼虎吸，全在一只鼎里。</div>
+        </div>
+        <div class="drow">
+          <div class="dterm"><span class="t">金</span><span class="g">不变的尺度</span></div>
+          <div class="dquot"><q class="q">金入于猛火。色不夺精光。</q>全书最常被引用的一句：真金入猛火，光泽不失。它既是化学观察，也是一句人格宣言。</div>
+        </div>
+      </div>
+      <p class="body">词典的最后一页是承诺条款：<b>「术士服食之。寿命得长久。」</b>功效写着「发白皆变黑。齿落生旧所。老翁复丁壮。耆妪成姹女」：白发转黑、掉牙重生、老头变壮汉、老妇变少女。以今日常识衡之，这些以铅汞为主角的承诺换个说法就是<b>中毒记录</b>。古人不知，情有可原；今人若信，无人可救。</p>
+    </div>
+  </section>
+
+  <!-- ============ 五 · 千举万败（反白） ============ -->
+  <section class="sec rev">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="gua" title="剥">
+          <span class="yao yang"></span><span class="yao yin"></span><span class="yao yin"></span>
+          <span class="yao yin"></span><span class="yao yin"></span><span class="yao yin"></span>
+        </div>
+        <h2>千举万败：一份失败者名录
+          <span class="guanote">消息卦「剥」，硕果仅存：剥烂肢体。消灭其形。</span>
+        </h2>
+      </div>
+      <p class="body">这本书最动人的地方，恰恰是它花大量篇幅<b>劝你别炼</b>。作者像一位看过太多事故的老工头，把失败现场一条条钉在墙上：</p>
+      <div class="failrows">
+        <div class="failrow">
+          <span class="fno mono">其一</span>
+          <span class="ftxt"><q class="q">世间多学士。高妙负良才。邂逅不遭遇。耗火亡货财。</q>「千举必万败。欲黠反成痴。」
+            <span class="fwhy">聪明人烧掉家财，越自信败得越惨。</span></span>
+        </div>
+        <div class="failrow">
+          <span class="fno mono">其二</span>
+          <span class="ftxt"><q class="q">捣治羌石胆。云母及礜磁。硫黄烧豫章。泥澒相炼飞。</q>
+            <span class="fwhy">一份错误的采购单：石胆、云母、礜石、硫黄乱炖一锅，药性不同类，永无合体之日。</span></span>
+        </div>
+        <div class="failrow">
+          <span class="fno mono">其三</span>
+          <span class="ftxt"><q class="q">不得其理。难以妄言。竭殚家产。妻子饥贫。自古及今。好者亿人。讫不谐遇。希有能成。</q>
+            <span class="fwhy">破产通知：古往今来爱好者上亿，成功的几乎没有。作者没有为同行遮羞。</span></span>
+        </div>
+        <div class="failrow">
+          <span class="fno mono">其四</span>
+          <span class="ftxt"><q class="q">昼夜不卧寐。晦朔未尝休。身体日疲倦。恍惚状若痴。</q>「遽以夭命死。腐露其形骸。」
+            <span class="fwhy">另一批人死于修炼过劳：不睡不休，形销骨立，早早丧命。</span></span>
+        </div>
+        <div class="failrow">
+          <span class="fno mono">其五</span>
+          <span class="ftxt"><q class="q">遂使宦者不仕。农夫失耘。商人弃货。志士家贫。吾甚伤之。</q>
+            <span class="fwhy">社会新闻视角：官不做、田不耕、生意不做，作者说，我真的很痛心。</span></span>
+        </div>
+      </div>
+      <p class="body">书中还插进一段近乎黑色幽默的<b>急救知识</b>：</p>
+      <div class="q">若以野葛一寸。巴豆一两。入喉辄僵。不得俛仰。……虽周文揲蓍。孔子占象。扁鹊操针。巫咸扣鼓。安能令苏。复起驰走。
+        <span class="src">毒药入口，圣贤急救团齐上阵也没用。这段冰冷的话埋在丹经里，像一句提醒：先认清什么东西会杀人。</span>
+      </div>
+      <p class="body">为什么失败率这么高？作者的答案是一条朴素得不像丹经的原则：<b>同类才能相从</b>。他先讲了个相亲笑话：</p>
+      <div class="q">假使二女共室。颜色甚姝。令苏秦通言。张仪结媒。发辩利舌。奋舒美辞。推心调谐。合为夫妻。弊发腐齿。终不相知。
+        <span class="src">两位美女同住一室，派苏秦说媒、张仪牵线，磨到头发白牙齿掉，也成不了夫妻。药物错配，就是这场笑话。</span>
+      </div>
+      <p class="body">然后是四条定理式的短句：<b>「燕雀不生凤。狐兔不乳马。水流不炎上。火动不润下。」</b>以及一句更直白的：<b>「牝鸡自卵。其雏不全。」</b>母鸡独自孵蛋，孵不出雏鸡。在没有元素概念的年代，这是能找到的最接近<b>化学反应条件论</b>的表述：材料不成对，神仙也没辙。</p>
+    </div>
+  </section>
+
+  <!-- ============ 六 · 鼎器图纸 ============ -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="gua" title="大壮">
+          <span class="yao yin"></span><span class="yao yin"></span><span class="yao yang"></span>
+          <span class="yao yang"></span><span class="yao yang"></span><span class="yao yang"></span>
+        </div>
+        <h2>一张用诗写成的设备图纸
+          <span class="guanote">消息卦「大壮」，器物成形：渐历大壮。侠列卯门。</span>
+        </h2>
+      </div>
+      <p class="body">卷末附了一首<b>鼎器歌</b>，通篇是尺寸。把它排开，活脱一张设备卡：</p>
+      <div class="furnace">
+        <div class="dingbox">
+          <div class="ding"></div>
+          <div class="leg l1"></div><div class="leg l2"></div><div class="leg l3"></div>
+          <div class="flame"></div>
+          <div class="dimline" style="left:70px;right:70px;top:58px"><span>圆三五 · 寸一分</span></div>
+          <div class="dimline" style="left:96px;right:96px;top:180px"><span>腹齐三</span></div>
+          <div class="dimline" style="left:70px;right:70px;top:272px"><span>长尺二 · 厚薄匀</span></div>
+        </div>
+        <div class="specrows">
+          <q class="q">圆三五。寸一分。口四八。两寸唇。长尺二。厚薄匀。腹齐三。坐垂温。阴在上。阳下奔。首尾武。中间文。</q>
+          <p class="body">口径、唇厚、腹深、腿长，一一给出数字；最后两句连<b>温度梯度</b>都标了：阴在上，阳下奔，炉温从头到尾不是均匀的。配料单同样有秤有斗：<b>「临炉定铢两。五分水有余。」</b>称量精确到铢两，配比写进正文。两千年前的炼丹家显然清楚：不定量，就不配叫实验。</p>
+        </div>
+      </div>
+      <div class="firebar">
+        <div class="wen">始文</div>
+        <div class="wu">终武</div>
+      </div>
+      <p class="firecap">火候程序：先文后武。<q class="q">始文使可修。终竟武乃陈。候视加谨慎。审察调寒温。周旋十二节。节尽更须亲。</q>文火慢烧，武火收尾，中间十二节逐一巡查，一份完整的操作规程。</p>
+    </div>
+  </section>
+
+  <!-- ============ 七 · 从炉火到呼吸 ============ -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="gua" title="姤">
+          <span class="yao yang"></span><span class="yao yang"></span><span class="yao yang"></span>
+          <span class="yao yang"></span><span class="yao yang"></span><span class="yao yin"></span>
+        </div>
+        <h2>后来，鼎炉被搬进了身体
+          <span class="guanote">消息卦「姤」，一阴始生：姤始纪序。履霜最先。</span>
+        </h2>
+      </div>
+      <p class="body">书里最出乎意料的一段，主角不是丹炉，是<b>耳目口</b>：</p>
+      <div class="q">耳目口三宝。固塞勿发扬。真人潜深渊。浮游守规中。
+        <span class="src">眼耳嘴是三个闸口，关紧它们，让真气沉下去、守在中间。</span>
+      </div>
+      <p class="body">接着是一段罕见的<b>体感描写</b>：</p>
+      <div class="q">淫淫若春泽。液液象解冰。从头流达足。究竟复上升。
+        <span class="src">暖意像春雨浸透，像冰在融化，从头顶流到脚底，再升回来。</span>
+      </div>
+      <p class="body">后世通读认为，这正是<b>内丹</b>的源头之一：鼎炉不在院里，在身体里：耳目口是关塞，呼吸是文武火，脊柱是偃月炉（书中原话「偃月法鼎炉」）。一段调息的文字，让这本炉火之书被静坐的人读了一千多年。它甚至提前写好了这条路的验收标准：<b>「反者道之验。弱者德之柄。」</b>以及最像座右铭的一句：<b>「浊者清之路。昏久则昭明。」</b>浑浊是变清的必经路，昏沉久了自然亮起来。</p>
+    </div>
+  </section>
+
+  <!-- ============ 八 · 会稽鄙夫 ============ -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sechead">
+        <div class="gua" title="遁">
+          <span class="yao yang"></span><span class="yao yang"></span><span class="yao yang"></span>
+          <span class="yao yang"></span><span class="yao yin"></span><span class="yao yin"></span>
+        </div>
+        <h2>藏在字里的名字
+          <span class="guanote">消息卦「遁」，退藏于密：遁去世位。收敛其精。</span>
+        </h2>
+      </div>
+      <p class="body">全书没有署名。唯一一段自画像，是一个地名加一副心肠：</p>
+      <div class="q">会稽鄙夫。幽谷朽生。挟怀朴素。不乐欢荣。栖迟僻陋。忽略利名。执守恬淡。希时安平。宴然闲居。乃撰斯文。
+        <span class="src">会稽乡下的鄙陋之人，山沟里的朽木；不爱热闹，不逐名利，闲居无事，写下这篇文章。</span>
+      </div>
+      <p class="body">魏伯阳三个字，正史无载，是后人从书末一段谜语里拆出来的。先把谜面抄在下面：</p>
+      <div class="q">委时去害。依托丘山。循游寥廓。与鬼为邻。……百世一下。遨游人间。……汤遭厄际。水旱隔并。
+        <span class="src">结尾这一串自述，像是交代去向后事，又像是故意把字摆好等人来拆。</span>
+      </div>
+      <div class="acrostic">
+        <div class="acard">
+          <div class="aquote"><q class="q">委时去害。依托丘山。循游寥廓。与鬼为邻。</q></div>
+          <div class="aplus">委 ＋ 鬼</div>
+          <div class="aout">魏</div>
+          <div class="ahint">与鬼为邻，委字傍鬼而立</div>
+        </div>
+        <div class="acard">
+          <div class="aquote"><q class="q">百世一下。遨游人间。</q></div>
+          <div class="aplus">亻＋ 百</div>
+          <div class="aout">伯</div>
+          <div class="ahint">百字下到人间，添人成伯</div>
+        </div>
+        <div class="acard">
+          <div class="aquote"><q class="q">汤遭厄际。水旱隔并。</q></div>
+          <div class="aplus">汤 － 水</div>
+          <div class="aout">阳</div>
+          <div class="ahint">汤字逢旱，水去留昜，昜即阳</div>
+        </div>
+      </div>
+      <p class="body">拆字得出魏伯阳之名，是流传最广的一种读法；是作者本意还是后人附会，已无从对质。能确定的是书名与成书的自白：<b>「命参同契。微览其端。辞寡意大。后嗣宜遵。」</b>书名是它自己报的。至于其人，《神仙传》里倒有一整篇传说：带弟子入山炼丹，先喂狗试毒，狗倒了自己再试，丹吞下去尸解升天（本系列第 120 篇《神仙传》已收此案）。顺带一提，那本书说他是<b>吴人</b>，这里自称<b>会稽</b>，两处小出入，隔着几百年，正好留给读者对质。</p>
+    </div>
+  </section>
+
+  <!-- ============ 校记 ============ -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="jiaji">
+        <b>校记</b><br>
+        一、库本不显上中下篇次，通篇以「○」断章，凡九十段；末附【鼎器歌】与一段【赞序】。赞序起句「参同契者。辞隐而道大。言微而旨深。」，口吻与正文不类，历来多视为另一支笔所加。<br>
+        二、卷末一段自述「故复作此。命五相类。」，是后世聚讼的源头：有人据此认为今日八千字本是两部书（参同契与五相类）叠在一起的合卷。<br>
+        三、库本底子有残字：一处在「亦犹和胶补釜。以*涂疮。」，星号即底本缺字；引文照录。<br>
+        四、本篇月相、纳甲、消息卦诸表，均按库本文句排定；文中所谓后世通读、拆字藏名，属流传的解读，非库本原文，特此声明。
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="n mono">7,748</div><div class="l">全帙字符（去空白）</div></div>
+        <div class="stat"><div class="n mono">90<small> 段</small></div><div class="l">「○」断章</div></div>
+        <div class="stat"><div class="n mono">27<small> 见</small></div><div class="l">火</div></div>
+        <div class="stat"><div class="n mono">29<small> 见</small></div><div class="l">金</div></div>
+        <div class="stat"><div class="n mono">25<small> 见</small></div><div class="l">月</div></div>
+        <div class="stat"><div class="n mono">17<small> 见</small></div><div class="l">龙</div></div>
+        <div class="stat"><div class="n mono">9<small> 见</small></div><div class="l">虎</div></div>
+        <div class="stat"><div class="n mono">4<small> 见</small></div><div class="l">铅</div></div>
+        <div class="stat"><div class="n mono">2<small> 见</small></div><div class="l">姹女</div></div>
+        <div class="stat"><div class="n mono">4<small> 见</small></div><div class="l">黄芽</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 尾声 ============ -->
+  <section class="finale">
+    <div class="wrap">
+      <q class="q">千周灿彬彬兮。万遍将可睹。神明或告人兮。心灵乍自悟。探端索其绪兮。必得其门户。</q>
+      <div class="loop"></div>
+      <p style="margin-bottom:18px"><q class="q">终坤始复。始循连环。</q></p>
+      <p>作者对读者的全部建议，是读一万遍。听起来是搪塞，其实是他最诚实的一句：书里自己招了，<q class="q">露见枝条。隐藏本根。托号诸石。覆谬众文。</q>：露出来的是枝条，藏起来的是根本，名号全是幌子。一本自称藏着掖着的书，两千年没人敢说读懂。好在他把台阶也修好了：今天读它，可以当化学史料读，当思想史读，唯独不要当说明书读。</p>
+      <a class="backlink" href="baopuzi-neipian.html">炉火旁的邻居：抱朴子内篇（导读之八十）</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <b>周易参同契</b>　殆知阁导读之一百七十二　卷六 工造卷　竹青<br>
+    文本来源：殆知阁简体库（github.com/robertsong2000/daizhigev20）道藏藏外类《周易参同契》，全帙 7,748 字符；导读仓库 github.com/robertsong2000/daizhige-daodu。<br>
+    所有引文均自库内文件逐字核验，附机数复算；引文之外的解读（纳甲火候、名物对读、拆字藏名、内外丹转向）只作流传通说转述，未联网复核处已在校记申报。<br>
+    本书成于丹术初起之世，服食铅汞金石之说以今日知识衡之即是中毒处方，长生久视之诺不可效仿；阅读时请把它当作化学史与思想史的现场，而不是操作手册。
+  </div>
+</footer>
+
+</body>
+</html>
