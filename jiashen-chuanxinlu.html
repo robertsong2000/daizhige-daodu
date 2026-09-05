@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>甲申传信录 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --gold:#c9963f;
+  --gold-dim:rgba(201,150,63,.42);
+  --faint:rgba(232,228,220,.55);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",SimSun,serif;
+  line-height:2;
+  font-size:16px;
+}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+.mono{font-family:"Noto Serif SC",SimSun,serif;letter-spacing:.05em}
+
+/* ── 开场：卷宗封套 ── */
+.docket{
+  min-height:min(88vh,560px);
+  display:grid;
+  grid-template-columns:minmax(120px,200px) 1fr;
+  gap:32px;
+  padding-top:56px;
+  position:relative;
+}
+.docket::before{
+  content:"";
+  position:absolute;
+  inset:24px 0 auto 0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);
+}
+/* 右上斜贴的封签 */
+.tagv{
+  writing-mode:vertical-rl;
+  background:var(--paper);
+  color:var(--ink);
+  padding:36px 18px 28px;
+  font-size:30px;
+  letter-spacing:.42em;
+  font-weight:700;
+  align-self:start;
+  justify-self:end;
+  transform:rotate(1.6deg);
+  box-shadow:6px 6px 0 rgba(0,0,0,.45);
+  position:relative;
+}
+.tagv small{
+  font-size:13px;
+  letter-spacing:.3em;
+  font-weight:400;
+  margin-top:22px;
+  color:#5a564c;
+}
+.tagv::after{
+  content:"信";
+  position:absolute;
+  bottom:14px;
+  left:50%;
+  transform:translateX(-50%);
+  width:34px;height:34px;
+  line-height:34px;
+  text-align:center;
+  background:var(--gold);
+  color:var(--ink);
+  font-size:19px;
+  border-radius:4px;
+}
+.stamp{
+  position:absolute;
+  top:64px;
+  left:24px;
+  width:74px;height:74px;
+  border:3px solid var(--gold);
+  color:var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  font-weight:700;
+  letter-spacing:.1em;
+  transform:rotate(-8deg);
+  opacity:.85;
+}
+.bell{
+  grid-column:2;
+  padding-top:36px;
+  max-width:640px;
+}
+.bell .when{
+  font-size:13px;
+  letter-spacing:.35em;
+  color:var(--gold);
+  margin-bottom:26px;
+}
+.bell p{margin-bottom:22px;color:var(--faint)}
+.bell p strong{color:var(--paper);font-weight:400}
+.bell .hero{
+  font-size:23px;
+  color:var(--paper);
+  line-height:2.1;
+  margin:10px 0 30px;
+}
+.bell .hero em{
+  font-style:normal;
+  color:var(--gold);
+}
+
+/* ── 十卷书脊 ── */
+.spines{
+  display:flex;
+  gap:6px;
+  justify-content:center;
+  flex-wrap:wrap;
+  padding:40px 0 8px;
+}
+.spine{
+  writing-mode:vertical-rl;
+  background:rgba(232,228,220,.05);
+  border:1px solid rgba(232,228,220,.16);
+  padding:22px 10px;
+  font-size:14.5px;
+  letter-spacing:.24em;
+  color:var(--faint);
+  min-height:176px;
+}
+.spine b{font-weight:400;color:var(--gold);font-size:12px;margin-bottom:14px;letter-spacing:.1em}
+.spine:hover{border-color:var(--gold-dim)}
+.spine .vno{font-size:11px;color:var(--gold);opacity:.7;margin-top:12px}
+
+/* ── 章节 ── */
+.chapter{
+  display:grid;
+  grid-template-columns:96px 1fr;
+  gap:36px;
+  padding:76px 0 24px;
+  border-top:1px solid rgba(232,228,220,.12);
+  margin-top:64px;
+}
+.cseal{
+  writing-mode:vertical-rl;
+  align-self:start;
+  justify-self:start;
+  border:2px solid var(--gold);
+  color:var(--gold);
+  padding:16px 8px;
+  font-size:17px;
+  letter-spacing:.34em;
+  font-weight:700;
+  position:sticky;
+  top:24px;
+}
+.chapter h2{
+  font-size:25px;
+  font-weight:700;
+  color:var(--paper);
+  letter-spacing:.12em;
+  margin-bottom:6px;
+}
+.chapter .sub{
+  font-size:13px;
+  color:var(--gold);
+  letter-spacing:.28em;
+  margin-bottom:26px;
+}
+.chapter p{margin-bottom:20px;color:var(--faint)}
+.chapter p strong{color:var(--paper);font-weight:400}
+
+/* ── 供状式引文 ── */
+.quote{
+  background:rgba(232,228,220,.07);
+  border-left:4px solid var(--gold);
+  padding:22px 26px;
+  margin:28px 0;
+  color:var(--paper);
+  font-size:17px;
+  line-height:2.15;
+  position:relative;
+}
+.quote .who{
+  display:block;
+  font-size:12.5px;
+  color:var(--gold);
+  letter-spacing:.3em;
+  margin-bottom:10px;
+}
+.quote .src{
+  display:block;
+  font-size:12px;
+  color:var(--faint);
+  margin-top:12px;
+  letter-spacing:.14em;
+}
+
+/* ── 碑名 ── */
+.stele{
+  margin:34px 0;
+  border:1px solid var(--gold-dim);
+  padding:30px 26px 24px;
+}
+.stele .cap{
+  text-align:center;
+  font-size:13px;
+  letter-spacing:.5em;
+  color:var(--gold);
+  margin-bottom:24px;
+}
+.stele ul{
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:12px 18px;
+}
+.stele li{
+  text-align:center;
+  padding:10px 4px;
+  border-bottom:1px solid rgba(232,228,220,.14);
+}
+.stele li b{
+  display:block;
+  font-size:17px;
+  font-weight:700;
+  color:var(--paper);
+  letter-spacing:.22em;
+}
+.stele li span{
+  display:block;
+  font-size:11.5px;
+  color:var(--faint);
+  margin-top:3px;
+  letter-spacing:.1em;
+}
+
+/* ── 流传线 ── */
+.relic{padding:34px 0 10px;max-width:620px}
+.relic .r{
+  position:relative;
+  padding:0 0 34px 34px;
+}
+.relic .r::before{
+  content:"";
+  position:absolute;
+  left:5px;top:12px;
+  width:11px;height:11px;
+  background:var(--ink);
+  border:2px solid var(--gold);
+  transform:rotate(45deg);
+}
+.relic .r::after{
+  content:"";
+  position:absolute;
+  left:10px;top:26px;bottom:-2px;
+  width:1px;
+  background:var(--gold-dim);
+}
+.relic .r:last-child::after{display:none}
+.relic .t{
+  color:var(--gold);
+  font-size:13.5px;
+  letter-spacing:.26em;
+  margin-bottom:4px;
+}
+.relic p{color:var(--faint);font-size:15px}
+.relic p strong{color:var(--paper);font-weight:400}
+
+/* ── 结束大字 ── */
+.fin{
+  text-align:center;
+  padding:90px 24px 40px;
+}
+.fin .zi{
+  font-size:64px;
+  letter-spacing:.3em;
+  color:var(--paper);
+  font-weight:700;
+}
+.fin .zi em{font-style:normal;color:var(--gold)}
+.fin p{
+  color:var(--faint);
+  font-size:14px;
+  letter-spacing:.2em;
+  margin-top:22px;
+}
+
+/* ── 页脚 ── */
+footer{
+  border-top:1px solid rgba(232,228,220,.14);
+  margin-top:70px;
+  padding:34px 24px 48px;
+  font-size:13px;
+  color:rgba(232,228,220,.45);
+  line-height:2.1;
+}
+footer .fw{max-width:1060px;margin:0 auto}
+footer b{color:rgba(232,228,220,.68);font-weight:400}
+footer a{color:var(--gold);text-decoration:none}
+
+@media (max-width:760px){
+  .docket{grid-template-columns:1fr;padding-top:40px}
+  .tagv{justify-self:start;transform:rotate(-1deg)}
+  .stamp{position:static;margin-bottom:20px}
+  .bell{grid-column:1;padding-top:8px}
+  .chapter{grid-template-columns:1fr;gap:18px}
+  .cseal{writing-mode:horizontal-tb;position:static;padding:8px 18px}
+  .spine{min-height:160px;font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<section class="docket wrap">
+  <div class="stamp">壹档</div>
+  <div class="tagv">甲申传信录<small>钱稚农 撰</small></div>
+  <div class="bell">
+    <div class="when">崇祯十七年 · 甲申三月十九</div>
+    <p class="hero">五更，九门尽陷。<br>皇帝死在宫后的山上，<em>三十多个大臣跟着死</em>，上千个没死的，跪在新的门槛外。</p>
+    <p>这一年秋天以前，钱稚农刚到北京候选官职。书没做上，先做了一年亡国史的目击者。事后他把听来的、见来的一一比对，写定十卷，起名只用两个字：<strong>传信</strong>。</p>
+    <p>《论语》里的话：信以传信，疑以传疑。谣言满城的年头，谁在现场，谁就有作证的责任。这部书是甲申年三月北京城的<strong>现场笔录</strong>：谁死了，怎么死的；谁降了，降得多难看；太子下落不明之后，一桩真假官司如何把新朝旧臣挨个拖上台。</p>
+  </div>
+</section>
+
+<section class="spines wrap">
+  <div class="spine"><b>卷一</b>睿谟留憾</div>
+  <div class="spine"><b>卷二</b>疆场裹革</div>
+  <div class="spine"><b>卷三</b>大行骖乘</div>
+  <div class="spine"><b>卷四</b>跖𫗦遗脔</div>
+  <div class="spine"><b>卷五</b>槐国衣冠</div>
+  <div class="spine"><b>卷六</b>赤眉寇略</div>
+  <div class="spine"><b>卷七</b>董狐剩荚</div>
+  <div class="spine"><b>卷八</b>桑郭余铃</div>
+  <div class="spine"><b>卷九</b>戾园疑迹</div>
+  <div class="spine"><b>卷十</b>使臣碧血</div>
+</section>
+
+<section class="chapter wrap" id="sec-juan1">
+  <div class="cseal">卷一</div>
+  <div>
+    <h2>目击者的入职</h2>
+    <div class="sub">癸未仲秋入都 · 迄甲申国变</div>
+    <p>全书十卷，卷名都起得像碑额：睿谟留憾记崇祯十七年的最后挣扎，疆场裹革记战死的将领，大行骖乘记随皇帝殉难的臣子，跖𫗦遗脔与槐国衣冠记大顺政权四十二天的官场，董狐剩荚与使臣碧血记死节诸臣，卷九戾园疑迹独记一桩悬案。开卷自序只有一句话交代资格：</p>
+    <div class="quote">
+      <span class="who">钱稚农 · 自序</span>
+      数癸未仲秋入都，迄甲申之变，其所见闻者，具述其略，至于政治纪纲，职在太史，非野陋之所及。
+      <span class="src">卷一「睿谟留憾」，志之以俟作史者取裁</span>
+    </div>
+    <p>不自居史官，只认领证人的位置。但全书对日期、官职、籍贯、第次的一路较真，比很多正史更接近档案。他记事常在几份口供之间留出缝隙，谁说的、与谁说的不合，并不强行抹平。这正是书名里那个信字的分量：<strong>不是宣布真相，是交代证据</strong>。</p>
+  </div>
+</section>
+
+<section class="chapter wrap" id="sec-juan3">
+  <div class="cseal">卷三</div>
+  <div>
+    <h2>第一个现场：宫中与各府</h2>
+    <div class="sub">大行骖乘 · 从死者三十余臣</div>
+    <p>三月十八日夜里，皇帝还在做最后的安排。驸马巩永固半年前劝过南迁，说自己能募数万义兵护驾，皇帝当面反悔过。此刻再问，答复已经变了：</p>
+    <div class="quote">
+      <span class="who">巩永固 · 复对南迁</span>
+      上曰：『卿言可致数十万，何乃云无及』？永固曰：『暇日人易集，今事急，人心尽乱，虽一卒亦难致也』。
+      <span class="src">卷三「大行骖乘」</span>
+    </div>
+    <p>十九日城破。死开始成串地出现。户部尚书倪元璐整冠束带，望阙四拜，与同僚施邦曜对酌三盏，然后有了那场极安静的告别：</p>
+    <div class="quote">
+      <span class="who">倪元璐 · 与施邦曜诀别</span>
+      邦曜曰：『如此，我亦从君行』。元璐曰：『诚如是，再加一盏，与君共之』。更与邦曜对酌三盏。
+      <span class="src">卷三「大行骖乘」</span>
+    </div>
+    <p>翰林院检讨汪伟与妻子耿氏各自悬梁，妻子留下一句像整理家务一样平静的话：</p>
+    <div class="quote">
+      <span class="who">汪伟耿氏 · 夫妇同缢</span>
+      伟先悬右，耿悬左。耿曰：『虽颠沛，不可失序』。乃解绳重整，正左右而死。
+      <span class="src">卷三「大行骖乘」</span>
+    </div>
+    <p>卷三像一份连日的讣闻底稿。随皇帝自尽的臣子，卷中可以数出名姓的有三十余人，从大学士、尚书到状元、给事中。碑一样抄一遍：</p>
+    <div class="stele" id="sec-stele">
+      <div class="cap">甲申三月十九日从死者略录</div>
+      <ul>
+        <li><b>范景文</b><span>大学士 · 投井</span></li>
+        <li><b>倪元璐</b><span>户部尚书 · 自缢</span></li>
+        <li><b>李邦华</b><span>左都御史 · 饮药</span></li>
+        <li><b>施邦曜</b><span>左副都御史 · 自缢</span></li>
+        <li><b>凌义渠</b><span>大理寺卿 · 系窗棂</span></li>
+        <li><b>周凤翔</b><span>左谕德 · 投缳</span></li>
+        <li><b>刘理顺</b><span>状元 · 阖门缢</span></li>
+        <li><b>马世奇</b><span>庶子 · 裂帛自尽</span></li>
+        <li><b>汪伟</b><span>检讨 · 夫妇同缢</span></li>
+        <li><b>王家彦</b><span>兵部侍郎 · 投城下</span></li>
+        <li><b>孟兆祥</b><span>刑部侍郎 · 死正阳门</span></li>
+        <li><b>吴麟征</b><span>太常少卿 · 闭户自缢</span></li>
+        <li><b>申佳胤</b><span>太仆寺丞 · 自缢</span></li>
+        <li><b>吴甘来</b><span>给事中 · 引佩带</span></li>
+        <li><b>王章</b><span>御史 · 骂贼被害</span></li>
+      </ul>
+    </div>
+    <p>名单之外还有从死的勋戚：新乐侯刘文炳拔梯纵火焚家，大小儿女死者十六人；驸马巩永固把子女用黄绳系在亡妻棺旁，大书<strong>世受国恩，义不受辱</strong>，自投火中。书的笔法冷得近乎登记，反而无处不疼。</p>
+  </div>
+</section>
+
+<section class="chapter wrap" id="sec-juan4">
+  <div class="cseal">卷四</div>
+  <div>
+    <h2>第二个现场：刘宗敏宅</h2>
+    <div class="sub">跖𫗦遗脔 · 夹棍追饷四十二天</div>
+    <p>大顺军进京第五天设官改制度：六部改六政府，巡抚改节度使，官服以云为级，一品一云，九品为九云。仪式做全套，目的却只有一件，卷四开门见山引了盗跖的典故，说这一场刑烈于黄巢，其志在于淘物。三千多降官在刘宗敏门前点名，之后按品级定赃：一品累万，以下至七品累千。追赃的刑法夹棍之外，还有名字都起得骇人的炮烙火尺棚弘之法。最能见这政权成色的一段，是两个将军的对话：</p>
+    <div class="quote">
+      <span class="who">自成与制将军 · 分赃之约</span>
+      自成谓诸将曰：『何不助孤作好皇帝』？制将军曰：『皇帝之权归汝！拷掠之威归我，无烦言也』！
+      <span class="src">卷四「跖𫗦遗脔」</span>
+    </div>
+    <p>首辅魏藻德的结局是全书最不堪的一页。夹讯之下，他先把自己择干净，再顺手把故主卖了：</p>
+    <div class="quote">
+      <span class="who">魏藻德 · 夹棍之下</span>
+      宗敏夹讯藻德曰：『若居首辅，何以致乱』？藻德曰：『本是书生，不谙政事，兼之先帝无道，遂至于此』。宗敏曰：『汝以书生擢状元，不三年为首辅，崇祯有何负汝，诋为无道』！呼左右掌其嘴数十。
+      <span class="src">卷四「跖𫗦遗脔」，凡六昼夜，夹脑至裂而毙</span>
+    </div>
+    <p>与卷五「槐国衣冠」对读更刺眼：那卷记降官们排队递门生帖，有人欣然告人<strong>明日此时，便非凡人</strong>。作者给整卷降臣起了个名字，槐国衣冠，用的是南柯一梦的典：一世之荣，尽于俄顷。梦醒之后，大顺军弃京西撤，这批人大多数连降清的门都来不及找。</p>
+  </div>
+</section>
+
+<section class="chapter wrap" id="sec-juan9">
+  <div class="cseal">卷九</div>
+  <div>
+    <h2>第三个现场：刑部大堂</h2>
+    <div class="sub">戾园疑迹 · 太子真伪案</div>
+    <p>崇祯三个儿子，城破时混出宫去。永王定王先落在大顺军手里，李自成对他们说：孤将与分治江南，不忍有弑君之名。太子则一直下落不明。当年冬天，一个少年投到外祖父嘉定侯周奎府上，长公主一见抱头大哭。周奎先以君臣礼待他，几天后翻脸，逼他改姓刘、自称假太子，他不肯，被家人椎系逐出，巡夜的兵卒当犯夜抓走，第二天送进刑部，案由三个字：<strong>此假太子也</strong>。</p>
+    <p>主审官钱凤览逐一讯问：旧太监说是真，百姓观者数千齐声说是真，旧锦衣卫十人齐跪说<strong>此真太子，愿无伤</strong>。晋王受新朝之命咬定是假。于是本案开始吞人：凡坚持说真的，太监、锦衣、百姓，与钱凤览一起下狱处死。朝臣朱徽等上疏里，有一段像是替这部书写下的注脚：</p>
+    <div class="quote">
+      <span class="who">朱徽等上疏 · 论研鞫</span>
+      今必从容研质，真伪自分。草草毕事，诚恐廷臣曰假，而百姓疑；京师曰假，而四方疑；一日曰假，而后世疑。众口难妨，信史可畏也。
+      <span class="src">卷九「戾园疑迹」</span>
+    </div>
+    <p>疏没有用。钱凤览改绞，指认真太子的官员百姓各斩。卷末记了两件收尾的事：东阿县民祁八聚众，在阵前喊<strong>若速还我太子</strong>，被斩；大学士谢升早朝回家，数日病笃，弥留时对着空气说：<strong>刑部钱先生至，可献茶</strong>。太子最终下落，书里没有答案。卷名借汉武帝戾太子的旧案：真相查无可查，只留下满朝的人证，和每个证人的立场。</p>
+  </div>
+</section>
+
+<section class="chapter wrap" id="sec-liuchuan">
+  <div class="cseal">流传</div>
+  <div>
+    <h2>一部禁书的接力</h2>
+    <div class="sub">芝兰当户 · 不得不锄</div>
+    <p>这样一部书写成之后，命运几乎注定。清代修史采撷极严，全书十卷，早期选本只肯收录卷一。宣统年间邓实为这册书作跋，把原委写得很直白：不是不信它，是芝兰当户，不得不锄。这部书能到今天，靠的是一条地下接力：</p>
+    <div class="relic">
+      <div class="r"><div class="t">1643 · 癸未仲秋</div><p>钱稚农入都候选，恰逢其时地站进了历史现场。</p></div>
+      <div class="r"><div class="t">1644 · 甲申</div><p>围城、国变、四十二天大顺政权、清军入京，逐日在场。</p></div>
+      <div class="r"><div class="t">明亡后</div><p>成书十卷，以传信自任。胜朝遗事一类选本仅敢录其卷一。</p></div>
+      <div class="r"><div class="t">清末 · 广州</div><p>邓实于羊石肆间购得全帙，后又见嘉应谢氏手钞本，纸墨黝黯，两相勘同。</p></div>
+      <div class="r"><div class="t">1906 · 丙午八月</div><p>邓实携书至沪，谋刊行。全书十卷始得完整面世，跋称<strong>吾会藏书楼又多一瑰宝</strong>。</p></div>
+      <div class="r"><div class="t">今日 · 殆知阁简体库</div><p>库本约六万八千字，讹字与卷题倒序仍在，十卷俱存。</p></div>
+    </div>
+    <p>跋文末尾有一句痛切的推断：世间若没有一二孤臣遗老以所见闻记下桑海之变，再过几百年，先朝的人物就再没有人知道了。</p>
+  </div>
+</section>
+
+<div class="fin">
+  <div class="zi">信以<em>传信</em></div>
+  <p>疑以传疑 · 甲申年间的每一个名字都值得登记</p>
+</div>
+
+<footer>
+  <div class="fw">
+    <p><b>文本来源</b>：殆知阁简体库 史藏 志存记录部（github.com/garychowcmu/daizhigev20 简体化仓库），本页引文均经与库内原文逐字核验。</p>
+    <p><b>阅读提醒</b>：库本经众手抄校，讹字与卷题倒序在所难免，如卷十目录作「甲申传信卷录十」，引用请以核验底本为准。文中涉及战争、酷刑、殉节等内容，皆十六至十七世纪之记录与观念，系时代局限所致，阅读时请留意分辨。</p>
+    <p><b>殆知阁导读</b> · 第 144 篇，总目见 <a href="mulu.html">mulu.html</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
