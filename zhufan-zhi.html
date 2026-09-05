@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>诸蕃志：一份没有出过海的世界志</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1c; --ink-3: #26241f;
+    --paper: #e8e4dc; --paper-dim: #a8a296; --paper-faint: #6f6a5f;
+    --gold: #c9963f; --gold-dim: rgba(201,150,63,0.35); --gold-faint: rgba(201,150,63,0.12);
+    --hairline: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 30px; }
+  a { color: var(--paper); text-decoration-color: var(--gold-dim); text-underline-offset: 4px; }
+  a:hover { color: var(--gold); }
+
+  /* ---------- 左侧航线卷 ---------- */
+  .rail { position: fixed; left: 34px; top: 50%; transform: translateY(-50%); z-index: 5; display: none; }
+  @media (min-width: 1180px) { .rail { display: block; } }
+  .rail svg { display: block; }
+  .rail ol { list-style: none; position: absolute; top: 0; left: 0; }
+  .rail li { position: relative; height: 74px; display: flex; align-items: center; }
+  .rail li a { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--paper-faint); font-size: 11.5px; letter-spacing: 0.18em; }
+  .rail li a .nd { width: 9px; height: 9px; border: 1px solid var(--paper-faint); transform: rotate(45deg); background: var(--ink); flex: none; }
+  .rail li.on a { color: var(--gold); }
+  .rail li.on a .nd { border-color: var(--gold); background: var(--gold); }
+  .rail li a:hover { color: var(--gold); }
+
+  /* ---------- 案卷封面 ---------- */
+  .ank { padding: 88px 0 20px; }
+  .ank-box { border: 1px solid var(--hairline); position: relative; padding: 54px 56px 44px; }
+  .ank-box::before, .ank-box::after,
+  .ank-box .cm3, .ank-box .cm4 { content: ""; position: absolute; width: 15px; height: 15px; border-color: var(--gold); border-style: solid; }
+  .ank-box::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .ank-box::after { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+  .ank-box .cm3 { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+  .ank-box .cm4 { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+  .ank-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; letter-spacing: 0.32em; color: var(--paper-faint); }
+  .ank-head .r { letter-spacing: 0.14em; }
+  .titlerow { display: flex; align-items: flex-end; gap: 26px; margin: 40px 0 8px; }
+  h1 { font-size: clamp(58px, 9vw, 108px); font-weight: 700; letter-spacing: 0.14em; line-height: 1.05; }
+  .seal-s { flex: none; width: 44px; height: 44px; margin-bottom: 12px; background: var(--gold); color: #17150f; display: flex; align-items: center; justify-content: center; font-size: 25px; font-weight: 700; box-shadow: 0 0 0 1px rgba(201,150,63,0.3); }
+  .pos { color: var(--paper-dim); font-size: clamp(16px, 1.7vw, 19px); max-width: 34em; margin-top: 18px; }
+  .pos em { font-style: normal; color: var(--gold); }
+  .meta { margin-top: 26px; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.1em; }
+  .meta b { color: var(--paper-dim); font-weight: 600; }
+
+  /* 题记检核单 */
+  .epi { margin: 46px auto 0; max-width: 30em; border-top: 2px solid var(--gold); background: var(--gold-faint); padding: 22px 26px 18px; position: relative; }
+  .epi p { font-size: 16.5px; color: var(--paper); }
+  .epi .src { display: block; margin-top: 10px; font-size: 12px; letter-spacing: 0.2em; color: var(--paper-faint); }
+
+  /* 航线带 */
+  .route { margin: 54px 0 10px; }
+  .route svg { width: 100%; height: auto; display: block; }
+
+  /* ---------- 正文航程 ---------- */
+  main { padding-bottom: 10px; }
+  .sec { padding: 88px 0 20px; }
+  .sec-head { display: flex; align-items: baseline; gap: 20px; margin-bottom: 10px; }
+  .sec-head .no { font-size: 13px; letter-spacing: 0.4em; color: var(--gold); white-space: nowrap; }
+  .sec-head h2 { font-size: clamp(27px, 3vw, 38px); font-weight: 700; letter-spacing: 0.1em; }
+  .sec-head .en { margin-left: auto; font-size: 11px; letter-spacing: 0.3em; color: var(--paper-faint); white-space: nowrap; }
+  .prose { color: var(--paper-dim); font-size: 16px; max-width: 66ch; margin-top: 22px; }
+  .prose strong { color: var(--paper); font-weight: 600; }
+  .prose .qi { color: var(--paper); }
+
+  /* 检核单（引文） */
+  .q { display: block; margin: 34px 0 8px; background: var(--ink-2); border-top: 2px solid var(--gold); padding: 24px 28px 20px; font-size: 17px; max-width: 62ch; position: relative; }
+  .q .src { display: block; margin-top: 12px; font-size: 12px; letter-spacing: 0.22em; color: var(--paper-faint); }
+  .q .stamp { position: absolute; right: 18px; bottom: 14px; font-size: 12px; letter-spacing: 0.3em; color: var(--gold); border: 1px solid var(--gold-dim); padding: 3px 8px 3px 11px; transform: rotate(-5deg); opacity: 0.55; }
+  .note { font-size: 14px; color: var(--paper-faint); max-width: 62ch; margin-bottom: 30px; }
+  .note b { color: var(--paper-dim); font-weight: 600; }
+
+  /* 班次牌 */
+  .board { margin: 40px 0 8px; border: 1px solid var(--hairline); }
+  .board-head { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 20px; border-bottom: 1px solid var(--hairline); background: var(--ink-2); }
+  .board-head h3 { font-size: 16px; letter-spacing: 0.28em; font-weight: 600; }
+  .board-head span { font-size: 11.5px; letter-spacing: 0.16em; color: var(--paper-faint); }
+  .brow { display: grid; grid-template-columns: 5.5em 1fr 10.5em; gap: 16px; padding: 11px 20px; border-bottom: 1px solid var(--hairline); align-items: baseline; }
+  .brow:last-child { border-bottom: none; }
+  .brow:hover { background: var(--gold-faint); }
+  .brow .nm { font-size: 15.5px; font-weight: 700; letter-spacing: 0.06em; }
+  .brow .bk { font-size: 14px; color: var(--paper-dim); }
+  .brow .bk .qi { color: var(--paper); }
+  .brow .td { font-size: 13px; color: var(--paper-faint); text-align: right; letter-spacing: 0.04em; }
+  @media (max-width: 720px) { .brow { grid-template-columns: 5em 1fr; } .brow .td { grid-column: 2; text-align: left; } }
+
+  /* 货单 */
+  .cargo { margin: 40px 0 8px; border-top: 1px solid var(--hairline); }
+  .crow { display: grid; grid-template-columns: 6em 1fr; gap: 22px; padding: 20px 4px; border-bottom: 1px solid var(--hairline); }
+  .crow .pn { font-size: 21px; font-weight: 700; letter-spacing: 0.12em; }
+  .crow .pn small { display: block; font-size: 11.5px; color: var(--paper-faint); font-weight: 400; letter-spacing: 0.16em; margin-top: 4px; }
+  .crow .cq { font-size: 15px; color: var(--paper-dim); max-width: 56ch; }
+  .crow .cq .qi { color: var(--paper); }
+  .crow .cq .td { display: block; margin-top: 6px; font-size: 12.5px; color: var(--paper-faint); }
+
+  /* 终卷 */
+  .coda-big { font-size: clamp(18px, 2vw, 22px); color: var(--paper); max-width: 40em; margin-top: 30px; }
+  .compass { margin: 46px 0 0; }
+  .last-line { margin-top: 48px; font-size: 19px; color: var(--gold); letter-spacing: 0.06em; }
+  .last-sub { font-size: 13px; color: var(--paper-faint); margin-top: 6px; letter-spacing: 0.12em; }
+
+  /* ---------- 页脚 ---------- */
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 90px; padding: 52px 0 64px; }
+  .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
+  @media (max-width: 720px) { .frow { grid-template-columns: 1fr; } }
+  .frow h4 { font-size: 13px; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 10px; font-weight: 600; }
+  .frow p { font-size: 13.5px; color: var(--paper-faint); line-height: 1.9; }
+  .fine { margin-top: 40px; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.08em; }
+  @media (max-width: 720px) {
+    .ank { padding-top: 56px; }
+    .ank-box { padding: 34px 26px 30px; }
+    .titlerow { gap: 18px; }
+    h1 { letter-spacing: 0.1em; }
+    .q { padding: 20px 20px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 航线卷 -->
+<nav class="rail" aria-label="航程">
+  <svg width="19" height="600" viewBox="0 0 19 600">
+    <line x1="4.5" y1="0" x2="4.5" y2="600" stroke="rgba(232,228,220,0.13)" stroke-width="1" stroke-dasharray="1 6"/>
+  </svg>
+  <ol>
+    <li data-t="anchu"><a href="#anchu"><span class="nd"></span>泉州 起锚</a></li>
+    <li data-t="zhiguo"><a href="#zhiguo"><span class="nd"></span>志国 卷上</a></li>
+    <li data-t="cengba"><a href="#cengba"><span class="nd"></span>层拔</a></li>
+    <li data-t="egentuo"><a href="#egentuo"><span class="nd"></span>遏根陀</a></li>
+    <li data-t="pisheye"><a href="#pisheye"><span class="nd"></span>毗舍耶</a></li>
+    <li data-t="zhiwu"><a href="#zhiwu"><span class="nd"></span>志物 卷下</a></li>
+    <li data-t="haiji"><a href="#haiji"><span class="nd"></span>海之极</a></li>
+    <li data-t="zhongjuan"><a href="#zhongjuan"><span class="nd"></span>终卷</a></li>
+  </ol>
+</nav>
+
+<div class="wrap">
+
+<!-- 案卷封面 -->
+<header class="ank" id="top">
+  <div class="ank-box">
+    <span class="cm3"></span><span class="cm4"></span>
+    <div class="ank-head"><span>福建路市舶司 · 蕃情案牍</span><span class="r mono">宝庆元年 1225</span></div>
+    <div class="titlerow">
+      <h1>诸蕃志</h1>
+      <span class="seal-s">舶</span>
+    </div>
+    <p class="pos">南宋泉州海关的一份世界情报底稿：四十五篇国志、四十七品船货，从占城写到桑给巴尔、从麦加写到亚历山大港。<em>全部听来，没有一站亲眼看过</em>，却是后世重构宋代海上世界的第一底稿。</p>
+    <p class="meta mono">赵汝适 撰（宋宗室，时任提举福建路市舶）&nbsp;&nbsp;/&nbsp;&nbsp;库内实测 22,607 汉字&nbsp;&nbsp;/&nbsp;&nbsp;卷上志国 45 篇，卷下志物 47 品，附海南</p>
+
+    <blockquote class="epi q">南对占城，西望真腊；东则千里长沙、万里石床，渺茫无际，天水一色。舟舶来往，惟以指南针为则；昼夜守视唯谨，毫厘之差，生死系焉。<span class="src">卷下 · 附海南</span></blockquote>
+  </div>
+
+  <div class="route" aria-hidden="true">
+    <svg viewBox="0 0 860 92" fill="none">
+      <path d="M 30 56 C 150 20, 260 78, 380 50 S 620 22, 700 48 S 800 60, 830 40" stroke="#c9963f" stroke-opacity="0.5" stroke-width="1.4" stroke-dasharray="2 7"/>
+      <g font-family="Songti SC, SimSun, serif" font-size="15" fill="#e8e4dc">
+        <circle cx="30" cy="56" r="4.5" fill="#c9963f"/><text x="14" y="84">泉州</text>
+        <circle cx="170" cy="41" r="3.5" fill="none" stroke="#c9963f" stroke-width="1.4"/><text x="152" y="30">占城</text>
+        <circle cx="330" cy="58" r="3.5" fill="none" stroke="#c9963f" stroke-width="1.4"/><text x="304" y="82">三佛齐</text>
+        <circle cx="480" cy="37" r="3.5" fill="none" stroke="#c9963f" stroke-width="1.4"/><text x="466" y="26">大食</text>
+        <circle cx="640" cy="44" r="3.5" fill="none" stroke="#c9963f" stroke-width="1.4"/><text x="622" y="33">层拔</text>
+        <circle cx="830" cy="40" r="4.5" fill="none" stroke="#c9963f" stroke-width="1.6"/><text x="800" y="66">木兰皮</text>
+      </g>
+    </svg>
+  </div>
+</header>
+
+<main>
+
+<!-- 起锚 -->
+<section class="sec" id="anchu">
+  <div class="sec-head"><span class="no mono">起锚</span><h2>案头上的海</h2><span class="en">AT THE DESK</span></div>
+  <p class="prose">宝庆元年（1225）前后，宗室出身的赵汝适提举福建路市舶，驻在泉州。那是泉州港最好的年月：每年冬汛北风起，大食、三佛齐、阇婆的商船满载香料珠宝进港，市舶司抽解、博买，再放它们贩回中国货。四库馆臣后来说得很直白：</p>
+  <blockquote class="q">然诸史外国列传，秉笔之人，皆未尝身历其地，即赵汝适「诸蕃志」之类，亦多得于市舶之口传。<span class="src">四库全书提要（库内附）</span><span class="stamp">检讫</span></blockquote>
+  <p class="prose">也就是说，这本书一个字都不是游历所得。赵汝适的工作方式近乎后世的海关关员编情报手册：<strong>翻前代图籍，查市舶案卷，再把每天到港的蕃商、蕃长请来问话</strong>，与史传相参。传闻不齐、真伪杂陈，他大多照单直录，不替你筛。这是它的短处，也是它长得好的原因：四十五篇国志像四十五份问话笔录，口气、方位、道里、物产都停在 1225 年的码头上，没有经过文人的再加工。</p>
+  <p class="prose">市舶司的考绩也压在这本书背后。卷下记乳香贸易，顺口漏出一句制度实情：<span class="qi">「番商贸易至，舶司视香之多少为殿最。」</span>香到得越多，官做得越好。写书人的职位、书的材料来源、书的动力，都在这一句里。</p>
+</section>
+
+<!-- 志国 -->
+<section class="sec" id="zhiguo">
+  <div class="sec-head"><span class="no mono">第一程</span><h2>志国：一份发舶班次表</h2><span class="en">THE NATIONS</span></div>
+  <p class="prose">卷上四十五篇，篇篇以国为目，先方位、次风俗、再物产、末朝贡，格式冷得像公事。把篇目连起来看，其实就是一份以泉州为起点的发舶班次表：东洋的新罗、倭、流求，西洋的占城、三佛齐、阇婆，再往西大食诸国、天竺、大秦，最远被虚构般的笔触推到非洲和地中海。下面挑几站，国名之下是书中原话，右栏是今人考订：</p>
+
+  <div class="board">
+    <div class="board-head"><h3>班次牌</h3><span class="mono">泉州发舶诸蕃，今地按学界通说</span></div>
+    <div class="brow"><span class="nm">交趾国</span><span class="bk"><span class="qi">「王系唐姓，服色饮食略与中国同」</span>，岁有进贡，其国不通商。</span><span class="td">越南北部</span></div>
+    <div class="brow"><span class="nm">占城国</span><span class="bk">商舶到港，<span class="qi">「十取其二，外听交易」</span>，隐瞒者籍没入官。</span><span class="td">越南中南部</span></div>
+    <div class="brow"><span class="nm">三佛齐国</span><span class="bk"><span class="qi">「其国在海中，扼诸番舟车往来之咽喉」</span>，香货总集之地。</span><span class="td">苏门答腊 · 巨港一带</span></div>
+    <div class="brow"><span class="nm">阇婆国</span><span class="bk"><span class="qi">「于泉州为丙巳方」</span>，率以冬月发船，藉北风月余可到。</span><span class="td">爪哇</span></div>
+    <div class="brow"><span class="nm">大食国</span><span class="bk">其王盆尼末换之前，<span class="qi">「谓之白衣大食」</span>，此后谓之黑衣大食。</span><span class="td">阿拉伯地区</span></div>
+    <div class="brow"><span class="nm">麻嘉国</span><span class="bk"><span class="qi">「乃佛麻霞勿所生之处」</span>，诸国皆至瞻礼，争持金银珠宝以施。</span><span class="td">麦加</span></div>
+    <div class="brow"><span class="nm">层拔国</span><span class="bk"><span class="qi">「日食饭、面、烧饼、羊肉」</span>，人皆大食种落，地气暖无寒。</span><span class="td">桑给巴尔及东非沿海</span></div>
+    <div class="brow"><span class="nm">木兰皮国</span><span class="bk">大食巨舰所可至者，<span class="qi">「一舟可容数千人」</span>，言舟之大者莫此国若也。</span><span class="td">北非至伊比利亚南部</span></div>
+    <div class="brow"><span class="nm">遏根陀国</span><span class="bk">濒海建大塔，<span class="qi">「其顶上有镜极大」</span>，兵船侵犯，镜先照见。</span><span class="td">埃及 · 亚历山大</span></div>
+    <div class="brow"><span class="nm">流求国</span><span class="bk"><span class="qi">「当泉州之东，舟行约五、六日程」</span>，视月盈亏以纪时。</span><span class="td">台湾方向</span></div>
+    <div class="brow"><span class="nm">新罗国</span><span class="bk">里有庠，处子弟习书射其中，<span class="qi">「故号君子国」</span>。</span><span class="td">朝鲜半岛</span></div>
+    <div class="brow"><span class="nm">倭国</span><span class="bk">交易用铜钱，<span class="qi">以「干文大宝」为文</span>，多产杉罗巨木贩至泉州。</span><span class="td">日本</span></div>
+  </div>
+  <p class="note"><b>读法提示：</b>朝贡纪事抄自前朝史传，可信度参半；物产与道里出自蕃商口供，是全书最值钱的部分。方位用泉州作坐标（如阇婆「于泉州为丙巳方」），等于一张以海关为原点的海图。</p>
+</section>
+
+<!-- 层拔 -->
+<section class="sec" id="cengba">
+  <div class="sec-head"><span class="no mono">第二程</span><h2>层拔：航线的西端</h2><span class="en">ZANZIBAR</span></div>
+  <p class="prose">全书最远的一站叫层拔，今地是非洲东海岸的桑给巴尔一带。它出现在「胡茶辣国（今印度古吉拉特）南海岛中」，词条短得像电报，却把语言、宗教、服饰、饭食、气候全交代了：</p>
+  <blockquote class="q">层拔国，在胡茶辣国南海岛中，西接大山。其人民皆大食种落，遵大食教度。缠青番布，蹑红皮鞋，日食饭、面、烧饼、羊肉。乡村山林多障岫层迭，地气暖，无寒。<span class="src">卷上 · 层拔国</span><span class="stamp">检讫</span></blockquote>
+  <blockquote class="q">产象牙、生金、龙涎、黄檀香。每岁胡茶辣国及大食边海等处发船贩易，以白布、甆器、赤铜、红吉贝为货。<span class="src">卷上 · 层拔国</span></blockquote>
+  <p class="prose">十三世纪的中国海关卷宗里，东非是一组具体的生意：出象牙、龙涎，来船换白布和瓷器。所谓印度洋贸易网的最东一环与最西一环，在这里对上了账。</p>
+</section>
+
+<!-- 遏根陀 -->
+<section class="sec" id="egentuo">
+  <div class="sec-head"><span class="no mono">第三程</span><h2>遏根陀：灯塔失窃案</h2><span class="en">THE GREAT TOWER</span></div>
+  <p class="prose">遏根陀是埃及亚历山大，书里记了一座大塔：开凿地基藏粮储械，顶上悬巨镜侦察海上兵船，全国可据塔拒敌。原型显然是古代世界的法罗斯灯塔，只是到南宋时它早已残破，赵汝适听来的版本已长成了传说，还附了一桩完整的失窃案：</p>
+  <blockquote class="q">遏根陀国，勿斯里之属也。相传古人异人徂葛尼于濒海建大塔，下凿地为两屋，砖结甚密；一窖粮食，一储器械。塔高二百丈，可通四马齐驱而上，至三分之二。塔心开大井，结渠透大江，以防他国，兵侵则举国据塔以拒敌。上下可容二万人，内居守而外出战。其顶上有镜极大，他国或有兵船侵犯，镜先照见，即预备守御之计。近来为外国人投塔下执役扫洒数年，人不疑之；忽一日，得便盗镜抛沉海中而去。<span class="src">卷上 · 遏根陀国</span><span class="stamp">检讫</span></blockquote>
+  <p class="prose">「徂葛尼」一般考订为亚历山大大帝的阿拉伯传说形象，巨镜则是地中海流传已久的灯塔传说。一条传闻从尼罗河口走到泉州港，被一位没出过海的关员写进卷宗：情报如何变形，这一条就是标本。</p>
+</section>
+
+<!-- 毗舍耶 -->
+<section class="sec" id="pisheye">
+  <div class="sec-head"><span class="no mono">第四程</span><h2>毗舍耶：家门口的劫掠者</h2><span class="en">THE RAIDERS</span></div>
+  <p class="prose">航线并非只有远方。卷上紧挨着流求国记了一个名字：毗舍耶，今地一般考订在台湾附近群岛。淳熙年间他们突袭泉州水澳、围头等村，全书笔调在此罕见地失了冷静：</p>
+  <blockquote class="q">毗舍耶，语言不通、商贩不及；袒裸盱睢，殆畜类也。泉有海岛曰澎湖，隶晋江县；与其国密迩，烟火相望。<span class="src">卷上 · 毗舍耶</span><span class="stamp">检讫</span></blockquote>
+  <blockquote class="q">喜铁器及匙箸。人闭户则免；但刓其门圈而去。掷以匙箸，则俯拾之，可缓数步。<span class="src">卷上 · 毗舍耶</span></blockquote>
+  <p class="prose">剥门环、拾匙箸就跑，为了铁器甘愿挨打：一条带着官府立场的记录，也顺手存下了澎湖隶晋江县的行政归属。「殆畜类也」这样的字眼是那个时代的语言，读时须换算。</p>
+</section>
+
+<!-- 志物 -->
+<section class="sec" id="zhiwu">
+  <div class="sec-head"><span class="no mono">第五程</span><h2>志物：香料的账本</h2><span class="en">THE CARGO</span></div>
+  <p class="prose">卷下四十七品，大半是香：脑子、乳香、沉香、檀香、丁香、安息香、蔷薇水、龙涎。这不是闲情，是市舶司的财政收入清单。物流枢纽写得明白，三佛齐不产香，却垄断香：</p>
+  <blockquote class="q">但其国据诸蕃来往之要津，遂截断诸国之物，聚于其国，以俟蕃舶贸易耳。<span class="src">卷下 · 脑子（记三佛齐转口）</span><span class="stamp">检讫</span></blockquote>
+  <p class="prose">乳香一条是全卷财政核心，从产地麻啰、拔施、曷奴发的深山，写到象驮舟载、三佛齐聚散，最后落到舶司的考绩。香料还被分了十三等，最有等级感的一句：</p>
+  <blockquote class="q">其上者为拣香，圆大如指头，俗所谓「滴乳」是也。<span class="src">卷下 · 乳香</span></blockquote>
+
+  <div class="cargo">
+    <div class="crow"><span class="pn">脑子<small>龙脑香 · 冰片</small></span><span class="cq"><span class="qi">「其成片者，谓之梅花脑，以状似梅花也」</span>，采脑人须数十为群，入山以木皮为衣、沙糊为粮。<span class="td">今解：龙脑香科树干裂隙析出的结晶，宋人视之与金并价。</span></span></div>
+    <div class="crow"><span class="pn">乳香<small>熏陆香</small></span><span class="cq"><span class="qi">「番商贸易至，舶司视香之多少为殿最」</span>，以斧砍树株，脂溢于外，结而成香，聚而成块。<span class="td">今解：橄榄科乳香树树脂，南宋进口香药之大宗，抽解定额由此而来。</span></span></div>
+    <div class="crow"><span class="pn">龙涎<small>龙涎香</small></span><span class="cq"><span class="qi">「和香而真用龙涎焚之，一缕翠烟浮空，结而不散，座客可用一剪分烟缕」</span>。<span class="td">今解：抹香鲸肠道的蜡状分泌物，作者顺手否定了「异香」「气腥」两派说法。</span></span></div>
+    <div class="crow"><span class="pn">黄蜡<small>蜂蜡</small></span><span class="cq"><span class="qi">「番民以皮鞔躯，先用恶草作烟，迫逐群蜂飞散，随取其窠」</span>，以三佛齐者为上。<span class="td">今解：采蜜驯烟的技术细节，出自三屿、麻逸一线的东洋货单。</span></span></div>
+  </div>
+</section>
+
+<!-- 海之极 -->
+<section class="sec" id="haiji">
+  <div class="sec-head"><span class="no mono">第六程</span><h2>海之极：针路</h2><span class="en">THE NEEDLE</span></div>
+  <p class="prose">卷下末尾附海南一篇，记到吉阳军（今三亚），「乃海之极，无复陆涂」。就是在这一篇里，出现了航海史上被反复引用的一段话：远洋航行不再看星辰地物，而押在磁针上。开篇题记引的正是它，这里补足前半：</p>
+  <blockquote class="q">东则千里长沙、万里石床，渺茫无际，天水一色。舟舶来往，惟以指南针为则；昼夜守视唯谨，毫厘之差，生死系焉。<span class="src">卷下 · 附海南</span><span class="stamp">检讫</span></blockquote>
+  <p class="prose"><strong>「千里长沙、万里石床」</strong>是宋人对南海诸岛的基本叫法；「毫厘之差，生死系焉」八个字，是整个罗盘时代的第一行操作规程。一本靠问话编成的书，在这里不小心记下了改变海洋史的技术细节。</p>
+</section>
+
+<!-- 终卷 -->
+<section class="sec" id="zhongjuan">
+  <div class="sec-head"><span class="no mono">终卷</span><h2>书的命运</h2><span class="en">HARBOR</span></div>
+  <p class="coda-big">它之后的海外志走了另一条路：一百零五年后，二十岁的汪大渊自己搭商船下西洋，把「问来的」换成「走过的」，就是同系列的《岛夷志略》；再往后郑和船队的随行通事马欢，又把亲历往前推了一步。</p>
+  <div class="compass" aria-hidden="true">
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(201,150,63,0.4)" stroke-width="1"/>
+      <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(232,228,220,0.14)" stroke-width="1" stroke-dasharray="2 5"/>
+      <path d="M 60 14 L 66 60 L 60 106 L 54 60 Z" fill="#c9963f" fill-opacity="0.85"/>
+      <path d="M 14 60 L 60 54 L 106 60 L 60 66 Z" fill="none" stroke="#c9963f" stroke-width="1" stroke-opacity="0.6"/>
+      <circle cx="60" cy="60" r="3.5" fill="#e8e4dc"/>
+    </svg>
+  </div>
+  <p class="prose">四库馆臣给它下的考语，承认了这种「问来的世界」的位置：史官从未亲历，海外诸书多靠市舶口传。正因如此，它在十六世纪以来一直是重构宋代海上贸易网的底账之一，二十世纪经柔克义英译、冯承钧校注，成为中外学者的共用底本。</p>
+  <blockquote class="q" style="max-width:38em">然诸史外国列传，秉笔之人，皆未尝身历其地，即赵汝适「诸蕃志」之类，亦多得于市舶之口传。<span class="src">四库全书提要</span></blockquote>
+  <p class="last-line">身未渡海，笔已至万里石塘。</p>
+  <p class="last-sub">代卷尾语</p>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <div class="frow">
+      <div>
+        <h4>文本来源</h4>
+        <p>殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>）史藏地理部《诸蕃志》，库内文件为三书合刊，本篇取其《诸蕃志》卷上、卷下及附海南（剔除一段截断的重复刊刻），去重后实测 22,607 汉字。页内引文均经脚本与库内文件逐字核验。</p>
+      </div>
+      <div>
+        <h4>读它之前</h4>
+        <p>此书成于十三世纪，以市舶口传与华夷之别为底色：「殆畜类也」一类字眼、「佛麻霞勿」式的转音与鳄鱼判狱式传闻，皆属时代局限，当史料读而非当事实信。道里方位系航海经验之记，朝贡纪事多抄前朝旧史，参差处须两读。</p>
+      </div>
+    </div>
+    <p class="fine">殆知阁导读系列之一百六十六，<a href="mulu.html">返回总目</a>。同卷参观：<a href="daoyi-zhilue.html">岛夷志略</a>、<a href="yingya-shenglan.html">瀛涯胜览</a>、<a href="shiliuqiu-lu.html">使琉球录</a></p>
+  </div>
+</footer>
+
+</div>
+
+<script>
+  const secs = [...document.querySelectorAll('main .sec, header.ank')];
+  const nodes = [...document.querySelectorAll('.rail li')];
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => {
+      if (e.isIntersecting) {
+        nodes.forEach(n => n.classList.toggle('on', n.dataset.t === e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -45% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
