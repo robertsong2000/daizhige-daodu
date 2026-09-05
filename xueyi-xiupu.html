@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>雪宧绣谱 · 殆知阁导读之一百八十六</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --paper: #e8e4dc;
+    --dim: #a39e93;
+    --faint: #6e6a61;
+    --acc: #5f9270;
+    --acc-dim: #48765a;
+    --hairline: rgba(232,228,220,.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "STSong", "SimSun", "Noto Serif CJK SC", serif;
+    font-size: 17px;
+    line-height: 2;
+    overflow-x: hidden;
+  }
+  .mono { font-family: "SF Mono", "Consolas", "Menlo", monospace; }
+
+  /* 贯穿全页的一根绣线：左缘，实线渐虚 */
+  .thread {
+    position: fixed; left: 26px; top: 0; bottom: 0; width: 2px; z-index: 0;
+    background: repeating-linear-gradient(180deg,
+      var(--acc) 0 14px, transparent 14px 22px);
+    opacity: .5;
+  }
+  @media (max-width: 700px) { .thread { display: none; } }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 1; }
+
+  /* ============ 开局：绷 ============ */
+  .bench { padding: 96px 0 30px; text-align: center; }
+  .stretcher {
+    display: flex; align-items: center; gap: 0;
+    max-width: 560px; margin: 0 auto 44px;
+  }
+  .stretcher .peg {
+    width: 13px; height: 34px; border-radius: 3px;
+    background: var(--acc); flex: none;
+  }
+  .stretcher .peg.inner { width: 9px; height: 24px; background: var(--acc-dim); }
+  .stretcher .rope {
+    flex: 1; height: 2px;
+    background: repeating-linear-gradient(90deg, var(--acc) 0 12px, transparent 12px 20px);
+  }
+  .kick {
+    font-size: 13px; letter-spacing: .35em; color: var(--dim);
+    text-transform: uppercase;
+  }
+  .kick a { color: var(--acc); text-decoration: none; }
+  h1.title {
+    font-size: clamp(44px, 9vw, 74px);
+    font-weight: 700; letter-spacing: .18em;
+    margin: 18px 0 6px;
+  }
+  .title-stitch {
+    display: flex; justify-content: center; gap: 7px; margin: 14px 0 26px;
+  }
+  .title-stitch i {
+    width: 17px; height: 3px; background: var(--acc);
+    transform: skewX(30deg); opacity: .8;
+  }
+  .title-stitch i:nth-child(even) { transform: skewX(-30deg); opacity: .45; }
+  .lede {
+    max-width: 34em; margin: 0 auto; text-align: left;
+    color: var(--paper); font-size: 18px;
+  }
+  .lede b { color: var(--acc); font-weight: 700; }
+  .pinyin { color: var(--faint); font-size: 14px; margin-top: 10px; }
+
+  /* 针脚导航 */
+  .stitch-nav {
+    display: flex; justify-content: center; flex-wrap: wrap;
+    gap: 4px 0; margin: 46px 0 0;
+  }
+  .stitch-nav a {
+    color: var(--dim); text-decoration: none; font-size: 15px;
+    padding: 2px 14px; letter-spacing: .12em;
+  }
+  .stitch-nav a:hover { color: var(--acc); }
+  .stitch-nav .nd {
+    width: 14px; height: 2px; background: var(--faint);
+    transform: skewX(35deg); align-self: center; flex: none;
+  }
+
+  /* ============ 节与节之间：一行针脚 ============ */
+  section.act { padding: 74px 0 10px; }
+  .seam {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 40px;
+  }
+  .seam .sew {
+    flex: 1; height: 2px;
+    background: repeating-linear-gradient(90deg, var(--faint) 0 10px, transparent 10px 17px);
+  }
+  .seam .sew.a { background: repeating-linear-gradient(90deg, var(--acc) 0 10px, transparent 10px 17px); }
+  .seam h2 {
+    font-size: 25px; letter-spacing: .3em; font-weight: 700; flex: none;
+  }
+  .seam .muh {
+    font-size: 12.5px; color: var(--faint); letter-spacing: .2em; flex: none;
+    margin-left: 4px;
+  }
+
+  /* 第一幕：双栏口述 */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin: 8px 0 34px; }
+  @media (max-width: 700px) { .duo { grid-template-columns: 1fr; } }
+  .face { border: 1px solid var(--hairline); padding: 24px 24px 20px; background: var(--ink-2); }
+  .face .who {
+    font-size: 13px; letter-spacing: .3em; color: var(--acc);
+    margin-bottom: 14px;
+  }
+  .face.needle .who { color: var(--dim); }
+  .face p { font-size: 15.5px; line-height: 2.1; color: var(--paper); }
+  .face small { display: block; margin-top: 12px; color: var(--faint); font-size: 13px; }
+
+  /* 大引文：绣片 */
+  .patch {
+    position: relative; margin: 34px 0; padding: 30px 34px 26px;
+    background: var(--ink-2);
+    border: 1px dashed rgba(95,146,112,.55);
+    outline: 1px solid var(--ink-2); outline-offset: 4px;
+  }
+  .patch::before {
+    content: ""; position: absolute; left: -9px; top: 26px; bottom: 26px; width: 2px;
+    background: repeating-linear-gradient(180deg, var(--acc) 0 9px, transparent 9px 15px);
+  }
+  .patch .qt { font-size: 18.5px; line-height: 2.25; display: block; }
+  .patch .src {
+    display: block; margin-top: 14px; font-size: 13px; color: var(--faint);
+    letter-spacing: .1em; text-align: right;
+  }
+  .patch .qt em { font-style: normal; color: var(--acc); }
+  .patch.hi { border-color: rgba(95,146,112,.9); }
+  .patch.hi .qt { font-size: 21px; }
+
+  .prose { max-width: 40em; margin: 0 auto 26px; color: var(--paper); }
+  .prose small { color: var(--faint); }
+  .prose .sg { color: var(--acc); }
+
+  /* 时间线：绷线上的五个结 */
+  .knots { margin: 36px 0 10px; border-left: 2px dashed rgba(95,146,112,.5); padding-left: 26px; }
+  .knot { position: relative; margin-bottom: 26px; }
+  .knot::before {
+    content: ""; position: absolute; left: -32px; top: 13px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--ink); border: 2px solid var(--acc);
+  }
+  .knot .yr {
+    font-size: 12.5px; letter-spacing: .22em; color: var(--acc);
+  }
+  .knot p { font-size: 15.5px; color: var(--paper); margin-top: 3px; max-width: 36em; }
+  .knot p b { color: var(--acc); font-weight: 700; }
+
+  /* 问答小剧场 */
+  .qa { margin: 30px 0; border: 1px solid var(--hairline); background: var(--ink-2); }
+  .qa .q, .qa .a { padding: 18px 26px; font-size: 16.5px; }
+  .qa .q { border-bottom: 1px dashed rgba(95,146,112,.4); }
+  .qa .a { color: var(--acc); }
+  .qa .tag {
+    display: inline-block; margin-right: 12px; font-size: 12px; letter-spacing: .25em;
+    color: var(--faint);
+  }
+
+  /* 第二幕：一屏大字 */
+  .solo { text-align: center; padding: 46px 0 30px; }
+  .solo .qt {
+    font-size: clamp(24px, 4.6vw, 36px); line-height: 2.1; display: block;
+    font-weight: 700; letter-spacing: .06em;
+  }
+  .solo .qt em { font-style: normal; color: var(--acc); }
+  .solo .src { display: block; margin-top: 20px; color: var(--faint); font-size: 13.5px; letter-spacing: .15em; }
+  .solo .after {
+    max-width: 32em; margin: 30px auto 0; text-align: left;
+    font-size: 15.5px; color: var(--paper);
+  }
+
+  /* 第三幕：十八针脚阵 */
+  .grid18 {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    margin: 10px 0 8px;
+  }
+  @media (max-width: 760px) { .grid18 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .grid18 { grid-template-columns: 1fr; } }
+  .cell {
+    border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 18px 18px 15px; transition: border-color .2s;
+  }
+  .cell:hover { border-color: var(--acc-dim); }
+  .cell .trace { height: 10px; margin-bottom: 14px; }
+  .cell h3 { font-size: 17px; letter-spacing: .1em; font-weight: 700; }
+  .cell h3 span {
+    font-size: 11px; color: var(--faint); letter-spacing: .18em;
+    margin-left: 8px; font-weight: 400;
+  }
+  .cell p { font-size: 13.5px; line-height: 1.9; color: var(--dim); margin-top: 5px; }
+  .cell.born { border-color: rgba(95,146,112,.65); }
+  .cell.born h3::after {
+    content: "自创"; font-size: 10.5px; color: var(--ink);
+    background: var(--acc); padding: 1px 6px; margin-left: 8px;
+    letter-spacing: .2em; vertical-align: 3px;
+  }
+  /* 十八种针迹走向，纯 CSS */
+  .t1  { background: repeating-linear-gradient(0deg,  var(--acc) 0 2px, transparent 2px 8px); }
+  .t2  { background: repeating-linear-gradient(35deg, var(--acc) 0 2px, transparent 2px 8px); }
+  .t3  { background: repeating-linear-gradient(90deg, var(--acc) 0 6px, transparent 6px 10px); }
+  .t4  { background: repeating-linear-gradient(90deg, var(--acc) 0 4px, transparent 4px 7px); }
+  .t5  { background: repeating-linear-gradient(90deg, var(--acc) 0 2px, transparent 2px 6px); }
+  .t6  { background: repeating-linear-gradient(55deg, var(--acc) 0 9px, transparent 9px 13px); }
+  .t7  { background: repeating-radial-gradient(circle at 8px 5px, var(--acc) 0 1.6px, transparent 1.6px 7px); }
+  .t8  { background: repeating-linear-gradient(180deg, var(--acc) 0 7px, transparent 7px 10px); }
+  .t9  { background: repeating-radial-gradient(circle at 4px 5px, var(--acc) 0 2.2px, transparent 2.2px 8px); }
+  .t10 { background: repeating-linear-gradient(125deg, var(--acc) 0 3px, transparent 3px 9px); }
+  .t11 { background: repeating-linear-gradient(90deg, var(--acc) 0 8px, transparent 8px 9px); }
+  .t12 { background: repeating-linear-gradient(35deg, var(--acc) 0 2px, transparent 2px 5px); }
+  .t13 { background: repeating-radial-gradient(circle at 3px 5px, var(--acc) 0 1.2px, transparent 1.2px 5px); }
+  .t14 { background: repeating-linear-gradient(35deg, var(--acc) 0 10px, transparent 10px 13px); }
+  .t15 { background: repeating-linear-gradient(90deg, var(--acc) 0 5px, transparent 5px 12px); }
+  .t16 { background: repeating-radial-gradient(circle at 40px 5px, var(--acc) 0 1.6px, transparent 1.6px 9px); }
+  .t17 { background: repeating-linear-gradient(90deg, var(--acc) 0 7px, transparent 7px 18px); }
+  .t18 { background: linear-gradient(90deg, var(--acc) 0 40%, transparent 40% 100%); opacity: .9; }
+
+  .legend {
+    display: flex; gap: 26px; flex-wrap: wrap; margin: 16px 0 8px;
+    font-size: 13px; color: var(--faint); letter-spacing: .1em;
+  }
+  .legend b { color: var(--acc); font-weight: 700; }
+
+  .notecards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 30px 0 6px; }
+  @media (max-width: 760px) { .notecards { grid-template-columns: 1fr; } }
+  .nc { border-top: 2px solid var(--acc); background: var(--ink-2); padding: 18px 20px 16px; }
+  .nc h4 { font-size: 15.5px; letter-spacing: .2em; margin-bottom: 8px; }
+  .nc p { font-size: 13.5px; line-height: 1.95; color: var(--dim); }
+  .nc p em { font-style: normal; color: var(--paper); }
+
+  /* 第四幕：色带 */
+  .bands { margin: 26px 0 14px; }
+  .band { display: flex; align-items: center; gap: 14px; margin-bottom: 9px; }
+  .band .nm { width: 3.2em; font-size: 14px; color: var(--paper); flex: none; letter-spacing: .15em; }
+  .band .strip {
+    flex: 1; height: 17px; border: 1px solid rgba(232,228,220,.14);
+  }
+  .b-red   { background: linear-gradient(90deg, #f2ded7, #c0453c, #7c2a25); }
+  .b-yellow{ background: linear-gradient(90deg, #f4ecd2, #c9963f, #8a6428); }
+  .b-blue  { background: linear-gradient(90deg, #d7e2ea, #5e8fbb, #33506e); }
+  .b-green { background: linear-gradient(90deg, #dde8dd, #5f9270, #2f5138); }
+  .b-purple{ background: linear-gradient(90deg, #e4dae6, #8b6299, #4c3457); }
+  .b-black { background: linear-gradient(90deg, #5a5854, #26251f); }
+  .b-white { background: linear-gradient(90deg, #f4f2ec, #b8b3a8); }
+  .band .ct { width: 5.4em; font-size: 12px; color: var(--faint); flex: none; text-align: right; }
+  .bandsum {
+    display: flex; align-items: baseline; gap: 18px; margin: 20px 0 8px;
+  }
+  .bandsum .big { font-size: 46px; font-weight: 700; color: var(--acc); line-height: 1.2; }
+  .bandsum .expl { font-size: 14px; color: var(--dim); max-width: 30em; }
+
+  /* 第五幕：戒条 */
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 10px 0 8px; }
+  @media (max-width: 700px) { .rules { grid-template-columns: 1fr; } }
+  .rule { border: 1px solid var(--hairline); padding: 22px 24px 18px; background: var(--ink-2); }
+  .rule h3 { font-size: 17px; letter-spacing: .3em; color: var(--acc); margin-bottom: 12px; }
+  .rule p { font-size: 14.5px; line-height: 2.05; color: var(--paper); }
+  .rule p em { font-style: normal; color: var(--acc); }
+  .rule ul { list-style: none; margin-top: 4px; }
+  .rule li { font-size: 14px; color: var(--dim); line-height: 2.05; padding-left: 16px; position: relative; }
+  .rule li::before { content: ""; position: absolute; left: 0; top: 15px; width: 8px; height: 2px; background: var(--acc); transform: skewX(35deg); }
+  .rule.wide { grid-column: 1 / -1; }
+
+  .warn {
+    margin: 34px 0 6px; padding: 26px 30px;
+    border-left: 3px solid var(--acc);
+    background: var(--ink-2);
+  }
+  .warn .qt { display: block; font-size: 17.5px; line-height: 2.2; }
+  .warn .src { display: block; margin-top: 10px; font-size: 13px; color: var(--faint); text-align: right; }
+  .warn p { font-size: 14.5px; color: var(--dim); margin-top: 14px; }
+  .warn p b { color: var(--acc); }
+
+  /* 跋 */
+  .epi { text-align: center; padding: 64px 0 20px; }
+  .epi .sew {
+    width: 90px; height: 2px; margin: 0 auto 30px;
+    background: repeating-linear-gradient(90deg, var(--acc) 0 10px, transparent 10px 17px);
+  }
+  .epi .qt { font-size: 19px; line-height: 2.2; display: block; }
+  .epi .qt em { font-style: normal; color: var(--acc); }
+  .epi .src { display: block; margin-top: 12px; color: var(--faint); font-size: 13.5px; }
+  .epi p { max-width: 34em; margin: 22px auto 0; text-align: left; font-size: 15px; color: var(--paper); }
+  .epi p small { color: var(--faint); font-size: 13px; }
+
+  /* 页脚 */
+  footer.page {
+    border-top: 1px solid var(--hairline); margin-top: 60px; padding: 36px 0 56px;
+    color: var(--faint); font-size: 13px; line-height: 2.1;
+  }
+  footer.page b { color: var(--dim); font-weight: 600; }
+  footer.page a { color: var(--acc-dim); text-decoration: none; }
+  footer.page a:hover { color: var(--acc); }
+
+  @media (max-width: 700px) {
+    .seam { flex-wrap: wrap; row-gap: 2px; }
+    .seam h2 { font-size: 19px; letter-spacing: .14em; }
+    .solo .qt br { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="thread"></div>
+
+<header class="wrap bench">
+  <div class="stretcher" aria-hidden="true">
+    <span class="peg"></span><span class="peg inner"></span>
+    <span class="rope"></span>
+    <span class="peg inner"></span><span class="peg"></span>
+  </div>
+  <p class="kick"><a href="mulu.html">殆知阁导读 之一百八十六</a> · 艺藏工艺</p>
+  <h1 class="title">雪宧绣谱</h1>
+  <div class="title-stitch" aria-hidden="true">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+  <p class="pinyin mono">xuě yí xiù pǔ　沈寿 口述　张謇 笔录　民国八年</p>
+  <p class="lede">一个绣娘在病床上口述，一个士绅在纸上笔录，赶在死亡之前，为中国留下一门本来注定随人死去的绝艺。全书一万余字，讲绷、讲针、讲十八则针法、讲七百四十五种颜色，末了讲三件最不像技法的事：<b>品德、节制、贯通</b>。</p>
+  <nav class="stitch-nav">
+    <a href="#xu">一 叙</a><span class="nd"></span>
+    <a href="#yuan">二 缘由</a><span class="nd"></span>
+    <a href="#zhenfa">三 针法</a><span class="nd"></span>
+    <a href="#xiuyao">四 绣要</a><span class="nd"></span>
+    <a href="#de">五 德节通</a><span class="nd"></span>
+    <a href="#ba">跋</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- 第一幕 叙 -->
+  <section class="act" id="xu">
+    <div class="seam"><h2>叙 · 两个人，一部谱</h2><span class="muh">卷首 张謇序</span><span class="sew a"></span></div>
+
+    <p class="prose">宣统年间，南京开南洋劝业会，百货云集。张謇任审查长，审查绣品的，是从京师绣工科来的苏州女子沈寿。她在会上挂出自己的《意大利后像》，精绝为世所未有。真正让张謇记住她的，是一次鉴定的功夫：</p>
+
+    <div class="qa">
+      <p class="q"><span class="tag">事</span>謇适得露香绣董书大屏，属别真赝，寿展首帧，即曰：「此露香园绣也。」</p>
+      <p class="a"><span class="tag">问</span>问何以知？曰：「以针法知之。」</p>
+    </div>
+
+    <p class="prose">看针法便认得出四百年前上海露香园顾家的绣，这是眼力；而沈寿自己的针法从哪里来，她在病榻上对张謇说过一段话，是全书真正的心法：</p>
+
+    <div class="patch hi">
+      <span class="qt">「我针法非有所受也，少而学焉，长而习焉，旧法而已。既悟绣以象物，物自有真，当放真。既见欧人铅油之画，本于摄影。影生于光，光有阴阳，当辨阴阳。潜神凝虑，以新意运旧法，渐有得。既又一游日本，观其美术之绣，归益有得。久之久之，遂觉天壤之间，千形万态，<em>但入吾目，无不可入吾针</em>，即无不可人吾绣。」</span>
+      <span class="src">叙 · 沈寿语，张謇记</span>
+    </div>
+
+    <p class="prose">旧法是底子，摄影与西画的光影是眼睛，日本的美术绣是镜子。三者合在一根针上。之后的故事环环相扣：辛亥年绣科罢散，她流落天津教绣自给；张謇怕这门手艺失传，在南通女子师范学校附设绣工，请她当主任；不久她病了，越病越重，张謇借了宅子给她养病，趁她病况稍好的间隙，一次次去问针法。</p>
+
+    <div class="knots">
+      <div class="knot"><span class="yr">宣统年间 · 劝业会</span><p>沈寿专审查绣品，携《意大利后像》入会，张謇由辨绣识其人。</p></div>
+      <div class="knot"><span class="yr">次年 · 京师</span><p>张謇送一名女生入绣科，从她学绣。</p></div>
+      <div class="knot"><span class="yr">辛亥 · 罢散</span><p>京师绣科解散，沈寿退到天津，教绣自给。</p></div>
+      <div class="knot"><span class="yr">其后 · 南通</span><p>张謇恐其艺不果传，附设绣工，延沈寿主任。</p></div>
+      <div class="knot"><span class="yr">病榻 · 数月</span><p>借宅养病，病稍间则时时叩法。日或一二条，或二三日而竟一条。</p></div>
+    </div>
+
+    <div class="patch">
+      <span class="qt">「且复问，且加审，且易稿。如是者再三，<em>无一字不自謇出，实无语不自寿出也</em>。」</span>
+      <span class="src">叙 · 成书之法</span>
+    </div>
+
+    <p class="prose">这句话是全书体例的自供状：字是张謇的字，话是沈寿的话。一部技法书，写成了两个人的合著。张謇还交代了笔录的纪律：<span class="sg">「语欲凡女子之易晓也，不务求深，术欲凡学绣之有征也，不敢涉诞。」</span>要普通女子读得懂，要有可验证的手上功夫，不许故弄玄虚。这在百年前的工艺书里，是极少见的清醒。</p>
+  </section>
+
+  <!-- 第二幕 缘由 -->
+  <section class="act" id="yuan">
+    <div class="seam"><h2>缘由 · 为什么非写不可</h2><span class="muh">序末 一声长叹</span><span class="sew"></span></div>
+
+    <div class="solo">
+      <span class="qt">「嗟夫！莽莽中国，独阙工艺之书耳。<br>习之无得者不能言，言之无序者不能记，<br>记之或诬或陋或过于文，则小能信与行。<br><em>一人绝艺，死便休息。</em>」</span>
+      <span class="src">叙 · 张謇</span>
+      <p class="after">手上有的说不出，说得出的写不成，写成的不像话。于是一门手艺跟着一个人的心跳走，心跳停，艺就停。张謇把这部一万字的小书，当成对整个中国工艺传统的抢救：序末说，他是「以是寄古今无涯之悲」，抚慰的不止一个沈寿。而书的署名，他破例处理：<span style="color:var(--acc)">「寿有独立足以传之之艺，故从金石书妇女特例。书曰吴县沈寿。」</span>像为金石名家立传那样，郑重写下她的名字。</p>
+    </div>
+  </section>
+
+  <!-- 第三幕 针法 -->
+  <section class="act" id="zhenfa">
+    <div class="seam"><h2>针法 · 十八则</h2><span class="muh">十三则旧法，五则新变</span><span class="sew a"></span></div>
+
+    <p class="prose">全书主体是针法。前十三则是普通针法，人人在学；后五则见变化，其中一枚针法是她自己造的。下面每一格的纹样，是那一种针法行针走向的示意。</p>
+
+    <div class="grid18">
+      <div class="cell"><div class="trace t1"></div><h3>齐针<span>其一</span></h3><p>沿画稿墨线落针，边不歪，孔不乱，平面线务使平匀。学绣第一课，先学平。</p></div>
+      <div class="cell"><div class="trace t2"></div><h3>抢针<span>其二</span></h3><p>由浅入深，分批衔接。花叶颜色由边及里渐次过渡，全靠它匀其色。</p></div>
+      <div class="cell"><div class="trace t3"></div><h3>单套针<span>其三</span></h3><p>先批后批，鳞次相覆，犬牙相错。第二批埋进第一批留下的针隙。</p></div>
+      <div class="cell"><div class="trace t4"></div><h3>双套针<span>其四</span></h3><p>套上加套，针短线细。转折愈多用针愈短，线色方能圆转和顺。</p></div>
+      <div class="cell"><div class="trace t5"></div><h3>扎针<span>其五</span></h3><p>直针之上加横针，如扎物然。专为鸟脚，扎出脚纹，谓之仿真。</p></div>
+      <div class="cell"><div class="trace t6"></div><h3>铺针<span>其六</span></h3><p>凤凰孔雀之背，长直针刺线使满，如平铺然，是翎毛的底子。</p></div>
+      <div class="cell"><div class="trace t7"></div><h3>刻鳞针<span>其七</span></h3><p>因其鳞次而用针以刻画之也。近颈处须细，渐下可渐展大。</p></div>
+      <div class="cell"><div class="trace t8"></div><h3>肉入针<span>其八</span></h3><p>棉线衬在丝线之下，厚之如肉。树石之大者，还可入棉絮为肉。</p></div>
+      <div class="cell"><div class="trace t9"></div><h3>打子针<span>其九</span></h3><p>针芒绕线一道为细孔，靠孔边下针固之。孔即子也；固而不动，即打也。</p></div>
+      <div class="cell"><div class="trace t10"></div><h3>羼针<span>其十</span></h3><p>即长短针。因其长短参错互用，故谓羼。</p></div>
+      <div class="cell"><div class="trace t11"></div><h3>接针<span>其十一</span></h3><p>第二针紧接第一针尾之中。绣行草书转折处，宜用此针。</p></div>
+      <div class="cell"><div class="trace t12"></div><h3>绕针<span>其十二</span></h3><p>俗名拉梭子针。回转之针必从原眼，取其易于匀整。</p></div>
+      <div class="cell"><div class="trace t13"></div><h3>刺针<span>其十三</span></h3><p>针迹须细如鱼子，俗谓一芝麻三针乃为上品。</p></div>
+      <div class="cell"><div class="trace t14"></div><h3>㧙针<span>其十四</span></h3><p>针针相逼而紧之，藏针于线下，使绣成如一笔写。茎须发折，都用它。</p></div>
+      <div class="cell"><div class="trace t15"></div><h3>施针<span>其十五</span></h3><p>加于他针之上。疏而不密，活而不滞，层层不相掩。翎毛走兽十之七八用它。</p></div>
+      <div class="cell born"><div class="trace t16"></div><h3>旋针<span>其十六</span></h3><p>回旋其针。拳曲树木、蜿蜒龙蛇、漩激波浪，皆宜短针随之。</p></div>
+      <div class="cell"><div class="trace t17"></div><h3>散整针<span>其十七</span></h3><p>兼施、套、接、长短而有之。浓处整，淡处散，绣的是云烟。</p></div>
+      <div class="cell"><div class="trace t18"></div><h3>虚实针<span>其十八</span></h3><p>虚实并用，以实形虚。由稀而细，而淡，而至于无，使与地等，所谓虚也。</p></div>
+    </div>
+    <div class="legend"><span><b>虚线纹</b>＝行针走向示意</span><span>格上有自创小标者，为沈寿所造</span></div>
+
+    <div class="patch">
+      <span class="qt">「旋针昔所无，余由散针，接针之法悟人而变化之。散针则于绣《九龙图》时，<em>观空际油油之云容体会而得之</em>，而变化于蒙茸之毛发，翩反之花叶亦用之。」</span>
+      <span class="src">绣要 · 妙用</span>
+    </div>
+
+    <p class="prose">旋针从旧法里悟出，散针是绣《九龙图》时看云看出来的。虚针与肉入针，则是游日本时「询其名，悟其法」学来的。她甚至把摄影绣像的方法也算作自己开的路：仿真绣摄影，<span class="sg">「亦自余始也」</span>。说到最后她引范宽与岳飞作比：<span class="sg">「范宽画师造化，岳武穆兵法运用在心，谁谓绣不当如是耶。」</span>绘画要师造化，兵法要运于心，绣也一样。针是这本书的主角，针本身却有一部消亡史：古时最细的羊毛针宜绣人面，久不可得；次好的苏针锋尖锐而鼻底钝，不伤手，今亦渐灭；她在写的当下，用的已是欧针。绷如此，针如此，这门手艺当时就站在消失的边上。</p>
+
+    <div class="notecards">
+      <div class="nc"><h4>水路</h4><p>花瓣复叠、叶片交互、枝茎分歧，显出处留一线空白，谓之水路。全幅匀称，<em>最大之幅，亦不可过两线</em>。绣面上看不见的路。</p></div>
+      <div class="nc"><h4>阴阳面</h4><p>「影生于光，光有阴阳，当辨阴阳。」受光处浅，背光处深，由浅入深必求其渐。旧绣无阴阳，她要绣出光。</p></div>
+      <div class="nc"><h4>肖神</h4><p>「书有精神也，画有精神也，惟绣亦然。」鸟兽于目睛颈项加一二针而神现。她引顾恺之为裴楷画像颊上加毛，神明殊胜。</p></div>
+    </div>
+  </section>
+
+  <!-- 第四幕 绣要 -->
+  <section class="act" id="xiuyao">
+    <div class="seam"><h2>绣要 · 八十八色，七百四十五变</h2><span class="muh">审势配色求光缜性</span><span class="sew"></span></div>
+
+    <p class="prose">配色一节说，所用之色大别有七：红、黄、青、绿、紫、黑、白。每色析深浅浓淡，各有十余色至二十余色；极淡者皆可与白相接，虽百数十色不能尽。全篇统计：<span class="sg">「右凡为色八十有八，其因染而别者，凡七百四十有五。」</span></p>
+
+    <div class="bands">
+      <div class="band"><span class="nm">红</span><span class="strip b-red"></span><span class="ct">十余至二十色</span></div>
+      <div class="band"><span class="nm">黄</span><span class="strip b-yellow"></span><span class="ct">十余至二十色</span></div>
+      <div class="band"><span class="nm">青</span><span class="strip b-blue"></span><span class="ct">十余至二十色</span></div>
+      <div class="band"><span class="nm">绿</span><span class="strip b-green"></span><span class="ct">十余至二十色</span></div>
+      <div class="band"><span class="nm">紫</span><span class="strip b-purple"></span><span class="ct">十余至二十色</span></div>
+      <div class="band"><span class="nm">黑</span><span class="strip b-black"></span><span class="ct">与白相接无尽</span></div>
+      <div class="band"><span class="nm">白</span><span class="strip b-white"></span><span class="ct">与百色相接</span></div>
+    </div>
+    <div class="bandsum">
+      <span class="big mono">88 → 745</span>
+      <span class="expl">为色八十八，因染而别七百四十五。而业染者告诉她，颜色根本不肯被数清。</span>
+    </div>
+
+    <div class="patch">
+      <span class="qt">「色随人而变，亦随天气燥湿、技乎巧拙而变，往往有以昨日所得之色，试之今日而变，以今日所得之色，试之明日而又变者。<em>变不可得而穷，色不易名而纪，伙颐哉。</em>」</span>
+      <span class="src">绣要配色 · 业染者语</span>
+    </div>
+
+    <p class="prose">配色之外，绣要还讲了四件事。审势，讲章法：<span class="sg">「势即章法也」</span>，先审画稿的部位与姿态。求光，讲光影：水之光在下，雪之光随风，人面额颧鼻辅皆阳，印堂颔下皆阴，一幅绣品要当一张照片打光。肖神，讲神采：针法线色都不错却不像，加一二针于阴阳浓淡之间，精神即显。缜性，讲心性，她说得最透：</p>
+
+    <div class="patch">
+      <span class="qt">「余往者尝求肖所绣之像，而欲得其神，<em>费数十分或数十刻之时间，反复审视而忽有得，及其既得，则只著一二针，一呼吸之顷耳</em>。」</span>
+      <span class="src">绣要 · 缜性</span>
+    </div>
+
+    <p class="prose">数十刻的凝视，换一呼吸之间的一二针。手艺的最后一寸不在手上，在眼睛和性子里。所以她说：<span class="sg">「绣，小技也，有儒者致曲之诚。女红也，有君子研几之学焉。」</span>观人之绣，观其针迹之匀净与否，而测其性之安静与否，十辄得七八。</p>
+  </section>
+
+  <!-- 第五幕 德节通 -->
+  <section class="act" id="de">
+    <div class="seam"><h2>德节通</h2><span class="muh">技法讲完之后的三件事</span><span class="sew a"></span></div>
+
+    <div class="rules">
+      <div class="rule">
+        <h3>绣品</h3>
+        <p>坐姿四条，是百年前的人体工学：</p>
+        <ul>
+          <li>脚无论申诎也，须竝</li>
+          <li>肩无论上下也，须称</li>
+          <li>背欲其坐之勿伤生也，须不过其高低</li>
+          <li>口欲其气之勿濡地也，须适当其远近</li>
+        </ul>
+      </div>
+      <div class="rule">
+        <h3>绣德</h3>
+        <p>对工具的纪律：剪近身而左其向；纸隔腕而面必光；备线以色分类，以待取用；余线捻结若环，以为后用。最细的一条，关乎口：</p>
+        <p><em>「取浥水之津如取露，口必漱而蠲其秽也。」</em>润线用口津，取之前必漱口。一根线的洁净，也是绣的洁净。</p>
+      </div>
+      <div class="rule wide">
+        <h3>绣通</h3>
+        <p>「绣于美术连及书画。」书则篆隶体方，行草笔圆，故绣圆难而方易；画则水墨意简，青绿构繁，故绣繁难而简易。她自认于书画茫无途径，间从通人略闻明训，末句是：<em>「但一息之尚存，犹沟通而求进也。是谓绣通。余且自儆。」</em></p>
+      </div>
+    </div>
+
+    <div class="warn">
+      <span class="qt">「余自笄龄，昼夜有作。尝过夜分，炷灯代烛。及于为妇，未懈而续，中馈之余，晷催漏促，坐是致疾，伤带任督。今我权之，二时而足，或起或行，稍间而复。<em>是谓绣节。致余忠告。</em>」</span>
+      <span class="src">绣要 · 绣节</span>
+      <p>从少女到主妇，昼夜赶工，攒出一身病，伤了带脉任脉。这一目她不再教人怎么绣，只教人<b>别学她</b>：每日两个时辰为足，累了起身走走。全书写绷写针写七百四十五种颜色，最后落在一个「节」字上。写这段话时，她已经时日无多。</p>
+    </div>
+  </section>
+
+  <!-- 跋 -->
+  <section class="epi" id="ba">
+    <div class="sew"></div>
+    <span class="qt">「伊古以来，凡能成一艺之名，孰不有其独运之深心，与不可磨之精气。而浮沤霅电，瞬息即逝，徒留其存亡疑似之名，而终无以禅其深造自得之法。」</span>
+    <span class="src">叙</span>
+    <p>会说的不会绣，会绣的说不出，这门手艺此前几千年，一直在打这个死结。《雪宧绣谱》是解开它的第一次尝试：一位有理论的实践者，加上一位肯一遍遍追问的记录者，再加「且复问，且加审，且易稿」的笨功夫。数月而成此谱。沈寿病逝于一九二一年，年四十八。<small>（卒年为库外背景，谱成于其病榻之岁，见于库内叙文。）</small>一人绝艺，没有死便休息。</p>
+  </section>
+
+  <footer class="page">
+    <div class="wrap">
+      <p><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>）艺藏工艺部《雪宧绣谱》，库内实存约八千六百汉字，卷次结构与引文均实测自库内文件。</p>
+      <p><b>引文核验</b>　本页全部引文（大引九条、小引十五条）均与库内文件逐字比对，去标点与空白后归一校验，全部通过。库内个别形近讹字（如「人吾绣」「人」）依原样保留，未作擅改。</p>
+      <p><b>阅读提醒</b>　本书成于民国初年，「女红」「妇女特例」等表述带有那个时代对手艺与性别的定位；沈寿以女性之身由宫廷绣科流落民间、终以口述立言，其处境与局限都是历史的一部分，读时可作史料观。</p>
+      <p><b>返回</b>　<a href="mulu.html">殆知阁导读总目</a></p>
+    </div>
+  </footer>
+
+</main>
+</body>
+</html>
