@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>职方外纪 · 殆知阁导读</title>
+<style>
+  :root {
+    --bg: #191917;
+    --bg-2: #1e1d1a;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --c: #5f9270;
+    --c-soft: rgba(95,146,112,0.14);
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+    background-image:
+      repeating-linear-gradient(0deg, transparent 0 119px, rgba(232,228,220,0.045) 119px 120px),
+      repeating-linear-gradient(90deg, transparent 0 119px, rgba(232,228,220,0.045) 119px 120px);
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ 开卷：题签与浑圆 ============ */
+  header.hero { min-height: 92dvh; display: grid; align-items: center; position: relative; }
+  .hero .wrap { display: grid; grid-template-columns: 130px 1fr 340px; gap: 40px; align-items: center; width: 100%; }
+  .kicker { font-size: 13px; letter-spacing: 0.34em; color: var(--paper-faint); margin-bottom: 22px; }
+  .kicker b { color: var(--c); font-weight: normal; }
+  .signboard {
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: clamp(34px, 4.4vw, 52px); font-weight: 700; letter-spacing: 0.32em;
+    padding: 34px 20px; border: 1px solid var(--hairline); background: var(--bg-2);
+    justify-self: start; position: relative;
+  }
+  .signboard::after {
+    content: "艾儒畧撰"; position: absolute; bottom: -58px; left: 20px;
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: 12px; letter-spacing: 0.3em; color: var(--paper-faint);
+  }
+  .hero-mid h1 { font-size: clamp(21px, 2.2vw, 27px); font-weight: 600; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .hero-mid .saying { font-size: 15px; color: var(--paper-dim); letter-spacing: 0.12em; margin-bottom: 26px; }
+  .hero-mid .lead { font-size: 15.5px; color: var(--paper-dim); max-width: 34em; }
+  .hero-mid .lead b { color: var(--paper); font-weight: 600; }
+  .hero-mid .lead em { font-style: normal; color: var(--c); }
+  .qt {
+    border-left: 2px solid var(--c); background: var(--c-soft);
+    padding: 14px 18px; margin: 22px 0; font-size: 15px; letter-spacing: 0.06em; line-height: 2.1;
+  }
+  .qt .qs { display: block; margin-top: 8px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  .inline-q { color: var(--paper); border-bottom: 1px dashed var(--c); padding-bottom: 1px; }
+  .globebox { text-align: center; }
+  .globe { width: 300px; height: 300px; cursor: pointer; transition: transform 2.6s cubic-bezier(0.3,0.7,0.2,1); }
+  .globe.spun { transform: rotate(180deg); }
+  .globe circle, .globe ellipse, .globe line { stroke: var(--paper-dim); fill: none; stroke-width: 1; }
+  .globe .rim { stroke: var(--paper); stroke-width: 1.6; }
+  .globe .equator { stroke: var(--c); stroke-width: 1.4; }
+  .globe .core { fill: var(--c); stroke: none; }
+  .globecap { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.22em; margin-top: 14px; }
+  .globecap b { color: var(--c); font-weight: normal; }
+  .globehint { font-size: 12px; color: var(--paper-faint); margin-top: 4px; letter-spacing: 0.2em; }
+
+  /* ============ 分节通用 ============ */
+  section.blk { padding: 76px 0 30px; border-top: 1px solid var(--hairline); }
+  .blk-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 10px; }
+  .blk-no { font-size: 13px; color: var(--c); letter-spacing: 0.3em; }
+  .blk-head h2 { font-size: 24px; font-weight: 600; letter-spacing: 0.14em; }
+  .blk-head .from { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.16em; }
+  .blk-p { color: var(--paper-dim); font-size: 15px; max-width: 62em; margin-bottom: 26px; }
+  .blk-p b { color: var(--paper); font-weight: 600; }
+  .blk-p em { font-style: normal; color: var(--c); }
+
+  /* ============ 一 度盘 ============ */
+  .ruler { margin: 0 0 30px; border: 1px solid var(--hairline); background: var(--bg-2); padding: 26px 20px 18px; }
+  .ruler-track { position: relative; height: 1px; background: var(--hairline); }
+  .tick { position: absolute; top: -5px; width: 1px; height: 11px; background: var(--paper-faint); }
+  .tick span { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-size: 11.5px; color: var(--paper-faint); white-space: nowrap; }
+  .tick.first span { left: 0; transform: none; }
+  .tick.last span { left: auto; right: 0; transform: none; }
+  .tick.zero { background: var(--c); }
+  .tick.zero span { color: var(--c); white-space: nowrap; }
+  .ruler-cap { margin-top: 44px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.14em; }
+  .zhou-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+  .chip-z {
+    border: 1px solid var(--hairline); background: var(--bg-2); color: var(--paper-dim);
+    font-family: inherit; font-size: 15px; letter-spacing: 0.12em; padding: 10px 20px; cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .chip-z:hover { border-color: var(--c); color: var(--paper); }
+  .chip-z.on { background: var(--c); border-color: var(--c); color: #f5efe6; }
+  .degboard { border: 1px solid var(--hairline); background: var(--bg-2); padding: 30px 32px; display: grid; grid-template-columns: 190px 1fr; gap: 34px; align-items: start; }
+  .deg-name { font-size: 40px; font-weight: 700; letter-spacing: 0.1em; line-height: 1.3; }
+  .deg-rank { font-size: 13px; color: var(--c); letter-spacing: 0.24em; margin-top: 8px; }
+  .deg-note { font-size: 13px; color: var(--paper-faint); margin-top: 16px; line-height: 2; letter-spacing: 0.04em; }
+  .deg-quote { font-size: 15.5px; line-height: 2.2; letter-spacing: 0.05em; }
+  .deg-plain { margin-top: 14px; font-size: 13.5px; color: var(--paper-dim); line-height: 2; }
+  .deg-plain b { color: var(--c); font-weight: normal; }
+
+  /* ============ 二 航海日志 ============ */
+  .logs { display: grid; grid-auto-flow: column; grid-auto-columns: min(420px, 84vw); gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 14px; }
+  .log { scroll-snap-align: start; border: 1px solid var(--hairline); background: var(--bg-2); padding: 26px 26px 22px; }
+  .log-top { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--hairline); padding-bottom: 12px; margin-bottom: 14px; }
+  .log-name { font-size: 27px; font-weight: 700; letter-spacing: 0.1em; }
+  .log-seal { font-size: 11.5px; color: var(--c); letter-spacing: 0.2em; border: 1px solid var(--c); padding: 3px 8px; }
+  .log-now { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.08em; margin-bottom: 12px; }
+  .log-now b { color: var(--paper-dim); font-weight: normal; }
+  .log p { font-size: 14px; color: var(--paper-dim); margin-bottom: 12px; }
+  .log .qt { margin: 14px 0 0; font-size: 14px; }
+  .logfoot { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.14em; margin-top: 14px; }
+  .logfoot b { color: var(--c); font-weight: normal; }
+
+  /* ============ 三 大舶剖面 ============ */
+  .ship { display: grid; grid-template-columns: 330px 1fr; gap: 38px; align-items: start; }
+  .shipstack { border: 1px solid var(--hairline); background: var(--bg-2); }
+  .deck {
+    border-top: 1px solid var(--hairline); padding: 13px 18px; cursor: pointer;
+    font-size: 14.5px; letter-spacing: 0.06em; color: var(--paper-dim);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+    transition: all 0.2s ease;
+  }
+  .deck:first-child { border-top: none; }
+  .deck .dno { font-size: 12px; color: var(--paper-faint); }
+  .deck:hover { color: var(--paper); background: rgba(232,228,220,0.03); }
+  .deck.on { background: var(--c); color: #f5efe6; }
+  .deck.on .dno { color: rgba(245,239,230,0.75); }
+  .shipread { border: 1px solid var(--hairline); background: var(--bg-2); padding: 30px 32px; min-height: 300px; }
+  .shipread .dk { font-size: 12.5px; color: var(--c); letter-spacing: 0.26em; margin-bottom: 14px; }
+  .shipread .dq { font-size: 17px; line-height: 2.3; letter-spacing: 0.05em; }
+  .shipstats { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 9px; }
+  .stat { font-size: 12.5px; color: var(--paper-dim); border: 1px solid var(--hairline); padding: 5px 12px; letter-spacing: 0.08em; }
+  .stat b { color: var(--c); font-weight: normal; }
+
+  /* ============ 四 异闻墙 ============ */
+  .wall { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .odd { border: 1px solid var(--hairline); background: var(--bg-2); padding: 20px 20px 18px; cursor: pointer; transition: border-color 0.25s ease; }
+  .odd:hover { border-color: var(--c); }
+  .odd-top { display: flex; justify-content: space-between; align-items: baseline; }
+  .odd h3 { font-size: 17px; font-weight: 700; letter-spacing: 0.1em; }
+  .odd .ono { font-size: 11.5px; color: var(--c); letter-spacing: 0.2em; }
+  .odd .tease { font-size: 13px; color: var(--paper-dim); margin-top: 8px; line-height: 1.9; }
+  .odd .qt { display: none; margin: 14px 0 0; font-size: 13.5px; padding: 12px 14px; }
+  .odd.open .qt { display: block; }
+  .odd .flip { font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.2em; margin-top: 12px; }
+  .odd.open .flip { color: var(--c); }
+
+  /* ============ 卷尾 ============ */
+  .ending { padding: 80px 0 40px; border-top: 1px solid var(--hairline); }
+  .verdict { font-size: clamp(20px, 2.4vw, 28px); line-height: 2.2; letter-spacing: 0.08em; max-width: 30em; }
+  .verdict b { color: var(--c); font-weight: normal; }
+  .afterwords { margin-top: 34px; color: var(--paper-dim); font-size: 15px; max-width: 62em; }
+  .afterwords p + p { margin-top: 12px; }
+  .afterwords b { color: var(--paper); font-weight: 600; }
+  .fin { margin-top: 40px; font-size: 14px; color: var(--paper-faint); letter-spacing: 0.24em; }
+  .fin b { color: var(--c); font-weight: normal; }
+
+  /* ============ 页脚 ============ */
+  footer.page { border-top: 1px solid var(--hairline); padding: 36px 0 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page .fnav { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 22px; }
+  footer.page .fnav a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px solid var(--hairline); padding-bottom: 2px; }
+  footer.page .fnav a:hover { color: var(--c); border-color: var(--c); }
+  footer.page .fnote { max-width: 66em; line-height: 2.15; }
+  footer.page .fnote b { color: var(--paper-dim); font-weight: normal; margin-right: 10px; }
+
+  @media (max-width: 940px) {
+    header.hero .wrap { grid-template-columns: 1fr; gap: 30px; padding-top: 60px; padding-bottom: 20px; }
+    .signboard { writing-mode: horizontal-tb; text-orientation: mixed; padding: 14px 22px; justify-self: start; }
+    .signboard::after { position: static; display: block; writing-mode: horizontal-tb; margin-top: 8px; }
+    .globebox { justify-self: center; }
+    .degboard { grid-template-columns: 1fr; gap: 16px; }
+    .ship { grid-template-columns: 1fr; gap: 18px; }
+    .wall { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="signboard">职方外纪</div>
+    <div class="hero-mid">
+      <div class="kicker">殆知阁导读之一百八十七 · <b>史藏地理类</b></div>
+      <h1>天启三年，明朝人第一次拿到完整的世界说明书</h1>
+      <div class="saying">明西洋艾儒畧撰 · 五卷，库本去空白三万零七十九字</div>
+      <p class="lead">西洋人利玛窦带来万国图志，庞迪我奉命译成图说，<em>艾儒略</em>在此基础上增补成编：天下分五州，每州先给经纬界度，再列国别风土。这是第一部用中文写成的世界地理，书名何来，四库提要一句讲清：<span class="inline-q">所纪皆绝域风土为自古舆图所不载故曰职方外纪</span>。卷首开门见山，把人站了千年的地理想翻个面。</p>
+      <div class="qt">天圆地方乃语其动静之徳非以形论也地既圆形则无处非中所谓东西南北之分不过就人所居立名初无定准<span class="qs">卷首 · 五大州总图界度解</span></div>
+    </div>
+    <div class="globebox">
+      <svg class="globe" id="globe" viewBox="0 0 300 300" aria-label="地圆示意图">
+        <circle class="rim" cx="150" cy="150" r="128"></circle>
+        <ellipse cx="150" cy="150" rx="128" ry="46"></ellipse>
+        <ellipse cx="150" cy="150" rx="46" ry="128"></ellipse>
+        <line class="equator" x1="22" y1="150" x2="278" y2="150"></line>
+        <line x1="150" y1="22" x2="150" y2="278"></line>
+        <line x1="72" y1="72" x2="228" y2="228"></line>
+        <line x1="228" y1="72" x2="72" y2="228"></line>
+        <circle class="core" cx="150" cy="150" r="4.5"></circle>
+      </svg>
+      <div class="globecap" id="globecap">天似室庐，地在中心</div>
+      <div class="globehint">点一下这颗地球试试</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="blk" id="du">
+    <div class="wrap">
+      <div class="blk-head">
+        <span class="blk-no">甲</span>
+        <h2>先定零度</h2>
+        <span class="from">卷首 · 五大州总图界度解</span>
+      </div>
+      <p class="blk-p">全书第一件事不是讲任何一国，而是讲<b>分度</b>：地为圆体，周天三百六十度，赤道、二至规、五带、昼夜长短，一路讲下去，俨然一份给明朝读者补的球面地理课。最要紧的一条是零度定在哪里。艾儒略给出的答案是福岛，也就是今天的大西洋加那利群岛，当时欧洲地理家公认的极西之地。</p>
+      <div class="qt">古来地理家俱从西洋最西处为初度即以过福岛子午规<span class="qs">卷首 · 五大州总图界度解</span></div>
+      <div class="ruler" aria-hidden="true">
+        <div class="ruler-track" id="ruler"></div>
+        <div class="ruler-cap">一轴经度。零度不在北京，不在罗马，在福岛。此后每讲一地，先报离福岛几度。</div>
+      </div>
+      <p class="blk-p">定完零度，五州一一登场。点一州，看它给自己报的界度。</p>
+      <div class="zhou-chips" id="chips"></div>
+      <p class="blk-p" style="margin-top:30px">五州界度里都给中国留了位置：亚细亚条目称<b>中国居其东南</b>，声名文物远近所共宗仰；又记它与大西洋的隔膜，几九万里，开辟未始相通，只有海外传闻，尊称一声大知纳。</p>
+      <div class="qt">其距大西洋路几九万开辟未始相通但海外传闻尊称之为大知纳<span class="qs">卷一 · 亚细亚总说</span></div>
+      <div class="degboard">
+        <div>
+          <div class="deg-name" id="degname">亚细亚</div>
+          <div class="deg-rank" id="degrank"></div>
+          <div class="deg-note" id="degnote"></div>
+        </div>
+        <div>
+          <div class="deg-quote" id="degquote"></div>
+          <div class="deg-plain" id="degplain"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk" id="hang">
+    <div class="wrap">
+      <div class="blk-head">
+        <span class="blk-no">乙</span>
+        <h2>四个划船的人</h2>
+        <span class="from">卷四 · 亚墨利加总说 / 墨瓦蜡尼加总说</span>
+      </div>
+      <p class="blk-p">写西半球，艾儒略没有铺开讲风土，而是先讲<b>人是怎么找到它的</b>。四个名字串成一段航海史，译名古怪，事是真的：一次靠鼻子，一次靠名字，一次靠人马不分，一次靠一柄按在船上的剑。左右滑开四页日志。</p>
+      <div class="logs" id="logs"></div>
+    </div>
+  </section>
+
+  <section class="blk" id="chuan">
+    <div class="wrap">
+      <div class="blk-head">
+        <span class="blk-no">丙</span>
+        <h2>拆一艘大船</h2>
+        <span class="from">卷五 · 海舶</span>
+      </div>
+      <p class="blk-p">卷末讲海，讲完海况讲船。艾儒略把当时欧洲远洋大船从底到桅拆给人看：<b>上下八层</b>，像一座倒扣的楼。点每一层，看原书怎么写。</p>
+      <div class="ship">
+        <div class="shipstack" id="shipstack"></div>
+        <div>
+          <div class="shipread">
+            <div class="dk" id="deckk"></div>
+            <div class="dq" id="deckq"></div>
+          </div>
+          <div class="shipstats">
+            <span class="stat">铁弹有三十余斤重者</span>
+            <span class="stat">水手 <b>二三百</b> 人</span>
+            <span class="stat">将卒锐士 <b>三四百</b> 人</span>
+            <span class="stat">客商 <b>数百</b></span>
+            <span class="stat">淡水 <b>千余大桶</b></span>
+            <span class="stat">大舶不畏风浪独畏山礁浅沙又畏火</span>
+          </div>
+          <div class="qt">桅之大者长十四丈帆阔八丈水手二三百人<span class="qs">卷五四海总说海舶</span></div>
+          <p class="blk-p" style="margin-top:18px">船上最怕的不是浪。艾儒略补了一句船规：火禁极严，因为全船一千多条命都拴在一起。</p>
+          <div class="qt">舶上火禁极严盖千人之命攸系<span class="qs">卷五四海总说海舶</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk" id="wen">
+    <div class="wrap">
+      <div class="blk-head">
+        <span class="blk-no">丁</span>
+        <h2>广异闻十张</h2>
+        <span class="from">散在五卷</span>
+      </div>
+      <p class="blk-p">四库馆臣嫌它奇，艾儒略自己早答过了：在创闻者固未免或骇为奇，然而非奇实常。挑十张最会讲故事的，点开看原文。</p>
+      <div class="wall" id="wall"></div>
+    </div>
+  </section>
+
+  <section class="ending">
+    <div class="wrap">
+      <div class="verdict">「<span id="vquote"></span>」<div class="fin" style="margin-top:14px">库本卷首提要 乾隆四十六年十一月恭校上</div></div>
+      <div class="afterwords">
+        <p>这是四库馆臣给它的定语：一半不信任，一半舍不得删。<b>一百五十年前刻书的时候没有这份犹豫</b>：艾儒略自序说，淇园杨公雅相孚赏，又为订其芜拙梓以行焉，出资订正刊行的杨廷筠是杭州奉教的士大夫；书成于天启癸亥，一六二三年。</p>
+        <p>此后两百年，海禁合拢，这本书在书架上睡了过去。直到道光年间海警再起，士大夫们急急翻检旧籍寻找世界知识，才把它重新抄进自己的著作里，魏源编《海国图志》多引其说。书没有变，变的是看书的人终于又要看世界了。</p>
+        <p>艾儒略自己的来路就记在卷五：从欧洲起程，候船、换船、越三次赤道，<b>阅三年方抵中国岭南广州府</b>，自注西来之路经九万里也。他写墨瓦蜡尼加那一州时留了一句退步：不漫述，后或有详之者。两百年后，详之者来了。</p>
+      </div>
+      <div class="fin">不出户庭 <b>可以周知遐逺</b></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <div class="fnav">
+      <span>殆知阁导读 之一百八十七 职方外纪</span>
+      <a href="mulu.html">返回总目</a>
+    </div>
+    <p class="fnote"><b>文本来源</b>殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）史藏地理类，四库本五卷又卷首，明西洋艾儒畧撰，库本去空白三万零七十九字。<b>引文核验</b>本页所有引文均与库内文本逐字核验（脚本 verify_zhifang.py，去标点并对畧逺徳氷眀黙葢髙等异体字归一后比对），引文一仍底本原字；阁龙即哥伦布、亚墨利哥即亚美利哥、墨瓦兰即麦哲伦、福岛即加那利群岛、大浪山即好望角、杨廷筠出资订梓与魏源《海国图志》引据等，皆库外通行学术记载，已在文中以今注分别标明。<b>时代局限</b>全书以造物主与天主默启为叙事底色，界度测绘系十七世纪水平，墨瓦蜡尼加一州大半出于当时想象；诸洲异闻如食亲、长人、女国与对诸族风俗的记写，杂有传闻夸饰与彼时欧洲视角，读者当以知识史材料视之，取其五州分界与实证分度的方法论眼光，勿执为事实。</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* ============ 引文库（与库本逐字核验） ============ */
+  var QT = {
+    yaxiya: "西起那多理亚离福岛六十二度东至亚尼俺峡离一百八十度南起爪哇在赤道南十二度北至冰海在赤道北七十二度",
+    ouluoba: "南起地中海北极出地三十五度北至冰海出地八十余度",
+    liweiya: "极南南极出地三十五度极北北极出地三十五度东西广七十八度",
+    yamolijia: "地分南北中有一峡相连",
+    mowalanijia: "即南极度数道里逺几何皆推步未周不漫述后或有详之者",
+    dazhina: "其距大西洋路几九万开辟未始相通但海外传闻尊称之为大知纳",
+    gelong: "一日行游西海嗅海中气味忽有省悟谓此非海水之气乃土地之气也自此以西必有人烟国土矣",
+    jingcuan: "或疑天神或谓海怪皆惊窜奔逸莫敢前",
+    amerigo: "即以其名名之故曰亚墨利加",
+    ma: "以为人马合为一体疑兽非兽疑人非人",
+    liangwu: "一是鸡豚食物等云尔若人类则享此一是香花鸟羽等云尔若天神则享此既而尝其食物方眀是人",
+    zhan: "有言归国者斩",
+    huodi: "入夜则磷火星流弥漫山谷而已因命为火地",
+    zhouyou: "遍遶大地一周四过赤道之下歴地三十万余里从古航海之绩未有若斯盛者",
+    xiwangfeng: "船破败率在此处过之则大喜可望登岸矣故亦称喜望峰",
+    longwei: "得一智巧士曰亚尔几黙得者为作一水器以时注泄便利无比即今龙尾车也",
+    jinzita: "大者下趾阔三百二十四步髙二百七十五级级髙四尺",
+    achao: "亚利斯多欲得此潮此潮反得亚利斯多",
+    nuguo: "国俗惟春月容男子一至其地生子男辄杀之",
+    changren: "有长人善跃一跃三丈履水如行陆者",
+    shiqin: "有父母将老即杀食之以为念亲之恩必葬于腹而不忍委之邱陇者",
+    weinisike: "有一种木为桩入水千万年不腐",
+    jiaohuang: "教皇皆不婚娶永无世及之事但凭盛徳辅弼大臣公推其一而立焉",
+    nilu: "河水每年一发自五月始以渐而长",
+    timYao: "所纪皆绝域风土为自古舆图所不载故曰职方外纪",
+    dingan: "似不免多所夸饰然天地之大何所不有录而存之亦足以广异闻焉",
+    woyou: "不出户庭可以周知遐逺",
+    haibo: "桅之大者长十四丈帆阔八丈水手二三百人",
+    haidao: "阅三年方抵中国岭南广州府",
+    d1: "最下一层镇以沙石千余石使舶不倾侧震荡全借此沙石",
+    d2: "二三层载货与食用之物",
+    d3: "须装淡水千余大桶以足千人一年之用",
+    d4: "近地平板一层则舶内中下人居之",
+    d5: "地平板之外则虚其中百步以为扬帆习武游戏作剧之地",
+    d6: "前后各建屋四层以为尊贵者之居",
+    d7: "尾复建水阁为纳凉之处以待贵者之游息",
+    d8: "舶两傍列大铳数十门以备不虞"
+  };
+
+  /* ============ 浑仪 ============ */
+  var globe = document.getElementById('globe');
+  var cap = document.getElementById('globecap');
+  var caps = ['天似室庐，地在中心', '转过去，还是中心'];
+  globe.addEventListener('click', function () {
+    globe.classList.toggle('spun');
+    cap.textContent = globe.classList.contains('spun') ? caps[1] : caps[0];
+  });
+
+  /* ============ 度尺 ============ */
+  var ruler = document.getElementById('ruler');
+  for (var d = 0; d <= 360; d += 30) {
+    var t = document.createElement('div');
+    t.className = 'tick' + (d === 0 ? ' zero first' : '') + (d === 360 ? ' last' : '');
+    t.style.left = (d / 360 * 100) + '%';
+    t.innerHTML = '<span>' + (d === 0 ? '0 福岛初度' : d === 180 ? '180 亚尼俺峡' : d) + '</span>';
+    ruler.appendChild(t);
+  }
+
+  /* ============ 五州度盘 ============ */
+  var ZHOU = [
+    { n: '亚细亚', k: 'yaxiya', rank: '天下一大州也', note: '人类肇生之地圣贤首出之乡。本书对本州着墨最多，中国居其东南，海外尊称大知纳。', plain: '南北从赤道之南十二度跨到北纬七十二度，东西几乎绕球一整圈。' },
+    { n: '欧逻巴', k: 'ouluoba', rank: '天下第二大州', note: '共七十余国，自国王以至庶民皆奉天主正教。卷二写列国制度食货最细。', plain: '南起地中海，北到冰海，南北相距四十五度。' },
+    { n: '利未亚', k: 'liweiya', rank: '天下第三大州', note: '今非洲。北岸丰饶，中多旷野异兽，西南海上有大浪山，商舶生死关。', plain: '极南与极北都是出地三十五度，正跨赤道，东西广七十八度。' },
+    { n: '亚墨利加', k: 'yamolijia', rank: '第四大州', note: '今美洲。全书故事性最强的一卷：四个人和一片新大陆。', plain: '一峡相连的南北两块，峡南之南极出地五十二度，峡北之北直抵冰海。' },
+    { n: '墨瓦蜡尼加', k: 'mowalanijia', rank: '第五大州', note: '麦哲伦海峡以南的未知南方大陆，十七世纪想象中的第五洲。', plain: '书里自己的交代是：因以其名命之曰墨瓦蜡尼加，为天下之第五大州也；四库提要则干脆说他疆域道里尚莫得详焉。' }
+  ];
+  var chips = document.getElementById('chips');
+  var dn = document.getElementById('degname'), dr = document.getElementById('degrank'),
+      dq = document.getElementById('degquote'), dp = document.getElementById('degplain'),
+      dnote = document.getElementById('degnote');
+  function showZhou(i) {
+    var z = ZHOU[i];
+    dn.textContent = z.n; dr.textContent = z.rank; dnote.textContent = z.note;
+    dq.textContent = '「' + QT[z.k] + '」'; dp.innerHTML = z.plain;
+    var cs = chips.querySelectorAll('.chip-z');
+    cs.forEach(function (c, j) { c.classList.toggle('on', j === i); });
+  }
+  ZHOU.forEach(function (z, i) {
+    var b = document.createElement('button');
+    b.className = 'chip-z'; b.textContent = z.n;
+    b.addEventListener('click', function () { showZhou(i); });
+    chips.appendChild(b);
+  });
+  showZhou(0);
+
+  /* ============ 航海日志 ============ */
+  var LOGS = [
+    { name: '阁龙', now: '今注：哥伦布', seal: '靠鼻子', tag: 'q_gelong',
+      body: '西土原本只知三大州，于大地全体中止得什三。阁龙深于格物穷理之学，天天琢磨海多于地这件事说不过去。',
+      q: 'gelong', q2: 'jingcuan',
+      foot: '望楼中人大声言有地矣，众共欢喜颂谢天主。' },
+    { name: '亚墨利哥', now: '今注：亚美利哥 · 韦斯普奇', seal: '靠名字', tag: 'q_amerigo',
+      body: '阁龙之后又有人往欧逻巴西南海去，寻得赤道以南之大地。大陆以他的名字命名，整个西半球跟着沾光。',
+      q: 'amerigo',
+      foot: '故曰亚墨利加，后来整个州都叫这个名字。' },
+    { name: '哥尔得斯', now: '今注：通行比定为卡博特', seal: '靠试探', tag: 'q_ma',
+      body: '其地从来无马。舟人乘马登岸，土人没见过这架势，官长都分不清来的是什么。国王想出一个笨办法：送两样东西试试。',
+      q: 'ma', q2: 'liangwu',
+      foot: '既而尝其食物，方眀是人。' },
+    { name: '墨瓦兰', now: '今注：麦哲伦', seal: '靠军令', tag: 'q_zhan',
+      body: '西把尼亚之君复念地为圜体，徂西自可达东。墨瓦兰承命西行，展转经年，茫茫无识津涯，人情厌斁辄思返国。船长的办法最直接：惧功用弗成无以复命，按剑下令。',
+      q: 'zhan', q2: 'huodi', q3: 'zhouyou',
+      foot: '于是舟人震慑贾勇而前。越峡入太平大海，自西复东，四过赤道而还，名其舟为胜舶。' }
+  ];
+  var logs = document.getElementById('logs');
+  LOGS.forEach(function (l) {
+    var el = document.createElement('article');
+    el.className = 'log';
+    var html = '<div class="log-top"><span class="log-name">' + l.name + '</span><span class="log-seal">' + l.seal + '</span></div>'
+      + '<div class="log-now">' + l.now + '</div>'
+      + '<p>' + l.body + '</p>'
+      + '<div class="qt">' + QT[l.q] + '<span class="qs">库本卷四</span></div>';
+    ['q2', 'q3'].forEach(function (k) {
+      if (l[k]) html += '<div class="qt">' + QT[l[k]] + '<span class="qs">库本卷四</span></div>';
+    });
+    html += '<div class="logfoot">' + l.foot + '</div>';
+    el.innerHTML = html;
+    logs.appendChild(el);
+  });
+
+  /* ============ 大舶八层 ============ */
+  var DECKS = [
+    { k: 'd1', t: '最下层', s: '镇沙石' },
+    { k: 'd2', t: '第二三层', s: '载货' },
+    { k: 'd3', t: '货层之中', s: '淡水千桶' },
+    { k: 'd4', t: '近地平板', s: '中下人居' },
+    { k: 'd5', t: '船面虚中', s: '百步校场' },
+    { k: 'd6', t: '前后建屋', s: '贵者之居' },
+    { k: 'd7', t: '船尾', s: '水阁纳凉' },
+    { k: 'd8', t: '两舷', s: '大铳数十门' }
+  ];
+  var stack = document.getElementById('shipstack');
+  var dk = document.getElementById('deckk'), dqq = document.getElementById('deckq');
+  function showDeck(i) {
+    dk.textContent = '第 ' + (i + 1) + ' 层 · ' + DECKS[i].t;
+    dqq.textContent = '「' + QT[DECKS[i].k] + '」';
+    stack.querySelectorAll('.deck').forEach(function (d, j) { d.classList.toggle('on', j === i); });
+  }
+  DECKS.forEach(function (d, i) {
+    var el = document.createElement('div');
+    el.className = 'deck';
+    el.innerHTML = '<span>' + d.t + '</span><span class="dno">' + d.s + '</span>';
+    el.addEventListener('click', function () { showDeck(i); });
+    stack.appendChild(el);
+  });
+  showDeck(0);
+  var statq = document.getElementById('deckq');
+
+  /* ============ 异闻墙 ============ */
+  var ODD = [
+    { t: '喜望峰', k: 'xiwangfeng', s: '利未亚', v: '卷三', tease: '西南海上有大浪山，风急浪高，船毁多在此处；过得去，就有登岸的欢喜。' },
+    { t: '龙尾车', k: 'longwei', s: '阨入多', v: '卷三', tease: '埃及七丰七歉的旧事里，国王求得一位智巧之士造出水器，今注：即阿基米德。' },
+    { t: '石头塔', k: 'jinzita', s: '阨入多', v: '卷三', tease: '整块山一样的石头铲削成台，底宽三百二十四步，二百七十五级，一级四尺。' },
+    { t: '七日潮', k: 'achao', s: '厄勒祭亚', v: '卷二', tease: '海潮一日七次，遍穷物理的名士也想不通这一例，谚语说得刻薄。' },
+    { t: '女国', k: 'nuguo', s: '鞑而靼', v: '卷一', tease: '迤西旧有女国，最骁勇善战，其神祠列天下七奇之一。' },
+    { t: '长人', k: 'changren', s: '鞑而靼', v: '卷一', tease: '东北诸种的异闻清单里最像武侠的一句：善跃，履水如行陆。' },
+    { t: '食亲', k: 'shiqin', s: '鞑而靼', v: '卷一', tease: '传闻中最惊悚的一条，杀亲而食，竟说是念亲之恩。夸饰之最，也是彼时眼光之最。' },
+    { t: '木桩城', k: 'weinisike', s: '勿搦祭亚', v: '卷二', tease: '威尼斯建在海里，木桩入水千万年不腐，城中有艘二万。' },
+    { t: '不婚之主', k: 'jiaohuang', s: '意大里亚', v: '卷二', tease: '写教皇制度最克制的一段：永无世及，但凭公推，列国之王虽非其臣然咸致敬尽礼。' },
+    { t: '泥禄河', k: 'nilu', s: '阨入多', v: '卷三', tease: '其地千万年无雨，全靠一条一年一发的河过日子，水涨几尺定丰歉。' }
+  ];
+  var wall = document.getElementById('wall');
+  ODD.forEach(function (o) {
+    var el = document.createElement('article');
+    el.className = 'odd';
+    el.innerHTML = '<div class="odd-top"><h3>' + o.t + '</h3><span class="ono">' + o.s + '</span></div>'
+      + '<p class="tease">' + o.tease + '</p>'
+      + '<div class="qt">「' + QT[o.k] + '」<span class="qs">库本' + o.v + '</span></div>'
+      + '<div class="flip">点开看原文</div>';
+    el.addEventListener('click', function () {
+      el.classList.toggle('open');
+      var f = el.querySelector('.flip');
+      f.textContent = el.classList.contains('open') ? '收起' : '点开看原文';
+    });
+    wall.appendChild(el);
+  });
+
+  /* ============ 卷尾 ============ */
+  document.getElementById('vquote').textContent = QT.dingan;
+})();
+</script>
+</body>
+</html>
