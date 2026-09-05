@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>殆知阁导读 · 蛮书</title>
+<style>
+  :root{
+    --ink:#191917;
+    --paper:#e8e4dc;
+    --gold:#c9963f;
+    --gold-dim:rgba(201,150,63,.42);
+    --gold-faint:rgba(201,150,63,.16);
+    --paper-dim:rgba(232,228,220,.62);
+    --paper-faint:rgba(232,228,220,.38);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    font-size:16px;
+    line-height:1.95;
+  }
+  .mono{font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace;letter-spacing:.06em}
+
+  /* 首屏：程站开卷 */
+  .hero{
+    min-height:min(88vh,560px);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    max-width:1060px;
+    margin:0 auto;
+    padding:64px 28px 48px;
+    position:relative;
+  }
+  .kick{
+    font-size:13px;
+    letter-spacing:.5em;
+    color:var(--gold);
+    margin-bottom:26px;
+  }
+  h1{
+    font-size:clamp(52px,9vw,96px);
+    font-weight:600;
+    letter-spacing:.22em;
+    line-height:1.1;
+  }
+  h1 i{font-style:normal;color:var(--gold)}
+  .sub{
+    margin-top:14px;
+    color:var(--paper-dim);
+    font-size:15px;
+    letter-spacing:.14em;
+  }
+  .sub b{color:var(--paper);font-weight:400}
+
+  /* 程站线 */
+  .route{
+    margin-top:56px;
+    position:relative;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:0;
+  }
+  .route::before{
+    content:"";
+    position:absolute;
+    left:8px;right:8px;top:7px;
+    border-top:1px dashed var(--gold-dim);
+  }
+  .st{
+    position:relative;
+    text-align:center;
+    font-size:12px;
+    color:var(--paper-dim);
+    line-height:1.5;
+    width:76px;
+  }
+  .st::before{
+    content:"";
+    display:block;
+    width:9px;height:9px;
+    margin:3px auto 8px;
+    background:var(--ink);
+    border:1px solid var(--gold);
+    transform:rotate(45deg);
+    position:relative;z-index:1;
+  }
+  .st.major{color:var(--paper);font-size:13px}
+  .st.major::before{background:var(--gold)}
+  .st small{display:block;color:var(--paper-faint);font-size:11px}
+  .st.boat::before{border-radius:50%;transform:none}
+  .route-note{
+    margin-top:30px;
+    color:var(--paper-faint);
+    font-size:12.5px;
+    letter-spacing:.2em;
+  }
+  .route-note em{font-style:normal;color:var(--gold)}
+
+  /* 站程主轴 */
+  .book{max-width:1060px;margin:0 auto;padding:0 28px 40px}
+  section{
+    display:grid;
+    grid-template-columns:64px 1fr;
+    gap:0 34px;
+    padding:58px 0 30px;
+    position:relative;
+  }
+  .axis{
+    position:relative;
+    display:flex;
+    justify-content:center;
+  }
+  .axis::before{
+    content:"";
+    position:absolute;
+    top:0;bottom:0;
+    border-left:1px solid var(--gold-faint);
+  }
+  section:first-of-type .axis::before{top:14px}
+  .tag{
+    position:sticky;
+    top:36px;
+    height:fit-content;
+    z-index:1;
+    background:var(--ink);
+    border:1px solid var(--gold-dim);
+    color:var(--gold);
+    font-size:14px;
+    letter-spacing:.32em;
+    padding:10px 6px 10px 10px;
+    writing-mode:vertical-rl;
+  }
+  h2{
+    font-size:23px;
+    font-weight:600;
+    letter-spacing:.16em;
+    margin-bottom:18px;
+  }
+  h2 small{
+    display:block;
+    font-size:12.5px;
+    font-weight:400;
+    color:var(--paper-faint);
+    letter-spacing:.24em;
+    margin-top:6px;
+  }
+  section p{margin-bottom:14px;color:var(--paper-dim);max-width:760px}
+  section p b{color:var(--paper);font-weight:400}
+  section p em{font-style:normal;color:var(--gold)}
+
+  /* 引文军牒 */
+  .q{
+    border-left:2px solid var(--gold);
+    background:var(--gold-faint);
+    margin:22px 0;
+    padding:16px 22px 14px;
+    max-width:760px;
+  }
+  .q .who{
+    display:block;
+    font-size:12px;
+    letter-spacing:.3em;
+    color:var(--gold);
+    margin-bottom:8px;
+  }
+  .q blockquote{
+    font-size:16.5px;
+    color:var(--paper);
+    line-height:2.05;
+  }
+  .q .src{
+    display:block;
+    margin-top:10px;
+    font-size:12px;
+    color:var(--paper-faint);
+    letter-spacing:.16em;
+  }
+
+  /* 贾客谣 */
+  .song{
+    margin:26px auto;
+    max-width:560px;
+    text-align:center;
+    padding:26px 20px 22px;
+    border-top:1px solid var(--gold-dim);
+    border-bottom:1px solid var(--gold-dim);
+  }
+  .song p{font-size:18px;color:var(--paper);letter-spacing:.18em;margin-bottom:2px}
+  .song .src{display:block;margin-top:12px;font-size:12px;color:var(--paper-faint);letter-spacing:.2em}
+
+  /* 金镂合子 */
+  .盒{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    margin:24px 0 6px;
+    max-width:760px;
+  }
+  .盒 figure{
+    flex:1 1 150px;
+    border:1px solid var(--gold-dim);
+    padding:18px 16px 14px;
+    text-align:center;
+  }
+  .盒 .物{
+    display:block;
+    font-size:30px;
+    color:var(--gold);
+    letter-spacing:.1em;
+    margin-bottom:8px;
+  }
+  .盒 figcaption{
+    font-size:13px;
+    color:var(--paper-dim);
+    line-height:1.8;
+  }
+
+  /* 誓文四本 */
+  .誓{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin:22px 0 8px;
+    max-width:760px;
+  }
+  .誓 span{
+    flex:1 1 140px;
+    text-align:center;
+    font-size:14px;
+    letter-spacing:.2em;
+    color:var(--paper);
+    border:1px dashed var(--gold-dim);
+    padding:12px 8px;
+  }
+  .誓 span small{display:block;font-size:11px;color:var(--paper-faint);letter-spacing:.1em;margin-top:4px}
+
+  /* 四十三年时刻带 */
+  .span43{
+    margin:26px 0 10px;
+    max-width:760px;
+    border:1px solid var(--gold-faint);
+    padding:22px 24px 18px;
+  }
+  .span43 .bar{
+    position:relative;
+    height:2px;
+    background:var(--gold-dim);
+    margin:34px 6px 40px;
+  }
+  .span43 .bar i{
+    position:absolute;
+    top:-5px;
+    width:12px;height:12px;
+    background:var(--ink);
+    border:2px solid var(--gold);
+    border-radius:50%;
+  }
+  .span43 .bar i::after{
+    content:attr(data-y);
+    position:absolute;
+    top:16px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:12.5px;
+    color:var(--paper-dim);
+    white-space:nowrap;
+    letter-spacing:.1em;
+  }
+  .span43 .bar i::before{
+    content:attr(data-t);
+    position:absolute;
+    bottom:16px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:12px;
+    color:var(--paper-faint);
+    white-space:nowrap;
+    letter-spacing:.12em;
+  }
+  .span43 .cap{
+    font-size:12.5px;
+    color:var(--paper-faint);
+    text-align:center;
+    letter-spacing:.3em;
+  }
+
+  /* 十卷之目 */
+  .juan{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(196px,1fr));
+    gap:10px;
+    margin:24px 0 8px;
+    max-width:760px;
+  }
+  .juan div{
+    border:1px solid var(--gold-faint);
+    padding:12px 14px;
+    font-size:13.5px;
+    color:var(--paper-dim);
+    line-height:1.7;
+  }
+  .juan div b{
+    display:block;
+    color:var(--gold);
+    font-weight:400;
+    font-size:12px;
+    letter-spacing:.2em;
+  }
+
+  /* 卷末落款 */
+  .fin{
+    max-width:1060px;
+    margin:0 auto;
+    padding:34px 28px 70px;
+    text-align:center;
+  }
+  .fin .rule{
+    width:52px;
+    border-top:1px solid var(--gold);
+    margin:0 auto 26px;
+  }
+  .fin p{
+    color:var(--paper-dim);
+    font-size:14.5px;
+    letter-spacing:.14em;
+    max-width:640px;
+    margin:0 auto 10px;
+  }
+  .fin p em{font-style:normal;color:var(--gold)}
+
+  footer{
+    border-top:1px solid var(--gold-faint);
+    padding:34px 28px 46px;
+    font-size:12.5px;
+    color:var(--paper-faint);
+    line-height:2;
+  }
+  footer .fw{max-width:1060px;margin:0 auto}
+  footer b{color:rgba(232,228,220,.68);font-weight:400}
+  footer a{color:var(--gold);text-decoration:none}
+
+  @media (max-width:720px){
+    section{grid-template-columns:44px 1fr;gap:0 16px}
+    .route{flex-wrap:wrap;row-gap:20px}
+    .st{width:64px}
+    h1{letter-spacing:.12em}
+    .tag{font-size:12px;letter-spacing:.2em;padding:8px 4px 8px 8px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kick">殆知阁导读 · 第 146 篇</div>
+  <h1>蛮<i>书</i></h1>
+  <p class="sub">唐 樊绰 撰，十卷。<b>一份从陷落之城浮水带出的敌国档案</b>，后世称《云南志》。</p>
+  <div class="route" aria-label="安南至南诏王城程站">
+    <div class="st major boat">安南府<small>起点</small></div>
+    <div class="st boat">峰州<small>上水二日</small></div>
+    <div class="st boat">忠诚州<small>三日</small></div>
+    <div class="st boat">贾勇步<small>水路廿五程</small></div>
+    <div class="st">通海城<small>陆路</small></div>
+    <div class="st">柘东城<small>鄯阐</small></div>
+    <div class="st">安宁城<small>盐井</small></div>
+    <div class="st major">龙尾城<small>万人冢</small></div>
+    <div class="st major">阳苴哶城<small>蛮王坐处</small></div>
+  </div>
+  <p class="route-note">全程水陆五十二日程。<em>只计日，无里数。</em></p>
+</header>
+
+<main class="book">
+
+<section>
+  <div class="axis"><span class="tag">途程</span></div>
+  <div>
+    <h2>不用里程的世界<small>卷一 云南界内途程第一</small></h2>
+    <p>全书开卷是一张路条。从安南都护府到南诏王城，樊绰把每一程写成一行：上水两日，登陆一日，过某馆，至某驿。没有里数，只有日子。这是行军与公文用的丈量法，走一遍才知道敌国有多远。</p>
+    <figure class="q">
+      <span class="who">卷一 · 途程</span>
+      <blockquote>苴哶城，从安南府城至蛮王见坐苴哶城水陆五十二日程，只计日，无里数。</blockquote>
+      <span class="src">蛮书卷一 云南界内途程第一</span>
+    </figure>
+    <p>另一条入滇的北路走石门。隋朝在这里凿过安梁石孔，唐军从这里下过兵，路废了五十年，贞元十年归化后又重开。樊绰记山如记关防：</p>
+    <figure class="q">
+      <span class="who">卷一 · 石门路</span>
+      <blockquote>石门东崖石壁，直上万仞。下临朱提江流，又下入地中数百尺，惟闻水声，人不可到。西崖亦是石壁，傍崖亦有阁路。横阔一步，斜亘三十余里，半壁架空，欹危虚险。其安梁石孔，即隋朝所凿也。</blockquote>
+      <span class="src">蛮书卷一 云南界内途程第一</span>
+    </figure>
+    <p>路条里忽然插进一句死人的数字：龙尾城下有一座坟，葬的是天宝年间全军覆没的唐军。</p>
+    <figure class="q">
+      <span class="who">卷一 · 万人冢</span>
+      <blockquote>李谧伐蛮，于龙尾城误陷军二十万众，今为万人冢。</blockquote>
+      <span class="src">蛮书卷一 云南界内途程第一</span>
+    </figure>
+    <p>山也记人情。高黎共山一驿在山腰，一驿在山顶，往来行商困在异乡，编了一支歌。这本冷硬的军牒里，留着九世纪外贸路上唯一的声音：</p>
+    <div class="song">
+      <p>冬时欲归来，高黎共上雪。</p>
+      <p>秋夏欲归来，无那穹赕热。</p>
+      <p>春时欲归来，平中络赂绝。</p>
+      <span class="src">卷二 山川江源 · 河赕贾客在寻传覊离未还者为之谣</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="axis"><span class="tag">隔绝</span></div>
+  <div>
+    <h2>四十三年<small>天宝九载至贞元十年</small></h2>
+    <p>南诏本是大唐册封的云南王。天宝年间，边将启衅，两度伐南诏，两度全军覆没。阁罗凤转投吐蕃，被册为赞普锺（兄弟之国）。樊绰在书里记下了断绝的那一刻，也记下阁罗凤留给子孙的话：</p>
+    <figure class="q">
+      <span class="who">卷三 · 决裂</span>
+      <blockquote>及张干陀陷姚州，鲜于仲通战江口，遂与中原隔绝。</blockquote>
+      <span class="src">蛮书卷三 六诏第三</span>
+    </figure>
+    <p>大和城中立起一方大碑，阁罗凤的清平官郑回撰文，把投蕃说成受制于人。他料到后世要翻案：</p>
+    <figure class="q">
+      <span class="who">卷五 · 大和城碑</span>
+      <blockquote>城中有大碑，阁罗凤清平官郑蛮利之文。论阻绝皇化之由，受制西戎之意。</blockquote>
+      <span class="src">蛮书卷五 六赕第五（库本题作六第五）</span>
+    </figure>
+    <figure class="q">
+      <span class="who">卷三 · 留给后嗣的话</span>
+      <blockquote>阁罗凤尝谓后嗣悦归皇化，但指大和城碑及表疏旧本，呈示汉使，足以雪吾前过也。</blockquote>
+      <span class="src">蛮书卷三 六诏第三</span>
+    </figure>
+    <div class="span43">
+      <div class="bar">
+        <i data-y="天宝九载" data-t="隔绝" style="left:0"></i>
+        <i data-y="贞元十年" data-t="盟誓归化" style="left:50%"></i>
+        <i data-y="咸通三年" data-t="再战" style="left:100%"></i>
+      </div>
+      <p class="cap">四十三年后，誓文自己报出了这个数</p>
+    </div>
+    <p>七九四年，异牟寻终于兑现祖训。誓文当着天地水三官念出隔绝的年数，像在给四十三年的僵局结息：</p>
+    <figure class="q">
+      <span class="who">卷十 · 贞元誓文</span>
+      <blockquote>去天宝九载，被姚州都督张干陁等离间部落，因此与汉阻绝，经今四十三年。</blockquote>
+      <span class="src">蛮书卷十 附 异牟寻与中国誓文</span>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="axis"><span class="tag">归化</span></div>
+  <div>
+    <h2>一只合子与四本誓文<small>贞元十年的和平</small></h2>
+    <p>归附不是一纸降表。异牟寻怕消息走不出去，分三路同时遣使，任何一路到了都算数。安南都护赵昌收到的信里附一只金镂合子，合子里装四样东西，每一件都是一句表态：</p>
+    <figure class="q">
+      <span class="who">卷三 · 三路遣使</span>
+      <blockquote>遂三路奉使，冀有一达：一使出安南，一使出西川，一使由黔中。贞元十年，三使悉至阙下。</blockquote>
+      <span class="src">蛮书卷三 六诏第三</span>
+    </figure>
+    <figure class="q">
+      <span class="who">卷十 · 赵昌奏状</span>
+      <blockquote>送合子中有绵者，以表柔服，不敢更与为生梗，有当归者永愿为内属，有朱砂者盖献丹心向阙，有金者言归义之意，如金之坚。</blockquote>
+      <span class="src">蛮书卷十 附 赵昌奏状</span>
+    </figure>
+    <div class="盒">
+      <figure><span class="物">绵</span><figcaption>以表柔服<br>不敢更与为生梗</figcaption></figure>
+      <figure><span class="物">当归</span><figcaption>永愿为内属</figcaption></figure>
+      <figure><span class="物">朱砂</span><figcaption>盖献丹心向阙</figcaption></figure>
+      <figure><span class="物">金</span><figcaption>归义之意<br>如金之坚</figcaption></figure>
+    </div>
+    <p>同年正月，西川节度使韦皋派巡官崔佐时入滇，与异牟寻盟于玷苍山神祠。誓文一式四份，各有去处：</p>
+    <figure class="q">
+      <span class="who">卷三 · 盟誓</span>
+      <blockquote>誓文四本：内一本进献，一本异牟寻置于玷苍山下神祠石函内，一本纳于祖父等庙，一本置府库中，以示子孙，不令背逆，不令侵掠。</blockquote>
+      <span class="src">蛮书卷三 六诏第三</span>
+    </figure>
+    <div class="誓">
+      <span>进献<small>随表入朝</small></span>
+      <span>石函<small>玷苍山神祠</small></span>
+      <span>祖庙<small>告于先人</small></span>
+      <span>府库<small>贻诚子孙</small></span>
+    </div>
+    <p>有意思的是，卷十全录的誓文末尾，四本的清单和卷三说的不一样：</p>
+    <figure class="q">
+      <span class="who">卷十 · 誓文四本另一版清单</span>
+      <blockquote>其誓文一本请剑南节度随表进献，一本藏于神室，一方投西洱河，一本牟寻留诏城内府库，贻诚子孙。</blockquote>
+      <span class="src">蛮书卷十 附 异牟寻与中国誓文</span>
+    </figure>
+    <p>同一场盟誓，两处记录，两个口径。谁在抄谁的，成了辑本里的小悬案。</p>
+    <p>册封礼上，樊绰记下了异牟寻的装束，也记下宴席上两位年近七十的乐人。那是开元皇帝赐的胡部、龟兹两部乐班里，最后活着的两个人：</p>
+    <figure class="q">
+      <span class="who">卷十 · 册封</span>
+      <blockquote>南诏异牟寻衣金甲，被大虫皮，执双铎鞘。</blockquote>
+      <span class="src">蛮书卷十 附 袁滋册立纪程</span>
+    </figure>
+    <figure class="q">
+      <span class="who">卷十 · 宴席上的旧乐人</span>
+      <blockquote>先人归蕃来国，开元皇帝赐胡部及龟兹音声各两部。今死亡零落尽，只余此二人在国。</blockquote>
+      <span class="src">蛮书卷十 附 袁滋册立纪程</span>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="axis"><span class="tag">陷城</span></div>
+  <div>
+    <h2>交趾城陷之夜<small>咸通三年至四年，樊绰亲历</small></h2>
+    <p>和平只维持了七十来年。八六〇年代，新任南诏王酋龙再度兴兵，五年之间三次虏掠邕州、交趾。八六二年春，樊绰以安南经略使蔡袭从事的身份，单骑混进敌将朱道古的营寨：</p>
+    <figure class="q">
+      <span class="who">卷四 · 深入贼营</span>
+      <blockquote>臣于咸通三年春三月四日，奉本使尚书蔡袭手示，密委臣单骑及健步二十以下人，深入贼帅朱道古营寨。三月八日，入贼重围中。</blockquote>
+      <span class="src">蛮书卷四 名类第四</span>
+    </figure>
+    <p>围城期间，这位情报官还干过一件奇事：把七十年前异牟寻的盟誓抄了几份，系在车弩上射进敌营，用他们祖宗的誓文劝他们退兵。</p>
+    <figure class="q">
+      <span class="who">卷三 · 车弩飞书</span>
+      <blockquote>臣咸通四年正月，奉本使尚书蔡袭意旨，令书吏写蛮王异牟寻『誓文』数本，并书牒系于车弩上，飞入贼营。</blockquote>
+      <span class="src">蛮书卷三 六诏第三</span>
+    </figure>
+    <p>八六三年正月，樊绰在阵面上生擒扑子蛮，拷问不语；六日，一名设法诅盟的胡僧被蔡袭一箭当胸。二月初七，城破。以下两段是全书最黑的夜晚，写信人右腕带着箭，一边浮水渡江，一边记下了上司和同僚的下场：</p>
+    <figure class="q">
+      <span class="who">卷四 · 城陷</span>
+      <blockquote>二月七日城陷，及臣本使蔡袭在左膊中箭，元从已尽。臣右腕中箭，携印浮水渡江。</blockquote>
+      <span class="src">蛮书卷四 名类第四</span>
+    </figure>
+    <figure class="q">
+      <span class="who">卷四 · 水边的四百人</span>
+      <blockquote>诸儿郞等！水次无船，入水必死。与诸兄弟每一个人杀得两蛮贼，我辈亦得便宜！</blockquote>
+      <span class="src">蛮书卷四 名类第四 · 荆南都虞候元惟德语</span>
+    </figure>
+    <p>四百无船的士卒杀回城里，近午杀死贼军两千余人、马三百匹。而蔡袭没能渡出来。樊绰后来在表中补记了账单，连自己的家人也一并报了：</p>
+    <figure class="q">
+      <span class="who">卷十 · 伤亡单</span>
+      <blockquote>本使蔡袭去年正月十四日内四度中矢石，家口并元随七十余人，悉殒于贼所。臣长男韬及奴婢一十四口，并陷蛮陬。</blockquote>
+      <span class="src">蛮书卷十 附 樊绰奏状</span>
+    </figure>
+    <p>同年表里，他把罪责归于边长吏苛暴，只引了一句古书作结：</p>
+    <figure class="q">
+      <span class="who">卷十 · 引尚书</span>
+      <blockquote>抚我则后，虐我则雠。</blockquote>
+      <span class="src">蛮书卷十 附 樊绰奏状</span>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="axis"><span class="tag">十卷</span></div>
+  <div>
+    <h2>敌国说明书<small>卷七 物产、卷八 风俗、卷九 条教</small></h2>
+    <p>逃出交趾的第二年正月，樊绰把案头的材料整理成十卷，在安南江口托驿使带进长安。全书是一份完整的敌情档案：路怎么走，城在哪里，种什么，信什么，兵制怎么编，全有。</p>
+    <div class="juan">
+      <div><b>卷一</b>云南界内途程第一</div>
+      <div><b>卷二</b>山川江源第二</div>
+      <div><b>卷三</b>六诏第三</div>
+      <div><b>卷四</b>名类第四</div>
+      <div><b>卷五</b>六赕第五（库本题六第五）</div>
+      <div><b>卷六</b>云南城镇第六</div>
+      <div><b>卷七</b>云南管内物产第七</div>
+      <div><b>卷八</b>蛮夷风俗第八</div>
+      <div><b>卷九</b>南蛮条教第九</div>
+      <div><b>卷十</b>南蛮疆界接连诸蕃夷国名第十</div>
+    </div>
+    <p>卷七像一本物资清单：安宁的盐井深八十尺，越赕马日行数百里，永昌出琥珀。贞元十年南诏进贡的那块琥珀，重二十六斤，当日以为罕有。还有茶史上常被引用的一条，银生城界诸山的茶，是云南产茶最早的文献记录：</p>
+    <figure class="q">
+      <span class="who">卷七 · 茶</span>
+      <blockquote>茶出银生城界诸山，散收无采造法。蒙舍蛮以椒姜桂和烹而饮之。</blockquote>
+      <span class="src">蛮书卷七 云南管内物产第七</span>
+    </figure>
+    <p>连织绫罗这样的手艺都有来历记录：会织的人，是太和三年南诏寇西川时掳回来的工匠。</p>
+    <figure class="q">
+      <span class="who">卷七 · 织工来源</span>
+      <blockquote>自大和三年蛮贼寇西川，虏掠巧儿及女工非少，如今悉解织绫罗也。</blockquote>
+      <span class="src">蛮书卷七 云南管内物产第七</span>
+    </figure>
+    <p>卷九是军制篇，读来最见骨气。士兵自带粮米一斗五升，背鱼脯，此外没有后勤，所以南诏军队生怕粮食吃完，心切于战；出界之后，许行劫掠。选兵的科目也古怪，五次上才能补罗苴，头一项是爬山：</p>
+    <figure class="q">
+      <span class="who">卷九 · 步卒五次上</span>
+      <blockquote>玷苍山顶立旗，先上到旗下为一次上。</blockquote>
+      <span class="src">蛮书卷九 南蛮条教第九</span>
+    </figure>
+    <p>卷十则是一圈邻国名录：弥诺、弥臣、骠国、昆仑、女王国、真腊。其中记了几笔南诏对外用兵的败仗，被女王国的药箭射得十不存一，被昆仑国决水淹浸、饿死万余。情报官连自己敌人的败仗也照录，这大概是全书最像档案的地方。</p>
+    <figure class="q">
+      <span class="who">卷十 · 成书自述</span>
+      <blockquote>臣去年正月二十九日，已录蛮界程途，及山川城镇，六诏始末，诸种名数，风俗条教，土宜物产，六名号，连接诸蕃，共纂录成十卷，于安南郡州江口，附襄州节度押衙张守忠进献。</blockquote>
+      <span class="src">蛮书卷十 附 樊绰奏状</span>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="axis"><span class="tag">流传</span></div>
+  <div>
+    <h2>书比人走得远<small>从军牒到正史底本</small></h2>
+    <p>十卷送进长安后，成了唐廷处理南诏问题的标准参考。《新唐书》的南诏传和《资治通鉴》的相关纪事，大量取材于此。宋以后原本渐渐散佚，清修四库时，馆臣从《永乐大典》里把全书辑了出来。所以今天看到的库本，是一部重新拼起来的书：正文里留着辑校的针脚，比如卷九一条末尾的错简注记「此条原在巻八蛮夷风俗篇末」，比如卷五龙尾城条下的校语「原本作龙口城」，再比如册封纪程里直接标出的「原缺」二字。</p>
+    <figure class="q">
+      <span class="who">卷十 · 作者的结局</span>
+      <blockquote>咸通五年六月，左授夔州都督府长史。</blockquote>
+      <span class="src">蛮书卷十 附 樊绰自记</span>
+    </figure>
+    <p>樊绰自己的下场，只在书尾一笔：左授夔州都督府长史。降了官，人到了巴蜀江边，还在接着问蛮夷根源，把访来的材料也寄给安南的旧同僚。书的最后不是凯旋，是一个被贬的情报官仍在补录。他给这本书起的名字很平实，蛮书；他真正写给朝廷的那句愿望，藏在卷一的路条末尾：希望朝廷照着这张图，四面征讨，永清羌虏。</p>
+    <figure class="q">
+      <span class="who">卷十 · 追记誓文缘由</span>
+      <blockquote>全驱蚁聚之众，攻劫邕、交之人。五载兴兵，三来虏掠。</blockquote>
+      <span class="src">蛮书卷十 附 樊绰奏状</span>
+    </figure>
+  </div>
+</section>
+
+</main>
+
+<div class="fin">
+  <div class="rule"></div>
+  <p>路条量出五十二日程，誓文存了四十三年账，<em>十卷纸比城墙活得久</em>。</p>
+  <p>下一座馆驿，见总目。</p>
+</div>
+
+<footer>
+  <div class="fw">
+    <p><b>文本来源</b>：殆知阁简体库 史藏 地理部（github.com/garychowcmu/daizhigev20 简体化仓库），本页引文均经与库内原文逐字核验。</p>
+    <p><b>阅读提醒</b>：库本为清四库馆臣自永乐大典辑出之辑本，错简、讹字与两存异文在所难免，如卷五卷题、誓文四本两处清单不同，引用请以核验底本为准。文中涉及战争、虏掠、诅盟等内容，皆九世纪之记录与观念，系时代局限所致，阅读时请留意分辨。</p>
+    <p><b>殆知阁导读</b> · 第 146 篇，总目见 <a href="mulu.html">mulu.html</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
