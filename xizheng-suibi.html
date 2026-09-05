@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>读书堂西征随笔 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink:#191917;
+    --paper:#e8e4dc;
+    --gold:#c9963f;
+    --gold-dim:rgba(201,150,63,.45);
+    --gold-faint:rgba(201,150,63,.14);
+    --seal:#9e3b2e;
+    --seal-faint:rgba(158,59,46,.16);
+    --soft:#a49e91;
+    --faint:#6e695f;
+    --hairline:rgba(232,228,220,.14);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { background:var(--ink); }
+  body {
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    line-height:1.95;
+    font-size:16.5px;
+  }
+  .wrap { max-width:880px; margin:0 auto; padding:0 22px; }
+  .mono { font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace; }
+
+  /* 起点：题签 + 引言 */
+  .hero { padding:64px 0 20px; position:relative; }
+  .hero-grid { display:flex; gap:44px; align-items:flex-start; }
+  .slip {
+    flex:0 0 auto;
+    background:var(--paper);
+    color:var(--ink);
+    writing-mode:vertical-rl;
+    padding:30px 20px 24px;
+    display:flex;
+    gap:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,.5), inset 0 0 0 1px rgba(25,25,23,.18);
+    position:relative;
+    transform:rotate(.6deg);
+  }
+  .slip::before {
+    content:""; position:absolute; top:10px; bottom:10px; left:9px; right:9px;
+    border:1px solid rgba(25,25,23,.28); pointer-events:none;
+  }
+  .slip-t { font-size:30px; letter-spacing:.34em; font-weight:700; }
+  .slip-s { font-size:13px; letter-spacing:.3em; color:#5c574d; padding-top:8px; }
+  .slip-seal {
+    writing-mode:horizontal-tb;
+    align-self:flex-start;
+    margin-top:10px;
+    background:var(--seal);
+    color:var(--paper);
+    font-size:12px;
+    letter-spacing:.18em;
+    padding:3px 7px;
+  }
+  .hero-txt { flex:1; min-width:0; }
+  .kicker {
+    color:var(--gold); font-size:12.5px; letter-spacing:.42em;
+    margin-bottom:26px;
+  }
+  .hero-txt p.body { margin-bottom:18px; color:var(--paper); }
+  .hero-txt p.body b { color:var(--gold); font-weight:700; }
+  .pos {
+    margin-top:30px;
+    border-left:3px solid var(--gold);
+    padding:6px 0 6px 18px;
+    font-size:18.5px;
+    color:var(--paper);
+  }
+  .pos small { display:block; font-size:12.5px; color:var(--faint); letter-spacing:.22em; margin-top:6px; }
+
+  /* 驿路 */
+  .road { position:relative; padding:34px 22px 30px; }
+  .road::before {
+    content:""; position:absolute; top:0; bottom:0; left:47px;
+    border-left:2px dashed var(--gold-dim);
+  }
+  .road .wrap { padding:0; }
+  .stop { position:relative; padding:0 0 74px 56px; }
+  .stop:last-child { padding-bottom:10px; }
+  .dot {
+    position:absolute; left:40px; top:6px;
+    width:16px; height:16px; border-radius:50%;
+    background:var(--ink); border:2px solid var(--gold);
+  }
+  .stop.off .dot { border-color:var(--seal); }
+  .stamp {
+    display:inline-block;
+    border:1px solid var(--gold-dim);
+    color:var(--gold);
+    font-size:12.5px; letter-spacing:.3em;
+    padding:4px 12px 4px 15px;
+    margin-bottom:16px;
+    background:var(--gold-faint);
+  }
+  .stop.off .stamp { border-color:rgba(158,59,46,.5); color:#c77f6f; background:var(--seal-faint); }
+  h2 { font-size:24px; letter-spacing:.1em; margin-bottom:6px; }
+  .dateline { font-size:13px; color:var(--faint); letter-spacing:.14em; margin-bottom:20px; }
+  .stop p.body { margin-bottom:16px; }
+
+  /* 纸片引文 */
+  .card {
+    background:var(--paper);
+    color:var(--ink);
+    padding:24px 28px;
+    margin:24px 4px;
+    box-shadow:0 8px 24px rgba(0,0,0,.45), inset 0 0 0 1px rgba(25,25,23,.16);
+    position:relative;
+  }
+  .card:nth-of-type(odd) { transform:rotate(-.45deg); }
+  .card:nth-of-type(even) { transform:rotate(.4deg); }
+  .card .tag {
+    position:absolute; top:-11px; left:22px;
+    background:var(--ink); color:var(--gold);
+    font-size:11.5px; letter-spacing:.24em;
+    padding:2px 10px;
+  }
+  .card .tag.red { background:var(--seal); color:var(--paper); }
+  .q {
+    font-size:17px; line-height:2.1;
+  }
+  .cap {
+    margin-top:12px;
+    font-size:13px; color:#7a7466;
+    letter-spacing:.1em;
+  }
+  .cap .mono { font-size:12px; }
+
+  /* 朱批侧签 */
+  .verdict { display:flex; gap:20px; }
+  .verdict .side {
+    flex:0 0 auto;
+    writing-mode:vertical-rl;
+    background:var(--seal);
+    color:var(--paper);
+    font-size:19px; letter-spacing:.5em;
+    padding:18px 9px;
+    font-weight:700;
+  }
+  .verdict .main { flex:1; min-width:0; }
+
+  /* 胭脂贼名号横卷 */
+  .scroll {
+    overflow-x:auto;
+    margin:26px 0 8px;
+    padding-bottom:10px;
+  }
+  .scroll .reel { display:flex; gap:12px; width:max-content; }
+  .nm {
+    writing-mode:vertical-rl;
+    border:1px solid var(--gold-dim);
+    background:var(--gold-faint);
+    color:var(--paper);
+    font-size:15.5px; letter-spacing:.3em;
+    padding:16px 9px;
+    white-space:nowrap;
+  }
+  .nm i { font-style:normal; color:var(--gold); font-size:12px; margin-top:12px; }
+  .scrollcap { font-size:13px; color:var(--faint); letter-spacing:.12em; }
+
+  /* 条目签 */
+  .chips { display:flex; flex-wrap:wrap; gap:10px; margin:20px 0 6px; }
+  .chip {
+    border:1px solid var(--hairline);
+    color:var(--soft);
+    font-size:13.5px; letter-spacing:.16em;
+    padding:5px 14px;
+  }
+
+  /* 路的终点标记 */
+  .roadend {
+    position:relative;
+    padding:0 0 64px 56px;
+  }
+  .roadend .cap2 {
+    position:absolute; left:33px; top:2px;
+    width:30px; height:30px; border-radius:50%;
+    border:2px solid var(--seal);
+    background:var(--ink);
+  }
+  .roadend p { color:var(--soft); font-size:15px; letter-spacing:.06em; }
+
+  .tail-q .card { margin-top:34px; }
+
+  /* 页脚 */
+  .foot-notes { border-top:1px solid var(--hairline); margin-top:26px; padding-top:22px; }
+  .foot-notes p { font-size:13.5px; color:var(--faint); margin-bottom:12px; line-height:1.9; }
+  .foot-notes a { color:var(--soft); text-decoration:none; border-bottom:1px solid var(--hairline); }
+  footer.page { border-top:1px solid var(--hairline); padding:22px 0 36px; }
+  footer.page .wrap { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:12.5px; color:var(--faint); letter-spacing:.14em; }
+  footer.page a { color:var(--soft); text-decoration:none; border-bottom:1px solid var(--hairline); }
+
+  @media (max-width:640px) {
+    .hero-grid { flex-direction:row; gap:22px; }
+    .slip-t { font-size:22px; }
+    .slip { padding:20px 14px 18px; gap:10px; }
+    .road::before { left:31px; }
+    .stop, .roadend { padding-left:40px; }
+    .dot { left:24px; }
+    .roadend .cap2 { left:17px; }
+    .verdict { flex-direction:column-reverse; }
+    .verdict .side { writing-mode:horizontal-tb; align-self:flex-start; padding:6px 14px; font-size:15px; }
+    .card { padding:18px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div class="slip">
+      <span class="slip-t">读书堂西征随笔</span>
+      <span class="slip-s">清 · 钱塘汪景祺 撰</span>
+      <span class="slip-seal">孤本</span>
+    </div>
+    <div class="hero-txt">
+      <p class="kicker">殆知阁导读 · 子藏笔记</p>
+      <p class="body">雍正二年初春，浙江举人汪景祺骑骡出太行，往西安去。他五十二岁，父亲做过户部侍郎，自己却半辈子没做成官。这一趟西行，是去投奔当朝最红的武将、川陕总督年羹尧。路上走了三个月，他把见闻记成两卷笔记，题作读书堂西征随笔。</p>
+      <p class="body">这本笔记当年大约只抄了一部。抄完的第二年年底，年羹尧获罪赐死，抄家的人从一堆废纸里翻出此书，进呈御览。皇帝亲自读完，把它定为逆书。作者立斩，头颅挂在菜市口的旗杆上，一挂十年。全天下因此只剩这一部，因为皇帝要留着，亲自批。</p>
+      <p class="pos">一部敲权门的笔记，最后敲断了自己的脖子。<small>库本三万六千字，三十五条目，引文全部经库本逐字核验</small></p>
+    </div>
+  </div>
+</header>
+
+<main class="road">
+  <div class="wrap">
+
+    <section class="stop">
+      <span class="dot"></span>
+      <div class="stamp">壹 · 赵州大石桥</div>
+      <h2>囊中十金</h2>
+      <div class="dateline">雍正二年二月初六 · 河北赵州</div>
+      <p class="body">路上的汪景祺不阔气。旧友张君任职的地界遭了灾，母亲妻子双双病殁，棺木都运不回南方；他去送行，自己盘缠也见了底。有人送他十六两银子，他转手全数塞给了更穷的张君，然后写信给朋友诉苦，信里有一句很硬的自夸。</p>
+      <div class="card">
+        <span class="tag">与胡别驾遵王宇</span>
+        <div class="q">囊中所存仅十金而已，无论不能到西安，即平定州亦难枵腹而至，然自信无饿倒中途之理。</div>
+        <div class="cap">口袋只剩十两，连西安都到不了，但自信饿不死在半路。库本此信末署：<span class="mono">二月初六日午，刻赵州大石桥旅次</span>。</div>
+      </div>
+      <p class="body">硬气之外还有一层凉意。他给这位胡别驾写信时说，父亲去世后，几十年的世交看他如路人，反倒是从无一面之缘的张君，见第一面就倾盖如故。</p>
+      <div class="card">
+        <span class="tag">与胡别驾遵王宇</span>
+        <div class="q">自先公捐馆以来，宿昔之通门年谊及数十年香火之交，待我如陌路，与张君从无半面而倾盖如故。</div>
+        <div class="cap">世态炎凉四个字，他比谁都清楚。所以后来那句把大将军捧上天的信，也不过是一个被冷了半辈子的人，终于找到一扇愿意开的门。</div>
+      </div>
+    </section>
+
+    <section class="stop">
+      <span class="dot"></span>
+      <div class="stamp">贰 · 红石镇与蒲州</div>
+      <h2>胭脂贼</h2>
+      <div class="dateline">二月二十九日至三月初一 · 山西闻喜、蒲州</div>
+      <p class="body">全书记得最鲜活的一段，不在官场，在路上。二月二十九他疝气发作，迷路闯进闻喜县红石镇一户人家，主家三位女眷为他揉腰打腿、烧水沏茶，言谈间豪气逼人。几天后在蒲州关帝庙，本地儒生常生替他解了谜：那一带的旱灾里，出来了一伙骑马的女盗，江湖上叫做胭脂贼。</p>
+      <div class="card">
+        <span class="tag">记蒲州常生语</span>
+        <div class="q">此邦不见雨雪者数年矣，岁歉无收，赤地千里，弱者转沟壑，强者率流亡，十室九空，流离无告。</div>
+        <div class="cap">灾荒的另一半是人祸：<span class="mono">正供桁杨桎梏，至卖儿贴妇以偿</span>，税吏上门，交不出就上枷锁，落到卖儿卖妻来抵税。</div>
+      </div>
+      <p class="body">女盗们有组织，有纪律，头目按军法部署村民。她们的规矩写在书里，像一句黑色笑话。</p>
+      <div class="card">
+        <span class="tag">记蒲州常生语</span>
+        <div class="q">于本地大户秋毫无犯，且不肯妄杀人。过客非重资不取，取重赀亦不过分十之二三。</div>
+        <div class="cap">不打劫本地富户，不乱杀人；过路客商，只抽重货的一两三成。比税吏体面，所以没人报官。</div>
+      </div>
+      <div class="scroll">
+        <div class="reel">
+          <span class="nm">闪电光<i>长枪</i></span>
+          <span class="nm">一堆雪<i>大刀</i></span>
+          <span class="nm">神臂弓<i>强弓</i></span>
+          <span class="nm">飞飞儿</span>
+          <span class="nm">决云儿</span>
+          <span class="nm">紫云来</span>
+          <span class="nm">锦上花</span>
+          <span class="nm">风中花</span>
+          <span class="nm">梨花雪</span>
+          <span class="nm">桃花雪</span>
+        </div>
+      </div>
+      <div class="scrollcap">名号都从库本：<span class="mono">飞飞儿、决云儿、紫云来、锦上花、风中花、梨花雪、桃花雪</span>，另有头目三人。闪电光是李氏，书里写得郑重：</div>
+      <div class="card">
+        <span class="tag">记蒲州常生语</span>
+        <div class="q">李氏名翠娃，能用长枪，人呼为闪电光……其女曰小云娃，能舞大刀，重五十斤，人呼为一堆雪。</div>
+        <div class="cap">五十斤的大刀。红石镇那三位沏茶的女眷，多半就在这份名单上。</div>
+      </div>
+      <p class="body">常生说，这伙人没本事久存，就看天。哪天雨下来了，有饭吃，人自然散伙。四天后夜里真下了一场大雨，是半年未见的大雨，汪景祺在旅店掌灯记下那句奇文。</p>
+      <div class="card">
+        <span class="tag">记蒲州常生语</span>
+        <div class="q">得雨三寸，则家给人足，此辈可即解散矣……余深为平阳人幸之，亦深为胭脂贼幸之也。</div>
+        <div class="cap">下三寸雨，家家有饭吃，她们就可以散伙了。我为平阳百姓高兴，也为胭脂贼高兴。</div>
+      </div>
+    </section>
+
+    <section class="stop">
+      <span class="dot"></span>
+      <div class="stamp">叁 · 西安客舍</div>
+      <h2>功臣不可为</h2>
+      <div class="dateline">三月十七 · 已抵西安，尚未见着大将军</div>
+      <p class="body">到了西安，引荐的路还没走通。他在客舍里写了一篇史论，替历朝被杀的功臣叫屈，顺手把皇帝杀功臣的心理拆成了四步。两千年帝制里，很少有人把这层心事写得这么白。</p>
+      <div class="card">
+        <span class="tag">功臣不可为</span>
+        <div class="q">彼夫猜忌之主，其才本庸，而其意复怯，当贼寇昌炽时，望烽火则魂惊，见军书则股栗。</div>
+        <div class="cap">那些猜忌功臣的皇帝，本事平庸，胆子又小：贼势嚣张时，望见烽火就魂飞，看见军书就腿软。</div>
+      </div>
+      <div class="card">
+        <span class="tag">功臣不可为</span>
+        <div class="q">疑也，畏也，怒也，厌也，以此四者待功臣，有不凶终而隙末者乎？</div>
+        <div class="cap">天下太平之后，皇帝对功臣依次生出疑心、畏心、怒心、厌心，四心一齐，功臣必然不得善终。库本此篇末署：<span class="mono">三月十七日</span>。</div>
+      </div>
+      <p class="body">文章举的例子一个个有名有姓：郭子仪靠自污保命，仅得善终；檀道济被杀，自毁长城。这在当时是一篇替年羹尧捏把汗的文章，也是一份预测他结局的文章。后来它成了案卷里最重的一条罪名。</p>
+      <div class="card">
+        <span class="tag">功臣不可为</span>
+        <div class="q">郭子仪以酒色自晦，仅能保首领以殁。</div>
+        <div class="cap">连郭子仪都得靠终日饮酒作乐来自掩锋芒，才勉强得了个善终。</div>
+      </div>
+    </section>
+
+    <section class="stop">
+      <span class="dot"></span>
+      <div class="stamp">肆 · 上大将军书</div>
+      <h2>宇宙之第一伟人</h2>
+      <div class="dateline">雍正二年四月十五 · 西安</div>
+      <p class="body">四月十五，他终于把信递进了大将军府。随信附着七言律诗六章，信里的意思是：天地开辟以来，用兵之奇、成功之快，没人比得过您。</p>
+      <div class="card">
+        <span class="tag">上抚远大将军太保一等公川陕总督年公书</span>
+        <div class="q">盖自有天地以来，制敌之奇，奏功之速，宁有盛于今日之大将军者哉……当吾世而不一瞻仰宇宙之第一伟人，此身诚虚生于人世间耳。</div>
+        <div class="cap">信末自陈：<span class="mono">小诗六章，聊效巷祝衢歌</span>，附诗第六首收尾一句：</div>
+      </div>
+      <div class="card">
+        <span class="tag">附载七言律诗六章 · 其六</span>
+        <div class="q">芜词敬赋从军乐，欲谒千秋第一人。</div>
+        <div class="cap">另一处他又写：<span class="mono">大将军有揖客，顾不重耶？</span>大将军能有一个作揖的门客，岂不更添身份？谀词写到这个份上，是功夫。</div>
+      </div>
+      <p class="body">这封信奏效了。年羹尧把他留在幕府做了记室，掌书记文字。平心而论，书里也不全是谀词。他记西宁被围那一笔，惊心动魄：罗卜藏丹津攻城，城楼中炮起火，火光一灭，众人看见年羹尧端坐如故，敌军以为有神助。库本译名如此，通行作罗卜藏丹津。</p>
+      <div class="card">
+        <span class="tag">西兵之捷</span>
+        <div class="q">罗卜藏丹金移兵向城发火器，指城楼焰息，则年大将军屹然坐如故，罗卜藏丹金惊以为神。</div>
+        <div class="cap">书里也有直笔。一条讲陕西吏治：<span class="mono">吏治之坏莫甚于陕西，数十年来，督抚藩臬皆以满州人为之，目不知书</span>，几十年的督抚臬司都看不懂公文。满州二字，库本原文如此。</div>
+      </div>
+      <p class="body">书里的事，到四月十五为止。后面的路，这本书没能走到。</p>
+    </section>
+
+    <div class="roadend">
+      <span class="cap2"></span>
+      <p>路线至此中断。以下是书外的路。</p>
+    </div>
+
+    <section class="stop off">
+      <span class="dot"></span>
+      <div class="stamp">伍 · 抄家</div>
+      <h2>废纸堆里翻出逆书</h2>
+      <div class="dateline">雍正三年十二月 · 年羹尧赐死之后</div>
+      <p class="body">雍正三年九月，年羹尧被调去杭州做将军，十二月，赐自尽。抄家的人在他家里翻出一部没人见过的书，本来混在一堆废纸里，被人拣了出来，一路进呈到皇帝案头。</p>
+      <p class="body">雍正是真的读了。他在书上留了长篇朱批，批语说他悖谬狂乱到了极点，只恨发现得太晚。随后刑部定罪，谕旨回来的朱批只有四个字：斩，头挂出去示众。</p>
+      <div class="verdict card">
+        <div class="main">
+          <span class="tag red">逆书定谳之句</span>
+          <div class="q">疑也，畏也，怒也，厌也，以此四者待功臣，有不凶终而隙末者乎？</div>
+          <div class="cap">杀功臣的四步心法，写的人本意是替功臣叫屈。两年后读它的人，恰好就是那篇推演里的皇帝本人。妻子发给黑龙江披甲人为奴，兄弟子侄革职的革职、发遣的发遣。</div>
+        </div>
+        <div class="side">逆书</div>
+      </div>
+      <p class="body">更奇的是，人死了，这本书还在官场上被调用。雍正五年清算蔡珽、程如丝一案，皇帝的上谕引用的正是书里一条：夔州知府程如丝强买商人盐，私商不服，鸟枪弓矢一齐放，死伤无算；湖广总督杨宗仁要上奏，程如丝抬出大将军的名头，压得督抚把案子按下。</p>
+      <div class="card">
+        <span class="tag">程如丝贪横</span>
+        <div class="q">程如丝指称是年大将军意。杨督竟寝其事。</div>
+        <div class="cap">抬出年羹尧的意思，总督就把奏折搁下了。库本此条前留有一行按注：<span class="mono">按此条见雍正五年三月戊戌谕旨所引</span>，这一条是从雍正五年上谕里辑回来的。</div>
+      </div>
+    </section>
+
+    <section class="stop off">
+      <span class="dot"></span>
+      <div class="stamp">陆 · 菜市口</div>
+      <h2>一挂十年</h2>
+      <div class="dateline">雍正四年至乾隆元年 · 北京菜市口</div>
+      <p class="body">汪景祺的头颅挂在菜市口的旗杆上。挂在第八年上，雍正驾崩；挂到第十年，乾隆元年，有大臣看不过去，奏请掩埋，这道恩旨才把头放了下来。他没活过五十四岁。</p>
+      <p class="body">当年他自比血性男子，替一面之缘的朋友散尽盘缠；到头来，通门世谊里没有一个人能替他收尸。全天下只剩一部书，就是皇帝批过的那一部，后来归了故宫博物院。相传书中另有一首讥讽御笔的诗，今存本里没有，此处不引。</p>
+      <div class="tail-q">
+        <div class="card">
+          <span class="tag">功臣不可为 · 篇首八字</span>
+          <div class="q">鸟尽弓藏，古今同慨。</div>
+          <div class="cap">这八个字，先是他的文章，后来是他的判词，最后成了他一生的注脚。</div>
+        </div>
+      </div>
+      <p class="body">两卷三十余篇，谀词与直笔混在一起。路上见闻之外，书里还有这些：</p>
+      <div class="chips">
+        <span class="chip">步光小传</span>
+        <span class="chip">诙谐之语</span>
+        <span class="chip">孤魅畏节妇</span>
+        <span class="chip">妇人缠足</span>
+        <span class="chip">记台吉女自缢事</span>
+        <span class="chip">秦中凯歌十三首</span>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <div class="foot-notes">
+      <p>文本来源：殆知阁简体库（子藏/笔记/西征随笔），导读页面见仓库 <a href="https://github.com/robertsong2000/daizhige-daodu">github.com/robertsong2000/daizhige-daodu</a>。全部引文经脚本与库本逐字比对（去标点、异体字归一）通过；驿站日期、条目名均据库本原文。</p>
+      <p>史实界限：案发经过、立斩枭示、家属发遣、头悬菜市口十年、乾隆元年收埋、孤本入藏故宫等，据通行史载与档案资料综述，库本原文不含这些内容；本页凡属库本文字均以引文纸片标出，其余为叙述。雍正朱批内容以转述为限，不作引文。</p>
+      <p>时代局限：书中谀词之肉麻、对妇女的轻佻笔墨、以及目不知书一类对官员的贬语，都是其所处时代的口吻；胭脂贼一段志异色彩浓厚，人物真伪难考，宜当作乱世里的一份社会史传闻来读。</p>
+    </div>
+    <span>殆知阁导读 之一百六十三,读书堂西征随笔</span>
+    <a href="mulu.html">返回总目</a>
+  </div>
+</footer>
+
+</body>
+</html>
