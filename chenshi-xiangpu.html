@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>陈氏香谱 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --green: #5f9270;
+    --green-dim: rgba(95,146,112,0.35);
+    --green-faint: rgba(95,146,112,0.14);
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ 首页：一炉香 ============ */
+  .hero { min-height: 88dvh; display: grid; grid-template-columns: 1.15fr 0.85fr; align-items: center; gap: 24px; padding: 64px 0 40px; }
+  .kicker { font-size: 13px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  .hero h1 { font-size: clamp(52px, 9vw, 96px); font-weight: 700; letter-spacing: 0.16em; line-height: 1.25; margin: 26px 0 10px; }
+  .hero h1 span { color: var(--green); }
+  .hero .au { font-size: 17px; color: var(--paper-dim); letter-spacing: 0.2em; }
+  .hero .au b { color: var(--paper); font-weight: 600; }
+  .hero .fact { margin-top: 22px; font-size: 14px; color: var(--paper-faint); letter-spacing: 0.06em; display: flex; flex-wrap: wrap; gap: 4px 18px; }
+  .hero .lead { margin-top: 30px; max-width: 30em; font-size: 15.5px; color: var(--paper-dim); border-left: 2px solid var(--green); padding-left: 18px; }
+  .ludzi { display: flex; justify-content: center; }
+  .ludzi svg { width: min(320px, 70vw); height: auto; overflow: visible; }
+  .smoke { stroke-dasharray: 520; stroke-dashoffset: 520; animation: pull 9s ease-in-out infinite; }
+  .smoke.s2 { animation-delay: 2.6s; }
+  .smoke.s3 { animation-delay: 5.2s; }
+  @keyframes pull {
+    0% { stroke-dashoffset: 520; opacity: 0; }
+    12% { opacity: 1; }
+    62% { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .smoke { animation: none; stroke-dashoffset: 260; opacity: 0.85; }
+  }
+
+  /* ============ 香路（锚点导览） ============ */
+  nav.lux { position: sticky; top: 0; z-index: 9; background: var(--ink); border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+  nav.lux .trail { max-width: 900px; margin: 0 auto; padding: 0 28px; display: flex; align-items: center; gap: 4px; overflow-x: auto; }
+  nav.lux a {
+    flex: 0 0 auto; text-decoration: none; color: var(--paper-faint); font-size: 13.5px;
+    letter-spacing: 0.18em; padding: 13px 10px; position: relative; white-space: nowrap;
+    transition: color 0.2s ease;
+  }
+  nav.lux a::before { content: ""; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--hairline); margin-right: 8px; vertical-align: 2px; }
+  nav.lux a:hover { color: var(--green); }
+  nav.lux a:hover::before { background: var(--green); }
+  nav.lux .fire { flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-left: 4px; box-shadow: 0 0 10px 2px var(--green-dim); }
+
+  /* ============ 章节通用 ============ */
+  main section { padding: 78px 0 20px; }
+  .jie { display: flex; align-items: baseline; gap: 18px; margin-bottom: 30px; }
+  .jie .xu { font-size: 12.5px; letter-spacing: 0.3em; color: var(--green); border: 1px solid var(--green-dim); padding: 4px 10px 4px 13px; }
+  .jie h2 { font-size: 30px; font-weight: 600; letter-spacing: 0.14em; }
+  .jie .zhu { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.1em; }
+  p.pro { font-size: 16px; color: var(--paper); opacity: 0.92; margin-bottom: 1.2em; max-width: 42em; }
+  p.pro em { font-style: normal; color: var(--green); }
+
+  /* 引块：香牌 */
+  .q {
+    background: var(--green-faint); border-left: 3px solid var(--green);
+    padding: 20px 24px; margin: 26px 0; max-width: 40em;
+    font-size: 16.5px; line-height: 2.05; color: var(--paper);
+  }
+  .q .qs { display: block; margin-top: 10px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.14em; }
+  .q.big { font-size: 19.5px; line-height: 2.2; padding: 28px 30px; background: transparent; border-left: none; border-top: 1px solid var(--green-dim); border-bottom: 1px solid var(--green-dim); max-width: none; }
+
+  /* 沉香三品：品第阶 */
+  .jie3 { margin: 30px 0 8px; max-width: 40em; }
+  .jie3 .rank { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; margin-bottom: 12px; }
+  .jie3 .no { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.14em; text-align: right; }
+  .jie3 .bar { position: relative; height: 44px; background: var(--green-faint); border-left: 2px solid var(--green); display: flex; align-items: center; padding-left: 16px; }
+  .jie3 .bar b { font-size: 16.5px; font-weight: 600; letter-spacing: 0.1em; }
+  .jie3 .bar i { font-style: normal; font-size: 12.5px; color: var(--paper-faint); margin-left: 12px; }
+  .jie3 .r1 { width: 100%; } .jie3 .r2 { width: 78%; } .jie3 .r3 { width: 60%; }
+  .jie3 .src { font-size: 12.5px; color: var(--paper-faint); margin-top: 8px; letter-spacing: 0.1em; }
+
+  /* 香名小账 */
+  .zhang { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; margin: 30px 0; border-top: 1px solid var(--hairline); max-width: 46em; }
+  .zhang div { display: flex; gap: 14px; padding: 13px 2px; border-bottom: 1px solid var(--hairline); font-size: 14.5px; align-items: baseline; }
+  .zhang b { flex: 0 0 auto; color: var(--green); font-weight: 600; letter-spacing: 0.08em; }
+  .zhang span { color: var(--paper-dim); }
+
+  /* 方笺 */
+  .fangs { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin: 34px 0 10px; }
+  .fang { position: relative; background: var(--paper); color: var(--ink); padding: 40px 26px 24px; border: 1px solid var(--paper); outline: 1px solid var(--paper-dim); outline-offset: 4px; font-size: 14.5px; line-height: 2; }
+  .fang h4 { position: absolute; top: -15px; left: 18px; background: var(--green); color: #f2f0ea; font-size: 14.5px; font-weight: 600; letter-spacing: 0.22em; padding: 4px 16px 4px 19px; }
+  .fang p { margin-bottom: 0.6em; }
+  .fang .fn { display: block; margin-top: 12px; font-size: 12.5px; color: #6e6a61; letter-spacing: 0.12em; }
+  .fang u { text-decoration: none; border-bottom: 2px solid var(--green); font-weight: 600; }
+
+  /* 香异：夜版卡 */
+  .ye { background: var(--ink-2); border: 1px solid var(--hairline); border-top: 2px solid var(--green); padding: 24px 26px; margin: 26px 0; max-width: 44em; }
+  .ye h4 { font-size: 16px; letter-spacing: 0.18em; color: var(--green); font-weight: 600; margin-bottom: 10px; }
+  .ye p { font-size: 15px; color: var(--paper-dim); margin-bottom: 0.8em; }
+  .ye p:last-child { margin-bottom: 0; }
+
+  /* 玩好：三器 */
+  .qi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin: 30px 0; }
+  .qi .tile { border: 1px solid var(--hairline); padding: 22px 20px; }
+  .qi h4 { font-size: 17px; font-weight: 600; letter-spacing: 0.16em; margin-bottom: 4px; }
+  .qi .tie { font-size: 12px; color: var(--green); letter-spacing: 0.2em; display: block; margin-bottom: 12px; }
+  .qi p { font-size: 14px; color: var(--paper-dim); line-height: 1.95; }
+  .qi p b { color: var(--paper); font-weight: 500; }
+
+  /* 边则 */
+  .zeze { border-top: 1px solid var(--hairline); margin-top: 36px; }
+  .ze { display: grid; grid-template-columns: 150px 1fr; gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--hairline); }
+  .ze .nm { font-size: 16.5px; font-weight: 600; letter-spacing: 0.1em; }
+  .ze .nm small { display: block; font-weight: 400; font-size: 12px; color: var(--paper-faint); margin-top: 6px; letter-spacing: 0.14em; }
+  .ze .bd { font-size: 15px; color: var(--paper-dim); max-width: 40em; }
+  .ze .bd .q { margin: 14px 0 0; padding: 14px 18px; font-size: 15px; }
+
+  /* 讳字批注 */
+  .hui { background: rgba(192,69,60,0.1); border: 1px dashed rgba(192,69,60,0.45); padding: 16px 20px; margin: 20px 0; font-size: 13.5px; color: var(--paper-dim); max-width: 44em; line-height: 2; }
+  .hui b { color: #c9968f; font-weight: 600; }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 70px; padding: 34px 0 60px; }
+  .fnav { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px; font-size: 14px; color: var(--paper-dim); letter-spacing: 0.12em; }
+  .fnav a { color: var(--green); text-decoration: none; border-bottom: 1px solid var(--green-dim); }
+  .fnote { margin-top: 20px; font-size: 12.5px; color: var(--paper-faint); line-height: 2; max-width: 60em; }
+
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 56px; gap: 8px; }
+    .ludzi { order: -1; justify-content: flex-start; }
+    .ludzi svg { width: 200px; }
+    .zhang, .fangs, .qi { grid-template-columns: 1fr; }
+    .ze { grid-template-columns: 1fr; gap: 6px; }
+    .jie h2 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div>
+    <div class="kicker">殆知阁导读 · 之一百七十五</div>
+    <h1>陈氏<span>香谱</span></h1>
+    <div class="au">南宋 <b>陈敬</b> 字子中 辑　四库本四卷</div>
+    <div class="fact mono"><span>去空白 50659 字</span><span>卷一 12424</span><span>卷二 11155</span><span>卷三 12008</span><span>卷四 14148</span></div>
+    <p class="lead">两代人编一部香谱，十一家旧谱在其中借尸还魂。本篇据殆知阁简体库四库本实测，引文均经逐字核验。</p>
+  </div>
+  <div class="ludzi" aria-hidden="true">
+    <svg viewBox="0 0 300 420" fill="none">
+      <!-- 炉 -->
+      <g stroke="#e8e4dc" stroke-width="2.5" stroke-linecap="round">
+        <path d="M150 330 C 120 330 104 310 102 288 L 198 288 C 196 310 180 330 150 330 Z"/>
+        <path d="M150 288 L150 262"/>
+        <path d="M96 262 L204 262" stroke="#5f9270"/>
+        <path d="M118 262 C 112 246 116 232 128 224 M138 226 C 128 214 132 198 142 190 M162 226 C 172 214 168 198 158 190 M182 262 C 188 246 184 232 172 224"/>
+        <path d="M104 330 L128 330 M172 330 L196 330" stroke-width="2"/>
+        <path d="M128 330 L150 372 L172 330" stroke-width="2"/>
+        <path d="M136 384 L164 384" stroke-width="3"/>
+      </g>
+      <g stroke="#e8e4dc" stroke-width="1" opacity="0.35">
+        <path d="M108 330 L150 404 M192 330 L150 404"/>
+      </g>
+      <!-- 烟 -->
+      <g stroke="#5f9270" stroke-width="2" stroke-linecap="round" opacity="0.9">
+        <path class="smoke" d="M150 252 C 138 214 168 196 152 160 C 140 132 162 112 150 78"/>
+        <path class="smoke s2" d="M150 248 C 166 216 138 194 158 162 C 174 136 150 116 164 84"/>
+        <path class="smoke s3" d="M150 256 C 128 226 156 200 142 168 C 130 140 156 120 144 88"/>
+      </g>
+    </svg>
+  </div>
+</header>
+
+<nav class="lux">
+  <div class="trail">
+    <a href="#kaijuan">开卷</a>
+    <a href="#xiangpin">香品</a>
+    <a href="#hexiang">合香</a>
+    <a href="#xiangyi">香异</a>
+    <a href="#wanhao">玩好</a>
+    <a href="#cunyi">存佚</a>
+    <span class="fire"></span>
+  </div>
+</nav>
+
+<main>
+
+  <section id="kaijuan" class="wrap">
+    <div class="jie"><span class="xu">开卷</span><h2>彭蠡湖上的序</h2><span class="zhu">原序 · 至治壬戌</span></div>
+    <p class="pro">元至治壬戌，公元一三二二年，七月。鄱阳湖上有人撑船，有人钓鱼。过路的浩卿拦住一位钓徒，从行囊里取出一部书：他父亲陈子中起手编的一部香谱，到这一年才脱稿。他请钓徒作序。</p>
+    <p class="pro">钓徒有名有姓。熊朋来，南宋咸淳年间中过进士，入元不再做官，在江西讲书讲了一辈子。他先吃一惊，那篇序的开头像一出小戏：作序的人多的是，蓬莱玉署里怀香握兰的仙儒在，乔木故家芝兰芳馥的世卿在，岛服夷言夸香诧宝的舶官在，进香受爵的少府在，宝梵琳房的高人在，罗襦芗泽的女士也在，凡知香者皆可使序，怎么会轮到一个湖上钓鱼的人。推辞推得香喷喷的。推完自嘲：</p>
+    <div class="q">灰钉之望既穷，熏习之梦久断，空有庐山一峰以为罏，峰顶片云以为香。<span class="qs">原序　彭蠡钓徒熊朋来</span></div>
+    <p class="pro">灰钉是葬具，熏习是佛家的话：此生的指望快用完了，宿世的香火梦也早断了，只剩一座庐山当香炉，一片云当香。话说尽，序还是写了。写完长揖上船就走，浩卿追着把这篇序抄了下来。</p>
+    <div class="q">遂长揖谢客，鼓棹去；客追录，为香谱序。<span class="qs">原序</span></div>
+    <p class="pro">这篇戏一样的序，顺手记下了这部书的工期：<em>河南陈氏香谱，自子中至浩卿再世乃脱藁</em>。子中是陈敬的字，浩卿是他儿子。父亲起稿，儿子收尾，两代人磨一部香谱。香的知识是什么知识？序的开头说得直白：</p>
+    <div class="q">香者五臭之一，而人服媚之；至于为香谱，非世宦愽物、尝杭舶浮海者不能悉也。<span class="qs">原序</span></div>
+    <p class="pro">香是海舶驮来的知识，要见过世面、坐过海船的人才讲得全。陈家父子未必坐过海船，他们做的是另一件事：把谈过香的书，一家一家收拢来。序里说，<em>凡洪颜沈叶诸谱具在此编，集其大成矣</em>。至于这样收拢是图什么，四库馆臣在两百年后给出了答案，本篇最后一节再说。</p>
+  </section>
+
+  <section id="xiangpin" class="wrap">
+    <div class="jie"><span class="xu">香品</span><h2>名字先于香</h2><span class="zhu">卷一 · 香品</span></div>
+    <p class="pro">全书第一节先给「香」字看相：许氏说文，香芳也，篆从黍从甘。黍是粮食，甘是味道，最早的香是庄稼和祭品的气味。然后才是香品举要的判断：</p>
+    <div class="q">香最多品类，出交广、崖州及海南诸国；然秦汉以前未闻，惟称兰蕙椒桂而已。<span class="qs">卷一 · 香品举要</span></div>
+    <p class="pro">兰蕙椒桂是土产的香草。海路一通，香的名字跟着船板涌进来，于是必须有谱。卷一像一间栈房，几十种香各立户头，名字却取得像诗：蓬莱香、龙鳞香、鸡骨香、鹧鸪斑香、水盘香。栈房里最贵的一格是沉香，南宋人叶庭珪的说法被原样搬了进来：</p>
+    <div class="q">叶庭珪云：沉香所出非一，真腊者为上，占城次之，渤泥最下；真腊之真又分三品，绿洋最佳，三泺次之，勃罗间差弱。<span class="qs">卷一 · 沉水香</span></div>
+    <div class="jie3">
+      <div class="rank"><span class="no">上品</span><div class="bar r1"><b>绿洋</b><i>最佳</i></div></div>
+      <div class="rank"><span class="no">中品</span><div class="bar r2"><b>三泺</b><i>次之</i></div></div>
+      <div class="rank"><span class="no">下品</span><div class="bar r3"><b>勃罗间</b><i>差弱</i></div></div>
+      <div class="src">真腊境内三品，据卷一沉水香条所引叶庭珪说</div>
+    </div>
+    <p class="pro">同一本书里，沉香还按形状取过一批小名：</p>
+    <div class="q">有状如犀角者，如燕口者，如附子者，如梭者。<span class="qs">卷一 · 沉水香</span></div>
+    <div class="zhang">
+      <div><b>蓬莱香</b><span>海南所产，士大夫目为蓬莱，气清而长</span></div>
+      <div><b>叶子香</b><span>一名龙鳞香，栈香的薄片，香却胜过栈</span></div>
+      <div><b>鸡骨香</b><span>栈香中形似鸡骨者</span></div>
+      <div><b>鹧鸪斑香</b><span>文如鹧鸪斑，故名，出海南</span></div>
+      <div><b>水盘香</b><span>类黄熟而殊大，多雕刻为香山佛像</span></div>
+      <div><b>黄熟桶</b><span>皮坚中腐，形状如桶，泉州人日用</span></div>
+    </div>
+    <p class="pro">香也不全是雅事。卷一降真香条记了泉州的年俗：</p>
+    <div class="q">其气劲而逺，能辟邪气；泉人毎岁除，家无贫富，皆爇之如燔柴。<span class="qs">卷一 · 降真香</span></div>
+    <p class="pro">除夕夜，泉州满城烧降真，烟大得像烧柴。家无贫富四个字最要紧：在宋代，香一半在文人的炉里，一半在市井的灶上。医家拿蕃香治冷气，泉州人拿降真香过年。</p>
+  </section>
+
+  <section id="hexiang" class="wrap">
+    <div class="jie"><span class="xu">合香</span><h2>如医者用药</h2><span class="zhu">卷一 · 修制</span></div>
+    <p class="pro">单品是香材，合起来才是香。卷一修制诸法里有一段总论，是这个行当的手艺经，也是全书的文眼：</p>
+    <div class="q big">合香之法，贵于使众香咸为一体。麝滋而散，挠之使匀；沉实而腴，碎之使和；檀坚而燥，揉之使腻。比其性，等其物，而髙下如医者，则药使气味各不相掩。<span class="qs">卷一 · 合香</span></div>
+    <p class="pro">四种香材四种脾气：麝香滋润却飞扬，搅到匀；沉香厚实却腴润，碎到和；檀香坚硬又干燥，揉到腻。最后一句把调香师比作医生，按药性开方，让每一味都留得住自己的气味，又谁也不盖过谁。</p>
+    <p class="pro">方子开好还不能烧。要窨：</p>
+    <div class="q">毎约香多少，贮以不津甆器，蜡纸封于静室屋中，掘地窞深三五寸，月余逐旋取出。<span class="qs">卷一 · 窨香</span></div>
+    <p class="pro">蜡纸封罐，埋进地里三五寸，一个多月后取出来。像酿酒的人等酒，燥湿得宜，香性才肯合拢。下面两张方笺，一张名字带御字，一张冠着一位谏臣的谥号：</p>
+    <div class="fangs">
+      <div class="fang">
+        <h4>御炉香</h4>
+        <p>沉香二两【细剉，以绢袋盛之，悬于铫中，勿着底，蜜水一碗，慢火煑一日，水尽再添】檀香一两【细片，以蜡茶清浸一日，梢焙干，令无檀气】甲香一两【法制】生梅花龙脑二钱【别研】马牙硝、麝香【别研】</p>
+        <p>右捣罗取细末，以苏合油拌和匀，甆合封窨一月许，旋入脑麝，作饼爇之。</p>
+        <span class="fn">卷二 · 凝和诸方</span>
+      </div>
+      <div class="fang">
+        <h4>赵清献公香</h4>
+        <p>白檀香四两【研剉】乳香纒末半两【研细】<u>玄参</u>六两【温汤洗净，慢火煑软，薄切作片焙干】</p>
+        <p>右碾取细末，以熟蜜拌匀，入新甆罐内封窨十日，爇如常法。</p>
+        <span class="fn">卷二 · 凝和诸方</span>
+      </div>
+    </div>
+    <div class="hui"><b>一个被挖掉的字。</b>赵笺第二味本是「玄参」，库本里只剩一个「参」字。四库馆臣刻书避康熙帝名讳，「玄」字一律删挖；殆知阁电子库本把这类字存成私用区字符，本篇核验时按归一表还原比对。同样的字还埋在卷四香囊条里，下文见。</div>
+  </section>
+
+  <section id="xiangyi" class="wrap">
+    <div class="jie"><span class="xu">香异</span><h2>一炉烟的传闻</h2><span class="zhu">卷一 · 香异</span></div>
+    <p class="pro">卷一里还藏着一部小志怪，题作香异：都夷香，吃一颗一个月不饿；荼芜香，研成屑铺地四五寸，舞人在上头跳一整天，不留脚印。千步香则是可考的实物，贡籍里南郡岁贡：</p>
+    <div class="q">出海南，佩之香闻千步也。<span class="qs">卷一 · 千步香</span></div>
+    <p class="pro">最会讲故事的一条是返魂香：司天主簿徐肇遇见一个自称苏德哥的人，善合返魂香，撮白檀末入炉，烟气袅袅直上，比龙脑还猛，死者几代亲人都在烟里现了形。德哥末了只加一句限制：</p>
+    <div class="q">但死八十年已前，则不可返矣。<span class="qs">卷一 · 返魂香</span></div>
+    <div class="ye">
+      <h4>八十年</h4>
+      <p>八十年，差不多四代人。返魂香的界限不是法术的界限，是记忆的界限：烟召得回亡人，召不回没有人记得的亡人。再往上，连香也追不回了。</p>
+    </div>
+    <p class="pro">香异里还有一条不留神记下了宫廷的奢靡：汉灵帝熹平三年，西域献茵墀香，煮成汤给宫人沐浴，余汁倒进渠里，那条渠从此叫流香之渠。渠水流走，名字留在纸上。</p>
+  </section>
+
+  <section id="wanhao" class="wrap">
+    <div class="jie"><span class="xu">玩好</span><h2>烟从兽口出</h2><span class="zhu">卷四 · 香事</span></div>
+    <p class="pro">卷四是器物与掌故。香怎么烧，古人烧出一整套家什，三件最有名：</p>
+    <div class="qi">
+      <div class="tile">
+        <h4>香兽</h4>
+        <span class="tie">卷四 · 洪谱</span>
+        <p><b>狻猊、麒麟、凫鸭</b>，涂金铸成，膛中焚香，烟从兽口吐出。也有木雕土塑的，图个不烧也能摆。</p>
+      </div>
+      <div class="tile">
+        <h4>被中香炉</h4>
+        <span class="tie">卷四 · 汉代巧工丁缓</span>
+        <p>机环运转，<b>炉体常平</b>，在被褥里翻滚，炉口始终朝天。今天说人睡得香，古人真在被窝里点过炉。</p>
+      </div>
+      <div class="tile">
+        <h4>香囊</h4>
+        <span class="tie">卷四 · 晋人故事</span>
+        <p>谢家少年的紫罗香囊，被伯父用一局棋<b>赌</b>了去，当场烧掉。这只囊背后站着一个被挖掉的字。</p>
+      </div>
+    </div>
+    <p class="pro">被中香炉一条说得分明：</p>
+    <div class="q">机环运转四周，而炉体常平，可置扵被褥，故以为名，今之香毬是也。<span class="qs">卷四 · 被中香炉</span></div>
+    <p class="pro">两个环互相套着转，重力始终把炉膛吊成水平，正是后来轮船罗盘、航天器里万向架的心思。香兽一条则像小型的烟火戏：</p>
+    <div class="q">以涂金为狻猊、麒麟、凫鸭之状，空中以焚香，使烟以口出，以为玩好。<span class="qs">卷四 · 香兽</span></div>
+    <p class="pro">香囊条全文引晋书本传，一开头就撞上那个讳字：</p>
+    <div class="q">晋谢玄常佩紫罗香嚢，谢安患之，而不欲伤其意，自戏赌取香嚢焚之，玄遂止。<span class="qs">卷四 · 香囊（库本「玄」字以私用区字符存储，此处依归一表还原）</span></div>
+    <p class="pro">谢安不喜欢侄子戴香囊，又不想伤他，故意赌棋赢来烧掉，谢玄从此不戴。伯父的一局棋烧掉一只香囊，四库馆臣的一支笔挖掉一个名字：同一个「玄」字，在这部书里挨了两刀。市井里香还有别的用法：</p>
+    <div class="zeze">
+      <div class="ze">
+        <div class="nm">露香告天<small>卷四 · 言行录</small></div>
+        <div class="bd">赵抃，谥清献，正是上一节那张赵清献公香笺的冠名人。他每夜对天烧一炉香，把一天做的事当面汇报。</div>
+        <div class="q">夜必衣冠露香九拜，手告扵天；应不可告者，则不敢为也。<span class="qs">卷四 · 露香告天</span></div>
+      </div>
+      <div class="ze">
+        <div class="nm">三班吃香<small>卷四 · 归田录</small></div>
+        <div class="bd">三班院的使臣差满回院，乾元节凑钱饭僧进香，谓之香钱，京师里传作笑话。今天话里说走俏叫吃香，这条掌故常被认作来处。</div>
+        <div class="q">京师语曰：三班吃香。<span class="qs">卷四 · 三班吃香</span></div>
+      </div>
+    </div>
+    <p class="pro">一张香方与一桩自省，冠着同一个人的谥号。香在那个时代的用法，一半在炉里，一半在心里。</p>
+  </section>
+
+  <section id="cunyi" class="wrap">
+    <div class="jie"><span class="xu">存佚</span><h2>十一家的保险箱</h2><span class="zhu">提要 · 卷四</span></div>
+    <p class="pro">四库馆臣对这部书并非没有意见：征引既繁，不免以浩博为长；卷首引左传黍稷馨香寥寥数则，被讥为溯源经传，殊为无谓。但批评完，馆臣给了它真正的身份：</p>
+    <div class="q">然十一家之谱今不尽传，敬能荟稡群言为之总汇，佚文遗事多赖以传，要于考证不为无益也。<span class="qs">四库全书总目提要</span></div>
+    <p class="pro">十一家，提要举出沈立、洪刍以下，序里说洪颜沈叶诸谱具在此编。这些谱，到乾隆年间已不尽传，今天传得更少。陈氏香谱于是成了它们的保险箱：别家的香方、香事、旧序，一概原样搬入，注明白出自谁谱。证据随手可举，卷四百刻香印条后留着一段两百年前的署名：</p>
+    <div class="q">熈寜甲寅岁仲春二日，右谏议大夫知宣城郡沈立题。<span class="qs">卷四 · 百刻香印后所存沈立题记</span></div>
+    <p class="pro">熙宁甲寅是一〇七四年，比陈书成书早两个半世纪。沈立的题记跟着他的谱一起，被搬进了陈家的总汇。佚书不在别处，就在这部不算精严的谱录的夹层里。</p>
+    <p class="pro">回到彭蠡湖上。熊朋来说他自己只剩庐山一峰当炉、片云当香，序写完就长揖下船。陈家父子两代人，把十一家的烟合进一炉：麝滋而散，沉实而腴，檀坚而燥，各不相掩。书就是那只罏，十一家旧谱的香火，到今天还在这只罏里续着。</p>
+  </section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <div class="fnav"><span>殆知阁导读 之一百七十五 陈氏香谱</span><a href="mulu.html">返回总目</a></div>
+    <p class="fnote">文本来源：殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）艺藏器物部，四库本四卷。本篇引文已与库内文本逐字核验（核验脚本 verify_chenshi.py，去标点并按私用区字符归一表比对，玄、爇、传等字照库本存储形态处理）。书中服食、辟邪、返魂诸说与避讳挖字皆时代原貌，时代局限明显，读者当以历史视之。</p>
+  </div>
+</footer>
+
+</body>
+</html>
