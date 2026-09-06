@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新石头记 殆知阁导读 194</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #26251f;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --blue: #5e8fbb; --blue-soft: rgba(94,143,187,0.16);
+    --hair: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .wrap > input[type="radio"] { display: none; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 26px; }
+  a { color: inherit; }
+
+  /* 开场：牌坊 */
+  .gatehead { padding: 58px 0 20px; }
+  .kick { display: flex; justify-content: space-between; font-size: 13px; letter-spacing: 0.3em; color: var(--faint); }
+  .kick b { color: var(--blue); font-weight: 400; }
+
+  .paifang { position: relative; width: min(620px, 92vw); height: 250px; margin: 44px auto 0; }
+  .pf-beam { position: absolute; top: 44px; left: 0; right: 0; height: 18px; background: linear-gradient(180deg, #2b2a26, #232220); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+  .pf-beam2 { position: absolute; top: 76px; left: 26px; right: 26px; height: 8px; background: #22211e; border-bottom: 1px solid var(--hair); }
+  .pf-pillar { position: absolute; top: 84px; width: 30px; bottom: 0; background: linear-gradient(90deg, #2b2a26, #232220 60%, #1e1d1a); border: 1px solid var(--hair); display: flex; align-items: center; justify-content: center; }
+  .pf-pillar.l { left: 0; } .pf-pillar.r { right: 0; }
+  .pf-pillar span { writing-mode: vertical-rl; font-size: 15px; letter-spacing: 0.42em; color: var(--dim); }
+  .pf-base { position: absolute; bottom: -12px; width: 46px; height: 14px; background: #1c1b18; border: 1px solid var(--hair); }
+  .pf-base.l { left: -8px; } .pf-base.r { right: -8px; }
+  .plaque { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 236px; height: 82px; perspective: 700px; cursor: pointer; z-index: 2; }
+  .plaque-in { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(.2,.7,.2,1); }
+  .plaque.flipped .plaque-in { transform: rotateY(180deg); }
+  .pf-face { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border: 3px double var(--blue); background: linear-gradient(180deg, #232730, #1d2027); box-shadow: 0 6px 22px rgba(0,0,0,0.5); }
+  .pf-face b { font-size: 34px; font-weight: 700; letter-spacing: 0.22em; text-indent: 0.22em; color: var(--paper); }
+  .pf-face.back { transform: rotateY(180deg); background: linear-gradient(180deg, #20242b, #1a1d23); }
+  .pf-face.back b { color: var(--blue); }
+  .pf-face i { position: absolute; font-style: normal; font-size: 10px; letter-spacing: 0.2em; color: var(--faint); }
+  .pf-face .f1 { top: 4px; left: 8px; } .pf-face .f2 { bottom: 4px; right: 8px; }
+  .pf-hint { text-align: center; font-size: 12.5px; color: var(--faint); letter-spacing: 0.2em; margin-top: 20px; }
+  .pf-hint em { font-style: normal; color: var(--dim); border-bottom: 1px dotted var(--faint); }
+
+  /* 标题区 */
+  .titleblock { padding: 52px 0 30px; border-top: 1px solid var(--hair); margin-top: 48px; }
+  h1 { font-size: clamp(52px, 9vw, 96px); font-weight: 700; letter-spacing: 0.12em; line-height: 1.15; }
+  h1 span { color: var(--blue); }
+  .meta { margin-top: 14px; font-size: 14px; color: var(--dim); letter-spacing: 0.08em; }
+  .meta i { font-style: normal; color: var(--faint); }
+  .lead { margin-top: 26px; font-size: 17px; max-width: 42em; color: var(--paper); }
+  .lead b { color: var(--blue); font-weight: 700; }
+  .epi { margin: 34px 0 0; border-left: 2px solid var(--blue); padding: 4px 0 4px 20px; }
+  .epi p { font-size: 16.5px; color: var(--paper); }
+  .epi p + p { margin-top: 6px; }
+  .qsrc { display: block; margin-top: 8px; font-size: 12.5px; color: var(--faint); letter-spacing: 0.12em; }
+
+  /* 站点 */
+  section.stop { padding: 74px 0 10px; border-top: 1px solid var(--hair); }
+  .stophead { display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap; }
+  .stopno { flex: none; width: 46px; height: 46px; border: 1px solid var(--blue); border-radius: 50%; display: grid; place-items: center; font-size: 19px; color: var(--blue); align-self: center; }
+  .stophead h2 { font-size: 27px; font-weight: 600; letter-spacing: 0.14em; }
+  .rtag { font-size: 12.5px; color: var(--faint); letter-spacing: 0.18em; border: 1px solid var(--hair); padding: 3px 10px; border-radius: 2px; }
+  .stop p.t { margin-top: 22px; font-size: 16px; color: var(--paper); max-width: 44em; }
+  .stop p.t + p.t { margin-top: 14px; }
+  .qbox { margin: 26px 0 0; border-left: 2px solid var(--blue); padding: 2px 0 2px 20px; }
+  .qbox p { font-size: 16.5px; }
+  .qbox p + p { margin-top: 8px; }
+  .note { margin-top: 22px; border: 1px solid var(--hair); background: var(--ink-2); padding: 16px 20px; font-size: 14.5px; color: var(--dim); border-radius: 3px; }
+  .note b { color: var(--paper); font-weight: 600; }
+
+  /* 验性质镜 */
+  .mirrorwrap { margin-top: 30px; display: grid; grid-template-columns: 300px 1fr; gap: 34px; align-items: center; }
+  .lens { position: relative; width: 260px; height: 260px; margin: 0 auto; border-radius: 50%; border: 3px double var(--blue); background: radial-gradient(circle at 35% 30%, #23252b, #17181c 70%); box-shadow: inset 0 0 40px rgba(0,0,0,0.7), 0 8px 30px rgba(0,0,0,0.45); overflow: hidden; }
+  .blob { position: absolute; inset: 18%; border-radius: 50%; background: radial-gradient(circle at 40% 35%, rgba(94,143,187,0.95), rgba(94,143,187,0.25) 55%, rgba(94,143,187,0) 75%); transition: filter 0.7s ease, opacity 0.7s ease, transform 0.7s ease; }
+  .mirrorwrap input { display: none; }
+  #st1:checked ~ .mirrorwrap .blob { filter: blur(1px) brightness(1.15); opacity: 0.95; }
+  #st2:checked ~ .mirrorwrap .blob { filter: blur(16px) brightness(0.8); opacity: 0.6; transform: scale(1.15); }
+  #st3:checked ~ .mirrorwrap .blob { filter: blur(26px) brightness(0.25); opacity: 0.85; transform: scale(1.3); background: radial-gradient(circle at 45% 40%, rgba(60,58,54,0.95), rgba(20,20,18,0.6) 60%); }
+  .verdict { position: relative; }
+  .ver { display: none; }
+  #st1:checked ~ .mirrorwrap .ver-1 { display: block; }
+  #st2:checked ~ .mirrorwrap .ver-2 { display: block; }
+  #st3:checked ~ .mirrorwrap .ver-3 { display: block; }
+  .ver h3 { font-size: 21px; letter-spacing: 0.14em; font-weight: 600; color: var(--blue); }
+  .ver p { margin-top: 8px; font-size: 14.5px; color: var(--dim); }
+  .seg { display: flex; gap: 0; margin-top: 18px; justify-content: center; border: 1px solid var(--hair); width: max-content; margin-left: auto; margin-right: auto; }
+  .seg label { padding: 8px 20px; font-size: 14px; letter-spacing: 0.14em; color: var(--dim); cursor: pointer; }
+  .seg label + label { border-left: 1px solid var(--hair); }
+  #st1:checked ~ .seg label[for="st1"], #st2:checked ~ .seg label[for="st2"], #st3:checked ~ .seg label[for="st3"] { background: var(--blue-soft); color: var(--paper); }
+
+  /* 司时器 */
+  .clockwrap { margin-top: 30px; border: 1px solid var(--hair); background: var(--ink-2); padding: 34px 20px 28px; text-align: center; border-radius: 3px; position: relative; overflow: hidden; }
+  .clockwrap:before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, var(--blue), transparent); opacity: 0.5; }
+  .shiqi { font-size: clamp(46px, 8vw, 74px); letter-spacing: 0.16em; color: var(--paper); font-weight: 700; }
+  .nowtime { margin-top: 6px; font-size: 13.5px; color: var(--faint); letter-spacing: 0.24em; }
+  .clocknote { margin-top: 14px; font-size: 13.5px; color: var(--dim); }
+  .holder { display: inline-block; margin-top: 16px; padding: 5px 16px; border: 1px solid var(--hair); border-radius: 2px; font-size: 12.5px; color: var(--faint); letter-spacing: 0.2em; }
+
+  /* 四时园 */
+  .park { margin-top: 30px; border: 1px solid var(--hair); border-radius: 3px; overflow: hidden; }
+  .sky { height: 150px; position: relative; transition: background 1s ease; background: linear-gradient(180deg, #22303c, #1b222b 70%, #20241f); }
+  .sky:after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 34px; background: linear-gradient(180deg, transparent, rgba(25,25,23,0.9)); }
+  .sun { position: absolute; top: 28px; right: 44px; width: 34px; height: 34px; border-radius: 50%; background: var(--blue); opacity: 0.55; filter: blur(1px); transition: all 1s ease; }
+  .parkcap { padding: 14px 20px 16px; font-size: 14.5px; color: var(--dim); border-top: 1px solid var(--hair); }
+  .parkcap b { color: var(--paper); font-weight: 600; letter-spacing: 0.1em; }
+  .pc-1, .pc-2, .pc-3, .pc-4 { display: none; }
+  #pk1:checked ~ .park .pc-1, #pk2:checked ~ .park .pc-2, #pk3:checked ~ .park .pc-3, #pk4:checked ~ .park .pc-4 { display: block; }
+  #pk1:checked ~ .park .sky { background: linear-gradient(180deg, #263a33, #1d2b26 70%, #22301f); }
+  #pk2:checked ~ .park .sky { background: linear-gradient(180deg, #2c3d4e, #22303f 70%, #26301f); }
+  #pk2:checked ~ .park .sun { opacity: 0.85; top: 20px; }
+  #pk3:checked ~ .park .sky { background: linear-gradient(180deg, #3a3226, #2b2620 70%, #2e2a1c); }
+  #pk3:checked ~ .park .sun { opacity: 0.4; filter: blur(3px); }
+  #pk4:checked ~ .park .sky { background: linear-gradient(180deg, #1f262e, #1a1f26 70%, #232628); }
+  #pk4:checked ~ .park .sun { opacity: 0.18; filter: blur(4px); }
+  .parkseg { display: flex; border-top: 1px solid var(--hair); }
+  .parkseg label { flex: 1; text-align: center; padding: 10px 0; font-size: 15px; letter-spacing: 0.3em; text-indent: 0.3em; color: var(--dim); cursor: pointer; }
+  .parkseg label + label { border-left: 1px solid var(--hair); }
+  #pk1:checked ~ .parkseg label[for="pk1"], #pk2:checked ~ .parkseg label[for="pk2"], #pk3:checked ~ .parkseg label[for="pk3"], #pk4:checked ~ .parkseg label[for="pk4"] { background: var(--blue-soft); color: var(--paper); }
+
+  /* 游程牌 */
+  .board { margin-top: 30px; border-top: 1px solid var(--hair); }
+  .row { display: grid; grid-template-columns: 110px 1fr; gap: 18px; padding: 16px 6px; border-bottom: 1px solid var(--hair); align-items: baseline; transition: background 0.25s ease; }
+  .row:hover { background: var(--ink-2); }
+  .row .rh { font-size: 13px; color: var(--faint); letter-spacing: 0.1em; }
+  .row .rh b { display: block; color: var(--blue); font-weight: 400; font-size: 15px; letter-spacing: 0.06em; }
+  .row .rt { font-size: 19px; font-weight: 600; letter-spacing: 0.1em; }
+  .row .rn { display: block; font-size: 13.5px; color: var(--dim); font-weight: 400; margin-top: 2px; letter-spacing: 0.02em; }
+
+  /* 大梦 */
+  .dream { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .dcard { border: 1px solid var(--hair); background: var(--ink-2); padding: 20px 22px 22px; border-radius: 3px; }
+  .dcard .dt { font-size: 13px; color: var(--blue); letter-spacing: 0.26em; }
+  .dcard h3 { margin-top: 6px; font-size: 19px; font-weight: 600; letter-spacing: 0.1em; }
+  .dcard p { margin-top: 10px; font-size: 14px; color: var(--dim); }
+  .dcard .qbox { margin-top: 14px; border-left-color: var(--blue); }
+  .dcard .qbox p { font-size: 14.5px; color: var(--paper); }
+  .dcard .qsrc { margin-top: 6px; }
+  .dcard.wide { grid-column: 1 / -1; }
+
+  /* 归石 */
+  .stone { margin-top: 32px; border: 1px solid var(--hair); background: linear-gradient(180deg, #201f1d, #1b1a18); padding: 40px 30px 34px; border-radius: 3px; text-align: center; }
+  .stone .stt { font-size: 12.5px; letter-spacing: 0.34em; color: var(--faint); }
+  .stone .ge { margin-top: 20px; font-size: 18.5px; line-height: 2.1; letter-spacing: 0.06em; }
+  .stone .ge + .ge { margin-top: 10px; }
+  .stone .ge b { color: var(--blue); font-weight: 700; }
+  .crabbox { margin-top: 26px; padding: 24px 26px; border: 1px dashed rgba(94,143,187,0.45); border-radius: 3px; background: var(--ink-2); }
+  .crabbox .en { font-family: Georgia, "Times New Roman", serif; font-style: italic; letter-spacing: 0.04em; color: var(--dim); font-size: 15px; transform: skewX(-6deg); display: inline-block; }
+  .crabbox .trans { margin-top: 14px; font-size: 15.5px; color: var(--paper); white-space: pre-line; }
+  .crabbox .ct { font-size: 12px; letter-spacing: 0.26em; color: var(--faint); margin-bottom: 4px; }
+
+  /* 页脚 */
+  footer.page { margin-top: 90px; border-top: 1px solid var(--hair); padding: 40px 0 60px; }
+  footer.page p { font-size: 13.5px; color: var(--faint); max-width: 60em; }
+  footer.page p + p { margin-top: 10px; }
+  footer.page b { color: var(--dim); font-weight: 600; }
+  footer.page a { color: var(--dim); border-bottom: 1px dotted var(--faint); text-decoration: none; }
+  .navline { display: flex; gap: 26px; margin-top: 22px; font-size: 14px; }
+  .navline a { color: var(--blue); text-decoration: none; border-bottom: 1px solid rgba(94,143,187,0.4); padding-bottom: 2px; }
+
+  @media (max-width: 700px) {
+    .mirrorwrap { grid-template-columns: 1fr; }
+    .lens { width: 220px; height: 220px; }
+    .dream { grid-template-columns: 1fr; }
+    .row { grid-template-columns: 84px 1fr; gap: 12px; }
+    .paifang { height: 220px; }
+    .kick { letter-spacing: 0.14em; }
+    .pf-pillar span { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="gatehead">
+  <div class="wrap">
+    <div class="kick"><span>殆知阁导读 <b>第194篇</b></span><span>卷一百一十三 <b>补天</b></span></div>
+  </div>
+  <div class="paifang" id="pf">
+    <div class="pf-beam"></div>
+    <div class="pf-beam2"></div>
+    <div class="pf-pillar l"><span>只言贾宝玉不死</span></div>
+    <div class="pf-pillar r"><span>干一番正经事业</span></div>
+    <div class="pf-base l"></div>
+    <div class="pf-base r"></div>
+    <div class="plaque" id="plaque" tabindex="0" role="button" aria-label="翻转匾额">
+      <div class="plaque-in">
+        <div class="pf-face front"><b>文明境界</b><i class="f1">光绪戊申</i><i class="f2">改良小说</i></div>
+        <div class="pf-face back"><b>孔道</b><i class="f1">额之背面</i><i class="f2">宝玉所见</i></div>
+      </div>
+    </div>
+  </div>
+  <p class="pf-hint">坊额迎面四字，<em>点一下可翻面</em></p>
+
+  <div class="wrap titleblock">
+    <h1>新<span>石头记</span></h1>
+    <p class="meta">清末 吴趼人 撰 <i>（署名老少年）</i> <i>｜</i> 光绪三十四年十月 上海改良小说社单行本 <i>｜</i> 四十回 <i>｜</i> 库本实测去空白 <span class="mono">156065</span> 字</p>
+    <p class="lead">曹雪芹以后，续《红楼梦》的书不下几十种，多半让林黛玉还魂，把儿女私情再写一遍。这一部反着来：<b>林黛玉不出场，贾宝玉不许死</b>。宝玉在青埂峰下凡心再动，蓄发下山，一头撞进庚子年的中国，又误入一百年后的乌托邦「文明境界」：镜子照人性，人偶报时辰，公园里造四季，飞车离地五十尺。末回一场大梦，梦见浦东开万国博览会。这不是同人的格局，是一部借石头下凡来讲补天的清末政治科幻。</p>
+    <div class="epi">
+      <p>且说续撰《红楼梦》的人。每每托言林黛玉复生，写不尽的儿女私情。我何如只言贾宝玉不死，干了一番正经事业呢。</p>
+      <span class="qsrc">开卷第一回，作者的入场声明</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="stop" id="s1">
+    <div class="wrap">
+      <div class="stophead">
+        <div class="stopno">壹</div>
+        <h2>破庙 蓄发</h2>
+        <span class="rtag">第一回 至 第二十一回</span>
+      </div>
+      <p class="t">宝玉下山的动机，开卷交代得干干净净：补天之愿未酬。女娲炼石三万六千五百块悉数用尽，单单剩他一块；前缘里那些缠绵，他自己只认作一场耽搁。</p>
+      <div class="qbox">
+        <p>当日女娲氏炼出五色石来，本是备补天之用，那三万六千五百块都用了，单单遗下我未用。</p>
+        <p>怎能够完了这个志向，我就化灰化烟，也是无怨的了。</p>
+        <span class="qsrc">第一回</span>
+      </div>
+      <p class="t">于是苦修的和尚开始蓄发，恨不得一日长一尺。养了年余辫子初成，下山第一夜在破庙踢醒睡糊涂了的焙茗，睁眼已是光绪二十六年的天下。前二十一回其实是另一部书：拳坛、使馆、邪术、洋货，宝玉还开过一次手枪，缚过一回强盗。作者把时事谴责小说整段塞进石头记的壳里，回目毫不掩饰，径直写作「义和团大闹北京城」「呆霸王夜走长新店」。</p>
+      <p class="t">真正的转向发生在第二十二回：宝玉独自迷路，远远望见一座牌坊，坊上祥瑞之气。他钻进坊门，从此走进这本书的另一半。</p>
+    </div>
+  </section>
+
+  <section class="stop" id="s2">
+    <div class="wrap">
+      <input type="radio" name="st" id="st1" checked>
+      <input type="radio" name="st" id="st2">
+      <input type="radio" name="st" id="st3">
+      <div class="stophead">
+        <div class="stopno">贰</div>
+        <h2>验性质房</h2>
+        <span class="rtag">第二十二回</span>
+      </div>
+      <p class="t">文明境界不查护照，查性质。入境第一旅馆隔壁就是验性质房，医生隔屋用测验质镜照人，宝玉得了一句考语：性质晶莹，外来之客万中难得一个。</p>
+      <div class="qbox">
+        <p>系用一镜，隔着此镜，窥测人身，则升肉筋骨一切不见，独见其性质。性质是文明的。便晶莹如冰雪；是野蛮的，便浑如烟雾。视其烟雾之浓淡，以别其野蛮之深浅。其有浓黑如墨的，便是不能改良的了。</p>
+        <span class="qsrc">第二十二回，老少年解说测验质镜</span>
+      </div>
+      <p class="t">镜子只是仪器，规矩才是正文。吴趼人写乌托邦的边境章程，一笔不苟：</p>
+      <div class="qbox">
+        <p>倘是性质文明的，便招留在此；若验得性质带点野蛮，便要送他到改良性质所去，等医生把他性质改良了，再行招待。</p>
+        <span class="qsrc">第二十二回，入境验视之制</span>
+      </div>
+      <div class="mirrorwrap">
+        <div class="lens"><div class="blob"></div></div>
+        <div class="verdict">
+          <div class="ver ver-1"><h3>晶莹如冰雪</h3><p>文明队中人。万中难得一个，招留入境。</p></div>
+          <div class="ver ver-2"><h3>浑如烟雾</h3><p>性质带点野蛮。烟雾有浓淡，野蛮分深浅。</p></div>
+          <div class="ver ver-3"><h3>浓黑如墨</h3><p>野蛮透顶，不能改良，送出境外。</p></div>
+        </div>
+      </div>
+      <div class="seg">
+        <label for="st1">验文明客</label>
+        <label for="st2">验半开通</label>
+        <label for="st3">验透顶者</label>
+      </div>
+      <div class="note"><b>全书最冷的一笔。</b>镜子照的是性质，量的是人，判的是去留。小说把这条边境章程写得毫无不安，一百年后的读者替它补上了寒意：文明一旦可以测量，就可以成为拒绝你的理由。</div>
+    </div>
+  </section>
+
+  <section class="stop" id="s3">
+    <div class="wrap">
+      <div class="stophead">
+        <div class="stopno">叁</div>
+        <h2>司时器</h2>
+        <span class="rtag">第二十二回</span>
+      </div>
+      <p class="t">旅馆墙角立着一个人偶：古代衣冠，双手捧牌，一双眼睛望着你似笑非笑。到点，牌上便现出「辰正一刻」四个大字。宝玉猜是留声机器，老少年摇头：留声机器哪有这般清楚字音，那是按人的肺管呼吸，用软皮做成，装一副扇风机器，到时候机捩一开，皮管翕张成声。</p>
+      <div class="qbox">
+        <p>这是‘司时器’，就同那欧美锺表一般，按时报出来的。</p>
+        <span class="qsrc">第二十二回</span>
+      </div>
+      <div class="clockwrap">
+        <div class="shiqi" id="shiqi">司时器</div>
+        <div class="nowtime mono" id="nowtime">正在对时</div>
+        <p class="clocknote">按你本机时刻折算十二时辰：一时辰分初正，一小时四刻。页一开，它就一直报下去。</p>
+        <span class="holder">境制 司时器 仿制</span>
+      </div>
+      <p class="t">宝玉嫌锺表记号别扭，上下午容易弄混。老少年的解决办法简单之至：</p>
+      <div class="qbox">
+        <p>非但麻烦，我们又何必舍己从人呢？</p>
+        <span class="qsrc">第二十二回</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="stop" id="s4">
+    <div class="wrap">
+      <input type="radio" name="pk" id="pk4" checked>
+      <input type="radio" name="pk" id="pk1">
+      <input type="radio" name="pk" id="pk2">
+      <input type="radio" name="pk" id="pk3">
+      <div class="stophead">
+        <div class="stopno">肆</div>
+        <h2>造天气</h2>
+        <span class="rtag">第二十二回</span>
+      </div>
+      <p class="t">五月天里，客房桌上摆出一盆绿萼梅花。宝玉大惊，老少年说不奇：境内四座公园，分造春夏秋冬四时天气。这门手艺有一位神话般的起源。一百多年前境内棉灾，冬天奇寒，善堂备好赈济却买不到棉花，一位化学博士把慈善的方向整个颠倒了过来。</p>
+      <div class="qbox">
+        <p>使人驾起数十百个气球，分向空中，施放硝磺之类，驱除寒气；又用数十百座大炉，蒸出暖气，散布四方，居然酝酿得同春深天气一般，草木也萌动起来。</p>
+        <span class="qsrc">第二十二回，华必振造天气</span>
+      </div>
+      <p class="t">那一回办下来，绝大家财散尽，三百里内不知有冬。政府接手精研，法子越来越省，园中立起他的石像，人人不称名姓，只叫再造天遗像。</p>
+      <div class="qbox">
+        <p>就送了这位华先生一雅号，叫做‘再造天’。</p>
+        <span class="qsrc">第二十二回</span>
+      </div>
+      <p class="t">博士姓华名兴，字必振：名字本身就是一句口号。下面这座园子比境内小得多，但天气同样现造：</p>
+      <div class="park">
+        <div class="sky"><div class="sun"></div></div>
+        <div class="parkcap">
+          <div class="pc-1"><b>春园</b>　风软，草木也萌动起来。三百里内的人，在这里第一次知道冬天来过。</div>
+          <div class="pc-2"><b>夏园</b>　此刻正统初夏，日光放足。绿萼梅花退到隔壁冬园去了。</div>
+          <div class="pc-3"><b>秋园</b>　气清尘敛。老少年说这一手与天地争功，天地没说话。</div>
+          <div class="pc-4"><b>冬园</b>　施放硝磺驱除寒气，蒸出暖气散布四方。名为冬，实不知有冬。</div>
+        </div>
+        <div class="parkseg">
+          <label for="pk1">春</label>
+          <label for="pk2">夏</label>
+          <label for="pk3">秋</label>
+          <label for="pk4">冬</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stop" id="s5">
+    <div class="wrap">
+      <div class="stophead">
+        <div class="stopno">伍</div>
+        <h2>游程</h2>
+        <span class="rtag">第二十三回 至 第三十八回</span>
+      </div>
+      <p class="t">文明境界第一条公共规则写在官道上：飞车既已发明，地面行车全数禁绝。宝玉一路只闻其声，先领教的是规矩：</p>
+      <div class="qbox">
+        <p>这是飞车。敝境近年发明了飞车之后，官道上就不准行车，以免行人碰撞。</p>
+        <p>行远的车，飞得高些，大约离地一百尺。这是市上往来的车，离地不过五十尺罢了。</p>
+        <span class="qsrc">第二十四回，官道之上</span>
+      </div>
+      <p class="t">从第二十三回起，老少年陪着宝玉把境界游了个遍，游程排了十六回书，站站是奇观：</p>
+      <div class="board">
+        <div class="row"><div class="rh mono">第二十四回<b>乘飞车</b></div><div class="rt">乘飞车快阅水师<span class="rn">官道禁行车一年，省下的修路费倒成一笔巨款</span></div></div>
+        <div class="row"><div class="rh mono">第二十五回<b>试电气</b></div><div class="rt">试电气海上发奇光<span class="rn">海上发电放光，战船穿鱼腹而施猛力</span></div></div>
+        <div class="row"><div class="rh mono">第二十九回<b>沉水底</b></div><div class="rt">沉水底发电战鳅鱼<span class="rn">猎艇追巨鳅入海，勇水手真刀真枪战人鱼</span></div></div>
+        <div class="row"><div class="rh mono">第三十一回<b>探南极</b></div><div class="rt">探南极异景看旋涡<span class="rn">旋涡异景之外，顺路戴冰获貂鼠</span></div></div>
+        <div class="row"><div class="rh mono">第三十七回<b>云端列阵</b></div><div class="rt">演飞车云端列阵<span class="rn">飞车成军，奇炮通神，演武演到平流层</span></div></div>
+      </div>
+      <div class="note"><b>留意奇观的成色。</b>水师、战船、电炮、猎艇、列阵：这场未来观光，一半是军备展览。吴趼人的乌托邦从不讳言武力，第六回目「人类战飞禽」打猎打到中非洲，胜利属于机器，仁术的修辞盖在炮身上。</div>
+    </div>
+  </section>
+
+  <section class="stop" id="s6">
+    <div class="wrap">
+      <div class="stophead">
+        <div class="stopno">陆</div>
+        <h2>一大梦</h2>
+        <span class="rtag">第四十回</span>
+      </div>
+      <p class="t">假期将尽的一夜，宝玉翻来覆去睡不着。一封信、两匹渡海的快马，把他带回上海，书里最要紧的一夜全是梦：梦里中国立宪告成，一夜之间改观。</p>
+      <div class="dream">
+        <div class="dcard">
+          <div class="dt">一折</div>
+          <h3>立宪告成</h3>
+          <p>两宫回銮后次第新政，五大臣出洋考察宪政，英国一条日本一条，斟酌布宪，神速到全国改观，治外法权收回，上海拆城开商场。</p>
+        </div>
+        <div class="dcard">
+          <div class="dt">二折</div>
+          <h3>浦东博会</h3>
+          <div class="qbox"><p>浦东开了会场，此刻正在那里开万国博览大会。</p><span class="qsrc">第四十回，吴伯惠语</span></div>
+        </div>
+        <div class="dcard wide">
+          <div class="dt">三折</div>
+          <h3>万国和平会</h3>
+          <p>和平会由各国公议到中国来办，举中国皇帝做会长，北京永定门外盖起极大会场。东方文明登台，宣布的宗旨一层比一层大：不止求国家和平，要为全球人类求和平。</p>
+          <div class="qbox"><p>故自此次开会之后，当消灭强权主义，实行和平主义。</p><span class="qsrc">第四十回，和平会演说</span></div>
+        </div>
+        <div class="dcard wide">
+          <div class="dt">四折</div>
+          <h3>踏空惊醒</h3>
+          <p>宝玉鼓掌不已，又要顿足，一顿足脚踏了空，一落千丈，一身冷汗：原来还睡在东方文明家客房里，寅正一刻，天没大亮。</p>
+        </div>
+      </div>
+      <div class="note"><b>一处常被提起的巧合。</b>小说刊于光绪三十四年，公元一九〇八年，梦里把万国博览大会安在上海浦东；二〇一〇年，世界博览会果真开在了浦东。梦里梦外，隔了一百零二年。</div>
+      <p class="t">梦醒之后，还有一场更安静的失落。主人东方文明，原来就是当年甄家那位甄宝玉，出家历劫的贾宝玉认了他半日，才认出满面的苍颜鹤发。补天这件事，有人先做完了。</p>
+      <div class="qbox">
+        <p>我本来要酬我这补天之愿，方才出来，不料功名事业，一切都被他全占了，我又成了虚愿了。</p>
+        <span class="qsrc">第四十回，宝玉自忖</span>
+      </div>
+      <div class="note"><b>顺手一笔。</b>老少年自报家门时，宝玉看他四十内外，他答一百四十岁，凭据是医学昌明可以驻颜益寿：贱齿今年虚度一百四十岁了。宝玉摇头不信，他答得理直气壮：我又不捐官考试，何必瞒年纪呢？</div>
+    </div>
+  </section>
+
+  <section class="stop" id="s7">
+    <div class="wrap">
+      <div class="stophead">
+        <div class="stopno">柒</div>
+        <h2>归石</h2>
+        <span class="rtag">第四十回</span>
+      </div>
+      <p class="t">结局把整本书反转成自己的来历。宝玉自知虚愿已了，把通灵宝玉赠给老少年：非玉非石，受生时含于口内带来。飞车过山，老少年凭窗纳凉把玩，偶一失手，玉直跌下去，越跌越大，落进东部仁字第十万区的山凹里。山名灵台方寸山，洞口凿着五个字：斜月三星洞。孙悟空的老家门牌，挂到了石头记的结尾。</p>
+      <div class="stone">
+        <div class="stt">石 面 现 出 奇 文 十 二 三 万 言 ， 后 添 一 歌</div>
+        <p class="ge">悲复悲兮世事，哀复哀兮后生。补天乏术兮岁不我与，群鼠满目兮恣其纵横。。</p>
+        <p class="ge">气郁郁而不得抒兮吾宁暗以死，付稗史兮以鸣其不平。。</p>
+      </div>
+      <p class="t">老少年抄下奇文，怕世人字训句诂胡说乱道反失其真，除办公事外夜夜改写成纯用白话的演义体裁，取名就叫《新石头记》。你刚读完的这一部，在书里是石头自己长出来的。故事只剩最后半页：那篇奇文预备给谁读，写得毫不客气。</p>
+      <div class="qbox">
+        <p>那篇奇文是预备丈夫读，不预备奴隶读；预备君子读，不预备小人读。</p>
+        <span class="qsrc">第四十回</span>
+      </div>
+      <p class="t">吃粪媚外的人纵使走到洞前，石面上也只会幻出几行蟹行斜上的字。</p>
+      <div class="crabbox">
+        <span class="en">Thy countrymen thou canst oppress.</span>
+        <div class="trans"><span class="ct">石 面 译 文</span>
+你崇拜所有的洋人，
+老会显出诚挚的神情。
+这是获得面包与金钱的妙法，
+且一家人靠此为生。
+只是一件事没能想到：
+你的同胞无法容忍。</div>
+      </div>
+      <p class="t">一道读者资格检查，设在全书的最后一行：看不懂的那个人，正是它要骂的那个人。补天补不成的石头下世一回，临走把骂人的话刻在自己身上，等一个读得懂的人来抄。</p>
+    </div>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p><b>文本来源</b>　殆知阁古代文献简体库 集藏/小说/新石头记.txt，底本光绪三十四年十月上海改良小说社单行本；库本实测去空白 <span class="mono">156065</span> 字。</p>
+    <p><b>引文核验</b>　本页所有引文均与库本逐字比对通过，照录原文，个别形讹字（如「那此」「升肉筋骨」「老会」「西飞」）未作润改。</p>
+    <p><b>时代局限</b>　书中以文明野蛮判人、按人种分等第的言论，是成书年代的印记，本页照录仅供批判地读，不表认同。</p>
+    <div class="navline">
+      <a href="mulu.html">返回总目</a>
+      <a href="https://github.com/robertsong2000/daizhige-daodu">导读仓库</a>
+      <a href="https://github.com/robertsong2000/daizhigev20">殆知阁简体库</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var plaque = document.getElementById('plaque');
+  var pf = document.getElementById('pf');
+  function flip() { plaque.classList.toggle('flipped'); }
+  plaque.addEventListener('click', flip);
+  plaque.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); }
+  });
+
+  var zhi = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  var kn = ['一','二','三','四'];
+  var el = document.getElementById('shiqi');
+  var nt = document.getElementById('nowtime');
+  function p2(n) { return (n < 10 ? '0' : '') + n; }
+  function tick() {
+    var d = new Date();
+    var h = d.getHours(), m = d.getMinutes(), s = d.getSeconds();
+    var idx = Math.floor(((h + 1) % 24) / 2);
+    var seg = (h % 2 === 1) ? '初' : '正';
+    el.textContent = zhi[idx] + seg + kn[Math.floor(m / 15)] + '刻';
+    nt.textContent = p2(h) + ' : ' + p2(m) + ' : ' + p2(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+
+</body>
+</html>
