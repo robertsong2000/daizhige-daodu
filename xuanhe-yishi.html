@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大宋宣和遗事 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink-bg: #191917;
+    --paper: #e8e4dc;
+    --paper-dim: #ddd7cc;
+    --ink: #1c1b19;
+    --ink-soft: #454340;
+    --cyan: #5e8fbb;
+    --cyan-deep: #4a7aa6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink-bg);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", SimSun, serif;
+    line-height: 1.9;
+  }
+  a { color: var(--cyan); text-decoration: none; }
+  .beacon {
+    position: fixed; top: 14px; left: 16px; z-index: 9;
+    font-size: 12px; letter-spacing: 2px; color: #8a8579;
+    border: 1px solid #3a382f; padding: 3px 10px; border-radius: 2px;
+    background: rgba(25,25,23,.85);
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- 开卷：对开册页 ---------- */
+  .spread { display: flex; gap: 0; margin: 90px auto 0; max-width: 900px; position: relative; }
+  .pg { background: var(--paper); color: var(--ink); position: relative; }
+  .pg-l { flex: 0 0 46%; padding: 34px 26px 34px 20px; border-radius: 6px 0 0 6px; }
+  .pg-r { flex: 1 1 54%; padding: 34px 30px; border-radius: 0 6px 6px 0; }
+  .pg-r::before {
+    content: ""; position: absolute; left: -14px; top: 0; bottom: 0; width: 14px;
+    background: linear-gradient(to right, rgba(25,25,23,0), rgba(25,25,23,.22));
+  }
+  .spine {
+    position: absolute; left: 46%; top: -6px; bottom: -6px; width: 2px;
+    background: #0e0e0d; box-shadow: 0 0 0 1px #2a2823;
+  }
+  .poem {
+    writing-mode: vertical-rl; height: 100%; min-height: 330px;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    font-size: 19px; letter-spacing: 6px; line-height: 1; margin: 0 auto; color: var(--ink);
+  }
+  .poem i { font-style: normal; }
+  .pg-l .lab {
+    position: absolute; bottom: 12px; left: 0; right: 0; text-align: center;
+    font-size: 11px; letter-spacing: 3px; color: var(--ink-soft);
+  }
+  .ttl {
+    writing-mode: vertical-rl; float: right; height: 240px; margin-left: 18px;
+    font-size: 40px; font-weight: 700; letter-spacing: 10px; line-height: 1.15; color: var(--ink);
+  }
+  .pg-r .k {
+    font-size: 12px; letter-spacing: 3px; color: var(--ink-soft); margin-bottom: 10px;
+  }
+  .pg-r h1 { font-size: 20px; color: var(--ink); margin-bottom: 14px; letter-spacing: 2px; }
+  .pg-r .lead { font-size: 15px; color: var(--ink); margin-bottom: 18px; }
+  .seals { display: flex; gap: 10px; clear: both; padding-top: 6px; }
+  .seal {
+    display: block; width: 64px; height: 64px; border: 1.5px solid var(--cyan-deep);
+    border-radius: 8px; color: var(--cyan-deep); text-align: center;
+    font-size: 26px; line-height: 60px; position: relative;
+  }
+  .seal small {
+    position: absolute; left: 0; right: 0; bottom: -20px; font-size: 10px;
+    letter-spacing: 1px; color: var(--ink-soft); line-height: 1.2;
+  }
+  .seal:hover { background: var(--cyan-deep); color: var(--paper); }
+  .numbers { margin-top: 34px; font-size: 13px; color: var(--ink-soft); }
+
+  /* ---------- 话本段落 ---------- */
+  .rua { margin: 54px auto 0; }
+  .hui {
+    background: var(--paper); color: var(--ink); border-radius: 4px;
+    padding: 30px 34px 26px 66px; margin-top: 26px; position: relative;
+  }
+  .hstamp {
+    position: absolute; left: 14px; top: 26px; width: 38px; height: 38px;
+    border-radius: 50%; background: var(--cyan-deep); color: var(--paper);
+    text-align: center; line-height: 38px; font-size: 15px;
+  }
+  .hui .set { position: absolute; right: 30px; top: 28px; font-size: 12px; letter-spacing: 2px; color: var(--ink-soft); border: 1px solid #b9b2a4; padding: 1px 8px; border-radius: 2px; }
+  .hui h2 {
+    font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: 2px;
+    margin-bottom: 4px; line-height: 1.5;
+  }
+  .hui h2 span + span { margin-left: 14px; }
+  .hui h2 span + span::before { content: "；"; color: var(--cyan-deep); margin-right: 14px; font-weight: 400; }
+  .hui .sub { font-size: 13px; color: var(--ink-soft); margin-bottom: 16px; }
+  .qt {
+    background: var(--paper-dim); border-left: 3px solid var(--cyan-deep);
+    padding: 12px 16px; margin: 14px 0; font-size: 16px; line-height: 2;
+  }
+  .qt .who { display: block; font-size: 12px; color: var(--ink-soft); letter-spacing: 2px; margin-top: 6px; }
+  .qt.verse { text-align: center; border-left: none; border-top: 2px solid var(--cyan-deep); border-bottom: 2px solid var(--cyan-deep); background: transparent; }
+  .kan {
+    font-size: 14px; color: var(--ink-soft); margin: 16px 0 4px; padding-left: 14px;
+    border-left: 3px dotted #a89f8d;
+  }
+  .kan b { color: var(--cyan-deep); font-weight: 700; }
+  .kan .src { color: #8a8271; font-size: 12px; }
+  .hook {
+    display: inline-block; margin-top: 14px; font-size: 14px; letter-spacing: 3px;
+    color: var(--cyan-deep); border-bottom: 1px dashed var(--cyan-deep); padding-bottom: 1px;
+  }
+  .hook::after {
+    content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 8px;
+    border-top: 1.5px solid var(--cyan-deep); border-right: 1.5px solid var(--cyan-deep);
+    transform: rotate(45deg); vertical-align: 2px;
+  }
+  .ink-block {
+    background: #121210; color: var(--paper); border-radius: 4px;
+    padding: 20px 22px; margin: 16px 0;
+  }
+  .ink-block .qt { background: #1d1c19; border-left-color: #7d7670; }
+  .ink-block .qt .who { color: #958d80; }
+  .ink-block .kan { color: #a29a8c; border-left-color: #4a463f; }
+  .ink-block .kan b { color: var(--cyan); }
+  .ink-block .tt { font-size: 13px; letter-spacing: 3px; color: #8a8579; margin-bottom: 8px; }
+
+  /* ---------- 三十六人榜 ---------- */
+  .rgrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 16px 0 4px; }
+  .nm {
+    background: #f2eee6; border: 1px solid #cfc8ba; border-radius: 3px;
+    padding: 8px 4px 6px; text-align: center; cursor: pointer; user-select: none;
+  }
+  .nm b { display: block; font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+  .nm .alt { display: none; font-size: 11px; color: var(--cyan-deep); line-height: 1.5; margin-top: 3px; border-top: 1px dotted #b9b2a4; padding-top: 3px; }
+  .nm.flip .alt { display: block; }
+  .nm:hover { border-color: var(--cyan-deep); }
+  .rtip { font-size: 12px; color: var(--ink-soft); letter-spacing: 1px; }
+
+  /* ---------- 收梢 ---------- */
+  .endnote { text-align: center; margin: 70px 0 30px; font-size: 13px; color: #8a8579; letter-spacing: 2px; }
+  footer { border-top: 1px solid #2e2c26; margin-top: 30px; padding: 34px 0 60px; font-size: 13px; }
+  footer .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 40px; color: #b3ac9e; }
+  footer b { color: var(--paper); letter-spacing: 1px; }
+  footer a { color: var(--cyan); }
+
+  .mutop {
+    position: fixed; right: 18px; bottom: 18px; z-index: 9;
+    width: 46px; height: 46px; border-radius: 50%; border: 1px solid #3a382f;
+    background: #201f1c; color: var(--paper); cursor: pointer; font-size: 13px;
+    font-family: inherit; letter-spacing: 1px;
+  }
+  .mutop:hover { background: var(--cyan-deep); }
+
+  @media (max-width: 760px) {
+    .spread { flex-direction: column; }
+    .pg-l { border-radius: 6px 6px 0 0; }
+    .pg-r { border-radius: 0 0 6px 6px; }
+    .spine { display: none; }
+    .poem { min-height: 260px; font-size: 16px; letter-spacing: 4px; }
+    .rgrid { grid-template-columns: repeat(4, 1fr); }
+    .hui { padding-left: 56px; padding-right: 22px; }
+    .hui .set { position: static; display: inline-block; margin-bottom: 8px; }
+    .ttl { font-size: 30px; height: 180px; }
+    footer .cols { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="beacon">殆知阁导读 · 第219篇</div>
+
+<!-- 开卷：一册对开的话本 -->
+<div class="spread wrap">
+  <div class="pg pg-l">
+    <div class="poem">
+      <i>暂时罢鼓膝间琴，</i>
+      <i>闲把遗编阅古今。</i>
+      <i>常叹贤君务勤俭，</i>
+      <i>深悲庸主事荒淫。</i>
+      <i>说破兴亡多少事，</i>
+      <i>高山流水有知音。</i>
+    </div>
+    <div class="lab">库本元集开卷诗</div>
+  </div>
+  <div class="pg pg-r">
+    <div class="ttl">宣和遗事</div>
+    <div class="k">殆知阁简体库 史藏 志存记录</div>
+    <h1>大宋宣和遗事</h1>
+    <p class="lead">一部话本，两副笔墨。前半是水浒的种子：杨志卖刀、天书聚义、三十六人上梁山，都在这里第一次连成故事。后半是汴京的挽歌：花石纲、李师师、青城易服、五国城石坑，编年一路哭到北狩。说书人把两件事讲成了因果。</p>
+    <div class="seals">
+      <a class="seal" href="#h1">元<small>花石卖刀</small></a>
+      <a class="seal" href="#h4">亨<small>天书聚义</small></a>
+      <a class="seal" href="#h7">利<small>金人围城</small></a>
+      <a class="seal" href="#h8">贞<small>北狩石坑</small></a>
+    </div>
+    <p class="numbers">库本去空白六万六千四百零一字，分元亨利贞四集：元集一万八千五百六十字，亨集一万六千七百三十八字，利集一万六千七百二十三字，贞集一万四千三百六十一字，皆经机数核验。宋元间人辑话本与朝报而成，撰人佚名。</p>
+  </div>
+  <div class="spine"></div>
+</div>
+
+<!-- 正文：九回 -->
+<div class="rua wrap">
+
+  <section class="hui" id="h0">
+    <div class="hstamp">入</div>
+    <span class="set">元集</span>
+    <h2><span>开场的套数</span><span>把听众按进因果</span></h2>
+    <p class="sub">入话 · 说书人先讲一遍天下大势</p>
+    <blockquote class="qt">「中国也，君子也，天理也，皆是阳类；夷狄也，小人也，人欲也，皆是阴类。」<span class="who">元集 · 入话论治乱</span></blockquote>
+    <aside class="kan">看官：开卷先把三千年治乱压成一句阴阳，阳气盛则君子在位，天下太平；阴气盛则小人在朝，天下大乱。这话今天听像算命，在当时是话本的标准开场套数，先把听众按进善恶因果的座次里，再开讲。底下从尧舜禅让一路数下来，数到谁？数到「朝欢暮乐，依稀似剑阁孟蜀王；论爱色贪杯，仿佛如金陵陈后主」的徽宗皇帝。</aside>
+    <blockquote class="qt">「宋江三十六人，哄州劫县；方腊一十三寇，放火杀人。天子全无忧问，与臣蔡京、童贯、杨戬、高俅、朱勔、王黼、梁师成、李彦等，取乐追欢，朝纲不理。」<span class="who">元集 · 徽宗小像后的总账</span></blockquote>
+    <aside class="kan">看官：注意这两句的口气，把「宋江三十六人」与方腊并列在灾异账里，是官家账簿的写法；可这本书偏偏又替宋江编出整本戏文。史笔与演义同床，正是这部书最要紧的体质。<span class="src">后面各回，就顺着这条裂缝走。</span></aside>
+  </section>
+
+  <section class="hui" id="h1">
+    <div class="hstamp">壹</div>
+    <span class="set">元集</span>
+    <h2><span>应奉局搜岩剔薮</span><span>花石纲凿河断桥</span></h2>
+    <p class="sub">祸事的起头，是几块石头</p>
+    <blockquote class="qt">「先有朱勔者，因蔡京以进。上颇垂意花石，勔初才致黄杨木三四本，已称圣意。后岁岁增加，遂至舟船相继，号作花石纲。」<span class="who">元集 · 崇宁后</span></blockquote>
+    <blockquote class="qt">「搜岩剔薮，无所不到。」「凡士庶之家，有一花一木之妙的，悉以黄帕遮覆，指做御前之物。不问坟墓之间，尽皆发掘。」「一花费数千贯，一石费数万缗。」<span class="who">元集 · 应奉局</span></blockquote>
+    <blockquote class="qt">「役民夫百千万，自汴梁直至苏杭，尾尾相含，人民劳苦，相枕而亡。」<span class="who">元集 · 修艮岳</span></blockquote>
+    <aside class="kan">看官：花石纲是正史里也认账的事，但话本把它讲成了刑名案卷：从「黄杨木三四本」起家，到黄帕一遮、指做御前，搜刮就有了官身。库本说巨石「名做神运」，运河走不通的就海运，凿河断桥数月方至。汴京城里万岁山一年年长高，江淮之间的人一年年变薄。</aside>
+  </section>
+
+  <section class="hui" id="h2">
+    <div class="hstamp">贰</div>
+    <span class="set">元集</span>
+    <h2><span>颍州雪里卖宝刀</span><span>五花营头倾寿担</span></h2>
+    <p class="sub">杨志与十万贯：两条通向梁山的路</p>
+    <blockquote class="qt">「先是朱勔运花石纲时分，差着杨志、李进义、林冲、王雄，花荣、柴进、张青、徐宁、李应、穆横、关胜、孙立十二人为指使，前往太湖等处，押人夫搬运花石。」<span class="who">元集 · 十二人指使</span></blockquote>
+    <blockquote class="qt verse">「乱飘僧舍茶烟湿，密洒歌楼酒力微。」<span class="who">杨志候孙立不至，雪阻颍州</span></blockquote>
+    <blockquote class="qt">「那杨志为等孙立不来，又值雪天，旅涂贫困，缺少果足，未免将一口宝刀出市货卖。」「那后生被杨志挥刀一斫，只见颈随刀落。」<span class="who">元集 · 卖刀</span></blockquote>
+    <blockquote class="qt">「是年，正是宣和二年五月，有北京留守梁师宝将十万贯金珠、珍宝、奇巧匹段，差县尉马安国一行人，担奔至京师，赶六月初一日为蔡太师上寿。」「才吃酒时，便觉眼花头晕，看见天在下，地在上」<span class="who">元集 · 五花营堤上</span></blockquote>
+    <aside class="kan">看官：这里的水浒还是另一个宇宙：杨志是花石纲十二指使之一，李进义就是后来的卢俊义，孙立是杨志的结义兄弟，卖刀杀人后众人黄河岸上杀防送军人、同上太行山落草；劫寿担的也不是七星聚义，是八个大汉的一对酒桶。情节与通行本《水浒传》处处差着几寸，可是每一段的骨架都认得。<span class="src">血统这东西，不靠名字。</span></aside>
+  </section>
+
+  <section class="hui" id="h3">
+    <div class="hstamp">叁</div>
+    <span class="set">元集末</span>
+    <h2><span>怒刀一柄题粉壁</span><span>遗事四集分亨元</span></h2>
+    <p class="sub">宋江杀惜，元集在这里断掉</p>
+    <blockquote class="qt">「却见故人阎婆惜又与吴伟打暖，更不采着。宋江一见了吴伟两个，正在偎倚，便一条忿气，怒发冲冠，将起一柄刀，把阎婆惜、吴伟两个杀了，就壁上写了四句诗。若知其意，便看亨集，后有诗为证。」<span class="who">元集末 · 分回处</span></blockquote>
+    <aside class="kan">看官：全书最要紧的一行字在这里：「若知其意，便看亨集」。这是说书人手里的分回钩子，书到自己喊出了目录。亨集劈头接的诗也拿住了：</aside>
+    <blockquote class="qt">「杀了阎婆惜，寰中显姓名。要捉凶身者，梁山泺上寻。」<span class="who">亨集卷头诗</span></blockquote>
+    <aside class="kan">看官：一部官修味的兴亡账，夹着一册勾栏口气的话本，接缝处的针脚就这样露在外面。后世目录家把它归进史部小说类，两边的体例都占，两边的体例都不认。<span class="src">梁山泺的泺，库本原字，即后来的梁山泊。</span></aside>
+  </section>
+
+  <section class="hui" id="h4">
+    <div class="hstamp">肆</div>
+    <span class="set">亨集</span>
+    <h2><span>玄女庙中授天书</span><span>聚义筵前数三六</span></h2>
+    <p class="sub">三十六人的第一次点名</p>
+    <blockquote class="qt">「争柰宋江已走在屋后九天玄女庙里躲了。」「破国因山木，兵刀用水工；一朝充将领，海内耸威风。」<span class="who">亨集 · 天书</span></blockquote>
+    <blockquote class="qt">「天书付天罡院三十六员猛将使呼保义宋江为帅，广行忠义，殄灭奸邪。」<span class="who">亨集 · 天书末行</span></blockquote>
+    <aside class="kan">看官：天书卷上开的是这份名单，三十六人，点谁是谁。点击名号看与通行本《水浒传》的异同。</aside>
+    <div class="rgrid" id="roster">
+      <div class="nm"><b>智多星吴加亮</b><span class="alt">后世作吴用</span></div>
+      <div class="nm"><b>玉麒麟卢进义</b><span class="alt">后世作卢俊义</span></div>
+      <div class="nm"><b>青面兽杨志</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>混江龙李海</b><span class="alt">后世作李俊</span></div>
+      <div class="nm"><b>九纹龙史进</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>入云龙公孙胜</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>浪里百跳张顺</b><span class="alt">后世作浪里白条</span></div>
+      <div class="nm"><b>霹雳火秦明</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>活阎罗阮小七</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>立地太岁阮小五</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>短命二郎阮进</b><span class="alt">后世作阮小二</span></div>
+      <div class="nm"><b>大刀关必胜</b><span class="alt">后世作关胜</span></div>
+      <div class="nm"><b>豹子头林冲</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>黑旋风李逵</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>小旋风柴进</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>金枪手徐宁</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>扑天雕李应</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>赤发鬼刘唐</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>一撞直董平</b><span class="alt">后世作双枪将</span></div>
+      <div class="nm"><b>插翅虎雷横</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>美髯公朱同</b><span class="alt">后世作朱仝</span></div>
+      <div class="nm"><b>神行太保戴宗</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>赛关索王雄</b><span class="alt">后世作杨雄</span></div>
+      <div class="nm"><b>病尉迟孙立</b><span class="alt">后世贬入地煞</span></div>
+      <div class="nm"><b>小李广花荣</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>没羽箭张青</b><span class="alt">后世作没羽箭张清</span></div>
+      <div class="nm"><b>没遮拦穆横</b><span class="alt">后世作穆弘</span></div>
+      <div class="nm"><b>浪子燕青</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>花和尚鲁智深</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>行者武松</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>铁鞭呼延绰</b><span class="alt">后世作呼延灼</span></div>
+      <div class="nm"><b>急先锋索超</b><span class="alt">名号同</span></div>
+      <div class="nm"><b>拼命二郎石秀</b><span class="alt">后世作拚命三郎</span></div>
+      <div class="nm"><b>火船工张岑</b><span class="alt">后世并入张横</span></div>
+      <div class="nm"><b>摸着云杜千</b><span class="alt">后世作杜迁</span></div>
+      <div class="nm"><b>铁天王晁盖</b><span class="alt">后世移出天罡，坐梁山头把交椅</span></div>
+    </div>
+    <p class="rtip">名单照录库本，晁盖在三十六人之内，宋江不与其数。</p>
+    <blockquote class="qt verse">「来时三十六，去后十八双。若还少一个，定是不还乡！」<span class="who">宋江题旗</span></blockquote>
+    <blockquote class="qt">「有那元帅姓张名叔夜的，是世代将门之子，前来招诱宋江和那三十六人归顺宋朝」「后遣宋江收方腊有功，封节度使。」<span class="who">亨集 · 招安</span></blockquote>
+    <aside class="kan">看官：话本里的招安干脆得近乎潦草，张叔夜一出，三十六人领了诰敕各赴诸路，转头宋江就去打方腊。历史上的宋江降张叔夜见宋史，话本拿这根钉子把故事钉回正史，好接着讲徽宗的账。</aside>
+  </section>
+
+  <section class="hui" id="h5">
+    <div class="hstamp">伍</div>
+    <span class="set">亨集</span>
+    <h2><span>金线巷深藏龙凤</span><span>谏议阶前折贾郎</span></h2>
+    <p class="sub">李师师：皇帝把私情走成了公事</p>
+    <blockquote class="qt">「我与师师两个胶漆之情甚美，便似天淡淡云边鸾凤，水澄澄波里鸳鸯，平白地涌出一条八爪金龙，把这鸳鸯儿拆散了。」<span class="who">亨集 · 镐巡贾奕的心理活动</span></blockquote>
+    <blockquote class="qt">「天子自有皇后、贵妃追欢之乐，贱妾平康泼妓，岂是天子行踏去处」<span class="who">亨集 · 李师师答杨戬</span></blockquote>
+    <aside class="kan">看官：这一段是全书写得最好的市井戏。酒都巡贾奕为师师气倒又跪倒，口称皇后娘娘；师师转身几盏淡酒替他解闷。曹辅谏了，张天觉又谏，徽宗当下认错，过几日又叫杨戬传旨续约，杨戬在师师桌上翻出贾奕的柬帖。私情一旦是皇帝的，就成了政事，谏章、贬官、赐死一路排下来，话本把这条线一直牵到金人过河。</aside>
+  </section>
+
+  <section class="hui" id="h6">
+    <div class="hstamp">陆</div>
+    <span class="set">亨集</span>
+    <h2><span>神霄殿上分三教</span><span>九天云头遇故人</span></h2>
+    <p class="sub">林灵素：把亡国讲成法术的人</p>
+    <blockquote class="qt">「将佛氏改为宫观，释迦改为天尊，菩萨改为大士，罗汉改为尊者，和尚改为德士，皆留发顶冠执简。」<span class="who">亨集 · 改佛为道</span></blockquote>
+    <blockquote class="qt">「有皇太子上殿争之，令胡僧一立藏十二人，并五台僧二人道坚等，与灵素斗法。」<span class="who">亨集 · 宫廷斗法</span></blockquote>
+    <blockquote class="qt">「你也恋不得皇宫内苑，宠不得皓齿朱颜，虐不得万邦黎庶。有分离乡背井，向五国城忍寒受饿！」<span class="who">徽宗梦游天阙，张天觉斥之</span></blockquote>
+    <aside class="kan">看官：梦里的张天觉上前扯住龙袍，望天门发力一推，把皇帝推下九天。徽宗惊醒时出了一身冷汗，明妃只说梦不足信，林灵素说兴废分已定。库本接了一句大白话：自此之后，「朝欢暮乐，无日虚度」。预言给了，因果摆了，人照旧，这是话本最有把握的写法，也是最狠的写法。</aside>
+  </section>
+
+  <section class="hui" id="h7">
+    <div class="hstamp">柒</div>
+    <span class="set">利集</span>
+    <h2><span>伏阙书惊陈太学</span><span>青城帐冷换帝袍</span></h2>
+    <p class="sub">城破：从灾异清单到易服之辱</p>
+    <blockquote class="qt">「都城有青果男子，有孕而诞子，坐蓐不能收，换易七人，始分娩而逃去；」<span class="who">利集 · 灾异</span></blockquote>
+    <aside class="kan">看官：靖康前夜的利集挤满这一类条目，男子诞子，酒保之妻生须，削榆皮至人相食。话本用灾异清单给亡国打拍子，敲到陈东伏阙，拍子停了一下，因为那篇书疏是真的：</aside>
+    <blockquote class="qt">「东南之民，怨入骨髓，欲食其肉而寝其皮。」「伏愿陛下擒此六贼，肆诛市朝，传首四方，以谢天下。」<span class="who">利集 · 太学生陈东上书</span></blockquote>
+    <blockquote class="qt">「粘罕令左右将青袍迫二帝易服，以常服服之。逼二后易服。」「大辽之亡，死节之臣甚众；南朝惟有李侍郎一人而已！」<span class="who">利集 · 青城军中</span></blockquote>
+    <aside class="kan">看官：李若水骂虏不屈死，衣襟里搜出一首诗，粘罕读罢对群胡说了上面那句话。敌酋替宋朝数忠臣，这一笔是全书少有的正面特写：</aside>
+    <blockquote class="qt">「胡马南来久不归，山河残破一身微。」「艰难重有君亲念，血泪班班满客衣。」<span class="who">李若水绝笔</span></blockquote>
+  </section>
+
+  <section class="hui" id="h8">
+    <div class="hstamp">捌</div>
+    <span class="set">贞集</span>
+    <h2><span>土坑夜寒僵踞影</span><span>石坑水冷作灯油</span></h2>
+    <p class="sub">北狩：话本在此收起一切排场</p>
+    <blockquote class="qt">「昔居天上兮，珠宫玉阙。今日草莽兮，事何可说。屈身辱志兮，恨何可雪。誓速归泉下兮，此愁可绝！」<span class="who">贞集 · 朱后歌罢赴死</span></blockquote>
+    <blockquote class="qt">「朱后病笃，初二日午死，年方二十岁。」「帝哭愈哀，不敢出声，恐监者喝之。」<span class="who">贞集 · 朱后之死</span></blockquote>
+    <aside class="kan">看官：北狩路上的编排全变了，前八回的插科打诨、诗赞套数一概不见，贞集只剩下赶路、吃饭、冻饿、死亡，倒像一份随行狱吏的日志。半路还安排了一场奇遇：二帝在平州撞见辽国末帝天祚，故国之君互道珍重，天祚说「此名平州，去燕京尚有七百里，勉之，勉之！」两个亡国的皇帝，隔着一堵墙互相打气。</aside>
+    <div class="ink-block">
+      <div class="tt">五国城 · 石坑</div>
+      <blockquote class="qt">「帝自土坑中顾视上皇，则僵踞死矣。」「死者必以火焚尸，及半，以杖击之，投州石坑中，由是此水可作灯油也。」「以木杖贯其尸，曳弃坑中，其尸直下至坑底。」<span class="who">天眷三年 · 徽宗之死</span></blockquote>
+      <blockquote class="qt">「古来有生人投死于中，不可作油，此水顿清净。」<span class="who">宋钦宗欲投坑，左右拽裾力止</span></blockquote>
+      <aside class="kan">看官：库本这一段的冷，不在句子狠，在句子平。火焚、杖击、贯尸、弃坑，每一步都像在报账。左右拦住钦宗的理由也是报账的口气：活人投进去，水就不干净了。亡国在此处不讲忠孝，只讲物理。</aside>
+      <blockquote class="qt">「汝本北方小胡奴，侵凌上国，南灭炎宋，北威契丹，不行仁德，专务杀伐，使我父兄孤苦，他日汝亦遭人夷灭也！」<span class="who">金主手刃赵妃之前，妃骂</span></blockquote>
+      <blockquote class="qt">「不可如此。且臣子不孝无道，致君父于若此。陛下求死，臣何容于世为万世罪人矣！」<span class="who">徽宗绞衣自尽，钦宗持下泣止</span></blockquote>
+    </div>
+  </section>
+
+  <section class="hui" id="h9">
+    <div class="hstamp">玖</div>
+    <span class="set">贞集末</span>
+    <h2><span>泥马驰开七百里</span><span>白头诗请旧神京</span></h2>
+    <p class="sub">收梢：中兴讲到一半，书停了</p>
+    <blockquote class="qt">「康王豁然环顾，果有疋马立于傍。将身一跳上马，一昼夜行七百余里，但见马僵立不进，下视之，则崔府君泥马也。」<span class="who">贞集 · 泥马渡康王</span></blockquote>
+    <blockquote class="qt">「宁作赵氏鬼，不作他邦臣！」<span class="who">建康通判杨邦义刺血书衣裾</span></blockquote>
+    <aside class="kan">看官：康王既位，书忽然转入高宗朝编年：黄天荡、岳飞、十三战功、秦桧南归、定都临安，一路讲到绍兴议和。库本骂南宋君臣「而忘父兄不共戴天之仇」，语气与说书人开卷的阴阳论遥遥对上。末了引刘后村咏史诗收梢：</aside>
+    <blockquote class="qt">「炎绍诸贤虑未精，今追遗恨尚难平。」「可怜白发宗留守，力请銮舆幸旧京！」<span class="who">卷末诗</span></blockquote>
+    <aside class="kan">看官：一部从尧舜讲起的兴亡大书，最后停在一句没实现的请求上：请皇帝回汴京。中兴讲到一半戛然而止，倒像说书人自己也不忍往下说了。<span class="src">醒木落，话本至此。</span></aside>
+  </section>
+
+</div>
+
+<div class="endnote">殆知阁导读 第219篇至此读毕，总目见 mulu.html。</div>
+
+<footer>
+  <div class="wrap cols">
+    <div>
+      <p><b>文本来源</b><br>殆知阁古代文献 史藏 志存记录 大宋宣和遗事<br><a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20（简体版）</a></p>
+    </div>
+    <div>
+      <p><b>核验声明</b><br>本页全部引文经脚本与库内文件逐字核验（去标点、归一后双侧比对），并反扫页面确认无未申报的库本成句复用；库本去空白六万六千四百零一字、四集分字数与三十六人名单均经机数断言。</p>
+    </div>
+    <div>
+      <p><b>库本讹字申报</b><br>库本有私用区缺字一处（童贯、杨戬等五人列名处），卷末「酣」字下有一占位缺字，引文皆避让；「梁山泺」之泺即泊，「争柰」即怎奈，疋马即匹马，皆照录；「蔡京壤乱于前」之壤疑当作乱，「毕闻已死」「瘐困」等处疑有讹，未引。宣和遗事版本极杂，此库本四集分元亨利贞，与通行诸本卷次文字互有出入，名单异文以库本为准。</p>
+    </div>
+    <div>
+      <p><b>使用提醒</b><br>本篇属史藏志存记录卷，导读系列总目见 <a href="mulu.html">mulu.html</a>。书中记靖康之耻与北狩惨状（焚尸、贯尸、逼辱、赐死诸节皆原文），系宋元人所述，掺入大量传说与虚构（泥马渡江、玄女天书皆非史实），人物评价从当时华夷之辨的立场，请以话本文学与史料两层视之；水浒部分是《水浒传》成书前的早期形态，与通行本差异处勿以后世小说反推。</p>
+    </div>
+  </div>
+</footer>
+
+<button class="mutop" id="mutop" title="回入话">醒木</button>
+
+<script>
+  var rows = document.querySelectorAll('#roster .nm');
+  rows.forEach(function (n) {
+    n.addEventListener('click', function () { n.classList.toggle('flip'); });
+  });
+  document.getElementById('mutop').addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
