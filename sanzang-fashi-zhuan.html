@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大唐大慈恩寺三藏法师传 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink2: #201f1d;
+    --paper: #e8e4dc;
+    --dim: #a39e93;
+    --faint: #6e6a61;
+    --gold: #c9963f;
+    --gold-dim: rgba(201,150,63,0.35);
+    --hair: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- hero: 关牒与里程 ---------- */
+  .hero {
+    position: relative;
+    min-height: 100dvh;
+    display: flex;
+    overflow: hidden;
+  }
+  .hero-inner {
+    flex: 1;
+    display: flex;
+    padding: 56px 40px 48px;
+  }
+  .kicker {
+    font-size: 13px;
+    letter-spacing: 0.5em;
+    color: var(--faint);
+    writing-mode: vertical-rl;
+    height: 100%;
+    padding-top: 6px;
+  }
+  .vtitle {
+    writing-mode: vertical-rl;
+    font-size: clamp(64px, 11vh, 108px);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    line-height: 1.15;
+    color: var(--paper);
+    height: 100%;
+  }
+  .vtitle small {
+    font-size: 0.22em;
+    letter-spacing: 0.5em;
+    color: var(--dim);
+    margin-top: 1.4em;
+    font-weight: 400;
+  }
+  .hero-note {
+    align-self: flex-end;
+    max-width: 20em;
+    color: var(--dim);
+    font-size: 15px;
+    margin-left: auto;
+    text-align: left;
+  }
+  .hero-note b { color: var(--paper); font-weight: 600; }
+  .scroll-hint {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    letter-spacing: 0.4em;
+    color: var(--faint);
+  }
+
+  /* 里程线 */
+  .spine {
+    position: relative;
+    width: 190px;
+    flex: none;
+    border-left: none;
+  }
+  .spine::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: var(--hair);
+  }
+  .spine .lit {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: var(--gold);
+    transform-origin: top;
+    transform: scaleY(0);
+    animation: grow 2.8s cubic-bezier(0.2,0.6,0.2,1) 0.4s forwards;
+  }
+  @keyframes grow { to { transform: scaleY(1); } }
+  .st {
+    position: absolute;
+    left: 50%;
+    font-size: 12.5px;
+    letter-spacing: 0.22em;
+    color: var(--faint);
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+    opacity: 0;
+    animation: stin 0.9s ease forwards;
+  }
+  @keyframes stin { to { opacity: 1; } }
+  .st i {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 5px; height: 5px;
+    background: var(--faint);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    font-style: normal;
+  }
+  .st.l { transform: translate(-130%, -50%); }
+  .st.r { transform: translate(30%, -50%); }
+  .st.long {
+    font-size: 11px;
+    letter-spacing: 0.34em;
+    color: var(--gold-dim);
+  }
+  .st:nth-of-type(1) { animation-delay: 0.15s; }
+  .st:nth-of-type(2) { animation-delay: 0.5s; }
+  .st:nth-of-type(3) { animation-delay: 0.8s; }
+  .st:nth-of-type(4) { animation-delay: 1.1s; }
+  .st:nth-of-type(5) { animation-delay: 1.4s; }
+  .st:nth-of-type(6) { animation-delay: 1.8s; }
+  .st:nth-of-type(7) { animation-delay: 2.1s; }
+  .st:nth-of-type(8) { animation-delay: 2.4s; }
+  .st:nth-of-type(9) { animation-delay: 2.7s; }
+  .st:nth-of-type(10) { animation-delay: 3.0s; }
+  .st:nth-of-type(11) { animation-delay: 3.3s; }
+  .st:nth-of-type(12) { animation-delay: 3.6s; }
+  .st:nth-of-type(13) { animation-delay: 3.9s; }
+  .st:nth-of-type(14) { animation-delay: 4.2s; }
+  .st:nth-of-type(15) { animation-delay: 4.7s; color: var(--gold); }
+  .st:nth-of-type(15) i { background: var(--gold); }
+
+  /* ---------- 章节 ---------- */
+  section { padding: 84px 0 30px; }
+  .prog {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 34px;
+  }
+  .seal {
+    width: 54px; height: 54px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+    flex: none;
+  }
+  .prog .pt { font-size: 22px; letter-spacing: 0.14em; font-weight: 600; }
+  .prog .pc { font-size: 13px; color: var(--faint); letter-spacing: 0.18em; margin-top: 2px; }
+  .prog .mile {
+    margin-left: auto;
+    text-align: right;
+    font-size: 12px;
+    color: var(--faint);
+    letter-spacing: 0.14em;
+  }
+  .prose p { margin-bottom: 1.1em; font-size: 16.5px; }
+  .prose .say { color: var(--dim); }
+  .prose b { color: var(--gold); font-weight: 600; }
+
+  /* 引文卡 */
+  .q {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 26px 28px 22px;
+    margin: 26px 0;
+    font-size: 17.5px;
+    line-height: 2;
+    border-left: 4px solid var(--gold);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.4);
+  }
+  .q .from {
+    display: block;
+    margin-top: 12px;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--faint);
+  }
+  .q.big { font-size: 20px; }
+  .q em { font-style: normal; background: linear-gradient(transparent 62%, rgba(201,150,63,0.38) 62%); }
+
+
+  /* 第五夜 */
+  details.night {
+    border: 1px solid var(--hair);
+    margin: 26px 0;
+  }
+  details.night summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 16px 22px;
+    font-size: 14px;
+    letter-spacing: 0.24em;
+    color: var(--dim);
+  }
+  details.night summary::-webkit-details-marker { display: none; }
+  details.night summary::before { content: "◇ "; color: var(--gold); }
+  details.night[open] summary::before { content: "◆ "; }
+  details.night .night-body {
+    padding: 4px 22px 20px;
+    color: var(--dim);
+    font-size: 15.5px;
+  }
+  details.night .night-body .q {
+    background: none;
+    color: var(--paper);
+    border-left-color: var(--gold-dim);
+    padding: 14px 0 6px 18px;
+    margin: 6px 0;
+    font-size: 16px;
+  }
+
+  /* 对照 */
+  .compare { margin-top: 70px; padding-top: 8px; }
+  .compare h3 {
+    font-size: 20px;
+    letter-spacing: 0.16em;
+    margin-bottom: 8px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid var(--hair); }
+  .cmp-grid > div { padding: 20px 18px 24px; border-bottom: 1px solid var(--hair); }
+  .cmp-grid > div:nth-child(odd) { border-right: 1px solid var(--hair); }
+  .cmp-grid .h {
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--faint);
+    padding: 14px 18px 10px;
+  }
+  .cmp-grid p { font-size: 15px; color: var(--dim); }
+  .cmp-grid .nov p { color: var(--faint); }
+  .cmp-grid .tru p { color: var(--paper); }
+
+  /* 卷表 */
+  .vols {
+    margin-top: 70px;
+    border-top: 1px solid var(--hair);
+    padding-top: 30px;
+  }
+  .vols h3 { font-size: 20px; letter-spacing: 0.16em; color: var(--gold); font-weight: 600; margin-bottom: 22px; }
+  .vol-row {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 16px;
+    padding: 11px 4px;
+    border-bottom: 1px solid var(--hair);
+    font-size: 15px;
+  }
+  .vol-row .vn { color: var(--gold); letter-spacing: 0.1em; font-size: 13.5px; padding-top: 2px; }
+  .vol-row .vd { color: var(--dim); }
+
+  footer {
+    margin-top: 90px;
+    border-top: 1px solid var(--hair);
+    padding: 40px 0 64px;
+    font-size: 13.5px;
+    color: var(--faint);
+    line-height: 1.9;
+  }
+  footer .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  footer b { color: var(--dim); font-weight: 600; }
+  footer a { color: var(--dim); }
+
+  @media (max-width: 900px) {
+    .spine { width: 120px; }
+    .st { font-size: 11px; letter-spacing: 0.12em; }
+    .st.long { letter-spacing: 0.2em; }
+    .hero-inner { padding: 48px 22px 44px; }
+    .hero-note { font-size: 13.5px; }
+    .cmp-grid { grid-template-columns: 1fr; }
+    .cmp-grid > div:nth-child(odd) { border-right: none; }
+    footer .cols { grid-template-columns: 1fr; }
+    .q { padding: 20px 18px 16px; font-size: 16px; }
+    .q.big { font-size: 18px; }
+  }
+  @media (max-width: 620px) {
+    .spine { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero" id="hero">
+  <div class="hero-inner">
+    <div class="kicker">殆知阁导读 · 史传部</div>
+    <h1 class="vtitle">三藏法师传<small>大唐大慈恩寺　唐 释慧立本　释彦悰笺</small></h1>
+    <p class="hero-note">小说里的师父需要被救。这本书里的玄奘，<b>通缉令贴到凉州，向导半路拔刀，五烽之外八百里沙河，一个人走</b>。回来之后，皇帝劝他还俗做宰相，他拒绝了。<br><br>弟子为他立传，十卷，库本去空白九万二千七百六十二字。</p>
+  </div>
+  <div class="spine" aria-hidden="true">
+    <div class="lit"></div>
+    <span class="st l" style="top:3%"><i></i>长安</span>
+    <span class="st r" style="top:9%"><i></i>凉州</span>
+    <span class="st l" style="top:15%"><i></i>瓜州</span>
+    <span class="st r" style="top:20%"><i></i>玉门关</span>
+    <span class="st l" style="top:25%"><i></i>五烽</span>
+    <span class="st r long" style="top:34%"><i></i>莫贺延碛八百里</span>
+    <span class="st l" style="top:44%"><i></i>伊吾</span>
+    <span class="st r" style="top:50%"><i></i>高昌</span>
+    <span class="st l" style="top:57%"><i></i>凌山</span>
+    <span class="st r" style="top:63%"><i></i>素叶</span>
+    <span class="st l" style="top:69%"><i></i>铁门</span>
+    <span class="st r" style="top:75%"><i></i>大雪山</span>
+    <span class="st l" style="top:83%"><i></i>那烂陀</span>
+    <span class="st r" style="top:89%"><i></i>曲女城</span>
+    <span class="st l" style="top:97%"><i></i>归长安</span>
+  </div>
+  <div class="scroll-hint">往下走</div>
+</header>
+
+<main>
+  <section id="s0">
+    <div class="wrap prose">
+      <p>《大唐西域记》是玄奘口述的地理，讲他走过的一百三十八个国家。这一部不是。这是弟子慧立写的玄奘本人，彦悰后来补笺，全帙十卷。传主开篇只有一句自报家门：</p>
+      <div class="q">法师讳玄奘。俗姓陈。陈留人也。<span class="from">卷一</span></div>
+      <p>小说把西游写成了奉旨出差，徒弟们打怪，师父念经等救援。本传里的西行从头到尾是一次<b>没有得到批准的私人出行</b>：上表请行，朝廷不报；出关后被通缉；唯一的向导上路第二天就变了卦。他把这件事做完，去用了十七年，回译了十九年。</p>
+    </div>
+  </section>
+
+  <section id="s1">
+    <div class="wrap">
+      <div class="prog">
+        <div class="seal">誓</div>
+        <div><div class="pt">第一程 · 洛阳</div><div class="pc">十三岁的落选者</div></div>
+        <div class="mile mono">卷一</div>
+      </div>
+      <div class="prose">
+        <p>隋末敕于洛阳度僧，<span class="say">于洛阳度二七僧</span>，名额十四。业优者数百，他因为年幼没进名额，站在公门之侧。大理卿郑善果路过，随口问他一句：<span class="say">「出家意何所为。」</span>他答：</p>
+      </div>
+      <div class="q big">意欲远绍如来。近光遗法。<span class="from">卷一 · 玄奘答郑善果问</span></div>
+      <div class="prose">
+        <p>郑善果当场为他破格，回头对官僚说：</p>
+      </div>
+      <div class="q">诵业易成风骨难得。若度此子必为释门伟器。<span class="from">卷一 · 郑善果语</span></div>
+      <p style="color:var(--dim);font-size:15.5px;">那一年他十三岁。此后十余年，他遍谒两京、吴蜀的名师，把各家经论读完，发现各擅宗涂、说法互相矛盾，谁也裁不断。<span class="say">「誓游西方以问所惑。」</span></p>
+    </div>
+  </section>
+
+  <section id="s2">
+    <div class="wrap">
+      <div class="prog">
+        <div class="seal">牒</div>
+        <div><div class="pt">第二程 · 凉州瓜州</div><div class="pc">通缉犯</div></div>
+        <div class="mile mono">卷一</div>
+      </div>
+      <div class="prose">
+        <p>贞观初年国基未稳，<span class="say">禁约百姓不许出蕃</span>。玄奘结伴上表申请西行，石沉大海，同伴全散了，只有他不回头。到凉州讲经，风声传到都督李大亮耳中，勒令回京。他昼伏夜行逃到瓜州。没过多久，访牒追到了：</p>
+      </div>
+      <div class="q">未发之间凉州访牒又至云。有僧字玄奘欲入西蕃。所在州县宜严候捉。<span class="from">卷一 · 捉拿文书</span></div>
+      <div class="prose">
+        <p>州吏李昌拿着牒文当面问他：师不是此人吧。他不敢应。李昌说：</p>
+      </div>
+      <div class="q">师须实语必是弟子为图之。<span class="from">卷一 · 李昌语</span></div>
+      <div class="prose">
+        <p>听完实情，李昌当场把牒文撕了，催他快走。出玉门关需要向导，一个胡人来礼佛，绕着他走了三圈，求受五戒，法号石槃陀。夜里三更偷渡，过了关，两人各自铺开褥子睡下。<b>少时胡人乃拔刀而起，徐向法师，未到十步许又回。</b>玄奘坐起诵经，胡人又躺下了。天亮，石槃陀求去：</p>
+      </div>
+      <div class="q">弟子不能去。家累既大。而王法不可干也。<span class="from">卷一 · 石槃陀语</span></div>
+      <div class="prose">
+        <p>临走还回头问了一句：你若被捉，招出我怎么办。玄奘答：</p>
+      </div>
+      <div class="q">纵使切割此身如微尘者终不相引。<span class="from">卷一 · 对石槃陀重誓</span></div>
+      <p style="color:var(--dim);font-size:15.5px;">从此孑然孤游沙漠，只靠认骨聚和马粪辨路。</p>
+    </div>
+  </section>
+
+  <section id="s3">
+    <div class="wrap">
+      <div class="prog">
+        <div class="seal">碛</div>
+        <div><div class="pt">第三程 · 沙河</div><div class="pc">四夜五日，无一滴沾喉</div></div>
+        <div class="mile mono">卷一</div>
+      </div>
+      <div class="prose">
+        <p>五烽之外是莫贺延碛，古称沙河，长八百余里：</p>
+      </div>
+      <div class="q">上无飞鸟下无走兽。复无水草。<span class="from">卷一 · 莫贺延碛</span></div>
+      <div class="prose">
+        <p>百余里后迷路，取水皮囊，一失手<span class="say">千里行资一朝斯罄</span>。他调头往东走了十几里，停下来，想起出发前发过的愿：</p>
+      </div>
+      <div class="q big">我先发愿若不至天竺终不东归一步。今何故来。宁可就西而死。岂归东而生。<span class="from">卷一 · 失水东归之际</span></div>
+      <div class="prose">
+        <p>掉头继续向西。此后</p>
+      </div>
+      <div class="q">是时四夜五日无一渧沾喉口腹干燋。几将殒绝<span class="from">卷一</span></div>
+      <details class="night">
+        <summary>第五夜发生了什么</summary>
+        <div class="night-body">
+          <p>他卧在沙中默念观音，对菩萨说的话只有一句：<span style="color:var(--paper)">但为无上正法来耳。</span></p>
+          <div class="q">至第五夜半忽有凉风触身。冷快如沐寒水。遂得目明马亦能起。<span class="from">卷一</span></div>
+          <p>睡梦里见一位大神，长数丈，执戟喝他：<span style="color:var(--paper)">何不强行而更卧也。</span>惊醒再走十里，老马突然偏离路线，拽都拽不住，走了几里，草数亩，池一口，甘澄镜澈。人马俱活。</p>
+        </div>
+      </details>
+      <p style="color:var(--dim);font-size:15.5px;">出流沙到伊吾，止一寺。寺有汉僧三人，中有一老者，<span class="say">衣不及带。跣足出迎。</span>抱住他哭：<span class="say">岂期今日重见乡人。</span></p>
+    </div>
+  </section>
+
+  <section id="s4">
+    <div class="wrap">
+      <div class="prog">
+        <div class="seal">盟</div>
+        <div><div class="pt">第四程 · 高昌</div><div class="pc">绝食换来的兄弟</div></div>
+        <div class="mile mono">卷一</div>
+      </div>
+      <div class="prose">
+        <p>高昌王麴文泰的使者在伊吾撞见玄奘，回报国王。国王当天派使者敕伊吾王送法师来，自己点起宫烛等着。玄奘半夜鸡鸣时入城：</p>
+      </div>
+      <div class="q">王与侍人前后列烛。自出宫迎法师入后院。<span class="from">卷一 · 高昌王亲迎</span></div>
+      <div class="prose">
+        <p>见面第一句话：</p>
+      </div>
+      <div class="q">云弟子自闻师名喜忘寝食。量准涂路知师今夜必至。与妻子皆未眠读经敬待。<span class="from">卷一 · 麴文泰语</span></div>
+      <div class="prose">
+        <p>国王要他留下当国师，永远留在高昌。玄奘不肯，国王便硬留，<span class="say">每日进食王躬捧槃</span>，亲自捧盘布菜。玄奘的回应是绝食：</p>
+      </div>
+      <div class="q">遂誓不食以感其心。于是端坐。水浆不涉于口三日。至第四日王觉法师气息渐惙。深生愧惧。乃稽首礼谢云。任师西行乞垂早食。<span class="from">卷一 · 水浆不入口</span></div>
+      <div class="prose">
+        <p>国王怕他真的死了，答应放行，还要与他再结一层因缘：</p>
+      </div>
+      <div class="q">请共对佛更结因缘。遂共入道场礼佛。对母张太妃共法师约为兄弟。任师求法。还日请住此国三年受弟子供养。<span class="from">卷一 · 宫中对佛结盟</span></div>
+      <div class="prose">
+        <p>此后玄奘在高昌讲经一个月。每一次升座：</p>
+      </div>
+      <div class="q">将升法座王又低跪为蹬。令法师蹑上。日日如此。<span class="from">卷一 · 王躬为蹬</span></div>
+      <p style="color:var(--dim);font-size:15.5px;">临别，高昌给四个沙弥、三十具法服、黄金一百两、银钱三万、绫绢五百匹，账上写着是<span class="say">充法师往还二十年所用之资</span>；又给马三十匹、手力二十五人，写了二十四封国书通行沿途各国。给叶护可汗的信里，国王自称<span class="say">法师者是奴弟。欲求法于婆罗门国。</span>十七年后玄奘归国，高昌已经不存在了：贞观十四年唐灭高昌，麴文泰死在国灭之前，三年之约再无人可赴。</p>
+    </div>
+  </section>
+
+  <section id="s5">
+    <div class="wrap">
+      <div class="prog">
+        <div class="seal">会</div>
+        <div><div class="pt">第五程 · 曲女城</div><div class="pc">十八日，无一人发论</div></div>
+        <div class="mile mono">卷五</div>
+      </div>
+      <div class="prose">
+        <p>印度诸国里，本传用墨最多的一战不在降魔，在辩经。戒日王听完他的说法，说：师论大好，但恐余国小乘外道尚守愚迷，于是召集五印度，在曲女城为他设无遮大会，请十八国王、三千余名僧人、两千余名婆罗门与外道到场，看他立论。会场门外悬出论题，旁边写着：</p>
+      </div>
+      <div class="q big">若其问有一字无理能难破者。请断首相谢。<span class="from">卷五 · 悬题会场门外</span></div>
+      <div class="prose">
+        <p>到会的规模，本传记得像一份清单：</p>
+      </div>
+      <div class="q">五印度中有十八国王到。谙知大小乘僧三千余人到。婆罗门及尼干外道二千余人到。那烂陀寺千余僧到。<span class="from">卷五 · 与会名录</span></div>
+      <div class="prose">
+        <p>结果：</p>
+      </div>
+      <div class="q">自是邪徒戢翼。竟十八日无一人发论。<span class="from">卷五</span></div>
+      <div class="prose">
+        <p>散会那天，按西国旧法，胜者乘象巡行，令众告唱立义无屈。玄奘谦让不行，戒日王说<span class="say">古来法尔事不可违</span>，只好把他的袈裟举起遍唱：<span class="say">支那国法师立大乘义，破诸异见，自十八日来无敢论者。</span>于是</p>
+      </div>
+      <div class="q">大乘众号曰摩诃耶那提婆。此云大乘天。小乘众号曰木叉提婆。此云解脱天。<span class="from">卷五 · 两个尊号</span></div>
+      <p style="color:var(--dim);font-size:15.5px;">烧香散花，礼敬而去。大会开在腊月的曲女城，玄奘四十出头。会上还有人因宗派结恨想谋害他，戒日王宣令：<span class="say">伤触法师者斩其首。毁骂者截其舌。</span>唯申辩教义不在此限。此后<span class="say">自是德音弥远矣。</span></p>
+    </div>
+  </section>
+
+  <section id="s6">
+    <div class="wrap">
+      <div class="prog">
+        <div class="seal">生</div>
+        <div><div class="pt">第六程 · 归长安，终玉华</div><div class="pc">十九年，七十四部，一千三百三十八卷</div></div>
+        <div class="mile mono">卷六至卷十</div>
+      </div>
+      <div class="prose">
+        <p>贞观十九年春，玄奘回到长安。太宗此时正在洛阳筹备辽东战事，军务缠身，还是立刻召见，<span class="say">而清言既交遂不知日昃</span>。谈着谈着，皇帝提出了一个条件：</p>
+      </div>
+      <div class="q">帝又察法师堪公辅之寄。因劝归俗助秉俗务。<span class="from">卷六 · 太宗劝还俗</span></div>
+      <div class="prose">
+        <p>他拒绝的话，留在了书里：</p>
+      </div>
+      <div class="q big">今遣从俗。无异乘流之舟使弃水而就陆不唯无功亦徒令腐败也。愿得毕身行道以报国恩。<span class="from">卷六</span></div>
+      <div class="prose">
+        <p>不久大军将发，皇帝又想带他东征，说的倒也是实话：</p>
+      </div>
+      <div class="q">师尚能孤游绝域。今此行盖同跬步。安足辞焉。<span class="from">卷六 · 太宗欲携玄奘东征</span></div>
+      <div class="prose">
+        <p>玄奘以佛律不观兵戎辞了。随后上表，想去少林寺安静译经。他在表里算过一笔账：</p>
+      </div>
+      <div class="q">玄奘从西域所得梵本六百余部。一言未译。<span class="from">卷六 · 上表请译</span></div>
+      <div class="prose">
+        <p>译场之外，他为带回来的经像奏建一塔，即今天的大雁塔。塔记里有一句收在书里：</p>
+      </div>
+      <div class="q">所以敬崇此塔拟安梵本。<span class="from">卷七 · 塔记</span></div>
+      <div class="prose">
+        <p>塔怎么建起来的，八个字之外还有八个字：</p>
+      </div>
+      <div class="q">时三藏亲负篑畚担运砖石。首尾二周功业斯毕。<span class="from">卷七</span></div>
+      <div class="prose">
+        <p>此后十九年，玄奘白天应付宫廷，夜里译经，译经数居唐代译人之首。晚年他向朝廷请求去玉华宫翻最大的那部经，大般若经，梵本二十万颂。动工时他对弟子说了自己的预感：</p>
+      </div>
+      <div class="q">玄奘今年六十有五。必当卒命于此伽蓝。<span class="from">卷十 · 起译大般若</span></div>
+      <div class="prose">
+        <p>译场僧众请求像罗什旧例删繁去重，他试了一夜，连做噩梦，醒来说：还依广翻，一字不删。龙朔三年冬十月，六百卷译毕：</p>
+      </div>
+      <div class="q">至龙朔三年冬十月二十三日功毕绝笔。合成六百卷。<span class="from">卷十</span></div>
+      <div class="prose">
+        <p>两个月后，麟德元年正月，他在玉华宫把身后事一件件交代完：造像、施舍、行道。徒弟数完他一生的账：</p>
+      </div>
+      <div class="q">具录所翻经论。合七十四部。总一千三百三十八卷。<span class="from">卷十</span></div>
+      <div class="prose">
+        <p>二月初四夜，他右胁而卧，从此不再翻身。不饮不食。到初五夜半，弟子问他：<span class="say">和上决定得生弥勒内院不。</span></p>
+      </div>
+      <div class="q big">弟子光等问。和上决定得生弥勒内院不。法师报云。得生。言讫喘息渐微。少间神逝。<span class="from">卷十</span></div>
+      <div class="prose">
+        <p>他生前反复说偈，只有两句留给了身边人：</p>
+      </div>
+      <div class="q">复口说偈教傍人云。南无弥勒如来应正等觉。愿与含识速奉慈颜。南无弥勒如来所居内众。愿舍命已必生其中。<span class="from">卷十</span></div>
+      <p style="color:var(--dim);font-size:15.5px;">同一夜，长安慈恩寺的僧人明慧在绕佛行道时，<span class="say">见北方有白虹四道。从北亘南贯井宿直至慈恩塔院。</span>四天后消息才到京城。本传的记法是唐人的笔法，信不信由你；但有一件事不用信不信，一个人<span class="say">从足向上渐冷最后顶暖</span>之后，皇帝为之罢朝：</p>
+      <div class="q big">帝闻之哀恸伤感。为之罢朝曰。朕失国宝矣。<span class="from">卷十</span></div>
+      <p style="color:var(--dim);font-size:15.5px;">葬事所须，朝廷一并官给。二十五年前那个偷渡出关的通缉犯，最后被皇帝称作国宝。</p>
+    </div>
+  </section>
+
+  <section class="compare" id="cmp">
+    <div class="wrap">
+      <h3>小说没告诉你的三件事</h3>
+      <p style="color:var(--faint);font-size:14px;margin-bottom:6px;">左边是四百年间长出来的通行印象，右边是本传原文。都不引小说，只对本传。</p>
+      <div class="cmp-grid">
+        <div class="h">通行印象</div><div class="h">本传</div>
+        <div class="nov"><p>唐僧奉旨西行，手持通关文牒，一路盖印。</p></div>
+        <div class="tru"><p>他上表申请，朝廷没有批准。他是通缉犯，访牒追到瓜州，靠一个信佛的小吏当面撕掉文书才活下来。</p></div>
+        <div class="nov"><p>取经靠三个徒弟降妖伏魔。</p></div>
+        <div class="tru"><p>五烽之外是他一个人。救过他命的有一匹往返伊吾十五趟的老赤马、一位梦里执戟的大神，和第五夜半的一阵凉风。</p></div>
+        <div class="nov"><p>西梁女国的国王一往情深，留人成亲。</p></div>
+        <div class="tru"><p>真正的挽留发生在高昌：国王夜半点烛亲迎，每天亲手布菜，被绝食逼到稽首认错，最后对佛结拜为兄弟。小说里的深情是编的，史书里这一位是真的，还是位男国王。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="vols" id="vols">
+    <div class="wrap">
+      <h3>十卷去向</h3>
+      <div class="vol-row"><div class="vn mono">卷一</div><div class="vd">陈留童年到高昌结盟：出家、通缉、沙河、绝食、拜把子，全书最好看的一卷。</div></div>
+      <div class="vol-row"><div class="vn mono">卷二</div><div class="vd">出高昌：凌山雪岭、素叶、铁门，一路国名排下去。</div></div>
+      <div class="vol-row"><div class="vn mono">卷三</div><div class="vd">入北印度，到那烂陀寺拜戒贤为师。</div></div>
+      <div class="vol-row"><div class="vn mono">卷四</div><div class="vd">巡历中印度诸国圣迹。</div></div>
+      <div class="vol-row"><div class="vn mono">卷五</div><div class="vd">那烂陀学业与曲女城无遮大会，大乘天由此得名。</div></div>
+      <div class="vol-row"><div class="vn mono">卷六</div><div class="vd">归国、太宗召对、两辞还俗、开译场。</div></div>
+      <div class="vol-row"><div class="vn mono">卷七</div><div class="vd">译经开局、慈恩寺成，大雁塔起造，印度诸师来书。</div></div>
+      <div class="vol-row"><div class="vn mono">卷八</div><div class="vd">永徽间译因明、理门二论，与吕才论诤，御制寺碑。</div></div>
+      <div class="vol-row"><div class="vn mono">卷九</div><div class="vd">显庆间随驾两京、表启往来、徙居西明寺。</div></div>
+      <div class="vol-row"><div class="vn mono">卷十</div><div class="vd">玉华宫译大般若六百卷，绝笔，得生。卷首自题起讫：<span style="color:var(--faint)">至麟德元年二月玉华宫舍化</span>。</div></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap cols">
+    <div>
+      <p><b>文本来源</b><br>殆知阁古代文献 佛藏 · 大唐大慈恩寺三藏法师传<br><a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20（简体版）</a></p>
+    </div>
+    <div>
+      <p><b>使用提醒</b><br>全部引文经本库逐字核验（去标点、异体归一）。梦中大神、凉风得水、白虹贯塔等感验记载系唐人史传笔法，请以历史文献视之；劝还俗、结盟、曲女城大会等人事均出自本传正文。</p>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>
