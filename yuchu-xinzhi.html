@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>虞初新志 · 青灯走马录</title>
+<style>
+:root{
+  --mo:#191917;
+  --zhi:#e8e4dc;
+  --qing:#5e8fbb;
+  --qing-dim:rgba(94,143,187,.28);
+  --qing-faint:rgba(94,143,187,.10);
+  --hui:#8b887f;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--mo);
+  color:var(--zhi);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.9;
+  letter-spacing:.04em;
+}
+.mono{font-family:"SF Mono",Menlo,Consolas,monospace}
+a{color:var(--qing);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ================= 灯座（首屏） ================= */
+.stage{
+  min-height:100vh;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  padding:56px 20px 40px;
+}
+.stage::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 62% 46% at 50% 44%, var(--qing-faint), transparent 70%),
+    radial-gradient(circle at 50% 30%, rgba(94,143,187,.06), transparent 55%);
+  pointer-events:none;
+  transition:opacity 1.2s;
+}
+.stage.off::before{opacity:0}
+.glow{
+  position:absolute;
+  left:50%;top:42%;
+  width:560px;height:560px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(94,143,187,.20), rgba(94,143,187,.05) 46%, transparent 70%);
+  filter:blur(6px);
+  transition:opacity 1.2s;
+  pointer-events:none;
+}
+.stage.off .glow{opacity:0}
+
+.hook-top{
+  position:relative;
+  width:2px;height:64px;
+  background:linear-gradient(var(--hui), var(--qing-dim));
+}
+.cap,.base{
+  position:relative;
+  width:300px;height:26px;
+  border:2px solid var(--qing-dim);
+  border-radius:50%;
+  background:#221f1b;
+}
+.cap{margin-bottom:-8px}
+.base{margin-top:-8px}
+
+.persp{
+  perspective:1100px;
+  width:100%;
+  display:flex;justify-content:center;
+  margin:-6px 0;
+}
+.ring{
+  position:relative;
+  width:300px;height:340px;
+  transform-style:preserve-3d;
+  animation:spin 48s linear infinite;
+}
+.stage.off .ring{animation-play-state:paused}
+@keyframes spin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
+.persp:hover .ring{animation-play-state:paused}
+.panel{
+  position:absolute;
+  left:50%;top:50%;
+  width:150px;height:320px;
+  margin:-160px 0 0 -75px;
+  background:linear-gradient(180deg,#efe9de, var(--zhi) 40%, #d9d3c6);
+  border:1px solid #b8b2a4;
+  outline:1px solid rgba(94,143,187,.35);
+  outline-offset:-7px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+  padding:20px 0 16px;
+  cursor:pointer;
+  backface-visibility:visible;
+  transition:filter 1.1s, opacity 1.1s;
+  box-shadow:0 0 34px rgba(94,143,187,.14);
+}
+.stage.off .panel{
+  filter:grayscale(1) brightness(.34);
+}
+.panel .glyph{
+  font-size:74px;
+  line-height:1;
+  color:var(--mo);
+  opacity:.9;
+}
+.panel .pt{
+  writing-mode:vertical-rl;
+  font-size:19px;
+  color:#2c2a26;
+  letter-spacing:.34em;
+}
+.panel .pa{
+  font-size:11px;
+  color:#6f6b60;
+  letter-spacing:.18em;
+}
+.panel .lamp-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--qing);
+  box-shadow:0 0 9px var(--qing);
+}
+.stage.off .panel .lamp-dot{background:#4a473f;box-shadow:none}
+
+.tassel{
+  position:relative;
+  width:2px;height:38px;
+  background:linear-gradient(var(--qing-dim), transparent);
+}
+.qian{
+  position:absolute;
+  right:max(24px, 4vw);
+  top:14vh;
+  writing-mode:vertical-rl;
+  border:1px solid var(--qing-dim);
+  padding:22px 12px;
+  letter-spacing:.42em;
+  font-size:26px;
+  background:rgba(25,25,23,.72);
+}
+.qian small{
+  font-size:12px;
+  color:var(--hui);
+  letter-spacing:.3em;
+  margin-top:16px;
+}
+.hook-line{
+  position:relative;
+  margin-top:44px;
+  text-align:center;
+  font-size:16px;
+  color:var(--zhi);
+  max-width:640px;
+}
+.hook-line em{font-style:normal;color:var(--qing)}
+.stage-intro{
+  position:relative;
+  margin-top:14px;
+  font-size:12.5px;
+  color:var(--hui);
+  letter-spacing:.12em;
+  text-align:center;
+}
+.switch{
+  position:relative;
+  margin-top:26px;
+  background:none;
+  border:1px solid var(--qing);
+  color:var(--qing);
+  font-family:inherit;
+  font-size:14px;
+  letter-spacing:.34em;
+  padding:9px 26px 9px 32px;
+  cursor:pointer;
+  transition:all .3s;
+}
+.switch:hover{background:var(--qing);color:var(--mo)}
+
+/* ================= 通栏 ================= */
+main{max-width:1060px;margin:0 auto;padding:0 22px 80px}
+
+.intro{margin:110px 0 130px;position:relative}
+.intro .lead{
+  font-size:21px;
+  max-width:760px;
+  margin-bottom:30px;
+}
+.intro .lead em{font-style:normal;color:var(--qing)}
+.intro p.body-p{
+  max-width:760px;
+  color:#cfcabf;
+  font-size:15.5px;
+  margin-bottom:18px;
+}
+
+/* ================= 灯影（六盏） ================= */
+.wei{
+  margin:130px 0;
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:44px;
+  opacity:.32;
+  transition:opacity 1.1s;
+}
+.wei.lit{opacity:1}
+.wei-rail{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+}
+.wei-no{
+  writing-mode:vertical-rl;
+  font-size:15px;
+  letter-spacing:.5em;
+  color:var(--qing);
+  border-top:1px solid var(--qing-dim);
+  border-bottom:1px solid var(--qing-dim);
+  padding:16px 0;
+}
+.wei-flame{
+  width:11px;height:11px;
+  border-radius:50%;
+  background:#3d3a33;
+  transition:all 1s;
+}
+.wei.lit .wei-flame{
+  background:var(--qing);
+  box-shadow:0 0 14px var(--qing);
+}
+.wei-title{
+  text-align:center;
+}
+.wei-title h2{
+  font-size:30px;
+  font-weight:600;
+  letter-spacing:.16em;
+  margin-bottom:10px;
+}
+.wei-title .src{
+  font-size:13px;
+  color:var(--hui);
+  letter-spacing:.14em;
+}
+.wei-title .src b{color:var(--qing);font-weight:normal}
+
+.wei-body{margin-top:26px}
+.shuo{
+  max-width:720px;
+  font-size:15.5px;
+  color:#d5d0c5;
+  margin-bottom:26px;
+}
+.shuo b{color:var(--zhi);font-weight:600}
+
+.qcard{
+  background:var(--zhi);
+  color:var(--mo);
+  padding:30px 34px;
+  margin:0 0 20px;
+  max-width:760px;
+  position:relative;
+  border-left:5px solid var(--qing);
+}
+.qcard.qv{
+  writing-mode:vertical-rl;
+  max-height:420px;
+  padding:30px 26px;
+  margin-left:auto;
+}
+.qcard .src-tag{
+  display:inline-block;
+  font-size:11.5px;
+  letter-spacing:.2em;
+  color:#7a7466;
+  border-bottom:1px solid #c6bfae;
+  padding-bottom:3px;
+  margin-bottom:14px;
+}
+.qcard.qv .src-tag{
+  writing-mode:horizontal-tb;
+  position:absolute;
+  left:14px;bottom:12px;
+  margin:0;
+}
+.qcard p{font-size:16.5px;letter-spacing:.06em}
+.qcard.qv p{font-size:15.5px;line-height:2.2}
+
+.note{
+  max-width:760px;
+  border:1px dashed var(--qing-dim);
+  padding:16px 22px;
+  font-size:13.5px;
+  color:#b9b4a8;
+  margin-top:24px;
+}
+.note .ntag{color:var(--qing);letter-spacing:.2em;margin-right:10px}
+
+.dia{
+  max-width:760px;
+  display:flex;
+  gap:0;
+  border:1px solid rgba(232,228,220,.14);
+  margin:6px 0 22px;
+}
+.dia .dstep{
+  flex:1;
+  padding:18px 20px;
+  border-right:1px solid rgba(232,228,220,.14);
+  font-size:14px;
+  color:#cfcabf;
+}
+.dia .dstep:last-child{border-right:none}
+.dia .dstep .dn{
+  display:block;
+  color:var(--qing);
+  font-size:12px;
+  letter-spacing:.3em;
+  margin-bottom:8px;
+}
+
+/* ================= 卷格 ================= */
+.juans-wrap{margin:150px 0 0}
+.juans-head{margin-bottom:40px}
+.juans-head h2{
+  font-size:26px;
+  letter-spacing:.18em;
+  margin-bottom:12px;
+}
+.juans-head p{font-size:14px;color:var(--hui);max-width:720px}
+.juans{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+}
+.juan{
+  border:1px solid rgba(232,228,220,.13);
+  padding:16px 16px 14px;
+  transition:border-color .3s, background .3s;
+  cursor:default;
+}
+.juan:hover{border-color:var(--qing);background:var(--qing-faint)}
+.juan .jn{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin-bottom:10px;
+}
+.juan .jn b{font-size:17px;font-weight:600}
+.juan .jn span{font-size:11.5px;color:var(--qing);letter-spacing:.1em}
+.juan .jt{font-size:12px;color:#a8a396;line-height:1.8}
+
+/* ================= 另录 ================= */
+.also-wrap{margin:150px 0 0}
+.also-wrap h2{font-size:26px;letter-spacing:.18em;margin-bottom:14px}
+.also-wrap>p{font-size:14px;color:var(--hui);margin-bottom:36px;max-width:720px}
+.also{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.also a.t{
+  border:1px solid rgba(232,228,220,.13);
+  padding:20px 18px;
+  color:var(--zhi);
+  display:block;
+  transition:all .3s;
+}
+.also a.t:hover{
+  border-color:var(--qing);
+  background:var(--qing-faint);
+  text-decoration:none;
+}
+.also a.t b{
+  display:block;
+  font-size:16px;
+  font-weight:600;
+  margin-bottom:8px;
+}
+.also a.t i{font-style:normal;color:var(--qing);font-size:12px;letter-spacing:.14em}
+.also a.t p{font-size:12.5px;color:#a8a396;margin-top:10px;line-height:1.8}
+
+/* ================= 尾声 ================= */
+.coda{
+  margin:170px auto 0;
+  max-width:620px;
+  text-align:center;
+}
+.coda .lamp2{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--qing);
+  box-shadow:0 0 18px var(--qing);
+  margin:0 auto 34px;
+}
+.coda p{font-size:16px;color:#d5d0c5;margin-bottom:20px}
+.coda p em{font-style:normal;color:var(--qing)}
+
+footer{
+  border-top:1px solid rgba(232,228,220,.12);
+  margin-top:110px;
+  padding:44px 22px 60px;
+}
+footer .fin{
+  max-width:900px;margin:0 auto;
+  font-size:12.5px;
+  color:var(--hui);
+  line-height:2.1;
+}
+
+@media (max-width:820px){
+  .qian{display:none}
+  .panel{width:126px;height:280px;margin:-140px 0 0 -63px}
+  .ring{width:260px}
+  .wei{grid-template-columns:64px 1fr;gap:22px}
+  .juans{grid-template-columns:repeat(2,1fr)}
+  .also{grid-template-columns:repeat(2,1fr)}
+  .dia{flex-direction:column}
+  .dia .dstep{border-right:none;border-bottom:1px solid rgba(232,228,220,.14)}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 首屏：走马灯 ============ -->
+<section class="stage" id="stage">
+  <div class="glow"></div>
+  <div class="qian">虞初新志<small>康熙二十二年 新安 张潮 辑</small></div>
+  <div class="hook-top"></div>
+  <div class="cap"></div>
+  <div class="persp">
+    <div class="ring" id="ring">
+      <div class="panel" style="transform:rotateY(0deg) translateZ(230px)" data-go="w1">
+        <span class="lamp-dot"></span>
+        <span class="glyph">椎</span>
+        <span class="pt">大铁椎传</span>
+        <span class="pa">魏禧</span>
+      </div>
+      <div class="panel" style="transform:rotateY(60deg) translateZ(230px)" data-go="w2">
+        <span class="lamp-dot"></span>
+        <span class="glyph">声</span>
+        <span class="pt">秋声诗自序</span>
+        <span class="pa">林嗣环</span>
+      </div>
+      <div class="panel" style="transform:rotateY(120deg) translateZ(230px)" data-go="w3">
+        <span class="lamp-dot"></span>
+        <span class="glyph">弦</span>
+        <span class="pt">汤琵琶传</span>
+        <span class="pa">王猷定</span>
+      </div>
+      <div class="panel" style="transform:rotateY(180deg) translateZ(230px)" data-go="w4">
+        <span class="lamp-dot"></span>
+        <span class="glyph">柳</span>
+        <span class="pt">柳敬亭传</span>
+        <span class="pa">吴伟业</span>
+      </div>
+      <div class="panel" style="transform:rotateY(240deg) translateZ(230px)" data-go="w5">
+        <span class="lamp-dot"></span>
+        <span class="glyph">虎</span>
+        <span class="pt">义虎记</span>
+        <span class="pa">王猷定</span>
+      </div>
+      <div class="panel" style="transform:rotateY(300deg) translateZ(230px)" data-go="w6">
+        <span class="lamp-dot"></span>
+        <span class="glyph">核</span>
+        <span class="pt">核舟记</span>
+        <span class="pa">魏学洢</span>
+      </div>
+    </div>
+  </div>
+  <div class="base"></div>
+  <div class="tassel"></div>
+
+  <p class="hook-line">一盏青灯，六扇影窗，转出一百四十八位<em>康熙年间的奇人</em>。</p>
+  <p class="stage-intro">点击影窗跳到那一盏、鼠标悬停可让灯停一停</p>
+  <button class="switch" id="switch">熄 灯</button>
+</section>
+
+<main>
+  <!-- ============ 灯引 ============ -->
+  <section class="intro">
+    <p class="lead">走马灯的道理：灯不转，影子是死的。康熙二十二年秋，扬州寓客张潮把同时代人的奇文编成一书，亲手给每篇末尾盖一行批语，然后把书变成了一盏会转的灯。</p>
+    <p class="body-p">虞初是汉代一个小说家的名字，后来成了奇闻故事集的代称。张潮嫌前人编的虞初故事尽收唐人旧闻，于是另起炉灶：只收当代人写当代的奇人奇事。他引汤显祖的旧话，称这一路书是<span class="q">小说家之珍珠船</span>：船上装的不是货，是一粒粒能捞起来的珠子。他在自叙里把收书的标准说得干净：</p>
+    <div class="qcard">
+      <span class="src-tag">自叙</span>
+      <p><span class="q">其事多近代也，其文多时贤也，事奇而核，文隽而工，写照传神，彷摹毕肖</span>。<span class="q">读之令人无端而喜、无端而愕、无端而欲歌欲泣</span>。</p>
+    </div>
+    <p class="body-p">全书二十卷一百四十八篇，不分类、不设门，刺客、艺人、匠人、义兽、畸人、孝子混编在一起，转完一圈是一圈。灯下这六盏，是全书里转得最亮的几扇。</p>
+  </section>
+
+  <!-- ============ 第一盏 大铁椎传 ============ -->
+  <section class="wei" id="w1">
+    <div class="wei-rail">
+      <span class="wei-no">第一盏</span>
+      <span class="wei-flame"></span>
+    </div>
+    <div>
+      <div class="wei-title">
+        <h2>大铁椎传</h2>
+        <div class="src">魏禧　<b>魏叔子文集</b>　卷一</div>
+      </div>
+      <div class="wei-body">
+        <p class="shuo">河南有个武师宋将军，家里来了个客人：饭量吓人，右肋下永远夹着一件四五斤重的铁锥，睡觉作揖都不撒手。问他姓名籍贯，一概不答。史书里全是名字，这一篇偏写一个<b>查无此人</b>的高手。</p>
+        <div class="qcard">
+          <span class="src-tag">自陈子灿所见</span>
+          <p><span class="q">时座上有健啖客，貌甚寝，右肋夹大铁椎，重四五十斤，饮食拱揖不暂去</span>。</p>
+        </div>
+        <p class="shuo">客人临走前，宋将军想帮忙，换来一句逐客令。决斗那天鸡叫头遍、月亮落山，二十多个骑贼从四面围上来，客人只说了一个字。</p>
+        <div class="qcard">
+          <span class="src-tag">旷野决斗</span>
+          <p><span class="q">时鸡鸣月落，星光照旷野，百步见人。</span><span class="q">众贼环而进，客从容挥椎，人马四面仆地下，杀三十许人。宋将军屏息观之，股栗欲堕。</span><span class="q">忽闻客大呼曰：“吾去矣！”但见地尘起，黑烟滚滚，东向驰去。后遂不复至。</span></p>
+        </div>
+        <p class="shuo">全篇最冷的一笔在结尾：陈子灿见过此人写的购物单子，一笔好楷书。魏禧论完只留一个问题悬着：</p>
+        <div class="qcard">
+          <p><span class="q">天生异人，必有所用之。</span><span class="q">岂天之生才，不必为人用与？抑用之自有时与？</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 第二盏 口技 ============ -->
+  <section class="wei" id="w2">
+    <div class="wei-rail">
+      <span class="wei-no">第二盏</span>
+      <span class="wei-flame"></span>
+    </div>
+    <div>
+      <div class="wei-title">
+        <h2>秋声诗自序</h2>
+        <div class="src">林嗣环　<b>秋声诗自序</b>　卷一</div>
+      </div>
+      <div class="wei-body">
+        <p class="shuo">课本里那篇口技的老家。林嗣环在书房请客论什么声音最好听，一位客人不说话，满上一大杯酒，讲了一桩亲见：屏风后面一个人、一张桌、一把椅、一把扇、一块醒木，演完一户人家从半夜被犬吠吵醒，到满巷失火逃命。</p>
+        <div class="qcard">
+          <span class="src-tag">开场</span>
+          <p><span class="q">京中有善口技者，会宾客大䜩，于厅事之东北角施八尺屏障，口技人坐屏障中，一桌、一椅、一扇、一抚尺而已。</span></p>
+        </div>
+        <p class="shuo">前半场是家常：深巷犬吠，妇人惊醒，婴儿啼哭，百声齐发，满座宾客伸着脖子以为妙绝。后半场突然变调：</p>
+        <div class="qcard">
+          <span class="src-tag">火起</span>
+          <p><span class="q">忽一人大呼火起。夫起大呼，妇亦起大呼，两儿齐哭。俄而百千人大呼，百千儿哭，百千犬吠。</span><span class="q">虽人有百手，手有百指，不能指其一端；人有百口，口有百舌，不能名其一一处也。</span><span class="q">而忽然抚尺一下，群响毕绝，撤屏视之，一人、一桌、一椅、一扇、一抚尺而已！</span></p>
+        </div>
+        <p class="shuo">库里这一篇和通行课本有几处异文：宴写作䜩，众宾写作家宾，默叹写作嘿叹，一处多作一一处；夜里夫妻床笫间的两句，课文删净，库里是足本。那些声音本来不存在，全是文字在放录音。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 第三盏 汤琵琶传 ============ -->
+  <section class="wei" id="w3">
+    <div class="wei-rail">
+      <span class="wei-no">第三盏</span>
+      <span class="wei-flame"></span>
+    </div>
+    <div>
+      <div class="wei-title">
+        <h2>汤琵琶传</h2>
+        <div class="src">王猷定　<b>四照堂集</b>　卷一</div>
+      </div>
+      <div class="wei-body">
+        <p class="shuo">邳州人汤应曾，家里穷。他学艺的故事从一个怪癖开始：</p>
+        <div class="qcard">
+          <span class="src-tag">哭出来的琴师</span>
+          <p><span class="q">幼好音律，闻歌声辄哭。已学歌，歌罢又哭。其母问曰：“儿何悲？”应曾曰：“儿无所悲也，心自凄动耳。”</span></p>
+        </div>
+        <p class="shuo">学琵琶不满一年出师，王府殿上一曲《胡笳十八拍》，从此吃上了这碗饭。之后的人生却一路向下：随军出塞，雪夜思母辞军；洞庭湖上老猿听琴半夜，天亮抱着他的琵琶跳湖走了；后来妻子死了，战乱里背着老母亲在兵堆里卖艺。</p>
+        <div class="qcard">
+          <span class="src-tag">晚境</span>
+          <p><span class="q">值寇乱，负母鬻食兵间。耳目聋瞽，鼻漏，人不可迩。召之者隔以屏障，听其声而已。</span></p>
+        </div>
+        <p class="shuo">当年殿上弹《胡笳十八拍》的人，老来耳聋眼瞎，听众只剩一面屏风隔着的耳朵。可他一辈子最得意的一曲，还是垓下那一夜：</p>
+        <div class="qcard">
+          <span class="src-tag">琵琶里的垓下</span>
+          <p><span class="q">而尤得意于《楚汉》一曲，当其两军决战时，声动天地，瓦屋若飞坠。</span><span class="q">有金声、鼓声、剑弩声、人马辟易声。</span><span class="q">俄而无声。久之，有怨而难明者，为楚歌声；凄而壮者，为项王悲歌慷慨之声、别姬声；陷大泽，有追骑声；至乌江，有项王自刎声、余骑蹂践争项王声。</span><span class="q">使闻者始而奋，既而恐，终而涕泪之无从也。</span></p>
+        </div>
+        <p class="shuo">这段不到一百五十字，是后世琵琶大曲十面埋伏能查到的最早一份节目单。开头是哭，结尾还是隔着一道屏障的琴声。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 第四盏 柳敬亭传 ============ -->
+  <section class="wei" id="w4">
+    <div class="wei-rail">
+      <span class="wei-no">第四盏</span>
+      <span class="wei-flame"></span>
+    </div>
+    <div>
+      <div class="wei-title">
+        <h2>柳敬亭传</h2>
+        <div class="src">吴伟业　<b>梅村文集</b>　卷二</div>
+      </div>
+      <div class="wei-body">
+        <p class="shuo">泰州少年姓曹，十五岁就成了通缉名单上的人，逃到盱眙说书糊口。过江时在一棵大柳树下歇脚，摸着树对同行说：从此我就姓柳了。名字自己种出来的说书人，后来成了这门手艺的门神。</p>
+        <div class="qcard">
+          <span class="src-tag">改姓</span>
+          <p><span class="q">休大柳下，生攀条泫然。已抚其树，顾同行数十人曰：“嘻！吾今氏柳矣！”</span></p>
+        </div>
+        <p class="shuo">真正定他身手的，是云间儒生莫后光。老师第一句话就不当他是说笑话的：</p>
+        <div class="qcard">
+          <span class="src-tag">师训</span>
+          <p><span class="q">夫演义虽小技，其以辨性情，考方俗，形容万类，不与儒者异道。</span><span class="q">故取之欲其肆，中之欲其微，促而赴之欲其迅，舒而绎之欲其安，进而止之欲其留，整而归之欲其洁。</span></p>
+        </div>
+        <div class="dia">
+          <div class="dstep"><span class="dn">一月一考</span>第一回，听众哈哈大笑。老师说：你说的太容易了。</div>
+          <div class="dstep"><span class="dn">又一月</span>第二回，听众正襟变色、毛发倒竖。老师说：差不多了。</div>
+          <div class="dstep"><span class="dn">又一月</span>第三回，老师见他吓得站起来：</div>
+        </div>
+        <div class="qcard">
+          <span class="src-tag">说书人毕业</span>
+          <p><span class="q">目之所视、手之所倚，足之所跂，言未发而哀乐具乎其前，此说之全矣！</span><span class="q">于是听者傥然若有见焉；其竟也，恤然若有亡焉。</span></p>
+        </div>
+        <p class="shuo">从此他的座上客变成兵部尚书范景文和大学士何文瑞这样的角色。故事讲的是草莽豪杰，听众笑说当年不信有这号人，如今亲眼见着了。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 第五盏 义虎记 ============ -->
+  <section class="wei" id="w5">
+    <div class="wei-rail">
+      <span class="wei-no">第五盏</span>
+      <span class="wei-flame"></span>
+    </div>
+    <div>
+      <div class="wei-title">
+        <h2>义虎记</h2>
+        <div class="src">王猷定　<b>于一文津选本</b>　卷四</div>
+      </div>
+      <div class="wei-body">
+        <p class="shuo">山西孝义县城外多虎。一个樵夫砍柴失足掉进虎穴，和两只小虎同住了一个月。老虎叼肉回来喂孩子，看着这个活人，先张开爪子，然后像想起了什么：</p>
+        <div class="qcard">
+          <span class="src-tag">穴中一月</span>
+          <p><span class="q">一樵者朝行丛箐中，忽失足堕虎穴。</span><span class="q">见樵蹲伏，张爪奋搏。俄巡视若有思者，反以残肉食樵，入抱小虎卧。</span></p>
+        </div>
+        <p class="shuo">小虎壮了，老虎把它们背出洞，又回来驮樵夫翻墙出去。樵夫约定：某日备一口猪，在西关三里外的邮亭相候。到了日子，消息传开，全县设伏把赴约的虎活捉送官。堂上，樵夫扑上去问它三个问题。</p>
+        <div class="qcard">
+          <span class="src-tag">公堂</span>
+          <p><span class="q">樵抱虎痛哭曰：“救我者大王耶？”虎点头。“大王以赴约入关耶？”复点头。</span><span class="q">言未讫，虎泪堕地如雨，观者数千人，莫不叹息。</span></p>
+        </div>
+        <p class="shuo">县官吓坏了，当场放虎。虎到亭下吃了那口猪，回头看樵夫一眼走了。后人给那亭子取名义虎亭。王猷定补一句狠的：</p>
+        <div class="qcard">
+          <p><span class="q">世往往以杀人之事归狱猛兽，闻义虎之说，其亦知所愧哉？</span></p>
+        </div>
+        <div class="note"><span class="ntag">张山来曰</span><span class="q">人往往以虎为凶暴之兽，今观此记，乃知世间尚有义虎，人而不如</span>。书主编自己的批语，篇篇都有，像一盏灯下的弹幕。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 第六盏 核舟记 ============ -->
+  <section class="wei" id="w6">
+    <div class="wei-rail">
+      <span class="wei-no">第六盏</span>
+      <span class="wei-flame"></span>
+    </div>
+    <div>
+      <div class="wei-title">
+        <h2>核舟记</h2>
+        <div class="src">魏学洢　<b>茅檐集</b>　卷十</div>
+      </div>
+      <div class="wei-body">
+        <p class="shuo">又一篇课本名篇的老家。常熟人王叔远送了魏学洢一件礼物：一枚桃核雕的小船，苏东坡游赤壁。整条船不满一寸长，开窗八扇，船头坐五个人，船底刻着三十四个字。</p>
+        <div class="qcard">
+          <span class="src-tag">开箱</span>
+          <p><span class="q">尝贻余核舟一，盖大苏泛赤壁云。舟首尾长约八分有奇，高可二黍许。</span><span class="q">闭之，则右刻“山高月小，水落石出”，左刻“清风徐来，水波不兴”；石青糁之。</span></p>
+        </div>
+        <p class="shuo">佛印袒胸露乳，左臂挂的念珠一粒粒数得清；船尾两个舟子，一个高声啸叫，一个烧着茶出神。最后清点家当，像点一船货：</p>
+        <div class="qcard">
+          <span class="src-tag">盘点</span>
+          <p><span class="q">通计一舟，为人五，为窗八，为篛篷，为楫、为炉、为壶、为手卷、为念珠各一；对联题名并篆文，为字共三十有四；而计其长，曾不盈寸。</span></p>
+        </div>
+        <p class="shuo">魏学洢从头到尾感叹了两声技亦灵怪矣哉，末了留一个想头：棘刺之端，未必不可为母猴也。张潮的批语更绝，直接上了当时的新工具：</p>
+        <div class="qcard">
+          <p><span class="q">由斯以观，棘刺之端，未必不可为母猴也。嘻！技亦灵怪矣哉！</span></p>
+        </div>
+        <div class="note"><span class="ntag">张山来曰</span><span class="q">眼镜中有所谓显微镜者，一虱之细，视之大如枣栗。由此推之，则一核未尝不可视为东瓜矣。</span>康熙年间的书主编，用显微镜给微雕做注脚。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 卷格 ============ -->
+  <section class="juans-wrap">
+    <div class="juans-head">
+      <h2>二十卷、一百四十八篇</h2>
+      <p>去空白二十二万四千七百六十六字，皆机数。凡例自己说：<span class="q">今兹选错综无次，庶不涉于拘牵；且其事荒诞不经，无庸分夫门类。</span>不分类的底账，只能一格一格数。</p>
+    </div>
+    <div class="juans">
+      <div class="juan"><div class="jn"><b>卷一</b><span>八篇</span></div><div class="jt">姜贞毅先生传、徐霞客传、大铁椎传、汤琵琶传</div></div>
+      <div class="juan"><div class="jn"><b>卷二</b><span>六篇</span></div><div class="jt">柳敬亭传、记老神仙事、九牛坝观觝戏记</div></div>
+      <div class="juan"><div class="jn"><b>卷三</b><span>六篇</span></div><div class="jt">马伶传、冒姬董小宛传、卖酒者传</div></div>
+      <div class="juan"><div class="jn"><b>卷四</b><span>八篇</span></div><div class="jt">义虎记、寄畅园闻歌记、焚琴子传</div></div>
+      <div class="juan"><div class="jn"><b>卷五</b><span>九篇</span></div><div class="jt">林四娘记、秦淮健儿传、雷州盗记</div></div>
+      <div class="juan"><div class="jn"><b>卷六</b><span>七篇</span></div><div class="jt">张南垣传、黄履庄小传、鬼孝子传</div></div>
+      <div class="juan"><div class="jn"><b>卷七</b><span>九篇</span></div><div class="jt">书戚三郎事、记盗、义犬记</div></div>
+      <div class="juan"><div class="jn"><b>卷八</b><span>十篇</span></div><div class="jt">王翠翘传、李一足传、万夫雄打虎传</div></div>
+      <div class="juan"><div class="jn"><b>卷九</b><span>八篇</span></div><div class="jt">剑侠传、毛女传、再来诗谶记</div></div>
+      <div class="juan"><div class="jn"><b>卷十</b><span>九篇</span></div><div class="jt">核舟记、鬼母传、北墅奇书</div></div>
+      <div class="juan"><div class="jn"><b>卷十一</b><span>十篇</span></div><div class="jt">过百龄传、八大山人传、圆圆传</div></div>
+      <div class="juan"><div class="jn"><b>卷十二</b><span>八篇</span></div><div class="jt">邵士梅传、薜衣道人传、孝犬传</div></div>
+      <div class="juan"><div class="jn"><b>卷十三</b><span>六篇</span></div><div class="jt">陈老莲别传、李姬传、补张灵崔莹合传</div></div>
+      <div class="juan"><div class="jn"><b>卷十四</b><span>六篇</span></div><div class="jt">太恨生传、姗姗传、瘗水盏子志石铭</div></div>
+      <div class="juan"><div class="jn"><b>卷十五</b><span>十一篇</span></div><div class="jt">哑孝子传、孝丐传、李丐传</div></div>
+      <div class="juan"><div class="jn"><b>卷十六</b><span>十篇</span></div><div class="jt">记桃核念珠、核工记、记吴六奇将军事</div></div>
+      <div class="juan"><div class="jn"><b>卷十七</b><span>七篇</span></div><div class="jt">南游记、人觚、名捕传</div></div>
+      <div class="juan"><div class="jn"><b>卷十八</b><span>二篇</span></div><div class="jt">圣师录、海天行记</div></div>
+      <div class="juan"><div class="jn"><b>卷十九</b><span>六篇</span></div><div class="jt">七奇图说、燕觚、吴觚</div></div>
+      <div class="juan"><div class="jn"><b>卷二十</b><span>二篇</span></div><div class="jt">三侬赘人广自序、板桥杂记</div></div>
+    </div>
+  </section>
+
+  <!-- ============ 另录 ============ -->
+  <section class="also-wrap">
+    <h2>灯影之外的几扇</h2>
+    <p>一百四十八盏转不完，剩下这些也值得一提。</p>
+    <div class="also">
+      <a class="t" href="#"><b>徐霞客传</b><i>钱谦益　卷一</i><p>文坛盟主给旅行家作传，收进一本小说集，开卷即压阵。</p></a>
+      <a class="t" href="#"><b>马伶传</b><i>侯方域　卷三</i><p>名伶输了一场，潜入对手戏班当三年杂役，回来再比，全盘翻盘。</p></a>
+      <a class="t" href="#"><b>黄履庄小传</b><i>戴榕　卷六</i><p>康熙年间的发明少年：会自己走的小车，会叫的木狗，不用人力转的风扇。</p></a>
+      <a class="t" href="#"><b>八大山人传</b><i>陈鼎　卷十一</i><p>前朝王孙装哑装疯，落款哭之笑之，一篇奇人的奇文。</p></a>
+      <a class="t" href="#"><b>圆圆传</b><i>陆次云　卷十一</i><p>陈圆圆与山海关，一人一身系着改朝换代的那根线。</p></a>
+      <a class="t" href="#"><b>七奇图说</b><i>南怀仁　卷十九</i><p>耶稣会士写给康熙的世界七大奇迹解说，混订在一册笔记小说里。</p></a>
+      <a class="t" href="#"><b>义猴传</b><i>宋曹　卷一</i><p>与义虎记遥遥对望的一篇：兽有义气，人未必有。</p></a>
+      <a class="t" href="#"><b>板桥杂记</b><i>余怀　卷二十</i><p>全书末卷整卷收秦淮旧闻，本书之外另有一篇导读。</p></a>
+    </div>
+  </section>
+
+  <!-- ============ 尾声 ============ -->
+  <section class="coda">
+    <div class="lamp2"></div>
+    <p>张潮编书时的选目眼光，和他写在每篇末尾的那行批语，是这本书真正的声音：书名借了汉代的小说家，灯里转的全是他同时代的活人。</p>
+    <p>走马灯转一圈，影子换一批；书传了三百多年，<em>灯还亮着</em>。</p>
+  </section>
+</main>
+
+<footer>
+  <div class="fin">
+    文本来源：殆知阁简体库子藏笔记《虞初新志》（去空白二十二万四千七百六十六字实测，二十卷一百四十八篇皆机数）。本页全部引文经脚本与库内文件逐字核验（去标点、归一后双侧比对），并反扫页面确认无未申报的库本成句复用；导读系列总目见 <a href="mulu.html">mulu.html</a>，仓库 <a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>。书中人物行止与评断皆出自其时代，请以历史眼光读之。
+  </div>
+</footer>
+
+<script>
+(function(){
+  var stage=document.getElementById('stage');
+  var btn=document.getElementById('switch');
+  btn.addEventListener('click',function(){
+    stage.classList.toggle('off');
+    btn.textContent=stage.classList.contains('off')?'点 灯':'熄 灯';
+  });
+  document.querySelectorAll('.panel').forEach(function(p){
+    p.addEventListener('click',function(){
+      var t=document.getElementById(p.getAttribute('data-go'));
+      if(t)t.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+  });
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('lit');});
+  },{threshold:.18});
+  document.querySelectorAll('.wei').forEach(function(s){obs.observe(s);});
+})();
+</script>
+
+</body>
+</html>
