@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台海使槎录 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #24231f;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --gold: #c9963f; --gold-soft: rgba(201,150,63,0.16); --gold-line: rgba(201,150,63,0.42);
+    --hair: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background:
+      repeating-linear-gradient(90deg, transparent 0 239px, rgba(232,228,220,0.028) 239px 240px),
+      var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 30px; }
+
+  /* ===== 首屏：渡海 ===== */
+  .hero { position: relative; padding: 52px 0 0; min-height: 88dvh; display: flex; flex-direction: column; }
+  .kick-row { display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 13px; letter-spacing: 0.34em; color: var(--faint);
+    border-bottom: 1px solid var(--hair); padding-bottom: 14px; }
+  .kick-row .mono { letter-spacing: 0.12em; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 170px; gap: 40px; align-items: end; flex: 1; padding: 46px 0 34px; }
+  .hero-line { font-size: clamp(30px, 4.6vw, 52px); font-weight: 700; letter-spacing: 0.08em; line-height: 1.5; }
+  .hero-line em { font-style: normal; color: var(--gold); }
+  .hero-sub { margin-top: 26px; max-width: 34em; color: var(--dim); font-size: 16px; }
+  .hero-sub b { color: var(--paper); font-weight: 600; }
+  .hero-title { writing-mode: vertical-rl; font-size: clamp(44px, 5.6vw, 64px); font-weight: 700;
+    letter-spacing: 0.3em; color: var(--paper); border-left: 1px solid var(--hair); padding-left: 26px;
+    display: flex; gap: 18px; justify-content: flex-end; }
+  .hero-title small { font-size: 14px; color: var(--gold); letter-spacing: 0.4em; font-weight: 400; margin-top: 8px; }
+
+  .route { border-top: 1px solid var(--hair); padding: 26px 0 30px; }
+  .route svg { width: 100%; height: auto; display: block; }
+  .route .dash { stroke-dasharray: 7 9; animation: sail 22s linear infinite; }
+  @keyframes sail { to { stroke-dashoffset: -640; } }
+
+  /* ===== 幕次 ===== */
+  .act { padding: 84px 0 30px; }
+  .act-head { display: flex; align-items: flex-start; gap: 26px; margin-bottom: 44px; }
+  .act-seal { flex: 0 0 auto; width: 66px; height: 66px; border: 1.5px solid var(--gold-line);
+    display: grid; place-items: center; font-size: 34px; font-weight: 700; color: var(--gold); }
+  .act-head h2 { font-size: 29px; font-weight: 700; letter-spacing: 0.14em; }
+  .act-head .lede { color: var(--dim); font-size: 15px; max-width: 56em; margin-top: 10px; }
+  .act-head .lede b { color: var(--paper); }
+
+  .q { border-left: 2px solid var(--gold-line); padding: 6px 0 6px 22px; margin: 26px 0; }
+  .q p { font-size: 17px; }
+  .q .src { display: block; margin-top: 8px; font-size: 12.5px; color: var(--faint); letter-spacing: 0.16em; }
+
+  .note { color: var(--faint); font-size: 13.5px; margin-top: 14px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  @media (max-width: 760px) { .cols { grid-template-columns: 1fr; } .hero-grid { grid-template-columns: 1fr; } .hero-title { writing-mode: horizontal-tb; border-left: 0; border-top: 1px solid var(--hair); padding: 20px 0 0; } }
+
+  /* 甲 风历 */
+  .tri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+  @media (max-width: 760px) { .tri { grid-template-columns: 1fr; } }
+  .tri .cell { border: 1px solid var(--hair); padding: 18px 20px; background: var(--ink-2); }
+  .tri .cell b { display: block; font-size: 24px; color: var(--gold); letter-spacing: 0.1em; }
+  .tri .cell span { font-size: 14px; color: var(--dim); }
+
+  .fengli { margin: 34px 0 8px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; }
+  @media (max-width: 900px) { .fengli { grid-template-columns: repeat(6, 1fr); } }
+  @media (max-width: 560px) { .fengli { grid-template-columns: repeat(3, 1fr); } }
+  .fm { border-top: 2px solid var(--gold-line); padding-top: 8px; }
+  .fm h4 { font-size: 13.5px; color: var(--dim); letter-spacing: 0.2em; margin-bottom: 8px; }
+  .fm .pills { display: flex; flex-direction: column; gap: 5px; }
+  .fm .pill { border: 1px solid var(--hair); background: var(--ink-2); padding: 4px 8px; font-size: 12.5px;
+    display: flex; align-items: baseline; gap: 6px; color: var(--paper); }
+  .fm .pill i { font-style: normal; font-size: 11px; color: var(--faint); }
+  .fm.hi { border-top-color: var(--gold); }
+  .fm.hi h4 { color: var(--gold); }
+  .fm .nine { border-color: var(--gold-line); background: var(--gold-soft); color: var(--gold); font-weight: 700; }
+
+  /* 乙 六考矩阵 */
+  .matrix { margin: 30px 0 14px; border: 1px solid var(--hair); background: var(--ink-2); }
+  .mx-row { display: grid; grid-template-columns: 88px repeat(6, 1fr); }
+  .mx-row + .mx-row { border-top: 1px solid var(--hair); }
+  .mx-row > * { padding: 12px 8px; text-align: center; font-size: 14px; }
+  .mx-head { border-bottom: 2px solid var(--gold-line); background: var(--ink-3); }
+  .mx-head .soc b { display: block; font-size: 15.5px; color: var(--gold); font-weight: 700; letter-spacing: 0.06em; }
+  .mx-head .soc span { font-size: 11.5px; color: var(--faint); }
+  .mx-head .corner { font-size: 13px; color: var(--dim); display: grid; place-items: center; letter-spacing: 0.2em; }
+  .mx-row .kao { display: grid; place-items: center; color: var(--dim); font-size: 13.5px; letter-spacing: 0.24em;
+    border-right: 1px solid var(--hair); background: var(--ink-3); }
+  .mx-cell { border: 0; border-left: 1px solid var(--hair); background: none; color: var(--paper);
+    font-family: inherit; cursor: pointer; transition: background 0.2s ease, color 0.2s ease; line-height: 1.5; }
+  .mx-cell:hover, .mx-cell.on { background: var(--gold-soft); color: var(--gold); }
+  .mx-cell.on { box-shadow: inset 0 0 0 1px var(--gold-line); }
+  @media (max-width: 820px) {
+    .mx-row { grid-template-columns: 64px repeat(3, 1fr); }
+    .mx-row > * { padding: 10px 4px; font-size: 12.5px; }
+  }
+  .mx-detail { border: 1px solid var(--gold-line); border-left-width: 3px; margin: 18px 0 6px;
+    padding: 20px 24px; background: var(--ink-3); min-height: 120px; }
+  .mx-detail .where { font-size: 13px; color: var(--gold); letter-spacing: 0.18em; margin-bottom: 8px; }
+  .mx-detail .what { font-size: 16.5px; }
+  .mx-detail .from { display: block; margin-top: 10px; font-size: 12px; color: var(--faint); letter-spacing: 0.14em; }
+
+  /* 番歌 */
+  .songs { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 40px; }
+  @media (max-width: 820px) { .songs { grid-template-columns: 1fr; } }
+  .song { border: 1px solid var(--hair); background: var(--ink-2); display: grid; grid-template-columns: 64px 1fr; }
+  .song .tab { writing-mode: vertical-rl; letter-spacing: 0.3em; font-size: 15px; color: var(--gold);
+    display: grid; place-items: center; border-right: 1px solid var(--hair); padding: 16px 0; background: var(--ink-3); }
+  .song .ly { padding: 16px 20px; }
+  .song .ly .ln { display: flex; flex-wrap: wrap; gap: 0 10px; padding: 4px 0; }
+  .song .ly .ln + .ln { border-top: 1px dashed rgba(232,228,220,0.07); }
+  .song .ly .tr { font-size: 16.5px; font-weight: 600; }
+  .song .ly .zh { font-size: 13px; color: var(--dim); }
+
+  /* 丙 界与商 */
+  .pull { margin: 30px 0; padding: 34px 10px 34px 30px; border-left: 3px solid var(--gold); }
+  .pull p { font-size: clamp(21px, 2.6vw, 30px); font-weight: 700; line-height: 1.85; letter-spacing: 0.04em; }
+  .chain { margin: 26px 0; }
+  .chain .ring { display: grid; grid-template-columns: 52px 1fr; gap: 18px; padding: 18px 0; border-top: 1px solid var(--hair); }
+  .chain .no { font-size: 22px; color: var(--gold); font-weight: 700; }
+  .chain .ring p { font-size: 15.5px; color: var(--paper); }
+  .chain .ring p b { color: var(--gold); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+  .chip { border: 1px solid var(--gold-line); color: var(--gold); font-size: 13px; padding: 3px 12px; letter-spacing: 0.06em; }
+
+  .jieyu { margin: 30px 0; border: 1px solid var(--hair); background: var(--ink-2); padding: 24px 24px 12px; }
+  .jieyu svg { width: 100%; height: auto; display: block; }
+  .deeds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 26px 0; }
+  @media (max-width: 820px) { .deeds { grid-template-columns: 1fr; } }
+  .deed { border-top: 2px solid var(--gold-line); padding-top: 12px; }
+  .deed h4 { font-size: 16px; color: var(--gold); letter-spacing: 0.14em; margin-bottom: 8px; }
+  .deed p { font-size: 14.5px; color: var(--dim); }
+  .deed .q { margin: 10px 0 0; padding-left: 14px; }
+  .deed .q p { font-size: 14px; color: var(--paper); }
+
+  /* 丁 谶余 */
+  .chen { margin: 30px auto; max-width: 560px; border: 1.5px solid var(--gold-line); padding: 38px 30px;
+    text-align: center; background: var(--ink-2); position: relative; }
+  .chen:before, .chen:after { content: ""; position: absolute; width: 14px; height: 14px;
+    border: 1.5px solid var(--gold-line); }
+  .chen:before { top: -8px; left: -8px; border-right: 0; border-bottom: 0; }
+  .chen:after { bottom: -8px; right: -8px; border-left: 0; border-top: 0; }
+  .chen .l { font-size: 19px; letter-spacing: 0.24em; display: block; }
+  .chen .cap { font-size: 12.5px; color: var(--faint); letter-spacing: 0.3em; margin-bottom: 18px; display: block; }
+
+  /* 尾声 / 卷次 */
+  .coda { border-top: 1px solid var(--hair); margin-top: 60px; padding: 46px 0 20px; }
+  .coda h3 { font-size: 22px; letter-spacing: 0.12em; margin-bottom: 16px; }
+  .coda p { color: var(--dim); font-size: 15.5px; max-width: 62em; }
+  .coda p b { color: var(--paper); }
+  .juan { margin-top: 30px; border: 1px solid var(--hair); }
+  .juan .jrow { display: grid; grid-template-columns: 190px 1fr; }
+  .juan .jrow + .jrow { border-top: 1px solid var(--hair); }
+  .juan .jt { padding: 12px 16px; color: var(--gold); font-size: 14px; letter-spacing: 0.1em;
+    border-right: 1px solid var(--hair); background: var(--ink-2); }
+  .juan .jb { padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13.5px; color: var(--dim); }
+  @media (max-width: 700px) { .juan .jrow { grid-template-columns: 1fr; } .juan .jt { border-right: 0; border-bottom: 1px solid var(--hair); } }
+
+  footer.page { border-top: 1px solid var(--hair); margin-top: 70px; padding: 34px 0 58px;
+    color: var(--faint); font-size: 13.5px; line-height: 2.1; }
+  footer.page a { color: var(--dim); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap" style="display:flex;flex-direction:column;flex:1;">
+    <div class="kick-row">
+      <span>殆知阁导读 · 史藏地理</span>
+      <span class="mono">NO.210</span>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <p class="hero-line">康熙六十一年，<em>一位御史渡海</em>，<br>把台湾从头查到脚。</p>
+        <p class="hero-sub">朱一贵之乱平定的当年，清廷头一遭派出巡台御史，首任是<b>黄叔璥</b>。他在岛上跑了一年多，写成<b>《台海使槎录》</b>八卷：前四卷「赤嵌笔谈」，问的是历史、风信、船、兵、赋；后四卷「番俗六考」与「番俗杂记」，问的是岛上先住民怎么住、怎么吃、怎么嫁娶、怎么下葬、怎么唱歌。这是汉语世界第一批成系统的台湾田野调查，也是一份治理档案。</p>
+      </div>
+      <div class="hero-title">台海使槎录<small>清 黄叔璥</small></div>
+    </div>
+    <figure class="route">
+      <svg viewBox="0 0 1060 230" aria-label="渡海航线图">
+        <rect x="0" y="0" width="1060" height="230" fill="#1c1b19"/>
+        <path d="M0 190 Q 120 178 250 190 T 520 190 T 780 186 T 1058 192" fill="none" stroke="rgba(232,228,220,0.07)" stroke-width="1"/>
+        <path d="M0 214 Q 160 204 320 214 T 660 210 T 1058 216" fill="none" stroke="rgba(232,228,220,0.05)" stroke-width="1"/>
+        <g stroke="rgba(232,228,220,0.25)" fill="none" stroke-width="1">
+          <circle cx="88" cy="112" r="34"/>
+          <circle cx="88" cy="112" r="3" fill="rgba(232,228,220,0.4)"/>
+          <path d="M88 70 v14 M88 140 v14 M46 112 h14 M116 112 h14"/>
+        </g>
+        <text x="88" y="60" fill="#a39e93" font-size="13" text-anchor="middle">北</text>
+        <line class="dash" x1="122" y1="112" x2="470" y2="112" stroke="#c9963f" stroke-width="1.6"/>
+        <line x1="150" y1="112" x2="205" y2="152" stroke="rgba(201,150,63,0.55)" stroke-width="1.2"/>
+        <polygon points="205,152 196,148 201,142" fill="#c9963f"/>
+        <text x="176" y="170" fill="#c9963f" font-size="12.5" text-anchor="middle">针路向巽</text>
+        <g font-size="13.5" fill="#a39e93">
+          <text x="132" y="96">厦门 · 浯屿放洋</text>
+          <text x="298" y="96">黑水沟</text>
+          <text x="452" y="96">鹿耳门</text>
+        </g>
+        <g stroke="#6e6a61" stroke-width="1">
+          <path d="M280 132 q6 -5 12 0 q6 5 12 0" fill="none"/>
+          <path d="M292 146 q6 -5 12 0 q6 5 12 0" fill="none"/>
+          <path d="M276 158 q6 -5 12 0 q6 5 12 0" fill="none"/>
+        </g>
+        <path d="M560 26 q10 22 2 40 q14 12 10 34 q16 10 12 32 q14 12 8 34 q10 14 2 30 q6 16 -6 28 q-4 18 -22 20 q-26 4 -44 -8 q-16 -10 -12 -28 q-8 -14 2 -30 q-6 -16 4 -30 q-4 -18 8 -30 q-4 -20 8 -32 q-4 -20 6 -32 q6 -20 12 -28 Z"
+          transform="translate(430,-8) scale(1.02)" fill="rgba(201,150,63,0.09)" stroke="rgba(201,150,63,0.5)" stroke-width="1"/>
+        <text x="620" y="128" fill="#c9963f" font-size="17" letter-spacing="4">台 湾</text>
+        <g fill="rgba(201,150,63,0.65)">
+          <circle cx="524" cy="150" r="3.4"/><circle cx="534" cy="156" r="2.6"/><circle cx="544" cy="162" r="2"/>
+        </g>
+        <text x="520" y="178" fill="#a39e93" font-size="12">彭湖</text>
+      </svg>
+      <figcaption class="note">放洋全以指南针为信；认定方向，随波上下，曰针路。由彭湖至台湾向巽方行，近鹿耳门隙仔，风日晴和，舟可泊；若有风，仍回彭湖。</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 甲 针路 -->
+  <section class="act" id="jia">
+    <div class="act-head">
+      <div class="act-seal">甲</div>
+      <div>
+        <h2>针路 · 先过的是海</h2>
+        <p class="lede">福州人鲁煜替这部书作序，说他订稿的法子是「凡禽鱼草木之细，必验其形焉」：看得见的东西，一样一样亲手验过才肯写下来。要验一样东西，先得过海。台湾海峡在书里不是布景，是全书第一道关卡。</p>
+      </div>
+    </div>
+
+    <div class="q"><p>「凡禽鱼草木之细，必验其形焉，别其色焉，辨其族焉，察其性焉；询之耆老、诘之医师，豪厘之疑，靡所不耀，而后即安。」</p><span class="src">鲁煜序</span></div>
+
+    <div class="tri">
+      <div class="cell"><b>飓</b><span>风大而烈者，倏发倏止；正、二、三、四月发者</span></div>
+      <div class="cell"><b>台</b><span>又甚者，常连日夜不止；五、六、七、八月发者</span></div>
+      <div class="cell"><b>九降</b><span>九月北风初烈，或至连月；最忌，多无雨而风</span></div>
+    </div>
+
+    <div class="q"><p>「台湾风信，与他海殊异。风大而烈者为飓，又甚者为台。飓，倏发倏止；台，常连日夜不止。正、二、三、四月发者为飓，五、六、七、八月发者为台。九月则北风初烈，或至连月，为九降。」</p><span class="src">卷一 赤嵌笔谈 · 风信（引自香祖笔记）</span></div>
+
+    <div class="fengli" aria-label="飓历">
+      <div class="fm"><h4>正月</h4><div class="pills">
+        <span class="pill"><i>初四日</i>接神飓</span><span class="pill"><i>初九日</i>玉皇飓</span>
+        <span class="pill"><i>十三日</i>关帝飓</span><span class="pill"><i>念九日</i>乌狗飓</span></div></div>
+      <div class="fm"><h4>二月</h4><div class="pills"><span class="pill"><i>初二日</i>白须飓</span></div></div>
+      <div class="fm"><h4>三月</h4><div class="pills">
+        <span class="pill"><i>初三日</i>上帝飓</span><span class="pill"><i>十五日</i>真人飓</span>
+        <span class="pill"><i>念三日</i>马祖飓</span></div></div>
+      <div class="fm"><h4>四月</h4><div class="pills"><span class="pill"><i>八日</i>佛子飓</span></div></div>
+      <div class="fm"><h4>五月</h4><div class="pills"><span class="pill"><i>初五日</i>屈原飓</span></div></div>
+      <div class="fm"><h4>六月</h4><div class="pills">
+        <span class="pill"><i>十二日</i>彭祖飓</span><span class="pill"><i>十八日</i>彭婆飓</span>
+        <span class="pill"><i>念四日</i>洗炊笼飓</span></div></div>
+      <div class="fm"><h4>七月</h4><div class="pills"><span class="pill"><i>十五日</i>鬼飓</span></div></div>
+      <div class="fm"><h4>八月</h4><div class="pills"><span class="pill"><i>初一日</i>灶君飓</span>
+        <span class="pill"><i>十五日</i>魁星飓</span></div></div>
+      <div class="fm hi"><h4>九月</h4><div class="pills">
+        <span class="pill nine">九降</span>
+        <span class="pill"><i>十六日</i>张良飓</span><span class="pill"><i>十九日</i>观音飓</span></div></div>
+      <div class="fm"><h4>十月</h4><div class="pills"><span class="pill"><i>初十日</i>水仙王飓</span>
+        <span class="pill"><i>念六日</i>翁爹飓</span></div></div>
+      <div class="fm"><h4>十一月</h4><div class="pills"><span class="pill"><i>念七日</i>普庵飓</span></div></div>
+      <div class="fm"><h4>十二月</h4><div class="pills"><span class="pill"><i>念四日</i>送神飓</span>
+        <span class="pill"><i>念九日</i>火盆飓</span><span class="pill"><i>念四日已后</i>送年风</span></div></div>
+    </div>
+    <p class="note">一年三十六飓，各有名字，来历是神明诞辰与节令：渡海的人把历法倒过来用，看日子挑航期。谚云「六月一雷止三台，七月一雷九台来」。</p>
+
+    <div class="cols">
+      <div>
+        <div class="q"><p>「土番识风草，草生无节则一年无台，一节则台一次，多节则多次。」</p><span class="src">卷一 · 风信</span></div>
+        <div class="q"><p>「凡台将至，则天边有断虹；先见一片如船帆者曰破帆梢，及半天如鲎尾者曰屈鲎。」</p><span class="src">卷一 · 风信</span></div>
+      </div>
+      <div>
+        <p class="note" style="margin-top:26px;">没有气象台的时代，预报分两路：汉人看断虹的形状，番人看风草的节。同一场风，两套民间观测系统，御史都记了下来。</p>
+      </div>
+    </div>
+
+    <div class="q" style="margin-top:40px;">
+      <p>「自初三日登舟，泊鹿耳门，十八日乃行，舵帆不协，斜入黑水者再，船首俯入水底，舟人大恐。」<br>「风中蝴蝶千百飞舞，舟人以为不祥。」<br>「舟师曰：惟有划水仙求登岸免死耳！众口齐作钲鼓声，人各挟一匕箸，虚作棹船势，如午日竞渡状；船果近岸，得不溺。」</p>
+      <span class="src">卷一 风信（引自稗海纪游，郁永河采硫遇险事）</span>
+    </div>
+    <p class="note">「划水仙」：船将沉而风浪不许放小艇时，全船人敲箸作锣鼓、空手作划桨，扮作端午竞渡，说是祈水仙尊王救命。黑水沟上真实的应急仪式，被当新闻记进了官方报告。</p>
+  </section>
+
+  <!-- 乙 六考 -->
+  <section class="act" id="yi">
+    <div class="act-head">
+      <div class="act-seal">乙</div>
+      <div>
+        <h2>六考 · 逐社填表</h2>
+        <p class="lede">卷五至卷七是全书的腹心：把先住民聚落拆成<b>居处、饮食、衣饰、婚嫁、丧葬、器用</b>六项，从北路诸罗到南路凤山、琅峤，<b>十三个区段逐社过一遍</b>，后附番歌三十三首，歌词以汉字记番音，旁边加汉译。三百年前的一份民族志调查表。点下面任意一格，看原文怎么写。</p>
+      </div>
+    </div>
+
+    <div class="q"><p>「各社终身依妇以处，皆以门楣绍瓜瓞，父母不得有其子，故一再世而孙且不识其祖矣。番人皆无姓氏，有以也。」</p><span class="src">卷五 附载（引自稗海纪游）：母系家系，汉人看了觉得奇怪，如实记下</span></div>
+
+    <div class="matrix" id="matrix">
+      <div class="mx-row mx-head">
+        <div class="corner">六考</div>
+        <div class="soc"><b>新港</b><span>诸罗番一</span></div>
+        <div class="soc"><b>大武郡</b><span>诸罗番三</span></div>
+        <div class="soc"><b>半线</b><span>诸罗番六</span></div>
+        <div class="soc"><b>大肚</b><span>诸罗番八</span></div>
+        <div class="soc"><b>崩山八社</b><span>诸罗番九</span></div>
+        <div class="soc"><b>上澹水</b><span>凤山番一</span></div>
+      </div>
+      <div class="mx-row"><div class="kao">居处</div>
+        <button class="mx-cell" data-q="xj_jc" data-w="新港 · 居处">状如覆舟</button>
+        <button class="mx-cell" data-q="dwz_jc" data-w="大武郡 · 居处">门绘红毛人像</button>
+        <button class="mx-cell" data-q="bx_jc" data-w="半线 · 居处">猫邻</button>
+        <button class="mx-cell" data-q="dd_jc" data-w="大肚 · 居处">凿山为壁</button>
+        <button class="mx-cell" data-q="bs_jc" data-w="崩山 · 居处">另室而居</button>
+        <button class="mx-cell" data-q="sds_jc" data-w="上澹水 · 居处">圭茅</button>
+      </div>
+      <div class="mx-row"><div class="kao">饮食</div>
+        <button class="mx-cell" data-q="xj_ys" data-w="新港 · 饮食">姑待</button>
+        <button class="mx-cell" data-q="dwz_ys" data-w="大武郡 · 饮食">约期会饮</button>
+        <button class="mx-cell" data-q="bx_ys" data-w="半线 · 饮食">几鲁</button>
+        <button class="mx-cell" data-q="dd_ys" data-w="大肚 · 饮食">都都</button>
+        <button class="mx-cell" data-q="bs_ys" data-w="崩山 · 饮食">蒸其液为酒</button>
+        <button class="mx-cell" data-q="sds_ys" data-w="上澹水 · 饮食">香米</button>
+      </div>
+      <div class="mx-row"><div class="kao">衣饰</div>
+        <button class="mx-cell" data-q="xj_yshi" data-w="新港 · 衣饰">萨豉宜</button>
+        <button class="mx-cell" data-q="dwz_yshi" data-w="大武郡 · 衣饰">马卓</button>
+        <button class="mx-cell" data-q="bx_yshi" data-w="半线 · 衣饰">包练</button>
+        <button class="mx-cell" data-q="dd_yshi" data-w="大肚 · 衣饰">止露两目</button>
+        <button class="mx-cell" data-q="bs_yshi" data-w="崩山 · 衣饰">束腹至胸</button>
+        <button class="mx-cell" data-q="sds_yshi" data-w="上澹水 · 衣饰">日一浴</button>
+      </div>
+      <div class="mx-row"><div class="kao">婚嫁</div>
+        <button class="mx-cell" data-q="xj_hs" data-w="新港 · 婚嫁">牵手</button>
+        <button class="mx-cell" data-q="dwz_hs" data-w="大武郡 · 婚嫁">嘴琴挑之</button>
+        <button class="mx-cell" data-q="bx_hs" data-w="半线 · 婚嫁">绵堵混</button>
+        <button class="mx-cell" data-q="dd_hs" data-w="大肚 · 婚嫁">猫六</button>
+        <button class="mx-cell" data-q="bs_hs" data-w="崩山 · 婚嫁">海蛤</button>
+        <button class="mx-cell" data-q="sds_hs" data-w="上澹水 · 婚嫁">突肉</button>
+      </div>
+      <div class="mx-row"><div class="kao">丧葬</div>
+        <button class="mx-cell" data-q="xj_sz" data-w="新港 · 丧葬">马歹</button>
+        <button class="mx-cell" data-q="dwz_sz" data-w="大武郡 · 丧葬">守丧三月</button>
+        <button class="mx-cell" data-q="bx_sz" data-w="半线 · 丧葬">马邻</button>
+        <button class="mx-cell" data-q="dd_sz" data-w="大肚 · 丧葬">神姊</button>
+        <button class="mx-cell" data-q="bs_sz" data-w="崩山 · 丧葬">鹿皮包裹</button>
+        <button class="mx-cell" data-q="sds_sz" data-w="上澹水 · 丧葬">班柔少里堂敖敖</button>
+      </div>
+      <div class="mx-row"><div class="kao">器用</div>
+        <button class="mx-cell" data-q="xj_qy" data-w="新港 · 器用">螺钱</button>
+        <button class="mx-cell" data-q="dwz_qy" data-w="大武郡 · 器用">小刀</button>
+        <button class="mx-cell" data-q="bx_qy" data-w="半线 · 器用">螺蛤壳为碗</button>
+        <button class="mx-cell" data-q="dd_qy" data-w="大肚 · 器用">篾篮</button>
+        <button class="mx-cell" data-q="bs_qy" data-w="崩山 · 器用">均如汉人</button>
+        <button class="mx-cell" data-q="sds_qy" data-w="上澹水 · 器用">大蒲仑</button>
+      </div>
+    </div>
+    <div class="mx-detail" id="mx-detail" aria-live="polite">
+      <div class="where">六考矩阵</div>
+      <div class="what">六项 × 十三区段，同一条目下逐社比勘：名字各异的牵手、马歹、几鲁，是各社自己的话。点一格，读一格。</div>
+    </div>
+
+    <h3 style="font-size:20px;letter-spacing:0.12em;margin-top:56px;">附番歌 · 汉字记下的声音</h3>
+    <p class="lede" style="color:var(--dim);font-size:15px;margin-top:8px;max-width:56em;">番歌以汉字谐音记词，括注汉译。这批歌词是台湾先住民语言相当早的一批书面记录，大意未必全对，声音留住了。</p>
+    <div class="songs">
+      <article class="song">
+        <div class="tab">新港社别妇歌</div>
+        <div class="ly">
+          <div class="ln"><span class="tr">马无艾几唎</span><span class="zh">（我爱汝美貌），</span></div>
+          <div class="ln"><span class="tr">唷无晃米哰</span><span class="zh">（不能忘），</span></div>
+          <div class="ln"><span class="tr">加麻无知各交</span><span class="zh">（实实想念）。</span></div>
+          <div class="ln"><span class="tr">麻各巴圭里文兰弥劳</span><span class="zh">（我今去捕鹿），</span></div>
+          <div class="ln"><span class="tr">查美狡呵阿孛沉沉唷无晃米哰</span><span class="zh">（心中辗转愈不能忘）；</span></div>
+          <div class="ln"><span class="tr">奚如直落圭哩其文兰</span><span class="zh">（待捕得鹿），</span></div>
+          <div class="ln"><span class="tr">查下力柔下麻勾</span><span class="zh">（回来便相赠）</span></div>
+        </div>
+      </article>
+      <article class="song">
+        <div class="tab">麻豆社思春歌</div>
+        <div class="ly">
+          <div class="ln"><span class="tr">唉加安吕燕</span><span class="zh">（夜间难寐），</span></div>
+          <div class="ln"><span class="tr">音那马无力圭吱腰</span><span class="zh">（从前遇着美女子），</span></div>
+          <div class="ln"><span class="tr">礁吗圭礁劳音毛噃</span><span class="zh">（我昨夜梦见伊）；</span></div>
+          <div class="ln"><span class="tr">没生交耶音毛夫</span><span class="zh">（今寻至伊门前），</span></div>
+          <div class="ln"><span class="tr">孩如未生吱连</span><span class="zh">（心中欢喜难说）！</span></div>
+        </div>
+      </article>
+      <article class="song">
+        <div class="tab">湾里社诫妇歌</div>
+        <div class="ly">
+          <div class="ln"><span class="tr">朱连么吱匏里乞</span><span class="zh">（娶汝众人皆知），</span></div>
+          <div class="ln"><span class="tr">加直老巴绵烟</span><span class="zh">（原为传代）；</span></div>
+          <div class="ln"><span class="tr">加年呀嗄加犁蛮</span><span class="zh">（须要好名声），</span></div>
+          <div class="ln"><span class="tr">拙年巴恩劳劳呀</span><span class="zh">（切勿做出坏事），</span></div>
+          <div class="ln"><span class="tr">车加犁末礁唠描</span><span class="zh">（彼此便觉好看）！</span></div>
+        </div>
+      </article>
+      <article class="song">
+        <div class="tab">琅峤待客歌</div>
+        <div class="ly">
+          <div class="ln"><span class="tr">立孙呵网直</span><span class="zh">（尔来琅峤），</span></div>
+          <div class="ln"><span class="tr">六呷呵谈眉谈眉</span><span class="zh">（此处不似内地），</span></div>
+          <div class="ln"><span class="tr">那鬼呵网直务昌哩呵郎耶</span><span class="zh">（尔来无佳物供应），</span></div>
+          <div class="ln"><span class="tr">吗疏吗疏</span><span class="zh">（得罪得罪）！</span></div>
+        </div>
+      </article>
+    </div>
+    <p class="note">末一首的语气值得多看一眼：琅峤在南路极南，来客自以为施恩，主人先道歉说拿不出好东西待客。谁在委屈谁，歌词自己会说话。</p>
+  </section>
+
+  <!-- 丙 界与商 -->
+  <section class="act" id="bing">
+    <div class="act-head">
+      <div class="act-seal">丙</div>
+      <div>
+        <h2>界与商 · 另一半是治理档案</h2>
+        <p class="lede">卷八「番俗杂记」收起好奇心，换上公务脸：生番熟番、社商社饷、捕鹿番役、番界土官，一条条是治理条目。黄叔璥记下了自己看到的剥削链条，也留下全书最重的一句话。</p>
+      </div>
+    </div>
+
+    <div class="pull"><p>「噫！若亦人也！马不宿驰，牛无偏驾，否则致疾；牛马且然，而况于人乎！抑知彼苟多帛，亦重绨矣，寒胡为哉！彼苟无事，亦安居矣，暴露胡为哉！彼苟免力役，亦暇且逸矣，奔走负戴胡为哉！异其人，何必异其性。」</p><span class="src" style="color:var(--faint);">卷八 · 社商（引自稗海纪游）</span></div>
+
+    <div class="chain">
+      <div class="ring"><div class="no">一</div><p><b>认课。</b>「郡县有财力者，认办社课，名曰社商」：番社的税银，包给汉人商人。</p></div>
+      <div class="ring"><div class="no">二</div><p><b>坐社。</b>社商再派通事、伙长进驻，番人猎得的一切「皆有籍稽之」，肉作脯、皮折饷，此外不许私相买卖；男女孩童轮番供役，番妇被纳作妻妾，而番人不甚怨之。</p></div>
+      <div class="ring"><div class="no">三</div><p><b>世袭。</b>真正动不得的是「社棍」：谋长、通事熟识番情又解番语，父死子继。「利番人之愚，又欲番人之贫；愚则攫夺惟意，贫则力不敢抗。」番人告状，番语说不达情，通事颠倒以对，反受呵谴。</p></div>
+    </div>
+    <div class="q"><p>「是举世所当哀矜者，莫番若矣。」</p><span class="src">卷八 · 社商</span></div>
+
+    <div class="cols">
+      <div class="q"><p>「向为番民鹿场麻地，今为业户请垦，或为流寓占耕，番民世守之业，竟不能存什一于千百。」</p><span class="src">卷八 · 社饷（周锺瑄上满总制书）</span></div>
+      <div class="q"><p>「土番膏血有几，虽欲不穷得乎？」</p><span class="src">卷八 · 社饷（周锺瑄上满总制书）</span></div>
+    </div>
+    <div class="chips">
+      <span class="chip">凤山下澹水八社番米 五千九百三十三石八斗</span>
+      <span class="chip">荡平后酌减 四千六百四十五石三斗</span>
+      <span class="chip">诸罗社饷 七千七百八两零 未邀裁减</span>
+      <span class="chip">一岁所出共 二万余金</span>
+    </div>
+
+    <div class="jieyu">
+      <svg viewBox="0 0 1000 150" aria-label="番界示意图">
+        <path d="M20 96 Q 180 88 360 94 T 700 92 T 980 98" fill="none" stroke="rgba(201,150,63,0.7)" stroke-width="1.6"/>
+        <text x="30" y="126" fill="#6e6a61" font-size="12">西 海 岸</text>
+        <g stroke="#c9963f" stroke-width="1.4">
+          <line x1="240" y1="90" x2="240" y2="58"/><line x1="380" y1="92" x2="380" y2="58"/>
+          <line x1="520" y1="91" x2="520" y2="58"/><line x1="660" y1="91" x2="660" y2="58"/>
+          <line x1="800" y1="93" x2="800" y2="58"/>
+        </g>
+        <line x1="225" y1="44" x2="815" y2="44" stroke="rgba(201,150,63,0.45)" stroke-width="1" stroke-dasharray="4 6"/>
+        <text x="830" y="48" fill="#c9963f" font-size="12.5">界</text>
+        <g font-size="13" fill="#a39e93" text-anchor="middle">
+          <text x="240" y="78">半线</text><text x="380" y="78">竹堑</text>
+          <text x="520" y="78">斗六门</text><text x="660" y="78">琅峤</text>
+        </g>
+        <g font-size="12.5" fill="#6e6a61">
+          <text x="250" y="24">山朝社</text><text x="450" y="24">蛤仔难</text><text x="640" y="24">卑南觅</text>
+        </g>
+        <path d="M310 30 q10 -6 20 0 M430 30 q10 -6 20 0 M560 30 q10 -6 20 0" fill="none" stroke="rgba(110,106,97,0.6)"/>
+        <text x="920" y="70" fill="#6e6a61" font-size="12" text-anchor="middle">内山</text>
+      </svg>
+    </div>
+    <div class="q"><p>「康熙六十一年，官斯土者，议凡逼近生番处所相去数十里或十余里，竖石以限之；越入者有禁。」</p><span class="src">卷八 · 番界</span></div>
+    <p class="note">一条用石桩划下的线，从半线沿山脚一路钉到琅峤；线的东侧，山朝社、蛤仔难、卑南觅还在民人耕种樵采「所不及」的远处。而书里同时承认：「其实启衅多由汉人」：越界侵占、窃鹿毁界的，恰是线这一边的人。</p>
+
+    <h3 style="font-size:20px;letter-spacing:0.12em;margin-top:56px;">御史自己动了手</h3>
+    <div class="deeds">
+      <div class="deed"><h4>不役番</h4><p>巡视南北两路，概不令番人抬轿负重，过溪才用人扶，悉数给酬。</p>
+        <div class="q"><p>「问何故跣足？曰：非乐此，特无履耳。可见人性皆同。」</p></div></div>
+      <div class="deed"><h4>约通事</h4><p>与道府约定：通事一律住县城，办事进社给限期，不许久顿番社。</p>
+        <div class="q"><p>「因与道府约，嗣后各社通事，俱令于各该县居住，社中有应办理事件，饬令前往，给以限期，不许久顿番社，以滋扰累。」</p></div></div>
+      <div class="deed"><h4>送四书</h4><p>番童能读者复其身，各社读书番童来见，劳以酒食。</p>
+        <div class="q"><p>「余劳以酒食，各给四书一册、时宪书一帙。不惟令奉正朔，亦使知有寒暑春秋；番不记年，或可渐易也。」</p></div></div>
+    </div>
+    <p class="note">同一支笔：给番童发四书，是为了「渐易」其俗。体贴与同化在乾隆前的官场是一件事的两面，这份档案把两面都留给了后人。</p>
+  </section>
+
+  <!-- 丁 谶余 -->
+  <section class="act" id="ding">
+    <div class="act-head">
+      <div class="act-seal">丁</div>
+      <div>
+        <h2>谶余 · 六十年海氛</h2>
+        <p class="lede">卷四「纪异」专收怪事：会喷火的山、海上不知名的巨兽、登岸而死的鳄鱼。最有名的一条，是崇祯年间厦门僧人掘地得砖，砖上刻着四十个字的谶语。</p>
+      </div>
+    </div>
+    <div class="chen">
+      <span class="cap">古砖谶语 · 古隶四行</span>
+      <span class="l">草鸡夜鸣，长耳大尾，干头衔鼠，拍水而起；</span>
+      <span class="l">杀人如麻，血成海水。起年灭年，六甲更始；</span>
+      <span class="l">庚小熙皞，太和千纪。</span>
+    </div>
+    <div class="q"><p>「识者曰：鸡，「酉」字也；加草头、大尾、长耳，「郑」字也。干头，「甲」字；鼠，「子」字也；谓郑芝龙以天启甲子起海中为群盗也。」</p><span class="src">卷四 · 纪异（引自池北偶谈）</span></div>
+    <div class="q"><p>「六十年海氛，一朝荡涤，此固国家灵长之福，而天数己预定矣，异哉。」</p><span class="src">卷四 纪异（引自池北偶谈）</span></div>
+    <p class="note">拆字拆出个「郑」：甲子起、甲子灭，六十年一甲子。黄叔璥抄这条时，郑氏归清才四十年，谶语是给新政权看的凯歌，也是汉人史观给这段历史找到的一个圆。</p>
+
+    <div class="coda">
+      <h3>一部书的两面</h3>
+      <p>开卷写台湾源头，引来的最早记载说岛上「语言不通，袒裸盱雎，殆非人类」；八卷之后，同一部书自己写下「若亦人也」与「异其人，何必异其性」。黄叔璥没有跨出他的时代：他记录风草与断虹，也记录四书与时宪书；他替番人算账，也替朝廷画线。但六考的表格、三十三首番歌、逐字记下的番语名物，让这部书同时是<b>「看见」的开始</b>和<b>「管起来」的开始</b>。读完它，再去看岛上后来三百年的故事，许多线头都从这里伸出。</p>
+      <div class="juan">
+        <div class="jrow"><div class="jt">鲁序</div><div class="jb"><span>乾隆元年会稽鲁煜序，自述「验形、别色、辨族、察性」的订书法</span></div></div>
+        <div class="jrow"><div class="jt">卷一至卷四 赤嵌笔谈</div><div class="jb"><span>原始</span><span>星野</span><span>形势</span><span>洋</span><span>潮</span><span>风信</span><span>气候</span><span>海船</span><span>城堡</span><span>赋饷</span><span>武备</span><span>习俗</span><span>祠庙</span><span>商贩</span><span>进贡</span><span>泉井围石</span><span>杂着</span><span>纪异</span><span>伪郑附略</span><span>朱逆附略</span></div></div>
+        <div class="jrow"><div class="jt">卷五至卷七 番俗六考</div><div class="jb"><span>北路诸罗番一至十</span><span>南路凤山番一</span><span>南路凤山傀儡番二</span><span>南路凤山琅峤十八社三</span><span>附番歌三十三首</span></div></div>
+        <div class="jrow"><div class="jt">卷八 番俗杂记</div><div class="jb"><span>生番</span><span>熟番</span><span>社商</span><span>社饷</span><span>捕鹿</span><span>番役</span><span>土官馈献</span><span>番界</span><span>吞霄澹水之乱</span><span>驭番</span><span>附题咏</span></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    文本来源：殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>）史藏/地理/台海使槎录<br>
+    页内引文与名物词均经脚本核验通过，与库本逐字比对；机数实测：全帙去空白 86557 字，八卷，六考十三区段，番歌三十三首<br>
+    古人对台湾先住民的记述带有其时代的偏见与局限，不代表编者立场<br>
+    殆知阁导读 第二百一十篇 · 2026 年 9 月
+  </div>
+</footer>
+
+<div id="qbank" hidden>
+  <p id="q-xj_jc">「备酒豕邀请番众，举上两扇，合为屋；状如覆舟，宽二丈余，长数丈。」（卷五诸罗番一 · 居处）</p>
+  <p id="q-xj_ys">「一舂秫米使碎，嚼米为曲，置地上，隔夜发气，拌和藏瓮中，数日发变，其味甘酸，曰姑待。」（卷五诸罗番一 · 饮食：酒名姑待）</p>
+  <p id="q-xj_yshi">「麻达走递公文，插雉尾于首，手背系萨豉宜，以铁为之，状如卷荷，长三寸许。展足鬪捷，脚掌去地尺余，扑及其臀；沙起风飞，手镯与萨豉宜相击，丁当远闻，瞬息数十里。」（卷五诸罗番一 · 衣饰：番社快递员）</p>
+  <p id="q-xj_hs">「婚姻名曰牵手。订盟时，男家父母遗以布。麻达（番未娶者）成婚，父母送至女家，不需媒妁。」（卷五诸罗番一 · 婚嫁）</p>
+  <p id="q-xj_sz">「番死曰马歹。不论贫富，俱用棺埋厝内；以平日衣服器皿之半殉之。」（卷五诸罗番一 · 丧葬）</p>
+  <p id="q-xj_qy">「螺钱皆汉人磨砻而成，圆约三寸，中一孔，以洁白者为上；每圆值银四、五分，如古贝式；各社皆然。」（卷五诸罗番一 · 器用）</p>
+  <p id="q-dwz_jc">「架梯入室，极高耸宏敞，门绘红毛人像。」（卷五诸罗番三 · 居处：荷兰人走后，画像留在门上）</p>
+  <p id="q-dwz_ys">「每年以黍熟时为节，先期定日，令麻达于高处传呼，约期会饮；男女着新衣，连手蹋地，歌呼呜呜。」（卷五诸罗番三 · 饮食）</p>
+  <p id="q-dwz_yshi">「他里雾以上，多为大耳。其始，先用线穿耳；后用蚝觳灰、漆木或螺钱或竹圈用白纸裹之，塞于两耳，名曰马卓。」（卷五诸罗番三 · 衣饰）</p>
+  <p id="q-dwz_hs">「亦有不用定聘；薄暮，男女梳妆结发，遍社戏游，互以嘴琴挑之，合意遂成夫妇。」（卷五诸罗番三 · 婚嫁）</p>
+  <p id="q-dwz_sz">「父母死，服皂衣，守丧三月。」（卷五诸罗番三 · 丧葬）</p>
+  <p id="q-dwz_qy">「出入必佩小刀。舍中置鹿头角；有疾者沐发，用以击之即瘥。」（卷五诸罗番三 · 器用）</p>
+  <p id="q-bx_jc">「大小同居一室；惟未嫁者另居一舍，曰猫邻。」（卷五诸罗番六 · 居处）</p>
+  <p id="q-bx_ys">「半线以北，取海泥卤曝为盐，色黑味苦，名几鲁；以腌鱼虾。」（卷五诸罗番六 · 饮食）</p>
+  <p id="q-bx_yshi">「每年二月间力田之候，名换年；男女俱衣杂色绸纻红袄，曰包练；或妆蟒锦绣为之。」（卷五诸罗番六 · 衣饰）</p>
+  <p id="q-bx_hs">「婚姻曰绵堵混。未娶妇曰打猫堵。男家父母先以犬毛纱头箍为定；或送糯饭。」（卷五诸罗番六 · 婚嫁）</p>
+  <p id="q-bx_sz">「番死，老幼裹以草席，瘗本厝内；平生衣物为殉。亲属葬毕，必浴身始入厝。丧家不为丧服，十日不出户；众番呼为马邻。」（卷五诸罗番六 · 丧葬）</p>
+  <p id="q-bx_qy">「耕种捕鹿具，与众番同；惟采鱼兼用篾篙。炊以三石块为灶，螺蛤壳为碗，竹筒为汲桶。」（卷五诸罗番六 · 器用）</p>
+  <p id="q-dd_jc">「猫雾拺诸社，凿山为壁，壁前用木为屏，覆以茅草，零星错落，高不盈丈，门户出入，俯首而行。」（卷五诸罗番八 · 居处）</p>
+  <p id="q-dd_ys">「或将糯米蒸熟，舂为饼饵，名都都。」（卷五诸罗番八 · 饮食）</p>
+  <p id="q-dd_yshi">「猫雾拺、岸里以下诸社，俱衣鹿皮；并以皮冒其头面，止露两目。」（卷五诸罗番八 · 衣饰）</p>
+  <p id="q-dd_hs">「男以银锡约指赠女为定，曰猫六。」（卷五诸罗番八 · 婚嫁）</p>
+  <p id="q-dd_sz">「十二日后，请番神姊祈禳除服。」（卷五诸罗番八 · 丧葬）</p>
+  <p id="q-dd_qy">「无升斗，以篾篮较准，与汉人交易。」（卷五诸罗番八 · 器用）</p>
+  <p id="q-bs_jc">「惟娶妇赘婿，则另室而居。」（卷五诸罗番九 · 居处）</p>
+  <p id="q-bs_ys">「又蒸熟置罂缶中，俟发变晒干，舂为曲；拌黍饭藏于瓮，数日后试其味，则投以水，蒸其液为酒。」（卷五诸罗番九 · 饮食）</p>
+  <p id="q-bs_yshi">「麻达编五色篾，束腹至胸，以便奔走。」（卷五诸罗番九 · 衣饰）</p>
+  <p id="q-bs_hs">「娶妇先以海蛤数升为聘；竹堑间用生鹿肉为定。」（卷五诸罗番九 · 婚嫁：蛤大如拇指，生海边石壁间，尽力采取日不过数升，甚珍之）</p>
+  <p id="q-bs_sz">「番死，男女老幼皆裸体用鹿皮包裹，亲属四人舁至山上。」（卷五诸罗番九 · 丧葬）</p>
+  <p id="q-bs_qy">「耕种犁耙诸器，均如汉人。食器亦有铁铛甆碗。阿里山、水沙连内山诸番，尚用木扣；平埔诸社多仿汉人。」（卷五诸罗番九 · 器用）</p>
+  <p id="q-sds_jc">「贮米另为小室，名曰圭茅。」（卷七凤山番一 · 居处：基高倍于常屋，夜则鸣锣巡守）</p>
+  <p id="q-sds_ys">「又有香米倍长大，味醇气馥，为饭逾二、三日香美不餲；每岁种植只供一年自食，不交易，价虽数倍不售也。」（卷七凤山番一 · 饮食）</p>
+  <p id="q-sds_yshi">「性好洁，冬夏男女日一浴，赤体危立，以盂水从首淋下，拭以布，或浴于溪。」（卷七凤山番一 · 衣饰）</p>
+  <p id="q-sds_hs">「琴削竹为弓，长尺余，以丝线为弦，一头以薄篾折而环其瑞，承于近弰，弦末迭系于弓面，咬其背，爪其弦，自成一音，名曰突肉。」（卷七凤山番一 · 婚嫁：琴成则女出而招之同居，曰牵手）</p>
+  <p id="q-sds_sz">「土官故，挂蓝布旛竿，鸣锣轝尸，遍游通社，名曰班柔少里堂敖敖，通社闭户。」（卷七凤山番一 · 丧葬）</p>
+  <p id="q-sds_qy">「汲水用大葫芦，曰大蒲仑。」（卷七凤山番一 · 器用）</p>
+</div>
+
+<script>
+(function () {
+  var detail = document.getElementById('mx-detail');
+  var btns = document.querySelectorAll('.mx-cell');
+  function show(btn) {
+    var q = document.getElementById('q-' + btn.dataset.q);
+    if (!q) return;
+    detail.querySelector('.where').textContent = btn.dataset.w;
+    detail.querySelector('.what').textContent = q.textContent;
+    btns.forEach(function (b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+  }
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () { show(b); });
+  });
+})();
+</script>
+
+</body>
+</html>
