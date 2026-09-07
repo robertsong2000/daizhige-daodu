@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>剪胜野闻 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #201f1d; --ink3: #232220;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --sha: #c0453c; --sha-deep: #8f322b;
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  q { quotes: none; }
+  q::before, q::after { content: none; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 28px; }
+  a { color: var(--paper); }
+
+  /* ============ 首屏：被剪开的书名 ============ */
+  header.cut {
+    min-height: 92dvh; display: flex; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .cut-stage { position: relative; width: 100%; padding-top: 60px; padding-bottom: 80px; }
+  .cut-kicker {
+    font-size: 13px; letter-spacing: 0.42em; color: var(--faint); margin-bottom: 30px;
+  }
+  .cut-title {
+    position: relative; font-size: clamp(64px, 13vw, 168px);
+    font-weight: 700; letter-spacing: 0.08em; line-height: 1.15;
+    width: max-content; max-width: 100%;
+  }
+  .cut-title .half { display: block; position: relative; transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+  .cut-title .half.top { z-index: 2; }
+  .cut-title .half.bot { z-index: 2; }
+  .cut-title.sliced .half.top { transform: translate(-14px, -12px) rotate(-0.6deg); }
+  .cut-title.sliced .half.bot { transform: translate(14px, 12px) rotate(0.4deg); }
+  .cut-title .zig {
+    position: absolute; left: -4%; top: 50%; width: 108%; height: 18px;
+    transform: translateY(-50%); z-index: 3; pointer-events: none;
+  }
+  .cut-title .zig line { stroke: var(--sha); stroke-width: 2.5; stroke-dasharray: 10 7; opacity: 0; transition: opacity .5s ease .2s; }
+  .cut-title .zig rect { fill: var(--sha); opacity: 0; transition: opacity .5s ease .2s; }
+  .cut-title.sliced .zig line, .cut-title.sliced .zig rect { opacity: 1; }
+  .cut-under {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: flex-end;
+    color: var(--sha); z-index: 1; pointer-events: none;
+    opacity: 0; transition: opacity .9s ease .3s; text-align: right;
+    font-size: clamp(16px, 2.4vw, 24px); letter-spacing: 0.3em;
+  }
+  .cut-title.sliced ~ .cut-under { opacity: 1; }
+  .cut-meta { margin-top: 42px; color: var(--dim); font-size: 15.5px; max-width: 34em; }
+  .cut-verdict { margin-top: 22px; font-size: 15px; color: var(--faint); }
+  .cut-verdict b { color: var(--sha); font-weight: 600; }
+  .cut-btn {
+    margin-top: 34px; display: inline-flex; align-items: center; gap: 10px;
+    background: none; border: 1px solid var(--faint); color: var(--paper);
+    font: inherit; font-size: 14px; letter-spacing: 0.24em;
+    padding: 10px 22px; cursor: pointer; transition: border-color .3s, color .3s;
+  }
+  .cut-btn:hover { border-color: var(--sha); color: var(--sha); }
+  .cut-scissors { width: 20px; height: 20px; }
+
+  /* ============ 引子：两副面孔 ============ */
+  .two-faces {
+    border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+    display: grid; grid-template-columns: 1fr 1fr;
+  }
+  .two-faces .face { padding: 44px 30px 50px; }
+  .two-faces .face + .face { border-left: 1px solid var(--hairline); }
+  .two-faces .tag { font-size: 12.5px; letter-spacing: 0.34em; color: var(--faint); margin-bottom: 16px; }
+  .two-faces h3 { font-size: 21px; letter-spacing: 0.1em; margin-bottom: 14px; font-weight: 600; }
+  .two-faces p { font-size: 14.5px; color: var(--dim); }
+  .two-faces .q { display: block; margin-top: 18px; font-size: 14.5px; color: var(--paper); }
+  .two-faces .face.dark-face { background: var(--ink2); }
+
+  /* ============ 野闻笺通用 ============ */
+  main { padding-bottom: 30px; }
+  .jian { padding: 84px 0 30px; }
+  .jian-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 8px; }
+  .jian-head .no {
+    font-size: 13px; color: var(--sha); letter-spacing: 0.2em;
+    border: 1px solid var(--sha-deep); padding: 3px 10px; white-space: nowrap;
+  }
+  .jian-head h2 { font-size: clamp(24px, 3.4vw, 34px); font-weight: 700; letter-spacing: 0.14em; }
+  .jian-lead { color: var(--dim); font-size: 15px; max-width: 58ch; margin: 10px 0 34px; }
+  .jian-lead b { color: var(--paper); font-weight: 600; }
+
+  /* 引文笺 */
+  .q {
+    display: block; position: relative; color: var(--paper);
+    font-size: 15.5px; padding: 14px 18px 14px 20px;
+    background: var(--ink2); border-left: 3px solid var(--sha-deep);
+    margin: 16px 0;
+  }
+  .q .note { display: block; font-size: 12.5px; color: var(--faint); margin-top: 6px; }
+  .who { display: block; font-size: 12.5px; color: var(--sha); letter-spacing: 0.18em; margin-bottom: 6px; }
+
+  .prose { font-size: 15px; color: var(--dim); max-width: 62ch; margin: 14px 0; }
+  .prose b { color: var(--paper); font-weight: 600; }
+
+  /* 野一 符瑞竖签 */
+  .omen-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+  .omen {
+    border: 1px solid var(--hairline); padding: 22px 16px 20px; position: relative;
+    background: linear-gradient(180deg, var(--ink2), transparent);
+  }
+  .omen::before {
+    content: ""; position: absolute; top: 0; left: 50%; width: 1px; height: 14px;
+    background: var(--sha); transform: translateX(-50%);
+  }
+  .omen .ot { font-size: 16px; letter-spacing: 0.12em; font-weight: 700; margin-bottom: 10px; }
+  .omen .os { font-size: 13px; color: var(--dim); line-height: 1.85; }
+  .omen .q { background: none; border: none; padding: 8px 0 0; margin: 8px 0 0; font-size: 13.5px; border-top: 1px dashed var(--hairline); }
+  .omen.wide { grid-column: span 2; }
+
+  /* 野二 举带 */
+  .belt-stage {
+    border: 1px solid var(--hairline); background: var(--ink2);
+    padding: 30px 26px 26px; margin: 26px 0; position: relative; overflow: hidden;
+  }
+  .belt-buttons { display: flex; gap: 12px; margin-bottom: 6px; }
+  .belt-buttons button {
+    font: inherit; font-size: 14px; letter-spacing: 0.2em; cursor: pointer;
+    background: none; border: 1px solid var(--faint); color: var(--dim); padding: 8px 20px;
+    transition: all .3s;
+  }
+  .belt-buttons button.on { border-color: var(--sha); color: var(--sha); }
+  .belt-well { position: relative; height: 210px; margin-top: 12px; }
+  .belt-well .silhouette {
+    position: absolute; left: 50%; top: 8px; transform: translateX(-50%);
+    width: 130px; height: 200px; border-radius: 60px 60px 8px 8px;
+    background: linear-gradient(180deg, #2a2823, #22201c);
+    border: 1px solid rgba(232,228,220,0.08);
+  }
+  .belt {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 190px; height: 26px; z-index: 2;
+    transition: top .7s cubic-bezier(.3,.9,.3,1);
+    top: 60px;
+  }
+  .belt .band { position: absolute; inset: 0; background: linear-gradient(180deg, #3a352c, #2b2720); border-top: 1px solid #57503f; border-bottom: 1px solid #171512; }
+  .belt .plate {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: 34px; height: 40px; background: linear-gradient(160deg, #b99a55, #8a713a);
+    box-shadow: 0 0 0 1px #6b5730;
+  }
+  .belt.down { top: 168px; }
+  .belt-line { position: absolute; left: 0; right: 0; border-top: 1px dashed rgba(232,228,220,0.14); font-size: 0; }
+  .belt-reading { margin-top: 4px; min-height: 54px; }
+  .belt-reading .r { display: none; font-size: 15.5px; }
+  .belt-reading .r.on { display: block; }
+  .belt-reading .r.up-r b { color: var(--paper); }
+  .belt-reading .r.down-r { color: #d8b3ae; }
+  .belt-reading .r.down-r b { color: var(--sha); }
+  .kill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--hairline); margin: 26px 0; }
+  .kill-grid .cell { padding: 26px 24px; }
+  .kill-grid .cell + .cell { border-left: 1px solid var(--hairline); }
+  .kill-grid .cell + .row2 { border-top: 1px solid var(--hairline); grid-column: 1 / 2; }
+  .kill-grid .cell h4 { font-size: 16.5px; letter-spacing: 0.1em; margin-bottom: 10px; font-weight: 600; }
+  .kill-grid .cell h4 em { font-style: normal; color: var(--sha); font-size: 12px; letter-spacing: 0.24em; margin-right: 8px; }
+  .kill-grid .cell p { font-size: 13.8px; color: var(--dim); }
+  .full-kill { border-top: 1px solid var(--hairline); margin-top: -1px; padding: 24px 24px 26px; grid-column: 1 / 3; }
+
+  /* 野三 太子三笺 */
+  .remon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 26px 0; }
+  .remon {
+    background: var(--ink2); border: 1px solid var(--hairline); position: relative;
+    padding: 40px 18px 22px; text-align: left;
+  }
+  .remon::before {
+    content: attr(data-tip); position: absolute; top: -1px; left: 50%; transform: translate(-50%,-50%);
+    background: var(--ink); border: 1px solid var(--sha-deep); color: var(--sha);
+    font-size: 12px; letter-spacing: 0.2em; padding: 2px 12px; white-space: nowrap;
+  }
+  .remon .rt { font-size: 15.5px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .remon p { font-size: 13.5px; color: var(--dim); }
+  .remon .q { background: none; border: none; border-top: 1px dashed var(--hairline); font-size: 13.5px; padding: 10px 0 0; margin-top: 10px; }
+  .grief {
+    text-align: center; margin: 34px auto 10px; max-width: 40em;
+  }
+  .grief .g-char { font-size: clamp(40px, 7vw, 72px); font-weight: 700; letter-spacing: 0.3em; color: var(--sha); }
+  .grief p { color: var(--dim); font-size: 14px; margin-top: 10px; }
+
+  /* 野四 求生 */
+  .live-wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 26px; margin: 26px 0; align-items: start; }
+  .yuan-box { border: 1px solid var(--hairline); background: var(--ink2); padding: 26px 24px; }
+  .yuan-box .yt { font-size: 17px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 6px; }
+  .yuan-box .ys { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
+  .yuan-step {
+    border-left: 2px solid var(--hairline); padding: 2px 0 2px 18px; margin-left: 4px;
+    opacity: 0.28; transition: opacity .5s;
+  }
+  .yuan-step.on { opacity: 1; border-left-color: var(--sha); }
+  .yuan-step .st { font-size: 14px; letter-spacing: 0.16em; color: var(--sha); margin-bottom: 4px; }
+  .yuan-step p { font-size: 13.8px; color: var(--dim); }
+  .yuan-btn {
+    margin-top: 20px; font: inherit; font-size: 13.5px; letter-spacing: 0.2em;
+    background: none; border: 1px solid var(--faint); color: var(--paper);
+    padding: 8px 20px; cursor: pointer; transition: all .3s;
+  }
+  .yuan-btn:hover { border-color: var(--sha); color: var(--sha); }
+  .live-side .q { font-size: 14px; }
+
+  /* 野五 布袋 */
+  .budai-row { display: grid; grid-template-columns: 240px 1fr; gap: 30px; margin: 26px 0; align-items: center; }
+  .budai-fig { text-align: center; cursor: pointer; user-select: none; }
+  .budai-fig svg { width: 170px; height: 200px; }
+  .budai-fig .hint { font-size: 12.5px; color: var(--faint); letter-spacing: 0.2em; margin-top: 8px; }
+  .gatha { max-height: 0; overflow: hidden; transition: max-height .9s ease; }
+  .gatha .q { background: none; border: none; padding: 0; margin: 0; }
+  .gatha.open { max-height: 400px; }
+  .gatha .g-line { font-size: clamp(19px, 3vw, 27px); letter-spacing: 0.22em; margin: 4px 0; }
+  .gatha .g-line em { font-style: normal; color: var(--sha); }
+
+  /* 野六 纸卷 */
+  .paper-grid { display: grid; grid-template-columns: auto 1fr; gap: 34px; margin: 26px 0; align-items: stretch; }
+  .wajuan {
+    writing-mode: vertical-rl; text-orientation: mixed;
+    height: 430px; max-width: 340px; overflow: auto;
+    border: 1px solid var(--hairline); background: var(--ink2);
+    padding: 26px 22px; font-size: 14.5px; line-height: 2.3; letter-spacing: 0.1em;
+    color: var(--paper);
+  }
+  .wajuan .wj-head { color: var(--sha); font-size: 15px; letter-spacing: 0.3em; margin-bottom: 14px; }
+  .wajuan .note { font-size: 11.5px; color: var(--faint); }
+  .paper-side .q { font-size: 14.5px; }
+
+  /* 终卷 公案 */
+  .case { border: 1px solid var(--sha-deep); margin: 30px 0; position: relative; }
+  .case .case-tab {
+    position: absolute; top: -1px; left: 28px; transform: translateY(-50%);
+    background: var(--ink); border: 1px solid var(--sha-deep);
+    color: var(--sha); font-size: 13px; letter-spacing: 0.3em; padding: 4px 16px;
+  }
+  .case .layer { padding: 30px 28px 24px; }
+  .case .layer + .layer { border-top: 1px dashed var(--hairline); }
+  .case .ly-tag { font-size: 12.5px; letter-spacing: 0.3em; color: var(--sha); margin-bottom: 10px; }
+  .case .layer p { font-size: 14.5px; color: var(--dim); margin-bottom: 8px; }
+  .case .layer.darkly { background: var(--ink2); }
+  .verdict-big { text-align: center; padding: 40px 0 10px; }
+  .verdict-big .v-word { font-size: clamp(26px, 4.5vw, 40px); letter-spacing: 0.18em; font-weight: 700; }
+  .verdict-big .v-word em { font-style: normal; color: var(--sha); }
+  .verdict-big p { color: var(--faint); font-size: 14px; margin-top: 14px; }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 40px 0 60px; margin-top: 70px; }
+  footer.page .cols { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 30px; }
+  footer.page b { display: block; font-size: 13px; letter-spacing: 0.28em; color: var(--sha); margin-bottom: 10px; font-weight: 600; }
+  footer.page div { font-size: 13px; color: var(--faint); line-height: 1.9; }
+  footer.page a { color: var(--dim); }
+
+  @media (max-width: 760px) {
+    .cut-under { display: none; }
+    .cut-title.sliced ~ .cut-under {
+      display: flex; position: static; justify-content: flex-start; text-align: left;
+      margin: 14px 0 2px; font-size: 17px;
+    }
+    .two-faces { grid-template-columns: 1fr; }
+    .two-faces .face + .face { border-left: none; border-top: 1px solid var(--hairline); }
+    .omen-grid { grid-template-columns: 1fr 1fr; }
+    .omen.wide { grid-column: span 2; }
+    .remon-grid { grid-template-columns: 1fr; }
+    .live-wrap, .budai-row, .paper-grid { grid-template-columns: 1fr; }
+    .wajuan { height: 360px; }
+    .kill-grid { grid-template-columns: 1fr; }
+    .kill-grid .cell + .cell { border-left: none; border-top: 1px solid var(--hairline); }
+    .kill-grid .cell + .row2 { grid-column: auto; }
+    .full-kill { grid-column: auto; }
+    footer.page .cols { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="cut">
+  <div class="wrap cut-stage">
+    <div class="cut-kicker">殆知阁导读 · 卷一百四十八</div>
+    <h1 class="cut-title" id="cutTitle">
+      <span class="half top">剪胜</span>
+      <span class="half bot">野闻</span>
+      <svg class="zig" viewBox="0 0 1000 24" preserveAspectRatio="none" aria-hidden="true">
+        <polyline points="0,12 40,2 80,22 120,2 160,22 200,2 240,22 280,2 320,22 360,2 400,22 440,2 480,22 520,2 560,22 600,2 640,22 680,2 720,22 760,2 800,22 840,2 880,22 920,2 960,22 1000,12" fill="none"/>
+        <rect x="0" y="11" width="1000" height="2"/>
+      </svg>
+    </h1>
+    <div class="cut-under">野史，是给正史开的一道偏缝</div>
+    <div class="cut-meta">明徐祯卿撰，子藏笔记一卷，四库存目。吴中四才子之一，替洪武朝的三十年剪了一册侧影：登龙的符瑞、带下的刑杀、太子的三谏、朝士的活命术、便服的皇帝、和一封来自倭国的硬气国书。</div>
+    <div class="cut-verdict">四库馆臣读罢，丢下一句判词：<b>真齐东野人之语，祯卿似未必至是也</b></div>
+    <button class="cut-btn" id="cutBtn" type="button">
+      <svg class="cut-scissors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/>
+        <path d="M8.2 7.4 L20 15 M8.2 16.6 L20 9"/>
+      </svg>
+      <span id="cutBtnText">剪开</span>
+    </button>
+  </div>
+</header>
+
+<section class="two-faces">
+  <div class="face">
+    <div class="tag">面孔之一 · 勤政</div>
+    <h3>缀满纸条的衣裳</h3>
+    <p>临食废箸，想起一事就写在纸条上，系在衣裳上，纸条挂得浑身都是。</p>
+    <q class="q">太祖勤于政事，每临食匕箸屡废，思得一事，即以片纸书之，缀于裳衣，或得数事，则累累满身，若悬鹑焉，洎临朝则一一行之。</q>
+  </div>
+  <div class="face dark-face">
+    <div class="tag">面孔之二 · 刑杀</div>
+    <h3>一条腰带的刑度</h3>
+    <p>同一件衣裳，腰带举与按之间，是一天的人命。满身纸条的手，也握着这条带子。</p>
+    <q class="q">太祖视朝，若举带当胸，则是日诛夷盖寡，若按而下之，则倾朝无人色矣。中涓以此察其喜怒云。</q>
+  </div>
+</section>
+
+<main>
+<div class="wrap">
+
+  <!-- 野一 龙兴 -->
+  <section class="jian" id="jian1">
+    <div class="jian-head"><span class="no mono">野一</span><h2>龙兴 · 符瑞账</h2></div>
+    <p class="jian-lead">开国要有来历。这册野闻替朱元璋记的登龙四兆，一桩比一桩玄：葬亲葬出<strong>神授的地</strong>，濯手濯出<strong>附命的白龙</strong>，未遇时已有术士隔着半个江南认出了他。符瑞账记的是天命，写账的人记的是人心怎么造天命。</p>
+    <div class="omen-grid">
+      <div class="omen wide">
+        <div class="ot">风雷葬亲</div>
+        <div class="os">至正甲申，父母长兄俱丧，贫不能具棺，辇葬山谷，绳断了，人走开的那一刻，天来接手了。凤阳陵寝的地址，是神语现场划的。</div>
+        <q class="q">忽风雷震电，太祖避树下，闻空中神语云：「孰袭取我土？」髣髴有应者，具淳皇帝讳，神曰：「为若人则已。」已而，暴风扬沙折木，天转晦。比明，往视之，土裂尸已陷人，田伯刘大秀遂归其地而辞其价，即今凤阳陵寝是其地也。</q>
+      </div>
+      <div class="omen">
+        <div class="ot">栢子潭五蛇</div>
+        <div class="os">滁州濯手，五蛇来就，祝罢纳于兜鍪。战胜祭甲，兜鍪里飞出的不是蛇。</div>
+        <q class="q">太祖在滁，尝濯手于栢子潭，有五蛇扰而就之，因祝之曰：「如天命在予，汝其来附焉。」</q>
+        <q class="q">甫奠，忽霹雳大震，白龙夭矫自兜鍪中出，挟雷声，握火光，腾空而去，诸将等自是畏服。</q>
+      </div>
+      <div class="omen">
+        <div class="ot">西湖望气</div>
+        <div class="os">刘基先看天，再看张士诚，最后在郭子兴营里认出了主公。</div>
+        <q class="q">尝携客泛舟于西湖，抵暮，仰瞻天象而言曰：「天子气在吴头楚尾，后十年当兴，予其辅之。」</q>
+        <q class="q">时郭子兴据濠上，就见之，遇太祖，曰：「吾主翁也。」深自结纳，曰：「后十载，主君当为天子，我其辅之。」乃拂衣而去。</q>
+      </div>
+      <div class="omen wide">
+        <div class="ot">羽士报主 · 天子岂可更立</div>
+        <div class="os">常遇春还在别人账下时，梦里有羽士催他起身迎主。而草莽诸将想换个主子再赌一把时，把这事按住的只有一个字：奇。</div>
+        <q class="q">梦一羽士语之曰：「起，起，此处非尔所宜托也，尔主至也。」</q>
+        <q class="q">太祖之初振也，将属皆草莽粗士，人人欲更试。太傅徐相国阴奇之，乃谓诸将曰：「天子岂可更立耶？」遂止。</q>
+      </div>
+    </div>
+  </section>
+
+  <!-- 野二 刑杀 -->
+  <section class="jian" id="jian2">
+    <div class="jian-head"><span class="no mono">野二</span><h2>刑杀 · 杀账</h2></div>
+    <p class="jian-lead">这一笺最长。弓弦、腰带、赐膳、灯谜、贺表、失朝，全是日常器物，件件可以杀人。<strong>杀账里没有刀</strong>。</p>
+
+    <div class="belt-stage">
+      <div class="belt-buttons">
+        <button type="button" id="beltUp" class="on">举带当胸</button>
+        <button type="button" id="beltDown">按带而下</button>
+      </div>
+      <div class="belt-well">
+        <div class="silhouette"></div>
+        <div class="belt-line" style="top: 59px;"></div>
+        <div class="belt-line" style="top: 167px;"></div>
+        <div class="belt" id="belt">
+          <div class="band"></div>
+          <div class="plate"></div>
+        </div>
+      </div>
+      <div class="belt-reading">
+        <div class="r up-r on" id="readUp">腰带提在胸口：<b>是日诛夷盖寡</b>，今天朝上基本不杀人，各衙门可以正常办事。</div>
+        <div class="r down-r" id="readDown">腰带按了下去：<b>倾朝无人色</b>，散朝的路上没人敢抬头，没人敢出声。</div>
+      </div>
+    </div>
+
+    <div class="kill-grid">
+      <div class="cell">
+        <h4><em>弓弦</em>张士诚之死</h4>
+        <p>亡国之君被押到面前，阶下人先抬眼反问了一句，然后太祖没有用刑具。</p>
+        <q class="q">「盍视我？」对曰：「天日照尔不照我，视尔何为哉？」帝以弓弦缢杀之。</q>
+        <p>后头还跪着前元旧臣周伯琦，问话里一个「资贼」，答不上来的人先于心死了。</p>
+        <q class="q">帝曰：「元君寄汝以心膂之责，乃资贼以为乱耶？」伯琦惶惧不能答。</q>
+      </div>
+      <div class="cell">
+        <h4><em>失朝</em>宋濂之狱</h4>
+        <p>致仕的老师傅没赶上圣节朝贺，查出是病了，仍旧下狱、诛、没家。太子投水相谏，换来一句狠话；救太子的人，按救时的衣着分赏罚。</p>
+        <q class="q">帝怒曰：「候汝为天子而宥之。」太子惶惧不知所出，遂赴溺，左右救得免。帝且喜且骂曰：「痴儿子，我杀人，何预汝耶？」因徧录救溺者，凡衣履入水者擢三级，解衣舄者皆斩之，曰：「太子溺，候汝等解衣而救之乎？」</q>
+        <p>马皇后那天特意吃素。太祖摔了筷子就走。</p>
+        <q class="q">对曰：「妾闻宋先生坐罪，薄为作福佑之。」帝艴然投箸而起。</q>
+      </div>
+      <div class="cell">
+        <h4><em>贺表</em>文字之狱</h4>
+        <p>杭州教授徐一夔上贺表，表里有「光天之下」「则」字。在做过和尚的皇帝耳朵里，光是剃发，则是近贼。此后天下官员上表，得照他亲自定的格式抄。</p>
+        <q class="q">帝览之，大怒曰：「腐儒乃如是侮我耶？光者僧也，以我尝从释也，光则摩发之谓矣。则字近贼，罪坐不敬。」命收斩之。礼臣大惧，因请曰：「愚蒙不知忌讳，乞降表式。」帝因自为文式布天下。</q>
+      </div>
+      <div class="cell row2">
+        <h4><em>灯谜</em>上元之夜</h4>
+        <p>京师灯会上有人画一个妇人怀抱西瓜。淮西。明日，军士屠戮居民，街巷为空。</p>
+        <q class="q">画一妇怀瓜，深触忌犯。帝就视，因喻其旨，甚衔之。明日，令军士大僇居民，空其室，盖太后祖贯淮西，故云。</q>
+      </div>
+      <div class="cell">
+        <h4><em>失期</em>周衡弃市</h4>
+        <p>他当面驳过皇帝的免税复征，说这是示天下以不信。后来他回家探亲晚归朝一天，皇帝把那句话原样还给了他。</p>
+        <q class="q">右正言周衡进曰：「陛下有诏已蠲秋税，天下幸甚，今复征之，是示天下以不信也。」上曰：「然。」</q>
+        <q class="q">上怒曰：「朕不信于天下，汝不信于天子矣。」遂命弃市。</q>
+      </div>
+      <div class="cell">
+        <h4><em>赐膳</em>徐达之疽</h4>
+        <p>魏国公背疽，皇帝几次探病，赐了一顿膳。徐达哭着吃完，先打发医工逃命。这道赐膳后来在民间长成了另一道菜的名字，蒸鹅。</p>
+        <q class="q">帝数往视之，大集医徒治疗。且久，病少差，帝忽赐膳，魏公对使者流涕而食之，密令医工逃逸。未几，告薨。</q>
+      </div>
+    </div>
+  </section>
+
+  <!-- 野三 太子 -->
+  <section class="jian" id="jian3">
+    <div class="jian-head"><span class="no mono">野三</span><h2>太子 · 谏账</h2></div>
+    <p class="jian-lead">懿文太子朱标在这册书里只做一件事：接父亲扔过来的东西。棘杖、图轴、剑锋、一车尸骨，他都接住了。</p>
+    <div class="remon-grid">
+      <div class="remon" data-tip="第一谏 · 棘杖">
+        <div class="rt">棘杖委地</div>
+        <p>皇帝把一根带刺的杖丢在地上，叫儿子拿。儿子为难，父亲说出了那句著名的嘱托：我替你把刺拔干净。</p>
+        <q class="q">帝曰：「汝弗能执欤？使我运琢以遗汝，岂不美哉？今所诛者，皆天下之刑余也，除之以安汝，福莫大焉。」</q>
+      </div>
+      <div class="remon" data-tip="第二谏 · 尧舜">
+        <div class="rt">尧舜之对</div>
+        <p>儿子的回话成了千古名句，也把父亲彻底点着了。椅子砸过去，太子跑，怀里掉出一张画。</p>
+        <q class="q">太子顿首曰：「上有尧舜之君，下有尧舜之民。」帝愈怒，即以所坐榻射之，太子走，帝追之，太子探怀中所绘图遗于地，帝展视之，大恸而止。</q>
+      </div>
+      <div class="remon" data-tip="第三谏 · 图轴">
+        <div class="rt">怀中之画</div>
+        <p>画上是很多年前：陈友谅追兵在后，母亲背着年幼的朱元璋在逃。杀兴正盛的皇帝，被自己的逃命样子看住了。</p>
+        <q class="q">太祖尝为伪汉陈友谅所追，太后负之而逃，太子私绘成图轴。及太后崩，帝惨不乐，愈肆诛虐。太子谏曰：「陛下诛夷过滥，恐伤天和。」帝默然。</q>
+      </div>
+    </div>
+    <div class="kill-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="cell">
+        <h4><em>剑逐</em>大杖则走</h4>
+        <p>为庶母丧服礼制争辩，皇帝提剑追，太子边跑边引古礼自辩。老儒一句话点破：礼可以慢慢讲，君父之命不能违。</p>
+        <q class="q">太子走，且曰：「大杖则走。」</q>
+        <q class="q">翰林正字桂彦良谏太子曰：「礼可缓，君父之命不可违也，嫌隙由是生矣。」太子感悟，遂齐衰见帝谢罪，帝怒始释。</q>
+      </div>
+      <div class="cell">
+        <h4><em>尸骨</em>激发之教</h4>
+        <p>嫌儿子仁柔，偷偷叫人在他面前拉过一整车尸骨。儿子的反应是合掌。</p>
+        <q class="q">一日，窃令人载尸骨满舆当其前激发之，太子不胜惨蹙，合掌称之曰：「善哉！善哉！」</q>
+      </div>
+    </div>
+    <div class="grief">
+      <div class="g-char">大恸而止</div>
+      <p>谏账记到这里。洪武二十五年太子先薨，这册书没有记那一天。</p>
+    </div>
+  </section>
+
+  <!-- 野四 求生 -->
+  <section class="jian" id="jian4">
+    <div class="jian-head"><span class="no mono">野四</span><h2>求生 · 活命账</h2></div>
+    <p class="jian-lead">洪武朝的官场秘学：如何在皇帝身边活下来。这一笺收四术，<strong>疯、让、防、俗</strong>，术术保命。</p>
+    <div class="live-wrap">
+      <div class="yuan-box">
+        <div class="yt">袁凯装疯</div>
+        <div class="ys">御史袁凯 · 三拍走完，活到太祖晏驾之后</div>
+        <div class="yuan-step on" id="ystep1">
+          <div class="st">第一拍 · 两端</div>
+          <p>皇帝问：朕要杀疑囚，太子要放，你说谁对。他说了句两边都对的话，被当骑墙下狱。</p>
+        </div>
+        <div class="yuan-step" id="ystep2">
+          <div class="st">第二拍 · 佯狂</div>
+          <p>放出来之后开始装疯：捡脏东西吃。皇帝拿木锥扎他，他冲着皇帝大笑。</p>
+        </div>
+        <div class="yuan-step" id="ystep3">
+          <div class="st">第三拍 · 自锁</div>
+          <p>回家自己把木榻锁在床下。使者来召，他就锁着链子坐在那儿唱歌。使者回报，皇帝不疑。直到晏驾才出来。</p>
+        </div>
+        <button class="yuan-btn" id="yuanBtn" type="button">下一拍</button>
+      </div>
+      <div class="live-side">
+        <div class="who">袁凯 · 原话</div>
+        <q class="q">凯顿首进曰：「陛下欲杀之，法之正也，今太子欲生之，心之慈也。」帝以凯持两端，下凯狱，三日不食，出之，遂佯狂病颠，拾啖秽物。</q>
+        <div class="who">袁凯 · 收梢</div>
+        <q class="q">久之，上使人召之，凯慢坐对使者歌，使者怜其缧，还奏状，上不为疑。已而，太祖晏驾，凯始出，优游以终。</q>
+        <p class="prose"><b>让术：</b>周玄素奉诏在殿壁画天下江山图，他说没走过九州不敢落笔，请陛下起个稿。稿成之后他只回了一句。</p>
+        <q class="q">玄素进曰：「陛下山河已定，岂可摇动？」帝笑而唯之。</q>
+        <p class="prose"><b>防术：</b>徐达病重，皇帝忽然亲至。太傅从枕头底下摸出一柄剑给他看。皇帝说：收好，落到别人手里，是要拿它杀你的。从此功臣家的门，皇帝不再登了。</p>
+        <q class="q">太傅病笃，帝忽至，太傅自枕蓐下出一剑以示，帝曰：「戒之戒之，若他人得，以僇汝也。」自后诸功臣家不一至矣。</q>
+        <p class="prose"><b>俗术：</b>唐肃陪膳完把筷子拱起来行了个乡礼，皇帝问这是什么礼，答：臣少习俗礼。皇帝说俗礼可用在天子身上吗。</p>
+        <q class="q">帝问曰：「此何礼也？」肃对曰：「臣少习俗礼。」帝怒曰：「俗礼可施之天子乎？」罪坐不敬，谪戍濠州。</q>
+      </div>
+    </div>
+  </section>
+
+  <!-- 野五 微行 -->
+  <section class="jian" id="jian5">
+    <div class="jian-head"><span class="no mono">野五</span><h2>微行 · 便服账</h2></div>
+    <p class="jian-lead">皇帝换上布衣走街市。三则微行，一则比一则冷：<strong>一句称呼籍没一坊，一场对饮送出一个按察使，一座废寺的墙上留着一道没敢回话的劝</strong>。</p>
+    <div class="kill-grid">
+      <div class="cell">
+        <h4><em>称呼</em>老头儿</h4>
+        <p>街上一声「老头儿」，皇帝记到了徐达家，绕着屋子走，一言不发。徐夫人吓得先替丈夫请罪。皇帝说不是。然后讲了他真正在意的事。</p>
+        <q class="q">太祖尝微行京城中，闻一老媪密指呼上为老头儿。帝大怒，至徐太傅家，绕室而行，沉吟不已。</q>
+        <q class="q">曰：「张士诚小窃江东，吴氏至今呼为张王。今朕为天子，此邦居民呼朕为老头儿，何也？」即令籍没民家甚众。</q>
+      </div>
+      <div class="cell">
+        <h4><em>对句</em>司土神让我坐</h4>
+        <p>酒坊满座，只有供土地神的小几空着，皇帝把神几拎到地上：神姑让我坐。对面是个重庆来的监生，一联对完，第二天就做官了。</p>
+        <q class="q">帝因属词曰：「千里为重，重水重山重庆府。」生应声曰：「一人成大，大邦大国大明君。」</q>
+        <q class="q">及既至，帝笑曰：「秀才忆昨与天子对席乎？」生惶惧谢罪。又曰：「汝欲登台端乎？」遂命除为按察使。金陵民家至今供司土神于地，本此。</q>
+      </div>
+      <div class="cell row2" style="grid-column: 1 / 3;">
+        <h4><em>废寺</em>布袋僧的偈</h4>
+        <p>一座戈戟围着的空寺，壁上墨迹犹新。政尚严猛四个字，画里人没说，偈里也没说，但皇帝看懂了，马上封寺拿人，没拿到。</p>
+        <q class="q">壁间画一布袋僧，墨痕犹新，傍题一偈云：「大千世界浩茫茫，收拾都将一袋藏。毕竟有收还有散，放宽些子又何妨？」盖帝政尚严猛，故以此讽之。急命武士索其人，不获。</q>
+        <div class="budai-row" style="margin-top: 18px;">
+          <div class="budai-fig" id="budaiFig" role="button" tabindex="0" aria-label="点开布袋看偈">
+            <svg viewBox="0 0 170 200" aria-hidden="true">
+              <ellipse cx="85" cy="182" rx="62" ry="10" fill="#12110f"/>
+              <path d="M45 92 C40 150 60 180 85 180 C110 180 130 150 125 92 C120 60 50 60 45 92 Z" fill="#2b2721" stroke="#4a4335" stroke-width="2"/>
+              <path d="M48 92 C55 80 115 80 122 92" fill="none" stroke="#4a4335" stroke-width="2"/>
+              <path d="M78 62 C70 40 100 40 92 62" fill="none" stroke="#4a4335" stroke-width="2"/>
+              <rect x="76" y="76" width="18" height="12" fill="#191917" stroke="#c0453c" stroke-width="1.4"/>
+            </svg>
+            <div class="hint" id="budaiHint">点开布袋</div>
+          </div>
+          <div class="gatha" id="gatha">
+            <q class="q g-line">大千世界浩茫茫，</q>
+            <q class="q g-line">收拾都将一袋藏。</q>
+            <q class="q g-line">毕竟有收还有散，</q>
+            <q class="q g-line"><em>放宽些子又何妨？</em></q>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 野六 文书 -->
+  <section class="jian" id="jian6">
+    <div class="jian-head"><span class="no mono">野六</span><h2>文书 · 纸账</h2></div>
+    <p class="jian-lead">这一笺全是纸：国书、答诗、密信、民谣。洪武朝的外交与人心，都压在纸上。</p>
+    <div class="paper-grid">
+      <div class="wajuan">
+        <div class="wj-head">倭国求通表文（节）</div>
+        <q class="q">故天下者天下之天下也，非一人之天下也。臣居远疆，偏倭小国，城池不满六十座，封疆不足二千里，故常存知足之心，而知足常足也。</q>
+        <q class="q">今闻大国有兴战之策<span class="note">（「今闻大国有兴战之策」，「策」原作「岂」，据清胜朝遗事本改。）</span>小邦有却兵之法，岂肯轨途拱奉天颜？顺之未必其生，逆之未必其死。</q>
+      </div>
+      <div class="paper-side">
+        <p class="prose">全书最奇的一张纸。怀良亲王的国书递到南京，先讲一遍「天下者天下之天下」的大道理，再摊牌：<b>顺之未必其生，逆之未必其死</b>。四库馆臣没骂这封信，徐祯卿把它一字不改抄进了书里。</p>
+        <p class="prose">同一笺里，北遁的元顺帝回过一首答诗，尾联温软得近乎揶揄。</p>
+        <div class="who">元帝答明使诗</div>
+        <q class="q">金陵使者渡江来，万里风烟一道开。王气有时还自息，圣恩无处不昭回。信知海岳归明主，亦喜江南有俊才。归去诚心烦为说，春风先到凤凰台。</q>
+        <p class="prose">还有一封不敢拆的信。僧宗泐奉旨西行求经，路上遇老僧拦住，替他带一封信回来，嘱他千万别发。信呈上去，竟是太祖自己即位那年做的告祭文，纸墨如故。</p>
+        <p class="prose">纸也记民谣。姑苏城灭之前，市井里就唱完了它的结局，连主政三人的姓氏都排好了。</p>
+        <div class="who">十七字谣</div>
+        <q class="q">「张王做事业，只凭黄蔡叶，一夜东风来，干鳖。」及国事既去，太祖收其臣黄、蔡、叶三人者，刳其肠而悬之，至成枯腊。</q>
+      </div>
+    </div>
+  </section>
+
+  <!-- 终卷 公案 -->
+  <section class="jian" id="jian7">
+    <div class="jian-head"><span class="no mono">终卷</span><h2>一桩公案</h2></div>
+    <p class="jian-lead">书里最出名的段子，和四库馆臣最恼的段子，是同一段：徐达追元顺帝，追上了，忽然收兵。这桩事在书里过了<strong>三道手</strong>。</p>
+    <div class="case">
+      <div class="case-tab">三层对读</div>
+      <div class="layer">
+        <div class="ly-tag">第一层 · 野闻本文</div>
+        <p>常遇春大怒驰归，告帝：达反矣。徐达算准了他会去告状，留兵北上，自己仗剑回来请罪。殿前自辩的一段，句句在理。</p>
+        <q class="q">且吾之不擒元帝，亦筹之熟矣，彼虽微也，亦尝南御中国，我执以归，将曷治焉？天命在上，已知之矣，顾达何人，敢以自外？</q>
+        <q class="q">帝重感悟，结誓而还，遂修好如故。</q>
+      </div>
+      <div class="layer darkly">
+        <div class="ly-tag">第二层 · 书内按语</div>
+        <p>书里另有一段按语，立场完全相反，夸徐达深知大体，是开国元勋。同一册书，一篇文章里两个徐达。</p>
+        <q class="q">按：获元后妃孙子不行献俘礼及元宗室皆封以官，此我太祖忠厚之道，兴灭继绝之仁，度越前代者也。</q>
+      </div>
+      <div class="layer">
+        <div class="ly-tag">第三层 · 四库提要</div>
+        <p>馆臣在存目里点名驳斥，说这段故事经不起推敲，连作者是谁都不肯认账（提要原文无标点，照录）。</p>
+        <q class="q">不着撰人名氏所记皆明太祖初年之事亦多互见他书</q>
+        <q class="q">书中所纪亦往往不经如谓徐达追元顺帝将及之而遽班师常遇春愬于帝达人自疑拔剑斩阍而出真齐东野人之语祯卿似未必至是也</q>
+      </div>
+    </div>
+    <p class="prose">野闻的妙处正在这里：它不负责为真。它负责把正史不肯留缝的年月，剪开一道偏缝，让你看一眼另一副面孔。至于缝里那个洪武帝，究竟是缀满纸条的勤政者，还是按着腰带的屠伯，徐祯卿把剪刀留给了读者。</p>
+    <div class="verdict-big">
+      <div class="v-word">剪胜<em>野</em>闻</div>
+      <p>胜者书其胜，闻者自剪裁</p>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<footer class="page">
+  <div class="wrap cols">
+    <div>
+      <b>文本来源</b>
+      殆知阁古代文献 子藏 笔记 剪胜野闻（去空白9141字实测，一卷，附四库全书总目提要存目）<br>
+      <a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20（简体库与导读仓库）</a>
+    </div>
+    <div>
+      <b>核验声明</b>
+      本页共 <span id="qcount">0</span> 处引文经脚本与库内文件逐字核验：引文先去标点、归一空白后验为库内原文连续子串；倭国表文一处跨行内校记，照录库本夹注原文；四库提要两处依库本无标点原样照录。栢、髣髴、艴、僇、徧、舄、愬、刳、缧、洎等用字一依库本照录。
+    </div>
+    <div>
+      <b>读法提醒</b>
+      本卷所记符瑞感应、梦兆神语之说，皆明人野史笔法与时代想象，刑杀诸条多孤证传闻，四库已断其不经，请以史料批判眼光读之。导读系列总目见 <a href="mulu.html">mulu.html</a>。
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var title = document.getElementById('cutTitle');
+  var btn = document.getElementById('cutBtn');
+  var btnText = document.getElementById('cutBtnText');
+  btn.addEventListener('click', function(){
+    var on = title.classList.toggle('sliced');
+    btnText.textContent = on ? '合拢' : '剪开';
+  });
+
+  var belt = document.getElementById('belt');
+  var bUp = document.getElementById('beltUp');
+  var bDown = document.getElementById('beltDown');
+  var rUp = document.getElementById('readUp');
+  var rDown = document.getElementById('readDown');
+  function setBelt(down){
+    belt.classList.toggle('down', down);
+    bUp.classList.toggle('on', !down);
+    bDown.classList.toggle('on', down);
+    rUp.classList.toggle('on', !down);
+    rDown.classList.toggle('on', down);
+  }
+  bUp.addEventListener('click', function(){ setBelt(false); });
+  bDown.addEventListener('click', function(){ setBelt(true); });
+
+  var steps = [document.getElementById('ystep1'), document.getElementById('ystep2'), document.getElementById('ystep3')];
+  var cur = 0;
+  document.getElementById('yuanBtn').addEventListener('click', function(){
+    cur = (cur + 1) % 3;
+    for (var i = 0; i < 3; i++) steps[i].classList.toggle('on', i === cur);
+  });
+
+  var fig = document.getElementById('budaiFig');
+  var gatha = document.getElementById('gatha');
+  var hint = document.getElementById('budaiHint');
+  function toggleGatha(){
+    var open = gatha.classList.toggle('open');
+    hint.textContent = open ? '收进布袋' : '点开布袋';
+  }
+  fig.addEventListener('click', toggleGatha);
+  fig.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleGatha(); } });
+
+  var qc = document.querySelectorAll('q.q').length;
+  var qcEl = document.getElementById('qcount');
+  if (qcEl) qcEl.textContent = String(qc);
+})();
+</script>
+</body>
+</html>
