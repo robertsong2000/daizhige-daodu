@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>癸辛杂识 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink2: #201f1d;
+    --paper: #e8e4dc;
+    --dim: #a39e93;
+    --faint: #6e6a61;
+    --gold: #c9963f;
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 28px; }
+  a { color: var(--gold); }
+
+  /* ===== 夜灯开场 ===== */
+  .lampstage {
+    min-height: 94vh; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .lamp {
+    width: 88px; height: 88px; border-radius: 50%;
+    background: radial-gradient(circle at 50% 42%, #f5e3bb 0%, var(--gold) 46%, #6b4c1d 100%);
+    box-shadow: 0 0 60px 18px rgba(201,150,63,0.28), 0 0 160px 60px rgba(201,150,63,0.10);
+    animation: flick 4.2s ease-in-out infinite;
+    position: relative; z-index: 2;
+  }
+  .lamp::after {
+    content: ""; position: absolute; inset: -34px; border-radius: 50%;
+    border: 1px solid rgba(201,150,63,0.25);
+  }
+  @keyframes flick {
+    0%, 100% { box-shadow: 0 0 60px 18px rgba(201,150,63,0.28), 0 0 160px 60px rgba(201,150,63,0.10); }
+    38% { box-shadow: 0 0 52px 14px rgba(201,150,63,0.22), 0 0 140px 52px rgba(201,150,63,0.08); }
+    61% { box-shadow: 0 0 70px 22px rgba(201,150,63,0.33), 0 0 180px 70px rgba(201,150,63,0.12); }
+  }
+  .vquote {
+    position: absolute; right: 12%; top: 50%; transform: translateY(-50%);
+    writing-mode: vertical-rl; letter-spacing: 0.32em;
+    color: var(--dim); font-size: 15px; height: 21em;
+    border-right: 1px solid var(--hairline); padding-right: 18px;
+  }
+  .titlebar { position: absolute; left: 8%; bottom: 9%; z-index: 2; }
+  .kicker { font-size: 13px; letter-spacing: 0.42em; color: var(--faint); }
+  .titlebar h1 {
+    font-size: clamp(40px, 6.4vw, 72px); font-weight: 700;
+    letter-spacing: 0.16em; margin: 10px 0 6px;
+  }
+  .who { color: var(--dim); font-size: 16px; }
+  .seal {
+    display: inline-block; margin-top: 22px; padding: 9px 13px;
+    border: 2px solid var(--gold); color: var(--gold);
+    font-size: 15px; letter-spacing: 0.3em; transform: rotate(-3deg);
+  }
+
+  /* ===== 碎屑墙 ===== */
+  section { padding: 84px 0 30px; }
+  .wallnote { color: var(--dim); font-size: 14.5px; max-width: 58ch; margin-bottom: 26px; }
+  .wall { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip {
+    font-size: 12px; line-height: 1; padding: 6px 9px;
+    border: 1px solid var(--hairline); color: var(--faint);
+    border-radius: 2px; letter-spacing: 0.06em;
+  }
+  .chip.gold {
+    color: var(--gold); border-color: rgba(201,150,63,0.55);
+    cursor: pointer; font-weight: 600;
+  }
+  .chip.gold:hover { background: rgba(201,150,63,0.14); }
+
+  /* ===== 章头 ===== */
+  .chaphead { display: flex; align-items: baseline; gap: 20px; margin-bottom: 14px; }
+  .cnum {
+    font-size: 44px; font-weight: 700; color: transparent;
+    -webkit-text-stroke: 1.4px var(--gold); line-height: 1;
+  }
+  .chaphead h2 { font-size: 25px; letter-spacing: 0.12em; font-weight: 600; }
+  .csub { color: var(--faint); font-size: 13px; letter-spacing: 0.22em; }
+  .chap-p { color: var(--paper); font-size: 15.5px; max-width: 62ch; margin: 14px 0; }
+  .chap-p em { font-style: normal; color: var(--gold); }
+  .aside { color: var(--dim); font-size: 13.5px; max-width: 58ch; margin: 8px 0 4px; }
+
+  /* ===== 引文卡 ===== */
+  .q {
+    background: var(--ink2); border-left: 3px solid var(--gold);
+    padding: 18px 24px; margin: 18px 0; max-width: 66ch;
+  }
+  .q p { font-size: 15.5px; letter-spacing: 0.02em; }
+  .q .qsrc { display: block; margin-top: 10px; font-size: 12px; color: var(--faint); letter-spacing: 0.14em; }
+  .duo { display: flex; gap: 18px; flex-wrap: wrap; }
+  .duo .q { flex: 1 1 280px; }
+
+  /* ===== 陵位 ===== */
+  .tombs {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+    gap: 12px; margin: 24px 0 8px;
+  }
+  .tomb {
+    border: 1px solid var(--hairline); background: var(--ink2);
+    padding: 14px 14px 12px; cursor: pointer; text-align: left;
+    color: var(--paper); font-family: inherit; font-size: 14px;
+    transition: border-color 0.25s ease;
+  }
+  .tomb:hover { border-color: rgba(201,150,63,0.6); }
+  .tomb .tname { font-size: 16px; font-weight: 600; letter-spacing: 0.1em; }
+  .tomb .tbatch { display: block; font-size: 11px; color: var(--faint); letter-spacing: 0.2em; margin: 3px 0 8px; }
+  .tomb .tcontent { display: none; color: var(--gold); font-size: 13px; line-height: 1.7; }
+  .tomb.open .tcontent { display: block; }
+  .tomb.open { border-color: var(--gold); }
+  .tomb.li { border-color: rgba(201,150,63,0.5); }
+  .tombs-hint { color: var(--faint); font-size: 12.5px; letter-spacing: 0.12em; margin-bottom: 6px; }
+
+  /* ===== 纸 ===== */
+  .paperzone { display: flex; gap: 22px; flex-wrap: wrap; margin: 26px 0; align-items: stretch; }
+  .paper {
+    background: var(--paper); color: #23211d;
+    padding: 26px 24px; flex: 1 1 300px; max-width: 420px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    position: relative;
+  }
+  .paper .phead {
+    font-size: 12px; letter-spacing: 0.34em; color: #8a7f6a;
+    border-bottom: 1px solid #c9c2b4; padding-bottom: 8px; margin-bottom: 14px;
+  }
+  .paper.vtext { writing-mode: vertical-rl; height: 430px; max-width: 100%; }
+  .paper.vtext p { font-size: 13.5px; line-height: 2.1; letter-spacing: 0.12em; margin-left: 14px; }
+  .paper .stamp {
+    position: absolute; right: 14px; bottom: 14px;
+    border: 2px solid #a04a38; color: #a04a38;
+    font-size: 13px; padding: 4px 7px; letter-spacing: 0.2em;
+    transform: rotate(-4deg); opacity: 0.85;
+  }
+  .paper.poem { max-width: 100%; flex-basis: 100%; }
+  .paper.poem p {
+    font-size: clamp(17px, 2.4vw, 23px); line-height: 2; letter-spacing: 0.2em;
+    text-align: center; margin: 6px 0;
+  }
+  .paper.poem .phead { text-align: center; }
+
+  /* ===== 学规五等 ===== */
+  .ladder { margin: 26px 0 10px; max-width: 640px; }
+  .step {
+    display: grid; grid-template-columns: 74px 150px 1fr; gap: 16px;
+    align-items: baseline; padding: 13px 6px;
+    border-top: 1px solid var(--hairline); font-size: 14.5px;
+  }
+  .step:last-child { border-bottom: 1px solid var(--hairline); }
+  .step .lv { color: var(--gold); letter-spacing: 0.16em; font-size: 13px; }
+  .step .tm { font-weight: 600; letter-spacing: 0.08em; }
+  .step .ds { color: var(--dim); font-size: 13.5px; }
+
+  /* ===== 三十六签 ===== */
+  .sig-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 10px; margin: 26px 0 8px; perspective: 900px;
+  }
+  .sig {
+    position: relative; height: 92px; border: 1px solid var(--hairline);
+    background: var(--ink2); color: var(--paper); font-family: inherit;
+    cursor: pointer; transform-style: preserve-3d;
+    transition: transform 0.5s ease; padding: 0;
+  }
+  .sig.flip { transform: rotateY(180deg); }
+  .sig .sfront, .sig .sback {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; backface-visibility: hidden;
+    padding: 8px; text-align: center;
+  }
+  .sig .sfront { font-size: 13px; line-height: 1.5; letter-spacing: 0.04em; }
+  .sig .sfront small { display: block; margin-top: 7px; font-size: 10px; color: var(--faint); letter-spacing: 0.18em; }
+  .sig .sback {
+    transform: rotateY(180deg); font-size: 12px; color: var(--gold);
+    line-height: 1.7; letter-spacing: 0.03em;
+  }
+  .sig.hot { border-color: rgba(201,150,63,0.65); }
+  .sig.hot .sfront { color: var(--gold); }
+  .sig-note { color: var(--dim); font-size: 13.5px; max-width: 62ch; margin-top: 14px; }
+
+  /* ===== 御押褪色 ===== */
+  .yaseal { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 8px; }
+  .yitem {
+    border: 1px solid var(--hairline); background: var(--ink2);
+    min-width: 118px; padding: 12px 14px; text-align: center;
+  }
+  .yitem .yname { font-size: 14px; letter-spacing: 0.14em; color: var(--dim); }
+  .yitem .ymark {
+    margin-top: 8px; font-size: 13px; color: var(--gold); letter-spacing: 0.06em;
+  }
+  .yitem .ymark.gone { color: transparent; border: 1px dashed var(--faint); border-radius: 50%; width: 34px; height: 34px; line-height: 32px; margin: 8px auto 0; }
+  .yitem .ymark.half { color: var(--faint); }
+  .yitem .ymark.faded { color: var(--faint); }
+
+  /* ===== 勘注与时代局限 ===== */
+  .kz, .limit {
+    background: var(--ink2); max-width: 760px;
+    margin: 22px 0; padding: 26px 30px 22px;
+  }
+  .kz { border-left: 5px solid var(--faint); }
+  .limit { border-left: 5px solid var(--gold); }
+  .kz h3, .limit h3 { font-size: 15px; letter-spacing: 0.3em; margin-bottom: 14px; color: var(--dim); }
+  .limit h3 { color: var(--gold); }
+  .kz ol { padding-left: 20px; }
+  .kz li, .limit li { font-size: 14px; color: var(--dim); margin: 7px 0; line-height: 1.85; }
+  .kz li b, .limit li b { color: var(--paper); font-weight: 600; }
+  .limit { padding-bottom: 8px; }
+
+  footer {
+    border-top: 1px solid var(--hairline); margin-top: 70px;
+    padding: 34px 0 60px; color: var(--faint); font-size: 13px; line-height: 2.1;
+  }
+  footer .fin { color: var(--dim); font-size: 15px; letter-spacing: 0.24em; margin-bottom: 12px; }
+
+  @media (max-width: 700px) {
+    .vquote { display: none; }
+    .step { grid-template-columns: 60px 1fr; }
+    .step .ds { grid-column: 2; }
+  }
+
+</style>
+</head>
+<body id="top">
+
+<header class="lampstage">
+  <div class="lamp"></div>
+  <div class="vquote">余卧病荒间，来者率野人畸士，放言善谑，醉谈笑语，靡所不有</div>
+  <div class="titlebar wrap">
+    <div class="kicker">殆知阁导读 · 宋季遗民笔记</div>
+    <h1>癸辛杂识</h1>
+    <div class="who">周密 撰，宋亡之后，杭州癸辛街</div>
+    <div class="seal">姑妄言之</div>
+  </div>
+</header>
+
+<main>
+
+<section class="wrap">
+  <div class="chaphead">
+    <div class="cnum">墙</div>
+    <h2>四百六十三题</h2>
+    <div class="csub">全书碎屑</div>
+  </div>
+  <p class="wallnote">周密把书分成前集、后集、续集上下、别集上下六册，库本以○标目，连同自序共四百六十三题，一题一事，短则数十字，长不过一卷。这里把题名全部铺开，像一地散场后的碎屑；本篇带走的几片，用金色标出，可以点。</p>
+  <div class="wall">
+      <span class="chip gold" data-target="#top">序</span>
+      <span class="chip">胎息</span>
+      <span class="chip">陈圣观梦</span>
+      <span class="chip">改春州为县</span>
+      <span class="chip">吴兴园圃</span>
+      <span class="chip">南沈尚书园</span>
+      <span class="chip">假山</span>
+      <span class="chip">艮岳</span>
+      <span class="chip">炮祸</span>
+      <span class="chip">牛女</span>
+      <span class="chip">蕈毒</span>
+      <span class="chip">呼名怖鬼</span>
+      <span class="chip">闽鄞二庙</span>
+      <span class="chip">健啖</span>
+      <span class="chip">科举论</span>
+      <span class="chip">荐杨诚斋</span>
+      <span class="chip">王小官人</span>
+      <span class="chip">化蝶</span>
+      <span class="chip">玉环</span>
+      <span class="chip">□书亟书</span>
+      <span class="chip">乘槎</span>
+      <span class="chip">游月宫</span>
+      <span class="chip">郑仙姑</span>
+      <span class="chip">寡欲</span>
+      <span class="chip">芍药</span>
+      <span class="chip">三建汤</span>
+      <span class="chip">杨凝式僧净端</span>
+      <span class="chip">迎曙</span>
+      <span class="chip">白帽</span>
+      <span class="chip">送刺</span>
+      <span class="chip">简椠</span>
+      <span class="chip">人妖</span>
+      <span class="chip">四韩</span>
+      <span class="chip">韩彦古</span>
+      <span class="chip">松五粒</span>
+      <span class="chip">唐重浮屠</span>
+      <span class="chip"></span>
+      <span class="chip">乞食歌姬院</span>
+      <span class="chip">袁彦纯客诗</span>
+      <span class="chip">长沙茶具</span>
+      <span class="chip">真西山入朝诗</span>
+      <span class="chip">赵子固梅谱</span>
+      <span class="chip">笔墨</span>
+      <span class="chip">辨章</span>
+      <span class="chip">来牟</span>
+      <span class="chip">父客</span>
+      <span class="chip">误著祭服</span>
+      <span class="chip">向胡命子名</span>
+      <span class="chip">贾母饰终</span>
+      <span class="chip">孝宗行三年丧</span>
+      <span class="chip">施行韩震</span>
+      <span class="chip">理宗初潜</span>
+      <span class="chip">魏子之谤</span>
+      <span class="chip">徽宗梓宫</span>
+      <span class="chip">成均旧规</span>
+      <span class="chip">光斋</span>
+      <span class="chip">诸斋祠先辈</span>
+      <span class="chip gold" data-target="#sec-xue">学规</span>
+      <span class="chip">太学文变</span>
+      <span class="chip">两学暇日</span>
+      <span class="chip">学舍燕集</span>
+      <span class="chip gold" data-target="#sec-xue">三学之横</span>
+      <span class="chip">贾相制外戚抑北司戢学校</span>
+      <span class="chip">祠神</span>
+      <span class="chip">簿录权臣</span>
+      <span class="chip">韩平原之败</span>
+      <span class="chip">马相去国</span>
+      <span class="chip">荔枝梅花赋</span>
+      <span class="chip">金龟称瑞</span>
+      <span class="chip">许占寺院</span>
+      <span class="chip">须属肾</span>
+      <span class="chip">短小精悍</span>
+      <span class="chip">纲目用武后年号</span>
+      <span class="chip">游阅古泉</span>
+      <span class="chip">种竹法</span>
+      <span class="chip">律文去避来</span>
+      <span class="chip">廖莹中仰药</span>
+      <span class="chip">先君出宰</span>
+      <span class="chip">向氏书画</span>
+      <span class="chip">误书庙讳</span>
+      <span class="chip">修史法</span>
+      <span class="chip">过癞</span>
+      <span class="chip">十二分野</span>
+      <span class="chip">吹霎</span>
+      <span class="chip">故都戏事</span>
+      <span class="chip">马裕斋尹京</span>
+      <span class="chip">贾廖刊书</span>
+      <span class="chip">贾廖碑帖</span>
+      <span class="chip">济王致祸</span>
+      <span class="chip">十三故事</span>
+      <span class="chip">舞谱</span>
+      <span class="chip">知州借紫</span>
+      <span class="chip">记方通律</span>
+      <span class="chip">大父廉俭</span>
+      <span class="chip">断桥</span>
+      <span class="chip">馈送寿物</span>
+      <span class="chip">桐蕈鳆鱼</span>
+      <span class="chip">纵囚</span>
+      <span class="chip">赵孟桂</span>
+      <span class="chip">紫纱公服</span>
+      <span class="chip">译者</span>
+      <span class="chip">秘固</span>
+      <span class="chip">雅流自居</span>
+      <span class="chip">张氏至孝</span>
+      <span class="chip">五行间色</span>
+      <span class="chip">杓字义</span>
+      <span class="chip">连架</span>
+      <span class="chip">正闰</span>
+      <span class="chip">奉倩象山</span>
+      <span class="chip">大行</span>
+      <span class="chip">龙有三名</span>
+      <span class="chip">押字不书名</span>
+      <span class="chip">蕞</span>
+      <span class="chip">五月五日生</span>
+      <span class="chip">度宗庙无室</span>
+      <span class="chip">徐留登第</span>
+      <span class="chip">私取林竹溪</span>
+      <span class="chip">吴益登对</span>
+      <span class="chip">朱王二事相同</span>
+      <span class="chip">方珠</span>
+      <span class="chip">张约斋佣者</span>
+      <span class="chip">禁男娼</span>
+      <span class="chip">赵春谷斩蛇</span>
+      <span class="chip">三山诏岁举送</span>
+      <span class="chip">罗椅</span>
+      <span class="chip">大打围</span>
+      <span class="chip">水竹居</span>
+      <span class="chip">宋彦举针法</span>
+      <span class="chip">华夷图石</span>
+      <span class="chip">缙云叶医</span>
+      <span class="chip">洪渠</span>
+      <span class="chip">插花种菊</span>
+      <span class="chip">大野猪</span>
+      <span class="chip">天花异</span>
+      <span class="chip">西域玉山</span>
+      <span class="chip">灵寿杖</span>
+      <span class="chip">改安吉州</span>
+      <span class="chip">二王入闽大略</span>
+      <span class="chip">海船头发</span>
+      <span class="chip">海神擎日</span>
+      <span class="chip">戊子地震</span>
+      <span class="chip">江西术者奇验</span>
+      <span class="chip">天裂</span>
+      <span class="chip">李醉降仙</span>
+      <span class="chip">海井</span>
+      <span class="chip">狗畏鼻冷</span>
+      <span class="chip">凿井法</span>
+      <span class="chip">重窖</span>
+      <span class="chip">日形如瓠</span>
+      <span class="chip">叶李遭黥</span>
+      <span class="chip">地连震</span>
+      <span class="chip">蜀人不浴</span>
+      <span class="chip">梅无仰开花</span>
+      <span class="chip">栅沙武口</span>
+      <span class="chip">李仲宾谈鬼</span>
+      <span class="chip">大兴狱鬼</span>
+      <span class="chip">梨酒</span>
+      <span class="chip">四明延寿寺火</span>
+      <span class="chip">合乐谐和</span>
+      <span class="chip">盗马踏浅</span>
+      <span class="chip">于阗玉佛</span>
+      <span class="chip">狗站</span>
+      <span class="chip">姨夫眼眶</span>
+      <span class="chip">偏僻无子</span>
+      <span class="chip">琴应弦</span>
+      <span class="chip">治物各有法</span>
+      <span class="chip">金凤染甲</span>
+      <span class="chip">杭城食米</span>
+      <span class="chip">开庆六士</span>
+      <span class="chip">范元章梦</span>
+      <span class="chip">福王婚启</span>
+      <span class="chip">雷雪</span>
+      <span class="chip">医术</span>
+      <span class="chip">湖翻</span>
+      <span class="chip">回回沙碛</span>
+      <span class="chip">短蓬</span>
+      <span class="chip">子山隆吉</span>
+      <span class="chip">蹇材望</span>
+      <span class="chip">船吼</span>
+      <span class="chip">古狱塔灯</span>
+      <span class="chip">成都恶事</span>
+      <span class="chip">冯妇搏虎义</span>
+      <span class="chip">盐养花</span>
+      <span class="chip">文山像赞</span>
+      <span class="chip">王茂林立子</span>
+      <span class="chip">回回送终</span>
+      <span class="chip">接待寺</span>
+      <span class="chip">天雨尘土</span>
+      <span class="chip gold" data-target="#sec-zan">宋江三十六赞</span>
+      <span class="chip">种葡萄法</span>
+      <span class="chip">插瑞香法</span>
+      <span class="chip gold" data-target="#sec-jue">杨髡发陵</span>
+      <span class="chip">西征异闻</span>
+      <span class="chip">嘲留忠斋</span>
+      <span class="chip">锁阳</span>
+      <span class="chip">纯色骰钱</span>
+      <span class="chip">公主添房</span>
+      <span class="chip">圣门本草</span>
+      <span class="chip">海鳅兆火</span>
+      <span class="chip">壬辰星陨</span>
+      <span class="chip">叶李纪梦诗</span>
+      <span class="chip">海蛆</span>
+      <span class="chip">北方大车</span>
+      <span class="chip">全氏孪鬼</span>
+      <span class="chip">押不芦</span>
+      <span class="chip">种茯苓</span>
+      <span class="chip">叶李姓名二士</span>
+      <span class="chip">讼学业嘴社</span>
+      <span class="chip">相马法</span>
+      <span class="chip">碑盖</span>
+      <span class="chip">驼峰</span>
+      <span class="chip">解厄咒</span>
+      <span class="chip">霍山显灵</span>
+      <span class="chip">黄芦城干</span>
+      <span class="chip">徐渊子词</span>
+      <span class="chip">龙负舟</span>
+      <span class="chip">白玉笙箫</span>
+      <span class="chip">白玉出香狮</span>
+      <span class="chip">画本草三辅黄图</span>
+      <span class="chip">水落石出笔格</span>
+      <span class="chip">吴妓徐兰</span>
+      <span class="chip">冰蛆飞驼</span>
+      <span class="chip">虹见井中</span>
+      <span class="chip">道学</span>
+      <span class="chip">秦九韶</span>
+      <span class="chip">吴生坐亡</span>
+      <span class="chip">银瓶娘子签</span>
+      <span class="chip">上庠斋牌</span>
+      <span class="chip">入燕士人</span>
+      <span class="chip">卖阙沈官人</span>
+      <span class="chip">爱水</span>
+      <span class="chip">避讳去姓</span>
+      <span class="chip">贡狮子</span>
+      <span class="chip">倭人居处</span>
+      <span class="chip">马赵致怨</span>
+      <span class="chip">南丹婚嫁</span>
+      <span class="chip">相怜草</span>
+      <span class="chip">石洞雷火</span>
+      <span class="chip">按摩女子</span>
+      <span class="chip">老张防御沈尧</span>
+      <span class="chip">蔡陈市舶</span>
+      <span class="chip">铁蛆</span>
+      <span class="chip">捕狸法</span>
+      <span class="chip">兰亭两王俣</span>
+      <span class="chip">洪起畏守京口</span>
+      <span class="chip">张世杰忠死</span>
+      <span class="chip">许夫人</span>
+      <span class="chip">孕妇双胎</span>
+      <span class="chip">屠节避讳</span>
+      <span class="chip">回人送炭</span>
+      <span class="chip">赵孟台评</span>
+      <span class="chip">金钩相士</span>
+      <span class="chip">十干纪节</span>
+      <span class="chip">文山书为北人所重</span>
+      <span class="chip">至元甲午节气之巧三十一年</span>
+      <span class="chip">夷考百年以来理宗宝四年丙辰</span>
+      <span class="chip">香炉峰桐柏山</span>
+      <span class="chip">失诰碎带</span>
+      <span class="chip">吴氏鸟卵</span>
+      <span class="chip">鲁港风祸</span>
+      <span class="chip">慈宪生吉兆</span>
+      <span class="chip">德二子名</span>
+      <span class="chip">绍陵初诞</span>
+      <span class="chip">宁宗不慧</span>
+      <span class="chip">衢吏徐信</span>
+      <span class="chip">征日本</span>
+      <span class="chip">束手无措</span>
+      <span class="chip">蜘蛛珠</span>
+      <span class="chip">佛莲家赀</span>
+      <span class="chip">圣铁</span>
+      <span class="chip">华岳阿房基</span>
+      <span class="chip">钉官石</span>
+      <span class="chip">张氏银窖</span>
+      <span class="chip">猪祸</span>
+      <span class="chip">张松</span>
+      <span class="chip">桃符获罪</span>
+      <span class="chip">龙蚌</span>
+      <span class="chip">透光镜</span>
+      <span class="chip">菖蒲子</span>
+      <span class="chip">死马杀人</span>
+      <span class="chip">爪哇铜器</span>
+      <span class="chip">黑漆船</span>
+      <span class="chip">周弥陀入冥</span>
+      <span class="chip">马相漂棺</span>
+      <span class="chip">伯宣被盗</span>
+      <span class="chip">李性学</span>
+      <span class="chip">夏驾山</span>
+      <span class="chip">渴字无对</span>
+      <span class="chip">观堂二石</span>
+      <span class="chip">董仪父论易</span>
+      <span class="chip">棺盖悬镜</span>
+      <span class="chip">北地赏柳</span>
+      <span class="chip">光禄寺御醴</span>
+      <span class="chip">奸僧伪梦</span>
+      <span class="chip">沉香圣像</span>
+      <span class="chip">西湖好处</span>
+      <span class="chip">石庭苔梅</span>
+      <span class="chip">陈谔捣油</span>
+      <span class="chip">襄鄂百咏</span>
+      <span class="chip">打聚</span>
+      <span class="chip">家之巽三贤诗</span>
+      <span class="chip">四圣水灯</span>
+      <span class="chip">大辟登科</span>
+      <span class="chip">黄王不辨</span>
+      <span class="chip">押韵语录</span>
+      <span class="chip">演福新碑</span>
+      <span class="chip">喜行古礼</span>
+      <span class="chip">龙畏神火</span>
+      <span class="chip">不葬父妨子</span>
+      <span class="chip">多景红罗缠头</span>
+      <span class="chip">韩平原姓王</span>
+      <span class="chip">乌银江兆</span>
+      <span class="chip">金紫银青</span>
+      <span class="chip">乌贼得名</span>
+      <span class="chip">天雨米豆</span>
+      <span class="chip">朱宣慰诗</span>
+      <span class="chip">杏仁有毒</span>
+      <span class="chip">章宗效徽宗</span>
+      <span class="chip">茯苓益松</span>
+      <span class="chip">虎引彪渡水</span>
+      <span class="chip">撩纸</span>
+      <span class="chip">冬至前造酒</span>
+      <span class="chip">壬日扦种</span>
+      <span class="chip">白蜡</span>
+      <span class="chip">汴梁杂事</span>
+      <span class="chip">蟛越馄饨</span>
+      <span class="chip">包宏斋桃符</span>
+      <span class="chip">南风损藕</span>
+      <span class="chip">灯檠去虫</span>
+      <span class="chip">鱼苗</span>
+      <span class="chip">同里虎</span>
+      <span class="chip">陶裴双缢</span>
+      <span class="chip">因庸堂</span>
+      <span class="chip">德寿买市</span>
+      <span class="chip">天狗坠</span>
+      <span class="chip">丁酉异星</span>
+      <span class="chip">彗星改元</span>
+      <span class="chip">和剂药局</span>
+      <span class="chip">葛天民赏雪</span>
+      <span class="chip">彭晋叟</span>
+      <span class="chip">唐尧封</span>
+      <span class="chip">林乔</span>
+      <span class="chip">李梦庚</span>
+      <span class="chip">陈╂如尊者</span>
+      <span class="chip">史浩传赞</span>
+      <span class="chip">唐震黄震</span>
+      <span class="chip">男不授女状</span>
+      <span class="chip">沈次卿</span>
+      <span class="chip">陈预知</span>
+      <span class="chip">牧羊子</span>
+      <span class="chip">何生五行</span>
+      <span class="chip">戴生星术</span>
+      <span class="chip">括苍赵墓</span>
+      <span class="chip">阴阳忌乐</span>
+      <span class="chip">悬棺葬</span>
+      <span class="chip">郭阊</span>
+      <span class="chip">王盖伏法</span>
+      <span class="chip">埋藏会</span>
+      <span class="chip">东迁道人</span>
+      <span class="chip">屠门受祭</span>
+      <span class="chip">陈公振立子</span>
+      <span class="chip">梅津食箩</span>
+      <span class="chip">郁{凶匕}大毒</span>
+      <span class="chip">陈仲潜健啖</span>
+      <span class="chip">范吕不合</span>
+      <span class="chip">施武子被劫</span>
+      <span class="chip">二章清贫</span>
+      <span class="chip">卿宰小鬼</span>
+      <span class="chip">刘漫塘</span>
+      <span class="chip">陈宜中父</span>
+      <span class="chip">刘朔斋再娶</span>
+      <span class="chip">朔斋小姬</span>
+      <span class="chip">成均浴堂</span>
+      <span class="chip">潜说友</span>
+      <span class="chip">王积翁</span>
+      <span class="chip">王厚斋形拘</span>
+      <span class="chip">安刘</span>
+      <span class="chip">俞浙</span>
+      <span class="chip">黄国</span>
+      <span class="chip">方回</span>
+      <span class="chip">衡岳借兵</span>
+      <span class="chip">北客诗</span>
+      <span class="chip">须溪月诗</span>
+      <span class="chip">菊子</span>
+      <span class="chip">回回无闰月</span>
+      <span class="chip">乱乱二字</span>
+      <span class="chip">两王医师</span>
+      <span class="chip">髯阉</span>
+      <span class="chip">胡服间色</span>
+      <span class="chip">天市垣</span>
+      <span class="chip">石行</span>
+      <span class="chip">世修降表</span>
+      <span class="chip">社公珠</span>
+      <span class="chip">贺知章倚史势</span>
+      <span class="chip">尼站</span>
+      <span class="chip">升遐玉圭</span>
+      <span class="chip">椒兰殿赤草</span>
+      <span class="chip">燕用</span>
+      <span class="chip">荐</span>
+      <span class="chip">大仙笔诗</span>
+      <span class="chip">蒙古江西政</span>
+      <span class="chip">火蝎</span>
+      <span class="chip">倪氏窖藏</span>
+      <span class="chip">燕子城铜印</span>
+      <span class="chip">祖杰</span>
+      <span class="chip gold" data-target="#sec-jue">杨髡发陵</span>
+      <span class="chip">二僧入冥</span>
+      <span class="chip">天籁</span>
+      <span class="chip">陈绍大改名</span>
+      <span class="chip">银花</span>
+      <span class="chip">褚承亮不就试</span>
+      <span class="chip">凤凰见</span>
+      <span class="chip">武城蝗</span>
+      <span class="chip">绵上火禁</span>
+      <span class="chip">旱魃</span>
+      <span class="chip">买地券</span>
+      <span class="chip">泰山如坐</span>
+      <span class="chip">平分四时</span>
+      <span class="chip">必世后仁</span>
+      <span class="chip">画扇不入内</span>
+      <span class="chip">权知举</span>
+      <span class="chip">一风彡</span>
+      <span class="chip">咸阳六冈</span>
+      <span class="chip">卯酉克损目</span>
+      <span class="chip">守口如瓶</span>
+      <span class="chip">德寿赏月</span>
+      <span class="chip">汴京宫殿</span>
+      <span class="chip">宦者服药</span>
+      <span class="chip">空谈实效</span>
+      <span class="chip">周莫论张说</span>
+      <span class="chip">假尸还魂</span>
+      <span class="chip">两世王</span>
+      <span class="chip">象油</span>
+      <span class="chip">狗蚤颂</span>
+      <span class="chip">物外平章</span>
+      <span class="chip">德表诏</span>
+      <span class="chip">景炎诏</span>
+      <span class="chip">鸡冠血</span>
+      <span class="chip">药州园馆</span>
+      <span class="chip">亭名</span>
+      <span class="chip">史嵩之始末</span>
+      <span class="chip">嵩之起复</span>
+      <span class="chip">徐霖</span>
+      <span class="chip">史宅之</span>
+      <span class="chip">郑清之</span>
+      <span class="chip">卫王惜名器</span>
+      <span class="chip">阎寺</span>
+      <span class="chip">余晦</span>
+      <span class="chip">余</span>
+      <span class="chip">王惟忠</span>
+      <span class="chip">李伯玉</span>
+      <span class="chip">伪号</span>
+      <span class="chip">马光祖</span>
+      <span class="chip">胥吏识义理</span>
+      <span class="chip">沈夏</span>
+      <span class="chip">史嵩之致仕</span>
+      <span class="chip">度宗诞育</span>
+      <span class="chip">钿屏十事</span>
+      <span class="chip gold" data-target="#sec-kui">襄阳始末</span>
+      <span class="chip">机速房</span>
+      <span class="chip">置士籍</span>
+      <span class="chip">宋二十一帝</span>
+      <span class="chip gold" data-target="#sec-ya">宋十五朝御押</span>
+  </div>
+</section>
+
+<section class="wrap" id="sec-jie">
+  <div class="chaphead">
+    <div class="cnum">甲</div>
+    <h2>癸辛街</h2>
+    <div class="csub">一间屋子</div>
+  </div>
+  <p class="chap-p">周密，字公谨，号草窗，祖籍济南，流寓吴兴，晚年住在杭州城里一条叫癸辛的街上。宋朝亡的时候他四十多岁，从此不仕，在街上这间屋子里住了下来。来访的多是<b>野人畸士</b>：没有功名的、不肯做官的、从北方逃回来的。他自己序里说，是抱病躺着，听他们说话。</p>
+  <div class="q">
+    <p>坡翁喜客谈，其不能者，强之说鬼。或辞无有，则曰：“姑妄言之。”</p>
+    <span class="qsrc">自序 · 从苏东坡的旧典起笔</span>
+  </div>
+  <div class="q">
+    <p>展卷对之，何异平生之友相与抵掌剧谈哉！</p>
+    <span class="qsrc">自序 · 旧朋不来，就翻开书</span>
+  </div>
+  <p class="chap-p">这本杂记是听来的、记下的、攒出来的。同一位作者写过《<a href="wulin-jiushi.html">武林旧事</a>》，把临安城里元宵、西湖、观潮的繁华一笔笔存档，本系列此前已记那本书；这一本，写的是梦外之事。结尾他只交代了一句书名的来历：</p>
+  <div class="q">
+    <p>癸辛盖余所居里云。</p>
+    <span class="qsrc">自序 · 癸辛，不过是我住的街坊</span>
+  </div>
+</section>
+
+<section class="wrap" id="sec-jue">
+  <div class="chaphead">
+    <div class="cnum">乙</div>
+    <h2>掘</h2>
+    <div class="csub">绍兴 · 至元二十二年</div>
+  </div>
+  <p class="chap-p">宋亡后第九年，江南释教总统杨琏真伽盯上了绍兴的南宋帝陵。周密在书里留了两条《杨髡发陵》：一条在续集上，抄存了一份出土的文书；一条在别集上，补记始末。以下这批陵位，按库本所记排开，<em>点击启棺</em>，看每座陵里还剩下什么。</p>
+  <p class="tombs-hint">前批四陵 · 至元二十二年八月</p>
+  <div class="tombs">
+    <button class="tomb" type="button"><span class="tname">宁宗陵</span><span class="tbatch">前批</span><span class="tcontent">劫取宝玉极多</span></button>
+    <button class="tomb li" type="button"><span class="tname">理宗陵</span><span class="tbatch">前批 · 藏最厚</span><span class="tcontent">启棺之初，有白气竟天，盖宝气也。理宗之尸如生，其下皆借以锦，锦之下则承以竹丝细簟，一小厮攫取，掷地有声，视之，乃金丝所成也。或谓含珠有夜明者，遂倒悬其尸树间，沥取水银，如此三日夜，竟失其首。</span></button>
+    <button class="tomb" type="button"><span class="tname">度宗陵</span><span class="tbatch">前批</span><span class="tcontent">劫取宝玉极多</span></button>
+    <button class="tomb" type="button"><span class="tname">杨后陵</span><span class="tbatch">前批</span><span class="tcontent">劫取宝玉极多</span></button>
+    <button class="tomb" type="button"><span class="tname">徽陵</span><span class="tbatch">后批 · 十一月</span><span class="tcontent">朽木一段</span></button>
+    <button class="tomb" type="button"><span class="tname">钦陵</span><span class="tbatch">后批</span><span class="tcontent">木灯檠一枚而已</span></button>
+    <button class="tomb" type="button"><span class="tname">高宗陵</span><span class="tbatch">后批</span><span class="tcontent">骨发尽化，略无寸骸，止有锡器数件，端砚一只</span></button>
+    <button class="tomb" type="button"><span class="tname">孝宗陵</span><span class="tbatch">后批</span><span class="tcontent">蜕化无余，止有项骨小片，内有玉瓶炉一副及古铜鬲一只</span></button>
+    <button class="tomb" type="button"><span class="tname">光宁诸后</span><span class="tbatch">后批</span><span class="tcontent">若光、宁诸后，俨然如生。后悉从火化。</span></button>
+    <button class="tomb" type="button"><span class="tname">孟后陵</span><span class="tbatch">后批</span><span class="tcontent">其发长六尺余，其色绀碧，髻根有短金钗</span></button>
+  </div>
+  <p class="chap-p">守陵的中官罗铣拦不住，被凶徒痛棰逐出，犹拒地大哭。掘完之后，他去买棺收殓：</p>
+  <div class="q">
+    <p>事竟，罗铣买棺制衣收敛，大恸垂绝，乡里皆为之感泣。是夕闻四山皆有哭声，凡旬日不绝。</p>
+    <span class="qsrc">别集上 · 杨髡发陵</span>
+  </div>
+  <p class="chap-p">续集上那条，周密抄的是<b>盗墓者内讧后递出去的互告状</b>，官府文书眼里的案子长这样：</p>
+  <div class="paperzone">
+    <div class="paper vtext">
+      <div class="phead">前集 杨髡发陵 互告状一纸</div>
+      <p>至元二十二年八月内，有绍兴路会稽县泰宁寺僧宗允、宗恺，盗斫陵木，与守陵人争诉。遂称亡宋陵墓，有金玉异宝，说诱杨总统，诈称杨侍郎、汪安抚侵占寺地为名，出给文书，将带河西僧人，部领人匠丁夫，前来将宁宗、杨后、理宗、度宗四陵，盗行发掘，割破棺椁，尽取宝货，不计其数。</p>
+      <p>又于当年十一月十一日前来，将孟后、徽宗、郑后、高宗、吴后、孝宗、谢后、光宗等陵尽发掘，劫取宝货，毁弃骸骨。其下本路文书，只言争寺地界，并不曾说开发坟墓，因此江南掘坟大起，而天下无不发之墓矣。</p>
+    </div>
+    <div class="aside" style="flex:1 1 240px; align-self:center;">
+      状纸是他们的徒弟告师父的，分赃不平才捅出来。最冷的一句在末尾：本案在本路的公文里，只写“争寺地界”。上梁的正文书一开，江南掘坟大起，天下无不发之墓。另外，状纸开的第二批陵单与别集上的详记并不一致，孰是难考，记入卷末勘注。
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="sec-xue">
+  <div class="chaphead">
+    <div class="cnum">丙</div>
+    <h2>学</h2>
+    <div class="csub">临安太学 · 国中之国</div>
+  </div>
+  <p class="chap-p">从掘坟的绍兴回到杭州，城里的太学是另一个世界。南宋太学生有议事的传统，朝廷罚不住，只好立了一套五等学规：</p>
+  <div class="ladder">
+    <div class="step"><span class="lv">轻</span><span class="tm">关暇几月</span><span class="ds">不许出入，此前廊所判</span></div>
+    <div class="step"><span class="lv">其二</span><span class="tm">前廊关暇</span><span class="ds">监中所行</span></div>
+    <div class="step"><span class="lv">其三</span><span class="tm">迁斋</span><span class="ds">别斋不受，须同舍力告公堂，此则比之徒罪</span></div>
+    <div class="step"><span class="lv">其四</span><span class="tm">下自讼斋</span><span class="ds">自宿自处，同舍亦不敢过而问，则比之黥罪</span></div>
+    <div class="step"><span class="lv">其五</span><span class="tm">夏楚屏斥</span><span class="ds">鸣鼓九通，黑竹篦量决数下，毁裂襕衫押去，自此不与士齿，比之死罪</span></div>
+  </div>
+  <div class="aside">行罚有一整套仪程，鸣鼓、宣讲弹文、黑竹篦行罚，重者当众毁裂襕衫押出学门。两学的假日都算不到一处：太学上巳暇一日，武学则三日；清明太学三日，武学乃一日，殊不可晓。</div>
+  <p class="chap-p">学规管得住个人，管不住群体。景定、淳祐之际，三学之横到了顶点：</p>
+  <div class="q">
+    <p>凡其所欲出者，虽宰相台谏，亦直攻之，使必去权，乃与人主抗衡。</p>
+    <span class="qsrc">后集 · 三学之横</span>
+  </div>
+  <p class="chap-p">史嵩之、丁大全都硬碰过，丁大全还专门重修监令张榜，结果被诸生合力攻走。轮到贾似道，换了办法：</p>
+  <div class="q">
+    <p>每重其恩数，丰其馈给，增拨学田，种种加厚，于是诸生啖其利而畏其威，虽目击似道之罪，而噤不敢发一语。</p>
+    <span class="qsrc">后集 · 三学之横</span>
+  </div>
+  <div class="q">
+    <p>直至鲁港溃师之后，始声其罪，无乃晚乎！</p>
+    <span class="qsrc">后集 三学之横 周密的收笔</span>
+  </div>
+</section>
+
+<section class="wrap" id="sec-kui">
+  <div class="chaphead">
+    <div class="cnum">丁</div>
+    <h2>溃</h2>
+    <div class="csub">襄阳 · 鲁港</div>
+  </div>
+  <p class="chap-p">襄阳被围六年，是这本杂记里最完整的一宗大案。起点不是元军，而是一桩南宋自己的窝案：蜀将刘整战功第一，被上司压成下等，申冤无门反遭追杀，只得北投。他给元廷的献策一句话定了南宋的死刑：</p>
+  <div class="q">
+    <p>遂领麾下亲兵数千人，投北献策，谓攻蜀不若攻襄，无襄则无淮，无淮则江南可唾手下也。</p>
+    <span class="qsrc">别集下 · 襄阳始末</span>
+  </div>
+  <p class="chap-p">围城日紧，吕文德病死，贾似道却连上奏疏请求出边视师，自比唐时以平章出使的裴度。那几道奏疏周密全文抄了，朝廷的回答是温言挽留：</p>
+  <div class="paperzone">
+    <div class="paper">
+      <div class="phead">贾平章奏 · 别集下</div>
+      <p style="font-size:14px; line-height:2;">臣近得师夔报，臣亦岂不知本朝故事，无以平章而巡边者，然唐裴度以平章出使山东，似有足援。用拜疏以请，恭听矜俞。<br><br>连夕展转不寐，良以驿置一往复，率半月余，曾不若身履其处，机应于速之为善。</p>
+      <span class="stamp">请</span>
+    </div>
+    <div class="paper">
+      <div class="phead">御笔</div>
+      <p style="font-size:14px; line-height:2;">师相岂可一日而轻去朝廷，虽跬步之近，不可舍去，请勿重陈。</p>
+      <span class="stamp">留</span>
+    </div>
+  </div>
+  <p class="chap-p">一请一留，演了三年。鲁港一役，十三万大军不战而溃，襄阳的结局早已写在刘整那句话里。城破前后，朝廷却在忙着给士人立籍，严查出身，士人写诗讽刺：</p>
+  <div class="paper poem">
+    <div class="phead">士人嘲诗 · 别集下</div>
+    <p>刘整惊天动地来，襄阳城下哭声哀。</p>
+    <p>庙堂束手浑无计，只把科场恼秀才。</p>
+  </div>
+</section>
+
+<section class="wrap" id="sec-zan">
+  <div class="chaphead">
+    <div class="cnum">戊</div>
+    <h2>赞</h2>
+    <div class="csub">三十六人 · 草莽的入场卷</div>
+  </div>
+  <p class="chap-p">杂记里混着一块意料之外的石头：宋江。周密的老友龚开，字圣与，也是亡国遗民，给宋江集团三十六人一人画了像、一人写了一段赞。龚开自叙说，此事只见街谈巷语：</p>
+  <div class="q">
+    <p>宋江事见于街谈巷语，不足采著，虽有高如李嵩辈传写，士大夫亦不见黜。</p>
+    <span class="qsrc">续集上 宋江三十六赞 龚开序</span>
+  </div>
+  <p class="chap-p">他后来在《东都事略》的侯蒙传里找到官面记录，才算坐实。侯蒙当年的奏疏是这样算账的：</p>
+  <div class="q">
+    <p>宋江以三十六人横行河、朔、京东，官军数万，无敢抗者，其材必有过人，不若赦过招降，使讨方腊，以此自赎，或可平东南之乱。</p>
+    <span class="qsrc">续集上 宋江三十六赞 引侯蒙书</span>
+  </div>
+  <p class="chap-p">三十六签都在下面，<em>点击翻签</em>，看龚开给的赞词。名单与后世《水浒传》出入极大：刘唐叫尺八腿，呼延灼作呼延绰，穆弘作穆横，董平叫一直撞；入云龙公孙胜不在其列，晁盖倒赫然在册，排在第三十四。</p>
+  <div class="sig-grid">
+      <button class="sig" type="button"><span class="sfront">呼保义宋江<small>点击见赞</small></span><span class="sback">不假称王而呼保义岂若狂卓专犯讳忌</span></button>
+      <button class="sig" type="button"><span class="sfront">智多星吴学究<small>点击见赞</small></span><span class="sback">古人用智义国安民惜哉所予酒色粗人</span></button>
+      <button class="sig" type="button"><span class="sfront">玉麒麟卢俊义<small>点击见赞</small></span><span class="sback">白玉麒麟见之可爱风尘大行皮毛终坏</span></button>
+      <button class="sig" type="button"><span class="sfront">大刀关胜<small>点击见赞</small></span><span class="sback">大刀关胜岂云长孙云长义勇汝其后昆</span></button>
+      <button class="sig" type="button"><span class="sfront">活阎罗阮小七<small>点击见赞</small></span><span class="sback">地下阎罗追魂摄魄今其活矣名喝太伯</span></button>
+      <button class="sig" type="button"><span class="sfront">尺八腿刘唐<small>点击见赞</small></span><span class="sback">将军下短贵称侯王汝岂非夫腿尺八长</span></button>
+      <button class="sig" type="button"><span class="sfront">没羽箭张清<small>点击见赞</small></span><span class="sback">箭以羽行破敌无颇七札难穿如游斜何</span></button>
+      <button class="sig" type="button"><span class="sfront">浪子燕青<small>点击见赞</small></span><span class="sback">平康巷陌岂知汝名太行春色有一丈青</span></button>
+      <button class="sig" type="button"><span class="sfront">病尉迟孙立<small>点击见赞</small></span><span class="sback">尉迟壮士以病自名端能去病国功可成</span></button>
+      <button class="sig" type="button"><span class="sfront">浪里白跳张顺<small>点击见赞</small></span><span class="sback">雪浪如山汝能白跳愿随忠魂来驾怒潮</span></button>
+      <button class="sig" type="button"><span class="sfront">船火儿张横<small>点击见赞</small></span><span class="sback">太行好汉三十有六无此火儿其数不足</span></button>
+      <button class="sig" type="button"><span class="sfront">短命二郎阮小二<small>点击见赞</small></span><span class="sback">灌口少年短命何益曷不监之清源庙食</span></button>
+      <button class="sig" type="button"><span class="sfront">花和尚鲁智深<small>点击见赞</small></span><span class="sback">有飞飞儿出家尤好与尔同袍佛也被恼</span></button>
+      <button class="sig" type="button"><span class="sfront">行者武松<small>点击见赞</small></span><span class="sback">汝优婆塞五戒在身酒色财气更要杀人</span></button>
+      <button class="sig" type="button"><span class="sfront">铁鞭呼延绰<small>点击见赞</small></span><span class="sback">尉迟彦章去来一身长鞭铁铸汝岂其人</span></button>
+      <button class="sig" type="button"><span class="sfront">混江龙李俊<small>点击见赞</small></span><span class="sback">乖龙混江射之即济武皇雄争自惜神臂</span></button>
+      <button class="sig" type="button"><span class="sfront">九文龙史进<small>点击见赞</small></span><span class="sback">龙数肖九汝有九文盍从东皇驾五色云</span></button>
+      <button class="sig" type="button"><span class="sfront">小李广花荣<small>点击见赞</small></span><span class="sback">中心慕汉夺马而归汝能慕广何忧数奇</span></button>
+      <button class="sig" type="button"><span class="sfront">霹雳火秦明<small>点击见赞</small></span><span class="sback">霹雳有火摧山破岳天心无妄汝孽自作</span></button>
+      <button class="sig" type="button"><span class="sfront">黑旋风李逵<small>点击见赞</small></span><span class="sback">风有大小不辨雌雄山谷之中遇尔亦凶</span></button>
+      <button class="sig" type="button"><span class="sfront">小旋风柴进<small>点击见赞</small></span><span class="sback">风有大小黑恶则惧一噫之微香满太虚</span></button>
+      <button class="sig" type="button"><span class="sfront">插翅虎雷横<small>点击见赞</small></span><span class="sback">飞而食肉有此雄奇生入玉关岂伤令姿</span></button>
+      <button class="sig" type="button"><span class="sfront">神行太保戴宗<small>点击见赞</small></span><span class="sback">不疾而速故神无方汝行何之敢离太行</span></button>
+      <button class="sig" type="button"><span class="sfront">急先锋索超<small>点击见赞</small></span><span class="sback">行军出师其锋必先汝勿锐进天兵在前</span></button>
+      <button class="sig" type="button"><span class="sfront">立地太岁阮小五<small>点击见赞</small></span><span class="sback">东家之西即西家东汝虽特立何有吾宫</span></button>
+      <button class="sig" type="button"><span class="sfront">青面兽杨志<small>点击见赞</small></span><span class="sback">圣人治世四灵在郊汝兽何名走旷劳劳</span></button>
+      <button class="sig" type="button"><span class="sfront">赛关索杨雄<small>点击见赞</small></span><span class="sback">关索之雄超之亦贤能持义勇自命何全</span></button>
+      <button class="sig" type="button"><span class="sfront">一直撞董平<small>点击见赞</small></span><span class="sback">昔樊将军鸿门直撞斗酒肉肩其言甚壮</span></button>
+      <button class="sig" type="button"><span class="sfront">两头蛇解珍<small>点击见赞</small></span><span class="sback">左啮右噬其毒可畏逢阴德人杖之亦毙</span></button>
+      <button class="sig" type="button"><span class="sfront">美髯公朱仝<small>点击见赞</small></span><span class="sback">长髯郁然美哉丰姿忍使尺宅而见赤眉</span></button>
+      <button class="sig" type="button"><span class="sfront">没遮拦穆横<small>点击见赞</small></span><span class="sback">出没大行茫无畔岸虽没遮拦难离伙伴</span></button>
+      <button class="sig" type="button"><span class="sfront">拼命三郎石秀<small>点击见赞</small></span><span class="sback">石秀拼命志在金宝大似河腹果一饱</span></button>
+      <button class="sig" type="button"><span class="sfront">双尾蝎解宝<small>点击见赞</small></span><span class="sback">医师用蝎其体贵全反其常性雷公汝嫌</span></button>
+      <button class="sig hot" type="button"><span class="sfront">铁天王晁盖<small>点击见赞</small></span><span class="sback">毗沙天人证紫金躯顽铁铸汝亦出洪炉</span></button>
+      <button class="sig" type="button"><span class="sfront">金枪班徐宁<small>点击见赞</small></span><span class="sback">金不可辱亦忌在秽盍铸长殳羽林是卫</span></button>
+      <button class="sig" type="button"><span class="sfront">扑天雕李应<small>点击见赞</small></span><span class="sback">鸷禽雄长惟雕最狡毋扑天飞封狐在草</span></button>
+  </div>
+  <p class="chap-p">写完赞，周密自己上去补了一段论，把龚开比作给游侠作传的太史公，落款用的是祖籍济南的那座山：</p>
+  <div class="q">
+    <p>此皆群盗之靡耳，圣与既各为之赞，又从而序论之。何哉？太史公序游侠而进奸雄，不免异世之讥，然其首著胜、广于列传，且为项籍作本纪，其意亦深矣，识者当自能辨之云。</p>
+    <span class="qsrc">续集上 · 华不注山人戏书</span>
+  </div>
+</section>
+
+<section class="wrap" id="sec-ya">
+  <div class="chaphead">
+    <div class="cnum">己</div>
+    <h2>押</h2>
+    <div class="csub">末页 · 十五朝御押</div>
+  </div>
+  <p class="chap-p">全书收在一条小注上：宋十五朝皇帝的御押，也就是他们签文件用的花押。周密记下了太祖、太宗的元押，仁宗是一个“白”字，其余几家在库本里只剩空位。数字化的时候，画押符号在字库里没有着落，大半褪成了空圈：</p>
+  <div class="yaseal">
+    <div class="yitem"><div class="yname">太祖</div><div class="ymark">元押</div></div>
+    <div class="yitem"><div class="yname">太宗</div><div class="ymark">元押</div></div>
+    <div class="yitem"><div class="yname">真宗</div><div class="ymark gone">押</div></div>
+    <div class="yitem"><div class="yname">仁宗</div><div class="ymark">白</div></div>
+    <div class="yitem"><div class="yname">英宗</div><div class="ymark gone">押</div></div>
+    <div class="yitem"><div class="yname">神宗</div><div class="ymark gone">押</div></div>
+    <div class="yitem"><div class="yname">哲宗</div><div class="ymark faded">{立巾}</div></div>
+    <div class="yitem"><div class="yname">徽宗</div><div class="ymark gone">押</div></div>
+    <div class="yitem"><div class="yname">钦宗</div><div class="ymark gone">押</div></div>
+    <div class="yitem"><div class="yname">高宗</div><div class="ymark gone">押</div></div>
+    <div class="yitem"><div class="yname">孝宗</div><div class="ymark gone">押</div></div>
+    <div class="yitem"><div class="yname">光宗</div><div class="ymark gone">押</div></div>
+    <div class="yitem"><div class="yname">宁宗</div><div class="ymark gone">押</div></div>
+    <div class="yitem"><div class="yname">理宗</div><div class="ymark gone">押</div></div>
+    <div class="yitem"><div class="yname">度宗</div><div class="ymark gone">押</div></div>
+  </div>
+  <p class="aside">这本书的最后一页停在十五位皇帝的签名上，而签名自己先走了。离这一页不远，还有一条《宋二十一帝》，数到“少帝、（德）并景炎、祥兴”为止：德祐的祐字，也在文库流转里缺了。</p>
+</section>
+
+<section class="wrap" id="sec-kz">
+  <div class="chaphead">
+    <div class="cnum">勘</div>
+    <h2>库本勘注</h2>
+    <div class="csub">两本对读</div>
+  </div>
+  <div class="kz">
+    <ol>
+      <li><b>缺字一处</b>：自序“以警以”下，史藏本作方括号码，四库本作“愳”，即“惧”之异体。</li>
+      <li><b>私用区码位</b>：四库本（子藏笔记）存私用区缺字五百一十九处，卷首提要之内即有，本篇引文一律取史藏本回避。</li>
+      <li><b>异体讹字</b>：四库本作“周宻”“已着录”“眀商维濬”“禆海”，末者当作“裨海”。</li>
+      <li><b>拆字</b>：学规条“襕衫”，史藏本拆作“衤阑”二字。</li>
+      <li><b>陵单出入</b>：第二批被掘诸陵，续集上状纸作孟、徽、郑、高、吴、孝、谢、光，别集上详记作徽、钦、高、孝、光五帝陵并孟、韦、吴、谢四后陵，两单不同，孰是难考。</li>
+      <li><b>御押褪色</b>：末条画押多化作空圈，哲宗一押只剩部件，“德祐”之祐亦缺。</li>
+    </ol>
+  </div>
+  <div class="limit">
+    <h3>时代局限</h3>
+    <ul style="padding-left:20px;">
+      <li><b>报应笔法</b>：允泽蹴理宗尸首而足疾溃烂死，村翁奉髻而家道渐丰，得金钱者非病即死，皆是遗民的因果叙事，不可当史料实据。</li>
+      <li><b>敌意称谓</b>：文中称杨琏真伽为“杨髡”，于北人、蕃僧多有贬语，是亡国之痛，也带着当时的偏见。</li>
+      <li><b>志怪杂则</b>：西征巨兽、锁阳诸条荒诞不经，间有秽笔，读者自辨。</li>
+      <li><b>孤证难复核</b>：发陵诸细节多出传闻与状纸，白气竟天之类无从对勘。</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fin">姑妄言之 · 姑妄听之</div>
+    文本来源：殆知阁简体库（史藏志存记录）癸辛杂识，全书去空白 109088 字实测<br>
+    导读仓库：<a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">github.com/robertsong2000/daizhige-daodu</a><br>
+    本篇引文均与库内文件逐字核验通过，异体字归一后比对，库本缺字与私用区码位处一律回避<br>
+    原书为宋元之际遗民笔记，果报志怪杂则其间，读者鉴其时代，勿据为定论
+  </div>
+</footer>
+
+</main>
+
+<script>
+(function(){
+  /* 碎屑墙高亮点击 */
+  document.querySelectorAll('.chip.gold').forEach(function(c){
+    c.addEventListener('click', function(){
+      var t = document.querySelector(c.getAttribute('data-target'));
+      if (t) t.scrollIntoView({behavior:'smooth'});
+    });
+  });
+  /* 启棺 */
+  document.querySelectorAll('.tomb').forEach(function(t){
+    t.addEventListener('click', function(){ t.classList.toggle('open'); });
+  });
+  /* 翻签 */
+  document.querySelectorAll('.sig').forEach(function(s){
+    s.addEventListener('click', function(){ s.classList.toggle('flip'); });
+  });
+})();
+</script>
+</body>
+</html>
