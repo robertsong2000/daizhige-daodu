@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>萍洲可谈 · 殆知阁导读</title>
+<style>
+  :root {
+    --bg: #191917;
+    --paper: #e8e4dc;
+    --paper2: #ddd7cc;
+    --ink: #1c1b19;
+    --ink2: #454340;
+    --bamboo: #5f9270;
+    --bamboo-deep: #48765a;
+    --gold: #c9963f;
+    --line: #33312a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", SimSun, serif;
+    line-height: 1.95;
+  }
+  a { color: var(--bamboo); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .beacon {
+    position: fixed; top: 14px; left: 16px; z-index: 9;
+    font-size: 12px; letter-spacing: 2px; color: #8a8579;
+    border: 1px solid #3a382f; padding: 3px 10px; border-radius: 2px;
+    background: rgba(25,25,23,.85);
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- 首屏：罗盘与书名 ---------- */
+  .hero { display: flex; align-items: center; justify-content: center; gap: 70px; margin-top: 96px; min-height: 430px; flex-wrap: wrap; }
+  .lp-zone { text-align: center; }
+  .lp {
+    width: 330px; height: 330px; border-radius: 50%; position: relative; cursor: pointer;
+    background: radial-gradient(circle at 38% 32%, #efe9dd, var(--paper2) 62%, #cfc8b8);
+    box-shadow: 0 0 0 3px #2a2823, 0 0 0 4px var(--bamboo-deep), 0 14px 40px rgba(0,0,0,.55);
+    margin: 0 auto;
+  }
+  .ring { position: absolute; inset: 0; border-radius: 50%; transition: transform 1.4s cubic-bezier(.6,.05,.2,1); }
+  .ring.spin { transform: rotate(540deg); }
+  .ring b {
+    position: absolute; left: 50%; top: 50%; font-weight: 400; color: var(--ink2);
+    font-size: 15px; width: 22px; height: 22px; margin: -11px 0 0 -11px; line-height: 22px;
+    transform: rotate(var(--r)) translateY(-146px) rotate(calc(-1 * var(--r)));
+  }
+  .ring b.zi { color: var(--bamboo-deep); font-weight: 700; }
+  .ring b.wu { color: var(--bamboo); font-weight: 700; }
+  .mid { position: absolute; inset: 46px; border-radius: 50%; border: 1px dashed #b7ad97; }
+  .mid b {
+    position: absolute; left: 50%; top: 50%; font-weight: 400; color: #8f8672;
+    font-size: 13px; width: 18px; height: 18px; margin: -9px 0 0 -9px; line-height: 18px;
+    transform: rotate(var(--r)) translateY(-101px) rotate(calc(-1 * var(--r)));
+  }
+  .pool {
+    position: absolute; inset: 92px; border-radius: 50%;
+    background: radial-gradient(circle at 40% 30%, #23231f, #14140f);
+    box-shadow: inset 0 0 18px rgba(0,0,0,.8);
+  }
+  .needle { position: absolute; left: 50%; top: 50%; width: 8px; height: 118px; margin: -59px 0 0 -4px; }
+  .needle::before, .needle::after {
+    content: ""; position: absolute; left: 0; width: 0; height: 0; border-style: solid;
+  }
+  .needle::before { top: 0; border-width: 0 4px 59px 4px; border-color: transparent transparent #d8d2c4 transparent; }
+  .needle::after { bottom: 0; border-width: 59px 4px 0 4px; border-color: var(--bamboo) transparent transparent transparent; filter: drop-shadow(0 0 4px rgba(95,146,112,.9)); }
+  .cap { position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--gold); }
+  .lp-tip { margin-top: 16px; font-size: 12px; letter-spacing: 2px; color: #8a8579; }
+  .lp-tip em { font-style: normal; color: var(--bamboo); }
+  .title-col { writing-mode: vertical-rl; height: 330px; display: flex; gap: 22px; align-items: flex-start; }
+  .title-col h1 { font-size: 52px; letter-spacing: 16px; color: var(--paper); font-weight: 700; }
+  .title-col .by { font-size: 15px; letter-spacing: 8px; color: #8a8579; padding-top: 8px; }
+  .title-col .pin-line { font-size: 13px; letter-spacing: 6px; color: var(--bamboo); padding-top: 4px; }
+  .lead { max-width: 640px; margin: 26px auto 0; text-align: center; font-size: 15px; color: #cfc9bc; }
+  .lead b { color: var(--bamboo); font-weight: 700; }
+
+  /* ---------- 书名来由 ---------- */
+  .origin {
+    background: var(--paper); color: var(--ink); border-radius: 6px;
+    max-width: 760px; margin: 70px auto 0; padding: 30px 36px; position: relative;
+  }
+  .origin::before {
+    content: "书名所自"; position: absolute; top: -13px; left: 30px;
+    background: var(--bamboo-deep); color: var(--paper); font-size: 12px;
+    letter-spacing: 3px; padding: 2px 12px;
+  }
+  .qt { color: inherit; }
+  .origin .qt, .card .qt, .plain .qt { border-left: 3px solid var(--bamboo); padding-left: 14px; display: block; margin: 12px 0; text-align: justify; }
+  .origin p, .card p, .plain p { text-align: justify; margin: 8px 0; }
+
+  /* ---------- 针路轴与章节 ---------- */
+  .route { position: relative; max-width: 980px; margin: 60px auto 0; padding: 10px 0 40px; }
+  .route::before {
+    content: ""; position: absolute; left: 47px; top: 0; bottom: 0;
+    border-left: 2px dashed #4a4738;
+  }
+  .sec { position: relative; padding: 44px 0 10px 120px; }
+  .pin {
+    position: absolute; left: 0; top: 40px; width: 96px; text-align: center;
+  }
+  .pin .dot {
+    display: inline-block; width: 34px; height: 34px; line-height: 32px; border-radius: 50%;
+    border: 2px solid #57543f; background: var(--bg); color: #8a8579;
+    font-size: 17px; font-weight: 700; margin-top: 4px;
+    transition: all .4s;
+  }
+  .pin span { display: block; font-size: 11px; letter-spacing: 2px; color: #6d6857; margin-top: 8px; }
+  .sec.lit .dot { border-color: var(--bamboo); color: var(--bamboo); box-shadow: 0 0 12px rgba(95,146,112,.5); }
+  .sec h2 { font-size: 24px; letter-spacing: 3px; color: var(--paper); margin-bottom: 16px; }
+  .sec h2 small { font-size: 12px; letter-spacing: 2px; color: #8a8579; font-weight: 400; margin-left: 12px; }
+  .plain { font-size: 15px; color: #cfc9bc; }
+  .plain .qt { background: rgba(232,228,220,.05); border-radius: 0 4px 4px 0; padding: 10px 16px 10px 14px; }
+  .note { font-size: 13px; color: #8a8579; margin-top: 10px; }
+  .note i { font-style: normal; color: var(--bamboo); }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 18px; }
+  .card {
+    background: var(--paper); color: var(--ink); border-radius: 6px; padding: 20px 22px; position: relative;
+  }
+  .card .tag {
+    position: absolute; top: -11px; left: 18px; background: var(--bamboo-deep); color: var(--paper);
+    font-size: 11px; letter-spacing: 2px; padding: 1px 10px;
+  }
+  .card h3 { font-size: 16px; letter-spacing: 1px; margin-bottom: 8px; color: var(--ink); }
+  .card p { font-size: 13.5px; line-height: 1.85; }
+  .card .qt { font-size: 13.5px; }
+  .card .src { font-size: 11px; color: var(--ink2); margin-top: 8px; letter-spacing: 1px; }
+
+  /* ---------- 抽解账板 ---------- */
+  .duel { display: flex; gap: 26px; flex-wrap: wrap; margin-top: 18px; }
+  .board {
+    flex: 1 1 320px; background: var(--paper); color: var(--ink); border-radius: 6px; padding: 24px 26px;
+  }
+  .board h3 { font-size: 16px; margin-bottom: 4px; }
+  .board .sub { font-size: 12px; color: var(--ink2); margin-bottom: 14px; }
+  .btns { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .btns button {
+    font-family: inherit; font-size: 13px; letter-spacing: 1px; cursor: pointer;
+    border: 1.5px solid var(--bamboo-deep); background: transparent; color: var(--bamboo-deep);
+    padding: 5px 14px; border-radius: 3px; transition: all .25s;
+  }
+  .btns button.on { background: var(--bamboo-deep); color: var(--paper); }
+  .cells { display: flex; gap: 5px; margin-bottom: 12px; }
+  .cells i { flex: 1; height: 34px; border: 1.5px solid #b7ad97; border-radius: 3px; background: transparent; transition: all .3s; }
+  .cells i.on { background: var(--bamboo-deep); border-color: var(--bamboo-deep); box-shadow: inset 0 0 6px rgba(0,0,0,.25); }
+  .verdict { font-size: 13.5px; min-height: 44px; }
+  .verdict b { color: var(--bamboo-deep); }
+
+  /* ---------- 针语大引 ---------- */
+  .bigqt {
+    background: linear-gradient(160deg, #20211c, #1a1b16);
+    border: 1px solid #3a4535; border-radius: 8px; padding: 40px 34px; margin: 24px 0;
+    position: relative; overflow: hidden;
+  }
+  .bigqt::before, .bigqt::after {
+    content: "针"; position: absolute; font-size: 150px; color: rgba(95,146,112,.07); font-weight: 700;
+  }
+  .bigqt::before { top: -40px; right: -10px; }
+  .bigqt::after { bottom: -50px; left: -6px; transform: rotate(180deg); }
+  .bigqt .qt { font-size: 21px; letter-spacing: 2px; color: var(--paper); text-align: center; display: block; border: none; padding: 0; line-height: 2.2; }
+  .bigqt .qt b { color: var(--bamboo); font-weight: 700; }
+  .bigqt .who { text-align: center; font-size: 12px; letter-spacing: 3px; color: #8a8579; margin-top: 14px; }
+
+  /* ---------- 藤杖挞刑 ---------- */
+  .cane { display: flex; gap: 26px; flex-wrap: wrap; margin-top: 18px; align-items: stretch; }
+  .cane-l { flex: 1 1 280px; background: var(--paper); color: var(--ink); border-radius: 6px; padding: 24px 26px; }
+  .cane-l h3 { font-size: 16px; margin-bottom: 10px; }
+  .cane-l p { font-size: 13.5px; }
+  .cane-r { flex: 1 1 280px; background: var(--paper); color: var(--ink); border-radius: 6px; padding: 24px 26px; text-align: center; }
+  .stick-btn {
+    font-family: inherit; font-size: 15px; letter-spacing: 2px; cursor: pointer;
+    background: var(--bamboo-deep); color: var(--paper); border: none;
+    padding: 10px 26px; border-radius: 4px; margin: 14px 0; transition: transform .1s;
+  }
+  .stick-btn:active { transform: scale(.94); }
+  .cane-count { font-size: 26px; font-weight: 700; color: var(--bamboo-deep); }
+  .cane-count small { font-size: 13px; color: var(--ink2); font-weight: 400; }
+  .ladder { display: flex; gap: 4px; justify-content: center; margin-top: 10px; }
+  .ladder i { width: 26px; height: 8px; border-radius: 2px; background: #d5cfbf; transition: all .3s; }
+  .ladder i.v { background: var(--bamboo-deep); }
+  .ladder i.hit { background: var(--gold); transform: scaleY(2.2); }
+
+  /* ---------- 住蕃住唐对牌 ---------- */
+  .twin { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+  .tcard { background: var(--paper); color: var(--ink); border-radius: 6px; padding: 26px 26px 22px; text-align: center; position: relative; overflow: hidden; }
+  .tcard::before { content: attr(data-word); position: absolute; right: -14px; bottom: -30px; font-size: 110px; color: rgba(72,118,90,.10); font-weight: 700; }
+  .tcard h3 { font-size: 22px; letter-spacing: 6px; margin-bottom: 10px; }
+  .tcard p { font-size: 13.5px; text-align: left; }
+  .tcard .src { font-size: 11px; color: var(--ink2); display: block; margin-top: 10px; }
+
+  /* ---------- 诗笺 ---------- */
+  .poemcard {
+    display: flex; gap: 30px; margin-top: 22px; background: var(--paper); color: var(--ink);
+    border-radius: 6px; padding: 30px 34px; flex-wrap: wrap;
+  }
+  .poem { writing-mode: vertical-rl; font-size: 18px; letter-spacing: 7px; line-height: 2.1; height: 300px; color: var(--ink); margin: 0 auto; }
+  .poemcard .pc-note { flex: 1 1 300px; align-self: center; }
+  .poemcard .pc-note h3 { font-size: 17px; margin-bottom: 10px; }
+  .poemcard .pc-note p { font-size: 13.5px; }
+  .poemcard .pc-note .qt { font-size: 13.5px; }
+
+  /* ---------- 佚文栈单 ---------- */
+  .stack { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; }
+  .slip {
+    background: var(--paper2); color: var(--ink); padding: 18px 22px 14px; border-radius: 2px;
+    position: relative; font-size: 13.5px; box-shadow: 0 2px 6px rgba(0,0,0,.35);
+  }
+  .slip::before { content: ""; position: absolute; top: 0; left: 30px; right: 30px; border-top: 1px dashed #a99f88; }
+  .slip .from { position: absolute; right: 16px; top: 12px; font-size: 11px; color: var(--bamboo-deep); letter-spacing: 1px; }
+  .slip .qt { border-left-color: var(--bamboo-deep); font-size: 13px; }
+
+  /* ---------- 页脚 ---------- */
+  footer { margin-top: 80px; border-top: 1px solid var(--line); padding: 40px 0 60px; }
+  .fgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; font-size: 13px; color: #a8a294; }
+  .fgrid b { color: var(--paper); display: block; margin-bottom: 8px; letter-spacing: 2px; }
+  .fgrid p { line-height: 1.85; }
+
+  .mutop {
+    position: fixed; right: 18px; bottom: 20px; z-index: 9; cursor: pointer;
+    font-family: inherit; font-size: 12px; letter-spacing: 2px; color: #8a8579;
+    border: 1px solid #3a382f; background: rgba(25,25,23,.85); padding: 6px 12px; border-radius: 2px;
+  }
+
+  @media (max-width: 760px) {
+    .hero { gap: 30px; }
+    .route::before { display: none; }
+    .sec { padding-left: 0; padding-top: 30px; }
+    .pin { position: static; width: auto; text-align: left; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+    .pin span { margin-top: 0; }
+    .twin { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="beacon">殆知阁导读 · 二百二十</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="lp-zone">
+      <div class="lp" id="lp">
+        <div class="ring" id="ring"></div>
+        <div class="mid" id="mid"></div>
+        <div class="pool">
+          <div class="needle"></div>
+          <div class="cap"></div>
+        </div>
+      </div>
+      <div class="lp-tip">点击外盘，盘转而<em>针不移</em>，此即「阴晦观指南针」</div>
+    </div>
+    <div class="title-col">
+      <div class="pin-line">海舶 指南针 蕃坊</div>
+      <h1>萍洲可谈</h1>
+      <div class="by">宋 朱彧 撰</div>
+    </div>
+  </div>
+
+  <p class="lead">北宋末年，一位随父亲宦游广州的年轻人，把市舶亭下的蕃商、海舶上的针路、蕃坊里的挞刑，一样样记进这本小书。其中<b>「舟师识地理，夜则观星，昼则观日，阴晦观指南针」</b>一语，是现存中文文献里最早的航海罗盘记录，比欧洲同类记载早了约一个世纪。</p>
+
+  <div class="origin">
+    <p>书名里的「萍洲」，原是一处宅子。黄冈有个叫丁生微的富民，挖井挖出一块石片，纹路竟像自己的姓名，便刻模立碑以为天命。不久他病死，家道随即败落，这处田宅辗转卖到了朱彧手上。</p>
+    <span class="qt">「未几病死，家旋破，余售之，今萍洲是也。」</span>
+    <p>萍洲即是谈话的厅堂。全书三卷加佚文，卷一记汴京朝士百态，卷二记广州海外诸事，卷三记神异报应。真正让这本书不朽的，是卷二：那是中国人第一次用文字记下罗盘如何为商船导航。</p>
+  </div>
+
+  <div class="route">
+
+    <section class="sec" id="s1">
+      <div class="pin"><div><span class="dot">子</span><span>北针</span></div></div>
+      <div class="sec-body">
+        <h2>启程之前，先看一眼汴京<small>卷一节选</small></h2>
+        <div class="plain">
+          <p>朱彧的父亲朱服在元丰间任起居郎、舍人一类近臣，人称「先公」，后来出知广州。朱彧因此自幼出入朝贵之门，卷一全是都下的规矩与八卦：上朝的灯火、宗室的婚事、科举的行情。</p>
+          <p>四更天，百官打着写有官位的白纸灯笼聚在禁门外，烛笼围成一圈，谓之「火城」，宰执一到即灭烛。</p>
+          <span class="qt">「朝时自四鼓，旧城诸门启关放入，都下人谓「四更时，朝马动，朝士至」者，以烛笼相围绕聚首，谓之「火城」。宰执最后至，至则「火城」灭烛。」</span>
+          <p>科场放榜之日是京城另一场集市。富室不问门第阴阳，在榜下当场「捉」新科进士做女婿，还要再勒索一笔「徧手钱」。</p>
+          <span class="qt">「本朝贵人家选壻，于科场年，择过省士人，不问阴阳吉凶及其家世，谓之「榜下捉壻」。亦有缗钱，谓之「系捉钱」，盖与壻为京索之费。」</span>
+          <p>宗室女多到官媒管不过来，富家行贿求娶，为的是借一纸官身庇护门户。</p>
+          <span class="qt">「京师富人如大桶张家，至有三十余县主。」</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="s2">
+      <div class="pin"><div><span class="dot">艮</span><span>市舶亭</span></div></div>
+      <div class="sec-body">
+        <h2>海山楼下，泊着整座南海<small>卷二 · 市舶司</small></h2>
+        <div class="plain">
+          <p>市舶司是帝国设在口岸的海关。崇宁初，泉州、明州、杭州与广州三路各置提举市舶官，而三方之中广州最盛。</p>
+          <span class="qt">「崇宁初，三路各置提举市舶官，三方唯广最盛，官吏或侵渔，则商人就易处，故三方亦迭盛衰。」</span>
+          <p>出洋要等风。商船十一月、十二月乘北风而去，五月、六月乘南风而回。去时在溽洲停泊拜别，谓之「放洋」；回时重泊市舶亭下，兵士看管，谓之「编栏」，等官府上船验货。</p>
+          <span class="qt">「广州自小海至溽洲七百里，溽洲有望舶巡检司，谓之一望，稍北又有第二、第三望，过溽洲则沧溟矣。商船去时，至溽洲少需以诀，然后解去，谓之「放洋」。」</span>
+          <span class="qt">「既至，泊船市舶亭下，五洲巡检司差兵监视，谓之「编栏」。」</span>
+          <p>市舶亭枕水处有一座海山楼，正对五洲。朱彧记下一件想不出道理的事：此处中流一丈见方的海水装进船上水舱，远渡重洋不坏，偏一步之外的水便生虫。</p>
+          <span class="qt">「广州市舶亭枕水有海山楼，正对五洲，其下谓之小海，中流方丈余，舶船取其水，贮以过海，则不坏。」</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="s3">
+      <div class="pin"><div><span class="dot">乙</span><span>抽解账</span></div></div>
+      <div class="sec-body">
+        <h2>十抽其一，还是十抽其三<small>卷二 · 抽解</small></h2>
+        <div class="plain">
+          <p>货一靠岸，帅臣、转运使与市舶监官登船看货抽税，谓之「抽解」。税率写得分明：细色贵货抽十分之一，麤色笨货抽十分之三，象牙和乳香更是抽完还得由官府按低价统购。</p>
+          <span class="qt">「凡舶至，帅漕与市舶监官莅阅其货而征之，谓之「抽解」，以十分为率，真珠龙脑凡细色抽一分，瑇瑁苏木凡麤色抽三分，抽外官市各有差，然后商人得为己物。」</span>
+        </div>
+        <div class="duel">
+          <div class="board">
+            <h3>抽解账板</h3>
+            <div class="sub">十格为一船之货，亮格即官府所取。点档试算。</div>
+            <div class="btns">
+              <button data-n="1" data-d="细色，真珠龙脑之类，十抽其一。官府抽走一格，余货才归商人。">细色抽一</button>
+              <button data-n="3" data-d="麤色，瑇瑁苏木之类，十抽其三。近三成货进了官仓。">麤色抽三</button>
+              <button data-n="10" data-d="榷货，象牙重及三十斤并乳香，抽分之外尽由官市。官市价微又以他货折价，商人多折阅，所以有人把象牙截成三斤以下躲开统购。">榷货尽官市</button>
+            </div>
+            <div class="cells"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="verdict" id="verdict">点一档，看官府从一船货里拿走多少。</div>
+          </div>
+          <div class="board">
+            <h3>逃税者的刀</h3>
+            <div class="sub">制度与对策，同页相隔不过数行</div>
+            <span class="qt">「象牙重及三十斤并乳香，抽外尽官市，盖榷货也。商人有象牙稍大者，必截为三斤以下，规免官市。凡官市价微，又准他货与之，多折阅，故商人病之。」</span>
+            <p class="note">十一世纪的广州商人已经懂得在甲板上锯象牙：三十斤是统购线，锯成三斤一截，便可按自由货出手。海关与避税，在这本书里同框。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="s4">
+      <div class="pin"><div><span class="dot">午</span><span>洋中</span></div></div>
+      <div class="sec-body">
+        <h2>数十丈的船，数尺的铺位<small>卷二 · 海舶</small></h2>
+        <div class="plain">
+          <p>远洋商船是一间浮动的城池。大船数百人，小船百余人，市舶司给纲首（船长）发朱记，授权他用笞刑管束船员，船员死亡则登记其财货。船舱深阔各数十丈，商人按摊位分占贮货，每人摊到几尺，白天是货架，夜里是床。</p>
+          <span class="qt">「甲令：海舶大者数百人，小者百余人，以巨商为纲首、副纲首、杂事，市舶司给朱记，许用笞治其徒，有死亡者籍其财。」</span>
+          <span class="qt">「舶船深阔各数十丈，商人分占贮货，人得数尺许，下以贮物，夜卧其上。货多陶器，大小相套，无少隙地。」</span>
+          <p>行船不怕风涛，怕搁浅。船漏了没法进舱里修，就由善泳、入水不闭眼的鬼奴持刀和絮，从船外把漏处堵上。帆也不是只吃顺风：开岸风、就岸风都能使，唯独顶风才倒退，谓之「使三面风」。</p>
+          <span class="qt">「海中不畏风涛，唯惧靠阁，谓之「凑浅」，则不复可脱。船忽发漏，既不可入治，令鬼奴持刀絮自外补之，鬼奴善游，入水不瞑。」</span>
+          <span class="qt">「海中不唯使顺风，开岸就岸风皆可使，唯风逆则倒退尔，谓之使三面风，逆风尚可用矴石不行。广帅以五月祈风于丰隆神。」</span>
+          <p>海里无雨，见雨即近山。舟师靠观星、观日、嗅海底泥的气味判断船位，阴天，则看这枚小小的针。</p>
+        </div>
+        <div class="bigqt">
+          <span class="qt">「舟师识地理，夜则观星，昼则观日，阴晦观<b>指南针</b>，或以十丈绳钩，取海底泥嗅之，便知所至。」</span>
+          <div class="who">朱彧记于广州，约元符崇宁间事，成书于宣和年间</div>
+        </div>
+        <div class="plain">
+          <p>这是现存中文文献里最早的航海罗盘记录，也是世界范围内最早的同类记载之一，早于欧洲文献约一个世纪。在此之前，指南针多见于堪舆方术之书；自这条记载起，它成了远洋航船上的航海仪器。书上承沈括《梦溪笔谈》的磁针实验，下启朱或以后徐兢《宣和奉使高丽图经》、赵汝适《诸蕃志》诸书的航海记录，把中国航海史分成了两半。</p>
+          <p>洋中还有别的故事。商人敬畏番僧，说海难祈祷时僧人现身空中，回广州便设斋供养，谓之「罗汉斋」。</p>
+          <span class="qt">「商人重番僧，云度海危难祷之，则见于空中，无不获济，至广州饭僧设供，谓之「罗汉斋」。」</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="s5">
+      <div class="pin"><div><span class="dot">坤</span><span>蕃坊</span></div></div>
+      <div class="sec-body">
+        <h2>一城之内，另有一城<small>卷二 · 蕃坊</small></h2>
+        <div class="plain">
+          <p>广州城南的蕃坊，是海外诸国商人获准聚居的租界式社区。蕃坊设蕃长一人，穿巾袍、执笏板，一如华人官员，专责招揽蕃商入贡；蕃人有罪，先由广州鞫实，再送回蕃坊行刑。</p>
+          <span class="qt">「广州蕃坊，海外诸国人聚居，置蕃长一人，管勾蕃坊公事，专切招邀蕃商入贡，用蕃官为之，巾袍履笏如华人。」</span>
+          <p>行刑的规矩别处没有：绑在木梯上，用藤杖从脚跟抽到头顶，藤杖三下折合大杖一下。库本这里记下了执法者的实地观察，鞭刑的痛感因人而行刑工具与体位而异。</p>
+          <span class="qt">「蕃人有罪，诣广州鞫实，送蕃坊行遣。缚之木梯上，以藤杖挞之，自踵至顶，每藤杖三下折大杖一下。盖蕃人不衣裈袴，喜地坐，以杖臀为苦，反不畏杖脊。」</span>
+        </div>
+        <div class="cane">
+          <div class="cane-l">
+            <h3>三藤折一杖</h3>
+            <p>按库本换算：蕃坊行刑，藤杖三下，才抵得上大杖一下。点几下试试这本刑名账。</p>
+            <span class="qt">「缚之木梯上，以藤杖挞之，自踵至顶，每藤杖三下折大杖一下。」</span>
+          </div>
+          <div class="cane-r">
+            <div class="cane-count"><span id="vineN">0</span><small> 藤杖</small></div>
+            <button class="stick-btn" id="caneBtn">挞一下</button>
+            <div class="ladder" id="ladder"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="note" style="text-align:center"><span id="caneLog">藤杖三下，折大杖一下</span></div>
+          </div>
+        </div>
+        <div class="plain">
+          <p>蕃坊的日常与禁忌，朱彧记得具体：衣着与华人不同，饮食却已与华人相通；因其先人曾奉佛受戒，至今不食猪肉，六畜非亲手宰杀不食，鱼鳖则不问生死皆食。手指上嵌宝石指环，最贵重的叫「猫儿眼睛」；还有一种摩娑石指环，遇毒一吮立愈。</p>
+          <span class="qt">「蕃人衣装与华异，饮食与华同。或云其先波巡尝事瞿昙氏，受戒勿食诸肉，至今蕃人但不食猪肉而已。又曰汝必欲食，当自杀自食，意谓使其割己肉自啖，至今蕃人非手刃六畜则不食，若鱼鳖则不问生死皆食。」</span>
+          <span class="qt">「其人手指皆带宝石，嵌以金锡，视其贫富，谓之指环子，交址人尤重之，一环直百金，最上者号猫儿眼睛，乃玉石也，光焰动灼，正如活者。」</span>
+          <span class="qt">「有摩娑石者，辟药虫毒，以为指环，遇毒则吮之立愈，此固可以卫生。」</span>
+          <p>连词牌「菩萨蛮」的来历，他也在蕃坊里找到了一个民间答案。</p>
+          <span class="qt">「乐府有「菩萨蛮」，不知何物，在广中见呼蕃妇为「菩萨蛮」，因识之。」</span>
+          <p>一次官府犒设，蕃人大集府中，蕃长领来一位三佛齐人，自称善诵《孔雀明王经》。朱彧让他在柱边诵经，听到的却是另一番声响。</p>
+          <span class="qt">「其人以两手向背，倚柱而呼，声正如瓶中倾沸汤，更无一声似世传《孔雀真言》者。」</span>
+          <p>蕃坊也通婚姻。元佑间蕃商刘姓娶了宗室女，官至左班殿直；刘死后两家争财产，一路闹到登闻鼓。朝廷这才醒悟宗女已嫁入夷部，随即立下三代须有一代做官才得娶宗女的禁令。</p>
+          <span class="qt">「元佑间，广州蕃坊刘姓人娶宗女，官至左班殿直。刘死，宗女无子，其家争分财产，遣人挝登闻院鼓。朝廷方悟宗女嫁夷部，因禁止，三代须一代有官，乃得取宗女。」</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="s6">
+      <div class="pin"><div><span class="dot">兑</span><span>两栖人</span></div></div>
+      <div class="sec-body">
+        <h2>住蕃，住唐<small>卷二 · 商人</small></h2>
+        <div class="plain">
+          <p>那一代远洋商人自成一类人：中国水手客死他乡叫「住蕃」，外国商人侨居广州叫「住唐」。广州的高利贷跟着季风走，借一还二，以船回为期，人十年不归，利息也不涨。</p>
+          <span class="qt">「北人过海外，是岁不还者，谓之「住蕃」；诸国人至广州，是岁不归者，谓之「住唐」。广人举债总一倍，约舶过回偿，住蕃虽十年不归，息亦不增。」</span>
+        </div>
+        <div class="twin">
+          <div class="tcard" data-word="蕃">
+            <h3>住蕃</h3>
+            <p>中国商人因风信错过归期，滞留南海诸国，一住十年。书里没有记下他们的名字，只记下债主的宽限：息亦不增。这是十一世纪的跨国信用。</p>
+            <span class="src">北人过海外，是岁不还者</span>
+          </div>
+          <div class="tcard" data-word="唐">
+            <h3>住唐</h3>
+            <p>外国商人侨居广州不归。海外诸国呼中国为「唐」，汉威行于西北故称汉，唐威行于东南故称唐。直到崇宁间还有臣僚上言，要把文书里的「唐装汉法」改称「宋」。</p>
+            <span class="src">诸国人至广州，是岁不归者</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="s7">
+      <div class="pin"><div><span class="dot">回</span><span>回舶</span></div></div>
+      <div class="sec-body">
+        <h2>回舶带上的人与事<small>卷三一瞥</small></h2>
+        <div class="cards">
+          <div class="card">
+            <span class="tag">狱中诗</span>
+            <h3>东坡渡海北归</h3>
+            <p>朱彧记乌台诗案最详：苏轼押解下狱，问的竟是有无誓书铁券，那是死囚的规格。狱中他把绝命诗托付狱吏寄弟苏辙。</p>
+            <span class="qt">「圣主如天万物春，小臣愚暗自亡身。百年未满先偿债，十口无归更累人。是处青山可埋骨，他时夜雨独伤神。与君世世为兄弟，更结来生未了因。」</span>
+            <p class="src">卷二 · 东坡事，末记作者亲见其北归气貌，别去数月，卒于阳羡</p>
+          </div>
+          <div class="card">
+            <span class="tag">捽须</span>
+            <h3>沈括的悍妻</h3>
+            <p>写《梦溪笔谈》的沈括，晚年娶妻张氏，悍虐不能制。张氏拔他的胡子，胡子连血肉落地，儿女哭着去拾。</p>
+            <span class="qt">「晚娶张氏，悍虐，存中不能制，时被棰骂，捽须堕地，儿女号泣而拾之，须上有血肉者，又相与号恸，张终不恕。」</span>
+            <p class="src">卷三 · 朱彧仲姊嫁沈括之子清直，所记为亲见</p>
+          </div>
+          <div class="card">
+            <span class="tag">海哥</span>
+            <h3>京师看海豹</h3>
+            <p>元佑间有人牵一头海兽进京，得钱便呼之出水，日获无算，贵人争相召看。后来在驸马园放入池中，一声呼哨，再没有出来。</p>
+            <span class="qt">「海哥，盖海豹也，有斑文如豹而无尾，凡四足，前二足如手，后二足与尾相纽如一。」</span>
+            <p class="src">卷三 · 辽东登莱海边的普通海豹，在汴京成了奇观</p>
+          </div>
+          <div class="card">
+            <span class="tag">活卦影</span>
+            <h3>米芾的怪扮相</h3>
+            <p>蜀中术士费老以丹青占卜，画牛添二尾为失、画犬添二口为哭，谓之卦影。朝士米芾好怪，穿深衣踏朝靴，朋友都叫他「活卦影」。</p>
+            <span class="qt">「朝士米芾好怪，常戴俗帽，衣深衣而蹑朝靴、绀缘缬，朋从目为「活卦影」。」</span>
+            <p class="src">卷三 · 卜以决疑，而转生疑，非先王命卜之意也</p>
+          </div>
+          <div class="card">
+            <span class="tag">柳箱</span>
+            <h3>最后的剑侠</h3>
+            <p>常州张大卿买得一婢，携一柳箱，每十数日失其人，夜半又从天窗回来。岁余生一女，发箱看，只有一柄短剑、一件皂色半臂。</p>
+            <span class="qt">「乃发箱视之，中藏一短剑及皂半臂，无他物。」</span>
+            <p class="src">卷三 · 古传剑侠甚着，近世寂不闻</p>
+          </div>
+          <div class="card">
+            <span class="tag">仿宋</span>
+            <h3>辽人也考据</h3>
+            <p>辽人立干文阁、置学士，事事仿中国。政和壬辰宋廷得元圭肆赦，当年冬天，辽也称得了孔子履，赦管内。连祥瑞都要对齐。</p>
+            <span class="qt">「辽人嗜学中国。」</span>
+            <p class="src">卷二 · 典章文物，仿效甚多</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="s8">
+      <div class="pin"><div><span class="dot">库</span><span>辑佚</span></div></div>
+      <div class="sec-body">
+        <h2>散佚的三张纸<small>佚文</small></h2>
+        <p class="plain">库本卷末附佚文三条，各注辑书出处，原书佚文可见一斑。</p>
+        <div class="stack">
+          <div class="slip">
+            <span class="from">《永乐大典》卷一○八一三 · 题《积俸葬母》</span>
+            <span class="qt">「后十年登第，调官，欲积俸营葬，凡两任，不能办。」</span>
+            <p>绵州杨鼎臣十余岁丧母，殡于菜园，登第后积俸营葬，两任不能办，直至改官方获襄事。启棺，面衣之下容颜如生，已三十年。</p>
+          </div>
+          <div class="slip">
+            <span class="from">《宋会要辑稿》礼二四之七七</span>
+            <span class="qt">「崇宁初，姚舜仁献明堂议，以秘书少监修建明堂，专掌制度。姚议太室用茅覆，尊尧制也，竟不成。」</span>
+            <p>明堂太室要不要按古制覆茅草，议了十几年；政和初徽宗自定合宫之制，不用茅。作者评一句：可见姚论之迂。</p>
+          </div>
+          <div class="slip">
+            <span class="from">《玉芝堂谈荟》卷一一</span>
+            <span class="qt">「见一人无首。主人云，因患瘰疬，头脱而活。每有所需，以手指画，日以汤粥灌之，犹存。」</span>
+            <p>亲戚宦游西蜀，途中借宿，见到一位没有头颅的活人。瘰疬之疾，头落而人存。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <p><b>核验声明</b><br>文本来源：殆知阁简体库史藏志存记录《萍洲可谈》（据库本去空白二万七千六百二十一字实测，卷一约九千六百六十一字、卷二约八千九百六十一字、卷三约八千五百八十一字、佚文约三百九十一字，四卷四分皆机数）。本页全部引文经脚本与库内文件逐字核验（去标点、归一后双侧比对），并反扫页面确认无未申报的库本成句复用；导读系列总目见 <a href="mulu.html">mulu.html</a>。</p>
+      </div>
+      <div>
+        <p><b>库本讹字申报</b><br>库本异体照录：壻、瑇瑁、麤、矴、徧、鬈、妬、棰；「交址」即交趾。卷二蕃坊条「其先波巡尝事瞿昙氏」之「波巡」二字难解，通行本或作「波斯」，照录存疑；卷一朝会条「探腰间布囊，取一纸角，视之，也」处有脱文，未引；卷三转生条有「刊本作史」校记混入正文，卷二物产条「蛙变为黄?」有占位问号，卷一、卷三另有个别疑讹之句，皆未引。</p>
+      </div>
+      <div>
+        <p><b>使用提醒</b><br>朱彧约于宣和年间成书，所记多为元丰至崇宁间事，多出其随父朱服宦游的亲历亲闻，但卷三神异报应诸条（卦影、紫姑、剑侠、转生）与「积俸葬母」「无首人」之类皆非史实，请以志怪文学视之。书中对蕃人、鬼奴等人群的记述带着当时人的猎奇目光与华夷之别，是十一世纪的记录而非今日的价值判断，阅读时请留意这一层时代局限。</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="mutop" id="mutop">回针位</button>
+
+<script>
+  var RING24 = "子癸丑艮寅甲卯乙辰巽巳丙午丁未坤申庚酉辛戌乾亥壬";
+  var ring = document.getElementById('ring');
+  for (var i = 0; i < 24; i++) {
+    var b = document.createElement('b');
+    b.textContent = RING24[i];
+    b.style.setProperty('--r', (i * 15) + 'deg');
+    if (RING24[i] === '子') b.className = 'zi';
+    if (RING24[i] === '午') b.className = 'wu';
+    ring.appendChild(b);
+  }
+  var DZ = "子丑寅卯辰巳午未申酉戌亥";
+  var mid = document.getElementById('mid');
+  for (var j = 0; j < 12; j++) {
+    var m = document.createElement('b');
+    m.textContent = DZ[j];
+    m.style.setProperty('--r', (j * 30) + 'deg');
+    mid.appendChild(m);
+  }
+  document.getElementById('lp').addEventListener('click', function () {
+    ring.classList.toggle('spin');
+  });
+
+  var btns = document.querySelectorAll('.btns button');
+  var cells = document.querySelectorAll('.cells i');
+  var verdict = document.getElementById('verdict');
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btns.forEach(function (x) { x.classList.remove('on'); });
+      btn.classList.add('on');
+      var n = +btn.dataset.n;
+      cells.forEach(function (c, i) { c.classList.toggle('on', i < n); });
+      verdict.innerHTML = btn.dataset.d;
+    });
+  });
+
+  var vineN = 0;
+  var ladder = document.querySelectorAll('#ladder i');
+  var caneLog = document.getElementById('caneLog');
+  document.getElementById('caneBtn').addEventListener('click', function () {
+    vineN++;
+    document.getElementById('vineN').textContent = vineN;
+    var big = Math.floor(vineN / 3);
+    ladder.forEach(function (el, i) {
+      el.classList.toggle('v', i < big);
+      el.classList.remove('hit');
+    });
+    var idx = (vineN - 1) % 3;
+    if (ladder[idx]) ladder[idx].classList.add('hit');
+    caneLog.textContent = big > 0
+      ? '藤杖 ' + vineN + ' 下，折大杖 ' + big + ' 下'
+      : '藤杖三下，折大杖一下';
+  });
+
+  var secs = document.querySelectorAll('.sec');
+  function lit() {
+    var midY = window.innerHeight * 0.42;
+    secs.forEach(function (s) {
+      var r = s.getBoundingClientRect();
+      s.classList.toggle('lit', r.top <= midY && r.bottom > midY);
+    });
+  }
+  window.addEventListener('scroll', lit, { passive: true });
+  lit();
+
+  document.getElementById('mutop').addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
