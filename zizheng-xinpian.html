@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>〈资政新篇〉· 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #232220;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --gold: #c9963f; --gold-dim: #8f6d2f;
+    --zhu: #b0433a;
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 26px; }
+  q { quotes: "「" "」"; }
+
+  /* 折面开卷 */
+  .zhemian { padding: 72px 0 64px; }
+  .zhemian-grid { display: grid; grid-template-columns: 150px 1fr; gap: 44px; align-items: stretch; }
+  .zhemian-main {
+    background: linear-gradient(90deg, rgba(232,228,220,0.05), rgba(232,228,220,0.015) 55%, rgba(232,228,220,0.05));
+    border: 1px solid var(--hairline); position: relative;
+    padding: 46px 44px 40px 60px;
+  }
+  .zhemian-main::before {
+    content: ""; position: absolute; top: 0; bottom: 0; left: 44px; width: 1px;
+    background: linear-gradient(rgba(232,228,220,0.18), rgba(232,228,220,0.04));
+  }
+  .zhe-title {
+    position: absolute; left: 10px; top: 42px;
+    writing-mode: vertical-rl; letter-spacing: 0.5em;
+    font-size: 34px; font-weight: 700; color: var(--paper);
+  }
+  .zhe-kicker { font-size: 12.5px; letter-spacing: 0.34em; color: var(--gold); }
+  .zhe-sub { color: var(--paper-dim); font-size: 15px; margin: 18px 0 26px; max-width: 34em; }
+  .zhe-sub b { color: var(--paper); font-weight: 600; }
+  .zhe-lead { font-size: 15.5px; max-width: 36em; }
+  .zhe-lead q { color: var(--paper); }
+  .yin {
+    width: 96px; height: 96px; border: 2px solid var(--zhu); color: var(--zhu);
+    display: grid; place-items: center; font-size: 26px; font-weight: 700;
+    letter-spacing: 0.18em; writing-mode: vertical-rl; margin-left: auto;
+    opacity: 0.92; align-self: start; margin-top: 8px;
+  }
+  .zhe-meta { margin-top: 30px; color: var(--paper-faint); font-size: 13px; letter-spacing: 0.08em; }
+  .zhe-meta span { color: var(--paper-dim); }
+
+  /* 归路 */
+  .sec { padding: 52px 0 8px; }
+  .sec-tag { font-size: 12px; letter-spacing: 0.32em; color: var(--gold); margin-bottom: 14px; }
+  .sec h2 { font-size: 24px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 16px; }
+  .sec p.prose { color: var(--paper-dim); font-size: 15.5px; max-width: 40em; margin-bottom: 14px; }
+  .sec p.prose b { color: var(--paper); font-weight: 600; }
+  .sec p.prose q { color: var(--paper); quotes: "「" "」"; }
+
+  .route { margin: 34px 0 18px; border: 1px solid var(--hairline); padding: 30px 22px 16px; }
+  .route svg { width: 100%; height: auto; display: block; }
+  .route-note { color: var(--paper-faint); font-size: 12.5px; margin-top: 10px; letter-spacing: 0.04em; }
+
+  /* 三纲 */
+  .sangang { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 30px 0 10px; }
+  .gang {
+    border: 1px solid var(--hairline); padding: 20px 18px 18px; background: var(--ink-2);
+  }
+  .gang .gn { font-size: 12px; letter-spacing: 0.3em; color: var(--gold-dim); }
+  .gang h3 { font-size: 20px; font-weight: 700; letter-spacing: 0.14em; margin: 10px 0 8px; }
+  .gang p { font-size: 13.5px; color: var(--paper-dim); }
+  .gang p q { color: var(--paper); }
+
+  /* 条陈卡 */
+  .tiaochen { margin-top: 30px; }
+  .tcard {
+    display: grid; grid-template-columns: 1fr 92px; gap: 0;
+    border: 1px solid var(--hairline); margin-bottom: 16px;
+  }
+  .tcard-body { padding: 24px 26px 22px; background: var(--ink-2); }
+  .tcard-chip {
+    display: inline-block; font-size: 11.5px; letter-spacing: 0.26em;
+    color: var(--gold); border: 1px solid var(--gold-dim); padding: 3px 10px; margin-bottom: 12px;
+  }
+  .tcard-body h3 { font-size: 19px; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 10px; }
+  .tcard-body p { font-size: 14.5px; color: var(--paper-dim); margin-bottom: 10px; }
+  .tcard-body p:last-child { margin-bottom: 0; }
+  .tcard-body q { color: var(--paper); quotes: "「" "」"; }
+  .tcard-bi { border-left: 1px solid var(--hairline); background: var(--ink-3); position: relative; display: flex; }
+  .bifan {
+    margin: auto; font-size: 34px; color: var(--zhu); font-weight: 700;
+    border: 2px solid var(--zhu); width: 52px; height: 52px; display: grid; place-items: center;
+    transform: rotate(6deg); opacity: 0.92;
+  }
+
+  /* 万国清单 */
+  .guo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px; }
+  .guo { border: 1px solid var(--hairline); padding: 18px 20px 16px; background: var(--ink-2); }
+  .guo h3 { font-size: 17px; font-weight: 700; letter-spacing: 0.1em; }
+  .guo h3 small { font-size: 12px; color: var(--gold); font-weight: 400; margin-left: 10px; letter-spacing: 0.14em; }
+  .guo p { font-size: 13.5px; color: var(--paper-dim); margin-top: 8px; }
+  .guo p q { color: var(--paper); }
+  .guo .an { display: block; margin-top: 9px; font-size: 12.5px; color: var(--paper-faint); }
+  .guo .an b { color: var(--gold-dim); font-weight: 600; }
+
+  /* 未行对照 */
+  .kongzhuan { margin-top: 28px; border-top: 1px solid var(--hairline); }
+  .krow {
+    display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--hairline);
+  }
+  .krow > div { padding: 16px 20px; font-size: 14px; }
+  .krow > div:first-child { border-right: 1px solid var(--hairline); }
+  .krow .lhs { color: var(--paper); }
+  .krow .lhs small { display: block; color: var(--gold-dim); font-size: 11.5px; letter-spacing: 0.22em; margin-bottom: 5px; }
+  .krow .rhs { color: var(--paper-faint); }
+  .krow .rhs small { display: block; color: var(--zhu); font-size: 11.5px; letter-spacing: 0.22em; margin-bottom: 5px; }
+
+  /* 折尾 */
+  .zhewei { padding: 56px 0 26px; border-top: 1px solid var(--hairline); margin-top: 56px; }
+  .zhewei ol { list-style: none; margin-top: 26px; }
+  .zhewei li {
+    display: grid; grid-template-columns: 120px 1fr; gap: 22px;
+    padding: 15px 4px; border-bottom: 1px solid var(--hairline);
+    font-size: 14.5px; color: var(--paper-dim);
+  }
+  .zhewei li b { color: var(--gold); font-weight: 600; font-size: 13.5px; letter-spacing: 0.06em; }
+  .zhewei li q { color: var(--paper); }
+
+  footer.page {
+    border-top: 1px solid var(--hairline); margin-top: 50px; padding: 34px 0 54px;
+    color: var(--paper-faint); font-size: 13.5px;
+  }
+  footer.page p { margin-bottom: 6px; }
+  footer.page a { color: var(--paper-dim); }
+
+  @media (max-width: 720px) {
+    .zhemian-grid { grid-template-columns: 1fr; }
+    .zhemian-main { padding-left: 74px; }
+    .sangang { grid-template-columns: 1fr; }
+    .guo-grid { grid-template-columns: 1fr; }
+    .tcard { grid-template-columns: 1fr; }
+    .tcard-bi { border-left: 0; border-top: 1px solid var(--hairline); padding: 12px; }
+    .bifan { transform: rotate(0deg); }
+    .zhewei li { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 折面 -->
+<header class="zhemian">
+  <div class="wrap">
+    <div class="zhemian-grid">
+      <div class="yin">干王印</div>
+      <div class="zhemian-main">
+        <div class="zhe-title">资政新篇</div>
+        <div class="zhe-kicker">太平天国己未九年 · 条陈一道</div>
+        <p class="zhe-sub">一八五九年春，一个在香港住了六年的教书先生化装成药材商人，穿过江西、湖北，走进被围城困住的天京。不到一个月，天王洪秀全封他做干王，总理朝政。宿将不服，他便递上这道奏疏，把自己在香港学到的整个世界摊开在纸上。这本奏疏叫<b>《资政新篇》</b>，通常被看作中国人写下的第一份系统的近代化蓝图：铁路、轮船、银行、报纸、专利、保险，一样不缺。</p>
+        <p class="zhe-lead">他在奏疏开头只说了一句私心：<q>缘小弟自粤来京，不避艰险，非图爵禄之荣，实欲备陈方策，以广圣闻</q>。库本去空白八千二百五十七字，分用人察失、风风、法法、刑刑四类，是太平天国文献里最安静的一本：没有战报，没有天话，通篇在算账。</p>
+        <div class="zhe-meta">撰者 <span>洪仁玕</span>（1822 至 1864，广东花县人，洪秀全族弟）；奏上 <span>己未九年（1859）</span>；库本 <span>史藏 志存记录</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 归路 -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">一 · 归 路</div>
+    <h2>六年香港，换来这份账本</h2>
+    <p class="prose">洪仁玕是拜上帝会最早的人之一，金田起事时却被清军堵在广东，从此流亡。他跑进香港，跟着瑞典教士韩山文，后来又助英国人理雅各译书。这一待就是六年，学会了看世界。有意思的是，这六年都写进了奏疏里：全篇点名感谢的洋人共有二十来位，韩山明、理雅各、慕维廉、艾约瑟都在其列，像一封写给香港的谢启。</p>
+    <div class="route">
+      <svg viewBox="0 0 820 150" role="img" aria-label="洪仁玕归国路线">
+        <line x1="40" y1="75" x2="780" y2="75" stroke="rgba(232,228,220,0.16)" stroke-width="1.5"/>
+        <g font-size="13" fill="#a39e93" font-family="'Songti SC','Noto Serif SC',serif">
+          <circle cx="70" cy="75" r="5" fill="#8f6d2f"/>
+          <text x="70" y="112" text-anchor="middle" fill="#e8e4dc">花县</text>
+          <text x="70" y="42" text-anchor="middle" fill="#6e6a61">1822 生于此</text>
+
+          <circle cx="205" cy="75" r="5" fill="#c9963f"/>
+          <text x="205" y="112" text-anchor="middle" fill="#e8e4dc">香港</text>
+          <text x="205" y="42" text-anchor="middle" fill="#6e6a61">1852 亡命至此</text>
+
+          <circle cx="360" cy="75" r="5" fill="#c9963f"/>
+          <text x="360" y="112" text-anchor="middle" fill="#e8e4dc">上海</text>
+          <text x="360" y="42" text-anchor="middle" fill="#6e6a61">1854 拟北上未成</text>
+
+          <circle cx="520" cy="75" r="5" fill="#c9963f"/>
+          <text x="520" y="112" text-anchor="middle" fill="#e8e4dc">黄梅</text>
+          <text x="520" y="42" text-anchor="middle" fill="#6e6a61">乔装药商</text>
+
+          <circle cx="680" cy="75" r="7" fill="#b0433a"/>
+          <circle cx="680" cy="75" r="12" fill="none" stroke="#b0433a" stroke-width="1" opacity="0.55"/>
+          <text x="680" y="112" text-anchor="middle" fill="#e8e4dc">天京</text>
+          <text x="680" y="42" text-anchor="middle" fill="#6e6a61">1859 春 抵京</text>
+        </g>
+        <path d="M 360 88 Q 282 108 218 88" fill="none" stroke="#6e6a61" stroke-width="1.2" stroke-dasharray="4 4"/>
+      </svg>
+      <div class="route-note">虚线是一八五四年那次失败的折返：从上海原路回香港，再等四年。</div>
+    </div>
+    <p class="prose">到京未及一月即封干王，位在宿将之上，军中多有不服。洪仁玕自己也清楚：他没有尺寸战功，能拿得出手的只有一肚子见闻。于是有了这道奏疏的开场白：<q>夫事有常变，理有穷通</q>，天国要的不是再打一场胜仗，而是<q>因时制宜，审势而行</q>八个字。</p>
+  </div>
+</section>
+
+<!-- 三纲 -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">二 · 三 纲</div>
+    <h2>全篇的方法论，只有三句话</h2>
+    <p class="prose">他把治国拆成三个动词，原文干净得像一份现代方案的总纲：</p>
+    <div class="sangang">
+      <div class="gang">
+        <div class="gn">其一</div>
+        <h3>以风风之</h3>
+        <p>移风易俗，自上化下。缠脚、蓄甲、养鸟斗蟋，<q>惟在在上者以为可耻之行</q>，见则鄙之忽之，不刑而自化。</p>
+      </div>
+      <div class="gang">
+        <div class="gn">其二</div>
+        <h3>以法法之</h3>
+        <p>立法定制，全篇的重心所在。铁路银行报纸专利，法法类下二十九条条陈，是全篇主体。</p>
+      </div>
+      <div class="gang">
+        <div class="gn">其三</div>
+        <h3>以刑刑之</h3>
+        <p>教在刑先。他引第六天条<q>勿杀</q>，替死刑找了一个不是杀的执行方式，详见下文条陈。</p>
+      </div>
+    </div>
+    <p class="prose">三纲之外他又补了一句忠告，像是提前替这个政权写好了讣告：<q>否则法立弊生，人将效尤</q>，末了四个字最狠：<q>实奉行者毁之尔</q>。法没有不好，毁掉它的是执行法令的人。</p>
+  </div>
+</section>
+
+<!-- 条陈 -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">三 · 条 陈</div>
+    <h2>六片蓝图，全部停留在纸上</h2>
+    <p class="prose">每张条陈右侧批着同一个字：是。这个字有出处，库本正文里夹着一行校记，说刻本上存有天王眉批；传世的钦定本上，朱批也多报是字。批了，然后没动工，这个落差才是全书真正的主角。</p>
+    <div class="tiaochen">
+
+      <div class="tcard">
+        <div class="tcard-body">
+          <div class="tcard-chip">法法类 · 兴车马之利</div>
+          <h3>二十一省，二十一条大路</h3>
+          <p><q>倘有能造如外邦火轮车，一日夜能行七八千里者，准自专其利，限满准他人仿做。</q>通常被视为中文里最早的成文专利条款，而且奖励分层：<q>器小者赏五年，大者赏十年，益民多者年数加多</q>。</p>
+          <p>铁路网设计得像一张体检单：<q>先于二十一省通二十一条大路，以为全国之脉格，通则国家无病焉。</q>路基宽窄按省郡县村四级递减，沿路二十里设一馆递信，他连信资怎么按重量计价都想好了。</p>
+        </div>
+        <div class="tcard-bi"><div class="bifan">是</div></div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-body">
+          <div class="tcard-chip">法法类 · 兴银行</div>
+          <h3>纸币、利息与沉船</h3>
+          <p>发行办法写到了操作层：<q>倘有百万家财者，先将家赀契式禀报入库，然后准颁一百五十万银纸</q>，利息<q>每两取息三厘</q>，允许一人独办，也允许三四家富民合办。</p>
+          <p>他替纸币辩护的那段话，是全篇最好的一句散文：<q>身有万金而人不觉，沉于江河则损于一己而益于银行，财宝仍在也</q>。人丢了命，账还在银行里，这就是现代金融的全部秘密。</p>
+        </div>
+        <div class="tcard-bi"><div class="bifan">是</div></div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-body">
+          <div class="tcard-chip">法法类 · 兴新闻馆</div>
+          <h3>报纸与事实核查</h3>
+          <p>他要设书信馆通公文，设新闻馆通物价与时事，理由排成三层：<q>上览之，得以资治术：士览之，得以识变通：商农览之，得以通有无</q>。对报纸只有一条编辑纪律：<q>只须实写，勿着一字浮文</q>。</p>
+          <p>甚至有报道免责条款：朝廷查证未实的事，报纸只需注明<q>有某人来说，未知是否，俟后报明</q>，就不算造谣。一百六十年前，他把信源标注制度写进了国家规划。</p>
+        </div>
+        <div class="tcard-bi"><div class="bifan">是</div></div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-body">
+          <div class="tcard-chip">法法类 · 兴保人之例</div>
+          <h3>保险，从外国抄来的作业</h3>
+          <p>他明说这是外国成例：<q>人命货物船等有防于水火者，先与保人议定，每年纳银若干，有失则保人赔其所值</q>。失了命，父母妻子有赖；失了货，自家不至于尽亏。</p>
+          <p>同一节还主张禁卖子为奴，理由冷峻得很：买奴是<q>贻笑外邦</q>，孩子沦为奴仆，后世纵然生出贤才也不能为国所用，反成其害。</p>
+        </div>
+        <div class="tcard-bi"><div class="bifan">是</div></div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-body">
+          <div class="tcard-chip">法法类 · 兴跛盲聋哑院</div>
+          <h3>不放弃一个废人</h3>
+          <p>残障救济写成了办学章程：有钱的自带盘缠，没钱的由善人资助，请教师教<q>鼓乐书数杂技，不致为废人也</q>。配套的还有鳏寡孤独院、医院与四民院，医院医师须<q>考取数场然后聘用，不受谢金</q>。</p>
+          <p>他把这套设施看作国格的一部分。讲到美国时特意补了一句：<q>郭中无有乞丐之民，此是其富足也</q>，一个邦的富足，先看街上有没有乞丐。</p>
+        </div>
+        <div class="tcard-bi"><div class="bifan">是</div></div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-body">
+          <div class="tcard-chip">刑刑类 · 议勿杀</div>
+          <h3>用吊死来遵守勿杀</h3>
+          <p>第六天条写着<q>盖谓天父有赏罚于来生，人无生杀于今世</q>，可国家又不能没有死刑。他的解法是绞架：重罪者圈颈立于高台，抽去足板吊死，先公示罪状日期，令观者股栗，<q>又少符勿杀之圣诫焉</q>。</p>
+          <p>逻辑通顺得令人后背发凉：杀是犯戒的，吊不是。神学为量刑打了个补丁，这个补丁里全是那个时代的裂缝。</p>
+        </div>
+        <div class="tcard-bi"><div class="bifan">是</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 万国 -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">四 · 万 国</div>
+    <h2>一张一八五九年的世界观清单</h2>
+    <p class="prose">奏疏里有一节各国综述，像一个香港读者给内陆政权做的新闻简报。有几条准得惊人，有几条错得离谱，合起来恰好是一八五九年世界的侧影。</p>
+    <div class="guo-grid">
+      <div class="guo">
+        <h3>英吉利<small>俗称红毛邦</small></h3>
+        <p>承认它<q>于今称为最强之邦，由法善也</q>，然后劝天王别再喊征服：凡往来文书，<q>万方来朝、四夷宾服、及夷狄戎蛮鬼子，一切轻污之字皆不必说也</q>。</p>
+        <span class="an"><b>今按</b> 理由是外交文书级的：<q>盖轻污字样，是口角取胜之事，不是经纶实际，且招祸也</q>。1859 年的中国官文书中，这份对英基调罕见地清醒。</span>
+      </div>
+      <div class="guo">
+        <h3>花旗邦<small>即米利坚</small></h3>
+        <p>他笔下的美国政治：邦长<q>五年一任，限以俸禄，任满则养尊虚优，各省再举</q>；议大事时<q>置一大柜在中廷，令凡官民有仁智者，写票公举</q>。</p>
+        <span class="an"><b>今按</b> 一只票柜四个短句，写清了任期制与票选，这是汉语对美国总统制的最早描述之一。</span>
+      </div>
+      <div class="guo">
+        <h3>俄罗斯邦<small>北方冠冕</small></h3>
+        <p>百余年前俄国被英法诸国所迫，<q>故遣其长子伪装凡民，到佛兰西邦学习邦法、火船技艺，数年回邦，无人知其为俄之长子也</q>。归国大兴政教，遂成强国。</p>
+        <span class="an"><b>今按</b> 这是彼得大帝微服留学的传说，人名细节有误，方向全对：学技术，回来变强。</span>
+      </div>
+      <div class="guo">
+        <h3>土耳其邦<small>天兄降生圣地</small></h3>
+        <p>其邦执摩西律法<q>不知变通，故邦势不振</q>，丙辰年（1856）<q>为俄罗斯所侵，幸英佛二邦相助，得免于祸</q>。</p>
+        <span class="an"><b>今按</b> 这是克里米亚战争。一份内陆政权的奏疏里出现了三年前刚结束的欧战战报，香港的报纸传到了这里。</span>
+      </div>
+      <div class="guo">
+        <h3>犹太遗民<small>河南开封</small></h3>
+        <p>讲完外国讲国内：<q>河南开封郡祥符县内，多有犹太人及羊皮书，写犹太字迹者不少</q>，只是其人自宋迄今徒行其礼，已不识其字。</p>
+        <span class="an"><b>今按</b> 开封犹太人社群明末即有传教士记录，洪仁玕把它写进万国简报，当作天父意旨的证据。</span>
+      </div>
+      <div class="guo">
+        <h3>日本邦<small>将来出于巧</small></h3>
+        <p>日本近年与美国通商，得各项技艺以为法则，他断言<q>将来亦必出于巧焉</q>。相形之下，拜偶像的邦<q>多衰弱不振，而名不著焉</q>。</p>
+        <span class="an"><b>今按</b> 一八五九年，明治维新还有九年。这算是全篇最准的一句预言。</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 眉批 -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">五 · 眉 批</div>
+    <h2>天王看完了，还批了字</h2>
+    <p class="prose">库本正文里夹着一行校记：<q>刻本有洪秀全在此策上眉批说：钦定此策是也</q>。传世的钦定本上，天王朱批多是这一个字：是。铁路批是，银行批是，报纸批是，投票柜批是。几乎条条照准，然后一条也没有动工。</p>
+    <p class="prose">天京城外重新立起了江南、江北两座大营，城里没有钢铁，没有机器，没有一天和平。蓝图没有错，错的是这张图纸落在一座即将陷落的城里。</p>
+    <div class="kongzhuan">
+      <div class="krow">
+        <div class="lhs"><small>蓝图上</small>二十一条大路，二十里一信馆，日夜行七八千里</div>
+        <div class="rhs"><small>实况</small>铁路零里，天京城破于甲子十四年六月（1864.7）</div>
+      </div>
+      <div class="krow">
+        <div class="lhs"><small>蓝图上</small>银行颁银纸，每两取息三厘，沉河亦无损</div>
+        <div class="rhs"><small>实况</small>太平天国治下没有开过一家银行</div>
+      </div>
+      <div class="krow">
+        <div class="lhs"><small>蓝图上</small>新闻馆实写勿浮文，信源注明俟后报明</div>
+        <div class="rhs"><small>实况</small>报纸未及一张，文报全凭军递</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 折尾 -->
+<section class="zhewei">
+  <div class="wrap">
+    <div class="sec-tag">折 尾</div>
+    <h2>后来</h2>
+    <ol>
+      <li><b>己未九年 · 1859</b><span>奏疏上，天王批是，钦定刊行。此后数年他出师东征、折戟安庆，救火的时间远多于绘图。</span></li>
+      <li><b>甲子十四年 · 1864.6</b><span>洪秀全病逝，天京围急。洪仁玕离城去湖州迎幼天王，拟赴江西再举。</span></li>
+      <li><b>十月 · 1864.10</b><span>队伍在江西石城溃散，洪仁玕被俘。供词里他把一个王朝的失败写得有条有理，又自比文天祥。</span></li>
+      <li><b>南昌 · 1864.11</b><span>十一月二十三日就义，年四十二。铁路、银行、报纸，一样都没能等他。</span></li>
+      <li><b>纸上</b><span>他在结尾交代过方法：<q>古所无者兴之，恶者禁之，是者损益之</q>。蓝图自己不会过时，过时的是批是的那个朝廷。</span></li>
+    </ol>
+  </div>
+</section>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库（史藏 · 志存记录），仓库见 <a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>，导读系列见 <a href="https://github.com/robertsong2000/daizhige-daodu">github.com/robertsong2000/daizhige-daodu</a>。</p>
+    <p>引文均逐字核对库本原文，脚本核验通过。</p>
+    <p>库本有排印讹字（如外园、屋字、价桂），引文一仍其旧或断于讹字之前，未代库本改字。</p>
+    <p>本文为古籍导读，书中宗教断言与十九世纪世界观系时代产物，不代表编者立场。</p>
+  </div>
+</footer>
+
+</body>
+</html>
