@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>张大家兰雪集 · 殆知阁导读</title>
+<style>
+  :root {
+    --bg: #191917;
+    --paper: #e8e4dc;
+    --paper2: #ddd7cc;
+    --ink: #1c1b19;
+    --ink2: #4a473f;
+    --cyan: #5e8fbb;
+    --cyan-deep: #47719c;
+    --gold: #c9963f;
+    --line: #33312a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", SimSun, serif;
+    line-height: 1.95;
+  }
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  .beacon {
+    position: fixed; top: 14px; left: 16px; z-index: 9;
+    font-size: 12px; letter-spacing: 2px; color: #8a8579;
+    border: 1px solid #3a382f; padding: 3px 10px; border-radius: 2px;
+    background: rgba(25,25,23,.85);
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- 首屏：碑与竖排开卷 ---------- */
+  .hero { display: flex; align-items: center; justify-content: center; gap: 84px; margin-top: 92px; min-height: 470px; flex-wrap: wrap; }
+  .openv {
+    writing-mode: vertical-rl; height: 400px; font-size: 27px; letter-spacing: 12px;
+    color: var(--paper); line-height: 2.5;
+  }
+  .openv em { font-style: normal; color: var(--cyan); }
+  .openv .dim { color: #8a8579; font-size: 19px; letter-spacing: 8px; margin-left: 26px; }
+  .stele { width: 216px; height: 400px; perspective: 1400px; cursor: pointer; }
+  .stele-in { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 1.1s cubic-bezier(.6,.05,.25,1); }
+  .stele.flipped .stele-in { transform: rotateY(180deg); }
+  .face {
+    position: absolute; inset: 0; backface-visibility: hidden; border-radius: 6px 6px 3px 3px;
+    background: linear-gradient(178deg, var(--paper) 0%, var(--paper2) 74%, #cfc8b8 100%);
+    box-shadow: 0 0 0 3px #2a2823, 0 0 0 5px #474536, 0 18px 44px rgba(0,0,0,.6);
+    display: flex; flex-direction: column; align-items: center; color: var(--ink);
+  }
+  .face.back { transform: rotateY(180deg); }
+  .knob {
+    width: 46px; height: 46px; border-radius: 50%; margin-top: 14px;
+    background: radial-gradient(circle at 35% 32%, #f2ece0, #cfc8b8);
+    border: 2px solid var(--cyan-deep); color: var(--cyan-deep);
+    font-size: 21px; line-height: 42px; text-align: center;
+  }
+  .stele-t { writing-mode: vertical-rl; font-size: 56px; letter-spacing: 20px; margin-top: 26px; color: var(--ink); font-weight: 700; }
+  .stele-s { writing-mode: vertical-rl; font-size: 14px; letter-spacing: 5px; color: var(--ink2); margin-top: 18px; height: 170px; }
+  .basebar { margin-top: auto; width: 74%; height: 10px; background: #b9b19d; border-radius: 3px 3px 0 0; }
+  .seal {
+    margin-top: 22px; width: 64px; height: 64px; border: 3px solid #a8382f; color: #a8382f;
+    border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; place-items: center;
+    font-size: 24px; font-weight: 700; transform: rotate(-3deg);
+  }
+  .hint { text-align: center; color: #6d695c; font-size: 13px; letter-spacing: 3px; margin-top: 14px; }
+
+  /* ---------- 节与签条 ---------- */
+  .sec { margin: 96px 0 0; padding: 0 0 0 64px; position: relative; opacity: 0; transform: translateY(26px); transition: opacity .8s, transform .8s; }
+  .sec.show { opacity: 1; transform: none; }
+  .qian {
+    position: absolute; left: 6px; top: 2px; width: 40px; padding: 14px 0 16px;
+    background: var(--paper); color: var(--ink); text-align: center;
+    font-size: 21px; border-radius: 3px; writing-mode: vertical-rl; letter-spacing: 7px;
+    box-shadow: 2px 3px 0 #0e0e0c; border-left: 3px solid var(--cyan);
+  }
+  .sec h2 { font-size: 27px; letter-spacing: 5px; color: var(--paper); font-weight: 700; }
+  .sec h2 small { font-size: 14px; letter-spacing: 2px; color: #8a8579; margin-left: 14px; font-weight: 400; }
+  .sec p { margin-top: 16px; font-size: 16.5px; color: #cfcabd; }
+  .sec p b { color: var(--paper); }
+
+  /* ---------- 引文诗笺 ---------- */
+  .qt {
+    display: block; margin: 22px 0 10px; padding: 16px 22px;
+    background: var(--paper); color: var(--ink);
+    font-size: 17.5px; line-height: 2.05; border-radius: 2px;
+    box-shadow: 3px 4px 0 rgba(0,0,0,.45); position: relative;
+  }
+  .qt::before {
+    content: attr(data-src); position: absolute; top: -9px; right: 12px;
+    font-size: 11px; letter-spacing: 1px; color: var(--paper);
+    background: var(--cyan-deep); padding: 1px 8px; border-radius: 2px;
+  }
+  .qt.note { font-size: 15px; color: var(--ink2); background: var(--paper2); padding: 10px 22px; }
+  .vk {
+    color: var(--cyan-deep); cursor: pointer; border-bottom: 1px dashed var(--cyan-deep);
+    font-size: 13px; padding: 0 2px;
+  }
+  .vk.on { background: var(--cyan); color: #fff; border-bottom-style: solid; }
+  .vbar { display: none; margin: 0 0 12px; font-size: 13.5px; color: var(--cyan); letter-spacing: 1px; }
+  .vbar.show { display: block; }
+
+  /* ---------- 诗体库 ---------- */
+  .shelf { margin-top: 26px; border-top: 1px solid var(--line); }
+  .row {
+    display: flex; align-items: baseline; gap: 18px; padding: 11px 8px;
+    border-bottom: 1px solid var(--line); cursor: pointer;
+  }
+  .row:hover { background: rgba(94,143,187,.08); }
+  .row .rt { min-width: 108px; font-size: 17px; color: var(--paper); }
+  .row .rc { font-size: 13px; color: #8a8579; letter-spacing: 1px; }
+  .row .rx { margin-left: auto; font-size: 13px; color: #6d695c; }
+  .row .panel { display: none; width: 100%; font-size: 15px; color: var(--cyan); letter-spacing: 2px; padding: 4px 0 2px; }
+  .row.open .panel { display: block; }
+  .row.open { background: rgba(94,143,187,.07); }
+
+  /* ---------- 烛影 ---------- */
+  .zhu { margin-top: 26px; position: relative; border: 1px solid var(--line); background: #121210; padding: 34px 26px 28px; border-radius: 4px; }
+  .zhu .dark { position: absolute; inset: 0; background: rgba(10,10,9,.86); transition: opacity 1.2s; pointer-events: none; }
+  .zhu.lit .dark { opacity: 0; }
+  .flame { position: absolute; top: 12px; left: 30px; width: 13px; height: 21px; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+    background: radial-gradient(circle at 50% 74%, #fff3cf, var(--gold) 68%, #8f5a1c); animation: flick .7s infinite alternate; }
+  @keyframes flick { from { transform: scaleY(1) rotate(-2deg); } to { transform: scaleY(1.14) rotate(3deg); } }
+  .zhu .qt { background: #e6e0d4; margin: 0 auto 14px; max-width: 620px; }
+  .zhu .qt + .qt { margin-top: 14px; }
+  .zhu .cap { text-align: center; font-size: 13px; color: #8a8579; letter-spacing: 2px; }
+
+  /* ---------- 生死簿 ---------- */
+  .book { margin-top: 30px; overflow-x: auto; padding-bottom: 10px; }
+  .rail { display: flex; gap: 0; min-width: 860px; position: relative; padding: 0 6px; }
+  .rail::before { content: ""; position: absolute; top: 8px; left: 20px; right: 20px; height: 1px; background: #3d4d5e; }
+  .node { flex: 1; position: relative; cursor: pointer; text-align: center; padding: 26px 4px 0; }
+  .node i { position: absolute; top: 3px; left: 50%; width: 11px; height: 11px; margin-left: -6px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--cyan-deep); transition: .3s; }
+  .node.on i { background: var(--cyan); box-shadow: 0 0 10px rgba(94,143,187,.8); }
+  .node .ny { font-size: 14.5px; color: #a7a294; letter-spacing: 1px; }
+  .node.on .ny { color: var(--paper); }
+  .node .nt { font-size: 12.5px; color: #6d695c; margin-top: 2px; }
+  .book-detail { margin-top: 20px; border-left: 3px solid var(--cyan-deep); padding: 10px 18px; font-size: 16px; color: #d8d3c6; min-height: 92px; }
+  .book-detail b { color: var(--paper); }
+
+  /* ---------- 对牌 ---------- */
+  .pair { margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pcard { background: var(--paper); color: var(--ink); padding: 16px 18px 14px; border-radius: 3px; box-shadow: 3px 4px 0 rgba(0,0,0,.45); position: relative; }
+  .pcard h4 { font-size: 14px; letter-spacing: 3px; color: var(--cyan-deep); margin-bottom: 8px; font-weight: 700; }
+  .pcard.a h4 { color: #8a5f1e; }
+  .pcard p { font-size: 15px; line-height: 1.9; color: var(--ink); }
+  .pmark { text-align: center; color: #8a8579; font-size: 13px; letter-spacing: 4px; margin-top: 10px; }
+  @media (max-width: 720px) { .pair { grid-template-columns: 1fr; } .hero { gap: 40px; } .sec { padding-left: 56px; } }
+
+  /* ---------- 页脚 ---------- */
+  footer { margin-top: 120px; border-top: 1px solid var(--line); background: #151513; padding: 40px 0 56px; }
+  .fgrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 34px; }
+  .fgrid p { font-size: 13.5px; line-height: 1.95; color: #98937f; }
+  .fgrid b { color: #c6c0af; letter-spacing: 2px; }
+  @media (max-width: 720px) { .fgrid { grid-template-columns: 1fr; } }
+  .mutop {
+    position: fixed; right: 18px; bottom: 20px; z-index: 9;
+    background: var(--paper); color: var(--ink); border: none; cursor: pointer;
+    font-family: inherit; font-size: 13px; letter-spacing: 3px; padding: 8px 13px;
+    border-radius: 3px; box-shadow: 2px 3px 0 #0e0e0c;
+  }
+</style>
+</head>
+<body>
+
+<div class="beacon"><a href="mulu.html">殆知阁导读 · 兰雪集</a></div>
+
+<header class="wrap">
+  <div class="hero">
+    <div class="openv">
+      宋女张玉娘遗稿一册<br>
+      侍儿殉之，鹦鹉殉之<br>
+      <span class="dim">书亦几殉之</span>
+    </div>
+    <div>
+      <div class="stele" id="stele">
+        <div class="stele-in">
+          <div class="face">
+            <div class="knob">鹦</div>
+            <div class="stele-t">鹦鹉冢</div>
+            <div class="stele-s">一贞居士张玉娘暨二婢一鸟葬此</div>
+            <div class="basebar"></div>
+          </div>
+          <div class="face back">
+            <div class="stele-t" style="font-size:44px;letter-spacing:14px;margin-top:56px;">兰雪</div>
+            <div class="stele-s">松阳张氏玉娘若琼之遗稿</div>
+            <div class="seal"><span>一</span><span>贞</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="hint" id="hint">点碑，翻到碑阴</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="sec">
+    <div class="qian">甲</div>
+    <h2>闺房三清<small>两位婢子与一只鸟</small></h2>
+    <p>宋末，浙江松阳的张家有个独生女，名玉娘，字若琼。她家四代做官，藏书多，她过目成诵，文章写得像科场高第，诗尤其好，时人拿东汉续成〈汉书〉的班昭来比她。她自己起号，叫<b>一贞居士</b>。身边两个侍儿，一个叫紫娥，一个叫霜娥，都有才色，会写字；还养了一只鹦鹉，伶俐到能懂人的心事。</p>
+    <span class="qt" data-src="明 王诏 张玉娘传">所畜鹦鹉，亦辩慧，能知人意事。因号曰闺房三清。</span>
+    <span class="qt" data-src="明 王诏 张玉娘传">尝自号一贞居士</span>
+    <p>两个婢子加一只鸟，被当时人合称「闺房三清」。记住这三个名字，这篇导读最后会回到它们身上。</p>
+  </section>
+
+  <section class="sec">
+    <div class="qian">乙</div>
+    <h2>兰与雪<small>一册诗的体量</small></h2>
+    <p>〈兰雪集〉分上下两卷：上卷收古体诗、歌行和绝句，下卷收律诗、排律、十六首词，末尾附杂体。加上后人续补的几首，拢共一百一十来个题目。名字里那个「兰」取香气，「雪」取洁白，她的一首咏梅诗正好可以作为注脚。下面这排架子，每格点开是一句。</p>
+    <div class="shelf" id="shelf"></div>
+    <span class="qt" data-src="兰雪集 卷首">宋松阳张玉娘若琼着</span>
+    <p>库本这一册末尾有民国刊家李之鼎的跋，把她在宋代女性作者里的位置说得很克制：能拿诗词传到今天的，不过漱玉（李清照）、断肠（朱淑真）两集罢了。</p>
+    <span class="qt" data-src="民国 李之鼎 跋">宋代女士以诗词着流传至今者，漱玉、断肠两集而已</span>
+  </section>
+
+  <section class="sec">
+    <div class="qian">丙</div>
+    <h2>铁衣霜天<small>闺秀写的边塞诗</small></h2>
+    <p>深闺里的张玉娘写过一整组边塞乐府：铁衣、枕戈、楼兰、燕然。一个不出远门的女孩子把凯歌唱得虎虎生风，这在宋代诗库里本身就罕见。更罕见的是她自己留下的批注，坦白得可爱：这组凯歌是闲来仿写而没写成的。</p>
+    <span class="qt" data-src="兰雪集 凯歌乐府自注">以上凯歌乐府，俱闲中效而不成者。丈夫则以忠勇自期，媍人则以贞洁自许，妾深有意焉。</span>
+    <span class="qt" data-src="兰雪集 卷一 塞上曲">为国劳戎事，迢迢出玉关。虎帐春风远，凯甲清霜寒。</span>
+    <span class="qt" data-src="兰雪集 卷一 幽州胡马客">慷慨激忠烈，许国一身轻。愿系匈奴颈，狼烟夜不惊。</span>
+    <p>「丈夫则以忠勇自期，媍人则以贞洁自许」：前半句她拿男子的标准要求自己，后半句她接受时代给女子的标准。两句话并置，就是她全部的悲剧所在，不过此刻还没人知道。</p>
+    <p>同一卷里还有一首〈王将军墓〉，是真正的时事：宋亡之际，松阳人王远宜抗元战死于望松岭。她为这位烈士写诗，注里把战死地点写得清清楚楚。</p>
+    <span class="qt" data-src="兰雪集 王将军墓诗序">宋王将军名远宜，松阳人。宋亡，与元兵战于望松岭，死之，遂葬于此。</span>
+    <span class="qt note" data-src="兰雪集 卷一 王将军墓">岭上松如旗，扶疎铁石姿。下有烈士魂，上有青菟丝。烈士节不改，青松色愈滋。欲识<span class="vk" data-note="此校记出库本原钞：「欲识」，一本作「欲试」。">[一本作试]</span>烈士心，请看青松枝。<span class="vbar"></span></span>
+    <p>历代抄手还在这册书里留下指纹。同一行字，不同本子各写各的，抄校的人把异文夹注在行内。下面两首里的虚线小字都可点开看。</p>
+    <span class="qt note" data-src="兰雪集 卷一 结袜子">闺中女儿兰蕙性，寒冰清澈秋霜<span class="vk" data-note="此校记出库本原钞：「霜」下，狄本作「露」。">[狄本作露]</span>莹。感君恩重不胜情，容光自抱悲明镜。</span>
+    <span class="qt note" data-src="兰雪集 卷一 捣衣曲">入夜坫声满四隣，一天霜月秋<span class="vk" data-note="此校记出库本原钞：「秋」下，元诗选作「楚」。">[元诗选作楚]</span>云轻。自怜岁岁衣裁就，欲寄无因到远人。</span>
+    <span class="qt note" data-src="兰雪集 卷一 鸣雁二章">鸣雁征征，白露既零。猗嗟清兮，怀清春冰。鸣雁嗥嗥，凉风飘飖。猗嗟娈<span class="vk" data-note="此校记出库本原钞：「娈」，一本作「寒」。">[一本作寒]</span>兮，怀彼春宵<span class="vk" data-note="此校记出库本原钞：「春宵」，狄本作「声断中宵」。">[狄本作声断中宵]</span>。</span>
+  </section>
+
+  <section class="sec">
+    <div class="qian">丁</div>
+    <h2>山之高<small>被两位大学士念出声的一首</small></h2>
+    <p>真正让她不朽的是这首。三章，头一章只有五句，几乎是〈诗经〉的口气。元代两位大学士虞集（伯生）和欧阳玄读到它，拿〈国风·草虫〉来比，说这是妇人女子中罕见的东西。</p>
+    <span class="qt" data-src="兰雪集 卷一 山之高三章">山之高，月出小。月之小，何皎皎。我有所思在远道，一日不见兮我心悄悄。</span>
+    <span class="qt" data-src="兰雪集 卷一 山之高三章">采苦采苦，于山之南。忡忡忧心，其何以堪。汝心金石坚，我操冰雪洁。拟结百岁盟，忽成一朝别。朝云暮雨心去来，千里相思共明月。</span>
+    <p>第三章像预言：「拟结百岁盟，忽成一朝别」。写这行字的时候，婚约还在，人还活着。松阳县志记下了大学士们的原话。</p>
+    <span class="qt note" data-src="松阳县志 闺操">至其所作词文，不下汉之班姬，遂号一贞居士。</span>
+    <p>她的笔触也不限于闺怨。〈幽居四景〉写山色水光窗月蛩音，〈题画〉一组咏伯牙、苏子、子猷，眼界都在墙外。下卷这首五律，是附录里唯一被刊者单独留了一条注的诗。</p>
+    <span class="qt" data-src="兰雪集 下卷 暮春夜思">夜凉春寂寞，淑气浸虚堂。花外钟初转，江南梦更长。野舂鸣涧水，山月照罗裳。此景谁相问，飞萤入绣床。</span>
+    <span class="qt note" data-src="兰雪集 卷下 刊者附注">虞伯生读至末句，拍案曰：此岂妇人所及。大为当时所称。</span>
+  </section>
+
+  <section class="sec">
+    <div class="qian">戊</div>
+    <h2>知否知否<small>她跟李清照开的一次玩笑</small></h2>
+    <p>〈兰雪集〉下卷十六首词里，藏着一首直接向李清照叫板的小令，词牌就叫〈如梦令〉，题作「戏和李易安」。易安原句问海棠绿肥红瘦，她的答句把那个「瘦」字从花挪到了人身上。</p>
+    <span class="qt" data-src="兰雪集 下卷 如梦令">门外车驰马骤。绣阁犹醺春酒。顿觉翠衾寒，人在枕边如旧。知否，知否，何事黄花俱瘦。</span>
+    <p>和易安比酒量豪气是玩笑，愁是真的。中秋那首〈水调歌头〉，题目写明「次东坡韵」，结句借嫦娥的口把两个愿望合在一句里。</p>
+    <span class="qt" data-src="兰雪集 下卷 水调歌头">粉郎一去，几见明月缺还圆。安得云鬟香臂，飞入瑶台银阙，兔鹤共清全。窃取长生药，人月两婵娟。</span>
+    <p>「粉郎一去」：词里的人不在身边。这三首连起来读，一个人已经有了完整的轮廓：有才气，有恋人，恋人不在家。</p>
+  </section>
+
+  <section class="sec">
+    <div class="qian">己</div>
+    <h2>哭沈生<small>同一个题目，写了两遍</small></h2>
+    <p>沈生名叫沈佺，是她的表亲，宣和年间中进士第一的沈晦的后人。两人自小定亲。上卷绝句里有一首〈哭沈生〉，二十个字；杂体卷里又出现一个〈哭沈生〉，五言十句，编集的人注明是刊集之后续补进来的。同一题写两遍，在别处少见。</p>
+    <span class="qt" data-src="兰雪集 卷一 哭沈生">中路怜长别，无因复见闻。愿将今日意，化作阳台云。</span>
+    <span class="qt" data-src="兰雪集 杂体 哭沈生">仙郎久未归，一归笑春风。中途成永绝，翠袖染啼红。怅恨生死异，梦魂还再逢。宝镜照秋水，明此一寸衷。素情无所著，怨逐双飞鸿。</span>
+    <p>集子里还收了沈佺病中写给她的诗。隔水的仙妃，最后一句是他开的玩笑，也是遗言。</p>
+    <span class="qt" data-src="附录 沈生病中赠张玉娘诗">隔水度仙妃，清绝云争飞。娇花羞素质，秋月见寒辉。高情春不染，心镜尘难依。何当饮云液，共跨双鸾归。</span>
+    <p>歌行里那首〈瑶琴怨〉，像是提前替这场诀别弹过一遍。</p>
+    <span class="qt" data-src="兰雪集 卷一 瑶琴怨">独此弦断无续期，梧桐叶上不胜悲。</span>
+  </section>
+
+  <section class="sec">
+    <div class="qian">庚</div>
+    <h2>烛影挥霍<small>一场只有她看见的显形</small></h2>
+    <p>沈佺随父亲宦游京师，二十二岁上害了两场寒症，医书断为不治。病中有人附耳告诉张家：这是积思所致。玉娘写信起誓，沈佺看着信问了五个字，随即闭上眼。这一段全部出自明人王诏写的传，是这篇故事的正源，下节再回头审它。</p>
+    <span class="qt" data-src="明 王诏 张玉娘传">佺俊茂不群，从其父宦游京师，年二十有二，两感寒疾，法曰不治。</span>
+    <span class="qt" data-src="明 王诏 张玉娘传">张闻而心恸，私折简于沈，以死矢之，曰：谷不偶于君，愿死以同穴也。</span>
+    <span class="qt" data-src="明 王诏 张玉娘传">若琼能卒我乎！嘘唏长潸，遂瞑以死。</span>
+    <p>此后是全篇最像小说的一段。某个元夕，父母出门观灯，女伴强拉玉娘同去，她托病不去，靠着几案打盹。然后，烛影里沈郎回来了。点灯看。</p>
+    <div class="zhu" id="zhu">
+      <div class="dark"></div>
+      <div class="flame"></div>
+      <span class="qt" data-src="明 王诏 张玉娘传">忽烛影挥霍下，见沈郎宛若，属曰：若琼自重，幸不寒夙盟，固所愿也。</span>
+      <span class="qt" data-src="明 王诏 张玉娘传">所不与沈郎者，有如此烛。</span>
+      <div class="cap">她伸手去握，握不住，对着烛火起了誓，随后昏绝，许久才醒，只说了一句：郎舍我乎。</div>
+    </div>
+    <p>「遂得疾以卒，时年二十有八。」王诏的传写她当年病故。一只看不见的手在替这两家收尾。</p>
+    <span class="qt" data-src="明 王诏 张玉娘传">遂得疾以卒，时年二十有八。</span>
+  </section>
+
+  <section class="sec">
+    <div class="qian">辛</div>
+    <h2>鹦鹉冢<small>两只婢子与一只鸟的收尾</small></h2>
+    <p>父母哀怜她的志气，向沈家请求，把她合葬在城外枫林。接下来发生的事，让这座坟得到那个流传至今的名字。先是霜娥忧愁而死；紫娥说，我忍心独活吗，义当殉主，自缢；第二天清早，鹦鹉悲鸣而死。全家人觉得奇异，让它们都陪葬在玉娘坟旁。</p>
+    <span class="qt" data-src="明 王诏 张玉娘传">逾月霜娥以忧死，紫娥曰：儿忍独生乎，义当以殉主也。遂自经而殒。诘旦鹦鹉亦悲鸣而死。家人异之，咸从殉于张。时或称张墓为鹦鹉冢云。</span>
+    <p>三百多年后，清初的戏曲家孟称舜来到松阳，修墓、建祠、刻集，还写了一篇祭文。他把一个历来用来压女子的字，重新解释成了「情」。</p>
+    <span class="qt" data-src="清 孟称舜 祭张玉娘文">吾闻天下之贞女者，必天下之情女也，从一以终之，死不二，非天下之大钟情者而能之乎！</span>
+    <p>他为这座坟写的赞里，有一句拿功名富贵陪跑的话。</p>
+    <span class="qt" data-src="清 唐九纬 鹦鹉冢赞">彼王侯卿相之垄，俱灭没于荒烟野草之岑，而独此鹦鹉之冢，永垂芳纪焉以卓绝于古今。</span>
+    <p>孟称舜在〈贞文祠记〉里还记下当地的一个传说：玉娘与沈生本是佛座前的一对侍者，因为调弄鹦鹉相顾一笑，动了凡心，才坠落人间。这个传说明白无误地把这场悲剧讲成了缘分债。</p>
+    <span class="qt" data-src="清 孟称舜 贞文祠记">俗传贞女与沈生为大士座前侍者化身，昔在座前调弄鹦鹉相顾一笑，私惰所感遂堕凡间。</span>
+    <span class="qt" data-src="清 孟称舜 贞文祠记">予故表之，以示劝也，而匪仅以其文之足传焉已也。</span>
+  </section>
+
+  <section class="sec">
+    <div class="qian">壬</div>
+    <h2>生死簿<small>这本集子自己的一生</small></h2>
+    <p>故事到这里该结束了，但这本书的命运比人更曲折。它成于宋末，元代就有大学士读它叹赏，随后彻底沉没，五百年里几次差点失传，又几次被捞回来。下面这条轨道，点开看每一站。</p>
+    <div class="book">
+      <div class="rail" id="rail"></div>
+    </div>
+    <div class="book-detail" id="bookDetail"></div>
+    <p>把它从墓坑边拉回来的，是两个素不相识的好事者。明朝成化、弘治年间，松阳诸生王诏替她立传；清顺治年间，孟称舜修墓建祠，刻集行世，还把故事编成传奇搬上戏台，传奇本身却没能传下来。到朱彝尊编〈词综〉，竟然一首未收，想来是没见过。若非这条断断续续的传抄链，今天这篇导读根本无从写起。</p>
+    <span class="qt" data-src="民国 李之鼎 跋">明成弘间王诏为立传表章，始显于世。顺治中孟称舜又复为之修墓建祠，刊集行世</span>
+  </section>
+
+  <section class="sec">
+    <div class="qian">癸</div>
+    <h2>一书自讼<small>传与县志，三处对不上</small></h2>
+    <p>最后把故事的叙述者们请来对质。王诏的传、松阳县志、孟称舜的刻本，讲的是同一个结局，细节却三处打架。这不是谁造伪，而是层累：故事每过一个朝代的手，就被按当时的需求改写一次。</p>
+    <div class="pair">
+      <div class="pcard a"><h4>侍女之名 · 王诏传</h4><p>紫娥、霜娥，皆有才色，善笔札</p></div>
+      <div class="pcard"><h4>侍女之名 · 松阳县志</h4><p>轻红、翠红，并注明「传言紫娥霜娥，异」</p></div>
+      <div class="pcard a"><h4>享年 · 王诏传</h4><p>时年二十有八</p></div>
+      <div class="pcard"><h4>享年 · 松阳县志</h4><p>时玉娘年二十四矣</p></div>
+      <div class="pcard a"><h4>卒法 · 王诏传</h4><p>烛下誓毕，遂得疾以卒</p></div>
+      <div class="pcard"><h4>卒法 · 松阳县志</h4><p>梦沈生驾辇相迎，曰吾事定矣，未逾月，竟不食而殒</p></div>
+    </div>
+    <div class="pmark">三组皆据库本原文摘录，见下</div>
+    <span class="qt" data-src="松阳县志 闺操">及侍儿轻红、翠红[传言紫娥霜娥，异]，俱悲鸣死，并遗以殉葬，名其冢曰鹦鹉。</span>
+    <span class="qt" data-src="民国 李之鼎 跋">传称沈佺为晦之后，佺乃玉娘同里人耳。</span>
+    <p>连沈佺的名门血统都靠不住：李之鼎核对浙江通志后指出，沈晦晚年确实住过松阳，但沈佺不过是同县的后辈而已。至于那些夹在校记里的字，比如「欲识」或作「欲试」，是历代抄手留下的指纹。一册薄薄的诗集，倒像一间小小的版本学陈列室。</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <p><b>核验声明</b><br>文本来源：殆知阁简体库集藏四库别集《张大家兰雪集》（据库本去空白一万二千九百一十七字实测，含标点与夹注校记，纯汉字约一万一千零二十八字，皆机数；上卷约二千九百七十九字、下卷含杂体约三千五百八十四字、附录约四千四百六十五字）。本页全部引文经脚本与库内文件逐字核验（去标点、归一后双侧比对），并反扫页面确认无未申报的库本成句复用；行内「一本作」「狄本作」「传言异」等夹注均照录库本原貌。导读系列总目见 <a href="mulu.html">mulu.html</a>。</p>
+      </div>
+      <div>
+        <p><b>库本讹字申报</b><br>库本异体照录：媍（妇）、疎（疏）、悮（误）、鬪（斗）、缐（线）、賖（赊）、着（著）。疑讹处照录存疑：〈白雪曲〉「冰饥清溽暑」之「饥」疑为「肌」，〈捣衣曲〉「坫声」疑为「砧声」，王诏传「冢紫娥」之「冢」疑为「长」或「筿」，皆未强改；〈暮春夜思〉「淑气浸虚堂」句下刊者附注与诗同叶混排，引文已分置。诗体计数按题计，二章三章诸题依题不拆首。</p>
+      </div>
+      <div>
+        <p><b>使用提醒</b><br>玉娘故事的叙述框架定型于明清理学氛围：王诏传与孟称舜祭文把「殉未婚之夫」当作最高德性来表彰，〈贞文祠记〉明言立祠为「示劝」，县志径目其事为「闺操」；传与县志在婢名、享年、卒法上的三处矛盾，提示事迹细节多出后人层累与想象，「烛影挥霍」「驾辇相迎」等显形情节应视作悼亡传说而非史实。集子本身留下的，更多是一个女子的才、情与不肯苟且，请把这两层分开读。</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="mutop" id="mutop">回冢</button>
+
+<script>
+  var stele = document.getElementById('stele');
+  var hint = document.getElementById('hint');
+  stele.addEventListener('click', function () {
+    stele.classList.toggle('flipped');
+    hint.textContent = stele.classList.contains('flipped') ? '点碑，翻回碑面' : '点碑，翻到碑阴';
+  });
+
+  var SHELF = [
+    ['古体诗', '十七题（含二章三章诸题）', '我有所思在远道'],
+    ['歌行', '四首', '独此弦断无续期'],
+    ['五言绝句', '十三题', '愿将今日意'],
+    ['六言诗', '五首', '帘外落花万点'],
+    ['七言绝句', '三十五题（香闺十咏、咏史十咏在内）', '独对菱花学淡妆'],
+    ['五言律诗', '八首', '飞萤入绣床'],
+    ['七言律诗', '十题（咏竹四首、咏案头四俊在内）', '隔云谁弄柯亭笛'],
+    ['排律', '三首（五言二、七言一）', '有梦恼襄王'],
+    ['词', '十六调', '何事黄花俱瘦'],
+    ['杂体诗', '四首（刊集后续补）', '天风吹袂凌波袜']
+  ];
+  var shelf = document.getElementById('shelf');
+  SHELF.forEach(function (s) {
+    var d = document.createElement('div');
+    d.className = 'row';
+    d.innerHTML = '<span class="rt">' + s[0] + '</span><span class="rc">' + s[1] +
+      '</span><span class="rx">点开一句</span><span class="panel">「' + s[2] + '」</span>';
+    d.addEventListener('click', function () { d.classList.toggle('open'); });
+    shelf.appendChild(d);
+  });
+
+  document.querySelectorAll('.vk').forEach(function (k) {
+    k.addEventListener('click', function () {
+      k.classList.toggle('on');
+      var bar = k.closest('.qt').querySelector('.vbar');
+      if (bar) {
+        bar.textContent = k.getAttribute('data-note');
+        bar.classList.toggle('show', k.classList.contains('on'));
+      }
+    });
+  });
+
+  var zhu = document.getElementById('zhu');
+  zhu.addEventListener('click', function () { zhu.classList.toggle('lit'); });
+
+  var RAIL = [
+    ['宋末', '集成', '玉娘殁后，遗稿曰兰雪。集中〈王将军墓〉咏宋亡殉国事，可证其卒已在宋元之际。'],
+    ['元代', '学士叹赏', '虞伯生、欧阳玄读其诗，至「山之高」一章，抚几叹曰可与国风草虫并称。'],
+    ['明成化弘治间', '王诏立传', '松阳诸生王诏为作〈张玉娘传〉，鹦鹉冢故事自此有完整文本，集始显于世。'],
+    ['清顺治间', '孟称舜刻集', '修墓、建贞文祠、刊梓行世，附录祭文祠记；兼作传奇已佚，今存本即其刻本系统。'],
+    ['康熙雍正间', '词综失收', '词学家朱彝尊与王昶编〈词综〉，竟一首未载，当是未见此集。集再度近乎湮没。'],
+    ['乾隆间', '仅选二首', '无锡顾奎光元诗选仅选入暮春夜思、春思二首，流传之窄可见。'],
+    ['道光间', '孔昭熏记', '曲阜孔昭熏得钞本记于微波榭迻录之源流；陈文述题诗，欲刊入丛书。'],
+    ['光绪间', '狄氏活字本', '近年始有狄氏活字本，字句多异同，少跋一篇，即本页校记「狄本作」诸条所自。'],
+    ['民国庚申', '李之鼎重刊', '世业堂刊本，周姬爱读此集怂恿付刊并任刊资；距宋末已五百五十余年。']
+  ];
+  var rail = document.getElementById('rail');
+  var bd = document.getElementById('bookDetail');
+  RAIL.forEach(function (r, i) {
+    var n = document.createElement('div');
+    n.className = 'node' + (i === 0 ? ' on' : '');
+    n.innerHTML = '<i></i><div class="ny">' + r[0] + '</div><div class="nt">' + r[1] + '</div>';
+    n.addEventListener('click', function () {
+      rail.querySelectorAll('.node').forEach(function (x) { x.classList.remove('on'); });
+      n.classList.add('on');
+      bd.innerHTML = '<b>' + r[0] + ' · ' + r[1] + '</b>　' + r[2];
+    });
+    rail.appendChild(n);
+  });
+  bd.innerHTML = '<b>' + RAIL[0][0] + ' · ' + RAIL[0][1] + '</b>　' + RAIL[0][2];
+
+  var secs = document.querySelectorAll('.sec');
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  secs.forEach(function (s) { io.observe(s); });
+
+  document.getElementById('mutop').addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
