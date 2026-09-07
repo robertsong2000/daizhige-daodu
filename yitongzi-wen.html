@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>易童子问 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --zhu: #c0453c; --zhu-deep: #8f322c; --zhu-pale: rgba(192,69,60,0.13);
+    --hair: rgba(232,228,220,0.14); --hair-ink: rgba(25,25,23,0.18);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.95; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  ::selection { background: var(--zhu); color: var(--paper); }
+
+  /* 书脊：随阅读进度被朱笔划去 */
+  #spinebar {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 20px;
+    background: rgba(25,25,23,0.94); border-bottom: 1px solid var(--hair);
+    backdrop-filter: blur(4px); overflow-x: auto; white-space: nowrap;
+  }
+  #spinebar .slabel {
+    font-size: 11px; letter-spacing: 0.4em; color: var(--paper-faint);
+    writing-mode: vertical-rl; max-height: 40px; padding-top: 2px;
+  }
+  .pills { display: flex; gap: 8px; }
+  .pill {
+    font-size: 13.5px; letter-spacing: 0.18em;
+    border: 1px solid var(--hair); padding: 3px 12px;
+    color: var(--paper-dim); position: relative; flex: none;
+    transition: all 0.5s ease;
+  }
+  .pill.jing { color: var(--paper); border-color: rgba(232,228,220,0.34); }
+  .pill.jing::before {
+    content: "经"; font-size: 10px; margin-right: 6px;
+    color: var(--paper-faint); letter-spacing: 0;
+  }
+  .pill.zhuan::before {
+    content: "传"; font-size: 10px; margin-right: 6px;
+    color: var(--zhu); letter-spacing: 0; opacity: 0.75;
+  }
+  .pill.hit {
+    color: var(--zhu); border-color: var(--zhu-deep); background: var(--zhu-pale);
+    text-decoration: line-through; text-decoration-color: var(--zhu);
+    text-decoration-thickness: 2px; transform: rotate(-2.5deg);
+  }
+  .pill.hit::before { opacity: 1; }
+  #sstat {
+    margin-left: auto; font-size: 12px; letter-spacing: 0.22em;
+    color: var(--paper-faint); flex: none;
+  }
+  #sstat.done { color: var(--zhu); }
+  @media (max-width: 700px) {
+    #spinebar { gap: 10px; padding: 8px 12px; }
+    #spinebar .slabel { display: none; }
+    #sstat { position: static; }
+  }
+
+  /* 卷首：双签 */
+  .hero { max-width: 1020px; margin: 0 auto; padding: 88px 28px 64px; position: relative; }
+  .kicker { font-size: 13px; letter-spacing: 0.42em; color: var(--paper-faint); margin-bottom: 46px; }
+  .tags { display: flex; align-items: flex-start; gap: 0; margin-bottom: 52px; min-height: 300px; }
+  .tag-zhou {
+    writing-mode: vertical-rl; background: var(--paper); color: var(--ink);
+    font-size: clamp(58px, 7vw, 86px); font-weight: 700; letter-spacing: 0.22em;
+    padding: 34px 20px 30px; line-height: 1.05;
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.35);
+  }
+  .tag-shiyi {
+    writing-mode: vertical-rl; background: var(--zhu); color: #f4efe6;
+    font-size: 19px; letter-spacing: 0.34em; font-weight: 700;
+    padding: 26px 10px; margin: 44px 0 0 -8px; transform: rotate(2.2deg);
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.3);
+  }
+  .vauthor {
+    writing-mode: vertical-rl; margin-left: auto; height: 300px;
+    color: var(--paper-dim); font-size: 15.5px; letter-spacing: 0.3em;
+    border-left: 1px solid var(--hair); padding-left: 20px;
+  }
+  .lede { max-width: 34em; color: var(--paper-dim); font-size: 16.5px; }
+  .lede b { color: var(--paper); }
+  @media (max-width: 700px) {
+    .tags { min-height: 0; flex-wrap: wrap; }
+    .vauthor { display: none; }
+    .tag-zhou { font-size: 46px; padding: 22px 14px; }
+  }
+
+  /* 幕：左右不对称双线框，左肩竖排卷宗签 */
+  .act { position: relative; padding: 78px 28px 88px; }
+  .act.inkbg { background: var(--ink); }
+  .act.paperbg { background: var(--paper); color: var(--ink); }
+  .aframe {
+    max-width: 1000px; margin: 0 auto; position: relative;
+    border: 1px solid var(--hair); outline: 1px solid var(--hair); outline-offset: 6px;
+    padding: 58px 50px 62px;
+  }
+  .paperbg .aframe { border-color: var(--hair-ink); outline-color: var(--hair-ink); }
+  .scrolltag {
+    position: absolute; top: -16px; left: 34px;
+    writing-mode: vertical-rl; background: var(--zhu); color: #f4efe6;
+    font-size: 13px; letter-spacing: 0.3em; font-weight: 700;
+    padding: 12px 5px 14px; box-shadow: 4px 4px 0 rgba(0,0,0,0.28);
+  }
+  .paperbg .scrolltag { box-shadow: 4px 4px 0 rgba(25,25,23,0.18); }
+  .acthead { display: flex; align-items: baseline; gap: 16px; margin: 6px 0 14px; flex-wrap: wrap; }
+  .acthead h2 { font-size: 27px; font-weight: 700; letter-spacing: 0.14em; }
+  .acthead .sub { font-size: 12.5px; letter-spacing: 0.3em; color: var(--zhu); }
+  .actnote { color: var(--paper-dim); font-size: 14.5px; margin-bottom: 40px; max-width: 36em; }
+  .paperbg .actnote { color: rgba(25,25,23,0.62); }
+  @media (max-width: 700px) { .aframe { padding: 44px 22px 48px; } }
+
+  /* 问答 */
+  .qa { margin: 0 0 46px; }
+  .sp { display: flex; gap: 16px; align-items: flex-start; }
+  .sp + .sp { margin-top: 22px; }
+  .seal {
+    flex: none; width: 38px; height: 38px; margin-top: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; font-weight: 700; font-style: normal;
+    background: transparent; color: var(--zhu);
+    border: 1.5px solid var(--zhu); border-radius: 50%;
+  }
+  .seal.ou { background: var(--zhu); color: #f4efe6; border-color: var(--zhu); transform: rotate(4deg); }
+  .say { font-size: 15px; color: var(--paper-dim); padding-top: 3px; }
+  .say.q { font-size: 17px; color: var(--paper); }
+  .say.a { font-size: 17.5px; color: var(--paper); border-left: 3px solid var(--zhu); padding-left: 18px; }
+  .paperbg .say { color: rgba(25,25,23,0.66); }
+  .paperbg .say.q { color: var(--ink); }
+  .paperbg .say.a { color: var(--ink); border-left-color: var(--zhu-deep); }
+  .aftercap {
+    margin: 26px 0 0 54px; font-size: 13.5px; letter-spacing: 0.06em;
+    color: var(--paper-faint); border-top: 1px dashed var(--hair);
+    padding-top: 14px; max-width: 34em;
+  }
+  .paperbg .aftercap { color: rgba(25,25,23,0.5); border-top-color: var(--hair-ink); }
+  @media (max-width: 700px) {
+    .aftercap { margin-left: 0; }
+    .sp { gap: 10px; }
+    .seal { width: 32px; height: 32px; font-size: 14px; }
+  }
+
+  /* 大字引与判词 */
+  .bigquote {
+    margin: 44px 0; padding: 30px 30px 30px 34px;
+    border-left: 6px solid var(--zhu); background: var(--zhu-pale);
+    font-size: 21px; line-height: 2.1; color: var(--paper); font-weight: 600;
+  }
+  .paperbg .bigquote { color: var(--ink); background: rgba(192,69,60,0.09); border-left-color: var(--zhu-deep); }
+  .verdict {
+    margin: 44px 0; border: 1.5px solid var(--zhu); outline: 1px solid var(--zhu); outline-offset: 5px;
+    padding: 32px 30px; position: relative; background: rgba(25,25,23,0.4);
+  }
+  .paperbg .verdict { background: rgba(25,25,23,0.03); }
+  .verdict::before {
+    content: "判"; position: absolute; top: -17px; left: 26px;
+    background: var(--zhu); color: #f4efe6; font-size: 14px; font-weight: 700;
+    padding: 3px 12px; letter-spacing: 0.2em;
+  }
+  .verdict p { font-size: 19px; line-height: 2.1; color: var(--paper); font-weight: 600; }
+  .paperbg .verdict p { color: var(--ink); }
+  .stampnote { margin-top: 16px; font-size: 13px; letter-spacing: 0.16em; color: var(--paper-faint); }
+  .paperbg .stampnote { color: rgba(25,25,23,0.5); }
+
+  /* 旁注小签 */
+  .aside {
+    margin: 40px 0 0; border: 1px dashed var(--hair);
+    padding: 22px 26px; font-size: 14px; color: var(--paper-dim);
+  }
+  .paperbg .aside { border-color: var(--hair-ink); color: rgba(25,25,23,0.62); }
+  .aside .at { font-size: 12px; letter-spacing: 0.32em; color: var(--zhu); display: block; margin-bottom: 8px; }
+
+  /* 终幕与回声 */
+  .coda { text-align: center; padding: 10px 0 6px; }
+  .coda .fin { font-size: 20px; letter-spacing: 0.14em; color: var(--paper); }
+  .coda .fin2 { margin-top: 10px; font-size: 13px; letter-spacing: 0.24em; color: var(--paper-faint); }
+
+  footer { border-top: 1px solid var(--hair); padding: 46px 28px 60px; }
+  .fwrap { max-width: 1000px; margin: 0 auto; }
+  footer p { font-size: 12.8px; color: var(--paper-faint); line-height: 2.05; }
+  footer a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px dotted var(--paper-faint); }
+  footer .fz { color: var(--zhu); }
+</style>
+</head>
+<body>
+
+<nav id="spinebar" aria-label="书脊">
+  <span class="slabel">书脊</span>
+  <div class="pills">
+    <span class="pill jing" data-key="jingyao">卦爻辞</span>
+    <span class="pill jing" data-key="tuan">彖</span>
+    <span class="pill jing" data-key="xiang">象</span>
+    <span class="pill zhuan" data-key="wenyan">文言</span>
+    <span class="pill zhuan" data-key="xici">系辞</span>
+    <span class="pill zhuan" data-key="shuogua">说卦</span>
+    <span class="pill zhuan" data-key="xugua">序卦</span>
+    <span class="pill zhuan" data-key="zagua">杂卦</span>
+  </div>
+  <span id="sstat">题作：孔氏</span>
+</nav>
+
+<header class="hero">
+  <div class="kicker mono">殆知阁导读 · 第 204 篇</div>
+  <div class="tags">
+    <div class="tag-zhou">周易</div>
+    <div class="tag-shiyi">十翼 · 题孔氏</div>
+    <div class="vauthor">宋 欧阳修 撰</div>
+  </div>
+  <p class="lede">库本去空白九千六百六十二字，全书只有两种声音：一个孩子发问，一位老人作答。孩子替他问出满朝不敢问的，老人替北宋经学交出一份最不留情面的答卷。<b>这是一场从第一行就开始的庭审</b>，书脊上「题作孔氏」的签，会被一根一根划掉。</p>
+</header>
+
+<section class="act inkbg" id="prolog">
+  <div class="aframe">
+    <div class="scrolltag">案起</div>
+    <div class="acthead"><h2>先有一笔旧账</h2><span class="sub">鲁襄公九年</span></div>
+    <p class="actnote">鲁国宫廷，穆姜夫人占了一卦，遇艮之随。史官记下筮辞，她引了一段现成的话头。</p>
+    <div class="bigquote">初，穆姜之筮也，遇艮之随，而为‘《随》，元亨利贞’说也，在襄公之九年。</div>
+    <p class="actnote">按《左传》系年，这是鲁襄公九年。孔子要到襄公二十二年才出生。后来，这段话头被抄进《文言》，署在圣人名下。书里自己算的账，比任何后世考据都狠。</p>
+    <div class="bigquote">后十有五年，而孔子始生，又数十年而始赞《易》。然则四德非《干》之德，《文言》不为孔子之言矣。</div>
+    <p class="aftercap">库本以「干」代「乾」、以「繋」代「繫」，引文照录。</p>
+  </div>
+</section>
+
+<section class="act paperbg" id="act1" data-strike="wenyan">
+  <div class="aframe">
+    <div class="scrolltag">卷一</div>
+    <div class="acthead"><h2>问卦</h2><span class="sub">刀藏在熟句里</span></div>
+    <p class="actnote">全书从最熟的句子问起。第一问就踩上了那颗雷。</p>
+
+    <div class="qa">
+      <div class="sp ask"><i class="seal">童</i><div class="say q">干，元、亨、利、贞’，何谓也？</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">众辞淆乱，质诸圣。《彖》者，圣人之言也。</div></div>
+      <div class="sp ask"><i class="seal">童</i><div class="say q">然则《干》无四德，而《文言》非圣人书乎？</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">是鲁穆姜之言也，在襄公之九年。</div></div>
+      <p class="aftercap">开卷第一问，雷就响了。《文言》开篇那一节四德颂，原来是一位鲁国夫人的话。书脊上「文言」的签，此刻划去。</p>
+    </div>
+
+    <div class="qa">
+      <div class="sp ask"><i class="seal">童</i><div class="say">问到师卦，问兵。老人先给汤武立了牌坊，说他们以臣伐君，如以毒药治病：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">彼二王者，以臣伐主，其为毒也甚矣。然其以本于顺民之欲而除其害，犹毒药瞑眩以去疾也</div></div>
+      <div class="sp ask"><i class="seal">童</i><div class="say">紧接着，他亲手把牌坊拆了：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">呜呼！举师之成功，莫大于王也，然不免毒天下，而仅得补过、无咎，以此见兵非圣王之所务，而汤、武不足贵也。</div></div>
+      <p class="aftercap">汤武革命在后世是金字招牌，在这里只换来一句「不足贵」。</p>
+    </div>
+
+    <div class="qa">
+      <div class="sp ask"><i class="seal">童</i><div class="say">问到谦卦。四句话把天道、地道、鬼神、人道说遍，老人的回答却把鬼神请出了场：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say q">天道亏盈而益谦，地道变盈而流谦，鬼神害盈而福谦，人道恶盈而好谦</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">圣人，人也，知人而已。天地鬼神不可知，故推其迹；人可知者，故直言其情。以人之情而推天地鬼神之迹，无以异也。然则修吾人事而已，人事修，则与天地鬼神合矣。</div></div>
+      <p class="aftercap">把「天人感应」改写成「修吾人事」，这是全书最理性的一刻。</p>
+    </div>
+
+    <div class="qa">
+      <div class="sp ask"><i class="seal">童</i><div class="say">问到复卦，冬至一阳生。老人的答案里有一句后来被理学家反复咀嚼的话：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">天地之心见乎动，《复》也，一阳初动于下矣。天地所以生育万物者本于此，故曰‘天地之心’也。天地以生物为心者也</div></div>
+      <p class="aftercap">「天地以生物为心」，说它是后来宋学六百年的先声之一，不算过分。</p>
+    </div>
+  </div>
+</section>
+
+<section class="act inkbg" id="act2">
+  <div class="aframe">
+    <div class="scrolltag">卷二</div>
+    <div class="acthead"><h2>问辞</h2><span class="sub">火气渐大</span></div>
+    <p class="actnote">卷二继续问卦爻之辞。有一答，是全书火气最大的一句。</p>
+
+    <div class="qa">
+      <div class="sp ask"><i class="seal">童</i><div class="say">童子拿一句流传极广的成话问：革卦去故、鼎卦取新，是什么道理？老人劈头就问这句成话是哪来的：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say q">非圣人之言也，何足问！</div></div>
+      <div class="sp ask"><i class="seal">童</i><div class="say">话题转到汤武革命，他不引经、不据传，拿孔子本人的偏好作证：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">孔子区区思文王而不已，其厚于此则薄于彼可知矣。</div></div>
+      <p class="aftercap">顺天应人的大帽子，他一句「厚薄」就揭掉了。</p>
+    </div>
+
+    <div class="aside">
+      <span class="at">旁注 · 直认不知</span>
+      这位先生也有答不出的时候。屯卦、睽卦两处，他只答六个字：<span style="color:var(--paper);font-weight:600">吾不知也。</span>替疑处留口子的话他也说过：<span style="color:var(--paper);font-weight:600">郭公夏五，圣人所以传疑。</span>又补一句：<span style="color:var(--paper);font-weight:600">圣人疑则传疑也。</span>不知就是不知，这笔账他算得很干净。
+    </div>
+  </div>
+</section>
+
+<section class="act paperbg" id="act3" data-strike="xici,shuogua,zagua">
+  <div class="aframe">
+    <div class="scrolltag">卷三</div>
+    <div class="acthead"><h2>问经</h2><span class="sub">不再藏刀</span></div>
+    <p class="actnote">前两卷把刀藏在卦辞里。卷三掀了桌子。</p>
+
+    <div class="bigquote">何独《繋辞》焉，《文言》、《说卦》而下，非圣人之作，而众说淆乱，亦非一人之言也。</div>
+
+    <div class="qa">
+      <div class="sp ask"><i class="seal">童</i><div class="say">证据链从八卦的来历起。《系辞》讲这件事，一口气给了好几种说法。其一是河图天降：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say q">河出图，洛出书，圣人则之。</div></div>
+      <div class="sp ask"><i class="seal">童</i><div class="say">其二是伏羲仰观俯察、亲手画卦。老人把两句一对照，说它们根本不能同时成立：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">然则八卦者，是人之所为也，河图不与焉。斯二说者已不能相容矣</div></div>
+      <div class="sp ask"><i class="seal">童</i><div class="say">《说卦》又添第三种，说是神明生蓍、以数立卦。老人问：这些话会出自同一个人吗？</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">谓此三说出于一人乎？则殆非人情也。</div></div>
+      <div class="sp ask"><i class="seal">童</i><div class="say">五路说法互相打架，他还嫌不够，补了总账：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">凡此五说者自相乖戾，尚不可以为一人之说，其可以为圣人之作乎？</div></div>
+      <p class="aftercap">用「人情」二字做证据，是全文最狠也最现代的一手：圣人著书，不会自相矛盾到这个地步。</p>
+    </div>
+
+    <div class="qa">
+      <div class="sp ask"><i class="seal">童</i><div class="say">动手之前，他先交了底：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">若余者可谓不量力矣，邈然远出诸儒之后，而学无师授之传，其勇于敢为而决于不疑者，以圣人之经尚在，可以质也。</div></div>
+      <p class="aftercap">「质」字用得极准：不是否定经典，是把一切传言押上堂来对质。凭据只有一条，圣人之经尚在。</p>
+    </div>
+
+    <div class="verdict" data-strike="xugua" data-final="1">
+      <p>《繋辞》者谓之《易大传》，则优于《书》、《礼》之传远矣。谓之圣人之作，则僭伪之书也。</p>
+      <p class="stampnote">判词落定：当「大传」读，是上等的好书；题「孔氏」名，就是冒牌的经。书脊上的签至此划完，《彖》《象》留在圣人名下。</p>
+    </div>
+
+    <div class="qa">
+      <div class="sp ask"><i class="seal">童</i><div class="say">气头上，他甚至引了《王制》里那条「言伪而辨」杀无赦的旧律：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">古之言伪而辨、顺非而泽者，杀无赦。呜呼！为斯说者，王制之所宜诛也。</div></div>
+      <div class="sp ask"><i class="seal">童</i><div class="say">随即又自己找补，说这些传坏在冒名，不在义理：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">虽然，辨其非圣之言而已，其于《易》义，尚未有害也。而又有害经而惑世者矣。</div></div>
+      <div class="sp ask"><i class="seal">童</i><div class="say">最后他替这场官司垫了一句自辩：</div></div>
+      <div class="sp ans"><i class="seal ou">欧</i><div class="say a">使以为圣人之作，不敢有所择而尽信之，则害经惑世者多矣。此不可以不辨也，吾岂好辨者哉！</div></div>
+      <p class="aftercap">童子听到这里只答了一句：<span style="font-weight:600">既闻命矣，敢不勉！</span>庭审落槌，全书收场。</p>
+    </div>
+  </div>
+</section>
+
+<section class="act inkbg" id="echo">
+  <div class="aframe">
+    <div class="scrolltag">回声</div>
+    <div class="acthead"><h2>后来</h2><span class="sub">经与传分了家</span></div>
+    <p class="actnote">这份判决在经学里埋下一颗种子：经是经，传是传。传可以是诸儒之作，取其是、舍其非；一旦冒充经，反而两边都失守。「疑传」从此成了正经学问，二十世纪的疑古运动，把自己认作这条路的远裔。今天的学界共识还更进一步：不只《系辞》，《彖》《象》也多半不出孔子之手。欧阳修只肯划到《文言》《说卦》为止，我们把剩下的两翼也替他划了。</p>
+
+    <div class="aside">
+      <span class="at">局限 · 照录</span>
+      这部书也带着它的时代。同在卷二，讲家人卦时他说：<span style="color:var(--paper);font-weight:600">凡家人之祸，未有不始于女子者也</span>。今天读来毫无道理，照录于此。怀疑精神也挑不脱时代的边界，这一句正是边界本身。
+    </div>
+
+    <div class="coda" style="margin-top:46px">
+      <div class="fin">九千六百六十二字，一场问完。</div>
+      <div class="fin2 mono">YI TONG ZI WEN · OUYANG XIU</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fwrap">
+    <p>文本来源：殆知阁古代文献简体库《易童子问》（易藏 · 易经），库本去空白 9662 字。系列仓库：<a href="https://github.com/robertsong2000/daizhige-daodu">github.com/robertsong2000/daizhige-daodu</a></p>
+    <p class="fz">本页引文均经与库本逐字核验（去空白比对）。</p>
+    <p>古籍带着它的时代局限（包括卷二「家人」一节对女性的偏见），照录仅作文献呈现，不代表今日立场。</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var stat = document.getElementById('sstat');
+  var hit = 0;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var keys = (e.target.getAttribute('data-strike') || '').split(',').filter(Boolean);
+      keys.forEach(function (k) {
+        var p = document.querySelector('.pill[data-key="' + k + '"]');
+        if (p && !p.classList.contains('hit')) { p.classList.add('hit'); hit++; }
+      });
+      if (e.target.getAttribute('data-final')) {
+        stat.textContent = '《彖》《象》留在圣人名下';
+        stat.classList.add('done');
+      } else if (hit > 0 && !stat.classList.contains('done')) {
+        stat.textContent = '已质 ' + hit + ' 传';
+      }
+    });
+  }, { threshold: 0.25 });
+  Array.prototype.forEach.call(
+    document.querySelectorAll('[data-strike],[data-final]'), function (el) { io.observe(el); });
+})();
+</script>
+
+</body>
+</html>
