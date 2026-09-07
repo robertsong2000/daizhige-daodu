@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>封氏闻见记 · 殆知阁导读之一百五十七</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --gold: #c9963f;
+    --gold-soft: rgba(201,150,63,0.5);
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 28px; }
+
+  /* 首屏：词典检目页 */
+  .hero { min-height: 88dvh; display: flex; align-items: center; padding: 56px 0 40px; position: relative; }
+  .kicker { font-size: 13px; letter-spacing: 0.42em; color: var(--paper-faint); margin-bottom: 40px; }
+  .hero-grid { display: flex; gap: 52px; align-items: flex-start; }
+  .headword {
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: clamp(96px, 15vw, 168px); font-weight: 700; letter-spacing: 0.18em;
+    line-height: 1.06; color: var(--paper);
+    border-top: 3px solid var(--gold); border-bottom: 3px solid var(--gold);
+    padding: 26px 4px;
+    user-select: none;
+  }
+  .anno { flex: 1; min-width: 0; padding-top: 6px; }
+  .fanqie {
+    display: inline-block; font-size: 15px; letter-spacing: 0.3em;
+    color: var(--gold); border: 1px solid var(--gold-soft);
+    padding: 4px 16px 4px 20px; margin-bottom: 26px;
+  }
+  .lede { font-size: clamp(16px, 1.7vw, 19px); color: var(--paper-dim); max-width: 32em; margin-bottom: 34px; }
+  .lede b { color: var(--paper); font-weight: 600; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 10px; }
+  .tabs a {
+    text-decoration: none; color: var(--paper-dim);
+    font-size: 14px; letter-spacing: 0.22em;
+    border: 1px solid var(--hairline); padding: 7px 18px 7px 24px;
+    transition: color .2s, border-color .2s;
+  }
+  .tabs a:hover { color: var(--gold); border-color: var(--gold-soft); }
+  .chain-teaser {
+    margin-top: 58px; padding-top: 20px; border-top: 1px solid var(--hairline);
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 14px;
+  }
+  .chain-teaser .ch { font-size: clamp(20px, 2.6vw, 27px); font-weight: 600; color: var(--paper-faint); }
+  .chain-teaser .ch.hot { color: var(--gold); }
+  .chain-teaser .arr { color: var(--paper-faint); font-size: 15px; }
+  .chain-teaser .why { margin-left: auto; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.12em; }
+
+  /* 部（章节） */
+  section { padding: 74px 0 8px; border-top: 1px solid var(--hairline); }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 14px; }
+  .sec-seal {
+    font-size: 12px; letter-spacing: 0.3em; color: var(--ink);
+    background: var(--gold); padding: 3px 10px 3px 14px; font-weight: 700;
+  }
+  .sec-head h2 { font-size: clamp(24px, 3vw, 31px); font-weight: 600; letter-spacing: 0.14em; }
+  .sec-desc { color: var(--paper-dim); font-size: 15.5px; max-width: 40em; margin-bottom: 30px; }
+  .sec-desc .q, .sec-desc .cite { color: var(--paper); }
+
+  /* 词条卡 */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card {
+    border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 26px 28px 22px; display: flex; flex-direction: column;
+  }
+  .card.wide { grid-column: 1 / -1; }
+  .hw-row { display: flex; align-items: baseline; gap: 16px; margin-bottom: 4px; }
+  .hw {
+    font-size: 34px; font-weight: 700; letter-spacing: 0.1em; color: var(--paper);
+    border-bottom: 2px solid var(--gold); padding-bottom: 6px;
+  }
+  .py { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  .defn { font-size: 15px; color: var(--paper-dim); margin: 10px 0 14px; }
+  .defn em { font-style: normal; color: var(--paper); }
+  .chain { font-size: 15px; color: var(--paper-faint); margin-bottom: 16px; }
+  .chain b { color: var(--gold); font-weight: 600; }
+  .chain .arr { padding: 0 6px; }
+  blockquote.q {
+    border-left: 2px solid var(--gold); padding: 2px 0 2px 18px;
+    color: var(--paper); font-size: 16px; margin: 6px 0 14px;
+  }
+  blockquote.q .src { display: block; font-size: 12.5px; color: var(--paper-faint); margin-top: 6px; letter-spacing: 0.1em; }
+  .now { font-size: 14px; color: var(--paper-faint); margin-top: auto; }
+  .now b { color: var(--gold); font-weight: 600; letter-spacing: 0.1em; }
+  .note-jiao { font-size: 13px; color: var(--paper-dim); border-top: 1px dashed var(--hairline); padding-top: 10px; margin-top: 14px; }
+  .note-jiao b { color: var(--gold); font-weight: 600; }
+
+  /* 饮茶特写 */
+  .tea-stops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 26px 0 30px; border-top: 1px solid var(--hairline); }
+  .stop { padding: 20px 22px 16px 0; position: relative; }
+  .stop + .stop { padding-left: 24px; border-left: 1px solid var(--hairline); }
+  .stop + .stop + .stop { padding-left: 24px; }
+  .stop .no { font-size: 12px; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 8px; }
+  .stop h4 { font-size: 18px; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .stop p { font-size: 14px; color: var(--paper-dim); }
+  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 22px; }
+  .duel .side { border: 1px dashed var(--hairline); padding: 20px 22px 16px; }
+  .duel .side.win { border: 1px solid var(--gold-soft); }
+  .duel h5 { font-size: 16px; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .duel .tag { font-size: 12px; letter-spacing: 0.2em; color: var(--paper-faint); margin-bottom: 12px; }
+  .duel .side.win h5 { color: var(--gold); }
+  .duel p { font-size: 14px; color: var(--paper-dim); margin-bottom: 10px; }
+  .verdict { margin-top: 22px; border-top: 1px solid var(--hairline); padding-top: 18px; font-size: 15.5px; color: var(--paper-dim); }
+  .verdict b { color: var(--paper); font-weight: 600; }
+
+  /* 段子笺 */
+  .notes { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid var(--hairline); border-left: 1px solid var(--hairline); }
+  .note-item { border-right: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+  .note-item details { padding: 0; }
+  .note-item summary {
+    list-style: none; cursor: pointer; padding: 20px 24px;
+    display: flex; align-items: baseline; gap: 14px;
+  }
+  .note-item summary::-webkit-details-marker { display: none; }
+  .note-item summary .idx { font-size: 12px; color: var(--gold); letter-spacing: 0.15em; }
+  .note-item summary .ti2 { font-size: 19px; font-weight: 700; letter-spacing: 0.14em; }
+  .note-item summary .hook { font-size: 13.5px; color: var(--paper-faint); margin-left: auto; text-align: right; }
+  .note-item summary .plus { color: var(--paper-faint); font-size: 18px; transition: transform .2s; }
+  .note-item details[open] summary .plus { transform: rotate(45deg); color: var(--gold); }
+  .note-item details[open] summary { border-bottom: 1px dashed var(--hairline); }
+  .note-body { padding: 18px 24px 22px; font-size: 14.5px; color: var(--paper-dim); }
+  .note-body blockquote.q { font-size: 15px; }
+
+  /* 残卷 */
+  .juan7 { margin-top: 26px; }
+  .juan7 .mulu-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 26px; }
+  .juan7 .m {
+    border: 1px solid var(--hairline); padding: 9px 18px 9px 24px;
+    font-size: 15px; letter-spacing: 0.1em; color: var(--paper-dim); position: relative;
+  }
+  .juan7 .m.gone { color: var(--paper-faint); border-style: dashed; }
+  .juan7 .m.gone::after {
+    content: "阙"; font-size: 11px; color: var(--gold); letter-spacing: 0.1em;
+    margin-left: 10px; vertical-align: 2px;
+  }
+  .juan7 .m.here::after {
+    content: "存"; font-size: 11px; color: var(--ink); background: var(--gold);
+    padding: 1px 7px 1px 10px; margin-left: 10px; vertical-align: 2px; letter-spacing: 0.1em;
+  }
+  .juan7 p { font-size: 15px; color: var(--paper-dim); max-width: 42em; }
+  .juan7 p b { color: var(--paper); font-weight: 600; }
+
+  /* 收梢 */
+  .ending { padding: 90px 0 70px; text-align: center; }
+  .ending .pre { font-size: 15px; color: var(--paper-dim); max-width: 38em; margin: 0 auto 34px; }
+  .ending blockquote.q {
+    border-left: none; padding: 0; font-size: clamp(18px, 2.2vw, 22px);
+    max-width: 34em; margin: 0 auto 40px; text-align: left;
+  }
+  .ending .big {
+    font-size: clamp(44px, 7vw, 76px); font-weight: 700; letter-spacing: 0.22em;
+    color: var(--gold); margin-bottom: 18px;
+  }
+  .ending .after { font-size: 14px; color: var(--paper-faint); letter-spacing: 0.14em; }
+
+  footer { border-top: 1px solid var(--hairline); padding: 34px 0 44px; }
+  footer .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 44px; font-size: 13px; color: var(--paper-faint); line-height: 1.9; }
+  footer b { color: var(--paper-dim); letter-spacing: 0.2em; }
+  footer a { color: var(--paper-dim); }
+
+  @media (max-width: 760px) {
+    .hero-grid { flex-direction: column; gap: 30px; }
+    .headword { writing-mode: horizontal-tb; text-orientation: mixed; font-size: 64px; padding: 12px 6px; }
+    .cards, .duel, .notes, footer .wrap { grid-template-columns: 1fr; }
+    .tea-stops { grid-template-columns: 1fr; }
+    .stop + .stop { padding-left: 0; border-left: none; border-top: 1px solid var(--hairline); }
+    .note-item summary .hook { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">殆知阁导读　卷一百五十七　问俗</div>
+    <div class="hero-grid">
+      <div class="headword">闻见</div>
+      <div class="anno">
+        <div class="fanqie">闻　无分切　　见　古甸切</div>
+        <p class="lede">唐人封演，天宝年间进士。他把一辈子<b>耳之所闻、目之所见</b>攒成十卷书：一百多条，条条像词典里的词目。你今天用的词，多半是他考过源头的，「衙门」的「衙」其实是「牙」的错字，「茶道」一词头一回就落在这一页里。</p>
+        <nav class="tabs">
+          <a href="#bu1">检目一　词有来历</a>
+          <a href="#bu2">检目二　事有来历</a>
+          <a href="#bu3">检目三　世相</a>
+          <a href="#bu4">检目四　残卷</a>
+        </nav>
+      </div>
+    </div>
+    <div class="chain-teaser">
+      <span class="ch">牙</span><span class="arr">→</span>
+      <span class="ch">牙门</span><span class="arr">→</span>
+      <span class="ch">公牙</span><span class="arr">→</span>
+      <span class="ch hot">衙门</span>
+      <span class="why">一个字的走样，见「公牙」条</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="bu1">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-seal">检目一</span><h2>词有来历</h2></div>
+    <p class="sec-desc">全书一百多目，多半是这一路文章：一个眼熟的词，封演替你翻出它的旧身。他考源的办法很朴素，先翻字书礼经，再拿亲见的时俗对勘，最后下断语。</p>
+    <div class="cards">
+      <article class="card wide">
+        <div class="hw-row"><span class="hw">公牙</span><span class="py mono">gong ya</span></div>
+        <p class="defn">官府为什么叫<em>衙门</em>？封演的答案：这字本来就是错的。</p>
+        <div class="chain">牙旗<b class="arr">→</b>牙门<b class="arr">→</b>公牙<b class="arr">→</b><b>衙门</b></div>
+        <blockquote class="q">近俗尚武，是以通呼公府为公牙，府门为牙门。字谬讹变，转而为衙也，非公府之名。<span class="src">卷五〈公牙〉</span></blockquote>
+        <p class="now"><b>今按</b>　大将出征，军前竖牙旗，营门就是牙门；文官的府门跟着叫，写着写着，牙长成了衙。此后一千二百年，打官司的地方都叫衙门。</p>
+      </article>
+      <article class="card">
+        <div class="hw-row"><span class="hw">官衔</span><span class="py mono">guan xian</span></div>
+        <p class="defn">头衔的<em>衔</em>，是嘴里衔的那个衔。</p>
+        <blockquote class="q">所以名为衔者，如人口衔物，取其连续之意。又如马之有衔，以制其首。<span class="src">卷五〈官衔〉</span></blockquote>
+        <p class="now"><b>今按</b>　任命状上新旧官名相衔不断，故曰官衔。衔级、头衔、衔命，全是这一口的延伸。</p>
+      </article>
+      <article class="card">
+        <div class="hw-row"><span class="hw">卤簿</span><span class="py mono">lu bu</span></div>
+        <p class="defn">皇帝出行仪仗叫<em>卤簿</em>，名字来自一张登记表。</p>
+        <blockquote class="q">卤以甲为之，所以扞敌。<span class="src">卷五〈卤簿〉</span></blockquote>
+        <blockquote class="q">甲楯有先后部伍之次，皆著之簿籍，天子出入，则按次导従，故谓之卤簿耳。<span class="src">同上</span></blockquote>
+        <p class="now"><b>今按</b>　卤是甲盾，簿是册子：甲盾按册编队。仪仗队的名字，其实是装备清单。</p>
+      </article>
+      <article class="card">
+        <div class="hw-row"><span class="hw">巾幞</span><span class="py mono">jin fu</span></div>
+        <p class="defn">唐官帽<em>幞头</em>，原是一块包头布。</p>
+        <blockquote class="q">近古用幅巾，周武帝裁出，脚向后幞发，故俗谓之幞头。<span class="src">卷五〈巾幞〉</span></blockquote>
+        <p class="now"><b>今按</b>　裹头松紧也见人品：吏部尚书刘晏裹头从不抽紧两翅，人问缘故，他答「两边通耶」，满朝传为笑谈。</p>
+      </article>
+      <article class="card">
+        <div class="hw-row"><span class="hw">烧尾</span><span class="py mono">shao wei</span></div>
+        <p class="defn">升了官要请客，唐人管这顿饭叫<em>烧尾</em>。</p>
+        <blockquote class="q">说者谓虎变为人，惧尾不化，须为焚除，乃得成人。<span class="src">卷五〈烧尾〉</span></blockquote>
+        <p class="now"><b>今按</b>　另一说是新羊入群，烧掉尾巴才肯合群。虎尾羊尾都是尾巴：进新圈子，先烧掉旧的那截。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="bu2">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-seal">检目二</span><h2>事有来历</h2></div>
+    <p class="sec-desc">另一路文章考的是风俗：一件事从无到有，掐得出年代。封演记事有个好处，他写的是自己一辈子的见闻，从天宝到大历，安史之乱恰好横在中间。</p>
+    <div class="cards">
+      <article class="card wide">
+        <div class="hw-row"><span class="hw">饮茶</span><span class="py mono">yin cha</span></div>
+        <p class="defn">「茶道」一词，文献里头一次出现就在这条。封演把茶从禅堂喝到朝堂的路线，一段一段摆了出来。</p>
+        <div class="tea-stops">
+          <div class="stop">
+            <div class="no">其一　禅堂</div>
+            <h4>北方人不喝茶，和尚先喝</h4>
+            <p>开元年间泰山灵岩寺，禅师坐禅不许睡、不许吃晚饭，全靠茶撑着。</p>
+          </div>
+          <div class="stop">
+            <div class="no">其二　街市</div>
+            <h4>城市开茶铺，投钱取饮</h4>
+            <p>风俗从山东一路传到两京，街上茶铺收钱卖茶，不问僧俗，江淮的茶一路堆到北方。</p>
+          </div>
+          <div class="stop">
+            <div class="no">其三　朝堂</div>
+            <h4>陆羽著书，伯熊润色</h4>
+            <p>京城好事人家都收藏一套二十四件的茶具，喝茶喝成了风尚。</p>
+          </div>
+        </div>
+        <blockquote class="q">开元中，太山灵岩寺有降魔师大兴禅教，学禅务于不寐，又不夕食，皆恃其饮茶。人自怀挟，到处煮饮。従此转相仿效，逐成风俗。<span class="src">卷六〈饮茶〉</span></blockquote>
+        <blockquote class="q">城市多开店铺，煎茶卖之，不问道俗，投钱取饮。<span class="src">同上</span></blockquote>
+        <blockquote class="q">楚人陆鸿渐为《茶论》，说茶之功效并煎茶炙茶之法，造茶具二十四事，以都统笼贮之。<span class="src">同上</span></blockquote>
+        <blockquote class="q">有常伯熊者，又因鸿渐之论广润色之。于是茶道大行，王公朝士无不饮者。<span class="src">同上</span></blockquote>
+        <div class="duel">
+          <div class="side win">
+            <h5>常伯熊</h5>
+            <div class="tag">茶艺表演家</div>
+            <p>一身黄衫乌纱，端着茶具现场解说，左右看得刮目相看。演完，李大人喝了两杯就打住。</p>
+          </div>
+          <div class="side">
+            <h5>陆鸿渐</h5>
+            <div class="tag">《茶论》原作者</div>
+            <p>一身便服，带着茶具进来，照伯熊的套路演了一遍。李大人看不上，喝完让仆人赏他三十文钱。</p>
+          </div>
+        </div>
+        <blockquote class="q">御史大夫李季卿宣慰江南，至临怀县馆，或言伯熊善茶者，李公请为之。<span class="src">同上。库本作「临怀」，通行本作「临淮」</span></blockquote>
+        <blockquote class="q">李公心鄙之，茶毕，命奴子取钱三十文酬煎茶博士。鸿渐游江介，通狎胜流，及此羞愧，复著《毁茶论》。<span class="src">同上</span></blockquote>
+        <p class="verdict">写《茶论》的人被人当茶博士赏了三十文，回去写《毁茶论》。这一页里有两个陆羽：一个让<b>茶道大行</b>，一个恨不得亲手毁掉它。</p>
+      </article>
+      <article class="card">
+        <div class="hw-row"><span class="hw">拔河</span><span class="py mono">ba he</span></div>
+        <p class="defn">拔河古名<em>牵钩</em>，本楚国教战之术，唐代成了宫廷游戏。大麻绳长四五十丈，两头各系几百条小索，上千人一齐拉。</p>
+        <blockquote class="q">中宗时，曾以清明日御梨园球场，命侍臣为拔河之戏。<span class="src">卷六〈拔河〉</span></blockquote>
+        <blockquote class="q">仆射韦巨源、少师康休璟年老，随纟亘而踣，久不能兴。上大笑，左右扶起。<span class="src">同上。库本「康休璟」通行作「唐休璟」，「纟亘」为「絙」字之拆讹</span></blockquote>
+        <blockquote class="q">玄宗数御楼，设此戏，挽者至千余人，喧呼动地。蕃客士庶观者，莫不震骇。<span class="src">同上</span></blockquote>
+        <p class="now"><b>今按</b>　两位宰相级别的高官被绳子拖倒在地爬不起来，皇帝大笑。拔河从楚地兵操到清明宫廷团建，走了一千年。</p>
+      </article>
+      <article class="card">
+        <div class="hw-row"><span class="hw">纸钱</span><span class="py mono">zhi qian</span></div>
+        <p class="defn">烧纸钱合不合礼法，唐人认真辩过。封演的裁断：祭品本来就是<em>象似</em>之物。</p>
+        <blockquote class="q">纸乃后汉蔡伦所造，其纸钱魏晋已来始有其事。今自王公逮于匹庶，通行之矣。<span class="src">卷六〈纸钱〉</span></blockquote>
+        <blockquote class="q">古埋帛金钱，今纸钱皆烧之，所以示不知神之所为也。<span class="src">同上</span></blockquote>
+        <p class="now"><b>今按</b>　从埋币到烧纸，逻辑只有一条：给鬼神的东西，本就该是「不知道神怎么用」的东西。烧纸的礼法学依据，在这儿。</p>
+      </article>
+      <article class="card">
+        <div class="hw-row"><span class="hw">降诞</span><span class="py mono">jiang dan</span></div>
+        <p class="defn">拿生日当节过，是唐玄宗朝的新发明，唐人自己也吵。</p>
+        <blockquote class="q">玄宗开元十七年，丞相张说遂奏以八月五日为千秋节，百僚有献承露囊者。<span class="src">卷四〈降诞〉</span></blockquote>
+        <blockquote class="q">千秋万岁之后，尚存此日以为节，恐乖本意。<span class="src">同上。吏部尚书颜真卿语</span></blockquote>
+        <p class="now"><b>今按</b>　八月五日全国过节，皇帝登楼奏乐，满城人出来看热闹；几十年后颜真卿上奏把它停了：皇帝千秋万岁之后，这天还过节吗。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="bu3">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-seal">检目三</span><h2>世相</h2></div>
+    <p class="sec-desc">卷九收官员的脸谱，卷十全是段子。这些条目短，趣味的密度却高，像一部唐人段子集，翻开一笺是一个。</p>
+    <div class="notes">
+      <div class="note-item">
+        <details>
+          <summary><span class="idx">其一</span><span class="ti2">千佛名经</span><span class="hook">进士榜值多少</span><span class="plus">＋</span></summary>
+          <div class="note-body">
+            <p>一位落第进士，汉阳王李柬之的曾孙，双手捧着一册《进士登科记》顶在头上。落第的人捧成佛经，这座独木桥在唐人心里的分量，不用再解释。</p>
+            <blockquote class="q">时初落第，两手捧《登科记》顶戴之曰：“此千佛名经也。”其企羡如此。<span class="src">卷三〈贡举〉</span></blockquote>
+          </div>
+        </details>
+      </div>
+      <div class="note-item">
+        <details>
+          <summary><span class="idx">其二</span><span class="ti2">空欢喜</span><span class="hook">皇帝许的进士不算数</span><span class="plus">＋</span></summary>
+          <div class="note-body">
+            <p>玄宗答应给女婿赏一个进士及第，贺客盈门。宰相李林甫把圣旨顶了回去：科名是国家取才之地，赏官可以，赏进士不行。</p>
+            <blockquote class="q">明经、进士，国家取才之地。若圣恩优异，差可与官。今以及第与之，将何以劝？<span class="src">卷三〈贡举〉李林甫语</span></blockquote>
+            <blockquote class="q">如泚宾朋贺，车马盈门。忽中书下牒礼部：“王如泚可依例考试。”闻者罔然失错矣。<span class="src">同上</span></blockquote>
+          </div>
+        </details>
+      </div>
+      <div class="note-item">
+        <details>
+          <summary><span class="idx">其三</span><span class="ti2">错认船</span><span class="hook">纸牌子糊弄皇帝</span><span class="plus">＋</span></summary>
+          <div class="note-body">
+            <p>烧尾宴设在兴庆池，吏部的船被仪仗挡住，兵部的船先到。侍郎崔湜要面子，拿纸写了「吏部」两个字贴在户部船上，一直贴到御前。风吹纸动，当场穿帮。</p>
+            <blockquote class="q">上令取牌探纸，见户字大笑。嗣立请科湜罪，上不许，但罚酒而已。<span class="src">卷五〈烧尾〉</span></blockquote>
+          </div>
+        </details>
+      </div>
+      <div class="note-item">
+        <details>
+          <summary><span class="idx">其四</span><span class="ti2">改姓氏</span><span class="hook">为出使改了姓</span><span class="plus">＋</span></summary>
+          <div class="note-body">
+            <p>韦伦奉使吐蕃，判官姓苟。有人提醒：吐蕃讳狗，带个苟判官怎么求好？于是奏请把苟改成荀。使人回来，那位先生干脆不归旧姓，一辈子姓了荀。</p>
+            <blockquote class="q">或谓伦曰：“吐蕃讳狗，大夫将一苟判官，何以求好？”伦遽奏其事，今上令改苟为荀，而其人不易。及使还，曾遂姓荀，不归旧姓。<span class="src">卷十〈避忌〉</span></blockquote>
+          </div>
+        </details>
+      </div>
+      <div class="note-item">
+        <details>
+          <summary><span class="idx">其五</span><span class="ti2">自曝宅</span><span class="hook">卖房先说缺点</span><span class="plus">＋</span></summary>
+          <div class="note-body">
+            <p>陆少保在洛阳卖宅子，价钱都谈好了，他偏要把买主叫来当面告知这宅子的缺陷。子侄不服，他的回答干脆。</p>
+            <blockquote class="q">元方告其人，曰：“此宅子甚好，但无出水处。”买者闻之，遽辞不置。<span class="src">卷九〈淳信〉</span></blockquote>
+            <blockquote class="q">元方曰：“汝太奇，岂可为钱而诳个人！”<span class="src">同上</span></blockquote>
+          </div>
+        </details>
+      </div>
+      <div class="note-item">
+        <details>
+          <summary><span class="idx">其六</span><span class="ti2">墙尚在</span><span class="hook">筑墙人一句话</span><span class="plus">＋</span></summary>
+          <div class="note-body">
+            <p>郭子仪宅院大到院内往来要乘车马。他见人修墙，随口嘱咐筑结实些。筑墙的回答，让这位中兴名将当场变了脸色，回去就上表请退。</p>
+            <blockquote class="q">筑者释锸而对曰：“数十年来，京城达官家墙，皆是某筑，只见人自改换，墙皆见在。”郭令闻之，怆然动容。遂入奏其事，因固请老。<span class="src">卷五〈第宅〉</span></blockquote>
+          </div>
+        </details>
+      </div>
+      <div class="note-item">
+        <details>
+          <summary><span class="idx">其七</span><span class="ti2">碧头巾</span><span class="hook">不体罚的羞辱刑</span><span class="plus">＋</span></summary>
+          <div class="note-body">
+            <p>延陵县令李封治下不用板子：吏人犯法，按情节轻重裹碧头巾示众，戴够日子才许摘。吴人视为此生大耻，赋税反倒常常先于诸县完成。</p>
+            <blockquote class="q">李封为延陵令。吏人有罪，不加杖罚，但令裹碧头巾以辱之。随所犯轻重，以日数为等级，日满乃释。<span class="src">卷九〈奇政〉</span></blockquote>
+            <blockquote class="q">吴人著此服，出人州乡，以为大耻，皆相劝励，无敢僭违。赋税常先诸县，去官，竟不捶一人。<span class="src">同上</span></blockquote>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="bu4">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-seal">检目四</span><h2>残卷</h2></div>
+    <div class="juan7">
+      <p>这部书不是完璧。卷七的条目名录还在，正文却有多条只剩一个〔阙〕字，缺的部分，宋代以后就没人见过了。留下来的卷七，讲的都是山川物产考辨：蜀地本没有兔子鸽子，是朝廷特意送去的；台州的「月桂子」，封演算过月亮的轨道，断定不可能从月宫掉下来。</p>
+      <div class="mulu-row">
+        <span class="m gone">视物远近</span>
+        <span class="m gone">海潮</span>
+        <span class="m gone">北方白虹</span>
+        <span class="m gone">西风则雨</span>
+        <span class="m gone">松柏西向</span>
+        <span class="m here">蜀无兔鸽</span>
+        <span class="m here">月桂子</span>
+        <span class="m gone">石鼓</span>
+        <span class="m gone">弦歌驿</span>
+        <span class="m here">高唐馆</span>
+      </div>
+      <p>一本考「来历」的书，自己缺了七条来历。读它的人只好接受封演式的解释：<b>缺的早就缺了，存的未必全真</b>。</p>
+    </div>
+  </div>
+</section>
+
+<section class="ending">
+  <div class="wrap">
+    <p class="pre">封演年轻时在太学读书，亲见经典传写讹谬，本想联合博士诸生倡议立《大唐石经》，奏疏还没递上去，安禄山反了。写下这部书时，他给自己的心愿留了一行结案陈词：</p>
+    <blockquote class="q">天宝中，余在太学，与博士诸生共论经籍失正，为欲建议请立《大唐石经》。迁延未发，而胡寇海内，文儒道消。至今四十六年，兵革未息。呜呼！石经之事，亦俟河之清也。<span class="src">卷二〈石经〉</span></blockquote>
+    <div class="big">俟河之清</div>
+    <p class="after">人寿几何。一部记俗的闲书，收梢收在一位老人没有做完的正经事上。</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <p><b>文本来源</b><br>殆知阁古代文献 史藏志存记录（封氏闻见记）<br><a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>（简体版），唐封演撰，库内全文去空白 29,128 字，十卷。本页全部引文经脚本与库内文本去标点、异体归一逐字核验通过；卷七残目按库本〔阙〕标注照录。</p>
+    </div>
+    <div>
+      <p><b>库外申报</b><br>作者封演的科第与历官、《永乐大典》辑本源流、「茶道」首见文献地位、绿头巾与后世服色禁忌的关联，均为库外通行知识，未经库本核验；「康休璟」「纟亘」「临怀」等库本文字与通行本之异同已在相应引文处注明。</p>
+    </div>
+    <div>
+      <p><b>使用提醒</b><br>全部引文异体字照录（従、楯之类）；白话转述与今按仅助阅读，以库本原文为准。书中杖杀豪族、以服色羞辱为刑等做法系时代产物，是历史文献记录，不可仿效。</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
