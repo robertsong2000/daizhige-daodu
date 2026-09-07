@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赤雅 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink2: #1f1e1b;
+    --ink3: #242219;
+    --paper: #e8e4dc;
+    --dim: #a39e93;
+    --faint: #6e6a61;
+    --gold: #c9963f;
+    --gold-soft: rgba(201,150,63,0.55);
+    --line: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.95;
+    letter-spacing: 0.04em;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+
+  .beacon {
+    position: fixed; top: 18px; left: 22px; z-index: 9;
+    font-size: 12px; letter-spacing: 0.18em; color: var(--faint);
+    border: 1px solid var(--line); padding: 5px 12px; border-radius: 2px;
+    background: rgba(25,25,23,0.7);
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    position: relative; min-height: 92vh;
+    display: grid; grid-template-columns: 1.25fr 0.75fr;
+    align-items: center; overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    background:
+      radial-gradient(ellipse 60% 50% at 38% 46%, rgba(201,150,63,0.10), transparent 70%),
+      var(--ink);
+  }
+  .drumzone { display: flex; flex-direction: column; align-items: center; gap: 26px; padding: 70px 10px 50px; }
+  .drum { width: min(400px, 72vw); cursor: pointer; user-select: none; }
+  .drum svg { width: 100%; height: auto; display: block; }
+  .drum-hint { font-size: 13px; letter-spacing: 0.5em; color: var(--faint); text-indent: 0.5em; }
+  .drum-reveal { max-width: 460px; text-align: center; min-height: 130px; }
+  .drum-reveal .rq {
+    font-size: 19px; color: var(--paper); opacity: 0; transform: translateY(8px);
+    transition: opacity 1.1s ease, transform 1.1s ease;
+  }
+  .drum-reveal .rq.on { opacity: 1; transform: none; }
+  .drum-reveal .rs { font-size: 12px; color: var(--faint); letter-spacing: 0.22em; margin-top: 12px; opacity: 0; transition: opacity 1.1s ease 0.35s; }
+  .drum-reveal .rs.on { opacity: 1; }
+  .ripples { position: absolute; inset: 0; pointer-events: none; }
+  .ripple {
+    position: absolute; border: 1px solid var(--gold-soft); border-radius: 50%;
+    animation: rip 1.8s ease-out forwards;
+  }
+  @keyframes rip { from { transform: scale(0.12); opacity: 0.9; } to { transform: scale(1.9); opacity: 0; } }
+
+  .herotitle {
+    border-left: 1px solid var(--line); height: 100%;
+    display: flex; justify-content: center; align-items: flex-start;
+    padding-top: 9vh;
+  }
+  .vt { writing-mode: vertical-rl; display: flex; gap: 26px; height: 66vh; }
+  .vt .big { font-size: clamp(64px, 9vw, 110px); letter-spacing: 0.28em; font-weight: 700; }
+  .vt .sub { font-size: 15px; color: var(--dim); letter-spacing: 0.42em; padding-top: 10px; }
+  .vt .tag {
+    writing-mode: vertical-rl; font-size: 12px; color: var(--gold);
+    border: 1px solid var(--gold-soft); padding: 12px 6px; letter-spacing: 0.3em; margin-top: 14px;
+  }
+
+  /* ---------- sections ---------- */
+  section { padding: 92px 0; border-bottom: 1px solid var(--line); }
+  .shead { display: flex; align-items: center; gap: 18px; margin-bottom: 44px; }
+  .seal {
+    width: 46px; height: 46px; flex: none;
+    border: 1.5px solid var(--gold); color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; border-radius: 2px;
+  }
+  .shead h2 { font-size: 25px; font-weight: 700; letter-spacing: 0.12em; }
+  .shead .from { margin-left: auto; font-size: 12px; color: var(--faint); letter-spacing: 0.22em; }
+  .kick { font-size: 15px; color: var(--dim); max-width: 760px; margin: 0 0 34px; }
+  .kick b { color: var(--paper); font-weight: 700; }
+  p.tx { font-size: 16px; color: var(--paper); max-width: 760px; margin-bottom: 22px; }
+  p.tx small { color: var(--dim); }
+  blockquote.q {
+    border-left: 2px solid var(--gold); padding: 6px 0 6px 20px;
+    margin: 26px 0 30px; font-size: 17.5px; color: var(--paper); max-width: 720px;
+  }
+  .src { display: block; font-size: 12px; color: var(--faint); letter-spacing: 0.2em; margin-top: 8px; }
+  .cols2 { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: start; }
+
+  /* 壹 三卷 */
+  .sanjuan { border: 1px solid var(--line); padding: 30px 26px; border-radius: 2px; }
+  .sj-row { display: flex; gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px dashed var(--line); }
+  .sj-row:last-child { border-bottom: none; }
+  .sj-no { color: var(--gold); font-size: 14px; letter-spacing: 0.1em; flex: none; }
+  .sj-t { font-size: 17px; }
+  .sj-d { font-size: 13px; color: var(--dim); }
+
+  /* 贰 七子 */
+  .qi {
+    display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+    padding: 34px 0 10px;
+  }
+  .stone {
+    width: 58px; height: 58px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; cursor: pointer; position: relative;
+    border: 1.5px solid var(--gold); color: var(--gold);
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .stone.k { background: var(--gold); color: var(--ink); }
+  .stone:hover { transform: translateY(-6px); }
+  .stone .tip {
+    position: absolute; top: -34px; left: 50%; transform: translateX(-50%);
+    white-space: nowrap; font-size: 12px; color: var(--dim);
+    opacity: 0; transition: opacity 0.2s; pointer-events: none;
+  }
+  .stone:hover .tip { opacity: 1; }
+  .qiclegend { text-align: center; font-size: 12.5px; color: var(--faint); letter-spacing: 0.2em; margin-bottom: 30px; }
+  .zhan { display: flex; gap: 22px; justify-content: center; padding: 10px 0 4px; }
+  .zhan span {
+    writing-mode: vertical-rl; font-size: 15px; letter-spacing: 0.28em;
+    color: var(--gold); border-top: 3px solid var(--gold-soft); padding: 12px 5px 26px;
+    background: linear-gradient(var(--ink3), transparent);
+  }
+  .lawcard {
+    border: 1px solid var(--line); padding: 22px 24px; margin: 30px 0; border-radius: 2px;
+    background: var(--ink2);
+  }
+  .lawcard .lt { font-size: 12px; color: var(--gold); letter-spacing: 0.3em; margin-bottom: 10px; }
+
+  /* 叁 蛊链 */
+  .gu-chain { display: flex; align-items: stretch; gap: 0; margin: 36px 0 10px; flex-wrap: wrap; }
+  .gu-step {
+    flex: 1 1 200px; border: 1px solid var(--line); padding: 22px 20px; border-radius: 2px;
+    background: var(--ink2); cursor: pointer; position: relative; min-height: 118px;
+    transition: border-color 0.25s;
+  }
+  .gu-step + .gu-step { margin-left: 40px; }
+  .gu-step + .gu-step::before {
+    content: "→"; position: absolute; left: -32px; top: 50%; transform: translateY(-50%);
+    color: var(--faint); font-size: 18px;
+  }
+  .gu-step .gt { color: var(--gold); font-size: 13px; letter-spacing: 0.26em; margin-bottom: 8px; }
+  .gu-step .gd { font-size: 14.5px; color: var(--dim); }
+  .gu-step .gh { font-size: 15px; }
+  .gu-step.open { border-color: var(--gold-soft); }
+  .gu-step .gx { display: none; font-size: 14.5px; margin-top: 10px; }
+  .gu-step.open .gx { display: block; }
+  .gu-hint { font-size: 12.5px; color: var(--faint); letter-spacing: 0.18em; margin-bottom: 26px; }
+
+  /* 肆 山脊 */
+  .ridge { width: 100%; }
+  .ridge svg { width: 100%; height: auto; display: block; }
+  .wp { cursor: pointer; }
+  .wp circle { transition: r 0.2s; }
+  .wp:hover circle, .wp.on circle { fill: var(--gold); }
+  .wp.on .wlabel, .wp:hover .wlabel { fill: var(--gold); }
+  .ridge-panel {
+    border: 1px solid var(--line); border-top: 2px solid var(--gold);
+    padding: 30px 32px; margin-top: -2px; background: var(--ink2); min-height: 190px;
+  }
+  .ridge-panel h3 { font-size: 19px; margin-bottom: 14px; letter-spacing: 0.1em; }
+  .ridge-panel .rp-body { display: none; }
+  .ridge-panel .rp-body.on { display: block; }
+  .ridge-panel p { font-size: 15.5px; color: var(--paper); max-width: 760px; }
+  .ridge-panel .q { font-size: 16px; margin: 16px 0 6px; }
+  .ridge-panel .src { margin-top: 4px; }
+  .ridge-panel blockquote { border-left: 2px solid var(--gold-soft); padding-left: 16px; }
+
+  /* 伍 鼓瘴 */
+  .wutu { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .card { border: 1px solid var(--line); background: var(--ink2); padding: 26px 28px; border-radius: 2px; margin-bottom: 34px; }
+  .card h3 { font-size: 18px; margin-bottom: 14px; letter-spacing: 0.12em; }
+  .card .dimline { font-size: 13px; color: var(--faint); letter-spacing: 0.16em; }
+  .smalldrum { width: 170px; float: right; margin: 0 0 10px 18px; }
+  .smalldrum svg { width: 100%; height: auto; }
+  .zhai-stage {
+    border: 1px solid var(--line); background: var(--ink3); border-radius: 2px;
+    height: 210px; position: relative; overflow: hidden; margin-bottom: 14px;
+  }
+  .pillar {
+    position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+    width: 34px; height: 0;
+    background: linear-gradient(to top, rgba(201,150,63,0.4), transparent);
+    animation: rise 4.6s ease-in-out infinite;
+  }
+  @keyframes rise { 0% { height: 0; opacity: 0; } 30% { height: 150px; opacity: 0.85; } 55% { height: 110px; opacity: 0.5; } 100% { height: 30px; opacity: 0; } }
+  .pellet {
+    position: absolute; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--gold); left: 50%; top: 26px; margin-left: -7px;
+    transition: top 1.2s cubic-bezier(0.5, 0, 0.9, 0.6), opacity 1.2s;
+    opacity: 0;
+  }
+  .pellet.fall { opacity: 1; top: 178px; }
+  .stage-msg { position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; font-size: 14px; color: var(--dim); }
+  .zhai-btns { display: flex; gap: 14px; justify-content: center; }
+  .btn {
+    border: 1px solid var(--gold-soft); background: transparent; color: var(--gold);
+    font-family: inherit; font-size: 14px; letter-spacing: 0.24em; text-indent: 0.24em;
+    padding: 9px 22px; border-radius: 2px; cursor: pointer;
+  }
+  .btn:hover { background: rgba(201,150,63,0.12); }
+  .fourzhai { display: flex; gap: 12px; margin: 22px 0 6px; flex-wrap: wrap; }
+  .fz { flex: 1 1 100px; text-align: center; border: 1px solid var(--line); padding: 14px 6px; border-radius: 2px; }
+  .fz .se { display: block; width: 30px; height: 6px; margin: 0 auto 10px; border-radius: 3px; }
+  .fz b { font-size: 15px; display: block; }
+  .fz small { font-size: 12px; color: var(--faint); }
+  .koujue {
+    text-align: center; font-size: 20px; letter-spacing: 0.3em; line-height: 2.3;
+    border: 1px dashed var(--gold-soft); border-radius: 2px; padding: 26px 10px; margin-top: 30px;
+  }
+
+  /* 陆 end */
+  .end .fin {
+    margin-top: 52px; font-size: clamp(26px, 4vw, 38px); font-weight: 700; letter-spacing: 0.1em;
+  }
+  .end .fin i { font-style: normal; color: var(--gold); }
+  .endnote { font-size: 13px; color: var(--faint); margin-top: 18px; letter-spacing: 0.1em; }
+
+  footer { padding: 64px 0 90px; }
+  footer .cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px; }
+  footer p { font-size: 12.5px; color: var(--dim); line-height: 1.9; }
+  footer b { color: var(--paper); display: block; margin-bottom: 8px; letter-spacing: 0.2em; }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; }
+    .herotitle { border-left: none; border-top: 1px solid var(--line); padding: 30px 0 50px; }
+    .vt { height: 40vh; }
+    .cols2, .wutu, footer .cols { grid-template-columns: 1fr; }
+    .gu-step + .gu-step { margin-left: 0; margin-top: 36px; }
+    .gu-step + .gu-step::before { left: 50%; top: -30px; transform: translateX(-50%); }
+  }
+</style>
+</head>
+<body>
+
+<div class="beacon">殆知阁导读 · 第212篇</div>
+
+<!-- ================= hero ================= -->
+<header class="hero">
+  <div class="drumzone">
+    <div class="drum" id="drum" title="击鼓">
+      <svg viewBox="0 0 400 400" aria-label="铜鼓面">
+        <g id="face" fill="none" stroke="#c9963f">
+          <circle cx="200" cy="200" r="192" stroke-width="2.5" opacity="0.9"/>
+          <circle cx="200" cy="200" r="178" stroke-width="1" opacity="0.4"/>
+          <circle cx="200" cy="200" r="140" stroke-width="1.6" opacity="0.7"/>
+          <circle cx="200" cy="200" r="128" stroke-width="0.8" opacity="0.35"/>
+          <circle cx="200" cy="200" r="86"  stroke-width="1.4" opacity="0.6"/>
+          <circle cx="200" cy="200" r="74"  stroke-width="0.8" opacity="0.35"/>
+          <circle cx="200" cy="200" r="46"  stroke-width="1.6" opacity="0.8"/>
+          <g stroke-width="1.4" opacity="0.85">
+            <path d="M200 16 l7 10 h-14 z"/>
+            <path d="M323 58 l10 7 -8 8 z"/>
+            <path d="M384 200 l-10 7 v-14 z"/>
+            <path d="M323 342 l8 8 -10 7 z"/>
+            <path d="M200 384 l-7 -10 h14 z"/>
+            <path d="M77 342 l-10 -7 8 -8 z"/>
+            <path d="M16 200 l10 -7 v14 z"/>
+            <path d="M77 58 l-8 -8 10 -7 z"/>
+          </g>
+          <g fill="#c9963f" stroke="none">
+            <circle cx="256" cy="144" r="7"/>
+            <circle cx="286" cy="200" r="7"/>
+            <circle cx="256" cy="256" r="7"/>
+            <circle cx="200" cy="286" r="7"/>
+            <circle cx="144" cy="256" r="7"/>
+            <circle cx="114" cy="200" r="7"/>
+            <circle cx="144" cy="144" r="7"/>
+            <circle cx="200" cy="114" r="7"/>
+          </g>
+          <g stroke-width="1.2" opacity="0.9">
+            <path d="M200 200 l-22 -22 M200 200 l22 -22 M200 200 l-22 22 M200 200 l22 22"/>
+            <path d="M200 200 l0 -31 M200 200 l31 0 M200 200 l0 31 M200 200 l-31 0"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="drum-hint">击其面</div>
+    <div class="drum-reveal" id="reveal">
+      <div class="rq" id="rq">余穷历九郡，南尽衡山，然后知先王建国亲侯，其道大也。</div>
+      <div class="rs" id="rs">卷中 · 山川论略</div>
+    </div>
+    <div class="ripples" id="ripples"></div>
+  </div>
+  <div class="herotitle">
+    <div class="vt">
+      <div class="big">赤雅</div>
+      <div class="sub">明 邝露 撰</div>
+      <div class="tag">史藏 地理</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= 壹 ================= -->
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">壹</div>
+      <h2>亡命的人</h2>
+      <div class="from">成 书</div>
+    </div>
+    <p class="kick">一位后来抱着琴死的诗人，早年在瘴乡亡命了几年。回来以后，他把那片地方写成了一册三卷的小书：<b>卷上记人，卷中记山川，卷下记物产</b>。</p>
+    <div class="cols2">
+      <div>
+        <p class="tx">邝露，字湛若，广东南海人，能诗，善琴。关于他早年为何亡命，说法不一，通行的是他触怒了官府，功名丢了，人也待不住了，于是一路向西，在瑶山壮峒之间做了几年客。</p>
+        <p class="tx">几年里他学会了听鸟言、辨瘴毒，见过了山里的兵法、歌墟和蛊。全书不设大章，只一条一条往下记，共一百九十七条，短则十余字，长不过一纸。他不止看，还动手试。治蛊那一则，他先自报家门：</p>
+        <blockquote class="q">予久客其中，习知其方。<span class="src">卷上 · 天姬破蛊</span></blockquote>
+        <p class="tx"><small>当然，他用的是明人的眼睛。笔下对诸族的称谓、评判，带着那个时代全部的偏见与猎奇，这层滤镜，今天的读者需要自己摘。</small></p>
+      </div>
+      <div class="sanjuan">
+        <div class="sj-row"><span class="sj-no">卷上</span><span><span class="sj-t">记人</span><br><span class="sj-d">土司兵制，瑶壮歌俗，蛊毒方术</span></span></div>
+        <div class="sj-row"><span class="sj-no">卷中</span><span><span class="sj-t">记山川</span><br><span class="sj-d">鬼门关，灵渠，阳朔诸峰，绿珠井</span></span></div>
+        <div class="sj-row"><span class="sj-no">卷下</span><span><span class="sj-t">记物产</span><br><span class="sj-d">凤与猩猩，伏波铜鼓，四瘴与玉笛</span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 贰 ================= -->
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">贰</div>
+      <h2>一张战国图</h2>
+      <div class="from">卷上 · 记人</div>
+    </div>
+    <p class="tx">粤西不设流官的地方，由土司世袭。在邝露眼里，那不是边地，是一张缩了尺寸的旧地图：</p>
+    <blockquote class="q">四府三十七州，形势宛然一衰周战国图。<span class="src">卷上 · 形势</span></blockquote>
+    <p class="tx">国与国之间远交近攻，弱小的割村为质。土司法极严，商贩入境，两杆枪交叉插在地上就是关卡，</p>
+    <blockquote class="q">税未输而越关者，许射之。既输，暮行露宿，货物狼藉，无敢睨者。<span class="src">卷上 · 法制</span></blockquote>
+    <p class="tx">兵制最见性格。岑家兵法七人一伍，同生共死，分工只有两种：</p>
+    <div class="qi">
+      <div class="stone k">击<span class="tip">专主击刺</span></div>
+      <div class="stone k">击<span class="tip">专主击刺</span></div>
+      <div class="stone k">击<span class="tip">专主击刺</span></div>
+      <div class="stone k">击<span class="tip">专主击刺</span></div>
+      <div class="stone">割<span class="tip">专主割首</span></div>
+      <div class="stone">割<span class="tip">专主割首</span></div>
+      <div class="stone">割<span class="tip">专主割首</span></div>
+    </div>
+    <div class="qiclegend">四人专主击刺　三人专主割首　悬停看分工</div>
+    <blockquote class="q">四人专主击刺，三人专主割首。所获首级，七人共之。<span class="src">卷上 · 岑家兵略</span></blockquote>
+    <p class="tx">女将云亸娘的寨兵能以少击众，靠军法更狠。一串斩字排下来，最末一种连弯腰捡敌人的赏金都不许：</p>
+    <div class="zhan"><span>不如令者斩</span><span>退缩者斩</span><span>走者斩</span></div>
+    <blockquote class="q">不如令者斩，退缩者斩，走者斩。<span class="src">卷上 · 云亸君兵法</span></blockquote>
+    <p class="tx">至于朝廷征调的狼兵，他只给了九个字的考语：</p>
+    <blockquote class="q">狼兵鸷悍，天下称最。<span class="src">卷上 · 狼兵</span></blockquote>
+  </div>
+</section>
+
+<!-- ================= 叁 ================= -->
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">叁</div>
+      <h2>浪花歌与蛊</h2>
+      <div class="from">卷上 · 记俗</div>
+    </div>
+    <p class="tx">兵法之外是歌。正月初一、三月初三、中秋节是歌期，三月那一场叫浪花歌。到日子，峒中的少女们先把场面铺开：</p>
+    <blockquote class="q">峒女于春秋时，布花果、笙箫于名山，五丝刺同心结、百纽鸳鸯囊，选峒中之少好者，伴峒官之女，名曰天姬队。<span class="src">卷上 · 浪花歌</span></blockquote>
+    <p class="tx">祭典也是成套的颜色。瑶人祀盘瓠，其乐五合，其旗五方，其衣五彩；祭仪最吓人的一步，其实是道具：</p>
+    <blockquote class="q">先献人头一枚，名吴将军首级。予观祭时以桄榔面为之<span class="src">卷上 · 瑶人祀典</span></blockquote>
+    <p class="tx">然后是全书最阴的一则。蛊，他记得有鼻子有眼，点它一步一步走：</p>
+    <div class="gu-hint">逐段点开</div>
+    <div class="gu-chain" id="guchain">
+      <div class="gu-step" data-step="0">
+        <div class="gt">聚 虫</div>
+        <div class="gh">五月五日</div>
+        <div class="gx">把毒虫关进一只瓮里，让它们自己解决自己。</div>
+      </div>
+      <div class="gu-step" data-step="1">
+        <div class="gt">独 存</div>
+        <div class="gh">最后独存者曰蛊</div>
+        <div class="gx">蛇蛊、晰蜴蛊、蜣螂蛊。用时先置食中，味增百倍。</div>
+      </div>
+      <div class="gu-step" data-step="2">
+        <div class="gt">飞 蛊</div>
+        <div class="gh">夜出有光，熠如曳彗</div>
+        <div class="gx">光积生影，是名桃影；积生形，能与人交，是名金蚕。</div>
+      </div>
+    </div>
+    <blockquote class="q">五月五日，聚诸虫豸之毒者，并置器内，自相吞食，最后独存者曰蛊。<span class="src">卷上 · 獞妇畜蛊</span></blockquote>
+    <p class="tx">也有解药。天姬望一眼病人的脸色就笑，病人磕头乞药，得丸一粒。破蛊的天姬，名字和歌墟里那队姑娘是一样的。邝露说他不但见过，还会配方：三七末和荸荠做丸，白矾细茶调服，得吐则止。</p>
+    <blockquote class="q">出一丸啖之，立吐奇怪。<span class="src">卷上 · 天姬破蛊</span></blockquote>
+  </div>
+</section>
+
+<!-- ================= 肆 ================= -->
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">肆</div>
+      <h2>一条脊线</h2>
+      <div class="from">卷中 · 记山川</div>
+    </div>
+    <p class="tx">卷中写山，起手先立论，论完才肯放自己出去看山。阳朔道上诸峰一节，他引了韩愈的旧句：</p>
+    <blockquote class="q">水作青罗带，山为碧玉簪。<span class="src">卷中 · 阳朔道上诸峰引韩退之句</span></blockquote>
+    <p class="tx">接着自己替诸峰一连打了八个比方，末了批语四个字：皆实录也。沿着这条脊线走，五个地方各有一段。点山头：</p>
+    <div class="ridge">
+      <svg viewBox="0 0 1000 210" aria-label="山脊示意">
+        <path d="M0 205 L90 168 L150 188 L235 120 L300 160 L370 96 L430 150 L505 78 L560 140 L640 60 L700 128 L780 96 L850 150 L920 122 L1000 165"
+              fill="none" stroke="rgba(232,228,220,0.28)" stroke-width="1.6"/>
+        <g class="wp on" data-p="0"><circle cx="90" cy="168" r="6" fill="#191917" stroke="#c9963f" stroke-width="1.6"/><text class="wlabel" x="90" y="146" text-anchor="middle" fill="#e8e4dc" font-size="14">鬼门关</text></g>
+        <g class="wp" data-p="1"><circle cx="370" cy="96" r="6" fill="#191917" stroke="#c9963f" stroke-width="1.6"/><text class="wlabel" x="370" y="74" text-anchor="middle" fill="#e8e4dc" font-size="14">阳朔诸峰</text></g>
+        <g class="wp" data-p="2"><circle cx="505" cy="78" r="6" fill="#191917" stroke="#c9963f" stroke-width="1.6"/><text class="wlabel" x="505" y="56" text-anchor="middle" fill="#e8e4dc" font-size="14">灵渠</text></g>
+        <g class="wp" data-p="3"><circle cx="640" cy="60" r="6" fill="#191917" stroke="#c9963f" stroke-width="1.6"/><text class="wlabel" x="640" y="38" text-anchor="middle" fill="#e8e4dc" font-size="14">松阴古道</text></g>
+        <g class="wp" data-p="4"><circle cx="850" cy="150" r="6" fill="#191917" stroke="#c9963f" stroke-width="1.6"/><text class="wlabel" x="850" y="128" text-anchor="middle" fill="#e8e4dc" font-size="14">绿珠井</text></g>
+      </svg>
+      <div class="ridge-panel">
+        <div class="rp-body on" data-p="0">
+          <h3>鬼门关</h3>
+          <blockquote class="q">鬼门关，十人去九不还。</blockquote>
+          <p>北流两峰对峙，中成关门，唐宋诗人谪此而死者踵相接。关外道中有大石瓮，瓮里骷髅五色，肠皆石乳凝化。别人绕着走，邝露提笔在瓮上题了四个字，又自己记下旁人读完的表情：</p>
+          <blockquote class="q">予大书四字其上，曰：“诗人鲊翁。”</blockquote>
+        </div>
+        <div class="rp-body" data-p="1">
+          <h3>阳朔诸峰</h3>
+          <blockquote class="q">如楼通天，如阙刺霄，如修竿，如高旗，如人怒</blockquote>
+          <p>诸峰如笋出地，各不相倚。漓江荔水在峰脚下织来织去，蛇形龟步，猿跳鹤立，万态给他写尽。</p>
+        </div>
+        <div class="rp-body" data-p="2">
+          <h3>灵渠</h3>
+          <blockquote class="q">灵渠自北而南，三十二陡。</blockquote>
+          <p>陡是渠里的分级船闸，冬天水涸不走船。他过渠那一晚，赶上了好时候：</p>
+          <blockquote class="q">予过陡时，水长月明，如层台叠壁，从天而下。</blockquote>
+        </div>
+        <div class="rp-body" data-p="3">
+          <h3>七百里松阴</h3>
+          <p>自桂城北行入湖南，七百里夹道皆长松，秦人置郡时所植，历代补种不辍。他走了整整十天，走完还不肯撒手：</p>
+          <blockquote class="q">予行十日，抵兴安，至今梦魂时时见之。</blockquote>
+        </div>
+        <div class="rp-body" data-p="4">
+          <h3>绿珠井</h3>
+          <blockquote class="q">绿珠井，在白州双角山下，有七孔</blockquote>
+          <p>传说汲此井者诞女必丽。绿珠善吹笛，是石崇的妾，笛艺传到南朝，入了宋明帝宫。乡人怕再出美人惹祸，用巨石塞了一孔。邝露谒祠借钞《笛谱》，劝父老把石头搬开，理由只有四个字，幼女何罪。结果他也记下来了：</p>
+          <blockquote class="q">善吹笛，传其弟子宋伟，后入宋明帝宫。</blockquote>
+          <blockquote class="q">父老然之，即日徙石。</blockquote>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 伍 ================= -->
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">伍</div>
+      <h2>鼓、瘴与猩猩</h2>
+      <div class="from">卷下 · 记物产</div>
+    </div>
+    <div class="wutu">
+      <div>
+        <div class="card">
+          <div class="smalldrum">
+            <svg viewBox="0 0 100 70">
+              <ellipse cx="50" cy="30" rx="44" ry="24" fill="none" stroke="#c9963f" stroke-width="1.6"/>
+              <ellipse cx="50" cy="30" rx="30" ry="15" fill="none" stroke="#c9963f" stroke-width="0.9" opacity="0.55"/>
+              <ellipse cx="50" cy="30" rx="12" ry="6" fill="none" stroke="#c9963f" stroke-width="1.1"/>
+              <path d="M6 30 L6 52 M94 30 L94 52 M6 52 Q50 74 94 52" fill="none" stroke="#c9963f" stroke-width="1.3" opacity="0.8"/>
+              <g fill="#c9963f"><circle cx="50" cy="10" r="2"/><circle cx="82" cy="24" r="2"/><circle cx="82" cy="36" r="2"/><circle cx="18" cy="24" r="2"/><circle cx="18" cy="36" r="2"/></g>
+            </svg>
+          </div>
+          <h3>伏波铜鼓</h3>
+          <blockquote class="q" style="margin-top:6px">伏波铜鼓，深三尺许，面径三尺五寸</blockquote>
+          <div class="dimline">深三尺许　面径三尺五寸</div>
+          <p class="tx" style="margin-top:18px">旁围渐缩如腰。鼓面上最生动的是一圈小东西：</p>
+          <blockquote class="q">鼓面环绕作蛙黾十数，昂首欲跳。</blockquote>
+          <p class="tx">两粤滇黔皆有，赛神宴客时时击之，重赀求购，多至千牛。开屏那面鼓，就是照这一条摆的。</p>
+        </div>
+        <div class="card">
+          <h3>绿珠玉笛</h3>
+          <p class="tx">同卷有一支笛，相传从宋陵里流出来，殉过宫人宋伟，后来流入交趾。这物件不会说话，却有它自己的动静：</p>
+          <blockquote class="q">清夜闻歌，每能自叫。</blockquote>
+          <blockquote class="q">盘公以名马五十匹易之。</blockquote>
+          <p class="tx">一支笛，值五十匹马。人换了一代又一代，笛还在响。卷下记物，记的多半是这种比人命长的东西。</p>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h3>猩猩</h3>
+          <p class="tx">猩猩人面猿身，最机警，通八方言，声如二八女子，嗜酒好屐。邝露说他在绿鸦山撞见过：</p>
+          <blockquote class="q">予在绿鸦山见之</blockquote>
+          <p class="tx">群猩先聚在一起议论，说客必东人，然后踊跃出视。他分了随身那包酒，猩猩接了，先礼后饮：</p>
+          <blockquote class="q">未饮先谢，既饮辄醉，知予之无机也。</blockquote>
+          <p class="tx">一句无机，道破这位亡命之客在山里活了几年靠的是什么。</p>
+        </div>
+        <div class="card">
+          <h3>瘴母</h3>
+          <p class="tx">卷下最实用的部分是瘴。瘴起的时候，天上先有一道气柱：</p>
+          <blockquote class="q">瘴起时，望之有气一道，上冲如柱</blockquote>
+          <p class="tx">柱散之后，空中凝成弹丸，渐大如车轮，四下掷人。躲法写成一个动作：</p>
+          <div class="zhai-stage">
+            <div class="pillar"></div>
+            <div class="pellet" id="pellet"></div>
+            <div class="stage-msg" id="stagemsg">气柱升处，弹丸将落</div>
+          </div>
+          <div class="zhai-btns">
+            <button class="btn" id="btnstand">伫 立</button>
+            <button class="btn" id="btnlie">伏 地</button>
+          </div>
+          <p class="tx" id="zhaiout" style="margin-top:20px;min-height:56px"></p>
+          <blockquote class="q" id="zhaq" style="display:none">人若伏地，从其自掷，则无恙。</blockquote>
+        </div>
+        <div class="card">
+          <h3>四瘴与要诀</h3>
+          <p class="tx">一年四季各有各的瘴，春夏之交与秋冬之交最毒：</p>
+          <blockquote class="q">春曰青草，夏曰黄梅，秋曰新禾，冬曰黄茅。</blockquote>
+          <div class="fourzhai">
+            <div class="fz"><span class="se" style="background:#5f9270"></span><b>青草</b><small>春</small></div>
+            <div class="fz"><span class="se" style="background:#a8913c"></span><b>黄梅</b><small>夏</small></div>
+            <div class="fz"><span class="se" style="background:#c9963f"></span><b>新禾</b><small>秋</small></div>
+            <div class="fz"><span class="se" style="background:#8a857c"></span><b>黄茅</b><small>冬</small></div>
+          </div>
+          <p class="tx">四瘴之后，跟着一条口诀，十六个字，比药方值钱：</p>
+          <div class="koujue">避色如避难，冷暖随时换。<br>少饮卯时酒，莫吃申时饭。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 陆 ================= -->
+<section class="end">
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">陆</div>
+      <h2>后来</h2>
+      <div class="from">1650</div>
+    </div>
+    <p class="tx">书写完没有多少年，天下变了：崇祯十七年，北京陷落；再过六年，清军破广州。通行的说法是，邝露城破抱琴而死。他写过的铜鼓、铜柱、玉笛，都是比人命长的东西；这一回，轮到他自己成了后人打捞的一条。</p>
+    <p class="tx">全书末条压轴的不是异物，是一桩考据：舜究竟到没到过苍梧。他遍引《虞典》《孟子》《离骚》逐层对勘，断定古今南岳苍梧本是一地，圣王确实死在岭表。末了他说：</p>
+    <blockquote class="q">惟帝不自有其黄屋之尊，而躬巡于鸟言卉服之域。<span class="src">卷下 · 舜至苍梧</span></blockquote>
+    <p class="tx">一部以亡命开始的书，以圣王死于南疆收束。写书的人后来也把自己的生命留在了岭表，仿佛早知道结局，先把地名写好了。</p>
+    <p>你在上面读到的每一条风物，都还在这册三卷小书里。蛊没人配过解药了，口诀还在。</p>
+    <div class="fin">他把岭南写成册<i>，</i>自己活成其中一条</div>
+    <div class="endnote">殆知阁导读 第212篇至此读毕，总目见 mulu.html。</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap cols">
+    <div>
+      <p><b>文本来源</b><br>殆知阁古代文献 史藏 地理 赤雅<br><a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20（简体版）</a></p>
+    </div>
+    <div>
+      <p><b>核验声明</b><br>本页全部引文经脚本与库内文件逐字核验（去标点、删夹注、归一后双侧比对），书内细节均出自库本；作者生平不出库本，系通行史传记载。</p>
+    </div>
+    <div>
+      <p><b>库本讹字申报</b><br>库本条目内夹注作「一本作某」者系辑校汇注，本页引文跨注处删注取正文；「■〈…〉」为库本未成字空位，引文皆避开；卷中鬼门关条「行数（一本有十字）武」正文残损，未引。</p>
+    </div>
+    <div>
+      <p><b>使用提醒</b><br>本篇属史部地志卷，导读系列总目见 <a href="mulu.html">mulu.html</a>。书中记瑶、壮诸族风物，夹杂明人的华夷偏见、猎奇笔法与神怪传闻，蛊毒飞头之属皆彼时叙事；民族称谓从旧文献，今多已改译，请以史料与文学视之。</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // 击鼓
+  var drum = document.getElementById('drum');
+  var ripples = document.getElementById('ripples');
+  var rq = document.getElementById('rq'), rs = document.getElementById('rs');
+  drum.addEventListener('click', function (e) {
+    var rect = drum.getBoundingClientRect();
+    var r = document.createElement('div');
+    r.className = 'ripple';
+    var size = Math.max(rect.width, rect.height);
+    r.style.width = size + 'px'; r.style.height = size + 'px';
+    r.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    r.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    ripples.appendChild(r);
+    setTimeout(function () { r.remove(); }, 1900);
+    rq.classList.add('on'); rs.classList.add('on');
+  });
+
+  // 蛊链
+  var steps = document.querySelectorAll('.gu-step');
+  steps.forEach(function (s) {
+    s.addEventListener('click', function () { s.classList.add('open'); });
+  });
+
+  // 山脊
+  var wps = document.querySelectorAll('.wp');
+  var bodies = document.querySelectorAll('.rp-body');
+  wps.forEach(function (w) {
+    w.addEventListener('click', function () {
+      var p = w.getAttribute('data-p');
+      wps.forEach(function (x) { x.classList.remove('on'); });
+      w.classList.add('on');
+      bodies.forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-p') === p);
+      });
+    });
+  });
+
+  // 瘴
+  var pellet = document.getElementById('pellet');
+  var msg = document.getElementById('stagemsg');
+  var out = document.getElementById('zhaiout');
+  var zq = document.getElementById('zhaq');
+  function throwPellet() {
+    pellet.style.transition = 'none';
+    pellet.style.top = '26px';
+    pellet.style.left = (40 + Math.random() * 20) + '%';
+    void pellet.offsetWidth;
+    pellet.style.transition = 'top 1.2s cubic-bezier(0.5,0,0.9,0.6), opacity 1.2s';
+    pellet.classList.add('fall');
+  }
+  document.getElementById('btnstand').addEventListener('click', function () {
+    throwPellet();
+    msg.textContent = '弹丸四下掷人';
+    out.textContent = '中了。中之者为痞闷，为疯痖，为汗死。起来，伏地重试。';
+    zq.style.display = 'none';
+  });
+  document.getElementById('btnlie').addEventListener('click', function () {
+    throwPellet();
+    msg.textContent = '伏地，任其自掷';
+    out.textContent = '弹丸从头顶掷过。';
+    zq.style.display = 'block';
+  });
+</script>
+
+</body>
+</html>
