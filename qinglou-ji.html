@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>青楼集 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink2: #1f1e1b;
+    --ink3: #242219;
+    --paper: #e8e4dc;
+    --dim: #a39e93;
+    --faint: #6e6a61;
+    --c: #5e8fbb;
+    --c-soft: rgba(94,143,187,0.5);
+    --c-faint: rgba(94,143,187,0.16);
+    --line: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.95;
+    letter-spacing: 0.04em;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+  a { color: var(--c); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+
+  .beacon {
+    position: fixed; top: 18px; left: 22px; z-index: 99;
+    font-size: 12px; letter-spacing: 0.18em; color: var(--faint);
+    border: 1px solid var(--line); padding: 5px 12px; border-radius: 2px;
+    background: rgba(25,25,23,0.7);
+  }
+
+  /* ---------- 首屏：戏楼卷帘 ---------- */
+  .stage {
+    position: relative; min-height: 100vh; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background:
+      radial-gradient(ellipse 55% 45% at 50% 62%, rgba(94,143,187,0.10), transparent 70%),
+      var(--ink);
+  }
+  .rod {
+    position: absolute; top: 0; left: 0; right: 0; height: 14px; z-index: 6;
+    background: linear-gradient(180deg, #2c2a26, #1c1b18);
+    border-bottom: 1px solid var(--line);
+  }
+  .curtain { position: absolute; inset: 0; z-index: 5; cursor: pointer; }
+  .leaf {
+    position: absolute; top: 0; bottom: 0; width: 50.5%;
+    transition: transform 1.5s cubic-bezier(.77,0,.18,1);
+  }
+  .leaf.l { left: 0; }
+  .leaf.r { right: 0; }
+  .leaf::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 9px 9px, rgba(94,143,187,0.85) 2.4px, rgba(94,143,187,0.18) 3.1px, transparent 3.7px),
+      repeating-linear-gradient(90deg, rgba(232,228,220,0.07) 0 1px, transparent 1px 18px);
+    background-size: 18px 24px, 18px 24px;
+    background-color: var(--ink2);
+  }
+  .leaf::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 30px;
+    background: linear-gradient(180deg, transparent, rgba(25,25,23,0.95));
+  }
+  .stage.open .leaf.l { transform: translateY(-103%); }
+  .stage.open .leaf.r { transform: translateY(-103%) translateX(6%); transition-delay: .08s; }
+  .curtain-hint {
+    position: absolute; bottom: 8vh; left: 50%; transform: translateX(-50%);
+    z-index: 7; text-align: center; color: var(--dim);
+    transition: opacity .5s;
+  }
+  .curtain-hint .lift {
+    display: inline-block; border: 1px solid var(--c-soft); color: var(--c);
+    padding: 9px 30px; letter-spacing: 0.5em; text-indent: 0.5em;
+    font-size: 14px; border-radius: 2px; background: rgba(25,25,23,0.5);
+  }
+  .curtain-hint .tip { display: block; margin-top: 12px; font-size: 12px; color: var(--faint); letter-spacing: 0.3em; }
+  .stage.open .curtain-hint { opacity: 0; pointer-events: none; }
+  .reopen {
+    position: absolute; top: 20px; right: 22px; z-index: 4;
+    font-size: 12px; letter-spacing: 0.3em; color: var(--faint);
+    border: 1px solid var(--line); padding: 5px 12px; border-radius: 2px;
+    cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .6s;
+    font-family: inherit; background: rgba(25,25,23,0.7);
+  }
+  .stage.open .reopen { opacity: 1; pointer-events: auto; }
+
+  .stage-inner { text-align: center; padding: 40px 20px; max-width: 760px; }
+  .plaque {
+    display: inline-block; border: 2px solid var(--c-soft); border-radius: 4px;
+    padding: 26px 58px; position: relative; background: rgba(31,30,27,0.6);
+  }
+  .plaque::before {
+    content: ""; position: absolute; inset: 6px; border: 1px solid var(--line); border-radius: 2px;
+  }
+  .plaque h1 { font-size: clamp(52px, 9vw, 92px); letter-spacing: 0.22em; text-indent: 0.22em; font-weight: 700; color: var(--paper); }
+  .plaque .pin {
+    position: absolute; top: -34px; left: 50%; transform: translateX(-50%);
+    font-size: 12px; letter-spacing: 0.4em; text-indent: 0.4em; color: var(--c);
+    border: 1px solid var(--c-soft); padding: 4px 14px; border-radius: 2px; background: var(--ink);
+  }
+  .stage-inner .who { margin-top: 26px; font-size: 15px; color: var(--dim); letter-spacing: 0.14em; }
+  .stage-inner .who b { color: var(--paper); font-weight: 700; }
+  .stage-inner .motto {
+    margin: 30px auto 0; max-width: 560px; font-size: 18px; color: var(--paper);
+    opacity: 0; transform: translateY(10px); transition: opacity 1.2s ease .7s, transform 1.2s ease .7s;
+  }
+  .stage-inner .motto i { color: var(--faint); font-style: normal; font-size: 13px; display: block; margin-top: 8px; letter-spacing: 0.2em; }
+  .stage.open .stage-inner .motto { opacity: 1; transform: none; }
+  .stage-inner .where { margin-top: 40px; font-size: 12px; color: var(--faint); letter-spacing: 0.24em; opacity: 0; transition: opacity 1.2s ease 1.2s; }
+  .stage.open .stage-inner .where { opacity: 1; }
+  .stage-inner .where a { color: var(--dim); border-bottom: 1px solid var(--line); }
+
+  /* ---------- 通用节 ---------- */
+  section { padding: 92px 0; border-bottom: 1px solid var(--line); }
+  .shead { display: flex; align-items: center; gap: 18px; margin-bottom: 40px; }
+  .seal {
+    width: 46px; height: 46px; flex: none;
+    border: 1.5px solid var(--c); color: var(--c);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 21px; border-radius: 2px;
+  }
+  .shead h2 { font-size: 25px; font-weight: 700; letter-spacing: 0.12em; }
+  .shead .from { margin-left: auto; font-size: 12px; color: var(--faint); letter-spacing: 0.22em; }
+  .lead { font-size: 16px; color: var(--dim); max-width: 800px; margin-bottom: 26px; }
+  .lead b { color: var(--paper); }
+  .q {
+    display: block; border-left: 2px solid var(--c-soft); padding: 4px 0 4px 20px;
+    margin: 20px 0; font-size: 17px; color: var(--paper);
+  }
+  .q i { display: block; font-style: normal; font-size: 12px; color: var(--faint); letter-spacing: 0.2em; margin-top: 8px; }
+  .note { font-size: 13px; color: var(--faint); border: 1px dashed var(--line); padding: 12px 18px; border-radius: 2px; margin: 18px 0; }
+  .note b { color: var(--dim); }
+
+  /* ---------- 序 ---------- */
+  .xu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: start; }
+  .three-names { display: flex; gap: 14px; margin: 26px 0 10px; }
+  .three-names span {
+    flex: 1; text-align: center; border: 1px solid var(--line); border-radius: 2px;
+    padding: 16px 8px; font-size: 14px; color: var(--dim); background: var(--ink2);
+  }
+  .three-names span b { display: block; font-size: 19px; color: var(--paper); letter-spacing: 0.1em; margin-bottom: 4px; }
+  .three-names span i { font-style: normal; font-size: 11px; color: var(--faint); letter-spacing: 0.12em; }
+
+  /* ---------- 名册 ---------- */
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin: 30px 0 14px; }
+  .fbtn {
+    font-family: inherit; font-size: 13px; letter-spacing: 0.12em;
+    color: var(--dim); background: transparent; border: 1px solid var(--line);
+    padding: 6px 16px; border-radius: 2px; cursor: pointer; transition: all .25s;
+  }
+  .fbtn:hover { color: var(--paper); border-color: var(--c-soft); }
+  .fbtn.on { color: var(--ink); background: var(--c); border-color: var(--c); font-weight: 700; }
+  .fcount { font-size: 12px; color: var(--faint); letter-spacing: 0.18em; margin-bottom: 22px; }
+  .roster { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .nm {
+    border: 1px solid var(--line); border-radius: 2px; padding: 16px 18px 14px;
+    background: var(--ink2); display: flex; flex-direction: column; gap: 8px;
+    transition: border-color .25s, background .25s;
+  }
+  .nm:hover { border-color: var(--c-soft); }
+  .nm.hide { display: none; }
+  .nm b { font-size: 17px; letter-spacing: 0.08em; color: var(--paper); }
+  .nm b em { font-style: normal; font-size: 11px; color: var(--faint); letter-spacing: 0.1em; margin-left: 8px; }
+  .nm .fm { font-size: 13.5px; color: var(--dim); line-height: 1.8; }
+  .nm .fm::before, .nm .fm::after { color: var(--c); }
+  .nm i { font-style: normal; font-size: 11px; color: var(--c); letter-spacing: 0.16em; margin-top: auto; }
+
+  /* ---------- 对答 ---------- */
+  .dlgzone { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .dlg {
+    border: 1px solid var(--line); border-radius: 3px; background: var(--ink2);
+    padding: 24px 26px 46px; cursor: pointer; min-height: 300px; position: relative;
+    transition: border-color .3s;
+  }
+  .dlg:hover { border-color: var(--c-soft); }
+  .dlg .dt { text-align: center; margin-bottom: 18px; }
+  .dlg .dt b { font-size: 19px; letter-spacing: 0.14em; }
+  .dlg .dt span { display: block; font-size: 12px; color: var(--faint); letter-spacing: 0.18em; margin-top: 4px; }
+  .dline {
+    font-size: 14.5px; margin: 12px 0; padding: 8px 14px; border-radius: 2px;
+    color: var(--dim); opacity: 0; transform: translateY(6px);
+    transition: opacity .6s, transform .6s; border: 1px solid transparent;
+  }
+  .dline.on { opacity: 1; transform: none; }
+  .dline i { font-style: normal; font-size: 11px; color: var(--c); letter-spacing: 0.14em; display: block; margin-bottom: 2px; }
+  .dline.hero-line { border-color: var(--c-faint); background: rgba(94,143,187,0.07); color: var(--paper); }
+  .dlg .more {
+    text-align: center; font-size: 12px; color: var(--faint); letter-spacing: 0.3em;
+    position: absolute; bottom: 14px; left: 0; right: 0; transition: opacity .4s;
+  }
+  .dlg.done .more { opacity: 0; }
+
+  /* ---------- 曲签 ---------- */
+  .qsigns { display: flex; gap: 12px; align-items: stretch; overflow-x: auto; padding-bottom: 10px; }
+  .qsign {
+    flex: 0 0 74px; height: 480px; border: 1px solid var(--line); border-radius: 2px;
+    background: var(--ink2); cursor: pointer; position: relative; overflow: hidden;
+    transition: flex-basis .55s cubic-bezier(.6,0,.2,1), border-color .3s;
+  }
+  .qsign:hover { border-color: var(--c-soft); }
+  .qsign.open { flex-basis: 380px; }
+  .qsign .head {
+    position: absolute; top: 0; left: 0; right: 0; padding: 16px 10px 12px;
+    text-align: center; border-bottom: 1px solid var(--line); background: var(--ink2); z-index: 2;
+  }
+  .qsign .head b { display: block; font-size: 15px; letter-spacing: 0.1em; color: var(--c); }
+  .qsign .head span { display: block; font-size: 11px; color: var(--faint); letter-spacing: 0.1em; margin-top: 5px; line-height: 1.6; }
+  .qsign .body {
+    position: absolute; inset: 96px 0 16px; overflow: hidden;
+    writing-mode: vertical-rl; padding: 6px 18px;
+    font-size: 15px; line-height: 2.3; color: var(--paper); letter-spacing: 0.08em;
+  }
+  .qsign .hint { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 11px; color: var(--faint); letter-spacing: 0.3em; z-index: 2; transition: opacity .3s; }
+  .qsign.open .hint { opacity: 0; }
+
+  /* ---------- 字汇 ---------- */
+  .glosses { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 26px; }
+  .gl {
+    font-family: inherit; font-size: 14px; letter-spacing: 0.14em;
+    border: 1px solid var(--line); background: var(--ink2); color: var(--paper);
+    padding: 9px 20px; border-radius: 2px; cursor: pointer; transition: all .25s;
+  }
+  .gl:hover { border-color: var(--c-soft); }
+  .gl.on { border-color: var(--c); color: var(--c); }
+  .gdefbox {
+    border-left: 2px solid var(--c-soft); padding: 10px 0 10px 22px; min-height: 90px;
+    font-size: 15.5px; color: var(--dim); max-width: 820px;
+  }
+  .gdef { display: none; }
+  .gdef.show { display: block; }
+  .gdef b { color: var(--paper); }
+  .gdef .src { font-size: 12px; color: var(--faint); letter-spacing: 0.18em; margin-left: 12px; }
+
+  /* ---------- 终局 ---------- */
+  .eline { position: relative; height: 2px; background: var(--line); margin: 66px 8px 40px; }
+  .stops { display: flex; justify-content: space-between; position: absolute; inset: 0; transform: translateY(-50%); }
+  .stop {
+    width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid var(--line);
+    background: var(--ink); color: var(--dim); font-size: 12px; letter-spacing: 0.05em;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    transition: all .3s; flex: none; line-height: 1.2; text-align: center; font-family: inherit;
+  }
+  .stop:hover { border-color: var(--c-soft); color: var(--paper); }
+  .stop.on { border-color: var(--c); background: var(--c); color: var(--ink); font-weight: 700; }
+  .estory { display: none; border: 1px solid var(--line); border-radius: 3px; background: var(--ink2); padding: 30px 34px; }
+  .estory.show { display: block; }
+  .estory h3 { font-size: 19px; letter-spacing: 0.12em; margin-bottom: 4px; }
+  .estory .es { font-size: 12px; color: var(--faint); letter-spacing: 0.2em; margin-bottom: 14px; }
+  .estory p { font-size: 14.5px; color: var(--dim); margin: 10px 0; }
+
+  /* ---------- 跋 ---------- */
+  .ba-wrap { max-width: 720px; margin: 0 auto; text-align: center; }
+  .ba-seal {
+    width: 54px; height: 54px; margin: 0 auto 26px; border: 1.5px solid var(--c);
+    color: var(--c); display: flex; align-items: center; justify-content: center;
+    font-size: 24px; border-radius: 2px;
+  }
+  .ba-big { font-size: 24px; line-height: 2; letter-spacing: 0.06em; margin: 26px 0; color: var(--paper); }
+  .ba-src { font-size: 12px; color: var(--faint); letter-spacing: 0.26em; }
+  .ba-end { margin-top: 40px; font-size: 13px; color: var(--faint); letter-spacing: 0.2em; }
+
+  .endnote { padding: 26px 0 34px; text-align: center; font-size: 12px; color: var(--faint); letter-spacing: 0.2em; }
+
+  footer { border-top: 1px solid var(--line); padding: 46px 0 60px; }
+  footer .cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; font-size: 12.5px; color: var(--faint); line-height: 1.9; }
+  footer b { color: var(--dim); letter-spacing: 0.14em; }
+
+  @media (max-width: 860px) {
+    .roster { grid-template-columns: 1fr 1fr; }
+    .xu-grid, .dlgzone { grid-template-columns: 1fr; }
+    footer .cols { grid-template-columns: 1fr 1fr; }
+    .qsign.open { flex-basis: 300px; }
+  }
+  @media (max-width: 560px) {
+    .roster { grid-template-columns: 1fr; }
+    footer .cols { grid-template-columns: 1fr; }
+    .eline { display: none; }
+    .stops { position: static; transform: none; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="beacon">殆知阁导读 · 第213篇</div>
+
+<!-- 首屏：卷帘 -->
+<header class="stage" id="stage">
+  <div class="rod"></div>
+  <div class="curtain" id="curtain">
+    <div class="leaf l"></div>
+    <div class="leaf r"></div>
+    <div class="curtain-hint">
+      <span class="lift">卷　帘</span>
+      <span class="tip">帘后有元代女艺人名册一部</span>
+    </div>
+  </div>
+  <button class="reopen" id="reopen">落帘</button>
+  <div class="stage-inner">
+    <div class="plaque">
+      <span class="pin">卷一百三十 · 芳册</span>
+      <h1>青楼集</h1>
+    </div>
+    <p class="who">元 · <b>夏庭芝</b>（库本署雪蓑）撰　一部元代女艺人名册</p>
+    <p class="motto">「姓朱氏，行第四，杂剧为当今独步。」<i>珠帘秀条 · 库本原句</i></p>
+    <p class="where">文本取自殆知阁简体库 · <a href="mulu.html">回总目</a></p>
+  </div>
+</header>
+
+<!-- 序：失其业 -->
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">序</div>
+      <h2>士失其业，志则郁矣</h2>
+      <span class="from">青楼集序</span>
+    </div>
+    <div class="xu-grid">
+      <div>
+        <p class="lead">书前这篇序是全书的钥匙。元初并入海宇，有一批前朝遗民不肯做官，转头扎进勾栏瓦舍，为伶人写剧本、制新曲。写序的人看得很直白：太平年景里这叫风流，世运一转，这批人是被时代从仕途上刷下来，才把满腹才情押给了戏台。</p>
+        <div class="three-names">
+          <span><b>杜散人</b><i>杜仁杰 · 通说</i></span>
+          <span><b>白兰谷</b><i>白朴 · 通说</i></span>
+          <span><b>关已斋</b><i>关汉卿 · 通说</i></span>
+        </div>
+        <p class="note"><b>注：</b>三人名号从库本，比定为杜仁杰、白朴、关汉卿系通行说法；库本此处点断作「关已，齐辈」，已斋二字讹断，页脚已申报。</p>
+      </div>
+      <div>
+        <blockquote class="q">「我皇元初并海宇，而金之遗民若杜散人、白兰谷、关已，齐辈皆不屑仕进，乃嘲风弄月，留连光景。」<i>序 · 库本点断如此</i></blockquote>
+        <blockquote class="q">「百年未几，世运中否？士失其业，志则郁矣。酤酒载严，诗祸叵测，何以纾其愁乎？」<i>序</i></blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 名册 -->
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">册</div>
+      <h2>名册：六十七目，百余人</h2>
+      <span class="from">库本一卷</span>
+    </div>
+    <p class="lead">全书去空白六千七百二十五字，一卷，序外凡六十七目（另有附目一、无目传二），末缀至正丙午夏邦彦跋。每则二三句到十余句不等，先用一两句定级：<b>「独步」「最高」「第一手」「艺绝一时」「悉造其妙」</b>，再记一段本事。最有名的珠帘秀，背微偻，冯海粟赠词便拿帘钩作比，一句玩笑定了一位角儿的身形：</p>
+    <blockquote class="q">「盖朱背微偻，冯故以帘钩寓意，至今后辈以朱娘娘称之者。」<i>珠帘秀条</i></blockquote>
+    <p class="lead">下面按技艺筛选这份名册；每条括出的评语都是库本原句。</p>
+    <div class="filters" id="filters">
+      <button class="fbtn on" data-f="">全部</button>
+      <button class="fbtn" data-f="杂剧">杂剧</button>
+      <button class="fbtn" data-f="花旦">花旦</button>
+      <button class="fbtn" data-f="绿林">绿林杂剧</button>
+      <button class="fbtn" data-f="南戏">南戏</button>
+      <button class="fbtn" data-f="唱">唱</button>
+      <button class="fbtn" data-f="弹拨">琵琶拨阮</button>
+      <button class="fbtn" data-f="旦末">旦末双全</button>
+      <button class="fbtn" data-f="说话">调话小说</button>
+      <button class="fbtn" data-f="舞">舞与百戏</button>
+      <button class="fbtn" data-f="文墨">文墨谈笑</button>
+      <button class="fbtn" data-f="家族">家族师承</button>
+      <button class="fbtn" data-f="广记">广记</button>
+    </div>
+    <p class="fcount" id="fcount"></p>
+    <div class="roster" id="roster">
+      <div class="nm" data-tags="文墨"><b>曹蛾秀<em>京师</em></b><span class="fm">「京师名妓也，赋性聪慧，色艺俱绝。」</span><i>文墨谈笑</i></div>
+      <div class="nm" data-tags="唱"><b>解语花<em>刘氏</em></b><span class="fm">「左手持荷花，右手举杯。」</span><i>慢词</i></div>
+      <div class="nm" data-tags="杂剧"><b>珠帘秀<em>朱四姐</em></b><span class="fm">「杂剧为当今独步。」</span><i>旦行诸色悉造其妙</i></div>
+      <div class="nm" data-tags="唱"><b>赵真真 杨玉娥</b><span class="fm">「善唱诸宫调。」</span><i>诸宫调</i></div>
+      <div class="nm" data-tags="唱"><b>刘燕歌</b><span class="fm">「至今脍炙人口。」</span><i>歌舞</i></div>
+      <div class="nm" data-tags="杂剧"><b>顺时秀<em>郭二姐</em></b><span class="fm">「杂剧为闺怨最高。」</span><i>驾头诸旦本</i></div>
+      <div class="nm" data-tags="唱"><b>小娥秀<em>邳三姐</em></b><span class="fm">「善小唱，能曼词。」</span><i>小唱</i></div>
+      <div class="nm" data-tags="唱"><b>杜妙隆<em>金陵</em></b><span class="fm">「金陵佳丽人也。」</span><i>卢疏斋题壁赠词</i></div>
+      <div class="nm" data-tags=""><b>喜春景<em>段氏 · 附目</em></b><span class="fm">「姿色不逾中人，而艺绝一时。」</span><i>张子友纳为侧室</i></div>
+      <div class="nm" data-tags="唱"><b>聂檀香</b><span class="fm">「姿色妩媚，歌韵清圆。」</span><i>东平严侯爱之</i></div>
+      <div class="nm" data-tags="杂剧"><b>南春宴</b><span class="fm">「长于驾头杂剧。」</span><i>京师表表者</i></div>
+      <div class="nm" data-tags="唱"><b>李心心 等七人</b><span class="fm">「皆国初京师之小唱也。」</span><i>唱社</i></div>
+      <div class="nm" data-tags="唱"><b>宋六嫂<em>同寿</em></b><span class="fm">「宋与其夫合乐，妙入神品。」</span><i>夫传父艺</i></div>
+      <div class="nm" data-tags="杂剧 家族"><b>周人爱</b><span class="fm">「京师旦，色姿艺并佳。」</span><i>儿妇玉叶儿</i></div>
+      <div class="nm" data-tags="唱"><b>秦玉莲 秦小莲</b><span class="fm">「艺绝一时，后无继之者。」</span><i>诸宫调</i></div>
+      <div class="nm" data-tags="杂剧"><b>司燕奴</b><span class="fm">「精杂剧，声名与宋郭相颉颃。」</span><i>杂剧</i></div>
+      <div class="nm" data-tags="杂剧"><b>天然秀<em>高小二姐</em></b><span class="fm">「闺怨杂剧，为当时第一手。」</span><i>国香深惜</i></div>
+      <div class="nm" data-tags="绿林"><b>国玉第</b><span class="fm">「尤善谈谑，得名京师。」</span><i>绿林杂剧</i></div>
+      <div class="nm" data-tags="家族"><b>张玉梅 一门</b><span class="fm">「皆擅美当时。」</span><i>女关关七八岁得名</i></div>
+      <div class="nm" data-tags=""><b>王金带<em>张六姐</em></b><span class="fm">「色艺无双。」</span><i>伯颜欲取入教坊</i></div>
+      <div class="nm" data-tags="舞"><b>魏道道</b><span class="fm">「勾栏内独舞鹧鸪四篇打散。」</span><i>「国初以来无能继者」</i></div>
+      <div class="nm" data-tags="舞"><b>玉莲儿</b><span class="fm">「尤善文揪握槊之戏。」</span><i>得侍英庙</i></div>
+      <div class="nm" data-tags=""><b>樊事真<em>京师</em></b><span class="fm">「乃抽金篦刺左目，血流遍地。」</span><i>其事编为杂剧</i></div>
+      <div class="nm" data-tags="杂剧 家族"><b>赛帘秀</b><span class="fm">「步线行针，不差毫发。」</span><i>朱帘秀高弟 · 中年双目无所睹</i></div>
+      <div class="nm" data-tags="绿林"><b>天锡秀<em>王氏</em></b><span class="fm">「足甚小而步武甚壮。」</span><i>绿林杂剧</i></div>
+      <div class="nm" data-tags=""><b>金兽头<em>湖广</em></b><span class="fm">「流落湘湖间。」</span><i>见诮于酸斋</i></div>
+      <div class="nm" data-tags=""><b>周喜歌<em>悦卿</em></b><span class="fm">「赵松雪书悦卿二字。」</span><i>「貌不甚扬，而体态温柔。」</i></div>
+      <div class="nm" data-tags="唱"><b>王巧儿<em>京师</em></b><span class="fm">「得侍巾栉，虽死无憾。」</span><i>歌舞颜色</i></div>
+      <div class="nm" data-tags="杂剧"><b>王奔儿</b><span class="fm">「为教师以终。」</span><i>身背微偻</i></div>
+      <div class="nm" data-tags="说话"><b>时小童</b><span class="fm">「如丸走坂，如水建瓴。」</span><i>调话即小说</i></div>
+      <div class="nm" data-tags="弹拨"><b>于四姐<em>慧卿</em></b><span class="fm">「尤长琵琶，合唱为一时之冠。」</span><i>琵琶</i></div>
+      <div class="nm" data-tags="绿林"><b>平阳奴<em>徐氏</em></b><span class="fm">「一目眇，四体文绣。」</span><i>绿林杂剧</i></div>
+      <div class="nm" data-tags="旦末"><b>赵偏惜</b><span class="fm">「旦末双全，江淮间多师事之。」</span><i>院本</i></div>
+      <div class="nm" data-tags="唱"><b>连枝秀<em>孙氏</em></b><span class="fm">「遂为女道士，浪游湖海间。」</span><i>「自起舞，唱青天歌。」</i></div>
+      <div class="nm" data-tags="唱"><b>王玉梅</b><span class="fm">「身材短小而声韵清圆。」</span><i>有磬圆磬槌之诮</i></div>
+      <div class="nm" data-tags="杂剧 广记"><b>李芝秀</b><span class="fm">「记杂剧三百余段。」</span><i>「旦色号为广记者，皆不及也。」</i></div>
+      <div class="nm" data-tags="杂剧 旦末"><b>朱锦绣</b><span class="fm">「杂剧旦末双全。」</span><i>歌声坠梁尘</i></div>
+      <div class="nm" data-tags="唱"><b>樊香歌<em>金陵</em></b><span class="fm">「惜寿不永，二十三岁而卒。」</span><i>颇涉猎书史</i></div>
+      <div class="nm" data-tags="杂剧 家族"><b>小玉梅<em>刘氏</em></b><span class="fm">「独步江浙。」</span><i>女匾匾 女宝宝</i></div>
+      <div class="nm" data-tags="唱"><b>杨买奴<em>杨驹儿之女</em></b><span class="fm">「嫁乐人查查鬼张四为妻，憔悴而死。」</span><i>「美姿容，善讴唱。」</i></div>
+      <div class="nm" data-tags="唱 文墨"><b>张玉莲<em>张四妈</em></b><span class="fm">「旧曲其音不传者，皆能寻腔依韵唱之。」</span><i>「即席成赋，审音知律。」</i></div>
+      <div class="nm" data-tags="杂剧 家族"><b>赵真真<em>冯蛮子之妻</em></b><span class="fm">「善杂剧，有绕梁之声。」</span><i>女西夏秀</i></div>
+      <div class="nm" data-tags="花旦"><b>李娇儿</b><span class="fm">「时人号为小天然。」</span><i>花旦特妙</i></div>
+      <div class="nm" data-tags="花旦"><b>张奔儿<em>李牛子之妻</em></b><span class="fm">「时人目奔儿为温柔旦。」</span><i>花旦杂剧</i></div>
+      <div class="nm" data-tags="南戏"><b>龙楼景 丹墀秀</b><span class="fm">「龙则梁尘暗籁，丹则骊珠宛转。」</span><i>专工南戏</i></div>
+      <div class="nm" data-tags="唱"><b>赛天香</b><span class="fm">「玉骨冰肌纤尘不染。」</span><i>倪元缜甚爱之</i></div>
+      <div class="nm" data-tags="杂剧"><b>翠荷秀<em>李氏</em></b><span class="fm">「两手指甲皆长尺余焉。」</span><i>杂剧见推于时</i></div>
+      <div class="nm" data-tags="唱 家族"><b>赵梅哥</b><span class="fm">「名虽高而寿不永。」</span><i>继室和当当歌调如贯珠</i></div>
+      <div class="nm" data-tags="唱 文墨"><b>陈婆惜</b><span class="fm">「貌微陋而谈笑风生。」</span><i>南北能弹唱者十人</i></div>
+      <div class="nm" data-tags="杂剧"><b>汪怜怜<em>湖州</em></b><span class="fm">「汪髡发为尼。」</span><i>「美姿容，善杂剧。」</i></div>
+      <div class="nm" data-tags="花旦"><b>米里哈<em>回回旦色</em></b><span class="fm">「回回旦色，歌喉清宛。」</span><i>花旦杂剧</i></div>
+      <div class="nm" data-tags="花旦"><b>顾山山<em>顾四姐</em></b><span class="fm">「至今老于松江，而花旦杂剧，犹少年时体态。」</span><i>后辈蒙其指教</i></div>
+      <div class="nm" data-tags="唱"><b>李芝仪<em>维扬</em></b><span class="fm">「工小唱，尤善慢词。」</span><i>王继学中丞赠诗序</i></div>
+      <div class="nm" data-tags="家族"><b>李真童<em>张奔儿之女</em></b><span class="fm">「十余岁，即名动江浙。」</span><i>后为道士</i></div>
+      <div class="nm" data-tags="唱"><b>真凤歌<em>山东</em></b><span class="fm">「真托以天寒不回，直造彭室。」</span><i>善小唱</i></div>
+      <div class="nm" data-tags="杂剧"><b>大都秀<em>张氏</em></b><span class="fm">「其外脚供过亦妙。」</span><i>杂剧</i></div>
+      <div class="nm" data-tags=""><b>喜温柔<em>曾九之妻</em></b><span class="fm">「姿色端丽，而举止温柔。」</span><i>「淮浙驰名，老而不衰。」</i></div>
+      <div class="nm" data-tags="文墨"><b>金莺儿<em>山东</em></b><span class="fm">「由是台端知之，被劾而去。」</span><i>贾伯坚作曲寄之</i></div>
+      <div class="nm" data-tags="唱 文墨"><b>一分儿<em>王氏</em></b><span class="fm">「歌舞绝伦，聪慧无比。」</span><i>应声足成沉醉东风</i></div>
+      <div class="nm" data-tags="文墨"><b>般般丑<em>马素卿</em></b><span class="fm">「善词翰，达音律。」</span><i>驰名江湘间</i></div>
+      <div class="nm" data-tags="文墨"><b>刘婆惜</b><span class="fm">「颇通文墨，滑稽善舞。」</span><i>续清江引得全子仁称赏</i></div>
+      <div class="nm" data-tags="杂剧 广记"><b>小春宴<em>张氏</em></b><span class="fm">「常写其名目，贴于四周遭梁上。任看官选拣需索。」</span><i>广记少有其比</i></div>
+      <div class="nm" data-tags="杂剧"><b>孙秀秀<em>都下小旦</em></b><span class="fm">「人间孙秀秀，天上鬼婆婆。」</span><i>京师谚</i></div>
+      <div class="nm" data-tags="家族"><b>事事宜<em>刘氏</em></b><span class="fm">「皆副净色，浙西驰名。」</span><i>歌舞悉妙</i></div>
+      <div class="nm" data-tags="杂剧"><b>帘前秀</b><span class="fm">「武昌湖南等处，多敬爱之。」</span><i>任国恩之妻</i></div>
+      <div class="nm" data-tags="家族"><b>燕山景</b><span class="fm">「夫妇乐艺皆妙。」</span><i>田眼睛光妻</i></div>
+      <div class="nm" data-tags="杂剧 旦末 家族"><b>燕山秀<em>李氏</em></b><span class="fm">「朱帘秀之高第。」</span><i>「旦末双全，杂剧无比。」</i></div>
+      <div class="nm" data-tags="花旦"><b>荆坚坚</b><span class="fm">「人呼为小顺时秀。」</span><i>花旦杂剧</i></div>
+      <div class="nm" data-tags="弹拨 家族"><b>孔千金</b><span class="fm">「善拨阮，能曼词，独步于时。」</span><i>儿妇王心奇</i></div>
+      <div class="nm" data-tags="杂剧 家族"><b>李定奴</b><span class="fm">「勾阑中曾唱《八声甘州》，喝采八声。」</span><i>夫帽儿王亦妙</i></div>
+    </div>
+  </div>
+</section>
+
+<!-- 对答 -->
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">对</div>
+      <h2>戏台对答四折</h2>
+      <span class="from">点一场看一段</span>
+    </div>
+    <p class="lead">名册里最好的部分是对答。名士、高官、艺人当面交锋，两句话里全是分寸。点卡片，一句一句放出来。</p>
+    <div class="dlgzone">
+      <div class="dlg" data-n="4">
+        <div class="dt"><b>伯机未饮</b><span>曹蛾秀条 · 京师宴席</span></div>
+        <div class="dline">「客曰伯机未饮。」<i>座客</i></div>
+        <div class="dline">「曹亦曰伯机未饮。」<i>曹蛾秀</i></div>
+        <div class="dline">「汝以伯机相呼，可为亲爱之至。」<i>座客笑</i></div>
+        <div class="dline hero-line">「我呼伯机，便不可，却只许尔叫王羲之也。」<i>曹蛾秀答鲜于佯怒</i></div>
+        <div class="dline">「一座大笑。」<i>库本收束</i></div>
+        <div class="more">点击续看</div>
+      </div>
+      <div class="dlg" data-n="4">
+        <div class="dt"><b>宰臣与文士</b><span>顺时秀条 · 中书省问</span></div>
+        <div class="dline">「平生与王元鼎密偶疾，思得马板肠，王即杀所骑骏马……」<i>本事 · 动词处库本缺字</i></div>
+        <div class="dline">「我何如王元鼎？」<i>阿鲁温参政戏问</i></div>
+        <div class="dline hero-line">「参政宰臣也，元鼎文士也。经纶朝政，致君泽民，则元鼎不及参政；嘲风弄月，惜玉怜香，则参政不敢望元鼎。」<i>郭二姐答</i></div>
+        <div class="dline">「阿鲁温一笑而罢。」<i>库本收束</i></div>
+        <div class="more">点击续看</div>
+      </div>
+      <div class="dlg" data-n="6">
+        <div class="dt"><b>青梅一枝</b><span>刘婆惜条 · 赣州席上</span></div>
+        <div class="dline">「刑余之妇，无足与也。」<i>全子仁拒见</i></div>
+        <div class="dline">「家欲之广海，誓不复还。」<i>刘婆惜谓阍者</i></div>
+        <div class="dline">「青青子儿枝上结。」<i>全帽簪青梅 · 口占令宾朋续</i></div>
+        <div class="dline">「能容妾一辞乎。」<i>刘婆惜敛衽进前</i></div>
+        <div class="dline hero-line">「青青子儿枝上结，引惹人攀折。其中全子仁，就裹滋味别。只为你酸留意儿难弃舍。」<i>刘婆惜应声 · 以青梅嵌全子仁名</i></div>
+        <div class="dline">「全大称赏，由是顾宠无间，纳为侧室。」<i>库本</i></div>
+        <div class="more">点击续看</div>
+      </div>
+      <div class="dlg" data-n="4">
+        <div class="dt"><b>名不虚得</b><span>般般丑条 · 道上相逢</span></div>
+        <div class="dline">「俗呼曰黑刘五，落魄不羁。」<i>刘廷信 · 善笑谈</i></div>
+        <div class="dline">「变用新奇，能道人所不能道者。」<i>库本评刘</i></div>
+        <div class="dline">「此刘五舍也，此即马般般丑也。」<i>偕行者引见</i></div>
+        <div class="dline hero-line">「见毕，刘熟视之，曰：名不虚得。马氏含笑而去，自是往来甚密。」<i>库本收束</i></div>
+        <div class="more">点击续看</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 曲签 -->
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">曲</div>
+      <h2>赠曲八签</h2>
+      <span class="from">横展阅读</span>
+    </div>
+    <p class="lead">名士赠曲是这本名册的另一条线，胡紫山、冯海粟、赵松雪、卢疏斋、滕玉霄、贾伯坚都在。点签展幅，竖读曲文。</p>
+    <div class="qsigns">
+      <div class="qsign">
+        <div class="head"><b>沉醉东风</b><span>胡紫山<br>赠珠帘秀</span></div>
+        <div class="body">「锦织江边翠竹，绒穿海上明珠。月淡时，风清处，都隔断落红尘土。一片闲情任春舒，挂尽朝云暮雨。」</div>
+        <div class="hint">点开</div>
+      </div>
+      <div class="qsign">
+        <div class="head"><b>鹧鸪天</b><span>冯海粟<br>赠珠帘秀</span></div>
+        <div class="body">「凭倚东风远映楼，流莺窥面燕低头。虾须瘦影纤纤织，龟背香纹细细浮。红雾敛，彩云收，海霞为带月为钩。夜来掷尽西山雨，不著人间半点愁。」</div>
+        <div class="hint">点开</div>
+      </div>
+      <div class="qsign">
+        <div class="head"><b>席上诗</b><span>赵松雪<br>万柳堂即席</span></div>
+        <div class="body">「万柳堂前数亩池，平铺云锦盖涟漪。主人自有沧洲趣，游女仍歌白雪词。手把荷花来劝酒，步随芳草云寻诗。谁知咫尺京城外，便有无穷万里思。」</div>
+        <div class="hint">点开</div>
+      </div>
+      <div class="qsign">
+        <div class="head"><b>太常引</b><span>刘燕歌<br>饯齐参议</span></div>
+        <div class="body">「故人别我出阳关，无计锁雕鞍。今古别离难，兀谁画蛾眉远山。一尊别酒，一声杜宇，寂寞又春残，明月小楼间，第一夜相思泪弹。」</div>
+        <div class="hint">点开</div>
+      </div>
+      <div class="qsign">
+        <div class="head"><b>清江引</b><span>刘婆惜<br>续全子仁</span></div>
+        <div class="body">「青青子儿枝上结，引惹人攀折。其中全子仁，就裹滋味别。只为你酸留意儿难弃舍。」</div>
+        <div class="hint">点开</div>
+      </div>
+      <div class="qsign">
+        <div class="head"><b>折桂令</b><span>张玉莲<br>赠班彦功</span></div>
+        <div class="body">「朝夕思君，泪点成斑。」又有一联云：「侧耳听门前过马，和泪看帘外飞花。」</div>
+        <div class="hint">点开</div>
+      </div>
+      <div class="qsign">
+        <div class="head"><b>醉高歌过红绣鞋</b><span>贾伯坚<br>寄金莺儿</span></div>
+        <div class="body">「乐心儿比目连枝，肯意儿新婚燕尔。画船开抛闪的人独自，遥望关西店儿。黄河水，流不尽心事。中条山，隔不断相思。常记得夜深沉人静悄自来时，来时节，三两句话。去时节，一篇诗。记在人心窝儿里直到死。」</div>
+        <div class="hint">点开</div>
+      </div>
+      <div class="qsign">
+        <div class="head"><b>踏沙行</b><span>卢疏斋<br>题壁赠杜妙隆</span></div>
+        <div class="body">「雪暗山明，溪深花早。行人马上诗成了，归来闻说妙隆歌。金陵却比蓬莱渺，宝镜慵窥玉容空好，梁尘不动歌声悄。无人知我此时情，春风一枕松窗晓。」</div>
+        <div class="hint">点开</div>
+      </div>
+    </div>
+    <p class="note"><b>注：</b>折桂令条库本仅录末句与又一联；醉高歌与红绣鞋两调库本连书，签题从通行带过曲式。曲文皆库本原句，曲题从各条原文。</p>
+  </div>
+</section>
+
+<!-- 字汇 -->
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">语</div>
+      <h2>行院字汇</h2>
+      <span class="from">点一个词</span>
+    </div>
+    <p class="lead">读这本名册要过一道行话关。好在书自己会解释：行当、技艺、规矩，多半在传主身上现出原形。点词看库本用法。</p>
+    <div class="glosses">
+      <button class="gl">驾头</button>
+      <button class="gl">花旦</button>
+      <button class="gl">温柔旦</button>
+      <button class="gl">末泥</button>
+      <button class="gl">副净</button>
+      <button class="gl">院本</button>
+      <button class="gl">诸宫调</button>
+      <button class="gl">调话</button>
+      <button class="gl">打散</button>
+      <button class="gl">广记</button>
+      <button class="gl">唱社</button>
+      <button class="gl">行院</button>
+      <button class="gl">点戏</button>
+    </div>
+    <div class="gdefbox" id="gdefbox">
+      <div class="gdef show">库本把行话织进人物里：谁擅长什么，谁的行当是什么，一条传读下来，行院的组织自己浮出来。</div>
+      <div class="gdef"><b>驾头</b>：帝王题材的戏路。<b>「驾头诸旦本亦得体。」</b><span class="src">顺时秀条</span></div>
+      <div class="gdef"><b>花旦</b>：书中留下了一条定义，是全书记录行当最直接的一句。<b>「凡妓以墨点破其面者为花旦。」</b><span class="src">李定奴条</span></div>
+      <div class="gdef"><b>温柔旦</b>：时人给张奔儿起的行当绰号，与之并提的李娇儿则称风流旦。<b>「时人目奔儿为温柔旦。」</b><span class="src">张奔儿条</span></div>
+      <div class="gdef"><b>末泥</b>：一行当，亦是夫职，可入传。<b>「末泥任国恩之妻。」</b><span class="src">帘前秀条</span></div>
+      <div class="gdef"><b>副净</b>：净色行当，一家夫婿叔伯皆操此业。<b>「皆副净色，浙西驰名。」</b><span class="src">事事宜条</span></div>
+      <div class="gdef"><b>院本</b>：与杂剧并行的演剧样式。<b>「樊院本亦罕与比。」</b><span class="src">赵偏惜条</span></div>
+      <div class="gdef"><b>诸宫调</b>：说唱技艺，「秦玉莲秦小莲」条断言后无继者；张五牛与商正叔编的曲目有词人赞曰：<b>「词人老笔佳人口，再唤春风在眼前。」</b><span class="src">赵真真杨玉娥条</span></div>
+      <div class="gdef"><b>调话</b>：说话技艺的别名，讲的是口条。<b>「善调话，即世所谓小说者，如丸走坂，如水建瓴。」</b><span class="src">时小童条</span></div>
+      <div class="gdef"><b>打散</b>：演出的收尾一段，可独舞。<b>「勾栏内独舞鹧鸪四篇打散。」</b><span class="src">魏道道条</span></div>
+      <div class="gdef"><b>广记</b>：能记数百段杂剧的旦色，业内专有此号。<b>「记杂剧三百余段。」</b><span class="src">李芝秀条</span></div>
+      <div class="gdef"><b>唱社</b>：京师小唱结社，社中自有魁首。<b>「寿之尤为京师唱社中之巨擘也。」</b><span class="src">李心心诸人条</span></div>
+      <div class="gdef"><b>行院</b>：乐户演艺人家，婚嫁见于书中。<b>「始嫁行院王元俏。」</b><span class="src">天然秀条</span></div>
+      <div class="gdef"><b>点戏</b>：名目写贴梁上，看官自点，是勾栏的经营法。<b>「任看官选拣需索。」</b><span class="src">小春宴条</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 终局 -->
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="seal">局</div>
+      <h2>终局九站</h2>
+      <span class="from">点站看下场</span>
+    </div>
+    <p class="lead">名册记艺，也记命。她们的下场散在书里：刺目的、为尼的、入道的、守志的、从良的、善终的、早卒的、流落的、老于松江的。一条线走到底。</p>
+    <div class="eline"><div class="stops">
+      <button class="stop">刺目</button>
+      <button class="stop">为尼</button>
+      <button class="stop">入道</button>
+      <button class="stop">守志</button>
+      <button class="stop">从良</button>
+      <button class="stop">善终</button>
+      <button class="stop">早卒</button>
+      <button class="stop">流落</button>
+      <button class="stop">老境</button>
+    </div></div>
+    <div class="estory show">
+      <h3>金篦刺目 · 樊事真</h3>
+      <div class="es">京师 · 周仲宏参议属意</div>
+      <blockquote class="q">「妾若负君，当刳一目以谢君子。」<i>齐化门外饯别之誓</i></blockquote>
+      <p>周归江南后，母亲那边迫于势、又贪其财，她终究没能守住。</p>
+      <blockquote class="q">「乃抽金篦刺左目，血流遍地。」<i>周再来京师 · 库本</i></blockquote>
+      <p>周为之骇然，两人欢好如初。后来好事者把这件事编成杂剧，搬上了戏台：</p>
+      <blockquote class="q">「好事者编为杂剧，曰《樊事真金篦刺目》，行于世。」<i>库本</i></blockquote>
+      <p class="note"><b>注：</b>「其母既迫于势，又利其财」为库本原句；金篦即金制簪钗一类，旧时用作挑目之具。</p>
+    </div>
+    <div class="estory">
+      <h3>髡发为尼 · 汪怜怜</h3>
+      <div class="es">湖州 · 涅古伯经历属意</div>
+      <blockquote class="q">「若不弃寒微，当以侧室处我。」<i>汪怜怜先约</i></blockquote>
+      <p>涅古伯依礼纳她为侧室，她克尽妇道，无人有闲话。数年后涅没，公卿士夫多来访。她剃去头发做了尼姑，又自己毁掉容貌，断众人念想：</p>
+      <blockquote class="q">「汪髡发为尼。」<i>库本</i></blockquote>
+      <blockquote class="q">「汪汩其形，以绝众之狂念而终身焉。」<i>库本</i></blockquote>
+    </div>
+    <div class="estory">
+      <h3>入道 · 连枝秀与李真童</h3>
+      <div class="es">京师与江浙 · 两途入道</div>
+      <p>连枝秀被逸人点化，入了道门，从此浪游湖海。松江化缘造庵时，陆宅之作疏语讥谑，其中有一句狠话：</p>
+      <blockquote class="q">「有不比寻常钩子，曾经老大钳槌，百炼不回，万夫难敌之句。」<i>陆宅之疏语 · 库本</i></blockquote>
+      <p>她就此飘然入吴，嫁了旧好医人李恕，后不知所终。李真童则是另一条路：「达天山检校浙省」，周旋三岁，约好来年相见，她先入了道，杜门谢客；达天山后来外放诸暨州同知，践约备礼娶她，达没后复为道士：</p>
+      <blockquote class="q">「复为道士，节行愈励云。」<i>库本</i></blockquote>
+    </div>
+    <div class="estory">
+      <h3>守志 · 翠荷秀</h3>
+      <div class="es">自维扬徙云间 · 石氏别馆</div>
+      <p>石没之后，李氏誓不他适，却扫焚香、以诵经自守。石家的后人每年节令都去拜她。书作者见到她时，已是这样：</p>
+      <blockquote class="q">「余见其年已七旬，鬓发如雪，两手指甲皆长尺余焉。」<i>库本</i></blockquote>
+    </div>
+    <div class="estory">
+      <h3>从良 · 王巧儿</h3>
+      <div class="es">京师 · 陈云峤属意</div>
+      <p>其母使人开喻：「陈公之妻，乃铁太师女，妒悍不可言。」王巧儿答得斩钉截铁：</p>
+      <blockquote class="q">「巧儿一贱倡，蒙陈公厚眷。得侍巾栉，虽死无憾。」<i>库本</i></blockquote>
+      <p>母亲见拗她不过，密把她藏到别处，许了富商。她托人报信，至期称疾，悲啼宛转，把富商的肌肤都掐损了，事遂不成。陈依计而来，携她归江南。陈卒后，她和正室铁氏把家业守住了。</p>
+    </div>
+    <div class="estory">
+      <h3>善终 · 刘婆惜</h3>
+      <div class="es">赣州席上续曲 · 全子仁侧室</div>
+      <p>那支清江引换来的结局，库本只两句：</p>
+      <blockquote class="q">「后兵兴，全死节。刘克守妇道，善终于家。」<i>库本</i></blockquote>
+    </div>
+    <div class="estory">
+      <h3>早卒 · 樊香歌 杨买奴 赵梅哥</h3>
+      <div class="es">金陵与江浙 · 三例</div>
+      <blockquote class="q">「惜寿不永，二十三岁而卒。」<i>樊香歌 · 金陵人</i></blockquote>
+      <blockquote class="q">「嫁乐人查查鬼张四为妻，憔悴而死。」<i>杨买奴 · 性嗜酒</i></blockquote>
+      <blockquote class="q">「名虽高而寿不永。」<i>赵梅哥 · 乐人张有才妻</i></blockquote>
+      <p>樊香歌葬南关外，每到春游，总有人带酒到她墓前祭奠。杨买奴被贯酸斋以髻挽青螺之句讥其疾，书里记下这一笔，不避讳，也不刻薄。</p>
+    </div>
+    <div class="estory">
+      <h3>流落 · 金兽头 王奔儿</h3>
+      <div class="es">湖广与京师 · 纳之者没后</div>
+      <p>金兽头为贯只歌平章所纳；平章一死，她流落到湘湖，酸斋曾拿老鹤啄余的话调侃她。王奔儿身有微偻，却长于杂剧，为金玉府总管置侧室，总管没后流落江湖，最后是这样收梢：</p>
+      <blockquote class="q">「为教师以终。」<i>库本</i></blockquote>
+    </div>
+    <div class="estory">
+      <h3>老境 · 顾山山 张玉莲</h3>
+      <div class="es">松江与昆山 · 书作者的亲见</div>
+      <blockquote class="q">「至今老于松江，而花旦杂剧，犹少年时体态，后辈且蒙其指教。」<i>顾山山 · 库本</i></blockquote>
+      <blockquote class="q">「年余六十矣，两鬓如黧，容色尚润，风流谈谑，不减少年时也。」<i>张玉莲 · 库本作者近年所见</i></blockquote>
+      <p>这两条是全书离写作时间最近的记录，名册在这里合上了现在时。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 跋 -->
+<section>
+  <div class="wrap">
+    <div class="ba-wrap">
+      <div class="ba-seal">跋</div>
+      <p class="lead" style="text-align:center">书末缀一行题记，抄的是罗春伯那部《闻见录》里陈子翁咏蔡奴像的话，算作全书的自序收梢：</p>
+      <p class="ba-big">「观全盛时，风尘中人物尚如此。」</p>
+      <p class="ba-src">题蔡奴像 · 转引自库本卷末</p>
+      <p class="ba-big" style="font-size:19px">「余于《青楼集》不能无感云。」</p>
+      <p class="ba-src">「至正丙午夏五月，郡人夏邦彦书于风月楼中。」</p>
+      <p class="ba-end">一个王朝的最后两年，有人在一座风月楼上，为一代艺人的名册落了款。</p>
+    </div>
+  </div>
+</section>
+
+<div class="endnote">殆知阁导读 第213篇至此读毕，总目见 mulu.html。</div>
+
+<footer>
+  <div class="wrap cols">
+    <div>
+      <p><b>文本来源</b><br>殆知阁古代文献 子藏 笔记 青楼集<br><a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20（简体版）</a></p>
+    </div>
+    <div>
+      <p><b>核验声明</b><br>本页全部引文经脚本与库内文件逐字核验（去标点、归一后双侧比对），并反扫页面确认无未申报的库本成句复用；库本去空白六千七百二十五字、目六十七均经机数断言。</p>
+    </div>
+    <div>
+      <p><b>库本讹字申报</b><br>库本「一曰」多为日之讹（当读作一日，引文从库本）；「尢长于慢词」当作尤；卢疏斋条缺字讹作「束齐」；「闺ト」当作闺阁；「就裹滋味别」疑当作就里；「奸事者」当作好事者；「终曰」「曰以」当作日；「酸齐」当作酸斋；「踏沙行」通行作踏莎行；顺时秀条「密偶疾」疑有讹、马板肠句动词处有未成字空位；张玉莲条、李芝仪联各有一处空位，引文皆避让；「于ツツ」「玳瑁敛」「象牛头」等疑讹，未引。撰者库本仅署雪蓑，通称夏庭芝，系通行说法。</p>
+    </div>
+    <div>
+      <p><b>使用提醒</b><br>本篇属子部笔记卷，导读系列总目见 <a href="mulu.html">mulu.html</a>。书中记元代女艺人，称谓与眼光从当时（名妓、贱倡、失身诸语皆原文），而所记行当技艺、曲目演法、婚嫁去向，是元杂剧与诸宫调史的宝贵材料，请以史料与文学视之；书中人物关系与评价皆为一家之言。</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var stage = document.getElementById('stage');
+  var curtain = document.getElementById('curtain');
+  var reopen = document.getElementById('reopen');
+  curtain.addEventListener('click', function () { stage.classList.add('open'); });
+  reopen.addEventListener('click', function (e) { e.stopPropagation(); stage.classList.remove('open'); });
+
+  var fbtns = document.querySelectorAll('.fbtn');
+  var cards = document.querySelectorAll('#roster .nm');
+  var fcount = document.getElementById('fcount');
+  fbtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      fbtns.forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      var f = b.getAttribute('data-f');
+      var n = 0;
+      cards.forEach(function (c) {
+        var tags = c.getAttribute('data-tags');
+        var show = (f === '') || (tags && tags.split(' ').indexOf(f) >= 0);
+        c.classList.toggle('hide', !show);
+        if (show) n++;
+      });
+      fcount.textContent = '现显 ' + n + ' 则';
+    });
+  });
+  fcount.textContent = '现显 ' + cards.length + ' 则';
+
+  document.querySelectorAll('.dlg').forEach(function (d) {
+    d.addEventListener('click', function () {
+      var lines = d.querySelectorAll('.dline');
+      var next = null;
+      for (var i = 0; i < lines.length; i++) {
+        if (!lines[i].classList.contains('on')) { next = lines[i]; break; }
+      }
+      if (next) { next.classList.add('on'); }
+      var allOn = true;
+      lines.forEach(function (l) { if (!l.classList.contains('on')) allOn = false; });
+      if (allOn) d.classList.add('done');
+    });
+  });
+
+  document.querySelectorAll('.qsign').forEach(function (s) {
+    s.addEventListener('click', function () { s.classList.toggle('open'); });
+  });
+
+  var defbox = document.getElementById('gdefbox');
+  document.querySelectorAll('.gl').forEach(function (g, gi) {
+    g.addEventListener('click', function () {
+      document.querySelectorAll('.gl').forEach(function (x) { x.classList.remove('on'); });
+      g.classList.add('on');
+      document.querySelectorAll('.gdef').forEach(function (d, di) { d.classList.toggle('show', di === gi + 1); });
+    });
+  });
+
+  var stops = document.querySelectorAll('.stop');
+  var stories = document.querySelectorAll('.estory');
+  stops.forEach(function (s, si) {
+    s.addEventListener('click', function () {
+      stops.forEach(function (x) { x.classList.remove('on'); });
+      s.classList.add('on');
+      stories.forEach(function (st, i) { st.classList.toggle('show', i === si); });
+    });
+  });
+</script>
+</body>
+</html>
