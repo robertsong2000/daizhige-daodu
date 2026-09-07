@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>朝野佥载 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --c1:#c9963f;
+  --c1deep:#8f6a28;
+  --ash:#6b675e;
+  --dim:rgba(232,228,220,.66);
+  --faint:rgba(232,228,220,.38);
+  --line:rgba(232,228,220,.16);
+  --cardline:rgba(25,25,23,.18);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.95;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+/* ========== 首屏：钱幕 ========== */
+.hero{
+  min-height:92vh;
+  max-width:1060px;
+  margin:0 auto;
+  padding:66px 28px 36px;
+  display:grid;
+  grid-template-columns:340px 1fr;
+  gap:56px;
+  align-items:center;
+  position:relative;
+}
+.coinwrap{perspective:900px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.coin{width:100%;max-width:330px;display:block;transition:transform .9s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.coinwrap:hover .coin{transform:rotateY(0) translateY(-6px)}
+.coin.flipped{transform:rotateY(180deg)}
+.cface{transform-origin:center;backface-visibility:hidden}
+.cback{transform:rotateY(180deg)}
+.herokicker{
+  font-size:13px;letter-spacing:.5em;color:var(--c1);
+  margin-bottom:18px;
+}
+h1{
+  font-size:clamp(46px,7vw,76px);
+  font-weight:700;
+  letter-spacing:.12em;
+  line-height:1.25;
+}
+.herosub{
+  margin-top:10px;font-size:17px;color:var(--dim);letter-spacing:.14em;
+}
+.herometa{
+  margin-top:26px;font-size:13.5px;color:var(--faint);letter-spacing:.08em;
+}
+.intro{
+  margin-top:26px;font-size:15.5px;line-height:2.15;max-width:560px;
+}
+.intro b{color:var(--c1);font-weight:700}
+.herohint{
+  margin-top:30px;font-size:12.5px;color:var(--faint);letter-spacing:.3em;
+}
+.herohint::before{
+  content:"";display:inline-block;width:34px;height:1px;background:var(--c1);
+  vertical-align:middle;margin-right:12px;
+}
+
+/* ========== 卷签 ========== */
+.tabs{
+  position:sticky;top:0;z-index:50;
+  background:rgba(25,25,23,.93);
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(4px);
+}
+.tabs .row{
+  max-width:1060px;margin:0 auto;padding:10px 28px;
+  display:flex;flex-wrap:wrap;gap:6px 18px;
+  font-size:13px;letter-spacing:.16em;
+}
+.tabs a{color:var(--faint);text-decoration:none;padding:2px 4px;white-space:nowrap}
+.tabs a:hover{color:var(--c1)}
+.tabs a b{color:var(--c1);font-weight:700;margin-right:4px}
+
+/* ========== 案卷骨架 ========== */
+.case{max-width:1060px;margin:0 auto;padding:86px 28px 30px}
+.casehead{display:flex;align-items:baseline;gap:18px;margin-bottom:8px}
+.caseno{
+  font-size:13px;letter-spacing:.4em;color:var(--ink);
+  background:var(--c1);padding:3px 12px 3px 15px;font-weight:700;white-space:nowrap;
+}
+.caseti{font-size:clamp(26px,3.4vw,34px);letter-spacing:.18em;font-weight:700}
+.caselead{font-size:14.5px;color:var(--faint);letter-spacing:.1em;margin-bottom:34px}
+p.body{font-size:15.5px;line-height:2.2;margin-bottom:1.2em;max-width:760px}
+p.body b{color:var(--c1)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start;margin-top:10px}
+
+/* 引文卡 */
+.qt{
+  background:var(--paper);color:var(--ink);
+  border-left:4px solid var(--c1);
+  padding:22px 24px 18px;margin:26px 0;
+  max-width:760px;
+}
+.qt p{font-size:15.5px;line-height:2.1}
+.qt .src{display:block;margin-top:10px;font-size:12.5px;color:var(--c1deep);letter-spacing:.14em}
+.zhu{
+  margin-top:14px;padding-top:12px;border-top:1px dashed var(--cardline);
+  font-size:13.5px;color:rgba(25,25,23,.62);line-height:1.95;
+}
+.zhu::before{content:"库本自注　";color:var(--c1deep);font-weight:700}
+
+/* ========== 壹 烧剩的书 ========== */
+.shelf{margin:8px 0 6px}
+.shelfcap{
+  display:flex;flex-wrap:wrap;gap:8px 26px;font-size:13px;color:var(--faint);
+  letter-spacing:.1em;margin-top:14px;
+}
+.shelfcap b{color:var(--c1);font-weight:700}
+.dupnote{
+  border:1px solid var(--line);padding:18px 22px;max-width:760px;margin-top:30px;
+  font-size:13.5px;color:var(--dim);line-height:2.05;
+}
+.dupnote b{color:var(--c1);letter-spacing:.2em}
+
+/* ========== 贰 选场 ========== */
+.moneyeye{
+  margin:34px auto 8px;max-width:560px;
+  background:var(--paper);color:var(--ink);
+  padding:44px 40px 38px;position:relative;text-align:center;
+}
+.moneyeye::before,.moneyeye::after{
+  content:"";position:absolute;width:26px;height:26px;background:var(--ink);
+}
+.moneyeye::before{top:14px;left:14px}
+.moneyeye::after{bottom:14px;right:14px}
+.moneyeye .big{
+  font-size:clamp(26px,4vw,36px);letter-spacing:.14em;line-height:1.9;font-weight:700;
+}
+.moneyeye .big em{font-style:normal;color:var(--c1deep)}
+.moneyeye .who{margin-top:14px;font-size:13px;color:var(--c1deep);letter-spacing:.2em}
+.vsbox{display:grid;grid-template-columns:1fr 64px 1fr;gap:12px;align-items:end;max-width:760px;margin:34px 0 6px}
+.vsnum{border:1px solid var(--line);padding:18px 18px 14px;text-align:center}
+.vsnum .n{font-size:clamp(30px,4.4vw,44px);font-weight:700;color:var(--c1);line-height:1.3}
+.vsnum .n.ash{color:var(--ash)}
+.vsnum .t{font-size:13px;color:var(--faint);letter-spacing:.14em;margin-top:6px}
+.vsmid{color:var(--faint);font-size:15px;text-align:center;padding-bottom:22px}
+
+/* ========== 叁 酷吏档案 ========== */
+.dossier{
+  border:1px solid var(--line);max-width:760px;margin:26px 0;position:relative;
+}
+.dossier .tag{
+  position:absolute;top:-13px;left:22px;background:var(--ink);
+  padding:0 12px;font-size:13px;letter-spacing:.3em;color:var(--c1);font-weight:700;
+}
+.dossier .inner{padding:30px 26px 22px}
+.dossier h3{font-size:19px;letter-spacing:.2em;margin-bottom:12px}
+.dossier h3 small{font-size:12.5px;color:var(--faint);letter-spacing:.12em;margin-left:12px;font-weight:400}
+.dossier p{font-size:15px;line-height:2.1;margin-bottom:.9em}
+.dossier p:last-child{margin-bottom:0}
+.plaque{
+  background:var(--paper);color:var(--ink);
+  border:3px double var(--c1deep);
+  padding:24px 26px 18px;margin:18px 0 6px;max-width:640px;position:relative;
+}
+.plaque::before{
+  content:"榜";position:absolute;top:-16px;right:20px;background:var(--c1);
+  color:var(--ink);font-weight:700;padding:1px 10px;font-size:14px;letter-spacing:.2em;
+}
+.plaque p{font-size:16.5px;line-height:2.1;font-weight:700;letter-spacing:.06em}
+.xingfa{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 4px}
+.xingfa span{
+  border:1px solid var(--c1deep);color:var(--c1);
+  font-size:13.5px;letter-spacing:.22em;padding:5px 14px;
+}
+.curse{
+  margin-top:18px;font-size:15px;color:var(--dim);
+}
+.curse b{color:var(--c1);font-weight:700;font-size:17px;letter-spacing:.1em}
+
+/* ========== 肆 木僧 ========== */
+.monkstage{
+  display:grid;grid-template-columns:minmax(240px,340px) 1fr;
+  gap:44px;align-items:center;max-width:860px;margin:14px auto 0;
+}
+.monkbox{position:relative;cursor:pointer;user-select:none;-webkit-user-select:none}
+.monkbox svg{width:100%;display:block}
+.bubble{
+  position:absolute;top:2%;left:56%;
+  background:var(--c1);color:var(--ink);
+  font-size:15px;font-weight:700;letter-spacing:.14em;
+  padding:4px 14px;opacity:0;transform:translateY(8px) scale(.8);
+  transition:opacity .25s,transform .25s;
+  pointer-events:none;
+}
+.bubble.on{opacity:1;transform:translateY(0) scale(1)}
+.coinfall{opacity:0}
+.coinfall.go{animation:fall .55s ease-in forwards}
+@keyframes fall{
+  0%{opacity:1;transform:translateY(-58px)}
+  70%{opacity:1;transform:translateY(0)}
+  100%{opacity:0;transform:translateY(4px)}
+}
+.monkside .cnt{
+  font-size:14px;color:var(--faint);letter-spacing:.14em;margin-bottom:18px;
+}
+.monkside .cnt b{color:var(--c1);font-size:22px;letter-spacing:.06em;font-weight:700}
+.twocard{
+  border:1px dashed var(--line);max-width:760px;margin:38px 0 0;padding:24px 26px;
+}
+.twocard .duo{
+  display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:16px;
+}
+.twocard .half{
+  border:1px solid var(--line);padding:16px 18px;font-size:14px;line-height:2.05;color:var(--dim);
+}
+.twocard .half b{display:block;color:var(--c1);letter-spacing:.2em;font-size:13px;margin-bottom:8px}
+.twocard .half.bad b{color:#b3653f}
+
+/* ========== 伍 谣谶 ========== */
+.slipwall{display:grid;grid-template-columns:1fr 1fr;gap:30px;max-width:820px;margin:10px 0 8px}
+.slip{
+  background:var(--paper);color:var(--ink);
+  padding:30px 26px 22px;
+  box-shadow:0 10px 26px rgba(0,0,0,.4);
+  transition:transform .35s;
+}
+.slip:nth-child(1){transform:rotate(-1.6deg)}
+.slip:nth-child(2){transform:rotate(1.3deg)}
+.slip:hover{transform:rotate(0)}
+.slip .yao{
+  font-size:clamp(21px,3vw,27px);font-weight:700;letter-spacing:.12em;line-height:1.85;
+}
+.slip .zhu2{
+  margin-top:14px;padding-top:10px;border-top:1px dashed var(--cardline);
+  font-size:13px;color:rgba(25,25,23,.62);line-height:1.9;
+}
+.slip .zhu2::before{content:"谣后自注　";color:var(--c1deep);font-weight:700}
+.grandprophecy{
+  max-width:760px;margin:44px 0 0;
+  border:1px solid var(--c1deep);
+  background:linear-gradient(160deg,rgba(201,150,63,.12),rgba(201,150,63,.03));
+  padding:32px 30px 24px;position:relative;
+}
+.grandprophecy .ptag{
+  position:absolute;top:-14px;left:24px;background:var(--ink);
+  padding:0 12px;font-size:13px;letter-spacing:.34em;color:var(--c1);font-weight:700;
+}
+.grandprophecy p{font-size:15.5px;line-height:2.15;margin-bottom:1em}
+.grandprophecy p:last-child{margin-bottom:0}
+
+/* ========== 陆 绿珠怨 ========== */
+.poemcase{
+  display:grid;grid-template-columns:minmax(250px,330px) 1fr;
+  gap:48px;align-items:start;margin-top:8px;
+}
+.poemsheet{
+  background:var(--paper);color:var(--ink);
+  writing-mode:vertical-rl;
+  height:560px;padding:34px 30px;
+  box-shadow:0 12px 30px rgba(0,0,0,.45);
+  display:flex;justify-content:flex-start;
+}
+.poemsheet .pt{
+  font-size:16.5px;line-height:2.35;letter-spacing:.28em;font-weight:600;
+  max-height:100%;
+}
+.poemsheet .pt span{color:var(--c1deep)}
+.storycol p{font-size:15.5px;line-height:2.2;margin-bottom:1.1em}
+.storycol p b{color:var(--c1)}
+.finale{
+  margin:22px 0 0;padding:20px 24px;background:rgba(201,150,63,.1);
+  border-left:4px solid var(--c1);font-size:16px;line-height:2.1;font-weight:600;
+}
+
+/* ========== 柒 乌鸦 ========== */
+.crow{max-width:760px}
+.crow .qa{
+  display:grid;grid-template-columns:auto 1fr;gap:0 26px;margin:26px 0;
+  border:1px solid var(--line);
+}
+.crow .qa .y{
+  background:var(--c1);color:var(--ink);writing-mode:vertical-rl;
+  font-size:15px;font-weight:700;letter-spacing:.3em;
+  padding:16px 10px 12px;
+}
+.crow .qa .a{padding:20px 24px 16px}
+.crow .qa .a p{font-size:15px;line-height:2.1}
+.crow .qa .a .src2{display:block;margin-top:8px;font-size:12.5px;color:var(--c1deep);letter-spacing:.14em}
+.closing{
+  margin-top:40px;font-size:17px;line-height:2.3;letter-spacing:.04em;max-width:720px;
+}
+.closing b{color:var(--c1)}
+
+/* ========== 勘注 ========== */
+.notes{max-width:800px;margin:0 auto;padding:70px 28px 40px}
+.notes h2{font-size:22px;letter-spacing:.34em;margin-bottom:24px;color:var(--c1)}
+.notes ol{list-style:none;counter-reset:n}
+.notes li{
+  counter-increment:n;position:relative;
+  padding:14px 0 14px 58px;border-top:1px solid var(--line);
+  font-size:14px;line-height:2.05;color:var(--dim);
+}
+.notes li::before{
+  content:counter(n,cjk-ideographic);position:absolute;left:14px;top:16px;
+  color:var(--c1);font-weight:700;
+}
+.notes li b{color:var(--paper)}
+
+footer{border-top:1px solid var(--line);margin-top:30px}
+footer .wrap{max-width:980px;margin:0 auto;padding:34px 28px 44px}
+footer p{font-size:13px;color:var(--faint);margin:4px 0;line-height:1.9}
+footer a{color:var(--dim)}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;padding-top:48px;gap:34px}
+  .coinwrap{max-width:250px;margin:0 auto}
+  .grid2,.monkstage,.twocard .duo,.slipwall,.poemcase{grid-template-columns:1fr}
+  .vsbox{grid-template-columns:1fr;gap:14px}
+  .vsmid{padding-bottom:0}
+  .poemsheet{height:480px}
+  .case{padding-top:64px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .coin{transition:none}
+  .coinwrap:hover .coin{transform:none}
+  .bubble{transition:none}
+  .coinfall.go{animation:none;opacity:0}
+  .slip{transition:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 ================= -->
+<header class="hero">
+  <div class="coinwrap" id="coinwrap" role="button" tabindex="0" aria-label="翻转铜钱" title="点它">
+    <svg class="coin" id="coin" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g class="cface">
+        <circle cx="170" cy="170" r="158" fill="none" stroke="#c9963f" stroke-width="7"/>
+        <circle cx="170" cy="170" r="132" fill="none" stroke="#c9963f" stroke-width="2" opacity=".7"/>
+        <g fill="#c9963f">
+          <circle cx="170" cy="26" r="4.2"/><circle cx="170" cy="314" r="4.2"/>
+          <circle cx="26" cy="170" r="4.2"/><circle cx="314" cy="170" r="4.2"/>
+          <circle cx="90" cy="48" r="3.4"/><circle cx="250" cy="48" r="3.4"/>
+          <circle cx="90" cy="292" r="3.4"/><circle cx="250" cy="292" r="3.4"/>
+          <circle cx="48" cy="90" r="3.4"/><circle cx="48" cy="250" r="3.4"/>
+          <circle cx="292" cy="90" r="3.4"/><circle cx="292" cy="250" r="3.4"/>
+        </g>
+        <rect x="125" y="125" width="90" height="90" fill="none" stroke="#c9963f" stroke-width="6"/>
+        <text x="170" y="150" text-anchor="middle" fill="#e8e4dc" font-size="30" letter-spacing="4" font-weight="700">朝野</text>
+        <text x="170" y="200" text-anchor="middle" fill="#e8e4dc" font-size="30" letter-spacing="4" font-weight="700">佥载</text>
+        <text x="170" y="86" text-anchor="middle" fill="#c9963f" font-size="21" font-weight="700">青</text>
+        <text x="254" y="178" text-anchor="middle" fill="#c9963f" font-size="21" font-weight="700">钱</text>
+        <text x="170" y="272" text-anchor="middle" fill="#c9963f" font-size="21" font-weight="700">万</text>
+        <text x="86" y="178" text-anchor="middle" fill="#c9963f" font-size="21" font-weight="700">选</text>
+      </g>
+      <g class="cface cback">
+        <circle cx="170" cy="170" r="158" fill="none" stroke="#8f6a28" stroke-width="7"/>
+        <circle cx="170" cy="170" r="132" fill="none" stroke="#8f6a28" stroke-width="2" opacity=".7"/>
+        <g fill="#8f6a28">
+          <circle cx="170" cy="26" r="4.2"/><circle cx="170" cy="314" r="4.2"/>
+          <circle cx="26" cy="170" r="4.2"/><circle cx="314" cy="170" r="4.2"/>
+          <circle cx="90" cy="48" r="3.4"/><circle cx="250" cy="48" r="3.4"/>
+          <circle cx="90" cy="292" r="3.4"/><circle cx="250" cy="292" r="3.4"/>
+          <circle cx="48" cy="90" r="3.4"/><circle cx="48" cy="250" r="3.4"/>
+          <circle cx="292" cy="90" r="3.4"/><circle cx="292" cy="250" r="3.4"/>
+        </g>
+        <rect x="125" y="125" width="90" height="90" fill="none" stroke="#8f6a28" stroke-width="6"/>
+        <text x="170" y="150" text-anchor="middle" fill="#e8e4dc" font-size="30" letter-spacing="4" font-weight="700">非钱</text>
+        <text x="170" y="200" text-anchor="middle" fill="#e8e4dc" font-size="30" letter-spacing="4" font-weight="700">不行</text>
+        <text x="170" y="86" text-anchor="middle" fill="#8f6a28" font-size="21" font-weight="700">三</text>
+        <text x="254" y="178" text-anchor="middle" fill="#8f6a28" font-size="21" font-weight="700">十</text>
+        <text x="170" y="272" text-anchor="middle" fill="#8f6a28" font-size="21" font-weight="700">存</text>
+        <text x="86" y="178" text-anchor="middle" fill="#8f6a28" font-size="21" font-weight="700">六</text>
+      </g>
+    </svg>
+  </div>
+  <div>
+    <div class="herokicker">殆知阁导读　第二百零六篇</div>
+    <h1>朝野佥载</h1>
+    <div class="herosub">一部被烧剩的武周朝野档案</div>
+    <div class="intro">
+      武则天时代的人怎么活？这一部笔记里全是现场记录：卖饼出身的小贩靠告密当上五品御史，刑讯的花样起了仙气飘飘的名字，能自己开口讨钱的木和尚在市集上日进千钱，民歌里唱着「张公吃酒李公醉」。写书的人张鷟，字文成，自己就泡在这架官僚机器里做官，写完还要把自己做梦改官的私事也记进去。书原本三十卷，被时代磨剩六卷，剩下这六卷，全是带体温的黑档案。
+    </div>
+    <div class="herometa">唐　张鷟　撰　　史藏　志存记录（子藏　笔记　重出）　　六卷　　库本去空白 58660 字</div>
+    <div class="herohint">点铜钱，翻面</div>
+  </div>
+</header>
+
+<!-- ================= 卷签 ================= -->
+<nav class="tabs">
+  <div class="row">
+    <a href="#c1"><b>壹</b>烧剩的书</a>
+    <a href="#c2"><b>贰</b>选场</a>
+    <a href="#c3"><b>叁</b>酷吏档案</a>
+    <a href="#c4"><b>肆</b>木僧与栈道</a>
+    <a href="#c5"><b>伍</b>谣谶</a>
+    <a href="#c6"><b>陆</b>绿珠怨</a>
+    <a href="#c7"><b>柒</b>文成的乌鸦</a>
+    <a href="#notes"><b>附</b>勘注</a>
+  </div>
+</nav>
+
+<!-- ================= 壹 烧剩的书 ================= -->
+<section class="case" id="c1">
+  <div class="casehead"><span class="caseno">案卷壹</span><h2 class="caseti">烧剩的书</h2></div>
+  <div class="caselead">三十卷如何变成六卷：一部书的减法史</div>
+  <div class="grid2">
+    <div>
+      <p class="body">四库馆臣把账算得很清楚：《新唐书·艺文志》著录<b>三十卷</b>，《宋史·艺文志》只剩<b>二十卷</b>，另有《补遗》三卷，《文献通考》更只剩一部补遗；晁公武读书志说原书分三十五门，今本却逐条联缀，门类全无。馆臣判断：这是宋人摘录删并的节本，加上后人附益的补遗，早已不是张鷟的原貌。</p>
+      <p class="body">书被删，却被读：洪迈《容斋随笔》嫌它记事琐碎、多媟语；司马光修《资治通鉴》，照样一条条引它的材料。玩笑与档案，宋人分得清。</p>
+      <p class="body">所以读这本书要先记住一件事：<b>你手里的是灰烬里的六卷</b>。它讲到酷吏、木僧、谶谣、市井骗局，全是一手见闻；可是它原本还有二十四卷的体量，替整个武周存档。</p>
+      <div class="dupnote"><b>库本形制</b>　史藏《志存记录》所收此书，一档之内同文重装两遍：前六卷无目录，后六卷带目录，去空白各 58660 字，逐字相同。本篇字数与引文均取其一。</div>
+    </div>
+    <div>
+      <svg class="shelf" viewBox="0 0 420 330" xmlns="http://www.w3.org/2000/svg" aria-label="三十卷烧剩六卷" role="img">
+        <line x1="10" y1="282" x2="410" y2="282" stroke="rgba(232,228,220,.3)" stroke-width="3"/>
+        <g id="spines"></g>
+        <g font-size="15" fill="#e8e4dc" font-weight="700" text-anchor="middle">
+          <text x="66" y="316">三十卷</text>
+          <text x="210" y="316">二十卷</text>
+          <text x="354" y="316">今本六卷</text>
+        </g>
+        <g font-size="11" fill="rgba(232,228,220,.4)" text-anchor="middle">
+          <text x="66" y="16">新唐书艺文志</text>
+          <text x="210" y="16">宋史艺文志</text>
+          <text x="354" y="16">四库著录</text>
+        </g>
+      </svg>
+      <div class="shelfcap">
+        <span><b>灰者</b>已佚之卷</span>
+        <span><b>金者</b>今本六卷</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 贰 选场 ================= -->
+<section class="case" id="c2">
+  <div class="casehead"><span class="caseno">案卷贰</span><h2 class="caseti">选场</h2></div>
+  <div class="caselead">作者其人：一个叫青钱的人，写下一句非钱不行</div>
+  <p class="body">张鷟字文成，高宗至玄宗间人，进士出身，官做到率更令。《新唐书》记下时人的评语：他的文章像青铜钱，<b>万选万中</b>，于是得了个外号「青钱学士」。一个被叫作钱的人，在一部官场笔记里，记下了这个时代真正通行的钱。</p>
+  <div class="moneyeye">
+    <div class="big">「当今之选，非钱不行。」</div>
+    <div class="who">选人系百钱于靴带，吏部侍郎问其故　卷一</div>
+  </div>
+  <p class="body">铨选是唐代的公务员大考，也是张鷟看得最透的一台机器。他算过一笔账：</p>
+  <div class="qt"><p>张文成曰：干封以前选人，每年不越数千；垂拱以后，每岁常至五万。</p><span class="src">卷一　张文成自述选政</span></div>
+  <div class="vsbox">
+    <div class="vsnum ash"><div class="n ash">数千</div><div class="t">干封以前　岁入选人</div></div>
+    <div class="vsmid">二十年后</div>
+    <div class="vsnum"><div class="n">五万</div><div class="t">垂拱以后　每岁常至</div></div>
+  </div>
+  <p class="body">人没变多，跑道变挤了。底下是什么光景？张文成接着写：</p>
+  <div class="qt"><p>是以选人冗冗，甚于羊群，吏部喧喧，多于蚁聚。</p><span class="src">卷一　同条</span></div>
+  <p class="body">「非钱不行」这五个字，是全书最冷的一句判词。它出自一个选人的靴带，被吏部侍郎亲耳听见，记进一部叫「佥载」的书。<b>青钱学士的大名与靴带上的百钱，是同一枚钱的两面</b>，这枚钱在本页首屏，点一下就能翻过来。</p>
+</section>
+
+<!-- ================= 叁 酷吏档案 ================= -->
+<section class="case" id="c3">
+  <div class="casehead"><span class="caseno">案卷叁</span><h2 class="caseti">酷吏档案</h2></div>
+  <div class="caselead">武周朝的三份卷宗：告密者的神话，与被造出来的地狱</div>
+
+  <div class="dossier">
+    <span class="tag">案一　卖饼御史</span>
+    <div class="inner">
+      <h3>侯思止<small>醴泉卖饼人　罗告起家　五品</small></h3>
+      <p>卖饼的小贩靠告密换到五品官，还要在武则天面前讨御史。上头说你不大识字，他的回答成了名对：</p>
+      <div class="qt"><p>獬豸岂识字但为国触罪人而已。</p></div>
+      <p>这尊不识字的獬豸审案，只会两句黑话，翻来覆去吓囚徒：</p>
+      <div class="qt"><p>不用你书言笔语，但还我白司马。若不肯来俊，即与你孟青。
+        <span class="zhu">白司马者，北邙山白司马坂也；来俊者，中丞来俊臣也；孟青者，将军孟青棒也。</span></div>
+      <p>白司马是北邙山一处坡，来俊是酷吏来俊臣，孟青是一根棒：三样凶器缝进两句话，囚徒听得懂就行。这位御史的结局也记在案：坐私蓄锦，朝堂决杀。</p>
+    </div>
+  </div>
+
+  <div class="dossier">
+    <span class="tag">案二　牛头阿婆</span>
+    <div class="inner">
+      <h3>周兴<small>秋官侍郎　时人号牛头阿婆</small></h3>
+      <p>周兴刑讯出名，百姓怨声载道，他的应对是贴出一张告示。这张告示今天读，仍是公文写作的最高黑教材：</p>
+      <div class="plaque"><p>兴乃榜门判曰：“被告之人，问皆称枉。斩决之后，咸悉无言。</p></div>
+      <p>告状的人都喊冤，砍了就安静了。十二个字，把整个武周司法的运行逻辑写在门上。</p>
+    </div>
+  </div>
+
+  <div class="dossier">
+    <span class="tag">案三　三豹</span>
+    <div class="inner">
+      <h3>李嵩　李全交　王旭<small>京师号三豹</small></h3>
+      <p>监察御史李嵩、李全交，殿中侍御史王旭，长安人给他们起的外号是三豹：赤黧豹、白额豹、黑豹。他们的刑讯术有一套仙气飘飘的命名法，一一都记在案：</p>
+      <div class="xingfa">
+        <span>仙人献果</span><span>玉女登梯</span><span>犊子悬车</span><span>驴驹拔橛</span>
+      </div>
+      <p class="curse">名字有多美，刑就有多毒。长安人见面立誓都不敢拿三豹起誓，只用一句咒语：</p>
+      <p class="curse" style="margin-top:6px"><b>若违心负教，横遭三豹。</b>　若违了心，就撞在这三人手里。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 肆 木僧与栈道 ================= -->
+<section class="case" id="c4">
+  <div class="casehead"><span class="caseno">案卷肆</span><h2 class="caseti">木僧与栈道</h2></div>
+  <div class="caselead">同一位杨务廉：卷六造会要钱的机器人，卷二造会杀人的栈道</div>
+  <p class="body">这是全书最奇幻的一条史料。将作大匠杨务廉在沁州集市上造出一个木头和尚，会自己化缘：<b>中文史料里，这是最早会开口讨钱的机器人之一</b>。</p>
+  <div class="monkstage">
+    <div class="monkbox" id="monkbox" role="button" tabindex="0" aria-label="投钱给木僧" title="投一钱">
+      <svg viewBox="0 0 300 330" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <ellipse cx="150" cy="312" rx="92" ry="10" fill="rgba(232,228,220,.08)"/>
+        <path d="M96 306 Q88 220 118 196 L182 196 Q212 220 204 306 Z" fill="#3a362e" stroke="#c9963f" stroke-width="2.5"/>
+        <line x1="126" y1="206" x2="120" y2="300" stroke="rgba(201,150,63,.35)" stroke-width="2"/>
+        <line x1="150" y1="204" x2="150" y2="302" stroke="rgba(201,150,63,.35)" stroke-width="2"/>
+        <line x1="174" y1="206" x2="180" y2="300" stroke="rgba(201,150,63,.35)" stroke-width="2"/>
+        <circle cx="150" cy="152" r="44" fill="#3a362e" stroke="#c9963f" stroke-width="2.5"/>
+        <path d="M112 138 Q150 96 188 138" fill="none" stroke="#c9963f" stroke-width="2.5"/>
+        <line x1="122" y1="150" x2="138" y2="150" stroke="#e8e4dc" stroke-width="3" stroke-linecap="round"/>
+        <line x1="162" y1="150" x2="178" y2="150" stroke="#e8e4dc" stroke-width="3" stroke-linecap="round"/>
+        <path d="M118 106 Q150 60 182 106" fill="none" stroke="#c9963f" stroke-width="3"/>
+        <path d="M204 226 Q246 224 258 252" fill="none" stroke="#c9963f" stroke-width="2.5"/>
+        <path d="M244 268 Q262 258 274 272 Q268 292 246 288 Q238 278 244 268 Z" fill="#3a362e" stroke="#c9963f" stroke-width="2.5"/>
+        <g id="fallcoin" class="coinfall">
+          <circle cx="259" cy="272" r="9" fill="#c9963f"/>
+          <rect x="255" y="268" width="8" height="8" fill="#191917"/>
+        </g>
+        <text x="150" y="330" text-anchor="middle" fill="rgba(232,228,220,.4)" font-size="12" letter-spacing="3">沁州木僧　关键忽发</text>
+      </svg>
+      <span class="bubble" id="bubble">布施</span>
+    </div>
+    <div class="monkside">
+      <div class="cnt">碗中钱满，关键忽发。今日所得　<b id="cnt">0</b>　钱</div>
+      <div class="qt" style="margin-top:0"><p>将作大匠杨务廉甚有巧思，常于沁州市内刻木作僧，手执一碗，自能行乞。碗中钱满，关键忽发，自然作声云“布施”。市人竞观，欲其作声，施者日盈数千矣。</p><span class="src">卷六　巧人</span></div>
+      <p class="body" style="font-size:14px;color:var(--dim)">同卷还有洛州县令殷文亮家的酒宴机器人：</p>
+      <div class="qt" style="margin-top:6px"><p>刻木为人，衣以缯彩，酌酒行觞，皆有次第。又作妓女，唱歌吹笙，皆能应节。</p><span class="src">卷六　同条</span></div>
+    </div>
+  </div>
+  <div class="twocard">
+    <p class="body" style="margin-bottom:14px">可是别急着把杨务廉当唐代工程师的浪漫偶像。同一位将作大匠，还在卷二留下另一份档案：他奏请在陕州三门凿山架栈道拉纤，把服役的纤夫用绳子拴在胸背上。</p>
+    <div class="duo">
+      <div class="half"><b>木僧　卷六</b>刻木作僧，手执一碗，自能行乞。碗中钱满，关键忽发，作声云布施。市人竞观，施者日盈数千。</div>
+      <div class="half bad"><b>栈道　卷二</b>苟牵绳一断，栈梁一绝，则扑杀数十人。满路悲号，声动山谷。落栈着石，百无一存。</div>
+    </div>
+    <div class="qt"><p>皆称杨务廉“人妖“也，天生此妖以破残百姓。</p><span class="src">卷二　时人语</span></div>
+    <p class="body" style="margin-top:14px"><b>会要钱的木僧与会杀人的栈道，出自同一双手。</b>张鷟把两卷档案都留着，没有替任何一边抒情。这大概是这本书最狠的地方：它连读者的眼泪都懒得引导。</p>
+  </div>
+</section>
+
+<!-- ================= 伍 谣谶 ================= -->
+<section class="case" id="c5">
+  <div class="casehead"><span class="caseno">案卷伍</span><h2 class="caseti">谣谶</h2></div>
+  <div class="caselead">街上的密码：童谣是最自由的报纸</div>
+  <p class="body">武周时代言论管控严密，但管不住儿歌。张鷟录了一批当时满城传唱的谣，并且像档案员一样，逐条写明所指：</p>
+  <div class="slipwall">
+    <div class="slip">
+      <div class="yao">莫浪语，阿婆嗔，三叔闻时笑杀人。</div>
+      <div class="zhu2">阿婆者，则天也；三叔者，孝和为第三也。</div>
+    </div>
+    <div class="slip">
+      <div class="yao">张公吃酒李公醉。</div>
+      <div class="zhu2">张公者，斥易之兄弟也；李公者，言李氏大盛也。</div>
+    </div>
+  </div>
+  <p class="body">阿婆是则天，三叔是中宗李显（行三），张公是张易之兄弟，李公是李家。一句童谣，就是一份政治形势报告。而全书分量最重的谶，是唐太宗与李淳风的那场密谈：</p>
+  <div class="grandprophecy">
+    <span class="ptag">大谶　女主武王</span>
+    <p>太宗时流传一部《秘记》，说唐三代之后，有女主武王代有天下。太宗秘密召李淳风来问，淳风说：其兆已成，此人就在陛下宫里。</p>
+    <div class="qt"><p>臣据玄象推算，其兆已成。然其人已生在陛下宫内，从今不逾四十年，当有天下，诛杀唐氏子孙殆将歼尽。</p></div>
+    <p>太宗问：那就找到她杀掉如何？淳风答：</p>
+    <div class="qt"><p>天之所命，不可废也。王者不死，虽求恐不可得。</p><span class="src">卷六　秘记条</span></div>
+    <p>四十后其人已老，老则仁慈；现在杀了她，她转世再来，正是少壮严毒，李家子孙反倒无遗类。这段对话见诸多家唐人笔记，真伪难辨，但它是理解武周最好的心理注脚：<b>连杀伐果断的天子，最后也选择了等</b>。等到的那个人，书里处处是她的爪牙。</p>
+  </div>
+</section>
+
+<!-- ================= 陆 绿珠怨 ================= -->
+<section class="case" id="c6">
+  <div class="casehead"><span class="caseno">案卷陆</span><h2 class="caseti">绿珠怨</h2></div>
+  <div class="caselead">补阙乔知之的婢女碧玉：一首诗引发的灭门</div>
+  <div class="poemcase">
+    <div class="poemsheet"><div class="pt">石家金谷重新声，明珠十斛买娉婷。此日可怜偏自许，此时歌舞得人情。君家闺阁不曾观，好将歌舞借人看。意气雄豪非分理，骄矜势力横相干。辞君去君终不忍，徒劳掩袂伤铅粉。百年离恨在高楼，一代容颜为君尽。</div></div>
+    <div class="storycol">
+      <p class="body">武承嗣是武则天的侄子，封魏王。补阙乔知之有个婢女叫碧玉，漂亮能歌，知之为她不婚。武承嗣借她去教自己家的歌姬梳妆，借了，就不还了。</p>
+      <p class="body">乔知之不能抢人，只能写诗。他托名古人石崇的爱妾绿珠，写了一首《绿珠怨》寄进去：绿珠当年为石崇坠楼殉情，而如今金谷园的旧事，正在武家重演。诗到了，碧玉读罢，绝食三日，投井。</p>
+      <p class="body">武承嗣捞出尸体，在裙带上搜出这首诗，大怒，指使罗织罪名的人告发乔知之。<b>斩于南市，破家籍没。</b></p>
+      <div class="finale">百年离恨在高楼，一代容颜为君尽。　碧玉读诗，饮泪不食，三日，投井而死。</div>
+      <p class="body" style="margin-top:18px">一条人命换十二句诗，一段灭门只为一首借古讽今的绝句。这条档案最惊心的地方在于程序：王夺人婢是借，诗人讨还靠典，执法者杀人靠罗织，每一环都打着体面的旗号。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 柒 文成的乌鸦 ================= -->
+<section class="case" id="c7">
+  <div class="casehead"><span class="caseno">案卷柒</span><h2 class="caseti">文成的乌鸦</h2></div>
+  <div class="caselead">作者把自己也写进了档案：一头清晨叫的猫头鹰</div>
+  <div class="crow">
+    <p class="body">全书里最可爱的一条，是作者自己的私事。张文成，就是张鷟（文成是他的字）。他在书里多次用第三人称记自己的日常，比如这天早上，一只枭（猫头鹰）落在他家院里叫：</p>
+    <div class="qa">
+      <div class="y">其妻</div>
+      <div class="a"><p>率更令张文成，枭晨鸣于庭树，其妻以为不祥，连唾之。</p><span class="src2">卷一　冥报杂录</span></div>
+    </div>
+    <div class="qa">
+      <div class="y">文成</div>
+      <div class="a"><p>急洒扫，吾当改官。　言未毕，贺客已在门矣。</p><span class="src2">卷一　同条</span></div>
+    </div>
+    <p class="body">枭鸣是凶兆，妻子连啐它；张文成却说：快扫地，我要升官了。凶兆反着解，贺客果然到门。在一个全民研究谶纬的时代，这位青钱学士对吉凶的态度，轻盈得近乎狡猾。</p>
+    <p class="body">另一次，他在听一位叫神鼎的和尚辩论。和尚说：乞讨到就欢喜，要不到就悲伤，打我就发怒，骂我就嗔恨，论这个，我离菩萨还远着呢。张文成听完了，说：<b>观法师即是菩萨行人也。</b>和尚把他的话原样挡了回去：</p>
+    <div class="qt"><p>鼎今乞得即喜，不得即悲，打之即怒，骂之即嗔。以此论之，去菩萨远矣。</p><span class="src">卷六　神鼎师条</span></div>
+    <div class="closing">能看穿吉凶，肯认自己不达，还把两件事都原原本本记下来。三十四卷被时代烧掉，剩下这六卷里的每一页都在提醒：<b>档案是冷的，可是档案员有体温。</b>这大概就是《朝野佥载》历经删毁还活着的原因。</div>
+  </div>
+</section>
+
+<!-- ================= 勘注 ================= -->
+<section class="notes" id="notes">
+  <h2>勘注四则</h2>
+  <ol>
+    <li><b>版本</b>　本篇据史藏《志存记录》本（六卷）。四库提要所考三十卷、二十卷又补遗三卷、今本六卷之演变，为馆臣考述之转述；洪迈《容斋随笔》之讥与《资治通鉴》引用，均出提要。提要原文另存子藏《笔记》本卷首，未入引文。</li>
+    <li><b>字数</b>　库本去空白 58660 字。史藏本一档之内同文重装两遍（前本无目录、后本带目录），逐字相同，字数取其一；两本叠装应是库本编目重复，非两个版本。</li>
+    <li><b>用字</b>　库本题名作者作「𬸦」，属生僻字库字符，本页行文一律作「鷟」；引文未及此字，不受影响。库本引号配对多有讹误（如「人妖」两用同向引号），引文照录未改。</li>
+    <li><b>外部知识</b>　「青钱学士」「万选万中」之号出《新唐书》张荐传所附张鷟事迹，非库本内容，正文已注明；杨务廉条系于卷二、卷六，木僧为「中文史料里最早会说话讨钱的机器人之一」之判断，是导读者的观察，非库本断言。</li>
+  </ol>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库（史藏 · 志存记录），仓库见 <a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>，导读系列见 <a href="https://github.com/robertsong2000/daizhige-daodu">github.com/robertsong2000/daizhige-daodu</a>。</p>
+    <p>库本去空白58660字，六卷，史藏本一档两本同文重出。引文均逐字核对库本原文，脚本核验通过。</p>
+    <p>库本引号配对多有讹误，引文一仍其旧，未代库本改字。</p>
+    <p>本文为古籍导读，书中酷吏刑讯、谶纬报应之说皆是武周时代产物，不代表编者立场。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var coin=document.getElementById('coin');
+  var wrap=document.getElementById('coinwrap');
+  function flip(){coin.classList.toggle('flipped');}
+  wrap.addEventListener('click',flip);
+  wrap.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();}
+  });
+
+  var box=document.getElementById('monkbox');
+  var fc=document.getElementById('fallcoin');
+  var bub=document.getElementById('bubble');
+  var cnt=document.getElementById('cnt');
+  var n=0,timer=null,btimer=null;
+  var rm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function give(){
+    n++;cnt.textContent=n;
+    if(rm){bub.classList.add('on');clearTimeout(btimer);btimer=setTimeout(function(){bub.classList.remove('on');},900);return;}
+    fc.classList.remove('go');void fc.offsetWidth;fc.classList.add('go');
+    clearTimeout(timer);
+    timer=setTimeout(function(){
+      bub.classList.add('on');
+      clearTimeout(btimer);
+      btimer=setTimeout(function(){bub.classList.remove('on');},900);
+    },380);
+  }
+  box.addEventListener('click',give);
+  box.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();give();}
+  });
+
+  var sp=document.getElementById('spines');
+  var NS='http://www.w3.org/2000/svg';
+  var surv=[25,26,27,28,29,30];
+  for(var i=1;i<=30;i++){
+    var x=12+(i-1)*13.3;
+    var r=document.createElementNS(NS,'rect');
+    var h=200+(i%4)*10;
+    r.setAttribute('x',x.toFixed(1));r.setAttribute('y',(282-h).toFixed(1));
+    r.setAttribute('width','10.6');r.setAttribute('height',h.toFixed(1));
+    if(surv.indexOf(i)>=0){r.setAttribute('fill','#c9963f');}
+    else{
+      r.setAttribute('fill','#3f3c35');r.setAttribute('opacity','.72');
+      var jag=document.createElementNS(NS,'path');
+      var top=282-h;
+      jag.setAttribute('d','M'+x.toFixed(1)+' '+top.toFixed(1)+' L'+(x+5.3).toFixed(1)+' '+(top+7).toFixed(1)+' L'+(x+10.6).toFixed(1)+' '+top.toFixed(1)+' Z');
+      jag.setAttribute('fill','#191917');
+      sp.appendChild(jag);
+    }
+    sp.appendChild(r);
+  }
+})();
+</script>
+</body>
+</html>
