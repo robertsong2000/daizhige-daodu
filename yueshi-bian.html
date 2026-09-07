@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阅世编 · 殆知阁导读 其二百一十六</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #1e1d1b; --ink-3: #242320;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --gold: #c9963f; --gold-soft: rgba(201,150,63,0.13);
+    --hairline: rgba(232,228,220,0.13); --hairline-2: rgba(201,150,63,0.28);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background:
+      repeating-linear-gradient(90deg, rgba(232,228,220,0.022) 0 1px, transparent 1px 88px),
+      radial-gradient(1000px 460px at 88% -4%, rgba(201,150,63,0.07), transparent 60%),
+      var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px; }
+  a { color: inherit; }
+
+  /* 顶栏:账簿抬头 */
+  .head { display: flex; justify-content: space-between; align-items: baseline; padding: 20px 0 0; font-size: 13px; letter-spacing: 0.22em; color: var(--paper-faint); }
+  .head .tag { color: var(--gold); }
+
+  /* 首屏:纪年比例尺 + 骑缝印 */
+  .ruler-hero { padding: 9dvh 0 7dvh; }
+  .ruler-cap { font-size: 12.5px; letter-spacing: 0.3em; color: var(--paper-faint); margin-bottom: 14px; }
+  .ruler { display: flex; height: 172px; border-top: 2px solid var(--paper-dim); border-bottom: 1px solid var(--hairline); position: relative; }
+  .seg { position: relative; border-right: 1px solid var(--hairline-2); padding: 12px 14px 10px; display: flex; flex-direction: column; }
+  .seg:last-child { border-right: 0; }
+  .seg .dyn { font-size: 15px; letter-spacing: 0.34em; color: var(--paper); font-weight: 700; }
+  .seg .yrs { font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.14em; margin-top: 2px; }
+  .seg .phrase { margin-top: auto; font-size: clamp(15px, 1.7vw, 21px); color: var(--gold); letter-spacing: 0.06em; line-height: 1.5; }
+  .seg .phrase small { display: block; font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.18em; margin-top: 4px; }
+  .seg::before { content: ""; position: absolute; inset: 0; top: 0; height: 9px;
+    background: repeating-linear-gradient(90deg, var(--hairline-2) 0 1px, transparent 1px 30px); }
+  .seg-zz { width: 24%; background: linear-gradient(180deg, rgba(201,150,63,0.05), transparent 70%); }
+  .seg-sz { width: 29%; background: linear-gradient(180deg, rgba(192,69,60,0.07), transparent 70%); }
+  .seg-kx { width: 47%; background: linear-gradient(180deg, rgba(201,150,63,0.03), transparent 70%); }
+  .hero-under { display: flex; align-items: flex-end; gap: 30px; margin-top: 34px; }
+  .seal { flex: 0 0 auto; width: 108px; height: 108px; border: 2px solid var(--gold); outline: 1px solid rgba(201,150,63,0.35); outline-offset: 4px;
+    display: grid; place-items: center; transform: rotate(-2.2deg); background: var(--gold-soft); }
+  .seal h1 { writing-mode: vertical-rl; font-size: 30px; font-weight: 700; letter-spacing: 0.22em; color: var(--gold); line-height: 1.1; }
+  .hero-under .brief { max-width: 40em; color: var(--paper-dim); font-size: 15.5px; }
+  .hero-under .brief b { color: var(--paper); font-weight: 700; }
+  .hero-under .brief .no { display: block; font-size: 12px; letter-spacing: 0.3em; color: var(--paper-faint); margin-bottom: 8px; }
+
+  /* 章头 */
+  section { padding: 7dvh 0 3dvh; }
+  .chap { display: flex; align-items: baseline; gap: 18px; border-bottom: 1px solid var(--hairline); padding-bottom: 14px; margin-bottom: 30px; }
+  .chap .cn { font-size: 12px; letter-spacing: 0.32em; color: var(--gold); white-space: nowrap; }
+  .chap h2 { font-size: clamp(22px, 2.6vw, 30px); font-weight: 700; letter-spacing: 0.1em; }
+  .chap .from { margin-left: auto; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.16em; white-space: nowrap; }
+
+  /* 卷目页签 */
+  .volnav { padding: 4dvh 0 2dvh; }
+  .volnav .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); gap: 14px 22px; }
+  .volitem { border-left: 2px solid var(--hairline-2); padding: 4px 0 4px 12px; }
+  .volitem .vn { font-size: 12px; color: var(--gold); letter-spacing: 0.22em; }
+  .volitem .chips { display: flex; flex-wrap: wrap; gap: 3px 8px; margin-top: 5px; }
+  .volitem .chips i { font-style: normal; font-size: 12.5px; color: var(--paper-dim); }
+  .volitem .chips i.hot { color: var(--paper); font-weight: 700; }
+
+  /* 账行引文 */
+  .ledger { border-top: 1px solid var(--hairline); }
+  .row { display: grid; grid-template-columns: 168px 1fr; gap: 22px; padding: 20px 0; border-bottom: 1px solid var(--hairline); }
+  .row .key { font-size: 13px; color: var(--gold); letter-spacing: 0.14em; padding-top: 5px; }
+  .row .key small { display: block; color: var(--paper-faint); font-size: 11px; letter-spacing: 0.2em; margin-top: 4px; }
+  .row blockquote { font-size: 16px; line-height: 2; color: var(--paper); }
+  .row blockquote em { font-style: normal; color: var(--gold); font-weight: 700; }
+  .note { font-size: 13px; color: var(--paper-faint); margin-top: 10px; letter-spacing: 0.04em; }
+
+  /* 大引文 */
+  .bigq { margin: 40px auto 8px; max-width: 30em; text-align: center; }
+  .bigq p { font-size: clamp(20px, 2.6vw, 28px); line-height: 2; letter-spacing: 0.04em; }
+  .bigq .src { display: block; margin-top: 14px; font-size: 12px; letter-spacing: 0.3em; color: var(--paper-faint); }
+  .bigq .bar { width: 46px; height: 2px; background: var(--gold); margin: 0 auto 22px; }
+
+  /* 折线图 */
+  .chart-card { border: 1px solid var(--hairline); background: var(--ink-2); padding: 26px 22px 16px; margin-top: 8px; }
+  .chart-card svg { width: 100%; height: auto; display: block; }
+  .chart-cap { font-size: 12.5px; color: var(--paper-faint); padding: 12px 6px 0; letter-spacing: 0.05em; }
+  .chart-cap b { color: var(--gold); font-weight: 700; }
+
+  /* 田价账表 */
+  .twocol { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: start; }
+  table.acct { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  table.acct caption { text-align: left; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.2em; padding-bottom: 10px; }
+  table.acct th { font-weight: 700; color: var(--gold); text-align: left; font-size: 13px; letter-spacing: 0.12em; border-bottom: 1px solid var(--hairline-2); padding: 8px 10px 8px 0; }
+  table.acct td { border-bottom: 1px solid var(--hairline); padding: 11px 10px 11px 0; vertical-align: top; }
+  table.acct td.v { text-align: right; white-space: nowrap; color: var(--paper); }
+  table.acct td.v b { color: var(--gold); font-size: 16px; }
+  table.acct tr.dim td { color: var(--paper-dim); }
+
+  /* 髻尺 */
+  .ji-ruler { display: flex; align-items: flex-end; gap: 26px; padding: 34px 8px 0; border-bottom: 2px solid var(--paper-dim); flex-wrap: wrap; }
+  .ji-stop { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .ji-box { border: 1px solid var(--gold); background: var(--gold-soft); border-radius: 50%; }
+  .ji-stop .lb { font-size: 13px; color: var(--paper); font-weight: 700; letter-spacing: 0.08em; padding-bottom: 10px; }
+  .ji-stop .lb small { display: block; font-weight: 400; color: var(--paper-faint); font-size: 11.5px; letter-spacing: 0.12em; margin-top: 2px; }
+  .ji-flat { border-radius: 40% / 100%; }
+  .ji-disc { border-radius: 50% / 100%; }
+  .ji-notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px 30px; margin-top: 26px; }
+  .ji-notes p { font-size: 14px; color: var(--paper-dim); border-top: 1px solid var(--hairline); padding-top: 10px; }
+  .ji-notes p b { color: var(--paper); }
+  .qtag { font-size: 12px; color: var(--gold); letter-spacing: 0.26em; margin-top: 20px; }
+  .qline { font-size: 14.5px; color: var(--paper-dim); border-left: 2px solid var(--hairline-2); padding-left: 14px; margin-top: 6px; line-height: 1.95; }
+
+  /* 榜文 */
+  .notice { max-width: 640px; margin: 46px auto 0; border: 1px solid var(--gold); outline: 1px solid rgba(201,150,63,0.3); outline-offset: 6px;
+    background: linear-gradient(180deg, rgba(201,150,63,0.08), rgba(201,150,63,0.02)); padding: 30px 34px 26px; }
+  .notice .nh { display: flex; justify-content: space-between; align-items: baseline; font-size: 12.5px; letter-spacing: 0.22em; color: var(--gold); margin-bottom: 14px; }
+  .notice blockquote { font-size: 17px; line-height: 2.05; }
+  .notice .nf { margin-top: 14px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.14em; }
+
+  /* 别行流水 */
+  .extras { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; }
+  .extras .x h3 { font-size: 13px; color: var(--gold); letter-spacing: 0.26em; margin-bottom: 12px; font-weight: 700; }
+  .extras .x blockquote { font-size: 15.5px; color: var(--paper); line-height: 2; border-left: 2px solid var(--hairline-2); padding-left: 16px; }
+
+  /* 终章 */
+  .about { display: grid; grid-template-columns: 220px 1fr; gap: 44px; margin-top: 10px; }
+  .about .facts { border-left: 2px solid var(--gold); padding-left: 18px; align-self: start; }
+  .about .facts dt { font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.24em; margin-top: 14px; }
+  .about .facts dt:first-child { margin-top: 0; }
+  .about .facts dd { font-size: 15px; color: var(--paper); margin-top: 2px; }
+  .about .story { font-size: 15.5px; color: var(--paper-dim); max-width: 38em; }
+  .about .story b { color: var(--paper); }
+  .about .story blockquote { margin: 18px 0; padding: 14px 20px; border-left: 2px solid var(--hairline-2); color: var(--paper); font-size: 16px; }
+
+  footer { border-top: 1px solid var(--hairline); margin-top: 8dvh; padding: 34px 0 46px; font-size: 13px; color: var(--paper-faint); line-height: 2.1; }
+  footer b { color: var(--paper-dim); font-weight: 700; }
+  footer .back { float: right; color: var(--gold); letter-spacing: 0.18em; }
+
+  @media (max-width: 760px) {
+    .twocol, .extras, .about { grid-template-columns: 1fr; }
+    .row { grid-template-columns: 1fr; gap: 6px; }
+    .seg .phrase { font-size: 13px; }
+    .seg .dyn { letter-spacing: 0.18em; }
+    .ruler { height: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap head">
+  <span class="tag">叶氏流水账</span>
+  <span>上海县 松江府</span>
+  <span class="mono">1630 至 1690</span>
+</header>
+
+<!-- 首屏：六十年纪年比例尺，依书内纪年实宽排布；书名作骑缝印 -->
+<div class="wrap ruler-hero">
+  <p class="ruler-cap">首条纪事在崇祯三年庚午，公元一六三〇年；最晚纪事见康熙二十八、九年，当一六八九、一六九〇年。三朝依年份实宽排布。</p>
+  <div class="ruler">
+    <div class="seg seg-zz">
+      <span class="dyn">崇祯</span>
+      <span class="yrs">1630 至 1644</span>
+      <span class="phrase">民多菜色<small>卷七食货一</small></span>
+    </div>
+    <div class="seg seg-sz">
+      <span class="dyn">顺治</span>
+      <span class="yrs">1644 至 1661</span>
+      <span class="phrase">斗米几及千文<small>卷七食货一</small></span>
+    </div>
+    <div class="seg seg-kx">
+      <span class="dyn">康熙</span>
+      <span class="yrs">1662 至 1690，书中纪年止于此</span>
+      <span class="phrase">米价大约每以千文钱内外为率<small>卷七食货一，鼎革前后六十年米价的起点</small></span>
+    </div>
+  </div>
+  <div class="hero-under">
+    <div class="seal"><h1>阅世编</h1></div>
+    <p class="brief"><span class="no mono">殆知阁导读 其二百一十六</span>
+      清初上海人<b>叶梦珠</b>留下的一部民间年鉴：天象、田产、科举、食货、冠服、门祚，十卷四十九门，全是身边事的账。别人修史写王朝，他记账，记的是<b>米多少钱一石，田多少钱一亩，发髻有多高，席面摆几品</b>。六十年鼎革，就此落在一本流水账里。</p>
+  </div>
+</div>
+
+<!-- 卷目 -->
+<section class="volnav wrap">
+  <div class="chap"><span class="cn">卷目</span><h2>十卷，四十九门</h2><span class="from">卷九食货独占六节</span></div>
+  <div class="grid">
+    <div class="volitem"><div class="vn">卷一</div><div class="chips"><i>天象</i><i>历法</i><i>水利</i><i>灾祥</i><i class="hot">田产</i></div></div>
+    <div class="volitem"><div class="vn">卷二</div><div class="chips"><i>学校一至五</i><i>礼乐</i><i>科举一至六</i><i>附呈控檄</i></div></div>
+    <div class="volitem"><div class="vn">卷三</div><div class="chips"><i>建设</i></div></div>
+    <div class="volitem"><div class="vn">卷四</div><div class="chips"><i>士风</i><i>宦迹</i><i>名节</i></div></div>
+    <div class="volitem"><div class="vn">卷五</div><div class="chips"><i class="hot">门祚一</i><i>门祚二</i></div></div>
+    <div class="volitem"><div class="vn">卷六</div><div class="chips"><i>赋税</i><i>徭役</i></div></div>
+    <div class="volitem"><div class="vn">卷七</div><div class="chips"><i class="hot">食货一至六</i><i>种植</i><i>钱法</i></div></div>
+    <div class="volitem"><div class="vn">卷八</div><div class="chips"><i class="hot">冠服</i><i>内装</i><i>文章</i><i>交际</i></div></div>
+    <div class="volitem"><div class="vn">卷九</div><div class="chips"><i>宴会</i><i>师长</i><i>及门</i><i>释道</i></div></div>
+    <div class="volitem"><div class="vn">卷十</div><div class="chips"><i>居第</i><i class="hot">纪闻</i></div></div>
+  </div>
+  <p class="note">卷次与小节题从库本实测照录；卷二两道长题(诸生呈控、江南檄文)与居第上下，此处从略。纪闻一门收明末清初奇案传闻，书末一案，书中自言至今疑不可解。</p>
+</section>
+
+<!-- 米价 -->
+<section id="shihuo" class="wrap">
+  <div class="chap"><span class="cn">流水之一</span><h2>食货记米价</h2><span class="from">卷七 食货一</span></div>
+
+  <div class="bigq">
+    <div class="bar"></div>
+    <p>不意三十余年来，一物而价或至于倍蓰什百，且自贵而贱，自贱而贵，辗转不测，不知何时而始。</p>
+    <span class="src">食货一 开篇</span>
+  </div>
+
+  <div class="chart-card">
+    <svg viewBox="0 0 1000 380" role="img" aria-label="白米每石价银折线，崇祯十五年至康熙二十三年">
+      <g stroke="rgba(232,228,220,0.09)" stroke-width="1">
+        <line x1="60" y1="67" x2="960" y2="67"/><line x1="60" y1="122" x2="960" y2="122"/>
+        <line x1="60" y1="176" x2="960" y2="176"/><line x1="60" y1="231" x2="960" y2="231"/>
+        <line x1="60" y1="285" x2="960" y2="285"/><line x1="60" y1="340" x2="960" y2="340"/>
+      </g>
+      <g fill="#6e6a61" font-size="12" font-family="SF Mono, Menlo, monospace" text-anchor="start">
+        <text x="12" y="71">五两</text><text x="12" y="126">四两</text><text x="12" y="180">三两</text>
+        <text x="12" y="235">二两</text><text x="12" y="289">一两</text>
+      </g>
+      <polyline fill="none" stroke="#c9963f" stroke-width="2.4" stroke-linejoin="round"
+        points="99,67 197,122 256,204 275,73 295,122 393,296 432,231 471,258 490,225 647,313 667,280 706,306 803,300 823,231 843,231 882,294 921,291"/>
+      <g fill="#191917" stroke="#c9963f" stroke-width="2">
+        <circle cx="99" cy="67" r="4"/><circle cx="197" cy="122" r="3.4"/><circle cx="256" cy="204" r="3"/>
+        <circle cx="275" cy="73" r="3.4"/><circle cx="295" cy="122" r="3.4"/><circle cx="393" cy="296" r="3.4"/>
+        <circle cx="432" cy="231" r="3.4"/><circle cx="471" cy="258" r="3"/><circle cx="490" cy="225" r="3"/>
+        <circle cx="647" cy="313" r="3.4"/><circle cx="667" cy="280" r="3"/><circle cx="706" cy="306" r="3"/>
+        <circle cx="803" cy="300" r="3"/><circle cx="823" cy="231" r="3.4"/><circle cx="843" cy="231" r="3.4"/>
+        <circle cx="882" cy="294" r="3"/><circle cx="921" cy="291" r="3.4"/>
+      </g>
+      <g fill="#e8e4dc" font-size="12.5" font-family="Songti SC, SimSun, serif">
+        <text x="112" y="64">崇祯十五年春，五两</text>
+        <text x="288" y="70">顺治八年六月，几及五两</text>
+        <text x="404" y="322">十四年冬，止八钱</text>
+        <text x="656" y="338">康熙九年，后至五钱</text>
+        <text x="700" y="224">十八年秋，长至二两</text>
+        <text x="856" y="318">二十三年冬，九钱上下</text>
+      </g>
+      <g fill="#6e6a61" font-size="12" font-family="SF Mono, Menlo, monospace" text-anchor="middle">
+        <text x="99" y="365">1642</text><text x="295" y="365">1652</text><text x="490" y="365">1662</text>
+        <text x="706" y="365">1673</text><text x="921" y="365">1684</text>
+      </g>
+    </svg>
+    <p class="chart-cap"><b>十七个点，皆是书内原价。</b>以白米每石折银计，横轴为公历。未记价之年以直线相连；钱价涨落各年不同，书里银钱并记，此处从银。明末与顺治初两度冲上五两，承平落回一两以下，一放手，就是六十年的世道。</p>
+  </div>
+
+  <div class="ledger">
+    <div class="row">
+      <div class="key">崇祯三年 起<small>卷七食货一</small></div>
+      <blockquote>崇祯三年庚午，年荒谷贵，民多菜色，郡县施粥赈饥。予时尚幼，未知物价。然越二载，壬申夏，白米每斗价钱一百二十文，值银一钱，民间便苦其贵，则庚午之米价，概可知已。</blockquote>
+    </div>
+    <div class="row">
+      <div class="key">顺治三年 兵火<small>卷七食货一</small></div>
+      <blockquote>迄于本朝顺治三年，斗米几及千文。四年，白米每石纹银四两。</blockquote>
+    </div>
+    <div class="row">
+      <div class="key">顺治八年 之夏<small>卷七食货一</small></div>
+      <blockquote>八年辛卯，二月，白米每石三两。三月，每石三两五钱。四月，每石四两。六月，长至四两八、九钱，几及五两一石。</blockquote>
+    </div>
+    <div class="row">
+      <div class="key">康熙十七至十九年 回摆<small>卷七食货一</small></div>
+      <blockquote>至十七年，早新米每石价银亦不过七钱三分。十八年春，长至一两四、五钱。秋八月，长至二两，早新米一两七钱。</blockquote>
+    </div>
+    <div class="row">
+      <div class="key">康熙十九至二十一年 复落<small>卷七食货一</small></div>
+      <blockquote>十九年夏，白米每石价银二两。二十一年五月，白米每石价八钱五分。</blockquote>
+    </div>
+  </div>
+  <p class="note">书里还有一行自供：物价之不齐也，自古而然。记到康熙二十三年冬为止，此后他不再逐季追价了。</p>
+</section>
+
+<!-- 田产 -->
+<section id="tianchan" class="wrap">
+  <div class="chap"><span class="cn">流水之二</span><h2>田产记破家</h2><span class="from">卷一 田产一</span></div>
+  <div class="twocol">
+    <div>
+      <div class="bigq" style="text-align:left; max-width:none; margin:0;">
+        <p style="font-size:clamp(17px,1.9vw,21px); line-height:2.05;">至康熙元、二、三年间，石米价至五六钱，而差役四出，一签赋长，立刻破家；里中小户，有田三亩五亩者，役及毫厘，中人之产，化为乌有。狡书贪吏，朋比作奸，图蠹虎差，追呼络绎，视南亩如畏途，相率以有田为戒矣。</p>
+        <span class="src" style="text-align:left;">田产一</span>
+      </div>
+      <p class="note">米贱不等于日子好过。粮价落底，差役反而找上门，有田成了灾，乡里互相劝戒的竟是莫要置产。</p>
+      <div class="qtag">康熙十九年，潮起潮落</div>
+      <blockquote class="qline">康熙十九年庚申春，因米价腾贵，田价骤长，如吾邑七斗起租之田，价至二两一亩，甚至有田地方，各就近争买者，价至二两五钱以及三两。华、娄石四五斗起租之田，价至七八两一亩。昔年贱价之田，加价回赎者蜂起。至次年辛酉，米价顿减，其风稍息。</blockquote>
+    </div>
+    <div>
+      <table class="acct">
+        <caption>上海县田价三段，皆书内原话折记</caption>
+        <tr><th>时</th><th>何田</th><th class="v" style="text-align:right">每亩</th></tr>
+        <tr class="dim"><td>崇祯中</td><td>华、青美田</td><td class="v">十余<b>两</b></td></tr>
+        <tr class="dim"><td>崇祯中</td><td>上海田美者</td><td class="v">三、四、五<b>两</b></td></tr>
+        <tr><td>顺治初</td><td>华、青石五六斗田</td><td class="v">十五六<b>两</b></td></tr>
+        <tr><td>顺治初</td><td>上海六七斗田</td><td class="v">三四<b>两</b>不等</td></tr>
+        <tr><td>康熙十九年</td><td>吾邑七斗起租之田</td><td class="v">二两，争者至三<b>两</b></td></tr>
+        <tr><td>康熙十九年</td><td>华、娄石四五斗起租</td><td class="v">七八<b>两</b>一亩</td></tr>
+      </table>
+      <div class="qtag">崇祯中</div>
+      <blockquote class="qline">华、青美田，每亩价值十余两。上海田美者，每亩价值三、四、五两，缙绅富室，最多不过数千亩。无贱价之田，亦无盈万之产也。</blockquote>
+      <div class="qtag">顺治初</div>
+      <blockquote class="qline">华、青石五六斗田，每亩价值十五六两；上海六七斗田，每亩价值三四两不等。田产之贵，至此极矣。</blockquote>
+      <p class="note">表中数字皆从原文折记。一场买田风潮，说来就来，说退就退。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 冠服 -->
+<section id="guanfu" class="wrap">
+  <div class="chap"><span class="cn">流水之三</span><h2>冠服记发髻</h2><span class="from">卷八 冠服 内装</span></div>
+
+  <div class="ji-ruler">
+    <div class="ji-stop"><div class="ji-box" style="width:64px; height:64px;"></div><div class="lb">前辈<small>高逾二寸，大如拳</small></div></div>
+    <div class="ji-stop"><div class="ji-box" style="width:32px; height:32px;"></div><div class="lb">其后变式<small>高不过寸，大仅如酒杯</small></div></div>
+    <div class="ji-stop"><div class="ji-box ji-flat" style="width:64px; height:26px;"></div><div class="lb">崇祯之末<small>髻愈大而扁，惟以乌纱为质</small></div></div>
+    <div class="ji-stop"><div class="ji-box ji-disc" style="width:236px; height:9px;"></div><div class="lb">年来<small>高不过二三分，大几及尺</small></div></div>
+  </div>
+  <p class="note">形制示意，以寸折算，一寸约三十二像素；宽扁者横置。四式四十年，女子的头面换了人间。</p>
+
+  <div class="ji-notes">
+    <p><b>余幼见前辈冠髻高逾二寸，大如拳，或用金银丝挽成之。</b>金银丝挽髻，是童年所见的旧家气派。</p>
+    <p><b>年来髻式不一，或纸胎纱表，或铜丝为质，装成花朵，以天鹅绒为表，样各不同。</b>髻不再用金银，改走时样。</p>
+    <p><b>盖男子僭于外，法可以禁止。妇女僭于内，禁有所不及。故移风易俗者，于此尤难。</b>内装一门的题眼：时尚走在禁令前面。</p>
+  </div>
+
+  <div class="notice">
+    <div class="nh"><span>顺治三年 丙戌 春暮</span><span>刊示严禁</span></div>
+    <blockquote>至三年丙戌春暮，招抚内院大学士亨九洪公承畴刊示严禁云：岂有现为大清臣子而敢故违君父之命，放肆藐玩，莫此为甚！</blockquote>
+    <div class="nf">洪承畴榜文之后，各属凛凛奉法。冠服一卷里，改朝换代落在每个人的头顶与发上。</div>
+  </div>
+</section>
+
+<!-- 别行 -->
+<section class="wrap">
+  <div class="chap"><span class="cn">流水别行</span><h2>又记两笔</h2><span class="from">卷七 食货四，卷九 宴会</span></div>
+  <div class="extras">
+    <div class="x">
+      <h3>木棉，衣被天下</h3>
+      <blockquote>吾邑地产木棉，行于浙西诸郡，纺绩成布，衣被天下，而民间赋税，公私之费，亦赖以济，故种植之广，与粳稻等。</blockquote>
+      <p class="note">上海县的钱粮，一半压在布机上。食货四、五两节，记棉花与布价，细到三林塘标布走秦、晋、京边诸路。</p>
+    </div>
+    <div class="x">
+      <h3>宴会，数十品</h3>
+      <blockquote>缙绅之家，或宴官长，一席之间，水陆珍羞，多至数十品。即士庶及中人之家，新亲严席，有多至二三十品者</blockquote>
+      <p class="note">宴会是物价的另一面。他记席面由奢而俭，也记由俭而奢，与米价互为注脚。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 门祚 -->
+<section id="menzuo" style="padding-bottom:0;">
+  <div class="wrap">
+    <div class="chap"><span class="cn">流水之末</span><h2>门祚记自家</h2><span class="from">卷五 门祚一</span></div>
+  </div>
+  <div class="bigq">
+    <div class="bar"></div>
+    <p>门祚之靡常，由来尚矣。《传》曰：高岸为谷，深谷为陵，三后之季，于今为庶。</p>
+    <span class="src">门祚一 开篇</span>
+  </div>
+  <div class="wrap">
+    <div class="ledger" style="margin-top:26px;">
+      <div class="row">
+        <div class="key">盛衰无常<small>卷五门祚一</small></div>
+        <blockquote>当其盛也，炙手可热，及其衰也，门可张罗。甚者胥原、栾却之族，未几降为皂隶；瓮牖绳枢之子，忽而列戟高门。氓隶之人，幸邀誉命；朱门之鬼，或类若敖。既废而兴，兴而复替，如环无端，天耶？人耶？岂盈虚消长之数所必然耶？</blockquote>
+      </div>
+      <div class="row">
+        <div class="key">著者自叙<small>卷五门祚一</small></div>
+        <blockquote>即如吾先大夫东瀛公，以廉吏起家，外高祖宾山宗伯以慎勤获眷，迄今五世，儒冠未有达者</blockquote>
+      </div>
+    </div>
+    <p class="note">父亲是清官，家里五代人却再没出过达官。他把这笔账也照实记下，所以这部书可信。</p>
+  </div>
+</section>
+
+<!-- 终章 -->
+<section class="wrap">
+  <div class="chap"><span class="cn">账尾</span><h2>关于这部书</h2><span class="from">卷首题 清 叶梦珠</span></div>
+  <div class="about">
+    <dl class="facts">
+      <dt>撰人</dt><dd>叶梦珠</dd>
+      <dt>时代</dt><dd>清初，松江府上海县人</dd>
+      <dt>自述生年</dt><dd>崇祯之际</dd>
+      <dt>体量</dt><dd>十卷四十九门，库本去空白十二万七千九百余字</dd>
+      <dt>最晚纪年</dt><dd>康熙二十八、九年，当一六八九、一六九〇年</dd>
+    </dl>
+    <div class="story">
+      <p>叶梦珠生卒不详，自言<b>予生崇祯之际，通用新钱，无一佳者</b>，一句话同时交代了生年和童年记忆。门祚一门里他自承，先父东瀛公以廉吏起家，而家中迄今五世，儒冠未有达者。生卒不详的一个人，却在四十九门流水里把晚明到康熙的上海记成了一座玻璃房：粮价、田价、发式、席面、家门兴衰，全部可数。</p>
+      <blockquote>物价之不齐也，自古而然。</blockquote>
+      <p>书里最后一道风景，记在食货六：康熙二十八、九年，洋船贩至。流水账记到洋船开到自家门口，就此合卷。</p>
+      <p>修史的人写胜负成败，他写菜色与髻式。三百多年后，经济史、社会史、生活史都要回头来翻这本账，因为<b>王朝的兴亡是叙事，一石米五两银子是数据</b>。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="back" href="mulu.html">返总目</a>
+    <b>文本来源</b>：殆知阁简体文库 史藏志存记录之〈阅世编〉，卷首题清叶梦珠，本库实测去空白十二万七千九百一十八字。
+    <b>引文核验</b>：本页全部引文经脚本与库内文件去标点、去空白、异体字归一后逐字比对通过(verify_yueshibian.py)；最晚纪年至康熙二十八、九年为全档检索实测。
+    <b>仓库</b>:github.com/robertsong2000/daizhige-daodu
+    <b>时代局限</b>：书中言灾祥占验、以门第科名论兴衰，于妇女服饰时涉贬语，皆三百余年前士人立场，读者鉴之。
+  </div>
+</footer>
+
+</body>
+</html>
