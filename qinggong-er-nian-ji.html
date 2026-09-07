@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>清宫禁二年记 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #201f1d; --ink3: #262522;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --gold: #c9963f; --gold-soft: rgba(201,150,63,.4); --gold-faint: rgba(201,150,63,.16);
+    --hair: rgba(232,228,220,.12);
+    --glass: #241d12; /* 翻负片后的琥珀底 */
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 2; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 26px; }
+
+  /* ============ 底片匣（开场） ============ */
+  .box { min-height: 92dvh; display: flex; align-items: center; padding: 64px 0 48px; }
+  .boxwrap { display: grid; grid-template-columns: 220px 1fr; gap: 54px; align-items: stretch; width: 100%; }
+  .lid {
+    background: var(--paper); color: #22201c; padding: 30px 0 26px;
+    writing-mode: vertical-rl; display: flex; gap: 20px; align-items: flex-start;
+    box-shadow: 0 18px 50px rgba(0,0,0,.55), inset 0 0 0 1px rgba(34,32,28,.25);
+    position: relative; min-height: 480px;
+  }
+  .lid::after {
+    content: ""; position: absolute; top: 14px; right: 14px; width: 44px; height: 44px;
+    background: var(--gold); color: #f5efe6; font-size: 26px; font-weight: 700;
+    display: grid; place-items: center; writing-mode: horizontal-tb;
+  }
+  .lid::after { content: "宫"; }
+  .lid h1 { font-size: 54px; font-weight: 700; letter-spacing: .18em; line-height: 1.15; }
+  .lid .lsub { font-size: 15px; letter-spacing: .3em; color: #5b564c; }
+  .lid .ltiny { font-size: 12px; letter-spacing: .26em; color: #8a8375; margin-top: auto; }
+
+  .right { display: flex; flex-direction: column; justify-content: center; gap: 26px; min-width: 0; }
+  .kick { font-size: 13px; letter-spacing: .34em; color: var(--faint); }
+  .kick b { color: var(--gold); font-weight: 400; }
+  .lede { font-size: 16.5px; color: var(--dim); max-width: 40em; }
+  .lede p + p { margin-top: 14px; }
+  .lede b { color: var(--paper); font-weight: 700; }
+  .v { color: #f2ecdf; border-bottom: 1px solid var(--gold-soft); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    border: 1px solid var(--hair); background: var(--ink2); color: var(--paper);
+    padding: 12px 16px 10px; cursor: pointer; text-decoration: none; font-size: 14.5px;
+    letter-spacing: .08em; position: relative; transition: background .2s ease, border-color .2s ease;
+  }
+  .chip::before {
+    content: ""; position: absolute; top: 5px; left: 8px; right: 8px; height: 4px;
+    background: repeating-linear-gradient(90deg, transparent 0 7px, rgba(232,228,220,.22) 7px 13px, transparent 13px 20px);
+  }
+  .chip:hover { background: var(--ink3); border-color: var(--gold-soft); }
+  .chip .n { color: var(--gold); margin-right: 8px; font-size: 13px; }
+  .hint { font-size: 12.5px; color: var(--faint); letter-spacing: .18em; }
+
+  /* ============ 底片框（章节） ============ */
+  main { padding-bottom: 8px; }
+  .frame { padding: 58px 0 40px; }
+  .frame + .frame { border-top: 1px solid var(--hair); }
+  .filmbar { height: 13px; margin-bottom: 26px;
+    background: repeating-linear-gradient(90deg, transparent 0 9px, rgba(232,228,220,.15) 9px 17px, transparent 17px 26px);
+  }
+  .fhead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 30px; flex-wrap: wrap; }
+  .fno {
+    color: var(--gold); font-size: 14px; letter-spacing: .3em;
+    border: 1px solid var(--gold-soft); padding: 4px 12px;
+  }
+  .fhead h2 { font-size: 30px; font-weight: 700; letter-spacing: .12em; }
+  .fwhen { font-size: 13px; color: var(--faint); letter-spacing: .2em; margin-left: auto; }
+
+  .fbody { display: grid; grid-template-columns: 1fr 1.08fr; gap: 44px; align-items: start; }
+  .frame:nth-of-type(even) .prose { order: 2; }
+  .prose { font-size: 15.5px; color: var(--dim); }
+  .prose b { color: var(--paper); }
+
+  .prints { display: grid; gap: 26px; }
+  .print {
+    background: var(--paper); color: #22201c; cursor: pointer;
+    padding: 20px 24px 18px; position: relative;
+    box-shadow: 0 14px 34px rgba(0,0,0,.5);
+    transition: transform .25s ease, background .3s ease, color .3s ease;
+  }
+  .prints .print:nth-child(odd) { transform: rotate(-.5deg); }
+  .prints .print:nth-child(even) { transform: rotate(.45deg); }
+  .print:hover { transform: rotate(0deg) translateY(-3px); }
+  .print::before {
+    content: ""; position: absolute; inset: 7px; border: 1px solid rgba(34,32,28,.14); pointer-events: none;
+  }
+  .print .pno { font-size: 12px; letter-spacing: .22em; color: #8a8375; display: flex; justify-content: space-between; margin-bottom: 10px; }
+  .print .pno i { font-style: normal; color: var(--gold); }
+  .print p { font-size: 17.5px; line-height: 2.05; font-weight: 600; letter-spacing: .02em; }
+  .print.flip { background: var(--glass); color: var(--paper); }
+  .print.flip::before { border-color: var(--gold-faint); }
+  .print.flip .pno { color: var(--dim); }
+
+  /* ============ 查档卡 ============ */
+  .dang { border-top: 1px solid var(--hair); margin-top: 26px; padding: 54px 0 20px; }
+  .card {
+    display: inline-block; background: var(--ink2); border: 1px solid var(--hair);
+    padding: 30px 36px; font-size: 14px; color: var(--dim); line-height: 2.3;
+  }
+  .card dt { color: var(--faint); letter-spacing: .2em; display: inline; }
+  .card dd { display: inline; color: var(--paper); }
+  .card div::before { content: "· "; color: var(--gold); }
+  .luo { margin-top: 44px; font-size: 13.5px; letter-spacing: .3em; color: var(--faint); }
+
+  footer.page { border-top: 1px solid var(--hair); margin-top: 40px; padding: 36px 0 60px; color: var(--faint); font-size: 13.5px; line-height: 2.1; }
+  footer.page a { color: var(--dim); }
+
+  @media (max-width: 860px) {
+    .boxwrap { grid-template-columns: 1fr; gap: 34px; }
+    .lid { writing-mode: horizontal-tb; min-height: 0; padding: 28px; gap: 14px; flex-direction: column; }
+    .lid h1 { font-size: 34px; }
+    .lid .ltiny { margin-top: 0; }
+    .fbody { grid-template-columns: 1fr; gap: 30px; }
+    .frame:nth-of-type(even) .prose { order: 0; }
+    .fwhen { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 底片匣 ============ -->
+<header class="box">
+  <div class="wrap boxwrap">
+    <div class="lid">
+      <h1>清宫禁二年记</h1>
+      <span class="lsub">清　裕德菱　著</span>
+      <span class="ltiny">库本原题　卷上卷下</span>
+    </div>
+    <div class="right">
+      <div class="kick">殆知阁导读　第 <b>201</b> 篇</div>
+      <div class="kick">史藏 · 志存记录</div>
+      <div class="lede">
+        <p>一千九百零三年一月二日，一艘安南船把驻法公使裕庚一家送回上海，随行五十五人。<span class="v">于一千九百零三年一月二日，乘安南船，由巴黎行抵上海。</span>在天津，这一家没回自己宅子，住进一间名屋：<span class="v">屋盖李鸿章与列强签辛丑条约之所。李亦旋捐馆于此者。</span>亲友都说屋子不祥，十七岁的女儿德菱住着，只留下一句<span class="v">并无鬼怪如友人所言者</span>。</p>
+        <p>当年三月，庆亲王带着儿子载振上门：太后想见见这几张巴黎脸。<span class="v">当一千九百零三年三月一号，庆亲王及其子贝子载振来拜晤。</span>还特意关照不必赶制旗装，<span class="v">并谓太后颇愿吾徒衣西服觐见，不必斤斤于旗服也。</span>德菱由此进宫当御前女官，两年后出宫，后来把这段日子写成回忆录；本库所收是文言译本，卷上卷下三百零一段，约九万四千字。</p>
+        <p>书没有章法，只有日程：几月几号，谁进宫，太后说什么，赏什么，恼什么。<b>本篇把这两年看成一只底片匣，只抽六枚。</b></p>
+      </div>
+      <nav class="chips">
+        <a class="chip" href="#p1"><span class="n">壹</span>叩门</a>
+        <a class="chip" href="#p2"><span class="n">贰</span>膳单</a>
+        <a class="chip" href="#p3"><span class="n">叁</span>马戏</a>
+        <a class="chip" href="#p4"><span class="n">肆</span>画像</a>
+        <a class="chip" href="#p5"><span class="n">伍</span>忆乱</a>
+        <a class="chip" href="#p6"><span class="n">陆</span>出匣</a>
+      </nav>
+      <div class="hint mono">点引文卡　可翻正负片</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ 底片壹 · 叩门 ============ -->
+  <section class="frame" id="p1">
+    <div class="filmbar"></div>
+    <div class="fhead"><span class="fno mono">底片壹</span><h2>叩门</h2><span class="fwhen">光绪二十九年三月 · 颐和园</span></div>
+    <div class="fbody">
+      <div class="prose">
+        <p>头一回觐见，先出来迎的是皇后，上来就握手，<span class="v">与西人无稍差异</span>。真正的太后随后到，德菱数了一遍行头：黄缎长衣绣淡红牡丹，明珠织的披肩，<span class="v">俱精圆，大如黄鸟之卵</span>，一共三千五百粒。</p>
+        <p>隔几日换上巴黎带回来的长裙，太后围着看了一圈，先叫好，再皱眉。</p>
+      </div>
+      <div class="prints">
+        <figure class="print"><div class="pno mono"><i>壹之一</i><span>卷上</span></div><p>太后见余辈至，旋即起立，相与握手，面呈笑容，殊可亲。</p></figure>
+        <figure class="print"><div class="pno mono"><i>壹之二</i><span>卷上</span></div><p>妇人笑容可掬，与吾徒握手相见，与西人无稍差异。询之他人，始知即光绪皇后也。</p></figure>
+        <figure class="print"><div class="pno mono"><i>壹之三</i><span>卷上</span></div><p>复有一披肩，肩系明珠所织。俱精圆，大如黄鸟之卵，色泽无二，共三千五百粒。</p></figure>
+        <figure class="print"><div class="pno mono"><i>壹之四</i><span>卷上</span></div><p>装束诚都丽，但余不悦其尾耳。</p></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 底片贰 · 膳单 ============ -->
+  <section class="frame" id="p2">
+    <div class="filmbar"></div>
+    <div class="fhead"><span class="fno mono">底片贰</span><h2>膳单</h2><span class="fwhen">同日 · 看戏之后</span></div>
+    <div class="fbody">
+      <div class="prose">
+        <p>这天看完戏就地开饭。一百五十品，列三长行，太后先吃糖，<span class="v">其味盖胜于肉</span>，吃剩的赏宫眷。满桌鸡鸭鱼翅，独独没有牛肉：牛是服力之兽，吃它要遭重谴。德菱记住的一道，是太后所嗜的葱炒肉。</p>
+      </div>
+      <div class="prints">
+        <figure class="print"><div class="pno mono"><i>贰之一</i><span>卷上</span></div><p>余计其食品，共约一百五十种，列三长行。大碗居先列，碟次之，小碗又次之。</p></figure>
+        <figure class="print"><div class="pno mono"><i>贰之二</i><span>卷上</span></div><p>太后谓渠乐之甚，其味盖胜于肉。</p></figure>
+        <figure class="print"><div class="pno mono"><i>贰之三</i><span>卷上</span></div><p>牛肉为宫中禁品，以服力之兽，食之将获重戾也。</p></figure>
+        <figure class="print"><div class="pno mono"><i>贰之四</i><span>卷上</span></div><p>又有笋炒肉丝，樱桃烧肉，葱炒肉片等。葱炒肉太后所嗜，余尝之果佳。</p></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 底片叁 · 马戏 ============ -->
+  <section class="frame" id="p3">
+    <div class="filmbar"></div>
+    <div class="fhead"><span class="fno mono">底片叁</span><h2>马戏</h2><span class="fwhen">九月间 · 御史抗议未遂</span></div>
+    <div class="fbody">
+      <div class="prose">
+        <p>俄国马戏进京，宫中无人不想看。御史们上折子：宫闱从无此例，请罢。太后大怒，留下一句又提气又心虚的话。马戏照演，球上跳舞的幼女被令重演数次；狮虎牵进来几分钟就抬出去，怕的是它们伤了别人，不是怕自己。散场赏银壹万两。</p>
+        <p>而德菱对这位观众的诊断更釜底抽薪：<b>她就没有一件事能高兴过五分钟。</b></p>
+      </div>
+      <div class="prints">
+        <figure class="print"><div class="pno mono"><i>叁之一</i><span>卷下</span></div><p>太后言时，大怒而言曰：“且视余之权力果何似也。余仅欲视一马戏耳，乃不能使人之不余逆。”</p></figure>
+        <figure class="print"><div class="pno mono"><i>叁之二</i><span>卷下</span></div><p>戏中有一段为幼女于球上跳舞，太后最悦之，且令重演之，至于数次。</p></figure>
+        <figure class="print"><div class="pno mono"><i>叁之三</i><span>卷下</span></div><p>不数分钟，太后即命携之去，而言曰：“吾实不之惧，第虑其万一逃脱，而伤他人耳。”</p></figure>
+        <figure class="print"><div class="pno mono"><i>叁之四</i><span>卷下</span></div><p>太后命赏之银壹万两。彼马戏者反得巨资以去矣。</p></figure>
+        <figure class="print"><div class="pno mono"><i>叁之五</i><span>卷下</span></div><p>盖无一事，而可使之愉快至于五分钟者。</p></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 底片肆 · 画像 ============ -->
+  <section class="frame" id="p4">
+    <div class="filmbar"></div>
+    <div class="fhead"><span class="fno mono">底片肆</span><h2>画像</h2><span class="fwhen">闰五月 · 历书与电灯</span></div>
+    <div class="fbody">
+      <div class="prose">
+        <p>美国公使夫人介绍来一位女画士，替太后画像。开笔先查历书择吉日，翻出来的「吉时」却在晚上七点，日落，没法画。德菱婉言相商，太后答得干脆：此间多电灯。磋商良久，才定在上午十钟。</p>
+        <p>画进展慢，太后先烦了。某日散步闯进德菱寝室，翻箱倒柜检查衣物折叠，忽然看见墙角几张巴黎照片：<b>摄影比画像逼真，为何不早拿出来！</b>但她终究守约把画像坐完：摄影归摄影，画像是画像，两样都要。</p>
+      </div>
+      <div class="prints">
+        <figure class="print"><div class="pno mono"><i>肆之一</i><span>卷下</span></div><p>查历书，须十余日后，始有吉日。</p></figure>
+        <figure class="print"><div class="pno mono"><i>肆之二</i><span>卷下</span></div><p>无妨，此间多电灯，光线甚足。</p></figure>
+        <figure class="print"><div class="pno mono"><i>肆之三</i><span>卷下</span></div><p>既取在手，惊而言曰：“噫！此皆尔之影片乎？较尔之画像佳甚，且益逼真，曷为不早示余！”</p></figure>
+        <figure class="print"><div class="pno mono"><i>肆之四</i><span>卷下</span></div><p>佳哉此片，美于画像多矣！惟余既有成言，自必践之。</p></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 底片伍 · 忆乱 ============ -->
+  <section class="frame" id="p5">
+    <div class="filmbar"></div>
+    <div class="fhead"><span class="fno mono">底片伍</span><h2>忆乱</h2><span class="fwhen">庚子 · 追述</span></div>
+    <div class="fbody">
+      <div class="prose">
+        <p>宫廷日常底下压着庚子年的旧伤。说起拳匪，太后自己讲西逃：她本决意不出宫门一步，端王和澜公力劝才走。<span class="v">愿从者从</span>的问话甫毕，侍侧的已寥寥：三千太监，只剩十七个太监、两个老婢、一个婢女。有人趁乱把她心爱的宝瓶掷碎在石板上，知道她将去，不能再惩治。她哭了一整日，祷告于太祖太宗。家族里随行的，只有皇后一人。</p>
+        <p>几年后她带德菱游三海，指着一片旷地说，朝殿焚于拳匪之乱，<span class="v">每见此地，辄为心酸</span>；又说联军入宫，外人登过她的宝座，摄影而去。</p>
+      </div>
+      <div class="prints">
+        <figure class="print"><div class="pno mono"><i>伍之一</i><span>卷上</span></div><p>吾之太监共三千人，乃不俟吾点验，而去者殆尽。</p></figure>
+        <figure class="print"><div class="pno mono"><i>伍之二</i><span>卷上</span></div><p>乃余言甫毕，而侍侧以聆是者，已寥寥。吾见之，诚不能不惊奇也。仅得太监十七，老婢二人，婢女一人，即长寿是也。</p></figure>
+        <figure class="print"><div class="pno mono"><i>伍之三</i><span>卷上</span></div><p>掷吾宝贵之瓶于石板上而破碎之，盖知吾之将去不能有所惩治也。吾涕泣终日，而祷于太祖太宗之前，祈其护佑。</p></figure>
+        <figure class="print"><div class="pno mono"><i>伍之四</i><span>卷上</span></div><p>至吾之家族相从者，仅皇后一人而已。</p></figure>
+        <figure class="print"><div class="pno mono"><i>伍之五</i><span>卷下</span></div><p>三海内之珍宝，几无一存。即余所日祷之白玉佛，亦复有人坏其手指。外人且有登余宝座，而摄影去者。</p></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 底片陆 · 出匣 ============ -->
+  <section class="frame" id="p6">
+    <div class="filmbar"></div>
+    <div class="fhead"><span class="fno mono">底片陆</span><h2>出匣</h2><span class="fwhen">两年将满 · 一去不返</span></div>
+    <div class="fbody">
+      <div class="prose">
+        <p>父亲病重，上书乞休，赴上海就医。德菱苦求随行，太后多方留难，放行时只嘱咐一句：诸事毕后，当速返宫中。<b>这一去没有回去。</b></p>
+        <p>临出宫前，太后还在忙一件大事：在焚毁的朝殿旧址建海晏堂，陈设悉用西式，家具选定路易十五世的式样，只是各物必涂黄色，以崇体制。<b>洋东西进了宫门，也得先染成中国色。</b></p>
+        <p>书末她给自己算了笔账：<span class="v">余虽为满人，然服膺西人已久，且在外国受有教育者</span>，婚嫁美国；但宫中两年，是她年幼时最安乐的日子。全书的最后一句话没给太后，给了中国。</p>
+      </div>
+      <div class="prints">
+        <figure class="print"><div class="pno mono"><i>陆之一</i><span>卷下</span></div><p>彼为尔父，尔既坚欲偕行，余知不便阻留。惟须记取诸事毕后，当速返宫中也。</p></figure>
+        <figure class="print"><div class="pno mono"><i>陆之二</i><span>卷下</span></div><p>乃择定路易十五世之式样。但各物必涂黄色，以崇体制。</p></figure>
+        <figure class="print"><div class="pno mono"><i>陆之三</i><span>卷下</span></div><p>然余在宫中之二年，以奉侍慈禧太后者，实余年幼时最安乐之日月，故余对此二年之光阴，遂念念不能忘也。</p></figure>
+        <figure class="print"><div class="pno mono"><i>陆之四</i><span>卷下</span></div><p>余于改革一事，虽不能多所循诱太后，然仍望此生得见中国有日醒悟，以侪于世界列强之林也。</p></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 查档卡 ============ -->
+  <section class="dang">
+    <dl class="card mono">
+      <div><dt>题名</dt>　<dd>清宫禁二年记</dd></div>
+      <div><dt>撰人</dt>　<dd>清　裕德菱　著</dd></div>
+      <div><dt>藏部</dt>　<dd>史藏 · 志存记录</dd></div>
+      <div><dt>卷次</dt>　<dd>卷上、卷下</dd></div>
+      <div><dt>段数</dt>　<dd>301 段</dd></div>
+      <div><dt>字数</dt>　<dd>约 9.4 万字（去空白 93,888 字）</dd></div>
+      <div><dt>底本</dt>　<dd>daizhige-simplified/史藏/志存记录/清宫禁二年记.txt</dd></div>
+    </dl>
+    <div class="luo">匣盖合拢 · 六枚底片归档</div>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    文本来源：殆知阁简体库（github.com/robertsong2000/daizhigev20）史藏 · 志存记录《清宫禁二年记》，本篇引文均与库本逐字核对（异体照录）。<a href="mulu.html">返回总目</a><br>
+    时代局限：本书为清宫视角的回忆录，对拳匪、教民与庚子诸事的叙述出自太后与宫廷立场的自我辩护，光绪帝与改革派始终只在侧影里出现；且此为文言译本，转译失真处当以史核之，请以史料之眼读之。
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.print').forEach(function(p){
+    p.addEventListener('click', function(){ p.classList.toggle('flip'); });
+  });
+</script>
+</body>
+</html>
