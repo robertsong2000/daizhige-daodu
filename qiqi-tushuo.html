@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奇器图说 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --bam: #5f9270; --bam-deep: #3f6b4e; --bam-pale: rgba(95,146,112,0.16);
+    --hair: rgba(232,228,220,0.14); --hair-ink: rgba(25,25,23,0.18);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  ::selection { background: var(--bam); color: var(--ink); }
+
+  /* 叶：一节一叶，双线版框 */
+  .leaf { position: relative; padding: 84px 28px 92px; }
+  .leaf.inkbg { background: var(--ink); }
+  .leaf.paperbg { background: var(--paper); color: var(--ink); }
+  .frame { max-width: 1020px; margin: 0 auto; position: relative;
+    border: 1px solid var(--hair); outline: 1px solid var(--hair); outline-offset: 6px; padding: 56px 48px; }
+  .paperbg .frame { border-color: var(--hair-ink); outline-color: var(--hair-ink); }
+  .fish { position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    background: var(--bam); color: #f2ede3; font-size: 15px; letter-spacing: 0.34em;
+    padding: 5px 18px 5px 22px; font-weight: 700; }
+  .leafhead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 34px; }
+  .leafhead h2 { font-size: 30px; font-weight: 700; letter-spacing: 0.16em; }
+  .leafhead .tag { font-size: 13px; letter-spacing: 0.3em; color: var(--bam); }
+  .paperbg .leafhead .tag { color: var(--bam-deep); }
+  .leafhead .en { margin-left: auto; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.12em; }
+  .paperbg .leafhead .en { color: var(--paper-faint); }
+
+  /* 卷首 */
+  .hero { padding: 0 0 76px; }
+  .herogrid { max-width: 1120px; margin: 0 auto; padding: 76px 28px 0;
+    display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: start; }
+  .kicker { font-size: 13.5px; letter-spacing: 0.4em; color: var(--paper-faint); margin-bottom: 26px; }
+  .machine { border: 1px solid var(--hair); outline: 1px solid var(--hair); outline-offset: 6px;
+    padding: 26px; position: relative; min-height: 420px; display: flex; align-items: center; }
+  .machine svg { width: 100%; height: auto; display: block; }
+  .machcap { position: absolute; left: 26px; bottom: 18px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  .titlecol { display: flex; gap: 26px; }
+  .spine { writing-mode: vertical-rl; font-size: clamp(52px, 6.2vw, 84px); font-weight: 700;
+    letter-spacing: 0.18em; line-height: 1.12; padding-top: 6px; }
+  .spine em { font-style: normal; color: var(--bam); }
+  .vside { writing-mode: vertical-rl; color: var(--paper-dim); font-size: 16px; letter-spacing: 0.28em;
+    padding-top: 12px; border-right: 1px solid var(--hair); padding-right: 18px; height: 480px; }
+  .tiyao { margin-top: auto; border-left: 3px solid var(--bam); padding: 4px 0 4px 20px;
+    color: var(--paper-dim); font-size: 14.5px; max-width: 30em; transform: rotate(0.6deg); }
+  .tiyao .src { display: block; color: var(--paper-faint); font-size: 12.5px; margin-top: 10px; letter-spacing: 0.16em; }
+  .lede { max-width: 1120px; margin: 44px auto 0; padding: 0 28px; color: var(--paper-dim); font-size: 16px; }
+  .lede b { color: var(--paper); }
+
+  /* 引文 */
+  .q { position: relative; display: block; padding: 22px 26px; margin: 26px 0;
+    background: var(--bam-pale); border-left: 3px solid var(--bam);
+    font-size: 15.5px; line-height: 2.05; letter-spacing: 0.04em; }
+  .paperbg .q { background: rgba(95,146,112,0.10); border-left-color: var(--bam-deep); }
+  .q .src { display: block; margin-top: 10px; font-size: 12.5px; color: var(--bam-deep); letter-spacing: 0.2em; }
+  .inkbg .q .src { color: var(--bam); }
+  .q.big { font-size: 18.5px; }
+  .pull { font-size: clamp(22px, 3vw, 32px); font-weight: 700; letter-spacing: 0.1em; line-height: 1.7; }
+  .pull em { font-style: normal; color: var(--bam); box-shadow: inset 0 -0.34em var(--bam-pale); }
+  .paperbg .pull em { color: var(--bam-deep); }
+  .note { color: var(--paper-dim); font-size: 14.5px; }
+  .paperbg .note { color: #5b564d; }
+
+  /* 图一 名 */
+  .namegrid { display: grid; grid-template-columns: auto 1fr; gap: 52px; align-items: start; }
+  .bigzi { writing-mode: vertical-rl; font-size: clamp(88px, 11vw, 150px); font-weight: 700; line-height: 1.06; letter-spacing: 0.06em; }
+  .bigzi span { color: var(--bam); }
+  .glines { border-top: 1px solid var(--hair-ink); margin-top: 26px; padding-top: 14px; font-size: 13.5px; color: #5b564d; letter-spacing: 0.1em; }
+
+  /* 图二 师承 */
+  .chain { display: flex; flex-wrap: wrap; gap: 0; margin: 34px 0 10px; }
+  .node { flex: 1 1 140px; border: 1px solid var(--hair); padding: 18px 16px 14px; position: relative; }
+  .node + .node { border-left: none; }
+  .node b { display: block; font-size: 17px; letter-spacing: 0.1em; color: var(--paper); }
+  .node i { font-style: normal; display: block; font-size: 12.5px; color: var(--bam); letter-spacing: 0.1em; margin-top: 6px; }
+  .node s { text-decoration: none; display: block; font-size: 12px; color: var(--paper-faint); margin-top: 4px; }
+  .node.self { background: var(--bam-pale); }
+
+  /* 图三 根本 等子台 */
+  .labgrid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 44px; align-items: start; }
+  .labbox { border: 1px solid var(--hair-ink); outline: 1px solid var(--hair-ink); outline-offset: 5px; padding: 18px; background: rgba(95,146,112,0.07); }
+  .labbox svg { width: 100%; height: auto; display: block; touch-action: none; }
+  .labread { display: flex; gap: 14px; align-items: baseline; margin-top: 12px; flex-wrap: wrap; }
+  .verdict { font-size: 21px; font-weight: 700; letter-spacing: 0.22em; color: var(--bam-deep); }
+  .verdict.off { color: #9a4a3e; }
+  .labread .det { font-size: 14px; color: #5b564d; }
+  .labhint { font-size: 12.5px; color: var(--paper-faint); margin-top: 8px; letter-spacing: 0.1em; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .chip { border: 1px solid var(--bam-deep); color: var(--ink); font-size: 14px; padding: 6px 16px; letter-spacing: 0.18em; }
+  .chip span { color: var(--bam-deep); font-size: 11.5px; margin-left: 6px; }
+
+  /* 图四 起重 图五 水铳 */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .plate { border: 1px solid var(--hair); outline: 1px solid var(--hair); outline-offset: 6px; padding: 22px; }
+  .paperbg .plate { border-color: var(--hair-ink); outline-color: var(--hair-ink); }
+  .plate svg { width: 100%; height: auto; display: block; }
+  .platecap { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.2em; margin-top: 12px; text-align: center; }
+  .paperbg .platecap { color: #7a756a; }
+  .spraybtn { display: block; margin: 18px auto 0; background: var(--bam-deep); border: none; color: #f2ede3;
+    font-family: inherit; font-size: 15px; letter-spacing: 0.34em; padding: 11px 34px 11px 38px; cursor: pointer; }
+  .spraybtn:active { background: var(--bam); }
+  .jetline { text-align: center; font-size: 16.5px; letter-spacing: 0.12em; margin-top: 16px; color: var(--bam-deep); opacity: 0; transition: opacity 0.5s ease; }
+  .jetline.on { opacity: 1; }
+
+  /* 图六 自作 轮系 */
+  .wheelgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 30px; }
+  .plate3 { border: 1px solid var(--hair); outline: 1px solid var(--hair); outline-offset: 5px; padding: 20px; }
+  .plate3 h3 { font-size: 18px; letter-spacing: 0.2em; margin-bottom: 12px; }
+  .plate3 h3 span { color: var(--bam); font-size: 12.5px; margin-left: 10px; letter-spacing: 0.14em; }
+  .plate3 svg { width: 100%; height: auto; display: block; }
+  .ming { writing-mode: vertical-rl; margin: 0 auto; height: 200px; font-size: 15.5px; letter-spacing: 0.3em; line-height: 2.1; color: var(--paper); }
+  .ming b { color: var(--bam); }
+
+  /* 卷末 */
+  .tline { border-top: 1px solid var(--hair-ink); }
+  .trow { display: grid; grid-template-columns: 190px 1fr; gap: 24px; padding: 18px 4px; border-bottom: 1px solid var(--hair-ink); }
+  .trow .yr { color: var(--bam-deep); font-weight: 700; letter-spacing: 0.08em; }
+  .trow .tx { font-size: 15px; }
+  .errata { margin-top: 30px; font-size: 13.5px; color: #5b564d; line-height: 2; }
+  .errata b { color: var(--ink); }
+
+  footer.page { border-top: 1px solid var(--hair); padding: 40px 28px 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page .wrap { max-width: 1020px; margin: 0 auto; }
+  footer.page b { color: var(--paper-dim); }
+  .navline { margin-top: 22px; display: flex; gap: 26px; }
+  .navline a { color: var(--bam); text-decoration: none; border-bottom: 1px solid var(--bam-deep); padding-bottom: 2px; }
+
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes spinb { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+  .g60 { animation: spin 30s linear infinite; transform-origin: center; }
+  .g48 { animation: spinb 24s linear infinite; transform-origin: center; }
+  .g36 { animation: spin 18s linear infinite; transform-origin: center; }
+  .g24 { animation: spinb 12s linear infinite; transform-origin: center; }
+  .g24r { animation: spin 12s linear infinite; transform-origin: center; }
+  .g36r { animation: spinb 18s linear infinite; transform-origin: center; }
+  .g48r { animation: spin 24s linear infinite; transform-origin: center; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+  @media (max-width: 860px) {
+    .herogrid, .namegrid, .labgrid, .split, .wheelgrid { grid-template-columns: 1fr; }
+    .frame { padding: 44px 22px; }
+    .spine { font-size: 52px; }
+    .trow { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="herogrid">
+    <div class="machine">
+      <svg id="herogears" viewBox="0 0 560 420" aria-label="甲乙丙丁四轮咬合图"></svg>
+      <div class="machcap">甲齿六十、乙四十八、丙三十六、丁二十四，以次相催</div>
+    </div>
+    <div style="display:flex; flex-direction:column;">
+      <div class="kicker">殆知阁导读 · 二百</div>
+      <div class="titlecol">
+        <div class="spine">奇<em>器</em>图说</div>
+        <div class="vside">明泰西邓玉函口授、泾阳王徵译绘，天启七年成于北京，谱录类器物之属</div>
+      </div>
+      <div class="tiyao">
+        征泾阳人天启壬戌进士官扬州府推官尝询西洋竒噐之法于玉函玉函因以其国所传文字口授征译为是书其术能以力小运大故名曰重又谓之力艺
+        <span class="src">四库全书总目提要</span>
+      </div>
+    </div>
+  </div>
+  <p class="lede">西历一六二七年冬，扬州府推官王徵正在吏部候命，闲居京师。他自幼癖好机器，同乡讥为「痴人」，此时遇到了欧洲最会造机器的耶稣会士邓玉函：此人是伽利略的院士同行，弃了罗马的荣名，航海万里而来。两人凑在一起，译文、绘图、刻版，几个月就攒出一部书，给「力学」这门学问起了它的第一个汉名：<b>力艺，又名重学</b>。四库馆臣嫌它开篇夸口「荒诞恣肆」，又不得不承认其制器之巧「甲于古今」。</p>
+</header>
+
+<main>
+
+<section class="leaf paperbg" id="ming">
+  <div class="frame">
+    <div class="fish">图一 · 名</div>
+    <div class="leafhead">
+      <h2>力艺，重学也</h2>
+      <span class="tag">卷一 · 表性言</span>
+      <span class="en">mechanica 之意译</span>
+    </div>
+    <div class="namegrid">
+      <div>
+        <div class="bigzi">力<span>艺</span>之学</div>
+        <div class="glines">力是气力，艺是巧法；重学之名，即力学在汉语里的第一个学名。</div>
+      </div>
+      <div>
+        <blockquote class="q">竒器图说译西庠文字而作者也西庠凡学各有本名此学本名原是力艺
+<span class="src">卷一 · 开篇</span></blockquote>
+        <blockquote class="q big">力艺重学也力是气力力量如人力马力水力风力之类又用力加力之谓如用人力用马力用水风之力之类艺则用力之巧法巧器所以善用其力轻省其力之总名也重学者学乃公称重则私号葢文学理学筭学之类俱以学称故曰公而此力艺之学其取义本専属重故独私号之曰重学云
+<span class="src">卷一 · 表性言解</span></blockquote>
+        <blockquote class="q">是重学也最确当而无差
+<span class="src">卷一 · 表德言</span></blockquote>
+        <p class="note">西庠，即泰西的学堂。书里说这门学问「最确当而无差」：它是数学的亲兄弟，数即算学，度乃测量学，重则此力艺之重学，三学「如兄弟内亲不可相离」。在四部分类里，它被安放在子部谱录类「器物之属」，与食谱、刀剑录同架，倒是恰如其分：一部讲机器的书，先在这里学会了说汉语。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="leaf inkbg" id="shicheng">
+  <div class="frame">
+    <div class="fish">图二 · 师承</div>
+    <div class="leafhead">
+      <h2>传授之人</h2>
+      <span class="tag">卷一 · 表性言解</span>
+      <span class="en">自亚历山大至泾阳</span>
+    </div>
+    <div class="chain">
+      <div class="node"><b>亚希黙得</b><i>阿基米德</i><s>新造龙尾车小螺丝转等器</s></div>
+      <div class="node"><b>未多</b><i>考订谓圭多巴尔多</i><s>今时最能明万器之理者</s></div>
+      <div class="node"><b>西门</b><i>考订谓斯蒂文</i><s>静力学奠基人</s></div>
+      <div class="node"><b>耕田</b><i>考订谓阿格里科拉</i><s>姓氏意译作「耕田」二字</s></div>
+      <div class="node"><b>剌墨里</b><i>考订谓拉梅里</i><s>一五八八年刻《各种精巧机械图》</s></div>
+      <div class="node self"><b>王徵</b><i>泾阳 · 葵心老人</i><s>中文世界接棒的第一人</s></div>
+    </div>
+    <blockquote class="q">相授之原有一大人名亚希黙得新造龙尾车小螺丝转等器又能记万器之所以然今时巧人之最能明万器所以然之理者一名未多一名西门又有绘图刻传者一名耕田一名剌墨里此皆力艺学中传授之人也
+<span class="src">卷一 · 表性言解</span></blockquote>
+    <div class="split" style="align-items: stretch; margin-top: 8px;">
+      <div>
+        <blockquote class="q big">偶悟而得者如一国王以纯金命一匠作器匠潜以银杂之王欲廉其弊弗得也亚希黙得因浴而偶悟焉谓金与银分两等而体段大小不等金重而小银重而大以器入水騐其所留之水谁多谁寡则金与银辨矣遂明其辨而匠自服罪之类是也
+<span class="src">卷一 · 表性言解</span></blockquote>
+      </div>
+      <div>
+        <p class="note">金冠掺银案，浴桶水溢，「尤里卡」的一声喊，被译成了文绉绉的八个字：<b style="color:var(--paper)">因浴而偶悟焉</b>。这大概是阿基米德故事最早的中译之一。紧接着还有一句汉籍里现成的功夫口诀，出自《管子》：</p>
+        <blockquote class="q">思之思之又重思之思之不得鬼神将通之
+<span class="src">思之思之，又重思之</span></blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="leaf paperbg" id="genben">
+  <div class="frame">
+    <div class="fish">图三 · 根本</div>
+    <div class="leafhead">
+      <h2>重学之根本</h2>
+      <span class="tag">卷二 · 第十九款</span>
+      <span class="en">杠杆原理，汉译首刻</span>
+    </div>
+    <div class="labgrid">
+      <div>
+        <blockquote class="q big">此欵乃重学之根本也诸法皆取用于此
+<span class="src">卷二 · 等子解</span></blockquote>
+        <blockquote class="q">有两系重是凖等者其大重与小重之比例就为等梁长节与短节之比例又为互相比例
+<span class="src">卷二 · 第十九款</span></blockquote>
+        <p class="note">原书举例正是右悬八斤、左悬二斤：比例为四倍，则长节与短节之比亦四倍，两端相凖。试一试：把左端的小码沿着长梁拖动，看它何时与右端八斤相凖。</p>
+        <blockquote class="q">器之用有三一用小力运大重二凡一切人所难用力者用器为便三用物力水力风力以代人力
+<span class="src">卷二 · 第二款</span></blockquote>
+        <p class="note">小力运大重，是全书的总纲；六种总类各有一款专用图解：</p>
+        <blockquote class="q">器之总类有六一天平二等子三杠杆四滑车五圆轮六藤线
+<span class="src">卷二 · 器之总类</span></blockquote>
+        <div class="chips">
+          <span class="chip">天平<span>权度之祖</span></span>
+          <span class="chip">等子<span>提系偏心</span></span>
+          <span class="chip">杠杆<span>根本所在</span></span>
+          <span class="chip">滑车<span>愈多愈轻</span></span>
+          <span class="chip">圆轮<span>辘轳车轮</span></span>
+          <span class="chip">藤线<span>螺丝龙尾</span></span>
+        </div>
+      </div>
+      <div>
+        <div class="labbox">
+          <svg id="lab" viewBox="0 0 460 300" aria-label="等子交互图"></svg>
+          <div class="labread">
+            <span class="verdict" id="verdict">凖等</span>
+            <span class="det" id="labdet">二斤悬第四分，四倍之比，与右端八斤相凖</span>
+          </div>
+          <div class="labhint">拖动左端小码，一分一格，共四分</div>
+        </div>
+        <blockquote class="q">造物生物有数有度有重物物皆然数即筭学度乃测量学重则此力艺之重学也
+<span class="src">卷一 · 度数之学</span></blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="leaf inkbg" id="qizhong">
+  <div class="frame">
+    <div class="fish">图四 · 起重</div>
+    <div class="leafhead">
+      <h2>一人之力，五百斤</h2>
+      <span class="tag">卷三 · 起重十一图</span>
+      <span class="en">滑车、辘轳、飞轮</span>
+    </div>
+    <div class="split">
+      <div class="plate">
+        <svg id="crane" viewBox="0 0 420 320" aria-label="三足架滑车起重图"></svg>
+        <div class="platecap">三足立架、上下滑车、秤杆十分举一分</div>
+      </div>
+      <div>
+        <div class="pull">以十分而举一分，<em>一人之力可起五百斤</em></div>
+        <blockquote class="q">以十分而举一分故一人之力可起五百斤也
+<span class="src">卷三 · 起重第一说</span></blockquote>
+        <p class="note">滑车不够加滑车，辘轳不够改大轮，还不够，就旁置一架四人递转，「断无不起之理」。而全套器械里最动人的注脚，是那句为飞轮写的辩护词：</p>
+        <blockquote class="q big">飞轮者已似无用而实能以重助他人之力者也故辘轳转之不足加一飞轮则人力必大胜矣
+<span class="src">卷三 · 转重第二说</span></blockquote>
+        <p class="note">「已似无用而实能以重助他人之力」，惯性储能，一句话讲透了飞轮的物理。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="leaf paperbg" id="shuichong">
+  <div class="frame">
+    <div class="fish">图五 · 水铳</div>
+    <div class="leafhead">
+      <h2>一六二七年的消防提案</h2>
+      <span class="tag">卷三 · 水铳三图</span>
+      <span class="en">灭火、御火、防火</span>
+    </div>
+    <div class="split">
+      <div>
+        <blockquote class="q big">此水铳可以灭火可以御火可以防火乃新有之器其能力最便最大最奇诸器所难比其功用者也
+<span class="src">卷三 · 水铳说</span></blockquote>
+        <blockquote class="q">但有此器则五六人可代数百人之用又不空费一滴之水不拘多髙多逺皆可立到有似大雨喷空无处不沾不但可灭已焰之火仍可预阻未燃之火
+<span class="src">卷三 · 水铳说</span></blockquote>
+        <p class="note">「不空费一滴之水」，是给器械写的水效账；「有似大雨喷空无处不沾」，是给围观者写的现场报道。写完性能写推广，写完推广写成本，末了署上一句实验记录：</p>
+        <blockquote class="q">凡城邑村坊悉当置此二三具其于捍患御灾最有裨也已作小様试之良验有志于仁民者其尚广为传造焉
+<span class="src">卷三 · 水铳说</span></blockquote>
+      </div>
+      <div class="plate">
+        <svg id="pump" viewBox="0 0 420 330" aria-label="水铳试射图"></svg>
+        <button class="spraybtn" id="spraybtn" aria-label="按住试水">按住试水</button>
+        <div class="jetline" id="jetline">五六人可代数百人之用</div>
+        <div class="platecap">两铜筒、四鞴、直角转管，四面八方去火</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="leaf inkbg" id="zizuo">
+  <div class="frame">
+    <div class="fish">图六 · 自作</div>
+    <div class="leafhead">
+      <h2>王徵自己的机器房</h2>
+      <span class="tag">诸器图说一卷</span>
+      <span class="en">自行车、轮壶、代耕、风硙</span>
+    </div>
+    <p class="note">译完三卷，王徵意犹未尽，把自己的设计附成一卷《诸器图说》，各配铭赞，器器皆是奔着民生去的：</p>
+    <blockquote class="q">诸噐图说凡图十一各为之说而附以铭赞乃征所自作亦具有思致云
+<span class="src">四库全书总目提要</span></blockquote>
+    <div class="wheelgrid">
+      <div class="plate3">
+        <h3>自行车<span>凖自鸣钟推作</span></h3>
+        <svg id="cart" viewBox="0 0 300 220" aria-label="自行车轮系图"></svg>
+        <blockquote class="q" style="padding:16px 18px;">其甲轮之所以能动者惟有一机承重愈重愈行之速无重则反不能动也</blockquote>
+      </div>
+      <div class="plate3">
+        <h3>轮壶<span>自鸣钟鼓</span></h3>
+        <svg id="clockw" viewBox="0 0 300 170" aria-label="轮壶甲轮图"></svg>
+        <div class="ming">流光难追，<b>寸隂是珍</b>，嗤予小子，岁月空沦</div>
+        <blockquote class="q" style="padding:16px 18px;">向曽制一具在都中见者多人当亦谅其匪妄也</blockquote>
+      </div>
+      <div class="plate3">
+        <h3>代耕<span>一人敌两牛</span></h3>
+        <svg id="plow" viewBox="0 0 300 220" aria-label="代耕辘轳图"></svg>
+        <blockquote class="q" style="padding:16px 18px;">一人坐一架手挽其橛则犂自行矣逓相挽亦逓相歇虽连扶犂者三人乎而用力者则止一人且一人一手之力足敌两牛</blockquote>
+      </div>
+    </div>
+    <div class="split" style="margin-top: 34px;">
+      <div>
+        <div class="pull">无木牛之名，<em>而有木牛之实用</em></div>
+        <blockquote class="q">总之无木牛之名而有木牛之实用或以乗人或以运重人与重正其催行之机云耳曽制小様能自行三丈若作大者可行三里
+<span class="src">诸器图说 · 自行车图说</span></blockquote>
+        <p class="note">车不动则已，动则靠坠重的势能：承重愈重，行之愈速。还自比木牛流马，「曽制小様能自行三丈」。至于计时器，他造过一具木人自行击鼓报时的轮壶，怕人不信，特意补一句「见者多人，当亦谅其匪妄也」，铭末自警：</p>
+        <blockquote class="q">流光难追徃哲竞辰嗤予小子岁月空沦爰制斯器寸隂是珍
+<span class="src">诸器图说 · 轮壶铭</span></blockquote>
+      </div>
+      <div>
+        <blockquote class="q">此余在计部观政时承松毓李老师之命而作业已试之有效也者故图之因并记之若此
+<span class="src">诸器图说 · 代耕图说</span></blockquote>
+        <blockquote class="q">向余在计部观政时曾以臆想作此不期与此图甚相合也可谓先得我心之同然矣
+<span class="src">卷三 · 代耕说</span></blockquote>
+        <p class="note">代耕是他任计部观政时奉老师之命所制，「业已试之有效」；数年后见西人图说，惊觉「先得我心之同然」。卷三之外还有一台风硙，他注明来路：</p>
+        <blockquote class="q">此盖西海金四表先生所传而余想像损益图说之若此观者肯广为传制或于民生日用不无小补云
+<span class="src">诸器图说 · 风硙图说</span></blockquote>
+        <p class="note">西海金四表先生，即《口授》同伴金尼阁。想象损益四个字，是十六七世纪技术转移的诚实写照。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="leaf paperbg" id="coda">
+  <div class="frame">
+    <div class="fish">卷末 · 灰烬</div>
+    <div class="leafhead">
+      <h2>书成了，天塌了</h2>
+      <span class="tag">崇祯十七年</span>
+      <span class="en">机器敌不过天下崩坏</span>
+    </div>
+    <div class="tline">
+      <div class="trow"><span class="yr">天启七年 · 一六二七</span><span class="tx">《奇器图说》与《诸器图说》合刻于北京。凡七卷：性言德言立其名，六器立其法，五十七图立其形。</span></div>
+      <div class="trow"><span class="yr">崇祯三年 · 一六三〇</span><span class="tx">邓玉函卒于北京历局，修《崇祯历书》未竟。罗马院士的万里之行，止于此。</span></div>
+      <div class="trow"><span class="yr">崇祯十七年 · 一六四四</span><span class="tx">李自成破西安，征召名册上有王徵。旧记称他绝食七日而死。造了一辈子省力机器的人，最后用力气换了一个死法。</span></div>
+      <div class="trow"><span class="yr">乾隆四十六年 · 一七八一</span><span class="tx">四库馆臣收书入谱录类，一边斥其言「荒诞恣肆不足究诘」，一边承认「制器之巧实为甲于古今」，理由是「书中所载皆禆益民生之具」。骂归骂，留下了。</span></div>
+    </div>
+    <blockquote class="q" style="margin-top: 34px;">其第一卷之首有表性言解表徳言解二篇俱极夸其法之神妙大都荒诞恣肆不足究诘然其制噐之巧实为甲于古今寸有所长自宜节取
+<span class="src">四库全书总目提要</span></blockquote>
+    <p class="pull" style="margin-top: 30px;">谁其长<em>此禾黍</em></p>
+    <blockquote class="q">冽彼下泉泽蔑及畆尔奋尔力遑恤濡首载沉载浮爰噏爰呕吁嗟尔云劳矣匪尔之劳谁其长此禾黍
+<span class="src">诸器图说 · 鹤饮铭</span></blockquote>
+    <p class="note">鹤饮水车上的这行铭文，问的是水，答的是田：尔奋尔力，遑恤濡首。一部讲省力的书，通篇却都在劝人用力：看多、想多、做多，「习惯如自然」。四库本里凡六处标注「圗缺」，款标残存者卷一仅八见、卷二仅二十八见，提要所记六十一条、九十二条之数，今已不可尽按；纸上机器，存下来的是说法，缺掉的是零件。</p>
+    <div class="errata">
+      <b>校字记</b>　库本以形讹字排印，本页照录未改：竒通奇、噐通器、凖通准、圗通图、髙通高、騐通验、隂通阴、葢通盖、徃通往、曽通曾、乗通乘、畆通亩；款通款。惟提要官职句一处部位字（私造码位，当即「扬」字），径改作扬，余皆原样。引文以内文所见原字为准。
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p><b>文本来源</b>　殆知阁古代文献简体库 艺藏/器物/奇器图说.txt，明泰西邓玉函口授、泾阳王徵译绘，天启七年成书，库本提要一卷、图说三卷、诸器图说一卷，实测去空白 <span class="mono">28375</span> 字。本页为殆知阁导读第二百篇。</p>
+    <p><b>引文核验</b>　本页所有引文均与库本逐字比对通过，去空白比对，形讹字照录并见卷末校字记；四款数、图数、师承考订等外缘说明均注明出处或推断依据。</p>
+    <p><b>时代局限</b>　书中视奇器为「裨益民生之具」的经世口吻、对西学的褒贬与四库馆臣的裁断皆属旧时语境，读者当以历史视之，本页照录仅供批判地读，不表认同。</p>
+    <div class="navline">
+      <a href="mulu.html">返回总目</a>
+      <a href="https://github.com/robertsong2000/daizhige-daodu">导读仓库</a>
+      <a href="https://github.com/robertsong2000/daizhigev20">殆知阁简体库</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(name, attrs, parent) {
+    var n = document.createElementNS(NS, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function gear(parent, cx, cy, teeth, r, cls, label) {
+    var g = el('g', { 'class': cls }, parent);
+    var inner = r * 0.78;
+    el('circle', { cx: cx, cy: cy, r: inner, fill: 'none', stroke: 'currentColor', 'stroke-width': 2 }, g);
+    el('circle', { cx: cx, cy: cy, r: r * 0.24, fill: 'none', stroke: 'currentColor', 'stroke-width': 2 }, g);
+    el('circle', { cx: cx, cy: cy, r: 2.5, fill: 'currentColor' }, g);
+    for (var i = 0; i < teeth; i++) {
+      var a = i * 360 / teeth;
+      el('rect', { x: cx - r * 0.055, y: cy - r - r * 0.18, width: r * 0.11, height: r * 0.26,
+        fill: 'currentColor', transform: 'rotate(' + a + ' ' + cx + ' ' + cy + ')' }, g);
+    }
+    if (label) {
+      var t = el('text', { x: cx, y: cy + 5, 'text-anchor': 'middle', fill: 'currentColor',
+        'font-size': 15, 'font-family': 'inherit' }, g);
+      t.textContent = label;
+    }
+    return g;
+  }
+
+  var hero = document.getElementById('herogears');
+  if (hero) {
+    var cols = ['#5f9270', '#4a7a5b', '#5f9270', '#8fb99c'];
+    var specs = [
+      { class: 'g60', cx: 170, cy: 205, t: 60, r: 86, lab: '甲' },
+      { class: 'g48', cx: 292, cy: 110, t: 48, r: 69, lab: '乙' },
+      { class: 'g36', cx: 370, cy: 203, t: 36, r: 53, lab: '丙' },
+      { class: 'g24', cx: 393, cy: 290, t: 24, r: 37, lab: '丁' }
+    ];
+    specs.forEach(function (s, i) {
+      var g = el('g', { class: s.class, style: 'color:' + cols[i] }, hero);
+      gear(g, s.cx, s.cy, s.t, s.r, '', '');
+      var t = el('text', { x: s.cx, y: s.cy + 5, 'text-anchor': 'middle', fill: cols[i], 'font-size': 15, 'font-family': 'inherit' }, hero);
+      t.textContent = s.lab;
+    });
+    el('line', { x1: 40, y1: 400, x2: 520, y2: 400, stroke: 'rgba(232,228,220,0.18)', 'stroke-width': 1 }, hero);
+  }
+
+  var lab = document.getElementById('lab');
+  if (lab) {
+    var L = el('g', {}, lab);
+    el('line', { x1: 40, y1: 262, x2: 420, y2: 262, stroke: 'rgba(25,25,23,0.35)', 'stroke-width': 2 }, L);
+    el('path', { d: 'M230 262 L214 226 L246 226 Z', fill: 'none', stroke: '#3f6b4e', 'stroke-width': 2.4 }, L);
+    el('circle', { cx: 230, cy: 222, r: 5, fill: '#3f6b4e' }, L);
+    var beamG = el('g', { id: 'beamG' }, L);
+    el('line', { x1: 60, y1: 222, x2: 400, y2: 222, stroke: '#191917', 'stroke-width': 5 }, beamG);
+    for (var i = 0; i <= 4; i++) {
+      var x = 60 + i * (230 - 60) / 4;
+      el('line', { x1: x, y1: 214, x2: x, y2: 230, stroke: 'rgba(25,25,23,0.5)', 'stroke-width': i === 0 ? 2.6 : 1.4 }, beamG);
+      if (i > 0) {
+        var tx = el('text', { x: x, y: 205, 'text-anchor': 'middle', 'font-size': 13, fill: '#5b564d', 'font-family': 'inherit' }, beamG);
+        tx.textContent = ['一', '二', '三', '四'][i - 1] + '分';
+      }
+    }
+    el('circle', { cx: 60, cy: 222, r: 5, fill: '#3f6b4e' }, beamG);
+    el('line', { x1: 60, y1: 222, x2: 60, y2: 262, stroke: '#191917', 'stroke-width': 2 }, beamG);
+    var wR = el('g', {}, beamG);
+    el('rect', { x: 382, y: 236, width: 36, height: 34, fill: '#3f6b4e' }, wR);
+    el('path', { d: 'M388 236 L400 218 L412 236 Z', fill: '#3f6b4e' }, wR);
+    var tr = el('text', { x: 400, y: 258, 'text-anchor': 'middle', 'font-size': 14, fill: '#f2ede3', 'font-family': 'inherit' }, wR);
+    tr.textContent = '八斤';
+    el('text', { x: 400, y: 288, 'text-anchor': 'middle', 'font-size': 13, fill: '#5b564d', 'font-family': 'inherit' }, beamG).textContent = '短节一分';
+    var wL = el('g', { id: 'weightL', style: 'cursor: grab' }, beamG);
+    var hx = 60 + 4 * 42.5;
+    el('line', { x1: hx, y1: 222, x2: hx, y2: 244, stroke: '#191917', 'stroke-width': 2 }, wL);
+    var boxL = el('rect', { x: hx - 17, y: 244, width: 34, height: 30, fill: '#5f9270' }, wL);
+    var tL = el('text', { x: hx, y: 264, 'text-anchor': 'middle', 'font-size': 13.5, fill: '#f2ede3', 'font-family': 'inherit' }, wL);
+    tL.textContent = '二斤';
+    var handle = el('circle', { cx: hx, cy: 259, r: 26, fill: 'transparent' }, wL);
+
+    var beam = document.getElementById('beamG');
+    var verdict = document.getElementById('verdict');
+    var det = document.getElementById('labdet');
+    var pos = 4;
+    function render() {
+      var px = 60 + pos * 42.5;
+      wL.setAttribute('transform', 'translate(' + (px - hx) + ' 0)');
+      var tilt = (8 * 1 - 2 * pos) * 1.9;
+      beam.setAttribute('transform', 'rotate(' + (-tilt) + ' 230 222)');
+      var bal = (2 * pos === 8);
+      if (bal) {
+        verdict.textContent = '凖等';
+        verdict.classList.remove('off');
+        det.textContent = '二斤悬第' + ['一', '二', '三', '四'][pos - 1] + '分，四倍之比，与右端八斤相凖';
+      } else if (2 * pos > 8) {
+        verdict.textContent = '左沉';
+        verdict.classList.add('off');
+        det.textContent = '二乘' + pos + '过于八，重者虽小必沉';
+      } else {
+        verdict.textContent = '右沉';
+        verdict.classList.add('off');
+        det.textContent = '二乘' + pos + '不及八，八斤未得相凖';
+      }
+    }
+    function setFromEvent(e) {
+      var rect = lab.getBoundingClientRect();
+      var sx = (e.clientX - rect.left) * 460 / rect.width;
+      var p = Math.round((sx - 60) / 42.5);
+      p = Math.max(1, Math.min(4, p));
+      if (p !== pos) { pos = p; render(); }
+    }
+    var dragging = false;
+    handle.addEventListener('pointerdown', function (e) { dragging = true; handle.setPointerCapture(e.pointerId); e.preventDefault(); });
+    handle.addEventListener('pointermove', function (e) { if (dragging) setFromEvent(e); });
+    handle.addEventListener('pointerup', function () { dragging = false; });
+    render();
+  }
+
+  var crane = document.getElementById('crane');
+  if (crane) {
+    var C = el('g', { stroke: '#5f9270', fill: 'none', 'stroke-width': 2 }, crane);
+    el('path', { d: 'M120 300 L200 40 L280 300' }, C);
+    el('line', { x1: 200, y1: 40, x2: 200, y2: 74 }, C);
+    el('circle', { cx: 200, cy: 86, r: 12 }, C);
+    el('circle', { cx: 200, cy: 176, r: 12 }, C);
+    el('line', { x1: 200, y1: 74, x2: 200, y2: 98 }, C);
+    el('path', { d: 'M200 98 L200 164' }, C);
+    el('path', { d: 'M200 188 L200 236' }, C);
+    el('path', { d: 'M170 300 L200 236 L230 300' }, C);
+    el('path', { d: 'M158 236 L242 236 L230 300 L170 300 Z' }, C);
+    el('text', { x: 200, y: 274, 'text-anchor': 'middle', 'font-size': 17, fill: '#5f9270', stroke: 'none', 'font-family': 'inherit' }, C).textContent = '石';
+    el('line', { x1: 60, y1: 300, x2: 360, y2: 300, stroke: 'rgba(232,228,220,0.2)', 'stroke-width': 1.4 }, C);
+    el('text', { x: 200, y: 24, 'text-anchor': 'middle', 'font-size': 12, fill: '#6e6a61', stroke: 'none', 'font-family': 'inherit' }, C).textContent = '人力坠索在十分，举重索在一分';
+  }
+
+  var pump = document.getElementById('pump');
+  var jet = null;
+  if (pump) {
+    var P = el('g', { stroke: '#3f6b4e', fill: 'none', 'stroke-width': 2.2 }, pump);
+    el('rect', { x: 130, y: 150, width: 44, height: 130 }, P);
+    el('rect', { x: 246, y: 150, width: 44, height: 130 }, P);
+    el('rect', { x: 108, y: 280, width: 204, height: 18 }, P);
+    el('path', { d: 'M174 168 L212 168' }, P);
+    el('path', { d: 'M246 168 L212 168 L212 120' }, P);
+    el('path', { d: 'M212 120 L330 120' }, P);
+    el('path', { d: 'M330 120 L330 66' }, P);
+    var bar1 = el('line', { x1: 152, y1: 150, x2: 152, y2: 104, 'stroke-width': 4 }, P);
+    var bar2 = el('line', { x1: 268, y1: 150, x2: 268, y2: 104, 'stroke-width': 4 }, P);
+    el('line', { x1: 96, y1: 104, x2: 324, y2: 104, 'stroke-width': 4 }, P);
+    var jet1 = el('path', { d: 'M330 62 L330 20', stroke: '#5f9270', 'stroke-width': 5, 'stroke-linecap': 'round', opacity: 0 }, pump);
+    var jet2 = el('path', { d: 'M330 62 Q 356 40 384 26', stroke: '#5f9270', 'stroke-width': 5, 'stroke-linecap': 'round', fill: 'none', opacity: 0 }, pump);
+    var jet3 = el('path', { d: 'M330 62 Q 304 40 276 26', stroke: '#5f9270', 'stroke-width': 5, 'stroke-linecap': 'round', fill: 'none', opacity: 0 }, pump);
+    jet = [jet1, jet2, jet3];
+  }
+  var spraybtn = document.getElementById('spraybtn');
+  var jetline = document.getElementById('jetline');
+  function sprayOn() {
+    if (!jet) return;
+    jet.forEach(function (j) { j.setAttribute('opacity', 1); });
+    jetline.classList.add('on');
+  }
+  function sprayOff() {
+    if (!jet) return;
+    jet.forEach(function (j) { j.setAttribute('opacity', 0); });
+    jetline.classList.remove('on');
+  }
+  if (spraybtn) {
+    spraybtn.addEventListener('pointerdown', function (e) { sprayOn(); e.preventDefault(); });
+    spraybtn.addEventListener('pointerup', sprayOff);
+    spraybtn.addEventListener('pointerleave', sprayOff);
+    spraybtn.addEventListener('keydown', function (e) { if (e.key === ' ' || e.key === 'Enter') { sprayOn(); e.preventDefault(); } });
+    spraybtn.addEventListener('keyup', sprayOff);
+  }
+
+  var cart = document.getElementById('cart');
+  if (cart) {
+    var W = el('g', { style: 'color:#5f9270' }, cart);
+    var a1 = el('g', { class: 'g24r' }, W); gear(a1, 58, 130, 24, 30, '');
+    var b1 = el('g', { class: 'g36r' }, W); gear(b1, 131.5, 130, 36, 43.5, '');
+    var c1 = el('g', { class: 'g48r' }, W); gear(c1, 231.5, 130, 48, 56.5, '');
+    el('line', { x1: 30, y1: 176, x2: 276, y2: 176, stroke: 'rgba(232,228,220,0.2)', 'stroke-width': 1.4 }, W);
+    var cl = el('text', { x: 150, y: 46, 'text-anchor': 'middle', 'font-size': 12.5, fill: '#6e6a61', 'font-family': 'inherit' }, W);
+    cl.textContent = '丁催轴齿，齿齿相催而车行';
+  }
+
+  var clockw = document.getElementById('clockw');
+  if (clockw) {
+    var K = el('g', { style: 'color:#5f9270' }, clockw);
+    var k1 = el('g', { class: 'g60' }, K); gear(k1, 150, 92, 60, 52, '');
+    var kl = el('text', { x: 150, y: 98, 'text-anchor': 'middle', 'font-size': 13, fill: '#6e6a61', 'font-family': 'inherit' }, K);
+    kl.textContent = '甲轮';
+  }
+
+  var plow = document.getElementById('plow');
+  if (plow) {
+    var G = el('g', { stroke: '#5f9270', fill: 'none', 'stroke-width': 2.2 }, plow);
+    el('circle', { cx: 74, y: 0, cy: 108, r: 34 }, G);
+    el('circle', { cx: 226, cy: 108, r: 34 }, G);
+    el('line', { x1: 74, y1: 74, x2: 74, y2: 142 }, G);
+    el('line', { x1: 226, y1: 74, x2: 226, y2: 142 }, G);
+    el('line', { x1: 74, y1: 108, x2: 226, y2: 108, 'stroke-dasharray': '5 5' }, G);
+    el('path', { d: 'M150 108 L196 96 L216 132' }, G);
+    el('path', { d: 'M216 132 L226 150' }, G);
+    el('text', { x: 74, y: 170, 'text-anchor': 'middle', 'font-size': 12.5, fill: '#6e6a61', stroke: 'none', 'font-family': 'inherit' }, G).textContent = '东辘轳';
+    el('text', { x: 226, y: 170, 'text-anchor': 'middle', 'font-size': 12.5, fill: '#6e6a61', stroke: 'none', 'font-family': 'inherit' }, G).textContent = '西辘轳';
+    el('text', { x: 150, y: 200, 'text-anchor': 'middle', 'font-size': 12.5, fill: '#6e6a61', stroke: 'none', 'font-family': 'inherit' }, G).textContent = '两索贯犁，逓挽逓歇';
+  }
+})();
+</script>
+
+</body>
+</html>
