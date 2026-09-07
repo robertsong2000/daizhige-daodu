@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>田家五行 殆知阁导读 199</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #1d1c1a; --ink-3: #232220;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --jade: #5f9270; --jade-soft: rgba(95,146,112,0.14); --jade-line: rgba(95,146,112,0.45);
+    --hair: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 34px 0 48px; }
+  a { color: inherit; }
+
+  /* 天色管：左缘一根随阅读进度变色的细管，管色即当前所观之天 */
+  #tube {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 9px;
+    background: #8aa6b2; transition: background 0.9s ease;
+    border-right: 1px solid rgba(232,228,220,0.08); z-index: 9;
+  }
+
+  /* 顶签 */
+  .fnav { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; padding: 26px 0 0; }
+  .fnav span { font-size: 14px; letter-spacing: 0.14em; color: var(--dim); }
+  .fnav a { font-size: 14px; color: var(--jade); text-decoration: none; border-bottom: 1px solid var(--jade-line); }
+
+  /* 开卷：占候簿。一页纸白天区的旧簿记，先见记录，后见书名 */
+  .ledger {
+    margin: 30px auto 0; max-width: 780px; background: var(--paper); color: #21201c;
+    padding: 30px 34px 26px; border: 1px solid rgba(25,25,23,0.35);
+    background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 43px, rgba(25,25,23,0.1) 43px, rgba(25,25,23,0.1) 44px);
+  }
+  .ledger .head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #21201c; padding-bottom: 10px; }
+  .ledger .head small { font-size: 13px; letter-spacing: 0.34em; color: #55524a; }
+  .ledger h1 { font-size: 54px; font-weight: 700; letter-spacing: 0.16em; line-height: 1.25; }
+  .ledger .who { margin-top: 6px; font-size: 15px; letter-spacing: 0.22em; color: #55524a; }
+  .ledger .who b { color: #21201c; font-weight: 600; }
+  .rec-tab { margin-top: 22px; border: 1px solid rgba(25,25,23,0.4); }
+  .rec-tab .rt-head {
+    display: flex; justify-content: space-between; font-size: 12.5px; letter-spacing: 0.26em;
+    color: #55524a; padding: 8px 14px; border-bottom: 1px solid rgba(25,25,23,0.25);
+  }
+  .rec-tab ol { list-style: none; }
+  .rec-tab li { display: grid; grid-template-columns: 8.5em 1fr; gap: 14px; padding: 9px 14px; font-size: 16px; border-top: 1px dashed rgba(25,25,23,0.16); }
+  .rec-tab li:first-child { border-top: 0; }
+  .rec-tab li i { font-style: normal; font-size: 13px; letter-spacing: 0.18em; color: #8a8577; padding-top: 2px; }
+  .rec-tab li b { font-weight: 600; }
+  .rec-tab li b em { font-style: normal; color: #4a7357; }
+  .lede { max-width: 660px; margin: 30px auto 0; font-size: 16.5px; color: var(--paper); }
+  .lede em { font-style: normal; color: var(--jade); }
+  .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .meta span { font-size: 13px; letter-spacing: 0.14em; color: var(--dim); border: 1px solid var(--hair); padding: 6px 13px; }
+  .meta span b { color: var(--paper); font-weight: 600; }
+
+  /* 观候：类名做梁，占验录做条目 */
+  section { padding: 66px 0 26px; border-top: 1px solid var(--hair); margin-top: 58px; }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+  .sec-head .lei { font-size: 13px; letter-spacing: 0.3em; color: var(--jade); white-space: nowrap; }
+  .sec-head h2 { font-size: 30px; font-weight: 600; letter-spacing: 0.12em; }
+  .sec-head .sub { font-size: 14px; color: var(--faint); letter-spacing: 0.1em; }
+  p.body { margin-top: 20px; font-size: 16px; color: var(--dim); max-width: 700px; }
+  p.body b { color: var(--paper); font-weight: 600; }
+
+  /* 占验录条目：左观候戳，右库本原文 */
+  .rec {
+    display: grid; grid-template-columns: 88px 1fr; gap: 0; margin-top: 24px; max-width: 780px;
+    border: 1px solid var(--hair);
+  }
+  .rec .stamp {
+    border-right: 1px solid var(--hair); background: var(--jade-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; letter-spacing: 0.2em; color: var(--jade);
+    writing-mode: vertical-rl; text-orientation: upright; padding: 14px 0;
+  }
+  .rec .rq { padding: 16px 20px 14px; }
+  .rec .rq .qy { font-size: 16.5px; color: var(--paper); }
+  .rec .rq .qy i { font-style: normal; color: var(--jade); }
+  .rec .rq .zs { display: block; margin-top: 8px; font-size: 13.5px; color: var(--faint); line-height: 1.8; }
+  .rec.wide { grid-template-columns: 1fr; }
+  .rec.wide .stamp { display: none; }
+
+  /* 九九双联 */
+  .nine { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 28px; max-width: 820px; }
+  .nine .col { border: 1px solid var(--hair); }
+  .nine .col h4 {
+    text-align: center; font-size: 15px; font-weight: 600; letter-spacing: 0.3em;
+    padding: 12px 0; border-bottom: 1px solid var(--hair); color: var(--jade);
+  }
+  .nine .col .cell { display: grid; grid-template-columns: 74px 1fr; border-top: 1px dashed rgba(232,228,220,0.1); }
+  .nine .col .cell:first-of-type { border-top: 0; }
+  .nine .no {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; letter-spacing: 0.14em; color: var(--jade);
+    border-right: 1px solid var(--hair); background: rgba(95,146,112,0.07);
+  }
+  .nine .pr { padding: 11px 16px; font-size: 15.5px; color: var(--paper); }
+
+  /* 验状：一桩至正十年的天气疑案 */
+  .case { margin-top: 28px; max-width: 780px; border: 1px solid var(--jade-line); }
+  .case .ch {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 12px 18px; background: var(--jade-soft); border-bottom: 1px solid var(--jade-line);
+  }
+  .case .ch b { font-size: 17px; letter-spacing: 0.24em; color: var(--paper); font-weight: 600; }
+  .case .ch span { font-size: 12.5px; letter-spacing: 0.2em; color: var(--jade); }
+  .case .row { display: grid; grid-template-columns: 96px 1fr; border-top: 1px dashed rgba(232,228,220,0.14); }
+  .case .row:first-of-type { border-top: 0; }
+  .case .row i { font-style: normal; font-size: 13.5px; letter-spacing: 0.26em; color: var(--jade); padding: 13px 0 0 18px; }
+  .case .row p { padding: 11px 20px 11px 0; font-size: 15.5px; color: var(--paper); }
+  .case .row p.dim { color: var(--dim); }
+  .case .verdict p { color: var(--paper); }
+  .case .verdict i { color: var(--paper); }
+
+  /* 自记不验 */
+  .miss { margin-top: 26px; max-width: 780px; }
+  .miss .mi {
+    display: grid; grid-template-columns: 64px 1fr; gap: 16px; align-items: start;
+    padding: 13px 0; border-top: 1px dashed rgba(232,228,220,0.14);
+  }
+  .miss .mi .tag {
+    font-size: 12.5px; letter-spacing: 0.2em; color: var(--faint);
+    border: 1px dashed rgba(232,228,220,0.28); text-align: center; padding: 4px 6px; margin-top: 3px;
+  }
+  .miss .mi p { font-size: 15.5px; color: var(--dim); }
+  .miss .mi p b { color: var(--paper); font-weight: 600; }
+
+  /* 观候小试 */
+  .try { margin-top: 28px; max-width: 780px; border: 1px solid var(--hair); padding: 22px 24px 24px; }
+  .try h4 { font-size: 13px; letter-spacing: 0.3em; color: var(--jade); font-weight: 400; }
+  .chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+  .chips button {
+    font-family: inherit; font-size: 14.5px; letter-spacing: 0.08em; cursor: pointer;
+    background: none; color: var(--dim); border: 1px solid var(--hair); padding: 8px 15px; transition: 0.22s;
+  }
+  .chips button:hover { color: var(--paper); border-color: var(--jade-line); }
+  .chips button.on { color: var(--jade); border-color: var(--jade); background: var(--jade-soft); }
+  .try .out { margin-top: 18px; border-top: 1px solid var(--hair); padding-top: 16px; min-height: 74px; }
+  .try .out .w { font-size: 17px; color: var(--paper); }
+  .try .out .w i { font-style: normal; color: var(--jade); }
+  .try .out .s { display: block; margin-top: 8px; font-size: 13px; letter-spacing: 0.16em; color: var(--faint); }
+  .try .hint { font-size: 13.5px; color: var(--faint); }
+
+  footer { border-top: 1px solid var(--hair); margin-top: 70px; padding: 40px 0 60px; }
+  footer p { font-size: 13.5px; color: var(--faint); max-width: 780px; margin-top: 10px; line-height: 1.9; }
+  footer b { color: var(--dim); font-weight: 600; }
+  .navline { display: flex; gap: 22px; margin-top: 26px; flex-wrap: wrap; }
+  .navline a { font-size: 14px; color: var(--jade); text-decoration: none; border-bottom: 1px solid var(--jade-line); }
+
+  @media (max-width: 640px) {
+    .wrap { padding-left: 26px; padding-right: 20px; }
+    .ledger h1 { font-size: 40px; }
+    .rec { grid-template-columns: 1fr; }
+    .rec .stamp { writing-mode: horizontal-tb; text-orientation: mixed; border-right: 0; border-bottom: 1px solid var(--hair); padding: 8px 0; }
+    .nine { grid-template-columns: 1fr; }
+    .case .row { grid-template-columns: 1fr; }
+    .case .row i { padding: 10px 18px 0; }
+    .case .row p { padding-left: 18px; }
+  }
+</style>
+</head>
+<body>
+<div id="tube"></div>
+
+<div class="wrap">
+  <nav class="fnav">
+    <span>殆知阁导读</span>
+    <a href="mulu.html">回总目</a>
+  </nav>
+
+  <!-- 开卷：占候簿。先给一条七百年前夜的观测记录，再请出这本书 -->
+  <header>
+    <div class="ledger">
+      <div class="head">
+        <small>占候簿</small>
+        <small>浙西田家旧抄</small>
+      </div>
+      <h1>田家五行</h1>
+      <p class="who">元　<b>娄元礼</b>　辑</p>
+      <div class="rec-tab">
+        <div class="rt-head"><span>观测记录一则</span><span>据库本原文移录</span></div>
+        <ol>
+          <li><i>日期</i><b>至元乙亥八月癸亥日</b></li>
+          <li><i>天象</i><b>久雨当晚才止，夜半忽见星月满天</b></li>
+          <li><i>众占</i><b>咸谓明又雨无疑矣</b></li>
+          <li><i>录者</i><b>余独否之</b></li>
+          <li><i>复验</i><b>明日果然连晴<em>月余</em></b></li>
+        </ol>
+      </div>
+    </div>
+
+    <p class="lede">写下这行记录的人，不是司天监的官，是浙西乡下的读书人。他们把几代人看天、看地、看虫鱼花木的经验编成口诀，一句谚，配一句验。<em>不谈星盘神煞，只认眼前天色</em>，这册薄书是那个时代离土地最近的气象手册，里面甚至留着作者自己占错了、占不准的记录。</p>
+
+    <div class="meta">
+      <span>朝代　<b>元</b></span>
+      <span>撰人　<b>娄元礼，字鹤天</b></span>
+      <span>类属　<b>子藏农家</b></span>
+      <span>库本　<b>七千一百九十二字</b></span>
+      <span>体例　<b>天文月占杂物三旬气候鳞虫鸟兽草木地理九类</b></span>
+    </div>
+  </header>
+
+  <!-- 甲 天文类 · 日 -->
+  <section id="tian" data-sky="#c6bfae">
+    <div class="sec-head">
+      <span class="lei">天文类</span>
+      <h2>看日</h2>
+      <span class="sub">谚语有错，作者当场改</span>
+    </div>
+    <p class="body">开篇先立一条常识：<b>日出有定刻，本无早晚</b>。所谓「日出早主雨，日出晏主晴」，只在久阴初晴的那一刻成立。老农讲完道理，作者还要补一句纠正，替这条谚语改字。占候之书里出现这样的自我修订，少见。</p>
+
+    <div class="rec">
+      <div class="stamp">日出</div>
+      <div class="rq">
+        <p class="qy">日出早，主雨；日出晏，主晴。</p>
+        <span class="zs">老农云：此特言久阴之余，夜雨连旦，正当天明之际，云忽一扫而卷即光，日出所以言早，少刻必雨，立验。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">订正</div>
+      <div class="rq">
+        <p class="qy">盖日之出入自有定刻，实无早晏也。愚谓但当云<i>「晴得早主雨，晏开主晴」</i>，不当言日出早晏也。占者悟此理。</p>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">日没</div>
+      <div class="rq">
+        <p class="qy">日没返照主晴，俗名<i>「日返坞」</i>。一云<i>「日没胭脂红，无雨也有风。」</i></p>
+        <span class="zs">两候形似而所主相反，老农分辨：返照在日没前，胭脂红在日没之后，不可不知也。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">乌云</div>
+      <div class="rq">
+        <p class="qy">今夜日没乌云洞，明朝晒得头皮痛。</p>
+        <span class="zs">日落时半天虽有云，日头下去处却无云，状如岩洞，主晴，甚验。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 乙 天文类 · 夜 -->
+  <section id="ye" data-sky="#33373b">
+    <div class="sec-head">
+      <span class="lei">天文类</span>
+      <h2>看夜</h2>
+      <span class="sub">一条亲历记录，就是开卷那条</span>
+    </div>
+    <p class="body">雨夜将晴，黄昏忽然云开星现，人人都会说明天接着下。作者却记住了一夜：至元乙亥八月癸亥，<b>夜半星月满天，众人皆谓必雨，他独自说不会</b>。次日果然连晴月余。这条记录被他自己写进书里，成为「一个星，保夜晴」的注脚。</p>
+
+    <div class="rec">
+      <div class="stamp">见星</div>
+      <div class="rq">
+        <p class="qy">一个星，保夜晴。</p>
+        <span class="zs">此言雨后天阴，但见一两星，次夜必晴。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">亲验</div>
+      <div class="rq">
+        <p class="qy">尝记至元乙亥八月癸亥日，正值久雨当晚才止，夜半忽见星月满天，咸谓明又雨无疑矣。余独否之。明日果然连晴月余</p>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">远电</div>
+      <div class="rq">
+        <p class="qy">南闪千年，北闪眼前。</p>
+        <span class="zs">夏秋之间夜晴见远电，俗谓之「热闪」。在南主久晴，在北主便雨；北闪俗谓之「北辰闪」，主雨立至。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 丙 天文类 · 风云 -->
+  <section id="feng" data-sky="#8b958f">
+    <div class="sec-head">
+      <span class="lei">天文类</span>
+      <h2>看风云</h2>
+      <span class="sub">台风，七百年前已有预警口诀</span>
+    </div>
+    <p class="body">夏秋之交的海上风暴，此书记下了一套完整的识别链：<b>先见断虹，谓之飓母，航海人见之即收帆</b>。船家叫它破帆风，言见此物蓬必为风斫破。风暴尚在海上，征兆先到岸边，这是沿海农人的生命经验。</p>
+
+    <div class="rec">
+      <div class="stamp">飓母</div>
+      <div class="rq">
+        <p class="qy">言其具四方之风，故名<i>「飓风」</i>。有此风，必有霖霪大雨同作，甚则拔木、偃禾、坏房舍、决堤堰。其先必有如断虹之状者现，名曰<i>「飓母」</i>，航海人见此，则又名<i>「破帆风」</i></p>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">夜风</div>
+      <div class="rq">
+        <p class="qy">西南转西北，搓绳来绊屋。</p>
+        <span class="zs">又云：半夜五更西，天明拔树枝。皆言冬夜风紧，须先绊好屋顶。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">风让日</div>
+      <div class="rq">
+        <p class="qy">大凡风日出之时必略静，谓之<i>「风让日」</i>。</p>
+        <span class="zs">大抵风自日内起者必善，夜起者必毒。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">云形</div>
+      <div class="rq">
+        <p class="qy">鱼鳞天，不雨也风颠。</p>
+        <span class="zs">冬天近晚，忽有老鲤斑云起，必无雨，名曰「护霜天」。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">云行</div>
+      <div class="rq">
+        <p class="qy">云行东，雨无踪，车马通；云行西，马溅泥，水没犁；云行南，水潺潺，水涨潭；云行北，雨便足，好晒谷。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 丁 天文类 · 雨霞虹 -->
+  <section id="yu" data-sky="#6f7a80">
+    <div class="sec-head">
+      <span class="lei">天文类</span>
+      <h2>看雨霞虹</h2>
+      <span class="sub">雨点的形状会说话</span>
+    </div>
+    <p class="body">雨怎么下，比下不下更要紧。五更短雨主速晴；<b>水面上溅起泡的雨，落到明朝未必停</b>。霞与虹的方位，同样是口诀的一半，东虹晴，西虹雨，至今江南老人还在说。</p>
+
+    <div class="rec">
+      <div class="stamp">五更</div>
+      <div class="rq">
+        <p class="qy">雨打五更，日晒水坑。</p>
+        <span class="zs">言五更忽有雨，日中必晴，甚验。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">雨形</div>
+      <div class="rq">
+        <p class="qy">一点雨似一个钉，落到明朝也不晴；一点雨似一个泡，落到明朝未得了。</p>
+        <span class="zs">雨著水面上有浮泡，主卒未晴。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">晚霞</div>
+      <div class="rq">
+        <p class="qy">朝霞不出市，暮霞走千里。</p>
+        <span class="zs">此皆言雨后乍晴之霞。满天谓之「霞得过」主晴，「霞不过」主雨。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">虹</div>
+      <div class="rq">
+        <p class="qy">东鲎晴，西鲎雨。</p>
+        <span class="zs">鲎即虹。今俗谓虹能截雨，信然。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 戊 气候类 · 九九 -->
+  <section id="jiujiu" data-sky="#b08a5a">
+    <div class="sec-head">
+      <span class="lei">气候类</span>
+      <h2>九九双联</h2>
+      <span class="sub">冬九九人人会背，夏九九极少得见</span>
+    </div>
+    <p class="body">数九不只属于冬天。此书同时记了<b>夏至后</b>与<b>冬至后</b>各一份九九歌，夏九九从摇扇数到打炭基预备过冬，冬九九从缩手数到开犁。同一片天，两套倒计时。</p>
+
+    <div class="nine">
+      <div class="col">
+        <h4>夏至后九九</h4>
+        <div class="cell"><span class="no">一九二九</span><span class="pr">扇子弗离手。</span></div>
+        <div class="cell"><span class="no">三九二十七</span><span class="pr">冰水甜如蜜。</span></div>
+        <div class="cell"><span class="no">四九三十六</span><span class="pr">出汗如出浴。</span></div>
+        <div class="cell"><span class="no">五九四十五</span><span class="pr">头戴秋叶舞。</span></div>
+        <div class="cell"><span class="no">六九五十四</span><span class="pr">乘凉勿入寺。</span></div>
+        <div class="cell"><span class="no">七九六十三</span><span class="pr">上床寻被单。</span></div>
+        <div class="cell"><span class="no">八九七十二</span><span class="pr">思量盖夹被。</span></div>
+        <div class="cell"><span class="no">九九八十一</span><span class="pr">家家打炭基。</span></div>
+      </div>
+      <div class="col">
+        <h4>冬至后九九</h4>
+        <div class="cell"><span class="no">一九二九</span><span class="pr">相见弗出手。</span></div>
+        <div class="cell"><span class="no">三九二十七</span><span class="pr">篱头吹筚篥。</span></div>
+        <div class="cell"><span class="no">四九三十六</span><span class="pr">夜眠如鹭宿。</span></div>
+        <div class="cell"><span class="no">五九四十五</span><span class="pr">太阳开门户。</span></div>
+        <div class="cell"><span class="no">六九五十四</span><span class="pr">贫儿争意气。</span></div>
+        <div class="cell"><span class="no">七九六十三</span><span class="pr">布衲担头担。</span></div>
+        <div class="cell"><span class="no">八九七十二</span><span class="pr">猫儿寻阴地。</span></div>
+        <div class="cell"><span class="no">九九八十一</span><span class="pr">犁耙一起出。</span></div>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">梅天</div>
+      <div class="rq">
+        <p class="qy">黄梅天，日多几番颠。</p>
+        <span class="zs">芒种后雨为「黄梅雨」，夏至后为「时雨」。此时天公易变。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 己 鳞虫鸟兽草木地理 · 地上 -->
+  <section id="dixia" data-sky="#5f7d68">
+    <div class="sec-head">
+      <span class="lei">鳞虫鸟兽草木地理类</span>
+      <h2>看地上</h2>
+      <span class="sub">天不识字，地上万物替它记账</span>
+    </div>
+    <p class="body">书中占候，一半在天，一半在地。鱼跃出水谓之称水，跳多高，涨多高；蛙声分上下昼，报两个乡的收成；<b>冬青花开不开，决定黄梅雨来不来</b>。最奇的是一株树：黄梅雨不过，叶子不舒，一境农人拿它当水情牌用。</p>
+
+    <div class="rec">
+      <div class="stamp">鱼</div>
+      <div class="rq">
+        <p class="qy">鱼跃离水面，谓之<i>「称水」</i>，主水涨，高多少，增多少。</p>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">蛙声</div>
+      <div class="rq">
+        <p class="qy">上昼叫，上乡熟；下昼叫，下乡熟；终日叫，上下齐熟。</p>
+        <span class="zs">初三日听蛙声占水旱。又云：田鸡叫得哑，低田好稻把，田鸡叫得响，田里好牵浆。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">社蛤</div>
+      <div class="rq">
+        <p class="qy">社蛤叫三通，不用问家公。</p>
+        <span class="zs">言报晚晴有准也。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">冬青</div>
+      <div class="rq">
+        <p class="qy">黄梅雨未过，冬青花未破，冬青花开，黄梅便不来。</p>
+        <span class="zs">又云：冬青花不落干地。花之开落与梅雨相随，故云关系水旱。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">望水檀</div>
+      <div class="rq">
+        <p class="qy">每年直待黄梅雨过方始舒叶，叶既开，水定，<i>一境农人专凭此以卜水候，不曾有误。</i></p>
+        <span class="zs">僧舍一树，一春如枯，后山丁识之，谓之「望水檀」，其名正取此义也。此树年深枯朽，他处再不复见。</span>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="stamp">水色</div>
+      <div class="rq">
+        <p class="qy">水底生青苔，卒逢暴水来。</p>
+        <span class="zs">又：水边经行，闻得水有香气，主雨水骤至。作者自记：初意甚疑，但凡有此闻，屡试屡验，不容不信。然所谓香气殆不可晓，或谓水气也，亦莫能辨之。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 庚 鸟兽类 · 验状 -->
+  <section id="yanzhuang" data-sky="#6f7a80">
+    <div class="sec-head">
+      <span class="lei">鸟兽类</span>
+      <h2>一桩至正十年的水情疑案</h2>
+      <span class="sub">群鸟压境，众口断灾，一老农翻案</span>
+    </div>
+    <p class="body">至正庚寅，梅水正涨。一种可畏的大鸟成群压境，全村都说这是农田被淹的先兆。<b>只有一个老农不慌</b>，他援引的不是占书，是一条分夏至前后两段的古谚。这一段原文，是全书最像故事的地方，照录如下。</p>
+
+    <div class="case">
+      <div class="ch"><b>验状</b><span>鹈鹕一名淘河</span></div>
+      <div class="row"><i>其鸟</i><p>河塘中鹅鹳之属，其状异营，可畏之鸟也，每来必主大水，甚验。</p></div>
+      <div class="row"><i>事发</i><p>近至正庚寅五月十八日，正当梅水泛涨之时，忽见此怪数十枚，自西而东，众人见之，咸谓没田之先兆。</p></div>
+      <div class="row"><i>老农证</i><p>忽一老农云：无妨，因扣其所以，遂引古谚曰：夏至前来谓之「犁湖」，夏至后来谓之「犁涂」。</p></div>
+      <div class="row"><i>谚解</i><p class="dim">「犁」谓其咀之形状相似摸鱼之势，「湖」，言水涨而深也，「涂」，言水退而浅也。</p></div>
+      <div class="row"><i>断语</i><p>今则夏至已过八日，此后雨脚必断，水必退也矣。虽闻此说甚详，疑信尚不能决。</p></div>
+      <div class="row verdict"><i>结案</i><p>自后果然天晴水退，高下皆得成熟。</p></div>
+    </div>
+    <div class="rec">
+      <div class="stamp">愚按</div>
+      <div class="rq">
+        <p class="qy">愚按草木飞走之灵，初非通神，盖其物感<i>气候变化之变</i>而使之自然而然也。</p>
+        <span class="zs">鸟兽不为神使，只是对气候比人敏感。七百年前，这本农书里已经有了这样的解释。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 辛 类尾 · 自记 -->
+  <section id="ziji" data-sky="#33373b">
+    <div class="sec-head">
+      <span class="lei">类尾</span>
+      <h2>自记不验</h2>
+      <span class="sub">占不准的，作者也照写</span>
+    </div>
+    <p class="body">这本小书最珍贵的地方，是它肯承认哪些口诀不灵。干支占水旱，<b>「少有应验」</b>；蚌浮主水，<b>「不验」</b>；杨树根干发红主水，<b>「不甚验」</b>。一条条都留在正文里，没有删。</p>
+
+    <div class="miss">
+      <div class="mi"><span class="tag">少验</span><p>上旬内得辛日占水旱，作者考之：<b>以上二说少有应验，盖风雪晴雨，百里不同，以其地占之应在其地，固有可信也。</b>余有六甲得壬得辰等日，皆不甚准，所以不敢泛陈。</p></div>
+      <div class="mi"><span class="tag">不验</span><p>蚌浮主有水，<b>不验。</b></p></div>
+      <div class="mi"><span class="tag">不甚验</span><p>杨树头并水际根干红者，主水，<b>此说恐每年如此，不甚验。</b></p></div>
+    </div>
+    <div class="rec">
+      <div class="stamp">总诀</div>
+      <div class="rq">
+        <p class="qy">其他间有不准者，亦恐有此等差错之误，人推测云，有所未至，故不能一一取验也。<i>占候者慎勿以一途而取之。</i></p>
+        <span class="zs">不许只凭一条口诀下判断。放在今日，这是写给所有预报者的职业守则。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 观候小试 -->
+  <section id="test" data-sky="#8aa6b2">
+    <div class="sec-head">
+      <span class="lei">观候小试</span>
+      <h2>借他的眼睛看一回天</h2>
+      <span class="sub">点一处天色，出一条库本口诀</span>
+    </div>
+    <div class="try">
+      <h4>今日所见</h4>
+      <div class="chips" id="chips"></div>
+      <div class="out" id="out"><p class="hint">点选上方任一天色，此书自会应答。</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>文本来源</b>　殆知阁古代文献简体库 子藏/农家/田家五行.txt，元娄元礼辑，库本不分卷，分九类，实测去空白去标点 <span class="mono">5531</span> 字。</p>
+    <p><b>引文核验</b>　本页所有引文均与库本逐字比对通过，照录原文；库本个别形讹字（如「圾验」「圾准」「蚱锰」「异营」）未作润改，引文遇讹处截取于讹字之前或照录存真；至元乙亥、至正庚寅皆照录库本干支纪年。</p>
+    <p><b>时代局限</b>　书中占候休咎之说，是前人经验与术数观念的杂糅，谚语又多限吴地一隅，今日观天当以气象部门为准；本页照录仅供批判地读，不表认同。</p>
+    <div class="navline">
+      <a href="mulu.html">返回总目</a>
+      <a href="https://github.com/robertsong2000/daizhige-daodu">导读仓库</a>
+      <a href="https://github.com/robertsong2000/daizhigev20">殆知阁简体库</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  /* 天色管：随阅读进度换管色 */
+  var tube = document.getElementById('tube');
+  var secs = [].slice.call(document.querySelectorAll('section[data-sky], header[data-sky]'));
+  function paint() {
+    var mid = window.innerHeight * 0.42, cur = '#8aa6b2';
+    secs.forEach(function (s) {
+      if (s.getBoundingClientRect().top <= mid) cur = s.getAttribute('data-sky');
+    });
+    tube.style.background = cur;
+  }
+  window.addEventListener('scroll', paint, { passive: true });
+  paint();
+
+  /* 观候小试 */
+  var SKY = [
+    ['日出奇早', '日出早，主雨；日出晏，主晴。', '天文类 论日月：少刻必雨，立验'],
+    ['日落乌云洞', '今夜日没乌云洞，明朝晒得头皮痛。', '天文类 论日月：以上皆主晴，甚验'],
+    ['夜半见一星', '一个星，保夜晴。', '天文类 论星：雨后天阴，但见一两星，次夜必晴'],
+    ['满天鱼鳞云', '鱼鳞天，不雨也风颠。', '天文类 论云：此言细细如鱼鳞斑者'],
+    ['雨打五更', '雨打五更，日晒水坑。', '天文类 论雨：日中必晴，甚验'],
+    ['水面起泡雨', '一点雨似一个泡，落到明朝未得了。', '天文类 论雨：主卒未晴'],
+    ['东边出虹', '东鲎晴，西鲎雨。', '天文类 论虹：对日鲎，不到昼'],
+    ['水底生青苔', '水底生青苔，卒逢暴水来。', '地理类 论水：主有暴水'],
+    ['初三蛙声起', '上昼叫，上乡熟；下昼叫，下乡熟；终日叫，上下齐熟。', '月占类 三月：听蛙声占水旱']
+  ];
+  var chips = document.getElementById('chips'), out = document.getElementById('out');
+  SKY.forEach(function (item, i) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = item[0];
+    b.addEventListener('click', function () {
+      [].slice.call(chips.children).forEach(function (c) { c.classList.remove('on'); });
+      b.classList.add('on');
+      out.innerHTML = '<p class="w">「<i>' + item[1] + '</i>」</p><span class="s">' + item[2] + '</span>';
+    });
+    chips.appendChild(b);
+  });
+})();
+</script>
+
+</body>
+</html>
