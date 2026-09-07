@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宁古塔地方乡土志 · 戍册导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #201f1d; --ink3: #262522;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --gold: #c9963f; --goldsoft: rgba(201,150,63,.13);
+    --hair: rgba(232,228,220,.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 26px; }
+
+  /* 垛口分缝：每一叶以一段城堞开场 */
+  .leaf { position: relative; padding: 64px 0 20px; }
+  .leaf + .leaf { border-top: 1px solid var(--hair); }
+  .leaf::before {
+    content: ""; position: absolute; top: -1px; left: 26px; right: 26px; height: 7px;
+    background: repeating-linear-gradient(90deg, var(--faint) 0 13px, transparent 13px 27px);
+    opacity: .38;
+  }
+  .leafhead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 10px; }
+  .lno {
+    flex: 0 0 auto; border: 1px solid var(--gold); color: var(--gold);
+    font-size: 13px; letter-spacing: .3em; padding: 3px 8px 3px 11px;
+  }
+  .leafhead h2 { font-size: 25px; font-weight: 700; letter-spacing: .1em; }
+  .leafhead .tag { margin-left: auto; font-size: 12.5px; color: var(--faint); letter-spacing: .18em; }
+  .leaf .prose { color: var(--dim); font-size: 15.5px; max-width: 62ch; margin-bottom: 26px; }
+  .leaf .prose b { color: var(--paper); font-weight: 700; }
+
+  /* 引文 */
+  blockquote.bq {
+    border-left: 2px solid var(--gold); background: var(--goldsoft);
+    padding: 14px 20px 12px; margin: 22px 0; font-size: 16.5px; line-height: 2.0;
+  }
+  blockquote.bq .from { display: block; margin-top: 8px; font-size: 12px; color: var(--faint); letter-spacing: .14em; }
+  span.q { color: var(--paper); border-bottom: 1px dashed rgba(201,150,63,.55); }
+
+  /* ============ 首屏：站道卷轴 ============ */
+  .hero { padding: 74px 0 0; }
+  .kick { font-size: 13px; letter-spacing: .4em; color: var(--faint); }
+  .kick b { color: var(--gold); font-weight: 400; }
+  h1 { font-size: clamp(44px, 7.4vw, 92px); font-weight: 700; letter-spacing: .1em; line-height: 1.16; margin: 20px 0 6px; }
+  h1 .thin { color: var(--dim); font-weight: 400; }
+  .lead { color: var(--dim); max-width: 58ch; font-size: 16px; margin: 14px 0 40px; }
+  .lead b { color: var(--paper); }
+
+  .roadbox { border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); background: var(--ink2); }
+  .road {
+    overflow-x: auto; scrollbar-width: none; cursor: grab; user-select: none;
+  }
+  .road::-webkit-scrollbar { display: none; }
+  .road.drag { cursor: grabbing; }
+  .track { display: flex; align-items: flex-end; min-width: 1560px; height: 300px; padding: 0 40px; position: relative; }
+  .track::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 96px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--faint) 4%, var(--faint) 96%, transparent);
+  }
+  .stop { flex: 1 0 auto; width: 132px; position: relative; text-align: center; padding-bottom: 118px; }
+  .stop .li {
+    position: absolute; bottom: 110px; left: 50%; transform: translateX(-50%);
+    font-size: 11.5px; color: var(--faint); white-space: nowrap; letter-spacing: .12em;
+  }
+  .stop .pole {
+    position: absolute; bottom: 92px; left: 50%;
+    width: 9px; height: 9px; background: var(--ink); border: 1px solid var(--dim); transform: translateX(-50%) rotate(45deg);
+  }
+  .stop .nm { position: absolute; bottom: 16px; left: 0; right: 0; font-size: 15.5px; letter-spacing: .12em; }
+  .stop .st { position: absolute; bottom: -2px; left: 0; right: 0; font-size: 11px; color: var(--faint); letter-spacing: .1em; }
+  .stop.city { width: 250px; }
+  .stop.city { z-index: 2; }
+  .stop.city .walled {
+    position: absolute; bottom: 84px; left: 50%; transform: translateX(-50%);
+    width: 150px; height: 52px; border: 2px solid var(--gold);
+    background-color: var(--ink2);
+    background-image: repeating-linear-gradient(90deg, var(--gold) 0 7px, transparent 7px 16px);
+    background-repeat: no-repeat; background-position: top; background-size: 100% 5px;
+    box-shadow: inset 0 0 0 100px var(--goldsoft);
+  }
+  .stop.city .walled i {
+    position: absolute; bottom: -2px; width: 16px; height: 7px; background: var(--ink); border: 1.5px solid var(--gold); border-top: 0;
+  }
+  .stop.city .walled i.w { left: 22px; }
+  .stop.city .walled i.e { right: 22px; }
+  .stop.city .walled i.s { left: 50%; transform: translateX(-50%); border-bottom: 0; }
+  .stop.city .nm { bottom: 8px; font-size: 21px; font-weight: 700; color: var(--gold); letter-spacing: .3em; }
+  .stop.city .st { bottom: -4px; }
+  .roadhint { text-align: center; font-size: 12px; color: var(--faint); letter-spacing: .2em; padding: 10px 0 14px; }
+
+  /* ============ 叶一 咨文 ============ */
+  .fold { border: 1px solid var(--hair); background: var(--ink2); padding: 30px 34px 24px; position: relative; }
+  .fold::before, .fold::after {
+    content: ""; position: absolute; top: 0; bottom: 0; width: 10px;
+    background: repeating-linear-gradient(180deg, var(--ink3) 0 26px, transparent 26px 52px);
+  }
+  .fold::before { left: 0; } .fold::after { right: 0; }
+  .fold .doc { font-size: 15px; color: var(--dim); }
+  .fold .doc b { color: var(--paper); }
+  .seal {
+    position: absolute; right: 34px; bottom: 24px; width: 92px; height: 92px;
+    border: 3px solid rgba(192,69,60,.75); color: rgba(192,69,60,.85);
+    display: grid; place-items: center; text-align: center;
+    font-size: 13px; line-height: 1.5; letter-spacing: .1em; transform: rotate(8deg);
+  }
+
+  /* ============ 叶二 沿革 ============ */
+  .rope { display: flex; flex-wrap: wrap; gap: 0; border-top: 1px solid var(--hair); }
+  .knot { flex: 1 1 150px; padding: 18px 16px 20px; border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); position: relative; }
+  .knot:last-child { border-right: 0; }
+  .knot::before { content: ""; position: absolute; top: -4px; left: 16px; width: 7px; height: 7px; background: var(--gold); transform: rotate(45deg); }
+  .knot .yr { font-size: 12.5px; color: var(--gold); letter-spacing: .16em; }
+  .knot .ev { font-size: 15.5px; margin-top: 6px; }
+  .knot .nt { font-size: 12.5px; color: var(--faint); margin-top: 4px; }
+
+  /* ============ 叶三 城图 ============ */
+  .citywrap { display: grid; grid-template-columns: 1fr 250px; gap: 30px; align-items: start; }
+  .citymap { border: 1px solid var(--hair); background: var(--ink2); }
+  .citymap svg { display: block; width: 100%; height: auto; }
+  .maplegend { list-style: none; display: flex; flex-direction: column; }
+  .maplegend li {
+    padding: 9px 12px; border-bottom: 1px solid var(--hair); font-size: 13.5px; color: var(--dim);
+    cursor: default; transition: background .2s;
+  }
+  .maplegend li:hover, .maplegend li.on { background: var(--goldsoft); color: var(--paper); }
+  .maplegend li b { color: var(--gold); font-weight: 400; margin-right: 8px; }
+  svg .blk { fill: var(--goldsoft); stroke: rgba(201,150,63,.65); stroke-width: 1.2; transition: fill .2s; }
+  svg .blk.on, svg .blk:hover { fill: rgba(201,150,63,.4); }
+  svg text { font-family: inherit; }
+  svg .lbl { fill: var(--dim); font-size: 12px; letter-spacing: 2px; }
+  svg .lbl2 { fill: var(--faint); font-size: 10.5px; }
+  svg .wall { fill: none; stroke: var(--paper); stroke-width: 3; opacity: .85; }
+  svg .gate { fill: var(--ink); stroke: var(--gold); stroke-width: 1.6; }
+  svg .river { fill: none; stroke: rgba(94,143,187,.55); stroke-width: 5; opacity: .7; }
+
+  /* ============ 叶四 仕宦 ============ */
+  .roll { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tab {
+    border: 1px solid var(--hair); padding: 7px 12px 6px; line-height: 1.35;
+    transition: transform .18s, border-color .18s;
+  }
+  .tab:hover { transform: translateY(-2px); border-color: var(--gold); }
+  .tab .n { font-size: 16.5px; letter-spacing: .1em; }
+  .tab .m { display: block; font-size: 11px; color: var(--faint); }
+  .tab.z { border-top: 2px solid var(--gold); }
+  .tab.last { background: var(--goldsoft); border-color: rgba(201,150,63,.5); }
+  .tab.last .n::after { content: "造册之时"; font-size: 10px; color: var(--gold); margin-left: 8px; letter-spacing: .1em; }
+
+  /* ============ 叶五 田赋 ============ */
+  .ledger { border-top: 2px solid var(--gold); }
+  .lrow {
+    display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: baseline;
+    padding: 13px 6px; border-bottom: 1px solid var(--hair); transition: background .2s;
+  }
+  .lrow:hover { background: var(--goldsoft); }
+  .lrow .k { font-size: 15.5px; }
+  .lrow .k small { display: block; font-size: 12.5px; color: var(--faint); }
+  .lrow .v { font-size: 15px; color: var(--paper); text-align: right; }
+  .lrow .v i { font-style: normal; font-size: 11.5px; color: var(--faint); margin-left: 10px; }
+  .burner { margin: 30px 0 8px; display: flex; align-items: baseline; gap: 22px; flex-wrap: wrap; }
+  .burner .big { font-size: clamp(34px, 5vw, 58px); color: var(--gold); font-weight: 700; letter-spacing: .06em; }
+  .burner .cap { font-size: 14px; color: var(--dim); max-width: 40ch; }
+
+  /* ============ 叶六 坛庙 ============ */
+  .twocol { display: grid; grid-template-columns: 1.2fr .8fr; gap: 34px; }
+  .temlist { columns: 2; column-gap: 30px; font-size: 14px; color: var(--dim); }
+  .temlist p { break-inside: avoid; margin-bottom: 7px; border-bottom: 1px dotted rgba(232,228,220,.09); padding-bottom: 7px; }
+  .temlist p b { color: var(--paper); font-weight: 400; }
+  .temlist p i { font-style: normal; color: var(--faint); font-size: 12px; float: right; }
+  .sch { border-left: 2px solid var(--gold); padding-left: 20px; }
+  .sch h3 { font-size: 17px; margin-bottom: 10px; letter-spacing: .1em; }
+  .sch p { font-size: 14.5px; color: var(--dim); margin-bottom: 12px; }
+
+  /* ============ 叶七 石佛寺（纸白碑版） ============ */
+  .stele-sec { background: var(--paper); color: var(--ink); margin: 30px -26px 0; padding: 56px 26px 60px; }
+  .stele { max-width: 720px; margin: 0 auto; }
+  .stele .cap { font-size: 13px; letter-spacing: .34em; color: #8a8474; }
+  .stele h2 { font-size: 30px; font-weight: 700; letter-spacing: .14em; margin: 12px 0 18px; }
+  .stele p { font-size: 15.5px; color: #4c4840; margin-bottom: 16px; }
+  .stele p b { color: var(--ink); }
+  .stele blockquote.bq { background: rgba(25,25,23,.045); border-left-color: var(--ink); color: #2b2823; }
+  .stele blockquote.bq .from { color: #8a8474; }
+  .stele .witness {
+    margin-top: 26px; border-top: 1px solid rgba(25,25,23,.14); padding-top: 18px;
+    font-size: 13.5px; color: #6b6558;
+  }
+  .stele .witness b { color: var(--ink); }
+
+  /* ============ 叶八 疆域 ============ */
+  .border-map { border: 1px solid var(--hair); background: var(--ink2); padding: 26px 10px 0; overflow: hidden; }
+  .spokes { display: grid; grid-template-columns: repeat(5, 1fr); }
+  .spoke { position: relative; padding: 10px 14px 22px; min-height: 210px; border-left: 1px solid var(--hair); }
+  .spoke:first-child { border-left: 0; }
+  .spoke .dir { font-size: 20px; color: var(--gold); letter-spacing: .2em; }
+  .spoke .dist { font-size: 13px; color: var(--dim); margin-top: 2px; }
+  .spoke .line { position: absolute; left: 14px; right: 14px; top: 86px; height: 1px; background: var(--faint); }
+  .spoke .line::before { content: ""; position: absolute; right: -4px; top: -3.5px; border-left: 8px solid var(--faint); border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
+  .spoke .to { position: absolute; left: 14px; top: 96px; font-size: 12.5px; color: var(--dim); line-height: 1.6; }
+  .spoke:hover { background: var(--goldsoft); }
+  .russia {
+    grid-column: 1 / -1; position: relative; height: 92px; margin: 0 -10px;
+    background:
+      repeating-linear-gradient(45deg, rgba(232,228,220,.16) 0 2px, transparent 2px 12px),
+      var(--ink);
+    border-top: 1px solid var(--faint);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .russia .seven { font-size: clamp(26px, 4.6vw, 44px); letter-spacing: .3em; color: var(--paper); }
+  .russia .en { position: absolute; right: 18px; bottom: 8px; font-size: 11px; color: var(--faint); letter-spacing: .2em; }
+
+  /* ============ 叶九 古迹 ============ */
+  .wonders { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; }
+  .wonder { border: 1px solid var(--hair); padding: 24px 26px 20px; position: relative; overflow: hidden; }
+  .wonder h3 { font-size: 20px; letter-spacing: .14em; margin-bottom: 8px; }
+  .wonder h3 i { font-style: normal; font-size: 12px; color: var(--gold); margin-right: 10px; }
+  .wonder p { font-size: 14px; color: var(--dim); }
+  .wonder.wide { grid-row: span 2; }
+  .vessels { display: flex; gap: 10px; margin: 18px 0 6px; }
+  .vessels span {
+    flex: 1; aspect-ratio: 1/1.15; display: grid; place-items: center;
+    font-size: 21px; color: var(--gold); border: 1px solid rgba(201,150,63,.5);
+    border-radius: 46% 46% 8% 8% / 62% 62% 8% 8%;
+  }
+  .eye { position: relative; height: 130px; margin: 14px 0 4px; }
+  .eye i {
+    position: absolute; left: 50%; top: 50%; border: 1px solid rgba(201,150,63,.5); border-radius: 50%;
+    transform: translate(-50%,-50%); animation: ripple 4.2s ease-out infinite;
+  }
+  .eye i:nth-child(1) { width: 60px; height: 60px; }
+  .eye i:nth-child(2) { width: 60px; height: 60px; animation-delay: 1.4s; }
+  .eye i:nth-child(3) { width: 60px; height: 60px; animation-delay: 2.8s; }
+  @keyframes ripple { from { opacity: .8; scale: 1; } to { opacity: 0; scale: 3.4; } }
+  .falls { height: 110px; margin: 14px 0 4px; position: relative;
+    background: linear-gradient(180deg, rgba(94,143,187,.0), rgba(94,143,187,.42) 30%, rgba(94,143,187,.14));
+  }
+  .falls::after {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(90deg, rgba(232,228,220,.28) 0 2px, transparent 2px 26px);
+    animation: pour 1.6s linear infinite;
+  }
+  @keyframes pour { from { transform: translateX(0); } to { transform: translateX(26px); } }
+
+  /* ============ 叶十 物产 ============ */
+  .catbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .cat {
+    border: 1px solid var(--hair); background: none; color: var(--dim);
+    font-family: inherit; font-size: 13.5px; letter-spacing: .16em; padding: 6px 15px; cursor: pointer;
+    transition: all .18s;
+  }
+  .cat:hover { color: var(--paper); border-color: var(--gold); }
+  .cat.on { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+  .goods { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--hair); border: 1px solid var(--hair); }
+  .good { background: var(--ink); padding: 14px 16px 12px; display: none; }
+  .good.show { display: block; }
+  .good .g { font-size: 16.5px; letter-spacing: .08em; }
+  .good .g em { font-style: normal; font-size: 10.5px; color: var(--gold); margin-left: 7px; letter-spacing: .1em; }
+  .good .n { font-size: 12px; color: var(--faint); margin-top: 3px; line-height: 1.6; }
+  .good:hover { background: var(--ink2); }
+
+  .fishbox { margin-top: 26px; border: 1px solid var(--hair); background: var(--ink2); overflow: hidden; }
+  .riverband { position: relative; height: 86px; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); background: linear-gradient(180deg, rgba(94,143,187,.16), rgba(94,143,187,.3)); overflow: hidden; }
+  .riverband .backs { position: absolute; inset: 0; display: flex; align-items: center; width: max-content; animation: swim 14s linear infinite; }
+  @keyframes swim { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .riverband .backs svg { margin: 0 -7px; opacity: .9; }
+  .riverband .walker { position: absolute; left: 18%; top: 12px; font-size: 13px; color: var(--paper); letter-spacing: .2em; animation: step 14s linear infinite; }
+  @keyframes step { from { left: 110%; } to { left: -8%; } }
+  .fishtext { padding: 22px 26px 20px; }
+
+  /* ============ 叶十一 户口 ============ */
+  .census { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 24px; }
+  .cs { border-top: 2px solid var(--gold); padding-top: 14px; }
+  .cs .t { font-size: 13px; color: var(--faint); letter-spacing: .24em; }
+  .cs .hu { font-size: clamp(30px, 4.4vw, 48px); font-weight: 700; letter-spacing: .04em; margin: 6px 0 0; }
+  .cs .hu small { font-size: 15px; font-weight: 400; color: var(--dim); margin-left: 6px; }
+  .cs .ko { font-size: 15px; color: var(--dim); margin-top: 4px; }
+  .total { border: 1px dashed rgba(201,150,63,.5); padding: 16px 22px; font-size: 15.5px; color: var(--dim); }
+  .total b { color: var(--gold); font-size: 21px; letter-spacing: .06em; }
+
+  /* ============ 校字记 ============ */
+  .errata { border: 1px solid var(--hair); }
+  .errata .er { display: grid; grid-template-columns: 210px 1fr; gap: 18px; padding: 12px 18px; border-bottom: 1px solid var(--hair); font-size: 14px; color: var(--dim); }
+  .errata .er:last-child { border-bottom: 0; }
+  .errata .er b { color: var(--paper); font-weight: 400; }
+  .errata .er span i { font-style: normal; color: var(--faint); }
+
+  /* ============ 页脚 ============ */
+  footer.page { border-top: 1px solid var(--hair); margin-top: 56px; padding: 36px 0 60px; color: var(--faint); font-size: 13.5px; }
+  footer.page b { color: var(--dim); font-weight: 400; }
+  footer.page a { color: var(--dim); }
+
+  .lit { opacity: 1; transform: none; }
+  .arm { opacity: 0; transform: translateY(16px); }
+  blockquote.bq, .knot, .wonder, .cs, .fold, .stele-sec .cap, .stele h2 { transition: opacity .7s ease, transform .7s ease; }
+
+  @media (max-width: 860px) {
+    .citywrap, .twocol, .wonders { grid-template-columns: 1fr; }
+    .census { grid-template-columns: 1fr; gap: 14px; }
+    .goods { grid-template-columns: repeat(2, 1fr); }
+    .spokes { grid-template-columns: 1fr 1fr; }
+    .spoke { border-top: 1px solid var(--hair); min-height: 0; padding-bottom: 14px; }
+    .spoke .line { display: none; }
+    .spoke .to { position: static; }
+    .temlist { columns: 1; }
+    .errata .er { grid-template-columns: 1fr; gap: 2px; }
+    .stele-sec { margin: 30px -26px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 · 站道 ================= -->
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">殆知阁导读 <b>戍册</b> 光绪十七年造送</div>
+    <h1>宁古塔<br><span class="thin">地方</span>乡土志</h1>
+    <p class="lead">清宫戏里一句「发配宁古塔」，让这座城成了极刑的代名词。光绪十七年，副都统衙门造送省城一本乡土志：<b>催稿的咨文排在正文之前</b>，六十任武官的名录排成一墙，账目的末行永远是「备抵兵饷」，而疆域条只用了七个字，说出东边的实情。本页照册讲城。</p>
+  </div>
+
+  <div class="roadbox">
+    <div class="road" id="road">
+      <div class="track">
+        <div class="stop"><span class="li">又六十里</span><span class="pole"></span><span class="nm">塔拉站</span><span class="st">西道第三站</span></div>
+        <div class="stop"><span class="li">七十里</span><span class="pole"></span><span class="nm">必尔罕河站</span><span class="st">西道第二站</span></div>
+        <div class="stop"><span class="li">八十里</span><span class="pole"></span><span class="nm">沙兰站</span><span class="st">西道首站</span></div>
+        <div class="stop city">
+          <span class="walled"><i class="w"></i><i class="e"></i><i class="s"></i></span>
+          <span class="nm">宁古塔城</span>
+          <span class="st">土墙五百八十五丈 东南西三门</span>
+        </div>
+        <div class="stop"><span class="li">七十里</span><span class="pole"></span><span class="nm">新官地站</span><span class="st">南道首站</span></div>
+        <div class="stop"><span class="li">五十里</span><span class="pole"></span><span class="nm">玛勒瑚哩站</span><span class="st">南道第二站</span></div>
+        <div class="stop"><span class="li">六十里</span><span class="pole"></span><span class="nm">老松岭站</span><span class="st">南道第三站</span></div>
+        <div class="stop"><span class="li">八十里</span><span class="pole"></span><span class="nm">萨奇库站</span><span class="st">南道第四站</span></div>
+        <div class="stop"><span class="li">七十里</span><span class="pole"></span><span class="nm">虎珠岭站</span><span class="st">南道第五站</span></div>
+        <div class="stop"><span class="li">入珲春界</span><span class="pole"></span><span class="nm">珲春</span><span class="st">南道尽头</span></div>
+      </div>
+    </div>
+    <div class="roadhint">卷首驿站条绘 站道可左右拖动 西道三站 南道五站</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= 叶一 咨文 ================= -->
+<section class="leaf" id="ye1">
+  <div class="leafhead"><span class="lno">叶一</span><h2>先收一封催稿公函</h2><span class="tag">咨文</span></div>
+  <p class="prose">这本书的第一页不是地理，是<b>公文</b>：吉林将军衙门催各城速交志书采访清册，宁古塔副都统衙门回函，说前两次已经造册报过，如今钤印再送。一场省与边城之间的公文往返，替这本乡土志开了场。落款时间是光绪十七年五月初一日，公历一八九一年夏。</p>
+  <div class="fold">
+    <p class="doc"><b>将军来咨</b>　案据志书局纂修候补同知郭锡铭称，案蒙本署道扎委纂修志书，并颁发志书局章程，饬令遵办……所有卑职请发各处送省事宜，查照汇纂缘由，理合呈请查核。</p>
+    <p class="doc" style="margin-top:14px"><b>副都统回咨</b>　前奉省咨，业将宁古塔地方采访志书事宜两次造册，咨送在案。今准来咨，复行造具采访志书清册二本，一并钤印，呈请备文附封咨送。</p>
+    <div class="seal">宁古塔副都统衙门之印</div>
+  </div>
+  <blockquote class="bq">将前项采访志书事迹，饬造清册二本，迅速送省施行。<span class="from">卷首 · 咨</span></blockquote>
+</section>
+
+<!-- ================= 叶二 沿革 ================= -->
+<section class="leaf" id="ye2">
+  <div class="leafhead"><span class="lno">叶二</span><h2>从一座名字很远的堡子说起</h2><span class="tag">建置沿革</span></div>
+  <p class="prose">沿革条一共四十多个字，把两百五十余年压成一条绳。起点是清太宗天聪八年设的一座<b>「官兵遥远堡」</b>，堡名照录库本，像是公文写手顺手把这里的地理感受写进了建制名。此后步步升格，又在康熙十五年把将军移驻吉林乌拉，宁古塔降为副都统镇守，从此它在行政版图上退了半步。</p>
+  <div class="rope">
+    <div class="knot"><div class="yr">天聪八年 · 1634</div><div class="ev">设官兵遥远堡</div><div class="nt">沿革条起点，堡名照录</div></div>
+    <div class="knot"><div class="yr">崇德三年 · 1638</div><div class="ev">移此镇守宁古塔</div><div class="nt">驻防定型</div></div>
+    <div class="knot"><div class="yr">顺治十年 · 1653</div><div class="ev">设昂邦章京</div><div class="nt">昂邦，满语大人</div></div>
+    <div class="knot"><div class="yr">康熙元年 · 1662</div><div class="ev">改镇守宁古塔等处将军</div><div class="nt">首任巴海</div></div>
+    <div class="knot"><div class="yr">康熙十五年 · 1676</div><div class="ev">移镇吉林乌拉</div><div class="nt">留副都统守宁古塔</div></div>
+    <div class="knot"><div class="yr">光绪十七年 · 1891</div><div class="ev">造送乡土志</div><div class="nt">本册落款五月朔日</div></div>
+  </div>
+</section>
+
+<!-- ================= 叶三 城池 ================= -->
+<section class="leaf" id="ye3">
+  <div class="leafhead"><span class="lno">叶三</span><h2>一座没有北门的城</h2><span class="tag">城池 官署</span></div>
+  <p class="prose">城池条记土墙一丈二尺高、五百八十五丈周长，<span class="q">东西南各一门</span>。北面没有门。城里的房子在官署条里一间一间数得出来：大堂五间，后堂七间，左右司各二员办公的司房八间六间，银库三间，印楼一间，公仓八座四十间，义仓六座三十间，监狱一座，狱墙二十八丈。右图按条文摆出这些房子，悬停图例可对照。</p>
+  <blockquote class="bq">在吉林省城东相距八百里，现筑土墙，高一丈二尺，周围五百八十五丈，东西南各一门。<span class="from">城池条</span></blockquote>
+  <blockquote class="bq">相距城南有虎儿哈河，今俗称牡丹江，康熙五年由旧城迁此，将军巴海监造。<span class="from">城池条</span></blockquote>
+  <div class="citywrap">
+    <div class="citymap">
+      <svg viewBox="0 0 660 470" aria-label="宁古塔城池示意">
+        <path class="river" d="M0,432 C120,414 210,444 330,430 C450,416 540,444 660,424" />
+        <text class="lbl2" x="470" y="462">牡丹江（虎儿哈河）</text>
+        <rect class="wall" x="90" y="70" width="480" height="300" />
+        <rect class="gate" x="84" y="212" width="12" height="22" />
+        <rect class="gate" x="564" y="212" width="12" height="22" />
+        <rect class="gate" x="324" y="364" width="22" height="12" />
+        <text class="lbl2" x="60" y="205">西门</text>
+        <text class="lbl2" x="580" y="205">东门</text>
+        <text class="lbl2" x="352" y="376">南门</text>
+        <line x1="90" y1="70" x2="570" y2="70" stroke="#6e6a61" stroke-width="1" stroke-dasharray="4 7" opacity=".0"/>
+        <text class="lbl2" x="292" y="60">北面不设门</text>
+        <rect class="blk" data-k="yamen" x="268" y="120" width="120" height="64" />
+        <text class="lbl" x="284" y="148">副都统公署</text>
+        <text class="lbl2" x="284" y="168">大堂五间 后堂七间</text>
+        <g data-k="cang">
+          <rect class="blk" x="118" y="96" width="18" height="13"/><rect class="blk" x="140" y="96" width="18" height="13"/><rect class="blk" x="162" y="96" width="18" height="13"/><rect class="blk" x="184" y="96" width="18" height="13"/><rect class="blk" x="118" y="113" width="18" height="13"/><rect class="blk" x="140" y="113" width="18" height="13"/><rect class="blk" x="162" y="113" width="18" height="13"/><rect class="blk" x="184" y="113" width="18" height="13"/>
+        </g>
+        <text class="lbl2" x="118" y="142">公仓八座</text>
+        <rect class="blk" data-k="yu" x="118" y="300" width="58" height="40" />
+        <text class="lbl" x="124" y="318">监狱</text>
+        <text class="lbl2" x="124" y="333">狱墙二十八丈</text>
+        <rect class="blk" data-k="xue" x="410" y="290" width="132" height="56" />
+        <text class="lbl" x="422" y="312">孔圣庙 义学</text>
+        <text class="lbl2" x="422" y="330">满义学 汉义学</text>
+        <rect class="blk" data-k="jiao" x="588" y="200" width="56" height="46" />
+        <text class="lbl2" x="592" y="222">教场</text>
+        <text class="lbl2" x="592" y="236">火药局</text>
+        <rect class="blk" data-k="guandi" x="592" y="296" width="50" height="34" />
+        <text class="lbl2" x="596" y="316">关帝庙</text>
+        <circle class="blk" data-k="guanyin" cx="46" cy="392" r="17" />
+        <text class="lbl2" x="14" y="428">观音阁</text>
+        <rect class="blk" data-k="duko" x="236" y="418" width="30" height="12" />
+        <text class="lbl2" x="272" y="410">头道渡口</text>
+        <g data-k="dongjing">
+          <rect class="blk" x="60" y="140" width="14" height="14"/>
+        </g>
+        <text class="lbl2" x="82" y="152">旧东京城（西南七十里 金时遗址）</text>
+      </svg>
+    </div>
+    <ul class="maplegend" id="legend">
+      <li data-k="yamen"><b>署</b>副都统公署，康熙五年建大堂仪门，衙署板墙八十五丈</li>
+      <li data-k="cang"><b>仓</b>城内公仓八座四十间，义仓六座三十间在城外东南</li>
+      <li data-k="yu"><b>狱</b>城内西北隅囚犯狱一座，狱墙周围二十八丈</li>
+      <li data-k="xue"><b>学</b>孔圣庙康熙三十二年建，满义学五间，汉义学光绪八年添修</li>
+      <li data-k="jiao"><b>场</b>城东三里教场演武厅三间，迤东火药局二间</li>
+      <li data-k="guandi"><b>庙</b>关帝庙康熙四年建，庙院左文昌右马神</li>
+      <li data-k="guanyin"><b>阁</b>观音阁康熙三年建，西三里胡尔哈河北岸</li>
+      <li data-k="duko"><b>渡</b>头道渡口在城西南三里，康熙年间捐置渡船</li>
+      <li data-k="dongjing"><b>迹</b>旧东京城，金时遗址，城外南隅有石佛</li>
+    </ul>
+  </div>
+  <p class="prose" style="margin-top:22px">驻防的兵力在仕宦条里有总数：<span class="q">现有领催七十二名，前锋四十名，兵一千二百零八名</span>。一千三百余名甲兵，守着一座没有北门的城。</p>
+</section>
+
+<!-- ================= 叶四 仕宦 ================= -->
+<section class="leaf" id="ye4">
+  <div class="leafhead"><span class="lno">叶四</span><h2>六十任武官的名牌墙</h2><span class="tag">宁古塔将军 副都统</span></div>
+  <p class="prose">仕宦条从顺治十六年的巴海一直点到光绪十三年的富，将军十一任、副都统四十九任，共六十任，一任不缺地钉在同一面墙上。头一任巴海驻防之时，正是流人成批发来的年代；末一任富在任之年，造册的咨文进了衙门。</p>
+  <div class="roll">
+    <span class="tab z"><span class="n">巴海</span><span class="m">镶兰旗 顺治十六年昂邦章京 康熙元年升将军</span></span>
+    <span class="tab z"><span class="n">音图</span><span class="m">正红旗 康熙二十二年</span></span>
+    <span class="tab z"><span class="n">终保</span><span class="m">康熙二十八年</span></span>
+    <span class="tab z"><span class="n">沙那海</span><span class="m">康熙三十五年</span></span>
+    <span class="tab z"><span class="n">杨福</span><span class="m">正兰旗宗室 康熙三十九年</span></span>
+    <span class="tab z"><span class="n">蒙古洛</span><span class="m">镶兰旗觉罗 康熙四十八年</span></span>
+    <span class="tab z"><span class="n">穆森</span><span class="m">康熙五十四年</span></span>
+    <span class="tab z"><span class="n">巴赛</span><span class="m">宗室辅国公 康熙五十六年</span></span>
+    <span class="tab z"><span class="n">哈达</span><span class="m">雍正五年</span></span>
+    <span class="tab z"><span class="n">常德</span><span class="m">镶黄旗 雍正八年</span></span>
+    <span class="tab z"><span class="n">都赍</span><span class="m">副都统署任 雍正十年</span></span>
+    <span class="tab"><span class="n">海塔</span><span class="m">顺治十五年</span></span>
+    <span class="tab"><span class="n">尼喀哩</span><span class="m">顺治十五年</span></span>
+    <span class="tab"><span class="n">满贵</span><span class="m">顺治十八年</span></span>
+    <span class="tab"><span class="n">满丕</span><span class="m">康熙六年</span></span>
+    <span class="tab"><span class="n">湖巴克泰</span><span class="m">康熙六年</span></span>
+    <span class="tab"><span class="n">安珠瑚</span><span class="m">康熙六年</span></span>
+    <span class="tab"><span class="n">蒯齐</span><span class="m">正白旗 康熙十年</span></span>
+    <span class="tab"><span class="n">席三</span><span class="m">正兰旗 康熙十五年</span></span>
+    <span class="tab"><span class="n">萨普苏</span><span class="m">镶黄旗 康熙十七年</span></span>
+    <span class="tab"><span class="n">雅泰</span><span class="m">正红旗 康熙二十二年</span></span>
+    <span class="tab"><span class="n">根头</span><span class="m">康熙三十三年</span></span>
+    <span class="tab"><span class="n">保定</span><span class="m">康熙三十八年</span></span>
+    <span class="tab"><span class="n">嘎尔图</span><span class="m">康熙四十二年</span></span>
+    <span class="tab"><span class="n">马奇</span><span class="m">康熙四十六年</span></span>
+    <span class="tab"><span class="n">阿岱</span><span class="m">吉林正红旗 雍正元年</span></span>
+    <span class="tab"><span class="n">常德</span><span class="m">雍正五年</span></span>
+    <span class="tab"><span class="n">巴尔代</span><span class="m">正白旗 雍正十一年</span></span>
+    <span class="tab"><span class="n">图那</span><span class="m">乾隆十年</span></span>
+    <span class="tab"><span class="n">阿尔嘎泰</span><span class="m">乾隆十八年</span></span>
+    <span class="tab"><span class="n">阿尔德恩</span><span class="m">觉罗 乾隆十八年</span></span>
+    <span class="tab"><span class="n">赊图肯</span><span class="m">乾隆二十一年</span></span>
+    <span class="tab"><span class="n">神通阿</span><span class="m">乾隆二十一年</span></span>
+    <span class="tab"><span class="n">和绷阿</span><span class="m">乾隆二十四年</span></span>
+    <span class="tab"><span class="n">富僧阿</span><span class="m">乾隆二十五年</span></span>
+    <span class="tab"><span class="n">增海</span><span class="m">乾隆二十八年</span></span>
+    <span class="tab"><span class="n">常升</span><span class="m">乾隆三十年</span></span>
+    <span class="tab"><span class="n">明亮</span><span class="m">额驸 乾隆三十三年</span></span>
+    <span class="tab"><span class="n">富珠哩</span><span class="m">多罗额驸 乾隆四十二年</span></span>
+    <span class="tab"><span class="n">达色</span><span class="m">乾隆四十三年</span></span>
+    <span class="tab"><span class="n">安林</span><span class="m">乾隆四十九年</span></span>
+    <span class="tab"><span class="n">那奇泰</span><span class="m">乾隆五十五年</span></span>
+    <span class="tab"><span class="n">庆林</span><span class="m">乾隆六十年</span></span>
+    <span class="tab"><span class="n">富尼山</span><span class="m">嘉庆四年</span></span>
+    <span class="tab"><span class="n">郭尔明阿</span><span class="m">嘉庆七年</span></span>
+    <span class="tab"><span class="n">富登阿</span><span class="m">嘉庆十年</span></span>
+    <span class="tab"><span class="n">德宁阿</span><span class="m">嘉庆十五年</span></span>
+    <span class="tab"><span class="n">达斯胡尔代</span><span class="m">嘉庆二十年</span></span>
+    <span class="tab"><span class="n">和福</span><span class="m">道光四年</span></span>
+    <span class="tab"><span class="n">说德</span><span class="m">道光十年</span></span>
+    <span class="tab"><span class="n">依尔栋阿</span><span class="m">吉林镶兰旗 道光十二年</span></span>
+    <span class="tab"><span class="n">乌勒德山</span><span class="m">道光二十年</span></span>
+    <span class="tab"><span class="n">班迪</span><span class="m">道光二十八年</span></span>
+    <span class="tab"><span class="n">巴栋阿</span><span class="m">咸丰元年</span></span>
+    <span class="tab"><span class="n">喀通阿</span><span class="m">咸丰九年</span></span>
+    <span class="tab"><span class="n">乌勃兴阿</span><span class="m">黑龙江 同治五年</span></span>
+    <span class="tab"><span class="n">双福</span><span class="m">伯都讷 光绪元年</span></span>
+    <span class="tab"><span class="n">德平阿</span><span class="m">吉林蒙古 光绪六年</span></span>
+    <span class="tab"><span class="n">容山</span><span class="m">京旗正黄 光绪九年</span></span>
+    <span class="tab last"><span class="n">富</span><span class="m">吉林正红旗 光绪十三年</span></span>
+  </div>
+</section>
+
+<!-- ================= 叶五 田赋 ================= -->
+<section class="leaf" id="ye5">
+  <div class="leafhead"><span class="lno">叶五</span><h2>一本总账，行行备抵兵饷</h2><span class="tag">田赋</span></div>
+  <p class="prose">田赋条是全册最像账本的一段：地分三等，银米并征，铺户、烧锅、斗税、盐税、油税一样一样报数。每一笔的末尾几乎都缀着同样四个字：<b>备抵兵饷</b>。这座城的产出，在纸面上是军费的注脚。</p>
+  <div class="ledger">
+    <div class="lrow"><span class="k">额征民地<small>乾隆四十六、七年丈出流民垦地一千三百二十一亩另征</small></span><span class="v">四万五千五百十六亩</span></div>
+    <div class="lrow"><span class="k">上则地<small>每亩征银三分，征米六升六合</small></span><span class="v">银三分 米六升六合</span></div>
+    <div class="lrow"><span class="k">中则地<small>每亩征银二分，征米四升四合</small></span><span class="v">银二分 米四升四合</span></div>
+    <div class="lrow"><span class="k">下则地<small>每亩征银一分，征米二升二合</small></span><span class="v">银一分 米二升二合<i>每米一石折银一两</i></span></div>
+    <div class="lrow"><span class="k">额征税银<small>除差役饭食银一百五十八两六钱二分一厘二毫八丝</small></span><span class="v">实剩一千四百二十七两五钱九分一厘五毫二丝<i>造册报省</i></span></div>
+    <div class="lrow"><span class="k">当铺税<small>报请开除荒闭当铺六家</small></span><span class="v">原有十一家 现存五家 征银十二两五钱</span></div>
+    <div class="lrow"><span class="k">商捐<small>七厘捐四千一百吊，光绪十三年加添四厘</small></span><span class="v">共钱六千四百四十二吊八百五十文<i>春秋解省</i></span></div>
+    <div class="lrow"><span class="k">斗税<small>拨抵税银津贴衙役饷银</small></span><span class="v">实剩三百七十三吊六百文</span></div>
+    <div class="lrow"><span class="k">盐税 油税<small>光绪十年十二月、十一年正月先后奉文开征</small></span><span class="v">二百四十五吊六百七十文 五百六十八吊四百八十八文</span></div>
+    <div class="lrow"><span class="k">官庄粮<small>额丁一百三十名，每名纳谷三十石</small></span><span class="v">粮地一千五百六十垧 共谷三千九百石<i>入公仓</i></span></div>
+  </div>
+  <div class="burner">
+    <span class="big">烧锅票课钱一万吊</span>
+    <span class="cap">烧锅即酿酒坊，票课是买票纳税的钱。全城酒税按年分春、秋二季收齐，也是那一句话：备抵兵饷。</span>
+  </div>
+  <blockquote class="bq">征收烧锅票课钱一万吊，按年分为春、秋二季收齐，备抵兵饷。<span class="from">田赋条</span></blockquote>
+</section>
+
+<!-- ================= 叶六 坛庙学塾 ================= -->
+<section class="leaf" id="ye6">
+  <div class="leafhead"><span class="lno">叶六</span><h2>神仙编制与两间学堂</h2><span class="tag">坛庙 学校</span></div>
+  <p class="prose">坛庙条像一份神仙花名册：武圣的庙一处接一处，清单里数得出八处，最早一座康熙四年就立了；文圣的孔庙晚建二十八年。给驻防子弟的满义学有五间，而汉义学要等到光绪八年才添起来。这座城的文化账，比它的神仙账晚了两个世纪。</p>
+  <div class="twocol">
+    <div class="temlist">
+      <p><b>关帝庙</b>八处<i>康熙四年首建</i></p>
+      <p><b>孔圣庙</b><i>康熙三十二年</i></p>
+      <p><b>文昌庙 魁星楼</b><i>嘉庆二十三年</i></p>
+      <p><b>三代神祠</b>敕修<i>雍正六年</i></p>
+      <p><b>昭忠祠</b><i>嘉庆九年</i></p>
+      <p><b>观音阁</b><i>康熙三年</i></p>
+      <p><b>石佛寺</b><i>金时遗址建刹</i></p>
+      <p><b>三官庙 娘娘庙</b><i>康熙二十一、三十七年</i></p>
+      <p><b>城隍庙 瘟神庙 土地祠</b><i>康熙三十二年</i></p>
+      <p><b>天齐庙 老君庙</b><i>康熙五年</i></p>
+      <p><b>财神庙</b><i>康熙四十五年</i></p>
+      <p><b>火神 龙王庙</b><i>康熙四十九年</i></p>
+      <p><b>山神庙</b><i>乾隆十二年</i></p>
+      <p><b>苗药虫王庙 三皇庙</b><i>康熙五十四年</i></p>
+      <p><b>七圣庙</b><i>康熙五十四年</i></p>
+      <p><b>地藏庙</b><i>雍正七年</i></p>
+      <p><b>弥勒院</b><i>乾隆四年</i></p>
+      <p><b>古佛寺</b>两处<i>乾隆二十、四十五年</i></p>
+      <p><b>祈雨坛</b><i>观音阁西</i></p>
+    </div>
+    <div class="sch">
+      <h3>学校条</h3>
+      <p>城内东南隅文昌庙北，<b>汉义学三间</b>，又添修汉义学五间，光绪八年建。</p>
+      <p>又北有<b>满义学五间</b>。</p>
+      <p>驻防二百年，八旗子弟的学堂先办；民籍子弟的义学，排在光绪朝的日程表上。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 叶七 石佛寺 ================= -->
+<section class="leaf" id="ye7">
+  <div class="stele-sec">
+    <div class="stele">
+      <div class="cap">叶七 · 古迹条嵌着的一段流人往事</div>
+      <h2>石佛寺的异梦</h2>
+      <p>旧东京城的金时遗址上有一尊石佛，相传石首坠地多年，重修时无人能安回去。乡土志在这里记下一段神异故事，故事末尾出现了两个名字，那是清初流放宁古塔的<b>科场案文人</b>：吴汉槎即吴兆骞，顺治十四年丁酉科场案遣戍宁古塔二十三年，是清代流人文学最著名的名字。</p>
+      <blockquote class="bq">内有石佛一尊，高两丈余，后石首坠地，有石匠见之欲凿为碾，甫举锤，头忽痛，遂置之。是夕吴汉槎，钱德维等同感异梦，于是举石首凑法像，冶铁固之，故址建刹，至今重修，香火甚盛。<span class="from">古迹 · 石佛寺</span></blockquote>
+      <p>寺里还有一尊向东南歪斜的石香亭，工匠百余人扶不正；等到重修竣工、工匠吃饭时，一朵红云落下几点雨，众人出门去看，<b>亭子自己正了</b>。</p>
+      <blockquote class="bq">其形欲倒，历经工匠置之不动。<span class="from">古迹 · 石佛寺</span></blockquote>
+      <blockquote class="bq">有红云一朵，降雨数点，闻有沥沥之声，众皆出视，其亭自正。<span class="from">古迹 · 石佛寺</span></blockquote>
+      <p class="witness"><b>按</b>　吴兆骞《秋笳集》与《宁古塔山水记》等流人著述可与此条互证。光绪年间的志书局采访员把康熙年间流人圈子里口耳相传的神异故事，原样收进了官方清册。公文之间，忽然夹着一页传奇。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 叶八 疆域 ================= -->
+<section class="leaf" id="ye8">
+  <div class="leafhead"><span class="lno">叶八</span><h2>疆域条的七个字</h2><span class="tag">疆域</span></div>
+  <p class="prose">疆域条按四个方向报界址，东面报到瑚布图卡伦为止。全书对咸丰十年以后版图的变化不作任何说明，只在这一行里说了一句实情，七个字。下面按条文画出四至，卡伦之外画成斜线。</p>
+  <div class="border-map">
+    <div class="spokes">
+      <div class="spoke"><div class="dir">南</div><div class="dist">三百余里</div><div class="line"></div><div class="to">至嘎哈里河<br>珲春界</div></div>
+      <div class="spoke"><div class="dir">北</div><div class="dist">三百余里</div><div class="line"></div><div class="to">至阿穆阿兰河<br>三姓界</div></div>
+      <div class="spoke"><div class="dir">西</div><div class="dist">二百一十里</div><div class="line"></div><div class="to">至都林河<br>吉林界</div></div>
+      <div class="spoke"><div class="dir">东</div><div class="dist">五百余里</div><div class="line"></div><div class="to">至瑚布图卡伦<br>卡伦之外即俄界</div></div>
+      <div class="spoke"><div class="dir">东北</div><div class="dist">八百余里</div><div class="line"></div><div class="to">至乌札库卡伦<br>卡伦之外即俄界</div></div>
+    </div>
+    <div class="russia"><span class="seven">其迤东皆系俄界</span><span class="en">疆域条末句</span></div>
+  </div>
+  <blockquote class="bq">南至嘎哈里河，距城三百余里珲春界，北至阿穆阿兰河，距城三百余里三姓界，西至都林河，距城二百一十里吉林界，东至瑚布图卡伦，距城五百余里，东北至乌札库卡伦，距城八百余里；其迤东皆系俄界。<span class="from">疆域条</span></blockquote>
+</section>
+
+<!-- ================= 叶九 古迹 ================= -->
+<section class="leaf" id="ye9">
+  <div class="leafhead"><span class="lno">叶九</span><h2>古迹四绝</h2><span class="tag">古迹 山川</span></div>
+  <p class="prose">采访员显然在山川古迹上花了心思，抄进册子的四段风景，一件比一件不像公文。</p>
+  <div class="wonders">
+    <div class="wonder wide">
+      <h3><i>其一</i>德林石</h3>
+      <p>城西九十里起，一片黑石甸子铺开一百余里，俗呼黑石甸子。石面平得像镜子，石穴或圆或方，像井、像盆、像池、像口、像盂；穴中有泉，凝碧不冻，夏天连蚊虻都没有。车马从甸子上走过去，脚下是空洞的回声。</p>
+      <div class="vessels"><span>井</span><span>盆</span><span>池</span><span>口</span><span>盂</span></div>
+      <blockquote class="bq">石面平如镜，洞穴大小不可数，或圆、或方、或六隅八隅，如井、如盆、如池、如口、如盂。<span class="from">古迹 · 德林石</span></blockquote>
+      <blockquote class="bq">中有水泉澄然凝碧，夏无蚊虻，马鹿群嬉。<span class="from">古迹 · 德林石</span></blockquote>
+      <blockquote class="bq">平甸车马行其上如闻空洞之声，石块或损，便有水从罅隙出，探之深不可测。<span class="from">古迹 · 德林石</span></blockquote>
+    </div>
+    <div class="wonder">
+      <h3><i>其二</i>海眼</h3>
+      <p>石头甸子西高山中，方圆八十余里的水泡子，每日三潮，与海相仿。仲夏日出时分风平浪静，巨鱼从波心涌出。</p>
+      <div class="eye"><i></i><i></i><i></i></div>
+      <blockquote class="bq">每至仲夏，日初出时，风平浪静，有巨鱼涌出波心，高约三丈，长十余丈，飞鸟不敢过其上，已午时始没。<span class="from">古迹 · 海眼</span></blockquote>
+    </div>
+    <div class="wonder">
+      <h3><i>其三</i>吊水楼</h3>
+      <p>镜泊湖西北出水处，胡克图崖高数十丈，湖水东注，瀑布悬空，轰鸣数里，当地人叫它响水。三四月间日出时分，水光日色红绿相映。</p>
+      <div class="falls"></div>
+      <blockquote class="bq">湖水东注，水势汹溪，飞瀑蹑空，沸腾奔浪如雷吼，声闻数里，谓之响水。<span class="from">山川 · 吊水楼</span></blockquote>
+    </div>
+    <div class="wonder" style="grid-column:1 / -1">
+      <h3><i>其四</i>镜泊湖与莲花泡</h3>
+      <p>城西南一百十里，群流凑成的大湖，土人呼必尔滕，广五六里、长七十余里，湖中有三山。西边的莲花泡相传是金时塞外的曲江，夏日荷花开红、粉、白三种，映水可趣。</p>
+      <blockquote class="bq">源出长白山，群流凑集至此，遂成巨浸，广五六里，长七十余里，湖中有三山。<span class="from">山川 · 镜泊湖</span></blockquote>
+      <blockquote class="bq">相传为金时塞外之曲江。此泡向产莲花。<span class="from">山川 · 莲花泡</span></blockquote>
+    </div>
+  </div>
+  <p class="prose" style="margin-top:24px">河里还藏着一笔财富。城西北五十里的海兰河出<b>东珠</b>，每年由吉林乌拉总管珠轩派官前来捕打贡珠。这条河，是皇室珠宝库的最北一个货源地。</p>
+  <blockquote class="bq">此河出东珠，向年由吉林乌拉总管珠轩下派官往此捕打贡珠，并产达发哈鱼。<span class="from">山川 · 海兰河</span></blockquote>
+</section>
+
+<!-- ================= 叶十 物产 ================= -->
+<section class="leaf" id="ye10">
+  <div class="leafhead"><span class="lno">叶十</span><h2>一份随心所欲的物产单</h2><span class="tag">物产</span></div>
+  <p class="prose">物产条分谷、蔬、花、果、禽、兽、水族、虫八属，类目编得随性：<b>人参编在花之属</b>，松榆木耳编在蔬之属。点类目可筛选。貂、参、珠、鱼，是这座城给京师的四样土贡底色。</p>
+  <div class="catbar" id="catbar">
+    <button class="cat on" data-c="all">全部</button>
+    <button class="cat" data-c="gu">谷之属</button>
+    <button class="cat" data-c="shu">蔬之属</button>
+    <button class="cat" data-c="hua">花之属</button>
+    <button class="cat" data-c="guo">果之属</button>
+    <button class="cat" data-c="qin">禽之属</button>
+    <button class="cat" data-c="shou">兽之属</button>
+    <button class="cat" data-c="shui">水族之属</button>
+    <button class="cat" data-c="chong">虫</button>
+  </div>
+  <div class="goods" id="goods">
+    <div class="good show" data-c="gu"><div class="g">稷<em>谷</em></div><div class="n">今呼糜子米，晓种早熟，边地尤宜</div></div>
+    <div class="good show" data-c="gu"><div class="g">黍<em>谷</em></div><div class="n">稷之粘者，今呼大黄米，可酿酒</div></div>
+    <div class="good show" data-c="gu"><div class="g">蜀黍<em>谷</em></div><div class="n">种始自蜀，今呼高粮，土人率多饭此</div></div>
+    <div class="good show" data-c="gu"><div class="g">粟<em>谷</em></div><div class="n">今之小米色黄，即黄梁也</div></div>
+    <div class="good show" data-c="gu"><div class="g">稗<em>谷</em></div><div class="n">宜下湿之地，米最甘滑</div></div>
+    <div class="good show" data-c="gu"><div class="g">元菽<em>谷</em></div><div class="n">黄豆黑豆，尚可榨油</div></div>
+    <div class="good show" data-c="gu"><div class="g">玉蜀黍<em>谷</em></div><div class="n">子藏包中，俗呼包儿米</div></div>
+    <div class="good show" data-c="shu"><div class="g">榆蘑 榛蘑<em>蔬</em></div><div class="n">榆树朽根所化，榛蘑高脚红裹</div></div>
+    <div class="good show" data-c="shu"><div class="g">松<em>蔬</em></div><div class="n">结子者果松，无子者杉松，脂多者油松</div></div>
+    <div class="good show" data-c="shu"><div class="g">榆<em>蔬</em></div><div class="n">刺榆大者中为车轴，花榆宜为几案</div></div>
+    <div class="good show" data-c="shu"><div class="g">木耳<em>蔬</em></div><div class="n">宜柞木而生，色染绸缎取光</div></div>
+    <div class="good show" data-c="shu"><div class="g">椴<em>蔬</em></div><div class="n">边外人参多生椴树之下</div></div>
+    <div class="good show" data-c="shu"><div class="g">老鹤眼<em>蔬</em></div><div class="n">名李木，子赤黑如鸦眼，皮可染色</div></div>
+    <div class="good show" data-c="hua"><div class="g">人参<em>花</em></div><div class="n">芽参 朵子参 黄草参，参须参膏无不珍之</div></div>
+    <div class="good show" data-c="hua"><div class="g">菊花<em>花</em></div><div class="n">旗人刘成和善养之，至冬犹盛</div></div>
+    <div class="good show" data-c="hua"><div class="g">荷花<em>花</em></div><div class="n">《尔雅》谓之芙渠，今名莲花</div></div>
+    <div class="good show" data-c="hua"><div class="g">向日莲<em>花</em></div><div class="n">顶作黄花，大如碗，向日转</div></div>
+    <div class="good show" data-c="hua"><div class="g">秋海棠<em>花</em></div><div class="n">入秋时花色亦娇艳</div></div>
+    <div class="good show" data-c="guo"><div class="g">松子<em>果</em></div><div class="n">今乌喇宁古塔山中有之</div></div>
+    <div class="good show" data-c="guo"><div class="g">香瓜<em>果</em></div><div class="n">银皮瓜 芝麻粒 高丽瓜诸名</div></div>
+    <div class="good show" data-c="guo"><div class="g">西瓜<em>果</em></div><div class="n">相传种自回纥，哈密来者味尤胜</div></div>
+    <div class="good show" data-c="guo"><div class="g">灯茏果<em>果</em></div><div class="n">外垂绛囊，俗呼红姑娘</div></div>
+    <div class="good show" data-c="guo"><div class="g">葡萄<em>果</em></div><div class="n">园产者大而味佳，田产者实小味酸</div></div>
+    <div class="good show" data-c="qin"><div class="g">雉<em>禽</em></div><div class="n">《尚书》谓之华虫，今呼野鸡</div></div>
+    <div class="good show" data-c="qin"><div class="g">鹊<em>禽</em></div><div class="n">一名灵鹊，俗呼喜鹊</div></div>
+    <div class="good show" data-c="qin"><div class="g">燕<em>禽</em></div><div class="n">善构巢者巧燕，来去皆以社时，故曰社燕</div></div>
+    <div class="good show" data-c="shou"><div class="g">虎<em>兽</em></div><div class="n">边外间有白质黑章者尤猛鸷</div></div>
+    <div class="good show" data-c="shou"><div class="g">狼<em>兽</em></div><div class="n">皮毛青白者贵，品官坐褥一品用狼</div></div>
+    <div class="good show" data-c="shou"><div class="g">貂鼠<em>兽</em></div><div class="n">边外色紫黑，皮甚轻暖</div></div>
+    <div class="good show" data-c="shou"><div class="g">狐<em>兽</em></div><div class="n">集腋为裘，元狐最贵</div></div>
+    <div class="good show" data-c="shou"><div class="g">猞猁狲<em>兽</em></div><div class="n">类野狸而大，耳有长毫</div></div>
+    <div class="good show" data-c="shou"><div class="g">狍<em>兽</em></div><div class="n">每冬有白项野狍从海边来，不可胜数</div></div>
+    <div class="good show" data-c="shui"><div class="g">鲫鱼<em>水族</em></div><div class="n">大不过二斤，今时贡之</div></div>
+    <div class="good show" data-c="shui"><div class="g">哲绿鱼<em>水族</em></div><div class="n">似鲈鱼，色黑，出牡丹江</div></div>
+    <div class="good show" data-c="shui"><div class="g">水獭<em>水族</em></div><div class="n">《月令》正月獭祭鱼，潦水之候</div></div>
+    <div class="good show" data-c="shui"><div class="g">大发哈鱼<em>水族</em></div><div class="n">秋八月自海入江，见下节</div></div>
+    <div class="good show" data-c="chong"><div class="g">蜂<em>虫</em></div><div class="n">在地作房者土蜂，酿蜜者蜜蜂</div></div>
+    <div class="good show" data-c="chong"><div class="g">蟋蟀<em>虫</em></div><div class="n">俗呼趋趋，好穴于灶，亦名灶鸡</div></div>
+    <div class="good show" data-c="chong"><div class="g">蝶<em>虫</em></div><div class="n">山中蝶大如掌，采色班烂，子即山蚕</div></div>
+  </div>
+
+  <div class="fishbox">
+    <div class="riverband">
+      <div class="backs" id="backs"></div>
+      <span class="walker">行人踏鱼背过江</span>
+    </div>
+    <div class="fishtext">
+      <p class="prose" style="margin-bottom:14px">水族条压轴的是大发哈鱼，即大马哈鱼。志书说它秋八月从海里迎水入江，多到<b>驱赶不走、堆积起来人踩着鱼背就能过河</b>；腹中的鱼子有玉米粒大，边地人把鱼炙干当粮囤积。毛皮类则记了捕貂的方法：打性人下雪天循着貂的足迹设捕。</p>
+      <blockquote class="bq">宁古塔诸处有之。秋八月白海迎水入江，驱之不去、充积甚厚。土人竟有履鱼背而渡者，腹中子大如玉蜀黍，边地人取鱼炙干积之如粮。<span class="from">水族 · 大发哈鱼（库本作白海，见校字记）</span></blockquote>
+      <blockquote class="bq">近东北边者色黄，边外色紫黑，皮甚轻煖。打性人于雪天寻其迹而捕焉。<span class="from">兽 · 貂鼠（煖字照录）</span></blockquote>
+    </div>
+  </div>
+
+  <div style="padding:34px 0 0">
+    <p class="prose" style="margin-bottom:10px">花之属开首是人参，志书引了一首高丽人参赞，四句二十字，是采参人的行路诀：参叶三丫五叶，参性背阳向阴，要找它的人，到椴树底下去寻。库本第三句有讹字，照录。</p>
+    <blockquote class="bq">三丫五叶，背阳向阴。所来求找，椴树之下相寻。<span class="from">花之属 · 人参（高丽人参赞）</span></blockquote>
+    <p class="prose" style="margin-bottom:10px">兽之属里还有一套穿在身上的等级制：冬天官坐的褥子按品级配皮，从一品到五品，一层一层降下来。</p>
+    <blockquote class="bq">国朝品官坐褥冬用皮，有定制，一品用狼，二品用獾，三品用貉，四品用山羊，五品以下用白羊皮，公、侯极品用虎豹皮。<span class="from">兽 · 狼</span></blockquote>
+    <p class="prose" style="margin-bottom:10px">猛虎条只一句话：<span class="q">诸山皆有之。边外间有白质黑章者尤猛鸷，围中以激打枪手制之</span>。白虎被记成山里本有的出产，围场里要靠枪手围打。</p>
+  </div>
+</section>
+
+<!-- ================= 叶十一 户口 ================= -->
+<section class="leaf" id="ye11">
+  <div class="leafhead"><span class="lno">叶十一</span><h2>光绪十四年的全部人口</h2><span class="tag">户口</span></div>
+  <p class="prose">清册最后落一句「光绪十七年二月二十八日」，户口数则记的是光绪十四年现查。当年发配文书上冷得烫手的三个字，到这里是九千四百多户人家的籍贯。</p>
+  <div class="census">
+    <div class="cs"><div class="t">八旗</div><div class="hu">6,772<small>户</small></div><div class="ko">32,883口，披甲闲散西丹男女</div></div>
+    <div class="cs"><div class="t">民籍</div><div class="hu">1,753<small>户</small></div><div class="ko">9,523口</div></div>
+    <div class="cs"><div class="t">官庄</div><div class="hu">895<small>户</small></div><div class="ko">2,824口</div></div>
+  </div>
+  <div class="total">合计 <b>9,420 户</b>　<b>45,230 口</b>　从流放绝域到编户四万五，这座城用两百年把罪名住成了户口。</div>
+  <blockquote class="bq">光绪十四年现查八旗户六千七百七十二户，披甲，闲散西丹男、妇等三万二千八百八十三口。<span class="from">户口条</span></blockquote>
+  <blockquote class="bq">民籍户一千七百五十三户，男、妇九千五百二十三名，口，官庄户八百九十五户，男，妇二千八百二十四名，口。<span class="from">户口条</span></blockquote>
+</section>
+
+<!-- ================= 校字记 ================= -->
+<section class="leaf" id="errata">
+  <div class="leafhead"><span class="lno">校字记</span><h2>库本原貌照录备查</h2><span class="tag">殆知阁简体库</span></div>
+  <div class="errata">
+    <div class="er"><b>白海</b><span>大发哈鱼条「秋八月白海迎水入江」，白海疑当作自海，引文照录。</span></div>
+    <div class="er"><b>所来求找</b><span>人参赞第三句，疑有讹字，句意大致为欲来求我，照录。</span></div>
+    <div class="er"><b>汹溪</b><span>吊水楼条「水势汹溪」，疑当作汹激，照录。</span></div>
+    <div class="er"><b>遥远堡</b><span>建置沿革「设官兵遥远堡」，堡名照录。</span></div>
+    <div class="er"><b>灯茏果</b><span>即灯笼果，俗呼红姑娘，照录。</span></div>
+    <div class="er"><b>煖</b><span>貂鼠条「皮甚轻煖」，煖同暖，照录。</span></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），史藏地理〈宁古塔地方乡土志〉，库内全文去空白约 9,758 字，本页全部引文经脚本与库内文本去标点、异体归一逐字比对通过。<br>
+    <b>上一篇同卷</b>　〈<a href="gegu-yaolun.html">格古要论</a>〉　<b>返回总目</b>　〈<a href="mulu.html">殆知阁导读总目</a>〉<br>
+    <b>时代局限提醒</b>　本志成于清代边疆驻防体制之下，流放刑、旗民分治、界务表述等皆系历史文献原貌，不代表编者与导读立场；涉及流人流寓与族群的内容，请以史料语境分辨取用。
+  </div>
+</footer>
+
+<script>
+(function(){
+  var road = document.getElementById('road');
+  if (road) {
+    road.scrollLeft = Math.max(0, (road.scrollWidth - road.clientWidth) / 2);
+    var drag = false, sx = 0, sl = 0;
+    road.addEventListener('pointerdown', function(e){ drag = true; sx = e.clientX; sl = road.scrollLeft; road.classList.add('drag'); });
+    window.addEventListener('pointermove', function(e){ if (drag) road.scrollLeft = sl - (e.clientX - sx); });
+    window.addEventListener('pointerup', function(){ drag = false; road.classList.remove('drag'); });
+  }
+
+  var legend = document.getElementById('legend');
+  if (legend) {
+    var items = legend.querySelectorAll('li');
+    items.forEach(function(li){
+      var key = li.getAttribute('data-k');
+      var blk = document.querySelector('svg .blk[data-k="' + key + '"], svg g[data-k="' + key + '"] .blk');
+      if (!blk) { var g = document.querySelector('svg g[data-k="' + key + '"]'); blk = g; }
+      if (!blk) return;
+      function on(){ blk.classList.add('on'); li.classList.add('on'); }
+      function off(){ blk.classList.remove('on'); li.classList.remove('on'); }
+      li.addEventListener('mouseenter', on); li.addEventListener('mouseleave', off);
+      blk.addEventListener('mouseenter', on); blk.addEventListener('mouseleave', off);
+    });
+  }
+
+  var bar = document.getElementById('catbar');
+  if (bar) {
+    bar.addEventListener('click', function(e){
+      var b = e.target.closest('.cat'); if (!b) return;
+      bar.querySelectorAll('.cat').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      var c = b.getAttribute('data-c');
+      document.querySelectorAll('#goods .good').forEach(function(g){
+        g.classList.toggle('show', c === 'all' || g.getAttribute('data-c') === c);
+      });
+    });
+  }
+
+  var backs = document.getElementById('backs');
+  if (backs) {
+    var fish = '<svg width="46" height="30" viewBox="0 0 46 30"><path d="M2,18 Q12,6 24,10 Q36,14 44,15 L38,19 Q30,26 18,24 Q8,22 2,18 Z" fill="rgba(232,228,220,.55)"/></svg>';
+    var h = '';
+    for (var i = 0; i < 24; i++) h += fish;
+    backs.innerHTML = h;
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('lit'); e.target.classList.remove('arm'); io.unobserve(e.target); }
+      });
+    }, { threshold: .12 });
+    document.querySelectorAll('blockquote.bq, .knot, .wonder, .cs, .fold').forEach(function(el){
+      el.classList.add('arm'); io.observe(el);
+    });
+  }
+})();
+</script>
+</body>
+</html>
