@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古今风谣 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #262521;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --slate: #5e8fbb; --slate-dim: rgba(94,143,187,0.45); --slate-faint: rgba(94,143,187,0.16);
+    --hairline: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    font-size: 17px; line-height: 2; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  q { quotes: none; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+  /* ===== 首屏：星授 ===== */
+  .hero { min-height: 92vh; display: flex; align-items: center; padding: 60px 0 56px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr auto; gap: 52px; align-items: center; }
+  .kicker { font-size: 13px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  .kicker b { color: var(--slate); font-weight: 400; }
+  .vtitle {
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: clamp(64px, 8vw, 100px); font-weight: 700; letter-spacing: 0.18em;
+    line-height: 1.3; height: 5.9em; margin: 26px 0 6px;
+  }
+  .vtitle i { font-style: normal; color: var(--slate); }
+  .hook { color: var(--paper-dim); max-width: 25em; margin-top: 22px; }
+  .hook b { color: var(--paper); font-weight: 600; }
+  .hmeta { margin-top: 18px; font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.08em; }
+  .hmeta em { font-style: normal; color: var(--slate-dim); }
+
+  .sky {
+    width: min(460px, 44vw); height: 560px; position: relative; overflow: hidden;
+    background:
+      radial-gradient(1.5px 1.5px at 18% 22%, rgba(232,228,220,0.5) 50%, transparent 51%),
+      radial-gradient(1px 1px at 74% 12%, rgba(232,228,220,0.42) 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 88% 38%, rgba(232,228,220,0.35) 50%, transparent 51%),
+      radial-gradient(1px 1px at 42% 8%, rgba(232,228,220,0.4) 50%, transparent 51%),
+      radial-gradient(1.4px 1.4px at 60% 30%, rgba(232,228,220,0.28) 50%, transparent 51%),
+      radial-gradient(1px 1px at 8% 46%, rgba(232,228,220,0.3) 50%, transparent 51%),
+      linear-gradient(180deg, #1b1f27 0%, #201f1d 62%, #1c1b19 100%);
+    border: 1px solid var(--hairline); border-radius: 16px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+  }
+  .star {
+    position: absolute; top: 26px; left: 50%; transform: translateX(-50%);
+    width: 14px; height: 14px; background: var(--slate);
+    transform: translateX(-50%) rotate(45deg);
+    box-shadow: 0 0 18px 4px var(--slate-dim), 0 0 3px 1px var(--slate);
+    animation: starp 2.6s ease-in-out infinite;
+  }
+  @keyframes starp { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+  .beam {
+    position: absolute; width: 1px; top: 46px;
+    background: linear-gradient(180deg, var(--slate-dim), transparent);
+    transition: left 0.6s ease, height 0.6s ease;
+  }
+  .rhyme-fly {
+    position: absolute; top: 96px; left: 8%; right: 8%;
+    text-align: center; color: var(--slate); font-size: 19px; line-height: 2.1;
+    transition: opacity 0.45s ease; letter-spacing: 0.04em;
+  }
+  .rhyme-fly small { display: block; margin-top: 10px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.3em; }
+  .kids { position: absolute; left: 0; right: 0; bottom: 26px; display: flex; justify-content: center; gap: 30px; }
+  .kid { position: relative; width: 26px; cursor: pointer; padding-top: 20px; }
+  .kid .khead { width: 13px; height: 13px; border-radius: 50%; background: #4a4841; margin: 0 auto 3px; transition: background 0.3s; }
+  .kid .kbody { width: 22px; height: 24px; border-radius: 8px 8px 3px 3px; background: #3c3a34; margin: 0 auto; transition: background 0.3s; }
+  .kid .spark {
+    position: absolute; top: 2px; left: 50%; width: 8px; height: 8px; margin-left: -4px;
+    background: var(--slate); transform: rotate(45deg); opacity: 0; transition: opacity 0.4s;
+    box-shadow: 0 0 10px 2px var(--slate-dim);
+  }
+  .kid.on .khead { background: var(--paper); }
+  .kid.on .kbody { background: var(--paper-dim); }
+  .kid.on .spark { opacity: 1; animation: starp 2.2s ease-in-out infinite; }
+  .skytip { position: absolute; bottom: 10px; right: 16px; font-size: 11px; color: var(--paper-faint); letter-spacing: 0.24em; }
+
+  /* ===== 分节 ===== */
+  section { padding: 84px 0 8px; }
+  .lab { font-size: 12.5px; letter-spacing: 0.5em; color: var(--slate); margin-bottom: 10px; }
+  .shead h2 { font-size: clamp(26px, 3.2vw, 36px); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .shead p.lead { color: var(--paper-dim); max-width: 34em; margin-bottom: 34px; }
+  .shead p.lead b { color: var(--paper); font-weight: 600; }
+
+  /* 谜面：两副面孔 */
+  .dual { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .face { border: 1px solid var(--hairline); border-radius: 14px; padding: 26px 26px 22px; background: var(--ink-2); }
+  .face.f-star { border-top: 3px solid var(--slate); }
+  .face.f-hand { border-top: 3px dashed var(--slate-dim); }
+  .face h3 { font-size: 19px; letter-spacing: 0.14em; margin-bottom: 12px; }
+  .face h3 small { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.3em; margin-left: 10px; }
+  .face p { color: var(--paper-dim); font-size: 15.5px; line-height: 2.05; }
+  .face p b { color: var(--paper); font-weight: 600; }
+  .face .fq { display: block; margin: 16px 0 4px; color: var(--slate); font-size: 17px; }
+  .face .fq i { font-style: normal; display: block; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.16em; margin-top: 6px; }
+  .punch { margin-top: 30px; text-align: center; color: var(--paper-faint); font-size: 15px; letter-spacing: 0.12em; }
+  .punch b { color: var(--slate); font-weight: 600; }
+
+  /* 长巷 */
+  .eras { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+  .chip {
+    cursor: pointer; border: 1px solid var(--hairline); background: transparent; color: var(--paper-dim);
+    font-family: inherit; font-size: 14px; letter-spacing: 0.18em; padding: 7px 18px; border-radius: 999px;
+    transition: all 0.25s;
+  }
+  .chip:hover { border-color: var(--slate-dim); color: var(--paper); }
+  .chip.on { background: var(--slate); border-color: var(--slate); color: var(--ink); }
+  .lane-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 12px; }
+  .slip {
+    cursor: pointer; border: 1px solid var(--hairline); border-radius: 8px; background: var(--ink-2);
+    padding: 14px 12px 10px; transition: all 0.25s; position: relative;
+  }
+  .lane-grid .slip:nth-child(3n+2) { transform: translateY(14px); }
+  .slip:hover { border-color: var(--slate-dim); transform: translateY(-4px); }
+  .lane-grid .slip:nth-child(3n+2):hover { transform: translateY(10px); }
+  .slip i.dot { position: absolute; top: 12px; right: 12px; width: 7px; height: 7px; border-radius: 50%; background: var(--slate-faint); }
+  .slip.on { background: var(--slate-faint); border-color: var(--slate-dim); }
+  .slip.on i.dot { background: var(--slate); }
+  .slip em { font-style: normal; display: block; font-size: 15.5px; letter-spacing: 0.14em; color: var(--paper); }
+  .slip span { display: block; margin-top: 4px; font-size: 11px; color: var(--paper-faint); letter-spacing: 0.12em; }
+
+  .reader { margin-top: 40px; border: 1px solid var(--hairline); border-radius: 14px; background: var(--ink-2); display: grid; grid-template-columns: 1.15fr 1fr; min-height: 250px; }
+  .rd-q { padding: 40px 42px; display: flex; align-items: center; border-right: 1px solid var(--hairline); }
+  .rd-q q { font-size: clamp(22px, 2.6vw, 30px); line-height: 2; color: var(--paper); letter-spacing: 0.06em; }
+  .rd-q q::first-letter { color: var(--slate); }
+  .rd-side { padding: 32px 34px; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+  .rd-era { font-size: 12px; letter-spacing: 0.4em; color: var(--slate); }
+  .rd-lib { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.06em; }
+  .rd-note { font-size: 15px; color: var(--paper-dim); line-height: 2.05; }
+  .rd-note b { color: var(--paper); font-weight: 600; }
+
+  /* 梳与篦 */
+  .dark-panel { background: var(--ink-2); border: 1px solid var(--hairline); border-radius: 14px; padding: 44px 46px; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; }
+  .dark-panel .bigq q { font-size: clamp(22px, 2.8vw, 32px); line-height: 2; color: var(--paper); }
+  .dark-panel .bigq .qsrc { display: block; margin-top: 14px; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.14em; }
+  .dark-panel p.note { margin-top: 18px; color: var(--paper-dim); font-size: 15px; max-width: 30em; }
+  .dark-panel p.note b { color: var(--slate); font-weight: 600; }
+  .combs { display: flex; gap: 26px; }
+  .cwrap { cursor: pointer; background: transparent; border: 1px solid var(--hairline); border-radius: 12px; padding: 18px 16px 12px; text-align: center; transition: border-color 0.25s; }
+  .cwrap:hover { border-color: var(--slate-dim); }
+  .cwrap em { font-style: normal; display: block; margin-top: 8px; font-size: 13px; letter-spacing: 0.3em; color: var(--paper-dim); }
+  .cwrap.shake svg { animation: cshake 0.5s ease; }
+  @keyframes cshake { 0%,100% { transform: translateY(0); } 30% { transform: translateY(9px); } 60% { transform: translateY(3px); } }
+  .cb-note { margin-top: 16px; font-size: 13.5px; color: var(--slate); letter-spacing: 0.1em; min-height: 2.2em; text-align: right; }
+
+  /* 城门 */
+  .gate-panel { border: 1px solid var(--hairline); border-radius: 14px; background: var(--ink-2); padding: 44px 46px; display: grid; grid-template-columns: auto 1fr; gap: 46px; align-items: center; }
+  .gatesvg { display: block; }
+  .gate-panel .gq q { font-size: clamp(22px, 2.6vw, 30px); color: var(--paper); line-height: 2; }
+  .gcap { margin-top: 16px; color: var(--paper-dim); font-size: 15px; max-width: 30em; min-height: 3.4em; }
+  .gcap b { color: var(--slate); font-weight: 600; }
+  .gbtn {
+    margin-top: 18px; cursor: pointer; font-family: inherit; font-size: 14px; letter-spacing: 0.3em;
+    color: var(--slate); background: transparent; border: 1px solid var(--slate-dim); border-radius: 999px; padding: 8px 24px; transition: all 0.25s;
+  }
+  .gbtn:hover { background: var(--slate); color: var(--ink); }
+  .leaf { transition: transform 0.7s ease; }
+  .gate-open .leaf-l { transform: translateX(-26px) rotate(-7deg); transform-origin: left bottom; }
+  .gate-open .leaf-r { transform: translateX(26px) rotate(7deg); transform-origin: right bottom; }
+
+  /* 收信人 */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .tcard { border: 1px solid var(--hairline); border-radius: 14px; background: var(--ink-2); padding: 26px 24px 22px; }
+  .tcard .tag { display: inline-block; font-size: 12px; letter-spacing: 0.36em; color: var(--slate); border: 1px solid var(--slate-faint); border-radius: 999px; padding: 3px 12px 3px 15px; margin-bottom: 14px; }
+  .tcard h3 { font-size: 18px; letter-spacing: 0.1em; margin-bottom: 10px; }
+  .tcard p { color: var(--paper-dim); font-size: 15px; line-height: 2.02; }
+  .tcard p b { color: var(--paper); font-weight: 600; }
+  .tcard q { color: var(--slate); }
+
+  /* 辑谣的人 */
+  .zgrid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 40px; align-items: start; }
+  .steps { list-style: none; border-left: 1px solid var(--hairline); padding-left: 26px; }
+  .steps li { position: relative; padding-bottom: 26px; }
+  .steps li::before { content: ""; position: absolute; left: -31px; top: 12px; width: 9px; height: 9px; border-radius: 50%; background: var(--ink); border: 2px solid var(--slate-dim); }
+  .steps li:last-child::before { background: var(--slate); border-color: var(--slate); box-shadow: 0 0 10px 2px var(--slate-dim); }
+  .steps .yr { font-size: 13px; color: var(--slate); letter-spacing: 0.14em; }
+  .steps p { color: var(--paper-dim); font-size: 15px; line-height: 2; }
+  .steps p b { color: var(--paper); font-weight: 600; }
+  .zcards { display: flex; flex-direction: column; gap: 20px; }
+  .zcard { border: 1px solid var(--hairline); border-radius: 14px; background: var(--ink-2); padding: 26px 28px 22px; }
+  .zcard .zt { font-size: 12px; letter-spacing: 0.4em; color: var(--paper-faint); margin-bottom: 10px; }
+  .zcard q { color: var(--paper); font-size: 18px; line-height: 2; }
+  .zcard p { margin-top: 12px; color: var(--paper-dim); font-size: 15px; }
+  .zcard p b { color: var(--slate); font-weight: 600; }
+
+  /* 页脚 */
+  footer.page { margin-top: 96px; border-top: 1px solid var(--hairline); padding: 40px 0 54px; }
+  footer.page .row { max-width: 1080px; margin: 0 auto 18px; padding: 0 28px; font-size: 13.5px; color: var(--paper-faint); line-height: 2; }
+  footer.page .row b { color: var(--paper-dim); font-weight: 600; letter-spacing: 0.2em; }
+  footer.page a { color: var(--slate); text-decoration: none; }
+  footer.page .fin { max-width: 1080px; margin: 0 auto; padding: 26px 28px 0; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.5em; }
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .sky { width: 100%; height: 440px; }
+    .dual, .trio, .zgrid, .dark-panel, .gate-panel { grid-template-columns: 1fr; }
+    .rd-q { border-right: 0; border-bottom: 1px solid var(--hairline); }
+    .reader { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kicker">殆知阁导读 <b>·</b> 问俗卷</div>
+      <h1 class="vtitle">古今<i>风谣</i></h1>
+      <p class="hook">帝王将相的正史之外，还有一批史官不肯署名的目击者：<b>巷口的小孩</b>。他们唱了四千年，唱谁谁倒。明代的状元杨慎把他们唱过的全部记了下来，收进这部风谣小册。</p>
+      <p class="hmeta">明 · 杨慎辑 <em>◇</em> 库本去空白一九〇八九字 <em>◇</em> 条目二百七十九 <em>◇</em> 上起唐尧，下讫嘉靖</p>
+    </div>
+    <div class="sky" id="sky">
+      <div class="star"></div>
+      <div class="beam" id="beam"></div>
+      <div class="rhyme-fly"><q id="flyq"></q><small id="flyt"></small></div>
+      <div class="kids" id="kids"></div>
+      <div class="skytip">点小孩换一首</div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="lab">谜面</div>
+      <h2>谣是从哪里来的</h2>
+      <p class="lead">史官把童谣一条条抄进五行志，却始终没交代作者是谁。于是有两套答案并存：<b>一套是神话</b>，一套是权术。</p>
+    </div>
+    <div class="dual">
+      <div class="face f-star">
+        <h3>星授说<small>天上来的</small></h3>
+        <p>三国吴永安二年，一群小孩正在玩耍，人群里忽然多了一个孩子，唱完一支谣，自报了家门，随即腾空而去，众人抬头只看见一道白练。这件事记在干宝《晋纪》里，是古人对童谣来源的标准解释：<b>荧惑星下凡，化作小儿，把歌教给孩子</b>。星星为何要唱歌，没人追问，那是天意开口。</p>
+        <div class="fq"><q>小儿群聚嬉戏，有异小儿忽来言曰</q><i>干宝《晋纪》，库本注</i></div>
+        <div class="fq"><q>我非人，荧惑星也</q><i>同注</i></div>
+        <div class="fq"><q>言毕上升，仰视若一疋练</q><i>同注</i></div>
+      </div>
+      <div class="face f-hand">
+        <h3>人造说<small>人间造的</small></h3>
+        <p>北周大将韦孝宽与北齐斛律光对峙，打不过，就<b>写了一首假童谣</b>，派人潜入邺城教给孩子传唱：百升是一斛，明月是斛律光的名。少年天子听到歌，果然起了疑心，名将斛律光被杀，北齐自毁长城。库本小注把这事的原委交代得清清楚楚。</p>
+        <div class="fq"><q>后周韦孝宽，密为此谣，令人传于邺中，邺中小儿歌之</q><i>库本注</i></div>
+        <div class="fq"><q>百升飞上天，明月照长安</q><i>北齐童谣</i></div>
+        <p>更早还有南朝的臧质：北魏太武帝打到盱眙，向他讨酒喝，他封了一罐尿送过去，附信引用一首童谣，说虏马饮江水，佛狸死卯年，<b>拿老天爷的日程表吓唬敌人</b>。</p>
+        <div class="fq"><q>不闻童谣言耶？虏马饮江水，佛狸死卯年，冥期使然</q><i>臧质报书，库本注</i></div>
+      </div>
+    </div>
+    <p class="punch">星授是<b>信仰</b>，人造是<b>技术</b>，信的人越多，用的人越顺手</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="lab">收谣</div>
+      <h2>一条四千年的长巷</h2>
+      <p class="lead">全书按时代排列，从尧的巷口一直排到编者自己身处的嘉靖年间。按朝代挑一条，到右边的笺里读它的正文与下落。<b>几乎每条谣的末尾都跟着同一句句式：其后某亡。</b></p>
+    </div>
+    <div class="eras" id="eras"></div>
+    <div class="lane-grid" id="lane"></div>
+    <div class="reader" id="reader">
+      <div class="rd-q"><q id="rdq"></q></div>
+      <div class="rd-side">
+        <div class="rd-era" id="rdEra"></div>
+        <div class="rd-lib mono" id="rdLib"></div>
+        <div class="rd-note" id="rdNote"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="lab">谣账</div>
+      <h2>梳一遍，篦一遍</h2>
+    </div>
+    <div class="dark-panel">
+      <div>
+        <div class="bigq">
+          <q>强贼放火，官军抢火，贼来梳我，军来篦我</q>
+          <span class="qsrc">正德中川蜀童谣，库本注：官军所过，掠劫甚于流贼</span>
+        </div>
+        <p class="note">正德年间四川流贼作乱，官军过境，百姓发现<b>土匪用梳子，官军用篦子</b>。梳子齿疏，篦子齿密；梳子掠走浮财，篦子连糠带秕刮干净。一句谣把两种劫掠的差别讲透，也把强盗与官军的位次排定了。</p>
+        <p class="cb-note" id="cbNote"></p>
+      </div>
+      <div class="combs">
+        <div class="cwrap" id="combA">
+          <svg width="130" height="150" viewBox="0 0 130 150" aria-hidden="true">
+            <rect x="10" y="10" width="110" height="26" rx="6" fill="#3c3a34" stroke="rgba(232,228,220,0.25)"/>
+            <rect x="20" y="36" width="9" height="100" rx="3" fill="#4a4841"/>
+            <rect x="45" y="36" width="9" height="100" rx="3" fill="#4a4841"/>
+            <rect x="70" y="36" width="9" height="100" rx="3" fill="#4a4841"/>
+            <rect x="95" y="36" width="9" height="100" rx="3" fill="#4a4841"/>
+          </svg>
+          <em>梳</em>
+        </div>
+        <div class="cwrap" id="combB">
+          <svg width="130" height="150" viewBox="0 0 130 150" aria-hidden="true">
+            <rect x="10" y="10" width="110" height="26" rx="6" fill="#3c3a34" stroke="rgba(232,228,220,0.25)"/>
+            <rect x="14" y="36" width="5" height="100" rx="2" fill="#5e8fbb" opacity="0.85"/>
+            <rect x="24" y="36" width="5" height="100" rx="2" fill="#5e8fbb" opacity="0.85"/>
+            <rect x="34" y="36" width="5" height="100" rx="2" fill="#5e8fbb" opacity="0.85"/>
+            <rect x="44" y="36" width="5" height="100" rx="2" fill="#5e8fbb" opacity="0.85"/>
+            <rect x="54" y="36" width="5" height="100" rx="2" fill="#5e8fbb" opacity="0.85"/>
+            <rect x="64" y="36" width="5" height="100" rx="2" fill="#5e8fbb" opacity="0.85"/>
+            <rect x="74" y="36" width="5" height="100" rx="2" fill="#5e8fbb" opacity="0.85"/>
+            <rect x="84" y="36" width="5" height="100" rx="2" fill="#5e8fbb" opacity="0.85"/>
+            <rect x="94" y="36" width="5" height="100" rx="2" fill="#5e8fbb" opacity="0.85"/>
+            <rect x="104" y="36" width="5" height="100" rx="2" fill="#5e8fbb" opacity="0.85"/>
+            <rect x="114" y="36" width="4" height="100" rx="2" fill="#5e8fbb" opacity="0.85"/>
+          </svg>
+          <em>篦</em>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="lab">十六字</div>
+      <h2>一份亡国诊断书</h2>
+    </div>
+    <div class="gate-panel" id="gatePanel">
+      <svg class="gatesvg" width="220" height="190" viewBox="0 0 220 190" aria-hidden="true">
+        <rect x="14" y="24" width="192" height="14" fill="#3c3a34" stroke="rgba(232,228,220,0.25)"/>
+        <rect x="14" y="38" width="14" height="130" fill="#3c3a34"/>
+        <rect x="192" y="38" width="14" height="130" fill="#3c3a34"/>
+        <g class="leaf leaf-l"><rect x="32" y="42" width="74" height="124" rx="4" fill="#4a4841" stroke="rgba(232,228,220,0.22)"/><circle cx="96" cy="106" r="7" fill="none" stroke="#5e8fbb" stroke-width="2.5"/></g>
+        <g class="leaf leaf-r"><rect x="114" y="42" width="74" height="124" rx="4" fill="#4a4841" stroke="rgba(232,228,220,0.22)"/><circle cx="124" cy="106" r="7" fill="none" stroke="#5e8fbb" stroke-width="2.5"/></g>
+      </svg>
+      <div>
+        <div class="gq"><q>城门开，言路闭。城门闭，言路开</q></div>
+        <p class="gcap" id="gcap"></p>
+        <button class="gbtn" id="gbtn">开城</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="lab">寄出之后</div>
+      <h2>谣落到谁手里</h2>
+      <p class="lead">同一支谣，交给不同的收信人，命运完全不同。书里恰好留下了三种收讫回执。</p>
+    </div>
+    <div class="trio">
+      <div class="tcard">
+        <div class="tag">史官</div>
+        <h3>归档为妖</h3>
+        <p>汉以下正史多设<b>五行志</b>，童谣与日食、地震、井水溢并列编目，每条后面补一句应验经过。歌谣在官方档案里的身份不是文学，是灾异，是<b>天象落在人间的地面部分</b>。本书二百七十九条，大半源出这些志书。</p>
+      </div>
+      <div class="tcard">
+        <div class="tag">女皇</div>
+        <h3>一笑收下</h3>
+        <p>武则天朝选官太滥，时谣说<q>补阙连车载，拾遗成斗量</q>。举人沈全交续了四句：<q>糊心存抚使，眯目圣神皇</q>。御史把他抓来问诽谤之罪，太后的回话是<q>但使卿辈不滥，何恤人言</q>。被点名的那位没治他的罪，<b>女皇把差评当成了考绩标准</b>。</p>
+      </div>
+      <div class="tcard">
+        <div class="tag">拆字人</div>
+        <h3>当谜来解</h3>
+        <p>许多谣是<b>字谜</b>：千里草合为董，十日卜合为卓；莫浪语拆出密字，指李密。唐宪宗朝官军讨吴元济，挖出一块碑，上刻<q>鸡未肥，酒未熟，障车儿郎且须缩</q>，注家用库本注里那套拆法读出<q>肥去月，乃己字</q>与<q>去水乃酉字</q>，吴元济果然在己酉日被擒。<b>字是钥匙，日子是锁。</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="lab">采风者</div>
+      <h2>辑谣的人</h2>
+      <p class="lead">杨慎，字用修，号升庵。这本书是他在滇南三十五年里，从五行志的档案与街巷的传闻里，一条一条辑出来的。</p>
+    </div>
+    <div class="zgrid">
+      <ol class="steps">
+        <li>
+          <div class="yr mono">1511</div>
+          <p>二十四岁，正德六年辛未科<b>状元</b>，授翰林修撰。少年得志的顶点。</p>
+        </li>
+        <li>
+          <div class="yr mono">1524</div>
+          <p>嘉靖三年，大礼议。他两次受廷杖，几乎打死，愈后即上道，<b>谪戍云南永昌卫</b>，终身不赦。</p>
+        </li>
+        <li>
+          <div class="yr mono">1524 至 1559</div>
+          <p>在滇南三十五年，著书四百余种，凡山川道路、方言里语、市井传闻，随手记下。<b>民间歌谣是其中一路</b>，与姊妹篇古今谚相辅而行。</p>
+        </li>
+        <li>
+          <div class="yr mono">1559</div>
+          <p>七十二岁，卒于戍所。全书末条收在嘉靖初年，<b>他辑下了流放他的那个朝代的街头议论</b>。</p>
+        </li>
+      </ol>
+      <div class="zcards">
+        <div class="zcard">
+          <div class="zt">他上路时会经过的歌</div>
+          <q>汉德广，开不宾。席博南，越兰津。度兰仓，为它人</q>
+          <p>东汉开博南山道，征发苦役，行者悲歌。一句<b>为它人</b>，替所有开路人道了辛苦。千年之后，流放的杨慎翻越的正是这座博南山，歌里的路成了他的戍途。</p>
+        </div>
+        <div class="zcard">
+          <div class="zt">全书末条</div>
+          <q>好群黑头虫，一半变蛤蚧，一半变人龙</q>
+          <p>嘉靖初年的街头议论。给当官的留了两个去向：变害虫，或变龙。<b>收谣的人把这句放在全书最后</b>，像替四千年的谣做了一个总评。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="qbank" hidden>
+  <li data-era="上古三代" data-t="康衢谣" data-lib="尧时康衢童谣（《列子》）" data-hero="1" data-note="全书第一条。相传尧微服行于康衢，闻儿童唱此，归而问政。四千年前的一首儿歌，被后世当作治道的总纲，也替这部谣集开了头。">立我蒸民，莫非尔极。不识不知，顺帝之则。</li>
+  <li data-era="上古三代" data-t="白云谣" data-lib="白云谣" data-note="西王母在瑶池给周穆王唱的送行歌：路太远，山太高，你若不死，还能再来吗。穆王约定三年后重访，史册里没有下文。">白云在天，山陵自出。道里悠远，山川间之。将子无死，尚能复来</li>
+  <li data-era="秦汉" data-t="三户谣" data-lib="三户谣" data-note="怀王受骗客死秦国，五十年后楚国被灭，街巷把这笔旧账编成六个字。后来起兵灭秦的项氏，正是楚将世家。">楚虽三户，亡秦必楚。</li>
+  <li data-era="秦汉" data-t="长城歌" data-lib="秦皇时民谣（《杨泉物理论》）" data-hero="1" data-note="长城下的白骨账。生男不必养，生女当宝贝，因为男丁要拿去填城。秦代人口情绪的一张清单。">生男慎勿举，生女哺用脯。不见长城下，尸骸相支拄。</li>
+  <li data-era="秦汉" data-t="虞美人" data-lib="虞美人帐中歌（《史记·正义》）" data-note="垓下夜里的四句。汉军四面唱楚地歌瓦解军心，帐中美人先替霸王把结局唱了出来，随后自尽。">汉军已略地，四面楚歌声。大王义气尽，贱妾何聊生？</li>
+  <li data-era="秦汉" data-t="淮南王" data-lib="淮南王谣" data-note="一尺布盖得下两个人，一斗粟吃得饱两个人，兄弟俩的天下却容不下彼此。汉文帝与淮南厉王的兄弟案，民间不判政治只算家常。">一尺布，暖融融。一斗粟，饱蓬蓬。兄弟二人不见容</li>
+  <li data-era="秦汉" data-t="匈奴歌" data-lib="匈奴歌" data-hero="1" data-note="霍去病连破焉支祁连两山，败走的匈奴留下这张损失清单：妇人没了胭脂原料，六畜没了水草。败者的账本，一句辩护都没有。">失我焉支山，令我妇女无颜色。失我祁连山，使我六畜不蕃息。</li>
+  <li data-era="秦汉" data-t="直如弦" data-lib="后汉顺帝末京都童谣" data-hero="1" data-note="太直的死在路边，弯得好的封了侯。东汉官场的一面镜子，此后每个朝代都能照见自己。">直如弦，死道边。曲如钩，反封侯。</li>
+  <li data-era="秦汉" data-t="城中谣" data-lib="城中谣" data-note="京城发式高一分，四方便敢高一尺。上行下效的传播学，汉代人用三句押韵讲完。">城中好高髻，四方高一尺。城中好广眉，四方且半额。</li>
+  <li data-era="秦汉" data-t="城上乌" data-lib="后汉桓帝初城上乌童谣" data-note="城头乌鸦尾巴蓬松，占着高处只顾自己吃，暗指人主聚敛。一路唱到河间姹女数钱起金堂，把灵帝朝的卖官生意提前编进了儿歌。">城上乌，尾毕逋。公为吏，子为徒。一徒死，百乘车。车班班，入河间。河间姹女工数钱，以钱为室金为堂。</li>
+  <li data-era="秦汉" data-t="燕燕谣" data-lib="汉成帝燕燕童谣" data-note="赵飞燕得幸，宫门铜环都成了显贵之兆；后四句燕啄皇孙，句句应验。成帝后宫档案的缩写本。">燕燕，尾涎涎，张公子，时相见，木门仓琅根。燕飞来，啄皇孙，皇孙死，燕啄矢。</li>
+  <li data-era="秦汉" data-t="千里草" data-lib="献帝初京都谣" data-note="千里草合为董，库本作十曰卜，曰为日之形讹，合为卓。汉末儿童已会玩字谜，大人说他们唱的是董卓的死期。">千里草，何青青？十曰卜，不得生</li>
+  <li data-era="秦汉" data-t="举秀才" data-lib="后汉桓灵帝时谣" data-note="被举的秀才不识字，被举的孝廉同父亲分居，良将胆小如鸡。察举制的体检报告，四句唱完，无一合格。">举秀才，不知书。举孝廉，父别居。举孝廉，浊如泥。举良将，怯如鸡。</li>
+  <li data-era="魏晋六朝" data-t="五马渡江" data-lib="晋惠帝大安中童谣" data-note="五匹马一同渡江，一匹化成龙。永嘉之乱后司马氏五王渡江，琅邪王成了元帝，衣冠南渡的预告片。">五马游渡江，一马化为龙。</li>
+  <li data-era="魏晋六朝" data-t="建业水" data-lib="吴孙皓初童谣" data-note="宁可喝建业的水，也不吃武昌的鱼；宁可回建业死，也不住武昌。孙皓迁都武昌激起民怨，这支谣唱完，又迁了回来。">宁饮建业水，不食武昌鱼。宁还建业死，不止武昌居。</li>
+  <li data-era="魏晋六朝" data-t="袁粲谣" data-lib="宋明帝升明时石头城谣" data-note="袁粲谋诛萧道成，事败身死；褚渊附逆得全。石头城下十个字，把两个人的身后名判完。">可怜石头城，宁为袁粲死，不作褚渊生。</li>
+  <li data-era="魏晋六朝" data-t="敕勒歌" data-lib="《敕勒歌》" data-hero="1" data-note="高欢攻玉壁不下，士卒死伤过半，自己气得发病。他强撑着宴请诸将，命斛律金领唱这首草原古歌，亲自跟着和唱以安军心。歌因此留了下来，成为北朝第一名篇。">敕勒川，阴山下。天似穹庐，笼盖四野。天苍苍，野茫茫，风吹草低见牛羊。</li>
+  <li data-era="魏晋六朝" data-t="洛阳髻" data-lib="元魏时洛阳谣" data-note="洛阳女儿赶梳时兴的高髻，瑶光寺的尼姑抢走了丈夫。北魏后期僧尼扰俗的一角，用一句玩笑记下。">洛阳女儿急作髻，瑶光寺尼夺作婿。</li>
+  <li data-era="魏晋六朝" data-t="金扫帚" data-lib="北齐末邺中童谣" data-note="金扫帚玉扫帚，把宫殿扫干净迎接西边来的人。亡国倒计时被唱成了大扫除，来年北周果然入邺。">金作扫帚玉作把，静扫殿屋迎西家。</li>
+  <li data-era="隋唐" data-t="桃李子" data-lib="隋大业中童谣" data-note="桃李子被读作李氏当兴，莫浪语拆出密字。隋末所有野心都往这支谣里对号，李密第一个应了。">桃李子，鸿鹄绕阳山，宛转花林里。莫浪语，谁道许</li>
+  <li data-era="隋唐" data-t="金虾蟆" data-lib="唐僖宗干符中童谣" data-note="金色蛤蟆努眼，翻却曹州天下反。王仙芝曹州起事、黄巢继之，儿歌直接当了檄文。">金色虾蟆争努眼，翻却曹州天下反。</li>
+  <li data-era="隋唐" data-t="燕上天" data-lib="唐天宝中童谣" data-note="燕上天、天上女儿铺白毡、毡上有千钱，拆开读出安禄山的名与财。天宝十四载他果然反了。">燕燕飞上天，天上女儿铺白毡，毡上有千钱</li>
+  <li data-era="隋唐" data-t="三箭" data-lib="薛将军歌" data-note="薛仁贵三箭射杀三人，九姓十余万下马请降。边地人给将军编的歌，全书少有的喜讯，也是谣的另一副面孔：报喜。">将军三箭定天山，战士长歌入汉关。</li>
+  <li data-era="隋唐" data-t="新禾" data-lib="唐高宗永淳初童谣" data-note="新粮进不了仓，新麦进不了场，到了八九月，狗对着空墙叫。永淳元年关中大饥，东都大雨，人多饿死。">新禾不入箱，新麦不入场。迨及八九月，狗吠空垣墙。</li>
+  <li data-era="两宋" data-t="眼中丁" data-lib="宋真宗时童谣" data-hero="1" data-note="想天下太平，拔掉眼中钉丁谓；想天下好，请回寇准。宋人给宰相打分的两张选票，一根钉一位老。">欲得天下宁，须拔眼中丁。欲得天下好，无如召寇老。</li>
+  <li data-era="两宋" data-t="飞来谣" data-lib="宋绍兴中鼎澧谣" data-note="洞庭湖的杨么说：想抓我，除非飞来。朝廷连换几任主帅不能平，最后来的那位，恰好单名一个飞字。">若是欲我，除是飞来。</li>
+  <li data-era="两宋" data-t="白雁谣" data-lib="宋季白雁谣" data-note="江南若破，白雁来过。元军渡江时人们才反应过来，白雁谐音伯颜，宋末的谣提前把征服者的名字报了。">江南若破，白雁来过</li>
+  <li data-era="元明" data-t="塔儿红" data-lib="元末真定童谣" data-note="塔白时北人是主南人是客，塔红时轮到南人做主人。元末的颜色预告，后来朱元璋应了红字。">塔儿白，北人是主南人客。塔儿红，南人来做主人公。</li>
+  <li data-era="元明" data-t="牡丹谣" data-lib="元明宗时童谣" data-note="牡丹一红一紫，庄稼就空就死。元明宗在位数月而崩，庙讳正是和字，红与和同音，谣里早埋了谐音。">牡丹红，禾苗空。牡丹紫，禾苗死</li>
+  <li data-era="元明" data-t="马倒鼓破" data-lib="正德北京童谣" data-note="马倒了不用喂料，鼓破了不用张皮。燕京口音里鼓读作谷，马永成、谷大用等四名权宦的名字全在歌里，倒的张的各有其人。">马倒不用喂，鼓破不用张</li>
+  <li data-era="元明" data-t="黑头虫" data-lib="嘉靖初童谣（又）" data-hero="1" data-note="全书最后一条，收在嘉靖初年：一群黑头虫，一半变蛤蚧，一半变人龙。编谣的人给当官的留了两个去向，辑谣的人正在这个朝代里流放至死。">好群黑头虫，一半变蛤蚧，一半变人龙。</li>
+</div>
+
+<footer class="page">
+  <div class="row"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），诗藏〈古今风谣〉，明杨慎辑，库内全文去空白 19,089 字，条目二百七十九，上起唐尧康衢，下讫明嘉靖初。本页四十七处引文（q 元素与页尾 qbank 谣辞清单，含谣辞三十九条与库本注文八处）经脚本与库内文本去标点、空白归一逐字核验通过，谣辞清单藏于页尾 qbank。库本作十曰卜处，曰为日之形讹，照录并申报。目录：<a href="mulu.html">殆知阁导读总目</a>。</div>
+  <div class="row"><b>库外申报</b>　杨慎生卒 1488 至 1559、字用修、号升庵、新都人、正德六年状元、嘉靖三年两受廷杖后谪云南永昌卫三十五年、卒于戍所、著述四百余种及古今谚姊妹篇诸事，出明史与通行年谱；康衢童谣本事出列子仲尼篇，白云谣出穆天子传，敕勒歌本事出乐府广题，荧惑化小儿之说另见史记天官书传统，韦孝宽反间与斛律光之死见周书北齐书，臧质盱眙拒魏事见宋书南史，武则天君臣问答出通鉴系统记载；本页对个别谣旨的解读（如白雁谐伯颜、鼓谐谷）依库本注文与通说；系列篇目互引、干支换算均为库外信息，未经库本核验。</div>
+  <div class="row"><b>时代局限提醒</b>　本书编次全依五行灾异史观，谣与应验的对应关系多为事后附会，正史五行志的归档方式不等于因果证明；拆字解谣属谶纬之术，无预言效力；部分谣辞含有彼时代对女性、对边疆族群的态度与污名，均为历史记录原貌，不代表编者与导读立场。文中涉及饥荒、战乱、刑杀的谣辞与注语系当时实录，愿读者以历史眼光观之。</div>
+  <div class="fin">殆知阁导读　二百六十一</div>
+</footer>
+
+<script>
+(function(){
+  var bank = [].slice.call(document.querySelectorAll('#qbank li'));
+  var lane = bank.filter(function(x){ return x.dataset.note; });
+
+  /* 首屏：星授 */
+  var heroes = bank.filter(function(x){ return x.dataset.hero; });
+  var kidsBox = document.getElementById('kids');
+  heroes.forEach(function(h, i){
+    var k = document.createElement('div');
+    k.className = 'kid' + (i === 0 ? ' on' : '');
+    k.innerHTML = '<span class="spark"></span><div class="khead"></div><div class="kbody"></div>';
+    k.addEventListener('click', function(){ pick(i, true); });
+    kidsBox.appendChild(k);
+  });
+  var kids = [].slice.call(kidsBox.children);
+  var flyq = document.getElementById('flyq'), flyt = document.getElementById('flyt');
+  var beam = document.getElementById('beam');
+  function layout(i){
+    var k = kids[i];
+    var sky = document.getElementById('sky').getBoundingClientRect();
+    var r = k.getBoundingClientRect();
+    var x = r.left + r.width / 2 - sky.left;
+    beam.style.left = x + 'px';
+    beam.style.height = (r.top - sky.top - 46 + 8) + 'px';
+  }
+  var cur = 0;
+  function pick(i, byUser){
+    cur = i;
+    kids.forEach(function(k, j){ k.classList.toggle('on', j === i); });
+    flyq.style.opacity = 0;
+    setTimeout(function(){
+      flyq.textContent = heroes[i].textContent;
+      flyt.textContent = heroes[i].dataset.t;
+      flyq.style.opacity = 1;
+    }, 420);
+    layout(i);
+    if (byUser) restart();
+  }
+  window.addEventListener('resize', function(){ layout(cur); });
+  pick(0);
+  var timer = null;
+  function restart(){
+    if (timer) clearInterval(timer);
+    timer = setInterval(function(){ pick((cur + 1) % heroes.length); }, 6000);
+  }
+  restart();
+
+  /* 长巷 */
+  var erasBox = document.getElementById('eras'), laneBox = document.getElementById('lane');
+  var eraNames = [];
+  lane.forEach(function(x){ if (eraNames.indexOf(x.dataset.era) < 0) eraNames.push(x.dataset.era); });
+  var curEra = eraNames[0];
+  eraNames.forEach(function(e, i){
+    var c = document.createElement('button');
+    c.className = 'chip' + (i === 0 ? ' on' : '');
+    c.textContent = e;
+    c.addEventListener('click', function(){
+      curEra = e;
+      [].slice.call(erasBox.children).forEach(function(b){ b.classList.toggle('on', b.textContent === e); });
+      renderLane();
+    });
+    erasBox.appendChild(c);
+  });
+  var rdq = document.getElementById('rdq'), rdEra = document.getElementById('rdEra');
+  var rdLib = document.getElementById('rdLib'), rdNote = document.getElementById('rdNote');
+  function renderLane(){
+    laneBox.innerHTML = '';
+    lane.filter(function(x){ return x.dataset.era === curEra; }).forEach(function(x){
+      var s = document.createElement('div');
+      s.className = 'slip';
+      s.innerHTML = '<i class="dot"></i><em></em><span></span>';
+      s.querySelector('em').textContent = x.dataset.t;
+      var pre = x.dataset.lib.replace(/[（(《》]/g, '').replace(/童谣|时谣|民谣|歌/g, '');
+      s.querySelector('span').textContent = pre === x.dataset.t ? x.dataset.era : pre;
+      s.addEventListener('click', function(){ openReader(x, s); });
+      laneBox.appendChild(s);
+    });
+  }
+  function openReader(x, slip){
+    [].slice.call(laneBox.children).forEach(function(s){ s.classList.toggle('on', s === slip); });
+    rdq.textContent = x.textContent;
+    rdEra.textContent = x.dataset.era;
+    rdLib.textContent = x.dataset.lib;
+    rdNote.textContent = x.dataset.note;
+  }
+  renderLane();
+  openReader(lane[0], laneBox.children[0]);
+
+  /* 梳篦 */
+  var cbNote = document.getElementById('cbNote');
+  var combSay = {
+    combA: '梳过一遍：掠走看得见的浮财',
+    combB: '篦过一遍：连糠带秕，贴地刮走'
+  };
+  ['combA','combB'].forEach(function(id){
+    var el = document.getElementById(id);
+    el.addEventListener('click', function(){
+      el.classList.remove('shake');
+      void el.offsetWidth;
+      el.classList.add('shake');
+      cbNote.textContent = combSay[id];
+    });
+  });
+
+  /* 城门 */
+  var panel = document.getElementById('gatePanel'), gbtn = document.getElementById('gbtn'), gcap = document.getElementById('gcap');
+  var open = false;
+  function gate(){
+    gcap.innerHTML = open
+      ? '<b>城门开，言路闭。</b>金人兵临，朝廷开城求和，同时严禁士民议政。'
+      : '<b>城门闭，言路开。</b>围城之中才下诏求直言，门外已经换了一面旗。';
+    gbtn.textContent = open ? '闭城' : '开城';
+  }
+  gbtn.addEventListener('click', function(){
+    open = !open;
+    panel.classList.toggle('gate-open', open);
+    gate();
+  });
+  gate();
+})();
+</script>
+</body>
+</html>
