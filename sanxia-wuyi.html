@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三侠五义 · 殆知阁导读 250</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #1d1f22; --ink3: #24282e;
+    --paper: #e8e4dc; --dim: #a49e92; --faint: #6f6a60;
+    --blue: #5e8fbb; --blue2: #43688c; --gold: #c9963f; --red: #c0453c;
+    --hair: rgba(232,228,220,0.14);
+    --hair2: rgba(94,143,187,0.35);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; font-size: 17px;
+  }
+  .mono { font-family: "SF Mono", "Menlo", "Consolas", monospace; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+  /* 首屏 */
+  .hero { min-height: 96dvh; display: grid; grid-template-columns: 130px 1fr 260px;
+    gap: 44px; align-items: center; padding: 56px 48px 88px; position: relative;
+    overflow: hidden; max-width: 1280px; margin: 0 auto; }
+  .slip { writing-mode: vertical-rl; justify-self: center; display: flex;
+    flex-direction: column; align-items: center; gap: 22px;
+    border: 1px solid var(--hair); border-radius: 4px; padding: 30px 14px;
+    background: var(--ink2); }
+  .slip h1 { font-size: 46px; letter-spacing: 0.34em; font-weight: 600; }
+  .slip .by { font-size: 15px; color: var(--dim); letter-spacing: 0.3em; }
+  .slip .tag { font-size: 12px; color: var(--blue); letter-spacing: 0.4em;
+    border-top: 1px solid var(--hair2); padding-top: 16px; }
+
+  .eyestage { position: relative; justify-self: center; }
+  .eye { width: min(370px, 78vw); height: auto; display: block; cursor: crosshair; }
+  .pupilg { transform-box: fill-box; transform-origin: center;
+    transition: transform 0.5s cubic-bezier(.2,.8,.3,1); }
+  .eye.alert .pupilg { transform: scaleY(0.16) scaleX(1.5); }
+  .eyecap { text-align: center; color: var(--dim); font-size: 14px;
+    margin-top: 18px; letter-spacing: 0.22em; }
+  .eyecap b { color: var(--blue); font-weight: 600; }
+
+  .side { display: flex; flex-direction: column; gap: 18px; }
+  .side .lede { font-size: 15px; color: var(--dim); line-height: 2; }
+  .side .lede b { color: var(--paper); }
+  .nav { display: flex; flex-direction: column; gap: 10px; }
+  .nav a { display: block; border: 1px solid var(--hair); border-radius: 3px;
+    padding: 10px 16px; color: var(--paper); text-decoration: none; font-size: 15px;
+    letter-spacing: 0.18em; transition: border-color 0.25s, color 0.25s; }
+  .nav a:hover { border-color: var(--blue); color: var(--blue); }
+  .nav a i { font-style: normal; color: var(--blue); margin-right: 10px;
+    font-size: 13px; }
+  .meta { font-size: 12px; color: var(--faint); line-height: 2;
+    border-top: 1px solid var(--hair); padding-top: 14px; }
+
+  .runway { position: absolute; left: 0; right: 0; bottom: 12px; height: 34px;
+    pointer-events: none; }
+  .mouse { position: absolute; bottom: 4px; left: -70px; width: 46px; height: 20px;
+    animation: dart 9s linear infinite; }
+  .mouse .body { position: absolute; bottom: 3px; left: 8px; width: 30px; height: 13px;
+    background: #0e0e0d; border-radius: 50% 60% 45% 55%; }
+  .mouse .ear { position: absolute; bottom: 13px; left: 26px; width: 8px; height: 8px;
+    background: #0e0e0d; border-radius: 50%; }
+  .mouse .tail { position: absolute; bottom: 8px; left: -14px; width: 24px; height: 2px;
+    background: #0e0e0d; border-radius: 2px; transform: rotate(-14deg); }
+  @keyframes dart {
+    0% { transform: translateX(0); opacity: 0; }
+    3% { opacity: 0.85; }
+    42% { opacity: 0.85; }
+    47% { transform: translateX(calc(100vw + 90px)); opacity: 0; }
+    100% { transform: translateX(calc(100vw + 90px)); opacity: 0; }
+  }
+
+  /* 章节通用 */
+  section { padding: 88px 0 30px; }
+  .shead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 10px; }
+  .seal { flex: none; width: 44px; height: 44px; background: var(--blue); color: var(--ink);
+    display: flex; align-items: center; justify-content: center; font-size: 19px;
+    border-radius: 3px; font-weight: 600; }
+  .shead h2 { font-size: 30px; letter-spacing: 0.14em; font-weight: 600; }
+  .shead .sub { color: var(--dim); font-size: 14px; letter-spacing: 0.2em; }
+  .rule { height: 1px; background: linear-gradient(90deg, var(--hair2), transparent);
+    margin: 16px 0 34px; }
+  .prose { max-width: 820px; color: #d9d4c9; }
+  .prose p { margin-bottom: 18px; }
+  .prose b { color: var(--blue); font-weight: 600; }
+  .prose .rp { color: var(--red); }
+  .chapter { display: inline-block; font-size: 12.5px; color: var(--dim);
+    border: 1px solid var(--hair); border-radius: 2px; padding: 1px 9px;
+    margin: 0 4px; letter-spacing: 0.08em; }
+
+  /* 引文 */
+  .quote { max-width: 820px; border-left: 3px solid var(--blue); background: var(--ink2);
+    padding: 20px 26px; margin: 26px 0; font-size: 16.5px; line-height: 2.15;
+    color: #e3ded3; border-radius: 0 4px 4px 0; position: relative; }
+  .quote::after { content: "出库本原文"; position: absolute; right: 12px; bottom: 8px;
+    font-size: 11px; color: var(--faint); letter-spacing: 0.2em; }
+  .quote .src { display: block; font-size: 12.5px; color: var(--blue); margin-bottom: 8px;
+    letter-spacing: 0.16em; }
+
+  /* 一 三口铡 */
+  .zhas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px;
+    max-width: 980px; margin-top: 30px; }
+  .zha { border: 1px solid var(--hair); border-radius: 4px; background: var(--ink2);
+    padding: 22px 20px 18px; cursor: pointer; user-select: none;
+    transition: border-color 0.25s; }
+  .zha:hover { border-color: var(--blue); }
+  .zha svg { width: 100%; height: auto; display: block; }
+  .blade { transition: transform 0.16s cubic-bezier(.6,0,1,.6); }
+  .zha.cut .blade { transform: translateY(58px); }
+  .zha .zname { text-align: center; font-size: 19px; letter-spacing: 0.3em;
+    margin-top: 14px; color: var(--paper); }
+  .zha .hint { text-align: center; font-size: 12px; color: var(--faint);
+    letter-spacing: 0.24em; margin-top: 4px; transition: opacity 0.3s; }
+  .zha.cut .hint { opacity: 0; }
+  .zha .verdict { display: block; text-align: center; font-size: 13.5px; color: var(--red);
+    letter-spacing: 0.1em; margin-top: 10px; min-height: 26px; opacity: 0;
+    transition: opacity 0.5s; }
+  .zha.cut .verdict { opacity: 1; }
+  .zha .vr { display: block; text-align: center; font-size: 11.5px; color: var(--faint);
+    min-height: 18px; opacity: 0; transition: opacity 0.5s 0.15s; }
+  .zha.cut .vr { opacity: 1; }
+
+  /* 二 揭盒 */
+  .limao-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    align-items: start; max-width: 980px; }
+  .boxstage { position: relative; padding-top: 26px; }
+  .boxsvg { width: min(340px, 84%); display: block; margin: 0 auto; cursor: pointer; }
+  #lidg { transform-box: fill-box; transform-origin: 6% 92%;
+    transition: transform 0.7s cubic-bezier(.3,1.3,.4,1); }
+  .boxsvg.open #lidg { transform: rotate(-104deg); }
+  #catg { opacity: 0; transition: opacity 0.8s 0.35s; }
+  .boxsvg.open #catg { opacity: 1; }
+  .boxhint { text-align: center; font-size: 12.5px; color: var(--faint);
+    letter-spacing: 0.3em; margin-top: 12px; }
+  .boxsvg.open + .boxhint { color: var(--blue); }
+
+  /* 三 猫鼠 */
+  .pull { max-width: 860px; border: 1px solid var(--hair2); border-radius: 4px;
+    background: var(--ink2); padding: 34px 38px; margin: 34px 0 14px;
+    font-size: 21px; line-height: 2.2; }
+  .pull .src { display: block; font-size: 12.5px; color: var(--blue);
+    letter-spacing: 0.16em; margin-bottom: 12px; }
+  .pull q { color: var(--paper); quotes: none; }
+  .twocol { display: grid; grid-template-columns: 1.25fr 1fr; gap: 30px;
+    max-width: 980px; align-items: start; }
+  .slipnote { border: 1px solid var(--hair); border-radius: 3px; background: var(--ink3);
+    padding: 22px 26px; transform: rotate(-1.1deg); font-size: 15.5px; line-height: 2.1; }
+  .slipnote .src { display: block; font-size: 12px; color: var(--gold);
+    letter-spacing: 0.18em; margin-bottom: 8px; }
+
+  /* 四 五鼠洞 */
+  .holes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+    max-width: 1020px; margin-top: 34px; }
+  .hole { border: 1px solid var(--hair); border-radius: 130px 130px 4px 4px;
+    background: var(--ink2); padding: 30px 16px 20px; text-align: center;
+    cursor: pointer; user-select: none; transition: border-color 0.25s, background 0.25s; }
+  .hole:hover { border-color: var(--blue); }
+  .hole .nick { font-size: 21px; letter-spacing: 0.12em; color: var(--paper);
+    writing-mode: vertical-rl; margin: 0 auto 14px; height: 96px; }
+  .hole .nm { font-size: 15px; color: var(--dim); }
+  .hole .from { display: block; font-size: 12px; color: var(--faint); margin-top: 6px; }
+  .hole .skill { display: block; font-size: 12.5px; color: var(--faint);
+    margin-top: 10px; letter-spacing: 0.06em; min-height: 20px; transition: color 0.3s; }
+  .hole.open { border-color: var(--blue); background: var(--ink3); }
+  .hole.open .skill { color: #cfd8e2; }
+  .hole.fifth { border-color: var(--blue2); }
+  .holequote { max-width: 1020px; border-left: 3px solid var(--blue); background: var(--ink2);
+    padding: 18px 24px; margin: 22px 0 0; font-size: 15.5px; line-height: 2.1;
+    color: #e3ded3; opacity: 0; transition: opacity 0.4s; }
+  .holequote.show { opacity: 1; }
+  .holequote .src { display: block; font-size: 12.5px; color: var(--blue); margin-bottom: 6px; }
+
+  /* 五 铜网阵 */
+  .netstage { max-width: 980px; margin-top: 34px; border: 1px solid var(--hair);
+    border-radius: 4px; background: var(--ink2); padding: 30px 26px 20px; }
+  .netsvg { width: 100%; height: auto; display: block; }
+  .netsvg line { stroke: rgba(94,143,187,0.4); stroke-width: 1; transition: stroke 0.5s; }
+  .netsvg .horiz { stroke: rgba(94,143,187,0.28); }
+  .netsvg.hot line { stroke: rgba(192,69,60,0.75); }
+  #xiag { cursor: pointer; }
+  #thread { transition: opacity 0.2s; }
+  #xiabox { transition: transform 0.9s cubic-bezier(.4,0,.9,.5); transform-box: fill-box; }
+  .netsvg.fallen #xiabox { transform: translateY(150px) rotate(8deg); }
+  .netsvg.fallen #thread { opacity: 0; }
+  .netnote { text-align: center; font-size: 12.5px; color: var(--faint);
+    letter-spacing: 0.28em; margin-top: 10px; }
+  .deathq { opacity: 0; transition: opacity 0.7s; }
+  .deathq.show { opacity: 1; }
+
+  /* 收梢 */
+  .coda { padding: 90px 0 40px; }
+  .coda .inner { max-width: 820px; border: 1px solid var(--hair); border-radius: 4px;
+    background: var(--ink2); padding: 40px 44px; }
+  .coda h3 { font-size: 24px; letter-spacing: 0.2em; margin-bottom: 18px;
+    color: var(--blue); }
+  .coda p { color: #d9d4c9; margin-bottom: 14px; }
+  .coda b { color: var(--paper); }
+
+  footer { border-top: 1px solid var(--hair); margin-top: 60px; padding: 40px 0 70px; }
+  footer .row { max-width: 1080px; margin: 0 auto 16px; padding: 0 28px;
+    font-size: 13.5px; color: var(--dim); line-height: 2.05; }
+  footer .row b { color: var(--paper); font-weight: 600; }
+  footer a { color: var(--blue); text-decoration: none; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; text-align: center; gap: 30px;
+      padding: 48px 0 70px; }
+    .slip { writing-mode: horizontal-tb; padding: 20px 26px; }
+    .slip h1 { font-size: 34px; }
+    .side { align-items: center; }
+    .nav { width: 100%; max-width: 340px; }
+    .zhas { grid-template-columns: 1fr; max-width: 420px; }
+    .limao-grid, .twocol { grid-template-columns: 1fr; }
+    .holes { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="slip">
+    <h1>三侠五义</h1>
+    <div class="by">清 石玉昆</div>
+    <div class="tag">公案与江湖</div>
+  </div>
+
+  <div class="eyestage">
+    <svg class="eye" id="eye" viewBox="0 0 400 400" aria-label="猫瞳">
+      <circle cx="200" cy="200" r="188" fill="#141410"/>
+      <circle cx="200" cy="200" r="184" fill="none" stroke="#2c2e26" stroke-width="2"/>
+      <circle cx="200" cy="200" r="150" fill="#3f6486"/>
+      <circle cx="200" cy="200" r="138" fill="#5e8fbb"/>
+      <circle cx="200" cy="200" r="120" fill="#527fa8"/>
+      <circle cx="200" cy="200" r="104" fill="#3f6486"/>
+      <circle cx="200" cy="200" r="86" fill="#2c4a66"/>
+      <g class="irislines" stroke="#24405a" stroke-width="1.5">
+        <line x1="200" y1="70" x2="200" y2="120"/>
+        <line x1="200" y1="280" x2="200" y2="330"/>
+        <line x1="70" y1="200" x2="120" y2="200"/>
+        <line x1="280" y1="200" x2="330" y2="200"/>
+        <line x1="105" y1="105" x2="142" y2="142"/>
+        <line x1="295" y1="105" x2="258" y2="142"/>
+        <line x1="105" y1="295" x2="142" y2="258"/>
+        <line x1="295" y1="295" x2="258" y2="258"/>
+      </g>
+      <circle cx="200" cy="200" r="82" fill="#12140f"/>
+      <g class="pupilg" id="pupilg">
+        <ellipse cx="200" cy="200" rx="17" ry="80" fill="#060705"/>
+        <ellipse cx="196" cy="168" rx="5" ry="12" fill="#cfd8e2" opacity="0.85"/>
+      </g>
+      <circle cx="200" cy="200" r="184" fill="none" stroke="#e8e4dc" stroke-width="0.6" opacity="0.25"/>
+    </svg>
+    <div class="eyecap">猫在朝堂，鼠在江湖。<b id="eyeword">瞳正圆。</b></div>
+    <div class="runway" aria-hidden="true">
+      <div class="mouse"><span class="tail"></span><span class="body"></span><span class="ear"></span></div>
+    </div>
+  </div>
+
+  <div class="side">
+    <div class="lede">圣上金口一句<b>御猫</b>，江湖结下一场<b>猫鼠之争</b>。上半是开封府的公案，下半是陷空岛的意气；一头在铡刀底下问王法，一头在铜网阵上死意气。</div>
+    <nav class="nav">
+      <a href="#zha"><i>壹</i>三口铡</a>
+      <a href="#limao"><i>贰</i>揭盒</a>
+      <a href="#maoshu"><i>叁</i>猫鼠一场</a>
+      <a href="#wushu"><i>肆</i>五鼠名帖</a>
+      <a href="#tongwang"><i>伍</i>铜网阵</a>
+    </nav>
+    <div class="meta mono">库本 集藏 话本<br>一百二十回<br>去空白 509,570 字</div>
+  </div>
+</header>
+
+<section id="zha">
+  <div class="wrap">
+    <div class="shead"><span class="seal">案</span><h2>三口铡</h2><span class="sub">御刑初试</span></div>
+    <div class="rule"></div>
+    <div class="prose">
+      <p>开封府衙后堂有一副御刑，分作三口：龙头铡、虎头铡、狗头铡。书里不忙着解释名目，先让它们一一口开口说话。<span class="chapter">第十五回 斩庞昱初试龙头铡</span>安乐侯庞昱在陈州放赈，赈成了抢；包公把黑脸一放，口说行刑二字，铡口第一次合上。往后虎头铡铡侯爷葛登云，狗头铡接连铡了李保、冯君衡、武吉祥，三口铡刀各开各的口。</p>
+      <p>点一口铡，看刀落。</p>
+    </div>
+    <div class="zhas">
+      <div class="zha" data-v="铡：安乐侯 庞昱">
+        <svg viewBox="0 0 160 170" aria-label="龙头铡">
+          <rect x="20" y="30" width="8" height="110" fill="#3a372f"/>
+          <rect x="132" y="30" width="8" height="110" fill="#3a372f"/>
+          <rect x="12" y="140" width="136" height="10" fill="#2c2a24"/>
+          <rect x="12" y="96" width="136" height="7" fill="#8a6d3a"/>
+          <g class="blade">
+            <polygon points="16,44 144,44 144,52 80,66 16,52" fill="#b8b3a6"/>
+            <rect x="16" y="20" width="128" height="24" fill="#a34d44"/>
+            <text x="80" y="38" text-anchor="middle" font-size="15" fill="#f0e9d8">龙</text>
+          </g>
+        </svg>
+        <div class="zname">龙头铡</div>
+        <div class="hint">点铡试刀</div>
+        <span class="verdict"></span>
+        <span class="vr mono">第十五回</span>
+      </div>
+      <div class="zha" data-v="铡：侯爷 葛登云">
+        <svg viewBox="0 0 160 170" aria-label="虎头铡">
+          <rect x="20" y="30" width="8" height="110" fill="#3a372f"/>
+          <rect x="132" y="30" width="8" height="110" fill="#3a372f"/>
+          <rect x="12" y="140" width="136" height="10" fill="#2c2a24"/>
+          <rect x="12" y="96" width="136" height="7" fill="#8a6d3a"/>
+          <g class="blade">
+            <polygon points="16,44 144,44 144,52 80,66 16,52" fill="#b8b3a6"/>
+            <rect x="16" y="20" width="128" height="24" fill="#a08136"/>
+            <text x="80" y="38" text-anchor="middle" font-size="15" fill="#141410">虎</text>
+          </g>
+        </svg>
+        <div class="zname">虎头铡</div>
+        <div class="hint">点铡试刀</div>
+        <span class="verdict"></span>
+        <span class="vr mono">此铡初用</span>
+      </div>
+      <div class="zha" data-v="铡：李保 冯君衡 武吉祥">
+        <svg viewBox="0 0 160 170" aria-label="狗头铡">
+          <rect x="20" y="30" width="8" height="110" fill="#3a372f"/>
+          <rect x="132" y="30" width="8" height="110" fill="#3a372f"/>
+          <rect x="12" y="140" width="136" height="10" fill="#2c2a24"/>
+          <rect x="12" y="96" width="136" height="7" fill="#8a6d3a"/>
+          <g class="blade">
+            <polygon points="16,44 144,44 144,52 80,66 16,52" fill="#b8b3a6"/>
+            <rect x="16" y="20" width="128" height="24" fill="#5c6e5e"/>
+            <text x="80" y="38" text-anchor="middle" font-size="15" fill="#141410">狗</text>
+          </g>
+        </svg>
+        <div class="zname">狗头铡</div>
+        <div class="hint">点铡试刀</div>
+        <span class="verdict"></span>
+        <span class="vr mono">累次开铡</span>
+      </div>
+    </div>
+    <div class="quote" id="zhaq" style="display:none">
+      <span class="src">第十五回 龙头铡初试</span>
+      包公将袍袖一拂，虎项一扭。口说“行刑”二字。王朝将彪躯一纵，两膀用力，只听咔喳一声，将恶贼登时腰斩，分为两头一边齐的两段
+    </div>
+  </div>
+</section>
+
+<section id="limao">
+  <div class="wrap">
+    <div class="shead"><span class="seal">盒</span><h2>揭盒</h2><span class="sub">开卷第一案</span></div>
+    <div class="rule"></div>
+    <div class="limao-grid">
+      <div class="prose">
+        <p>全书从一只盒开卷。刘妃与太监郭槐定计，李妃分娩血晕之际，一只剥了皮的狸猫，换走了刚落地的太子；再用一条裙绦，要宫人寇珠把襁褓勒死在销金亭。寇珠抱着太子走到河边，把心一横，要抱孩子一同赴河，迎面撞上捧龙妆盒采办果品的太监陈林。太子装进盒里，哭声顿止，一路送进南清宫。</p>
+        <p>这一案压了整整十八回。到<span class="chapter">第十九回 巧取供单郭槐受戮</span>，包公设下森罗殿，让装神的灯突然亮起来，郭槐跪在地上把当年的事从头招供。开头那只盒，到这里才算合上。</p>
+        <p>点盒盖，看盒里换进去的是什么。</p>
+      </div>
+      <div class="boxstage">
+        <svg class="boxsvg" id="boxsvg" viewBox="0 0 300 210" aria-label="龙妆盒">
+          <rect x="30" y="150" width="240" height="52" fill="#242218" stroke="#8a6d3a" stroke-width="1.5"/>
+          <rect x="30" y="150" width="240" height="8" fill="#8a6d3a"/>
+          <text x="150" y="188" text-anchor="middle" font-size="15" fill="#c9963f" letter-spacing="6">龙妆盒</text>
+          <g id="catg">
+            <path d="M118 148 L118 108 Q118 92 132 92 L140 92 L148 74 L158 92 L174 92 L182 74 L190 92 L196 92 Q210 92 210 108 L210 148 Z" fill="#0e0e0d"/>
+            <circle cx="152" cy="112" r="2.6" fill="#c9963f"/>
+            <circle cx="176" cy="112" r="2.6" fill="#c9963f"/>
+            <path d="M150 122 Q164 130 178 122" stroke="#5c3a34" stroke-width="2" fill="none"/>
+          </g>
+          <g id="lidg">
+            <rect x="24" y="128" width="252" height="20" fill="#3a3426" stroke="#8a6d3a" stroke-width="1.5"/>
+            <rect x="140" y="122" width="20" height="7" fill="#c9963f"/>
+          </g>
+        </svg>
+        <div class="boxhint" id="boxhint">点盖开盒</div>
+      </div>
+    </div>
+    <div class="quote" id="limaoq" style="display:none">
+      <span class="src">第一回 设阴谋临产换太子 奋侠义替死救皇娘</span>
+      原来就是二人定的好计，将狸猫剥去皮毛，血淋淋，光油油，认不出是何妖物，好生难看。二人来至玉宸宫内，别人以为盒内是吃食之物，哪知其中就里，恰好李妃临蓐，刚然分娩，一时血晕，人事不知。刘妃、郭槐、尤氏做就活局，趁着忙乱之际，将狸猫换出太子
+    </div>
+  </div>
+</section>
+
+<section id="maoshu">
+  <div class="wrap">
+    <div class="shead"><span class="seal">名</span><h2>猫鼠一场</h2><span class="sub">一句封号 两处心思</span></div>
+    <div class="rule"></div>
+    <div class="prose">
+      <p>南侠展昭随包公入朝，在耀武楼当着天子献技：纵身跃上高阁，贴柱倒爬，卷身翻上房去。天子看到兴头，随口赏了两个字，江湖从此多了一场说不清的恩怨。<span class="chapter">第二十二回 耀武楼南侠封护卫</span></p>
+    </div>
+    <div class="pull">
+      <span class="src">第二十二回 天子金口赐号</span>
+      <q>天子看至此，不由失声道：“奇哉！奇哉！这哪里是个人，分明是朕的御猫一般。”谁知展爷在高处业已听见，便在房上与圣上叩头。众人又是欢喜，又替他害怕。只因圣上金口说了“御猫”二字，南侠从此就得了这个绰号，人人称他为御猫</q>
+    </div>
+    <div class="prose">
+      <p>御猫二字，在金銮殿上是赞，出了殿门就是刺。陷空岛五义弟兄绰号里个个带鼠，猫鼠名分相克，白玉堂收拾行装直奔东京。开封府里，公孙策一句话把这层窗户纸捅破。</p>
+    </div>
+    <div class="twocol">
+      <div class="quote">
+        <span class="src">公孙策点破名分</span>
+        他们五人号称五鼠，你却号称御猫。焉有猫儿不捕鼠之理？这明是嗔大哥号称御猫之故。所以知道他要与大哥合气
+      </div>
+      <div class="slipnote">
+        <span class="src">开封府酒席间 赵虎插话</span>
+        他不来便罢。他若来时，我烧一壶开开的水把他冲着喝了，也去去我的滞气
+      </div>
+    </div>
+    <div class="prose" style="margin-top:22px">
+      <p>一句玩笑话，一份封号，一场猫鼠之争就此开场：白玉堂进京盗三宝、陷空岛设线网拿御猫，闹到最后以义收场。可这四个字并没有翻篇，书末它绕了远路，落回一个字上。</p>
+    </div>
+  </div>
+</section>
+
+<section id="wushu">
+  <div class="wrap">
+    <div class="shead"><span class="seal">帖</span><h2>五鼠名帖</h2><span class="sub">陷空岛五义</span></div>
+    <div class="rule"></div>
+    <div class="prose">
+      <p>松江茉花村酒席上，丁兆蕙给展昭报了一趟家门：陷空岛卢家庄，五义结义，绰号个个带鼠。这是全书报得最全的一份名帖，五个人五个出身，五门本事。点洞看帖。</p>
+    </div>
+    <div class="holes">
+      <div class="hole" data-q="lufang" data-src="丁兆蕙报家门">
+        <div class="nick">钻天鼠</div>
+        <div class="nm">卢方</div>
+        <span class="from">卢家庄 大爷</span>
+        <span class="skill"></span>
+      </div>
+      <div class="hole" data-q="hanzhang" data-src="丁兆蕙报家门">
+        <div class="nick">彻地鼠</div>
+        <div class="nm">韩彰</div>
+        <span class="from">黄州 行伍</span>
+        <span class="skill"></span>
+      </div>
+      <div class="hole" data-q="xuqing" data-src="丁兆蕙报家门">
+        <div class="nick">穿山鼠</div>
+        <div class="nm">徐庆</div>
+        <span class="from">山西 铁匠</span>
+        <span class="skill"></span>
+      </div>
+      <div class="hole" data-q="jiangping" data-src="丁兆蕙报家门">
+        <div class="nick">翻江鼠</div>
+        <div class="nm">蒋平</div>
+        <span class="from">金陵 客商</span>
+        <span class="skill"></span>
+      </div>
+      <div class="hole fifth" data-q="baitang" data-src="丁兆蕙报家门">
+        <div class="nick">锦毛鼠</div>
+        <div class="nm">白玉堂</div>
+        <span class="from">金华 武生员</span>
+        <span class="skill"></span>
+      </div>
+    </div>
+    <div class="holequote" id="holequote">
+      <span class="src">丁兆蕙报家门</span>
+      <span id="holeqtext"></span>
+    </div>
+    <div id="qbank" hidden>
+      <span data-q="lufang">因他有爬杆之能，大家送了他个绰号，叫做钻天鼠</span>
+      <span data-q="hanzhang">会做地沟地雷，因此他的绰号儿叫做彻地鼠</span>
+      <span data-q="xuqing">是个铁匠出身，能探山中十八孔，因此绰号叫穿山鼠</span>
+      <span data-q="jiangping">能在水中居住，开目视物，绰号人称翻江鼠</span>
+      <span data-q="baitang">因他形容秀美，文武双全，人呼他绰号为锦毛鼠</span>
+    </div>
+  </div>
+</section>
+
+<section id="tongwang">
+  <div class="wrap">
+    <div class="shead"><span class="seal">网</span><h2>铜网阵</h2><span class="sub">第一百二回末</span></div>
+    <div class="rule"></div>
+    <div class="prose">
+      <p>襄阳王赵爵立了盟书，怕人盗取，盖了一座冲霄楼，把盟书悬在中梁，楼下设下八卦铜网阵，门户按卦象开合，处处藏着消息。白玉堂探了两回，门户曲折，方向都摸不清；第三回他单人独骑再来，撬窗入楼，终于望见了中梁上那只系着绒线的锦匣。<span class="chapter">第一百二回 锦毛鼠初探冲霄楼</span></p>
+      <p>点锦匣，看三探冲霄楼的结局。</p>
+    </div>
+    <div class="netstage">
+      <svg class="netsvg" id="netsvg" viewBox="0 0 880 400" aria-label="铜网阵">
+        <line x1="20" y1="30" x2="860" y2="30" stroke="#8a6d3a" stroke-width="3"/>
+        <text x="28" y="20" font-size="12" fill="#8a6d3a" letter-spacing="4">冲霄楼下 铜网阵</text>
+        <line id="thread" x1="440" y1="30" x2="440" y2="66" stroke="#c9963f" stroke-width="1.5"/>
+        <g id="xiag">
+          <g id="xiabox">
+            <rect x="420" y="66" width="40" height="26" fill="#242218" stroke="#c9963f" stroke-width="1.5"/>
+            <rect x="432" y="60" width="16" height="7" fill="#c9963f"/>
+            <text x="440" y="84" text-anchor="middle" font-size="11" fill="#c9963f">盟单</text>
+          </g>
+        </g>
+        <g id="net"><line x1="40.0" y1="120" x2="40.0" y2="360"/><line x1="80.0" y1="120" x2="80.0" y2="360"/><line x1="120.0" y1="120" x2="120.0" y2="360"/><line x1="160.0" y1="120" x2="160.0" y2="360"/><line x1="200.0" y1="120" x2="200.0" y2="360"/><line x1="240.0" y1="120" x2="240.0" y2="360"/><line x1="280.0" y1="120" x2="280.0" y2="360"/><line x1="320.0" y1="120" x2="320.0" y2="360"/><line x1="360.0" y1="120" x2="360.0" y2="360"/><line x1="400.0" y1="120" x2="400.0" y2="360"/><line x1="440.0" y1="120" x2="440.0" y2="360"/><line x1="480.0" y1="120" x2="480.0" y2="360"/><line x1="520.0" y1="120" x2="520.0" y2="360"/><line x1="560.0" y1="120" x2="560.0" y2="360"/><line x1="600.0" y1="120" x2="600.0" y2="360"/><line x1="640.0" y1="120" x2="640.0" y2="360"/><line x1="680.0" y1="120" x2="680.0" y2="360"/><line x1="720.0" y1="120" x2="720.0" y2="360"/><line x1="760.0" y1="120" x2="760.0" y2="360"/><line x1="800.0" y1="120" x2="800.0" y2="360"/><line x1="840.0" y1="120" x2="840.0" y2="360"/><line class="horiz" x1="40" y1="120.0" x2="840" y2="120.0"/><line class="horiz" x1="40" y1="150.0" x2="840" y2="150.0"/><line class="horiz" x1="40" y1="180.0" x2="840" y2="180.0"/><line class="horiz" x1="40" y1="210.0" x2="840" y2="210.0"/><line class="horiz" x1="40" y1="240.0" x2="840" y2="240.0"/><line class="horiz" x1="40" y1="270.0" x2="840" y2="270.0"/><line class="horiz" x1="40" y1="300.0" x2="840" y2="300.0"/><line class="horiz" x1="40" y1="330.0" x2="840" y2="330.0"/><line class="horiz" x1="40" y1="360.0" x2="840" y2="360.0"/></g>
+        <text x="440" y="384" text-anchor="middle" font-size="12" fill="#5f6a76" id="netcap" letter-spacing="3">网下暗设消息 八面门户按卦开合</text>
+      </svg>
+      <div class="netnote" id="netnote">点匣试阵</div>
+    </div>
+    <div class="quote deathq" id="deathq1">
+      <span class="src">第一百二回末 滚板翻处</span>
+      滚板一翻。白爷说声：“不好！”身体往下一沉，觉得痛彻心髓。登时从头上到脚下无处不是利刃，周身已无完肤
+    </div>
+    <div class="quote deathq" id="deathq2">
+      <span class="src">阵上放箭</span>
+      只见一阵锣声乱响，人声嘈杂，道：“铜网阵有了人了。”其中有一人高声道：“放箭！”耳内如闻飞蝗骤雨，铜网之上犹如刺猬一般
+    </div>
+    <div class="prose deathq" id="deathcoda">
+      <p>书里写到这一段，说书人自己停了一停，说这段情节<span class="rp">不好说，不忍说，又不能不说</span>。五义里最小的、意气最盛的锦毛鼠，全书没有让他死在任何一场恶斗里，死在他认定非探不可的阵里。卢方听见消息，只急得搓手叹气，说千不是万不是全是五弟不是；蒋平回了一句：难道五弟有了英名，你我作哥哥的不光彩么。</p>
+      <p>御猫二字是恩赏，也是谶语。猫在朝堂，鼠在江湖；江湖的规矩进不得宫墙，意气的脚力跨不过铜网。</p>
+    </div>
+  </div>
+</section>
+
+<div class="coda">
+  <div class="wrap">
+    <div class="inner">
+      <h3>收梢</h3>
+      <p>这本书一半公案，一半江湖。包公铡下问的是<b>王法</b>：狸猫换太子要郭槐跪着招供，庞昱铡在陈州，案子不论多大，落到堂上都得画供。侠客网中死的是<b>意气</b>：白玉堂与展昭争的是一个名号，与襄阳王争的是一口气，争到最后，命抵给了机关。</p>
+      <p>石玉昆把两班人马装进同一部书，让御猫挂着四品的牌子在两界跑腿。圣上一句金口赏号，江湖当了真；一只剥皮的狸猫，骗过整座皇宫。庙堂之诡与江湖之义互为表里，这是百二十回说得最透的一件事。</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="row"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），集藏话本〈三侠五义〉，清石玉昆撰，库内全文去空白 509,570 字，一百二十回。本页十二处引文经脚本与库内文本去标点、空白归一逐字核验通过；库本 OCR 讹字（冲霄楼段「咕嗜」疑当作「咕噜」、「将奸工参倒」之「工」疑当作「王」）照录并申报，引文断口均已避开。目录：<a href="mulu.html">殆知阁导读总目</a>。</div>
+  <div class="row"><b>库外申报</b>　通行本又题〈忠烈侠义传〉，光绪间北京聚珍堂活字本首刊，署问竹主人原编、入迷道人参订，石玉昆为清道光咸丰间说书名家，诸节为库外通行知识，未经库本核验。三口铡刀「龙铡皇亲、虎铡官吏、狗铡恶霸」之专铡名目为后起通说，库本仅见各案用铡实例，本页人物与案情均据库本丁兆蕙报家门、陈州放赈、冲霄楼诸段。展昭所演三绝技、白玉堂三探冲霄楼之「三」为叙事撮述，回目原文如此。</div>
+  <div class="row"><b>时代局限提醒</b>　库本成书于清季，称圣颂圣、清官断案多凭神机与酷刑，腰斩、铡刑皆作快意场面铺陈，鬼魂显灵、装神取供入于正笔，妇女角色多作情节之道具，均照录原文，反映成书时代的认识限度，不代表编者与导读立场。书中酷刑描写仅作历史文献呈现，愿读者以历史眼光观之。</div>
+</footer>
+
+<script>
+(function () {
+
+  // 猫瞳随机警戒：与鼠奔同步
+  var eye = document.getElementById('eye');
+  var word = document.getElementById('eyeword');
+  setInterval(function () {
+    eye.classList.add('alert');
+    word.textContent = '瞳骤缩。';
+    setTimeout(function () {
+      eye.classList.remove('alert');
+      word.textContent = '瞳正圆。';
+    }, 1700);
+  }, 9000);
+
+  // 铡刀
+  var zhaq = document.getElementById('zhaq');
+  var zhas = document.querySelectorAll('.zha');
+  zhas.forEach(function (z) {
+    z.addEventListener('click', function () {
+      z.classList.add('cut');
+      z.querySelector('.verdict').textContent = z.getAttribute('data-v');
+      zhaq.style.display = 'block';
+    });
+  });
+
+  // 揭盒
+  var box = document.getElementById('boxsvg');
+  var boxhint = document.getElementById('boxhint');
+  var limaoq = document.getElementById('limaoq');
+  box.addEventListener('click', function () {
+    box.classList.toggle('open');
+    boxhint.textContent = box.classList.contains('open') ? '盒中是剥皮狸猫' : '点盖开盒';
+    if (box.classList.contains('open')) limaoq.style.display = 'block';
+  });
+
+  // 五鼠名帖
+  var hq = document.getElementById('holequote');
+  var hqt = document.getElementById('holeqtext');
+  var holes = document.querySelectorAll('.hole');
+  holes.forEach(function (h) {
+    h.addEventListener('click', function () {
+      holes.forEach(function (o) { o.classList.remove('open'); });
+      h.classList.add('open');
+      var k = h.getAttribute('data-q');
+      var t = document.querySelector('#qbank span[data-q="' + k + '"]').textContent;
+      hqt.textContent = t;
+      h.querySelector('.skill').textContent = t;
+      hq.classList.add('show');
+    });
+  });
+
+  // 铜网阵
+  var svg = document.getElementById('netsvg');
+  var note = document.getElementById('netnote');
+  var cap = document.getElementById('netcap');
+  var armed = false;
+  document.getElementById('xiag').addEventListener('click', function () {
+    if (armed) return;
+    armed = true;
+    svg.classList.add('fallen');
+    setTimeout(function () {
+      svg.classList.add('hot');
+      cap.setAttribute('y', '250');
+      cap.textContent = '铜网阵有了人了';
+      note.textContent = '阵发了';
+      document.getElementById('deathq1').classList.add('show');
+      setTimeout(function () {
+        document.getElementById('deathq2').classList.add('show');
+        document.getElementById('deathcoda').classList.add('show');
+      }, 900);
+    }, 950);
+  });
+})();
+</script>
+
+</body>
+</html>
