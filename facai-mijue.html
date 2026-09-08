@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>发财秘诀 · 殆知阁导读之二百八十</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #201f1d; --ink3: #26251f;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --blue: #5e8fbb; --blue-dim: rgba(94,143,187,.32); --blue-faint: rgba(94,143,187,.12);
+    --hair: rgba(232,228,220,.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  q { quotes: none; }
+  .q { quotes: none; }
+  ::selection { background: var(--blue-dim); }
+
+  /* ===== 首屏 ===== */
+  .hero {
+    min-height: 92dvh; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    padding: 64px 20px 90px;
+  }
+  .topbar {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between;
+    padding: 18px 26px; font-size: 12.5px; letter-spacing: .28em; color: var(--faint);
+  }
+  .hero-grid { display: flex; gap: clamp(28px, 6vw, 90px); align-items: center; max-width: 1060px; }
+  .titlebox { display: flex; gap: 22px; align-items: flex-start; }
+  h1.vt {
+    writing-mode: vertical-rl; font-size: clamp(58px, 9.5vw, 108px);
+    letter-spacing: .16em; font-weight: 700; line-height: 1.08;
+  }
+  .seal {
+    writing-mode: vertical-rl; background: var(--blue); color: var(--ink);
+    font-size: clamp(17px, 2vw, 22px); letter-spacing: .34em;
+    padding: 14px 9px 10px; border-radius: 3px; font-weight: 700; margin-top: 10px;
+  }
+  .hero-side { max-width: 30em; }
+  .ord { font-size: 13px; letter-spacing: .3em; color: var(--faint); margin-bottom: 18px; }
+  .lede b { color: var(--blue); font-weight: 700; }
+  .lede { font-size: clamp(15.5px, 1.55vw, 17.5px); color: var(--paper); }
+  .lede .mut { color: var(--dim); }
+  .heroq { margin-top: 30px; border-left: 2px solid var(--blue-dim); padding-left: 18px; }
+  .heroq q { font-size: 17px; letter-spacing: .06em; }
+  .heroq .att { display: block; font-size: 12.5px; color: var(--faint); margin-top: 6px; letter-spacing: .1em; }
+
+  /* 料泡 */
+  .bubblewrap { display: flex; flex-direction: column; align-items: center; gap: 4px; user-select: none; }
+  #bubble {
+    width: clamp(150px, 20vw, 205px); height: clamp(150px, 20vw, 205px);
+    position: relative; cursor: pointer; touch-action: none;
+  }
+  #bubble .glass {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid var(--blue-dim);
+    background: radial-gradient(circle at 34% 30%, rgba(232,228,220,.16), rgba(94,143,187,.05) 46%, transparent 70%);
+    transition: transform .18s ease;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #bubble .glass::after {
+    content: ""; position: absolute; left: 22%; top: 16%;
+    width: 22%; height: 13%; border-radius: 50%;
+    background: rgba(232,228,220,.28); filter: blur(2px);
+    transform: rotate(-24deg);
+  }
+  #bubble .tube {
+    position: absolute; top: -30px; left: 50%; width: 9px; height: 32px;
+    margin-left: -4px; border: 2px solid var(--blue-dim); border-bottom: none;
+    border-radius: 5px 5px 0 0;
+  }
+  #bubble .word { font-size: 15px; color: var(--dim); letter-spacing: .2em; }
+  #bubble.pop .glass { animation: pop .5s ease forwards; }
+  @keyframes pop {
+    0% { transform: scale(1.28); opacity: 1; }
+    55% { transform: scale(1.55); opacity: .35; }
+    100% { transform: scale(1.75); opacity: 0; }
+  }
+  #shards { position: absolute; inset: 0; pointer-events: none; }
+  #shards i {
+    position: absolute; left: 50%; top: 50%; width: 5px; height: 5px;
+    background: rgba(232,228,220,.75); border-radius: 50%; opacity: 0;
+  }
+  #bubble.pop ~ #shards i { animation: shard .6s ease-out forwards; }
+  @keyframes shard {
+    0% { opacity: 1; transform: translate(0, 0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(.4); }
+  }
+  .counter { font-size: 13px; color: var(--faint); letter-spacing: .22em; margin-top: 10px; }
+  .counter b { color: var(--blue); font-weight: 700; }
+  .bubblehint { font-size: 12.5px; color: var(--faint); letter-spacing: .18em; }
+
+  /* ===== 写字楼长廊 ===== */
+  .corridor {
+    border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair);
+    background: var(--ink2); padding: 20px 0 24px; position: sticky; top: 0; z-index: 40;
+  }
+  .corr-inner { max-width: 1060px; margin: 0 auto; padding: 0 20px; display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; }
+  .door {
+    flex: 0 0 auto; width: 86px; cursor: pointer; background: none; border: none;
+    color: var(--dim); font-family: inherit; padding: 0 0 6px; text-align: center;
+  }
+  .door .arch {
+    height: 52px; border: 1px solid var(--hair); border-bottom: none;
+    border-radius: 40px 40px 0 0; margin: 0 10px; position: relative;
+    background: var(--ink); transition: background .2s, border-color .2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .door .bell { font-size: 15px; color: var(--faint); transition: color .2s; display: inline-block; }
+  .door .no { font-size: 11px; letter-spacing: .3em; color: var(--faint); white-space: nowrap; }
+  .door .nm { font-size: 14.5px; letter-spacing: .14em; margin-top: 2px; white-space: nowrap; }
+  .door:hover .arch, .door.on .arch { background: var(--blue-faint); border-color: var(--blue-dim); }
+  .door:hover .nm, .door.on .nm { color: var(--blue); }
+  .door.ring .bell { color: var(--blue); animation: ring .5s ease; display: inline-block; }
+  @keyframes ring {
+    0%, 100% { transform: rotate(0); } 25% { transform: rotate(18deg); }
+    50% { transform: rotate(-14deg); } 75% { transform: rotate(8deg); }
+  }
+  .corr-note { max-width: 1060px; margin: 10px auto 0; padding: 0 22px; font-size: 12px; color: var(--faint); letter-spacing: .16em; }
+
+  /* ===== 通用段 ===== */
+  main { max-width: 1060px; margin: 0 auto; padding: 0 20px; }
+  section.hui { padding: 76px 0 30px; }
+  .huihead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 8px; flex-wrap: wrap; }
+  .huino {
+    font-size: 13px; letter-spacing: .3em; color: var(--ink); background: var(--blue);
+    padding: 3px 10px; border-radius: 2px; font-weight: 700;
+  }
+  .huititle { font-size: clamp(24px, 3.2vw, 34px); letter-spacing: .12em; font-weight: 700; }
+  .huisub { font-size: 13px; color: var(--faint); letter-spacing: .2em; }
+  .prose { color: var(--dim); max-width: 44em; font-size: 15.5px; margin: 14px 0; }
+  .prose b { color: var(--paper); font-weight: 700; }
+  .prose .bl { color: var(--blue); }
+  blockquote.qb {
+    border-left: 2px solid var(--blue-dim); padding: 6px 0 6px 20px; margin: 22px 0;
+    max-width: 42em;
+  }
+  blockquote.qb q { font-size: 16.5px; letter-spacing: .04em; }
+  blockquote.qb .src { display: block; font-size: 12.5px; color: var(--faint); margin-top: 8px; letter-spacing: .12em; }
+  .shuo {
+    margin-top: 26px; padding: 14px 18px; background: var(--ink2); border: 1px solid var(--hair);
+    border-radius: 4px; color: var(--faint); font-size: 13.5px; max-width: 46em;
+  }
+  .shuo b { color: var(--dim); }
+
+  /* 回一 筐与泡 */
+  .lei-grid { display: grid; grid-template-columns: 1.2fr .9fr; gap: 40px; }
+  .lei-quotes .qb { margin: 18px 0; }
+  .priceboard {
+    border: 1px solid var(--hair); background: var(--ink2); border-radius: 4px;
+    padding: 22px; margin-top: 8px;
+  }
+  .priceboard h4 { font-size: 13px; letter-spacing: .3em; color: var(--faint); margin-bottom: 14px; font-weight: 400; }
+  .priceboard .row { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--hair); padding: 9px 2px; font-size: 15px; }
+  .priceboard .row:last-child { border-bottom: none; }
+  .priceboard .row em { font-style: normal; color: var(--dim); }
+  .priceboard .row b { color: var(--blue); font-weight: 700; }
+
+  /* 回二 秤 */
+  .scalewrap { margin: 34px 0 10px; }
+  .scalebtns { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .sbtn {
+    background: var(--ink2); border: 1px solid var(--hair); color: var(--dim);
+    font-family: inherit; font-size: 14px; letter-spacing: .18em; padding: 9px 18px;
+    border-radius: 3px; cursor: pointer; transition: all .2s;
+  }
+  .sbtn.on { border-color: var(--blue); color: var(--blue); background: var(--blue-faint); }
+  .steelyard { position: relative; height: 190px; }
+  .steelyard svg { width: 100%; max-width: 640px; display: block; }
+  #sybeam { transition: transform .5s ease; transform-origin: 90px 96px; }
+  #syweight { transition: transform .5s ease; }
+  .scaleread { font-size: 15px; color: var(--dim); margin-top: 6px; }
+  .scaleread b { color: var(--blue); font-size: 20px; }
+  .scaleread .faint { color: var(--faint); font-size: 13px; }
+
+  /* 回三 乩盘 */
+  .ji-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 44px; align-items: start; }
+  .jisand {
+    border: 1px solid var(--hair); border-radius: 50% 50% 6px 6px / 18% 18% 6px 6px;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 11px, rgba(232,228,220,.05) 11px 12px),
+      var(--ink2);
+    padding: 30px 20px 24px; text-align: center; cursor: pointer; user-select: none;
+  }
+  .jisand .jilabel { font-size: 12px; letter-spacing: .4em; color: var(--faint); margin-bottom: 16px; }
+  .jiline { writing-mode: vertical-rl; margin: 0 auto; height: 220px; font-size: clamp(20px, 2.6vw, 27px); letter-spacing: .32em; }
+  .jiline span { display: inline-block; transition: transform .3s; }
+  .jisand.shake .jiline span { animation: jit .55s ease; }
+  @keyframes jit {
+    0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-4px, 2px) rotate(-6deg); }
+    45% { transform: translate(3px, -3px) rotate(5deg); } 70% { transform: translate(-2px, 3px) rotate(-3deg); }
+  }
+  .jihint { font-size: 12px; color: var(--faint); letter-spacing: .2em; margin-top: 14px; }
+  .datedstrip { margin-top: 24px; }
+  .drow { display: flex; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px dashed var(--hair); }
+  .drow .d { font-size: 13px; color: var(--faint); letter-spacing: .14em; flex: 0 0 86px; }
+  .drow .e { font-size: 15px; color: var(--paper); }
+  .drow.bad .e { color: var(--blue); font-weight: 700; }
+
+  /* 回四 洋泾浜簿 */
+  .vocab {
+    margin: 30px 0; border: 1px solid var(--hair); border-radius: 4px; overflow: hidden;
+    background: var(--ink2);
+  }
+  .vocab .vh {
+    display: flex; justify-content: space-between; padding: 12px 20px;
+    border-bottom: 1px solid var(--hair); font-size: 12.5px; color: var(--faint); letter-spacing: .24em;
+  }
+  .vrow { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px dashed var(--hair); }
+  .vrow:last-child { border-bottom: none; }
+  .vrow > div { padding: 14px 20px; font-size: 16px; }
+  .vrow .zh { border-right: 1px dashed var(--hair); }
+  .vrow .yang { color: var(--blue); letter-spacing: .06em; }
+  .vrow .yang small { display: block; color: var(--faint); font-size: 12px; letter-spacing: .14em; margin-top: 3px; }
+  .vfn { padding: 12px 20px; font-size: 12.5px; color: var(--faint); letter-spacing: .1em; }
+
+  /* 回六 猪仔 · 暗段 */
+  section.dark {
+    background: linear-gradient(180deg, var(--ink) 0%, #14130f 12%, #14130f 88%, var(--ink) 100%);
+  }
+  .daochi { margin: 30px 0; max-width: 40em; }
+  .dstep { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px dashed var(--hair); }
+  .dstep .k {
+    flex: 0 0 30px; height: 30px; border: 1px solid var(--blue-dim); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; color: var(--blue); font-size: 14px;
+  }
+  .dstep .t { font-size: 15.5px; color: var(--dim); }
+  .dstep .t b { color: var(--paper); }
+
+  /* 回七至九 酒席账条 */
+  .ledger { margin: 30px 0; }
+  .lrow {
+    display: grid; grid-template-columns: 130px 1fr; gap: 20px;
+    padding: 20px 0; border-top: 1px solid var(--hair);
+  }
+  .lrow:last-child { border-bottom: 1px solid var(--hair); }
+  .lrow .who { font-size: 17px; letter-spacing: .1em; font-weight: 700; }
+  .lrow .who small { display: block; font-weight: 400; font-size: 12px; color: var(--faint); margin-top: 4px; letter-spacing: .16em; }
+  .lrow .what { font-size: 15px; color: var(--dim); }
+  .lrow .what b { color: var(--paper); }
+  .lrow .what .win { color: var(--blue); font-weight: 700; }
+  .lrow.qrow .what q { display: block; margin-top: 8px; color: var(--paper); font-size: 16px; }
+  .lrow.qrow .what .at { display: block; font-size: 12px; color: var(--faint); margin-top: 4px; letter-spacing: .12em; }
+
+  /* 回十 命摊 */
+  .mint { margin: 34px 0; border: 1px solid var(--hair); background: var(--ink2); border-radius: 4px; overflow: hidden; }
+  .mint .mhead {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    padding: 18px 22px; border-bottom: 1px solid var(--hair);
+  }
+  .mint .mhead .shop { font-size: clamp(19px, 2.4vw, 24px); letter-spacing: .18em; font-weight: 700; }
+  .mint .mhead .tag {
+    font-size: 12.5px; color: var(--blue); border: 1px solid var(--blue-dim);
+    padding: 4px 12px; border-radius: 2px; letter-spacing: .18em;
+  }
+  .mint .mbody { padding: 20px 22px; }
+  .ledger2 { display: grid; grid-template-columns: auto 1fr; gap: 8px 22px; font-size: 15px; color: var(--dim); }
+  .ledger2 .y { color: var(--faint); font-size: 13px; letter-spacing: .1em; padding-top: 2px; }
+  .ledger2 .v b { color: var(--blue); }
+  .heartstage { text-align: center; padding: 34px 20px 26px; }
+  #heartbtn {
+    background: none; border: 1px solid var(--blue-dim); color: var(--paper);
+    font-family: inherit; font-size: 15px; letter-spacing: .3em; padding: 12px 26px;
+    border-radius: 3px; cursor: pointer; transition: all .25s;
+  }
+  #heartbtn:hover { border-color: var(--blue); color: var(--blue); }
+  #hearts { display: flex; justify-content: center; gap: 34px; margin: 26px 0 8px; min-height: 92px; }
+  .heartcard {
+    width: 92px; height: 92px; position: relative; cursor: default;
+  }
+  .heartcard .face {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 40px; border: 1px solid var(--hair); border-radius: 6px; background: var(--ink);
+    backface-visibility: hidden; transition: transform .6s ease, opacity .6s ease;
+  }
+  .heartcard .back {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 40px; border: 1px solid var(--blue); border-radius: 6px;
+    background: var(--blue-faint); transform: rotateY(180deg);
+    backface-visibility: hidden; transition: transform .6s ease, opacity .6s ease;
+  }
+  .heartcard.flip .face { transform: rotateY(180deg); opacity: 0; }
+  .heartcard.flip .back { transform: rotateY(0); opacity: 1; }
+  .heartlabel { font-size: 12.5px; color: var(--faint); letter-spacing: .24em; margin-top: 10px; }
+  .finalq { text-align: center; padding: 10px 0 30px; }
+  .finalq q { font-size: clamp(20px, 3vw, 28px); letter-spacing: .1em; }
+  .finalq .at { display: block; font-size: 12.5px; color: var(--faint); margin-top: 12px; letter-spacing: .16em; }
+
+  /* 账尾 */
+  .coda { border-top: 1px solid var(--hair); margin-top: 60px; padding: 56px 0 30px; }
+  .coda-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
+  .coda h3 { font-size: 15px; letter-spacing: .3em; color: var(--blue); font-weight: 700; margin-bottom: 14px; }
+  .coda p { font-size: 14.5px; color: var(--dim); margin-bottom: 12px; }
+  .coda p b { color: var(--paper); }
+
+  footer.page { border-top: 1px solid var(--hair); margin-top: 40px; padding: 34px 0 60px; }
+  footer.page .fin { max-width: 1060px; margin: 0 auto; padding: 0 20px; font-size: 13px; color: var(--faint); line-height: 2.1; }
+  footer.page a { color: var(--dim); }
+
+  @media (max-width: 860px) {
+    .hero-grid { flex-direction: column; align-items: flex-start; gap: 40px; }
+    .lei-grid, .ji-grid, .coda-grid { grid-template-columns: 1fr; gap: 26px; }
+    .lrow { grid-template-columns: 1fr; gap: 6px; }
+    .ledger2 { grid-template-columns: auto 1fr; }
+    h1.vt { writing-mode: horizontal-tb; font-size: clamp(44px, 11vw, 64px); }
+    .seal { writing-mode: horizontal-tb; padding: 8px 14px; margin-top: 0; }
+    .titlebox { flex-direction: column-reverse; }
+    .jiline { height: 190px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 首屏 · 一只料泡 ============ -->
+<header class="hero">
+  <div class="topbar"><span>殆知阁导读 · 集藏小说</span><span>第二百八十篇</span></div>
+  <div class="hero-grid">
+    <div class="titlebox">
+      <h1 class="vt">发财秘诀</h1>
+      <div class="seal">洋财</div>
+    </div>
+    <div class="hero-side">
+      <div class="ord">清 吴趼人 十回</div>
+      <p class="lede">一部教人<b>发洋财</b>的小说，通篇没写一句醒世恒言，只在末回借一个算命先生的嘴，把诀窍说破。<span class="mut">吴趼人自评：生平所著小说，以此篇为最劣。因为下笔时怒眦先裂，骂人骂得写不成样子。</span></p>
+      <div class="heroq">
+        <q>往事追回泪似珠，十人中有九糊涂。致令一样须眉汉，硬要从中判主奴。</q>
+        <span class="att">开卷诗。判主奴三字，是全书的账总。</span>
+      </div>
+    </div>
+    <div class="bubblewrap">
+      <div id="bubble" role="button" tabindex="0" aria-label="按住吹料泡，松手即破">
+        <div class="tube"></div>
+        <div class="glass"><span class="word">口兵嘣</span></div>
+      </div>
+      <div id="shards"></div>
+      <div class="bubblehint">按住吹气，松手即破</div>
+      <div class="counter">发洋财 <b id="cnt">0</b> 注</div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 写字楼长廊 ============ -->
+<nav class="corridor" aria-label="十回长廊">
+  <div class="corr-inner" id="doors">
+    <button class="door" data-go="hui1"><span class="arch"><span class="bell">铃</span></span><span class="no">第一回</span><span class="nm">料泡</span></button>
+    <button class="door" data-go="hui2"><span class="arch"><span class="bell">铃</span></span><span class="no">第二回</span><span class="nm">秤金</span></button>
+    <button class="door" data-go="hui3"><span class="arch"><span class="bell">铃</span></span><span class="no">第三回</span><span class="nm">坐探</span></button>
+    <button class="door" data-go="hui4"><span class="arch"><span class="bell">铃</span></span><span class="no">第四回</span><span class="nm">写字楼</span></button>
+    <button class="door" data-go="hui5"><span class="arch"><span class="bell">铃</span></span><span class="no">第五回</span><span class="nm">洋泾浜</span></button>
+    <button class="door" data-go="hui6"><span class="arch"><span class="bell">铃</span></span><span class="no">第六回</span><span class="nm">猪仔</span></button>
+    <button class="door" data-go="hui7"><span class="arch"><span class="bell">铃</span></span><span class="no">第七回</span><span class="nm">鱼翅</span></button>
+    <button class="door" data-go="hui8"><span class="arch"><span class="bell">铃</span></span><span class="no">第八回</span><span class="nm">狠心</span></button>
+    <button class="door" data-go="hui9"><span class="arch"><span class="bell">铃</span></span><span class="no">第九回</span><span class="nm">炎凉</span></button>
+    <button class="door" data-go="hui10"><span class="arch"><span class="bell">铃</span></span><span class="no">第十回</span><span class="nm">换心</span></button>
+  </div>
+  <div class="corr-note">写字楼长廊：楼上一带长廊，靠栏杆放着一张杉木板桌。门后各是一回。</div>
+</nav>
+
+<main>
+
+<!-- ============ 第一回 ============ -->
+<section class="hui" id="hui1">
+  <div class="huihead"><span class="huino">第一回</span><span class="huititle">一筐料泡</span><span class="huisub">辟香港通商初发达 · 卖料泡穷汉得奇逢</span></div>
+  <div class="lei-grid">
+    <div>
+      <p class="prose">张槎乡穷汉区丙，贩玻璃料泡过海。香港是刚割给英国的新码头，街上没有小孩子，一筐玩具眼看要砸在手里。偏偏撞上一个外国人，伸出一个指头，换来<b>一元洋银</b>：乡下只卖一文钱的东西，出了海翻了一百倍。更妙的是那泡儿一吹就破，外国人只当奇技，破了再买，<span class="bl">随买随吹，随吹随破</span>，二三十个人把他围在总会门口。</p>
+      <blockquote class="qb">
+        <q>是卖给小孩子玩的。小的不过荸荠大小，零卖只得二三文一个；大的有馒头大小，也不过十来文一个。</q>
+        <span class="src">第一回：料泡本钱，一文起跳。</span>
+      </blockquote>
+      <blockquote class="qb">
+        <q>二三十个外国人争着来买，随买，随吹；随吹，随破。</q>
+        <span class="src">第一回：破得越快，卖得越快。</span>
+      </blockquote>
+      <blockquote class="qb">
+        <q>写区丙乎，吾知作者之意，实为今日之发洋财者写照耳。今之发洋财者，其痴呆如区丙，其忠厚尚不及区丙也。</q>
+        <span class="src">回后评：先把主角钉在墙上。</span>
+      </blockquote>
+    </div>
+    <div class="priceboard">
+      <h4>区丙发家账 · 第一簿</h4>
+      <div class="row"><em>料泡一个，乡下价</em><b>一文</b></div>
+      <div class="row"><em>料泡一个，总会价</em><b>一元</b></div>
+      <div class="row"><em>头一天收账</em><b>五百数十元</b></div>
+      <div class="row"><em>石湾窑货小人儿，贩价</em><b>四五文</b></div>
+      <div class="row"><em>窑货十个，洋行价</em><b>二十元</b></div>
+      <div class="row"><em>三个多月后</em><b>五万两上下</b></div>
+      <p class="prose" style="font-size:13.5px; margin-top:14px;">回末赞：<q>运退黄金失色，时来黑铁生光。莫讥舞袖太郎当，此是发财榜样。</q></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 第二回 ============ -->
+<section class="hui" id="hui2">
+  <div class="huihead"><span class="huino">第二回</span><span class="huititle">一把私秤</span><span class="huisub">察嗜好货郎逐利 · 发储藏夫妇秤金</span></div>
+  <p class="prose">钱要藏，先要<b>秤</b>。区丙夜里去杂货铺借秤，掌柜的夸口自家是天平秤，顺手把别处的黑秤揭了底。夫妻俩在灯下把麻袋一袋一袋搬出来称，称到三更，算盘一响：<b>三十二担</b>。回末批语把这两个人的样子写绝了。</p>
+  <blockquote class="qb">
+    <q>不比苏州上海的人家，黑良心，专门刻剥小负贩，用二十四两、三十二两的天平秤。</q>
+    <span class="src">第二回：十六两是一斤，二十四两也是一斤。</span>
+  </blockquote>
+  <blockquote class="qb">
+    <q>一连看了几袋，只吓得他目瞪口呆，心惊肉跳，手足无措，出了一身冷汗。正是：惊喜交集，变为怖畏。穷人发财，如同受罪。</q>
+    <span class="src">第二回回末赞。</span>
+  </blockquote>
+  <div class="scalewrap">
+    <div class="scalebtns">
+      <button class="sbtn on" data-lb="16">公道秤 · 十六两</button>
+      <button class="sbtn" data-lb="24">黑心秤 · 廿四两</button>
+      <button class="sbtn" data-lb="32">黑心秤 · 卅二两</button>
+    </div>
+    <div class="steelyard">
+      <svg viewBox="0 0 640 190" aria-hidden="true">
+        <g id="sybeam">
+          <rect x="60" y="92" width="360" height="7" rx="3" fill="rgba(232,228,220,.5)"/>
+          <circle cx="90" cy="96" r="9" fill="none" stroke="rgba(94,143,187,.8)" stroke-width="2.5"/>
+          <line x1="90" y1="60" x2="90" y2="88" stroke="rgba(232,228,220,.35)" stroke-width="2"/>
+          <rect x="380" y="80" width="4" height="30" fill="rgba(232,228,220,.4)"/>
+          <g id="syweight">
+            <line x1="382" y1="110" x2="382" y2="132" stroke="rgba(232,228,220,.4)" stroke-width="2"/>
+            <path d="M382 132 l-20 26 h40 z" fill="rgba(94,143,187,.55)"/>
+          </g>
+        </g>
+        <rect x="40" y="150" width="120" height="10" rx="4" fill="rgba(232,228,220,.14)"/>
+        <text x="60" y="182" fill="rgba(163,158,147,.85)" font-size="13" letter-spacing="2">同一袋银</text>
+        <text x="470" y="96" fill="#a39e93" font-size="13" id="sytxt">报五十两</text>
+      </svg>
+    </div>
+    <div class="scaleread">本钱五十两的一袋货，上黑秤只报得 <b id="rdv">五十两</b>。<span class="faint">秤锤挪一寸，斤两由人不由天。</span></div>
+  </div>
+</section>
+
+<!-- ============ 第三回 ============ -->
+<section class="hui" id="hui3">
+  <div class="huihead"><span class="huino">第三回</span><span class="huititle">一纸探报</span><span class="huisub">开店铺广交亡命 · 充汉奸再发洋财</span></div>
+  <div class="ji-grid">
+    <div>
+      <div class="jisand" id="jisand" role="button" tabindex="0" aria-label="点一下扶乩">
+        <div class="jilabel">扶 乩 问 吉 凶</div>
+        <div class="jiline" id="jiline"><span>十</span><span>五</span><span>日</span><span>无</span><span>事</span></div>
+        <div class="jihint">点一下，乩笔再动</div>
+      </div>
+      <div class="datedstrip">
+        <div class="drow"><span class="d">扶 乩</span><span class="e">那乩忽然乱动一阵，然后判出十五日无事五个字来</span></div>
+        <div class="drow"><span class="d">十三日</span><span class="e">开炮攻城，轰天震地的，攻了一日一夜</span></div>
+        <div class="drow bad"><span class="d">十四日</span><span class="e">广州城破，总督被捉，后死在印度</span></div>
+        <div class="drow"><span class="d">十五日</span><span class="e">果然无事：事已经没有了</span></div>
+      </div>
+    </div>
+    <div>
+      <p class="prose">劫案在逃的关阿巨投了英军当探子，回香港拉区丙入伙：不出门，不冒险，坐在省城店里<b>做坐探</b>，衙门师爷拿他当老实生意人，海防洋务当闲谈说给他听，他拿去换银子。咸丰丁巳之役，两广总督叶名琛扶乩问吉凶，求来五个字，从此僚属乡绅来请设防，一概不理。</p>
+      <blockquote class="qb">
+        <q>每月坐支薪水五十两，以后探事每件事酬银五十两，你愿意吗？</q>
+        <span class="src">第三回：坐探价目牌。</span>
+      </blockquote>
+      <blockquote class="qb">
+        <q>那乩忽然乱动一阵，然后判出「十五日无事」五个字来，名琛连忙焚香致谢。</q>
+        <span class="src">第三回：乩盘上的五个字。</span>
+      </blockquote>
+      <blockquote class="qb">
+        <q>叶中堂告官吏，十五日必无事，点兵调勇无庸议。十三洋炮来攻城，十四城破无炮声。十五无事灵不灵？乩诗耶，乩笔耶，占卦耶，择日耶？</q>
+        <span class="src">回后评引粤人乐府，刺叶督三章之一。</span>
+      </blockquote>
+      <blockquote class="qb">
+        <q>诸公莫骂区丙，区丙原是愚民。今日赫然显宦，如区丙者几人。</q>
+        <span class="src">第三回收束：骂人不骂到底。</span>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 第四回 ============ -->
+<section class="hui" id="hui4">
+  <div class="huihead"><span class="huino">第四回</span><span class="huititle">一间黑房</span><span class="huisub">区牧蕃初登写字楼 · 陶庆云引见咸水妹</span></div>
+  <p class="prose">区丙的儿子阿牛心热洋话，去揸颠洋行找买办陶庆云。楼梯口一块黑漆牌子，外国字底下横刻着<b>「楼字写」</b>三个字：外国派右行，倒过来念就是写字楼。上了楼，长廊尽头一间黑房，深不到丈五，宽不到一丈，两对面钉了八个床位；桌上一摞《粉妆楼》《五虎平西》，一件外国书，一罐吃剩的烟头。</p>
+  <blockquote class="qb">
+    <q>我们做写字的，自然总在写字楼。</q>
+    <span class="src">第四回：写字楼三字进小说，比进词典早。</span>
+  </blockquote>
+  <blockquote class="qb">
+    <q>不料碰翻了一个洋铁罐，撒了一地东西，连忙低头用手摸索拾起，仍旧放在罐内。拿来仔细一看，原来都是吃剩半寸来长的吕宋烟头。</q>
+    <span class="src">第四回：大买办的枕头边。</span>
+  </blockquote>
+  <blockquote class="qb">
+    <q>不是我说句甚么话，那中国书读了有甚么用处？你看我们的两广总督叶名琛，听说他是翰林出身，已经拜了相，可见得一定是读饱中国书的了，为甚么去年外国人一来，便把他捉了去？</q>
+    <span class="src">第四回：买办的学问论。</span>
+  </blockquote>
+  <blockquote class="qb">
+    <q>欲识发财秘诀，先要审辨时机。两句洋泾浜话，到底落了便宜。</q>
+    <span class="src">第四回回末赞。</span>
+  </blockquote>
+</section>
+
+<!-- ============ 第五回 ============ -->
+<section class="hui" id="hui5">
+  <div class="huihead"><span class="huino">第五回</span><span class="huititle">一册洋泾浜</span><span class="huisub">学洋话陶庆云著书 · 犯乡例花雪畦追月</span></div>
+  <p class="prose">庆云有一本<b>自编洋话簿</b>：上层一句中国话，下层注一排口字旁的怪字，旁边加点、加圈、加竖。他打算刻板卖钱，四块洋钱一部，这是后话。簿子里的学问，如今隔着纸还能听见响。</p>
+  <div class="vocab">
+    <div class="vh"><span>陶庆云洋话簿 · 双层抄</span><span>音注皆库本原样</span></div>
+    <div class="vrow"><div class="zh">入门课本叫甚么</div><div class="yang">十啤令卜<small>庆云：犹如中国读的三字经一般</small></div></div>
+    <div class="vrow"><div class="zh">饥荒</div><div class="yang">噃棉<small>咸水妹问东家，东家写出的外国字：KiLong－Famine</small></div></div>
+    <div class="vrow"><div class="zh">洋人点头的话</div><div class="yang">也斯哪<small>蔡以善读了半年，略略懂了两句，便升了写字楼细崽</small></div></div>
+    <div class="vrow"><div class="zh">巡捕头赞人</div><div class="yang">拉姆罢温<small>木子镜破案，一连被赞五六声，好不威风有体面</small></div></div>
+    <div class="vfn">庆云自道：越是这种冷门说话，越是不能不留心。万一东家要说起来，回答不出，岂不要受他两句。</div>
+  </div>
+  <div class="lei-grid">
+    <div>
+      <p class="prose">同席的花雪畦一句洋话不通，回到省城米店做出店，赌钱输了本，偷阉猪匠的小猪去卖，被拿住游街：一声锣，一藤鞭，锣是圆的，像月亮在前面，他被取了个雅号叫<b>追月</b>。小窃的规矩，阿牛在厕所里开的眼。</p>
+      <blockquote class="qb">
+        <q>有两个尖刻的人和他取了个别名，叫做「追月」因为那面锣是圆的，像一个月亮在前面，他在后头紧紧跟着。</q>
+        <span class="src">第五回：雅号的来历。</span>
+      </blockquote>
+      <blockquote class="qb">
+        <q>只要发财能有术，英雄不问出身低。</q>
+        <span class="src">第五回回末赞。</span>
+      </blockquote>
+    </div>
+    <div>
+      <p class="prose" style="margin-top:30px;">回后评冷冷补了一刀：这一席人言动举止，已知都是能发财之辈，独雪畦不懂外国话，虽有大财，正不知从何发起。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 第六回 ============ -->
+<section class="hui dark" id="hui6">
+  <div class="huihead"><span class="huino">第六回</span><span class="huititle">一纸猪仔单</span><span class="huisub">五木无灵少爷卖猪仔 · 一条妙计财主仗洋人</span></div>
+  <p class="prose">雪畦翻身进的是<b>招工馆</b>的生意：在赌场门口看门，专拣输急了的赌客，荐去香港「谋事」。新安县衙的少爷输了公款，也这样被贩出了海。县太爷发票拿人，馆里的高阿元一句话把天说破。</p>
+  <blockquote class="qb">
+    <q>莫说是县官的儿子，便是皇帝的太子，他除非不来，来了便是我的货物，如何轻易放他回去？</q>
+    <span class="src">第六回：招工馆的物权观。</span>
+  </blockquote>
+  <blockquote class="qb">
+    <q>那招工馆是去得的么？除了他们伙计之外，任是甚么人，进了去就不放出来的。</q>
+    <span class="src">第六回：门是单开的。</span>
+  </blockquote>
+  <div class="daochi">
+    <div class="dstep"><span class="k">一</span><span class="t">上海买地皮，<b>地上有两座坟</b>，讲好交易后搬走，几房公产偏偏不认，还要打官司。</span></div>
+    <div class="dstep"><span class="k">二</span><span class="t">陶庆云出主意：<b>转道契</b>。由外国人出面，写一封信到上海县去，一面指控起来。</span></div>
+    <div class="dstep"><span class="k">三</span><span class="t">舒云旃恍然大悟：<b>怕他不搬？</b>雪畦在回去的路上也想通了自己那门生意的根。</span></div>
+  </div>
+  <blockquote class="qb">
+    <q>原来外国人的势力如此利害，怪不得他们巴结外国人了。</q>
+    <span class="src">第六回：全书的题眼，从一桩坟地里想出来。</span>
+  </blockquote>
+  <blockquote class="qb">
+    <q>骆驼不是马肿背，乡人少见自多怪。</q>
+    <span class="src">第六回回末赞。</span>
+  </blockquote>
+</section>
+
+<!-- ============ 第七至九回 ============ -->
+<section class="hui" id="hui7">
+  <div class="huihead"><span class="huino">第七至九回</span><span class="huititle">一席鱼翅</span><span class="huisub">洋奴得意别有原因 花雪畦领略狠心法 世态炎凉寸心生变幻</span></div>
+  <p class="prose">陶庆云请客，新新楼第五号，鱼翅滚烫。这一桌人后来各自发达，吴趼人把他们挨个记账，一笔一笔，全是<b>洋场履历表</b>。</p>
+  <div class="ledger">
+    <div class="lrow qrow">
+      <div class="who">陶庆云<small>写字 · 副买办</small></div>
+      <div class="what">替东家换一块钱的角子，市价十一角零五十文，他如数交了。别人都只交十角。就为一角多洋钱，大班认定他是<b>唯一的好人</b>，几天里升了二买办。
+        <q>你说徼幸不徼幸？</q>
+        <span class="at">第七回：一角多洋钱，买了个二买办。</span>
+      </div>
+    </div>
+    <div class="lrow qrow">
+      <div class="who">蔡以善<small>阉猪 · 二买办</small></div>
+      <div class="what">在洋行帐房做茶房，拿水烟袋装上一口烟递大班；外国人不吃中国水烟，他把装好的烟挖出来放回烟盒。大班赞他惜物，青眼一至，读书半年，<span class="win">略略懂了两句「也斯哪」</span>，升写字楼细崽。
+        <q>一则也是他福至心灵，处处懂得巴结，二则也是人才难得。</q>
+        <span class="at">第九回：一根水烟袋的路子。</span>
+      </div>
+    </div>
+    <div class="lrow qrow">
+      <div class="who">言能君<small>木匠 · 老板</small></div>
+      <div class="what">年关只剩一块寡洋钱，进赌台连中五回宝，一块变二百，开起合隆木匠店，穷朋友一概不认。
+        <q>我们这些穷朋友他一发不认得了。</q>
+        <span class="at">第九回：魏又园说的。</span>
+      </div>
+    </div>
+    <div class="lrow qrow">
+      <div class="who">木子镜<small>赌台保镖 · 巡捕房</small></div>
+      <div class="what">夜里出窃案，五点报案六点到场，八点破案，一连被赞五六声「拉姆罢温」；次日中席请伙计，肥鱼大肉，歪帽散扣，狼吞虎嚼。
+        <q>好不威风有体面。</q>
+        <span class="at">第九回：八个钟点的官运。</span>
+      </div>
+    </div>
+    <div class="lrow qrow">
+      <div class="who">冷雁士<small>饱学秀才 · 老夫子</small></div>
+      <div class="what">雪畦开字号，八块洋钱一月请他做文案。满座争说发财经，他只在肚里暗笑。
+        <q>本来是个饱学秀才，为人士热衷，只因时运不济，落魄在上海。</q>
+        <span class="at">第十回：席上唯一不发洋财的人。</span>
+      </div>
+    </div>
+    <div class="lrow qrow">
+      <div class="who">杭森娘<small>说良心话的人</small></div>
+      <div class="what">满席劝人狠心，只有她讲了个反例：干昌老班替外国船客收账，收回来一包金四开，<b>动也不敢动</b>，等船回来原样奉还。外国人把他还金的事上在外国新闻纸，满埠都信他，小店三年撑到三间门面。
+        <q>谁知不是小洋钱竟，是一包金四开。外洋金钱，上海方言谓之金四开。</q>
+        <span class="at">第八回：森娘演说，满席不信。</span>
+      </div>
+    </div>
+  </div>
+  <p class="prose">发得最快的还是<b>狠心法</b>。汉口办茶，两头说谎：对山客说外洋缺货，捺住他的货；对洋行说内地丰收，压住他的价。山客盘缠耗尽，贱价成交。</p>
+  <blockquote class="qb">
+    <q>自从霭兰这样一办，那山客投江的、上吊的、吃鸦片的，也不知多少。那个管他！须知世界上不狠心的人一辈子也不能发财。</q>
+    <span class="src">第八回：陶庆云的经商课。</span>
+  </blockquote>
+  <blockquote class="qb">
+    <q>他们的手段比我拐卖猪仔还要利害，从此倒要留心学着他们呢。</q>
+    <span class="src">第八回：雪畦听课笔记。</span>
+  </blockquote>
+  <blockquote class="qb">
+    <q>成书之后，我卖四块洋钱一部，等我们中国人看了，都从这书上学起话来，好叫一个个的中国人都懂了外国话，发了洋财，那时才知道外国人的好处呢。</q>
+    <span class="src">第九回：庆云刻书宣言，一部洋话书的广告词。</span>
+  </blockquote>
+  <blockquote class="qb">
+    <q>抑己扬人莫怪此公饶舌，欧风美雨至今已遍中原。</q>
+    <span class="src">第九回回末赞。</span>
+  </blockquote>
+</section>
+
+<!-- ============ 第十回 ============ -->
+<section class="hui" id="hui10">
+  <div class="huihead"><span class="huino">第十回</span><span class="huititle">一句秘诀</span><span class="huisub">舒云旃历举得意人 · 知微子喝破发财诀</span></div>
+  <p class="prose">冷雁士听厌了满席生意经，出门散气，路过一个命摊。簇新招牌，旁边一张小红纸条。他身上恰好还有一角小洋钱，进去只问两件事：<b>有发财之日没有，有饿死之日没有。</b>知微子排开四柱，先算他二十年的流水。</p>
+  <div class="mint">
+    <div class="mhead"><span class="shop">知微子命相</span><span class="tag">小批减取一角</span></div>
+    <div class="mbody">
+      <div class="ledger2">
+        <span class="y">十六至廿六</span><span class="v">走正财运，代人做枪，润笔所入<b>约五千金</b></span>
+        <span class="y">去向</span><span class="v">先人见背，衣衾棺椁皆赊欠，一有钱便加利还人，觅地安葬</span>
+        <span class="y">廿六至卅六</span><span class="v">进学十年，束修润笔，短衣缩食，又积<b>五千金</b></span>
+        <span class="y">去向</span><span class="v">代两个舍弟完娶，教两个舍弟读书</span>
+        <span class="y">卅六岁</span><span class="v">实缺清苦的叔父殁于山东，亏欠公私各债三千余金，交代不出；又捐千金入善堂，运柩安葬，<b>馨我所有，还不够</b>，再借数百金</span>
+        <span class="y">知微子判</span><span class="v">二十年中坐致者已达万金。天之待阁下者不为不厚，<b>阁下乃天与勿取</b></span>
+      </div>
+    </div>
+  </div>
+  <p class="prose">回到酒席上，雁士其实先赢过一阵。庆云怪叶名琛不知时务，雁士说：这班读书饭桶，正是列位的功臣。他们若会打仗，何来五口通商，上海仍是一片芦苇滩头，公等又何由到此。</p>
+  <blockquote class="qb">
+    <q>然则此辈败兵失地，正是为公等发财而设，岂非是列位的功臣么？</q>
+    <span class="src">第十回：冷雁士的祝酒词，满座不能答。</span>
+  </blockquote>
+  <p class="prose">命摊上，知微子把最后一层窗户纸也捅破了。雁士问他可有秘诀，知微子说有，只怕你不肯做。于是附耳过来。</p>
+  <div class="heartstage">
+    <div id="hearts">
+      <div class="heartcard" id="hcard"><div class="face">人心</div><div class="back">兽心</div></div>
+    </div>
+    <button id="heartbtn">依 诀 而 行</button>
+    <div class="heartlabel">知微子曰：速与阎罗王商量，把你本有的人心，挖去换上一个兽心。</div>
+  </div>
+  <div class="finalq">
+    <q>从此入山，惟恐不深。</q>
+    <span class="at">冷雁士得了秘诀，奉上一角命金，进山去了。近四万字的书，收在这八个字上。</span>
+  </div>
+  <div class="shuo"><b>著者自评（库本回末）：</b>生平所著小说，以此篇为最劣。盖章回体例，其擅长处在于描摹，而此篇下笔时，每欲有所描摹，则怒眦为之先裂。故于篇首独写一区丙，篇未独写一雪畦，自余诸人概从简略。</div>
+</section>
+
+<!-- ============ 账尾 ============ -->
+<div class="coda">
+  <div class="coda-grid">
+    <div>
+      <h3>这是一本什么书</h3>
+      <p>吴趼人（吴沃尧），《二十年目睹之怪现状》的作者。此书十回，从道光二十一年香港开埠写到上海洋场，写的是<b>买办与跟买办学样的人</b>：料泡贩子、坐探、写字、招工馆、赌馆、地皮掮客、老夫子。库本去空白三万九千余字，卷首列十回目，每回之后系评语一批，与正文对读。</p>
+      <p>书名叫秘诀，通篇其实只有一句：靠洋人发财。至于靠得住靠不住，作者不答，只让雪畦干没合伙人的遗产，让雁士进山。</p>
+    </div>
+    <div>
+      <h3>读它要带着什么</h3>
+      <p>这是<b>小说，不是账本</b>。区丙、雪畦诸人是文学形象，洋场百态有夸张有漫画，不可当史料逐条坐实；叶名琛扶乩、黑纸炮浮水等段，系演义家言，与史载细节有出入。</p>
+      <p>书中写妇女子弟、写粤人乡俗，多有时人偏见与刻薄笔墨，皆照录库本，今人不取。回后评语出作者（或编者）之手，立场与正文同一时代。</p>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer class="page">
+  <div class="fin">
+    文本来源：殆知阁古代文献简体库〈发财秘诀〉，集藏小说部，清 吴沃尧撰，去空白三万九千余字。导读仓库
+    <a href="https://github.com/robertsong2000/daizhige-daodu">robertsong2000/daizhige-daodu</a><br>
+    页内所有引文均经脚本与库内文件去标点、去空白、逐字比对通过。本篇为第二百八十篇。时代局限内容提醒见「读它要带着什么」。
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* 料泡：按住吹，松手破 */
+  var bub = document.getElementById('bubble');
+  var cnt = document.getElementById('cnt');
+  var shards = document.getElementById('shards');
+  var n = 0, blown = false;
+  function inflate(e) {
+    if (e) e.preventDefault();
+    blown = true;
+    bub.querySelector('.glass').style.transform = 'scale(1.28)';
+  }
+  function popIt() {
+    if (!blown) return;
+    blown = false;
+    var g = bub.querySelector('.glass');
+    g.style.transform = '';
+    bub.classList.remove('pop');
+    void bub.offsetWidth;
+    bub.classList.add('pop');
+    shards.innerHTML = '';
+    for (var i = 0; i < 14; i++) {
+      var s = document.createElement('i');
+      var a = Math.PI * 2 * i / 14, r = 70 + Math.random() * 60;
+      s.style.setProperty('--dx', Math.cos(a) * r + 'px');
+      s.style.setProperty('--dy', Math.sin(a) * r + 'px');
+      s.style.animationDelay = '0.12s';
+      shards.appendChild(s);
+    }
+    setTimeout(function () { shards.innerHTML = ''; bub.classList.remove('pop'); }, 750);
+    n++; cnt.textContent = n;
+  }
+  bub.addEventListener('pointerdown', inflate);
+  window.addEventListener('pointerup', popIt);
+  bub.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inflate(); setTimeout(popIt, 350); } });
+
+  /* 长廊门：摇铃进门 */
+  var doors = document.querySelectorAll('.door');
+  doors.forEach(function (d) {
+    d.addEventListener('click', function () {
+      doors.forEach(function (x) { x.classList.remove('on'); });
+      d.classList.add('on');
+      d.classList.remove('ring'); void d.offsetWidth; d.classList.add('ring');
+      var t = document.getElementById(d.getAttribute('data-go'));
+      if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  /* 秤：同一袋银，三杆秤 */
+  var rdv = document.getElementById('rdv'), sytxt = document.getElementById('sytxt');
+  var sybeam = document.getElementById('sybeam');
+  var base = 50;
+  document.querySelectorAll('.sbtn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.sbtn').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      var lb = parseInt(b.getAttribute('data-lb'), 10);
+      var v = lb === 16 ? base : Math.round(base * 16 / lb * 10) / 10;
+      rdv.textContent = v + ' 两';
+      sytxt.textContent = '报' + v + '两';
+      sybeam.style.transform = lb === 16 ? 'rotate(0deg)' : 'rotate(' + (lb === 24 ? 4 : 7) + 'deg)';
+    });
+  });
+
+  /* 乩盘：点一下，乩笔再动 */
+  var jisand = document.getElementById('jisand');
+  jisand.addEventListener('click', function () {
+    jisand.classList.remove('shake'); void jisand.offsetWidth; jisand.classList.add('shake');
+    var spans = document.querySelectorAll('#jiline span');
+    spans.forEach(function (s) {
+      s.style.transform = 'translate(' + (Math.random() * 8 - 4) + 'px,' + (Math.random() * 8 - 4) + 'px) rotate(' + (Math.random() * 14 - 7) + 'deg)';
+    });
+    setTimeout(function () {
+      spans.forEach(function (s) { s.style.transform = ''; });
+    }, 620);
+  });
+
+  /* 人心换兽心 */
+  var hb = document.getElementById('heartbtn'), hc = document.getElementById('hcard');
+  hb.addEventListener('click', function () {
+    hc.classList.toggle('flip');
+    hb.textContent = hc.classList.contains('flip') ? '还 我 人 心' : '依 诀 而 行';
+  });
+})();
+</script>
+</body>
+</html>
