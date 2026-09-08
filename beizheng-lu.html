@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>北征录 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --night: #121210;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --zhu: #c0453c; --zhu-dim: rgba(192,69,60,0.55);
+    --hair: rgba(232,228,220,0.14); --hair-2: rgba(232,228,220,0.07);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 26px; }
+  q { quotes: none; color: inherit; }
+  q::before { content: "「"; color: var(--zhu); }
+  q::after { content: "」"; color: var(--zhu); }
+
+  /* 首屏 漠夜 */
+  .night { position: relative; min-height: 100dvh; background: var(--night); overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .sky { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sky .tw { animation: tw 3.6s ease-in-out infinite; }
+  .sky .tw2 { animation: tw 5.2s ease-in-out 1.2s infinite; }
+  @keyframes tw { 0%,100% { opacity: .9; } 50% { opacity: .25; } }
+  .dipper-cap { position: absolute; top: 9%; left: 50%; transform: translateX(-50%);
+    font-size: 12.5px; letter-spacing: .28em; color: var(--faint); }
+  .ground { position: absolute; left: 0; right: 0; bottom: 0; height: 16%;
+    background: linear-gradient(to top, rgba(232,228,220,0.045), transparent);
+    border-top: 1px solid var(--hair-2); }
+  .stone { position: relative; margin-top: 8px;
+    background: var(--paper); color: var(--ink);
+    border-radius: 90px 90px 6px 6px; padding: 34px 30px 26px; box-shadow: 0 18px 50px rgba(0,0,0,0.55); }
+  .stone::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px;
+    background: var(--zhu); border-radius: 90px 90px 0 0; }
+  .stone h1 { writing-mode: vertical-rl; font-size: 44px; font-weight: 700; letter-spacing: .34em; margin: 0 auto; height: 232px; }
+  .shadow { width: 150px; height: 12px; border-radius: 50%; background: rgba(0,0,0,0.5); margin: 14px auto 0; filter: blur(3px); }
+  .open-day { position: relative; margin-top: 30px; font-size: 14px; letter-spacing: .4em; color: var(--dim); }
+  .open-day b { color: var(--zhu); font-weight: 700; }
+  .open-p { position: relative; max-width: 34em; margin: 14px auto 0; padding: 0 26px; color: var(--dim); font-size: 15.5px; text-align: justify; }
+  .open-p em { font-style: normal; color: var(--paper); }
+  .hint { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center;
+    font-size: 12px; letter-spacing: .5em; color: var(--faint); animation: bob 2.6s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  /* 驿路 */
+  .road { position: relative; padding: 90px 0 40px; }
+  .road::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--hair) 3%, var(--hair) 97%, transparent); }
+  .zone { position: relative; padding: 30px 0 60px; }
+  .zlabel { position: sticky; top: 40dvh; z-index: 3; float: left; margin-left: -92px;
+    writing-mode: vertical-rl; font-size: 15px; letter-spacing: .5em; color: var(--faint);
+    border-left: 3px solid var(--zhu); padding-left: 12px; }
+  .zname { text-align: center; font-size: 13px; letter-spacing: .6em; color: var(--faint); margin-bottom: 46px; }
+  .zname b { color: var(--dim); font-weight: 400; }
+
+  .st { position: relative; width: 50%; padding: 0 44px 54px 0; }
+  .st:nth-of-type(even) { margin-left: 50%; padding: 0 0 54px 44px; }
+  .st .dot { position: absolute; top: 12px; right: -7px; width: 12px; height: 12px; border-radius: 50%;
+    background: var(--ink); border: 2px solid var(--dim); z-index: 2; }
+  .st:nth-of-type(even) .dot { right: auto; left: -7px; }
+  .st .when { font-size: 12.5px; letter-spacing: .3em; color: var(--faint); }
+  .st .where { font-size: 24px; font-weight: 700; letter-spacing: .12em; margin: 2px 0 6px; }
+  .st .where small { font-size: 13px; font-weight: 400; color: var(--faint); letter-spacing: .06em; margin-left: 10px; }
+  .st .note { font-size: 14.5px; color: var(--dim); text-align: justify; }
+  .st .note q { color: var(--paper); }
+  .st .note q::before, .st .note q::after { font-size: .9em; }
+
+  .st.q-big .card { background: var(--paper); color: var(--ink); padding: 24px 26px 18px;
+    border-left: 5px solid var(--zhu); box-shadow: 0 10px 34px rgba(0,0,0,0.45); }
+  .st.q-big .where { color: var(--ink); }
+  .st.q-big .when { color: #8a857b; }
+  .st.q-big .note { color: #4c4841; }
+  .st.q-big q { color: #201f1d; font-size: 18.5px; }
+  .st.q-big q::before, .st.q-big q::after { color: var(--zhu); }
+  .attr { display: block; margin-top: 10px; font-size: 12.5px; letter-spacing: .18em; color: #8a857b; }
+  .st.q-big .dot { border-color: var(--zhu); background: var(--zhu); }
+
+  .st.water .where { color: #9ab8c4; }
+  .st.water .dot { border-color: #9ab8c4; }
+  .st.ruin .dot { border-color: var(--faint); background: var(--faint); }
+  .sic { font-size: 12px; color: var(--faint); letter-spacing: .05em; }
+
+  /* 迷路 */
+  .lost { position: relative; margin: 8px auto 64px; max-width: 640px; border: 1px dashed var(--zhu-dim);
+    background: var(--ink-2); padding: 30px 34px 26px; }
+  .lost::before, .lost::after { content: ""; position: absolute; top: 50%; width: 40px; height: 0;
+    border-top: 1px dashed var(--zhu-dim); }
+  .lost::before { left: -104px; } .lost::after { right: -104px; }
+  .lost h3 { font-size: 14px; letter-spacing: .5em; color: var(--zhu); font-weight: 400; margin-bottom: 14px; }
+  .lost .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .lost .step { font-size: 13.5px; color: var(--dim); }
+  .lost .step b { display: block; color: var(--paper); font-size: 15px; margin-bottom: 4px; font-weight: 700; }
+  .lost .lost-q { margin-top: 20px; font-size: 17px; color: var(--paper); }
+  .lost .lost-sub { margin-top: 8px; font-size: 13.5px; color: var(--dim); }
+
+  /* 会战 */
+  .battle { position: relative; margin: 8px auto 64px; max-width: 660px; background: #1e1d1b;
+    border: 1px solid var(--zhu-dim); border-left: 5px solid var(--zhu); padding: 30px 34px 26px; }
+  .battle h3 { font-size: 14px; letter-spacing: .5em; color: var(--zhu); font-weight: 400; margin-bottom: 12px; }
+  .battle p { font-size: 14.5px; color: var(--dim); text-align: justify; }
+  .battle p + p { margin-top: 10px; }
+  .battle q { color: var(--paper); }
+  .battle .bq { margin: 14px 0 0; font-size: 17.5px; color: var(--paper); }
+  .battle .tagline { margin-top: 14px; font-size: 12.5px; letter-spacing: .2em; color: var(--faint); }
+
+  /* 碑 */
+  .stele { background: var(--paper); color: var(--ink); padding: 26px 24px 20px; text-align: center;
+    box-shadow: 0 10px 34px rgba(0,0,0,0.45); border-left: 5px solid var(--zhu); margin-top: 14px; }
+  .stele .chars { font-size: 40px; font-weight: 700; letter-spacing: .1em; color: #23221f; }
+  .stele .chars span { display: inline-block; }
+  .stele .chars span:nth-child(1) { transform: translateY(3px) rotate(-2deg); }
+  .stele .chars span:nth-child(2) { transform: translateY(-2px) rotate(1deg); }
+  .stele .chars span:nth-child(4) { transform: translateY(4px) rotate(2deg); }
+  .stele .chars span:nth-child(5) { transform: translateY(-3px) rotate(-1deg); }
+  .stele .cap2 { margin-top: 10px; font-size: 13px; color: #6b665d; text-align: left; }
+
+  /* 横排面板 */
+  .panel { position: relative; z-index: 2; max-width: 760px; margin: 20px auto 90px; padding: 0 26px; }
+  .panel-head { text-align: center; margin-bottom: 26px; }
+  .panel-head h2 { font-size: 15px; letter-spacing: .7em; color: var(--paper); font-weight: 400; }
+  .panel-head p { margin-top: 8px; font-size: 13.5px; color: var(--faint); }
+  .panel-head b { color: var(--zhu); font-weight: 400; }
+
+  .ink-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .ink-card { border: 1px solid var(--hair); padding: 18px 18px 14px; background: var(--ink-2); }
+  .ink-card .it { font-size: 16px; font-weight: 700; letter-spacing: .1em; }
+  .ink-card .id { font-size: 11.5px; letter-spacing: .22em; color: var(--faint); margin: 4px 0 10px; }
+  .ink-card p { font-size: 13.5px; color: var(--dim); text-align: justify; }
+  .ink-card q { font-size: 14.5px; color: var(--paper); display: block; margin-bottom: 8px; }
+
+  .names-strip { display: flex; gap: 12px; overflow-x: auto; padding: 6px 2px 18px; }
+  .name-chip { flex: 0 0 auto; width: 128px; border: 1px solid var(--hair); padding: 16px 14px 12px; position: relative; }
+  .name-chip .nm { font-size: 21px; font-weight: 700; letter-spacing: .08em; }
+  .name-chip .pl { font-size: 12px; color: var(--dim); margin-top: 6px; }
+  .name-chip .dt { font-size: 11px; letter-spacing: .14em; color: var(--faint); margin-top: 10px; }
+  .name-chip .seal { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px;
+    background: var(--zhu); color: var(--paper); font-size: 12px; line-height: 22px; text-align: center; }
+  .names-note { font-size: 12.5px; color: var(--faint); margin-top: 6px; }
+
+  /* 校字记 */
+  .collate { max-width: 640px; margin: 0 auto 80px; padding: 0 26px; }
+  .collate h2 { font-size: 14px; letter-spacing: .6em; color: var(--faint); font-weight: 400; text-align: center; margin-bottom: 20px; }
+  .collate ul { list-style: none; }
+  .collate li { display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid var(--hair-2); font-size: 14px; }
+  .collate li .a { flex: 0 0 44%; color: var(--paper); }
+  .collate li .b { color: var(--zhu); letter-spacing: .06em; }
+  .collate .cnote { margin-top: 14px; font-size: 12.5px; color: var(--faint); text-align: justify; }
+
+  /* 尾声 */
+  .coda { position: relative; z-index: 2; max-width: 620px; margin: 0 auto; padding: 0 26px 90px; text-align: center; }
+  .coda p { font-size: 15px; color: var(--dim); text-align: justify; }
+  .coda .end { margin-top: 26px; font-size: 26px; letter-spacing: .3em; color: var(--paper); font-weight: 700; }
+  .coda .end small { display: block; margin-top: 10px; font-size: 12.5px; letter-spacing: .3em; color: var(--faint); font-weight: 400; }
+
+  /* 页脚 */
+  footer { border-top: 1px solid var(--hair); padding: 34px 0 46px; background: var(--ink-2); }
+  footer .wrap { max-width: 900px; }
+  .fm { display: block; font-size: 12.5px; color: var(--faint); line-height: 1.9; margin-bottom: 12px; text-align: justify; }
+  .fm b { color: var(--dim); font-weight: 700; letter-spacing: .1em; }
+  .fm a { color: var(--dim); }
+
+  @media (max-width: 1180px) { .zlabel { display: none; } }
+  @media (max-width: 720px) {
+    .road::before { left: 12px; }
+    .st, .st:nth-of-type(even) { width: 100%; margin-left: 0; padding: 0 0 48px 34px; }
+    .st .dot, .st:nth-of-type(even) .dot { left: 6px; right: auto; }
+    .lost::before, .lost::after { display: none; }
+    .lost, .battle { margin-left: 26px; margin-right: 26px; padding: 24px 20px 20px; }
+    .lost .steps { grid-template-columns: 1fr; }
+    .ink-cards { grid-template-columns: 1fr; }
+    .stone h1 { font-size: 38px; height: 200px; }
+  }
+
+  .will { opacity: 0.001; transform: translateY(18px); transition: opacity .8s ease, transform .8s ease; }
+  .will.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .will { opacity: 1; transform: none; transition: none; } .sky .tw, .sky .tw2, .hint { animation: none; } }
+</style>
+</head>
+<body>
+
+<header class="night">
+  <svg class="sky" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="#e8e4dc">
+      <circle cx="80" cy="90" r="1" opacity=".35"/><circle cx="210" cy="300" r="1.4" opacity=".5"/>
+      <circle cx="330" cy="80" r=".9" opacity=".3"/><circle cx="420" cy="240" r="1.1" opacity=".4"/>
+      <circle cx="520" cy="60" r="1.2" opacity=".45"/><circle cx="640" cy="330" r="1" opacity=".3"/>
+      <circle cx="760" cy="120" r="1.5" opacity=".5"/><circle cx="880" cy="260" r="1" opacity=".35"/>
+      <circle cx="990" cy="70" r="1.2" opacity=".4"/><circle cx="1090" cy="210" r="1.4" opacity=".5"/>
+      <circle cx="150" cy="480" r="1" opacity=".3"/><circle cx="300" cy="560" r="1.2" opacity=".4"/>
+      <circle cx="520" cy="500" r=".9" opacity=".3"/><circle cx="700" cy="560" r="1.1" opacity=".35"/>
+      <circle cx="920" cy="470" r="1.3" opacity=".45"/><circle cx="1120" cy="520" r="1" opacity=".3"/>
+      <circle cx="60" cy="220" r="1.1" opacity=".4"/><circle cx="980" cy="380" r=".9" opacity=".3"/>
+      <circle cx="180" cy="170" r=".8" opacity=".3"/><circle cx="840" cy="40" r="1" opacity=".35"/>
+      <circle cx="400" cy="400" r="1" opacity=".35"/><circle cx="600" cy="180" r="1.2" opacity=".4"/>
+    </g>
+    <g class="tw" fill="#e8e4dc">
+      <circle cx="120" cy="360" r="1.3"/><circle cx="500" cy="330" r="1.2"/><circle cx="1040" cy="130" r="1.4"/>
+      <circle cx="260" cy="440" r="1.1"/><circle cx="740" cy="240" r="1.2"/>
+    </g>
+    <g class="tw2" fill="#e8e4dc">
+      <circle cx="360" cy="150" r="1.2"/><circle cx="880" cy="470" r="1.3"/><circle cx="60" cy="560" r="1.1"/>
+    </g>
+    <g stroke="rgba(232,228,220,0.28)" stroke-width="1" fill="none">
+      <path d="M 940 120 L 990 165 L 1045 150 L 1090 190"/>
+      <path d="M 1090 190 L 1140 225 L 1188 235 L 1235 275"/>
+    </g>
+    <g fill="#e8e4dc">
+      <circle cx="940" cy="120" r="4"/><circle cx="990" cy="165" r="3"/><circle cx="1045" cy="150" r="3"/>
+      <circle cx="1090" cy="190" r="3.5"/><circle cx="1140" cy="225" r="3"/><circle cx="1188" cy="235" r="3"/>
+      <circle cx="1235" cy="275" r="2.6"/>
+    </g>
+    <circle cx="600" cy="86" r="2.6" fill="#e8e4dc"/>
+    <circle cx="600" cy="86" r="8" fill="none" stroke="rgba(232,228,220,0.3)" stroke-width="1"/>
+  </svg>
+  <div class="dipper-cap">三月初八夜　上望北斗　<q>北辰正值头上</q></div>
+  <div class="stone">
+    <h1>北征录</h1>
+  </div>
+  <div class="shadow"></div>
+  <div class="open-day">明 · 金幼孜 撰　永乐八年<b>二月出塞</b>七月还</div>
+  <p class="open-p">一个新淦来的书生，替皇帝起草文书的大学士，骑着马跟着朱棣出了居庸关，在漠北走了五个多月再走回来。他<em>每天记一笔</em>：到了哪座山，喝的什么水，皇帝说了哪句话。整本日记里敌人没有名字，只有一个字：虏。有意思的全是路上小事，风雪、迷路、冷笑话，还有皇帝一路给山水起的名字。</p>
+  <div class="hint">沿驿路北行</div>
+  <div class="ground"></div>
+</header>
+
+<main class="road">
+  <div class="wrap">
+
+  <section class="zone">
+    <span class="zlabel">出塞</span>
+    <div class="zname"><b>二月</b>　居庸关外风雪初见</div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">二月初十</div>
+      <div class="where">德胜门<small>今日出师</small></div>
+      <p class="note">驾出德胜门，金幼孜和胡广从安定门绕出去追大部队。<q>兵甲车马旌旗之盛，耀于川陆</q>，晚上赶到清河。日记从这天起，一天一笔。</p>
+    </div>
+
+    <div class="st q-big" data-r>
+      <span class="dot"></span>
+      <div class="card">
+        <div class="when">二月十三</div>
+        <div class="where">居庸关外 · 永安甸</div>
+        <p class="note">傍晚大雪，一会儿放晴，云霞照着两坡积雪。皇帝站在帐殿前看山，看了半天，给身边三个书生留了一句评语。</p>
+        <q>雪后看山，止此景最佳。虽有善画者，莫能图其仿佛也。</q>
+        <span class="attr">上曰　二月十三</span>
+        <p class="note">次日且行且猎，金幼孜看人纵马追兔子，一个不留神骑到了皇帝前头，皇帝也不恼，笑着招呼他们看另一面的雪山。</p>
+      </div>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">二月十六至十七</div>
+      <div class="where">鸡鸣山</div>
+      <p class="note">山脚有元朝的官酒务，每年皇帝北上取酒的地方。传说元顺帝北逃时此山崩塌<q>有声如雷</q>，次日经过，崩处的土石还是新的。</p>
+    </div>
+
+    <div class="st q-big" data-r>
+      <span class="dot"></span>
+      <div class="card">
+        <div class="when">二月二十一</div>
+        <div class="where">宣平</div>
+        <p class="note">还没出塞，皇帝先把这仗打完之后的版图说给书生听。</p>
+        <q>今灭此残虏，惟守开平、兴和、宁夏、甘肃、大宁、辽东，则边境可永无事矣。</q>
+        <span class="attr">上谓幼孜等曰</span>
+      </div>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">二月二十四</div>
+      <div class="where">万全 · 渡冰</div>
+      <p class="note">河面没化透，人马从冰上走，薄的地方<q>薄处仅盈寸，渡此甚战栗</q>，往下能看见水在流。</p>
+    </div>
+
+    <div class="st q-big" data-r>
+      <span class="dot"></span>
+      <div class="card">
+        <div class="when">二月二十五</div>
+        <div class="where">野狐岭</div>
+        <p class="note">上岭这天风沙眯眼，碎石打脸，脸被风吹成紫黑色。下马走一段，靴底沾雪冻成冰壳，再上马得用两手扳着鞍子，手指头屈伸不得。当晚皇帝叫人捎话，先教御寒的法子，再问了一句。</p>
+        <q>足寒时不要即附火，只频行足自暖。</q>
+        <q>金幼孜何在？恐冻伤其足。</q>
+        <span class="attr">上曰　问于兴和城北大营</span>
+      </div>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">二月二十六至二十九</div>
+      <div class="where">兴和<small>出塞前最后一座城</small></div>
+      <p class="note">皇帝指着地势教他们：<q>远见似高阜，至即又平也，此即阴山脊</q>，若把山当堑、把壑当池，谁能飞渡。又赶上变天，说<q>尔等今日始知朔方风气</q>，话音才落雪就到了营门。二十九日猎户献黄羊，三人在帐殿前站着聊天，聊到二更。</p>
+    </div>
+  </section>
+
+  <section class="zone">
+    <span class="zlabel">漠北</span>
+    <div class="zname"><b>三月至五月</b>　大漠深处</div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">三月初七</div>
+      <div class="where">鸣銮戍<small>途过封王陀海子</small></div>
+      <p class="note">海子里鸟堆成了景：远看像有人立着坐着走着咳嗽着，白如雪黑如墨，骑马一赶就飞，人一走又落回水边。皇帝说，<q>汝等观此，方知塞外风景。读书者但纸上见，未若尔等今日亲见之。</q>临走又叮嘱：倦了就眯半晌，起来四下看看，<q>以畅悦胸次</q>。</p>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">三月初九</div>
+      <div class="where">鸣銮戍 · 大阅誓师</div>
+      <p class="note">六军列阵，从东到西拉开数十里。皇帝问身边人：<q>此阵孰敢婴锋！</q>又说你们没见过大阵，看惯了就不觉得多。发鼓时东风，鼓一响，风慢慢转成了南风，皇帝高兴，大饮将士。</p>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">三月初十</div>
+      <div class="where">凌霄峰</div>
+      <p class="note">登顶四望，皇帝说没来过的人谈塞北都是<q>但想像耳，安能得其真也</q>。这晚扎营的地方缺水，军士很多人饭都做不成。夜里下了雪。</p>
+      <p class="note"><q>夜雪，平地尺余。次日，人马得雪，炊饭皆足。</q>一场雪救了全营的炊烟。</p>
+    </div>
+
+    <div class="lost" data-r>
+      <h3>三月十六 · 迷路</h3>
+      <div class="steps">
+        <div class="step"><b>走岔</b>大营走东路，三人抄了西路，天亮就追不上，<q>幼孜与光大由哨马路迷入橐𫘞山谷中</q>，问谁谁不知道大营在哪。</div>
+        <div class="step"><b>荒草一夜</b>夜里月色昏暗，<q>野烧漫山，悲风萧瑟</q>，几个书生下马躺在荒草里过夜，身边是没主的鹿角和旧坟。</div>
+        <div class="step"><b>寻回</b>次日听见隔山铜角声，寻到左掖军马，晌午到锦水碛见驾。方尚书说，皇帝昨天一路召你们不见，料定迷路，<q>凡遣传令者三十辈来相寻</q>，今早又添十多人。</div>
+      </div>
+      <p class="lost-q">见面第一句：<q>汝等何来迟？</q>三人老实交代是迷了道，皇帝大笑：<q>尔等皆疲倦，且休息。</q></p>
+      <p class="lost-sub">两天后皇帝还记着这事，命人讨了副马鞍送到帐房：他发现金幼孜的鞍子丢了。金幼孜在日记里写下那句收尾：<q>幼孜自惟以一介书生，荷蒙圣上眷顾，顷刻不忘，天地之德，将何以为报。</q></p>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">三月二十</div>
+      <div class="where">压虏川</div>
+      <p class="note">水是咸的。<q>水多咸，炊饭色皆变黄，作气息，食不下咽。</q>大军的胃，也是行军的一部分。</p>
+    </div>
+
+    <div class="st water" data-r>
+      <span class="dot"></span>
+      <div class="when">三月二十一至三十</div>
+      <div class="where">金刚阜、小甘泉、大甘泉、清水源</div>
+      <p class="note">路上认起了动植物：沙葱辛辣，沙芦菔像小萝卜；掘出跳兔，头脸活脱是兔，爪子却是鼠，狗都逮不住它。清水源扎营时，离营六七里的荒地里忽然涌出泉水，溢了数亩，人马都够了。四月初三，金幼孜进《神应泉铭》。</p>
+    </div>
+
+    <div class="st q-big" data-r>
+      <span class="dot"></span>
+      <div class="card">
+        <div class="when">四月初五至初六</div>
+        <div class="where">屯云谷 · 五雪冈</div>
+        <p class="note">四月了还下得像腊月，人人皮裘狐帽。金幼孜的帽子被风吹歪，只能一路拿手拢着，皇帝回头看见笑了。</p>
+        <q>今日秀才酸矣！</q>
+        <span class="attr">上顾而笑曰</span>
+        <p class="note">次日说起《豳风》里的寒风，胡广答了一句<q>井蛙不可以语海，夏虫不可以语冰</q>，说自己不趟这一趟也不信。皇帝笑着给了三个南方人一句总评：<q>尔等诚南士也。</q>又看胡广裹得圆滚滚，补了一句考语：<q>今为冷学士矣。</q></p>
+      </div>
+    </div>
+
+    <div class="st q-big" data-r>
+      <span class="dot"></span>
+      <div class="card">
+        <div class="when">四月初七</div>
+        <div class="where">玄石坡 · 勒铭</div>
+        <p class="note">山顶忽然撞见几丛山桃花开在荒草里。皇帝登顶制铭，把岁月纪行刻上石头，又写了六个大字。</p>
+        <q>命光大书之，并书“玄石坡立马峰”六大字，刻于石。时无大笔，用小羊毫笔钩上</q>
+        <div class="stele">
+          <div class="chars"><span>玄</span><span>石</span><span>坡</span><span>立</span><span>马</span><span>峰</span></div>
+        </div>
+        <p class="cap2">没有大笔，一支小羊毫在石上钩出六个大字，勒成之后<q>甚壮伟可观</q>。当晚泉水涌出，够人马喝，赐名天锡泉。</p>
+        <span class="attr">四月初九 归化甸中官将玄石坡字进呈　送司礼监入箧</span>
+      </div>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">四月中下旬</div>
+      <div class="where">归化甸、杨林戍、禽胡山、广武镇</div>
+      <p class="note">一路走一路拾美石，琥珀玳瑁碧玉的样子，同行的好事者下马捡着玩。到了广武镇，川原上有洪武年间征和林时筑下的屯粮土城。十八日在西南峰下想刻石，刚提笔<q>忽风雨作</q>，只好下山，山峰的名字才留在口头上。</p>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">四月二十二</div>
+      <div class="where">大漠</div>
+      <p class="note">出捷胜冈走了几十里，全是荒山野草。皇帝说：<q>四望无际，莫如其极，此真所谓大漠也。</q><span class="sic">（库本其字疑当作知）</span></p>
+    </div>
+
+    <div class="st q-big" data-r>
+      <span class="dot"></span>
+      <div class="card">
+        <div class="when">四月二十五至二十八</div>
+        <div class="where">威虏镇、玄云谷、长清塞</div>
+        <p class="note">瓦剌回来的使臣到了营里，听完情报连夜赶写敕书。没有桌子。</p>
+        <q>夜命写敕，无卓，以毡覆地，伏而书之，书毕已四鼓矣。</q>
+        <span class="attr">卓疑当作桌　四月二十六夜</span>
+        <p class="note">二十八日晚宿长清塞，泉水清得很，赐名玉华泉。夜里皇帝站在帐殿前，指着北斗说：</p>
+        <q>至此则南望北斗矣。</q>
+      </div>
+    </div>
+
+    <div class="st q-big" data-r>
+      <span class="dot"></span>
+      <div class="card">
+        <div class="when">五月初一</div>
+        <div class="where">白云山 · 饮马河</div>
+        <p class="note">行十余里，白云里现出一道青气接着地，望上去像青山白云。金幼孜当了真，皇帝笑了。</p>
+        <q>此气也，非真山。若诚为山，则天下之山无有过之者。</q>
+        <span class="attr">上笑曰</span>
+        <p class="note">再走几里，到了胪朐河边，<q>立马久之</q>。这条河从此有了新名字：饮马河。大军沿河东行，把营扎在河上。</p>
+      </div>
+    </div>
+
+    <div class="st q-big" data-r>
+      <span class="dot"></span>
+      <div class="card">
+        <div class="when">五月初十</div>
+        <div class="where">饮马河大营</div>
+        <p class="note">皇帝要带轻骑去追虏，人各带二十日粮，扈从文臣只留方宾、胡广、杨荣几人，命金幼孜留营。他跑去帐殿请战，被拒绝了。</p>
+        <q>尔不能战阵，往亦无益。前途艰难，朕一时顾盼有不及，或为尔累，尔留此岂不安？</q>
+        <span class="attr">上曰</span>
+        <p class="note">饭后送胡广、杨荣出营门，<q>马上相别，殊觉怆然</q>。此后十天他在留守营里登小山、等消息，五月十九听说捷音将至，<q>甚喜</q>。二十一日在营中重见皇帝，奉命写《平胡诏》。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="panel" data-r>
+    <div class="panel-head">
+      <h2>笔墨三则</h2>
+      <p>皇帝的文书房，一路没有一张书桌</p>
+    </div>
+    <div class="ink-cards">
+      <div class="ink-card">
+        <div class="it">砚水成冰</div>
+        <div class="id">三月二十四夜</div>
+        <q>夜甚寒，上召草敕，砚水成冰。</q>
+        <p>一行日记，十一个字。大漠的寒夜被压进了砚台里。</p>
+      </div>
+      <div class="ink-card">
+        <div class="it">马上草敕</div>
+        <div class="id">三月二十六</div>
+        <q>幼孜三人按辔徐行，执笔书草成，上己行三里余。</q>
+        <p>在马背上起草敕书，写完皇帝已经走出三里多，纵马赶上呈稿，再看一遍，<q>下马坐地，于膝上书之</q>。己疑当作已。</p>
+      </div>
+      <div class="ink-card">
+        <div class="it">毡地伏书</div>
+        <div class="id">四月二十六夜</div>
+        <q>夜命写敕，无卓，以毡覆地，伏而书之，书毕已四鼓矣。</q>
+        <p>听完瓦剌来的军报，把毡子铺在地上，趴着写完，已经四更。</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="zone">
+    <span class="zlabel">鏖战</span>
+    <div class="zname"><b>五月末至六月</b>　追击与合围</div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">五月初八</div>
+      <div class="where">玉华峰</div>
+      <p class="note">都指挥款台抓回一个虏兵，问出了主力屯于兀古儿扎河。当晚大军渡饮马河下营，第二天皇帝自带轻骑出发，<q>人各赍粮二十日</q>。</p>
+    </div>
+
+    <div class="st water q-big" data-r>
+      <span class="dot"></span>
+      <div class="card">
+        <div class="when">六月初二</div>
+        <div class="where">阔滦海子</div>
+        <p class="note">皇帝派他们去看一片大水。有山像长堤一样拦着水，海子阔得望不见对岸，水竟然是立着的。</p>
+        <q>遥望水高如山，但见白浪隐隐，自高而下，天下之物，莫平于水。</q>
+        <span class="attr">金幼孜记所见　<q>此理极不可晓</q></span>
+        <p class="note">回来复命，皇帝说这片大水周围有千余里，<q>斡难、胪朐凡七河注其中，故大也</q>。又赐下一个名字：玄冥池。</p>
+      </div>
+    </div>
+
+    <div class="battle" data-r>
+      <h3>六月初八至初九 · 飞云壑会战</h3>
+      <p>初八夜里夜行军，<q>夜入山谷中，乘月倍道兼行</q>，月亮落了以后，<q>月落，路难行，旌旗甲戈咫只不能辨</q><span class="sic">（库本只字疑当作尺）</span>，三人跟着宝纛走，一转眼就不知身在何处。</p>
+      <p>初九前进二十余里，前哨已经望见虏兵列阵。皇帝先带几十骑登山看地形，三个书生<q>下马被甲，复上马随阵后</q>。虏方派人来说要投降，可皇帝早料到了这一手，出征路上就预先写好了招降敕。此刻当着两军，他召来那道敕，金幼孜纵马冲到阵前把敕递上去。</p>
+      <p class="bq"><q>虏诈来请降，朕亦给之。</q></p>
+      <p>把敕书交来人带回去。接着炮声响了，左哨接敌，<q>虏选锋以当我中军，上麾宿卫即摧败之</q>，追出去数十里。三个书生跟着宝纛冲到了前面，都指挥王贵策马赶来，吓了一跳：<q>何故在此？主上已久下营，可亟回。</q>一来一回，<q>往返已百余里</q>。</p>
+      <div class="tagline">十余日后　六月十四　河曲设伏　佯载辎重诱敌　铳响伏发　生擒数人　虏由是遂绝</div>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">六月初十至十四</div>
+      <div class="where">长秀川 · 广漠戍</div>
+      <p class="note">追击路上人渴得厉害，<q>以衣于草间且行且拽渍露水，扭出饮之</q>，拧衣服上的露水喝。沿途虏人丢下的牛羊狗马撒满山谷。十四日皇帝在河曲设伏，佯装押辎重殿后诱敌，虏兵冲上来，铳一响伏兵四起，渡河的虏骑被歼，从此这一带的虏踪断绝。</p>
+    </div>
+  </section>
+
+  <div class="panel" data-r>
+    <div class="panel-head">
+      <h2>赐名簿</h2>
+      <p>从三月到六月，皇帝给漠北的山水<em>重新起了一遍名字</em>，泉水尤多</p>
+    </div>
+    <div class="names-strip">
+      <div class="name-chip"><div class="nm">神应泉</div><div class="pl">清水源</div><div class="dt">三月三十日出泉</div></div>
+      <div class="name-chip"><div class="nm">天锡泉</div><div class="pl">玄石坡</div><div class="dt">四月初七</div><div class="seal">石</div></div>
+      <div class="name-chip"><div class="nm">灵秀泉</div><div class="pl">归化甸</div><div class="dt">四月初九</div></div>
+      <div class="name-chip"><div class="nm">神贶泉</div><div class="pl">杨林戍</div><div class="dt">四月十二</div></div>
+      <div class="name-chip"><div class="nm">灵济泉</div><div class="pl">禽胡山</div><div class="dt">四月十六书石</div><div class="seal">石</div></div>
+      <div class="name-chip"><div class="nm">灵显翠秀峰</div><div class="pl">广武镇西南</div><div class="dt">四月十八遇风雨</div></div>
+      <div class="name-chip"><div class="nm">神献泉</div><div class="pl">捷胜冈</div><div class="dt">四月二十一</div><div class="seal">石</div></div>
+      <div class="name-chip"><div class="nm">瑞应泉</div><div class="pl">清冷泊</div><div class="dt">四月二十二</div></div>
+      <div class="name-chip"><div class="nm">永清泉</div><div class="pl">灭虏镇</div><div class="dt">四月二十四</div></div>
+      <div class="name-chip"><div class="nm">玉华泉</div><div class="pl">长清塞</div><div class="dt">四月二十八</div></div>
+      <div class="name-chip"><div class="nm">饮马河</div><div class="pl">胪朐河</div><div class="dt">五月初一赐名</div></div>
+      <div class="name-chip"><div class="nm">玄冥池</div><div class="pl">阔滦海子</div><div class="dt">六月初二赐名</div></div>
+    </div>
+    <p class="names-note">带石记者皆曾书刻于石：<q>玄石坡立马峰</q>六大字、<q>禽胡山灵济泉</q>大字、<q>捷胜冈</q>三大字、<q>云石山</q>三字，捷胜冈山间正多云母石。灵显翠秀峰是唯一没刻成的：刚要下笔，风雨骤至。</p>
+  </div>
+
+  <section class="zone">
+    <span class="zlabel">南还</span>
+    <div class="zname"><b>六月末至七月</b>　班师</div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">六月二十七</div>
+      <div class="where">长乐镇</div>
+      <p class="note">回程也有回程的苦头，草里蚊子多，<q>草间多蚊，大者如蜻蜓</q>，拂之不去。</p>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">六月二十九</div>
+      <div class="where">金沙苑</div>
+      <p class="note">榆柳夹道，沙陀起伏，树青沙白。皇帝看了一眼，说这景像<q>小李金碧山水也</q>。金碧山水是唐朝李思训父子的家法。</p>
+    </div>
+
+    <div class="st ruin q-big" data-r>
+      <span class="dot"></span>
+      <div class="card">
+        <div class="when">七月初二</div>
+        <div class="where">开平</div>
+        <p class="note">扎营处叫干耳朵，是宫殿的音译。元时的宫殿只剩下故址。</p>
+        <q>荒台断础，零落荒烟野草间，可为一慨。</q>
+        <span class="attr">金幼孜记开平元宫故址</span>
+        <p class="note">初七日又过元西凉亭，石墙未倒，殿前两行柏树还在，<q>观久，怅然而出</q>。</p>
+      </div>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">七月初五</div>
+      <div class="where">李陵台<small>今名威虏驿</small></div>
+      <p class="note">汉将军的旧名还挂在驿壁上，明军的营垒已经扎在旁边。一路又渡了好几条河，水都深及马鞍。</p>
+    </div>
+
+    <div class="st q-big" data-r>
+      <span class="dot"></span>
+      <div class="card">
+        <div class="when">七月初九</div>
+        <div class="where">龙门</div>
+        <p class="note">两山如门相对，石崖高千仞，路从水底走。皇帝指着山说，断了这条路，谁过得去。</p>
+        <q>断此路，孰能度者？</q>
+        <span class="attr">上指此山曰</span>
+        <p class="note">胡广抬头看见崖石悬处平整，顺口说了一句：</p>
+        <q>此处好镌磨崖碑。</q>
+        <p class="note">皇帝答得很快：<q>朕意如此，汝言正相合也。</q>君臣想到一块去了。这块磨崖碑后来刻没刻，日记没有说。</p>
+      </div>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">七月十一</div>
+      <div class="where">长安岭</div>
+      <p class="note">过了燕然关、长安岭，<q>至此方出险</q>。山没了，路平了，家近了。</p>
+    </div>
+
+    <div class="st" data-r>
+      <span class="dot"></span>
+      <div class="when">七月十五至十七</div>
+      <div class="where">居庸关 · 北京</div>
+      <p class="note">皇帝命三人记关内的桥，<q>自八达岭出关口，凡二十三桥</q>。十七日，<q>驾入北京</q>。日记到这一句为止。</p>
+    </div>
+  </section>
+
+  </div>
+</main>
+
+<div class="coda" data-r>
+  <p>回程比来时快了一个月。五个月里这支大军在大漠里走了一个来回，日记里没有一场被夸饰的大捷，最动人的常是小事：一场救了全营炊烟的夜雪，一副追送来的马鞍，砚台里的冰，趴在毡子上写到四更的敕书，还有一座没刻成的碑。至于龙门那句刻碑的约定，后来有没有下文，日记没有说。</p>
+  <div class="end">七月十七　驾入北京<small>永乐八年　日记止于此</small></div>
+</div>
+
+<div class="collate" data-r>
+  <h2>校字记</h2>
+  <ul>
+    <li><span class="a"><q>饶鼓之声</q></span><span class="b">疑当作铙鼓</span></li>
+    <li><span class="a"><q>咫只不能辨</q></span><span class="b">只疑当作尺</span></li>
+    <li><span class="a"><q>上己行三里余</q></span><span class="b">己疑当作已</span></li>
+    <li><span class="a"><q>夜命写敕，无卓</q></span><span class="b">卓疑当作桌</span></li>
+    <li><span class="a"><q>冯瑙</q></span><span class="b">疑当作玛瑙</span></li>
+    <li><span class="a"><q>人马钦之俱足</q></span><span class="b">钦疑当作饮</span></li>
+    <li><span class="a"><q>莫如其极</q></span><span class="b">其疑当作知</span></li>
+    <li><span class="a"><q>沙ヌ</q></span><span class="b">ヌ为片假名混入，疑当作碛</span></li>
+  </ul>
+  <p class="cnote">以上皆库本形近之讹与混入字符，引文一律照录原字，旁注当为某字，不改库本。</p>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="fm"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），史藏志存记录〈北征录〉一书，明金幼孜撰，库本去空白 9,463 字，逐日日记体。本页全部引文经脚本与库内文本去标点、异体归一逐字核验比对通过；库本形近讹字与混入字符引文照录，旁注当为某字，详见校字记。</span>
+    <span class="fm"><b>库外申报</b>　永乐八年之役的对手为本雅失里与阿鲁台两部，日记通篇只称虏不名一人；静虏镇前后之战胜负多系于阿鲁台，属通行史载。光大是胡广的表字，勉仁是杨荣的表字；阔滦海子即今呼伦湖，胪朐河即今克鲁伦河，小李指唐李思训父子金碧山水一派，皆通行比定，非出库本。库本卷首称前后两录，本件仅收前录，止于七月十七日大军回到北京，永乐十二年第二次北征的后录未收。</span>
+    <span class="fm"><b>上一篇同系列</b>　〈<a href="xiaoting-zalu.html">啸亭杂录</a>〉　<b>返回总目</b>　〈<a href="mulu.html">殆知阁导读总目</a>〉　第<b>二百五十一</b>篇</span>
+    <span class="fm"><b>读法提醒</b>　库本以虏称蒙古诸部、以天朝自居的口吻，以及视塞外为可以随手赐名刻石之地的姿态，皆古人闻见与时代局限，请以历史眼光读之，不代表编者与导读立场。</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var els = document.querySelectorAll('[data-r]');
+  for (var i = 0; i < els.length; i++) els[i].classList.add('will');
+  if (!('IntersectionObserver' in window)) {
+    for (var j = 0; j < els.length; j++) els[j].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.06 });
+  for (var k = 0; k < els.length; k++) io.observe(els[k]);
+})();
+</script>
+
+</body>
+</html>
