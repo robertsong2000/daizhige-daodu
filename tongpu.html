@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>桐谱 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #232220;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --green: #5f9270; --green-dim: rgba(95,146,112,0.55); --green-faint: rgba(95,146,112,0.16);
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+
+  /* 丈尺导航 */
+  .ruler {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 132px; z-index: 5;
+    border-right: 1px solid var(--hairline);
+    padding: 26px 0 20px 18px; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: space-between;
+    background: linear-gradient(90deg, rgba(25,25,23,0.92), rgba(25,25,23,0));
+  }
+  .ruler .rt { font-size: 11px; letter-spacing: 0.3em; color: var(--paper-faint); writing-mode: vertical-rl; }
+  .ruler nav { display: flex; flex-direction: column; gap: 2px; }
+  .ruler nav a {
+    display: flex; align-items: center; gap: 8px; text-decoration: none;
+    color: var(--paper-faint); font-size: 12.5px; letter-spacing: 0.14em;
+    padding: 4px 0; transition: color 0.25s;
+  }
+  .ruler nav a i {
+    font-style: normal; width: 22px; height: 1px; background: var(--paper-faint);
+    opacity: 0.5; transition: width 0.25s, background 0.25s; flex: none;
+  }
+  .ruler nav a.on { color: var(--paper); }
+  .ruler nav a.on i { width: 34px; background: var(--green); opacity: 1; }
+  .ruler nav a:hover { color: var(--green); }
+
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 30px; }
+  .body-wrap { max-width: 860px; margin: 0 auto; padding: 0 30px 0 170px; }
+  @media (max-width: 900px) {
+    .ruler { display: none; }
+    .body-wrap { padding-left: 30px; }
+  }
+
+  /* 开卷：地契式扉页 */
+  .cover { min-height: 92dvh; display: flex; align-items: center; position: relative; overflow: hidden; }
+  .cover .grid-bg {
+    position: absolute; inset: 0; opacity: 0.5; pointer-events: none;
+    background-image: linear-gradient(var(--hairline) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--hairline) 1px, transparent 1px);
+    background-size: 52px 52px;
+    mask-image: radial-gradient(ellipse 70% 60% at 30% 45%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 30% 45%, #000 30%, transparent 75%);
+  }
+  .cover .in { display: flex; gap: 56px; align-items: stretch; width: 100%; position: relative; }
+  .title-col { flex: none; writing-mode: vertical-rl; display: flex; gap: 20px; }
+  .title-col h1 { font-size: clamp(64px, 9vw, 108px); font-weight: 700; letter-spacing: 0.28em; line-height: 1.1; }
+  .title-col .who { font-size: 15px; color: var(--paper-dim); letter-spacing: 0.42em; padding-top: 10px; }
+  .title-col .seal {
+    align-self: flex-start; margin-top: 8px; border: 1px solid var(--green-dim); color: var(--green);
+    font-size: 12px; letter-spacing: 0.24em; padding: 7px 9px; writing-mode: vertical-rl;
+  }
+  .deed { flex: 1; align-self: center; max-width: 560px; }
+  .deed .frame {
+    border: 3px double var(--green-dim); padding: 30px 34px 22px; position: relative;
+    background: rgba(25,25,23,0.72);
+  }
+  .deed .frame::before, .deed .frame::after {
+    content: ""; position: absolute; width: 12px; height: 12px; border: 1px solid var(--green-dim);
+  }
+  .deed .frame::before { top: 5px; left: 5px; border-right: none; border-bottom: none; }
+  .deed .frame::after { bottom: 5px; right: 5px; border-left: none; border-top: none; }
+  .deed .dk { font-size: 12px; letter-spacing: 0.4em; color: var(--green); margin-bottom: 14px; }
+  .deed q {
+    display: block; font-size: 17.5px; color: var(--ink); background: var(--paper);
+    padding: 18px 20px; line-height: 2.05;
+  }
+  .deed .sign {
+    margin-top: 14px; text-align: right; color: var(--paper-dim); font-size: 14.5px; letter-spacing: 0.18em;
+  }
+  .deed .pitch { margin-top: 26px; color: var(--paper-dim); font-size: 15px; }
+  .deed .pitch b { color: var(--paper); font-weight: 600; }
+
+  section { padding: 84px 0 30px; }
+  .shead { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+  .shead .sn {
+    font-size: 12px; color: var(--green); letter-spacing: 0.3em; border: 1px solid var(--green-faint);
+    background: var(--green-faint); padding: 3px 10px 3px 13px; flex: none;
+  }
+  .shead h2 { font-size: clamp(24px, 3.4vw, 34px); font-weight: 700; letter-spacing: 0.14em; }
+  .lede { color: var(--paper-dim); font-size: 15.5px; max-width: 62ch; margin-bottom: 26px; }
+  .lede em { font-style: normal; color: var(--paper); }
+
+  q { quotes: none; }
+  q.il::before { content: "「"; }
+  q.il::after { content: "」"; }
+  q.blk {
+    display: block; background: var(--paper); color: var(--ink);
+    padding: 20px 24px; margin: 20px 0; font-size: 16.5px; line-height: 2.1;
+    border-left: 3px solid var(--green);
+  }
+  q.blk .src { display: block; margin-top: 10px; font-size: 12.5px; letter-spacing: 0.22em; color: #6f6a5e; }
+  q.il { font-style: normal; color: var(--paper); border-bottom: 1px solid var(--green-dim); }
+
+  /* 地契图 */
+  .plan { border: 1px solid var(--hairline); background: var(--ink-2); padding: 26px 22px 14px; margin: 24px 0; }
+  .plan svg { display: block; width: 100%; height: auto; }
+  .plan .cap { color: var(--paper-faint); font-size: 13px; padding: 12px 6px 4px; letter-spacing: 0.06em; }
+  .plan text { font-family: "Songti SC", "Noto Serif SC", "SimSun", serif; }
+
+  /* 种植簿 */
+  .ledger { border-top: 2px solid var(--green-dim); margin-top: 24px; }
+  .lrow {
+    display: grid; grid-template-columns: 118px 1fr; gap: 20px; padding: 17px 4px;
+    border-bottom: 1px solid var(--hairline); align-items: baseline;
+  }
+  .lrow .yr { font-size: 14px; color: var(--green); letter-spacing: 0.1em; }
+  .lrow .yr small { display: block; color: var(--paper-faint); font-size: 11.5px; letter-spacing: 0.18em; }
+  .lrow .ev { color: var(--paper-dim); font-size: 15px; }
+  .lrow .ev q.il { color: var(--paper); }
+
+  /* 十篇 */
+  .tens { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); margin: 26px 0; }
+  .ten { background: var(--ink); padding: 16px 14px 13px; }
+  .ten .tno { font-size: 11px; letter-spacing: 0.3em; color: var(--green); margin-bottom: 6px; }
+  .ten .tname { font-size: 17px; font-weight: 700; letter-spacing: 0.12em; }
+  .ten .tdesc { font-size: 12.5px; color: var(--paper-faint); margin-top: 7px; line-height: 1.7; }
+  @media (max-width: 720px) { .tens { grid-template-columns: repeat(2, 1fr); } }
+
+  /* 手艺卡 */
+  .craft { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); }
+  .craft .c { background: var(--ink); padding: 20px 22px 17px; }
+  .craft .c h3 { font-size: 17px; letter-spacing: 0.14em; margin-bottom: 8px; color: var(--paper); }
+  .craft .c h3::before { content: "◆ "; color: var(--green); font-size: 11px; vertical-align: 2px; }
+  .craft .c p { font-size: 14.5px; color: var(--paper-dim); }
+  @media (max-width: 720px) { .craft { grid-template-columns: 1fr; } }
+
+  /* 琴面 */
+  .qin { border: 1px solid var(--hairline); background: var(--ink-2); padding: 30px 22px 20px; margin: 26px 0; }
+  .qin svg { display: block; width: 100%; height: auto; }
+  .qin .hui { cursor: pointer; }
+  .qin .hui circle.dot { transition: r 0.15s; }
+  .qin .hui:hover circle.dot { r: 7; }
+  .qin .cap { color: var(--paper-faint); font-size: 13px; padding: 10px 6px 2px; }
+  .qin .cap b { color: var(--green); font-weight: 600; }
+
+  /* 幽灵志案卷 */
+  .ghost { border: 1px solid var(--hairline); border-left: 3px solid var(--green-dim); background: var(--ink-2); padding: 22px 24px 18px; margin: 18px 0; }
+  .ghost h3 { font-size: 17px; letter-spacing: 0.16em; margin-bottom: 8px; }
+  .ghost h3 .gno { color: var(--green); font-size: 12px; letter-spacing: 0.28em; margin-right: 12px; }
+  .ghost p { color: var(--paper-dim); font-size: 14.5px; margin-bottom: 8px; }
+  .ghost p:last-child { margin-bottom: 0; }
+
+  .outro { padding: 70px 0 40px; }
+  .outro .fin { font-size: 21px; line-height: 2.2; max-width: 34em; }
+  .outro .fin q.il { color: var(--green); border-bottom-color: var(--green-faint); }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 34px 0 60px; color: var(--paper-faint); font-size: 13px; line-height: 2.1; }
+  footer.page a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+  footer.page a:hover { color: var(--green); }
+</style>
+</head>
+<body>
+
+<aside class="ruler">
+  <div class="rt">殆知阁导读 · 二百七十三</div>
+  <nav id="rail">
+    <a href="#s-xu" data-t="s-xu"><i></i>序</a>
+    <a href="#s-ji" data-t="s-ji"><i></i>记志</a>
+    <a href="#s-xuyuan" data-t="s-xuyuan"><i></i>叙源</a>
+    <a href="#s-leishu" data-t="s-leishu"><i></i>类属</a>
+    <a href="#s-shouyi" data-t="s-shouyi"><i></i>种植</a>
+    <a href="#s-qin" data-t="s-qin"><i></i>器用</a>
+    <a href="#s-zashuo" data-t="s-zashuo"><i></i>杂说</a>
+    <a href="#s-shifu" data-t="s-shifu"><i></i>诗赋</a>
+  </nav>
+  <div class="rt" style="color: var(--green-dim)">桐竹君</div>
+</aside>
+
+<header class="cover" id="s-xu">
+  <div class="grid-bg"></div>
+  <div class="body-wrap in">
+    <div class="title-col">
+      <h1>桐谱</h1>
+      <div class="who">宋　陈翥　撰</div>
+      <div class="seal">咸聱子</div>
+    </div>
+    <div class="deed">
+      <div class="frame">
+        <div class="dk">谱录 · 草木</div>
+        <q>虽茶有经，竹有谱，吾皆略而不具。植桐乎西山之南，乃述其桐之事十篇，作《桐谱》一卷。其植桐则有纪志存焉，聊以示于子孙，庶知吾既不能干禄以代耕，亦有补农之说云耳。</q>
+        <div class="sign">皇祐元年十月七日夜</div>
+      </div>
+      <p class="pitch">现存唯一一部古代泡桐专书。前八篇是农书，后两篇是自传：一个四十岁上断了仕途念想的人，在数亩黄壤上种了十几年树，<b>等着砍来做一张琴</b>。</p>
+    </div>
+  </div>
+</header>
+
+<main class="body-wrap">
+
+<section id="s-ji">
+  <div class="shead"><span class="sn">记志第九</span><h2>先看他的地</h2></div>
+  <p class="lede">全书最动人的不是树，是一块地的产权记录。陈翥把它写进了书里，连四至都写得一清二楚，一千年后还能照着把地画出来。</p>
+  <q class="blk">至庆历八年戊子冬十有一月，于家后西山之南，始有地数亩。东止陈诩，西止柴养，凡东西延二十丈有奇；南止弟翊，北止兄翦，凡南北袤十丈有奇。<span class="src">记志第九 · 西山植桐记</span></q>
+  <div class="plan">
+    <svg id="plan" viewBox="0 0 760 470" role="img" aria-label="西山桐地界至图，东西二十丈，南北十丈"></svg>
+    <div class="cap">西山桐地界至图，按记志所记丈尺绘制：东西二十丈有奇，南北十丈有奇，南栽戟榆，北树槿篱，庆历八年冬手植两行八十株，其后增至数百株。</div>
+  </div>
+  <div class="ledger" id="s-shouyi-ledger">
+    <div class="lrow"><div class="yr">庆历八年<small>戊子 · 1048</small></div><div class="ev">冬十一月治地数亩，十二月始植。植桐诗序追记：<q class="il">庆历八年冬，予手植两行八十株于西山之南</q>。</div></div>
+    <div class="lrow"><div class="yr">皇祐元年<small>己丑 · 1049</small></div><div class="ev">十月七日夜，书成作序，自陈<q class="il">聊以示于子孙</q>。</div></div>
+    <div class="lrow"><div class="yr">皇祐三年<small>辛卯 · 1051</small></div><div class="ev">自十二月至是年冬，<q class="il">浇而植之，凡数百株</q>。</div></div>
+  </div>
+</section>
+
+<section id="s-xuyuan">
+  <div class="shead"><span class="sn">叙源第一</span><h2>一棵树的户口</h2></div>
+  <p class="lede">别的谱开头考订名物，陈翥也一样，但他多问了一句抬杠的话：凤凰真的非梧桐不栖吗？众木森森，凭什么独独是它。</p>
+  <q class="blk">或者谓凤凰非梧桐而不栖，且众木森森，胡有不可栖者，岂独梧桐乎？答曰：夫凤凰，仁瑞之禽也，不止强恶之木。梧桐叶软之木也，皮理细腻而脆，枝干扶疏而软，故凤凰非梧桐而不栖也。<span class="src">叙源第一</span></q>
+  <p class="lede">树性也答得干脆。桐是柔木，<q class="il">生则肌骨脆而嫩；死则材体坚而韧</q>，湿了不烂，干了不裂。山里早有顺口溜：</p>
+  <q class="blk">故鄙谚云：“轻是桐，重是桐，难砟亦是桐。”此之谓也。<span class="src">叙源第一</span></q>
+  <p class="lede">类属第二给桐分了户：白花桐<q class="il">其花先叶而开，白色，心赤内凝红</q>；紫花桐<q class="il">其花亦先叶而开，皆紫色，而作穟有类紫藤花也</q>。花比叶先到，这是桐最像奇迹的地方，清明前后满树是花，叶子还一根没抽。</p>
+</section>
+
+<section id="s-shouyi">
+  <div class="shead"><span class="sn">种植、所宜、采斫</span><h2>种树的手艺</h2></div>
+  <p class="lede">中间三篇是正经农书，全是动手的细节。北宋山民的桐作经验，在这几篇里保存得比任何一部大类书都完整。</p>
+  <div class="craft">
+    <div class="c"><h3>会飞的种子</h3><p><q class="il">凡桐之子，轻而喜飏，如柳絮飞，可一二里</q>。所以林麓之间反而不生，种子都飞到熟地里去了。</p></div>
+    <div class="c"><h3>给叶子开口子</h3><p>叶大遇风易折，他的办法：<q class="il">则以竹竿破其叶，令作三片</q>，风就穿叶而过了。三四年后木质自坚，不必再破。</p></div>
+    <div class="c"><h3>冬天动土</h3><p>十月到正月，叶落汁归根，移栽最宜。春栽皮汁已通，<q class="il">根一伤，故枝叶瘁矣</q>。</p></div>
+    <div class="c"><h3>砍树先缠绳</h3><p>山岩之地伐桐易折裂，<q class="il">用巨绳缠缚一尺有余，则免折裂之虞矣</q>。歧枝长到五寸就要掰掉，两三春后树皮自己长平。</p></div>
+  </div>
+</section>
+
+<section id="s-qin">
+  <div class="shead"><span class="sn">所出第五 · 器用第七</span><h2>种这一切，为一张琴</h2></div>
+  <p class="lede">为什么偏偏是桐？因为天下木材里，它最不怕怠慢：</p>
+  <q class="blk">夫桐之材，则异于是。采伐不时，而不蛀虫；渍湿所加，而不腐败；风吹日曝，而不坼裂；雨溅泥淤，而不枯藓；干濡相兼，而其质不变。<span class="src">器用第七</span></q>
+  <p class="lede">栋梁它也做得，棺椁它也做得，但陈翥惦记的从来是琴。《诗》里早写过：<q class="il">树之榛栗，椅桐梓漆，爰伐琴瑟</q>。峄山之阳的孤桐、龙门高百尺无枝的桐，都是琴材谱系里的名门。器用篇末尾记了那桩著名的火中捡琴：</p>
+  <q class="blk">蔡邕在吴，吴人有烧桐以爨者，邕闻火裂之声，知其良木也。因请裁为琴，果有美音。故诗人名之曰焦尾琴。<span class="src">杂说第八引《后汉书》</span></q>
+  <p class="lede">陈翥自己的批语只有一句：<q class="il">则知桐之材，有贤不肖，皆混而无别，惟赏音者识之耳</q>。桐木混在柴堆里没有分别，认出它的是耳朵。他种十几年树，就是把耳朵等成这样的耳朵。</p>
+  <div class="qin">
+    <svg id="qin" viewBox="0 0 760 150" role="img" aria-label="琴面十三徽示意，点击有声"></svg>
+    <div class="cap">琴面十三徽，<b>点一枚，听一声</b>。他等的正是这一声：敷荣朝阳，以待灵凤之栖。</div>
+  </div>
+</section>
+
+<section id="s-zashuo">
+  <div class="shead"><span class="sn">杂说第八</span><h2>桐树底下的幽灵</h2></div>
+  <p class="lede">杂说第八是一部桐的典故总账，从神农削桐为琴到唐人传奇，几十条排下来，像给一棵树召来满堂幽灵。挑三件最奇的。</p>
+  <div class="ghost">
+    <h3><span class="gno">其一</span>叶子会记闰月</h3>
+    <p>纬书里的梧桐是一部活的历法：<q class="il">梧桐以知日月正闰，生十二叶，一边有六叶，从下数一月，有闰则十三叶，视叶小者，则知闰何月也</q>。叶脉即历书，多出的那片小叶，替老天记住闰在哪个月。</p>
+  </div>
+  <div class="ghost">
+    <h3><span class="gno">其二</span>木头会喊冤</h3>
+    <p>《论衡》里一个审案办法：李子长<q class="il">欲知囚情，刻桐，象囚形，凿地为坎，卧木囚其中。囚若正，木囚不动；若有冤，木囚动出</q>。刻一个桐木小人替囚犯受审，冤重了，木头自己会爬出来。</p>
+  </div>
+  <div class="ghost">
+    <h3><span class="gno">其三</span>等凤凰的人</h3>
+    <p>全书最冷的一条。长安童谣唱凤凰止于阿房，于是<q class="il">符坚遂于阿房城植桐数万株以待之。其后，慕容冲入阿房城而止焉。冲，小字凤也</q>。数万株桐树等来的凤凰，是一支杀回来的军队。种桐待凤这个意象，在陈翥笔下是盼头，在这里成了谶。</p>
+  </div>
+</section>
+
+<section id="s-shifu" class="outro">
+  <div class="shead"><span class="sn">记志 · 诗赋</span><h2>咸聱子</h2></div>
+  <p class="lede">陈翥，字子翔，自号咸聱子，又号桐竹君，后世记为铜陵人。动工之前有个种菜的邻居来笑话他，这段对话他原样存档：</p>
+  <q class="blk">圃者笑曰：‘得利之速，植桐不如植桑之博矣。’余应之曰：‘吾非不知衣食之源为世所急，但足而已。夫仲尼岂不能明老圃之业乎？下惠岂不能为盗跖之事乎？苟议利而后动，诚圣贤之所不取，亦吾心之所未能也。’<span class="src">记志第九</span></q>
+  <p class="lede">栽下第一批树苗那天，他对着树念了一段祝词。与其说是给树听的，不如说是给自己立的字据：</p>
+  <q class="blk">尔其材森森，直而理，敷荣朝阳，立而不倚。梧将激清风，将其声听之，以为古琴之操焉。尔其叶萋萋，绿而繁，应时开落，不为物顽。吾将招君子，游其下乐之，以待灵凤之栖焉。又曰：‘吾今四十，以徯我数十年，当蕲尔为周身之具，斯吾植之心也。’<span class="src">记志第九 · 植桐祝词</span></q>
+  <p class="lede">四十岁种，等几十年后砍来做棺材板吗？不，<q class="il">当蕲尔为周身之具</q>，树成材之日，就是他的归处。他又解释过为什么桐竹一起种：<q class="il">夫竹岁寒不雕，所以坚志性之掺也。桐识时之变，所以顺天地之道也</q>。竹是骨气，桐是时运，一硬一软都种在自家地里。书的末尾是那篇桐赋，乱辞唱道：</p>
+  <p class="fin">自号桐竹君的人，最后想要的不过是：<q class="il">吾愿终身老林泉兮</q>，<q class="il">器与不器居其间兮</q>。做得了琴是器，做不了琴，也是树底下听琴的人。</p>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="body-wrap">
+    文本来源：殆知阁简体库 艺藏 · 草木鸟兽虫鱼《桐谱》一卷，<a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>。<br>
+    本篇引文均与库本逐字核验通过。<br>
+    《桐谱》为北宋农书，其物候、药用、祥瑞之说皆属当时观念，请以时代局限视之。
+  </div>
+</footer>
+
+<script>
+(function () {
+  var SVG = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, parent) {
+    var n = document.createElementNS(SVG, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    parent.appendChild(n);
+    return n;
+  }
+  function txt(x, y, s, attrs, parent) {
+    var a = attrs || {}; a.x = x; a.y = y;
+    var t = el("text", a, parent); t.textContent = s; return t;
+  }
+
+  /* 界至图：二十丈 x 十丈，26px 一丈 */
+  var P = document.getElementById("plan");
+  var X0 = 120, Y0 = 90, W = 520, H = 260;
+  el("rect", { x: X0, y: Y0, width: W, height: H, fill: "rgba(95,146,112,0.06)", stroke: "#5f9270", "stroke-width": 1.6 }, P);
+  el("rect", { x: X0 - 4, y: Y0 - 4, width: W + 8, height: H + 8, fill: "none", stroke: "rgba(95,146,112,0.35)", "stroke-width": 0.8, "stroke-dasharray": "2 5" }, P);
+  /* 四至 */
+  var lbl = { fill: "#a39e93", "font-size": "14", "letter-spacing": "2" };
+  txt(X0 + W / 2, Y0 - 44, "北止兄翦", lbl, P);
+  txt(X0 + W / 2, Y0 + H + 34, "南止弟翊", lbl, P);
+  txt(X0 + W + 22, Y0 + H / 2 + 5, "东止陈诩", lbl, P);
+  txt(X0 - 92, Y0 + H / 2 + 5, "西止柴养", lbl, P);
+  /* 丈尺 */
+  txt(X0 + W / 2, Y0 - 20, "东西延二十丈有奇", { fill: "#6e6a61", "font-size": "11.5", "letter-spacing": "3" }, P);
+  var ys = txt(0, 0, "南北袤十丈有奇", { fill: "#6e6a61", "font-size": "11.5", "letter-spacing": "3" }, P);
+  ys.setAttribute("transform", "translate(" + (X0 - 14) + "," + (Y0 + H / 2) + ") rotate(-90)");
+  ys.setAttribute("text-anchor", "middle");
+  /* 比例尺 */
+  el("line", { x1: X0, y1: Y0 + H + 62, x2: X0 + 130, y2: Y0 + H + 62, stroke: "#6e6a61", "stroke-width": 1 }, P);
+  [0, 65, 130].forEach(function (x, i) {
+    el("line", { x1: X0 + x, y1: Y0 + H + 57, x2: X0 + x, y2: Y0 + H + 67, stroke: "#6e6a61", "stroke-width": 1 }, P);
+    txt(X0 + x, Y0 + H + 84, i === 0 ? "0" : (i * 5) + "丈", { fill: "#6e6a61", "font-size": "11", "text-anchor": "middle" }, P);
+  });
+  /* 北针 */
+  el("line", { x1: X0 + W + 62, y1: Y0 + 40, x2: X0 + W + 62, y2: Y0 + 8, stroke: "#6e6a61", "stroke-width": 1 }, P);
+  txt(X0 + W + 62, Y0 + 2, "北", { fill: "#6e6a61", "font-size": "11", "text-anchor": "middle" }, P);
+  /* 篱与榆 */
+  var i, x, y;
+  for (i = 0; i < 34; i++) {
+    x = X0 + 12 + i * ((W - 24) / 33);
+    el("path", { d: "M" + x + " " + (Y0 + 12) + " a6 6 0 0 1 12 0", stroke: "rgba(95,146,112,0.7)", fill: "none", "stroke-width": 1.1 }, P);
+    el("line", { x1: x + 3, y1: Y0 + H - 10, x2: x + 3, y2: Y0 + H - 22, stroke: "rgba(95,146,112,0.7)", "stroke-width": 1.4 }, P);
+  }
+  txt(X0 + 16, Y0 + 30, "北树槿篱以分剪", { fill: "#6e6a61", "font-size": "11", "letter-spacing": "2" }, P);
+  txt(X0 + W - 130, Y0 + H - 26, "南栽戟榆以累翊", { fill: "#6e6a61", "font-size": "11", "letter-spacing": "2" }, P);
+  /* 两行八十株 */
+  var rows = [Y0 + 96, Y0 + 128];
+  rows.forEach(function (ry, r) {
+    el("line", { x1: X0 + 16, y1: ry, x2: X0 + W - 16, y2: ry, stroke: "rgba(95,146,112,0.18)", "stroke-width": 10 }, P);
+    for (i = 0; i < 40; i++) {
+      x = X0 + 16 + i * ((W - 32) / 39);
+      el("circle", { cx: x, cy: ry, r: 2.6, fill: "#5f9270" }, P);
+    }
+    txt(X0 + W + 8, ry + 4, r === 0 ? "行一" : "行二", { fill: "#5f9270", "font-size": "10.5" }, P);
+  });
+  el("path", { d: "M" + (X0 + 16) + " " + (Y0 + 76) + " L" + (X0 + W - 16) + " " + (Y0 + 76) + " L" + (X0 + W - 16) + " " + (Y0 + 84), stroke: "rgba(95,146,112,0.4)", fill: "none", "stroke-width": 0.8 }, P);
+  txt(X0 + 16, Y0 + 70, "手植两行八十株", { fill: "#5f9270", "font-size": "11.5", "letter-spacing": "2" }, P);
+  /* 其后数百株：种子散布 */
+  var seed = 1048;
+  function rnd() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
+  for (i = 0; i < 170; i++) {
+    x = X0 + 20 + rnd() * (W - 40);
+    y = Y0 + 44 + rnd() * (H - 70);
+    if (Math.abs(y - rows[0]) < 9 || Math.abs(y - rows[1]) < 9) continue;
+    el("circle", { cx: x, cy: y, r: 1.7, fill: "rgba(95,146,112,0.45)" }, P);
+  }
+
+  /* 琴面十三徽 */
+  var Q = document.getElementById("qin");
+  var qx = 40, qy = 52, qw = 680, qh = 46;
+  el("rect", { x: qx, y: qy, width: qw, height: qh, rx: 16, fill: "rgba(232,228,220,0.05)", stroke: "rgba(232,228,220,0.3)", "stroke-width": 1.2 }, Q);
+  el("rect", { x: qx + 10, y: qy + 8, width: 12, height: qh - 16, fill: "rgba(232,228,220,0.18)" }, Q);
+  el("rect", { x: qx + qw - 22, y: qy + 8, width: 12, height: qh - 16, fill: "rgba(232,228,220,0.18)" }, Q);
+  el("line", { x1: qx + 22, y1: qy + 6, x2: qx + qw - 22, y2: qy + 6, stroke: "rgba(232,228,220,0.14)" }, Q);
+  el("line", { x1: qx + 22, y1: qy + qh - 6, x2: qx + qw - 22, y2: qy + qh - 6, stroke: "rgba(232,228,220,0.14)" }, Q);
+  txt(qx, qy - 16, "岳山", { fill: "#6e6a61", "font-size": "11" }, Q);
+  txt(qx + qw, qy - 16, "龙龈", { fill: "#6e6a61", "font-size": "11", "text-anchor": "end" }, Q);
+  var pent = [220, 247.5, 275, 330, 366.7, 440, 495, 550, 660, 733.3, 880, 990, 1100];
+  var actx = null;
+  function pluck(freq) {
+    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    var t = actx.currentTime;
+    var o = actx.createOscillator(), g = actx.createGain(), f = actx.createBiquadFilter();
+    o.type = "triangle"; o.frequency.value = freq;
+    f.type = "lowpass"; f.frequency.value = freq * 4;
+    g.gain.setValueAtTime(0.28, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 1.4);
+    o.connect(f); f.connect(g); g.connect(actx.destination);
+    o.start(t); o.stop(t + 1.5);
+  }
+  for (i = 0; i < 13; i++) {
+    (function (n) {
+      var hx = qx + 46 + (qw - 92) * (n - 1) / 12;
+      var g = el("g", { class: "hui" }, Q);
+      el("rect", { x: hx - 16, y: qy - 8, width: 32, height: qh + 42, fill: "transparent" }, g);
+      el("circle", { class: "dot", cx: hx, cy: qy + qh / 2, r: 5, fill: "#5f9270" }, g);
+      txt(hx, qy + qh + 22, n + "", { fill: "#6e6a61", "font-size": "10.5", "text-anchor": "middle" }, g);
+      g.addEventListener("click", function () { pluck(pent[n - 1]); });
+    })(i + 1);
+  }
+
+  /* 丈尺导航 scrollspy */
+  var links = document.querySelectorAll("#rail a");
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute("data-t")] = a; });
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (a) { a.classList.remove("on"); });
+        var a = map[e.target.id]; if (a) a.classList.add("on");
+      }
+    });
+  }, { rootMargin: "-30% 0px -60% 0px" });
+  ["s-xu", "s-ji", "s-xuyuan", "s-shouyi", "s-qin", "s-zashuo", "s-shifu"].forEach(function (id) {
+    var s = document.getElementById(id); if (s) io.observe(s);
+  });
+})();
+</script>
+</body>
+</html>
