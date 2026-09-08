@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>曾公遗录 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #242320;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --gold: #c9963f; --gold-2: #a87c33; --red: #c0453c;
+    --hairline: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  ::selection { background: var(--gold); color: var(--ink); }
+
+  /* ---------- 帘 ---------- */
+  .curtain {
+    position: fixed; inset: 0; z-index: 50; cursor: pointer;
+    background:
+      repeating-linear-gradient(90deg,
+        rgba(232,228,220,0.045) 0 2px, transparent 2px 26px),
+      linear-gradient(180deg, #232220 0%, var(--ink) 55%, #1d1c1a 100%);
+    transition: transform 1.15s cubic-bezier(.72,0,.26,1), opacity 1.15s ease;
+  }
+  .curtain .rod {
+    position: absolute; top: 0; left: 0; right: 0; height: 14px;
+    background: linear-gradient(180deg, #d8a951, var(--gold) 40%, #7d5c22);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+  }
+  .curtain .fringe {
+    position: absolute; top: 14px; left: 0; right: 0; height: 44px;
+    background: repeating-linear-gradient(90deg,
+      rgba(201,150,63,0.55) 0 2px, transparent 2px 26px);
+    mask-image: linear-gradient(180deg, #000 30%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent 100%);
+  }
+  .curtain .ask {
+    position: absolute; top: 16dvh; right: 9vw;
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: clamp(24px, 4.4vw, 46px); font-weight: 700;
+    letter-spacing: 0.24em; line-height: 1.9; color: var(--paper);
+    text-shadow: 0 2px 22px rgba(0,0,0,0.65);
+  }
+  .curtain .ask span { display: block; }
+  .curtain .ask .q3 { color: var(--gold); }
+  .curtain .date {
+    position: absolute; left: 8vw; top: 18dvh; writing-mode: vertical-rl;
+    text-orientation: upright; letter-spacing: 0.5em;
+    color: var(--faint); font-size: 14px;
+  }
+  .tag-title {
+    position: absolute; left: 8vw; bottom: 12dvh;
+    background: var(--paper); color: #26241f;
+    padding: 26px 14px 20px; border: 1px solid #cfc9bd;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.55);
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: clamp(30px, 4.6vw, 44px); font-weight: 700; letter-spacing: 0.3em;
+  }
+  .tag-title::before {
+    content: ""; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+    width: 5px; height: 5px; border-radius: 50%; background: var(--gold);
+  }
+  .tag-title .seal {
+    margin-top: 18px; writing-mode: vertical-rl; text-orientation: upright;
+    background: var(--red); color: #f2e9dd; font-size: 13px;
+    letter-spacing: 0.24em; padding: 8px 5px; font-weight: 600;
+  }
+  .curtain .hint {
+    position: absolute; bottom: 6dvh; right: 9vw; color: var(--faint);
+    font-size: 13px; letter-spacing: 0.42em;
+    animation: breathe 2.6s ease-in-out infinite;
+  }
+  @keyframes breathe { 50% { opacity: 0.35; } }
+  body.open .curtain { transform: translateY(-103%); pointer-events: none; }
+  body.open .curtain .ask, body.open .curtain .tag-title, body.open .curtain .date,
+  body.open .curtain .hint { opacity: 0; transition: opacity 0.5s ease; }
+  @media (prefers-reduced-motion: reduce) { .curtain { transition: none; } .curtain .hint { animation: none; } }
+
+  /* ---------- 通用节 ---------- */
+  main { position: relative; z-index: 1; }
+  .sec { max-width: 1060px; margin: 0 auto; padding: 84px 28px 30px; }
+  .sec + .sec { border-top: 1px solid var(--hairline); }
+  .rodhead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 8px; }
+  .rodhead .bar { width: 46px; height: 7px; background: linear-gradient(180deg, #d8a951, var(--gold-2)); align-self: center; }
+  .rodhead h2 { font-size: clamp(23px, 3vw, 30px); font-weight: 700; letter-spacing: 0.16em; }
+  .rodhead .day { font-size: 13px; color: var(--faint); letter-spacing: 0.24em; }
+  .lede { color: var(--dim); font-size: 15.5px; max-width: 58ch; margin-bottom: 30px; }
+  .lede b { color: var(--paper); font-weight: 600; }
+
+  q { quotes: none; }
+  .qblock {
+    background: var(--paper); color: #26241f;
+    padding: 16px 20px; margin: 14px 0; border-left: 3px solid var(--gold);
+    font-size: 15.5px; line-height: 2; box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  }
+  .qblock.red { border-left-color: var(--red); }
+  .qblock .who {
+    display: block; font-size: 12.5px; letter-spacing: 0.28em;
+    color: #8a6a2c; margin-bottom: 4px; font-weight: 600;
+  }
+  .qnote { color: var(--faint); font-size: 13.5px; margin: 2px 0 18px; }
+
+  /* ---------- 簿面 ---------- */
+  .ledger { display: grid; grid-template-columns: 1.15fr 1fr; gap: 26px; }
+  @media (max-width: 820px) { .ledger { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--ink-2); border: 1px solid var(--hairline); padding: 24px 24px 20px;
+  }
+  .card h3 { font-size: 14px; letter-spacing: 0.34em; color: var(--gold); margin-bottom: 14px; font-weight: 600; }
+  .facts li { list-style: none; padding: 7px 0; border-top: 1px dashed rgba(232,228,220,0.1); font-size: 14.5px; color: var(--dim); }
+  .facts li:first-child { border-top: 0; }
+  .facts li b { color: var(--paper); font-weight: 600; margin-right: 8px; }
+  .paradox {
+    margin-top: 26px; border: 1px solid rgba(192,69,60,0.4); padding: 20px 22px;
+    background: linear-gradient(180deg, rgba(192,69,60,0.07), transparent);
+  }
+  .paradox .tagline { font-size: 12.5px; letter-spacing: 0.3em; color: var(--red); margin-bottom: 8px; }
+  .paradox p { font-size: 16.5px; color: var(--paper); max-width: 34em; }
+  .paradox p em { font-style: normal; color: var(--gold); }
+
+  /* ---------- 残卷架 ---------- */
+  .scrolls { display: flex; gap: 12px; flex-wrap: wrap; margin: 26px 0 8px; }
+  .scroll {
+    flex: 1 1 84px; min-width: 84px; text-align: center; padding: 4px 0 10px;
+    border: 1px solid var(--hairline); background: var(--ink-2); position: relative;
+  }
+  .scroll::before, .scroll::after {
+    content: ""; position: absolute; top: -5px; bottom: -5px; width: 6px;
+    background: linear-gradient(180deg, #d8a951, var(--gold-2)); border-radius: 3px;
+  }
+  .scroll::before { left: -4px; } .scroll::after { right: -4px; }
+  .scroll .vname { writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 0.22em;
+    font-size: 17px; font-weight: 700; color: var(--paper); display: inline-block; padding-top: 6px; }
+  .scroll.empty { background: transparent; border-style: dashed; }
+  .scroll.empty::before, .scroll.empty::after { opacity: 0.28; }
+  .scroll.empty .vname { color: var(--faint); }
+  .scroll .srcnote { display: block; font-size: 11.5px; color: var(--dim); margin-top: 8px; letter-spacing: 0.06em; }
+  .scroll.empty .srcnote { color: var(--faint); }
+  .scrolls-cap { color: var(--faint); font-size: 13px; letter-spacing: 0.14em; margin-bottom: 26px; }
+
+  .gapbar { margin: 26px 0 6px; }
+  .gapbar .track { position: relative; height: 12px; border: 1px solid var(--hairline); background: var(--ink-2); }
+  .gapbar .filled { position: absolute; inset: 0 34% 0 0; background: rgba(201,150,63,0.28); border-right: 1px solid var(--gold-2); }
+  .gapbar .lost { position: absolute; top: -3px; bottom: -3px; left: 66%; right: 0;
+    background: repeating-linear-gradient(45deg, rgba(192,69,60,0.4) 0 6px, transparent 6px 12px); border: 1px solid rgba(192,69,60,0.5); }
+  .gapbar .lab { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--faint); margin-top: 8px; letter-spacing: 0.12em; }
+  .gapbar .lab .l { color: var(--red); }
+  .blankdays { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
+  .blankdays .d {
+    border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 12px 18px; font-size: 16px; letter-spacing: 0.3em; color: var(--paper);
+  }
+  .blankdays .d.dimcell { color: var(--faint); background: transparent; border-style: dashed; }
+
+  /* ---------- 时刻线 ---------- */
+  .dayline { position: relative; margin-top: 34px; padding-left: 118px; }
+  @media (max-width: 720px) { .dayline { padding-left: 0; } }
+  .dayline::before {
+    content: ""; position: absolute; left: 96px; top: 6px; bottom: 6px; width: 1px;
+    background: linear-gradient(180deg, transparent, var(--gold-2) 8%, var(--gold-2) 92%, transparent);
+  }
+  @media (max-width: 720px) { .dayline::before { left: 8px; } }
+  .beat { position: relative; padding: 0 0 38px; }
+  .beat .keikei {
+    position: absolute; left: -118px; top: 2px; width: 72px; text-align: right;
+    font-size: 14px; letter-spacing: 0.2em; color: var(--gold); font-weight: 600;
+  }
+  @media (max-width: 720px) {
+    .beat .keikei { position: static; display: inline-block; width: auto;
+      border: 1px solid var(--gold-2); padding: 1px 8px; margin-bottom: 10px; text-align: left; }
+    .dayline::before { display: none; }
+  }
+  .beat::before {
+    content: ""; position: absolute; left: -27px; top: 10px; width: 9px; height: 9px;
+    background: var(--ink); border: 2px solid var(--gold); border-radius: 50%;
+  }
+  @media (max-width: 720px) { .beat::before { display: none; } }
+  .beat p { color: var(--dim); font-size: 15px; max-width: 56ch; }
+  .beat p b { color: var(--paper); font-weight: 600; }
+  .beat .bigq { font-size: clamp(21px, 3.2vw, 30px); font-weight: 700; line-height: 1.7;
+    color: var(--paper); padding: 10px 0 6px; letter-spacing: 0.04em; }
+  .beat .bigq em { font-style: normal; color: var(--gold); }
+  .beat .who-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 4px; }
+  .beat .who-row .w {
+    font-size: 13.5px; border: 1px solid var(--hairline); background: var(--ink-2);
+    padding: 6px 12px; color: var(--dim);
+  }
+  .beat .who-row .w b { color: var(--paper); font-weight: 700; margin-right: 6px; }
+  .beat .who-row .w.red b { color: var(--red); }
+
+  /* ---------- 帘制 ---------- */
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 6px; }
+  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
+  .twocol .card p { color: var(--dim); font-size: 14.5px; }
+
+  /* ---------- 边角格 ---------- */
+  .noisegrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+  @media (max-width: 820px) { .noisegrid { grid-template-columns: 1fr; } }
+  .noise { background: var(--ink-2); border: 1px solid var(--hairline); padding: 22px; }
+  .noise h3 { font-size: 15px; letter-spacing: 0.3em; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+  .noise h3 small { color: var(--faint); letter-spacing: 0.14em; font-weight: 400; margin-left: 10px; font-size: 12px; }
+  .noise p { color: var(--dim); font-size: 14px; margin-bottom: 6px; }
+  .noise p b { color: var(--paper); }
+  .pillrow { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .pill { border: 1px solid var(--gold-2); color: var(--paper); font-size: 14.5px;
+    padding: 6px 14px; letter-spacing: 0.14em; background: rgba(201,150,63,0.07); }
+
+  /* ---------- 发引 ---------- */
+  .outro { text-align: center; padding: 30px 0 10px; }
+  .outro .lastline {
+    display: inline-block; writing-mode: vertical-rl; text-orientation: upright;
+    font-size: clamp(30px, 5vw, 46px); font-weight: 700; letter-spacing: 0.4em;
+    color: var(--paper); padding: 26px 20px; border: 1px solid var(--hairline);
+    background: var(--ink-2); margin-bottom: 28px;
+  }
+  .outro .lastline em { font-style: normal; color: var(--gold); }
+  .outro p { color: var(--dim); font-size: 15px; max-width: 56ch; margin: 0 auto 12px; }
+  .outro p b { color: var(--paper); }
+
+  /* ---------- 页脚 ---------- */
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 90px; padding: 40px 0 64px; font-size: 13.5px; color: var(--faint); }
+  footer.page .row { max-width: 1060px; margin: 0 auto 14px; padding: 0 28px; line-height: 2; }
+  footer.page b { color: var(--dim); font-weight: 600; }
+  footer.page a { color: var(--gold); text-decoration: none; }
+  footer.page .fin { max-width: 1060px; margin: 26px auto 0; padding: 0 28px; letter-spacing: 0.3em; color: var(--dim); }
+
+  .rise { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .rise.in { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<div class="curtain" id="curtain" role="button" aria-label="卷帘开卷" tabindex="0">
+  <div class="rod"></div>
+  <div class="fringe"></div>
+  <div class="date">元符三年　正月　己卯</div>
+  <div class="ask">
+    <span>皇帝已弃天下</span>
+    <span>未有皇子</span>
+    <span class="q3">当如何</span>
+  </div>
+  <div class="tag-title">曾公遗录<span class="seal">宋　曾布　日录</span></div>
+  <div class="hint">卷　帘</div>
+</div>
+
+<main>
+
+  <section class="sec" id="mian">
+    <div class="rodhead rise"><span class="bar"></span><h2>簿面</h2><span class="day">残三卷 · 十七个月</span></div>
+    <p class="lede rise">一部写在工作岗位上的日记：作者不是史官，是当朝执政。西府的边报、东府的堂议、御榻前的应答、夜里散会后的腹诽，当天记当天，一日不肯隔。库内存文去空白<b>134110 字</b>，记事起元符二年三月，止元符三年七月：一整年的西边兵事与朝堂日常，外加哲宗从病重到下葬的最后一程。</p>
+    <div class="ledger">
+      <div class="card rise">
+        <h3>写日记的人</h3>
+        <ul class="facts">
+          <li><b>曾布</b>字子宣，建昌南丰人，唐宋八大家曾巩之弟，嘉佑二年进士。</li>
+          <li><b>熙宁</b>力行新法，深得神宗赏识，官至翰林学士、三司使。</li>
+          <li><b>绍圣元年</b>六月入西府任枢密之副，执掌兵机，与章惇同理复新法之局。</li>
+          <li><b>元符三年</b>正月帘前定策，十月拜相，入相未久即遭蔡京排挤出朝。</li>
+          <li><b>身后</b>大观元年卒，名字写进《宋史》卷四七一：奸臣传。</li>
+        </ul>
+        <div class="paradox">
+          <div class="tagline">书　眼</div>
+          <p>正史把他钉在奸臣传里，他的私记却存下了那十七个月里<em>皇帝说过的每一句话</em>。两宋宰执的逐日日录几乎全数湮灭，这部残卷是罕见幸存者，而且出自党争漩涡中心：他记别人，也知道后代会记他。</p>
+        </div>
+      </div>
+      <div class="card rise">
+        <h3>这册残卷</h3>
+        <ul class="facts">
+          <li><b>体例</b>逐日系事，君臣奏对原话当天落纸，连空日也照书干支。</li>
+          <li><b>卷七</b>自元符二年三月开卷：保甲调发、西边进筑、北虏泛使到京。</li>
+          <li><b>卷八</b>元符二年秋冬：青唐邈川兵事、皇子诞生与夭折。</li>
+          <li><b>卷九</b>自正月记到七月：哲宗弃天下，端王即位，太后还政。</li>
+          <li><b>价值</b>《续资治通鉴长编》元符末卷大段抄录此书；两家互校，可正史文之讹。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="canguan">
+    <div class="rodhead rise"><span class="bar"></span><h2>残卷架</h2><span class="day">九卷存三</span></div>
+    <p class="lede rise">书原不止这三卷。陈振孙《直斋书录解题》著录过绍圣、元符两册日录，晁公武《郡斋读书志》著录《曾相手记》三卷，明文渊阁书目尚见一部七册；今天全靠《永乐大典》留下一枚完整的卷八，再靠清末缪荃孙从大典残卷里辑回卷七卷九。</p>
+    <div class="scrolls rise">
+      <div class="scroll empty"><span class="vname">卷一</span><span class="srcnote">佚</span></div>
+      <div class="scroll empty"><span class="vname">卷二</span><span class="srcnote">佚</span></div>
+      <div class="scroll empty"><span class="vname">卷三</span><span class="srcnote">佚</span></div>
+      <div class="scroll empty"><span class="vname">卷四</span><span class="srcnote">佚</span></div>
+      <div class="scroll empty"><span class="vname">卷五</span><span class="srcnote">佚</span></div>
+      <div class="scroll empty"><span class="vname">卷六</span><span class="srcnote">佚</span></div>
+      <div class="scroll"><span class="vname">卷七</span><span class="srcnote">藕香零拾辑本</span></div>
+      <div class="scroll"><span class="vname">卷八</span><span class="srcnote">大典卷一九七三五</span></div>
+      <div class="scroll"><span class="vname">卷九</span><span class="srcnote">藕香零拾辑本</span></div>
+    </div>
+    <p class="scrolls-cap rise">三实六虚：六枚空轴，是永乐大典散亡后再也回不来的部分。</p>
+    <div class="gapbar rise">
+      <div class="track"><div class="filled"></div><div class="lost"></div></div>
+      <div class="lab"><span>卷七至卷九前段：长编尚存，可互校</span><span class="l">元符三年三月至七月：长编已佚，天下独此残卷</span></div>
+    </div>
+    <p class="qnote rise">清人辑《长编拾补》时未见到这部书，这一百多天的朝局，世界上只剩这三卷在说话。</p>
+    <div class="blankdays rise">
+      <div class="d dimcell">丙午。</div>
+      <div class="d dimcell">丁未。</div>
+      <div class="d dimcell">庚戌。</div>
+      <div class="d dimcell">乙卯。</div>
+      <div class="d">甲寅　北虏泛使到京</div>
+    </div>
+    <p class="qnote rise">日记也有发呆的日子：无事可记，只书干支两字一个句号，照记不误。</p>
+  </section>
+
+  <section class="sec" id="bingta">
+    <div class="rodhead rise"><span class="bar"></span><h2>病榻</h2><span class="day">元符三年正月</span></div>
+    <p class="lede rise">皇帝的病拖了一冬。宰执每日入问圣体，医官进汤药，大臣进丹药：火朱砂二十粒、七返金液丹，轮番送上御榻。病榻上的哲宗还在跟大臣讲礼数。</p>
+    <div class="qblock rise"><span class="who">哲宗　对宰执</span><q>「朱砂等皆已服，喘亦渐定，卿等但安心。」</q></div>
+    <p class="rise">宰执们商量着君臣之礼不必让病人撑起来，皇帝不肯省。</p>
+    <div class="qblock rise"><span class="who">宰执　乞免起坐冠服</span><q>「礼数不可阙。」</q><q>「君臣义均父子，乞不须如此。」</q></div>
+    <p class="rise">五鼓，御药院的申报送到，众人便知道时间不多了。</p>
+    <div class="qblock red rise"><span class="who">五鼓　御药院申</span><q>「医官四更诊，脉气愈微细，自汗不止，不宜更有增加。」</q></div>
+  </section>
+
+  <section class="sec" id="jmao">
+    <div class="rodhead rise"><span class="bar"></span><h2>己卯日</h2><span class="day">元符三年正月十二 · 一日之内</span></div>
+    <p class="lede rise">从五鼓到深夜，一天之内换了一个皇帝。这是全书最密的一天，曾布的笔从黎明跟到掌灯，每一句对答都当场录下，帘外罗立的百余名内侍都听得见。</p>
+    <div class="dayline">
+      <div class="beat rise">
+        <span class="keikei">先一日</span>
+        <p>章惇托辞不赴祈福道场烧香，同僚相视愕然。散会后曾布私下对中书同僚断言：<b>「此公多计数。」</b>又自记心语：变故一旦发生，年长的端王别无第二人选。夜里宿资善堂，通夕不能寐；诸王问安的哭声里，他听出了差别。</p>
+        <div class="qblock rise"><span class="who">资善堂夜　记诸王</span><q>「诸王唯简王哭甚哀，睦王未尝有泪，左辖等皆讶之。」</q></div>
+      </div>
+      <div class="beat rise">
+        <span class="keikei">五　鼓</span>
+        <p>御药院申送至，遂起聚仆射厅。黎明角门开，诣内东门求对。</p>
+      </div>
+      <div class="beat rise">
+        <span class="keikei">内东门</span>
+        <p>都知梁从政拦在会通门：<b>「已不可入。」</b>至福宁殿东阶，垂帘立庭下。皇太后已坐帘下，微出声发哭。</p>
+      </div>
+      <div class="beat rise">
+        <span class="keikei">帘　前</span>
+        <div class="bigq">「<em>皇帝已弃天下，未有皇子，当如何?</em>」</div>
+        <p>众未及对，章惇厉声开口。</p>
+        <div class="who-row">
+          <span class="w red"><b>章惇</b><q>「依礼典律令，简王乃母弟之亲，当立。」</q></span>
+          <span class="w"><b>太后</b><q>「申王病眼，次当立端王，兼先皇帝曾言：端王生得有福寿。」</q></span>
+          <span class="w"><b>曾布</b><q>「章惇并不曾与众商量，皇太后圣谕极允当。」</q></span>
+        </div>
+        <p>章惇的提议连附和都没等到：蔡卞把话推给太后，许将唯唯，章惇默然。曾布特意记下现场：<b>「都知、押班、御药以下百余人罗立帘外，莫不闻此语。」</b></p>
+      </div>
+      <div class="beat rise">
+        <span class="keikei">俄　而</span>
+        <p>内侍持问圣体榜子出来报信，满场等新君，新君却没到。</p>
+        <div class="qblock rise"><span class="who">问圣体榜子</span><q>「三王皆已来，唯端王请假。」</q></div>
+        <p>太后遣使宣召，久久未至，曾布两次督办，又请皇太后殿里另遣使臣去催。</p>
+      </div>
+      <div class="beat rise">
+        <span class="keikei">帐　前</span>
+        <p>宰执乞入至御榻前亲见，得旨引入，开御帐。</p>
+        <div class="qblock rise"><span class="who">福宁殿</span><q>「见大行已冠栉小敛讫，覆以衣衾，从政等令解开覆面白巾，见大行面如傅粉。」</q></div>
+        <p>余等皆哀泣，近侍呜咽成片。退出来，曾布回头叮嘱梁从政：<q>「适来帘前奏对之语，都知以下无有不闻。」</q></p>
+      </div>
+      <div class="beat rise">
+        <span class="keikei">少　选</span>
+        <p>端王至，入殿廷，向宰执侧立长揖，躬身揖都知以下。帘前，太后亲谕。</p>
+        <div class="qblock rise"><span class="who">太后　谕端王</span><q>「皇帝已弃天下，无子，端王当立。」</q></div>
+        <p>王<b>踧踖固辞</b>：「申王居长，不敢当。」太后与宰执隔帘再劝，帘中忽然传来取帽子的呼喝。少选卷帘，</p>
+        <div class="bigq">「<em>上顶帽被黄背子即御坐。</em>」</div>
+      </div>
+      <div class="beat rise">
+        <span class="keikei">殿　上</span>
+        <p>二府草定遗制，未敢召学士。新君忽然密语章惇，声音压得极低。</p>
+        <div class="qblock rise"><span class="who">曾布　当场记</span><q>「上密谕章惇，语声低，同列皆不闻。」</q></div>
+        <p>曾布直说：臣等皆未闻圣语。章惇只好当众复述：为的是请太后权同听政。遗制重修写讫，添入一节，传旨的内侍们<b>色皆骇愕</b>。</p>
+      </div>
+      <div class="beat rise">
+        <span class="keikei">是　夕</span>
+        <p>宣遗制，百官恸哭不可遏；移班贺皇帝即位。<q>「是夕，鏁院，降登极赦。」</q>一日之内，天下两主。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="lianzhi">
+    <div class="rodhead rise"><span class="bar"></span><h2>帘制</h2><span class="day">庚辰以后 · 垂帘与还政</span></div>
+    <p class="lede rise">新君十八岁不算幼主，太后垂帘于礼无据。次日起，帘子挂不挂、挂多久，成了新朝廷的第一件大事：宰执里只有曾布一套成算，而帘内的太后，比谁都急着把帘子撤下来。</p>
+    <div class="twocol">
+      <div class="card rise">
+        <h3>曾布的算法</h3>
+        <p>同列主张把天圣、元丰两朝故事一并奏请裁定，曾布独持异议，当堂定调。</p>
+        <div class="qblock"><span class="who">曾布　对同列</span><q>「今上长君，岂可垂帘听政，正当从吾等请如嘉佑故事施行，乃为得礼。」</q></div>
+        <p>又面奏皇帝，抬出两朝幼主作比。</p>
+        <div class="qblock"><span class="who">曾布　面奏</span><q>「章献时仁宗方十三，宣仁时大行方十岁，陛下岂可坐帘中!」</q></div>
+        <p>上甚悦。札子即曾布亲草，垂帘之仪一照英宗旧例收窄。</p>
+      </div>
+      <div class="card rise">
+        <h3>帘内的太后</h3>
+        <p>太后知道儿子谦挹，也知道自己该退。</p>
+        <div class="qblock"><span class="who">太后</span><q>「官家年长聪明，自己那里理会得他事。」</q></div>
+        <p>未逾月，两降手书，决意还政。</p>
+        <div class="qblock"><span class="who">太母手书　付三省</span><q>「决以祔庙后还政，可令中外闻知。」</q><q>「文词尤精详，非词臣可及。」</q></div>
+      </div>
+    </div>
+    <p class="rise" style="margin-top:26px">手书里，太后翻出一条俗谚自警，又自叙家门旧闻：先相最受真宗知遇，殁在仁宗策立前一年，那句评慈圣的话她记了一辈子。</p>
+    <div class="qblock rise"><span class="who">太后手书</span><q>「俗谚云：『被杀不如自杀』，不成更待他时，教他人有言语后还政?何如先自处置为善。」</q></div>
+    <div class="qblock rise"><span class="who">太后手书　评慈圣</span><q>「慈圣盛德，然还政亦差迟。」</q></div>
+    <div class="qblock rise"><span class="who">曾布　当廷叹诵</span><q>「自古母后临政常患迁延，不肯复辟。」</q></div>
+    <p class="qnote rise">未逾月两降手书，臣等不胜叹诵。帘子从头到尾没有真正落下来。</p>
+  </section>
+
+  <section class="sec" id="bianjiao">
+    <div class="rodhead rise"><span class="bar"></span><h2>边角格</h2><span class="day">日记的杂音</span></div>
+    <p class="lede rise">日录的边角处，藏着正史不收的东西：真影、骂语、空日、口头禅。</p>
+    <div class="noisegrid">
+      <div class="noise rise">
+        <h3>皇子<small>卷八 · 生与殁</small></h3>
+        <p>元符二年八月某日，<b><q>「未时，皇子生。」</q></b>皇帝喜见于色，说<b><q>「两宫尤喜。」</q></b>曾布顺势进言：边鄙罢兵、元子诞生，太平之福到齐了。</p>
+        <p>未几皇子病喘，医官进药不顺。</p>
+        <div class="qblock"><span class="who">御药刘友端　报</span><q>「服伏火丹砂不作，皆径下。」</q></div>
+        <p>医官又捧出小主真影：<b><q>「极似，面团丰肥，貌甚美。」</q></b>顶有朱砂。未几，<b><q>「皇子薨，辍视事三日。」</q></b>于是到了己卯日，帘前那句「未有皇子」才落得那样重。</p>
+      </div>
+      <div class="noise rise">
+        <h3>骂语<small>卷八 · 堂上旧账</small></h3>
+        <p>西边画界之争，章惇曾当面羞辱曾布。数月后议边事，曾布当着皇帝旧事重提：</p>
+        <div class="qblock"><span class="who">曾布　对三省</span><q>「章惇以臣为杂赁院子裹妇人之语」</q></div>
+        <p>又与章惇争起当初筑会州之议，一句句对质，上极哂之。骂人的与挨骂的都在场，日记里谁也不让谁。</p>
+      </div>
+      <div class="noise rise">
+        <h3>空日<small>卷七 · 无事之日</small></h3>
+        <p>不是每天都有大场面。连着几天，纸上只有干支与句号。</p>
+        <div class="pillrow">
+          <span class="pill">丙午。</span><span class="pill">丁未。</span><span class="pill">庚戌。</span><span class="pill">乙卯。</span>
+        </div>
+        <p style="margin-top:12px">空日照记，是日记的诚实：值房里的人也有无事可奏的一天。</p>
+      </div>
+      <div class="noise rise">
+        <h3>口语<small>皇帝的原话</small></h3>
+        <p>日录里的皇帝不是谥号，是说话的人：议仪式礼数，他说</p>
+        <div class="pillrow">
+          <span class="pill">「恰一般。」</span><span class="pill">「极好。」</span><span class="pill">「甚好。」</span>
+        </div>
+        <p style="margin-top:12px">至于乞假一日这样的小事，他笔下也带着温度：<q>「上亦为之恻然。」</q>这些细碎声口，后世史书一律删净，只在这里。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="fayin">
+    <div class="rodhead rise"><span class="bar"></span><h2>发引</h2><span class="day">卷九末 · 日记的最后一页</span></div>
+    <p class="lede rise">日记的最后几页，是哲宗灵驾出城。曾布病了，中使来赐金赐带，他记下自己实抱疾；边报、备御、放逐便的编管人，一桩桩办到最后一日。</p>
+    <div class="qblock rise"><span class="who">乙酉　出殡</span><q>「乙酉，卯初三刻，发引先行，启奠，升龙輴，讫，行祖奠礼，上及后妃哭送至端门外。」</q></div>
+    <div class="qblock rise"><span class="who">同日　城西</span><q>「三省、密院祭于城西，午正后，大升轝至板桥，遂奉辞，讫，归府。」</q></div>
+    <p class="rise">次日，全书只剩一行：</p>
+    <div class="outro">
+      <div class="lastline">丙戌<em>，入慰。</em></div>
+      <p class="rise">日记到此为止。这年十月曾布拜相，入相未久为蔡京所排出朝，晚岁卒于润州任上。帘前那一天的每一个字，都成了后世还原这次传位的第一现场；骂他的人赢了朝局，他的字却比案子活得久。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="page">
+  <div class="row"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），史藏志存记录〈曾公遗录〉，宋曾布撰，库内全文（含卷首提要）去空白 134,110 字，残三卷：卷七起元符二年三月，卷九止元符三年七月；卷八出自《永乐大典》卷一九七三五，卷七、卷九据清光绪缪荃孙《藕香零拾》辑本。本页四十三处引文（q 元素与帘前答语）经脚本与库内文本去标点、空白归一逐字核验通过，页尾藏引文全清单。目录：<a href="mulu.html">殆知阁导读总目</a>。</div>
+  <div class="row"><b>库外申报</b>　章惇反对立端王的名句（端王轻佻云云）出宋人笔记与他史所记，本库此卷并无其文，帘前对话以本书为现存最原始记录；《长编》哲宗末段多录自本书、元符三年三月以后《长编》已佚，据卷首提要；元符纪年换算为公元 1099 至 1100、曾布生卒与人物关系、两宋宰执日录传世概况，均系库外通识。库本 OCR 讹字照录申报：乙末当作乙未，墉延当作鄜延，串执疑当作执政，梁惟筒当作梁惟简，老壏字后另附部首改注。</div>
+  <div class="row"><b>时代局限提醒</b>　本书出自北宋党争核心人物之手，自记其事，褒贬去取皆带立场，传位一日的是非尤须对读他史；母后垂帘、简王失位、皇子夭折等记述反映的是彼时宫廷政治与伦理观念，不代表编者与导读立场。文中丹药、脉诊属宋代医药认识，本页仅作古籍文献导读，不构成任何医疗建议。愿读者以历史眼光观之。</div>
+  <div class="fin">殆知阁导读　二百六十</div>
+</footer>
+
+<div id="qbank" hidden>
+  <ul>
+    <li>皇帝已弃天下，未有皇子，当如何?</li>
+    <li>朱砂等皆已服，喘亦渐定，卿等但安心。</li>
+    <li>礼数不可阙。</li>
+    <li>君臣义均父子，乞不须如此。</li>
+    <li>医官四更诊，脉气愈微细，自汗不止，不宜更有增加。</li>
+    <li>此公多计数。</li>
+    <li>诸王唯简王哭甚哀，睦王未尝有泪，左辖等皆讶之。</li>
+    <li>已不可入。</li>
+    <li>依礼典律令，简王乃母弟之亲，当立。</li>
+    <li>申王病眼，次当立端王，兼先皇帝曾言：端王生得有福寿。</li>
+    <li>章惇并不曾与众商量，皇太后圣谕极允当。</li>
+    <li>都知、押班、御药以下百余人罗立帘外，莫不闻此语。</li>
+    <li>三王皆已来，唯端王请假。</li>
+    <li>见大行已冠栉小敛讫，覆以衣衾，从政等令解开覆面白巾，见大行面如傅粉。</li>
+    <li>适来帘前奏对之语，都知以下无有不闻。</li>
+    <li>皇帝已弃天下，无子，端王当立。</li>
+    <li>申王居长，不敢当。</li>
+    <li>上顶帽被黄背子即御坐。</li>
+    <li>上密谕章惇，语声低，同列皆不闻。</li>
+    <li>是夕，鏁院，降登极赦。</li>
+    <li>今上长君，岂可垂帘听政，正当从吾等请如嘉佑故事施行，乃为得礼。</li>
+    <li>章献时仁宗方十三，宣仁时大行方十岁，陛下岂可坐帘中!</li>
+    <li>官家年长聪明，自己那里理会得他事。</li>
+    <li>决以祔庙后还政，可令中外闻知。</li>
+    <li>文词尤精详，非词臣可及。</li>
+    <li>俗谚云：被杀不如自杀，不成更待他时，教他人有言语后还政?何如先自处置为善。</li>
+    <li>慈圣盛德，然还政亦差迟。</li>
+    <li>自古母后临政常患迁延，不肯复辟。</li>
+    <li>三省、密院祭于城西，午正后，大升轝至板桥，遂奉辞，讫，归府。</li>
+    <li>未时，皇子生。</li>
+    <li>两宫尤喜。</li>
+    <li>服伏火丹砂不作，皆径下。</li>
+    <li>极似，面团丰肥，貌甚美。</li>
+    <li>皇子薨，辍视事三日。</li>
+    <li>章惇以臣为杂赁院子裹妇人之语</li>
+    <li>丙午。</li>
+    <li>丁未。</li>
+    <li>庚戌。</li>
+    <li>乙卯。</li>
+    <li>恰一般。</li>
+    <li>极好。</li>
+    <li>甚好。</li>
+    <li>乙酉，卯初三刻，发引先行，启奠，升龙輴，讫，行祖奠礼，上及后妃哭送至端门外。</li>
+    <li>丙戌，入慰。</li>
+  </ul>
+</div>
+
+<script>
+(function(){
+  var c = document.getElementById('curtain');
+  function open(){ document.body.classList.add('open'); }
+  c.addEventListener('click', open);
+  c.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' ') open(); });
+  window.addEventListener('wheel', open, { once: true, passive: true });
+  window.addEventListener('touchstart', open, { once: true, passive: true });
+
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.rise').forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>
