@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>京师五城坊巷胡同集 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink2: #201f1c;
+    --paper: #e8e4dc;
+    --paper-faint: rgba(232, 228, 220, 0.6);
+    --paper-dim: rgba(232, 228, 220, 0.32);
+    --gold: #c9963f;
+    --gold-soft: rgba(201, 150, 63, 0.14);
+    --gold-line: rgba(201, 150, 63, 0.4);
+    --line: rgba(232, 228, 220, 0.12);
+    --song: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    --mono: "SF Mono", Menlo, Consolas, "PingFang SC", monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--song);
+    line-height: 1.95;
+    letter-spacing: 0.03em;
+  }
+  ::selection { background: var(--gold); color: var(--ink); }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  q { quotes: none; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 22px; }
+
+  /* ============ 首屏 · 总图点卯 ============ */
+  .roll { min-height: 100vh; display: flex; flex-direction: column; padding: 46px 0 30px; }
+  .kick {
+    font-size: 13px; color: var(--gold); letter-spacing: 0.5em;
+    margin-bottom: 10px;
+  }
+  .kick small { color: var(--paper-dim); letter-spacing: 0.2em; margin-left: 14px; }
+  h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 700; letter-spacing: 0.12em; line-height: 1.3; }
+  .subline { color: var(--paper-faint); margin-top: 6px; font-size: 16px; }
+  .subline b { color: var(--gold); font-weight: 600; }
+  .meta { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 26px; }
+  .meta span {
+    font-family: var(--mono); font-size: 12px; color: var(--paper-faint);
+    border: 1px solid var(--line); padding: 4px 12px; letter-spacing: 0.08em;
+  }
+  .meta span em { font-style: normal; color: var(--gold); }
+
+  .atlas-wrap { display: grid; grid-template-columns: 1.5fr 1fr; gap: 26px; align-items: stretch; }
+  @media (max-width: 860px) { .atlas-wrap { grid-template-columns: 1fr; } }
+
+  /* 城图 */
+  .atlas {
+    border: 1px solid var(--gold-line);
+    padding: 30px 26px 22px;
+    background:
+      linear-gradient(rgba(232,228,220,0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,228,220,0.028) 1px, transparent 1px),
+      var(--ink2);
+    background-size: 34px 34px, 34px 34px, auto;
+    position: relative;
+  }
+  .atlas .compass {
+    position: absolute; top: 10px; right: 14px;
+    font-size: 12px; color: var(--paper-dim); letter-spacing: 0.3em;
+  }
+  .citymap { display: grid; grid-template-rows: auto auto auto auto; gap: 8px; height: 100%; }
+  .row-north { display: grid; grid-template-columns: 1fr; }
+  .row-mid { display: grid; grid-template-columns: 1fr 1.35fr 1fr; gap: 8px; }
+  .row-south { display: grid; grid-template-columns: 1fr; }
+  .borough {
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.25s, background 0.25s;
+    min-height: 66px;
+  }
+  .borough .bn { font-size: 17px; letter-spacing: 0.2em; }
+  .borough .bf { font-size: 12px; color: var(--paper-dim); margin-top: 2px; }
+  .borough .gates {
+    position: absolute; font-size: 11px; color: var(--gold);
+    letter-spacing: 0.1em; white-space: nowrap;
+  }
+  .borough.active { border-color: var(--gold); background: var(--gold-soft); }
+  .borough.flash { border-color: var(--gold); background: var(--gold-soft); }
+  .b-zhong { display: flex; align-items: center; gap: 14px; }
+  .b-zhong .hc {
+    border: 1px dashed var(--gold-line); color: var(--paper-dim);
+    font-size: 13px; padding: 16px 10px; letter-spacing: 0.5em;
+    text-indent: 0.5em; display: flex; align-items: center;
+    align-self: stretch;
+  }
+  .gate-strip {
+    display: flex; justify-content: space-around; align-items: center;
+    border-top: 1px dashed var(--gold-line); border-bottom: 1px solid var(--line);
+    padding: 6px 4px; font-size: 11px; color: var(--gold); letter-spacing: 0.12em;
+  }
+
+  /* 卯册 */
+  .cebu {
+    border: 1px solid var(--line); padding: 16px 18px; display: flex; flex-direction: column;
+    background: var(--ink2);
+  }
+  .cebu h3 {
+    font-size: 13px; letter-spacing: 0.4em; color: var(--gold); font-weight: 400;
+    border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 10px;
+  }
+  .cebu .where { font-size: 13px; color: var(--paper-faint); margin-bottom: 8px; }
+  .fang-list { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; align-content: flex-start; }
+  .fang {
+    font-size: 13px; border: 1px solid var(--line); padding: 2px 9px; color: var(--paper-faint);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .fang i { font-style: normal; font-family: var(--mono); font-size: 11px; color: var(--paper-dim); margin-left: 5px; }
+  .fang.hot { border-color: var(--gold); color: var(--paper); }
+  .cebu .ops { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .cebu button {
+    font-family: var(--song); font-size: 13px; letter-spacing: 0.2em;
+    background: none; border: 1px solid var(--gold-line); color: var(--gold);
+    padding: 5px 14px; cursor: pointer; transition: background 0.2s;
+  }
+  .cebu button:hover { background: var(--gold-soft); }
+  .cebu .drawn {
+    margin-top: 10px; min-height: 52px; border-top: 1px dashed var(--line); padding-top: 8px;
+    font-size: 14px; color: var(--paper);
+  }
+  .cebu .drawn b { color: var(--gold); font-weight: 600; }
+  .cebu .drawn small { color: var(--paper-dim); font-size: 12px; margin-left: 8px; }
+
+  /* ============ 正文 ============ */
+  .body-note { margin: 40px 0 10px; }
+  .sect { margin: 64px 0; }
+  .sect-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 18px; }
+  .sect-no {
+    font-family: var(--mono); font-size: 13px; color: var(--ink);
+    background: var(--gold); padding: 2px 10px; letter-spacing: 0.15em;
+  }
+  .sect-head h2 { font-size: 23px; letter-spacing: 0.14em; font-weight: 600; }
+  .sect-head small { color: var(--paper-dim); font-size: 13px; letter-spacing: 0.1em; }
+  .prose { max-width: 760px; color: var(--paper-faint); font-size: 16px; }
+  .prose b { color: var(--paper); font-weight: 600; }
+  .prose em { color: var(--gold); font-style: normal; }
+
+  .qt {
+    border-left: 2px solid var(--gold); margin: 26px 0; padding: 4px 0 4px 20px;
+    font-size: 17px; color: var(--paper); max-width: 720px; line-height: 2.1;
+  }
+  .qt-src { display: block; margin-top: 8px; font-size: 12.5px; color: var(--paper-dim); letter-spacing: 0.1em; }
+
+  /* 卯签墙 */
+  .groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+  .group { border: 1px solid var(--line); padding: 16px 18px 14px; background: var(--ink2); }
+  .group h4 { font-size: 15px; letter-spacing: 0.2em; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
+  .group p.gd { font-size: 13px; color: var(--paper-dim); margin-bottom: 10px; }
+  .nc {
+    display: inline-block; font-size: 13.5px; color: var(--paper-faint);
+    border: 1px solid var(--line); padding: 1px 8px; margin: 0 6px 7px 0;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .nc:hover { color: var(--ink); background: var(--gold); border-color: var(--gold); cursor: default; }
+  .nc sup { font-size: 10px; color: var(--gold); font-family: var(--mono); }
+  .nc:hover sup { color: var(--ink); }
+  .nc-gloss { font-size: 11.5px; color: var(--paper-dim); display: block; margin-top: 2px; }
+
+  /* 同名账 */
+  .twin { border: 1px solid var(--line); }
+  .twin-row {
+    display: grid; grid-template-columns: 150px 1fr; gap: 14px; padding: 12px 18px;
+    border-bottom: 1px solid var(--line); align-items: baseline;
+  }
+  .twin-row:last-child { border-bottom: none; }
+  .twin-row .tn { font-size: 16px; color: var(--paper); }
+  .twin-row .tn em {
+    font-style: normal; font-family: var(--mono); font-size: 15px; color: var(--gold); margin-left: 8px;
+  }
+  .twin-row .tv { font-size: 14px; color: var(--paper-faint); }
+  .twin-row .tv span { border: 1px dashed var(--line); padding: 0 7px; margin-right: 6px; font-size: 13px; }
+
+  /* 今名对读 */
+  .then-now { width: 100%; border-collapse: collapse; max-width: 860px; }
+  .then-now th {
+    text-align: left; font-size: 13px; letter-spacing: 0.25em; color: var(--gold); font-weight: 400;
+    border-bottom: 1px solid var(--gold-line); padding: 8px 12px;
+  }
+  .then-now td { padding: 9px 12px; border-bottom: 1px solid var(--line); font-size: 15px; vertical-align: top; }
+  .then-now td.old { color: var(--paper-faint); white-space: nowrap; }
+  .then-now td.old small { color: var(--paper-dim); font-size: 12px; display: block; }
+  .then-now td.arr { color: var(--gold); font-family: var(--mono); width: 34px; }
+  .then-now td.new { color: var(--paper); }
+  .then-now td.new small { display: block; color: var(--paper-dim); font-size: 12.5px; }
+
+  /* 八景与陵卫 */
+  .scenery { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 26px; }
+  .scenery span {
+    border: 1px solid var(--gold-line); color: var(--paper); font-size: 14.5px;
+    letter-spacing: 0.15em; padding: 4px 14px;
+  }
+  .scenery span small { color: var(--gold); font-size: 11px; margin-left: 7px; font-family: var(--mono); }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 820px) { .duo { grid-template-columns: 1fr; } }
+  .ling { border: 1px solid var(--line); padding: 14px 18px; background: var(--ink2); }
+  .ling h4, .guansu h4 { font-size: 14px; letter-spacing: 0.3em; color: var(--gold); font-weight: 400; margin-bottom: 10px; }
+  .ling table { width: 100%; border-collapse: collapse; }
+  .ling td { font-size: 13.5px; padding: 3.5px 6px; border-bottom: 1px dashed var(--line); color: var(--paper-faint); }
+  .ling td:first-child { color: var(--paper); white-space: nowrap; }
+  .ling td:last-child { color: var(--paper-dim); font-size: 12.5px; text-align: right; }
+  .guansu { border: 1px solid var(--line); padding: 14px 18px; background: var(--ink2); }
+  .guansu .nc { margin-bottom: 8px; }
+  .guansu p { font-size: 13px; color: var(--paper-dim); margin-top: 8px; }
+
+  /* 收梢 */
+  .coda { margin-top: 80px; border-top: 1px solid var(--gold-line); padding-top: 34px; position: relative; }
+  .coda .seal {
+    position: absolute; top: -14px; left: 0; background: var(--ink); padding-right: 18px;
+    font-size: 13px; letter-spacing: 0.5em; color: var(--gold);
+  }
+  .coda p { max-width: 760px; color: var(--paper-faint); font-size: 16.5px; }
+  .coda p b { color: var(--paper); }
+
+  footer { margin-top: 70px; border-top: 1px solid var(--line); padding: 26px 0 50px; }
+  .fm { display: block; font-size: 13px; color: var(--paper-dim); line-height: 2; margin-bottom: 10px; max-width: 900px; }
+  .fm b { color: var(--gold); font-weight: 600; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+
+<header class="roll wrap">
+  <div class="kick">殆知阁导读<small>第两百六十九篇</small></div>
+  <h1>京师五城坊巷胡同集</h1>
+  <p class="subline">嘉靖三十九年春，一个署名竹坡的北京人把全城胡同点了名。<b>这是一册城市的户口。</b></p>
+  <div class="meta">
+    <span>库本去空白 <em>7,293</em> 字</span>
+    <span>五城 <em>34</em> 坊</span>
+    <span>坊下记 <em>铺</em> 为网格</span>
+    <span>记名胡同 <em>443</em> 条</span>
+    <span>不同名字 <em>359</em> 个</span>
+    <span>京师八景 <em>8</em> 备全</span>
+  </div>
+
+  <div class="atlas-wrap">
+    <div class="atlas">
+      <div class="compass">北</div>
+      <div class="citymap">
+        <div class="row-north">
+          <div class="borough" data-c="bei">
+            <span class="gates" style="top:-22px; left:8px">安定门</span>
+            <span class="gates" style="top:-22px; right:8px">德胜门</span>
+            <div class="bn">北城</div>
+            <div class="bf">在北安门至安定、德胜门里并北关外 · 七坊</div>
+          </div>
+        </div>
+        <div class="row-mid">
+          <div class="borough" data-c="xi">
+            <span class="gates" style="right:8px; top:-20px">西直门</span>
+            <span class="gates" style="right:8px; bottom:-20px">阜成门</span>
+            <div class="bn">西城</div>
+            <div class="bf">宣武门里，街西往北 · 五坊</div>
+          </div>
+          <div class="borough b-zhong" data-c="zhong">
+            <div class="hc">皇城</div>
+            <div>
+              <div class="bn">中城</div>
+              <div class="bf">在正阳门里，皇城两边 · 九坊</div>
+            </div>
+          </div>
+          <div class="borough" data-c="dong">
+            <span class="gates" style="left:8px; top:-20px">东直门</span>
+            <span class="gates" style="left:8px; bottom:-20px">朝阳门</span>
+            <div class="bn">东城</div>
+            <div class="bf">崇文门里，街东往北 · 五坊</div>
+          </div>
+        </div>
+        <div class="gate-strip">
+          <span>宣武门</span><span>正阳门</span><span>崇文门</span>
+        </div>
+        <div class="row-south">
+          <div class="borough" data-c="nan">
+            <div class="bn">南城</div>
+            <div class="bf">在正阳、崇文、宣武三门外，新城内外 · 八坊</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="cebu">
+      <h3>卯 册</h3>
+      <div class="where" id="where">点击城块，坊名到此报到</div>
+      <div class="fang-list" id="fangs"></div>
+      <div class="ops">
+        <button id="btn-roll">依序点名</button>
+        <button id="btn-draw">随点一条胡同</button>
+      </div>
+      <div class="drawn" id="drawn">坊之下记铺，铺之下才是一条条胡同的名字。</div>
+    </aside>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="sect">
+    <div class="sect-head"><span class="sect-no">壹</span><h2>官册与俗传</h2><small>自序全文首尾</small></div>
+    <div class="prose">
+      <p>开卷先是一篇自序，落款只八个字：竹坡张爵。他没写自己官居几品，只交代了材料的两个来处，这也是整本书的姿态：<b>一半是档案，一半是道听途说</b>，两样他都照登。</p>
+    </div>
+    <blockquote class="qt"><q>予见公署所载五城坊巷必录之，遇时俗相传京师胡同亦书之，取其大小远近，采葺成编</q><span class="qt-src">卷首自序</span></blockquote>
+    <div class="prose">
+      <p>公署的册页与街面上的口传，在他手里平起平坐。书前他配了一张总图，图的用处他也说得直白：</p>
+    </div>
+    <blockquote class="qt"><q>披图而观，京师之广，古今之迹，了然于目，视如指掌。</q><span class="qt-src">卷首自序</span></blockquote>
+    <blockquote class="qt"><q>使京师坊巷广大数十里之外，不出户而可知。庶五城胡同浩繁几千条之间，一举目而毕见。</q><span class="qt-src">卷首自序</span></blockquote>
+    <div class="prose">
+      <p>序里说胡同浩繁几千条，实测全书记名四百四十三条、不同名字三百五十九个，<em>「几千条」是修辞</em>。但这三百多个名字本身就是一座城的家底：谁的手艺，谁的姓氏，哪口井，哪座庙，哪个市口，全在名字里挂着号。开篇那句地形总述，他背得也很顺口：</p>
+    </div>
+    <blockquote class="qt"><q>京师古幽蓟之地，左环沧海，右拥太行，北枕居庸，南襟河济，诚所谓天府之国也。</q><span class="qt-src">卷首自序</span></blockquote>
+  </section>
+
+  <section class="sect">
+    <div class="sect-head"><span class="sect-no">贰</span><h2>名字的户口</h2><small>八类卯签，条条都是库本原名</small></div>
+    <div class="prose">
+      <p>把三百五十九个名字摊开，会自己站队。<b>手艺加上姓氏</b>是最常见的一种格式：姓张的骟马，姓刘的烧砂锅，姓姚的铸锅，姓杨的擀毡，还有兽医姓陶姓黄，师婆姓刘，老娘姓石，崔姥姥管着马厂。</p>
+    </div>
+    <div class="groups">
+      <div class="group">
+        <h4>手艺养人</h4>
+        <p class="gd">一种营生换一条胡同的名字</p>
+        <span class="nc" data-f="宣北坊">骟马张胡同</span><span class="nc" data-f="金城坊">砂锅刘胡同</span><span class="nc" data-f="宣北坊">孔砂锅胡同</span><span class="nc" data-f="明时坊">姚铸锅胡同</span><span class="nc" data-f="金台坊">针刘胡同</span><span class="nc" data-f="北居贤坊">针匠胡同</span><span class="nc" data-f="正西坊">杨毡胡同</span><span class="nc" data-f="正东坊">吴毡儿胡同</span><span class="nc" data-f="发祥坊">陶兽医胡同</span><span class="nc" data-f="明时坊">黄兽医胡同</span><span class="nc" data-f="明时坊">刘师婆胡同</span><span class="nc" data-f="鸣玉坊">石老娘胡同</span><span class="nc" data-f="澄清坊">马厂崔姥姥胡同</span>
+      </div>
+      <div class="group">
+        <h4>人留了名</h4>
+        <p class="gd">大人、姑娘、神仙与老爹</p>
+        <span class="nc" data-f="发祥坊">三保老爹胡同</span><span class="nc" data-f="仁寿坊">马定大人胡同</span><span class="nc" data-f="黄华坊">石大人胡同</span><span class="nc" data-f="黄华坊">蒋大人胡同</span><span class="nc" data-f="黄华坊">吴良大人胡同</span><span class="nc" data-f="思城坊">把台大人胡同</span><span class="nc" data-f="金城坊">赵府大人胡同</span><span class="nc" data-f="宣南坊">杨布政街</span><span class="nc" data-f="明时坊">耿喜家胡同</span><span class="nc" data-f="南居贤坊">陈昂家胡同</span><span class="nc" data-f="南薰坊">邵贤家胡同</span><span class="nc" data-f="南薰坊">唐神仙胡同</span><span class="nc" data-f="明时坊">马姑娘胡同</span><span class="nc" data-f="南居贤坊">宋姑娘胡同</span>
+      </div>
+      <div class="group">
+        <h4>市口即生活</h4>
+        <p class="gd">门脸朝哪，名字就朝哪</p>
+        <span class="nc" data-f="宣南坊等">菜市口</span><span class="nc" data-f="正东坊等">猪市口</span><span class="nc" data-f="日中坊等">米市口</span><span class="nc" data-f="崇南坊">蒜市口</span><span class="nc" data-f="崇北坊等">煤市口</span><span class="nc" data-f="崇南坊">柴市口</span><span class="nc" data-f="正西坊">缸市口</span><span class="nc" data-f="金城坊">羊市口</span><span class="nc" data-f="宣北坊">骡马市街</span><span class="nc" data-f="思城坊">驴市胡同</span><span class="nc" data-f="正东坊">鲜鱼巷</span><span class="nc" data-f="思城坊">炒米胡同</span><span class="nc" data-f="小时雍坊">馓子王胡同</span><span class="nc" data-f="昭回靖恭坊">炒豆儿胡同</span>
+      </div>
+      <div class="group">
+        <h4>一口水井</h4>
+        <p class="gd">甜水是奢侈品，苦水也是地名</p>
+        <span class="nc" data-f="十处重名">井儿胡同</span><span class="nc" data-f="澄清坊等">甜水井</span><span class="nc" data-f="金城坊">苦水井胡同</span><span class="nc" data-f="仁寿坊等">四眼井</span><span class="nc" data-f="正东坊等">板井胡同</span><span class="nc" data-f="大时雍坊">红井胡同</span><span class="nc" data-f="大时雍坊">黄井胡同</span><span class="nc" data-f="昭回靖恭坊">宣家井胡同</span><span class="nc" data-f="南居贤坊">冯良井儿</span><span class="nc" data-f="正西坊">干井儿胡同</span>
+      </div>
+      <div class="group">
+        <h4>一步一寺</h4>
+        <p class="gd">庙比街坊活得久</p>
+        <span class="nc" data-f="两处重名">观音寺胡同</span><span class="nc" data-f="两处重名">净土寺胡同</span><span class="nc" data-f="两处重名">千佛寺胡同</span><span class="nc" data-f="鸣玉坊">宝禅寺胡同</span><span class="nc" data-f="崇教坊">极乐寺胡同</span><span class="nc" data-f="阜财坊">真如寺胡同</span><span class="nc" data-f="昭回靖恭坊">裟衣寺胡同</span><span class="nc" data-f="宣南坊">悯忠寺</span>
+      </div>
+      <div class="group">
+        <h4>忌讳不忌名</h4>
+        <p class="gd">凶地照实写，注解也直给</p>
+        <span class="nc" data-f="崇教坊">鬼门关</span><span class="nc" data-f="南居贤坊">棺材巷</span><span class="nc" data-f="南居贤坊">灵床胡同</span><span class="nc" data-f="宣南坊">棺材尚家胡同</span><span class="nc" data-f="白纸坊">露泽园</span><span class="nc-gloss" data-f="">库本自注：藏暴尸</span><span class="nc" data-f="正西坊">寄骨寺</span><span class="nc-gloss" data-f="">库本自注：即万善寺</span><span class="nc" data-f="正南坊">埋马坟</span><span class="nc" data-f="昭回靖恭坊">臭皮胡同</span><span class="nc" data-f="大时雍坊">臭沟胡同</span><span class="nc" data-f="宣南坊">烂面胡同</span>
+      </div>
+      <div class="group">
+        <h4>畜口满街</h4>
+        <p class="gd">狗最出名，马房排到城外</p>
+        <span class="nc" data-f="三处重名">打狗巷</span><span class="nc" data-f="明时坊">杨狗头胡同</span><span class="nc" data-f="正南坊">焦狗头胡同</span><span class="nc" data-f="宣南坊">狗营</span><span class="nc" data-f="阜成西直关外">乖狗村</span><span class="nc" data-f="教忠坊">花猪胡同</span><span class="nc" data-f="北居贤坊">猪毛胡同</span><span class="nc" data-f="正南坊">牛血胡同</span><span class="nc" data-f="鸣玉坊">驴肉胡同</span><span class="nc" data-f="正南坊">养羊胡同</span><span class="nc" data-f="明时坊">赶驴桥</span><span class="nc" data-f="朝阳东直关外">驹子马房</span><span class="nc" data-f="朝阳东直关外">金盏马房</span><span class="nc" data-f="东乡">奶子房</span>
+      </div>
+      <div class="group">
+        <h4>身上衣裳</h4>
+        <p class="gd">裤子和帽子都敢当街挂名</p>
+        <span class="nc" data-f="南居贤坊">裤子胡同</span><span class="nc" data-f="南薰坊">皮裤胡同</span><span class="nc" data-f="宣北坊">皮裤营</span><span class="nc" data-f="鸣玉坊">帽儿胡同</span><span class="nc" data-f="大时雍坊">草帽胡同</span><span class="nc" data-f="阜财坊等">棕帽胡同</span><span class="nc" data-f="正东坊">金帽儿胡同</span><span class="nc" data-f="崇南坊">马尾帽胡同</span><span class="nc" data-f="阜财坊">白帽胡同</span><span class="nc" data-f="明时坊">冠帽胡同</span><span class="nc" data-f="北居贤坊">手帕胡同</span><span class="nc" data-f="澄清坊等">麻绳胡同</span><span class="nc" data-f="金城坊等">麻线胡同</span><span class="nc" data-f="宣南坊">绳匠胡同</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sect">
+    <div class="sect-head"><span class="sect-no">叁</span><h2>同名不同处</h2><small>一个名字，城里好几处报到</small></div>
+    <div class="prose">
+      <p>名字少，胡同多，重名在所难免。<b>井儿胡同一个人就报了十次到</b>。同名不是懒惰，是这座城的语法：哪口井、哪个市、哪家作坊，成了区分彼此的全部依据。</p>
+    </div>
+    <div class="twin">
+      <div class="twin-row"><div class="tn">井儿胡同<em>十处</em></div><div class="tv">从保大坊到发祥坊，全城散布，挑水的人走不了太远</div></div>
+      <div class="twin-row"><div class="tn">堂子胡同<em>五处</em></div><div class="tv">澄清坊、小时雍坊、黄华坊、发祥坊都有</div></div>
+      <div class="twin-row"><div class="tn">椿树胡同<em>四处</em></div><div class="tv">澄清坊、积庆坊、朝天宫西、宣北坊各一条，宣北坊还一口气回报「椿树胡同三条」</div></div>
+      <div class="twin-row"><div class="tn">头条胡同<em>四处</em></div><div class="tv">另有一处连写「头条二条三条胡同」，数字胡同是打包登记的</div></div>
+      <div class="twin-row"><div class="tn">打狗巷<em>三处</em></div><div class="tv">积庆坊、宣北坊、朝阳东直关外各一处</div></div>
+      <div class="twin-row"><div class="tn">纸马铺<em>三家</em></div><div class="tv"><span>汪纸马胡同</span><span>罗纸马胡同</span><span>何纸马胡同</span>冥纸作坊三家分驻仁寿坊、明时坊、昭回靖恭坊，像同行的商标之争</div></div>
+      <div class="twin-row"><div class="tn">琉璃厂<em>两门</em></div><div class="tv">正西坊记「琉璃厂东门」，宣北坊记「琉璃厂西门」，一座厂横跨内外城两坊</div></div>
+      <div class="twin-row"><div class="tn">取灯胡同<em>两处</em></div><div class="tv">保大坊、正西坊各一，取灯儿是当时火种的叫法</div></div>
+      <div class="twin-row"><div class="tn">噶噶胡同<em>两处</em></div><div class="tv">仁寿坊、发祥坊各一，名字来历库本没说</div></div>
+      <div class="twin-row"><div class="tn">灯草<em>两家</em></div><div class="tv"><span>灯草胡同</span><span>灯草王家胡同</span>一家姓王，把姓氏直接焊进招牌</div></div>
+    </div>
+  </section>
+
+  <section class="sect">
+    <div class="sect-head"><span class="sect-no">肆</span><h2>四个世纪之后</h2><small>这册户口，今天还能对上号</small></div>
+    <div class="prose">
+      <p>这本册子最了不起的地方，是它登记的许多名字<b>今天还在上岗</b>。关外乡村卷里随手一笔的三里屯六里屯，如今是全城最热闹的街角；北中路的畏吾村，后来写成了魏公村。</p>
+    </div>
+    <table class="then-now">
+      <tr><th>嘉靖三十九年</th><th></th><th>今天</th></tr>
+      <tr><td class="old">三里屯<small>朝阳东直关外</small></td><td class="arr">→</td><td class="new">三里屯<small>名字一个字没动</small></td></tr>
+      <tr><td class="old">六里屯<small>朝阳东直关外</small></td><td class="arr">→</td><td class="new">六里屯<small>与三里屯同条登录</small></td></tr>
+      <tr><td class="old">望京馆<small>东乡</small></td><td class="arr">→</td><td class="new">望京<small>北郊大地名沿用至今</small></td></tr>
+      <tr><td class="old">畏吾村<small>北中路</small></td><td class="arr">→</td><td class="new">魏公村<small>畏吾即畏兀儿，村以族名</small></td></tr>
+      <tr><td class="old">金盏马房<small>朝阳东直关外</small></td><td class="arr">→</td><td class="new">金盏<small>马房删了，村名留下</small></td></tr>
+      <tr><td class="old">高碑店<small>崇南坊外</small></td><td class="arr">→</td><td class="new">高碑店<small>通惠河边的老地名</small></td></tr>
+      <tr><td class="old">十里河<small>崇南坊</small></td><td class="arr">→</td><td class="new">十里河<small>至今是城南要道口</small></td></tr>
+      <tr><td class="old">磨石口<small>北中路</small></td><td class="arr">→</td><td class="new">模式口<small>后来因模式口大街改名行世</small></td></tr>
+      <tr><td class="old">钓鱼台<small>南中路</small></td><td class="arr">→</td><td class="new">钓鱼台<small>西郊地名未改</small></td></tr>
+      <tr><td class="old">三保老爹胡同<small>发祥坊</small></td><td class="arr">→</td><td class="new">三不老胡同<small>通行说法：三保老爹即郑和，名随音转</small></td></tr>
+    </table>
+    <div class="prose" style="margin-top:22px">
+      <p>还有几处名字没变、东西换了分量：阜财坊那条<em>铸锅厂（王恭厂）</em>，六十六年后成了天启大爆炸的震中；教忠坊的文丞相祠，今天还安安稳稳坐在府学胡同；宣南坊的悯忠寺，就是后来的法源寺；卢沟桥的石狮与晓月，库里这行字写得最好：</p>
+    </div>
+    <blockquote class="qt"><q>其桥金建，本朝正统年重修，长二百余步。石栏刻狮形，每早波光映月，为京师八景之一，曰卢沟晓月。</q><span class="qt-src">南城卷末附卢沟河</span></blockquote>
+  </section>
+
+  <section class="sect">
+    <div class="sect-head"><span class="sect-no">伍</span><h2>附录里的城</h2><small>八景、御马房与陵卫</small></div>
+    <div class="prose">
+      <p>正文五城坊巷之外，序里许诺的附录一样不缺。京师八景全部到场，每景还各带一句小传：</p>
+    </div>
+    <div class="scenery">
+      <span>太液晴波<small>西苑</small></span><span>琼岛春云<small>西苑</small></span><span>金台夕照<small>府东南</small></span><span>西山霁雪<small>府西三十里</small></span><span>玉泉垂虹<small>府西二十里</small></span><span>卢沟晓月<small>府西十五里</small></span><span>蓟门烟树<small>土城</small></span><span>居庸叠翠<small>府北一百二十里</small></span>
+    </div>
+    <blockquote class="qt"><q>西苑内有太液池、琼花岛，波光澄澈，烟云缭绕，上有广寒殿，隐然仙府，为京师八景之二：一曰太液晴波，一曰琼岛春云。</q><span class="qt-src">中城卷末附西苑</span></blockquote>
+    <blockquote class="qt"><q>土城，燕城古蓟门，今止存二土阜，林木苍翠，为京师八景之一，曰蓟门烟树。</q><span class="qt-src">北城卷末附土城</span></blockquote>
+    <div class="prose">
+      <p>东城关外记着一整片御马房，数字报得像账房：</p>
+    </div>
+    <blockquote class="qt"><q>各马房大小二十所各相距三四里，牧养御马。</q><span class="qt-src">东城卷末附郑村坝马房</span></blockquote>
+    <blockquote class="qt"><q>南海子在京城南二十里，其周一万八千六百六十丈，乃育养禽兽、种植蔬果之处，中有海子三处</q><span class="qt-src">南城卷末附南海子</span></blockquote>
+    <div class="prose">
+      <p>卷末还顺手立了一张陵卫表，八陵八卫，哪年设的都记得清楚。永陵卫一行写「嘉靖年设」，正是成书人自己的当下。</p>
+    </div>
+    <div class="duo">
+      <div class="ling">
+        <h4>天寿山八陵八卫</h4>
+        <table>
+          <tr><td>长陵卫</td><td>原南羽林卫</td><td>永乐二十三年设</td></tr>
+          <tr><td>献陵卫</td><td>原武成左卫</td><td>洪熙元年设</td></tr>
+          <tr><td>景陵卫</td><td>原武成右卫</td><td>宣德十年设</td></tr>
+          <tr><td>裕陵卫</td><td>原武成前卫</td><td>正统十四年又天顺八年设</td></tr>
+          <tr><td>茂陵卫</td><td>原武成后卫</td><td>成化二十三年设</td></tr>
+          <tr><td>泰陵卫</td><td>原忠义左卫</td><td>弘治十八年设</td></tr>
+          <tr><td>康陵卫</td><td>原义勇中卫</td><td>正德十六年设</td></tr>
+          <tr><td>永陵卫</td><td>原义勇左卫</td><td>嘉靖年设</td></tr>
+        </table>
+      </div>
+      <div class="guansu">
+        <h4>皇城里的衙署名字</h4>
+        <span class="nc">混堂司</span><span class="nc">巾帽局</span><span class="nc">针工局</span><span class="nc">鸽子房</span><span class="nc">鹰房虫蚁房</span><span class="nc">虎城</span><span class="nc">象房</span><span class="nc">甲乙丙丁戊字库</span>
+        <p>积庆坊一条街的公署名录，从混堂司到戊字库，皇城的日子全在编制里。同卷还有两处库本自注，一句顶十句：</p>
+        <blockquote class="qt" style="margin:14px 0 10px"><q>养济院（住孤老无目人月给与粮）</q><span class="qt-src">金城坊</span></blockquote>
+        <blockquote class="qt" style="margin:10px 0"><q>文丞相祠（元杀宋臣丞相文天祥于此处故名曰教忠）</q><span class="qt-src">北城教忠坊，坊名即由此来</span></blockquote>
+        <p>保大坊条下另有一行小字：<b>「东厂」</b>。特务衙门夹在迎禧观与翠花胡同之间，登记得像一家普通作坊。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="coda">
+    <span class="seal">收梢</span>
+    <p style="margin-top:14px">嘉靖庚申孟春，张爵用工锓梓，把这座城的每一个小名字钉进纸里。四百六十六年后再点名，应到的都到了：手艺、井、庙、市口、狗、裤子、大人、老爹，一个不少。<b>户口是名字的档案，名字是户口的活着的那部分。</b>这册书最动人处不在它多全，而在它把东厂和臭皮胡同记在同一支笔下一视同仁的口气里。点名点到末尾，他只留了一行落款：</p>
+    <blockquote class="qt"><q>时嘉靖庚申孟春竹坡张爵序。</q><span class="qt-src">卷首自序末行</span></blockquote>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="fm"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），史藏志存记录〈京师五城坊巷胡同集〉一书，明张爵撰，库本去空白 7,293 字，首自序，正文分中城九坊、东城五坊、西城五坊、南城八坊、北城七坊共三十四坊，坊下记铺，登录衙署、仓场、寺观、市口与胡同名字，附京师八景、山川、马房、陵卫、关外乡村。本页全部引文与胡同名经脚本与库内文本去标点、异体归一逐字核验比对通过；实测胡同记名 443 条、不同名 359 个为按「胡同」二字截取的单一口径统计，仅作参考。</span>
+    <span class="fm"><b>库外申报</b>　张爵生平库内仅自署「竹坡」，嘉靖庚申即嘉靖三十九年（1560），庚申纪年与孟春月序为纪年常识。三保老爹胡同今作三不老胡同、三保即郑和的小名，畏吾村今作魏公村，悯忠寺今法源寺，磨石口今作模式口，王恭厂于天启六年（1626）发生大爆炸，文丞相祠今存府学胡同，三里屯、六里屯、望京、金盏、高碑店、十里河、钓鱼台沿用至今，皆库外通行常识，本页仅作对读提示，未引库文。铺为明代城市治安分段单位系通说，库本未自注；陵卫表「永乐二十三年设」系库本原文如此（永乐纪年止二十二年），照录不校。</span>
+    <span class="fm"><b>上一篇同系列</b>　〈<a href="yisi-riji.html">抱残守缺斋乙巳日记</a>〉　<b>返回总目</b>　〈<a href="mulu.html">殆知阁导读总目</a>〉　第<b>两百六十九</b>篇</span>
+    <span class="fm"><b>读法提醒</b>　本书是嘉靖年间的一册官私合流的城坊登记簿，名字带着当时的行业、身份与忌讳：蛮子营、高丽庄一类称呼是明代用语；「大人」「老爹」「师婆」「老娘」皆是当时称谓。养济院、露泽园诸条折射的是明代的社会救济与慈善实态，不宜以今天眼光苛求。以历史眼光读之，不代表编者与导读立场。</span>
+  </div>
+</footer>
+
+<script>
+  var FANGS = {
+    zhong: { name: "中城", where: "在正阳门里，皇城两边", list: [
+      ["南薰坊", "八铺"], ["澄清坊", "九铺"], ["明照坊", "六铺"], ["保大坊", "四铺"],
+      ["仁寿坊", "八铺"], ["大时雍坊", "十八铺"], ["小时雍坊", "五铺"], ["安富坊", "六铺"], ["积庆坊", "四铺"]
+    ]},
+    dong: { name: "东城", where: "在崇文门里，街东往北，至城墙并东关外", list: [
+      ["明时坊", "西四牌十六铺又东四牌二十六铺"], ["黄华坊", "四牌二十一铺"], ["思城坊", "五牌二十一铺"],
+      ["南居贤坊", "六牌三十六铺"], ["北居贤坊", "五牌三十八铺"], ["朝阳东直关外", "五牌三十七铺"]
+    ]},
+    xi: { name: "西城", where: "在宣武门里，街西往北，至城墙并西关外", list: [
+      ["阜财坊", "四牌二十铺"], ["咸宜坊", "二牌十铺"], ["鸣玉坊", "三牌十四铺"], ["日中坊", "四牌十九铺"],
+      ["金城坊", "五牌二十二铺"], ["河漕西", "三牌十三铺"], ["朝天宫西", "三牌十五铺"]
+    ]},
+    nan: { name: "南城", where: "在正阳、崇文、宣武三门外，新城内外", list: [
+      ["正东坊", "八牌四十铺"], ["正西坊", "六牌二十四铺"], ["正南坊", "四牌二十铺"], ["崇北坊", "七牌三十七铺"],
+      ["崇南坊", "七牌三十三铺"], ["宣北坊", "七牌四十五铺"], ["宣南坊", "五牌二十七铺"], ["白纸坊", "五牌二十一铺"]
+    ]},
+    bei: { name: "北城", where: "在北安门至安定、德胜门里并北关外", list: [
+      ["教忠坊", "十铺"], ["崇教坊", "十四铺"], ["昭回靖恭坊", "共十四铺"], ["灵春坊", "八铺"],
+      ["金台坊", "九铺"], ["日忠坊", "二十二铺"], ["发祥坊", "七铺"], ["安定德胜关外", "共六铺"]
+    ]}
+  };
+
+  var NAMES = [
+    ["金箔胡同", "南薰坊"], ["邵贤家胡同", "南薰坊"], ["唐神仙胡同", "南薰坊"], ["皮裤胡同", "南薰坊"], ["锡蜡胡同", "南薰坊"],
+    ["马厂崔姥姥胡同", "澄清坊"], ["金鱼胡同", "澄清坊"], ["干鱼胡同", "澄清坊"],
+    ["豹房胡同", "明照坊"], ["小豹房胡同", "明照坊"], ["鹁鸽市", "明照坊"],
+    ["东厂", "保大坊"], ["奶子府", "保大坊"], ["灯市", "保大坊"], ["翠花胡同", "保大坊"], ["取灯胡同", "保大坊"], ["刚太监胡同", "保大坊"], ["眉掠胡同", "保大坊"],
+    ["汪纸马胡同", "仁寿坊"], ["铁狮子胡同", "仁寿坊"], ["喇嘛杨家胡同", "仁寿坊"], ["噶噶胡同", "仁寿坊"],
+    ["臭沟胡同", "大时雍坊"], ["红井胡同", "大时雍坊"], ["锦衣卫", "大时雍坊"], ["绒线胡同", "大时雍坊"], ["安儿胡同", "大时雍坊"],
+    ["李阁老胡同", "小时雍坊"], ["馓子王胡同", "小时雍坊"],
+    ["蝇子胡同", "安富坊"], ["杨刀儿胡同", "安富坊"],
+    ["打狗巷", "积庆坊"], ["红罗厂", "积庆坊"], ["战车厂", "积庆坊"],
+    ["姚铸锅胡同", "明时坊"], ["杨狗头胡同", "明时坊"], ["黄兽医胡同", "明时坊"], ["刘师婆胡同", "明时坊"], ["灯草王家胡同", "明时坊"], ["赶驴桥", "明时坊"],
+    ["石大人胡同", "黄华坊"], ["演乐胡同", "黄华坊"], ["勾兰胡同", "黄华坊"], ["干面胡同", "黄华坊"], ["梁瓜子胡同", "黄华坊"],
+    ["驴市胡同", "思城坊"], ["炒米胡同", "思城坊"], ["拐棒胡同", "思城坊"],
+    ["棺材巷", "南居贤坊"], ["灵床胡同", "南居贤坊"], ["裤子胡同", "南居贤坊"], ["蚂螂胡同", "南居贤坊"], ["宋姑娘胡同", "南居贤坊"],
+    ["猪毛胡同", "北居贤坊"], ["木掀胡同", "北居贤坊"], ["金太监寺", "北居贤坊"],
+    ["铸锅厂（王恭厂）", "阜财坊"], ["石虎胡同", "阜财坊"], ["何薄酒胡同", "阜财坊"], ["叉手胡同", "阜财坊"],
+    ["砖塔胡同", "咸宜坊"], ["羊肉胡同", "咸宜坊"], ["沈篦子胡同", "咸宜坊"], ["千张胡同", "咸宜坊"],
+    ["熟皮胡同", "鸣玉坊"], ["石老娘胡同", "鸣玉坊"], ["猪市胡同", "鸣玉坊"],
+    ["曹老虎观", "日中坊"], ["獐鹿房", "日中坊"],
+    ["砂锅刘胡同", "金城坊"], ["苦水井胡同", "金城坊"], ["盆儿胡同", "金城坊"], ["养济院", "金城坊"],
+    ["哵咧胡同", "朝天宫西"], ["喇叭胡同", "朝天宫西"], ["秀头庵", "朝天宫西"],
+    ["鲜鱼巷", "正东坊"], ["长巷儿", "正东坊"], ["芦苇园", "正东坊"],
+    ["琉璃厂东门", "正西坊"], ["王皮胡同", "正西坊"], ["笤帚胡同", "正西坊"], ["炭胡同", "正西坊"],
+    ["骟马张胡同", "宣北坊"], ["琉璃厂西门", "宣北坊"], ["虎房", "宣北坊"],
+    ["绳匠胡同", "宣南坊"], ["烂面胡同", "宣南坊"], ["教子胡同", "宣南坊"], ["狗营", "宣南坊"], ["益儿胡同", "宣南坊"],
+    ["露泽园", "白纸坊"], ["纸房胡同", "白纸坊"], ["土坯营", "白纸坊"],
+    ["文丞相祠", "教忠坊"], ["翦子巷", "教忠坊"],
+    ["鬼门关", "崇教坊"], ["火烧寺胡同", "崇教坊"],
+    ["炒豆儿胡同", "昭回靖恭坊"], ["臭皮胡同", "昭回靖恭坊"], ["何纸马胡同", "昭回靖恭坊"], ["雨笼胡同", "昭回靖恭坊"],
+    ["三保老爹胡同", "发祥坊"], ["陶兽医胡同", "发祥坊"], ["哱啰仓", "发祥坊"]
+  ];
+
+  var fangBox = document.getElementById("fangs");
+  var whereBox = document.getElementById("where");
+  var drawn = document.getElementById("drawn");
+  var blocks = document.querySelectorAll(".borough");
+  var seq = ["zhong", "dong", "xi", "nan", "bei"];
+  var timer = null, idx = 0;
+
+  function pick(key, hot) {
+    whereBox.textContent = FANGS[key].name + " " + FANGS[key].where;
+    fangBox.innerHTML = "";
+    FANGS[key].list.forEach(function (p) {
+      var s = document.createElement("span");
+      s.className = "fang" + (hot === p[0] ? " hot" : "");
+      s.innerHTML = p[0] + "<i>" + p[1] + "</i>";
+      fangBox.appendChild(s);
+    });
+  }
+
+  blocks.forEach(function (b) {
+    b.addEventListener("click", function () {
+      clearInterval(timer); timer = null;
+      blocks.forEach(function (x) { x.classList.remove("active", "flash"); });
+      b.classList.add("active");
+      pick(b.dataset.c);
+    });
+  });
+
+  document.getElementById("btn-roll").addEventListener("click", function () {
+    clearInterval(timer);
+    idx = 0;
+    blocks.forEach(function (x) { x.classList.remove("active", "flash"); });
+    timer = setInterval(function () {
+      blocks.forEach(function (x) { x.classList.remove("flash", "active"); });
+      var key = seq[idx];
+      var bk = document.querySelector('.borough[data-c="' + key + '"]');
+      bk.classList.add("flash");
+      pick(key);
+      idx++;
+      if (idx >= seq.length) {
+        clearInterval(timer); timer = null;
+        drawn.innerHTML = "五城点到，<b>三十四坊</b>全部到齐，一个都没缺席。";
+      }
+    }, 650);
+  });
+
+  document.getElementById("btn-draw").addEventListener("click", function () {
+    var p = NAMES[Math.floor(Math.random() * NAMES.length)];
+    drawn.innerHTML = "点得：<b>" + p[0] + "</b><small>在" + p[1] + "</small>";
+  });
+</script>
+</body>
+</html>
