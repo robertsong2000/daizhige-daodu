@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蟹略：为一只螃蟹修的国史（殆知阁导读）</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #201f1d; --ink3: #26241f;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --bam: #5f9270; --bam-dim: rgba(95,146,112,0.35); --bam-faint: rgba(95,146,112,0.14);
+    --zhu: #c0453c;
+    --hair: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 28px; }
+  ::selection { background: var(--bam); color: var(--ink); }
+
+  .kick { font-size: 13px; letter-spacing: 0.4em; color: var(--faint); }
+  .kick b { color: var(--bam); font-weight: 400; }
+
+  /* ============ 首屏 夜滩横行 ============ */
+  .hero { min-height: 88dvh; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .hero-top { display: flex; justify-content: space-between; align-items: baseline; padding: 30px 28px 0; }
+  .hero-main { flex: 1; display: flex; align-items: center; gap: 40px; padding: 20px 28px; position: relative; z-index: 2; }
+  .hero-title h1 {
+    font-size: clamp(84px, 15vw, 190px); font-weight: 700; letter-spacing: 0.08em;
+    line-height: 1.05; color: var(--paper);
+  }
+  .hero-title h1 span { color: var(--bam); }
+  .hero-title .fan { font-size: 14px; color: var(--faint); letter-spacing: 0.2em; margin-top: 6px; }
+  .hero-title .fan i { font-style: normal; color: var(--bam); }
+  .hero-hook { max-width: 34em; color: var(--dim); font-size: 16.5px; margin-top: 26px; }
+  .hero-hook em { font-style: normal; color: var(--paper); }
+  .hero-slips { display: flex; gap: 14px; margin-left: auto; padding-top: 30px; }
+  .slip {
+    writing-mode: vertical-rl; white-space: nowrap;
+    background: var(--paper); color: var(--ink3);
+    padding: 18px 8px; font-size: 15px; letter-spacing: 0.28em;
+    border-radius: 2px; box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  }
+  .slip.mid { transform: translateY(26px); }
+  .slip.dark { background: transparent; color: var(--bam); border: 1px solid var(--bam-dim); box-shadow: none; }
+
+  .flat { position: relative; height: 190px; }
+  .tide { position: absolute; left: 0; right: 0; bottom: 0; height: 92px;
+    background: linear-gradient(to top, rgba(95,146,112,0.16), rgba(95,146,112,0.03));
+    border-top: 1px solid var(--bam-dim); }
+  .tide::before, .tide::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: var(--bam-faint); }
+  .tide::before { top: 26px; }
+  .tide::after { top: 54px; opacity: .6; }
+  .hero-crab { position: absolute; bottom: 54px; left: 0; width: 120px;
+    animation: crabslow 26s linear infinite alternate; }
+  @keyframes crabslow { from { transform: translateX(-140px) } to { transform: translateX(calc(100vw - 20px)) } }
+  .hint { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center;
+    font-size: 12px; color: var(--faint); letter-spacing: 0.3em; }
+
+  /* ============ 通用 门头 ============ */
+  .gate { padding: 96px 0 20px; position: relative; }
+  .gate-head { display: flex; align-items: flex-start; gap: 22px; margin-bottom: 12px; }
+  .gate-tag {
+    background: var(--bam); color: var(--ink); font-size: 13px; letter-spacing: 0.24em;
+    padding: 5px 12px; white-space: nowrap; margin-top: 10px;
+  }
+  .gate-head h2 { font-size: clamp(30px, 4.6vw, 46px); font-weight: 700; letter-spacing: 0.1em; }
+  .gate-head h2 small { display: block; font-size: 14px; font-weight: 400; color: var(--dim); letter-spacing: 0.14em; margin-top: 4px; }
+  .gate-lead { color: var(--dim); max-width: 46em; font-size: 15.5px; margin-bottom: 34px; }
+  .gate-lead em { font-style: normal; color: var(--paper); }
+  .gate-no { position: absolute; right: 0; top: 92px; font-size: 88px; line-height: 1;
+    color: transparent; -webkit-text-stroke: 1px rgba(95,146,112,0.28); font-weight: 700; }
+
+  /* ============ 纸底引文 ============ */
+  .q {
+    display: block; background: var(--paper); color: #26241f;
+    padding: 16px 20px; font-size: 15px; line-height: 2.0; border-radius: 2px;
+    position: relative; box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+  }
+  .q p, .q span { color: #26241f; }
+  .q .src { display: block; margin-top: 8px; font-size: 12.5px; color: #7d7669; letter-spacing: 0.12em; }
+  .q.big { font-size: 19px; padding: 26px 30px; text-align: center; line-height: 2.2; }
+  .q .v { color: var(--bam); font-weight: 700; }
+
+  /* ============ 门一 传 ============ */
+  .zhuan-grid { display: grid; grid-template-columns: 64px 1fr 300px; gap: 30px; align-items: start; }
+  .zqian {
+    writing-mode: vertical-rl; white-space: nowrap; align-self: stretch;
+    border: 1px solid var(--bam-dim); color: var(--bam);
+    font-size: 26px; font-weight: 700; letter-spacing: 0.5em;
+    display: flex; align-items: center; justify-content: center; padding: 18px 0; min-height: 300px;
+  }
+  .zhuan-body { display: flex; flex-direction: column; gap: 18px; }
+  .name-tiles { display: flex; flex-direction: column; gap: 14px; }
+  .nt { cursor: pointer; perspective: 700px; height: 118px; }
+  .nt-in { position: relative; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2,.7,.3,1); transform-style: preserve-3d; }
+  .nt.open .nt-in { transform: rotateX(180deg); }
+  .nt-f, .nt-b {
+    position: absolute; inset: 0; backface-visibility: hidden; border-radius: 3px;
+    display: flex; flex-direction: column; justify-content: center; padding: 14px 18px;
+  }
+  .nt-f { background: var(--ink2); border: 1px solid var(--bam-dim); }
+  .nt-f b { font-size: 25px; letter-spacing: 0.12em; color: var(--bam); }
+  .nt-f i { font-style: normal; font-size: 12.5px; color: var(--faint); margin-top: 6px; letter-spacing: 0.1em; }
+  .nt-b { background: var(--paper); color: #26241f; transform: rotateX(180deg); font-size: 13.5px; line-height: 1.9; }
+  .nt-b b { color: #26241f; font-size: 14px; }
+  .nt-b span { color: #4a463e; }
+  .tip { font-size: 12px; color: var(--faint); letter-spacing: 0.22em; margin-bottom: 2px; }
+  .zhuan-foot { margin-top: 26px; }
+
+  /* ============ 门二 形 解剖 ============ */
+  .xing-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 36px; align-items: center; }
+  .xstage { position: relative; }
+  .xstage svg { width: 100%; height: auto; display: block; }
+  .xpart { cursor: pointer; transition: opacity .25s; }
+  .xpart:hover { opacity: 0.82; }
+  .xpart.on .pf { fill: var(--bam); }
+  .xpart.on text, .xpart text { font-size: 15px; fill: var(--dim); letter-spacing: 2px; }
+  .xpart.on text { fill: var(--bam); font-weight: 700; }
+  .xpanel { min-height: 320px; display: flex; flex-direction: column; gap: 14px; }
+  .xpanel h3 { font-size: 25px; letter-spacing: 0.16em; color: var(--bam); }
+  .xpanel h3 small { font-size: 13px; color: var(--faint); letter-spacing: 0.14em; font-weight: 400; margin-left: 10px; }
+  #xnote { color: var(--dim); font-size: 14.5px; }
+  .taboo { margin-top: 46px; }
+  .taboo-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+  .tb {
+    border: 1px solid rgba(192,69,60,0.55); color: #d8a49e; background: rgba(192,69,60,0.08);
+    padding: 8px 14px; font-size: 14px; letter-spacing: 0.1em; position: relative;
+  }
+  .tb::before { content: "禁"; position: absolute; top: -9px; left: -9px; width: 20px; height: 20px;
+    background: var(--zhu); color: #f2e8e6; font-size: 11px; display: grid; place-items: center; border-radius: 50%; }
+  .taboo-note { font-size: 12.5px; color: var(--faint); margin-top: 12px; }
+
+  /* ============ 门三 乡 夜捕 ============ */
+  .shore { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border-bottom: 1px solid var(--bam-dim); position: relative; }
+  .shore::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--bam), transparent); }
+  .stn { padding: 0 22px 30px; position: relative; }
+  .stn:nth-child(2) { transform: translateY(26px); }
+  .stn:nth-child(3) { transform: translateY(52px); }
+  .stn-h { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+  .stn-h b { font-size: 22px; color: var(--bam); letter-spacing: 0.14em; }
+  .stn-h span { font-size: 12.5px; color: var(--faint); letter-spacing: 0.14em; }
+  .stn p { color: var(--dim); font-size: 14px; margin-bottom: 12px; }
+  .stn .q { font-size: 13.5px; padding: 12px 14px; }
+  .deng { display: flex; gap: 8px; margin: 4px 0 12px; }
+  .deng i { width: 9px; height: 9px; border-radius: 50%; background: rgba(95,146,112,0.25); }
+  .stn.lit .deng i { background: #d9b36b; box-shadow: 0 0 10px rgba(217,179,107,0.8); }
+  .stn .act { font-size: 12.5px; color: var(--bam); letter-spacing: 0.2em; cursor: pointer;
+    border-bottom: 1px dashed var(--bam-dim); background: none; border-top: none; border-left: none; border-right: none;
+    font-family: inherit; padding: 0 0 2px; }
+  .duan-box { height: 120px; position: relative; margin-bottom: 12px; overflow: hidden; }
+  .duan-flow { position: absolute; top: 52%; left: 0; right: 60px; height: 2px; background: var(--bam-faint); }
+  .fdot { position: absolute; width: 7px; height: 5px; background: var(--bam); border-radius: 40%; opacity: .9; }
+  .zhu-bar { position: absolute; right: 44px; top: 6px; bottom: 6px; width: 7px;
+    background: repeating-linear-gradient(to bottom, var(--bam) 0 8px, transparent 8px 14px); opacity: .85; }
+  .zhu-cap { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl;
+    font-size: 12px; color: var(--bam); letter-spacing: 0.3em; }
+  .she-img { height: 120px; position: relative; margin-bottom: 12px; }
+  .she-img svg { position: absolute; bottom: 0; left: 8px; }
+
+  /* ============ 门四 品 ============ */
+  .jiantuan { display: flex; gap: 40px; align-items: center; margin-bottom: 40px; flex-wrap: wrap; }
+  .jt-belly { cursor: pointer; text-align: center; }
+  .jt-belly svg { width: 120px; height: auto; display: block; margin: 0 auto; }
+  .jt-belly .flap { fill: var(--bam-faint); stroke: var(--bam-dim); transition: all .3s; }
+  .jt-belly.on .flap { fill: var(--bam); stroke: var(--bam); }
+  .jt-belly.on .jt-name { color: var(--bam); }
+  .jt-belly .jt-name { display: block; margin-top: 8px; font-size: 17px; letter-spacing: 0.2em; color: var(--dim); }
+  .jt-q { flex: 1; min-width: 260px; display: none; }
+  .jt-q.show { display: block; }
+  .pin-list { border-top: 1px solid var(--hair); }
+  .pin { border-bottom: 1px solid var(--hair); }
+  .pin-h { display: grid; grid-template-columns: 92px 1fr auto; gap: 18px; align-items: baseline;
+    padding: 16px 6px; cursor: pointer; }
+  .pin-h:hover { background: var(--ink2); }
+  .pin-h b { font-size: 19px; letter-spacing: 0.18em; color: var(--paper); }
+  .pin:hover .pin-h b { color: var(--bam); }
+  .pin-h span { color: var(--dim); font-size: 14px; }
+  .pin-h i { color: var(--faint); font-style: normal; font-size: 13px; letter-spacing: 0.2em; }
+  .pin-b { display: none; padding: 4px 6px 22px; }
+  .pin.open .pin-b { display: block; }
+  .pin-b .q { max-width: 640px; }
+  .pin-b p { color: var(--dim); font-size: 14px; margin-bottom: 12px; max-width: 46em; }
+  .pin-b p em { font-style: normal; color: var(--bam); }
+
+  /* ============ 门五 占 ============ */
+  .zhan-star { position: relative; border: 1px solid var(--bam-dim); padding: 30px 26px 26px; margin-bottom: 30px;
+    background: radial-gradient(ellipse at 70% 20%, rgba(95,146,112,0.08), transparent 60%); }
+  .zhan-star h3 { font-size: 21px; letter-spacing: 0.2em; color: var(--bam); margin-bottom: 6px; }
+  .zhan-star .sub { font-size: 12.5px; color: var(--faint); letter-spacing: 0.16em; margin-bottom: 18px; }
+  .star-flex { display: flex; gap: 34px; align-items: center; flex-wrap: wrap; }
+  .cancer { width: 190px; flex: none; }
+  .cancer circle { fill: var(--paper); opacity: .85; }
+  .cancer circle.main { fill: var(--bam); }
+  .cancer line { stroke: rgba(95,146,112,0.5); stroke-dasharray: 3 5; }
+  .cancer .lab { fill: var(--faint); font-size: 11px; letter-spacing: 2px; }
+  .zhan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .zcard { border: 1px solid var(--hair); padding: 22px; }
+  .zcard h4 { font-size: 18px; letter-spacing: 0.2em; color: var(--bam); margin-bottom: 10px; }
+  .zcard.alert { border-color: rgba(192,69,60,0.5); }
+  .zcard.alert h4 { color: #d8a49e; }
+  .zcard p { color: var(--dim); font-size: 14px; margin: 10px 0 0; }
+  .zcard p em { font-style: normal; color: var(--paper); }
+  .menq { margin-top: 30px; display: flex; gap: 30px; align-items: center; flex-wrap: wrap; }
+  .door { width: 150px; height: 210px; border: 2px solid var(--bam-dim); position: relative; flex: none;
+    background: linear-gradient(180deg, rgba(95,146,112,0.06), transparent); }
+  .door::before { content: ""; position: absolute; right: 10px; top: 50%; width: 8px; height: 8px;
+    border-radius: 50%; background: var(--bam); }
+  .dry-crab { position: absolute; left: 50%; top: 34px; transform: translateX(-50%); width: 74px;
+    animation: sway 3.4s ease-in-out infinite; transform-origin: top center; }
+  @keyframes sway { 0%,100% { transform: translateX(-50%) rotate(-4deg) } 50% { transform: translateX(-50%) rotate(4deg) } }
+  .gui-slip { position: absolute; left: 50%; top: 130px; transform: translateX(-50%);
+    writing-mode: vertical-rl; background: var(--paper); color: #26241f; font-size: 13px;
+    padding: 10px 5px; letter-spacing: 0.2em; opacity: 0; transition: all .5s; }
+  .door.spooked .gui-slip { opacity: 1; top: 148px; }
+  .door-spook-btn { font-size: 12.5px; color: var(--bam); letter-spacing: 0.2em; cursor: pointer;
+    background: none; border: none; border-bottom: 1px dashed var(--bam-dim); font-family: inherit; padding: 0 0 2px; }
+
+  /* ============ 门六 贡 ============ */
+  .trib { border: 1px solid var(--bam-dim); padding: 30px 24px 24px; margin-bottom: 30px; overflow: hidden; }
+  .trib h3 { font-size: 21px; letter-spacing: 0.2em; color: var(--bam); margin-bottom: 4px; }
+  .trib .sub { font-size: 12.5px; color: var(--faint); letter-spacing: 0.16em; margin-bottom: 20px; }
+  .trib-svg { width: 100%; height: auto; display: block; }
+  .lane-lab { font-size: 12px; letter-spacing: 0.2em; }
+  .t-go { margin-top: 18px; font-size: 13px; color: var(--bam); letter-spacing: 0.22em; cursor: pointer;
+    background: none; border: 1px solid var(--bam-dim); padding: 9px 22px; font-family: inherit; }
+  .t-go:hover { background: var(--bam-faint); }
+  .moving { animation: upRun 3.2s ease-in-out forwards; }
+  @keyframes upRun { from { transform: translateX(0) } to { transform: translateX(640px) } }
+  .moving2 { animation: dnRun 3.2s ease-in-out forwards; }
+  @keyframes dnRun { from { transform: translateX(0) } to { transform: translateX(-640px) } }
+  .gong-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+  .gcard { border-top: 2px solid var(--bam); padding-top: 14px; }
+  .gcard h4 { font-size: 17px; letter-spacing: 0.16em; margin-bottom: 8px; color: var(--paper); }
+  .gcard h4 span { color: var(--faint); font-size: 12px; letter-spacing: 0.14em; display: block; font-weight: 400; }
+  .gcard p { color: var(--dim); font-size: 13.5px; margin-bottom: 12px; }
+  .gcard .q { font-size: 13px; padding: 12px 14px; }
+
+  /* ============ 门七 馔 ============ */
+  .menu { border: 1px solid var(--bam-dim); background: var(--ink2); padding: 34px 30px; }
+  .menu-head { text-align: center; margin-bottom: 26px; }
+  .menu-head b { font-size: 24px; letter-spacing: 0.5em; color: var(--bam); }
+  .menu-head span { display: block; font-size: 12px; color: var(--faint); letter-spacing: 0.3em; margin-top: 6px; }
+  .dish { border-bottom: 1px dashed rgba(95,146,112,0.3); padding: 18px 4px; cursor: pointer; }
+  .dish:last-child { border-bottom: none; }
+  .dish-h { display: flex; align-items: baseline; gap: 16px; }
+  .dish-h b { font-size: 20px; letter-spacing: 0.14em; color: var(--paper); min-width: 128px; }
+  .dish:hover .dish-h b { color: var(--bam); }
+  .dish-h span { color: var(--dim); font-size: 13.5px; flex: 1; }
+  .dish-h i { color: var(--faint); font-style: normal; font-size: 12px; letter-spacing: 0.2em; }
+  .dish-b { display: none; padding-top: 16px; }
+  .dish.open .dish-b { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .dish-b p { color: var(--dim); font-size: 14px; }
+  .dish-b p em { font-style: normal; color: var(--bam); }
+
+  /* ============ 终 雅 ============ */
+  .ya-map { display: flex; align-items: flex-end; gap: 0; margin: 40px 0 10px; position: relative; }
+  .lvl { flex: 1; position: relative; padding-bottom: 60px; }
+  .lvl-bar { height: 10px; border-radius: 5px; background: rgba(95,146,112,0.18); position: relative; overflow: visible; }
+  .lvl:last-child .lvl-bar { background: rgba(95,146,112,0.35); }
+  .lvl-lab { position: absolute; bottom: 26px; left: 0; }
+  .lvl-lab b { font-size: 20px; letter-spacing: 0.16em; color: var(--dim); display: block; }
+  .lvl-lab span { font-size: 12.5px; color: var(--faint); letter-spacing: 0.1em; }
+  .lvl.hop .lvl-lab b { color: var(--bam); }
+  .hopper { position: absolute; bottom: 16px; left: 6%; width: 54px; transition: left 1.1s cubic-bezier(.4,0,.2,1); }
+  .ya-act { margin: 8px 0 30px; font-size: 13px; color: var(--bam); letter-spacing: 0.22em; cursor: pointer;
+    background: none; border: 1px solid var(--bam-dim); padding: 9px 22px; font-family: inherit; }
+  .ya-act:hover { background: var(--bam-faint); }
+  .ya-quote { max-width: 780px; }
+  .ship-poems { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-top: 44px; }
+  .sp { background: var(--ink2); border: 1px solid var(--hair); padding: 18px 16px; }
+  .sp .q { background: transparent; color: var(--paper); box-shadow: none; padding: 0; font-size: 15.5px; line-height: 2.1; }
+  .sp .q .src { color: var(--faint); }
+  .mo-sea { margin-top: 90px; position: relative; height: 170px; }
+  .mo-line { position: absolute; left: 0; right: 0; top: 70px; height: 1px; background: var(--bam-dim); }
+  .mo-line::before, .mo-line::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: var(--bam-faint); }
+  .mo-line::before { top: 18px; } .mo-line::after { top: 36px; opacity: .5; }
+  .mo-seal { position: absolute; right: 6%; top: 6px; width: 78px; height: 78px; border: 2px solid var(--zhu);
+    color: var(--zhu); display: grid; place-items: center; font-size: 40px; font-weight: 700;
+    transform: rotate(6deg) scale(0.4); opacity: 0; transition: all 1.1s ease; background: rgba(192,69,60,0.07); }
+  .mo-seal.show { opacity: 1; transform: rotate(6deg) scale(1); }
+  .mo-cap { position: absolute; left: 0; top: 100px; color: var(--faint); font-size: 13px; letter-spacing: 0.2em; }
+
+  /* ============ 横行蟹 rail ============ */
+  #railcrab { position: fixed; bottom: 10px; left: calc(100vw - 92px); width: 62px; z-index: 50;
+    pointer-events: none; transition: opacity .8s; }
+  #railcrab.gone { opacity: 0; }
+  #railcrab svg { width: 100%; display: block; }
+  .legL, .legR { transform-box: fill-box; transform-origin: top center; }
+  .legL { animation: swyL 0.9s ease-in-out infinite; }
+  .legR { animation: swyR 0.9s ease-in-out infinite; }
+  @keyframes swyL { 0%,100% { transform: rotate(-7deg) } 50% { transform: rotate(9deg) } }
+  @keyframes swyR { 0%,100% { transform: rotate(9deg) } 50% { transform: rotate(-7deg) } }
+
+  /* ============ 页脚 ============ */
+  footer.page { border-top: 1px solid var(--hair); padding: 40px 0 60px; margin-top: 90px;
+    color: var(--faint); font-size: 13.5px; }
+  footer.page p { margin-bottom: 10px; max-width: 62em; }
+  footer.page b { color: var(--dim); font-weight: 400; }
+
+  @media (max-width: 860px) {
+    .hero-title h1 { font-size: clamp(58px, 19vw, 120px); }
+    .name-tiles .tip { flex-basis: 100%; }
+    .zhuan-grid { grid-template-columns: 1fr; }
+    .zqian { writing-mode: horizontal-tb; min-height: 0; padding: 10px; font-size: 20px; }
+    .name-tiles { flex-direction: row; flex-wrap: wrap; }
+    .nt { flex: 1 1 46%; }
+    .xing-grid, .zhan-grid, .gong-cards, .ship-poems { grid-template-columns: 1fr; }
+    .shore { grid-template-columns: 1fr; }
+    .stn:nth-child(2), .stn:nth-child(3) { transform: none; }
+    .hero-slips { display: none; }
+    .gate-no { display: none; }
+    .dish.open .dish-b { grid-template-columns: 1fr; }
+    .ya-map { flex-direction: column; gap: 26px; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 ================= -->
+<header class="hero">
+  <div class="wrap hero-top">
+    <div class="kick">殆知阁导读 <b>卷一百七十八</b> · 艺藏</div>
+    <div class="kick">宋 髙似孙 撰</div>
+  </div>
+  <div class="wrap hero-main">
+    <div class="hero-title">
+      <h1>蟹<span>畧</span></h1>
+      <div class="fan">畧 即 略 之 古 体 · 库 本 原 题 如 是</div>
+      <p class="hero-hook">北宋有人给蟹写过一部《蟹谱》，像一份说明书。几十年后，南宋宁波人高似孙不服气，干脆给蟹<em>修了一部国史</em>：立传、考家世、编户口、记灾异、收贡赋、订食谱、辑诗文。四卷十余门写完，一只无肠公子，享用了一整代文人为它执笔的体面。</p>
+    </div>
+    <div class="hero-slips">
+      <div class="slip dark">蟹 畧 四 卷</div>
+      <div class="slip mid">宋　髙似孙　撰</div>
+      <div class="slip">钦定四库全书</div>
+    </div>
+  </div>
+  <div class="flat">
+    <div class="tide"></div>
+    <svg class="hero-crab" viewBox="0 0 120 84" id="herocrab"></svg>
+  </div>
+  <div class="hint">本 页 亦 横 行 · 往 下 滚 动 蟹 自 左 行</div>
+</header>
+
+<main>
+<!-- ================= 门一 传 ================= -->
+<section class="gate" id="m1">
+  <div class="wrap">
+    <div class="gate-no mono">01</div>
+    <div class="gate-head">
+      <div class="gate-tag">蟹国志 卷一</div>
+      <h2>郭索传<small>先给蟹起个名字，再给蟹立一场命运</small></h2>
+    </div>
+    <p class="gate-lead">国史开卷是本传。传主的名字就有讲究：扬雄《太玄》里它叫<em>郭索</em>，取爬行时窸窣作响、心里长草的样子；皮日休叫它<em>介夫</em>，一身盔甲的甲士；道教书里最出名的外号是<em>无肠公子</em>。三枚名帖，翻过来看来历。</p>
+    <div class="zhuan-grid">
+      <div class="zqian">郭索传</div>
+      <div class="zhuan-body">
+        <span class="q" data-v>蟹之郭索，后蚓黄泉。测曰：蟹之郭索，心不一也。<span class="src">太玄经 · 卷一郭索传首引，扬雄拟易，以蚓之专对蟹之躁</span></span>
+        <span class="q" data-v>蚓无爪牙之利，筋骨之强，下饮黄泉，用心一也；蟹六跪而二螯，用心躁也。<span class="src">荀子劝学篇，司马光注太玄时引来作对照</span></span>
+        <span class="q" data-v>惟耿介不受扰触，外甚刚果，若奋矛；甲中实柔脆，殊无他肠，人皆爱之，称其为无肠公子。<span class="src">郭索传本传，为传主定性：外壳像长矛，壳里没心肠</span></span>
+        <span class="q" data-v>岁至西风髙爽、霜深月峭、嘉谷登实之秋，更甚得志。<span class="src">郭索传，蟹一年的高光时刻全在霜降稻熟前后</span></span>
+        <div class="zhuan-foot">
+          <span class="q big" data-v>"左手持蟹螯，右手持酒杯，拍浮酒池中，岂不了一生乎。"<span class="src">毕茂世语 · 传末赞引。晋人毕卓为蟹平生第一知己，传里说"惟毕茂世与之狎，最为相知者"</span></span>
+        </div>
+      </div>
+      <div class="name-tiles">
+        <div class="tip">点 名 帖 翻 面</div>
+        <div class="nt"><div class="nt-in">
+          <div class="nt-f"><b>郭索</b><i>状声兼状貌</i></div>
+          <div class="nt-b"><b>出处</b><span>范明叔曰：<q data-v style="display:inline;background:none;padding:0;color:#26241f;box-shadow:none">郭索，多足貌</q>。又状爬行窸窣之声，后成蟹的代称，杜甫有句"草泥行郭索"。</span></div>
+        </div></div>
+        <div class="nt"><div class="nt-in">
+          <div class="nt-f"><b>介夫</b><i>甲士之谓</i></div>
+          <div class="nt-b"><b>出处</b><span>传曰<q data-v style="display:inline;background:none;padding:0;color:#26241f;box-shadow:none">郭索字介夫</q>。皮日休诗"左右拥介臣"，一身硬壳如甲胄，故以字行。</span></div>
+        </div></div>
+        <div class="nt"><div class="nt-in">
+          <div class="nt-f"><b>无肠公子</b><i>道教名号</i></div>
+          <div class="nt-b"><b>出处</b><span>抱朴子曰：<q data-v style="display:inline;background:none;padding:0;color:#26241f;box-shadow:none">山中无肠公子者，蟹也</q>。称公子而不称君，是古人早已看出它横行的派头。</span></div>
+        </div></div>
+        <div class="nt"><div class="nt-in">
+          <div class="nt-f"><b>蟹</b><i>本名</i></div>
+          <div class="nt-b"><b>出处</b><span>易说卦曰：<q data-v style="display:inline;background:none;padding:0;color:#26241f;box-shadow:none">离为蟹</q>，孔颕达疏曰<q data-v style="display:inline;background:none;padding:0;color:#26241f;box-shadow:none">取其刚在外</q>。八卦里它占了一卦，刚强都在外面。</span></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 门二 形 ================= -->
+<section class="gate" id="m2">
+  <div class="wrap">
+    <div class="gate-no mono">02</div>
+    <div class="gate-head">
+      <div class="gate-tag">蟹国志 卷一</div>
+      <h2>蟹原<small>形体志：点蟹身各处，看古人怎么写它</small></h2>
+    </div>
+    <p class="gate-lead">卷一立<em>蟹原</em>一门，从匡、膏、脐、螯到目、足，一处一处给蟹做身体档案，每一处都配了诗。点一点这只蟹。</p>
+    <div class="xing-grid">
+      <div class="xstage">
+        <svg viewBox="0 0 520 340" id="xcrab"></svg>
+      </div>
+      <div class="xpanel">
+        <h3 id="xname">匡 箱<small>壳的主件</small></h3>
+        <span class="q" id="xsrc" data-v>礼记曰：蚕则绩而蟹有匡。<span class="src">礼记檀弓。蚕丝自绩，蟹壳自匡，各成其功；匡即壳如筐</span></span>
+        <span class="q" id="xpoem" data-v>匡实黄金重，螯肥白玉香。<span class="src">张文潜诗 · 壳如黄金，螯如白玉，一只蟹配色先定了</span></span>
+        <p id="xnote">蟹壳古称匡，又名箱。任昉述异记载腾屿之南有蟹<em>匡大如笠</em>，一只壳顶一顶斗笠。</p>
+      </div>
+    </div>
+    <div class="taboo">
+      <div class="kick">食 忌 · 卷 一 原 文 五 条</div>
+      <div class="taboo-row" id="taboorow"></div>
+      <p class="taboo-note">古人食忌与下文"治疗""化水长生"诸条皆旧说，无科学依据，仅存其文。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 门三 乡 ================= -->
+<section class="gate" id="m3">
+  <div class="wrap">
+    <div class="gate-no mono">03</div>
+    <div class="gate-head">
+      <div class="gate-tag">蟹国志 卷二</div>
+      <h2>蟹乡<small>地理志：从水滨的火光到竹栅的流水</small></h2>
+    </div>
+    <p class="gate-lead">卷二先立<em>蟹乡</em>：泽、浦、洲、浪、穴、窟、舍、簖、帘、篝、网、钓、火、户，十四个地名部首全是蟹字打头。江东人捕蟹的全套装置，被写成了一座<em>水边的城</em>。</p>
+    <div class="shore">
+      <div class="stn" id="stn1">
+        <div class="stn-h"><b>蟹火</b><span>夜里的灯海</span></div>
+        <p>秋夜水滨，火光一点，蟹便纷纷出水扑光而来，吴人管这场面叫蟹浪。</p>
+        <div class="deng"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <button class="act" data-lit="stn1">点 火 诱 蟹</button>
+        <span class="q" data-v>吴人夜执火于水滨，纷然而集，谓之蠏浪。<span class="src">卷二蟹浪条</span></span>
+      </div>
+      <div class="stn" id="stn2">
+        <div class="stn-h"><b>蟹簖</b><span>拦在江道上的竹栅</span></div>
+        <div class="duan-box">
+          <div class="duan-flow" id="duanflow"></div>
+          <div class="zhu-bar"></div>
+          <div class="zhu-cap">簖 断 江 道</div>
+        </div>
+        <button class="act" data-duan="1">放 水 行 蟹</button>
+        <span class="q" data-v>早夜觱沸，指江而奔。渔者纬萧承其流而障之，曰簖。<span class="src">陆龟蒙蟹志 · 蟹群夜奔江海，人只在水路上设一道闸</span></span>
+        <span class="q" data-v style="margin-top:12px">簖断其入江之道焉尔。<span class="src">同篇 · 库本此处有夹注，分两条引，夹注不与</span></span>
+      </div>
+      <div class="stn" id="stn3">
+        <div class="stn-h"><b>蟹舍</b><span>住在蟹乡的人</span></div>
+        <div class="she-img">
+          <svg width="120" height="96" viewBox="0 0 120 96">
+            <polygon points="18,40 60,10 102,40" fill="none" stroke="#5f9270" stroke-width="2"/>
+            <rect x="30" y="40" width="60" height="50" fill="none" stroke="#5f9270" stroke-width="2"/>
+            <rect x="52" y="58" width="16" height="32" fill="rgba(95,146,112,0.35)"/>
+            <line x1="0" y1="92" x2="120" y2="92" stroke="rgba(95,146,112,0.4)"/>
+          </svg>
+        </div>
+        <p>张志和的渔歌里就有"淞江蟹舍主人欢"。到了陆游笔下，蟹舍成了退休生活的终点站。</p>
+        <span class="q" data-v>洞庭八万四千顷，蟹舍正对芦花洲。<span class="src">陆放翁诗 · 八万顷太湖，正门对芦花，是最好的朝向</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 门四 品 ================= -->
+<section class="gate" id="m4">
+  <div class="wrap">
+    <div class="gate-no mono">04</div>
+    <div class="gate-head">
+      <div class="gate-tag">蟹国志 卷二</div>
+      <h2>蟹品<small>户口志：四十多种蟹，各有籍贯与时令</small></h2>
+    </div>
+    <p class="gate-lead">卷二下半是<em>蟹品</em>：洛蟹、吴蟹、越蟹、楚蟹、江蟹、湖蟹、春蟹、夏蟹、霜蟹、灯蟹、大蟹、尺蟹、斤蟹……按产地与时令编成一本户口册。点下面两只蟹腹，看古人分蟹的第一课。</p>
+    <div class="jiantuan">
+      <div class="jt-belly on" id="jtX">
+        <svg viewBox="0 0 90 120">
+          <ellipse cx="45" cy="62" rx="34" ry="46" fill="rgba(95,146,112,0.1)" stroke="rgba(95,146,112,0.4)"/>
+          <path class="flap" d="M45 52 L57 62 L45 92 L33 62 Z" stroke-width="2"/>
+        </svg>
+        <span class="jt-name">尖 脐</span>
+      </div>
+      <div class="jt-belly" id="jtT">
+        <svg viewBox="0 0 90 120">
+          <ellipse cx="45" cy="62" rx="34" ry="46" fill="rgba(95,146,112,0.1)" stroke="rgba(95,146,112,0.4)"/>
+          <ellipse class="flap" cx="45" cy="70" rx="13" ry="24" stroke-width="2"/>
+        </svg>
+        <span class="jt-name">团 脐</span>
+      </div>
+      <div class="jt-q show" id="jtqX">
+        <span class="q" data-v>如今竹阁多清兴，紫蟹尖团不数虾。<span class="src">胡澹翁诗 · 尖脐是公蟹，行家看脐下菜</span></span>
+        <span class="q" data-v style="margin-top:14px">尖团擘双蟹，丹漆饤山梨。<span class="src">陆放翁诗 · 尖团各一只，讲究人对开</span></span>
+      </div>
+      <div class="jt-q" id="jtqT">
+        <span class="q" data-v>呼儿破团脐，进此杯中绿。<span class="src">章甫诗 · 团脐是母蟹，膏黄在此，破脐下酒</span></span>
+        <span class="q" data-v style="margin-top:14px">菊报酒初熟，橙催蟹又肥。<span class="src">疎寮诗，即高似孙自作 · 满腹膏黄的时节，菊与橙都来赶场</span></span>
+      </div>
+    </div>
+    <div class="pin-list" id="pinlist"></div>
+  </div>
+</section>
+
+<!-- ================= 门五 占 ================= -->
+<section class="gate" id="m5">
+  <div class="wrap">
+    <div class="gate-no mono">05</div>
+    <div class="gate-head">
+      <div class="gate-tag">蟹国志 卷二</div>
+      <h2>蟹占<small>五行志：上天有巨蟹宫，地上有蟹灾</small></h2>
+    </div>
+    <p class="gate-lead">古人相信虫子也通天象。卷二末立<em>蟹占</em>：天上有黄道十二宫的巨蟹宫，地上有"虾荒蟹乱"的年成谶语，行军扎营见蟹要立刻搬家，关中人还拿干蟹吓疟鬼。一国史书该有的灾异门，蟹一样不少。</p>
+    <div class="zhan-star">
+      <h3>蟹官</h3>
+      <div class="sub">蟹 也 占 了 一 个 星 座 的 编 制</div>
+      <div class="star-flex">
+        <svg class="cancer" viewBox="0 0 190 150">
+          <line x1="40" y1="110" x2="80" y2="60"/>
+          <line x1="150" y1="110" x2="110" y2="60"/>
+          <line x1="80" y1="60" x2="110" y2="60"/>
+          <line x1="95" y1="60" x2="95" y2="28"/>
+          <circle cx="40" cy="110" r="4" class="main"/>
+          <circle cx="150" cy="110" r="4" class="main"/>
+          <circle cx="80" cy="60" r="3.4"/>
+          <circle cx="110" cy="60" r="3.4"/>
+          <circle cx="95" cy="28" r="3"/>
+          <text class="lab" x="66" y="138">巨 蟹 宫</text>
+        </svg>
+        <div style="flex:1;min-width:260px">
+          <span class="q" data-v>天文录曰：十二星有巨蟹官。<span class="src">卷二蟹官条 · 库本"宫"讹作"官"，照录。黄道十二宫，蟹在星空里也有一席</span></span>
+          <span class="q" data-v style="margin-top:14px">虽居天上三辰次，未免人间五鼎烹。<span class="src">黄太史诗 · 哪怕挂在天上，掉下来还是一盘菜</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="zhan-grid">
+      <div class="zcard alert">
+        <h4>蟹灾</h4>
+        <span class="q" data-v style="background:transparent;color:#d8a49e;padding:0;box-shadow:none">军畧灾篇曰：地忽生蟹，当急迁砦栅，不迁将亡。<span class="src">卷二蟹灾条 · 行军见蟹成灾，属紧急军情</span></span>
+        <p>兵书把它列进<em>灾异条目</em>，与山崩河竭同科。吴地谚语"虾荒蟹乱"，蟹一多，年成就要坏，虫口即天意。</p>
+      </div>
+      <div class="zcard">
+        <h4>蟹漆</h4>
+        <span class="q" data-v style="background:transparent;color:var(--paper);padding:0;box-shadow:none">博物志曰：蟹漆相合成水。<span class="src">卷二蟹漆条</span></span>
+        <p>蟹遇上生漆会化成一汪水，方士据此说<em>投蟹漆中化水饮之长生</em>。化学上叫蛋白变性，长生是 没有 的，此条属旧说。</p>
+      </div>
+    </div>
+    <div class="menq">
+      <div class="door" id="door">
+        <svg class="dry-crab" viewBox="0 0 74 44">
+          <ellipse cx="37" cy="26" rx="20" ry="13" fill="none" stroke="#a39e93" stroke-width="2"/>
+          <path d="M20 20 Q8 12 4 6" fill="none" stroke="#a39e93" stroke-width="2"/>
+          <path d="M54 20 Q66 12 70 6" fill="none" stroke="#a39e93" stroke-width="2"/>
+          <line x1="30" y1="38" x2="26" y2="44" stroke="#a39e93" stroke-width="2"/>
+          <line x1="44" y1="38" x2="48" y2="44" stroke="#a39e93" stroke-width="2"/>
+          <line x1="24" y1="14" x2="20" y2="6" stroke="#a39e93" stroke-width="2"/>
+          <line x1="50" y1="14" x2="54" y2="6" stroke="#a39e93" stroke-width="2"/>
+        </svg>
+        <div class="gui-slip">疟 鬼 至 此 而 回</div>
+      </div>
+      <div style="flex:1;min-width:280px">
+        <span class="q" data-v>关中无螃蟹，土人恶其形状，以为怪物。秦州人家收得一干蟹，有病疟者则借去，悬门上，徃徃遂差。不但人不识，鬼亦不识。<span class="src">沈存中笔谈 · 卷二治疟条。关中人不认得蟹，鬼也不认得，疟鬼被这怪东西吓退，病竟好了</span></span>
+        <p style="color:var(--dim);font-size:14px;margin-top:14px">一只干蟹在长安以西的身价：先当怪物，后当药。<button class="door-spook-btn" data-door="1">扮 一 回 疟 鬼 上 门</button></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 门六 贡 ================= -->
+<section class="gate" id="m6">
+  <div class="wrap">
+    <div class="gate-no mono">06</div>
+    <div class="gate-head">
+      <div class="gate-tag">蟹国志 卷三</div>
+      <h2>蟹贡<small>食货志：蟹给海王上贡，人给皇帝上贡</small></h2>
+    </div>
+    <p class="gate-lead">卷三立<em>蟹贡</em>。最奇的是贡是双向的：本草书说蟹每年八月衔着两茎稻芒，东向入海，给海王送年贡；陆龟蒙补了现场，说稻熟时分，蟹还要捧着稻穗拜过自家的蟹王才动身。人间这边，从周成王到南宋，蟹一直在贡单上。</p>
+    <div class="trib">
+      <h3>双向朝贡</h3>
+      <div class="sub">上 行 是 蟹 的 ， 下 行 是 人 的</div>
+      <svg class="trib-svg" viewBox="0 0 780 190">
+        <line x1="20" y1="58" x2="700" y2="58" stroke="rgba(95,146,112,0.35)"/>
+        <text x="104" y="40" fill="#6e6a61" font-size="12" letter-spacing="3">蟹 衔 稻 芒 东 输 海 王</text>
+        <g id="upcrab">
+          <ellipse cx="60" cy="58" rx="17" ry="10" fill="none" stroke="#5f9270" stroke-width="2"/>
+          <line x1="52" y1="48" x2="47" y2="41" stroke="#5f9270" stroke-width="2"/>
+          <line x1="68" y1="48" x2="73" y2="41" stroke="#5f9270" stroke-width="2"/>
+          <line x1="52" y1="68" x2="47" y2="75" stroke="#5f9270" stroke-width="2"/>
+          <line x1="68" y1="68" x2="73" y2="75" stroke="#5f9270" stroke-width="2"/>
+          <line x1="60" y1="46" x2="58" y2="34" stroke="#c9963f" stroke-width="2"/>
+          <line x1="64" y1="46" x2="66" y2="34" stroke="#c9963f" stroke-width="2"/>
+        </g>
+        <g stroke="#5f9270" stroke-width="2" fill="none" opacity="0.8">
+          <path d="M712 58 q8 -10 16 0 q8 10 16 0"/>
+          <path d="M712 74 q8 -10 16 0 q8 10 16 0" opacity="0.5"/>
+        </g>
+        <text x="716" y="40" fill="#6e6a61" font-size="12" letter-spacing="3">海</text>
+        <line x1="20" y1="138" x2="700" y2="138" stroke="rgba(95,146,112,0.35)"/>
+        <text x="20" y="168" fill="#6e6a61" font-size="12" letter-spacing="3">平 原 驿 糖 蟹 西 上 京 师</text>
+        <g id="dnbox">
+          <rect x="690" y="126" width="22" height="24" fill="none" stroke="#5f9270" stroke-width="2"/>
+          <line x1="690" y1="133" x2="712" y2="133" stroke="#5f9270" stroke-width="1"/>
+        </g>
+        <text x="700" y="168" fill="#6e6a61" font-size="12" letter-spacing="3">都</text>
+      </svg>
+      <button class="t-go" id="tgo">开 贡</button>
+      <p style="color:var(--faint);font-size:12.5px;margin-top:12px" id="tgohint"></p>
+    </div>
+    <div class="gong-cards">
+      <div class="gcard">
+        <h4>三千年前的贡单<span>先秦</span></h4>
+        <p>周成王时，海阳进贡的方物里就有蟹。蟹上贡单，比多数贡品资历都老。</p>
+        <span class="q" data-v>汲冢周书王防篇曰：成王时，海阳献蟹。<span class="src">卷三献蟹条 · 库本"王会"讹作"王防"，照录</span></span>
+      </div>
+      <div class="gcard">
+        <h4>供不上要掉脑袋<span>十六国</span></h4>
+        <p>刘聪在位时，襄陵王因为<em>鱼蟹供不上</em>获罪被杀。蟹贡的分量，压死过一个王。</p>
+        <span class="q" data-v>刘聪以襄陵王櫖坐鱼蟹不供被诛。<span class="src">卷三供蟹条</span></span>
+      </div>
+      <div class="gcard">
+        <h4>分蟹是一种礼<span>汉</span></h4>
+        <p>朱登任东海相，给张敞送蟹，附信说好东西不敢独享。一只蟹里的分寸。</p>
+        <span class="q" data-v>蘧伯玉受孔子之赐，必及乡老。敞谨分斯贶于尊行者，何敢独烹之。<span class="src">卷三遗蟹条 · 朱登报张敞书，典故是蘧伯玉把孔子的赏赐分给乡里老人</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 门七 馔 ================= -->
+<section class="gate" id="m7">
+  <div class="wrap">
+    <div class="gate-no mono">07</div>
+    <div class="gate-head">
+      <div class="gate-tag">蟹国志 卷三</div>
+      <h2>蟹馔<small>饮膳志：一张宋人的蟹菜单</small></h2>
+    </div>
+    <p class="gate-lead">洗手蟹、盐蟹、蟹虀、蟹羮、糟蟹、糖蟹、蟹黄、蟹包、蟹饭，卷三把蟹从头吃到尾。每道菜都押着诗韵上桌，点菜牌看故事。</p>
+    <div class="menu">
+      <div class="menu-head"><b>蟹 馔 单</b><span>卷 三 · 点 牌 看 故 事</span></div>
+      <div class="dish">
+        <div class="dish-h"><b>洗手蟹</b><span>生腌快手，一顿饭工夫上桌</span><i>生 蟹 快 手 菜</i></div>
+        <div class="dish-b">
+          <span class="q" data-v>今人以蟹沃之盐酒，和以姜橙，是蟹生，亦曰洗手蟹。<span class="src">卷三洗手蟹条 · 洗个手的工夫就能上桌，宋宴上的快手凉菜</span></span>
+          <p>陆放翁下过厨的人盖章：<em>斫雪双螯洗手供</em>。同卷还有一位吃出事故的：蔡谟渡江，把蟛蜞当蟹抓来就吃，吐了。谢仁祖笑他<em>读尔雅不熟</em>。吃蟹先认字，是这门学问的门槛。</p>
+        </div>
+      </div>
+      <div class="dish">
+        <div class="dish-h"><b>蟹黄包</b><span>京师第一笼</span><i>包 子 有 档 案</i></div>
+        <div class="dish-b">
+          <span class="q" data-v>游京录云：京师买蟹黄包绝胜。<span class="src">卷三蟹黄条 · 汴京城里就有蟹黄包子专店，评分只有两个字，绝胜</span></span>
+          <p>陆游诗<em>蟹馔牢丸美</em>，闻人封徳考证：饼赋里的牢丸，就是包子。这只包子到今天仍在早点铺里活着，一千年没换过馅心。</p>
+        </div>
+      </div>
+      <div class="dish">
+        <div class="dish-h"><b>糟蟹</b><span>醉死在酒里，也算善终</span><i>酒 浸 浸 到 骨</i></div>
+        <div class="dish-b">
+          <span class="q" data-v>醉死杨家郭索生，此曹平日要横行。<span class="src">王履道次韵震子磐送糟蟹 · 横行一生的蟹，最后醉倒 在酒里</span></span>
+          <span class="q" data-v>烹不能鸣，渠幸生；含糊终作醉乡行。<span class="src">王初寮糟蟹诗 · 蟹被煮不会出声算它命大，含含糊糊在醉乡里走完</span></span>
+        </div>
+      </div>
+      <div class="dish">
+        <div class="dish-h"><b>糖蟹</b><span>有人替它向甜求情</span><i>贡 品 本 命</i></div>
+        <div class="dish-b">
+          <span class="q" data-v>蟹之将糖，躁扰弥甚，仁人用意，深懐恻怛。<span class="src">南史载钟岏议糖蟹 · 蟹下糖锅前挣扎得更厉害，仁人不忍；历数食单，独独为一只蟹开过一场听证会</span></span>
+          <span class="q" data-v>劝君莫以无肠故，忍见纷纷躁扰时。<span class="src">韩子苍糖蟹诗 · 别拿它没有心肠当借口，它挣扎的样子你看得住吗</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 终 雅 ================= -->
+<section class="gate" id="m8">
+  <div class="wrap">
+    <div class="gate-no mono">08</div>
+    <div class="gate-head">
+      <div class="gate-tag">蟹国志 卷四</div>
+      <h2>蟹雅<small>艺文志：这部虫谱真正的野心</small></h2>
+    </div>
+    <p class="gate-lead">卷四收图、琴曲、茶汤、蟹杯，最后压卷放了一整篇陆龟蒙的<em>蟹志</em>。表面写蟹，实际劝学：读书人守着笔记小说，就像蟹守着泥洞。点按钮，放蟹上路。</p>
+    <div class="ya-map">
+      <div class="lvl" id="lvl1">
+        <div class="lvl-bar"></div>
+        <div class="lvl-lab"><b>沮洳</b><span>蟹的泥洞 = 百家小说</span></div>
+      </div>
+      <div class="lvl" id="lvl2">
+        <div class="lvl-bar"></div>
+        <div class="lvl-lab"><b>渎</b><span>入江 = 孟子荀卿扬氏</span></div>
+      </div>
+      <div class="lvl" id="lvl3">
+        <div class="lvl-bar"></div>
+        <div class="lvl-lab"><b>海</b><span>六籍 = 圣人之海</span></div>
+      </div>
+      <svg class="hopper" id="hopper" viewBox="0 0 54 40" style="left:4%"></svg>
+    </div>
+    <button class="ya-act" id="yago">纵 蟹 出 洞</button>
+    <div class="ya-quote">
+      <span class="q big" data-v>百家小说，沮洳也；孟荀扬氏，圣人之渎也；六籍者，圣人之海也。茍不能舍沮洳而求渎，而至于海，是人之智反出于水虫下，能不悲夫！吾是以志其蟹。<span class="src">陆龟蒙蟹志 · 高似孙全文抄录压卷。一只蟹都懂得奔海，人别困在自己的泥洞里</span></span>
+    </div>
+    <div class="ship-poems">
+      <div class="sp"><span class="q" data-v>小橘枚枚菊未黄，蟹肥全不待些霜。<span class="src">高似孙李迅甫送蟹 · 主编自己的诗也收进蟹的国史</span></span></div>
+      <div class="sp"><span class="q" data-v>鴈愁奔旧菊，蟹健敌新醪。<span class="src">高似孙诗 · 蟹的健旺能与新酒过招</span></span></div>
+      <div class="sp"><span class="q" data-v>蟹与人同健，诗如酒怕陈。<span class="src">高似孙诗 · 蟹要当季，诗怕隔年，都吃个新鲜</span></span></div>
+    </div>
+    <div class="mo-sea">
+      <div class="mo-line"></div>
+      <div class="mo-seal" id="moseal">没</div>
+      <div class="mo-cap">卷二里那只被放走的斗大之蟹，横行一里才沉底。这只蟹也游到头了。</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>殆知阁导读 第<b>二百九十二</b>篇 · 2026 年 9 月编</p>
+    <p>校字记：库本畧为略之古体、髙同高、蠏同蟹、徃同往、茍同苟、昩同昧、歳同岁、鴈同雁、呉同吴、鼈同鳖，引文照录原字；库本避讳脱"玄"字（太玄经迳作太经）、扬雄与陆龟蒙等人名间有脱字、"巨蟹宫"讹作"官"、"王会篇"讹作"王防篇"、卷一黄诗"摩围山"讹作"摩山围"（本页从卷四辑本）、孝经援神契脱"契"字，本页照录讹字并于行文注明；库内私有区占位字所在句段，本页一概避开未引。</p>
+    <p>文本来源：殆知阁古代文献简体库 艺藏草木鸟兽虫鱼《蟹略》（github.com/robertsong2000/daizhigev20），去空白一万四千二百零二字。本篇引文经脚本与库内文件去标点空白归一逐字比对通过；书中食忌、治疗、蟹漆化水长生等条目为古人旧说，并无科学依据，仅存文献之真。本页无任何外部依赖。</p>
+  </div>
+</footer>
+
+<div id="railcrab"></div>
+
+<script>
+(function(){
+  var BAM = '#5f9270', BAMDIM = 'rgba(95,146,112,0.5)', DIM = '#a39e93';
+
+  function crabSVG(w, stroke, claws) {
+    var s = '';
+    s += '<g stroke="' + stroke + '" stroke-width="' + (w*0.055).toFixed(1) + '" fill="none" stroke-linecap="round">';
+    var i;
+    for (i = 0; i < 4; i++) {
+      var y = 30 + i * 8;
+      s += '<path class="legL" d="M35 ' + y + ' Q22 ' + (y+3) + ' 14 ' + (y+9) + '"/>';
+      s += '<path class="legR" d="M85 ' + y + ' Q98 ' + (y+3) + ' 106 ' + (y+9) + '"/>';
+    }
+    if (claws) {
+      s += '<path d="M38 24 Q26 14 18 16"/><path d="M18 16 q-7 -2 -6 7" />';
+      s += '<path d="M82 24 Q94 14 102 16"/><path d="M102 16 q7 -2 6 7"/>';
+    }
+    s += '</g>';
+    s += '<ellipse cx="60" cy="42" rx="26" ry="19" fill="rgba(95,146,112,0.13)" stroke="' + stroke + '" stroke-width="' + (w*0.05).toFixed(1) + '"/>';
+    s += '<line x1="51" y1="26" x2="49" y2="17" stroke="' + stroke + '" stroke-width="2"/>';
+    s += '<line x1="69" y1="26" x2="71" y2="17" stroke="' + stroke + '" stroke-width="2"/>';
+    s += '<circle cx="49" cy="15" r="2.6" fill="' + stroke + '"/>';
+    s += '<circle cx="71" cy="15" r="2.6" fill="' + stroke + '"/>';
+    s += '<path d="M48 34 q12 8 24 0" stroke="' + stroke + '" stroke-width="1.6" fill="none"/>';
+    return '<svg viewBox="0 0 120 84" style="width:100%;display:block">' + s + '</svg>';
+  }
+
+  document.getElementById('herocrab').innerHTML = crabSVG(120, BAM, true);
+  document.getElementById('railcrab').innerHTML = crabSVG(62, BAM, true);
+  var hop = document.getElementById('hopper');
+  if (hop) hop.innerHTML = crabSVG(54, BAM, false);
+
+  /* 横行 rail: scroll progress drives crab from right to left */
+  var rail = document.getElementById('railcrab');
+  function walk() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop || document.body.scrollTop) / max : 0;
+    var vw = document.documentElement.clientWidth;
+    var x = (1 - p) * (vw - 76) + 4;
+    rail.style.left = x + 'px';
+    rail.classList.toggle('gone', p > 0.985);
+  }
+  window.addEventListener('scroll', walk, {passive:true});
+  window.addEventListener('resize', walk);
+  walk();
+
+  /* 名帖翻面 */
+  Array.prototype.forEach.call(document.querySelectorAll('.nt'), function(t){
+    t.addEventListener('click', function(){ this.classList.toggle('open'); });
+  });
+
+  /* 蟹原解剖 */
+  var PARTS = {
+    kuang: {
+      name: '匡 箱', sub: '壳的主件',
+      src: '礼记曰：蚕则绩而蟹有匡。|礼记檀弓。蚕丝自绩，蟹壳自匡；匡即壳，如筐在背',
+      poem: '匡实黄金重，螯肥白玉香。|张文潜诗 · 一只蟹的配色，壳金螯白',
+      note: '壳古称匡，又称箱。任昉述异记：腾屿之南溪有蟹，<em>匡大如笠</em>，一只壳顶一顶斗笠。'
+    },
+    gao: {
+      name: '膏', sub: '秋深的第一等事',
+      src: '岭表录异曰：蟹壳内有黄赤膏。|卷一膏条',
+      poem: '满腹红膏肥似髓，贮盘青壳大于杯。|梅圣俞诗 · 膏满到像骨髓，壳大过酒杯',
+      note: '皮日休：蟹因霜重<em>金膏溢</em>。膏随霜涨，是蟹与节令的对账。'
+    },
+    qi: {
+      name: '脐', sub: '厣，行家的第一眼',
+      src: '广韵曰：厣，蟹腹下厣，即脐也。|卷一脐条',
+      poem: '想见霜脐当大嚼，梦回雪厣摩围山。|黄太史诗 · 梦里都在嚼霜脐，摩围山从卷四辑本',
+      note: '脐分尖团：尖是公，团是母。后文<em>蟹品</em>一门专讲这门看脐的功课。'
+    },
+    ao: {
+      name: '二 螯', sub: '两件兵器',
+      src: '大戴礼曰：二螯八足。|螯犹兵也，小虫而倾两端自卫，故使傍行。孝经援神注 · 库本脱契字，句从注语',
+      poem: '两螯斫雪劝加餐。|东坡诗 · 螯肉白如雪，斫雪二字从此归它所有',
+      note: '兵家给它记过战功：蝤蛑<em>能与豹鬬</em>，豹不能胜。横行是天生的自卫姿势。'
+    },
+    mu: {
+      name: '目', sub: '食忌的总开关',
+      src: '博物志曰：蟹目相向者，毒尤甚。|卷一目条',
+      poem: '怒目横行与虎争，寒沙奔火祸胎成。|黄太史诗 · 一副怒目，连夜里扑火都带着脾气',
+      note: '赤目、独目、目相向者，古书都劝你别吃，见下方食忌五条。'
+    },
+    zu: {
+      name: '足 与 行', sub: '八足加两螯，全部侧着用',
+      src: '本草经曰：蟹足节屈曲，行则旁横。|郑康成周礼注：虫有仄行者，蟹属也',
+      poem: '横行葭苇中，不自贵其身。|黄太史诗 · 横着走，也不把自己当回事',
+      note: '它的一生都用在侧面上。简斋看得最透：<em>但见横行疑是躁，不知公子实无肠</em>。'
+    }
+  };
+  var XS = {
+    kuang: '<path class="pf" d="M150 128 q110 -76 220 0 q14 60 -18 92 h-184 q-32 -32 -18 -92z" fill="rgba(95,146,112,0.13)" stroke="#5f9270" stroke-width="3"/>',
+    gao:   '<path class="pf" d="M205 150 q55 -34 110 0 q-12 44 -55 52 q-43 -8 -55 -52z" fill="rgba(192,69,60,0.25)" stroke="#c9963f" stroke-width="2.5"/>',
+    qi:    '<path class="pf" d="M245 222 q15 44 15 60 q0 -16 15 -60z" fill="rgba(95,146,112,0.3)" stroke="#5f9270" stroke-width="2.5"/>',
+    mu:    '<circle class="pf" cx="215" cy="102" r="9" fill="rgba(95,146,112,0.35)" stroke="#5f9270" stroke-width="2.5"/><circle class="pf" cx="305" cy="102" r="9" fill="rgba(95,146,112,0.35)" stroke="#5f9270" stroke-width="2.5"/>',
+    ao:    '<path class="pf" d="M158 92 q-52 -30 -78 -18 q-16 10 2 26 q-14 6 -2 22 q22 14 78 -6z" fill="rgba(95,146,112,0.16)" stroke="#5f9270" stroke-width="3"/><path class="pf" d="M362 92 q52 -30 78 -18 q16 10 -2 26 q14 6 2 22 q-22 14 -78 -6z" fill="rgba(95,146,112,0.16)" stroke="#5f9270" stroke-width="3"/>',
+    zu:    '<g class="pf" stroke="#5f9270" stroke-width="2.5" fill="none"><path d="M168 168 q-58 8 -84 44"/><path d="M172 192 q-52 26 -66 64"/><path d="M352 168 q58 8 84 44"/><path d="M348 192 q52 26 66 64"/></g>'
+  };
+  var LBL = {
+    kuang: [245,120], gao: [260,182], qi: [260,262], mu: [190,84], ao: [80,64], zu: [96,240]
+  };
+  var xs = '';
+  var key;
+  for (key in XS) {
+    xs += '<g class="xpart" data-p="' + key + '">' + XS[key];
+    xs += '<text x="' + LBL[key][0] + '" y="' + LBL[key][1] + '" text-anchor="middle">' +
+      ({kuang:'匡', gao:'膏', qi:'脐', mu:'目', ao:'螯', zu:'足'})[key] + '</text></g>';
+  }
+  document.getElementById('xcrab').innerHTML = xs;
+
+  function setPart(k) {
+    var d = PARTS[k]; if (!d) return;
+    document.getElementById('xname').innerHTML = d.name + '<small>' + d.sub + '</small>';
+    var sp = d.src.split('|');
+    document.getElementById('xsrc').innerHTML = sp[0].replace(/([一-鿿]+[：，。；])/g, '$1') +
+      '<span class="src">' + sp[1] + '</span>';
+    var pp = d.poem.split('|');
+    document.getElementById('xpoem').innerHTML = pp[0] + '<span class="src">' + pp[1] + '</span>';
+    document.getElementById('xnote').innerHTML = d.note;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.xpart'), function(g){
+    g.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.xpart'), function(x){ x.classList.remove('on'); });
+      this.classList.add('on');
+      setPart(this.getAttribute('data-p'));
+    });
+  });
+
+  /* 食忌五条 */
+  var T = ['赤目者不可食','独目者不可食','两目相向者不可食','四足者不可食','姙者不可食'];
+  document.getElementById('taboorow').innerHTML = T.map(function(t){
+    return '<span class="tb">' + t + '</span>';
+  }).join('');
+
+  /* 蟹火 */
+  document.querySelector('[data-lit]').addEventListener('click', function(){
+    document.getElementById('stn1').classList.add('lit');
+    this.textContent = '火 已 举';
+  });
+
+  /* 蟹簖 */
+  var duanrun = false;
+  document.querySelector('[data-duan]').addEventListener('click', function(){
+    if (duanrun) return; duanrun = true;
+    this.textContent = '簖 上 蟹 聚';
+    var box = document.getElementById('duanflow');
+    var n = 0;
+    var iv = setInterval(function(){
+      var d = document.createElement('i');
+      d.className = 'fdot';
+      d.style.top = (46 + Math.random()*16) + '%';
+      d.style.left = '0px';
+      box.appendChild(d);
+      var x = 0, lim = box.clientWidth - 62;
+      var iv2 = setInterval(function(){
+        x += 3;
+        if (x >= lim) { d.style.opacity = '0.15'; d.style.top = (parseFloat(d.style.top) - 1.4) + '%'; }
+        else { d.style.left = x + 'px'; x >= lim - 6 && (d.style.top = (parseFloat(d.style.top) - 0.5) + '%'); }
+        if (x > lim + 26) { clearInterval(iv2); d.remove(); }
+      }, 26);
+      n++;
+      if (n > 26) { clearInterval(iv); }
+    }, 160);
+  });
+
+  /* 尖团 */
+  var jx = document.getElementById('jtX'), jt = document.getElementById('jtT');
+  var qx = document.getElementById('jtqX'), qt = document.getElementById('jtqT');
+  function setJT(isX){
+    jx.classList.toggle('on', isX); jt.classList.toggle('on', !isX);
+    qx.classList.toggle('show', isX); qt.classList.toggle('show', !isX);
+  }
+  jx.addEventListener('click', function(){ setJT(true); });
+  jt.addEventListener('click', function(){ setJT(false); });
+
+  /* 蟹品名录 */
+  var PINS = [
+    ['湖蟹','淞苕太湖之蟹','陆游替它颁过奖：<em>西湖蟹称天下第一</em>。他写这句时人在万里外的塞月征尘里，靠一口梦里湖蟹撑着乡愁。',
+      [['淞苕之蟹，太湖蟹也。','卷二湖蟹条'],['西湖蟹称天下第一。','同条引陆放翁诗注']]],
+    ['泖蟹','三泖之蟹','松江三泖产的蟹<em>蟹大而美</em>，当地人直接拿地名喊它，蟹以地贵。',
+      [['三泖属华亭，蟹大而美，人呼为泖蟹。','卷二泖蟹条']]],
+    ['溪蟹','清癯一派','溪蟹走的是瘦硬路线，高似孙点评<em>不言肥而言癯</em>，肥是湖蟹的事，溪蟹赢在隽。',
+      [['溪边石蟹小如钱。','卷二溪蟹条引东坡诗'],['不言肥而言癯，可表溪蟹之隽。','同条疏寮评语']]],
+    ['霜蟹','霜降即开市','全书出现最勤的一个品类，霜越重，市越好。',
+      [['老蟹饱经霜，紫膏青石壳。','卷二霜蟹条引梅圣俞钓蟹诗']]],
+    ['灯蟹','上元节的奢侈','正月十五吃蟹，在吴越与京城都算顶级讲究，专有名称灯蟹。',
+      [['吴越及中都以上元时蟹为贵，谓之灯蟹。','卷二灯蟹条']]],
+    ['尺蟹','论尺卖的体面','放翁买蟹论尺，高似孙记吴人以及斤者为奇，尺与斤是蟹里的豪车排量。',
+      [['紫蟹迎霜径一尺。','卷二尺蟹条引陆放翁诗'],['黄柑磊落围三寸，尺蟹轮囷可一斤。','同条斤蟹条引放翁诗']]],
+    ['大蟹','江湖的使者','震泽渔人网到斗大的蟹，老渔夫说这是江湖使者，煮了不祥，放它走。蟹横行水面一里，才沉下去。',
+      [['震泽渔者得蟹大如斗。','卷二大蟹条'],['老渔曰：鼈蟹之殊常者，必江湖之使，烹之不祥。乃纵之，横行水面一里方没。','同条 · 全书最像志怪的一条']]]
+  ];
+  document.getElementById('pinlist').innerHTML = PINS.map(function(p){
+    var qs = p[3].map(function(pair, j){
+      return '<span class="q" data-v' + (j > 0 ? ' style="margin-top:12px"' : '') + '>' + pair[0] +
+        '<span class="src">' + pair[1] + '</span></span>';
+    }).join('');
+    return '<div class="pin"><div class="pin-h"><b>' + p[0] + '</b><span>' + p[1] + '</span><i>展 开</i></div>' +
+      '<div class="pin-b"><p>' + p[2] + '</p>' + qs + '</div></div>';
+  }).join('');
+  Array.prototype.forEach.call(document.querySelectorAll('.pin-h'), function(h){
+    h.addEventListener('click', function(){ this.parentElement.classList.toggle('open'); });
+  });
+
+  /* 挂蟹门 */
+  document.querySelector('[data-door]').addEventListener('click', function(){
+    document.getElementById('door').classList.toggle('spooked');
+    this.textContent = document.getElementById('door').classList.contains('spooked') ? '疟 鬼 已 遁' : '扮 一 回 疟 鬼 上 门';
+  });
+
+  /* 双向朝贡 */
+  var tgo = document.getElementById('tgo');
+  tgo.addEventListener('click', function(){
+    var u = document.getElementById('upcrab'), d = document.getElementById('dnbox');
+    u.classList.remove('moving'); d.classList.remove('moving2');
+    void u.getBBox; u.getBoundingClientRect();
+    u.classList.add('moving'); d.classList.add('moving2');
+    document.getElementById('tgohint').textContent = '上行的蟹衔着两茎稻芒往海里去；人间这头，平原驿马驮的糖蟹正向京师赶。';
+  });
+
+  /* 纵蟹三级跳 */
+  var stage = 0;
+  document.getElementById('yago').addEventListener('click', function(){
+    var lv = [document.getElementById('lvl1'), document.getElementById('lvl2'), document.getElementById('lvl3')];
+    if (stage >= 3) {
+      lv.forEach(function(l){ l.classList.remove('hop'); });
+      hop.style.left = '4%'; stage = 0;
+      this.textContent = '纵 蟹 出 洞';
+      return;
+    }
+    var pos = [4, 37, 70];
+    hop.style.left = pos[stage] + '%';
+    lv[stage].classList.add('hop');
+    stage++;
+    this.textContent = stage >= 3 ? '已 入 圣 人 之 海 · 再 点 放 回 洞 里' : '再 跳 一 级';
+  });
+
+  /* 没 seal */
+  var shown = false;
+  window.addEventListener('scroll', function(){
+    var h = document.documentElement;
+    var p = (h.scrollTop || document.body.scrollTop) / (h.scrollHeight - h.clientHeight);
+    if (p > 0.965 && !shown) { shown = true; document.getElementById('moseal').classList.add('show'); }
+  }, {passive:true});
+})();
+</script>
+</body>
+</html>
