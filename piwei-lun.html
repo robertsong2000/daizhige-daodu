@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>脾胃论 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #262521;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --bamboo: #5f9270; --bamboo-dim: rgba(95,146,112,0.42);
+    --hairline: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    font-size: 17px; line-height: 2; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  q { quotes: none; }
+
+  /* ===== 首屏：百子柜 ===== */
+  .hero { min-height: 92vh; display: flex; align-items: center; padding: 64px 0 56px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; width: 100%; }
+  .hero-grid { display: grid; grid-template-columns: 1fr auto; gap: 56px; align-items: center; }
+  .kicker { font-size: 13px; letter-spacing: 0.42em; color: var(--paper-faint); }
+  .kicker b { color: var(--bamboo); font-weight: 400; }
+  .vtitle {
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: clamp(72px, 9vw, 118px); font-weight: 700; letter-spacing: 0.16em;
+    line-height: 1.12; margin: 30px 0 8px; height: 5.6em;
+  }
+  .vtitle i { font-style: normal; color: var(--bamboo); }
+  .hook { color: var(--paper-dim); max-width: 26em; margin-top: 26px; }
+  .hook b { color: var(--paper); font-weight: 600; }
+  .hmeta { margin-top: 20px; font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.08em; }
+
+  .cabinet {
+    width: min(500px, 46vw); background: var(--ink-2);
+    border: 1px solid var(--hairline); border-radius: 14px; padding: 20px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+  }
+  .cplate {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 2px 6px 14px; border-bottom: 1px solid var(--hairline); margin-bottom: 14px;
+  }
+  .cplate b { font-size: 15px; letter-spacing: 0.5em; font-weight: 600; }
+  .cplate span { font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  .drawers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .drawer {
+    height: 86px; border-radius: 7px; cursor: pointer; border: 1px solid rgba(232,228,220,0.07);
+    background: linear-gradient(180deg, #26251f 0%, #1e1d19 88%);
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    padding: 12px 4px 10px; transition: transform 0.28s ease, border-color 0.28s ease;
+  }
+  .drawer:hover { transform: translateY(7px); border-color: var(--bamboo-dim); }
+  .drawer em { font-style: normal; font-size: 12.5px; color: var(--paper-dim); letter-spacing: 0.14em; }
+  .drawer i { width: 12px; height: 12px; border-radius: 50%; background: #3a382f; box-shadow: inset 0 1px 2px rgba(0,0,0,0.7), 0 1px 0 rgba(232,228,220,0.08); }
+  .drawer.ajar {
+    transform: translateY(14px); border-color: var(--bamboo);
+    background: linear-gradient(180deg, #2c3328 0%, #20261e 88%);
+    box-shadow: 0 14px 26px rgba(0,0,0,0.5);
+  }
+  .drawer.ajar em { color: var(--bamboo); }
+  .chint { margin-top: 16px; font-size: 12px; color: var(--paper-faint); text-align: center; letter-spacing: 0.1em; }
+
+  /* ===== 正文小节 ===== */
+  section { padding: 96px 0 8px; }
+  .shead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 34px; }
+  .sno { font-size: 13px; color: var(--bamboo); letter-spacing: 0.3em; }
+  h2 { font-size: clamp(26px, 3vw, 34px); font-weight: 700; letter-spacing: 0.12em; }
+  .srule { flex: 1; height: 1px; background: var(--hairline); }
+  .prose { max-width: 44em; color: var(--paper-dim); }
+  .prose b { color: var(--paper); font-weight: 600; }
+
+  /* 疫账 */
+  .ledger { max-width: 560px; margin: 44px 0 30px; }
+  .lrow {
+    display: flex; align-items: baseline; gap: 12px; padding: 16px 2px;
+    border-bottom: 1px dashed rgba(232,228,220,0.16); font-size: clamp(19px, 2.4vw, 24px);
+  }
+  .lrow .dot { color: var(--bamboo); font-size: 13px; }
+  .lrow q { color: var(--paper); letter-spacing: 0.04em; }
+  .lrow .lsrc { margin-left: auto; font-size: 12px; color: var(--paper-faint); white-space: nowrap; }
+  .bigq {
+    max-width: 44em; border-left: 2px solid var(--bamboo); padding: 6px 0 6px 26px;
+    margin: 40px 0; font-size: clamp(18px, 2vw, 21px); color: var(--paper); line-height: 2.2;
+  }
+  .qsrc { display: block; margin-top: 10px; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.14em; }
+  .qsrc b { color: var(--bamboo); font-weight: 400; }
+
+  /* 医者 */
+  .biocard {
+    display: grid; grid-template-columns: 120px 1fr; gap: 30px; max-width: 760px;
+    margin: 40px 0; padding: 30px; background: var(--ink-2); border: 1px solid var(--hairline); border-radius: 10px;
+  }
+  .biocard .nm { writing-mode: vertical-rl; text-orientation: upright; font-size: 30px; font-weight: 700; letter-spacing: 0.22em; color: var(--bamboo); height: 7em; }
+  .biocard p { font-size: 15.5px; color: var(--paper-dim); }
+  .biocard p + p { margin-top: 12px; }
+
+  /* 柜层：目录 */
+  .shelfrow { display: flex; gap: 40px; flex-wrap: wrap; margin-top: 10px; }
+  .shelfnum { font-size: 15px; color: var(--bamboo); letter-spacing: 0.2em; margin-bottom: 6px; }
+  .shelfnum span { color: var(--paper-faint); font-size: 12.5px; }
+  .shelf { flex: 1 1 240px; }
+  .shelf q {
+    display: block; font-size: 14.5px; color: var(--paper-dim); padding: 7px 0 7px 14px;
+    border-left: 1px solid var(--hairline); letter-spacing: 0.03em; line-height: 1.9;
+  }
+  .shelf q.hl { color: var(--bamboo); border-left-color: var(--bamboo); }
+  .countrow { display: flex; gap: 34px; flex-wrap: wrap; margin: 38px 0 26px; }
+  .countrow div { padding-left: 14px; border-left: 2px solid var(--bamboo-dim); }
+  .countrow b { display: block; font-size: clamp(24px, 3vw, 32px); font-weight: 700; color: var(--paper); }
+  .countrow span { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.16em; }
+  .tnote { font-size: 13.5px; color: var(--paper-faint); }
+
+  /* 升降枢 */
+  .axis { display: grid; grid-template-columns: 1fr auto 1fr; gap: 40px; align-items: center; max-width: 900px; margin: 46px 0; }
+  .axq { color: var(--paper-dim); font-size: 15.5px; }
+  .axq q { display: block; color: var(--paper); font-size: clamp(17px, 1.9vw, 20px); padding: 14px 0; line-height: 2.2; }
+  .axq.left { text-align: right; }
+  .axcol { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 190px; }
+  .axnode { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.3em; }
+  .axup, .axdn { width: 1px; height: 64px; background: var(--bamboo-dim); position: relative; }
+  .axup::before, .axdn::after { content: ""; position: absolute; left: -4px; border: 4px solid transparent; }
+  .axup::before { top: -2px; border-bottom-color: var(--bamboo); }
+  .axdn::after { bottom: -2px; border-top-color: var(--bamboo); }
+  .zhongtu {
+    width: 108px; height: 108px; border-radius: 50%; border: 1px solid var(--bamboo);
+    display: grid; place-items: center; background: radial-gradient(circle at 38% 32%, #2b3229, #1e211d 72%);
+    font-size: 17px; letter-spacing: 0.24em; text-indent: 0.24em; font-weight: 700;
+  }
+
+  /* 方笺 */
+  .fchap {
+    max-width: 620px; margin: 42px 0 26px; padding: 34px 34px 28px;
+    background: linear-gradient(180deg, #22211e, #1d1c1a); border: 1px solid var(--hairline); border-radius: 4px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.4); position: relative;
+  }
+  .fchap::before {
+    content: "补中益气汤"; position: absolute; top: -17px; left: 30px;
+    background: var(--bamboo); color: #10130f; font-size: 14px; font-weight: 700;
+    letter-spacing: 0.32em; text-indent: 0.32em; padding: 4px 16px; border-radius: 2px;
+  }
+  .herbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); }
+  .herb { background: var(--ink-2); padding: 16px 14px; }
+  .herb q { display: block; font-size: 14px; color: var(--paper-dim); line-height: 1.9; }
+  .herb q::first-letter { font-size: 21px; color: var(--bamboo); font-weight: 700; }
+  .fnote { margin-top: 18px; font-size: 13px; color: var(--paper-faint); }
+  .fusenote { max-width: 620px; margin: 26px 0; font-size: 15px; color: var(--paper-dim); padding-left: 16px; border-left: 1px dashed var(--bamboo-dim); }
+  .fusenote q { color: var(--paper); }
+
+  /* 省言 */
+  .portrait {
+    max-width: 44em; margin: 44px 0; padding: 36px 40px;
+    background: var(--ink-2); border: 1px solid var(--hairline); border-radius: 10px;
+    font-size: clamp(18px, 2vw, 21px); line-height: 2.3; color: var(--paper);
+  }
+  .portrait .lbl { display: block; font-size: 12.5px; color: var(--bamboo); letter-spacing: 0.3em; margin-bottom: 14px; }
+  .zhen {
+    max-width: 620px; margin: 40px 0; text-align: center;
+    font-size: clamp(19px, 2.2vw, 23px); line-height: 2.6; color: var(--paper);
+  }
+  .zhen .zz { display: block; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.4em; margin-bottom: 16px; }
+  .colophon {
+    display: flex; gap: 26px; align-items: stretch; max-width: 780px; margin: 48px 0 10px; flex-wrap: wrap;
+  }
+  .coph { flex: 1 1 280px; padding: 22px 24px; border-top: 2px solid var(--bamboo-dim); background: var(--ink-2); }
+  .coph .who { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.16em; margin-bottom: 10px; }
+  .coph q { font-size: 16px; color: var(--paper); }
+  .coph.later { border-top-color: var(--bamboo); }
+  .endq { max-width: 44em; border-left: 2px solid var(--bamboo); padding-left: 26px; margin: 40px 0 0; font-size: clamp(18px, 2vw, 21px); line-height: 2.2; }
+
+  /* 页脚 */
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 90px; padding: 40px 0 64px; font-size: 13.5px; color: var(--paper-faint); }
+  footer.page .row { max-width: 1080px; margin: 0 auto 14px; padding: 0 28px; line-height: 2; }
+  footer.page b { color: var(--paper-dim); font-weight: 600; }
+  footer.page a { color: var(--bamboo); text-decoration: none; }
+  footer.page .fin { max-width: 1080px; margin: 26px auto 0; padding: 0 28px; letter-spacing: 0.3em; color: var(--paper-dim); }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .cabinet { width: 100%; }
+    .vtitle { height: 4.4em; font-size: clamp(58px, 15vw, 84px); }
+    .biocard { grid-template-columns: 1fr; }
+    .biocard .nm { writing-mode: horizontal-tb; height: auto; }
+    .axis { grid-template-columns: 1fr; }
+    .axq.left { text-align: left; }
+    .axcol { margin: 0 auto; }
+    .herbs { grid-template-columns: repeat(2, 1fr); }
+    section { padding-top: 72px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="kicker">殆知阁导读 <b>·</b> 医方卷</div>
+        <h1 class="vtitle">脾胃<i>论</i></h1>
+        <p class="hook">一部从围城大疫里长出来的病源书。城外是兵，城内是疫，医生翻遍死者们的病程，落笔只有一句话：<b>饿坏的脾胃，撑不起一条命。</b></p>
+        <p class="hmeta">金　李杲 撰　东垣老人书　元好问作序　罗天益作后序</p>
+      </div>
+      <div class="cabinet">
+        <div class="cplate"><b>东垣书案</b><span>三卷 五十九方</span></div>
+        <div class="drawers">
+          <div class="drawer" data-go="s3"><em>虚实传变</em><i></i></div>
+          <div class="drawer" data-go="s3"><em>胜衰</em><i></i></div>
+          <div class="drawer" data-go="s3"><em>肺之虚</em><i></i></div>
+          <div class="drawer" data-go="s3"><em>君臣佐使</em><i></i></div>
+          <div class="drawer" data-go="s3"><em>气运衰旺</em><i></i></div>
+          <div class="drawer" data-go="s3"><em>热中论</em><i></i></div>
+          <div class="drawer ajar" data-go="s5"><em>补中益气汤</em><i></i></div>
+          <div class="drawer" data-go="s5"><em>清暑益气</em><i></i></div>
+          <div class="drawer" data-go="s4"><em>九窍</em><i></i></div>
+          <div class="drawer" data-go="s4"><em>升降浮沉</em><i></i></div>
+          <div class="drawer" data-go="s6"><em>摄养远欲</em><i></i></div>
+          <div class="drawer" data-go="s6"><em>省言箴</em><i></i></div>
+        </div>
+        <div class="chint">点开一屉，去看那层书</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="s1">
+    <div class="shead"><span class="sno">壹</span><h2>疫账</h2><div class="srule"></div></div>
+    <p class="prose">壬辰年，1232 年。蒙古大军围汴京，解围之后，城里起了大疫。替这册书写序的人，把这一年的账记在开头：他叫元好问，系列第 06 篇《中州集》的编者、第 250 篇《归潜志》里为崔立碑事难眠的那位遗山。这座围城我们见过，只是那两回看的是政局，这一回看的是尸体。</p>
+    <div class="ledger">
+      <div class="lrow"><span class="dot">●</span><q>五六十日之间</q><span class="lsrc">时</span></div>
+      <div class="lrow"><span class="dot">●</span><q>为饮食劳倦所伤而殁者</q><span class="lsrc">症</span></div>
+      <div class="lrow"><span class="dot">●</span><q>将百万人</q><span class="lsrc">数</span></div>
+      <div class="lrow"><span class="dot">●</span><q>皆谓由伤寒而殁</q><span class="lsrc">断</span></div>
+    </div>
+    <blockquote class="bigq"><q>往者，遭壬辰之变，五六十日之间，为饮食劳倦所伤而殁者，将百万人，皆谓由伤寒而殁，后见明之辨内外伤及饮食劳倦伤一论，而后知世医之误。学术不明，误人乃如此，可不大哀耶！</q><span class="qsrc"><b>序</b>　己酉七月望日遗山元好问序</span></blockquote>
+    <p class="prose">围城断了粮，人先饿，后病。世医按伤寒的外感法度发汗攻下，治的全是错处：病根不在风寒，在饿。饿坏的是脾胃。这场疫过后二十年，李杲把道理写成书，元好问在序尾替他许愿。</p>
+    <blockquote class="bigq"><q>上发二书之微，下祛千载之惑，此书果行，壬辰药祸，当无从而作。仁人之言，其意博哉！</q><span class="qsrc"><b>序</b>　所谓二书，《内外伤辨惑论》在前，即此书在后</span></blockquote>
+  </section>
+
+  <section id="s2">
+    <div class="shead"><span class="sno">贰</span><h2>医者</h2><div class="srule"></div></div>
+    <div class="biocard">
+      <div class="nm">东垣老人</div>
+      <div>
+        <p>李杲，字明之，真定人，家世豪富。少年时母亲董氏卧病，里中数医各执一词，寒热温凉乱投，竟以药误而终。他痛悔不懂医，携千金拜易水张元素为师，尽得其学。后来金亡，他流落行医，自号东垣老人。上述生平出元人砚坚所撰本传，属库外知识。</p>
+        <p>四库馆臣在提要里引明人孙一奎的话，把人与书的关系说透：这样的医学，是被那个乱世逼出来的。</p>
+      </div>
+    </div>
+    <blockquote class="bigq"><q>东垣生当金、元之交，中原扰攘，士失其所，人疲奔命，或以劳倦伤脾，或以忧思伤脾，或以饥饱伤脾，病有缓急，不得不以急者为先务。此真知杲者也。</q><span class="qsrc"><b>四库提要</b>　引孙一奎《医旨绪馀》</span></blockquote>
+    <p class="prose">书稿最后托给了一个叫罗天益、字谦父的年轻人。提要记下了托付的那一刻。</p>
+    <blockquote class="bigq"><q>杲临终，取平日所著书，检勘卷帙，以次相从，列于几前，嘱谦父曰此书付汝者，即其人也。</q><span class="qsrc"><b>四库提要</b>　引砚坚《东垣老人传》</span></blockquote>
+  </section>
+
+  <section id="s3">
+    <div class="shead"><span class="sno">叁</span><h2>柜层</h2><div class="srule"></div></div>
+    <div class="countrow">
+      <div><b>三</b><span>卷</span></div>
+      <div><b>三十四</b><span>论说</span></div>
+      <div><b>五十九</b><span>方</span></div>
+      <div><b>42,827</b><span>库本去空白字数</span></div>
+    </div>
+    <p class="prose">全书不炫奇方，先立理后立方：论在前，讲脾胃为什么是全身的枢纽；方在后，枢纽怎么转，药就怎么配。库本首卷无卷上题字，卷中卷下各有标记，首列提要一篇、元好问序一篇，卷末附门人罗天益后序。</p>
+    <div class="shelfrow">
+      <div class="shelf">
+        <div class="shelfnum">卷上 <span>七篇</span></div>
+        <q>脾胃虚实传变论</q>
+        <q>脾胃胜衰论</q>
+        <q>脏气法时升降浮沉补泻图说</q>
+        <q>肺之脾胃虚论</q>
+        <q>君臣佐使法</q>
+        <q>分经随病制方</q>
+        <q>用药宜禁论</q>
+      </div>
+      <div class="shelf">
+        <div class="shelfnum">卷中 <span>九篇</span></div>
+        <q>气运衰旺图说</q>
+        <q>饮食劳倦所伤始为热中论</q>
+        <q class="hl">补中益气汤</q>
+        <q>脾胃虚弱随时为病随病制方</q>
+        <q>长夏湿热胃困尤甚用清暑益气汤论</q>
+        <q>随时加减用药法</q>
+        <q>肠下血论</q>
+        <q>脾胃虚不可妄用吐药论</q>
+        <q>安养心神调治脾胃论</q>
+        <q>胃气下溜五脏气皆乱其为病互相出见论</q>
+      </div>
+      <div class="shelf">
+        <div class="shelfnum">卷下 <span>十八篇</span></div>
+        <q>大肠小肠五脏皆属于胃胃虚则俱病论</q>
+        <q>脾胃虚则九窍不通论</q>
+        <q>胃虚脏腑经络皆无所受气而俱病论</q>
+        <q>胃虚元气不足诸病所生论</q>
+        <q>忽肥忽瘦论</q>
+        <q>天地阴阳生杀之理在升降浮沉之间论</q>
+        <q>阴阳寿夭论</q>
+        <q>五脏之气交变论</q>
+        <q>阴阳升降论</q>
+        <q>调理脾胃治验治法用药若不明升降浮沉差互反损论</q>
+        <q>阳明病湿胜自汗论</q>
+        <q>湿热成痿肺金受邪论</q>
+        <q>饮食伤脾论</q>
+        <q>脾胃损在调饮食适寒温</q>
+        <q>脾胃将理法</q>
+        <q>摄养</q>
+        <q>远欲</q>
+        <q>省言箴</q>
+      </div>
+    </div>
+    <p class="tnote">篇目从库本逐行辑出；五十九方不列于此，散在各论之后，最有名的一张见下节。</p>
+  </section>
+
+  <section id="s4">
+    <div class="shead"><span class="sno">肆</span><h2>枢</h2><div class="srule"></div></div>
+    <p class="prose">李杲的全部医学可以画成一个轮子：脾胃坐在中间，是升降的轴。清气升上去，滋养五官九窍；浊气降下去，排出体外。轴一虚，两头都停摆。</p>
+    <div class="axis">
+      <div class="axq left"><q>胃气一虚，耳目口鼻，俱为之病。</q>眼耳口鼻这些「窍」，在他看来都不是孤立零件，全靠胃气往上托着。</div>
+      <div class="axcol">
+        <div class="axnode">九窍</div>
+        <div class="axup"></div>
+        <div class="zhongtu">脾胃</div>
+        <div class="axdn"></div>
+        <div class="axnode">浊阴</div>
+      </div>
+      <div class="axq"><q>人以水谷为本，故人绝水谷则死，脉无胃气亦死。</q>这话本是引《内经》，李杲把它放大成全书的底座：饭就是命，消化饭的能力就是元气。</div>
+    </div>
+    <p class="prose">所以围城疫死的百万人，在他眼里是一组同一条病根的病人：饥饿劳倦先伤脾胃，轴垮了，百病自己长出来。他把这句话写进卷上，像把钉子敲进梁。</p>
+    <blockquote class="bigq"><q>欲人知百病皆由脾胃衰而生也，毫厘之失，则灾害立生。</q><span class="qsrc"><b>卷上</b>　脾胃胜衰论</span></blockquote>
+  </section>
+
+  <section id="s5">
+    <div class="shead"><span class="sno">伍</span><h2>一张方子</h2><div class="srule"></div></div>
+    <p class="prose">五十九方里走得最远的一张出自卷中，治的是「饮食劳倦所伤始为热中」：饿累了、愁苦了、气陷下去了的人。药味只有八味，剂量轻得近乎吝啬。这张方子今天还在，药店里能买到的补中益气丸就是它的直系后代（此为库外常识）。</p>
+    <div class="fchap">
+      <div class="herbs">
+        <div class="herb"><q>黄芪（病甚，劳役热者一钱）</q></div>
+        <div class="herb"><q>甘草（以上各五分，炙）</q></div>
+        <div class="herb"><q>人参（去节，三分，有嗽去之。）</q></div>
+        <div class="herb"><q>当归身（三分，酒焙干，或日干，以和血脉）</q></div>
+        <div class="herb"><q>橘皮（不去白，二分或三分，以导气，又能益元气，得诸甘药乃可，若独用泻脾胃）</q></div>
+        <div class="herb"><q>升麻（二分或三分，引胃气上腾而复其本位，便是行春升之令）</q></div>
+        <div class="herb"><q>柴胡（二分或三分，引清气，行少阳之气上升）</q></div>
+        <div class="herb"><q>白术（三分，降胃中热，利腰脐间血）</q></div>
+      </div>
+      <p class="fnote">八味各自的差事，是李杲原注。升麻柴胡两味升药，把中气往上送，是他最要紧的发明。</p>
+    </div>
+    <div class="fusenote">煎服也有分寸：<q>如伤之重者，不过二服而愈；若病日久者，以权立加减法治之。</q>吃下去更要喂回来，<q>若喜食，初一二日不可饱食，恐胃再伤，以药力尚少，胃气不得转运升发也。</q></div>
+  </section>
+
+  <section id="s6">
+    <div class="shead"><span class="sno">陆</span><h2>省言</h2><div class="srule"></div></div>
+    <p class="prose">书末没有压轴大方，只有几篇小字：将理法、摄养、远欲、省言箴。一个打了大半辈子仗的老人，把医术收成几句家常话。摄养篇里全是琐碎叮咛，落点一句。</p>
+    <blockquote class="bigq"><q>大抵宜温暖，避风寒，省语，少劳役为上。</q><span class="qsrc"><b>卷下</b>　摄养</span></blockquote>
+    <div class="portrait">
+      <span class="lbl">远欲 · 晚年自画像</span>
+      <q>残躯六十有五，耳目半失于视听，百脉沸腾而烦心，身如众派漂流，瞑目则魂如浪去，神气衰于前日，饮食减于囊时</q>。写完病，他给自己开的方子是放下：<q>安于淡薄，少思寡欲，省语以养气，不妄作劳以养形，虚心以维神，寿夭得失，安之于数，得丧既轻，血气自然谐和，邪无所容，病安增剧？</q>
+    </div>
+    <div class="zhen">
+      <span class="zz">省言箴</span>
+      <q>气乃神之祖，精乃气之子。气者，精神之根蒂也。大矣哉！积气以成精，积精以全神，必清必静，御之以道，可以为天人矣。有道者能之，予何人哉，切宜省言而已。</q>
+    </div>
+    <div class="colophon">
+      <div class="coph"><div class="who">前序 · 己酉（1249）</div><q>己酉七月望日遗山元好问序</q></div>
+      <div class="coph later"><div class="who">后序 · 至元丙子（1276）</div><q>至元丙子三月上巳日门生罗天益谨序</q></div>
+    </div>
+    <p class="prose">两篇序之间隔着二十七年。老师没等到后序：1251 年李杲去世，书稿跟着罗天益又走了二十五年，才落成这行后序。乱世里一册书能走完这条路，靠的全是活人接力。</p>
+    <blockquote class="endq"><q>东垣先生之学，医之王道也！观此书则可见矣。</q><span class="qsrc"><b>后序</b>　罗天益引鲁齐先生语</span></blockquote>
+  </section>
+
+</main>
+
+<footer class="page">
+  <div class="row"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），医藏〈脾胃论〉，金李杲撰，库内全文去空白 42,827 字，三卷，卷首附四库提要与元好问序，卷末附罗天益后序。本页六十七处引文（q 元素六十二处、夹注五处，含篇目三十四条与方药八味）经脚本与库内文本去标点、空白归一逐字核验通过，页尾另藏引文全清单。目录：<a href="mulu.html">殆知阁导读总目</a>。</div>
+  <div class="row"><b>库外申报</b>　壬辰之变即 1232 年蒙古围汴京后城中大疫，《金史》哀宗纪载大疫五十日、出各门死者九十余万，与序文「将百万人」相表里；李杲生卒年 1180 至 1251、字明之、真定人、师张元素、母董氏误于医药及捐千金从学诸事，出元砚坚《东垣老人传》；补中益气丸为今日常见成药；干支纪年换算、系列篇目互引均为库外信息，未经库本核验。</div>
+  <div class="row"><b>时代局限提醒</b>　本书理论建立在四时五行、升降浮沉与脉法之上，用药剂量、炮制与禁忌皆属金元医学体系，与现代医学认识有本质差异；本页仅作古籍文献导读，不构成任何医疗建议，身体不适请就医。序文与史册所记疫死人数为当时记载，规模与口径无法以今日标准复核；文中「伤寒」「内伤」之辨反映的是那个时代的认识限度，不代表编者与导读立场。愿读者以历史眼光观之。</div>
+  <div class="fin">殆知阁导读　二百五十七</div>
+</footer>
+
+<div id="qbank" hidden>
+  <ul>
+    <li>五六十日之间</li>
+    <li>为饮食劳倦所伤而殁者</li>
+    <li>将百万人</li>
+    <li>皆谓由伤寒而殁</li>
+    <li>往者，遭壬辰之变，五六十日之间，为饮食劳倦所伤而殁者，将百万人，皆谓由伤寒而殁，后见明之辨内外伤及饮食劳倦伤一论，而后知世医之误。学术不明，误人乃如此，可不大哀耶！</li>
+    <li>上发二书之微，下祛千载之惑，此书果行，壬辰药祸，当无从而作。仁人之言，其意博哉！</li>
+    <li>己酉七月望日遗山元好问序</li>
+    <li>东垣生当金、元之交，中原扰攘，士失其所，人疲奔命，或以劳倦伤脾，或以忧思伤脾，或以饥饱伤脾，病有缓急，不得不以急者为先务。此真知杲者也。</li>
+    <li>杲临终，取平日所著书，检勘卷帙，以次相从，列于几前，嘱谦父曰此书付汝者，即其人也。</li>
+    <li>脾胃虚实传变论</li>
+    <li>脾胃胜衰论</li>
+    <li>脏气法时升降浮沉补泻图说</li>
+    <li>肺之脾胃虚论</li>
+    <li>君臣佐使法</li>
+    <li>分经随病制方</li>
+    <li>用药宜禁论</li>
+    <li>气运衰旺图说</li>
+    <li>饮食劳倦所伤始为热中论</li>
+    <li>补中益气汤</li>
+    <li>脾胃虚弱随时为病随病制方</li>
+    <li>长夏湿热胃困尤甚用清暑益气汤论</li>
+    <li>随时加减用药法</li>
+    <li>肠下血论</li>
+    <li>脾胃虚不可妄用吐药论</li>
+    <li>安养心神调治脾胃论</li>
+    <li>胃气下溜五脏气皆乱其为病互相出见论</li>
+    <li>大肠小肠五脏皆属于胃胃虚则俱病论</li>
+    <li>脾胃虚则九窍不通论</li>
+    <li>胃虚脏腑经络皆无所受气而俱病论</li>
+    <li>胃虚元气不足诸病所生论</li>
+    <li>忽肥忽瘦论</li>
+    <li>天地阴阳生杀之理在升降浮沉之间论</li>
+    <li>阴阳寿夭论</li>
+    <li>五脏之气交变论</li>
+    <li>阴阳升降论</li>
+    <li>调理脾胃治验治法用药若不明升降浮沉差互反损论</li>
+    <li>阳明病湿胜自汗论</li>
+    <li>湿热成痿肺金受邪论</li>
+    <li>饮食伤脾论</li>
+    <li>脾胃损在调饮食适寒温</li>
+    <li>脾胃将理法</li>
+    <li>摄养</li>
+    <li>远欲</li>
+    <li>省言箴</li>
+    <li>胃气一虚，耳目口鼻，俱为之病。</li>
+    <li>人以水谷为本，故人绝水谷则死，脉无胃气亦死。</li>
+    <li>欲人知百病皆由脾胃衰而生也，毫厘之失，则灾害立生。</li>
+    <li>黄芪（病甚，劳役热者一钱）</li>
+    <li>甘草（以上各五分，炙）</li>
+    <li>人参（去节，三分，有嗽去之。）</li>
+    <li>当归身（三分，酒焙干，或日干，以和血脉）</li>
+    <li>橘皮（不去白，二分或三分，以导气，又能益元气，得诸甘药乃可，若独用泻脾胃）</li>
+    <li>升麻（二分或三分，引胃气上腾而复其本位，便是行春升之令）</li>
+    <li>柴胡（二分或三分，引清气，行少阳之气上升）</li>
+    <li>白术（三分，降胃中热，利腰脐间血）</li>
+    <li>如伤之重者，不过二服而愈；若病日久者，以权立加减法治之。</li>
+    <li>若喜食，初一二日不可饱食，恐胃再伤，以药力尚少，胃气不得转运升发也。</li>
+    <li>大抵宜温暖，避风寒，省语，少劳役为上。</li>
+    <li>残躯六十有五，耳目半失于视听，百脉沸腾而烦心，身如众派漂流，瞑目则魂如浪去，神气衰于前日，饮食减于囊时</li>
+    <li>安于淡薄，少思寡欲，省语以养气，不妄作劳以养形，虚心以维神，寿夭得失，安之于数，得丧既轻，血气自然谐和，邪无所容，病安增剧？</li>
+    <li>气乃神之祖，精乃气之子。气者，精神之根蒂也。大矣哉！积气以成精，积精以全神，必清必静，御之以道，可以为天人矣。有道者能之，予何人哉，切宜省言而已。</li>
+    <li>至元丙子三月上巳日门生罗天益谨序</li>
+    <li>东垣先生之学，医之王道也！观此书则可见矣。</li>
+  </ul>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.drawer').forEach(function(d){
+    d.addEventListener('click', function(){
+      var t = document.getElementById(d.getAttribute('data-go'));
+      if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+</body>
+</html>
