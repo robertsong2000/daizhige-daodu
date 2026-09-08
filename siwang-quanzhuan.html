@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>殆知阁导读 · 降王四传〈吴耿尚孔四王全传〉</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #131210;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --gold: #c9963f; --gold-dim: rgba(201,150,63,0.55); --gold-faint: rgba(201,150,63,0.18);
+    --cinnabar: #c0453c;
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 26px; }
+  a { color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold-faint); }
+  a:hover { border-bottom-color: var(--gold); }
+  q { quotes: none; }
+  ::selection { background: var(--gold); color: var(--ink); }
+
+  /* ============ 首屏 · 悬券 ============ */
+  .hero { position: relative; min-height: 92dvh; display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 30px; align-items: stretch; padding: 0 0 40px; }
+  .wall { position: relative; display: flex; justify-content: center; gap: clamp(10px, 4vw, 46px); padding: 0 12px; }
+  .tally { background: none; border: none; cursor: pointer; text-align: center; }
+  .tally .cord { display: block; width: 1px; height: clamp(28px, 7dvh, 74px); margin: 0 auto; background: linear-gradient(to bottom, var(--paper-faint), var(--gold-dim)); }
+  .tally .nail { display: block; width: 7px; height: 7px; border-radius: 50%; background: var(--gold-dim); margin: -2px auto 0; box-shadow: 0 0 8px var(--gold-faint); }
+  .board {
+    position: relative; display: block; width: clamp(64px, 9vw, 96px); margin: 8px auto 0;
+    background: linear-gradient(160deg, #262420 0%, #1d1c19 55%, #171613 100%);
+    border: 1px solid rgba(201,150,63,0.4); border-radius: 3px;
+    padding: 26px 0 30px; transform-origin: 50% -34px; transform: rotate(var(--tilt, 0deg));
+    transition: transform 0.5s ease; box-shadow: 0 14px 26px rgba(0,0,0,0.5);
+  }
+  .board::before, .board::after {
+    content: ""; position: absolute; left: 14px; right: 14px; height: 1px; background: var(--gold-faint);
+  }
+  .board::before { top: 10px; } .board::after { bottom: 10px; }
+  .tally:hover .board, .tally:focus-visible .board, .tally.open .board { animation: sway 2.6s ease-in-out infinite; }
+  @keyframes sway {
+    0%, 100% { transform: rotate(var(--tilt, 0deg)); }
+    30% { transform: rotate(calc(var(--tilt, 0deg) + 2.4deg)); }
+    65% { transform: rotate(calc(var(--tilt, 0deg) - 2deg)); }
+  }
+  .board .wang {
+    display: block; writing-mode: vertical-rl; margin: 0 auto;
+    font-size: clamp(44px, 5.4vw, 64px); font-weight: 700; letter-spacing: 0.28em;
+    color: var(--paper); text-shadow: 0 0 22px rgba(201,150,63,0.25);
+  }
+  .board .haom {
+    display: block; margin-top: 12px; font-size: 12.5px; letter-spacing: 0.3em; color: var(--gold-dim);
+  }
+  .crack {
+    position: absolute; left: 50%; top: 12%; width: 2px; height: 72%;
+    transform: translateX(-50%) scaleY(0); transform-origin: top; transition: transform 0.9s ease 0.15s;
+    background: repeating-linear-gradient(to bottom, var(--cinnabar) 0 9px, transparent 9px 13px);
+    opacity: 0.9;
+  }
+  .tally:hover .crack, .tally:focus-visible .crack, .tally.open .crack { transform: translateX(-50%) scaleY(1); }
+  .tally.mercy .crack { height: 30%; background: repeating-linear-gradient(to bottom, var(--gold) 0 9px, transparent 9px 13px); }
+  .fate {
+    position: absolute; left: 50%; bottom: -34px; transform: translateX(-50%);
+    white-space: nowrap; font-size: 12.5px; letter-spacing: 0.14em; color: var(--gold);
+    opacity: 0; transition: opacity 0.5s ease 0.6s;
+  }
+  .tally:hover .fate, .tally:focus-visible .fate, .tally.open .fate { opacity: 1; }
+  .hero-text { display: flex; flex-direction: column; justify-content: center; padding: 56px 26px 20px 0; }
+  .kicker { font-size: 13px; letter-spacing: 0.4em; color: var(--paper-faint); }
+  .title-v {
+    display: flex; align-items: flex-start; gap: 20px; margin: 30px 0 26px;
+  }
+  .title-v h1 {
+    writing-mode: vertical-rl; font-size: clamp(52px, 6.6vw, 88px); font-weight: 700; letter-spacing: 0.18em; line-height: 1.14;
+  }
+  .title-v h1 em { font-style: normal; color: var(--gold); }
+  .title-v .side {
+    writing-mode: vertical-rl; font-size: 14.5px; color: var(--paper-dim); letter-spacing: 0.22em; padding-top: 10px; max-height: 300px;
+  }
+  .lede { color: var(--paper-dim); font-size: 15.5px; max-width: 34em; }
+  .lede b { color: var(--paper); font-weight: 600; }
+  .fnote { margin-top: 26px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.06em; }
+  .hint { margin-top: 10px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.12em; }
+  .hint i { font-style: normal; color: var(--gold-dim); }
+
+  /* ============ 通用节 ============ */
+  section { padding: 84px 0 30px; }
+  .sechead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 8px; }
+  .sechead .no { font-size: 13px; color: var(--gold-dim); letter-spacing: 0.2em; }
+  .sechead h2 { font-size: clamp(26px, 3.2vw, 36px); font-weight: 700; letter-spacing: 0.14em; }
+  .sechead h2 em { font-style: normal; color: var(--gold); }
+  .seclede { color: var(--paper-dim); font-size: 14.8px; max-width: 42em; margin-bottom: 34px; }
+  .qsrc { display: block; margin-top: 10px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.1em; }
+  .q {
+    display: block; background: var(--paper); color: var(--ink);
+    border-left: 3px solid var(--gold); padding: 18px 22px; margin: 26px auto 0;
+    font-size: 15.5px; line-height: 2; max-width: 640px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+  }
+  .q.qsrc { background: none; border: none; color: var(--paper-faint); box-shadow: none; padding: 0; margin: 8px 0 0; font-size: 12px; }
+  .q.small { font-size: 14px; }
+
+  /* ============ 一剑三孙 ============ */
+  .sword-line { position: relative; margin: 10px 0 40px; padding-left: 22px; }
+  .sword-line::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--gold), transparent); }
+  .flips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .flipcard { perspective: 900px; min-height: 210px; }
+  .flipcard input { position: absolute; opacity: 0; pointer-events: none; }
+  .flipcard label { display: block; cursor: pointer; height: 100%; }
+  .flipcard .inner { position: relative; height: 100%; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); }
+  .flipcard input:checked ~ label .inner { transform: rotateY(180deg); }
+  .face {
+    position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border: 1px solid var(--hairline); background: var(--ink-2); border-radius: 4px;
+    padding: 20px 18px; display: flex; flex-direction: column; justify-content: center;
+  }
+  .face .mao { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.16em; margin-bottom: 8px; }
+  .face .nm { font-size: 24px; font-weight: 700; letter-spacing: 0.1em; }
+  .face .sub { margin-top: 10px; font-size: 13px; color: var(--paper-dim); }
+  .face.back { transform: rotateY(180deg); border-color: var(--gold-dim); background: linear-gradient(150deg, #242019, #1a1814); }
+  .face.back .nm { color: var(--gold); }
+  .face.back .st { margin-top: 10px; font-size: 12.5px; color: var(--paper-dim); line-height: 1.8; }
+  .face .tap { margin-top: 14px; font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .wucard {
+    margin-top: 22px; border: 1px dashed rgba(201,150,63,0.35); border-radius: 4px; padding: 20px 22px;
+    display: flex; gap: 20px; align-items: baseline; flex-wrap: wrap;
+  }
+  .wucard .nm { font-size: 22px; font-weight: 700; color: var(--paper); }
+  .wucard .ex { font-size: 13.5px; color: var(--paper-dim); flex: 1; min-width: 260px; }
+
+  /* ============ 吴 · 檄与行 ============ */
+  .cedict {
+    margin: 30px auto 0; max-width: 640px; background: var(--ink-3); border: 1px solid rgba(201,150,63,0.3);
+    padding: 30px 28px 26px; position: relative;
+  }
+  .cedict::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--hairline); pointer-events: none; }
+  .cedict .tag { position: absolute; top: -12px; left: 22px; background: var(--gold); color: var(--ink); font-size: 12px; letter-spacing: 0.24em; padding: 3px 12px; }
+  .cedict .big { font-size: clamp(19px, 2.4vw, 24px); font-weight: 700; letter-spacing: 0.1em; line-height: 2; }
+  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 30px; }
+  .duel .cell { border: 1px solid var(--hairline); border-radius: 4px; padding: 20px; background: var(--ink-2); }
+  .duel .cell.say { border-top: 3px solid var(--gold); }
+  .duel .cell.act { border-top: 3px solid var(--cinnabar); }
+  .duel .k { font-size: 12.5px; letter-spacing: 0.3em; color: var(--paper-faint); margin-bottom: 12px; }
+  .duel .cell.say .k { color: var(--gold-dim); }
+  .duel .cell.act .k { color: var(--cinnabar); }
+  .duel q { display: block; font-size: 14.5px; line-height: 2; color: var(--paper); }
+  .duel .yr { display: block; margin-top: 12px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.14em; }
+  .verdict { margin: 22px auto 0; max-width: 640px; text-align: center; font-size: 15px; color: var(--paper-dim); }
+  .verdict b { color: var(--gold); font-weight: 600; }
+  .beats { margin-top: 44px; position: relative; padding-left: 34px; }
+  .beats::before { content: ""; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 1px; background: var(--hairline); }
+  .beat { position: relative; padding: 4px 0 30px; }
+  .beat .dot {
+    position: absolute; left: -34px; top: 6px; width: 23px; height: 23px; border-radius: 50%;
+    background: var(--ink); border: 1px solid var(--gold-dim); color: var(--gold);
+    font-size: 11.5px; display: grid; place-items: center;
+  }
+  .beat h3 { font-size: 16.5px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .beat p { font-size: 14px; color: var(--paper-dim); max-width: 40em; }
+  .beat .q { margin: 14px 0 0; font-size: 14px; padding: 14px 18px; }
+  .beat.final .dot { background: var(--cinnabar); border-color: var(--cinnabar); color: var(--paper); }
+
+  /* ============ 耿 · 火耳 ============ */
+  .huoer { display: flex; align-items: center; justify-content: center; gap: clamp(18px, 5vw, 54px); margin: 36px 0 10px; }
+  .huoer .part { font-size: clamp(90px, 14vw, 170px); font-weight: 700; line-height: 1; }
+  .huoer .part.ear { color: var(--paper); }
+  .huoer .part.fire { color: var(--cinnabar); text-shadow: 0 0 34px rgba(192,69,60,0.35); }
+  .huoer .plus { font-size: 15px; color: var(--paper-faint); letter-spacing: 0.1em; }
+  .oracle {
+    margin: 26px auto 0; max-width: 560px; text-align: center; font-size: 15.5px; color: var(--paper-dim);
+  }
+  .stamps { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
+  .stamp {
+    border: 2px solid var(--gold-dim); color: var(--paper); border-radius: 4px;
+    padding: 14px 18px; font-size: 15px; letter-spacing: 0.12em; transform: rotate(var(--rot, 0deg));
+    background: rgba(201,150,63,0.06); position: relative;
+  }
+  .stamp small { display: block; margin-top: 6px; font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  .two-q { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 30px; }
+  .two-q .q { margin: 0; max-width: none; }
+  .endmark { margin: 34px auto 0; max-width: 640px; border-top: 1px solid var(--hairline); padding-top: 18px; font-size: 14px; color: var(--paper-dim); }
+  .endmark b { color: var(--cinnabar); font-weight: 600; }
+
+  /* ============ 尚 · 撤藩夜 ============ */
+  .night {
+    margin-top: 30px; background: var(--ink-3); border: 1px solid rgba(232,228,220,0.09);
+    border-radius: 5px; padding: 34px 28px; position: relative; overflow: hidden;
+  }
+  .blades { display: flex; justify-content: center; gap: clamp(14px, 4vw, 34px); margin-bottom: 26px; }
+  .blades span { color: rgba(201,150,63,0.4); font-size: 15px; transform: skewX(-24deg); }
+  .night:hover .blades span { color: var(--gold); transition: color 0.4s ease; }
+  .night .lamp { text-align: center; font-size: 13px; letter-spacing: 0.34em; color: var(--paper-faint); margin-bottom: 20px; }
+  details.edict { border: 1px solid var(--hairline); border-radius: 4px; background: var(--ink-2); margin: 18px auto 0; max-width: 620px; }
+  details.edict summary { cursor: pointer; list-style: none; padding: 15px 20px; font-size: 14.5px; color: var(--gold); letter-spacing: 0.1em; }
+  details.edict summary::-webkit-details-marker { display: none; }
+  details.edict summary::before { content: "＋ "; }
+  details.edict[open] summary::before { content: "－ "; }
+  details.edict .inner { padding: 4px 20px 20px; font-size: 14.5px; color: var(--paper); line-height: 2.05; }
+  .pillar-wrap { display: flex; gap: 30px; margin-top: 44px; align-items: stretch; justify-content: center; flex-wrap: wrap; }
+  .pillar {
+    writing-mode: vertical-rl; background: #26221a; border: 1px solid var(--gold-faint); border-radius: 3px;
+    padding: 24px 16px; font-size: 17px; letter-spacing: 0.22em; color: var(--paper);
+    transform: rotate(180deg); transition: transform 0.8s ease; min-height: 300px;
+  }
+  .pillar:hover { transform: rotate(0deg); }
+  .pillar-cap { writing-mode: vertical-rl; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.2em; max-height: 300px; }
+  .pillar-normal { max-width: 380px; align-self: center; }
+  .pillar-normal .q { margin: 0; font-size: 15px; }
+
+  /* ============ 孔 · 圣人之后 ============ */
+  .sage { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 26px; }
+  .seal-big {
+    flex: 0 0 auto; width: 108px; height: 108px; border: 2px solid var(--cinnabar); border-radius: 6px;
+    display: grid; place-items: center; font-size: 40px; font-weight: 700; color: var(--cinnabar);
+    transform: rotate(-3deg); background: rgba(192,69,60,0.05);
+  }
+  .sage .txt { flex: 1; min-width: 260px; font-size: 14.5px; color: var(--paper-dim); }
+  .sage .txt b { color: var(--paper); }
+  .guilin { margin-top: 34px; background: var(--ink-3); border: 1px solid var(--hairline); border-radius: 5px; padding: 30px 28px; }
+  .guilin .h { font-size: 13px; letter-spacing: 0.32em; color: var(--cinnabar); margin-bottom: 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  .chip { border: 1px solid var(--hairline); border-radius: 999px; padding: 6px 16px; font-size: 13px; color: var(--paper-dim); }
+  .chip b { color: var(--gold); font-weight: 600; }
+  .weird {
+    margin-top: 30px; border: 1px dashed rgba(192,69,60,0.45); border-radius: 4px; padding: 22px 24px; max-width: 640px;
+  }
+  .weird .k { font-size: 12px; letter-spacing: 0.3em; color: var(--cinnabar); margin-bottom: 12px; }
+  .weird .head { font-size: 30px; display: inline-block; transition: transform 0.35s ease; }
+  .weird:hover .head { animation: pounce 0.6s ease; }
+  @keyframes pounce {
+    0% { transform: translateY(0); } 40% { transform: translateY(-14px) rotate(-8deg); }
+    70% { transform: translateY(2px) rotate(4deg); } 100% { transform: translateY(0); }
+  }
+  .weird p { font-size: 14px; color: var(--paper-dim); margin-top: 10px; }
+
+  /* ============ 终局对读 ============ */
+  .ledger { margin-top: 30px; border-top: 2px solid var(--gold-dim); }
+  .lrow { display: grid; grid-template-columns: 92px repeat(4, 1fr); border-bottom: 1px solid var(--hairline); }
+  .lrow.head { border-bottom: 1px solid var(--gold-dim); }
+  .lrow > div { padding: 14px 12px; font-size: 13.5px; color: var(--paper-dim); }
+  .lrow.head > div { font-size: 12.5px; letter-spacing: 0.2em; color: var(--gold-dim); }
+  .lrow > div:first-child { color: var(--paper); font-weight: 700; letter-spacing: 0.1em; border-right: 1px solid var(--hairline); }
+  .lrow .dead { color: var(--paper); }
+  .lrow .dead i { font-style: normal; color: var(--cinnabar); }
+  .lrow .live i { font-style: normal; color: var(--gold); }
+
+  /* ============ 附录三签 ============ */
+  .slips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 30px; }
+  .slip { background: var(--paper); color: var(--ink); border-radius: 3px; padding: 0; transform: rotate(var(--rot, 0deg)); box-shadow: 0 12px 26px rgba(0,0,0,0.4); }
+  .slip summary { cursor: pointer; list-style: none; padding: 20px 20px 16px; }
+  .slip summary::-webkit-details-marker { display: none; }
+  .slip summary .k { font-size: 11.5px; letter-spacing: 0.26em; color: #8a6428; }
+  .slip summary .t { display: block; margin-top: 8px; font-size: 19px; font-weight: 700; letter-spacing: 0.1em; color: var(--ink); }
+  .slip summary .open-hint { display: inline-block; margin-top: 12px; font-size: 11.5px; color: #6e6a61; letter-spacing: 0.2em; }
+  .slip .body { padding: 0 20px 20px; font-size: 13.8px; line-height: 2; color: #2c2a26; border-top: 1px dashed rgba(25,25,23,0.25); padding-top: 14px; }
+  .slip .body q { display: block; background: rgba(25,25,23,0.06); border-left: 3px solid #8a6428; color: var(--ink); padding: 10px 14px; margin: 12px 0 0; font-size: 13px; }
+  .slip .body p { margin-top: 10px; }
+
+  /* ============ 校字记 ============ */
+  .colnotes { margin-top: 26px; border: 1px solid var(--hairline); border-radius: 4px; padding: 22px 26px; max-width: 760px; }
+  .colnotes .k { font-size: 12.5px; letter-spacing: 0.3em; color: var(--gold-dim); margin-bottom: 12px; }
+  .colnote { font-size: 13.5px; color: var(--paper-dim); padding: 7px 0 7px 20px; position: relative; }
+  .colnote::before { content: "※"; position: absolute; left: 0; color: var(--gold-faint); }
+  .colnote b { color: var(--paper); font-weight: 600; }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 70px; padding: 40px 0 60px; color: var(--paper-faint); font-size: 13.5px; }
+  footer.page .row { margin-bottom: 16px; max-width: 60em; }
+  footer.page b { color: var(--paper-dim); font-weight: 600; }
+  footer.page .fin { margin-top: 30px; letter-spacing: 0.3em; font-size: 12.5px; }
+  #qbank { display: none; }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-text { padding: 20px 26px 30px; }
+    .wall { order: 2; padding-bottom: 56px; }
+    .title-v h1 { writing-mode: horizontal-tb; }
+    .title-v .side { writing-mode: horizontal-tb; max-height: none; }
+    .flips { grid-template-columns: 1fr; }
+    .duel, .two-q { grid-template-columns: 1fr; }
+    .slips { grid-template-columns: 1fr; }
+    .lrow { grid-template-columns: 72px repeat(4, 1fr); }
+    .lrow > div { font-size: 12px; padding: 10px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 · 悬券 ================= -->
+<header class="hero wrap">
+  <div class="wall">
+    <button class="tally" style="--tilt:-1.6deg" aria-label="平西王吴三桂结局">
+      <span class="cord"></span><span class="nail"></span>
+      <span class="board"><span class="wang">吴</span><span class="haom">平西王</span><span class="crack"></span><span class="fate">病死称帝之年，冢发骨粉</span></span>
+    </button>
+    <button class="tally" style="--tilt:1.1deg" aria-label="靖南王耿氏结局">
+      <span class="cord"></span><span class="nail"></span>
+      <span class="board"><span class="wang">耿</span><span class="haom">靖南王</span><span class="crack"></span><span class="fate">孙辈磔于柴市</span></span>
+    </button>
+    <button class="tally" style="--tilt:-0.7deg" aria-label="平南王尚氏结局">
+      <span class="cord"></span><span class="nail"></span>
+      <span class="board"><span class="wang">尚</span><span class="haom">平南王</span><span class="crack"></span><span class="fate">子赐死，粉骨扬灰</span></span>
+    </button>
+    <button class="tally mercy" style="--tilt:1.5deg" aria-label="定南王孔有德结局">
+      <span class="cord"></span><span class="nail"></span>
+      <span class="board"><span class="wang">孔</span><span class="haom">定南王</span><span class="crack"></span><span class="fate">合门自焚刃，独得谥忠烈</span></span>
+    </button>
+  </div>
+  <div class="hero-text">
+    <div class="kicker">殆知阁导读 · 史藏传记</div>
+    <div class="title-v">
+      <h1>降王<em>四传</em></h1>
+      <div class="side">清人辑佚名之本，四传三记，一册摆满易代之际的活法。</div>
+    </div>
+    <p class="lede">四位异姓王，三个出自同一个死人的门下。降清时封王，撤藩时反目，结局各异：病死掘冢、柴市寸磔、赐死扬灰、阖门殉节。而全册真正的主角不是任何一位王，是<b>「降」这个字本身</b>：它兑现了，也收账了。</p>
+    <p class="fnote">库本去空白 22986 字，卷首列目七段：平西、靖南、平南、定南四传，附金坛狱案、戴重事录、董心葵事记三篇。辑者佚名，附篇分别署计六奇、章学诚。</p>
+    <p class="hint"><i>↑</i> 悬在壁上的四块封爵券，凑近看裂痕，各有各的裂法。</p>
+  </div>
+</header>
+
+<!-- ================= 一 · 一剑三孙 ================= -->
+<section class="wrap">
+  <div class="sechead"><span class="no mono">壹</span><h2>一剑<em>三孙</em></h2></div>
+  <p class="seclede">崇祯初，督师袁崇焕持上方剑斩皮岛帅毛文龙，岛兵星散。此后十余年，毛家三个养孙先后渡海降清；他们降时用同一个理由，封王时用同一道圣旨。四王里的另外一位吴三桂，是关宁系统的边将，不在此谱。</p>
+  <div class="sword-line">
+    <q class="q small">大将军要合义旅、跋涉荒、出万死以复疆宇，而卒之冤死；我与若，直几上肉耳。可郁郁久居此乎？</q><span class="qsrc">靖南王耿仲明语，时在毛文龙死后，岛中饷尽</span>
+  </div>
+  <div class="flips">
+    <div class="flipcard">
+      <input type="checkbox" id="flip1">
+      <label for="flip1"><div class="inner">
+        <div class="face"><span class="mao">毛文龙养孙 · 谱名</span><span class="nm">毛有杰</span><span class="sub">皮岛旧部，后转隶登州孙元化部</span><span class="tap">点一下，翻面</span></div>
+        <div class="face back"><span class="mao">还本姓</span><span class="nm">耿仲明</span><span class="st">封怀顺王，改封靖南王。孙耿继茂袭爵镇福建，曾孙耿精忠举闽应吴，俘至京师弃市。</span></div>
+      </div></label>
+    </div>
+    <div class="flipcard">
+      <input type="checkbox" id="flip2">
+      <label for="flip2"><div class="inner">
+        <div class="face"><span class="mao">毛文龙养孙 · 谱名</span><span class="nm">毛永喜</span><span class="sub">率亲兵五百，泛海来归</span><span class="tap">点一下，翻面</span></div>
+        <div class="face back"><span class="mao">还本姓</span><span class="nm">尚可喜</span><span class="st">封智顺王，改封平南王，开府广州四十年。四王中唯一善终者。</span></div>
+      </div></label>
+    </div>
+    <div class="flipcard">
+      <input type="checkbox" id="flip3">
+      <label for="flip3"><div class="inner">
+        <div class="face"><span class="mao">毛文龙养孙 · 谱名</span><span class="nm">毛永诗</span><span class="sub">袭破镇江城一百九十七人之一</span><span class="tap">点一下，翻面</span></div>
+        <div class="face back"><span class="mao">还本姓</span><span class="nm">孔有德</span><span class="st">封恭顺王，改封定南王。自称至圣后裔，桂林城破举家自殉，清廷谥忠烈。</span></div>
+      </div></label>
+    </div>
+  </div>
+  <q class="q small">大将军功名卓卓，犹且不免；我辈死固晚矣。时势如此，尚可为耶！</q><span class="qsrc">定南王孔有德语，与耿仲明同声同气，先后率众渡海</span>
+  <div class="wucard">
+    <span class="nm">吴三桂</span>
+    <span class="ex">不在毛氏门下。辽东将门出身，武举出身，董其昌的门生；松山夜遁免死，奉命镇宁远。他降清要走得更远：不是率众渡海，是开城门、借清兵，亲手替旧主讨仇，再亲手勒死旧主的继承人。</span>
+  </div>
+</section>
+
+<!-- ================= 二 · 平西王吴 ================= -->
+<section class="wrap">
+  <div class="sechead"><span class="no mono">貳</span><h2>平西王 · <em>先为朱家讨贼</em></h2></div>
+  <p class="seclede">甲申年三月，京师陷，吴襄被执，李自成以父书招降吴三桂。三桂的回书写得孝义两全，随后一路反水；他发的讨贼檄文，通篇是明朝忠臣口吻。这份檄文后来成了全书最大的反讽，因为他十七年后亲手处死了明朝最后一位皇帝。</p>
+  <div class="cedict">
+    <span class="tag">讨贼檄 · 甲申</span>
+    <div class="big"><q>闯贼李自成，以么么小丑荡秽神京，日色无光，妖气吐焰；</q></div>
+    <div class="big"><q>弑我帝后，刑〔我〕缙绅；戮我士民，掠我财物。</q></div>
+    <div class="big"><q>试看赤县之归心，仍是朱家之正统。</q></div>
+    <span class="qsrc">三桂乞师前后传檄远近之语，库本照录，〔　〕为原校补字</span>
+  </div>
+  <div class="duel">
+    <div class="cell say">
+      <div class="k">言 · 十七年前</div>
+      <q>试看赤县之归心，仍是朱家之正统。</q>
+      <span class="yr">甲申 · 讨贼复君父仇，乞师于清</span>
+    </div>
+    <div class="cell act">
+      <div class="k">行 · 十七年后</div>
+      <q>先是，辛丑冬，三桂兵临阿瓦，檄取永历以归，缢使贵阳府治，殓其遗骸，藁葬府城外</q>
+      <span class="yr">辛丑 · 兵临缅甸，缢杀永历帝</span>
+    </div>
+  </div>
+  <p class="verdict">同一支笔。前一张写给天下人看，后一张记在<b>清人修的账</b>里。</p>
+
+  <div class="beats">
+    <div class="beat">
+      <span class="dot">誓</span><h3>覆父书</h3>
+      <p>父书劝降，孝字当头；儿子的回书先把忠字立住，再顺势把孝字接走。接着一桩家务事替他做了决定。</p>
+      <q class="q small">国破君亡，儿自当以死报；今吾父谆谆以孝字督责，儿又不得不勉遵严命</q>
+    </div>
+    <div class="beat">
+      <span class="dot">怒</span><h3>陈沅</h3>
+      <p>世传冲冠一怒为红颜，库本只淡淡一句，可见夺妾才是压垮议降的最后一根稻草。</p>
+      <q class="q small">适有爱妾陈沅在襄所，为自成夺去。三桂询知，大愤；乃遣使乞降于我朝，求其讨贼。</q>
+    </div>
+    <div class="beat">
+      <span class="dot">祭</span><h3>易服谒陵</h3>
+      <p>撤藩令下，三桂不即反，先设计一场祭礼：命诸将具汉官威仪集于故明陵下，自己方巾素服，恸哭伏地，三军皆哭。造反前的动员，做成了全军的哭场。</p>
+      <q class="q small">指其首曰：我先朝曾有此冠乎？指其身曰：我先朝曾有此衣乎？老臣且易服以祭，诸君其预图之。</q>
+    </div>
+    <div class="beat">
+      <span class="dot">变</span><h3>霍然而起</h3>
+      <p>称病拒行，激部下杀巡抚；事情闹到不可收拾，他抢地顿足，把责任推个干净，然后当场起病。</p>
+      <q class="q small">尔辈杀我！尔辈杀我！我三百口，死不旋踵；即尔辈亦且族矣。</q>
+      <q class="q small">三桂大喜，霍然而起。</q>
+    </div>
+    <div class="beat">
+      <span class="dot">僭</span><h3>衡山称帝</h3>
+      <p>把常德府治改成行宫，衡山筑坛告即位于上帝，建国大周。行礼未毕，一场大风先替天下人表了态。</p>
+      <q class="q small">未毕，大风忽起，席厂卷入云中，俄而骤雨如注。逆党草草卒事，识者早知其不克终矣。</q>
+    </div>
+    <div class="beat final">
+      <span class="dot">绝</span><h3>中秋气噎</h3>
+      <p>库本不给病名，只给一个场景：中秋夜拥歌姬玩月，前线变闻入帐，一句遗言，当场气绝。</p>
+      <q class="q small">值中秋，三桂方拥歌姬与所嬖陈沅临轩玩月；忽国柱变闻，大呼曰：吾事去矣！即气噎仆地，遽绝。</q>
+    </div>
+    <div class="beat final">
+      <span class="dot">毁</span><h3>发冢</h3>
+      <p>死后五年，孙世璠败亡，昆明城破，云南平。清军入蜀，开棺。封王的荣典终究没保住尸骨。</p>
+      <q class="q small">后大兵破蜀，发其冢，粉骨为尘，无余骼焉。</q>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 三 · 靖南王耿 ================= -->
+<section class="wrap">
+  <div class="sechead"><span class="no mono">叄</span><h2>靖南王 · <em>火耳</em></h2></div>
+  <p class="seclede">耿家三代：仲明渡海，继茂镇闽，精忠袭爵。精忠少长宫壶，不知祖父缔造之艰，身边人替他翻出一条谶谣，把他的姓拆成了两个字。</p>
+  <div class="huoer"><span class="part ear">耳</span><span class="plus">＋</span><span class="part fire">火</span></div>
+  <p class="oracle"><q>因谶纬所载有「天子分身火耳」之谣，谓火耳者，耿也</q><span class="qsrc">举闽从逆的理论根据，是一条拆字谶</span></p>
+  <div class="stamps">
+    <span class="stamp" style="--rot:-2.5deg">抬不动将军<small>浙将军图赖，闻反报瘫软不能起</small></span>
+    <span class="stamp" style="--rot:1.8deg">跌脚巡抚<small>巡抚田逢吉，顿足不止</small></span>
+    <span class="stamp" style="--rot:-1.2deg">捻须总督<small>总督李之芳，掀髯不已，后定讨贼之志</small></span>
+  </div>
+  <p class="oracle" style="margin-top:16px">闽变一起，浙江三巨头的当场反应，库本各给了他们一个绰号。战事在九龙山、仙霞岭一线胶着年余，总督李之芳疾驰衢州，城中已空，就此守住了江防。</p>
+  <div class="two-q">
+    <q class="q small">时称「抬不动将军」；逢吉顿足不止，称「跌脚巡抚」；之芳闻变，掀髯不已，称「捻须总督」。</q>
+    <q class="q small">承谟被拘三载，矢志不屈</q>
+  </div>
+  <p class="oracle" style="margin-top:14px">后一句写被精忠扣押的闽督范承谟：王师破仙霞岭，他遇害。精忠降而复叛、叛而复降，终以叛逆论罪。</p>
+  <div class="endmark">结局：俘至京师弃市。外史氏判词毫不留情，<q style="display:inline;background:none;border:none;padding:0;color:var(--cinnabar);font-size:14px;box-shadow:none">柴市之诛，固已晚矣</q>。祖孙三代，兑现封爵的是前两代，付账的是第三代。</div>
+  <q class="q">俘至京师，与吴三桂将马宝同归于市。</q><span class="qsrc">康熙二十一年，耿精忠与马宝同日弃市</span>
+</section>
+
+<!-- ================= 四 · 平南王尚 ================= -->
+<section class="wrap">
+  <div class="sechead"><span class="no mono">肆</span><h2>平南王 · <em>撤藩夜</em></h2></div>
+  <p class="seclede">康熙十二年，撤藩使臣到广州。尚可喜上疏请撤本藩、归老辽东，是四王里唯一主动交权的；吊诡的是，正是这份请撤疏给了朝廷撤藩的理由，把另外两藩逼反，最后也烧光了自己全家。这一夜广州使馆内外的对峙，库本写得像一出独幕剧。</p>
+  <div class="night">
+    <div class="blades"><span>刃</span><span>刃</span><span>刃</span><span>刃</span><span>刃</span><span>刃</span><span>刃</span><span>刃</span></div>
+    <div class="lamp">使馆账房 · 鼓三下</div>
+    <q class="q small" style="margin:0 auto">至则可喜拜诏如仪，主客无一言。逮夜，环账房馆垣，皆露刃注矢。</q>
+    <details class="edict">
+      <summary>尚书拄案叱问，随即亮出一道底牌</summary>
+      <div class="inner">
+        <p>户部尚书梁清标当夜被郎中何嘉佑叫醒，一句顶住满堂刀矢：</p>
+        <q style="display:block;background:var(--paper);color:var(--ink);padding:12px 16px;margin:12px 0">王劳苦异诸藩，当永镇南疆</q>
+        <q style="display:block;background:var(--paper);color:var(--ink);padding:12px 16px;margin:12px 0">今所撤，独平西藩耳。</q>
+        <p style="margin-top:12px;color:var(--paper-dim);font-size:13.5px">密谕一出，满座错愕。可喜拉过儿子之信，咬破他的手指立誓。</p>
+        <q style="display:block;background:var(--paper);color:var(--ink);padding:12px 16px;margin:12px 0">可喜啮其指曰：几负圣朝！</q>
+      </div>
+    </details>
+  </div>
+  <p class="oracle" style="margin-top:26px">欢宴三日而使臣行。越四日，吴三桂反闻至。四个月后，之信发兵幽父、举兵从逆；可喜闻变涕泣，悔不听幕僚金光废子之谋，不数日遽殁。</p>
+  <q class="q">遗命以本朝冠服殓。</q><span class="qsrc">尚可喜遗命，至死认的仍是这身冠服</span>
+
+  <p class="seclede" style="margin-top:40px">儿子尚之信是库本里写得不留情面的一个：酗酒嗜杀，宠犬出必塞途，喜怒杀人。两件家事可见其虐。</p>
+  <div class="two-q">
+    <q class="q small">尝怒一监，命左右割肉啖犬，肉尽而止。</q>
+    <q class="q small">见其腹大，曰：此中必有奇宝！即剸刃于腹而毙。</q>
+  </div>
+  <p class="oracle" style="margin-top:14px">后来他反正归朝，袭封平南亲王，又在康熙十九年被侍卫大臣构发旧事，赐死。父子两代，一个得谥一个扬灰。</p>
+  <div class="two-q">
+    <q class="q small">十九年八月十七日，之信赐死于府学之名宦祠；粉其骨，扬灰焉。</q>
+    <q class="q small">福善祸淫之说，我于平南一藩而益信。</q>
+  </div>
+
+  <div class="pillar-wrap">
+    <div class="pillar-cap">之信建殿，铁粟木柱忽现倒题一诗，库本称意竟不可解</div>
+    <div class="pillar"><q style="display:inline;background:none;border:none;padding:0;color:inherit;font-size:inherit">掘断老龙伤粤秀，怪风吹上尉陀城；可怜白草黄沙国，直待刘家汗马鸣。</q></div>
+    <div class="pillar-normal">
+      <p style="font-size:13.5px;color:var(--paper-dim)">诗句倒题于柱。把光标悬在柱上，转正来读：</p>
+      <q class="q small">掘断老龙伤粤秀，怪风吹上尉陀城；可怜白草黄沙国，直待刘家汗马鸣。</q>
+      <p style="font-size:13px;color:var(--paper-faint);margin-top:10px">同卷又记一桩乩语：周、郑交恶亡。指之信先通三桂、再通郑经，后皆相背，卒以灭门。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 五 · 定南王孔 ================= -->
+<section class="wrap">
+  <div class="sechead"><span class="no mono">伍</span><h2>定南王 · <em>圣人之后</em></h2></div>
+  <p class="seclede">四传里唯一把「忠」字守到底的，降将里最不该有忠字的一位。库本开篇第一句就交代了他的血统，之后的一切都成了这句话的注脚。</p>
+  <div class="sage">
+    <span class="seal-big">至圣裔</span>
+    <span class="txt">孔有德，库本首句：<b>原籍山东，徙居辽阳</b>。铁矿矿工出身，从皮岛起兵，渡海降清，取广西，开府桂林。他记得旧恩：毛文龙灵柩停登州，他具舟从海道迎葬辽阳，舟至中流飓风大作，拜祷而返。</span>
+  </div>
+  <q class="q small">公不欲往东耶？因返舟，舟移而风止。</q><span class="qsrc">迎葬旧帅毛文龙，飓风骤起时的祷语</span>
+
+  <div class="guilin">
+    <div class="h">桂林 · 顺治九年七月初四夜</div>
+    <p style="font-size:14.5px;color:var(--paper-dim)">李定国破严关，象阵冲营，桂林城陷。有德具衣冠端坐府中，久之无言，对夫人交代身后：己身受两朝厚恩，誓以死殉，命她早自为计。夫人的回答是先安顿孩子。</p>
+    <q class="q small" style="max-width:none;margin:16px 0 0">此子苟脱于难，当度为沙弥，无效乃父一生驰驱南北，下场有今日也。</q>
+    <p style="font-size:13.5px;color:var(--paper-faint);margin-top:12px">言毕，夫人与妾皆自经。独子托付老妪负出城去。</p>
+    <q class="q small" style="max-width:none;margin:16px 0 0">有德纵火焚其府，向北再拜，拔剑自刎死；家口一百二十人皆被害。</q>
+    <p style="font-size:13.5px;color:var(--paper-faint);margin-top:12px">独子后来仍死于乱军，唯幼女获存。世祖震悼撤朝，谥忠烈，赐葬京师。</p>
+  </div>
+
+  <div class="chips">
+    <span class="chip">幼女送入宫，为太后养女</span>
+    <span class="chip"><b>名孔四贞</b></span>
+    <span class="chip">后封和硕格格，掌定南王事</span>
+    <span class="chip">清宫唯一的汉人格格</span>
+  </div>
+  <q class="q small">止遗一女，令送入宫为太后养女，名孔四贞。</q><span class="qsrc">定南王合门殉难后，朝廷对孔家的处置</span>
+  <q class="q small">四贞幼时，曾为三桂养女</q><span class="qsrc">库本一处冷笔，把两家的命运早已拴在一起</span>
+  <p class="oracle" style="margin-top:14px">孔四贞后来嫁给孙延龄，夫妇同镇广西。三藩乱起，延龄从吴，又谋反正，事泄被杀。库本给这一段收了笔鬼气极重的一幕。</p>
+  <div class="weird">
+    <div class="k">库本志怪 · 桂林</div>
+    <span class="head">❝</span>
+    <q class="q small" style="background:none;border:none;padding:0;box-shadow:none;color:var(--paper);font-size:14.5px;margin-top:8px">延龄亦有今日乎！头忽睁目张口，跃然而起，直扑雄身；雄大叫曰：延龄杀我？遂呕血而死。</q>
+    <p>马雄大笑取头，头反扑，笑者即死。降将互杀，连收账都收得像一桩现世报。</p>
+  </div>
+  <div class="endmark">外史氏曰：<q style="display:inline;background:none;border:none;padding:0;color:var(--gold);font-size:14px;box-shadow:none">信乎！圣人之后，其所树立固殊焉。</q>四王合传，把最后一点体面判给了圣人后代，这判词本身，就是清人对「降」字最体面的收梢。</div>
+</section>
+
+<!-- ================= 六 · 终局对读 ================= -->
+<section class="wrap">
+  <div class="sechead"><span class="no mono">陆</span><h2>四王<em>终局对读</em></h2></div>
+  <p class="seclede">同一种封爵，四种裂法。放平了看，恩典与结局之间的落差，就是这本佚名之书的全部修辞。</p>
+  <div class="ledger">
+    <div class="lrow head"><div>传</div><div>出身</div><div>封号</div><div>终局</div><div>身后</div></div>
+    <div class="lrow"><div>吴三桂</div><div>关宁将门</div><div>平西亲王</div><div class="dead">称帝五月<i>气噎</i></div><div>冢发，<i>粉骨为尘</i></div></div>
+    <div class="lrow"><div>耿精忠</div><div>毛文龙养孙之后</div><div>袭靖南王</div><div class="dead"><i>磔</i>于市</div><div>藩除</div></div>
+    <div class="lrow"><div>尚之信</div><div>毛文龙养孙之子</div><div>袭平南亲王</div><div class="dead">赐死名宦祠<i>粉骨扬灰</i></div><div>父独善终，族产入官</div></div>
+    <div class="lrow"><div>孔有德</div><div>至圣裔</div><div>定南王</div><div class="live"><i style="color:var(--gold)">自刎殉城</i>，谥忠烈</div><div>女存，奉祀不绝</div></div>
+  </div>
+  <q class="q small" style="max-width:560px">三桂构逆凡五年；卒，七十有五。</q><span class="qsrc">库本记吴三桂卒年如此；通行史考其生于万历四十年，卒年六十七，两说并存照录</span>
+</section>
+
+<!-- ================= 七 · 册尾三签 ================= -->
+<section class="wrap">
+  <div class="sechead"><span class="no mono">柒</span><h2>册尾<em>三签</em></h2></div>
+  <p class="seclede">这本册子的真正结构藏在总目里：题四王，却附录三篇非王传。三个不肯降、不肯反、不肯站队的人，被订在四王的传记后面，像三张垫底的纸。</p>
+  <div class="slips">
+    <details class="slip" style="--rot:-1.8deg">
+      <summary><span class="k">附一 · 戴重事录</span><span class="t">墓石上留着「明」字</span><span class="open-hint">点开细读</span></summary>
+      <div class="body">
+        <p>和州诸生戴重，南都破后自募义军二千、湖舸五百，缟素誓师于太湖。兵败中矢，洞腹自拔其镞；创愈后为僧行遁归乡，决意绝食，遗命丧事从简。</p>
+        <q>毋作浮屠经谶事，书墓石「明和州河村戴重墓」，棺止四寸，逾月而葬。</q>
+        <p>绝食十日不得死，端坐正衣冠而卒，距被创恰满一岁。他起兵前自诧的一联诗，日后被库本原样收存。</p>
+        <q>更遣包胥何处哭、谁为荆轲复同谋</q>
+        <p>降王的传用「僭」「伪」，他的传用一个「明」字开墓。一册之内，两种书法。</p>
+      </div>
+    </details>
+    <details class="slip" style="--rot:1.4deg">
+      <summary><span class="k">附二 · 金坛狱案</span><span class="t">一个账目，两个总数</span><span class="open-hint">点开细读</span></summary>
+      <div class="body">
+        <p>顺治十八年，镇江金坛县。乡绅借「海寇」案罗织十个控告过他们的诸生，层层构陷，反把十几家缙绅自己填了进去。计六奇记下全过程，像一份审讯笔录。</p>
+        <p>正文里一处说此案共斩六十四人；卷末抄录上谕执行清单，又自记一笔总数。</p>
+        <q>斩四十八人、绞一人、流徙十四人，共六十三人。此顺治十八年辛丑七月十三事。</q>
+        <p>六十四与六十三，差的一人是谁，卷内没有答案。案中人家属流徙宁古塔，起点不过是减一点当铺利息、揭一张吏弊告示。降王传记大人物的账，这一篇记小人物的账。</p>
+      </div>
+    </details>
+    <details class="slip" style="--rot:-0.9deg">
+      <summary><span class="k">附三 · 董心葵事记</span><span class="t">精明一世，死于无名</span><span class="open-hint">点开细读</span></summary>
+      <div class="body">
+        <p>武进人董心葵，库本四句定评。</p>
+        <q>农无力，商无本，工无艺，士无学。见贫贱人，怜之；见富贵人，骄之。</q>
+        <p>他靠替篦头朋友监造一座庙起家，看中延陵会馆屋朽门颓，罄千金修葺，坐等大官上门，果然成了权相周延儒在京的账房与馆舍主人，布衣通天。李自成入京，寄存的财宝尽归流贼；入清后，他连三十几个借宿马兵都应付不来。</p>
+        <q>心葵曰：尔杀我！彼即曰：杀则何如！遂杀之。兵亦他去，不知何来也。</q>
+        <p>算计了一辈子人情的人，死于一场最不讲人情的过路纠纷。放全册末尾，像替四王的算盘收了一声冷响。</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ================= 八 · 校字记 ================= -->
+<section class="wrap">
+  <div class="sechead"><span class="no mono">捌</span><h2>库本<em>校字记</em></h2></div>
+  <p class="seclede">库本系简体转写之本，扫录讹误与史实异文并存，本页一律照录，申报如下。</p>
+  <div class="colnotes">
+    <div class="k">照录与申报</div>
+    <p class="colnote">卷首目次列七段，正文四传三记俱全；题四王而附录三篇非王传，<b>体例本如此</b>。</p>
+    <p class="colnote">「遣降将唐通j赍银四万犒师」：<b>西文字母 j 为扫入衍文</b>。</p>
+    <p class="colnote">「先璧骁将，号□神」：<b>□系库本原缺字</b>。</p>
+    <p class="colnote">「明怀宗改元人起前辽东巡抚袁崇焕为督师」：<b>「人」字疑衍或倒</b>，当读改元起袁崇焕为督师。</p>
+    <p class="colnote">三桂衡山建国「<b>改元利用</b>」：通行史籍作昭武，库本独作利用，照录存疑。</p>
+    <p class="colnote">「比明，大将军统全喌酂师城，云南平」：<b>喌、酂二字疑讹</b>，文义当为统兵入城。</p>
+    <p class="colnote">「堂吏见新，知有异」：<b>新下疑脱「命」字</b>，告变者为笔帖式王新命。</p>
+    <p class="colnote">金坛狱案斩数两见：<b>正文云共斩六十四人，卷末自记共六十三人</b>，库本自相出入，照录。</p>
+    <p class="colnote">吴三桂「卒，七十有五」：<b>与通行史考卒年六十七不同</b>，两说并存。</p>
+    <p class="colnote">自成军中语「今日决一死战，勿令外国来助，乃为豪杰耳」：本书自称我朝，<b>独此句存敌方口吻</b>，径呼清为外国，照录。</p>
+  </div>
+</section>
+
+<footer class="page">
+  <div class="wrap">
+    <div class="row"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），史藏传记「吴耿尚孔四王全传」，辑者佚名，库本去空白 22,986 字，四传三记：平西王吴传、靖南王耿传、平南王尚传、定南王孔传，附金坛狱案（署计六奇）、戴重事录（章学诚原传、辑者芟存）、董心葵事记。本页引文四十二处（q 元素、「」引语与页尾清单）经脚本与库内文本去标点、空白归一逐字核验通过，页尾藏引文全清单。目录：<a href="mulu.html">殆知阁导读总目</a>。</div>
+    <div class="row"><b>库外申报</b>　三藩之乱的总体进程、撤藩决策的朝廷讨论、孔四贞故事的后世流传（含清宫剧改编），均系库外通识，本页仅据库本行文；吴三桂卒年、周政权年号（昭武）、永历帝殉国地点昆明篦子坡等，库本与通行史籍有出入者已在校字记申报；毛文龙三养孙谱名（毛有杰、毛永喜、毛永诗）悉据库本，库外史料或作别名，未取。袁崇焕斩毛文龙系年（崇祯二年）出库外，仅用于背景交代。</div>
+    <div class="row"><b>时代局限提醒</b>　本书是清人立场的四王传记，「僭」「伪」「逆」「我朝」等书法悉依库本照录，不代为订正；对吴、耿、尚三家之后评价严苛，对孔氏独予褒词，褒贬本身即史料。文中磔、粉骨、扬灰等酷刑记述系古代司法实况，非本页立场。降与抗的道德判断，原文与附录互相拆台，愿读者自持权衡。</div>
+    <div class="fin">殆知阁导读　二百六十七</div>
+  </div>
+</footer>
+
+<div id="qbank" hidden>
+  <ul>
+    <li>周命未改，汉德可思。诚志所孚，顺能克逆；义兵所向，一以当千。</li>
+    <li>还我太子、二王而后罢兵。</li>
+    <li>其妻闻变，哭而出曰：杀吾儿矣！</li>
+    <li>大丈夫不能生擒名王，岂其可为敌所辱！遂自刎。</li>
+    <li>平生未见如此恶战，特遣一着耳。令如复臣言，我军休矣。</li>
+    <li>生而面深墨、手掌洁白如玉</li>
+    <li>上以台湾未平，许仍统其部。</li>
+    <li>体劲捷，能趋九尺屏风。</li>
+    <li>四贞自以为和硕格格已居极品，不从夫贵也</li>
+    <li>广西一军，唯知有都统，不知有将军，并不知有格格。</li>
+    <li>第儿曹何罪，而亦遭此劫乎？</li>
+    <li>周、郑交恶亡。</li>
+    <li>廷龄竟无后。</li>
+    <li>三桂构逆凡五年；卒，七十有五。</li>
+  </ul>
+</div>
+
+<script>
+  document.querySelectorAll('.tally').forEach(function (t) {
+    t.addEventListener('click', function () { t.classList.toggle('open'); });
+  });
+</script>
+</body>
+</html>
