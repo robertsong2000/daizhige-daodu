@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>君子堂日询手镜 · 殆知阁导读 二百八十四</title>
+<style>
+:root{
+  --ink:#191917;
+  --ink2:#1e1d1a;
+  --paper:#e8e4dc;
+  --paper-dim:rgba(232,228,220,.62);
+  --paper-faint:rgba(232,228,220,.34);
+  --gold:#c9963f;
+  --gold-soft:rgba(201,150,63,.42);
+  --gold-faint:rgba(201,150,63,.14);
+  --bronze1:#8a6a35;
+  --bronze2:#4a3a1e;
+  --slip:#e4ddcd;
+  --slip-ink:#2c2618;
+  --slip-dim:#6b5f45;
+  --hairline:rgba(232,228,220,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);color:var(--paper);
+  font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.95;letter-spacing:.02em;
+}
+.wrap{max-width:1060px;margin:0 auto;padding:0 26px}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+.q{display:block;color:#332b1a;quotes:none}
+.q::before,.q::after{content:none}
+em.b{font-style:normal;color:var(--gold)}
+.mono{font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif}
+
+/* ===== 首屏 ===== */
+.hero{border-bottom:1px solid var(--hairline);overflow:hidden}
+.hero-grid{
+  display:grid;grid-template-columns:170px minmax(0,1fr) 360px;gap:36px;
+  max-width:1120px;margin:0 auto;padding:56px 26px 30px;align-items:start;
+}
+.brand{display:flex;gap:14px;justify-content:center}
+.brand-side{display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:4px}
+.seal{
+  width:48px;background:var(--gold);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  writing-mode:vertical-rl;font-size:14px;letter-spacing:.14em;
+  box-shadow:0 0 0 1px rgba(232,228,220,.2),0 0 18px rgba(201,150,63,.32);
+  padding:10px 0;
+}
+.meta{writing-mode:vertical-rl;font-size:12.5px;color:var(--paper-faint);letter-spacing:.34em}
+.t-big{
+  writing-mode:vertical-rl;font-size:56px;line-height:1.14;letter-spacing:.16em;
+  color:var(--paper);font-weight:400;text-shadow:0 0 24px rgba(232,228,220,.07);
+}
+.t-small{
+  writing-mode:vertical-rl;font-size:18px;letter-spacing:.44em;color:var(--paper-dim);padding-top:8px;
+}
+.stand{
+  margin-top:22px;font-size:15px;color:var(--paper-dim);
+  border-top:1px solid var(--hairline);padding-top:14px;
+}
+.stand b{color:var(--paper);font-weight:400}
+
+/* 手镜 */
+.mirror-zone{display:flex;flex-direction:column;align-items:center;padding-top:6px}
+.hand-mirror{position:relative;width:320px;height:400px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.5))}
+.mirror-rim{
+  position:absolute;inset:0;border-radius:50% 50% 47% 53% / 46% 46% 54% 54%;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(232,228,220,.25), transparent 34%),
+    conic-gradient(from 20deg,#a9834a,#5d4726,#c9963f,#6b5330,#a9834a,#7c5f33,#a9834a);
+  padding:13px;
+}
+.mirror-face{
+  width:100%;height:100%;border-radius:inherit;overflow:hidden;position:relative;
+  background:
+    radial-gradient(120% 90% at 30% 18%, rgba(232,228,220,.16), transparent 42%),
+    radial-gradient(130% 110% at 72% 88%, rgba(201,150,63,.14), transparent 48%),
+    linear-gradient(155deg,#232019 0%,#14120d 58%,#1a170f 100%);
+  cursor:pointer;
+}
+.mirror-face::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(118deg,transparent 42%,rgba(232,228,220,.07) 50%,transparent 58%);
+  pointer-events:none;
+}
+.face-pane{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;opacity:0;transition:opacity .5s ease;pointer-events:none;padding:0 30px;text-align:center}
+.face-pane.on{opacity:1;pointer-events:auto}
+.face-tag{font-size:12px;letter-spacing:.5em;color:var(--gold);text-indent:.5em}
+.face-line{font-size:21px;line-height:1.8;letter-spacing:.1em;color:var(--paper)}
+.face-line .q{display:inline;color:var(--paper)}
+.face-sub{font-size:12.5px;color:var(--paper-dim);letter-spacing:.12em}
+.tree{opacity:0;transition:opacity .6s ease .1s}
+.face-pane.on .tree{opacity:1}
+.mirror-handle{
+  position:absolute;left:50%;bottom:-96px;transform:translateX(-50%) rotate(0.001deg);
+  width:30px;height:126px;border-radius:15px;
+  background:linear-gradient(90deg,#3d2f18,#a9834a 30%,#6b5330 55%,#c9963f 78%,#4a3a1e);
+}
+.mirror-handle::after{
+  content:"";position:absolute;left:50%;bottom:-26px;transform:translateX(-50%);
+  width:44px;height:44px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#c9963f,#5d4726 68%,#2e2410);
+  box-shadow:inset 0 0 0 3px rgba(232,228,220,.12);
+}
+.phase-sw{display:flex;gap:0;margin-top:150px;border:1px solid var(--gold-soft)}
+.phase-sw button{
+  appearance:none;border:0;background:transparent;color:var(--paper-dim);
+  font:inherit;font-size:14px;letter-spacing:.3em;text-indent:.3em;padding:8px 22px;cursor:pointer;
+}
+.phase-sw button.on{background:var(--gold);color:var(--ink)}
+
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:30px}
+  .brand{justify-content:flex-start}
+  .hand-mirror{width:270px;height:330px}
+  .phase-sw{margin-top:120px}
+}
+
+/* ===== 小节头 ===== */
+.sec{padding:64px 0 8px}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:26px}
+.sec-no{font-size:13px;color:var(--gold);letter-spacing:.3em;border:1px solid var(--gold-soft);padding:3px 10px;white-space:nowrap}
+.sec-title{font-size:24px;letter-spacing:.14em;color:var(--paper)}
+.sec-cap{font-size:13px;color:var(--paper-faint);letter-spacing:.1em;margin-left:auto;text-align:right}
+
+/* ===== 镜背铭 ===== */
+.back-plate{
+  border:1px solid var(--hairline);background:var(--ink2);
+  padding:30px 34px;position:relative;
+}
+.back-plate::before{content:"";position:absolute;inset:7px;border:1px solid var(--gold-faint);pointer-events:none}
+.back-plate p{font-size:15.5px;color:var(--paper-dim);margin-bottom:14px}
+.back-plate p:last-of-type{margin-bottom:0}
+.facts{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:20px;padding-top:16px;border-top:1px dashed var(--hairline)}
+.facts span{font-size:13px;color:var(--paper-faint);letter-spacing:.06em}
+.facts b{color:var(--gold);font-weight:400}
+
+/* ===== 手札 ===== */
+.slip-zone{display:flex;flex-direction:column;gap:30px;padding:10px 0 20px}
+.slip{
+  background:linear-gradient(172deg,#eae3d2,#ddd4bf);
+  color:var(--slip-ink);
+  padding:30px 34px 74px;position:relative;max-width:860px;
+  box-shadow:0 14px 30px rgba(0,0,0,.42);
+  border:1px solid #cbc0a6;
+}
+.slip:nth-child(odd){transform:rotate(-.5deg)}
+.slip:nth-child(even){transform:rotate(.45deg);margin-left:auto}
+.slip::before{
+  content:"";position:absolute;top:-7px;left:34px;width:13px;height:13px;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%,#d8c79a,#7d6534 70%,#45370f);
+  box-shadow:0 3px 6px rgba(0,0,0,.4);
+}
+.slip:nth-child(even)::before{left:auto;right:34px}
+.slip-tag{
+  position:absolute;top:-13px;left:-13px;width:44px;height:44px;
+  background:var(--ink);color:var(--gold);display:flex;align-items:center;justify-content:center;
+  font-size:19px;border:1px solid var(--gold-soft);box-shadow:0 6px 14px rgba(0,0,0,.4);
+}
+.slip:nth-child(even) .slip-tag{left:auto;right:-13px}
+.slip h3{font-size:21px;letter-spacing:.14em;font-weight:400;margin-bottom:4px}
+.slip .cap{font-size:12.5px;color:var(--slip-dim);letter-spacing:.24em;margin-bottom:16px}
+.slip .q{
+  border-left:3px solid var(--gold);padding:2px 0 2px 16px;margin:10px 0;
+  font-size:16.5px;line-height:1.95;text-align:justify;
+}
+.slip .q i{font-style:normal;color:var(--slip-dim);font-size:13px;letter-spacing:.1em;display:block;margin-bottom:2px}
+.note{
+  margin-top:16px;padding-top:14px;border-top:1px dashed #b9ad8f;
+  font-size:14px;color:var(--slip-dim);line-height:1.9;
+}
+.note b{color:var(--slip-ink);font-weight:400}
+.stamp{
+  position:absolute;right:30px;bottom:24px;
+  border:2px solid rgba(150,63,38,.75);color:rgba(150,63,38,.85);
+  padding:7px 10px;font-size:14px;letter-spacing:.16em;line-height:1.35;
+  transform:rotate(-7deg);text-align:center;max-width:96px;
+  box-shadow:inset 0 0 0 1px rgba(150,63,38,.28);
+  background:rgba(150,63,38,.05);
+}
+.slip:nth-child(even) .stamp{right:auto;left:30px;transform:rotate(6deg)}
+@media (max-width:760px){
+  .slip{padding:26px 22px 68px}
+  .slip-tag{left:auto;right:-8px;top:-10px}
+  .stamp{right:20px;bottom:14px}
+}
+
+/* ===== 异物谱 ===== */
+.slats{display:flex;gap:12px;height:400px;padding-bottom:20px}
+.slat{
+  flex:1;min-width:0;position:relative;cursor:pointer;overflow:hidden;
+  background:linear-gradient(180deg,#232019,#191712);
+  border:1px solid var(--hairline);transition:flex 0.45s cubic-bezier(.22,.8,.3,1),border-color .3s;
+}
+.slat:hover{border-color:var(--gold-soft)}
+.slat.open{flex:4.2;border-color:var(--gold)}
+.slat-front{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:18px;padding:24px 0;transition:opacity .3s;
+}
+.slat.open .slat-front{opacity:0;pointer-events:none}
+.slat-name{writing-mode:vertical-rl;font-size:26px;letter-spacing:.4em;color:var(--paper)}
+.slat-quote{writing-mode:vertical-rl;font-size:13.5px;color:var(--paper-faint);letter-spacing:.14em;line-height:2.2;max-height:240px}
+.slat-quote .q{display:inline;color:var(--paper-dim)}
+.slat-quote .q::before{content:"「"}
+.slat-quote .q::after{content:"」"}
+.slat-back .q::before{content:"「"}
+.slat-back .q::after{content:"」"}
+.slat-back{
+  position:absolute;inset:0;padding:30px 30px;opacity:0;transition:opacity .4s .15s;pointer-events:none;
+  display:flex;flex-direction:column;justify-content:flex-end;gap:12px;
+}
+.slat.open .slat-back{opacity:1;pointer-events:auto}
+.slat-back h4{font-size:20px;letter-spacing:.2em;color:var(--gold);font-weight:400}
+.slat-back .q{font-size:14.5px;line-height:1.95;color:var(--paper-dim);text-align:justify}
+.slat-back p{font-size:13.5px;color:var(--paper-faint);line-height:1.85}
+.slat-glyph{position:absolute;top:20px;right:22px;font-size:64px;color:var(--gold-faint);line-height:1;user-select:none}
+@media (max-width:860px){
+  .slats{flex-direction:column;height:auto}
+  .slat{min-height:64px}
+  .slat.open{min-height:230px;flex:1}
+  .slat-front{flex-direction:row;justify-content:flex-start;gap:14px;padding:14px 20px}
+  .slat-name{writing-mode:horizontal-tb;font-size:19px;letter-spacing:.3em}
+  .slat-quote{writing-mode:horizontal-tb;display:none}
+  .slat-back{padding:22px}
+}
+
+/* ===== 印谱 ===== */
+.seal-rack{
+  border:1px solid var(--hairline);background:var(--ink2);
+  display:flex;align-items:center;justify-content:center;gap:34px;flex-wrap:wrap;
+  padding:44px 30px 38px;
+}
+.rseal{
+  border:3px solid rgba(150,63,38,.7);color:rgba(196,98,72,.9);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  transform:rotate(-4deg);box-shadow:inset 0 0 0 1px rgba(150,63,38,.25);
+  background:rgba(150,63,38,.05);line-height:1.3;
+}
+.rseal:nth-child(even){transform:rotate(3.5deg)}
+.rseal small{display:block;font-size:11px;color:var(--paper-faint);letter-spacing:.1em;margin-top:4px}
+.seal-cap{margin-top:20px;font-size:14.5px;color:var(--paper-dim);text-align:center;letter-spacing:.04em}
+.seal-cap b{color:var(--gold);font-weight:400}
+
+/* ===== 尾 ===== */
+.tail{padding:60px 0 30px;border-top:1px solid var(--hairline);margin-top:56px}
+.tail p{font-size:15.5px;color:var(--paper-dim);max-width:760px;margin-bottom:14px}
+.tail p b{color:var(--paper);font-weight:400}
+
+/* ===== 页脚 ===== */
+footer{border-top:1px solid var(--hairline);margin-top:40px;padding:30px 0 46px}
+.fm{display:block;font-size:13px;color:var(--paper-faint);line-height:2.1;margin-bottom:10px}
+.fm b{color:var(--paper-dim);font-weight:400}
+.fm a{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏：手镜 ================= -->
+<header class="hero">
+  <div class="hero-grid">
+    <div class="brand">
+      <div class="brand-side">
+        <div class="seal">导读<br>二百八十四</div>
+        <div class="meta">殆知阁导读</div>
+      </div>
+      <h1 class="t-big">君子堂日询手镜</h1>
+      <div class="t-small">明 · 王济</div>
+    </div>
+
+    <div>
+      <p class="stand">
+        一个江南人被谪到岭南横州，把随身带着的故乡眼光当成一面<b>手镜</b>：
+        市集、婚丧、饮食、滩险、神祠、猴子和铁树，一样样拿镜子照过去，照完还要盖一枚短评的印。
+        这部书就是那面镜子剩下的相纸：三十七则手记，热爱与不耐烦都写在明处。
+      </p>
+      <p class="stand">
+        吴浙的谚语里，铁树开花是一切等不来的事；
+        而他在横州的园子里亲手摸到那棵树，<b>丁卯年真的开花</b>。
+        拨一下镜子，看看这两句话怎么互相照。
+      </p>
+    </div>
+
+    <div class="mirror-zone">
+      <div class="hand-mirror">
+        <div class="mirror-rim">
+          <div class="mirror-face" id="face">
+            <div class="face-pane" id="pane-wz">
+              <div class="face-tag">吴浙之相</div>
+              <div class="face-line">「<span class="q">见事难成，则云须铁树花开</span>」</div>
+              <div class="face-sub">故乡把这句谚语，送给一切等不来的事</div>
+            </div>
+            <div class="face-pane" id="pane-hz">
+              <div class="face-tag">横州之相</div>
+              <svg class="tree" width="96" height="96" viewBox="0 0 100 100" aria-hidden="true">
+                <g stroke="#c9963f" stroke-width="2.4" stroke-linecap="round" fill="none" opacity=".92">
+                  <path d="M50 92 L50 46"/>
+                  <path d="M50 46 L18 30"/><path d="M50 46 L82 30"/>
+                  <path d="M50 46 L26 12"/><path d="M50 46 L74 12"/>
+                  <path d="M50 46 L44 6"/><path d="M50 46 L58 6"/>
+                  <path d="M50 46 L10 48"/><path d="M50 46 L90 48"/>
+                </g>
+                <circle cx="50" cy="46" r="5" fill="#e8e4dc"/>
+              </svg>
+              <div class="face-line">「<span class="q">此铁树也，每遇丁卯年乃花</span>」</div>
+              <div class="face-sub">驯象卫殷指挥的园子里，他亲眼看见了</div>
+            </div>
+          </div>
+        </div>
+        <div class="mirror-handle"></div>
+      </div>
+      <div class="phase-sw" role="group" aria-label="镜相切换">
+        <button id="sw-wz" type="button">吴浙</button>
+        <button id="sw-hz" type="button" class="on">横州</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= 镜背铭 ================= -->
+<section class="sec">
+  <div class="sec-head">
+    <span class="sec-no mono">壹</span>
+    <h2 class="sec-title">镜背铭</h2>
+    <span class="sec-cap">书是谁写的，凭什么可信</span>
+  </div>
+  <div class="back-plate">
+    <p>书名里的<b style="color:var(--gold)">君子堂</b>是他的堂号，<b style="color:var(--paper)">日询手镜</b>是他给这本书定的用法：每天问一点异乡的事，记下来，像揣一面随身的镜子。作者王济，吴浙人，书里处处拿故乡作对照；横州在他笔下是谪居之地，他管过州里的祭祀，代理过州事，交游是卫所的指挥、邻州的太守、本地的举人，离任时还带了几竿横州竹子北归。通行著录把他系在正德年间，与书中所记岑猛之事正相衔接。</p>
+    <p>全书不分文章，只分手记：上卷二十二则，记风土物产婚俗市况；下卷十五则，收神异传闻与飞禽走兽。他不是采风的官，是被贬的客，所以这面镜子常常带着情绪：看着不顺的要骂，看着稀奇的要试，书上写错的要驳。</p>
+    <div class="facts">
+      <span>库本去空白 <b>10,479</b> 字</span>
+      <span>上卷 <b>22</b> 则</span>
+      <span>下卷 <b>15</b> 则</span>
+      <span>据子藏笔记本</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 手札 ================= -->
+<section class="sec">
+  <div class="sec-head">
+    <span class="sec-no mono">贰</span>
+    <h2 class="sec-title">手札七枚</h2>
+    <span class="sec-cap">每枚右上角，是他自己盖的考语印</span>
+  </div>
+  <div class="slip-zone">
+
+    <article class="slip">
+      <div class="slip-tag">市</div>
+      <h3>满街皆是妇人</h3>
+      <div class="cap">入市第一眼</div>
+      <q class="q"><i>记市况</i>荷担贸易，百货塞途，悉皆妇人，男子不十一。</q>
+      <q class="q"><i>他问出了原因</i>城中居者多戎籍，不敢买仆，有仆则有差，虽武弁之家例不得免，故厮役多用妇女</q>
+      <q class="q"><i>行情</i>有善经纪者，值银二十两。</q>
+      <p class="note"><b>今按：</b>军籍之家不许私蓄奴仆，一城的家务与买卖只好外包给女人。他看见的其实是制度的影子，落笔骂的却是风俗。镜子有时候也照歪。</p>
+      <div class="stamp">诚可鄙也</div>
+    </article>
+
+    <article class="slip">
+      <div class="slip-tag">婚</div>
+      <h3>以歌为媒</h3>
+      <div class="cap">全书最放开的一则</div>
+      <q class="q"><i>聘礼</i>有女之家，初不计财，惟槟榔数裹为聘。</q>
+      <q class="q"><i>送嫁</i>女家于近村倩能歌男妇一二十人或三四十者，至期伺男舁轿至，众集女门，女登轿，夹而歌之，互相应答，欢笑而行，声闻数里。</q>
+      <q class="q"><i>定情</i>每岁元旦或次日，里中少年裂布为帕，挟往村落，觅处女少妇，相期答歌。允者，男子以布帕投女，女解所衣汗衫授男子归，谓之抛帛。</q>
+      <q class="q"><i>还帕</i>归时，女以前帕巧刺文绣还男子，男子亦以汗衫归之女妇之父母</q>
+      <p class="note"><b>今按：</b>不要财礼，只要几裹槟榔；成婚靠两队歌者夹轿对唱；定情是一方裂布换一件汗衫，次年归还时已绣上花。他记流程记得像笔录，末了补一句：城里衣冠人家也照办不误。</p>
+      <div class="stamp">虽衣冠<br>家不废</div>
+    </article>
+
+    <article class="slip">
+      <div class="slip-tag">食</div>
+      <h3>一口槟榔</h3>
+      <div class="cap">全书少见的自我实验</div>
+      <q class="q"><i>日常</i>宾至不设茶，但呼槟榔</q>
+      <q class="q"><i>亲试</i>余初至其地，见人食甚甘，余亦试嚼一口，良久耳热面赤，头眩目花，几于颠仆，久之方苏，遂更不复食，始知其为真能醉人。</q>
+      <q class="q"><i>释疑</i>又见人嚼久，吐津水甚红，乃信口吐血之说</q>
+      <p class="note"><b>今按：</b>他没听传闻下结论，自己嚼了一口，醉到几乎栽倒，认输。又见人嚼出满口红涎，才明白家乡人吓唬人的话并非虚言。先试再评，这是手镜的可贵处。</p>
+      <div class="stamp">诚为可笑</div>
+    </article>
+
+    <article class="slip">
+      <div class="slip-tag">险</div>
+      <h3>铁锁木虎</h3>
+      <div class="cap">乌蛮滩，进横州的鬼门关</div>
+      <q class="q"><i>滩名即恐吓诗</i>其滩有六，延亘三十余里，曰鬼挂舵、马槽、疑壁、龙门、雷壁、三鬼。</q>
+      <q class="q"><i>庙祝的办法</i>门右以铁锁锁木虎，势甚狞恶，云不锁则夜出伤人。过滩者必牲醴告庙，又以生鸡血滴虎头。</q>
+      <p class="note"><b>今按：</b>六个滩名排出来已是一篇檄文；滩上伏波庙拿铁链锁一只木虎，说半夜会出来伤人，过滩的先祭庙，再给虎头浇生鸡血。恐惧也要按章缴费，这条河的经济循环设计得相当完整。</p>
+      <div class="stamp">心骇<br>魂夺</div>
+    </article>
+
+    <article class="slip">
+      <div class="slip-tag">神</div>
+      <h3>真冯都长</h3>
+      <div class="cap">全书最像小说的一则</div>
+      <q class="q"><i>敌军压境，他先安抚</i>答云：无妨，待我与祖宗商量</q>
+      <q class="q"><i>焚香出营，对空作揖</i>无事，无事，吾祖宗俱在此矣，可速传令，子时蓐食，丑时起营纵火。</q>
+      <q class="q"><i>乱军之中</i>都长单骑驰而呼曰：我即真冯都长也，汝辈复何遁？</q>
+      <q class="q"><i>俘虏的供词</i>吾固将叛，只被冯都长放许多大虫咆哮围绕家宅，恐祸及妻孥，故不敢爱一死，乃来耳。</q>
+      <p class="note"><b>今按：</b>郁林妖贼顶着冯家名号聚众数万，官军半月无计；真都长焚一炷香，说与祖宗商量定了，丑时反放火烧营，单骑追喊一句真名，贼众罗拜。后来招抚的贼魁失期不至，众人皆慌，他说无妨，贼自陈家中夜夜有大虫绕宅吼，不敢再叛。志怪与战报同纸，他照单全收。</p>
+      <div class="stamp">吾祖公<br>来矣</div>
+    </article>
+
+    <article class="slip">
+      <div class="slip-tag">隐</div>
+      <h3>寿佛寺的客人</h3>
+      <div class="cap">建文帝下落传说的广西分支</div>
+      <q class="q"><i>传闻</i>横人相传，建文庶人遇革除时，削发为佛徒，遁至岭南，后行脚至横之南门寿佛寺，遂居焉，十五余年，人不之知，其徒归者千数</q>
+      <q class="q"><i>他的态度</i>此言亦无可据，今存其所书寿佛禅寺四大字在焉。</q>
+      <q class="q"><i>末笔见真章</i>岁可得赁钱百五十金，今止一二僧，懦不能立，利归里长并诸有力者。</q>
+      <p class="note"><b>今按：</b>逊帝削发南遁、隐居横州十五年，是靖难之后流传最广的一支传说，寺中题字被当作物证。他抄下故事，老老实实补一句无可据，然后顺手记下寺产账目：田产铺面年租一百五十金，如今只剩两个撑不住场的和尚，便宜尽归里长。传说归传说，最后一行才是正文。</p>
+      <div class="stamp">此言亦<br>无可据</div>
+    </article>
+
+    <article class="slip">
+      <div class="slip-tag">辨</div>
+      <h3>铁树与猿</h3>
+      <div class="cap">手镜的两面：一面照书外，一面照书错</div>
+      <q class="q"><i>眼见为实</i>余因忆铁树花开之说，且谓不到此地，又焉知真有是物耶！</q>
+      <q class="q"><i>五百人围山两日夜</i>已号召得三百余夫，合围得一小黑猿于独岭上，二日夜矣</q>
+      <q class="q"><i>他驳书</i>余深然之。著书之人，何谬误如此。</q>
+      <q class="q"><i>收梢</i>遂携归，畜之三数年，甚驯扰，忽疾作而毙，瘗小横山侧，与鹤冢相并。</q>
+      <p class="note"><b>今按：</b>上一半，谚语里绝无可能的铁树开花，他在园子里看见了；下一半，为一句书上的通臂之说，他调三百乡夫围山两夜捕猿验看，回头判书上写错了。土人又说老猿会由雄转雌，他先不信，问到总镇府养过猿的人才肯信。猿后来养了几年，病死，葬在小横山边，与鹤冢作伴。较真的人，心肠往往是软的。</p>
+      <div class="stamp">何谬误<br>如此</div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ================= 异物谱 ================= -->
+<section class="sec">
+  <div class="sec-head">
+    <span class="sec-no mono">叁</span>
+    <h2 class="sec-title">岭南异物谱</h2>
+    <span class="sec-cap">竖简六条，点开看注</span>
+  </div>
+  <div class="slats" id="slats">
+
+    <div class="slat" data-open="false">
+      <div class="slat-glyph">鼠</div>
+      <div class="slat-front">
+        <div class="slat-name">竹鼠</div>
+        <div class="slat-quote"><q class="q">名竹鼠，云极肥美，岭南所珍</q></div>
+      </div>
+      <div class="slat-back">
+        <h4>竹鼠</h4>
+        <q class="q">名竹鼠，云极肥美，岭南所珍</q>
+        <p>挽夫特地献给这位新来的官，他皱眉端详半天，叱还而去。后来听满城士大夫说这是食笋的至味、得之最艰，懊悔也写进了书里。</p>
+      </div>
+    </div>
+
+    <div class="slat" data-open="false">
+      <div class="slat-glyph">竹</div>
+      <div class="slat-front">
+        <div class="slat-name">竻竹</div>
+        <div class="slat-quote"><q class="q">共植此竹环之，以为屏翰，则蛇鼠不能入</q></div>
+      </div>
+      <div class="slat-back">
+        <h4>竻竹</h4>
+        <q class="q">共植此竹环之，以为屏翰，则蛇鼠不能入</q>
+        <p>通身密节带寸许长刺的竹子。村寨环种一圈当城墙，蛇鼠进不来；邕州旧时干脆用它做城，来犯者无计可施。</p>
+      </div>
+    </div>
+
+    <div class="slat" data-open="false">
+      <div class="slat-glyph">树</div>
+      <div class="slat-front">
+        <div class="slat-name">铁树</div>
+        <div class="slat-quote"><q class="q">此铁树也，每遇丁卯年乃花</q></div>
+      </div>
+      <div class="slat-back">
+        <h4>铁树</h4>
+        <q class="q">此铁树也，每遇丁卯年乃花</q>
+        <p>殷指挥父亲丁卯年生，那年树当真开花，全家移树堂前置酒称贺。花开累月不凋，嗅之只有草气。六十年一遇的丁卯，他家等到了。</p>
+      </div>
+    </div>
+
+    <div class="slat" data-open="false">
+      <div class="slat-glyph">鸟</div>
+      <div class="slat-front">
+        <div class="slat-name">倒挂</div>
+        <div class="slat-quote"><q class="q">好香，故名收香倒挂</q></div>
+      </div>
+      <div class="slat-back">
+        <h4>倒挂</h4>
+        <q class="q">倒挂，小巧可爱，形色皆如绿鹦鹉而小，略大于瓦雀，好香，故名收香倒挂。</q>
+        <p>好香的小绿鸟，睡时倒挂在花枝间。东坡句里的倒挂绿毛么凤，他考订到了横州头上。</p>
+      </div>
+    </div>
+
+    <div class="slat" data-open="false">
+      <div class="slat-glyph">蛇</div>
+      <div class="slat-front">
+        <div class="slat-name">蚺蛇</div>
+        <div class="slat-quote"><q class="q">大者长十余丈，能逐鹿食之</q></div>
+      </div>
+      <div class="slat-back">
+        <h4>蚺蛇</h4>
+        <q class="q">山中产蚺蛇，大者长十余丈，能逐鹿食之。</q>
+        <p>捕法写得很从容：葛藤塞住蛇穴，持杖徐入，蛇嗅到葛藤便瘫软，任凭捆缚。蛇胆售价甚厚，是山里的硬通货。</p>
+      </div>
+    </div>
+
+    <div class="slat" data-open="false">
+      <div class="slat-glyph">鱼</div>
+      <div class="slat-front">
+        <div class="slat-name">钩鱼</div>
+        <div class="slat-quote"><q class="q">吃着钩鱼唇，不惜老婆裈</q></div>
+      </div>
+      <div class="slat-back">
+        <h4>钩鱼</h4>
+        <q class="q">其唇甚长，垂下数寸，味皆在此</q>
+        <p>一条鱼的长嘴唇，被横州人抬到嘴比裤子还金贵的地步，谚语原话更直白：为了这口鱼唇，老婆的裈都可以不要。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 印谱 ================= -->
+<section class="sec">
+  <div class="sec-head">
+    <span class="sec-no mono">肆</span>
+    <h2 class="sec-title">印谱</h2>
+    <span class="sec-cap">他盖在书页边上的口头禅</span>
+  </div>
+  <div class="seal-rack">
+    <div class="rseal" style="width:112px;height:112px;font-size:20px">可爱<small>十见</small></div>
+    <div class="rseal" style="width:92px;height:92px;font-size:18px">甚佳<small>五见</small></div>
+    <div class="rseal" style="width:86px;height:86px;font-size:17px">可笑<small>四见</small></div>
+    <div class="rseal" style="width:86px;height:86px;font-size:17px">可鄙<small>四见</small></div>
+    <div class="rseal" style="width:70px;height:70px;font-size:15px">甚异<small>两见</small></div>
+  </div>
+  <p class="seal-cap">三十七则手记，他顺手盖下 <b>二十五</b> 枚短评：可爱十见，甚佳五见，可笑四见，可鄙四见，甚异两见。</p>
+  <p class="seal-cap" style="margin-top:6px">夸是横州的草木鸟兽，骂多半是留在他眼里的故乡标准。爱憎都摆在明处，这也是一面镜子。</p>
+</section>
+
+<!-- ================= 尾 ================= -->
+<section class="tail">
+  <p>镜子的用法，他在书名里已经交代：日询，手镜。每天问一点，记一条，随时取出来照一照异乡，也照一照自己带来的那套标准。</p>
+  <p>所以这部一万字的小书里，既有满街的妇人与对歌的婚事，也有一口把自己醉倒的槟榔，一只被叱还的竹鼠，一只葬在鹤冢旁边的猿。他不是不偏见，是肯把偏见写在纸面上，让人看见镜子本身有几分曲直。</p>
+  <p><b>五百年后翻这面镜子，照见的第二个人，是读者。</b></p>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="fm"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），子藏笔记〈君子堂日询手镜〉一书，明王济撰，库本去空白 10,479 字，上卷二十二则，下卷十五则。本页全部引文经脚本与库内文本去标点、归一逐字核验比对通过；库本形近讹字照录不改。</span>
+    <span class="fm"><b>读前须知</b>　书成于明正德前后，所记婚俗鬼神药石皆四百年前之所见所信，时代局限照录不辩，读时自持。</span>
+    <span class="fm"><b>上一篇同系列</b>　〈<a href="chuanya.html">串雅</a>〉　<b>返回总目</b>　〈<a href="mulu.html">殆知阁导读总目</a>〉　第<b>二百八十四</b>篇</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var swWz = document.getElementById('sw-wz');
+  var swHz = document.getElementById('sw-hz');
+  var paneWz = document.getElementById('pane-wz');
+  var paneHz = document.getElementById('pane-hz');
+  function setPhase(p){
+    var wz = (p === 'wz');
+    paneWz.classList.toggle('on', wz);
+    paneHz.classList.toggle('on', !wz);
+    swWz.classList.toggle('on', wz);
+    swHz.classList.toggle('on', !wz);
+  }
+  swWz.addEventListener('click', function(){ setPhase('wz'); });
+  swHz.addEventListener('click', function(){ setPhase('hz'); });
+  document.getElementById('face').addEventListener('click', function(){
+    setPhase(paneHz.classList.contains('on') ? 'wz' : 'hz');
+  });
+  setPhase('hz');
+
+  var slats = document.querySelectorAll('.slat');
+  slats.forEach(function(s){
+    s.addEventListener('click', function(){
+      var open = s.getAttribute('data-open') === 'true';
+      slats.forEach(function(o){ o.classList.remove('open'); o.setAttribute('data-open','false'); });
+      if(!open){ s.classList.add('open'); s.setAttribute('data-open','true'); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
