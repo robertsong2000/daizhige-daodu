@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>串雅：一只虎撑摇出来的江湖医书</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #222220;
+    --ink-3: #2b2b28;
+    --paper: #e8e4dc;
+    --paper-dim: #b9b3a6;
+    --paper-dark: #d8d2c6;
+    --bc: #5f9270;
+    --bc-bright: #7ab88b;
+    --bc-dim: rgba(95, 146, 112, .34);
+    --bc-faint: rgba(95, 146, 112, .13);
+    --iron: #55534e;
+    --iron-lite: #7b786f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "STSong", "NSimSun", "SimSun", "Noto Serif CJK SC", serif;
+    line-height: 1.85;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--bc); color: var(--ink); }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 26px; }
+  q { quotes: none; }
+  .q {
+    display: block;
+    background: var(--paper);
+    color: var(--ink);
+    padding: 20px 26px;
+    font-size: 17px;
+    letter-spacing: .04em;
+    position: relative;
+    box-shadow: 0 10px 26px rgba(0,0,0,.45);
+  }
+  .q::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: var(--bc);
+  }
+  .q .att {
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #6d685e;
+    letter-spacing: .05em;
+  }
+  .il {
+    display: inline;
+    background: var(--bc-faint);
+    color: var(--bc-bright);
+    padding: 1px 6px;
+    box-shadow: none;
+    font-size: inherit;
+  }
+
+  /* ============ 首屏：夜行 ============ */
+  .hero {
+    display: flow-root;
+    position: relative;
+    padding-bottom: 70px;
+    border-bottom: 1px solid rgba(232,228,220,.12);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 40px;
+    padding-top: 66px;
+    align-items: start;
+  }
+  .tblock { display: flow-root; }
+  .tmain {
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+    float: right;
+    font-size: 108px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    line-height: 1.05;
+    color: var(--paper);
+    text-shadow: 0 0 34px rgba(95,146,112,.28);
+  }
+  .tmain b { color: var(--bc-bright); }
+  .tsub {
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+    float: right;
+    margin-right: 26px;
+    margin-top: 14px;
+    font-size: 16px;
+    letter-spacing: .5em;
+    color: var(--paper-dim);
+    border-right: 1px solid var(--bc-dim);
+    padding-right: 14px;
+    height: 400px;
+  }
+  .hero-meta {
+    margin-top: 30px;
+    font-size: 13.5px;
+    color: var(--paper-dim);
+    letter-spacing: .06em;
+    clear: both;
+  }
+  .hero-meta em { color: var(--bc-bright); font-style: normal; }
+
+  /* 山道夜行带 */
+  .road {
+    position: relative;
+    height: 380px;
+    background: linear-gradient(180deg, #141413 0%, #1c1c1a 58%, #232320 100%);
+    border: 1px solid rgba(232,228,220,.14);
+    overflow: hidden;
+  }
+  .moon {
+    position: absolute;
+    right: 66px; top: 42px;
+    width: 74px; height: 74px;
+    border-radius: 50%;
+    box-shadow: inset -20px 8px 0 2px rgba(232,228,220,.85);
+    opacity: .8;
+  }
+  .ridge {
+    position: absolute;
+    left: -5%; right: -5%; bottom: 118px;
+    height: 90px;
+    background:
+      linear-gradient(115deg, transparent 24%, rgba(232,228,220,.10) 25%, rgba(232,228,220,.10) 26%, transparent 27%),
+      linear-gradient(245deg, transparent 30%, rgba(232,228,220,.07) 31%, rgba(232,228,220,.07) 32%, transparent 33%),
+      linear-gradient(180deg, transparent 62%, #191917 63%);
+  }
+  .path {
+    position: absolute;
+    left: 0; right: 0; bottom: 64px;
+    border-bottom: 2px dashed rgba(232,228,220,.32);
+  }
+  .walker {
+    position: absolute;
+    bottom: 64px;
+    left: 4%;
+    width: 74px;
+    text-align: center;
+    transition: left 1.1s cubic-bezier(.45,.05,.35,1);
+  }
+  .fan {
+    position: absolute;
+    bottom: 30px; left: 4px;
+    width: 4px; height: 92px;
+    background: var(--iron-lite);
+  }
+  .fan::before {
+    content: "串";
+    position: absolute;
+    top: -52px; left: -24px;
+    width: 52px; height: 44px;
+    background: var(--bc);
+    color: var(--ink);
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 44px;
+    clip-path: polygon(0 0, 100% 0, 78% 50%, 100% 100%, 0 100%);
+    animation: sway 2.6s ease-in-out infinite;
+    transform-origin: 100% 100%;
+  }
+  @keyframes sway { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
+  .man {
+    position: absolute;
+    bottom: 30px; right: 8px;
+    width: 22px; height: 34px;
+    background: var(--paper-dark);
+    border-radius: 9px 9px 3px 3px;
+  }
+  .man::before {
+    content: "";
+    position: absolute;
+    top: -11px; left: 2px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--paper-dark);
+    box-shadow: -2px -4px 0 -1px var(--bc);
+  }
+  .man::after {
+    content: "";
+    position: absolute;
+    bottom: -13px; left: 3px;
+    width: 16px; height: 13px;
+    background:
+      linear-gradient(90deg, var(--paper-dark) 45%, transparent 45%),
+      linear-gradient(90deg, transparent 55%, var(--paper-dark) 55%);
+    animation: steps .9s ease-in-out infinite;
+  }
+  @keyframes steps { 0%,100% { margin-left: -3px; } 50% { margin-left: 3px; } }
+  .gear {
+    position: absolute;
+    left: 50%;
+    bottom: 128px;
+    transform: translateX(-50%) translateY(12px);
+    background: var(--paper);
+    color: var(--ink);
+    padding: 10px 18px;
+    font-size: 14.5px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity .5s, transform .5s;
+    pointer-events: none;
+  }
+  .gear::after {
+    content: "";
+    position: absolute;
+    left: 50%; bottom: -8px;
+    margin-left: -7px;
+    border: 8px solid transparent;
+    border-top-color: var(--paper);
+    border-bottom: 0;
+  }
+  .gear b {
+    color: #3d5a47;
+    font-size: 19px;
+    margin-right: 10px;
+    letter-spacing: .1em;
+  }
+  .gear.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .road-foot {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 18px;
+    font-size: 12.5px;
+    color: var(--paper-dim);
+    letter-spacing: .08em;
+  }
+  .go {
+    background: none;
+    border: 1px solid var(--bc);
+    color: var(--bc-bright);
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: .22em;
+    padding: 8px 22px;
+    cursor: pointer;
+    transition: background .25s, color .25s;
+  }
+  .go:hover { background: var(--bc); color: var(--ink); }
+
+  /* ============ 章节骨架 ============ */
+  .sec { display: flow-root; position: relative; padding: 84px 0; }
+  .sec.dark { background: var(--ink-2); border-top: 1px solid rgba(232,228,220,.1); border-bottom: 1px solid rgba(232,228,220,.1); }
+  .rail {
+    position: absolute;
+    left: max(12px, calc(50% - 560px));
+    top: 84px;
+    writing-mode: vertical-rl;
+    font-size: 13px;
+    letter-spacing: .42em;
+    color: var(--bc);
+    border-left: 1px solid var(--bc-dim);
+    padding-left: 10px;
+  }
+  .sec-body { max-width: 880px; margin: 0 auto; padding: 0 70px; }
+  h2 {
+    font-size: 34px;
+    letter-spacing: .14em;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  h2 small {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 400;
+    letter-spacing: .3em;
+    color: var(--bc-bright);
+    margin-bottom: 18px;
+  }
+  .lead { color: var(--paper-dim); font-size: 15.5px; margin-bottom: 30px; max-width: 62ch; }
+  .lead strong { color: var(--paper); font-weight: 400; border-bottom: 1px solid var(--bc-dim); }
+
+  /* ============ 贱薄之行 ============ */
+  .duel { display: grid; grid-template-columns: 1.05fr .95fr; gap: 26px; }
+  .mock { background: var(--ink-3); border: 1px solid rgba(232,228,220,.13); padding: 24px 26px; }
+  .mock h3 {
+    font-size: 14px;
+    letter-spacing: .3em;
+    color: var(--paper-dim);
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+  .mock q {
+    display: block;
+    font-size: 16.5px;
+    color: var(--paper);
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(232,228,220,.15);
+  }
+  .mock q:last-child { border-bottom: 0; }
+  .mock q b { color: var(--bc-bright); font-weight: 400; }
+  .turn {
+    margin-top: 26px;
+    text-align: center;
+    font-size: 14px;
+    letter-spacing: .28em;
+    color: var(--bc-bright);
+  }
+  .turn::before, .turn::after {
+    content: "";
+    display: inline-block;
+    width: 60px; height: 1px;
+    background: var(--bc-dim);
+    vertical-align: middle;
+    margin: 0 16px;
+  }
+
+  /* ============ 虎口 ============ */
+  .tiger { display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: center; }
+  .ringwrap { position: relative; height: 300px; }
+  .ring {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 190px; height: 190px;
+    margin: -95px 0 0 -95px;
+    border-radius: 50%;
+    border: 16px solid var(--iron);
+    box-shadow:
+      inset 0 0 0 3px rgba(232,228,220,.16),
+      0 0 0 3px rgba(0,0,0,.5),
+      0 18px 40px rgba(0,0,0,.6);
+    animation: breathe 5s ease-in-out infinite;
+  }
+  .ring::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: 12px;
+    width: 26px; height: 26px;
+    margin-left: -13px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #8d8a80, #4a4842 70%);
+    box-shadow: 0 2px 6px rgba(0,0,0,.7);
+  }
+  .ring::after {
+    content: "";
+    position: absolute;
+    inset: 26px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 30%, rgba(232,228,220,.13), transparent 60%);
+  }
+  @keyframes breathe {
+    0%,100% { transform: rotate(-6deg); }
+    50% { transform: rotate(6deg); }
+  }
+  .ringwrap figcaption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--paper-dim);
+    letter-spacing: .2em;
+  }
+  .ringwrap figcaption b { color: var(--bc-bright); font-size: 15px; letter-spacing: .3em; }
+
+  /* ============ 切口簿 ============ */
+  .kgrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .kk {
+    position: relative;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,.4);
+  }
+  .kk .w {
+    display: block;
+    text-align: center;
+    padding: 16px 6px 14px;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: .12em;
+  }
+  .kk .m {
+    display: block;
+    text-align: center;
+    font-size: 12.5px;
+    padding: 0 6px 12px;
+    color: #56524a;
+    min-height: 30px;
+  }
+  .kk .lid {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 30px;
+    background: repeating-linear-gradient(45deg, var(--ink-3), var(--ink-3) 7px, #262624 7px, #262624 14px);
+    border-top: 3px solid var(--bc);
+    transition: transform .5s cubic-bezier(.6,.05,.3,1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .kk .lid span {
+    color: var(--paper-dim);
+    font-size: 12px;
+    letter-spacing: .3em;
+  }
+  .kk.open .lid { transform: translateY(108%); }
+
+  /* ============ 三字诀 ============ */
+  .tri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .slat {
+    background: var(--ink-3);
+    border: 1px solid rgba(232,228,220,.14);
+    border-top: 5px solid var(--bc);
+    padding: 26px 24px 22px;
+    position: relative;
+  }
+  .slat .zi {
+    font-size: 66px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--bc-bright);
+    text-shadow: 0 0 24px rgba(95,146,112,.4);
+  }
+  .slat q {
+    display: block;
+    margin-top: 14px;
+    font-size: 16px;
+    color: var(--paper);
+  }
+  .slat p { margin-top: 10px; font-size: 13.5px; color: var(--paper-dim); }
+  .jue-strip {
+    display: block;
+    margin-top: 22px;
+    background: var(--paper);
+    color: var(--ink);
+    padding: 18px 26px;
+    font-size: 16.5px;
+    box-shadow: 0 10px 26px rgba(0,0,0,.45);
+  }
+  .four {
+    margin-top: 30px;
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--bc-dim);
+  }
+  .four div {
+    flex: 1;
+    text-align: center;
+    padding: 14px 6px;
+    font-size: 15px;
+    letter-spacing: .2em;
+    color: var(--paper);
+    border-right: 1px solid var(--bc-dim);
+  }
+  .four div:last-child { border-right: 0; }
+  .four div small { display: block; font-size: 11.5px; letter-spacing: .1em; color: var(--paper-dim); margin-top: 4px; }
+  .four-note { margin-top: 12px; font-size: 13px; color: var(--paper-dim); text-align: center; letter-spacing: .1em; }
+
+  /* ============ 三大法 ============ */
+  .pipes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 26px; }
+  .pipe {
+    background: var(--ink-3);
+    border: 1px solid rgba(232,228,220,.14);
+    padding: 20px 22px;
+    cursor: pointer;
+    transition: border-color .3s;
+  }
+  .pipe:hover { border-color: var(--bc-dim); }
+  .pipe h3 { font-size: 30px; color: var(--bc-bright); letter-spacing: .2em; margin-bottom: 4px; }
+  .pipe .sub { font-size: 12.5px; color: var(--paper-dim); letter-spacing: .2em; margin-bottom: 16px; }
+  .well {
+    height: 120px;
+    position: relative;
+    background: #151514;
+    border: 1px solid rgba(232,228,220,.1);
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .drop {
+    position: absolute;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--bc-bright);
+    opacity: 0;
+  }
+  .pipe.pding .drop { left: 22%; animation: rise 1.5s linear infinite; }
+  .pipe.pding .drop:nth-child(2) { left: 50%; animation-delay: .5s; }
+  .pipe.pding .drop:nth-child(3) { left: 74%; animation-delay: 1s; }
+  .pipe.pding.on .drop { animation-play-state: paused; }
+  @keyframes rise { 0% { bottom: -8px; opacity: 0; } 18% { opacity: 1; } 86% { opacity: 1; } 100% { bottom: 112px; opacity: 0; } }
+  .pipe.pchuan .drop { left: 22%; animation: sink 1.5s linear infinite; }
+  .pipe.pchuan .drop:nth-child(2) { left: 50%; animation-delay: .5s; }
+  .pipe.pchuan .drop:nth-child(3) { left: 74%; animation-delay: 1s; }
+  .pipe.pchuan.on .drop { animation-play-state: paused; }
+  @keyframes sink { 0% { top: -8px; opacity: 0; } 18% { opacity: 1; } 86% { opacity: 1; } 100% { top: 112px; opacity: 0; } }
+  .pipe.pjie .drop { left: 22%; animation: sink 1.5s linear infinite; }
+  .pipe.pjie .drop:nth-child(2) { left: 50%; animation-delay: .5s; }
+  .pipe.pjie .drop:nth-child(3) { left: 74%; animation-delay: 1s; }
+  .gate {
+    position: absolute;
+    left: 15%; right: 15%;
+    height: 14px;
+    background: repeating-linear-gradient(90deg, var(--bc) 0 12px, #3d5a47 12px 16px);
+    top: -20px;
+    transition: top .4s cubic-bezier(.7,0,.3,1.4);
+  }
+  .pipe.pjie.on .gate { top: 53px; }
+  .pipe.pjie.on .drop { animation: none; opacity: .3; }
+  .pipe q { display: block; font-size: 15px; color: var(--paper); }
+  .pipe .att { display: block; font-size: 12.5px; color: var(--paper-dim); margin-top: 8px; }
+  .pipe-tip { font-size: 12.5px; color: var(--paper-dim); letter-spacing: .14em; margin-bottom: 30px; }
+  .boast { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* ============ 囊中取方 ============ */
+  .nangwrap { display: grid; grid-template-columns: 250px 1fr; gap: 34px; }
+  .nangbox { text-align: center; }
+  .bag {
+    width: 190px; height: 205px;
+    margin: 8px auto 4px;
+    position: relative;
+    background:
+      radial-gradient(circle at 50% 34%, #34342f, #262623 68%);
+    border-radius: 52% 52% 46% 46% / 40% 40% 60% 60%;
+    border: 1px solid rgba(232,228,220,.2);
+    box-shadow: inset 0 -18px 34px rgba(0,0,0,.5), 0 16px 34px rgba(0,0,0,.5);
+    transition: transform .2s;
+  }
+  .bag::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: -12px;
+    width: 84px; height: 30px;
+    transform: translateX(-50%);
+    background: var(--ink);
+    border: 1px solid rgba(232,228,220,.28);
+    border-radius: 10px;
+  }
+  .bag::after {
+    content: "无且囊";
+    position: absolute;
+    left: 50%; top: 44%;
+    transform: translate(-50%,-50%);
+    writing-mode: vertical-rl;
+    color: var(--bc-bright);
+    font-size: 21px;
+    letter-spacing: .3em;
+    text-shadow: 0 0 14px rgba(95,146,112,.5);
+  }
+  .bag.grab { transform: scale(.94) rotate(-2deg); }
+  .draw {
+    margin-top: 18px;
+    width: 100%;
+    background: none;
+    border: 1px solid var(--bc);
+    color: var(--bc-bright);
+    font-family: inherit;
+    font-size: 15px;
+    letter-spacing: .3em;
+    padding: 11px 0;
+    cursor: pointer;
+    transition: background .25s, color .25s;
+  }
+  .draw:hover { background: var(--bc); color: var(--ink); }
+  .nang-count { margin-top: 10px; font-size: 12.5px; color: var(--paper-dim); letter-spacing: .14em; }
+  .slips { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 20px; min-height: 40px; }
+  .slip {
+    border: 1px solid var(--bc-dim);
+    color: var(--paper);
+    background: var(--ink-3);
+    font-size: 14px;
+    padding: 6px 14px;
+    cursor: pointer;
+    letter-spacing: .12em;
+    animation: pop .35s ease;
+  }
+  .slip small { color: var(--bc-bright); font-size: 11px; margin-left: 6px; letter-spacing: .06em; }
+  .slip.cur { background: var(--bc); color: var(--ink); border-color: var(--bc); }
+  .slip.cur small { color: var(--ink); }
+  @keyframes pop { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .fang {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 26px 30px;
+    box-shadow: 0 10px 26px rgba(0,0,0,.45);
+    position: relative;
+    display: flow-root;
+    min-height: 150px;
+  }
+  .fang::before {
+    content: "方笺";
+    position: absolute;
+    right: 16px; top: 16px;
+    writing-mode: vertical-rl;
+    font-size: 12px;
+    letter-spacing: .3em;
+    color: #8a8477;
+    border-right: 1px solid #c8c2b4;
+    padding-right: 8px;
+  }
+  .fang h4 { font-size: 15px; letter-spacing: .2em; color: #3d5a47; margin-bottom: 10px; }
+  .fang h4 b { font-size: 22px; margin-right: 12px; letter-spacing: .1em; }
+  .fang q { display: block; font-size: 17px; letter-spacing: .03em; }
+  .fang .att { display: block; margin-top: 12px; font-size: 13px; color: #6d685e; }
+
+  /* ============ 黑幕 ============ */
+  .traps { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 30px; }
+  .trap { background: var(--ink-3); border: 1px solid rgba(232,228,220,.13); padding: 20px 22px; }
+  .trap h4 {
+    font-size: 17px;
+    letter-spacing: .24em;
+    color: var(--paper);
+    margin-bottom: 10px;
+  }
+  .trap h4 span {
+    display: inline-block;
+    width: 26px; height: 26px;
+    line-height: 26px;
+    text-align: center;
+    background: var(--bc);
+    color: var(--ink);
+    font-size: 14px;
+    margin-right: 10px;
+    letter-spacing: 0;
+  }
+  .trap q { display: block; font-size: 15px; color: var(--paper-dim); }
+  .seal {
+    margin: 40px auto 0;
+    max-width: 620px;
+    text-align: center;
+    position: relative;
+    border: 3px double var(--bc);
+    padding: 34px 30px 30px;
+  }
+  .seal .big {
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    color: var(--bc-bright);
+    text-shadow: 0 0 26px rgba(95,146,112,.5);
+  }
+  .seal q { display: block; margin-top: 16px; font-size: 15.5px; color: var(--paper-dim); }
+  .seal .note { margin-top: 14px; font-size: 12.5px; color: var(--paper-dim); letter-spacing: .1em; }
+
+  /* ============ 书命线 ============ */
+  .tline { position: relative; margin: 46px 0 30px; }
+  .tline .bar {
+    position: absolute;
+    left: 0; right: 0; top: 9px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--bc-dim), var(--bc) 55%, rgba(192,69,60,0) 60%, var(--bc-dim));
+  }
+  .nodes { display: grid; grid-template-columns: repeat(7, 1fr); position: relative; }
+  .node { text-align: center; cursor: pointer; padding: 0 4px; }
+  .node i {
+    display: block;
+    width: 18px; height: 18px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 3px solid var(--bc);
+    transition: background .3s, transform .3s;
+  }
+  .node.crack i { border-color: #8a6a52; }
+  .node.cur i { background: var(--bc-bright); transform: scale(1.25); }
+  .node b { display: block; font-size: 13.5px; margin-top: 12px; letter-spacing: .1em; color: var(--paper); font-weight: 400; }
+  .node small { display: block; font-size: 11.5px; color: var(--paper-dim); margin-top: 3px; letter-spacing: .06em; }
+  .tq { margin-top: 34px; }
+  .srcs { margin-top: 34px; display: grid; grid-template-columns: 1fr; gap: 0; border: 1px solid var(--bc-dim); }
+  .srcs .hd {
+    padding: 12px 20px;
+    background: var(--bc-faint);
+    font-size: 13.5px;
+    letter-spacing: .2em;
+    color: var(--bc-bright);
+  }
+  .srcs q { display: block; padding: 18px 22px; font-size: 16px; color: var(--paper); }
+
+  /* ============ 页脚 ============ */
+  .end { border-top: 1px solid rgba(232,228,220,.12); padding: 40px 0 34px; display: flow-root; }
+  .end .wrap { display: flow-root; }
+  .fin {
+    float: right;
+    font-size: 13px;
+    letter-spacing: .3em;
+    color: var(--paper-dim);
+    border: 1px solid rgba(232,228,220,.2);
+    padding: 6px 14px;
+  }
+  .src {
+    font-size: 12.5px;
+    color: var(--paper-dim);
+    line-height: 2;
+    max-width: 78ch;
+    letter-spacing: .04em;
+  }
+  .src a { color: var(--bc-bright); text-decoration: none; }
+  .src b { color: var(--paper); font-weight: 400; }
+
+  .qbank { display: none; }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .tmain { font-size: 78px; }
+    .tsub { display: none; }
+    .duel, .tiger, .tri, .pipes, .boast, .traps, .nangwrap { grid-template-columns: 1fr; }
+    .kgrid { grid-template-columns: repeat(3, 1fr); }
+    .nodes { grid-template-columns: repeat(4, 1fr); row-gap: 26px; }
+    .tline .bar { display: none; }
+    .rail { display: none; }
+    .sec-body { padding: 0 6px; }
+    .ringwrap { height: 260px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏：夜行 ================= -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="tblock">
+        <div class="tsub">负笈江湖　摇铃而行</div>
+        <div class="tmain">串<b>雅</b></div>
+      </div>
+      <div>
+        <div class="road">
+          <div class="moon"></div>
+          <div class="ridge"></div>
+          <div class="path"></div>
+          <div class="walker" id="walker">
+            <div class="fan"></div>
+            <div class="man"></div>
+          </div>
+          <div class="gear" id="gear"></div>
+          <div class="road-foot">
+            <span id="roadTip">走方的人，随身家当一共几件？</span>
+            <button class="go" id="goBtn">前 行</button>
+          </div>
+        </div>
+        <p class="hero-meta">清 赵学敏 撰　殆知阁简体库去空白 <em>50,677</em> 字　内编外编各四卷，二十九门，五百余条方术　<em>医藏 · 竹青</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 壹 贱薄之行 ================= -->
+<section class="sec">
+  <div class="rail">壹 · 贱薄之行</div>
+  <div class="sec-body">
+    <h2>谁在笑他们<small>被人贱薄的行当</small></h2>
+    <p class="lead">正统医书里从来没有这个行当的位置。走到哪儿治到哪儿、靠一把药一把针吃饭的人，被读书人起了个轻蔑的名字。赵学敏偏要替他们立传，先把难听话原样抄在开卷。</p>
+    <div class="duel">
+      <q class="q">人每贱薄之，谓其游食江湖，货药吮舐，迹类丐；挟技劫病，贪利恣睢，心又类盗；剽窃医绪，倡为诡异；败草毒剂，悉曰仙遗；刳涤魇迷，诧为神授。<span class="att">库本原序：世人对走方医的四笔账，行迹像乞丐，心思像强盗</span></q>
+      <div class="mock">
+        <h3>他替他们回敬了一句</h3>
+        <q>为问今之乘华轩、繁徒卫者，胥能识症、知脉、辨药，通其玄妙者乎？<b>俨然峨高冠，窃虚誉矣！</b></q>
+        <q>是知笑之为笑，而不知非笑之为笑也。</q>
+        <q>昔欧阳子暴利几绝，乞药于牛医。李防御治嗽得官，传方于下走。</q>
+      </div>
+    </div>
+    <p class="turn">穿高冠的未必会看病，摇铃的未必没有真传</p>
+  </div>
+</section>
+
+<!-- ================= 贰 虎口 ================= -->
+<section class="sec dark">
+  <div class="rail">贰 · 虎口拔刺</div>
+  <div class="sec-body">
+    <h2>一只铁环的来历<small>虎撑，行医的幌子也是行医的招牌</small></h2>
+    <div class="tiger">
+      <figure class="ringwrap">
+        <div class="ring"></div>
+        <figcaption><b>虎 撑</b><br>环中置丸，摇之有声</figcaption>
+      </figure>
+      <div>
+        <q class="q">手所持器以铁为之，形如环盂，虚其中，置铁丸，周转摇之，名曰虎刺。乃始于李次口。<span class="att">绪论：走方医手里的铁环，书里叫虎刺，另有一部书写作虎撑</span></q>
+        <div style="height:18px"></div>
+        <q class="q">次口，走医也。常行深山，有虎啮刺于口，求李拔之。次口置此器于虎口，为拔其刺。后其术大行，名闻江湖。祖其术者率持此以为识，即名虎刺云（三才藻异作虎撑）。<span class="att">虎张着嘴叼住铁环，人才敢伸手进去拔刺：此后一只铁环成了这个行当的身份证</span></q>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 叁 切口簿 ================= -->
+<section class="sec">
+  <div class="rail">叁 · 切口簿</div>
+  <div class="sec-body">
+    <h2>黑话对照表<small>行内人开口，外行人是听众</small></h2>
+    <p class="lead">赵学敏手里的柏云抄本，原本有一整卷行话黑话。他觉得这些东西教人钻营牟利，大笔一挥删了，只捡了一小撮塞进绪论。此处照单全收，点一下铁皮盖子，看每个切口到底指什么。</p>
+    <div class="kgrid" id="kgrid">
+      <div class="kk"><span class="w">无且囊</span><span class="m">药囊</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">铍针</span><span class="m">针</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">罗星袋</span><span class="m">小袋</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">分脉尺</span><span class="m">小尺</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">语魅</span><span class="m">点药之镜</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">折脆</span><span class="m">取牙铁筒</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">何兼</span><span class="m">伪药</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">夹草</span><span class="m">草药</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">货软</span><span class="m">卖膏药</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">游方</span><span class="m">扮僧道</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">挑红</span><span class="m">用针</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">放红</span><span class="m">用刀</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">标印</span><span class="m">撮痧</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">秉离</span><span class="m">艾火</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">填冷</span><span class="m">水调</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">打桩</span><span class="m">治病</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">拢工</span><span class="m">合治</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">破洞</span><span class="m">分钱</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">捞爪</span><span class="m">赚人钱</span><span class="lid"><span>揭底</span></span></div>
+      <div class="kk"><span class="w">出洞</span><span class="m">脱险</span><span class="lid"><span>揭底</span></span></div>
+    </div>
+    <q class="q" style="margin-top:26px">柏云手抄有《市语宗派神用运技》一卷，言多不经，启后人渔利之私，急为芟削，间采一、二入《绪论》中，以广见闻。<span class="att">凡例：整卷黑话原被删去，只捡了零头收进绪论，此处连删剩的零头一并展出</span></q>
+  </div>
+</section>
+
+<!-- ================= 肆 三字诀 ================= -->
+<section class="sec dark">
+  <div class="rail">肆 · 三字诀</div>
+  <div class="sec-body">
+    <h2>贱、验、便<small>这门生意全部的经济学</small></h2>
+    <p class="lead">用药贱，是让穷人抓得起；见效快，是让人肯信；随处可取，是走到深山老村也不抓瞎。三个字撑起一门生意的全部逻辑，也顺手解释了它为什么被正统看不惯。</p>
+    <div class="tri">
+      <div class="slat">
+        <div class="zi">贱</div>
+        <q>一曰贱，药物不取贵也；</q>
+        <p>便宜到不存在以次充好的动机。</p>
+      </div>
+      <div class="slat">
+        <div class="zi">验</div>
+        <q>二曰验，以下咽即能去病也；</q>
+        <p>当场见效，走方的人等不起慢性子。</p>
+      </div>
+      <div class="slat">
+        <div class="zi">便</div>
+        <q>三曰便，山林僻邑仓卒即有。</q>
+        <p>药就长在路边，不必等千里之外的药铺。</p>
+      </div>
+    </div>
+    <q class="jue-strip">能守三字之要者，便是此中之杰出者矣。</q>
+    <div class="four">
+      <div>取牙<small>当街一绝</small></div>
+      <div>点痣<small>当街二绝</small></div>
+      <div>去翳<small>当街三绝</small></div>
+      <div>捉虫<small>当街四绝</small></div>
+    </div>
+    <p class="four-note">以上四样，是走方的人当街立信用的看家戏。</p>
+  </div>
+</section>
+
+<!-- ================= 伍 三大法 ================= -->
+<section class="sec">
+  <div class="rail">伍 · 三大法</div>
+  <div class="sec-body">
+    <h2>顶、串、截<small>行内的三大法门，点击可开合</small></h2>
+    <p class="lead">药往上走叫顶，吃了要吐；往下走叫串，吃了要泻；不出不泻、让病戛然而止的叫截。名目听着玄，底下压着的正是汉代以来汗、吐、下那几件老兵器，只是换了一身江湖行头。</p>
+    <div class="pipes">
+      <div class="pipe pding" id="pDing">
+        <h3>顶</h3>
+        <div class="sub">药行于上</div>
+        <div class="well"><span class="drop"></span><span class="drop"></span><span class="drop"></span></div>
+        <q>药上行者曰顶</q>
+        <span class="att">顶药门卷首自注</span>
+        <q>（主上吐药也）</q>
+      </div>
+      <div class="pipe pchuan" id="pChuan">
+        <h3>串</h3>
+        <div class="sub">药行于下</div>
+        <div class="well"><span class="drop"></span><span class="drop"></span><span class="drop"></span></div>
+        <q>下行者曰串</q>
+        <span class="att">串药门卷首自注</span>
+        <q>（主下泻药也）</q>
+      </div>
+      <div class="pipe pjie" id="pJie">
+        <h3>截</h3>
+        <div class="sub">闸门落下，病就此止</div>
+        <div class="well"><span class="drop"></span><span class="drop"></span><span class="drop"></span><div class="gate"></div></div>
+        <q>顶、串而外，则曰截。截，绝也，使其病截然而止。</q>
+        <span class="att">绪论按语</span>
+        <q>按此即古汗、吐、下三法也。</q>
+      </div>
+    </div>
+    <p class="pipe-tip">顶与串，点按即停；截，点按落闸。行内人常拿一串秘目数字唬人，赵学敏说他一次全部抖了出来：</p>
+    <div class="boast">
+      <q class="q">有九顶、十三串、七十二截等目，每自夸于人，辄曰：某某得几顶、几串、几截，其法甚秘，云罕有全知者。<span class="att">凡例：行里人拿数字唬人，把寻常方子包装成秘传</span></q>
+      <q class="q">余因尽发其秘，非欲矜己之长，良由济世一端，多多益善也。<span class="att">凡例：一本书捅破全部窗户纸的理由</span></q>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 陆 囊中取方 ================= -->
+<section class="sec dark">
+  <div class="rail">陆 · 囊中取方</div>
+  <div class="sec-body">
+    <h2>伸手入囊<small>从五百多条里抽十二张方笺</small></h2>
+    <p class="lead">药囊是走方人的全部家当。此处从库里抽十二张方笺铺开：有当街止疼的，有握在手心发汗的，有把溺水的人趴在牛背上救活的。剂量与药材照录原文，仅作古籍观赏。</p>
+    <div class="nangwrap">
+      <div class="nangbox">
+        <div class="bag" id="bag"></div>
+        <button class="draw" id="drawBtn">伸手入囊</button>
+        <div class="nang-count" id="nangCount">囊中尚余十二签</div>
+      </div>
+      <div>
+        <div class="slips" id="slips"></div>
+        <div class="fang" id="fang">
+          <h4><b>候取</b>伸手抽一签</h4>
+          <span class="att">十二签按库里先后排定，抽完为止。全书五百余条，此处只取有故事的一角。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 柒 黑幕 ================= -->
+<section class="sec">
+  <div class="rail">柒 · 黑幕录</div>
+  <div class="sec-body">
+    <h2>他自己拆自己的台<small>绪论里最狠的四页，是写给同行的</small></h2>
+    <p class="lead">这本书一半是秘方，另一半是防骗手册。赵学敏把行里最见不得人的几手，一条条写明：病怎么故意留一半，药怎么下猛的，毒怎么种进人身，连牛马花木都逃不掉。</p>
+    <div class="traps">
+      <div class="trap">
+        <h4><span>一</span>留根</h4>
+        <q>用而偶验，则留根不除，俟再发而再获也。</q>
+      </div>
+      <div class="trap">
+        <h4><span>二</span>劫剂</h4>
+        <q>有最验者曰丹头，即劫剂是也，病除后必不可再用。</q>
+      </div>
+      <div class="trap">
+        <h4><span>三</span>下杀手</h4>
+        <q>用而不验，则率用猛毒之药以攻之，所谓下杀手也。</q>
+      </div>
+      <div class="trap">
+        <h4><span>四</span>种毒</h4>
+        <q>外科则用白朱砂以种毒，蛇蕈灰以种疮，即九种十三根之类。</q>
+      </div>
+    </div>
+    <q class="q">更有合扁豆膏以留疟，曼陀酒以留癫，甚则醉兽散之可以病牛马，金针丸之可以困花木，种种不仁，愈降愈甚，良由操技不精，欲借此遂其罔利之心耳。<span class="att">绪论：从留病生财，一路写到毒害牲畜花木，伤天害理的程度还在不断降级</span></q>
+    <div class="seal">
+      <div class="big">勿读吾书</div>
+      <q>若终岁群居科诨，入市招摇，贪饕沉凶，不知潜心理道者，勿读吾书。</q>
+      <div class="note">绪论末句：这册书有门槛，想拿它行骗的人，不许翻开</div>
+    </div>
+    <q class="q" style="margin-top:30px">此书虽尽删其法，而不能尽绝其传也。故述其大概，使后来者知所免焉。<span class="att">删得掉方子，删不掉手艺：写出来的目的，是让人认得那些坑</span></q>
+  </div>
+</section>
+
+<!-- ================= 捌 书命线 ================= -->
+<section class="sec dark">
+  <div class="rail">捌 · 书命线</div>
+  <div class="sec-body">
+    <h2>一部书的生死簿<small>七个节点，点着看</small></h2>
+    <p class="lead">成书之后百余年间，这册书几乎死了一次：刻板毁在咸丰末年的战火里，全靠藏书楼的抄本续命。今天能读到它，中间每一环都是捡回来的。</p>
+    <div class="tline">
+      <div class="bar"></div>
+      <div class="nodes" id="nodes">
+        <div class="node" data-q="qN1"><i></i><b>戊寅过访</b><small>乾隆年间</small></div>
+        <div class="node" data-q="qN2"><i></i><b>录方成书</b><small>约乾隆中叶</small></div>
+        <div class="node" data-q="qN3"><i></i><b>余杭初刊</b><small>咸丰初</small></div>
+        <div class="node crack" data-q="qN3"><i></i><b>板毁兵火</b><small>咸丰末</small></div>
+        <div class="node" data-q="qN4"><i></i><b>楼中借抄</b><small>光绪乙酉</small></div>
+        <div class="node" data-q="qN5"><i></i><b>重刊行世</b><small>光绪庚寅</small></div>
+        <div class="node" data-q="qN6"><i></i><b>外编归来</b><small>重刊前后</small></div>
+      </div>
+    </div>
+    <div class="tq" id="tq"></div>
+    <div class="srcs">
+      <div class="hd">采录四路，各占三成</div>
+      <q>是书采录得于柏云手抄者十之三，《百草镜》、《救生海》者十之三，《养素园》及《江闽方本》者十之三，其一则传于世医者，悉汇而成帙。<span class="att" style="color:#6d685e">凡例末条：一部书的地基，三成来自那位铃医的手抄本</span></q>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 页脚 ================= -->
+<footer class="end">
+  <div class="wrap">
+    <span class="fin">殆知阁导读　二百八十三</span>
+    <p class="src">
+      <b>文本来源</b>：殆知阁古代文献简体库 医藏《串雅内外编》，书目清单见
+      <a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>。
+      本页全部引文经脚本与库内文件逐字比对（去标点、去空白归一），并作反向扫描确认叙述文字未夹带原文。
+      <br><b>时代局限提醒</b>：书中大量方剂含巴豆、雄黄、川乌等毒性药材，部分疗法与自我叙事为旧时代产物；本页仅供古籍阅读与文献观赏，不可照方试药，身体不适请就医。
+    </p>
+  </div>
+</footer>
+
+<!-- ================= 隐藏引文库 ================= -->
+<div class="qbank">
+  <q id="qN1">宗子柏云者，挟是术遍游南北，远近震其名，今且老矣。戊寅航海归，过予谈艺。</q>
+  <q id="qN2">因录其所授，重加芟订，存其可济于世者，部居别白，都成一编，名之曰《串雅》。</q>
+  <q id="qN3">咸丰初，为余杭某君刊行，未及流布，遽毁于庚辛之难，人间仅有存者。</q>
+  <q id="qN4">徐侍郎颂阁先生乙酉春来杭州，从丁氏八千卷楼假归，录付以去。</q>
+  <q id="qN5">因乞吴君平格（庚生）补注，条系于后。</q>
+  <q id="qN6">今年正月，从越中藏书家觅得外编，如获拱宝。</q>
+  <q id="qF1">治缠喉风闭；先胸膈气紧，蓦然咽喉肿痛，手足厥冷，气不能通，顷刻不治。</q>
+  <q id="qF1b">须臾吐痰立解，未吐再服。</q>
+  <q id="qF2">石青一两，石绿五钱，水飞为末，曲糊丸绿豆大，温水下十丸，吐出痰二三碗，不损人。</q>
+  <q id="qF3">治偏正头风，百药不效，一服便愈。</q>
+  <q id="qF4">至三更，遍身手足俱麻木如针刺，头目齿缝俱痛，此药寻病之功。</q>
+  <q id="qF5">凡人由水中救起，以身俯伏于牛背上，手足俱用人扶，另用一人牵牛缓行，有五里之久自活</q>
+  <q id="qF6">杏仁三十一粒，白胡椒三十一粒，共捣为末，生姜汁为丸，握手中一时，自然汗出</q>
+  <q id="qF7">绿豆粉、麻黄（去根节）、甘草各等分，为极细末，用无根水半茶杯调服一钱，实时汗出自愈。</q>
+  <q id="qF8">心痛如刺，口吐清水，乃蛔虫也。白艾一升，水三升，煮一升服，吐虫出。</q>
+  <q id="qF9">面糊丸，如弹子大，黄丹为衣，晒干焚之，可辟时气。</q>
+  <q id="qF10">男用黄鹤丹，女用青囊丸，此二方乃游方之祖方也。</q>
+  <q id="qF11">食结在胸，非大黄、芒硝、枳壳、槟榔、浓朴之类所能祛逐，必得瓜蒌始得陷之。</q>
+  <q id="qF12">治小儿百病。此方以巴霜为君，体质热者勿服。</q>
+  <q id="qH1">手所持药囊曰无且囊，云秦无且所用者。针曰铍针。有小袋曰罗星袋。有小尺曰分脉尺。</q>
+  <q id="qH2">有药点之镜曰语魅。有马口铁小筒，用以取牙，曰折脆。所作伪药皆曰何兼。市草药曰夹草。</q>
+  <q id="qH3">持竿布，卖膏药，曰货软。作道妆僧服曰游方。用针曰挑红。用刀曰放红。撮痧曰标印。艾火曰秉离。水调曰填冷。与人治病曰打桩。两人合治曰拢工。共分酬金曰破洞。赚人财帛曰捞爪。脱险曰出洞。如此之类不能悉载，略举一、二焉。</q>
+</div>
+
+<script>
+  (function () {
+    /* 夜行：走一步，亮一件行头 */
+    var gears = [
+      '虎撑：铁环中置铁丸，摇之替行医人开路',
+      '无且囊：装药的布囊，托名秦太医夏无且',
+      '铍针：一根针，挑破脓疮用',
+      '罗星袋：随身小袋，零药收在这里',
+      '分脉尺：一柄小尺，按脉用',
+      '语魅：一面点药的镜子',
+      '折脆：马口铁小筒，当街取牙用',
+      '家当齐了：三字诀只剩三个字，贱、验、便'
+    ];
+    var step = 0;
+    var walker = document.getElementById('walker');
+    var gear = document.getElementById('gear');
+    var tip = document.getElementById('roadTip');
+    var btn = document.getElementById('goBtn');
+    btn.addEventListener('click', function () {
+      if (step >= gears.length) {
+        step = 0;
+        walker.style.left = '4%';
+        gear.classList.remove('show');
+        tip.textContent = '走方的人，随身家当一共几件？';
+        btn.textContent = '前 行';
+        return;
+      }
+      step += 1;
+      walker.style.left = (4 + Math.min(step, 7) * 12.4) + '%';
+      gear.innerHTML = '<b>' + gears[step - 1].split('：')[0] + '</b>' + gears[step - 1].split('：')[1];
+      gear.classList.remove('show');
+      void gear.offsetWidth;
+      gear.classList.add('show');
+      tip.textContent = '第 ' + step + ' 站，共 ' + gears.length + ' 站';
+      if (step === gears.length) btn.textContent = '再走一遭';
+    });
+
+    /* 切口揭底 */
+    document.querySelectorAll('#kgrid .kk').forEach(function (k) {
+      k.addEventListener('click', function () { k.classList.toggle('open'); });
+    });
+
+    /* 三大法开关 */
+    document.querySelectorAll('.pipe').forEach(function (p) {
+      p.addEventListener('click', function () { p.classList.toggle('on'); });
+    });
+
+    /* 囊中取方 */
+    var fangs = [
+      { id: 'qF1', id2: 'qF1b', tag: '顶药', name: '缠喉风', note: '喉头封门，顷刻要命：顶药从上吐开一条路', extra: '以巴豆七粒配雄黄郁金为丸' },
+      { id: 'qF2', tag: '顶药', name: '顽痰', note: '吐出两三碗才算数，行文口气极有把握', extra: '庚生按：本名碧林丹，铜绿一类' },
+      { id: 'qF3', tag: '截药', name: '头风', note: '百药不效四个字，是广告也是挑衅', extra: '细茶薄荷汤调下一钱' },
+      { id: 'qF4', tag: '串药', name: '大麻风', note: '必胜散：半夜药力寻病，虫随二便而下', extra: '三十日内服药三次' },
+      { id: 'qF5', tag: '起死', name: '溺死', note: '外编起死门：救溺水，牛背控水走五里', extra: '同门尚有银簪刺络诸法' },
+      { id: 'qF6', tag: '截药', name: '握汗', note: '不入口的汗药：握在手里，汗自己出来', extra: '虚损之人尤宜' },
+      { id: 'qF7', tag: '截药', name: '风寒', note: '庚生按引古方：诸葛之名压阵，绿豆粉挂帅', extra: '无根水即平旦第一汲井水' },
+      { id: 'qF8', tag: '取虫', name: '蛔虫', note: '外编取虫门：蛔虫上攻作心痛，艾汤一碗吐出', extra: '同门石榴根方称永远绝根' },
+      { id: 'qF9', tag: '截药', name: '疫气', note: '不入口不入敷，晒干点火熏屋子', extra: '苍术为君，加倍用' },
+      { id: 'qF10', tag: '祖方', name: '游方祖方', note: '飞霞子韩氏传下：男黄鹤丹，女青囊丸', extra: '绪论称之为拦江网' },
+      { id: 'qF11', tag: '截药', name: '食结', note: '一味瓜蒌陷胸，甘草留其不过分推荡', extra: '原按自注：此变症而用变法' },
+      { id: 'qF12', tag: '截药', name: '小儿', note: '巴霜打头的儿科丸，体质热的娃不能碰', extra: '惊痫潮热各按汤引送下' }
+    ];
+    var slips = document.getElementById('slips');
+    var fang = document.getElementById('fang');
+    var cnt = document.getElementById('nangCount');
+    var bag = document.getElementById('bag');
+    var drawBtn = document.getElementById('drawBtn');
+    var drawn = 0;
+    function renderFang(idx) {
+      var f = fangs[idx];
+      var q1 = document.getElementById(f.id).textContent;
+      var q2 = f.id2 ? document.getElementById(f.id2).textContent : '';
+      var extra = f.extra ? '　' + f.extra : '';
+      fang.innerHTML = '<h4><b>' + f.name + '</b>' + f.tag + '门</h4>' +
+        '<q>' + q1 + (q2 ? '　' + q2 : '') + '</q>' +
+        '<span class="att">' + f.note + extra + '</span>';
+    }
+    drawBtn.addEventListener('click', function () {
+      if (drawn >= fangs.length) {
+        drawn = 0;
+        slips.innerHTML = '';
+        fang.innerHTML = '<h4><b>候取</b>伸手抽一签</h4><span class="att">十二签按库里先后排定，抽完为止。全书五百余条，此处只取有故事的一角。</span>';
+        cnt.textContent = '囊中尚余十二签';
+        drawBtn.textContent = '伸手入囊';
+        return;
+      }
+      bag.classList.add('grab');
+      setTimeout(function () { bag.classList.remove('grab'); }, 220);
+      var i = drawn;
+      var s = document.createElement('span');
+      s.className = 'slip cur';
+      s.innerHTML = fangs[i].name + '<small>' + fangs[i].tag + '</small>';
+      s.addEventListener('click', function () {
+        document.querySelectorAll('.slip').forEach(function (x) { x.classList.remove('cur'); });
+        s.classList.add('cur');
+        renderFang(parseInt(s.dataset.i, 10));
+      });
+      s.dataset.i = i;
+      document.querySelectorAll('.slip').forEach(function (x) { x.classList.remove('cur'); });
+      slips.appendChild(s);
+      renderFang(i);
+      drawn += 1;
+      if (drawn >= fangs.length) {
+        cnt.textContent = '囊已空，点按钮再抖一遍';
+        drawBtn.textContent = '再抖一遍';
+      } else {
+        cnt.textContent = '囊中尚余' + (fangs.length - drawn) + '签';
+      }
+    });
+
+    /* 书命线 */
+    var tq = document.getElementById('tq');
+    function showNode(n) {
+      document.querySelectorAll('.node').forEach(function (x) { x.classList.remove('cur'); });
+      n.classList.add('cur');
+      var q = document.getElementById(n.dataset.q).textContent;
+      tq.innerHTML = '<q class="q">' + q + '</q>';
+    }
+    document.querySelectorAll('.node').forEach(function (n) {
+      n.addEventListener('click', function () { showNode(n); });
+    });
+    showNode(document.querySelector('.node'));
+  })();
+</script>
+
+</body>
+</html>
