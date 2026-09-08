@@ -1,0 +1,706 @@
+# -*- coding: utf-8 -*-
+"""宣和画谱导读页构建：引文以占位符从库本字节级注入，断言全过才写盘。"""
+import re, sys
+
+LIB = '/home/robertsong/workspace/claude/daizhige-simplified/艺藏/绘画/宣和画谱.txt'
+OUT = '/home/robertsong/workspace/claude/daizhige-daodu/xuanhe-huapu.html'
+
+txt = open(LIB, encoding='utf-8').read()
+
+# id -> 库本精确子串（构建时断言命中）
+QUOTES = {
+ 'q1':  '志于道，据于徳，依于仁，游于艺。',
+ 'q2':  '艺也者，虽志道之士所不能忘，然特游之而已。画亦艺也，进乎妙，则不知艺之为道，道之为艺。',
+ 'q3':  '四体妍蚩，本亡闗于妙，处传神写照，正在阿堵中。',
+ 'q4':  '不三日，观者所施可得百万。',
+ 'q5':  '又尝于金陵安乐寺画四龙，不目睛，谓点即腾骧而去。人以谓诞，固请点之。因为落墨，才及二龙，果雷电破壁，徐视画已失之矣。独二龙未睛者在焉。',
+ 'q6':  '吾少读书，文辞不减侪辈，今独以画见名，遂与厮役等，若曹慎毋习。',
+ 'q7':  '然性所好，欲罢不能也。',
+ 'q8':  '左相宣威沙漠，右相驰誉丹青',
+ 'q9':  '有唐之盛，文至于韩愈，诗至于杜甫，书至于颜真卿，画至于吴道玄，天下之能事毕矣。',
+ 'q10': '自古四民不相杂处，吾本儒生，虽游心艺事，然适意而已，奈何使人羁致入戚里宾馆，研吮丹粉而与画史冗人同列乎？此戴逵之所以碎琴也。',
+ 'q11': '前人之法未尝不近取诸物，吾与其师于人者，未若师诸物也。吾与其师于物者，未若师诸心。',
+ 'q12': '夙世谬词客，前身应画师。',
+ 'q13': '重可惜者，兵火之余，数百年间而流落无几',
+ 'q14': '道元之所画者，眼色意思俱在第二指；今臣所画，眼色意思俱在拇指。',
+ 'q15': '误认雉为生，掣臂者数四',
+ 'q16': '盖筌之画则神而不妙，昌之画则妙而不神，兼二者一洗而空之其为熙欤！',
+ 'q17': '臣衣单爱酒，以酒御寒，用画偿酒，此外无能。',
+ 'q18': '臣自有师。今陛下内廏马，皆臣之师也。',
+ 'q19': '我鬼使也。闻君善图良马，欲赐一疋。',
+ 'q20': '故有以淡墨挥扫，整整斜斜，不专于形似而独得于象外者，往往不出于画史而多出于词人墨卿之所作',
+ 'q21': '然蔬果于写生，最为难工。论者以谓郊外之蔬易工于水濵之蔬，而水濵之蔬又易工于园畦之蔬也。盖坠地之果易工于折枝之果，而折枝之果又易工于林间之果也。',
+ 'q22': '非天资颕异而胷中有渭川千畆，气压十万丈夫，何以至于此哉？',
+ 'q23': '万里之远，可得之于咫尺间，其非胸中自有丘壑，发而见诸形容，未必知此。',
+ 'q24': '春山淡冶而如笑，夏山苍翠而如滳，秋山明浄而如籹，冬山惨淡而如睡',
+ 'q25': '大山堂堂为众山之主，长松亭亭为众木之表',
+ 'q26': '故花之于牡丹芍药，禽之于鸾凤孔翠，必使之富贵。而松竹梅菊，鸥鹭鴈鹜，必见之幽闲。',
+ 'q27': '然裔学朱繇，如婢作夫人，举止羞涩，终不似真。',
+ 'q28': '世俗多以蜀画为名家，是虚得名，此谱所以黜之。',
+ 'q29': '工巧有余，而殊乏髙韵',
+ 'q30': '若取之于气骨，则有所不足，故不得附名于谱也。',
+ 'q31': '夜闻有水声，而明皇谓思训通神之佳手',
+ 'q32': '此子笔力常时不及我，今乃相类，是子也，精爽尽于此矣。',
+ 'q33': '居一月，楞伽果卒。',
+ 'q34': '我见斗牛多\U00022B0D尾，今掲其尾，非也。',
+ 'q35': '昔人有画斗牛者，众穪其精，独有一田夫在傍，乃指其瑕。',
+ 'q36': '画者惘然，因服其不到。',
+ 'q37': '祖宗以来，图画院之较艺者，必以黄筌父子笔法为程序，自白及吴元瑜出，其格遂变。',
+ 'q38': '其后改名遇，卒不知所在。',
+ 'q39': '或问其氏族年寿，但云“何何”',
+ 'q40': '草根有纎意，醉墨得已熟。',
+ 'q41': '喜饮酒，酒酣则好为戏墨，作草虫，笔力劲峻，不专于形似。',
+ 'q42': '故画人物最为难工，虽得其形似则往往乏韵。',
+ 'q43': '若乃犬羊猫狸，又其近人之物，最为难工。',
+ 'q44': '浄名居士图一，三天女美人图一，夏禹治水图一，黄初平牧羊图一，古贤图一，春龙出蛰图一，女史箴图一，斲琴图一，牧羊图一。',
+ 'q45': '名下定无虚士。',
+ 'q46': '坐卧观之，留宿其下十日不能去。',
+ 'q47': '落花寂寂啼山鸟，杨柳青靑渡水人',
+ 'q48': '行到水穷处，坐看云起时',
+ 'q49': '以其句法皆所画也',
+ 'q50': '阁外传呼画师阎立本',
+}
+
+missing = [k for k, v in QUOTES.items() if v not in txt]
+if missing:
+    sys.exit('引文锚未命中: ' + ', '.join(missing))
+
+TPL = r'''<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>宣和画谱 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#22221f; --ink3:#2b2b27;
+  --paper:#e8e4dc; --paper2:#ded9cf; --paperdim:#cfc9bd;
+  --b:#5f9270; --bdim:#3d5f4a; --bdim2:#2f4a3a;
+  --mut:#9a958a; --mutd:#6d695f;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:"Noto Serif CJK SC","Source Han Serif SC","Songti SC","SimSun",serif;line-height:1.9}
+a{color:var(--b);text-decoration:none}
+a:hover{text-decoration:underline}
+q{quotes:"「" "」"}
+q.il{display:inline}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+.kicker{font-size:12px;letter-spacing:.5em;color:var(--b)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+
+/* ===== 首屏 画库大门 ===== */
+.gate{min-height:96vh;display:grid;grid-template-columns:minmax(120px,220px) 1fr;gap:30px;align-items:center;position:relative;overflow:hidden;border-bottom:1px solid var(--bdim2)}
+.gate::after{content:"";position:absolute;inset:auto 0 0 0;height:6px;background:linear-gradient(90deg,var(--bdim2),var(--b) 30%,var(--bdim2))}
+.vplate{justify-self:center;writing-mode:vertical-rl;display:flex;gap:18px;align-items:center}
+.vplate h1{font-size:min(17vw,13vh);font-weight:900;letter-spacing:.28em;line-height:1.15;color:var(--paper)}
+.vplate .vsub{writing-mode:vertical-rl;font-size:min(3.4vw,2.6vh);letter-spacing:.5em;color:var(--b);line-height:1.2}
+.seal{width:44px;height:44px;background:var(--b);color:var(--ink);display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;font-size:15px;letter-spacing:.2em;line-height:1.2;border-radius:3px;box-shadow:0 0 0 3px var(--ink),0 0 0 4px var(--bdim)}
+.ledgerbox{padding:56px 0 72px}
+.ledgerbox .lead{font-size:15px;color:var(--mut);letter-spacing:.35em;margin-bottom:14px}
+.bigcount{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.bigcount b{font-size:min(17vw,110px);font-weight:900;color:var(--paper);font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:.02em}
+.bigcount span{font-size:20px;color:var(--b);letter-spacing:.3em}
+.mets{display:flex;gap:34px;margin-top:26px;flex-wrap:wrap}
+.mets div{border-left:2px solid var(--bdim);padding-left:14px}
+.mets i{display:block;font-style:normal;font-size:13px;color:var(--mutd);letter-spacing:.25em}
+.mets em{font-style:normal;font-size:26px;color:var(--paper)}
+.gateline{margin-top:34px;font-size:15px;color:var(--mut);max-width:560px}
+.gateline strong{color:var(--paper);font-weight:700}
+
+/* 库架（十门轴数即宽度） */
+.rack{margin-top:52px;border:1px solid var(--bdim2);background:var(--ink2);padding:18px 18px 12px;border-radius:6px}
+.rackcap{display:flex;justify-content:space-between;font-size:12px;color:var(--mutd);letter-spacing:.3em;margin-bottom:12px}
+.shelf{display:flex;align-items:center;gap:10px;margin:9px 0}
+.shelf .sn{width:44px;flex:none;font-size:12px;color:var(--mut);letter-spacing:.2em;text-align:right}
+.shelf .row{height:13px;border-radius:2px;background:linear-gradient(180deg,var(--b),var(--bdim));min-width:8px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.28);flex:none}
+.shelf .row.hot{background:linear-gradient(180deg,#7db38c,var(--b))}
+.shelf .sv{flex:none;font-size:11px;color:var(--mutd);font-family:ui-monospace,Menlo,Consolas,monospace}
+
+/* ===== 通用纸幅 ===== */
+main{display:block}
+.sheet{background:var(--paper);color:#22221c;display:flow-root;padding:74px 0}
+.sheet .kicker{color:var(--bdim)}
+.sheet h2{font-size:min(7.2vw,34px);letter-spacing:.22em;margin:12px 0 8px;font-weight:900}
+.sheet .sub{color:#6f6a5e;font-size:14px;letter-spacing:.14em;margin-bottom:34px}
+.cols{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:start}
+.cols p{margin:0 0 16px;font-size:15.5px;color:#33332b;text-align:justify}
+.cols p strong{color:#191917}
+.qcard{background:#f3f0e8;border:1px solid #d8d2c4;border-left:4px solid var(--b);padding:20px 22px;margin:18px 0;font-size:16px;color:#2c2c24;text-align:justify}
+.qcard .att{display:block;margin-top:10px;font-size:12.5px;color:#8b857a;letter-spacing:.1em}
+.ledger-demo{background:#22221c;color:var(--paper);border-radius:6px;padding:18px 20px;font-size:13.5px;line-height:2.05}
+.ledger-demo b{color:#7db38c;font-weight:700}
+
+/* ===== 十门十架 ===== */
+.doors{padding:80px 0 90px;border-bottom:1px solid var(--bdim2)}
+.doors .head{margin-bottom:36px}
+.doors h2{font-size:min(7.2vw,34px);letter-spacing:.22em;font-weight:900}
+.doors .head p{color:var(--mut);font-size:14.5px;margin-top:10px;max-width:640px}
+.dgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.door{border:1px solid var(--bdim2);background:var(--ink2);border-radius:6px;overflow:hidden;cursor:pointer;transition:border-color .25s}
+.door:hover{border-color:var(--bdim)}
+.door .drow{display:flex;align-items:center;gap:16px;padding:16px 18px}
+.door .dn{font-size:22px;font-weight:900;letter-spacing:.3em;color:var(--paper)}
+.door .dmeta{margin-left:auto;text-align:right;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mutd);line-height:1.5}
+.door .dmeta b{color:var(--b);font-size:15px}
+.door .dbar{height:5px;background:var(--ink3);border-radius:3px;overflow:hidden}
+.door .dbar i{display:block;height:100%;background:linear-gradient(90deg,var(--bdim),var(--b));width:0;transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+.dgrid.in .dbar i{width:var(--w)}
+.door .dmore{max-height:0;overflow:hidden;transition:max-height .45s ease;font-size:14px;color:var(--mut)}
+.door.open .dmore{max-height:640px}
+.door .dmore .inner{padding:4px 18px 20px;border-top:1px dashed var(--bdim2)}
+.door .dmore p{margin:12px 0}
+.door .dmore q{display:block;background:#21211d;border-left:3px solid var(--b);padding:10px 14px;margin:10px 0;color:var(--paper);font-size:14px;text-align:justify}
+.door .tag{display:inline-block;font-size:11px;color:var(--b);border:1px solid var(--bdim);border-radius:3px;padding:1px 8px;letter-spacing:.15em;margin-right:6px}
+
+/* ===== 签条墙 ===== */
+.slips{padding:74px 0 84px}
+.slipgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+.slip{background:#f3f0e8;border:1px solid #d8d2c4;border-radius:5px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s}
+.slip:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.slip .stop{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px dashed #d8d2c4}
+.slip .knot{width:12px;height:12px;border-radius:50%;background:var(--b);flex:none;box-shadow:0 0 0 2px #f3f0e8,0 0 0 3px var(--bdim)}
+.slip .nm{font-size:19px;font-weight:900;letter-spacing:.14em;color:#22221c}
+.slip .who{margin-left:auto;font-size:11.5px;color:#8b857a;letter-spacing:.12em}
+.slip .pre{padding:12px 16px;font-size:13.5px;color:#5b564c;line-height:1.85}
+.slip .body{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.slip.open .body{max-height:760px}
+.slip .body .inner{padding:2px 16px 16px}
+.slip q{display:block;background:#eae6da;border-left:3px solid var(--b);padding:10px 13px;margin:8px 0;font-size:13.5px;color:#2c2c24;text-align:justify;line-height:1.95}
+.slip .hint{font-size:11px;color:#a49d8f;letter-spacing:.2em;text-align:right;padding:0 16px 10px}
+.slip.open .hint{display:none}
+
+/* ===== 轴数榜 ===== */
+.hoard{padding:80px 0 88px;border-top:1px solid var(--bdim2);border-bottom:1px solid var(--bdim2)}
+.hoard h2{font-size:min(7.2vw,34px);letter-spacing:.22em;font-weight:900}
+.hoard .head p{color:var(--mut);font-size:14.5px;margin:10px 0 34px;max-width:660px}
+.bars .brow{display:grid;grid-template-columns:96px 1fr 64px;gap:12px;align-items:center;margin:10px 0}
+.bars .bn{font-size:15px;color:var(--paper);letter-spacing:.1em;text-align:right}
+.bars .btrack{height:18px;background:var(--ink2);border-radius:3px;overflow:hidden}
+.bars .bfill{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--bdim),var(--b));border-radius:3px;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.bars.in .bfill{width:var(--w)}
+.bars .bv{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:var(--mut)}
+.brow.father .bn{color:#7db38c}
+.brow.father .bfill{background:linear-gradient(90deg,var(--b),#a4cbb0)}
+.hoardnote{margin-top:26px;font-size:14px;color:var(--mut);max-width:660px}
+.hoardnote b{color:var(--b)}
+
+/* ===== 黜名册 ===== */
+.oust .table{border:1px solid #d8d2c4;border-radius:6px;overflow:hidden}
+.oust .trow{display:grid;grid-template-columns:150px 1fr;border-bottom:1px solid #e2ddd1}
+.oust .trow:last-child{border-bottom:none}
+.oust .tn{padding:16px;background:#efebe1;font-weight:900;font-size:16.5px;letter-spacing:.1em;color:#43413a;display:flex;align-items:center;gap:8px}
+.oust .tn s{text-decoration-color:var(--b);text-decoration-thickness:2px}
+.oust .tv{padding:14px 18px;font-size:14px;color:#4a463d;text-align:justify}
+.oust .tv q{color:#2c2c24}
+.oust .tv .att{display:block;font-size:11.5px;color:#948d7f;margin-top:6px;letter-spacing:.1em}
+
+/* ===== 库本校记 ===== */
+.collate .clist{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.collate .cc{background:#f3f0e8;border:1px solid #d8d2c4;border-radius:6px;padding:16px 18px;font-size:13.5px;color:#4a463d;line-height:2}
+.collate .cc b{color:#22221c;letter-spacing:.12em}
+.collate .cc .fam{font-size:14px;color:#2c2c24;letter-spacing:.06em;line-height:2.1}
+
+/* ===== 封条收梢 ===== */
+.sealoff{padding:96px 0 100px;position:relative;overflow:hidden}
+.sealoff .strip{position:absolute;top:0;bottom:0;left:50%;width:64px;transform:translateX(-50%) rotate(.6deg);background:repeating-linear-gradient(45deg,var(--bdim2) 0 10px,var(--bdim) 10px 20px);opacity:.16}
+.sealoff .inner{position:relative;max-width:700px;margin:0 auto;text-align:center}
+.sealoff .big{font-size:min(11vw,64px);font-weight:900;letter-spacing:.3em;color:var(--paper)}
+.sealoff .after{margin-top:20px;font-size:15px;color:var(--mut);letter-spacing:.2em}
+.sealoff .omen{margin:44px auto 0;max-width:620px;text-align:left}
+.sealoff .omen q{display:block;font-size:18px;line-height:2.1;color:var(--paper);background:var(--ink2);border-left:4px solid var(--b);padding:20px 24px;text-align:justify}
+.sealoff .omen .att{display:block;margin-top:10px;font-size:12.5px;color:var(--mutd);letter-spacing:.12em}
+.sealoff .pair{margin-top:38px;font-size:14.5px;color:var(--mut);line-height:2.2}
+.sealoff .pair b{color:var(--b)}
+.sealoff .lastentry{margin-top:44px;font-size:14px;color:var(--mutd);line-height:2.2}
+.sealoff .lastentry q{color:var(--paper)}
+
+/* ===== 页脚 ===== */
+footer.page{background:#141412;border-top:1px solid var(--bdim2);padding:46px 0 40px;font-size:12.8px;color:var(--mutd);line-height:2.1}
+footer.page .row{margin-bottom:12px;text-align:justify}
+footer.page b{color:var(--mut);letter-spacing:.2em}
+footer.page a{color:#7db38c}
+footer.page .fin{text-align:center;margin-top:26px;color:var(--mut);letter-spacing:.4em;font-size:13.5px}
+
+@media (max-width:860px){
+  .gate{grid-template-columns:1fr;gap:10px;padding-bottom:40px}
+  .vplate{justify-self:start;padding:48px 0 0 4px;gap:12px}
+  .ledgerbox{padding:20px 22px 8px}
+  .cols,.dgrid,.clist{grid-template-columns:1fr}
+  .slipgrid{grid-template-columns:1fr}
+  .bars .brow{grid-template-columns:78px 1fr 52px}
+  .sheet,.slips,.doors,.hoard,.sealoff{padding-top:56px;padding-bottom:60px}
+}
+</style>
+</head>
+<body>
+
+<header class="gate">
+  <div class="vplate">
+    <h1>宣和画谱</h1>
+    <div class="vsub">御府藏画总账</div>
+    <div class="seal">入库</div>
+  </div>
+  <div class="ledgerbox">
+    <div class="lead">点验 · 御府所藏</div>
+    <div class="bigcount"><b id="axcount">0</b><span>轴</span></div>
+    <div class="mets">
+      <div><i>门类</i><em>十门</em></div>
+      <div><i>画家</i><em>二百三十一家</em></div>
+      <div><i>卷帙</i><em>二十卷</em></div>
+      <div><i>库本字数</i><em>70,151</em></div>
+    </div>
+    <p class="gateline">一份帝王的藏品清单：每位画家立一篇小传，小传末尾同一句式收账，<strong>今御府所藏若干，逐件点名</strong>。书写成的时候，库房是满的。</p>
+    <div class="rack" aria-hidden="true">
+      <div class="rackcap"><span>库架即数据</span><span>格宽按各门轴数</span></div>
+      <div class="shelf"><span class="sn">花鸟</span><i class="row hot" style="width:72%"></i><span class="sv">2786</span></div>
+      <div class="shelf"><span class="sn">道释</span><i class="row" style="width:30.5%"></i><span class="sv">1180</span></div>
+      <div class="shelf"><span class="sn">山水</span><i class="row" style="width:28.6%"></i><span class="sv">1106</span></div>
+      <div class="shelf"><span class="sn">人物</span><i class="row" style="width:13%"></i><span class="sv">505</span></div>
+      <div class="shelf"><span class="sn">畜兽</span><i class="row" style="width:8.4%"></i><span class="sv">324</span></div>
+      <div class="shelf"><span class="sn">墨竹</span><i class="row" style="width:3.8%"></i><span class="sv">148</span></div>
+      <div class="shelf"><span class="sn">番族</span><i class="row" style="width:3.5%"></i><span class="sv">133</span></div>
+      <div class="shelf"><span class="sn">龙鱼</span><i class="row" style="width:3%"></i><span class="sv">117</span></div>
+      <div class="shelf"><span class="sn">宫室</span><i class="row" style="width:1.8%"></i><span class="sv">71</span></div>
+      <div class="shelf"><span class="sn">蔬果</span><i class="row" style="width:.8%"></i><span class="sv">25</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="sheet">
+  <div class="wrap">
+    <div class="kicker">入库章程</div>
+    <h2>一部只管登记的书</h2>
+    <div class="sub">不着一句藏画的样子，只记藏了谁的画、藏了多少</div>
+    <div class="cols">
+      <div>
+        <p><strong>《宣和画谱》是北宋宫廷的藏画总账。</strong>全书二十卷，分十门：道释、人物、宫室、番族、龙鱼、山水、畜兽、花鸟、墨竹、蔬果。每门先有一篇叙论讲门道，然后逐家立传：先叙籍贯师承与评语，末尾必定落到同一句式，今御府所藏若干，接着把每件藏品一件一件报出名字。</p>
+        <p>以开卷第一人顾恺之为例，账是这样的：</p>
+        <div class="ledger-demo"><b>顾恺之</b>　今御府所藏九：<br><q class="il">@@q44@@</q></div>
+        <p>全书二百三十一家，家家如此。按各家所藏数字逐条加总，共六千三百九十五轴；通行著录作六千三百九十六，差其一，不知丢在哪一家的账上。这正是本书的气质：<strong>它不谈画，它管画。</strong></p>
+        <p>库本首行即卷一，无序无跋。通行本卷首有序，落款宣和庚子岁，即宣和二年（1120），此处系库外通识，库内文件不含。各门叙论自报的人数，与逐条清点正好对上：道释四十九人，人物三十三人，畜兽二十七人，花鸟四十六人，墨竹十二人，蔬果六人，一本书自己给自己做的账，九百年后还能核验。</p>
+      </div>
+      <div>
+        <div class="qcard">
+          <q>@@q1@@</q><span class="att">@@q2@@</span>
+          <span class="att">卷一 道释叙论开篇。游于艺三个字，是全书给绘画留的位置：技艺之上另有一个妙处，到了那一步，就分不清是艺还是道。</span>
+        </div>
+        <p>序论既把画安放在艺的末位，登记就成了一种权力：谁能入账，谁被黜落，谁连名字都不配有。下面这份库房，按门开架。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="doors">
+  <div class="wrap">
+    <div class="head">
+      <div class="kicker">开架点验</div>
+      <h2>十门十架</h2>
+      <p>每格一格是一门库架，宽度按轴数。点一格，看这一门管什么、最难的是什么。</p>
+    </div>
+    <div class="dgrid" id="dgrid">
+      <div class="door">
+        <div class="drow"><span class="dn">道释</span><span class="dmeta"><b>1180</b> 轴<br>49 家</span></div>
+        <div class="dbar"><i style="--w:42.4%"></i></div>
+        <div class="dmore"><div class="inner">
+          <p><span class="tag">卷一至卷四</span>神仙与佛陀的户口。库本此门最厚，吴道玄一人家藏九十三轴。卷四在库本中不见，道释四附于卷三之末，疑传抄时并卷。</p>
+          <q>@@q9@@</q>
+          <p>这句评语把唐代的诗文书画四位天花板排成一排，画的位置由吴道玄占着，等于官方盖章的画圣认证。</p>
+        </div></div>
+      </div>
+      <div class="door">
+        <div class="drow"><span class="dn">人物</span><span class="dmeta"><b>505</b> 轴<br>33 家</span></div>
+        <div class="dbar"><i style="--w:18.1%"></i></div>
+        <div class="dmore"><div class="inner">
+          <p><span class="tag">卷五至卷七</span>周昉的仕女、顾闳中的夜宴、李公麟的白描都在此门。叙论开门见山给难度定调。</p>
+          <q>@@q42@@</q>
+          <p>难工二字与蔬果门那句遥遥相对：越日常的东西越难画好。</p>
+        </div></div>
+      </div>
+      <div class="door">
+        <div class="drow"><span class="dn">宫室</span><span class="dmeta"><b>71</b> 轴<br>4 家</span></div>
+        <div class="dbar"><i style="--w:2.5%"></i></div>
+        <div class="dmore"><div class="inner">
+          <p><span class="tag">卷八</span>全谱最小的门，只收四人。界画楼台近于工匠的图纸活，文人画论一向看轻它，四家在账，已是给足了体面。郭忠恕在这里。</p>
+        </div></div>
+      </div>
+      <div class="door">
+        <div class="drow"><span class="dn">番族</span><span class="dmeta"><b>133</b> 轴<br>5 家</span></div>
+        <div class="dbar"><i style="--w:4.8%"></i></div>
+        <div class="dmore"><div class="inner">
+          <p><span class="tag">卷八</span>边地人物鞍马。头一家李赞华来头极大：契丹开国者阿保机的长子，本国皇位之争里出逃，渡海投后唐，两次赐姓改名，成了这本中原账册里的一位画家。库本记他渡海时随身带了几千卷书，笔下多写故国的贵人酋长。</p>
+        </div></div>
+      </div>
+      <div class="door">
+        <div class="drow"><span class="dn">龙鱼</span><span class="dmeta"><b>117</b> 轴<br>8 家</span></div>
+        <div class="dbar"><i style="--w:4.2%"></i></div>
+        <div class="dmore"><div class="inner">
+          <p><span class="tag">卷九</span>没人见过龙，此门画的是想象与气象；鱼倒是要见真章的，画不出在水里的感觉，叙论里的评语是看的人只觉得馋。</p>
+        </div></div>
+      </div>
+      <div class="door">
+        <div class="drow"><span class="dn">山水</span><span class="dmeta"><b>1106</b> 轴<br>41 家</span></div>
+        <div class="dbar"><i style="--w:39.7%"></i></div>
+        <div class="dmore"><div class="inner">
+          <p><span class="tag">卷十至卷十二</span>士大夫的门。叙论说，画得动山水的多半不是画工行当，而是读书做官的人；李成一家独藏一百五十九轴。</p>
+          <q>@@q23@@</q>
+          <q>@@q24@@</q>
+          <p>前一句是全谱山水的纲领，胸中先有丘壑，笔下才有万里；后一句是郭熙的四季山，四个如字把山写成四种表情。库本滳籹两字为滴妆之讹，照录。</p>
+        </div></div>
+      </div>
+      <div class="door">
+        <div class="drow"><span class="dn">畜兽</span><span class="dmeta"><b>324</b> 轴<br>27 家</span></div>
+        <div class="dbar"><i style="--w:11.6%"></i></div>
+        <div class="dmore"><div class="inner">
+          <p><span class="tag">卷十三至卷十四</span>叙论从易经讲起：干象天故为马，坤象地故为牛，马牛领衔，虎豹次之，最后落到家养的猫狗，最难画的反而是天天见的东西。</p>
+          <q>@@q43@@</q>
+        </div></div>
+      </div>
+      <div class="door">
+        <div class="drow"><span class="dn">花鸟</span><span class="dmeta"><b>2786</b> 轴<br>46 家</span></div>
+        <div class="dbar"><i style="--w:100%"></i></div>
+        <div class="dmore"><div class="inner">
+          <p><span class="tag">卷十五至卷十九</span>全谱最大的一门，一家吃掉四成库房。叙论定了配对的规矩，画什么配什么气质，不由分说。</p>
+          <q>@@q26@@</q>
+          <p>牡丹必须富贵，松梅必须幽闲，题材自带阶级。这份口味背后站着的正是爱花鸟的皇帝本人。</p>
+        </div></div>
+      </div>
+      <div class="door">
+        <div class="drow"><span class="dn">墨竹</span><span class="dmeta"><b>148</b> 轴<br>12 家</span></div>
+        <div class="dbar"><i style="--w:5.3%"></i></div>
+        <div class="dmore"><div class="inner">
+          <p><span class="tag">卷二十（库本作巻）</span>不着一色的一门。叙论说墨竹多不是画工画的，写竹的人另有来历。</p>
+          <q>@@q20@@</q>
+          <p>文同在此门，库本给他的评语极高，说他胸中装着整片竹海。苏轼是他的表亲，湖州竹派由此起。</p>
+        </div></div>
+      </div>
+      <div class="door">
+        <div class="drow"><span class="dn">蔬果</span><span class="dmeta"><b>25</b> 轴<br>6 家</span></div>
+        <div class="dbar"><i style="--w:1%"></i></div>
+        <div class="dmore"><div class="inner">
+          <p><span class="tag">卷二十</span>最小又最嘴硬的门。全谱的压卷道理留给了白菜和果子。</p>
+          <q>@@q21@@</q>
+          <p>离人越近越难画：郊外的菜好画，园畦里的菜最难，掉在地上的果子好画，长在林间的最难。一本皇家账册的末门，说的全是距离感。</p>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sheet slips">
+  <div class="wrap">
+    <div class="kicker">抽签读人</div>
+    <h2>签条十四枝</h2>
+    <div class="sub">每轴画上原来都该有一张签。点开一枝，读这一家的事</div>
+    <div class="slipgrid">
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">顾恺之</span><span class="who">晋 · 道释</span></div>
+        <div class="pre">画绝痴绝才绝。画人不点眼睛，一放就是好几年。</div>
+        <div class="body"><div class="inner">
+          <q>@@q3@@</q>
+          <p>眼珠才是传神的地方。瓦官寺画维摩诘将成，他不点睛，先对寺僧放了话。</p>
+          <q class="il">@@q4@@</q>
+          <p>钱真的到了。这是全谱最像营销案的一笔。</p>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">张僧繇</span><span class="who">梁 · 道释</span></div>
+        <div class="pre">画龙点睛的主人公，账本里留着现场记录。</div>
+        <div class="body"><div class="inner">
+          <q>@@q5@@</q>
+          <p>四条龙点了两条，飞走两条，剩下两条至今瞎着。成语在账册里居然有据可查。</p>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">阎立本</span><span class="who">唐 · 道释</span></div>
+        <div class="pre">宰相，也是被当众喊名字的画师。</div>
+        <div class="body"><div class="inner">
+          <p>太宗春苑池上见异鸟，坐者赋诗，召他写生。彼时他已是主爵郎中，等来的只有一声传呼。</p>
+          <q>@@q50@@</q>
+          <q>@@q6@@</q>
+          <q>@@q7@@</q>
+          <p>回家告诫儿子别学画，转头又忍不住画。后来拜右相，军功出身的左相与他并立，时人编排。</p>
+          <q class="il">@@q8@@</q>
+          <p>他三看金陵僧繇壁画，第一日说虚有其名，第三日服气。</p>
+          <q class="il">@@q45@@</q>
+          <q>@@q46@@</q>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">韩干</span><span class="who">唐 · 畜兽</span></div>
+        <div class="pre">皇帝叫他拜师，他说我的老师拴在你的马厩里。</div>
+        <div class="body"><div class="inner">
+          <q>@@q18@@</q>
+          <p>又传说夜有鬼使叩门求马，他画一匹烧掉，次日有人送来百匹缣帛道谢。</p>
+          <q>@@q19@@</q>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">李成</span><span class="who">宋 · 山水</span></div>
+        <div class="pre">山水第一，也是全谱脾气最大的一位。</div>
+        <div class="body"><div class="inner">
+          <p>贵戚孙氏捎信要画，他回信骂了回去。</p>
+          <q>@@q10@@</q>
+          <p>对方买通他的朋友骗走几幅，他上门看见自己的画挂在客人屋里，拂衣而去，此后王公驰书求画一概不理。</p>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">范寛</span><span class="who">宋 · 山水</span></div>
+        <div class="pre">一段话，三个师字，把学画的路彻底倒过来。</div>
+        <div class="body"><div class="inner">
+          <q>@@q11@@</q>
+          <p>师人不嫩师物，师物不如师心。他搬进终南太华的山里，跟云烟风月过招，雪景寒林由此而来。寛是绰号，关中人说性缓为寛。</p>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">王维</span><span class="who">唐 · 山水</span></div>
+        <div class="pre">账本里他藏了一百二十六轴，是文人画的祖师牌位。</div>
+        <div class="body"><div class="inner">
+          <p>谱里说他诗里本来就藏着画，随手举证。</p>
+          <q>@@q47@@</q>
+          <q>@@q48@@</q>
+          <p>评语只有一句。</p>
+          <q class="il">@@q49@@</q>
+          <p>他自己认领身份的方式是一联自嘲。</p>
+          <q>@@q12@@</q>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">卢楞伽</span><span class="who">唐 · 道释</span></div>
+        <div class="pre">全谱最冷的一笔，画完就死。</div>
+        <div class="body"><div class="inner">
+          <p>他偷画老师吴道玄风格的庄严寺三门，被撞见。老师惊叹。</p>
+          <q>@@q32@@</q>
+          <q>@@q33@@</q>
+          <p>笔力追平之日，精气用尽之时。技艺的账，最后是以命结算的。</p>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">黄筌</span><span class="who">五代 · 花鸟</span></div>
+        <div class="pre">库房榜首，三百四十九轴，还附赠一场改画教学。</div>
+        <div class="body"><div class="inner">
+          <p>后主命他改吴道玄的钟馗：抠鬼眼睛用食指不如拇指有力。他没改原画，另画一张交卷。</p>
+          <q>@@q14@@</q>
+          <p>又在殿壁上画过一只雉鸡，进献的猎鹰当场扑了空。</p>
+          <q class="il">@@q15@@</q>
+          <p>一对父子占了本榜前两名，画院拿他家的笔法当统一教材上百年。</p>
+          <q>@@q37@@</q>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">徐熙</span><span class="who">五代 · 花鸟</span></div>
+        <div class="pre">黄家富贵之外的那个野字，全靠他的落墨法。</div>
+        <div class="body"><div class="inner">
+          <p>别人先填色，他先用墨写出枝叶蕊萼再上色，谱里给的定语是古今绝笔，顺手排了座次。</p>
+          <q>@@q16@@</q>
+          <p>李煜亡国，徐熙的画全部没入内帑，后来这份账里他名下二百四十九轴。藏画的人完了，画换了主人，账本倒把两家都记下了。</p>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">厉归真</span><span class="who">五代 · 畜兽</span></div>
+        <div class="pre">道士不穿道袍，泡在酒垆，梁太祖亲自问他有什么本事。</div>
+        <div class="body"><div class="inner">
+          <q>@@q17@@</q>
+          <p>衣裳单薄爱喝酒，靠喝酒御寒，靠画画换酒，别的不会。皇帝听愣了，谱里评此人必非常人。</p>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">祁序条内的田夫</span><span class="who">宋 · 畜兽</span></div>
+        <div class="pre">一条无名者的批注，替所有外行出了口气。</div>
+        <div class="body"><div class="inner">
+          <q>@@q35@@</q>
+          <q>@@q34@@</q>
+          <q>@@q36@@</q>
+          <p>天天放牛的人一眼看出斗牛尾巴是夹着的，画家服输。账本里难得给实战经验记了一功。</p>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">孙位</span><span class="who">唐 · 道释</span></div>
+        <div class="pre">画水画的圣手，画完一套壁事后人间蒸发。</div>
+        <div class="body"><div class="inner">
+          <q>@@q38@@</q>
+          <p>黄巢入长安他随僖宗入蜀，画罢应天寺东壁，改名换姓，从此没人知道他去了哪里。</p>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+      <div class="slip">
+        <div class="stop"><i class="knot"></i><span class="nm">何尊师</span><span class="who">五代 · 畜兽</span></div>
+        <div class="pre">画猫的隐士，连姓名都是一句玩笑。</div>
+        <div class="body"><div class="inner">
+          <q>@@q39@@</q>
+          <p>问什么都答何何，于是尊号就叫何尊师。谱里说他画猫专攻姿态，只是可惜：猫似虎，唯独耳大眼黄，他没把这层捅破。</p>
+        </div></div>
+        <div class="hint">点开签条</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hoard">
+  <div class="wrap">
+    <div class="head">
+      <div class="kicker">囤积榜</div>
+      <h2>御府囤谁</h2>
+      <p>按各家所藏轴数取前十二名。数据逐条取自库本今御府所藏句。</p>
+    </div>
+    <div class="bars" id="bars">
+      <div class="brow father"><span class="bn">黄筌</span><div class="btrack"><i class="bfill" style="--w:100%"></i></div><span class="bv">349</span></div>
+      <div class="brow father"><span class="bn">黄居采</span><div class="btrack"><i class="bfill" style="--w:95.1%"></i></div><span class="bv">332</span></div>
+      <div class="brow"><span class="bn">徐熙</span><div class="btrack"><i class="bfill" style="--w:71.3%"></i></div><span class="bv">249</span></div>
+      <div class="brow"><span class="bn">易元吉</span><div class="btrack"><i class="bfill" style="--w:70.2%"></i></div><span class="bv">245</span></div>
+      <div class="brow"><span class="bn">崔白</span><div class="btrack"><i class="bfill" style="--w:69.1%"></i></div><span class="bv">241</span></div>
+      <div class="brow"><span class="bn">吴元瑜</span><div class="btrack"><i class="bfill" style="--w:54.2%"></i></div><span class="bv">189</span></div>
+      <div class="brow"><span class="bn">李成</span><div class="btrack"><i class="bfill" style="--w:45.6%"></i></div><span class="bv">159</span></div>
+      <div class="brow"><span class="bn">赵昌</span><div class="btrack"><i class="bfill" style="--w:44.1%"></i></div><span class="bv">154</span></div>
+      <div class="brow"><span class="bn">卢楞伽</span><div class="btrack"><i class="bfill" style="--w:43%"></i></div><span class="bv">150</span></div>
+      <div class="brow"><span class="bn">徐崇嗣</span><div class="btrack"><i class="bfill" style="--w:40.7%"></i></div><span class="bv">142</span></div>
+      <div class="brow"><span class="bn">许道宁</span><div class="btrack"><i class="bfill" style="--w:39.5%"></i></div><span class="bv">138</span></div>
+      <div class="brow"><span class="bn">巨然</span><div class="btrack"><i class="bfill" style="--w:39%"></i></div><span class="bv">136</span></div>
+    </div>
+    <p class="hoardnote">前两名是<b>父子</b>。黄筌入宋前已殁，轴是他的；黄居采随蜀主降宋，活到了太宗朝，替皇家搜访名画、诠定品目。十二名里花鸟系占一半，再加徐崇嗣是徐熙之孙，山水只有李成许道宁巨然三人。所谓御府口味，是一家画院的口味。</p>
+  </div>
+</section>
+
+<section class="sheet oust">
+  <div class="wrap">
+    <div class="kicker">落选档案</div>
+    <h2>黜名册</h2>
+    <div class="sub">一本登记之书，同时是一部退件之书。以下名字，谱里点名不收</div>
+    <div class="table">
+      <div class="trow">
+        <div class="tn"><s>赵裔</s></div>
+        <div class="tv"><q class="il">@@q27@@</q>学谁不像谁，连举止都羞涩。<span class="att">卷一 道释叙论</span></div>
+      </div>
+      <div class="trow">
+        <div class="tn"><s>髙文进</s></div>
+        <div class="tv"><q class="il">@@q28@@</q>蜀地画家的名气被判为虚名，直接开除。<span class="att">卷一 道释叙论</span></div>
+      </div>
+      <div class="trow">
+        <div class="tn"><s>牛戬</s></div>
+        <div class="tv">百雀图飞鸣俯啄样样都会，判词是<q class="il">@@q29@@</q>技巧满分，格调不够。<span class="att">卷十五 花鸟叙论</span></div>
+      </div>
+      <div class="trow">
+        <div class="tn"><s>李懐衮</s></div>
+        <div class="tv">设色轻薄，柔婉鲜华，判词<q class="il">@@q30@@</q><span class="att">卷十五 花鸟叙论</span></div>
+      </div>
+      <div class="trow">
+        <div class="tn"><s>包鼎 裴某</s></div>
+        <div class="tv">画虎画牛各有名声，叙论给他们留了一句：<q class="il">岂不缩手于袖间耶</q>名字入册，原画无缘。（裴氏名次字库本作扩展区生僻字，本页不转写）<span class="att">卷十三 畜兽叙论</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sheet collate">
+  <div class="wrap">
+    <div class="kicker">点验异闻</div>
+    <h2>库本校记</h2>
+    <div class="sub">这份账本本身也是一件有残损的藏品</div>
+    <div class="clist">
+      <div class="cc"><b>卷次</b><br>库本卷四不见，道释四附于卷三之末；末卷卷字写作巻。通行本卷次与库本略有出入，照录不校。</div>
+      <div class="cc"><b>总轴数</b><br>按二百三十一家御府所藏数字逐条加总得六千三百九十五，通行著录六千三百九十六，差其一。断在谁家账上，库本不自知。</div>
+      <div class="cc"><b>异体字家族</b><br><span class="fam">徳=德　歴=历　熈=熙　浄=净　廏=厩　闗=关<br>蔵=藏　畆=亩　胷=胸　滳=滴　籹=妆　掲=揭<br>穪=称　鴈=雁　纎=纤　寛=宽　懐=怀</span><br>简体转写本特征，本页引文照录原字，核验时归一比对。</div>
+      <div class="cc"><b>生僻字与缺文</b><br>库内含扩展区生僻字十五处与合字括注若干：如杜某龟之第二字、驼之马旁异体等，引文避其大半，牛尾事一处以原字注入。另有个别疑脱文，如支仲元条藏品单内商山四皓一格疑脱图与数字。</div>
+      <div class="cc"><b>无序无跋</b><br>库本首行即书名与卷一，通篇无序无跋，成书年月全然不见，末条是僧居宁的草虫图。成书年代须靠通行本卷首序补，见库外申报。</div>
+      <div class="cc"><b>书眼自证</b><br>各门叙论自报人数与逐条清点完全一致（道释四十九人物三十三畜兽二十七花鸟四十六墨竹十二蔬果六）。账房先生的体面，是账能对上。</div>
+    </div>
+  </div>
+</section>
+
+<section class="sealoff">
+  <div class="strip"></div>
+  <div class="inner">
+    <div class="kicker">封存</div>
+    <div class="big">编成后七年</div>
+    <div class="after">靖康。金兵入汴，府库所藏与二帝俱北。</div>
+    <div class="omen">
+      <q>@@q13@@</q>
+      <span class="att">王维条下，卷十。写这一句时劫掠还没发生，账房先生只是在惋惜唐代传下来的真迹已经不多。七年之后回头看，像一句谶。</span>
+    </div>
+    <p class="pair">同卷已收的<b>历代名画记</b>是唐人开的报损单，记的是已经毁掉的墙与散掉的藏。<br>这一份入库单，后来也成了报损单。</p>
+    <p class="lastentry">全书没有总账，没有跋，正文收在一个爱喝酒的和尚笔下。僧居宁每自题醉笔，梅尧臣赠过他一句诗。<br><q class="il">@@q40@@</q></p>
+  </div>
+</section>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <div class="row"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），艺藏绘画〈宣和画谱〉，题北宋官方撰，库内全文去空白 70,151 字。本页引文（q 元素）经脚本与库内文本去标点、异体字归一逐字核验通过；门类家数轴数均按库内文件逐条清点。目录：<a href="mulu.html">殆知阁导读总目</a>。</div>
+    <div class="row qsrc"><b>库外申报</b>　成书于宣和二年（1120）之说、靖康之变（1127）与御府藏品北迁、黄筌黄居采父子生平出处、文同与苏轼的亲缘、通行本卷首宣和庚子序、著录总数六千三百九十六轴，均系库外通识，库内文件不含其事。库本为简体转写本，异体字与个别讹字照录并见校记。</div>
+    <div class="row"><b>时代局限提醒</b>　本书是北宋宫廷收藏制度下的官修账册，其以帝王口味定优劣、以题材配身份、对匠人与民间经验的轻视，均属十一十二世纪宫廷立场。黜名册所载判词是权力对技艺的裁决，不是艺术史的定论。本页仅作古籍文献导读，不代表编者赞同其立场。愿读者以历史眼光观之。</div>
+    <div class="fin">殆知阁导读　之@@NO@@</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var n=document.getElementById('axcount');
+  var target=6395,started=false;
+  function tick(){
+    if(started)return;started=true;
+    var t0=null;
+    function step(ts){
+      if(!t0)t0=ts;
+      var p=Math.min((ts-t0)/1800,1);
+      p=1-Math.pow(1-p,3);
+      n.textContent=Math.floor(target*p).toLocaleString('en-US');
+      if(p<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  window.addEventListener('scroll',tick,{once:true});
+  setTimeout(tick,600);
+
+  var dg=document.getElementById('dgrid');
+  document.querySelectorAll('.door .drow').forEach(function(r){
+    r.addEventListener('click',function(){
+      var d=r.parentNode;
+      var was=d.classList.contains('open');
+      document.querySelectorAll('.door.open').forEach(function(o){o.classList.remove('open')});
+      if(!was)d.classList.add('open');
+    });
+  });
+  document.querySelectorAll('.slip').forEach(function(s){
+    s.addEventListener('click',function(){s.classList.toggle('open')});
+  });
+
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+      });
+    },{threshold:.25});
+    io.observe(dg);
+    io.observe(document.getElementById('bars'));
+  }else{
+    dg.classList.add('in');document.getElementById('bars').classList.add('in');
+  }
+})();
+</script>
+</body>
+</html>
+'''
+
+html = TPL
+for k, v in QUOTES.items():
+    html = html.replace('@@' + k + '@@', v)
+html = html.replace('@@NO@@', '二百八十五')
+
+assert '@@' not in html, '存在未替换占位符'
+for ch in ('—', '–'):
+    assert ch not in html, '发现长划线 ' + repr(ch)
+open(OUT, 'w', encoding='utf-8').write(html)
+print('written', OUT, len(html), 'bytes,', len(QUOTES), 'quotes injected')
