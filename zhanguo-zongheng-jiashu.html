@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>战国纵横家书 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1c; --tomb: #121211;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --gold: #c9963f; --gold-dim: #8a6a2f;
+    --silk: #d8c493; --silk-2: #c9b27c; --silk-ink: #3a2e17;
+    --hair: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 26px; }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+
+  /* 顶栏帛带 */
+  .band { position: fixed; top: 0; left: 0; right: 0; height: 10px; background: #23211c; z-index: 60; }
+  .band .ticks { position: absolute; inset: 0; display: flex; }
+  .band .ticks i { flex: 1; border-right: 1px solid rgba(232,228,220,0.10); }
+  .band .ticks i:last-child { border-right: none; }
+  .band .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+    background: repeating-linear-gradient(90deg, var(--gold) 0 30px, #b7853a 30px 60px); }
+
+  /* 首屏 漆奁 */
+  .hero { min-height: 94dvh; display: flex; align-items: center; justify-content: center;
+    text-align: center; background: radial-gradient(120% 90% at 50% 20%, #1a1917 0%, var(--tomb) 62%);
+    position: relative; padding: 70px 0 50px; }
+  .eyebrow { font-size: 13px; letter-spacing: 0.5em; color: var(--faint); }
+  .zeng { position: relative; width: 158px; height: 118px; margin: 34px auto 30px; }
+  .zeng .l { position: absolute; inset: 0; border-radius: 2px; }
+  .zeng .a { background: #b39a63; transform: rotate(-7deg) translate(-9px, 8px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
+  .zeng .b { background: #c7b078; transform: rotate(4deg) translate(7px, 3px); }
+  .zeng .c { background: linear-gradient(155deg, var(--silk) 0%, var(--silk-2) 100%);
+    display: grid; place-items: center; overflow: hidden;
+    box-shadow: inset 0 0 26px rgba(120,90,40,0.35), 0 4px 14px rgba(0,0,0,0.45);
+    animation: unfold 1.2s ease both 0.35s; }
+  .zeng .c span { writing-mode: vertical-rl; font-size: 15px; letter-spacing: 0.34em;
+    color: var(--silk-ink); opacity: 0.82; font-weight: 700; }
+  @keyframes unfold { from { transform: rotate(-14deg) translateY(-16px); opacity: 0; }
+    to { transform: none; opacity: 1; } }
+  h1 { font-size: clamp(40px, 7.4vw, 84px); font-weight: 700; letter-spacing: 0.2em;
+    text-indent: 0.2em; margin: 6px 0 14px; }
+  .hero .sub { color: var(--dim); max-width: 32em; margin: 0 auto; font-size: 16.5px; }
+  .hero .sub b { color: var(--paper); font-weight: 700; }
+  .open { margin-top: 34px; display: inline-block; border: 1px solid var(--gold-dim);
+    color: var(--gold); background: none; font: inherit; font-size: 15px; letter-spacing: 0.4em;
+    text-indent: 0.4em; padding: 11px 26px; border-radius: 999px; cursor: pointer; }
+  .open:hover { background: rgba(201,150,63,0.12); }
+  .hero .geo { position: absolute; bottom: 18px; left: 0; right: 0; font-size: 12px;
+    color: var(--faint); letter-spacing: 0.22em; }
+
+  section { padding: 78px 0 30px; border-top: 1px solid var(--hair); }
+  .head { margin-bottom: 26px; }
+  .head .k { font-size: 12.5px; letter-spacing: 0.46em; color: var(--gold); }
+  .head h2 { font-size: clamp(26px, 3.4vw, 36px); font-weight: 700; letter-spacing: 0.12em; margin-top: 8px; }
+  .lead { color: var(--dim); font-size: 16px; max-width: 62ch; margin-bottom: 22px; }
+  .lead b, p b { color: var(--paper); }
+  p { color: var(--dim); font-size: 16px; }
+  p + p { margin-top: 12px; }
+
+  /* 引文 */
+  .q { background: var(--paper); color: #2a261f; display: inline; padding: 1px 7px;
+    border-radius: 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .q em { font-style: normal; color: var(--gold-dim); font-size: 0.78em; }
+  .blk { display: block; padding: 14px 18px; border-left: 3px solid var(--gold);
+    font-size: 17.5px; line-height: 1.9; margin: 14px 0; }
+  .blk .who { display: block; font-size: 12px; letter-spacing: 0.3em; color: var(--gold-dim);
+    margin-bottom: 6px; }
+  .blk.hl { background: #efe6d2; }
+
+  /* 帛奁 */
+  .ceal { display: grid; grid-template-columns: 1.25fr 0.9fr; gap: 42px; align-items: center; }
+  .silkcard { background: linear-gradient(160deg, var(--silk), var(--silk-2));
+    color: var(--silk-ink); border-radius: 3px; padding: 30px 28px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.45), inset 0 0 40px rgba(120,90,40,0.25); }
+  .silkcard .big { font-size: 30px; font-weight: 700; letter-spacing: 0.14em; }
+  .silkcard .row { display: flex; justify-content: space-between; align-items: baseline;
+    border-top: 1px solid rgba(58,46,23,0.25); padding: 13px 2px 3px; margin-top: 13px; }
+  .silkcard .row dt { font-size: 13.5px; opacity: 0.75; letter-spacing: 0.14em; }
+  .silkcard .row dd { font-size: 19px; font-weight: 700; }
+  .silkcard .row dd small { font-size: 12px; font-weight: 400; opacity: 0.7; margin-left: 4px; }
+  .tally { margin-top: 16px; font-size: 13.5px; opacity: 0.8; }
+  .tally .q { background: rgba(232,228,220,0.55); color: var(--silk-ink); }
+
+  /* 空方格 */
+  .map { display: flex; gap: 2px; align-items: stretch; height: 64px; margin: 26px 0 12px; }
+  .map .ch { position: relative; background: var(--silk); cursor: pointer; border-radius: 1px;
+    min-width: 5px; transition: transform 0.15s ease; }
+  .map .ch:hover { transform: translateY(-4px); }
+  .map .ch.on { outline: 2px solid var(--gold); }
+  .map .ch.d1 { background: repeating-linear-gradient(90deg, var(--silk) 0 7px, #9c8a5c 7px 9px); }
+  .map .ch.d2 { background: repeating-linear-gradient(90deg, #b8a26e 0 5px, #7c6c44 5px 8px); }
+  .map .ch.d3 { background: repeating-linear-gradient(90deg, #8d7a4e 0 4px, #544626 4px 7px); }
+  .mapinfo { font-size: 14.5px; color: var(--dim); min-height: 30px; }
+  .mapinfo b { color: var(--paper); }
+  .legend { font-size: 12.5px; color: var(--faint); letter-spacing: 0.08em; }
+
+  /* 间者三信 */
+  .cord { border-top: 1px dashed rgba(201,150,63,0.45); position: relative; margin: 30px 0 0; }
+  .tabs { display: flex; gap: 10px; flex-wrap: wrap; transform: translateY(-52%); margin-bottom: -14px; }
+  .tabs button { font: inherit; font-size: 14.5px; letter-spacing: 0.1em; cursor: pointer;
+    background: var(--ink-2); color: var(--dim); border: 1px solid var(--hair);
+    border-radius: 999px; padding: 9px 20px; }
+  .tabs button.on { background: var(--gold); border-color: var(--gold); color: #241c0c; font-weight: 700; }
+  .letter { display: none; margin-top: 26px; }
+  .letter.on { display: block; }
+  .vfold { display: grid; grid-template-columns: minmax(0,1fr) 340px; gap: 40px; align-items: start; }
+  .vpanel { writing-mode: vertical-rl; height: 400px; max-width: 100%; overflow: auto hidden;
+    background: linear-gradient(160deg, var(--silk), var(--silk-2)); color: var(--silk-ink);
+    padding: 30px 26px; font-size: 18.5px; letter-spacing: 0.14em; line-height: 2.3;
+    border-radius: 3px; box-shadow: 0 14px 40px rgba(0,0,0,0.45), inset 0 0 40px rgba(120,90,40,0.25); }
+  .vpanel .t { font-size: 13px; opacity: 0.72; letter-spacing: 0.4em; margin-left: 14px; }
+  .vpanel .q { background: rgba(232,228,220,0.5); color: var(--silk-ink); padding: 2px 3px; }
+  .vpanel .u { text-decoration: underline; text-decoration-color: #8a2f28; text-underline-offset: 5px; }
+
+  /* 三资翻签 */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 30px 0 8px; }
+  .card { perspective: 900px; height: 250px; cursor: pointer; }
+  .card .in { position: relative; width: 100%; height: 100%; transition: transform 0.7s cubic-bezier(.4,.1,.2,1);
+    transform-style: preserve-3d; }
+  .card.flip .in { transform: rotateY(180deg); }
+  .face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 4px;
+    display: flex; flex-direction: column; justify-content: center; padding: 22px;
+    background: var(--ink-2); border: 1px solid var(--hair); }
+  .face .zi { font-size: 66px; font-weight: 700; color: var(--gold); line-height: 1.15; }
+  .face .nm { font-size: 15px; color: var(--dim); letter-spacing: 0.2em; margin-top: 10px; }
+  .face .hint { position: absolute; bottom: 14px; right: 16px; font-size: 11.5px; color: var(--faint);
+    letter-spacing: 0.2em; }
+  .face.back { transform: rotateY(180deg); background: var(--paper); color: #2a261f; border: none; }
+  .face.back p { color: #2a261f; font-size: 16.5px; }
+  .punch { font-size: clamp(24px, 3.4vw, 34px); font-weight: 700; letter-spacing: 0.1em;
+    line-height: 1.7; color: var(--paper); margin: 40px 0 18px; }
+  .punch .q { background: none; color: var(--gold); padding: 0; border-bottom: 2px solid var(--gold-dim); }
+
+  /* 龙言 */
+  .machine { display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: center; margin: 30px 0; }
+  .glyphbox { height: 300px; background: var(--ink-2); border: 1px solid var(--hair); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; gap: 2px; }
+  .glyphbox .fused { font-size: 168px; font-weight: 700; color: var(--paper); line-height: 1; }
+  .glyphbox .split { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+  .glyphbox .split span { font-size: 84px; font-weight: 700; color: var(--paper); line-height: 1.02; }
+  .glyphbox .split span:last-child { color: var(--gold); }
+  .gctrl { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+  .gctrl button { font: inherit; font-size: 14px; letter-spacing: 0.24em; text-indent: 0.24em;
+    background: none; border: 1px solid var(--gold-dim); color: var(--gold); border-radius: 999px;
+    padding: 8px 22px; cursor: pointer; }
+  .gctrl button.on { background: var(--gold); color: #241c0c; font-weight: 700; }
+  .gnote { font-size: 14px; color: var(--faint); margin-top: 12px; text-align: center; }
+
+  .beats { margin-top: 34px; border-left: 1px solid var(--hair); padding-left: 26px; }
+  .beat { margin-bottom: 26px; max-width: 620px; }
+  .beat .tag { display: inline-block; font-size: 12px; letter-spacing: 0.3em; color: var(--gold);
+    border: 1px solid var(--gold-dim); border-radius: 999px; padding: 2px 12px; margin-bottom: 10px; }
+  .beat p { max-width: 56ch; }
+
+  /* 课业 */
+  .case { display: grid; grid-template-columns: 74px 1fr; gap: 26px; margin: 34px 0; }
+  .spine { writing-mode: vertical-rl; background: var(--ink-2); border: 1px solid var(--hair);
+    border-radius: 3px; display: flex; align-items: center; justify-content: center;
+    letter-spacing: 0.4em; font-size: 15px; color: var(--gold); padding: 18px 0; min-height: 200px; }
+  .case .bd { max-width: 640px; }
+  .case h3 { font-size: 21px; letter-spacing: 0.08em; margin-bottom: 10px; color: var(--paper); }
+
+  /* 收卷 */
+  .roll { padding: 70px 0 40px; border-top: 1px solid var(--hair); }
+  .rollbar { height: 14px; background: repeating-linear-gradient(90deg, var(--gold) 0 30px, #b7853a 30px 60px);
+    border-radius: 7px; width: 100%; transition: width 1.6s cubic-bezier(.6,.05,.3,1); margin: 44px 0 10px; }
+  .roll.done .rollbar { width: 7%; }
+  .rollfin { font-size: 15px; letter-spacing: 0.6em; color: var(--gold); opacity: 0; transition: opacity 1s ease 1.2s; }
+  .roll.done .rollfin { opacity: 1; }
+
+  footer.page { border-top: 1px solid var(--hair); padding: 40px 0 60px; color: var(--faint); font-size: 13.5px; }
+  footer.page p + p { margin-top: 10px; }
+  footer.page b { color: var(--dim); }
+
+  .rv { opacity: 0; transform: translateY(16px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .rv.vis { opacity: 1; transform: none; }
+
+  @media (max-width: 860px) {
+    .ceal, .vfold, .machine { grid-template-columns: 1fr; }
+    .vpanel { height: 330px; font-size: 16.5px; }
+    .trio { grid-template-columns: 1fr; }
+    .card { height: 210px; }
+    .map { overflow-x: auto; }
+    .case { grid-template-columns: 1fr; }
+    .spine { writing-mode: horizontal-tb; min-height: 0; padding: 10px 14px; letter-spacing: 0.3em; }
+    .glyphbox .fused { font-size: 128px; }
+    .glyphbox { height: 240px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="band"><div class="ticks"></div><div class="fill" id="fill"></div></div>
+
+<header class="hero">
+  <div>
+    <div class="eyebrow">长沙马王堆三号汉墓出土帛书</div>
+    <div class="zeng"><div class="l a"></div><div class="l b"></div><div class="l c"><span>触龙言愿见</span></div></div>
+    <h1>战国纵横家书</h1>
+    <p class="sub">一卷叠了两千一百年的丝帛。二十七章，去空白<b>一万六千一百一十五</b>字，过半是同一个人的信：<b>苏秦</b>。</p>
+    <button class="open" id="open">展 卷</button>
+  </div>
+  <div class="geo">一九七三年十二月 长沙</div>
+</header>
+
+<main>
+  <section id="juan">
+    <div class="wrap">
+      <div class="head rv"><div class="k">帛 奁</div><h2>一摞丝帛，一位认真的抄手</h2></div>
+      <p class="lead rv">1973年12月，长沙马王堆三号汉墓开箱。墓主是轪侯家的年轻人，下葬在汉文帝前十二年前后。随葬品里有一摞折叠成小方块的丝帛，摊开来是《老子》，是《周易》，是医方，也是这一卷纵横家言。</p>
+      <div class="ceal">
+        <div class="rv">
+          <p>抄手是个认真人：通假字随文夹注在圆括号里，丝帛缺损的段落拿空方格占位，读完几卷还在章尾点字数。全卷二十七章，前十八章大半不见于传世之书，后九章可以和《战国策》《史记》对读，像一册策士的课本。</p>
+          <p style="margin-top:12px">读完第十九章，他合计一笔：</p>
+          <blockquote class="q blk rv" style="max-width:340px">大凡二千八百七十</blockquote>
+          <p>两千年后，这行小字成了全卷最像人的地方：一个汉代书吏数完字，顺手记下总数，然后把笔放下，把帛叠好。</p>
+        </div>
+        <dl class="silkcard rv">
+          <div class="big">帛书形制</div>
+          <div class="row"><dt>出土</dt><dd>1973<small>年12月</small></dd></div>
+          <div class="row"><dt>地点</dt><dd>马王堆<small>三号汉墓</small></dd></div>
+          <div class="row"><dt>章节</dt><dd>二十七<small>章</small></dd></div>
+          <div class="row"><dt>去空白</dt><dd>16115<small>字</small></dd></div>
+          <div class="row"><dt>空方格</dt><dd>310<small>处阙字</small></dd></div>
+          <div class="tally">章尾批注照录库本，如第十八章末的<span class="q">五百六十九。</span></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="sun">
+    <div class="wrap">
+      <div class="head rv"><div class="k">空 方 格</div><h2>丝帛会烂，字会掉</h2></div>
+      <p class="lead rv">整理者拿□占住每一个缺字的位置。全卷数下来，这样的空格有<b>三百一十个</b>，密处一段连着一段，疏处整章无缺。分布见下图：色越深，缺得越多。</p>
+      <div class="map rv" id="map"></div>
+      <div class="mapinfo" id="mapinfo">点章块看名目与残损。</div>
+      <p class="legend rv">块宽按章内去空白字数伸缩。末两章合计一百二十五个空格，全卷最碎的地方在卷尾；最出名的第十八章几乎完好，整章只缺三个字。</p>
+    </div>
+  </section>
+
+  <section id="jian">
+    <div class="wrap">
+      <div class="head rv"><div class="k">间 者</div><h2>过半卷帛，是苏秦的信</h2></div>
+      <p class="lead rv">传世《史记》里的苏秦，与张仪同时，是挂六国相印的合纵领袖。帛书里的苏秦晚了一辈，活动在燕昭王与齐闵王年间：明面上是说客，实际差事是间谍。他替燕国住进齐国，把齐国往伐宋的路上一步步引，引到五国合力伐齐、乐毅下七十余城。间谍的结局，史书记作车裂。</p>
+      <div class="cord rv">
+        <div class="tabs">
+          <button class="on" data-l="0">其一 献书燕王</button>
+          <button data-l="1">其二 自齐献燕王</button>
+          <button data-l="2">其三 献书赵王</button>
+        </div>
+      </div>
+
+      <div class="letter on" data-l="0">
+        <div class="vfold">
+          <div class="rv">
+            <p>开卷第一章，苏秦人在赵国，信写给燕王，中心只有一件事：求大王想办法让我回去，他怕赵国把自己扣在半路。信末总结自己的处境，只用了十个字：</p>
+            <blockquote class="q blk">知（智）能免国，未能免身。</blockquote>
+            <p>免得了国，免不了身。间谍这一行的全部风险管理，尽在于此。</p>
+          </div>
+          <div class="vpanel"><span class="t">章一 苏秦自赵献书燕王章</span><span class="q">知（智）能免国，未能免身。</span></div>
+        </div>
+      </div>
+
+      <div class="letter" data-l="1">
+        <div class="vfold">
+          <div class="rv">
+            <p>在齐国写给燕王的申诉状。朝中流言四起，他把身后可能挨的每一支箭都数了一遍：</p>
+            <blockquote class="q blk">臣贵于齐，燕大夫将不信臣。臣贱，将轻臣。臣用，将多望于臣，齐有不善，将归罪于臣。</blockquote>
+            <p>自己站在哪儿？他说站在一摞鸡蛋上：</p>
+            <blockquote class="q blk">天下不功（攻）齐，将曰善与齐谋。天下功（攻）齐，将与齐兼弃臣。臣之所处者重卵也。</blockquote>
+            <p>燕王当年给他递过底牌，原话也记在这一章：</p>
+            <blockquote class="q blk">下笱（苟）毋死，若无不为也。</blockquote>
+            <p>底线之上全是授权。为了让戏做足，连和齐国合谋伐燕都在许可之列：</p>
+            <blockquote class="q blk">甚者与谋燕可，期于成事而已。</blockquote>
+            <p>一国之君，亲口准许自己的间谍演一场背叛自己的戏。条件只有一条：别死，把事办成。</p>
+          </div>
+          <div class="vpanel"><span class="t">章四 苏秦自齐献书于燕王章</span><span class="q">臣之所处者<u class="u">重卵</u>也。</span></div>
+        </div>
+      </div>
+
+      <div class="letter" data-l="2">
+        <div class="vfold">
+          <div class="rv">
+            <p>这一封跳出间谍的小算盘，谈天下棋局：秦国真正的胃口不在齐国。开篇先借丰收讲反话：</p>
+            <blockquote class="q blk">臣闻〔甘〕洛（露）降，时雨至，禾谷綘（丰）盈，众人喜之，贤君恶之。</blockquote>
+            <p>雨下得太是时候，众人只顾欢喜，贤君先想到淹。随后点破秦国的算术：</p>
+            <blockquote class="q blk">欲以亡韩呻（吞）两周，故以齐饵天下。</blockquote>
+            <p>齐国是饵，天下是鱼。结尾把权柄整个端给赵王：</p>
+            <blockquote class="q blk">是一世之命制于王也。</blockquote>
+          </div>
+          <div class="vpanel"><span class="t">章二十一 苏秦献书赵王章</span><span class="q">故以<u class="u">齐饵</u>天下。</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sanz">
+    <div class="wrap">
+      <div class="head rv"><div class="k">三 资</div><h2>三样美德，一样不益国</h2></div>
+      <p class="lead rv">第五章是全卷思想最锋利的一段。燕王拿三项美德替苏秦背书：你孝如曾参，信如尾生，廉如伯夷，别人再说闲话，寡人也不惭愧了吧。苏秦答：正是这三样，请大王收回去。点签翻面看判词。</p>
+      <div class="trio rv">
+        <div class="card"><div class="in">
+          <div class="face"><div class="zi">孝</div><div class="nm">曾参</div><div class="hint">点 翻</div></div>
+          <div class="face back"><p class="q">孝如增（曾）参，乃不离亲，不足而（以）益国。</p></div>
+        </div></div>
+        <div class="card"><div class="in">
+          <div class="face"><div class="zi">信</div><div class="nm">尾生</div><div class="hint">点 翻</div></div>
+          <div class="face back"><p class="q">信如犀（尾）星（生），乃不延（诞），不足而（以）益国。</p></div>
+        </div></div>
+        <div class="card"><div class="in">
+          <div class="face"><div class="zi">廉</div><div class="nm">伯夷</div><div class="hint">点 翻</div></div>
+          <div class="face back"><p class="q">廉若相（伯）夷，乃不窃，不足以益国。</p></div>
+        </div></div>
+      </div>
+      <div class="punch rv"><span class="q">自复之术，非进取之道也。</span></div>
+      <p class="rv">守本分是自我保全的路，不是进取的路。他把道理说破：人没有信就寸步难行，国没有义就不能称王，可这两样东西的用处另有讲究：</p>
+      <p class="rv"><span class="q">人无信则不彻，国无义则不王。</span>　<span class="q">仁义所以自为也，非所以为人也。</span></p>
+      <p class="rv" style="margin-top:12px">若天下人人守着本分自复，会怎样？苏秦说，各国都还窝在老家的山口里：</p>
+      <blockquote class="q blk rv" style="max-width:560px">自复而足，楚将不出雎（沮）章（漳），秦将不出商阉（于）。</blockquote>
+      <p class="rv">那样战国就打不起来了，这通歪理在战国也就完全不成立。说完他撂挑子，宁可去当挑担子的力夫：</p>
+      <blockquote class="q blk rv" style="max-width:480px">臣愿辞而之周，负笼操首，毋辱大王之廷。</blockquote>
+    </div>
+  </section>
+
+  <section id="longyan">
+    <div class="wrap">
+      <div class="head rv"><div class="k">龙 言</div><h2>一个被读错两千年的名字</h2></div>
+      <p class="lead rv">第十八章你可能读过：跛脚老人上殿，绕了半日弯子，让赵太后点头把小儿子长安君送去齐国做人质，齐国才肯出兵解围。《史记》与《战国策》都收了这场戏。两千年来，这位老人在传世本里被叫作触詟。直到帛书出土，谜底揭开。</p>
+      <div class="machine rv">
+        <div>
+          <div class="glyphbox" id="glyph"><span class="fused">詟</span></div>
+          <div class="gctrl">
+            <button id="gSplit">分 读</button>
+            <button id="gFuse" class="on">合 读</button>
+          </div>
+          <div class="gnote" id="gnote">龙言二字上下相挤，就成了传世本里那个人名：詟。</div>
+        </div>
+        <div>
+          <div class="vpanel" style="height:300px"><span class="t">章十八</span><span class="q">左师触<u class="u">龙言</u>，愿见。</span></div>
+          <p style="margin-top:18px">原句是：一位名叫触龙的左师说，愿意见太后。今天通行的读本，已经把名字改了回来。一个字的重排，让一位真实的老臣从两千年的人名讹误里走了出来。</p>
+        </div>
+      </div>
+
+      <div class="beats">
+        <div class="beat rv"><span class="tag">太后放话</span>
+          <blockquote class="q blk">有复言令长安君质者，老妇必唾亓（其）面。</blockquote>
+          <p>秦兵攻得急，齐国要长安君来做人才肯出兵。太后不肯，先把话堵死。</p>
+        </div>
+        <div class="beat rv"><span class="tag">触龙上殿</span>
+          <blockquote class="q blk"><span class="who">触龙</span>老臣病足，曾不能疾走。</blockquote>
+          <p>太后盛气等着。老人偏偏入而徐趋，先为自己的脚道歉。</p>
+        </div>
+        <div class="beat rv"><span class="tag">拉家常</span>
+          <blockquote class="q blk"><span class="who">太后</span>老妇持（恃）连（辇）而还。</blockquote>
+          <blockquote class="q blk"><span class="who">触龙</span>食饮得毋衰乎？</blockquote>
+          <blockquote class="q blk"><span class="who">太后</span>侍（恃）鬻（粥）耳。</blockquote>
+          <p>问脚，问车，问饭。太后的气，从盛到平。</p>
+        </div>
+        <div class="beat rv"><span class="tag">讨差事</span>
+          <blockquote class="q blk"><span class="who">太后</span>丈夫亦爱怜少子乎？</blockquote>
+          <blockquote class="q blk"><span class="who">触龙</span>甚于妇人。</blockquote>
+          <blockquote class="q blk"><span class="who">太后</span>妇人异甚。</blockquote>
+          <p>他替十五岁的小儿子讨一个王宫卫士的缺。太后笑了，笑他连这种事也偏心。</p>
+        </div>
+        <div class="beat rv"><span class="tag">计深远</span>
+          <blockquote class="q blk"><span class="who">触龙</span>父母爱子则为之计深远。</blockquote>
+          <p>从疼小儿子绕到嫁出去的燕后，再绕到赵家的列祖列宗：</p>
+          <blockquote class="q blk">祭祀则祝之曰：必不使反。</blockquote>
+          <p>送女儿远嫁，祷词竟是不让她回来，为的是让她子孙世代为王。</p>
+        </div>
+        <div class="beat rv"><span class="tag">病 根</span>
+          <blockquote class="q blk">位尊而无功，奉厚而无劳，而挟重器多也。</blockquote>
+          <p>位子高，俸禄厚，家底重，偏偏没有一点功劳垫底。所以：</p>
+          <blockquote class="q blk">山陵崩，长安君何以自托于赵？</blockquote>
+        </div>
+        <div class="beat rv"><span class="tag">松 口</span>
+          <blockquote class="q blk">于氏（是）为长安君约车百乘，质于齐，兵乃出。</blockquote>
+        </div>
+        <div class="beat rv"><span class="tag">子义评</span>
+          <blockquote class="q blk">人主子也，骨肉之秦也，犹不能施无功之尊，不劳之奉，而守金玉之重也。然兄（况）人臣乎。</blockquote>
+          <p>帛书把骨肉之亲的亲抄成了同音的秦，释文照录，读者自知。这一章在帛书里几乎完好，只缺三个字。汉代抄手读完，在章尾点数：<span class="q">五百六十九。</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="keye">
+    <div class="wrap">
+      <div class="head rv"><div class="k">课 业</div><h2>卷尾九案，案案有教训</h2></div>
+      <p class="lead rv">卷尾九章是策士的课业文本，大半能在《战国策》《史记》里找到近似的篇目，像一册谈判案例集。每案有可背的台词，有可记的教训。挑三案。</p>
+
+      <div class="case rv"><div class="spine">甲</div><div class="bd">
+        <h3>陈轸的救兵</h3>
+        <p>秦国攻韩，韩国急了。楚国放话要救，陈轸劝楚王把救兵开到边境上做样子。韩王果然动心，公仲倗拦不住，只留下一句分家的话：</p>
+        <blockquote class="q blk">夫以实苦我者秦也。以长名救〔我〕者楚也。</blockquote>
+        <p>韩王不听，绝秦。楚救不至，岸门一战大败。抄手在案末替他总结：</p>
+        <blockquote class="q blk" style="max-width:340px">计听知顺逆，虽（虽）王可。</blockquote>
+      </div></div>
+
+      <div class="case rv"><div class="spine">乙</div><div class="bd">
+        <h3>六月不出</h3>
+        <p>秦国约梁国合兵伐楚。李园替楚国去见梁将辛梧，不劝他别打，只劝他慢慢打，开口先讲养生的道理：</p>
+        <blockquote class="q blk">天下人无不死者，久者寿。</blockquote>
+        <p>又举将军的旧同僚做例子：井忌为秦攻燕，功劳不小，末了被秦诛杀。将军的命，值钱在自己手里。结果记在章尾：</p>
+        <blockquote class="q blk" style="max-width:300px">粱（梁）兵果六月乃出。</blockquote>
+      </div></div>
+
+      <div class="case rv"><div class="spine">丙</div><div class="bd">
+        <h3>迟到的救兵</h3>
+        <p>邯郸告急，使者麛皮赴楚请兵。楚国满口答应，麛皮回赵复命，却断定这救兵靠不住，理由细得像相面：</p>
+        <blockquote class="q blk">彼亓（其）应臣甚辨（辩），女（如）似有理。</blockquote>
+        <p>答得太流畅，流畅得像早就背好的推辞。帛书抄到这里，偏偏在最要紧的字上破了：</p>
+        <blockquote class="q blk">三年，邯郸□，楚人然后举兵，</blockquote>
+        <p>空着的那个方格，正是邯郸的下场。三年之后楚人才出兵，顺手在两国身上取利。答应得越顺口的救兵，来得越晚。</p>
+      </div></div>
+    </div>
+  </section>
+
+  <div class="roll" id="roll">
+    <div class="wrap">
+      <div class="head rv"><div class="k">收 卷</div><h2>叠好，收进漆奁</h2></div>
+      <p class="lead rv">前二八四年，五国联军破齐，齐闵王出逃被杀，间者的差事到了头。他的结局，史书记作车裂。这卷书没有记他的死，只留下他二十几封信、一位跛脚老人的口才和一册策士课业，由一位认真的抄手誊在丝帛上，叠成小小一方，塞进漆奁，陪轪侯家的年轻人下葬。</p>
+      <p class="lead rv">两千一百多年后漆奁开箱：苏秦的真实年纪、触龙的真实名字、抄手点过的字数，都从空方格和夹注里站了出来。</p>
+      <div class="rollbar"></div>
+      <div class="rollfin">卷 终</div>
+    </div>
+  </div>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>殆知阁导读 第<b>二百九十三</b>篇 · 2026 年 9 月编</p>
+    <p>校字记：库本为帛书整理释文，通假字随文夹注于圆括号，阙字以□占位，罕僻字以■加角注存原形；本页引文照录库本原字，含夹注与空方格。</p>
+    <p>文本来源：殆知阁古代文献简体库 子藏诸子《马王堆帛书战国纵横家书》（github.com/robertsong2000/daizhigev20）。本篇引文经脚本与库内文件去标点空白归一逐字比对通过（四十三处）；帛书说辞带有战国游士权诈之习与抄写通假之变，出土文献整理亦难免时代局限，读者自酌。本页无任何外部依赖。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var CH=[[1,'献书燕王','苏秦自赵献书燕王章',310,21],
+          [2,'使韩山献书燕王','苏秦使韩山献书燕王章',212,1],
+          [3,'使盛庆献书燕王','苏秦使盛庆献书于燕王章',505,30],
+          [4,'自齐献书燕王','苏秦自齐献书于燕王章',777,0],
+          [5,'谓燕王','苏秦谓燕王章',316,0],
+          [6,'自梁献书燕王其一','苏秦自梁献书于燕王章（一）',216,0],
+          [7,'自梁献书燕王其二','苏秦自梁献书于燕王章（二）',280,11],
+          [8,'谓齐王其一','苏秦谓齐王章（一）',457,0],
+          [9,'谓齐王其二','苏秦谓齐王章（二）',239,28],
+          [10,'谓齐王其三','苏秦谓齐王章（三）',181,16],
+          [11,'自赵献书齐王其一','苏秦自赵献书于齐王章（一）',306,0],
+          [12,'自赵献书齐王其二','苏秦自赵献书于齐王章（二）',686,6],
+          [13,'韩□献书于齐','韩■〈曰上寅下〉献书于齐章',179,4],
+          [14,'谓齐王其四','苏秦谓齐王章（四）',767,3],
+          [15,'须贾说穰侯','须贾说穰侯章',612,1],
+          [16,'朱己谓魏王','朱己谓魏王章',913,17],
+          [17,'谓起贾','谓起贾章',561,24],
+          [18,'触龙见赵太后','触龙见赵太后章',599,3],
+          [19,'客卿造谓穰侯','秦客卿造谓穰侯章',326,0],
+          [20,'谓燕王其二','谓燕王章',547,1],
+          [21,'献书赵王','苏秦献书赵王章',507,4],
+          [22,'谓陈轸','苏秦谓陈轸章',322,6],
+          [23,'虞卿谓春申君','虞卿谓春申君章',250,3],
+          [24,'公仲倗谓韩王','公仲倗谓韩王章',469,6],
+          [25,'李园谓辛梧','李园谓辛梧章',380,0],
+          [26,'见田□于梁南','见田■于梁南章',890,53],
+          [27,'麛皮对邯郸君','麛皮对邯郸君章',481,72]];
+  var CNUM=['零','一','二','三','四','五','六','七','八','九','十',
+    '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
+    '二十一','二十二','二十三','二十四','二十五','二十六','二十七'];
+
+  var ticks=document.querySelector('.band .ticks');
+  for(var i=0;i<27;i++){ ticks.appendChild(document.createElement('i')); }
+  var fill=document.getElementById('fill');
+  function onScroll(){
+    var h=document.documentElement;
+    var p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);
+    fill.style.width=(p*100).toFixed(2)+'%';
+  }
+  addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  document.getElementById('open').addEventListener('click',function(){
+    document.getElementById('juan').scrollIntoView({behavior:'smooth'});
+  });
+
+  var map=document.getElementById('map'), info=document.getElementById('mapinfo');
+  CH.forEach(function(c){
+    var d=document.createElement('div');
+    d.className='ch'+(c[4]===0?'':(c[4]<6?' d1':(c[4]<25?' d2':' d3')));
+    d.style.flexGrow=c[3]; d.style.flexBasis='0';
+    d.title='第'+c[0]+'章 '+c[2];
+    d.addEventListener('click',function(){
+      map.querySelectorAll('.ch').forEach(function(x){x.classList.remove('on');});
+      d.classList.add('on');
+      info.innerHTML='第'+CNUM[c[0]]+'章 <b>'+c[2]+'</b>，去空白'+c[3]+'字，空方格'+c[4]+'个。';
+    });
+    map.appendChild(d);
+  });
+
+  var tabs=document.querySelectorAll('.tabs button');
+  tabs.forEach(function(b){
+    b.addEventListener('click',function(){
+      tabs.forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      document.querySelectorAll('.letter').forEach(function(l){
+        l.classList.toggle('on', l.getAttribute('data-l')===b.getAttribute('data-l'));
+      });
+    });
+  });
+
+  document.querySelectorAll('.card').forEach(function(c){
+    c.addEventListener('click',function(){ c.classList.toggle('flip'); });
+  });
+
+  var glyph=document.getElementById('glyph'), gs=document.getElementById('gSplit'),
+      gf=document.getElementById('gFuse'), gn=document.getElementById('gnote');
+  function fuse(){
+    glyph.innerHTML='<span class="fused">詟</span>';
+    gf.classList.add('on'); gs.classList.remove('on');
+    gn.textContent='龙言二字上下相挤，就成了传世本里那个人名：詟。';
+  }
+  function split(){
+    glyph.innerHTML='<span class="split"><span>龙</span><span>言</span></span>';
+    gs.classList.add('on'); gf.classList.remove('on');
+    gn.textContent='分开读：触龙言，愿见。是一位名叫触龙的左师，说愿意见太后。';
+  }
+  gs.addEventListener('click',split); gf.addEventListener('click',fuse);
+
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('vis'); io.unobserve(e.target); }
+    });
+  },{threshold:0.12});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  var roll=document.getElementById('roll'), done=false;
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting && !done){ done=true; setTimeout(function(){roll.classList.add('done');},400); }
+    });
+  },{threshold:0.3});
+  io2.observe(roll);
+})();
+</script>
+</body>
+</html>
