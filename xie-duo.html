@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>谐铎 · 殆知阁导读之二百七十二</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --ink-3: #262523;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --hair: rgba(232,228,220,.14);
+    --hair-2: rgba(232,228,220,.08);
+    --az: #5e8fbb;
+    --az-dim: rgba(94,143,187,.35);
+    --az-faint: rgba(94,143,187,.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+  .mono { font-family: "SFMono-Regular", Menlo, Consolas, monospace; }
+
+  /* ===== hero ===== */
+  .hero { position: relative; min-height: 96vh; display: flex; align-items: stretch; border-bottom: 1px solid var(--hair); }
+  .hero .wrap { display: grid; grid-template-columns: minmax(0,1fr) 150px; gap: 40px; width: 100%; padding-top: 72px; padding-bottom: 64px; }
+  .kicker { font-size: 13px; letter-spacing: .42em; color: var(--paper-faint); margin-bottom: 34px; }
+  .hero-intro { align-self: center; max-width: 34em; }
+  .hero-intro h1 { font-size: clamp(24px, 3vw, 34px); font-weight: 600; letter-spacing: .06em; margin-bottom: 26px; }
+  .hero-intro h1 b { color: var(--az); font-weight: 600; }
+  .hero-intro p { font-size: 16px; color: var(--paper-dim); margin-bottom: 18px; }
+  .hero-intro p strong { color: var(--paper); font-weight: 600; }
+  .meta-line { margin-top: 30px; font-size: 13px; letter-spacing: .18em; color: var(--paper-faint); }
+  .meta-line span { display: inline-block; margin-right: 26px; }
+  .meta-line em { font-style: normal; color: var(--az); }
+
+  /* vertical title */
+  .hero-title { display: flex; gap: 18px; justify-content: flex-end; padding-top: 8px; }
+  .vtitle {
+    writing-mode: vertical-rl; font-size: clamp(56px, 7.4vw, 92px); font-weight: 700;
+    letter-spacing: .28em; color: var(--paper); line-height: 1.14;
+    border-right: 1px solid var(--hair); padding-right: 22px;
+  }
+  .vtitle b { color: var(--az); font-weight: 700; }
+  .vsub-title { writing-mode: vertical-rl; font-size: 14px; letter-spacing: .5em; color: var(--paper-faint); padding-top: 10px; }
+
+  /* ===== bell ===== */
+  .bell-stage { grid-column: 1 / 2; justify-self: center; align-self: end; margin-top: 26px; text-align: center; cursor: pointer; user-select: none; }
+  .bell-rig { position: relative; height: 240px; width: 220px; margin: 0 auto; }
+  .rope { position: absolute; left: 50%; top: 0; width: 1px; height: 46px; background: linear-gradient(var(--hair), var(--paper-dim)); }
+  .bell-body {
+    position: absolute; left: 50%; top: 46px; transform: translateX(-50%);
+    width: 108px; height: 118px;
+    background: linear-gradient(165deg, #6d9cc6 0%, var(--az) 42%, #47708f 100%);
+    border-radius: 52% 52% 9% 9% / 94% 94% 9% 9%;
+    border: 1px solid rgba(232,228,220,.25);
+    box-shadow: inset 0 -14px 22px rgba(25,25,23,.45), inset 0 8px 14px rgba(232,228,220,.22);
+    transform-origin: top center;
+  }
+  .bell-body::before {
+    content: ""; position: absolute; left: 50%; top: -12px; transform: translateX(-50%);
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--az); border: 1px solid rgba(232,228,220,.3);
+  }
+  .bell-lip {
+    position: absolute; left: 50%; top: 156px; transform: translateX(-50%);
+    width: 126px; height: 10px; border-radius: 5px;
+    background: linear-gradient(180deg, #47708f, #385a75);
+    border: 1px solid rgba(232,228,220,.22);
+  }
+  .clapper { position: absolute; left: 50%; top: 164px; transform: translateX(-50%); width: 2px; height: 26px; background: var(--paper-dim); }
+  .clapper::after { content: ""; position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); width: 12px; height: 12px; border-radius: 50%; background: var(--paper); }
+  .ring { position: absolute; left: 50%; top: 150px; width: 150px; height: 150px; margin-left: -75px; border-radius: 50%; border: 1px solid var(--az); opacity: 0; pointer-events: none; }
+  .ring.r2 { animation-delay: .22s; }
+  .ring.r3 { animation-delay: .44s; }
+  .ringing .ring { animation: ringout 1.5s ease-out; }
+  .ringing.ringing .ring.r2 { animation: ringout 1.5s ease-out .22s; }
+  .ringing.ringing .ring.r3 { animation: ringout 1.5s ease-out .44s; }
+  @keyframes ringout {
+    0% { opacity: .85; transform: scale(.42); }
+    100% { opacity: 0; transform: scale(1.45); }
+  }
+  .ringing .bell-body { animation: sway 1.5s ease-in-out; }
+  .ringing .clapper { animation: claps 1.5s ease-in-out; }
+  @keyframes sway {
+    0% { transform: translateX(-50%) rotate(0deg); }
+    18% { transform: translateX(-50%) rotate(4.5deg); }
+    45% { transform: translateX(-50%) rotate(-3deg); }
+    70% { transform: translateX(-50%) rotate(1.6deg); }
+    100% { transform: translateX(-50%) rotate(0deg); }
+  }
+  @keyframes claps {
+    0% { transform: translateX(-50%) rotate(0deg); }
+    15% { transform: translateX(-50%) rotate(-14deg); }
+    40% { transform: translateX(-50%) rotate(10deg); }
+    70% { transform: translateX(-50%) rotate(-4deg); }
+    100% { transform: translateX(-50%) rotate(0deg); }
+  }
+  .bell-line { margin-top: 20px; min-height: 62px; max-width: 30em; font-size: 15px; color: var(--paper-dim); }
+  .bell-line::before { content: "铎曰"; display: block; font-size: 12px; letter-spacing: .5em; color: var(--az); margin-bottom: 8px; }
+  .bell-hint { margin-top: 8px; font-size: 12px; letter-spacing: .3em; color: var(--paper-faint); }
+
+  /* ===== generic section ===== */
+  section { padding: 84px 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 22px; margin-bottom: 44px; }
+  .sec-no { font-size: 13px; letter-spacing: .4em; color: var(--az); white-space: nowrap; }
+  .sec-head h2 { font-size: clamp(22px, 2.4vw, 30px); font-weight: 600; letter-spacing: .1em; }
+  .sec-head .tail { font-size: 13px; color: var(--paper-faint); letter-spacing: .2em; }
+
+  /* ===== origin ===== */
+  .origin-grid { display: grid; grid-template-columns: 220px minmax(0,1fr); gap: 48px; }
+  .origin-grid .side { border-left: 2px solid var(--az); padding-left: 20px; }
+  .origin-grid .side p { font-size: 14px; color: var(--paper-dim); margin-bottom: 14px; }
+  .origin-grid .side p b { color: var(--paper); font-weight: 600; }
+  .origin-grid article p { font-size: 16px; color: var(--paper-dim); margin-bottom: 20px; max-width: 40em; }
+  .origin-grid article p strong { color: var(--paper); font-weight: 600; }
+
+  /* quote block (paper) */
+  .qblock {
+    background: var(--paper); color: #23221f; padding: 26px 30px;
+    border-radius: 3px; font-size: 15.5px; line-height: 2.05;
+    position: relative; margin: 26px 0;
+    box-shadow: 0 12px 34px rgba(0,0,0,.35);
+  }
+  .qblock .q { display: block; }
+  .qblock .src { display: block; margin-top: 14px; font-size: 12.5px; letter-spacing: .2em; color: #6e6a61; }
+
+  /* ===== wall of 12 volumes ===== */
+  .wall { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .wvol { border: 1px solid var(--hair); border-radius: 3px; padding: 18px 16px 14px; background: var(--ink-2); transition: border-color .25s; }
+  .wvol:hover { border-color: var(--az-dim); }
+  .wvol .wno { font-size: 12px; letter-spacing: .34em; color: var(--az); margin-bottom: 10px; }
+  .wvol ul { list-style: none; }
+  .wvol li { font-size: 13.5px; color: var(--paper-dim); line-height: 2.05; letter-spacing: .06em; }
+  .wvol li.hit { color: var(--paper); }
+  .wvol li.hit::after { content: " ◉"; color: var(--az); font-size: 10px; vertical-align: 2px; }
+  .wall-note { margin-top: 20px; font-size: 13px; color: var(--paper-faint); letter-spacing: .12em; }
+
+  /* ===== stories ===== */
+  .story { display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 44px; padding: 58px 0; border-top: 1px solid var(--hair); }
+  .story:first-of-type { border-top: none; padding-top: 8px; }
+  .story .tab { padding-top: 6px; }
+  .story .tab .dno { font-size: 13px; letter-spacing: .4em; color: var(--az); }
+  .story .tab h3 { font-size: 24px; font-weight: 700; letter-spacing: .14em; margin: 12px 0 10px; }
+  .story .tab .vol-tag { font-size: 12.5px; letter-spacing: .22em; color: var(--paper-faint); }
+  .story .tab .mini-bell { margin-top: 26px; width: 34px; height: 46px; position: relative; opacity: .9; }
+  .story .tab .mini-bell::before {
+    content: ""; position: absolute; inset: 0 0 10px 0;
+    background: var(--az-faint); border: 1px solid var(--az-dim);
+    border-radius: 52% 52% 9% 9% / 94% 94% 9% 9%;
+  }
+  .story .tab .mini-bell::after { content: ""; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: 3px; height: 12px; background: var(--az-dim); border-radius: 2px; }
+  .story .body p { font-size: 15.5px; color: var(--paper-dim); max-width: 41em; margin-bottom: 16px; }
+  .story .body p strong { color: var(--paper); font-weight: 600; }
+
+  /* duo verdict strip */
+  .duo {
+    display: grid; grid-template-columns: 74px minmax(0,1fr); gap: 18px; align-items: stretch;
+    margin-top: 26px; border: 1px solid var(--az-dim); border-radius: 3px; background: var(--ink-2);
+  }
+  .duo .stamp {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; font-weight: 700; letter-spacing: .3em; color: var(--az);
+    border-right: 1px solid var(--az-faint); padding: 14px 0;
+    writing-mode: vertical-rl;
+  }
+  .duo .duoquote { padding: 18px 22px; font-size: 15px; line-height: 2; color: var(--paper); }
+
+  /* ===== author / dog ===== */
+  .author-band { border: 1px solid var(--hair); border-radius: 4px; background: var(--ink-2); padding: 46px 48px; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 44px; }
+  .author-band h3 { font-size: 21px; font-weight: 600; letter-spacing: .12em; margin-bottom: 18px; }
+  .author-band h3 b { color: var(--az); font-weight: 600; }
+  .author-band p { font-size: 15px; color: var(--paper-dim); margin-bottom: 14px; }
+  .author-band p strong { color: var(--paper); font-weight: 600; }
+
+  /* ===== collation ===== */
+  .colla { border-top: 1px solid var(--hair); }
+  .colla ol { list-style: none; counter-reset: cck; max-width: 46em; }
+  .colla li { counter-increment: cck; font-size: 14.5px; color: var(--paper-dim); padding: 13px 0 13px 44px; position: relative; border-bottom: 1px dashed var(--hair-2); }
+  .colla li::before { content: counter(cck, cjk-ideographic); position: absolute; left: 6px; top: 13px; width: 26px; height: 26px; border: 1px solid var(--az-dim); border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; color: var(--az); }
+  .colla li b { color: var(--paper); font-weight: 600; }
+
+  footer { padding: 64px 0 90px; }
+  footer .rule { height: 1px; background: var(--hair); margin-bottom: 28px; }
+  footer p { font-size: 13px; color: var(--paper-faint); line-height: 2.1; max-width: 46em; }
+  footer .no { margin-top: 20px; letter-spacing: .26em; color: var(--paper-dim); }
+
+  .qbank { display: none; }
+
+  @media (max-width: 860px) {
+    .hero .wrap { grid-template-columns: 1fr; padding-top: 52px; }
+    .hero-title { justify-content: flex-start; order: -1; }
+    .vtitle { font-size: 44px; border-right: none; padding-right: 0; border-bottom: 1px solid var(--hair); padding-bottom: 14px; }
+    .vsub-title { display: none; }
+    .origin-grid, .author-band { grid-template-columns: 1fr; gap: 26px; }
+    .wall { grid-template-columns: repeat(2, 1fr); }
+    .story { grid-template-columns: 1fr; gap: 18px; }
+    .story .tab .mini-bell { display: none; }
+    .duo { grid-template-columns: 54px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-col" style="display:flex; flex-direction:column;">
+      <div class="kicker">殆知阁古代文献 · 子藏笔记部</div>
+      <div class="hero-intro">
+        <h1>笑话是铃铛，<b>判词是钟声</b></h1>
+        <p>乾隆年间苏州文人<strong>沈起凤</strong>写了一部怪谈：狐仙、饿鬼、虎与猫、能识字的狗，满纸谈妖说鬼，篇末却都要摇一下铃，留一条<strong>铎曰</strong>。谐是玩笑，铎是警铃。他给这部书起的名字，就是它的使用说明。</p>
+        <p>全书十二卷一百二十二篇，篇篇短小，笑点扎手：考官是几只发霉的鬼，县令多半是饿鬼投胎，一个乞丐跑到奸相府上偷师三个月，学成出师。本篇从库里挑出六声铃，逐一敲给你听。</p>
+      </div>
+      <div class="meta-line mono">
+        <span>库本去空白 <em>97804</em> 字</span>
+        <span>十二卷 <em>122</em> 篇</span>
+        <span>铎曰 <em>121</em> 处</span>
+      </div>
+      <div class="bell-stage" id="bell" role="button" aria-label="敲一下铎，换一条判词" tabindex="0">
+        <div class="bell-rig">
+          <div class="rope"></div>
+          <div class="bell-body"></div>
+          <div class="bell-lip"></div>
+          <div class="clapper"></div>
+          <div class="ring r1"></div>
+          <div class="ring r2"></div>
+          <div class="ring r3"></div>
+        </div>
+        <div class="bell-line" id="bellLine">敲一下铎，听一条判词。</div>
+        <div class="bell-hint">点 击 摇 铃</div>
+      </div>
+    </div>
+    <div class="hero-title">
+      <div class="vsub-title">清 · 沈起凤</div>
+      <div class="vtitle">谐<b>铎</b></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="origin">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-no mono">先说铃</span>
+      <h2>铎是什么</h2>
+      <span class="tail">古代官家宣布政教法令时摇的大铃</span>
+    </div>
+    <div class="origin-grid">
+      <div class="side">
+        <p><b>铎</b>，一种带舌的大铃。木舌叫木铎，金舌叫金铎。摇铃聚众，是为了让人听一句话。</p>
+        <p>历代采诗观风的官员，摇的就是这口铃：走街串巷，把民间的苦乐记下来带回去。</p>
+      </div>
+      <article>
+        <p>沈起凤把这个官家的物件，安在了一部鬼故事集上。他的写法是<strong>倒着摇</strong>：先讲一个笑话给你听，笑完，篇末一声「铎曰」，把笑里的刺挑出来给你看。铃在故事的结尾响，判词跟着钟声落地。</p>
+        <p>所以这不是一部靠恐怖取胜的志怪。狐鬼蛇神只是他的道具柜，真正的主角始终是人间的<strong>贪官、考官、势利眼和势利犬</strong>。铃摇了一百二十一次，每一声都对着具体的人。</p>
+        <div class="qblock">
+          <span class="q">此朱门上客一面照心镜也。打破天下人多少衣钵，亦是我辈大罪过处。</span>
+          <span class="src">卷一 狐媚 篇末铎曰，全书第一声铃，先照的是朱门里的客人</span>
+        </div>
+        <p>首篇写书生宁生在废园读书，狐女不媚以色，反坐下来跟他<strong>考据狐狸的祖德宗功</strong>，从大禹娶涂山一直数到《山海经》，把轻薄的读书人辩得哑口无言。铃声响处，被照的不是狐，是人。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="wall" style="padding-top: 0;">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-no mono">铃谱</span>
+      <h2>十二卷一百二十二篇</h2>
+      <span class="tail">依库本目录照录</span>
+    </div>
+    <div class="wall">
+      <div class="wvol"><div class="wno mono">卷一</div><ul>
+        <li>狐媚</li><li>虎痴</li><li>鸡谈</li><li>獭祭</li><li>蚁封</li><li>龟鉴</li><li>兔孕</li><li>雉煤</li>
+      </ul></div>
+      <div class="wvol"><div class="wno mono">卷二</div><ul>
+        <li>屏角相郎</li><li>笔头减寿</li><li>讨猫檄</li><li>祭蠹文</li><li>隔牖谈诗</li><li>垂帘论曲</li><li class="hit">考牌逐腐鬼</li><li>妙画代良医</li>
+      </ul></div>
+      <div class="wvol"><div class="wno mono">卷三</div><ul>
+        <li>娇娃皈佛</li><li>穷士扶乩</li><li>老面鬼</li><li>遮眼神</li><li>烧录成名</li><li>读书贻笑</li><li>镜戏</li><li>帖嘲</li><li class="hit">一钱落职</li><li>两指题旌</li>
+      </ul></div>
+      <div class="wvol"><div class="wno mono">卷四</div><ul>
+        <li>酒戒</li><li>色戒</li><li>财戒</li><li>气戒</li><li>侠妓教忠</li><li>雏伶尽孝</li><li>丐妇殉节</li><li>营卒守义</li><li>桃夭村</li><li>荆棘里</li>
+      </ul></div>
+      <div class="wvol"><div class="wno mono">卷五</div><ul>
+        <li>恶饯</li><li>奇婚</li><li>泄气生员</li><li>换形乞丐</li><li>菜花三娘子</li><li>草鞋四相公</li><li>讼师说讼</li><li>名妓沽名</li><li>泥傀儡</li><li>石赑屃</li>
+      </ul></div>
+      <div class="wvol"><div class="wno mono">卷六</div><ul>
+        <li>上清宫除妖</li><li class="hit">森罗殿点鬼</li><li>苏三</li><li>葛九</li><li>奇女雪怨</li><li>达士报恩</li><li>梦中梦</li><li>身外身</li><li>香粉地狱</li><li>面目轮回</li><li>能诗贼</li><li class="hit">识字犬</li>
+      </ul></div>
+      <div class="wvol"><div class="wno mono">卷七</div><ul>
+        <li>有根女</li><li>无气官</li><li>鬼妇持家</li><li>鄙夫训世</li><li>虫书</li><li>兽谱</li><li>黑衣太仆</li><li>巾帼幕宾</li><li>鲛奴</li><li>犬婢</li>
+      </ul></div>
+      <div class="wvol"><div class="wno mono">卷八</div><ul>
+        <li>棺中鬼手</li><li>镜里人心</li><li class="hit">孟婆庄</li><li>十姨庙</li><li>车前数典</li><li>骡后谈书</li><li>死嫁</li><li>生吊</li><li>术士驱蝇</li><li class="hit">壮夫缚虎</li>
+      </ul></div>
+      <div class="wvol"><div class="wno mono">卷九</div><ul>
+        <li>嘲吴蒙</li><li>赛齐妇</li><li>村姬毒舌</li><li>醮妇冰心</li><li>地师身后劫</li><li>节母死时箴</li><li>顶上圆光</li><li>掌中秘戏</li><li>眼前杀报</li><li>脑后淫魔</li>
+      </ul></div>
+      <div class="wvol"><div class="wno mono">卷十</div><ul>
+        <li>道人神相</li><li>和尚婆心</li><li>蟪蛄郡</li><li class="hit">蜣螂城</li><li>鬼嫖</li><li>神赌</li><li>梦里家园</li><li>命中姻眷</li><li>臭桂</li><li>祥鸦</li>
+      </ul></div>
+      <div class="wvol"><div class="wno mono">卷十一</div><ul>
+        <li>老僧辨奸</li><li>青衣捕盗</li><li>正士驱邪</li><li>恶客除淫</li><li>芙蓉城香姑子</li><li>扫帚村钝秀才</li><li>三杖惩奴</li><li>片言保赤</li><li>盗师</li><li>鬼婿</li><li>书神作祟</li><li>病鬼延医</li>
+      </ul></div>
+      <div class="wvol"><div class="wno mono">卷十二</div><ul>
+        <li>南部</li><li>北里</li><li class="hit">贫儿学馅</li><li>才士惩骄</li><li>卜将军庙灵签</li><li>况太守祠赝梦</li><li>怕婆县令</li><li>捣鬼夫人</li><li>吕仙宝筏</li><li>大士慈航</li><li>奎垣真像</li><li>天府贤书</li>
+      </ul></div>
+    </div>
+    <p class="wall-note">◉ 为本篇选讲的六声铃所在（识字犬收入铃舌一节；卷十二目录「贫儿学馅」，正文作「谄」，见文末校字记）。</p>
+  </div>
+</section>
+
+<section id="ring">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-no mono">六声</span>
+      <h2>选六声，敲给你听</h2>
+      <span class="tail">引文与库本逐字核对，讹字照录</span>
+    </div>
+
+    <div class="story">
+      <div class="tab">
+        <div class="dno mono">第一声</div>
+        <h3>一钱落职</h3>
+        <div class="vol-tag">卷三</div>
+        <div class="mini-bell"></div>
+      </div>
+      <div class="body">
+        <p>书肆里掉了一枚铜钱。少年弯腰去捡之前，先<strong>用脚踩住</strong>，等失主走远再俯身拾起。这一脚，被旁边一位老先生看在眼里，冷笑而去。多年后这少年选官得中，去江苏常熟做县尉，却怎么也见不到巡抚大人，只等来一纸弹章：他的罪名是贪，罪证是当年那枚钱。巡抚汤斌的原话如下。</p>
+        <div class="qblock">
+          <span class="q">汝不记昔年书肆中事耶？为秀才时，尚且一钱如命；今侥幸作地方官，能不探囊胠箧，为纱帽下之劫贼乎？请即解组去，毋使一路哭也！</span>
+          <span class="src">卷三 一钱落职</span>
+        </div>
+        <p>官还没上任，先被撤了。全书里最漂亮的一场处刑，刑具只有一枚铜钱。</p>
+        <div class="duo"><div class="stamp">铎曰</div><div class="duoquote">钱神化百千亿万身，种种诱人失着。勿谓一钱甚微也。涓涓不塞成江河，爝火不灭成燎原。吾愿饬簠簋者，自一钱始。</div></div>
+      </div>
+    </div>
+
+    <div class="story">
+      <div class="tab">
+        <div class="dno mono">第二声</div>
+        <h3>贫儿学谄</h3>
+        <div class="vol-tag">卷十二</div>
+        <div class="mini-bell"></div>
+      </div>
+      <div class="body">
+        <p>嘉靖朝权相严嵩府上，干儿子们夜夜排队膝行入户，争相献媚。某夜檐瓦窸窣，掉下来一个人，是个乞丐。他自陈来意：同行钱秃子讨钱总比他多，因为人家<strong>有媚骨佞舌</strong>。他打听到天下媚术最高明的学府，就是这间相府，于是趴在墙头听课，一听就是三个月。</p>
+        <div class="qblock">
+          <span class="q">因思相公门下，乞怜昏夜者，其媚骨佞舌，当什倍于钱。是以涉远而来，伏而听，隙而窥者，已三月矣！</span>
+          <span class="src">卷十二 贫儿学谄（目录作馅）</span>
+        </div>
+        <p>严嵩听罢愣住，随即对满堂干儿子笑道：丐亦有道，你们这些媚骨佞舌，真是这行的老师。之后命众人轮班授课，乞丐学成出师，讨钱果然高出钱秃子一头。这一篇的铃，摇得又轻又狠。</p>
+        <div class="duo"><div class="stamp">铎曰</div><div class="duoquote">张禄师严冢宰门下，若严宰门下又何师？曰师严宰。前明一部百官公卿表，即乞儿渊源录也。异哉张禄，乃又衍一支。</div></div>
+      </div>
+    </div>
+
+    <div class="story">
+      <div class="tab">
+        <div class="dno mono">第三声</div>
+        <h3>森罗殿点鬼</h3>
+        <div class="vol-tag">卷六</div>
+        <div class="mini-bell"></div>
+      </div>
+      <div class="body">
+        <p>一位姓李的县令夜宿十王殿廊下，撞见阎王三十年一度的<strong>鬼籍大清查</strong>。点到的鬼一场比一场荒唐：勾魂簿上八万七千名催命鬼，全员脱岗，都投胎去了；再点饿鬼簿，看守失职，饿鬼集体越狱，也都混进了阳世。阎王问他们如今做什么营生。</p>
+        <div class="qblock">
+          <span class="q">王问：“在阳世作何事？”曰：“大半作县令。”王曰：“若辈埋头地狱，枵腹垂千百年。今一得志，必至狼餐虎噬，生炅无噍类矣！”</span>
+          <span class="src">卷六 森罗殿点鬼（炅当作灵，见校字记）</span>
+        </div>
+        <p>阎王的处置方案充满了 bureaucracy 的辛酸：能忍饥的随他们去，饿相露出来的，重的削其禄籍罚子孙做乞丐，轻的降作冷官，冻饿终身，还其本相。李县令在廊下看到这里，失声大笑，一时灯烛尽灭。笑话讲给阎王听是失礼的，讲给读者听正合适：世上衙门里坐着的，有多少是饿了几百年的鬼。</p>
+        <div class="duo"><div class="stamp">铎曰</div><div class="duoquote">吾闻李君在会宁时，戎服御贼，颇着劳绩。其改就学博，亦急流勇退意也。曾书一联瞄之曰：“秀才有学皆吾辈，俗吏能修到此官。”亦可想见其人矣！此殆其游戏之谈耶？</div></div>
+      </div>
+    </div>
+
+    <div class="story">
+      <div class="tab">
+        <div class="dno mono">第四声</div>
+        <h3>壮夫缚虎</h3>
+        <div class="vol-tag">卷八</div>
+        <div class="mini-bell"></div>
+      </div>
+      <div class="body">
+        <p>陕西壮士焦奇流落沂州，徒步入山，遇虎<strong>徒手格杀</strong>，背着回来当日常。某日连毙两虎，还活捉一只小虎扛回家，满座失色。他在酒席上讲武松式的事迹，讲到兴起，一只邻家的猫跳上桌抢食，他不放在眼里，随它大嚼。猫又来，他起拳击之，砸了满桌菜肴，猫已跃上窗角。他张臂作擒虎状扑过去。</p>
+        <div class="qblock">
+          <span class="q">焦怒，又逐击之，窗棂尽裂，描一跃登屋角，目耽耽视焦。焦愈怒，张臂作擒缚状，而猫嗥然一声，曳尾徐步，过邻墙而去，焦计无所施，面墙呆望而已。</span>
+          <span class="src">卷八 壮夫缚虎（描当作猫，见校字记）</span>
+        </div>
+        <p>能空手缚虎的大汉，被一只猫当面遛了三圈，最后面壁罚站。作者随后自己出了判词之外的第二段按语，说得极平实。</p>
+        <div class="qblock">
+          <span class="q">函牛之鼎，不可以烹小鲜，千斤之弩，不可以中鼷鼠。怀材者宜知，用材者益宜知矣。</span>
+          <span class="src">卷八 壮夫缚虎 篇中按语</span>
+        </div>
+        <div class="duo"><div class="stamp">铎曰</div><div class="duoquote">丙吉问牛喘，而兵、刑、钱，谷不对；非不对也，是不能也。于何知之，知之于焦生之缚猫。</div></div>
+      </div>
+    </div>
+
+    <div class="story">
+      <div class="tab">
+        <div class="dno mono">第五声</div>
+        <h3>孟婆庄</h3>
+        <div class="vol-tag">卷八</div>
+        <div class="mini-bell"></div>
+      </div>
+      <div class="body">
+        <p>穷书生葛生为情殉死，到了冥府被判投生，路上口渴，投一处石棚讨水，棚里几百个鬼正排队抢瓢。棚后走出一位女子，竟是他死去的旧识兰蕊。她一把按住他的瓢：这里是<strong>孟婆庄</strong>，喝了汤就忘掉前世，再也回不去了。随后她领他去看墙角一排石瓮，报菜名一样报了一串汤名。</p>
+        <div class="qblock">
+          <span class="q">此名益智汤，饮者有才。此名长命汤，饮者多寿。此名和气汤，饮者令人欢喜。</span>
+          <span class="src">卷八 孟婆庄</span>
+        </div>
+        <p>才、寿、欢喜，全是要紧的东西，可众人抢着喝的偏偏都不是这些。葛生问大家喝的究竟是什么汤。</p>
+        <div class="qblock">
+          <span class="q">此皆焦心火滴泪泉煎成之混沌汤也！</span>
+          <span class="src">卷八 孟婆庄</span>
+        </div>
+        <p>最后兰蕊逼他喝下一瓮元宝汤，说你需要的就是这一味，并劝一句西出阳关。葛生还阳，呕吐之下从床底挖出满瓮银子，聘回玉蕊，葬了兰蕊。整篇志怪的地府里，孟婆汤被写成了<strong>一条欲望的分拣线</strong>：人人都说想有才、想长寿、想欢喜，身体却诚实得很。</p>
+        <div class="duo"><div class="stamp">铎曰</div><div class="duoquote">十斛量珠，千里结网。家无黄金屋，阿娇从何处贮哉？因知温柔乡里，坑煞几多寒士。欲海沉身，泉台埋骨；鬼门关外，独立茫茫。究竟元宝汤向谁家吃也？嗟乎！</div></div>
+      </div>
+    </div>
+
+    <div class="story">
+      <div class="tab">
+        <div class="dno mono">第六声</div>
+        <h3>蜣螂城</h3>
+        <div class="vol-tag">卷十</div>
+        <div class="mini-bell"></div>
+      </div>
+      <div class="body">
+        <p>香人荀生浮海误入一座岛，被满岛臭味熏得退行三四步。迎面来的老头反而掩鼻惊叫：哪来的龌龊儿偷窥净土。</p>
+        <div class="qblock">
+          <span class="q">予铜臭翁孔氏，此名乳臭小儿。因慕洞天福地，自五浊村移家于此。蒙鲍鱼肆主人见爱，谓予臭味不殊，荐诸逐臭大夫，命司蜣螂城北门管钥。</span>
+          <span class="src">卷十 蜣螂城</span>
+        </div>
+        <p>城里的风光一件比一件正经：城墙用粪土涂墙，四面趴着百万只蜣螂，<strong>屹如长城</strong>；财主家的厅堂题名如兰，侧轩题名藏垢，轩后再进一进，是纳污书屋。荀生被追捕，浑身被摩嗅了一遍之后，全城惊为天人。</p>
+        <div class="qblock">
+          <span class="q">何顿芗泽若是，真化臭腐为神奇矣！</span>
+          <span class="src">卷十 蜣螂城</span>
+        </div>
+        <p>在气味倒悬的国度，香是瘟疫，臭是门风。沈起凤把「入鲍鱼之肆久而不闻其臭」翻成了一整座城：寓言的规模第一次超过了笑话，接近一篇小小的反乌托邦。</p>
+        <div class="duo"><div class="stamp">铎曰</div><div class="duoquote">蜣螂抱粪，人恶其秽。而转之金颜笃褥中，适速之死耳！以是知生于香者，亦必死于臭也。红粉长埋，黄金失色，止剩个臭皮囊，无从洗涤矣。哀哉！</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="author">
+  <div class="wrap">
+    <div class="author-band">
+      <div>
+        <h3>铃舌是他自己的舌头</h3>
+        <p>识字犬是全书少有的<strong>第一人称</strong>故事：作者小时候养过一条狗，陪他在书塾读书，竟能看懂字条。</p>
+        <p>狗后来发狂，见穿破衣的摇头摆尾，见<strong>鲜衣华服</strong>的就狂吠，半年后被邻家孩子打死，葬在桑树下，立石曰识字犬。识别势利眼的病，犬比人犯得早，也死得早。</p>
+        <p>用一条狗的癖性自况生平，这几乎是全书的作者自画像：一个把讽刺当天性、又明知这天性惹祸的写作者。</p>
+      </div>
+      <div>
+        <div class="qblock" style="margin-top:0;">
+          <span class="q">予奇之，戏书“进宝不许入塾”六字，粘诸座隅。</span>
+          <span class="src">卷六 识字犬</span>
+        </div>
+        <div class="qblock" style="margin-bottom:0;">
+          <span class="q">垂二十年，闻其忽发狂疾，见蓝缕者，欢迎憨跳；遇鲜衣华服者，必狂吠。</span>
+          <span class="src">卷六 识字犬</span>
+        </div>
+        <div class="duo" style="margin-top:22px;"><div class="stamp">铎曰</div><div class="duoquote">识字为造物所忌，矧堕畜生道中，敢恃才陵傲耶？反常性以取祸，真觉世之言也。乃始以狂死，继以节报，或造物忌其生，不忌其死耳。鹤虽挂牌，犬不识字，一番冤狱，全赖不识字救解。若以此犬当之，未免试宸濠之剑矣。犬而识字，诚为祸阶。</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="colla" class="colla">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-no mono">校字记</span>
+      <h2>库本讹字照录</h2>
+      <span class="tail">引文一仍其旧，只在此处记下可疑处</span>
+    </div>
+    <ol>
+      <li>卷六森罗殿点鬼：<b>「紫面亦髯」</b>与下文「紫面赤髯」不合，亦疑当作赤，照录。</li>
+      <li>卷六森罗殿点鬼：王愀然<b>「臼」</b>云云，臼疑当作曰；<b>「生炅无噍类」</b>之炅疑当作灵，均照录。</li>
+      <li>卷六森罗殿点鬼：铎曰「书一联<b>瞄</b>之曰」瞄疑当作贻；「秦<b>准</b>客馆」准疑当作淮，照录。</li>
+      <li>卷八壮夫缚虎：<b>「登筳攫食」「设筳款之」</b>两处筳疑当作筵，照录。</li>
+      <li>卷八壮夫缚虎：<b>「描一跃登屋角」</b>描疑当作猫，照录。</li>
+      <li>卷八壮夫缚虎：<b>「赞挟千佛寺前石鼎」</b>赞字文义未安，疑有讹，照录。</li>
+      <li>卷八壮夫缚虎：铎曰<b>「而兵、刑、钱，谷不对」</b>四事连文而点画参差，照录。</li>
+      <li>卷十二目录作<b>「贫儿学馅」</b>，正文标题作「贫儿学谄」，两见并存。</li>
+      <li>卷六识字犬：犬名进生，所书条子作<b>「进宝不许入塾」</b>，名与条字不一，或有意为之，照录。</li>
+      <li>卷六识字犬：<b>「垂首丧气而山」</b>之山疑当作出，照录。</li>
+      <li>全书铎曰凡一百二十一处，与正文一百二十二篇之数微差，个别篇目铃在何处不可确指，照录。</li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="rule"></div>
+    <p>文本来源：殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）子藏笔记部《谐铎》，题清沈起凤撰，十二卷，库本去空白 97804 字。本篇全部引文经脚本与库内文件去标点归一后逐字比对通过；库本文字间或有传写讹误，引文一仍其旧，校字记列其可疑者。</p>
+    <p>本书以谈狐说鬼写世情人心，其中对节烈的表彰、对乞丐妓女的刻写，都带着那个时代的眼光与刻薄，读时请留意其时代局限。</p>
+    <p class="no mono">殆知阁导读之二百七十二　卷六十五谐谑　2026 年 9 月编</p>
+  </div>
+</footer>
+
+<div class="qbank">
+  <span class="q">吾愿饬簠簋者，自一钱始。</span>
+  <span class="q">前明一部百官公卿表，即乞儿渊源录也。</span>
+  <span class="q">大半作县令。</span>
+  <span class="q">怀材者宜知，用材者益宜知矣。</span>
+  <span class="q">究竟元宝汤向谁家吃也？嗟乎！</span>
+  <span class="q">真化臭腐为神奇矣！</span>
+</div>
+
+<script>
+  (function () {
+    var bell = document.getElementById('bell');
+    var line = document.getElementById('bellLine');
+    var lines = Array.prototype.slice.call(document.querySelectorAll('.qbank .q'));
+    var i = 0;
+    function ring() {
+      bell.classList.remove('ringing');
+      void bell.offsetWidth;
+      bell.classList.add('ringing');
+      line.textContent = '「' + lines[i % lines.length].textContent + '」';
+      i += 1;
+    }
+    bell.addEventListener('click', ring);
+    bell.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ring(); }
+    });
+  })();
+</script>
+
+</body>
+</html>
