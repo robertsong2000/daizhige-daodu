@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>囘文类聚</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#201f1c; --ink3:#26241f;
+  --paper:#e8e4dc; --paper2:#f2eee5; --dim:#a39e91; --faint:#787468;
+  --blue:#5e8fbb; --blued:#3e6688; --blueline:rgba(94,143,187,.35); --bluebg:rgba(94,143,187,.10);
+  --red:#c0453c; --gold:#c9963f; --line:#39372f;
+  --pink:#c98a94; --green:#6f9c7d; --whitec:#e8e4dc; --silk:#ded3bd; --yellow:#cfae62; --cyan:#7fa8a4;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;line-height:1.9;font-size:16.5px}
+q{quotes:"「" "」"}
+a{color:var(--blue);text-decoration:none}
+.mono{font-family:Consolas,"Courier New",monospace}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+.sec{padding:74px 0 60px;position:relative}
+.sechead{display:flex;align-items:flex-end;gap:18px;margin-bottom:34px}
+.sealno{width:46px;height:46px;flex:0 0 46px;background:var(--blue);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;border-radius:4px;box-shadow:3px 3px 0 rgba(94,143,187,.22)}
+.sechead h2{font-size:27px;letter-spacing:.06em;font-weight:700}
+.sechead .sub{color:var(--dim);font-size:13.5px;padding-bottom:4px}
+.note{color:var(--dim);font-size:14px}
+.mark{color:var(--blue);font-weight:700}
+.att{display:block;color:var(--faint);font-size:12.5px;margin-top:4px}
+.qline{border-left:3px solid var(--blueline);padding:4px 0 4px 16px;margin:14px 0;color:var(--paper)}
+
+/* ---------- hero : 锦机 ---------- */
+#hero{position:relative;min-height:min(760px,94vh);overflow:hidden;padding-bottom:60px;
+  background:
+   repeating-linear-gradient(90deg,rgba(232,228,220,.045) 0 1px,transparent 1px 13px),
+   repeating-linear-gradient(90deg,rgba(94,143,187,.05) 0 1px,transparent 1px 39px),
+   linear-gradient(180deg,#15161a 0%,#1a1d24 34%,#171a20 60%,#101216 100%)}
+.beam{position:absolute;left:0;right:0;top:126px;height:7px;background:linear-gradient(180deg,#5a4c33,#332a1c);box-shadow:0 3px 10px rgba(0,0,0,.6);border-radius:0 0 3px 3px}
+.beam::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:rgba(94,143,187,.35)}
+.topbar{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:14px 22px;font-size:13px;color:var(--dim);z-index:5}
+.htitle{position:absolute;right:74px;top:168px;writing-mode:vertical-rl;font-size:62px;letter-spacing:.2em;color:var(--paper);font-weight:700;text-shadow:0 0 20px rgba(94,143,187,.3);z-index:3}
+.hmeta{position:absolute;right:34px;top:186px;writing-mode:vertical-rl;color:var(--dim);font-size:14px;letter-spacing:.3em;z-index:3}
+.hseal{position:absolute;right:196px;top:176px;width:44px;height:44px;background:var(--blued);color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;border-radius:4px;box-shadow:2px 2px 0 rgba(0,0,0,.45);z-index:4}
+.tagline{position:absolute;left:44px;top:176px;max-width:330px;color:var(--paper);z-index:3}
+.tagline b{display:block;color:var(--blue);font-size:21px;letter-spacing:.04em;margin-bottom:10px;line-height:1.6}
+.tagline span{color:var(--dim);font-size:14.5px;line-height:2.05;display:block}
+/* 梭读演示 */
+#suttle{position:absolute;left:44px;right:230px;top:400px;z-index:3;max-width:660px}
+.slab{font-size:13px;color:var(--dim);letter-spacing:.28em;margin-bottom:10px}
+.slab b{color:var(--blue);font-weight:700}
+#strip{display:flex;flex-wrap:wrap;gap:4px;position:relative;padding:12px 12px 10px;background:linear-gradient(180deg,rgba(232,228,220,.07),rgba(232,228,220,.03));border:1px solid var(--line);border-radius:3px}
+#strip i{font-style:normal;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--paper);background:
+  repeating-linear-gradient(0deg,rgba(25,25,23,.22) 0 1px,transparent 1px 5px),
+  repeating-linear-gradient(90deg,rgba(94,143,187,.14) 0 1px,transparent 1px 6px),
+  #23262c;border-radius:2px;transition:transform .35s,opacity .35s}
+#strip i:nth-child(even){background:
+  repeating-linear-gradient(90deg,rgba(25,25,23,.22) 0 1px,transparent 1px 5px),
+  repeating-linear-gradient(0deg,rgba(94,143,187,.14) 0 1px,transparent 1px 6px),
+  #212329}
+#strip.flip i{animation:weft .5s ease both}
+@keyframes weft{0%{transform:rotateY(0);opacity:1}55%{transform:rotateY(90deg);opacity:.2}100%{transform:rotateY(0);opacity:1}}
+#shuttle{position:absolute;top:-17px;left:0;width:52px;height:15px;background:linear-gradient(180deg,#7ea4c6,var(--blued));border-radius:8px 3px 8px 3px;box-shadow:0 2px 8px rgba(62,102,136,.55);transition:left .8s cubic-bezier(.6,.1,.3,1);z-index:4}
+#shuttle::after{content:"";position:absolute;left:16px;top:6px;width:20px;height:3px;background:var(--paper);opacity:.85;border-radius:2px}
+.sbtns{margin-top:12px;display:flex;gap:10px;align-items:center}
+.sbtns button{background:none;border:1px solid var(--blueline);color:var(--blue);font-family:inherit;font-size:13.5px;letter-spacing:.18em;padding:7px 16px;cursor:pointer;border-radius:3px}
+.sbtns button:hover{background:var(--bluebg)}
+#stripstate{font-size:13px;color:var(--faint);letter-spacing:.14em}
+/* 内经两读 */
+#neijing{margin-top:16px;max-width:660px}
+.njrow{display:flex;align-items:center;gap:12px;color:var(--paper);font-size:15px;min-height:30px}
+.njrow .who{flex:0 0 58px;font-size:12.5px;color:var(--faint);letter-spacing:.2em}
+.njrow q{color:var(--paper)}
+.njrow.alt q{color:var(--blue)}
+.njarr{color:var(--faint)}
+.heroq{position:absolute;left:44px;bottom:36px;max-width:520px;background:var(--paper);color:#33302a;padding:15px 19px 13px;font-size:14px;line-height:1.95;border-radius:2px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.heroq .att{color:#7d786c}
+
+/* ---------- 锦程七结 ---------- */
+#thread{position:relative;margin:56px 0 26px;height:120px}
+#thread .rope{position:absolute;left:0;right:0;top:56px;height:2px;background:linear-gradient(90deg,transparent,var(--blueline) 6%,var(--blueline) 94%,transparent)}
+.knots{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between}
+.knot{width:118px;cursor:pointer;text-align:center;position:relative}
+.knot .kb{width:15px;height:15px;margin:49px auto 0;background:var(--blued);transform:rotate(45deg);transition:.25s;border:1px solid var(--blue)}
+.knot:hover .kb,.knot.on .kb{background:var(--blue);box-shadow:0 0 14px rgba(94,143,187,.7)}
+.knot .kt{margin-top:16px;font-size:13.5px;color:var(--dim);letter-spacing:.06em;line-height:1.5}
+.knot.on .kt{color:var(--paper)}
+.kpanel{margin-top:6px;border:1px solid var(--line);background:var(--ink2);border-radius:3px;padding:22px 26px;min-height:110px}
+.kpanel .ktit{color:var(--blue);font-size:15px;letter-spacing:.14em;margin-bottom:6px;font-weight:700}
+.kpanel .kq{font-size:15.5px;line-height:2.05}
+
+/* ---------- 机括 ---------- */
+.tickets{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:36px}
+.ticket{background:var(--paper);color:#33302a;border-radius:2px;padding:15px 17px 12px;position:relative;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.ticket::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--blue);border-radius:2px 0 0 2px}
+.ticket .tp{font-size:14px;color:#57524a;line-height:1.9}
+.ticket .tr{margin-top:7px;font-size:13.5px;color:var(--blued);font-weight:700;letter-spacing:.02em}
+.strips{border:1px solid var(--line);border-radius:3px;background:var(--ink2);padding:20px 22px;margin-bottom:18px}
+.strph{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.strph .sn{font-size:14px;color:var(--blue);letter-spacing:.22em;font-weight:700}
+.rvbtn{background:none;border:1px solid var(--blueline);color:var(--blue);font-family:inherit;font-size:12.5px;letter-spacing:.16em;padding:5px 13px;cursor:pointer;border-radius:3px}
+.rvbtn:hover{background:var(--bluebg)}
+.fwt{display:flex;flex-wrap:wrap;gap:3px}
+.fwt i{font-style:normal;width:27px;height:27px;display:flex;align-items:center;justify-content:center;font-size:14.5px;background:rgba(232,228,220,.06);border:1px solid var(--line);border-radius:2px;color:var(--paper)}
+.rvbox{margin-top:10px;display:none;align-items:center;gap:8px;flex-wrap:wrap}
+.rvbox.on{display:flex}
+.rvbox .rvtag{font-size:12px;color:var(--gold);border:1px dashed rgba(201,150,63,.5);padding:2px 8px;border-radius:3px;letter-spacing:.14em;flex:0 0 auto}
+.rvt{display:flex;flex-wrap:wrap;gap:3px}
+.rvt i{font-style:normal;width:27px;height:27px;display:flex;align-items:center;justify-content:center;font-size:14.5px;background:rgba(94,143,187,.13);border:1px solid var(--blueline);border-radius:2px;color:#bcd3e6}
+.pairs{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.pair{border:1px solid var(--line);border-radius:3px;background:var(--ink2);padding:16px 18px}
+.pair .ph{font-size:13px;color:var(--faint);letter-spacing:.2em;margin-bottom:8px}
+.pair .pl{font-size:15px;line-height:2.1;color:var(--paper)}
+.pair .pl q.alt{color:var(--blue)}
+.pair .att{margin-top:6px}
+
+/* ---------- 五色 ---------- */
+#weave{display:flex;flex-direction:column;gap:9px;margin-bottom:30px}
+.wrow{display:flex;gap:3px;flex-wrap:wrap;align-items:center}
+.wrow i{font-style:normal;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:15px;border-radius:2px;color:#22201b}
+.wlegend{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 26px}
+.wlegend span{font-size:12.5px;color:var(--dim);display:inline-flex;align-items:center;gap:6px}
+.wlegend i{width:13px;height:13px;border-radius:2px;display:inline-block}
+.countpanel{display:flex;gap:26px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);background:linear-gradient(120deg,var(--ink2),#1d2026);border-radius:3px;padding:24px 28px;margin-bottom:22px}
+.bignum{font-size:46px;font-weight:700;color:var(--blue);letter-spacing:.06em;line-height:1.15;text-shadow:0 0 18px rgba(94,143,187,.35)}
+.bigcap{font-size:13px;color:var(--dim);letter-spacing:.24em;margin-top:4px}
+.countq{flex:1;min-width:260px;font-size:14.5px;line-height:2.05}
+
+/* ---------- 六幅 ---------- */
+.frames{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:22px}
+.frame{aspect-ratio:3/4;background:var(--paper2);border-radius:2px;position:relative;box-shadow:0 5px 16px rgba(0,0,0,.4);overflow:hidden}
+.frame .fv{position:absolute;top:8px;right:7px;writing-mode:vertical-rl;font-size:12.5px;color:#4a453c;letter-spacing:.16em;line-height:1.5}
+.frame .fs{position:absolute;left:8px;bottom:7px;font-size:10.5px;color:var(--faint);letter-spacing:.1em}
+.frame::before{content:"";position:absolute;inset:16px 12px 26px;border:1px solid rgba(72,66,55,.25)}
+.frame::after{content:"";position:absolute;left:26%;right:26%;top:44%;height:2px;background:rgba(94,143,187,.4)}
+.frame.r3::after{background:rgba(201,150,63,.45)}
+@media (max-width:760px){.frames{grid-template-columns:repeat(3,1fr)}}
+
+/* ---------- 题签 ---------- */
+#rod{position:relative;height:8px;background:linear-gradient(180deg,#5a4c33,#332a1c);border-radius:3px;margin:44px 0 0;box-shadow:0 3px 8px rgba(0,0,0,.5)}
+.tags{display:flex;justify-content:space-between;gap:8px;padding:0 12px;flex-wrap:wrap}
+.tag{writing-mode:vertical-rl;background:var(--paper2);color:#43403a;cursor:pointer;padding:14px 7px 10px;font-size:13.5px;letter-spacing:.18em;line-height:1.5;border-radius:0 0 3px 3px;margin-top:0;transform-origin:top center;transition:transform .3s;box-shadow:0 4px 12px rgba(0,0,0,.4);min-height:120px;position:relative}
+.tag::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:5px;height:9px;background:var(--blued);border-radius:0 0 2px 2px}
+.tag:hover{transform:rotate(1.6deg)}
+.tag.on{background:var(--blue);color:var(--ink);font-weight:700}
+.tag small{font-size:10.5px;letter-spacing:.1em;opacity:.75;margin-top:8px}
+.tagpanel{margin-top:22px;border:1px solid var(--line);background:var(--ink2);border-radius:3px;padding:22px 26px;min-height:120px}
+.tagpanel .tg{color:var(--blue);font-size:15px;font-weight:700;letter-spacing:.12em;margin-bottom:6px}
+.tagpanel .tq{font-size:15.5px;line-height:2.05}
+
+/* ---------- 试机 ---------- */
+.jcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px}
+.jcard{background:var(--paper);color:#33302a;border-radius:2px;padding:18px 20px 14px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.jcard h3{font-size:15.5px;color:#33302a;letter-spacing:.08em;margin-bottom:2px}
+.jcard .ja{font-size:12.5px;color:#8a8478;letter-spacing:.16em;margin-bottom:10px}
+.jline{display:flex;align-items:center;gap:9px;cursor:pointer;padding:4px 6px;border-radius:3px;transition:background .2s}
+.jline:hover{background:rgba(94,143,187,.12)}
+.jline .ja2{font-size:12px;color:var(--blued);border:1px solid rgba(94,143,187,.4);border-radius:3px;padding:0 6px;flex:0 0 auto;letter-spacing:.08em}
+.jline q{font-size:14.5px}
+.jline.rev{flex-direction:row-reverse;background:var(--bluebg)}
+.jcard .att{color:#7d786c}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.chip{background:none;border:1px solid var(--line);color:var(--dim);font-family:inherit;font-size:13px;padding:7px 14px;border-radius:20px;cursor:pointer;letter-spacing:.1em}
+.chip:hover,.chip.on{border-color:var(--blueline);color:var(--blue)}
+
+/* ---------- 攷异 · 撤诗 ---------- */
+.kao{border-left:3px solid rgba(201,150,63,.5);padding:4px 0 4px 16px;margin:16px 0}
+.edict{background:linear-gradient(160deg,#e5d5a4,#d9c68c);color:#4a3d20;border-radius:2px;padding:26px 30px 20px;position:relative;margin:30px 0 16px;box-shadow:0 8px 26px rgba(0,0,0,.5)}
+.edict::after{content:"撤出";position:absolute;right:22px;top:20px;width:58px;height:58px;border:3px solid rgba(178,58,44,.75);color:rgba(178,58,44,.85);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;transform:rotate(9deg);border-radius:4px;letter-spacing:.05em}
+.edict h3{font-size:15px;letter-spacing:.3em;margin-bottom:10px;color:#6b5628}
+.edict .eq{font-size:15.5px;line-height:2.15}
+.edict .att{color:#8a744a}
+.revoke{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 8px}
+.revoke s{text-decoration:none;background:rgba(25,25,23,.08);color:#8a744a;border:1px dashed rgba(138,116,74,.6);border-radius:3px;padding:6px 12px;font-size:13.5px;letter-spacing:.08em;position:relative}
+.revoke s::after{content:"✕";position:absolute;right:-7px;top:-9px;width:16px;height:16px;background:var(--red);color:var(--paper);border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center}
+.closeline{text-align:center;font-size:19px;color:var(--dim);letter-spacing:.2em;margin:44px 0 8px}
+
+/* ---------- footer ---------- */
+footer.page{border-top:1px solid var(--line);margin-top:40px;padding:38px 0 46px;background:var(--ink2)}
+footer.page .row{font-size:13.5px;color:var(--dim);margin-bottom:14px;line-height:2}
+footer.page .row b{color:var(--paper);font-weight:700}
+footer.page .fin{text-align:center;color:var(--faint);letter-spacing:.4em;margin-top:26px;font-size:14px}
+#qbank{display:none}
+
+@media (max-width:860px){
+  .htitle{font-size:44px;right:40px;top:150px}
+  .hmeta{display:none}
+  .hseal{right:120px}
+  #suttle{right:44px;top:392px}
+  .tagline{max-width:280px}
+  .heroq{max-width:min(520px,86vw)}
+  .knot{width:90px}
+}
+</style>
+</head>
+<body>
+
+<section id="hero">
+  <div class="beam"></div>
+  <div class="topbar"><span>殆知阁导读 · 集部总集类</span><span>第二百七十六篇</span></div>
+  <div class="hseal">璇</div>
+  <div class="hmeta">宋桑世昌编 · 四卷补遗一卷</div>
+  <h1 class="htitle">囘文类聚</h1>
+  <div class="tagline">
+    <b>一幅织出来的情书，<br>一首倒着读的诗。</b>
+    <span>前秦才女苏蕙把八百余言织进锦缎，寄给冷落她的丈夫；纵横回环，读出诗几千首。武则天亲笔作记，李公麟考出读法，苏轼秦观黄庭坚跟着题诗，乾隆皇帝下旨删诗。桑世昌把它们装订成一部总集。</span>
+  </div>
+  <div id="suttle">
+    <div class="slab">锦上开读 · <b>图内经纬一隅</b></div>
+    <div id="strip"><div id="shuttle"></div><q style="display:none">诗情明显怨义兴理辞丽作此端无终始</q></div>
+    <div class="sbtns">
+      <button id="flipbtn">回读</button>
+      <span id="stripstate">顺读</span>
+    </div>
+    <div id="neijing">
+      <div class="njrow" id="njfw"><span class="who">顺读</span><q>诗情明显怨义兴理辞丽作此端无终始</q></div>
+      <div class="njrow alt" id="njrv" style="display:none"><span class="who">回读</span><span class="njarr">⇄</span><q>始终无端作此丽辞理兴义怨显明情诗</q></div>
+    </div>
+  </div>
+  <div class="heroq">
+    <q>徘徊宛转自为语言非我佳人莫之能解</q>
+    <span class="att">苏氏笑答满座读者，见卷一〈璇玑图叙〉，叙末署如意元年五月一日大周天册金轮皇帝制。</span>
+  </div>
+</section>
+
+<main>
+
+<!-- ================= 本事 · 锦程 ================= -->
+<section class="sec" id="benchou">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">壹</div><h2>本事 · 锦程</h2><div class="sub">武则天代她写的传记，七个结，一线牵</div></div>
+    <p class="note">卷一开篇不是图，是一篇完整的婚姻故事，署名是皇帝。线是纬线，七个结点开一个，读一段。</p>
+    <div id="thread">
+      <div class="rope"></div>
+      <div class="knots">
+        <div class="knot on" data-k="0"><div class="kb"></div><div class="kt">十六归窦</div></div>
+        <div class="knot" data-k="1"><div class="kb"></div><div class="kt">宠姬入室</div></div>
+        <div class="knot" data-k="2"><div class="kb"></div><div class="kt">忿不偕行</div></div>
+        <div class="knot" data-k="3"><div class="kb"></div><div class="kt">织锦寄远</div></div>
+        <div class="knot" data-k="4"><div class="kb"></div><div class="kt">苍头送图</div></div>
+        <div class="knot" data-k="5"><div class="kb"></div><div class="kt">送妾迎妻</div></div>
+        <div class="knot" data-k="6"><div class="kb"></div><div class="kt">武后作记</div></div>
+      </div>
+    </div>
+    <div class="kpanel" id="kpanel"></div>
+  </div>
+</section>
+
+<!-- ================= 机括 · 读法 ================= -->
+<section class="sec" id="jikuo" style="background:var(--ink2)">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">贰</div><h2>机括 · 读法</h2><div class="sub">库本把开图方法一并刻了进去</div></div>
+    <p class="note">桑世昌原序先分家：<q>止两韵者谓之囘文而举一字皆成读者谓之反复</q>，又借上官仪补一句对法：<q>凡诗对有八其七曰囘文对情亲因得意得意逐情亲是也</q>。到李公麟手里，这张图被当成星图来解：<q>予因究璇玑之义如日星之左右行天故布为经纬由中旋外以旁循四旁于其交防皆契韵句巡环反复窈窕纵横各能妙畅</q>。下面这些机括，全是卷一「读图内诗括例」的原话。</p>
+    <div class="tickets">
+      <div class="ticket"><div class="tp"><q>仁智至惨伤伦疋至榆桑人贱至圣皇春阳至殊方钦岑至如何</q></div><div class="tr"><q>已上七言四十句毎句为一首每首反读之计八十首</q></div></div>
+      <div class="ticket"><div class="tp"><q>诗风至表仁贤至凋松光颜至虎龙日往至寄倾</q></div><div class="tr"><q>已上五言十六句以每句反读之成三十二首</q></div></div>
+      <div class="ticket"><div class="tp"><q>周南至相追年时至无差谗佞至未形牵辜至伯禽</q></div><div class="tr"><q>已上四言二十四首作二句分读就成一篇</q></div></div>
+      <div class="ticket"><div class="tp"><q>寜自至劳形懐忧至何寃念是至何如悼思至者谁诗情至终始</q></div><div class="tr"><q>已上四言前四首以每句反读后一首每句反读成十首</q></div></div>
+      <div class="ticket"><div class="tp"><q>嗟叹至为荣凶顽至为基游西至摧伤神明至雁归</q></div><div class="tr"><q>已上三言十二首反读成二十四首</q></div></div>
+      <div class="ticket"><div class="tp"><q>佞因至旧新南郑至遗身旧间至佞臣遗哀至南音</q></div><div class="tr"><q>已上七言凡起头退一字反读之成四首</q></div></div>
+      <div class="ticket"><div class="tp"><q>厢挑至基津嗟中至春亲春衰至嗟仁基自至厢琴</q></div><div class="tr"><q>已上七言自角退一字斜读之成四首</q></div></div>
+    </div>
+
+    <div class="strips">
+      <div class="strph"><span class="sn">外经 · 二十八言</span><button class="rvbtn" data-t="fw1">回读</button></div>
+      <div class="fwt" id="fw1"><q style="display:none">仁智怀徳圣虞唐真妙显华重荣章臣贤惟圣配英皇伦疋离飘浮江湘</q></div>
+      <div class="rvbox" id="rv1"><span class="rvtag">回读</span><div class="rvt"><span class="rvtext">湘江浮飘离疋伦皇英配圣惟贤臣章荣重华显妙真唐虞圣徳怀智仁</span></div></div>
+      <span class="att">库本注「囘读」二字；回读行由本页按字倒排生成，非库本原文。</span>
+    </div>
+    <div class="strips">
+      <div class="strph"><span class="sn">中经 · 二十八言</span><button class="rvbtn" data-t="fw2">回读</button></div>
+      <div class="fwt" id="fw2"><q style="display:none">钦岑幽岩峻嵯峨深渊重涯经网罗林阳潜曜翳英华沈浮异游颓流沙</q></div>
+      <div class="rvbox" id="rv2"><span class="rvtag">回读</span><div class="rvt"><span class="rvtext">沙流颓游异浮沈华英翳曜潜阳林罗网经涯重渊深峨嵯峻岩幽岑钦</span></div></div>
+      <span class="att">同上注：苏氏笑语的底气在此，读者不能悉通，她只给了一条路，倒过来走。</span>
+    </div>
+    <div class="strips">
+      <div class="strph"><span class="sn">四方之角 · 二十八言</span><button class="rvbtn" data-t="fw3">回读</button></div>
+      <div class="fwt" id="fw3"><q style="display:none">仁智怀徳圣虞唐真志笃终誓穹苍钦所感想忘淫荒心忧増慕怀惨伤</q></div>
+      <div class="rvbox" id="rv3"><span class="rvtag">回读</span><div class="rvt"><span class="rvtext">伤惨怀慕増忧心荒淫忘想感所钦苍穹誓终笃志真唐虞圣徳怀智仁</span></div></div>
+      <span class="att">四角之方，库本注「囘读」。</span>
+    </div>
+
+    <div class="pairs">
+      <div class="pair">
+        <div class="ph">内经 · 两读并陈</div>
+        <div class="pl"><q>诗情明显怨义兴理辞丽作此端无终始</q></div>
+        <div class="pl"><q class="alt">始终无端作此丽辞理兴义怨显明情诗</q></div>
+        <span class="att">这是全图唯一一处库本把两个方向都抄出来的经，十四言。</span>
+      </div>
+      <div class="pair">
+        <div class="ph">四角之间 · 窈窕成文</div>
+        <div class="pl"><q>嗟叹怀所离经遐旷路伤中情家无君房帏清华饬容朗镜明</q></div>
+        <span class="att">库本注「囘读」，李公麟称这一路「窈窕成文」。</span>
+      </div>
+      <div class="pair">
+        <div class="ph">在中四角 · 反读窈窕</div>
+        <div class="pl"><q>念是咎愆谁为独居贱女怀叹鄙贱何如</q><br><q class="alt">愆咎是念谁为独居叹怀女贱鄙贱何如</q></div>
+        <span class="att">库本两行并录，注「反读窈窕成文」；不走直线，走折线。</span>
+      </div>
+      <div class="pair">
+        <div class="ph">四旁相对 · 文皆六言</div>
+        <div class="pl"><q>谗人作乱闱庭奸凶害我忠贞祸原消受难明所得滋极骄盈</q></div>
+        <span class="att">锦上有政治：谗佞一路与贤明一路并存，是图也是话。</span>
+      </div>
+      <div class="pair">
+        <div class="ph">四旁横读 · 文皆五言</div>
+        <div class="pl"><q>寒岁识凋松真物知终始颜衰改华容仁贤别行士</q><br><q class="alt">士行别贤仁容华改衰颜始终知物贞松雕识岁寒</q></div>
+        <span class="att">库本两行并录，注「反读窈窕成文」。</span>
+      </div>
+      <div class="pair">
+        <div class="ph">交手成文 · 文皆四言</div>
+        <div class="pl"><q>谗佞奸凶害我忠贞祸因所恃滋极骄盈</q></div>
+        <span class="att">库本注「反读」。</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 五色 · 分章 ================= -->
+<section class="sec" id="wuse">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">叁</div><h2>五色 · 分章</h2><div class="sub">读法藏在颜色里，颜色照库本自注</div></div>
+    <p class="note">原图五彩相宣，字色就是章法。黄长孺说得直白：<q>后人流传不复施采故迷其句读非辞句之脱畧也</q>，图没失传，颜色失传了。李公麟补上计数，广慧夫人见过实物。</p>
+    <div class="wlegend">
+      <span><i style="background:var(--pink)"></i>粉红</span>
+      <span><i style="background:var(--green)"></i>绿</span>
+      <span><i style="background:var(--whitec)"></i>白</span>
+      <span><i style="background:var(--silk)"></i>丝</span>
+      <span><i style="background:var(--yellow)"></i>黄</span>
+      <span><i style="background:var(--cyan)"></i>青</span>
+    </div>
+    <div id="weave">
+      <div class="wrow" data-c="p"><q style="display:none">嗟叹怀所离经遐旷路伤中情</q><span class="att">十二字用粉红</span></div>
+      <div class="wrow" data-c="g"><q style="display:none">家无君房帏清华饰容朗镜明</q><span class="att">用绿</span></div>
+      <div class="wrow" data-c="w"><q style="display:none">葩粉光珠耀英多思感谁为荣</q><span class="att">用白</span></div>
+      <div class="wrow" data-c="y" data-c2="s"><q style="display:none">周风兴自后妃樊楚厉节中闱</q><span class="att">周楚二字用黄外十字用丝</span></div>
+      <div class="wrow" data-c="y" data-c2="p"><q style="display:none">长叹不能奋飞双发歌我衮衣</q><span class="att">长双二字用黄外十字用粉红</span></div>
+      <div class="wrow" data-c="y" data-c2="c"><q style="display:none">华观冶容为谁宫羽同声相追</q><span class="att">华宫二字用黄外十字用青</span></div>
+    </div>
+    <p class="note">六条横色之后库本自注一句：<q>已上依此顺读成章</q>。色是句读，也是韵脚的路标。</p>
+    <div class="countpanel">
+      <div><div class="bignum">三七五二</div><div class="bigcap">李公麟点数 · 共诗三千七百五十二首</div></div>
+      <div class="countq"><q>四围纵横初行八行十五卄二卄九行及仁嗟斜至春亲廓琴斜至基津以朱画其形如交接读法此色凡九图其余四色色各一图共诗三千七百五十二首</q><span class="att">李公麟五色读法，朱青紫黄墨各领一路。</span></div>
+    </div>
+    <div class="countpanel">
+      <div><div class="bignum">至道元年</div><div class="bigcap">公元九九五 · 有实物为证</div></div>
+      <div class="countq"><q>八月卄日驾幸翠微殿赏桂诏令赋诗见御案所置一幅五色相宣读之易明因照式记之以志不忘至道元年十一月六日广慧夫人书</q><span class="att">广慧夫人在太宗御案上见到一幅五色图，照式记下。至道是宋太宗年号。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 六幅 · 唐图 ================= -->
+<section class="sec" id="liufu" style="background:var(--ink2)">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">肆</div><h2>六幅 · 唐图</h2><div class="sub">李公麟亲眼看过一卷，替苏蕙留了一组分镜</div></div>
+    <p class="note">元祐三年，工部何公在李公麟书案上认出这图，次日取来唐真本六幅。李公麟把画面写了下来。</p>
+    <div class="frames">
+      <div class="frame"><span class="fv">若兰所居</span><span class="fs">右一幅</span></div>
+      <div class="frame"><span class="fv">着思练丝</span><span class="fs">右二幅</span></div>
+      <div class="frame r3"><span class="fv">织锦遣使</span><span class="fs">右三幅</span></div>
+      <div class="frame r3"><span class="fv">窦滔归第</span><span class="fs">左一幅</span></div>
+      <div class="frame r3"><span class="fv">车马相迎</span><span class="fs">左二幅</span></div>
+      <div class="frame"><span class="fv">合乐对饮</span><span class="fs">左三幅</span></div>
+    </div>
+    <div class="qline"><q>元祐三年九月工部何公过曲院见仆书几有此惊曰昨日于屯田陈侯所观书唐真本图宜皆可求一见果得出示凡六幅</q></div>
+    <div class="qline"><q>右三为若兰所居重楼复屋户牖间各作着思练丝织锦遣使处左三幅为窦滔归第外为车马相迎次女妓坐大毺合乐其间楼阁对饮处</q><span class="att">六幅帧题为本页拆注，原文一句连读。</span></div>
+    <div class="qline"><q>又见图中近上作逺水红桥窦临髙列骑拥旌旄以望桥之西氊车从数骑排引见滔盛礼迎蘓图中近下左书武后序右写诗图</q></div>
+    <div class="qline"><q>青红绿旋所之方皆不少差葢理之所在阴阳五行色味莫不相假况情识之运宜自冥合也元丰四年四月赵郡李公麟伯时再题</q></div>
+  </div>
+</section>
+
+<!-- ================= 题签 ================= -->
+<section class="sec" id="tiqian">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">伍</div><h2>题签</h2><div class="sub">一部总集，半部文学史来挂签</div></div>
+    <p class="note">从武后到康熙，签子挂了一千年。点一支签，读一段题跋。</p>
+    <div id="rod"></div>
+    <div class="tags" id="tags">
+      <div class="tag" data-t="0">武后<small>如意元年</small></div>
+      <div class="tag" data-t="1">李公麟<small>布经纬</small></div>
+      <div class="tag" data-t="2">广慧夫人<small>至道元年</small></div>
+      <div class="tag" data-t="3">黄长孺<small>又叙</small></div>
+      <div class="tag" data-t="4">王勃<small>上元二载</small></div>
+      <div class="tag" data-t="5">令狐楚<small>元和十三载</small></div>
+      <div class="tag" data-t="6">黄庭坚<small>题图</small></div>
+      <div class="tag" data-t="7">苏轼<small>记三绝</small></div>
+      <div class="tag" data-t="8">朱存孝<small>康熙戊子</small></div>
+    </div>
+    <div class="tagpanel" id="tagpanel"></div>
+  </div>
+</section>
+
+<!-- ================= 试机 ================= -->
+<section class="sec" id="shiji" style="background:var(--ink2)">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">陆</div><h2>试机</h2><div class="sub">后人上机试梭，点一句，倒过来读</div></div>
+    <p class="note">卷三卷四收历代回文，补遗续采到明人。下面每行都能倒读，点一下互换方向。</p>
+    <div class="jcards">
+      <div class="jcard">
+        <h3>菩萨蛮 · 闲情</h3><div class="ja">苏轼</div>
+        <div class="jline"><span class="ja2">倒读</span><q>落花闲院春衫薄</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>薄衫春院闲花落</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>迟日恨依依</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>依依恨日迟</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>梦回莺舌弄</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>弄舌莺回梦</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>邮便问人羞</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>羞人问便邮</q></div>
+        <span class="att">句句倒读仍是句，词牌被当成了回文机。</span>
+      </div>
+      <div class="jcard">
+        <h3>次圭甫韵</h3><div class="ja">朱熹</div>
+        <div class="jline"><span class="ja2">倒读</span><q>暮江寒碧萦长路</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>路长萦碧寒江暮</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>花坞夕阳斜</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>斜阳夕坞花</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>客愁无胜集</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>集胜无愁客</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>醒似醉多情</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>情多醉似醒</q></div>
+        <span class="att">理学家也来试机，一联两读都通。</span>
+      </div>
+      <div class="jcard">
+        <h3>虞美人 · 寄情</h3><div class="ja">王文甫</div>
+        <div class="jline"><span class="ja2">倒读</span><q>玉肌香衬氷丝縠</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>縠丝氷衬香肌玉</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>纎指拂眉尖</q></div>
+        <div class="jline"><span class="ja2">倒读</span><q>尖眉拂指纎</q></div>
+        <span class="att">王文甫是苏轼在黄州时的邻居，一首寄进总集。</span>
+      </div>
+      <div class="jcard">
+        <h3>书怀</h3><div class="ja">叠字体 · 补遗</div>
+        <div class="pl" style="font-size:14.5px;line-height:2.15"><q>纷纷雨竹翠森森防防风花落绿阴贫恨苦吟穷寞寞乱愁牵断梦沈沈昏昏岭隔重重信渺渺江如寸寸心</q></div>
+        <span class="att">撰人库本未署，一联叠两字，密得像织。</span>
+      </div>
+      <div class="jcard">
+        <h3>晚眺</h3><div class="ja">苏轼 · 神智体</div>
+        <div class="pl" style="font-size:15px;letter-spacing:.1em;line-height:2.2"><q><span style="font-size:20px">长</span><span style="font-size:12px">亭</span><span style="font-size:12px">短</span><span style="font-size:21px">景</span>无人画<span style="font-size:21px">老</span>大横拖<span style="font-size:12px">瘦</span>竹笻回首<span style="font-size:20px">防</span>云斜日暮曲江倒蘸侧山峰</q></div>
+        <span class="att">库本题下自注「此首神智体」；以字形大小欹侧藏谜面，本页字号仅示意，读法出库外。</span>
+      </div>
+      <div class="jcard">
+        <h3>盘中诗</h3><div class="ja">苏伯玉妻</div>
+        <div class="pl" style="font-size:14.5px;line-height:2.15"><q>山树高鸟鸣悲泉水深鲤鱼肥空仓雀常苦饥吏人妇会夫稀</q></div>
+        <div class="pl" style="font-size:14.5px;line-height:2.15"><q>姓者苏字伯玉人才多智谋足家居长安身在蜀何惜马蹄归不数</q></div>
+        <div class="pl" style="font-size:14.5px;line-height:2.15"><mark style="background:none;color:var(--blued)"><q>羊肉千斤酒百斛令君马肥麦与粟今时人知四足与其书不能读当从中央周四角</q></mark></div>
+        <span class="att">末句是说明书：从中央出发，绕着四角读。四库提要考它实为方盘。</span>
+      </div>
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip" data-c="0">薛涛 · 四时之春</button>
+      <button class="chip" data-c="1">高青丘 · 绝句</button>
+      <button class="chip" data-c="2">汤若士 · 拟织妇</button>
+      <button class="chip" data-c="3">丘琼山 · 批语</button>
+    </div>
+    <div class="kpanel" id="chippanel" style="margin-top:14px"></div>
+  </div>
+</section>
+
+<!-- ================= 攷异 · 撤诗 ================= -->
+<section class="sec" id="kao">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">柒</div><h2>攷异 · 撤诗</h2><div class="sub">一本书的最后一刀，是皇帝下的</div></div>
+    <p class="note">卷一末尾有一篇〈璇玑图攷异〉，作者把听来的故事挨个对账。</p>
+    <div class="kao"><q>尝按晋列女传云滔苻坚时为秦州刺史被徙流沙蘓氏思之织锦囘文以赠滔宛转循环读之词甚凄惋</q><span class="att">〈晋书·列女传〉：窦滔是被流放的，没有盛礼迎归那一场。</span></div>
+    <div class="kao"><q>则又与武后所序不协葢厯时寖久疑信相传无足多怪</q></div>
+    <div class="kao"><q>苏孔二公所载八绝虽极新奇然与图上诗体不类逺甚疑是唐人拟作</q><span class="att">秦少游跋语，连苏轼那几首题诗都可能是唐人托名。</span></div>
+    <div class="kao"><q>曽不百年而矛盾如此因具载云</q></div>
+    <p class="note" style="margin-top:26px">四库提要接着泼了三盆冷水：首创权不在苏蕙，<q>考艺文类聚载曹植镜铭八字囬环读之无不成文实在蕙前乃不标以为始是亦少疎</q>；刘勰那句「回文所兴」也另有人认领，<q>考刘勰文心雕龙曰回文所兴则道原为始梅庚注谓原当作庆宋贺道庆也</q>，卷三开头正好收着贺道庆四言一首：<q>阳春艳曲丽锦夸文伤情织怨长路懐君惜别同心</q>；连盘中诗的图也被没收，<q>考原诗末句称当从中央周四角则实方盘而非圆盘所图殆亦妄也</q>。</p>
+    <div class="edict">
+      <h3>乾隆四十六年十一月初六日内阁奉上谕</h3>
+      <div class="eq"><q>昨阅四库馆进呈书有朱存孝编辑回文类聚补遗一种内载美人八咏诗词意媟狎有乖雅正</q></div>
+      <div class="eq" style="margin-top:8px"><q>朕辑四库全书当采诗文之有闗世道人心者</q></div>
+      <div class="eq" style="margin-top:8px"><q>所有美人八咏诗着即行撤出</q></div>
+      <span class="att">上谕又令各督同总校分校详细检查一并撤去，以示厘正诗体崇尚雅醇之至意。一部文字游戏总集，卷尾被钉了一道圣旨。</span>
+    </div>
+    <div class="revoke">
+      <s>美人八咏 其一</s><s>其二</s><s>其三</s><s>其四</s><s>其五</s><s>其六</s><s>其七</s><s>其八</s>
+    </div>
+    <p class="note">被点名的美人八咏，库本一字未存，删得干净。倒是提要的尾巴上留了句人话：<q>然如明典故中所载回文诗三十图在耳目前者即已不收则所漏亦多矣姑附存以备参考云耳</q>。</p>
+    <div class="closeline">「字不数百 · 诗几千首」</div>
+    <p class="note" style="text-align:center">朱存孝序里的话。他给这部书写的开场白只有一句：<q>靖节陶公有云竒文共欣赏</q><span class="att">序末自谦椎鲁无文，与骚雅之道相逺，偶涉及此，为陶公共欣赏之意。</span></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <div class="row"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），集藏文总集〈囘文类聚〉，宋桑世昌编，库本去空白 11,797 字，四卷补遗一卷：卷一璇玑图并武后叙、读法、题跋，卷二盘中诗与鞶鉴图，卷三四言至七言诸体回文，卷四回文词，补遗康熙间长洲朱存孝续采兼及明人。本页引文五十八处（q 元素与页尾清单）经脚本与库内文本去标点、归一逐字核验通过，页尾藏引文全清单。目录：<a href="mulu.html">殆知阁导读总目</a>。</div>
+    <div class="row"><b>库外申报</b>　库本系扫描 OCR，讹字照录：防字一身数任（忤防即忤旨、镇防阳即镇襄阳、克晋防阳即苻坚克晋襄阳、五防相宣即五彩相宣、回首防云通行本作断云），徳闗碁蘓皆通用异体；回读演示行由本页按字倒排生成并经脚本断言，非库本原文；六幅图帧题、神智体字形示意、王勃作序次年渡海溺亡、纪昀任四库总纂官、璇玑图为二十九乘二十九方阵的通行图文，均出库外，本页分别挂签；苏蕙事的两个版本（武后序与晋书列女传）矛盾，攷异自陈，本页并存不判。</div>
+    <div class="row"><b>时代局限提醒</b>　本书把才女的价值钉在挽回婚姻的功能上，武后叙的褒奖止于令夫悔过；图中有谗佞奸凶一路字句，是宫廷政治语汇的织入；乾隆撤诗标准以雅醇为名，香艳即罪，是那个时代的审查语法；补遗按语斥佛为贼道，一并照录存档。愿读者带着距离读它：锦上的字有多聪明，套在字上的规矩就有多旧。</div>
+    <div class="fin">殆知阁导读　二百七十六</div>
+  </div>
+</footer>
+
+<div id="qbank"><ul>
+<li>徘徊宛转自为语言非我佳人莫之能解</li>
+<li>诗情明显怨义兴理辞丽作此端无终始</li>
+<li>始终无端作此丽辞理兴义怨显明情诗</li>
+<li>名蕙字若兰智识精明仪容秀丽谦黙自守不求显扬年十六归于窦氏滔甚敬之</li>
+<li>初滔有宠姬赵阳台歌舞之妙无出其右滔置之别所苏氏知之求而获焉苦加棰辱</li>
+<li>及滔将镇防阳邀苏氏同往苏氏忿之不与偕行乃携阳台之任绝苏氏音问</li>
+<li>苏氏悔恨自伤因织锦为回文五防相宣莹心辉目纵广八寸题诗二百余首计八百余言纵横反复皆为文章</li>
+<li>遂发苍头赍至襄阳滔览之感其悱恻</li>
+<li>因送阳台之闗中而具车从盛礼邀迎苏氏归于汉南恩好愈重</li>
+<li>朕聴政之暇留心坟典散帙之次偶见斯图因述若兰之多才复美连波之悔过遂制此记聊以示将来也如意元年五月一日大周天册金轮皇帝制</li>
+<li>止两韵者谓之囘文而举一字皆成读者谓之反复</li>
+<li>凡诗对有八其七曰囘文对情亲因得意得意逐情亲是也</li>
+<li>予因究璇玑之义如日星之左右行天故布为经纬由中旋外以旁循四旁于其交防皆契韵句巡环反复窈窕纵横各能妙畅</li>
+<li>仁智至惨伤伦疋至榆桑人贱至圣皇春阳至殊方钦岑至如何</li>
+<li>已上七言四十句毎句为一首每首反读之计八十首</li>
+<li>诗风至表仁贤至凋松光颜至虎龙日往至寄倾</li>
+<li>已上五言十六句以每句反读之成三十二首</li>
+<li>周南至相追年时至无差谗佞至未形牵辜至伯禽</li>
+<li>已上四言二十四首作二句分读就成一篇</li>
+<li>寜自至劳形懐忧至何寃念是至何如悼思至者谁诗情至终始</li>
+<li>已上四言前四首以每句反读后一首每句反读成十首</li>
+<li>嗟叹至为荣凶顽至为基游西至摧伤神明至雁归</li>
+<li>已上三言十二首反读成二十四首</li>
+<li>佞因至旧新南郑至遗身旧间至佞臣遗哀至南音</li>
+<li>已上七言凡起头退一字反读之成四首</li>
+<li>厢挑至基津嗟中至春亲春衰至嗟仁基自至厢琴</li>
+<li>已上七言自角退一字斜读之成四首</li>
+<li>仁智怀徳圣虞唐真妙显华重荣章臣贤惟圣配英皇伦疋离飘浮江湘</li>
+<li>钦岑幽岩峻嵯峨深渊重涯经网罗林阳潜曜翳英华沈浮异游颓流沙</li>
+<li>仁智怀徳圣虞唐真志笃终誓穹苍钦所感想忘淫荒心忧増慕怀惨伤</li>
+<li>嗟叹怀所离经遐旷路伤中情家无君房帏清华饬容朗镜明</li>
+<li>念是咎愆谁为独居贱女怀叹鄙贱何如</li>
+<li>愆咎是念谁为独居叹怀女贱鄙贱何如</li>
+<li>谗人作乱闱庭奸凶害我忠贞祸原消受难明所得滋极骄盈</li>
+<li>寒岁识凋松真物知终始颜衰改华容仁贤别行士</li>
+<li>士行别贤仁容华改衰颜始终知物贞松雕识岁寒</li>
+<li>谗佞奸凶害我忠贞祸因所恃滋极骄盈</li>
+<li>嗟叹怀所离经遐旷路伤中情</li>
+<li>家无君房帏清华饰容朗镜明</li>
+<li>葩粉光珠耀英多思感谁为荣</li>
+<li>周风兴自后妃樊楚厉节中闱</li>
+<li>长叹不能奋飞双发歌我衮衣</li>
+<li>华观冶容为谁宫羽同声相追</li>
+<li>已上依此顺读成章</li>
+<li>后人流传不复施采故迷其句读非辞句之脱畧也</li>
+<li>四围纵横初行八行十五卄二卄九行及仁嗟斜至春亲廓琴斜至基津以朱画其形如交接读法此色凡九图其余四色色各一图共诗三千七百五十二首</li>
+<li>八月卄日驾幸翠微殿赏桂诏令赋诗见御案所置一幅五色相宣读之易明因照式记之以志不忘至道元年十一月六日广慧夫人书</li>
+<li>元祐三年九月工部何公过曲院见仆书几有此惊曰昨日于屯田陈侯所观书唐真本图宜皆可求一见果得出示凡六幅</li>
+<li>右三为若兰所居重楼复屋户牖间各作着思练丝织锦遣使处左三幅为窦滔归第外为车马相迎次女妓坐大毺合乐其间楼阁对饮处</li>
+<li>又见图中近上作逺水红桥窦临髙列骑拥旌旄以望桥之西氊车从数骑排引见滔盛礼迎蘓图中近下左书武后序右写诗图</li>
+<li>青红绿旋所之方皆不少差葢理之所在阴阳五行色味莫不相假况情识之运宜自冥合也元丰四年四月赵郡李公麟伯时再题</li>
+<li>因述若兰之多才复美连波之悔过</li>
+<li>代久传讹颇有误字亦辄澄改一二其他阙谬不欲以意定之</li>
+<li>见御案所置一幅五色相宣读之易明</li>
+<li>政和初予在洛阳于居士王晋玉许得唐程士南效此诗并申诚之释而后晓然</li>
+<li>上元二载岁次乙亥十有一月庚午朔七日丙子予将之交趾旅次南海有好事者以转轮钩枝八花鉴铭示予云当今之才妇人作也</li>
+<li>观其藻丽反复文字萦回句读曲屈韵谐高雅有陈规起讽之意</li>
+<li>君承皇诏安邉戌读起至愿放儿夫及早还止</li>
+<li>元和十三载二月八日予为中书舍人翰林学士夜直禁中奏进旨检事因开前库东阁于架上阅古今撰集凡数百家偶于王勃集中巻末获此鉴圗并序爱玩久之</li>
+<li>千诗织就囘文锦如此阳台暮雨何亦有英灵蘓蕙子只无悔过窦连波</li>
+<li>余少时见一江南本其后有题诗十余首皆奇绝宛转过于蘓氏之作逺甚今独记其三绝</li>
+<li>春晚落花余碧草夜凉低月半枯桐人随雁逺城边暮雨映疎帘绣阁空</li>
+<li>悲风鸣叶秋宵凉丝寒萦手泪残妆微烛窥人愁断肠机翻云锦妙成章</li>
+<li>字如碁置按诵成章字不数百诗几千首何物女郎以锦心织成锦字令千古骚流不能卒读天才耶仙才耶</li>
+<li>靖节陶公有云竒文共欣赏</li>
+<li>落花闲院春衫薄</li>
+<li>薄衫春院闲花落</li>
+<li>迟日恨依依</li>
+<li>依依恨日迟</li>
+<li>梦回莺舌弄</li>
+<li>弄舌莺回梦</li>
+<li>邮便问人羞</li>
+<li>羞人问便邮</li>
+<li>暮江寒碧萦长路</li>
+<li>路长萦碧寒江暮</li>
+<li>花坞夕阳斜</li>
+<li>斜阳夕坞花</li>
+<li>客愁无胜集</li>
+<li>集胜无愁客</li>
+<li>醒似醉多情</li>
+<li>情多醉似醒</li>
+<li>玉肌香衬氷丝縠</li>
+<li>縠丝氷衬香肌玉</li>
+<li>纎指拂眉尖</li>
+<li>尖眉拂指纎</li>
+<li>纷纷雨竹翠森森防防风花落绿阴贫恨苦吟穷寞寞乱愁牵断梦沈沈昏昏岭隔重重信渺渺江如寸寸心</li>
+<li>长亭短景无人画老大横拖瘦竹笻回首防云斜日暮曲江倒蘸侧山峰</li>
+<li>山树高鸟鸣悲泉水深鲤鱼肥空仓雀常苦饥吏人妇会夫稀</li>
+<li>姓者苏字伯玉人才多智谋足家居长安身在蜀何惜马蹄归不数</li>
+<li>羊肉千斤酒百斛令君马肥麦与粟今时人知四足与其书不能读当从中央周四角</li>
+<li>花朶几枝柔傍砌栁丝千缕细摇风霞云半岭西斜日月上孤村一树松</li>
+<li>风帘一烛对残花薄雾寒笼翠袖纱空院别愁惊破梦东阑井树夜啼鸦</li>
+<li>梅题逺色春归得迟乡瘴岭过愁客孤影雁囘斜峰寒逼翠纱</li>
+<li>但其中潮浪浦泉波水等字太多不免重复</li>
+<li>当渔舟钓月之时又安得红霞暎日乎</li>
+<li>尝按晋列女传云滔苻坚时为秦州刺史被徙流沙蘓氏思之织锦囘文以赠滔宛转循环读之词甚凄惋</li>
+<li>则又与武后所序不协葢厯时寖久疑信相传无足多怪</li>
+<li>苏孔二公所载八绝虽极新奇然与图上诗体不类逺甚疑是唐人拟作</li>
+<li>曽不百年而矛盾如此因具载云</li>
+<li>考艺文类聚载曹植镜铭八字囬环读之无不成文实在蕙前乃不标以为始是亦少疎</li>
+<li>考刘勰文心雕龙曰回文所兴则道原为始梅庚注谓原当作庆宋贺道庆也</li>
+<li>阳春艳曲丽锦夸文伤情织怨长路懐君惜别同心</li>
+<li>考原诗末句称当从中央周四角则实方盘而非圆盘所图殆亦妄也</li>
+<li>昨阅四库馆进呈书有朱存孝编辑回文类聚补遗一种内载美人八咏诗词意媟狎有乖雅正</li>
+<li>朕辑四库全书当采诗文之有闗世道人心者</li>
+<li>所有美人八咏诗着即行撤出</li>
+<li>然如明典故中所载回文诗三十图在耳目前者即已不收则所漏亦多矣姑附存以备参考云耳</li>
+</ul></div>
+
+<script>
+(function(){
+  var NZ = ['一','二','三','四','五','六','七','八','九','十'];
+  function nz(n){return n<=10?NZ[n-1]:(n<20?'十'+NZ[n-11]:'');}
+
+  /* hero 内经 flip */
+  var strip=document.getElementById('strip'),fwq=strip.querySelector('q'),flip=false;
+  var chars=fwq.textContent.trim().split('');
+  function render(){strip.querySelectorAll('i.tl').forEach(function(n){n.remove();});chars.forEach(function(c){var i=document.createElement('i');i.className='tl';i.textContent=c;strip.appendChild(i);});}
+  render();
+  var shuttle=document.getElementById('shuttle');
+  document.getElementById('flipbtn').addEventListener('click',function(){
+    flip=!flip;chars.reverse();render();
+    strip.classList.remove('flip');void strip.offsetWidth;strip.classList.add('flip');
+    shuttle.style.left=flip?'calc(100% - 54px)':'0px';
+    this.textContent=flip?'顺读':'回读';
+    document.getElementById('stripstate').textContent=flip?'回读':'顺读';
+    document.getElementById('njfw').style.display=flip?'none':'flex';
+    document.getElementById('njrv').style.display=flip?'flex':'none';
+  });
+
+  /* 锦程七结 */
+  var knots=[
+    {t:'十六归窦',q:'名蕙字若兰智识精明仪容秀丽谦黙自守不求显扬年十六归于窦氏滔甚敬之',a:'〈璇玑图叙〉：陈留令苏道质第三女。'},
+    {t:'宠姬入室',q:'初滔有宠姬赵阳台歌舞之妙无出其右滔置之别所苏氏知之求而获焉苦加棰辱',a:'阳台又専伺苏氏之短，谗毁交至。'},
+    {t:'忿不偕行',q:'及滔将镇防阳邀苏氏同往苏氏忿之不与偕行乃携阳台之任绝苏氏音问',a:'防阳即襄阳，库本 OCR 之讹照录。'},
+    {t:'织锦寄远',q:'苏氏悔恨自伤因织锦为回文五防相宣莹心辉目纵广八寸题诗二百余首计八百余言纵横反复皆为文章',a:'五防即五彩。纵广八寸，一方手帕的尺寸。'},
+    {t:'苍头送图',q:'遂发苍头赍至襄阳滔览之感其悱恻',a:'苍头是仆人。她先笑给满座听：非我佳人莫之能解。'},
+    {t:'送妾迎妻',q:'因送阳台之闗中而具车从盛礼邀迎苏氏归于汉南恩好愈重',a:'一封锦书换掉了一个宠姬，结局由丈夫签收。'},
+    {t:'武后作记',q:'朕聴政之暇留心坟典散帙之次偶见斯图因述若兰之多才复美连波之悔过遂制此记聊以示将来也如意元年五月一日大周天册金轮皇帝制',a:'如意元年公元六九二年。叙是武则天亲笔，落款是她的帝号。'}
+  ];
+  var kp=document.getElementById('kpanel');
+  function showK(i){
+    kp.innerHTML='<div class="ktit">'+(i+1)+'　'+knots[i].t+'</div><div class="kq"><q>'+knots[i].q+'</q></div><span class="att">'+knots[i].a+'</span>';
+  }
+  var knotEls=document.querySelectorAll('.knot');
+  knotEls.forEach(function(k){k.addEventListener('click',function(){
+    knotEls.forEach(function(x){x.classList.remove('on');});k.classList.add('on');
+    showK(parseInt(k.dataset.k,10));
+  });});
+  showK(0);
+
+  /* 回读 strips */
+  document.querySelectorAll('.rvbtn').forEach(function(b){
+    var id=b.dataset.t,fw=document.getElementById(id),rv=document.getElementById(id.replace('fw','rv'));
+    var q=fw.querySelector('q'),cs=q.textContent.trim().split('');
+    var box=document.createElement('span');box.style.cssText='display:contents';
+    cs.forEach(function(c){var i=document.createElement('i');i.textContent=c;box.appendChild(i);});
+    fw.appendChild(box);
+    var rt=rv.querySelector('.rvt'),rvs=rt.querySelector('.rvtext').textContent.trim().split('');
+    rvs.forEach(function(c){var i=document.createElement('i');i.textContent=c;rt.appendChild(i);});
+    b.addEventListener('click',function(){rv.classList.toggle('on');});
+  });
+
+  /* 五色织 */
+  var CM={p:'var(--pink)',g:'var(--green)',w:'var(--whitec)',s:'var(--silk)',y:'var(--yellow)',c:'var(--cyan)'};
+  document.querySelectorAll('#weave .wrow').forEach(function(row){
+    var q=row.querySelector('q'),att=row.querySelector('.att'),cs=q.textContent.trim().split('');
+    var c2=row.dataset.c2;
+    cs.forEach(function(c,idx){
+      var i=document.createElement('i');i.textContent=c;
+      i.style.background=CM[c2?(idx<2?row.dataset.c:c2):row.dataset.c];
+      if(row.dataset.c==='w'&&!c2){i.style.color='#33302a';i.style.border='1px solid var(--line)';}
+      i.title=att.textContent;
+      row.insertBefore(i,att);
+    });
+  });
+
+  /* 题签 */
+  var tags=[
+    {n:'武后',t:'如意元年五月一日',q:'因述若兰之多才复美连波之悔过',a:'〈璇玑图叙〉：听政之暇偶见斯图，遂制此记。详见锦程第七结。'},
+    {n:'李公麟',t:'布经纬',q:'予因究璇玑之义如日星之左右行天故布为经纬由中旋外以旁循四旁于其交防皆契韵句巡环反复窈窕纵横各能妙畅',a:'李公麟再叙，图在他手里第一次有了系统读法。他自认改字有度：代久传讹颇有误字亦辄澄改一二其他阙谬不欲以意定之。'},
+    {n:'广慧夫人',t:'至道元年',q:'见御案所置一幅五色相宣读之易明',a:'驾幸翠微殿赏桂，她在御案上见到实物，照式记之。唐代彩色原图的直接人证。'},
+    {n:'黄长孺',t:'又叙',q:'政和初予在洛阳于居士王晋玉许得唐程士南效此诗并申诚之释而后晓然',a:'他见过的唐本连仿作带注疏成套；并替颜色翻案：后人流传不复施采故迷其句读非辞句之脱畧也。'},
+    {n:'王勃',t:'上元二载',q:'上元二载岁次乙亥十有一月庚午朔七日丙子予将之交趾旅次南海有好事者以转轮钩枝八花鉴铭示予云当今之才妇人作也',a:'另一件回文物：一面铜镜。铭文：君承皇诏安邉戌读起至愿放儿夫及早还止。戍边者的妻子把话铸在镜上。作序次年，王勃渡海。'},
+    {n:'令狐楚',t:'元和十三载',q:'元和十三载二月八日予为中书舍人翰林学士夜直禁中奏进旨检事因开前库东阁于架上阅古今撰集凡数百家偶于王勃集中巻末获此鉴圗并序爱玩久之',a:'夜班翻库房翻出来的，一百多年没人动过。宝历二年命人绘于缣素传诸好事者。'},
+    {n:'黄庭坚',t:'题图',q:'千诗织就囘文锦如此阳台暮雨何亦有英灵蘓蕙子只无悔过窦连波',a:'山谷四句把故事压成一副对联的上：才女与悔过的丈夫。'},
+    {n:'苏轼',t:'记三绝',q:'余少时见一江南本其后有题诗十余首皆奇绝宛转过于蘓氏之作逺甚今独记其三绝',a:'苏轼说别人题的诗比苏蕙原作还好。录其一：春晚落花余碧草夜凉低月半枯桐人随雁逺城边暮雨映疎帘绣阁空。秦观和了五首，其中名句：悲风鸣叶秋宵凉丝寒萦手泪残妆微烛窥人愁断肠机翻云锦妙成章。'},
+    {n:'朱存孝',t:'康熙戊子',q:'字如碁置按诵成章字不数百诗几千首何物女郎以锦心织成锦字令千古骚流不能卒读天才耶仙才耶',a:'补遗编辑者的开场白，从陶渊明借来一句：靖节陶公有云竒文共欣赏。'}
+  ];
+  var tp=document.getElementById('tagpanel'),tagEls=document.querySelectorAll('.tag');
+  function showT(i){
+    tp.innerHTML='<div class="tg">'+tags[i].n+'　'+tags[i].t+'</div><div class="tq"><q>'+tags[i].q+'</q></div><span class="att">'+tags[i].a+'</span>';
+  }
+  tagEls.forEach(function(t){t.addEventListener('click',function(){
+    tagEls.forEach(function(x){x.classList.remove('on');});t.classList.add('on');
+    showT(parseInt(t.dataset.t,10));
+  });});
+  tagEls[0].classList.add('on');showT(0);
+
+  /* 试机点句倒读 */
+  document.querySelectorAll('.jline').forEach(function(l){l.addEventListener('click',function(){l.classList.toggle('rev');});});
+
+  /* chips */
+  var chips=[
+    {n:'薛涛 · 四时之春',q:'花朶几枝柔傍砌栁丝千缕细摇风霞云半岭西斜日月上孤村一树松',a:'补遗自万首唐人绝句录出，倒读仍成四时。'},
+    {n:'高青丘 · 绝句',q:'风帘一烛对残花薄雾寒笼翠袖纱空院别愁惊破梦东阑井树夜啼鸦',a:'明初第一诗人也交了一篇作业。'},
+    {n:'汤若士 · 拟织妇',q:'梅题逺色春归得迟乡瘴岭过愁客孤影雁囘斜峰寒逼翠纱',a:'〈牡丹亭〉作者拟织妇闺怨，菩萨蛮体。'},
+    {n:'丘琼山 · 批语',q:'但其中潮浪浦泉波水等字太多不免重复',a:'后面半句更狠：当渔舟钓月之时又安得红霞暎日乎。回文诗的第一条写实差评，出在一位读者身上。'}
+  ];
+  var cp=document.getElementById('chippanel');
+  document.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){
+    document.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on');});c.classList.add('on');
+    var i=parseInt(c.dataset.c,10);
+    cp.innerHTML='<div class="ktit">'+chips[i].n+'</div><div class="kq"><q>'+chips[i].q+'</q></div><span class="att">'+chips[i].a+'</span>';
+  });});
+})();
+</script>
+</body>
+</html>
