@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拾遗记</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#201f1c; --ink3:#26241f;
+  --paper:#e8e4dc; --paper2:#f2eee5; --dim:#a39e91; --faint:#787468;
+  --blue:#5e8fbb; --blued:#3e6688; --blueline:rgba(94,143,187,.35); --bluebg:rgba(94,143,187,.10);
+  --red:#c0453c; --wood:#6d5a3c; --line:#39372f;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;line-height:1.9;font-size:16.5px}
+q{quotes:"「" "」"}
+a{color:var(--blue);text-decoration:none}
+.mono{font-family:Consolas,"Courier New",monospace}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+.sec{padding:74px 0 60px;position:relative}
+.sechead{display:flex;align-items:flex-end;gap:18px;margin-bottom:34px}
+.sealno{width:46px;height:46px;flex:0 0 46px;background:var(--blue);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;border-radius:4px;box-shadow:3px 3px 0 rgba(94,143,187,.22)}
+.sechead h2{font-size:27px;letter-spacing:.06em;font-weight:700}
+.sechead .sub{color:var(--dim);font-size:13.5px;padding-bottom:4px}
+.note{color:var(--dim);font-size:14px}
+.mark{color:var(--blue);font-weight:700}
+.qline{border-left:3px solid var(--blueline);padding:4px 0 4px 16px;margin:14px 0;color:var(--paper)}
+.qline .att{display:block;color:var(--faint);font-size:12.5px;margin-top:2px}
+
+/* ---------- hero ---------- */
+#hero{position:relative;height:min(700px,92vh);min-height:560px;overflow:hidden;background:linear-gradient(180deg,#101418 0%,#141a22 46%,#131a1e 62%,#0d1216 63%,#0a0e12 100%)}
+#stars{position:absolute;inset:0}
+.st{position:absolute;background:#dfe6ea;border-radius:50%;animation:tw 5s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.15}to{opacity:.9}}
+#hero.day{background:linear-gradient(180deg,#2a3036 0%,#3a4250 46%,#33404a 62%,#20282e 63%,#151b20 100%)}
+#hero.day .st{opacity:.05 !important;animation:none}
+#hero.day .glow{opacity:0 !important}
+.horizon{position:absolute;left:0;right:0;top:62%;height:1px;background:rgba(151,178,196,.28)}
+.searefl{position:absolute;left:0;right:0;top:63%;bottom:0;background:repeating-linear-gradient(180deg,rgba(94,143,187,.05) 0 2px,transparent 2px 9px)}
+.topbar{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:14px 22px;font-size:13px;color:var(--dim);z-index:5}
+#daybtn{position:absolute;top:44px;right:22px;z-index:6;background:none;border:1px solid var(--blueline);color:var(--blue);font-family:inherit;font-size:13px;letter-spacing:.2em;padding:7px 13px;cursor:pointer;border-radius:3px}
+#daybtn:hover{background:var(--bluebg)}
+.htitle{position:absolute;right:88px;top:96px;writing-mode:vertical-rl;font-size:64px;letter-spacing:.22em;color:var(--paper);font-weight:700;text-shadow:0 0 22px rgba(94,143,187,.35)}
+.hmeta{position:absolute;right:40px;top:112px;writing-mode:vertical-rl;color:var(--dim);font-size:14.5px;letter-spacing:.28em}
+.tagline{position:absolute;left:44px;top:120px;max-width:340px;color:var(--paper)}
+.tagline b{display:block;color:var(--blue);font-size:22px;letter-spacing:.05em;margin-bottom:8px}
+.tagline span{color:var(--dim);font-size:14.5px;line-height:2}
+/* raft */
+#raft{position:absolute;left:50%;top:41%;transform:translate(-50%,-50%);animation:floaty 7s ease-in-out infinite alternate}
+@keyframes floaty{from{transform:translate(-50%,-52%)}to{transform:translate(-50%,-46%)}}
+.glow{position:absolute;left:50%;top:50%;width:340px;height:200px;transform:translate(-50%,-52%);background:radial-gradient(closest-side,rgba(168,205,232,.34),rgba(94,143,187,.12) 55%,transparent 75%);animation:breath 3.4s ease-in-out infinite alternate;pointer-events:none}
+@keyframes breath{from{opacity:.45;transform:translate(-50%,-52%) scale(1)}to{opacity:1;transform:translate(-50%,-52%) scale(1.16)}}
+.rbody{position:relative;width:170px;height:18px;background:linear-gradient(180deg,#8a734c,#5f4d31);border-radius:9px;box-shadow:0 3px 8px rgba(0,0,0,.5)}
+.rbody i{position:absolute;top:0;bottom:0;width:3px;background:rgba(25,25,23,.4)}
+.rbody i:nth-child(1){left:30%}.rbody i:nth-child(2){left:55%}.rbody i:nth-child(3){left:78%}
+.yren{position:absolute;left:50%;bottom:16px;transform:translateX(-50%)}
+.yren::before{content:"";display:block;width:10px;height:10px;border-radius:50%;background:#e8e4dc;margin:0 auto 2px}
+.yren::after{content:"";display:block;width:18px;height:22px;border-radius:8px 8px 3px 3px;background:#cfc9ba;margin:0 auto}
+.heroq{position:absolute;left:44px;bottom:40px;max-width:560px;background:var(--paper);color:#33302a;padding:16px 20px 14px;font-size:14px;line-height:1.95;border-radius:2px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.heroq .att{color:#8b8577;font-size:12px;display:block;text-align:right;margin-top:4px}
+.heroq q{color:#2c2a25}
+@media (max-width:760px){
+  .htitle{right:30px;font-size:44px}
+  .hmeta{display:none}
+  .tagline{left:24px;top:96px;max-width:270px}
+  .heroq{left:20px;right:20px;bottom:20px;font-size:13px}
+}
+
+/* ---------- 一 三道删痕 ---------- */
+.delgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:860px){.delgrid{grid-template-columns:1fr}}
+.del{background:var(--ink2);border:1px solid var(--line);border-top:3px solid var(--red);padding:20px 20px 16px;position:relative}
+.del .dlab{color:var(--red);font-size:13px;letter-spacing:.25em;margin-bottom:10px}
+.del h3{font-size:18px;margin-bottom:8px}
+.del p{font-size:14px;color:var(--dim);margin-bottom:10px}
+.del q{color:var(--paper);font-size:14.5px}
+.del .stamp{position:absolute;right:14px;top:12px;width:44px;height:44px;border:2px solid var(--red);border-radius:50%;color:var(--red);display:flex;align-items:center;justify-content:center;font-size:22px;transform:rotate(12deg);opacity:.75;font-weight:700}
+.authors{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+@media (max-width:860px){.authors{grid-template-columns:1fr}}
+.acard{border:1px solid var(--line);background:var(--ink2);padding:16px 18px;font-size:14px;color:var(--dim)}
+.acard b{color:var(--paper);font-size:16.5px;margin-right:8px}
+.mach{margin-top:20px;font-size:13.5px;color:var(--faint);border-top:1px dashed var(--line);padding-top:12px}
+.mach b{color:var(--blue)}
+
+/* ---------- 二 周天 ---------- */
+.cycwrap{display:grid;grid-template-columns:340px 1fr;gap:44px;align-items:center}
+@media (max-width:860px){.cycwrap{grid-template-columns:1fr}}
+#cycring{width:300px;height:300px;margin:0 auto;position:relative;cursor:pointer;border-radius:50%}
+#cycring.spin{animation:spin 7s linear}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.cychub{position:absolute;left:50%;top:50%;width:74px;height:74px;transform:translate(-50%,-50%);border-radius:50%;background:var(--blue);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;line-height:1.5;text-align:center;z-index:2}
+.cychub b{font-size:16px}
+.rayspokes{position:absolute;inset:0;border-radius:50%;border:1px solid var(--blueline)}
+.rayspokes::before{content:"";position:absolute;inset:26px;border-radius:50%;border:1px dashed rgba(94,143,187,.3)}
+.spoke{position:absolute;left:50%;top:50%;width:2px;height:150px;background:linear-gradient(180deg,var(--blue),transparent);transform-origin:top center;opacity:.85}
+.spk{position:absolute;left:50%;top:8px;width:9px;height:9px;margin-left:-4px;border-radius:50%;background:#cfe0ee;box-shadow:0 0 9px rgba(94,143,187,.9)}
+.cycnote{font-size:13px;color:var(--faint);text-align:center;margin-top:14px}
+
+/* ---------- 三 顺流十卷 ---------- */
+.lanewrap{position:relative}
+.lane{display:flex;gap:14px;overflow-x:auto;padding:10px 4px 18px;cursor:grab;scrollbar-width:thin;scrollbar-color:var(--blued) transparent}
+.lane.grab{cursor:grabbing}
+.stop{flex:0 0 236px;background:var(--ink2);border:1px solid var(--line);padding:15px 16px 13px;position:relative}
+.stop::before{content:"";position:absolute;left:0;right:0;top:-11px;height:3px;background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:.6}
+.stop .vh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.stop .vh b{color:var(--blue);font-size:16px}
+.stop .vh span{font-size:12px;color:var(--faint)}
+.stop .ti{font-size:14px;color:var(--paper);margin-bottom:4px}
+.stop p{font-size:12.8px;color:var(--dim);line-height:1.75}
+.wavebg{height:16px;background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(94,143,187,.22) 18px 36px);border-radius:50%/100%;opacity:.5;margin-bottom:6px}
+.asides{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+@media (max-width:860px){.asides{grid-template-columns:1fr}}
+.asidec{border:1px dashed var(--blueline);background:var(--bluebg);padding:14px 16px;font-size:13.5px}
+.asidec b{color:var(--blue);display:block;font-size:14.5px;margin-bottom:6px;letter-spacing:.1em}
+.asidec q{color:var(--paper)}
+
+/* ---------- 四 出生证 ---------- */
+.certgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:1000px){.certgrid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:760px){.certgrid{grid-template-columns:repeat(2,1fr)}}
+.cert{perspective:900px;height:196px;cursor:pointer}
+.cinner{position:relative;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d}
+.cert.on .cinner{transform:rotateY(180deg)}
+.cface{position:absolute;inset:0;backface-visibility:hidden;background:var(--paper);color:#33302a;border:1px solid #cfc8b8;padding:14px 15px;display:flex;flex-direction:column}
+.cface.front{justify-content:space-between}
+.cface.front::before{content:"拾遗记存";position:absolute;right:10px;top:9px;font-size:10.5px;color:#a89f8c;letter-spacing:.18em;border:1px solid #d8d0bd;padding:2px 5px}
+.cface.front .nm{font-size:21px;font-weight:700;color:#2b2925;margin-top:16px}
+.cface.front .fr{font-size:12px;color:#8b8577}
+.cface.front .use{font-size:12.5px;color:#5c564a;line-height:1.65;border-top:1px dashed #cfc8b8;padding-top:8px}
+.cface.back{transform:rotateY(180deg);background:#efe9dc}
+.cface.back q{font-size:13px;line-height:1.85;color:#33302a}
+.cface.back .att{font-size:11px;color:#8b8577;text-align:right;display:block;margin-top:auto}
+
+/* ---------- 五 沦波舟 ---------- */
+#lzscene{height:360px;border:1px solid var(--line);background:linear-gradient(180deg,#1a2027 0%,#1a2027 46%,#0f151b 47%,#0b1015 100%);position:relative;overflow:hidden;margin:18px 0 10px}
+#lzscene .wline{position:absolute;left:0;right:0;top:46%;height:1px;background:rgba(151,178,196,.3)}
+#lzscene .surf{position:absolute;left:0;right:0;top:46%;height:10px;background:repeating-linear-gradient(90deg,transparent 0 16px,rgba(151,178,196,.18) 16px 32px);opacity:.5}
+#lzboat{position:absolute;left:44%;top:36%;transform:translateX(-50%);transition:top 2.6s ease-in-out}
+#lzscene.sub #lzboat{top:74%}
+.spiral{width:120px;height:56px;border-radius:60px 60px 8px 8px;background:conic-gradient(from 20deg at 60% 40%,#7d8b96,#4c5a66,#8b99a4,#3f4d58,#7d8b96);box-shadow:0 4px 14px rgba(0,0,0,.6);position:relative;overflow:hidden}
+.spiral::after{content:"";position:absolute;left:18px;top:10px;width:66px;height:34px;border-radius:50%;border:3px solid rgba(232,228,220,.32);border-bottom-color:transparent;transform:rotate(-14deg)}
+#lzscene .depth{position:absolute;right:14px;top:52%;writing-mode:vertical-rl;color:var(--faint);font-size:12px;letter-spacing:.3em}
+.lzbtns{display:flex;gap:10px;margin-bottom:16px}
+.btn{background:none;border:1px solid var(--blueline);color:var(--blue);font-family:inherit;font-size:14px;padding:8px 18px;cursor:pointer;letter-spacing:.12em;border-radius:3px}
+.btn:hover{background:var(--bluebg)}
+/* 燃石 */
+.firebox{border:1px solid var(--line);background:var(--ink2);padding:18px 20px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-top:18px}
+@media (max-width:760px){.firebox{grid-template-columns:1fr}}
+#firegrains{position:relative;height:74px}
+#firegrains i{position:absolute;bottom:6px;width:7px;height:7px;border-radius:50%;background:#3a3f45;transition:all .8s}
+#firegrains.lit i{background:#ffd9a0;box-shadow:0 0 12px 3px rgba(255,196,120,.75);transform:translateY(-30px)}
+#firegrains.lit{background:radial-gradient(closest-side,rgba(255,205,140,.16),transparent);transition:background .8s}
+.firebox p{font-size:13.5px;color:var(--dim)}
+
+/* ---------- 六 泪凝如血 ---------- */
+.tearwrap{display:grid;grid-template-columns:330px 1fr;gap:40px;align-items:start}
+@media (max-width:900px){.tearwrap{grid-template-columns:1fr}}
+#tearscene{border:1px solid var(--line);background:var(--ink2);padding:22px;text-align:center}
+#bowlwrap{position:relative;height:230px;margin:6px auto 4px}
+.tdrop{position:absolute;top:0;width:6px;height:9px;border-radius:50% 50% 60% 60%;background:#9db7cc;animation:tfall .85s ease-in forwards}
+@keyframes tfall{from{transform:translateY(0);opacity:1}to{transform:translateY(150px);opacity:.4}}
+#bowl{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:130px;height:130px;border-radius:14px 14px 46px 46px;border:3px solid #6d675a;background:#22211d;overflow:hidden}
+#bowlfill{position:absolute;bottom:0;left:0;right:0;height:0%;background:#7e97a8;transition:all .6s}
+#tearscene.blood #bowlfill{background:#8e2f28}
+#tearscene.blood #bowlwrap::after{content:"泪凝如血";position:absolute;left:50%;top:4px;transform:translateX(-50%);color:var(--red);border:1.5px solid var(--red);padding:3px 12px;font-size:14px;letter-spacing:.28em;border-radius:3px}
+.tbtns{display:flex;gap:10px;justify-content:center}
+#tearct{color:var(--blue);font-size:20px;vertical-align:-2px}
+.song{writing-mode:vertical-rl;height:238px;padding:10px 0}
+.song p{font-size:17px;letter-spacing:.16em;color:var(--paper);border-right:1px solid var(--line);padding-right:14px;margin-left:18px;white-space:nowrap}
+.song p:last-child{border-right:none}
+.decoderoad{margin-top:20px;position:relative;height:64px;background:linear-gradient(180deg,#2b2a25,#23221d);border:1px solid var(--line);overflow:hidden}
+.decoderoad .tick{position:absolute;bottom:0;width:3px;height:26px;background:#8b8577}
+.decoderoad .tick::after{content:"";position:absolute;top:-7px;left:-2.5px;width:8px;height:6px;background:#b3ac9b;border-radius:2px}
+.decoderoad .tower{position:absolute;left:70%;bottom:26px;width:34px;height:38px;background:#514a3a;clip-path:polygon(50% 0,100% 28%,88% 100%,12% 100%,0 28%)}
+.decoderoad .tower::before{content:"";position:absolute;left:6px;right:6px;top:12px;height:5px;background:rgba(255,206,130,.85);box-shadow:0 0 10px 2px rgba(255,190,110,.5);animation:breath 2.4s ease-in-out infinite alternate}
+
+/* ---------- 七 三绝 ---------- */
+.sjgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:900px){.sjgrid{grid-template-columns:1fr}}
+.sjp{border:1px solid var(--line);background:var(--ink2);padding:18px}
+.sjp h3{color:var(--blue);font-size:19px;margin-bottom:10px;letter-spacing:.1em}
+.sjp .viz{height:150px;border:1px dashed rgba(94,143,187,.3);margin-bottom:12px;position:relative;overflow:hidden;background:#1d1c18}
+.sjp p{font-size:13.5px;color:var(--dim)}
+.sjp q{color:var(--paper)}
+/* 机绝 loom */
+#loom{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(6,1fr);gap:2px;padding:8px}
+#loom i{background:#2a2823}
+#loom.live i{animation:weave 2.8s linear infinite}
+#loom.live i:nth-child(3n){animation-delay:.3s;background:var(--blue)}
+#loom.live i:nth-child(4n){animation-delay:.7s}
+#loom.live i:nth-child(5n){animation-delay:1.1s;background:#8fb6d8}
+@keyframes weave{0%,100%{opacity:.25}50%{opacity:1}}
+#loomstart{position:absolute;right:6px;bottom:6px;font-size:11.5px}
+/* 针绝 map */
+#emap{position:absolute;inset:0}
+#emap .mtn{position:absolute;width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;border-bottom:19px solid #7fa6c6}
+#emap .camp{position:absolute;width:10px;height:10px;background:none;border:1.5px solid #b3844d;transform:rotate(45deg)}
+#emap .city{position:absolute;width:13px;height:9px;background:#8b8577}
+#emap .river{position:absolute;height:2px;background:linear-gradient(90deg,transparent,#5e8fbb,transparent)}
+.emaplab{position:absolute;left:6px;bottom:4px;font-size:11px;color:var(--faint)}
+/* 丝绝 curtain */
+#curtain{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:118px;height:112px;background:linear-gradient(180deg,rgba(180,205,228,.4),rgba(140,175,205,.18));border:1px solid rgba(190,215,235,.4);cursor:pointer;transition:width 1.6s ease-in-out;backdrop-filter:blur(0)}
+#curtain.furl{width:44px}
+.curlab{position:absolute;left:6px;top:4px;font-size:11px;color:#cfe0ee}
+.curlabr{position:absolute;right:6px;bottom:4px;font-size:11px;color:#cfe0ee}
+.sjclose{margin-top:20px;border-left:3px solid var(--blueline);padding-left:16px;font-size:14px;color:var(--dim)}
+.sjclose q{color:var(--paper)}
+
+/* ---------- 八 按语 ---------- */
+.lugrid{display:grid;grid-template-columns:1.15fr 1fr;gap:34px}
+@media (max-width:900px){.lugrid{grid-template-columns:1fr}}
+.luleft p{font-size:14.5px;color:var(--dim);margin-bottom:14px}
+.luleft q{color:var(--paper)}
+.luright{border:1px solid var(--line);background:var(--ink2);padding:22px}
+.luright h3{color:var(--blue);font-size:18px;margin-bottom:12px;letter-spacing:.1em}
+.luright .luitem{padding:12px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.luright .luitem:last-child{border-bottom:none}
+.luright .luitem .att{display:block;text-align:right;color:var(--faint);font-size:12px}
+
+/* ---------- 九 名山 ---------- */
+.isles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:1000px){.isles{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.isles{grid-template-columns:1fr}}
+.isle{border:1px solid var(--line);background:var(--ink2);padding:16px;position:relative;transition:all .5s}
+.isle:hover{border-color:var(--blue);box-shadow:0 0 22px rgba(94,143,187,.22);transform:translateY(-3px)}
+.isle h3{font-size:17.5px;color:var(--paper);margin-bottom:2px}
+.isle .ig{color:var(--faint);font-size:12px;margin-bottom:8px;display:block}
+.isle p{font-size:13px;color:var(--dim)}
+.isle q{color:var(--paper);font-size:12.8px}
+.swordrow{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}
+.sw{font-size:11.5px;border:1px solid var(--blueline);color:var(--blue);padding:1px 7px;border-radius:2px;letter-spacing:.08em}
+
+/* ---------- 十 校记 ---------- */
+.nmgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media (max-width:900px){.nmgrid{grid-template-columns:1fr}}
+.nmgrid h3{font-size:16.5px;color:var(--blue);margin-bottom:10px;letter-spacing:.12em}
+.nmgrid li{font-size:13.8px;color:var(--dim);margin:0 0 9px 18px;line-height:1.8}
+.nmgrid li b{color:var(--paper);font-weight:400}
+
+/* ---------- footer ---------- */
+footer.page{border-top:1px solid var(--line);margin-top:40px;padding:38px 0 46px;background:var(--ink2)}
+footer.page .row{font-size:13.5px;color:var(--dim);margin-bottom:14px;line-height:2}
+footer.page .row b{color:var(--paper);font-weight:700}
+footer.page .fin{text-align:center;color:var(--faint);letter-spacing:.4em;margin-top:26px;font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 贯月查 ================= -->
+<header id="hero">
+  <div id="stars"></div>
+  <div class="searefl"></div>
+  <div class="horizon"></div>
+  <div class="topbar"><span>殆知阁导读</span><span>卷十 · 志怪</span></div>
+  <button id="daybtn">夜明昼灭</button>
+  <h1 class="htitle">拾遗记</h1>
+  <div class="hmeta">〔晋〕王嘉撰　〔梁〕萧绮录</div>
+  <div class="tagline">
+    <b>一部被删过三次的书</b>
+    <span>先被战火删得只剩残稿，再被梁人萧绮删并成十卷；而书里恰好记着另一场删书：张华写《博物志》四百卷，武帝下令删成十卷。删别人书的和被删的，在同一卷里打了个照面。</span>
+  </div>
+  <div id="raft">
+    <div class="glow"></div>
+    <div class="rbody"><i></i><i></i><i></i></div>
+    <div class="yren"></div>
+  </div>
+  <div class="heroq">
+    <q>尧登位三十年，有巨查浮于西海，查上有光，夜明昼灭。海人望其光，乍大乍小，若星月之出入矣。查常浮绕四海，十二年一周天，周而复始，名曰贯月查，亦谓挂星查，羽人栖息其上。</q>
+    <q>群仙含露以漱，日月之光则如冥矣。虞、夏之季，不复记其出没。游海之人，犹传其神伟也。</q>
+    <span class="att">卷一 · 唐尧</span>
+  </div>
+</header>
+
+<!-- ================= 一 三道删痕 ================= -->
+<section class="sec" id="del">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">壹</div><h2>三道删痕</h2><div class="sub">这本书先讲自己的幸存</div></div>
+    <div class="delgrid">
+      <div class="del">
+        <div class="stamp">删</div>
+        <div class="dlab">删痕一 · 战火</div>
+        <h3>残稿</h3>
+        <p>王嘉是陇西安阳人，方士，收徒数百。书写成时正值五胡入主中原，关中化为丘墟。梁人萧绮拿到手的，已经是一部烂尾的巨帙。</p>
+        <q>《拾遗记》者，晋陇西安阳人王嘉字子年所撰，凡十九卷，二百二十篇，皆为残缺。</q>
+      </div>
+      <div class="del">
+        <div class="stamp">删</div>
+        <div class="dlab">删痕二 · 删繁</div>
+        <h3>萧绮删并成十卷</h3>
+        <p>萧绮做的不止于抄：删繁、纠谬、按语，三件事一起干。今天看到的十卷本是他的再创作，每段怪谈后面那声「录曰」就是他的批注。</p>
+        <q>绮更删其繁紊，纪其实美，搜刊幽秘，捃采残落，言匪浮诡，事弗空诬。</q>
+      </div>
+      <div class="del">
+        <div class="stamp">删</div>
+        <div class="dlab">删痕三 · 删浮</div>
+        <h3>书里还记了一场删书</h3>
+        <p>晋时事卷写张华编《博物志》四百卷上奏，武帝嫌其芜杂，御笔砍成十卷。删书的逻辑一脉相承：怪力乱神，留其可信者。</p>
+        <q>将恐惑乱于后生，繁芜于耳目，可更芟截浮疑，分为十卷。</q>
+        <q>昔仲尼删《诗》、《书》，不及鬼神幽昧之事，以言怪力乱神。</q>
+      </div>
+    </div>
+    <div class="authors">
+      <div class="acard"><b>王嘉</b>字子年，方士，教过不少弟子。前秦末天下大乱，他后来死于非命：史载后秦主姚苌问他吉凶，答话不称旨而遇害（此节出库外史传，本页不引原文）。书比人命长。</div>
+      <div class="acard"><b>萧绮</b>梁人，生平史无详传。他给每段正文后加的按语自称「录曰」，自陈工作是<q>搜刊幽秘，捃采残落</q>：把散掉的捡回来，把假的按下去。</div>
+    </div>
+    <p class="mach">库本去空白 <b>43,470</b> 字，十卷三十一目；萧绮按语「录曰」凡 <b>37</b> 处，卷十·诸名山一处也没有；库本缺字 <b>19</b> 处、合字括注 6 处，详见页尾校记。</p>
+  </div>
+</section>
+
+<!-- ================= 二 周天 ================= -->
+<section class="sec" id="cycle">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">贰</div><h2>十二年一周天</h2><div class="sub">点那只查，让它转一圈</div></div>
+    <div class="cycwrap">
+      <div>
+        <div id="cycring">
+          <div class="rayspokes"></div>
+          <div class="cychub"><b>巨查</b>西海来</div>
+        </div>
+        <p class="cycnote">查绕四海一圈，人间恰好十二年。点环即转。</p>
+      </div>
+      <div>
+        <p style="margin-bottom:14px">开场这一段，是全书最像天文观测的怪谈：一件发光物漂浮海上，光有大小明灭之变，十二年绕天一周，从尧一直看到虞夏之际才不再出现。后人谈古代飞行器的想象，常把它和卷四的沦波舟并提。</p>
+        <div class="qline">
+          <q>尧登位三十年，有巨查浮于西海，查上有光，夜明昼灭。海人望其光，乍大乍小，若星月之出入矣。</q>
+          <span class="att">同一段还有后半：群仙把它当漱洗台，含露而漱，日月之光也跟着暗下去。</span>
+        </div>
+        <div class="qline">
+          <q>群仙含露以漱，日月之光则如冥矣。虞、夏之季，不复记其出没。游海之人，犹传其神伟也。</q>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 三 顺流十卷 ================= -->
+<section class="sec" id="river">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">叁</div><h2>顺流十卷</h2><div class="sub">从庖牺漂到晋代，可以拖动</div></div>
+    <div class="wavebg"></div>
+    <div class="lane" id="lane">
+      <div class="stop"><div class="vh"><b>卷一</b><span>5422 字</span></div><div class="ti">上古八帝　庖牺至舜</div><p>贯月查在尧世出现；重明鸟像鸡，末句解释了元日门窗上画鸡的来历。另有西海阴火，夜里烧着海水。</p></div>
+      <div class="stop"><div class="vh"><b>卷二</b><span>4075 字</span></div><div class="ti">夏禹　殷汤　周</div><p>禹凿龙门，空岩深处有兽衔夜明珠照明、青犬引路，走到深处豕犬化人。</p></div>
+      <div class="stop"><div class="vh"><b>卷三</b><span>4832 字</span></div><div class="ti">周穆王　鲁僖公　周灵王</div><p>西域幻人指端出十层浮屠，喷水成雾，又吹气收雾；吴国武库兵器被双兔吃空。</p></div>
+      <div class="stop"><div class="vh"><b>卷四</b><span>3630 字</span></div><div class="ti">燕昭王　秦始皇</div><p>旋娟提谟二舞者体轻无痕；宛渠人乘螺舟沉行海底，全书最著名的场面。</p></div>
+      <div class="stop"><div class="vh"><b>卷五</b><span>3618 字</span></div><div class="ti">前汉上</div><p>太上皇的匕首投进炉中，铸成汉家天子剑；泥离国来使谈燧人以前，句句不像神话像史评。</p></div>
+      <div class="stop"><div class="vh"><b>卷六</b><span>5591 字</span></div><div class="ti">前汉下　后汉</div><p>全书成语最密的一卷：断袖、舌耕、燃藜、经神、学海、书仓、行尸走肉都在此领证。</p></div>
+      <div class="stop"><div class="vh"><b>卷七</b><span>3275 字</span></div><div class="ti">魏</div><p>薛灵芸别父母进宫，眼泪用玉壶接着，到京师凝成了血色；宫中从此多了一位针神。</p></div>
+      <div class="stop"><div class="vh"><b>卷八</b><span>3987 字</span></div><div class="ti">吴　蜀</div><p>赵夫人一手织出三绝；糜竺家青气绕库，一场大火烧掉十分之一珠玉。</p></div>
+      <div class="stop"><div class="vh"><b>卷九</b><span>4460 字</span></div><div class="ti">晋时事</div><p>张华的四百卷在这里被删；还有一缸喝坏肝肠的消肠酒，和一匹应验三杨擅权的三株草。</p></div>
+      <div class="stop"><div class="vh"><b>卷十</b><span>3773 字</span></div><div class="ti">诸名山</div><p>八座仙岛物产志：冰蚕、五色蝙蝠、嗽月兽、昆吾八剑、洞庭金堂，全书的插画册。</p></div>
+    </div>
+    <div class="asides">
+      <div class="asidec"><b>顺流拾零 · 阴火</b><q>山下有巨穴，穴中有水，其色若火，昼则通昽不明，夜则照耀穴外，虽波涛灌荡，其光不灭，是谓阴火。</q></div>
+      <div class="asidec"><b>顺流拾零 · 二舞</b><q>其舞一名萦尘，言其体轻与尘相乱；次曰集羽，言其婉转若羽毛之从风；末曰旋怀，言其肢体缠曼，若入怀袖也。</q><span style="color:var(--faint);font-size:12px">二舞来路，萧绮给了个体面的解释：是天女托形下凡。</span></div>
+      <div class="asidec"><b>顺流拾零 · 渴羌</b><q>马圉老羌，渐染皇化，溥天夷貊，皆为王臣，今若欢酒池之乐，更为殷纣之民乎？</q><span style="color:var(--faint);font-size:12px">养马的姚馥醉后把皇帝噎回去，反手升了酒泉太守，因为那里<q>地有清泉，其味若酒。</q></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 四 出生证 ================= -->
+<section class="sec" id="certs">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">肆</div><h2>名物出生证</h2><div class="sub">十二件今天还在用的词与物，都在这里上的户口（点卡片翻面看原句）</div></div>
+    <div class="certgrid">
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">卷一 · 唐尧</span><div class="nm">元日画鸡</div><div class="use">新年门牖上的鸡形，据本条是重明鸟的遗像。</div></div>
+        <div class="cface back"><q>今人每岁元日，或刻木铸金，或图画为鸡于牖上，此之遗像也。</q><span class="att">重明鸟状如鸡，鸣似凤，能搏逐猛兽。</span></div>
+      </div></div>
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">前汉下 · 哀帝</span><div class="nm">断袖</div><div class="use">董贤故事的另一个版本，这句写的是宫中风气。</div></div>
+        <div class="cface back"><q>宫人皆效其断袖。又曰，割袖恐惊其眠。</q></div>
+      </div></div>
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">后汉 · 贾逵</span><div class="nm">舌耕</div><div class="use">教书吃饭的雅称，出自一句玩笑。</div></div>
+        <div class="cface back"><q>贾逵非力耕所得，诵经口倦，世所谓舌耕也。</q></div>
+      </div></div>
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">后汉 · 任末</span><div class="nm">行尸走肉</div><div class="use">十四岁的少年讲学，临终留下一句狠话。</div></div>
+        <div class="cface back"><q>夫人好学，虽死若存；不学者虽存，谓之行尸走肉耳！</q></div>
+      </div></div>
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">后汉 · 刘向</span><div class="nm">燃藜</div><div class="use">深夜苦读的意象源头：一位老人吹亮藜杖来照他。</div></div>
+        <div class="cface back"><q>老父乃吹杖端，烟燃，因以见向，说开辟已前。</q></div>
+      </div></div>
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">后汉 · 郑玄　何休</span><div class="nm">经神　学海</div><div class="use">京师给两位大儒起的并称。</div></div>
+        <div class="cface back"><q>京师谓康成为经神，何休为学海。</q></div>
+      </div></div>
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">后汉 · 曹曾</span><div class="nm">书仓</div><div class="use">乱世藏书：石仓存书，后来连车输于王府。</div></div>
+        <div class="cface back"><q>曾虑先文湮没，乃积石为仓以藏书，故谓曹氏为书仓。</q></div>
+      </div></div>
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">后汉 · 郭况</span><div class="nm">金穴</div><div class="use">豪富之家的代称，源头是一句洛阳里语。</div></div>
+        <div class="cface back"><q>洛阳多钱郭氏室，夜日昼星富无匹。</q><q>故东京谓郭家为琼厨金穴。</q></div>
+      </div></div>
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">卷七 · 魏</span><div class="nm">针神</div><div class="use">薛灵芸改名夜来之后的宫中称号。</div></div>
+        <div class="cface back"><q>夜来妙于针工，虽处于深帷之内，不用灯烛之光，裁制立成。非夜来缝制，帝则不服。宫中号为针神也。</q></div>
+      </div></div>
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">卷八 · 吴</span><div class="nm">三绝</div><div class="use">机绝、针绝、丝绝，一位女性的三项专利。</div></div>
+        <div class="cface back"><q>舒之则广纵一丈，卷之则可纳于枕中，时人谓之丝绝。</q></div>
+      </div></div>
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">卷九 · 晋</span><div class="nm">消肠酒</div><div class="use">张华酿的烈酒，里语唱它宁饮此酒不慕长生。</div></div>
+        <div class="cface back"><q>宁得醇酒消肠，不与日月齐光。</q></div>
+      </div></div>
+      <div class="cert"><div class="cinner">
+        <div class="cface front"><span class="fr">卷四 · 燕昭王</span><div class="nm">招凉珠</div><div class="use">黑蚌千年生一珠，揣着过夏天。</div></div>
+        <div class="cface back"><q>此蚌千岁一生珠也。</q><q>昭王常怀此珠，当隆暑之月，体自轻凉，号曰销暑招凉之珠也。</q></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 五 沦波舟 ================= -->
+<section class="sec" id="luozhou">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">伍</div><h2>沦波舟</h2><div class="sub">卷四 · 秦始皇（四事）之二</div></div>
+    <div class="lzbtns">
+      <button class="btn" id="divebtn">沉行海底</button>
+      <button class="btn" id="risebtn">浮出水面</button>
+    </div>
+    <div id="lzscene">
+      <div class="wline"></div><div class="surf"></div>
+      <div id="lzboat"><div class="spiral"></div></div>
+      <div class="depth">水线之下</div>
+    </div>
+    <div class="qline">
+      <q>始皇好神仙之事，有宛渠之民，乘螺舟而至。舟形似螺，沉行海底，而水不浸入，一名沦波舟。其国人长十丈，编鸟兽之毛以蔽形。</q>
+      <span class="att">螺舟客的自我介绍，更像一位看过全部上古史的证人：</span>
+    </div>
+    <div class="qline">
+      <q>臣少时蹑虚却行，日游万里。及其老朽也，坐见天地之外事。臣国在咸池日没之所九万里，以万岁为一日。</q>
+      <span class="att">日游万里，以万岁为一日；始皇听完只说了一句：神人。从此更信仙术。</span>
+    </div>
+    <div class="firebox">
+      <div id="firegrains"><i style="left:6%"></i><i style="left:16%"></i><i style="left:27%"></i><i style="left:38%"></i><i style="left:49%"></i><i style="left:60%"></i><i style="left:71%"></i><i style="left:82%"></i><i style="left:92%"></i><i style="left:44%"></i></div>
+      <div style="min-width:260px">
+        <p>宛渠人带来的伴手礼是燃石：碎如小米，一粒照亮一堂。传说炎帝改生食为熟食，用的就是这种火。点一下，扣之则碎。</p>
+        <button class="btn" id="firebtn" style="margin-top:10px">扣石</button>
+      </div>
+    </div>
+    <div class="qline">
+      <q>及夜，燃石以继日光。此石出燃山，其土石皆自光澈，扣之则碎，状如粟，一粒辉映一堂。</q>
+    </div>
+    <p class="note">后人谈飞碟想象，爱把沦波舟列为老祖宗之一；库本只说它贴着海底走，能防水不进。附会之辞，本页不引。</p>
+  </div>
+</section>
+
+<!-- ================= 六 泪凝如血 ================= -->
+<section class="sec" id="tears">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">陆</div><h2>泪凝如血</h2><div class="sub">卷七 · 魏，薛灵芸入宫的路</div></div>
+    <div class="tearwrap">
+      <div id="tearscene">
+        <div id="bowlwrap">
+          <div id="bowl"><div id="bowlfill"></div></div>
+        </div>
+        <p style="font-size:13px;color:var(--dim);margin-bottom:10px">玉唾壶承泪 <span id="tearct">0</span> 滴，满十滴见血色</p>
+        <div class="tbtns">
+          <button class="btn" id="weepbtn">承泪</button>
+          <button class="btn" id="rstbtn">复位</button>
+        </div>
+      </div>
+      <div>
+        <p style="margin-bottom:12px">常山亭长之女薛灵芸被千金聘入六宫，别父母登车，一路用玉壶接眼泪。这是卷七开篇第一事，也是全书写得最像小说的一段：从常山到京师，路上的每一件排场都在为一件小事作注，那壶泪的颜色。</p>
+        <div class="qline">
+          <q>以玉唾壶承泪，壶则红色。既发常山，及至京师，壶中泪凝如血。</q>
+        </div>
+        <div class="qline">
+          <q>昔者言朝为行云，暮为行雨，今非云非雨，非朝非暮。</q>
+          <span class="att">文帝远迎，替她改名夜来。</span>
+        </div>
+        <p class="note" style="margin:12px 0">沿途烛台列星、铜表记里，车尘蔽月，时人叫它尘宵。道旁童谣四句，萧绮在后文逐句解成谶：</p>
+        <div class="song">
+          <p>青槐夹道多尘埃</p><p>龙楼凤阙望崔嵬</p><p>清风细雨杂香来</p><p>土上出金火照台</p>
+        </div>
+        <div class="qline" style="margin-top:16px">
+          <q>青槐夹道多尘埃，龙楼凤阙望崔嵬。清风细雨杂香来，土上出金火照台。</q>
+          <q>以烛置台下，则火在土下之义。汉火德王，魏土德王，火伏而土兴，土上出金，是魏灭而晋兴也。</q>
+          <span class="att">萧绮把这四句童谣逐字拆成了谶，题作妖辞。</span>
+        </div>
+        <div class="decoderoad">
+          <span class="tick" style="left:8%"></span><span class="tick" style="left:16%"></span><span class="tick" style="left:24%"></span><span class="tick" style="left:32%"></span><span class="tick" style="left:40%"></span><span class="tick" style="left:48%"></span><span class="tick" style="left:56%"></span>
+          <div class="tower"></div>
+        </div>
+        <div class="qline" style="margin-top:16px">
+          <q>为铜表志里数于道侧，是土上出金之义。</q>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 七 三绝 ================= -->
+<section class="sec" id="sanjue">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">柒</div><h2>三绝</h2><div class="sub">卷八 · 吴，赵夫人的三项绝技</div></div>
+    <div class="sjgrid">
+      <div class="sjp">
+        <h3>机绝</h3>
+        <div class="viz"><div id="loom"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><button class="btn" id="loomstart">开织</button></div>
+        <p><q>善画，巧妙无双，能于指间以彩丝织云霞龙蛇之锦，大则盈尺，小则方寸，宫中谓之机绝。</q></p>
+      </div>
+      <div class="sjp">
+        <h3>针绝</h3>
+        <div class="viz"><div id="emap">
+          <div class="river" style="left:8%;top:64%;width:40%"></div>
+          <div class="river" style="left:52%;top:30%;width:36%"></div>
+          <div class="mtn" style="left:16%;top:22%"></div>
+          <div class="mtn" style="left:24%;top:19%"></div>
+          <div class="mtn" style="left:70%;top:58%"></div>
+          <div class="mtn" style="left:79%;top:55%"></div>
+          <div class="city" style="left:44%;top:44%"></div>
+          <div class="city" style="left:62%;top:70%"></div>
+          <div class="camp" style="left:30%;top:62%"></div>
+          <div class="camp" style="left:36%;top:56%"></div>
+          <div class="camp" style="left:33%;top:70%"></div>
+          <div class="camp" style="left:41%;top:66%"></div>
+          <div class="emaplab">山川城邑行阵，一针一线</div>
+        </div></div>
+        <p><q>丹青之色，甚易歇灭，不可久宝；妾能刺绣，列国方帛之上，写以五岳河海城邑行阵之形。</q></p>
+      </div>
+      <div class="sjp">
+        <h3>丝绝</h3>
+        <div class="viz"><div id="curtain"><span class="curlab">舒</span><span class="curlabr">卷</span></div></div>
+        <p><q>神胶出郁夷国，接弓弩之断弦，百断百续也。</q>以发续发织成罗縠，作帐自凉，随军征幕。<q>舒之则广纵一丈，卷之则可纳于枕中，时人谓之丝绝。</q>点幔可舒卷。</p>
+      </div>
+    </div>
+    <div class="sjclose">
+      <p>三绝的结局收得极冷：<q>后有贪宠求媚者，言夫人幻耀于人主，因而致退黜。</q><q>虽见疑坠，犹存录其巧工。吴亡，不知所在。</q>萧绮记下了她的手艺，没记下她的下落。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 八 按语 ================= -->
+<section class="sec" id="luyue">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">捌</div><h2>录曰：萧绮的按语簿</h2><div class="sub">王嘉摆怪，萧绮断案，三十七处批注是一册内部审查记录</div></div>
+    <div class="lugrid">
+      <div class="luleft">
+        <p>原书是故事集，萧绮的按语是判词。他多半肯定故事里的人伦孝义，再对神迹本身降温：蜀人周群遇白猿授历算之学，从此算定蜀当灭亡，萧绮的判语只有八个字。</p>
+        <div class="qline"><q>其事迂诞，若是而非也。</q></div>
+        <p>书里甚至预埋了一个怀疑者的形象：频斯国使者献上图卷，主持鉴定的是全书最负盛名的博物学家张华，他的态度是拒绝背书。</p>
+        <div class="qline"><q>华云：此神异之国，难可验信。</q></div>
+        <p>但萧绮并不拆台到底。序言里他给自己的工作定了调：往迹可以与经史对读，怪谈也能与图籍互证。这不是轻信，是一种古老的信息分级。</p>
+        <div class="qline"><q>推详往迹，则影彻经史；考验真怪，则叶附图籍。</q></div>
+      </div>
+      <div class="luright">
+        <h3>按语簿 · 抽样三则</h3>
+        <div class="luitem">燕昭王二舞者来路不明，萧绮给了一个体面的出处：<q>王好神仙之术，玄天之女，托形作此二人。</q><span class="att">卷四 · 燕昭王</span></div>
+        <div class="luitem">汉武帝求仙半生，按语直接点名批评：<q>武帝修黄老，治却老之方，求报无福之祀。</q><span class="att">卷五 · 前汉上</span></div>
+        <div class="luitem">统计一句：「录曰」全书三十七见，卷十诸名山零见。仙岛物产卷不需要判词，因为整卷没有一案是准的。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 九 名山 ================= -->
+<section class="sec" id="isles">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">玖</div><h2>诸名山</h2><div class="sub">卷十 · 八座仙岛物产志</div></div>
+    <div class="isles">
+      <div class="isle"><h3>昆仑山</h3><span class="ig">九层 · 玉树之山</span><p><q>山有九层，每层相去万里。</q>第六层立着五色玉树，树荫铺开五百里；风分四种，其中一种专管除尘，衣裳沾尘，风过即净。</p></div>
+      <div class="isle"><h3>蓬莱山</h3><span class="ig">防丘 · 云来</span><p>含明国人缀鸟毛为衣，承露而饮；大螺名裸步，负壳露行，冷则入壳。</p></div>
+      <div class="isle"><h3>方丈山</h3><span class="ig">龙场 · 照石</span><p>燕昭王得龙膏，<q>以龙膏为灯，光耀百里，烟色丹紫</q>，灯芯缠的是火浣布。</p></div>
+      <div class="isle"><h3>瀛洲</h3><span class="ig">魂洲 · 环洲</span><p>有树名影木，<q>日中视之如列星</q>，万岁一实；地下另有刻玉为日、水精为月的机关浑仪，<q>以测昏明，不亏弦望。</q></p></div>
+      <div class="isle"><h3>员峤山</h3><span class="ig">环丘 · 星池</span><p><q>有冰蚕长七寸，黑色，有角有麟，以霜雪覆之，然后作茧，长一尺，其色五彩，织为文锦，入水不濡，以之投火，经宿不燎。</q>尧的时代有海人献过一只。</p></div>
+      <div class="isle"><h3>岱舆山</h3><span class="ig">浮析 · 玉梁</span><p>五色蝙蝠样样奇特：<q>黄者无肠，倒飞，腹向天；白者脑重，头垂自挂；黑者如乌，至千岁形变如小燕</q>。还有嗽月兽，<q>此兽夜喷白气，其光如月，可照数十亩。</q></p></div>
+      <div class="isle"><h3>昆吾山</h3><span class="ig">赤金 · 八剑</span><p><span class="sw">掩日</span><span class="sw">断水</span><span class="sw">转魄</span><span class="sw">悬翦</span><span class="sw">惊鲵</span><span class="sw">灭魂</span><span class="sw">却邪</span><span class="sw">真刚</span><q>一名掩日，以之指日，则光昼暗。</q><q>三名转魄，以之指月，蟾兔为之倒转。</q>山兔食铁，胆肾铸剑，一雄一雌，正是干将与镆邪；后来双剑飞入延平津，<q>及入水寻之，但见双龙缠屈于潭下，目光如电，遂不敢前取矣。</q></p></div>
+      <div class="isle"><h3>洞庭山</h3><span class="ig">金堂 · 水仙</span><p>浮于水上，下有金堂数百间；采药人误入灵洞，席间遇仙，还乡时已换了人间。<q>已见邑里人户，各非故乡邻，唯寻得九代孙。问之，云：远祖入洞庭山采药不还，今经三百年也。</q></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 十 校记 ================= -->
+<section class="sec" id="notes">
+  <div class="wrap">
+    <div class="sechead"><div class="sealno">拾</div><h2>校记与库外</h2><div class="sub">照录与申报</div></div>
+    <div class="nmgrid">
+      <div>
+        <h3>校记 · 库本照录</h3>
+        <li><b>咸熙元夫</b>：薛灵芸条纪年，元夫当为元年之讹，照录不改。</li>
+        <li><b>缺字十九处</b>：库本以问号占位，如织为？縠、发大如？娄、?袂兮无声，本页引文一律避开。</li>
+        <li><b>合字括注六处</b>：生僻合字以括注拆写，如奏(女更)娟之乐、云梯飞(玄鸟)，照录。</li>
+        <li><b>镆邪</b>：通行本作镆铘，库本作镆邪，照录。</li>
+      </div>
+      <div>
+        <h3>库外申报</h3>
+        <li><b>王嘉之死</b>：姚苌问吉凶、答语不称旨而遇害一节出《晋书》艺术传，本书正文不载，本页仅述而不引。</li>
+        <li><b>萧绮生平</b>：史无专传，仅据本书序文与历代著录。</li>
+        <li><b>归类</b>：后世书目多入子部小说家类；本库置于子藏笔记。</li>
+        <li><b>飞碟说</b>：以贯月查、沦波舟为古代飞行器想象的讲法是现代附会，古籍语境里它们是仙人与异物。</li>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="page">
+  <div class="wrap">
+    <div class="row"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），子藏笔记〈拾遗记〉，晋王嘉撰、梁萧绮录，库本去空白 43,470 字，十卷三十一目：卷一上古八帝至卷九晋时事以朝代为序，卷十诸名山为八座仙岛物产志。本页引文一百一十处、去重五十七条（q 元素与页尾清单）经脚本与库内文本去标点、归一逐字核验通过，页尾藏引文全清单。目录：<a href="mulu.html">殆知阁导读总目</a>。</div>
+    <div class="row"><b>库外申报</b>　王嘉遇害事出《晋书》艺术传，萧绮生平无专传，后世小说家类的归类与现代飞碟附会之说均非库内文字，本页已分别挂签；书中帝王谶纬、四职能内容系晋人史观，与史实对读须参正史。</div>
+    <div class="row"><b>时代局限提醒</b>　本书以神异附会写史，帝王感应、灾祥谶纬贯穿全书，对四夷诸国的想象充满猎奇与等级偏见，后妃方士的记载亦多小说笔法；卷六裸游馆一节含对宫人的轻慢书写，卷四屏风酒池诸条是亡国修辞的样本。愿读者带着距离读它：怪谈是那个时代的新闻体，也是那个时代的偏见存档。</div>
+    <div class="fin">殆知阁导读　二百七十</div>
+  </div>
+</footer>
+
+<div id="qbank" hidden><ul>
+<li>尧登位三十年，有巨查浮于西海，查上有光，夜明昼灭。海人望其光，乍大乍小，若星月之出入矣。查常浮绕四海，十二年一周天，周而复始，名曰贯月查，亦谓挂星查，羽人栖息其上。</li>
+<li>群仙含露以漱，日月之光则如冥矣。虞、夏之季，不复记其出没。游海之人，犹传其神伟也。</li>
+<li>《拾遗记》者，晋陇西安阳人王嘉字子年所撰，凡十九卷，二百二十篇，皆为残缺。</li>
+<li>绮更删其繁紊，纪其实美，搜刊幽秘，捃采残落，言匪浮诡，事弗空诬。</li>
+<li>推详往迹，则影彻经史；考验真怪，则叶附图籍。</li>
+<li>始皇好神仙之事，有宛渠之民，乘螺舟而至。舟形似螺，沉行海底，而水不浸入，一名沦波舟。其国人长十丈，编鸟兽之毛以蔽形。</li>
+<li>臣少时蹑虚却行，日游万里。及其老朽也，坐见天地之外事。臣国在咸池日没之所九万里，以万岁为一日。</li>
+<li>及夜，燃石以继日光。此石出燃山，其土石皆自光澈，扣之则碎，状如粟，一粒辉映一堂。</li>
+<li>以玉唾壶承泪，壶则红色。既发常山，及至京师，壶中泪凝如血。</li>
+<li>昔者言朝为行云，暮为行雨，今非云非雨，非朝非暮。</li>
+<li>青槐夹道多尘埃，龙楼凤阙望崔嵬。清风细雨杂香来，土上出金火照台。</li>
+<li>为铜表志里数于道侧，是土上出金之义。</li>
+<li>夜来妙于针工，虽处于深帷之内，不用灯烛之光，裁制立成。非夜来缝制，帝则不服。宫中号为针神也。</li>
+<li>丹青之色，甚易歇灭，不可久宝；妾能刺绣，列国方帛之上，写以五岳河海城邑行阵之形。</li>
+<li>善画，巧妙无双，能于指间以彩丝织云霞龙蛇之锦，大则盈尺，小则方寸，宫中谓之机绝。</li>
+<li>神胶出郁夷国，接弓弩之断弦，百断百续也。</li>
+<li>舒之则广纵一丈，卷之则可纳于枕中，时人谓之丝绝。</li>
+<li>后有贪宠求媚者，言夫人幻耀于人主，因而致退黜。</li>
+<li>虽见疑坠，犹存录其巧工。吴亡，不知所在。</li>
+<li>贾逵非力耕所得，诵经口倦，世所谓舌耕也。</li>
+<li>夫人好学，虽死若存；不学者虽存，谓之行尸走肉耳！</li>
+<li>老父乃吹杖端，烟燃，因以见向，说开辟已前。</li>
+<li>京师谓康成为经神，何休为学海。</li>
+<li>曾虑先文湮没，乃积石为仓以藏书，故谓曹氏为书仓。</li>
+<li>洛阳多钱郭氏室，夜日昼星富无匹。</li>
+<li>故东京谓郭家为琼厨金穴。</li>
+<li>宫人皆效其断袖。又曰，割袖恐惊其眠。</li>
+<li>今人每岁元日，或刻木铸金，或图画为鸡于牖上，此之遗像也。</li>
+<li>宁得醇酒消肠，不与日月齐光。</li>
+<li>此蚌千岁一生珠也。</li>
+<li>昭王常怀此珠，当隆暑之月，体自轻凉，号曰销暑招凉之珠也。</li>
+<li>山下有巨穴，穴中有水，其色若火，昼则通昽不明，夜则照耀穴外，虽波涛灌荡，其光不灭，是谓阴火。</li>
+<li>其舞一名萦尘，言其体轻与尘相乱；次曰集羽，言其婉转若羽毛之从风；末曰旋怀，言其肢体缠曼，若入怀袖也。</li>
+<li>王好神仙之术，玄天之女，托形作此二人。</li>
+<li>马圉老羌，渐染皇化，溥天夷貊，皆为王臣，今若欢酒池之乐，更为殷纣之民乎？</li>
+<li>其事迂诞，若是而非也。</li>
+<li>华云：此神异之国，难可验信。</li>
+<li>将恐惑乱于后生，繁芜于耳目，可更芟截浮疑，分为十卷。</li>
+<li>昔仲尼删《诗》、《书》，不及鬼神幽昧之事，以言怪力乱神。</li>
+<li>状如鸡，鸣似凤。</li>
+<li>以龙膏为灯，光耀百里，烟色丹紫</li>
+<li>有冰蚕长七寸，黑色，有角有麟，以霜雪覆之，然后作茧，长一尺，其色五彩，织为文锦，入水不濡，以之投火，经宿不燎。</li>
+<li>黄者无肠，倒飞，腹向天；白者脑重，头垂自挂；黑者如乌，至千岁形变如小燕</li>
+<li>此兽夜喷白气，其光如月，可照数十亩。</li>
+<li>一名掩日，以之指日，则光昼暗。</li>
+<li>三名转魄，以之指月，蟾兔为之倒转。</li>
+<li>及入水寻之，但见双龙缠屈于潭下，目光如电，遂不敢前取矣。</li>
+<li>已见邑里人户，各非故乡邻，唯寻得九代孙。问之，云：远祖入洞庭山采药不还，今经三百年也。</li>
+<li>武帝修黄老，治却老之方，求报无福之祀。</li>
+</ul></div>
+
+<script>
+(function(){
+  var seed=20260909;
+  function rnd(){seed=(seed*1103515245+12345)%2147483648;return seed/2147483648;}
+  var hs=document.getElementById('stars');
+  for(var i=0;i<120;i++){
+    var s=document.createElement('span');
+    s.className='st';
+    s.style.left=(rnd()*100)+'%';
+    s.style.top=(rnd()*60)+'%';
+    var sz=(rnd()*2+1).toFixed(1);
+    s.style.width=sz+'px';s.style.height=sz+'px';
+    s.style.animationDelay=(rnd()*6).toFixed(2)+'s';
+    hs.appendChild(s);
+  }
+  var spokes=document.createElement('div');
+  for(var k=0;k<12;k++){
+    var sp=document.createElement('div');
+    sp.className='spoke';
+    sp.style.transform='translate(-50%,0) rotate('+(k*30)+'deg)';
+    var pk=document.createElement('div');pk.className='spk';sp.appendChild(pk);
+    document.getElementById('cycring').appendChild(sp);
+  }
+  var hero=document.getElementById('hero');
+  document.getElementById('daybtn').addEventListener('click',function(){hero.classList.toggle('day');});
+  var cyc=document.getElementById('cycring');
+  cyc.addEventListener('click',function(){cyc.classList.remove('spin');void cyc.offsetWidth;cyc.classList.add('spin');});
+  var lane=document.getElementById('lane'),dn=false,sx=0,sl=0;
+  lane.addEventListener('pointerdown',function(e){dn=true;sx=e.clientX;sl=lane.scrollLeft;lane.classList.add('grab');});
+  window.addEventListener('pointermove',function(e){if(dn){lane.scrollLeft=sl-(e.clientX-sx);}});
+  window.addEventListener('pointerup',function(){dn=false;lane.classList.remove('grab');});
+  document.querySelectorAll('.cert').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('on');});});
+  var lz=document.getElementById('lzscene');
+  document.getElementById('divebtn').addEventListener('click',function(){lz.classList.add('sub');});
+  document.getElementById('risebtn').addEventListener('click',function(){lz.classList.remove('sub');});
+  document.getElementById('firebtn').addEventListener('click',function(){
+    var fg=document.getElementById('firegrains');
+    fg.classList.add('lit');
+    setTimeout(function(){fg.classList.remove('lit');},2600);
+  });
+  var n=0;
+  document.getElementById('weepbtn').addEventListener('click',function(){
+    if(n>=10)return;
+    n++;
+    document.getElementById('tearct').textContent=n;
+    var d=document.createElement('span');d.className='tdrop';
+    d.style.left=(48+Math.random()*8)+'%';
+    document.getElementById('bowlwrap').appendChild(d);
+    setTimeout(function(){d.remove();},900);
+    document.getElementById('bowlfill').style.height=(n*10)+'%';
+    if(n>=10)document.getElementById('tearscene').classList.add('blood');
+  });
+  document.getElementById('rstbtn').addEventListener('click',function(){
+    n=0;
+    document.getElementById('tearct').textContent='0';
+    document.getElementById('bowlfill').style.height='0%';
+    document.getElementById('tearscene').classList.remove('blood');
+  });
+  document.getElementById('loomstart').addEventListener('click',function(){
+    var lm=document.getElementById('loom');
+    lm.classList.toggle('live');
+    this.textContent=lm.classList.contains('live')?'停梭':'开织';
+  });
+  document.getElementById('curtain').addEventListener('click',function(){this.classList.toggle('furl');});
+})();
+</script>
+</body>
+</html>
