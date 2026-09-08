@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>诗品 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#222220; --paper:#e8e4dc; --dim:#a8a297; --faint:#6e695f;
+  --blue:#5e8fbb; --deep:#33506b; --pale:rgba(94,143,187,.13); --line:rgba(232,228,220,.14);
+  --seal:#b04a3c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:"Songti SC","STSong","SimSun","Noto Serif CJK SC","Source Han Serif SC",serif;
+  line-height:1.9; letter-spacing:.03em; font-size:16px;
+}
+::selection{background:var(--blue);color:var(--ink)}
+a{color:var(--blue)}
+q{quotes:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+/* ---------- hero : 悬秤 ---------- */
+#top{min-height:100vh;position:relative;display:flex;align-items:center;overflow:hidden}
+#beam{position:absolute;inset:0;opacity:.5;pointer-events:none}
+.hero{position:relative;z-index:2;display:flex;gap:56px;align-items:flex-start;width:100%;padding:9vh 0 7vh}
+.vtitle{
+  writing-mode:vertical-rl; font-size:clamp(72px,11vh,128px); line-height:1.06;
+  letter-spacing:.22em; color:var(--paper); flex:none; user-select:none;
+  text-shadow:0 0 1px rgba(232,228,220,.35);
+}
+.vsub{
+  writing-mode:vertical-rl; font-size:15px; color:var(--dim); letter-spacing:.5em;
+  border-right:1px solid var(--line); padding-right:14px; margin-top:10px; flex:none;
+}
+.hmain{flex:1;min-width:0;padding-top:1.5vh}
+.kick{font-size:13px;letter-spacing:.42em;color:var(--blue);margin-bottom:26px}
+.lede{font-size:19px;max-width:30em;color:var(--paper)}
+.lede b{color:var(--blue);font-weight:400}
+.hq{margin:30px 0 6px;font-size:26px;color:var(--paper)}
+.hq q{border-bottom:1px solid var(--deep);padding-bottom:6px}
+.hsrc{font-size:13px;color:var(--faint);letter-spacing:.2em}
+/* 悬秤三牌 */
+#scale{margin-top:44px;position:relative;width:min(560px,100%)}
+.tags{display:flex;justify-content:space-between;padding:0 26px}
+.tag{
+  width:31%; text-align:center; padding:16px 8px 18px; position:relative;
+  background:linear-gradient(180deg,rgba(232,228,220,.05),rgba(232,228,220,.02));
+  border:1px solid var(--line); border-top:3px solid var(--blue); cursor:default;
+  transition:transform .5s ease, border-color .5s;
+}
+.tag:hover{transform:translateY(-4px);border-top-color:var(--paper)}
+.tag.mid{border-top-color:rgba(94,143,187,.55)}
+.tag.low{border-top-color:rgba(94,143,187,.28)}
+.tag .tr{writing-mode:vertical-rl;margin:0 auto;font-size:26px;letter-spacing:.35em;color:var(--paper);height:4.6em}
+.tag .tn{font-size:13px;color:var(--dim);margin-top:10px;letter-spacing:.1em}
+.tagnote{margin-top:14px;font-size:12.5px;color:var(--faint);text-align:right;letter-spacing:.08em;padding-right:96px}
+/* 摆动 */
+@keyframes sway{0%{transform:rotate(0)}18%{transform:rotate(1.15deg)}40%{transform:rotate(-.75deg)}62%{transform:rotate(.4deg)}82%{transform:rotate(-.18deg)}100%{transform:rotate(0)}}
+.swayer{transform-origin:50% 0;animation:sway 3.2s ease-in-out .3s 1}
+.seal{
+  position:absolute;right:-14px;bottom:-58px;width:74px;height:74px;border:2.5px solid var(--seal);
+  color:var(--seal);display:grid;grid-template-columns:1fr 1fr;place-items:center;
+  font-size:24px;line-height:1;transform:rotate(6deg);opacity:.85;user-select:none;
+  box-shadow:inset 0 0 0 1.5px rgba(176,74,60,.35); border-radius:4px; padding:4px;
+}
+.seal span{width:100%;text-align:center}
+.scrolltip{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);color:var(--faint);font-size:12px;letter-spacing:.5em;writing-mode:vertical-rl}
+
+/* ---------- 通用节 ---------- */
+section{padding:9vh 0 7vh;border-top:1px solid var(--line)}
+.stit{display:flex;align-items:baseline;gap:18px;margin-bottom:8px}
+.stit .no{font-size:13px;color:var(--blue);letter-spacing:.3em}
+.stit h2{font-size:30px;font-weight:400;letter-spacing:.18em}
+.slead{color:var(--dim);max-width:44em;margin-bottom:34px}
+.slead em{font-style:normal;color:var(--paper);border-bottom:1px dotted var(--faint)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+@media(max-width:820px){.cols{grid-template-columns:1fr}}
+.card{
+  background:linear-gradient(180deg,rgba(232,228,220,.045),rgba(232,228,220,.015));
+  border:1px solid var(--line); padding:30px 30px 26px; position:relative;
+}
+.card::before{content:"";position:absolute;top:8px;left:8px;right:8px;bottom:8px;border:1px solid rgba(232,228,220,.05);pointer-events:none}
+.card h3{font-size:19px;font-weight:400;letter-spacing:.14em;color:var(--blue);margin-bottom:14px}
+.card p{margin:12px 0;font-size:15.5px;color:rgba(232,228,220,.86)}
+.bigq{font-size:21px;margin:20px 0;line-height:2}
+.bigq q{border-bottom:1px solid var(--deep);padding-bottom:3px}
+.mq{display:block;margin:10px 0;padding-left:16px;border-left:2px solid var(--deep);color:rgba(232,228,220,.9);font-size:16px}
+.mq i{display:block;font-style:normal;font-size:12.5px;color:var(--faint);margin-top:2px;letter-spacing:.15em}
+.band{
+  margin-top:38px;border:1px solid var(--line);background:var(--pale);
+  padding:22px 28px;display:flex;flex-wrap:wrap;gap:8px 34px;align-items:baseline;
+}
+.band .bt{font-size:13px;letter-spacing:.3em;color:var(--blue);flex:none}
+.band q{font-size:17px;color:rgba(232,228,220,.92)}
+.glos{font-size:14.5px;color:var(--dim)}
+
+/* ---------- 三品榜 ---------- */
+.epig{font-size:18px;color:var(--dim);margin:6px 0 30px}
+.epig q{color:var(--paper);border-bottom:1px solid var(--deep)}
+.fanchip{
+  position:sticky;top:0;z-index:40;display:flex;justify-content:flex-end;pointer-events:none;
+  height:0;
+}
+.fanchip b{
+  pointer-events:auto;background:var(--deep);color:var(--paper);font-weight:400;
+  font-size:13px;letter-spacing:.15em;padding:7px 16px;border:1px solid var(--blue);
+  box-shadow:0 4px 18px rgba(0,0,0,.5);
+}
+.fanchip b i{font-style:normal;color:var(--blue);font-size:16px;padding:0 4px}
+#board{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;margin-top:8px}
+@media(max-width:980px){#board{grid-template-columns:1fr}}
+.rkcol{border-top:2px solid var(--blue);padding-top:14px;min-width:0}
+.rkcol.mid{border-top-color:rgba(94,143,187,.55)}
+.rkcol.low{border-top-color:rgba(94,143,187,.25)}
+.rkhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.rkhead h3{font-size:21px;letter-spacing:.3em;font-weight:400}
+.rkhead span{font-size:12.5px;color:var(--faint);letter-spacing:.12em}
+.plates{display:flex;flex-direction:column;gap:7px}
+.plate{
+  border:1px solid var(--line);background:rgba(232,228,220,.025);
+  transition:border-color .3s, background .3s; position:relative;
+}
+.plate.bare{opacity:.62}
+.plate .phead{
+  width:100%;display:flex;align-items:baseline;gap:10px;text-align:left;
+  background:none;border:0;color:var(--paper);font:inherit;cursor:pointer;padding:9px 12px;
+}
+.plate.bare .phead{cursor:default}
+.phead .po{font-size:11.5px;color:var(--faint);letter-spacing:.08em;flex:none;max-width:9.5em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.phead .pn{font-size:16.5px;letter-spacing:.12em;flex:1;min-width:0}
+.phead .pm{color:var(--blue);font-size:13px;flex:none;transition:transform .3s}
+.plate.open .phead .pm{transform:rotate(45deg)}
+.pbody{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.plate.open .pbody{max-height:520px}
+.pbody .pin{padding:2px 14px 14px}
+.pbody .mq{font-size:15px}
+.pbody .gl{font-size:13.5px;color:var(--dim);margin-top:8px}
+/* 翻案 */
+.fanbtn{
+  flex:none;background:none;border:1px solid var(--blue);color:var(--blue);
+  font:inherit;font-size:12px;padding:1px 9px;cursor:pointer;letter-spacing:.1em;border-radius:2px;
+  transition:all .25s;
+}
+.fanbtn:hover{background:var(--blue);color:var(--ink)}
+.plate.over{border-color:var(--blue);background:var(--pale);order:-1}
+.plate.over .phead{cursor:default}
+.plate.over .fanbtn{display:none}
+.plate.over::after{
+  content:"翻";position:absolute;top:-9px;right:-7px;width:26px;height:26px;
+  border:1.5px solid var(--seal);color:var(--seal);border-radius:3px;
+  display:grid;place-items:center;font-size:14px;transform:rotate(10deg);background:var(--ink);
+}
+.evd{display:none;font-size:12.5px;color:var(--blue);margin-top:6px;letter-spacing:.04em}
+.plate.over .evd{display:block}
+.upfirst{font-size:12.5px;color:var(--faint);letter-spacing:.15em;padding:2px 0 8px;display:none}
+#col-up.upshift .upfirst{display:block}
+#col-up.upshift .plates{display:flex;flex-direction:column}
+.note{margin-top:20px;font-size:13.5px;color:var(--faint);max-width:52em}
+.note em{font-style:normal;color:var(--dim)}
+
+/* ---------- 源流谱 ---------- */
+#lineage{margin:26px 0 8px}
+#lineage svg{width:100%;height:auto;display:block}
+.nd rect{fill:rgba(232,228,220,.04);stroke:rgba(232,228,220,.22)}
+.nd text{fill:var(--paper);font-size:15px;letter-spacing:.1em}
+.nd.root rect{stroke:var(--blue)}
+.nd.root text{fill:var(--blue)}
+.nd.ghost rect{stroke-dasharray:3 3}
+.edge{stroke:rgba(232,228,220,.14);stroke-width:1;fill:none;transition:stroke .25s}
+.nd{cursor:pointer}
+.lit.edge{stroke:var(--blue);stroke-width:1.6}
+.nd.hot rect{stroke:var(--blue);fill:var(--pale)}
+.linnote{font-size:13.5px;color:var(--faint);margin-top:10px}
+
+/* ---------- 四场硬仗 ---------- */
+.fights{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+@media(max-width:820px){.fights{grid-template-columns:1fr}}
+.fight{border:1px solid var(--line);padding:26px 26px 22px;position:relative}
+.fight .fn{position:absolute;top:-13px;left:20px;background:var(--ink);color:var(--blue);border:1px solid var(--blue);font-size:12px;letter-spacing:.25em;padding:2px 12px}
+.fight h3{font-size:19px;font-weight:400;letter-spacing:.14em;margin:8px 0 10px}
+.fight p{font-size:15px;color:rgba(232,228,220,.85);margin:10px 0}
+.fight .vs{font-size:13px;color:var(--faint);margin-top:8px}
+
+/* ---------- 签筒掌故 ---------- */
+#lotzone{display:grid;grid-template-columns:250px 1fr;gap:40px;align-items:start}
+@media(max-width:820px){#lotzone{grid-template-columns:1fr}}
+.tube{
+  border:1px solid var(--line);background:rgba(232,228,220,.03);padding:22px 18px 18px;text-align:center;
+}
+.tube .ttitle{font-size:15px;letter-spacing:.3em;color:var(--blue);margin-bottom:16px}
+.sticks{display:flex;justify-content:center;gap:9px;align-items:flex-end;height:120px}
+.stick{
+  writing-mode:vertical-rl;width:30px;padding:14px 0 16px;background:linear-gradient(180deg,#ddd6c8,#b8b0a0);
+  color:var(--ink);border:0;font:inherit;font-size:13.5px;letter-spacing:.18em;cursor:pointer;
+  box-shadow:inset 0 0 0 1px rgba(25,25,23,.25), 0 3px 6px rgba(0,0,0,.4);
+  transition:transform .3s, box-shadow .3s;
+}
+.stick:hover{transform:translateY(-12px)}
+.stick.on{transform:translateY(-22px);box-shadow:inset 0 0 0 1px var(--blue), 0 3px 8px rgba(0,0,0,.5)}
+.tubetip{font-size:12px;color:var(--faint);margin-top:14px;letter-spacing:.1em}
+#lotcard{border:1px solid var(--line);min-height:300px;padding:30px 32px;position:relative;background:linear-gradient(180deg,rgba(232,228,220,.045),rgba(232,228,220,.015))}
+#lotcard h3{font-size:22px;font-weight:400;letter-spacing:.2em;color:var(--blue);margin-bottom:4px}
+#lotcard .lw{font-size:12.5px;color:var(--faint);letter-spacing:.2em;margin-bottom:18px}
+#lotcard .bigq{margin-top:4px}
+#lotcard .gl{font-size:14.5px;color:var(--dim);margin-top:16px}
+.lthint{color:var(--faint);font-size:15px;letter-spacing:.1em;padding-top:60px;text-align:center}
+
+/* ---------- 校记 ---------- */
+.jiaoji{border:1px solid var(--line);padding:26px 30px}
+.jiaoji .row{display:flex;gap:16px;padding:9px 0;border-bottom:1px dashed rgba(232,228,220,.09);font-size:14.5px}
+.jiaoji .row:last-child{border-bottom:0}
+.jiaoji .jk{flex:none;color:var(--blue);font-size:12.5px;letter-spacing:.2em;padding-top:3px;width:4.5em}
+.jiaoji .row q{color:rgba(232,228,220,.92)}
+
+/* ---------- 页脚 ---------- */
+footer{border-top:1px solid var(--line);padding:6vh 0 8vh;font-size:13.5px;color:var(--dim)}
+footer .row{margin-bottom:16px;line-height:2}
+footer b{color:var(--paper);font-weight:400;letter-spacing:.15em}
+footer a{color:var(--blue)}
+.fin{margin-top:34px;text-align:center;color:var(--faint);letter-spacing:.4em;font-size:14px}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+.rv.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 悬秤 ================= -->
+<header id="top">
+  <svg id="beam" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g stroke="rgba(94,143,187,.16)" fill="none" stroke-width="1">
+      <circle cx="600" cy="130" r="7" fill="rgba(94,143,187,.16)" stroke="none"/>
+      <path d="M130 210 Q600 96 1070 210" stroke-width="1.6"/>
+      <line x1="600" y1="130" x2="600" y2="640"/>
+      <line x1="130" y1="210" x2="130" y2="770"/>
+      <line x1="1070" y1="210" x2="1070" y2="770"/>
+      <line x1="130" y1="210" x2="1070" y2="210"/>
+      <circle cx="905" cy="196" r="34" fill="rgba(94,143,187,.08)" stroke="none"/>
+    </g>
+    <text x="905" y="204" text-anchor="middle" fill="rgba(232,228,220,.28)" font-size="26" font-family="Songti SC,SimSun,serif" letter-spacing="4">准的</text>
+  </svg>
+  <div class="wrap hero">
+    <div class="vtitle">诗品</div>
+    <div class="vsub">梁 钟嵘 撰</div>
+    <div class="hmain">
+      <div class="kick">殆知阁导读 · 诗藏</div>
+      <p class="lede">一千五百年前的一份<b>诗歌排行榜</b>：一百二十二位诗人，另加无名氏〈古诗〉一组，分置上中下三品。曹操列下品，陶潜列中品，曹植独占上品鳌头。榜单作者自己承认，这秤会挨骂。</p>
+      <p class="hq"><q>动天地，感鬼神，莫近于诗。</q></p>
+      <div class="hsrc">序开卷第一句的下半，上半是「气之动物，物之感人」</div>
+      <div id="scale">
+        <div class="swayer">
+          <div class="tags">
+            <div class="tag"><div class="tr">上品</div><div class="tn">十一人，并古诗一组</div></div>
+            <div class="tag mid"><div class="tr">中品</div><div class="tn">三十九人</div></div>
+            <div class="tag low"><div class="tr">下品</div><div class="tn">七十二人</div></div>
+          </div>
+        </div>
+        <div class="tagnote">序自计「凡百二十人」，今本实数多出二名，见文末校记</div>
+        <div class="seal"><span>才</span><span>子</span><span>之</span><span>证</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="scrolltip">下 拉 放 榜</div>
+</header>
+
+<!-- ================= 一 缘起 ================= -->
+<section id="s1">
+  <div class="wrap">
+    <div class="stit rv"><span class="no">壹</span><h2>为什么要放这张榜</h2></div>
+    <p class="slead rv">梁朝的诗坛，人人都谈诗，谁也不服谁。钟嵘在序里把这场没完没了的争吵原样记下，然后自己上场当裁判。</p>
+    <div class="cols">
+      <div class="card rv">
+        <h3>吵不出结果</h3>
+        <p>诗是王公缙绅宴席上的日常谈资，谈资却没有准绳。他说众人品诗，好比把两条河的水倒进同一只碗：</p>
+        <p class="bigq"><q>淄、渑并泛，朱紫相夺，喧议竞起，准的无依。</q></p>
+        <p>近人彭城刘士章看不下去了，想动笔立个标准，文章没写成就放下了。钟嵘接过了这件事，但他把话说得很轻：</p>
+        <p class="mq"><q>嵘之今录，庶周旋于闾里，均之于谈笑耳。</q><i>我这册子，不过街巷之间谈笑的资粮</i></p>
+      </div>
+      <div class="card rv">
+        <h3>他凭什么定标准</h3>
+        <p>先把诗的来路讲清：四季万物摇动人心，人心发为吟咏。然后立三条手法，名曰兴、比、赋：</p>
+        <p class="mq"><q>文已尽而意有馀，兴也。</q><i>话说完了，意思没完</i></p>
+        <p class="mq"><q>因物喻志，比也。</q><i>借物说志</i></p>
+        <p class="mq"><q>直书其事，寓言写物，赋也。</q><i>直陈其事</i></p>
+        <p>又立一条底线，叫滋味。五言之所以胜过四言，在它最有滋味，而好句子的来路只有一个：</p>
+        <p class="bigq"><q>观古今胜语，多非补假，皆由直寻。</q></p>
+      </div>
+    </div>
+    <div class="band rv">
+      <span class="bt">诗能做什么</span>
+      <q>春风春鸟，秋月秋蝉，夏云暑雨，冬月祁寒。</q>
+      <q>嘉会寄诗以亲，离群讬诗以怨。</q>
+      <q>使穷贱易安，幽居靡闷，莫尚于诗矣。</q>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 二 三品榜 ================= -->
+<section id="s2">
+  <div class="fanchip"><b>翻案 <i id="fann">0</i> 次，钟嵘早留了口子</b></div>
+  <div class="wrap">
+    <div class="stit rv"><span class="no">贰</span><h2>三品榜</h2></div>
+    <p class="slead rv">规矩写在卷首：只评五言，只录亡故之人，一品之内按时代排先后，不按高下。入榜即是一种认证，他说<q>预此宗流者，便称才子</q>。</p>
+    <p class="epig rv"><q>一品之中，略以世代为先后，不以优劣为诠次。</q><q>今所寓言，不录存者。</q></p>
+    <div id="board">
+      <!-- 上品 -->
+      <div class="rkcol" id="col-up">
+        <div class="rkhead"><h3>上品</h3><span>十一人 并古诗一组</span></div>
+        <div class="upfirst">以下为升高之牌</div>
+        <div class="plates">
+          <div class="plate rv" data-n="曹植">
+            <div class="phead" role="button" tabindex="0"><span class="po">魏 陈思王</span><span class="pn">曹植</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>骨气奇高，词采华茂，情兼雅怨，体被文质，粲溢今古，卓尔不群。</q></p>
+              <p class="mq"><q>譬人伦之有周、孔，鳞羽之有龙凤，音乐之有琴笙。</q></p>
+              <p class="gl">全榜最高的待遇：把他比作圣人、龙凤、琴笙。孔氏之门如用诗，则公干升堂，思王入室。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">无名氏</span><span class="pn">古诗</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>文温以丽，意悲而远，惊心动魄，可谓几乎一字千金！</q></p>
+              <p class="gl">不署作者的组诗被破格提为上品第一组；「人代冥灭，而清音独远，悲夫」是他替无名氏发的感叹。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">汉 都尉</span><span class="pn">李陵</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>生命不谐，声颓身丧。使陵不遭辛苦，其文亦何能至此！</q></p>
+              <p class="gl">评语替降将辩护：不是苦难成全诗，是苦难逼出了这样的诗。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">汉 婕妤</span><span class="pn">班姬</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>《团扇》短章，词旨清捷，怨深文绮，得匹妇之致。</q><i>「侏儒一节，可以知其工矣」</i></p>
+              <p class="gl">一百二十二人里最早的女性上榜者，从一段短歌里看出全部手笔。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">魏 文学</span><span class="pn">刘桢</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>仗气爱奇，动多振绝。真骨凌霜，高风跨俗。</q></p>
+              <p class="gl">缺点也直说：气过其文，雕润恨少。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">魏 侍中</span><span class="pn">王粲</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>发愀怆之词，文秀而质羸。</q></p>
+              <p class="gl">定位句是「方陈思不足，比魏文有馀」，把他钉在曹植与曹丕之间。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">晋 步兵</span><span class="pn">阮籍</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>言在耳目之内，情寄八荒之表。</q></p>
+              <p class="gl">「厥旨渊放，归趣难求」，连注家颜延年都「怯言其志」。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">晋 平原相</span><span class="pn">陆机</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>咀嚼英华，厌饫膏泽，文章之渊泉也。</q></p>
+              <p class="gl">钟嵘自己的秤：<q>余常言陆才如海，潘才如江。</q></p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">晋 黄门郎</span><span class="pn">潘岳</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>翩翩然如翔禽之有羽毛，衣服之有绡縠。</q><i>《翰林》所叹</i></p>
+              <p class="gl">谢混的比较被全文照录：<q>潘诗烂若舒锦，无处不佳，陆文如披沙简金，往往见宝。</q></p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">晋 黄门郎</span><span class="pn">张协</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>文体华净，少病累。</q></p>
+              <p class="gl">考语是「风流调达，实旷代之高手」，读他让人「味之亹亹不倦」。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">晋 记室</span><span class="pn">左思</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>文典以怨，颇为精切，得讽谕之致。</q></p>
+              <p class="gl">谢灵运的话被引来抬价：<q>左太冲诗，潘安仁诗，古今难比。</q></p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">宋 临川太守</span><span class="pn">谢灵运</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>譬犹青松之拔灌木，白玉之映尘沙，未足贬其高洁也。</q></p>
+              <p class="gl">上品压轴。繁芜是缺点，但挡不住「名章迥句，处处间起」；小名「客儿」的来历，他讲了钱塘杜明师夜梦的一段。</p>
+            </div></div>
+          </div>
+        </div>
+      </div>
+      <!-- 中品 -->
+      <div class="rkcol mid" id="col-mid">
+        <div class="rkhead"><h3>中品</h3><span>三十九人</span></div>
+        <div class="plates">
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">汉 上计 夫妇</span><span class="pn">秦嘉 徐淑</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>夫妻事既可伤，文亦凄怨。</q></p>
+              <p class="gl">顺带记了一笔冷知识：「为五言者，不过数家，而妇人居二。」</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">魏 文帝</span><span class="pn">曹丕</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>率皆鄙质如偶语。</q></p>
+              <p class="gl">皇帝也照贬：百余篇大多像家常对话，只有「西北有浮云」十余首堪称「殊美赡可玩」。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">晋 中散</span><span class="pn">嵇康</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>过为峻切，讦直露才，伤渊雅之致。</q></p>
+              <p class="gl">但讬喻清远，良有鉴裁，仍保住高流之名。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">晋 司空</span><span class="pn">张华</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>犹恨其儿女情多，风云气少。</q></p>
+              <p class="gl">放进一个两难：<q>今置之中品疑弱，处之下科恨少。</q>秤秤不准的时候，他如实记下。</p>
+            </div></div>
+          </div>
+          <div class="plate bare rv"><div class="phead"><span class="po">魏 尚书 等</span><span class="pn">何晏 孙楚 王赞 张翰 潘尼</span></div></div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">魏 侍中</span><span class="pn">应璩</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>善为古语，指事殷勤，雅意深笃，得诗人激刺之旨。</q></p>
+              <p class="gl">记住这个名字：他是陶潜名单上的师承，全榜最出名的一桩判词。</p>
+            </div></div>
+          </div>
+          <div class="plate bare rv"><div class="phead"><span class="po">晋清河守 等</span><span class="pn">陆云 石崇 曹摅 何劭</span></div></div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">晋 太尉 等</span><span class="pn">刘琨 卢谌</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>琨既体良才，又罹厄运，故善叙丧乱，多感恨之词。</q></p>
+              <p class="gl">又是时势造诗的逻辑，与李陵条遥遥相对。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">晋 弘农太守</span><span class="pn">郭璞</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>始变永嘉平淡之体，故称中兴第一。</q></p>
+              <p class="gl">但游仙之作被钟嵘判为「非列仙之趣也」：你写的哪里是神仙，分明是牢骚。</p>
+            </div></div>
+          </div>
+          <div class="plate bare rv"><div class="phead"><span class="po">晋 处士 等</span><span class="pn">郭泰机 顾恺之 谢世基 顾迈 戴凯</span></div></div>
+          <div class="plate rv" data-n="陶潜">
+            <div class="phead" role="button" tabindex="0"><span class="po">宋 征士</span><span class="pn">陶潜<button class="fanbtn" data-n="陶潜">翻</button></span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>其源出于应璩，又协左思风力。</q></p>
+              <p class="mq"><q>文体省净，殆无长语。</q></p>
+              <p class="mq"><q>古今隐逸诗人之宗也。</q></p>
+              <p class="gl">中品，是这张榜最著名的争议。他辩护说世叹其质直，<q>风华清靡，岂直为田家语邪？</q>千年后苏轼遍和陶诗，把这场翻案做完。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">宋 光禄大夫</span><span class="pn">颜延之</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>又喜用古事，弥见拘束。</q></p>
+              <p class="gl">用典太多的反面教材；汤惠休那句著名的比较让他<q>终身病之</q>，见掌故一节。</p>
+            </div></div>
+          </div>
+          <div class="plate bare rv"><div class="phead"><span class="po">宋豫章太守 等</span><span class="pn">谢瞻 谢混 袁淑 王微 王僧达</span></div></div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">宋 法曹参军</span><span class="pn">谢惠连</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>小谢才思富捷，恨其兰玉夙凋，故长辔未骋。</q></p>
+              <p class="gl">早逝的惋惜，还有一段「池塘生春草」的神助故事，见掌故一节。</p>
+            </div></div>
+          </div>
+          <div class="plate rv" data-n="鲍照">
+            <div class="phead" role="button" tabindex="0"><span class="po">宋 参军</span><span class="pn">鲍照<button class="fanbtn" data-n="鲍照">翻</button></span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>嗟其才秀人微，故取湮当代。</q></p>
+              <p class="gl">钟嵘自己点破了原因：有才，出身不行。「总四家而擅美，跨两代而孤出」，也只到此为止。后来李白杜甫一路的诗风，公认从他这条线下来的。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">齐 吏部</span><span class="pn">谢朓</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>足使叔源失步，明远变色。</q></p>
+              <p class="gl">也有缺点：<q>善自发诗端，而末篇多踬</q>，意锐而才弱。补一句现场感：「朓极与余论诗，感激顿挫过其文。」</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">齐 光禄</span><span class="pn">江淹</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>文通诗体总杂，善于摹拟。</q></p>
+              <p class="gl">江郎才尽的档案也在这条里，见掌故一节。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">梁 卫将军 等</span><span class="pn">范云 邱迟</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>范诗清便宛转，如流风回雪。</q></p>
+              <p class="mq"><q>邱诗点缀映媚，似落花依草。</q></p>
+              <p class="gl">全榜最漂亮的一对比喻。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">梁 太常</span><span class="pn">任昉</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>但昉既博物，动辄用事，所以诗不得奇。</q></p>
+              <p class="gl">少年士子学他用典，他补一句「弊矣」。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">梁 左光禄</span><span class="pn">沈约</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>嵘谓约所著既多，今翦除淫杂，收其精要，允为中品之第矣。</q></p>
+              <p class="gl">等于当着权势者的面替他删了诗。四声八病的正面交锋，见下节四场硬仗。</p>
+            </div></div>
+          </div>
+        </div>
+      </div>
+      <!-- 下品 -->
+      <div class="rkcol low" id="col-low">
+        <div class="rkhead"><h3>下品</h3><span>七十二人</span></div>
+        <div class="plates">
+          <div class="plate rv" data-n="曹操">
+            <div class="phead" role="button" tabindex="0"><span class="po">魏武帝 明帝</span><span class="pn">曹操 曹叡<button class="fanbtn" data-n="曹操">翻</button></span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>曹公古直，甚有悲凉之句。</q></p>
+              <p class="mq"><q>叡不如丕，亦称三祖。</q></p>
+              <p class="gl">一代雄主，十个字打发到下品。全榜流传最广的失手，后世诗话推他为建安之雄，幽燕老将，气韵沉雄。</p>
+              <p class="evd">后世翻案：建安风骨，公其首出。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">汉令史 等</span><span class="pn">班固 郦炎 赵壹</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>观其《咏史》，有感叹之词。</q></p>
+              <p class="gl">序里骂过班固「质木无文」，这里稍留体面。末句是一声叹息：「斯人也，而有斯困，悲夫。」</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">魏白马王 等</span><span class="pn">曹彪 徐干</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>虽曰「以莛叩钟」，亦能闲雅矣。</q></p>
+              <p class="gl">拿草茎撞钟，居然撞得从容，是下品里少见的温柔考语。</p>
+            </div></div>
+          </div>
+          <div class="plate bare rv"><div class="phead"><span class="po">魏仓曹属 等</span><span class="pn">阮瑀 欧阳建 应璩 嵇含 阮偘 嵇绍 枣据</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">晋中书 等</span><span class="pn">张载 傅玄 傅咸 缪袭 夏侯湛</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">晋骠骑 等</span><span class="pn">王济 杜预 孙绰 许询</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">晋征士 等</span><span class="pn">戴逵 殷仲文</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">宋 尚书令</span><span class="pn">傅亮</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">宋记室 等</span><span class="pn">何长瑜 羊曜璠 范晔</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">宋孝武帝 等</span><span class="pn">刘骏 刘铄 刘宏</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">宋 光禄</span><span class="pn">谢庄</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">宋御史 等</span><span class="pn">苏宝生 陵修之 任昙绪 戴兴</span></div></div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">宋 监典事</span><span class="pn">区惠恭</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>君诚能，恐人未重。且可以为谢法曹造。</q></p>
+              <p class="gl">一桩代笔案：胡人属吏的诗被上司冒名，写赋又得罪主家被斥退；谢惠连教他换个名字送礼，得锦二端。抄袭产业链的完整记录。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">齐惠休上人 等</span><span class="pn">惠休 道猷 宝月</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>《行路难》是东阳柴廓所造。宝月尝憩其家，会廓亡，因窃而有之。</q></p>
+              <p class="mq"><q>廓子赉手本出都，欲讼此事，乃厚赂止之。</q></p>
+              <p class="gl">和尚偷了死者的稿子，被死者儿子告到都城，花钱私了。南朝版版权诉讼，全档案在这条里。</p>
+            </div></div>
+          </div>
+          <div class="plate bare rv"><div class="phead"><span class="po">齐高帝 等</span><span class="pn">萧道成 张永 王俭</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">齐黄门 等</span><span class="pn">谢超宗 丘灵鞠 刘祥 檀超 锺宪 颜则 顾则心</span></div></div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">齐参军 等</span><span class="pn">毛伯成 吴迈远 许瑶之</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>我诗可为汝诗父。</q><i>汤休谓吴迈远</i></p>
+              <p class="mq"><q>不然尔，汤可为庶兄。</q><i>谢光禄答</i></p>
+              <p class="gl">两位诗人在纸上攀亲戚，一位要当爹，一位只肯认个堂兄。</p>
+            </div></div>
+          </div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">齐 等</span><span class="pn">鲍令晖 韩兰英</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>臣妹才自亚于左芬，臣才不及太冲尔。</q></p>
+              <p class="gl">鲍照答皇帝的话，替妹妹定位：比我差一点，正好落在左家兄妹的旧例上。「兰英绮密，甚有名篇。」</p>
+            </div></div>
+          </div>
+          <div class="plate bare rv"><div class="phead"><span class="po">齐司徒长史 等</span><span class="pn">张融 孔稚珪</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">齐宁朔将军 等</span><span class="pn">王融 刘绘</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">齐 仆射</span><span class="pn">江祏</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">齐记室 等</span><span class="pn">王巾 卞彬 卞录</span></div></div>
+          <div class="plate rv">
+            <div class="phead" role="button" tabindex="0"><span class="po">齐 诸暨令</span><span class="pn">袁嘏</span><span class="pm">＋</span></div>
+            <div class="pbody"><div class="pin">
+              <p class="mq"><q>我诗有生气，须人捉著。不尔，便飞去。</q></p>
+              <p class="gl">评语只有五个字「嘏诗平平耳」，他自己倒觉得诗是活的，得有人按住。</p>
+            </div></div>
+          </div>
+          <div class="plate bare rv"><div class="phead"><span class="po">齐雍州刺史 等</span><span class="pn">张欣泰 范缜</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">梁 秀才</span><span class="pn">陆厥</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">梁常侍 等</span><span class="pn">虞羲 江洪</span></div></div>
+          <div class="plate bare rv"><div class="phead"><span class="po">梁步兵 等</span><span class="pn">鲍行卿 孙察</span></div></div>
+        </div>
+      </div>
+    </div>
+    <p class="note rv">本页摘录评语与轶事，非全帙；灰色名牌为未录评语者。<em>凡带翻钮的三块名牌可点：升入上品，盖一枚翻字朱章。</em></p>
+  </div>
+</section>
+
+<!-- ================= 三 源流谱 ================= -->
+<section id="s3">
+  <div class="wrap">
+    <div class="stit rv"><span class="no">叁</span><h2>源流谱</h2></div>
+    <p class="slead rv">每条评语都以一句话开卷：<em>源出谁家</em>。国风、楚辞两支祖脉往下分岔，师承线上 hover 高亮。榜单的暴论多半藏在这张谱里：陶潜被记在应璩名下，曹操则干脆没有家世可归。</p>
+    <div id="lineage" class="rv"></div>
+    <p class="linnote">悬停任何一位诗人，看他从哪一支脉来。虚线为无名氏〈古诗〉，全谱的另一位祖先。</p>
+  </div>
+</section>
+
+<!-- ================= 四 四场硬仗 ================= -->
+<section id="s4">
+  <div class="wrap">
+    <div class="stit rv"><span class="no">肆</span><h2>四场硬仗</h2></div>
+    <p class="slead rv">榜单之外，序与各条里藏着钟嵘的四处开火。每一处都有具体对手，也都有他自己的让步。</p>
+    <div class="fights">
+      <div class="fight rv">
+        <span class="fn">其一</span>
+        <h3>怼掉书袋</h3>
+        <p class="bigq"><q>至乎吟咏情性，亦何贵于用事？</q></p>
+        <p>他随口拈来五个名句作证，句句不靠经史：<q>思君如流水</q>，既是即目；<q>明月照积雪</q>，讵出经史；<q>清晨登陇首</q>，羌无故实。</p>
+        <p class="vs">对手是颜延之、任昉一路的用典风，他形容当时文坛「句无虚语，语无虚字，拘挛补衲，蠹文已甚」。</p>
+      </div>
+      <div class="fight rv">
+        <span class="fn">其二</span>
+        <h3>怼声律</h3>
+        <p>沈约的四声八病正风行士林，他的回应分两层。先递刀：</p>
+        <p class="bigq"><q>至平上去入，则余病未能。</q></p>
+        <p>再补一句事实：蜂腰、鹤膝的毛病，<q>蜂腰、鹤膝，闾里已具</q>，里巷歌谣里早就有。让步也留足：</p>
+        <p class="mq"><q>但令清浊通流，口吻调利，斯为足矣。</q></p>
+      </div>
+      <div class="fight rv">
+        <span class="fn">其三</span>
+        <h3>立滋味</h3>
+        <p>配方的口诀是：</p>
+        <p class="bigq"><q>干之以风力，润之以丹彩。</q></p>
+        <p>火候过了不行：专用比兴则意深词踬，专用赋体则意浮文散。到位的境界：</p>
+        <p class="mq"><q>使味之者无极，闻之者动心，是诗之至也。</q></p>
+      </div>
+      <div class="fight rv">
+        <span class="fn">其四</span>
+        <h3>争「品第」本身</h3>
+        <p>他清点前人：「谢客集诗，逢诗辄取；张骘《文士》，逢文即书。」结论是：</p>
+        <p class="bigq"><q>诸英志录，并义在文，曾无品第。</q></p>
+        <p>只收不评的传统里，他是第一个把高下写进书名的。连别人的未遂稿也记了一笔，让刘士章的名字留在出版史上。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 五 签筒掌故 ================= -->
+<section id="s5">
+  <div class="wrap">
+    <div class="stit rv"><span class="no">伍</span><h2>签筒掌故</h2></div>
+    <p class="slead rv">榜文里夹着六桩小事，是从一百二十二则评语里长出来的段子。抽一支签，看一段南朝诗坛的日常。</p>
+    <div id="lotzone">
+      <div class="tube rv">
+        <div class="ttitle">诗 坛 签 筒</div>
+        <div class="sticks">
+          <button class="stick" data-i="0">才尽</button>
+          <button class="stick" data-i="1">春草</button>
+          <button class="stick" data-i="2">芙蓉</button>
+          <button class="stick" data-i="3">捉诗</button>
+          <button class="stick" data-i="4">诗父</button>
+          <button class="stick" data-i="5">盗稿</button>
+        </div>
+        <div class="tubetip">点签抽故</div>
+      </div>
+      <div id="lotcard" class="rv">
+        <div class="lthint">签筒在左，先抽一支。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 六 校记 ================= -->
+<section id="s6">
+  <div class="wrap">
+    <div class="stit rv"><span class="no">陆</span><h2>校字记</h2></div>
+    <p class="slead rv">库本有拆字、窜字数处，照录如下，引文断口均已避开。</p>
+    <div class="jiaoji rv">
+      <div class="row"><span class="jk">拆字</span><span>魏文帝条「何以<q>钅全衡群彦</q>」：<q>钅全</q>即铨字拆写。</span></div>
+      <div class="row"><span class="jk">拆字</span><span>序「今既不被<q>管纟玄</q>」：<q>纟玄</q>即弦字拆写。</span></div>
+      <div class="row"><span class="jk">窜字</span><span>下品条题「齐正员郎<q>锺宪齐</q>」末字当连下条「齐诸暨令颜则」读，库本此处断条错位。</span></div>
+      <div class="row"><span class="jk">衍字</span><span>古诗条「旧疑是建安中<q>曹泛王</q>所制」：泛字疑衍，当为曹、王二家。</span></div>
+      <div class="row"><span class="jk">计数</span><span>序自计「凡百二十人」，今本上中下三品点数为一百二十二，或举成数，或传写有添。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 页脚 ================= -->
+<footer>
+  <div class="wrap">
+    <div class="row"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），诗藏诗话〈诗品〉，梁钟嵘撰，库内全文去空白 7,072 字，序并上中下三卷，凡六十一条，一百二十二人并〈古诗〉一组。本页引文经脚本与库内文本去标点、空白归一逐字核验通过；库本拆字窜条诸处见校字记，引文断口均已避开。目录：<a href="mulu.html">殆知阁导读总目</a>。</div>
+    <div class="row"><b>库外申报</b>　三品人数为今本统计口径，序自计百二十人；苏轼遍和陶诗、敖陶孙评曹公为幽燕老将，气韵沉雄，李白杜甫承鲍照一路等翻案脉络均为后起诗史通识，库内无，翻案钮与证据小字仅系提示；「思君如流水」等五言句为钟嵘所引成句；〈古诗〉十九首之称、建安风骨等提法为通行文学史语。</div>
+    <div class="row"><b>时代局限提醒</b>　品第以官爵门第标识诗人，降将、帝王、胡人、僧人各按其时代口径落笔；对女性作者的评语不出「匹妇」「纨素」一类口吻；「才秀人微，故取湮当代」一语既是对鲍照的惋惜，也如实记录了南朝的出身逻辑；「不录存者」自认避祸之规。三品升降是南朝士族的趣味切片，不代表诗歌史定论，均为成文时代的原貌，不代表编者与导读立场。愿读者以历史眼光观之。</div>
+    <div class="fin">殆知阁导读　二百六十二</div>
+  </div>
+</footer>
+
+<div id="qbank" hidden>
+  <section class="lot" data-t="江郎才尽" data-w="齐光禄 江淹 条">
+    <p class="bigq"><q>我有笔在卿处多年矣，可以见还。</q></p>
+    <p class="bigq"><q>尔后为诗，不复成语，故世传江淹才尽。</q></p>
+    <p class="gl">罢郡夜宿，梦里一位自称郭璞的美男子来讨还五色笔。江淹从怀里摸出一支奉还，从此写不出句子。成语的原始档案，全文不过六十余字。</p>
+  </section>
+  <section class="lot" data-t="池塘春草" data-w="谢惠连 条引《谢氏家录》">
+    <p class="bigq"><q>康乐每对惠连，辄得佳语。</q></p>
+    <p class="bigq"><q>此语有神助，非吾语也。</q></p>
+    <p class="gl">谢灵运整日写不出诗，睡梦里见到弟弟谢惠连，醒来落下「池塘生春草」五字，自己承认这一句不是我写的。</p>
+  </section>
+  <section class="lot" data-t="出水芙蓉" data-w="颜延之 条引汤惠休">
+    <p class="bigq"><q>谢诗如芙蓉出水，颜如错彩镂金。</q></p>
+    <p class="bigq"><q>颜终身病之。</q></p>
+    <p class="gl">一句比较，两句命运：芙蓉出水的谢灵运千古定评，被比作雕金刻彩的颜延之，记恨了一辈子。</p>
+  </section>
+  <section class="lot" data-t="诗须捉著" data-w="齐诸暨令 袁嘏 条">
+    <p class="bigq"><q>我诗有生气，须人捉著。不尔，便飞去。</q></p>
+    <p class="gl">钟嵘给他的评语只有「嘏诗平平耳」五个字。他坚持自己的诗是活的，一松手就飞。</p>
+  </section>
+  <section class="lot" data-t="诗父庶兄" data-w="吴迈远 条">
+    <p class="bigq"><q>我诗可为汝诗父。</q></p>
+    <p class="bigq"><q>不然尔，汤可为庶兄。</q></p>
+    <p class="gl">汤惠休对吴迈远说要当你诗的爹，吴不服，去问谢光禄。谢的判决是：不成，惠休只能当个堂兄。</p>
+  </section>
+  <section class="lot" data-t="盗稿案" data-w="宝月 条">
+    <p class="bigq"><q>《行路难》是东阳柴廓所造。宝月尝憩其家，会廓亡，因窃而有之。</q></p>
+    <p class="bigq"><q>廓子赉手本出都，欲讼此事，乃厚赂止之。</q></p>
+    <p class="gl">僧人宝月借宿时偷走亡者文稿，死者儿子带原件进京要打官司，被一笔厚赂按住。附赠另一桩：区惠恭的诗被上司冒名，反教他把诗改名送人换赏。</p>
+  </section>
+</div>
+
+<script>
+(function(){
+  /* reveal */
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.08});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  /* 板条展开 */
+  document.querySelectorAll('.plate:not(.bare)').forEach(function(p){
+    p.querySelector('.phead').addEventListener('click',function(ev){
+      if(ev.target.closest('.fanbtn')) return;
+      p.classList.toggle('open');
+    });
+  });
+
+  /* 翻案 */
+  var fan=0, fann=document.getElementById('fann');
+  var upcol=document.getElementById('col-up');
+  var uplist=upcol.querySelector('.plates');
+  document.querySelectorAll('.fanbtn').forEach(function(b){
+    b.addEventListener('click',function(ev){
+      ev.stopPropagation();
+      var p=b.closest('.plate');
+      if(p.classList.contains('over')) return;
+      p.classList.add('over');
+      p.classList.remove('open');
+      uplist.prepend(p);
+      upcol.classList.add('upshift');
+      fan++; fann.textContent=fan;
+    });
+  });
+
+  /* 源流谱 */
+  var NODES=[
+    {n:'国风',x:150,y:20,root:1},{n:'楚辞',x:470,y:20,root:1},{n:'小雅',x:790,y:20,root:1},{n:'古诗',x:960,y:20,ghost:1},
+    {n:'李陵',x:400,y:120},{n:'刘桢',x:880,y:120},{n:'曹植',x:700,y:120},{n:'王粲',x:540,y:120},{n:'阮籍',x:790,y:120},
+    {n:'班姬',x:330,y:220},{n:'潘岳',x:470,y:220},{n:'左思',x:880,y:220},{n:'陆机',x:620,y:220},{n:'张协',x:540,y:320},{n:'张华',x:400,y:320},
+    {n:'颜延之',x:640,y:320},{n:'应璩',x:760,y:320},{n:'谢灵运',x:700,y:420},{n:'陶潜',x:860,y:420},{n:'鲍照',x:470,y:420},{n:'沈约',x:300,y:420}
+  ];
+  var EDGES=[
+    ['国风','古诗'],['国风','曹植'],['楚辞','李陵'],['小雅','阮籍'],['古诗','刘桢'],
+    ['李陵','班姬'],['李陵','王粲'],['古诗','阮籍'],['刘桢','左思'],['曹植','陆机'],['王粲','潘岳'],
+    ['左思','陶潜'],['陆机','颜延之'],['张协','鲍照'],['张华','鲍照'],['应璩','陶潜'],['曹植','谢灵运'],['张华','沈约']
+  ];
+  var W=1060,H=480, sx=function(x){return 40+x*0.98;}, sy=function(y){return 30+y;};
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
+  EDGES.forEach(function(e,i){
+    var a=NODES.filter(function(n){return n.n===e[0];})[0], b=NODES.filter(function(n){return n.n===e[1];})[0];
+    var x1=sx(a.x)+45,y1=sy(a.y)+22,x2=sx(b.x)+45,y2=sy(b.y);
+    s+='<path class="edge" data-a="'+a.n+'" data-b="'+b.n+'" d="M'+x1+' '+y1+' C'+x1+' '+((y1+y2)/2)+','+x2+' '+((y1+y2)/2)+','+x2+' '+y2+'"/>';
+  });
+  NODES.forEach(function(n){
+    var w=n.n.length>2?86:66;
+    s+='<g class="nd'+(n.root?' root':'')+(n.ghost?' ghost':'')+'" data-n="'+n.n+'">';
+    s+='<rect x="'+sx(n.x)+'" y="'+sy(n.y)+'" width="'+w+'" height="34" rx="3"/>';
+    s+='<text x="'+(sx(n.x)+w/2)+'" y="'+(sy(n.y)+23)+'" text-anchor="middle">'+n.n+'</text></g>';
+  });
+  s+='</svg>';
+  var lg=document.getElementById('lineage'); lg.innerHTML=s;
+  lg.querySelectorAll('.nd').forEach(function(g){
+    var name=g.getAttribute('data-n');
+    g.addEventListener('mouseenter',function(){
+      lg.querySelectorAll('.edge').forEach(function(e){
+        var hit=(e.getAttribute('data-a')===name||e.getAttribute('data-b')===name);
+        e.classList.toggle('lit',hit);
+      });
+      lg.querySelectorAll('.nd').forEach(function(o){
+        o.classList.toggle('hot', o===g || EDGES.some(function(e){
+          return (e[0]===name&&e[1]===o.getAttribute('data-n'))||(e[1]===name&&e[0]===o.getAttribute('data-n'));
+        }));
+      });
+    });
+    g.addEventListener('mouseleave',function(){
+      lg.querySelectorAll('.lit').forEach(function(e){e.classList.remove('lit');});
+      lg.querySelectorAll('.hot').forEach(function(e){e.classList.remove('hot');});
+    });
+  });
+
+  /* 签筒：签文取自隐藏 qbank */
+  var bank=document.querySelectorAll('#qbank .lot');
+  var card=document.getElementById('lotcard');
+  document.querySelectorAll('.stick').forEach(function(st){
+    st.addEventListener('click',function(){
+      document.querySelectorAll('.stick').forEach(function(o){o.classList.remove('on');});
+      st.classList.add('on');
+      var L=bank[+st.getAttribute('data-i')];
+      card.innerHTML='';
+      var h=document.createElement('h3'); h.textContent=L.getAttribute('data-t'); card.appendChild(h);
+      var w=document.createElement('div'); w.className='lw'; w.textContent=L.getAttribute('data-w'); card.appendChild(w);
+      L.querySelectorAll('p').forEach(function(p){ card.appendChild(p.cloneNode(true)); });
+    });
+  });
+})();
+</script>
+</body>
+</html>
