@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>野议 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink2: #20211e;
+    --paper: #e8e4dc;
+    --paper-faint: rgba(232, 228, 220, 0.62);
+    --paper-dim: rgba(232, 228, 220, 0.34);
+    --gold: #c9963f;
+    --gold-soft: rgba(201, 150, 63, 0.16);
+    --gold-line: rgba(201, 150, 63, 0.38);
+    --ember: #d97b3f;
+    --line: rgba(232, 228, 220, 0.1);
+    --song: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    --mono: "SF Mono", Menlo, Consolas, "PingFang SC", monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: auto; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--song);
+    line-height: 1.9;
+    letter-spacing: 0.03em;
+  }
+  ::selection { background: var(--gold); color: var(--ink); }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  q { quotes: none; }
+
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 22px; }
+
+  /* ============ 夜 · 首屏 ============ */
+  .night {
+    position: relative;
+    min-height: 96vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 60% 42% at 50% 58%, rgba(201, 150, 63, 0.14), transparent 70%),
+      var(--ink);
+    transition: background 2.4s ease;
+    cursor: pointer;
+  }
+  .night::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 30%, rgba(232, 228, 220, 0.05), transparent 55%);
+    pointer-events: none;
+  }
+  .night .kick {
+    font-size: 13px;
+    letter-spacing: 0.42em;
+    color: var(--paper-dim);
+    margin-bottom: 34px;
+    transition: color 2.4s ease;
+  }
+  .lamprow {
+    display: flex;
+    align-items: center;
+    gap: 58px;
+    position: relative;
+    z-index: 2;
+  }
+  .lamp {
+    position: relative;
+    width: 130px;
+    height: 240px;
+    flex: none;
+  }
+  .flame {
+    position: absolute;
+    left: 50%; top: 96px;
+    width: 26px; height: 44px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at 50% 78%, #f7e3ae 0%, var(--gold) 42%, var(--ember) 78%, rgba(217, 123, 63, 0) 100%);
+    border-radius: 50% 50% 46% 46% / 66% 66% 34% 34%;
+    filter: blur(0.6px);
+    box-shadow:
+      0 0 34px 12px rgba(201, 150, 63, 0.36),
+      0 0 90px 40px rgba(201, 150, 63, 0.14);
+    animation: flick 1.1s ease-in-out infinite alternate;
+    transform-origin: 50% 100%;
+  }
+  .flame::after {
+    content: "";
+    position: absolute;
+    left: 50%; bottom: 7px;
+    width: 8px; height: 15px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at 50% 70%, #fdf6e0, rgba(253, 246, 224, 0));
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  }
+  @keyframes flick {
+    0%   { transform: translateX(-50%) scale(1, 1) rotate(-1.4deg); opacity: 0.94; }
+    38%  { transform: translateX(-50%) scale(1.05, 1.1) rotate(1.2deg); opacity: 1; }
+    100% { transform: translateX(-50%) scale(0.95, 0.94) rotate(-0.6deg); opacity: 0.9; }
+  }
+  .wick {
+    position: absolute;
+    left: 50%; top: 138px;
+    width: 3px; height: 18px;
+    transform: translateX(-50%);
+    background: #3c362c;
+    border-radius: 2px;
+  }
+  .pool {
+    position: absolute;
+    left: 50%; top: 150px;
+    width: 150px; height: 74px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at 50% 22%, rgba(201, 150, 63, 0.22), transparent 72%);
+  }
+  .stem {
+    position: absolute;
+    left: 50%; top: 168px;
+    transform: translateX(-50%);
+    width: 2px; height: 44px;
+    background: linear-gradient(rgba(232,228,220,0.28), rgba(232,228,220,0.08));
+  }
+  .base {
+    position: absolute;
+    left: 50%; top: 212px;
+    transform: translateX(-50%);
+    width: 84px; height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(rgba(232,228,220,0.22), rgba(232,228,220,0.05));
+  }
+  .base::after {
+    content: "";
+    position: absolute;
+    left: 50%; top: 8px;
+    transform: translateX(-50%);
+    width: 46px; height: 6px;
+    border-radius: 3px;
+    background: rgba(232, 228, 220, 0.1);
+  }
+  .titlecol {
+    writing-mode: vertical-rl;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+  .titlecol h1 {
+    writing-mode: vertical-rl;
+    font-size: 92px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--paper);
+    text-shadow: 0 0 46px rgba(201, 150, 63, 0.3);
+    transition: color 2.4s ease, text-shadow 2.4s ease;
+  }
+  .titlecol .sub {
+    writing-mode: vertical-rl;
+    font-size: 15px;
+    letter-spacing: 0.34em;
+    color: var(--paper-faint);
+    border-right: 1px solid var(--gold-line);
+    padding-right: 14px;
+    transition: color 2.4s ease;
+  }
+  .sealsq {
+    writing-mode: vertical-rl;
+    align-self: center;
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    padding: 10px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+  .lamplede {
+    margin-top: 40px;
+    max-width: 560px;
+    text-align: center;
+    font-size: 15.5px;
+    color: var(--paper-faint);
+    position: relative;
+    z-index: 2;
+    transition: color 2.4s ease;
+  }
+  .lamplede .hint {
+    display: block;
+    margin-top: 14px;
+    font-size: 12.5px;
+    letter-spacing: 0.3em;
+    color: var(--paper-dim);
+  }
+  /* 天亮 */
+  .night.day {
+    cursor: pointer;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(201, 150, 63, 0.22), transparent 72%),
+      linear-gradient(#2a2620, #4a3f2c 70%, #6b5432);
+  }
+  .night.day .flame {
+    animation: none;
+    transform: translateX(-50%) scale(0.42, 0.5);
+    opacity: 0.55;
+    box-shadow: 0 0 14px 4px rgba(201, 150, 63, 0.22);
+  }
+  .night.day h1 { color: #f4efe4; text-shadow: none; }
+  .night.day .kick, .night.day .lamplede, .night.day .titlecol .sub { color: rgba(30, 26, 18, 0.02); }
+  .night.day .dawnnote { opacity: 1; transform: none; }
+  .dawnnote {
+    position: absolute;
+    bottom: 8%;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 17px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 1.8s ease 1.2s, transform 1.8s ease 1.2s;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* ============ 通用区块 ============ */
+  main { position: relative; }
+  .sec {
+    position: relative;
+    padding: 88px 0 72px;
+    border-top: 1px solid var(--line);
+  }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 14px; }
+  .sec-no {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.14em;
+    flex: none;
+  }
+  .sec h2 {
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--paper);
+  }
+  .sec-cap {
+    font-size: 15px;
+    color: var(--paper-faint);
+    max-width: 760px;
+    margin-bottom: 40px;
+  }
+  .sec-cap em { font-style: normal; color: var(--gold); }
+  .rq {
+    display: block;
+    border-left: 3px solid var(--gold);
+    background: var(--gold-soft);
+    padding: 20px 26px;
+    font-size: 18.5px;
+    line-height: 2.1;
+    letter-spacing: 0.05em;
+    color: var(--paper);
+    border-radius: 0 6px 6px 0;
+    margin: 30px 0;
+  }
+  .rq .qsrc {
+    display: block;
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--paper-dim);
+    letter-spacing: 0.12em;
+  }
+  .rq.big { font-size: 22px; text-align: center; border-left: none; border-top: 1px solid var(--gold-line); border-bottom: 1px solid var(--gold-line); border-radius: 0; padding: 34px 20px; }
+  .note {
+    font-size: 15px;
+    color: var(--paper-faint);
+    max-width: 780px;
+  }
+  .note b { color: var(--gold); font-weight: 700; }
+
+  /* 入场 */
+  .rv { opacity: 0; transform: translateY(20px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .rv.in { opacity: 1; transform: none; }
+
+  /* ============ 一夜时间线 ============ */
+  .oneight {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+    margin: 44px 0 12px;
+    position: relative;
+  }
+  .oneight::before {
+    content: "";
+    position: absolute;
+    left: 4%; right: 4%; top: 9px;
+    border-top: 1px dashed var(--gold-line);
+  }
+  .stop { position: relative; padding: 0 10px 0 0; }
+  .stop .dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    background: var(--ink);
+    position: relative;
+    z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .stop .dot::after {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--paper-dim);
+  }
+  .stop.hot .dot { background: var(--gold); border-color: var(--gold); }
+  .stop.hot .dot::after { background: var(--ink); }
+  .stop h3 {
+    font-size: 16.5px;
+    font-weight: 700;
+    margin: 14px 0 6px;
+    letter-spacing: 0.08em;
+    color: var(--paper);
+  }
+  .stop p { font-size: 13.5px; color: var(--paper-dim); line-height: 1.75; }
+  .stop.hot h3 { color: var(--gold); }
+
+  /* 两无 */
+  .liangwu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+    margin: 46px 0 10px;
+  }
+  .wu {
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--gold);
+    border-radius: 0 0 8px 8px;
+    padding: 30px 28px 26px;
+    background: var(--ink2);
+  }
+  .wu .zi {
+    font-size: 58px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+  .wu p { margin-top: 12px; font-size: 15px; color: var(--paper-faint); }
+  .wu p q { color: var(--paper); font-size: 16px; }
+
+  /* ============ 十二议题本 ============ */
+  .memgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 44px;
+  }
+  .mem {
+    position: relative;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--gold-line);
+    background:
+      repeating-linear-gradient(transparent 0, transparent 37px, rgba(232, 228, 220, 0.05) 37px, rgba(232, 228, 220, 0.05) 38px),
+      var(--ink2);
+    padding: 22px 24px 20px 24px;
+    border-radius: 0 6px 6px 0;
+    overflow: hidden;
+  }
+  .mem::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    border-style: solid;
+    border-width: 0 20px 20px 0;
+    border-color: transparent var(--ink) transparent transparent;
+    filter: drop-shadow(-2px 2px 0 rgba(201, 150, 63, 0.28));
+  }
+  .mem .ord {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--paper-dim);
+    letter-spacing: 0.2em;
+  }
+  .mem h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.14em;
+    margin: 4px 0 8px;
+  }
+  .mem p { font-size: 14px; color: var(--paper-faint); line-height: 1.85; }
+  .mem p q { color: var(--paper); }
+  .mem.hot { border-left-color: var(--gold); }
+  .mem .go { font-size: 12.5px; color: var(--gold); letter-spacing: 0.16em; }
+
+  /* ============ 深读面板 ============ */
+  .deep {
+    background:
+      repeating-linear-gradient(transparent 0, transparent 39px, rgba(232, 228, 220, 0.04) 39px, rgba(232, 228, 220, 0.04) 40px);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 84px 0 76px;
+  }
+  .duo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+    margin: 40px 0 8px;
+  }
+  .pan {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 28px 26px;
+    background: rgba(25, 25, 23, 0.6);
+  }
+  .pan h3 {
+    font-size: 17px;
+    color: var(--gold);
+    letter-spacing: 0.22em;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .pan ul { list-style: none; }
+  .pan li {
+    font-size: 15px;
+    color: var(--paper-faint);
+    padding: 9px 0 9px 18px;
+    position: relative;
+    border-bottom: 1px dotted rgba(232, 228, 220, 0.12);
+  }
+  .pan li:last-child { border-bottom: none; }
+  .pan li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 19px;
+    width: 7px; height: 7px;
+    background: var(--gold-line);
+    transform: rotate(45deg);
+  }
+  .pan li q { color: var(--paper); }
+
+  /* 稻历对征期 */
+  .cal {
+    margin: 44px 0 8px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .cal .row {
+    display: grid;
+    grid-template-columns: 96px repeat(12, 1fr);
+    align-items: stretch;
+  }
+  .cal .row + .row { border-top: 1px solid var(--line); }
+  .cal .lab {
+    padding: 14px 10px;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    border-right: 1px solid var(--line);
+    background: rgba(201, 150, 63, 0.07);
+    display: flex; align-items: center;
+  }
+  .cal .cell {
+    padding: 12px 4px;
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--paper-dim);
+    border-right: 1px dotted rgba(232, 228, 220, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+  }
+  .cal .cell:last-child { border-right: none; }
+  .cal .cell b { color: var(--paper); font-weight: 700; font-size: 13px; }
+  .cal .cell.mark { background: var(--gold-soft); color: var(--paper); }
+  .cal .cell.mark b { color: var(--gold); }
+  .cal .cell.clash { background: rgba(192, 69, 60, 0.18); }
+  .cal .cell.clash b { color: #d4695f; }
+  .calnote { font-size: 13.5px; color: var(--paper-dim); margin-top: 10px; }
+
+  /* 十日十饷 */
+  .ten {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 8px;
+    margin: 40px 0 10px;
+  }
+  .ten .d {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    text-align: center;
+    padding: 14px 4px 12px;
+    background: var(--ink2);
+  }
+  .ten .d .g {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .ten .d .t {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--paper-faint);
+    border-top: 1px dotted rgba(232, 228, 220, 0.14);
+    padding-top: 7px;
+  }
+  .ten .d:nth-child(10) { border-style: dashed; }
+  .ten .d:nth-child(10) .t { font-size: 10.5px; color: var(--paper-dim); padding-top: 5px; }
+
+  /* 贼户构成 */
+  .band {
+    margin: 46px 0 12px;
+  }
+  .bandbar {
+    display: flex;
+    height: 66px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .bandbar .seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .bandbar .s1 { width: 4%; background: var(--gold); }
+  .bandbar .s2 { width: 22%; background: var(--gold-line); color: var(--ink); }
+  .bandbar .s3 { width: 74%; background: rgba(232, 228, 220, 0.82); }
+  .bandlegend { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 14px; }
+  .bandlegend span {
+    font-size: 13.5px;
+    color: var(--paper-faint);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .bandlegend i {
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .chain {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 42px 0 8px;
+  }
+  .chain .hop {
+    border: 1px solid var(--gold-line);
+    color: var(--paper);
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-size: 14.5px;
+    background: var(--ink2);
+  }
+  .chain .hop b { color: var(--gold); }
+  .chain .arw { color: var(--paper-dim); font-size: 15px; }
+
+  /* 账目 */
+  .ledger {
+    margin-top: 40px;
+    border-top: 2px solid var(--gold-line);
+  }
+  .ledger .li {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 15px 2px;
+    border-bottom: 1px dotted rgba(232, 228, 220, 0.16);
+    font-size: 15.5px;
+  }
+  .ledger .li .k { color: var(--paper-faint); flex: none; }
+  .ledger .li .fill {
+    flex: 1;
+    border-bottom: 1px dotted rgba(232, 228, 220, 0.22);
+    transform: translateY(-4px);
+  }
+  .ledger .li .v {
+    color: var(--gold);
+    font-family: var(--mono);
+    font-size: 14.5px;
+    flex: none;
+    letter-spacing: 0.02em;
+  }
+
+  /* 名帖 */
+  .tie {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin: 44px 0 10px;
+    align-items: end;
+  }
+  .tiecard {
+    background: var(--paper);
+    color: #26231d;
+    border-radius: 4px;
+    padding: 22px 16px;
+    text-align: center;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+    position: relative;
+  }
+  .tiecard .nm {
+    writing-mode: vertical-rl;
+    display: inline-block;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.3;
+    color: #26231d;
+  }
+  .tiecard.c1 .nm { font-size: 15px; }
+  .tiecard.c2 .nm { font-size: 21px; }
+  .tiecard.c3 .nm { font-size: 33px; letter-spacing: 0.04em; }
+  .tiecard .cap {
+    display: block;
+    margin-top: 14px;
+    font-size: 13px;
+    color: #7a6f58;
+    border-top: 1px dotted #b9ae94;
+    padding-top: 9px;
+  }
+  .tiecard.c3 { outline: 2px solid var(--gold); outline-offset: 4px; }
+  .tiecard.c3 .cap::after {
+    content: "凑顶止空一字";
+    display: block;
+    margin-top: 5px;
+    color: #a4542e;
+    font-weight: 700;
+  }
+
+  /* 对读 */
+  .duok {
+    border: 1px solid var(--gold-line);
+    border-radius: 10px;
+    padding: 40px 36px;
+    background:
+      radial-gradient(ellipse 80% 100% at 50% 0%, rgba(201, 150, 63, 0.1), transparent 70%),
+      var(--ink2);
+    margin-top: 44px;
+  }
+  .duok .hands {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 22px;
+    align-items: center;
+    margin-top: 26px;
+  }
+  .duok .hand {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px 20px;
+    font-size: 15px;
+    color: var(--paper-faint);
+    text-align: center;
+  }
+  .duok .hand b { display: block; font-size: 19px; color: var(--paper); margin-bottom: 8px; letter-spacing: 0.14em; }
+  .duok .hand a { display: inline-block; margin-top: 10px; font-size: 13px; letter-spacing: 0.1em; }
+  .duok .mid {
+    font-size: 30px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* 结尾 */
+  .coda {
+    padding: 96px 0 80px;
+    text-align: center;
+    border-top: 1px solid var(--line);
+  }
+  .coda .big q { font-size: 30px; line-height: 1.9; letter-spacing: 0.08em; color: var(--paper); display: block; }
+  .coda .big .qsrc { display: block; margin-top: 16px; font-size: 13.5px; color: var(--paper-dim); letter-spacing: 0.2em; }
+  .coda .after {
+    margin-top: 34px;
+    font-size: 15px;
+    color: var(--paper-faint);
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* 页脚 */
+  footer {
+    border-top: 1px solid var(--gold-line);
+    background: #141412;
+    padding: 44px 0 54px;
+  }
+  footer .fm {
+    display: block;
+    font-size: 13px;
+    line-height: 2;
+    color: rgba(232, 228, 220, 0.5);
+    margin-bottom: 14px;
+  }
+  footer .fm b { color: var(--gold); font-weight: 700; }
+  footer .fm a { color: rgba(232, 228, 220, 0.78); text-decoration: underline; }
+
+  @media (max-width: 760px) {
+    .lamprow { flex-direction: column; gap: 26px; }
+    .titlecol { writing-mode: horizontal-tb; flex-direction: row; gap: 18px; }
+    .titlecol h1 { writing-mode: horizontal-tb; font-size: 64px; }
+    .titlecol .sub { writing-mode: horizontal-tb; border-right: none; border-bottom: 1px solid var(--gold-line); padding: 0 0 8px; }
+    .oneight { grid-template-columns: 1fr 1fr; gap: 22px; }
+    .oneight::before { display: none; }
+    .liangwu, .duo, .memgrid { grid-template-columns: 1fr; }
+    .ten { grid-template-columns: repeat(5, 1fr); }
+    .tie { grid-template-columns: 1fr; align-items: stretch; }
+    .duok .hands { grid-template-columns: 1fr; }
+    .duok .mid { text-align: center; }
+    .cal .row { grid-template-columns: 72px repeat(12, 1fr); }
+    .cal .lab { font-size: 11px; padding: 10px 4px; }
+    .bandbar .seg { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="night" id="night" role="button" tabindex="0" aria-label="点亮或熄灭这盏灯" title="点灯芯，等天亮">
+  <div class="kick">殆知阁导读</div>
+  <div class="lamprow">
+    <div class="lamp" aria-hidden="true">
+      <div class="flame"></div>
+      <div class="wick"></div>
+      <div class="pool"></div>
+      <div class="stem"></div>
+      <div class="base"></div>
+    </div>
+    <div class="titlecol">
+      <h1>野议</h1>
+      <div class="sub">明宋应星撰 · 一夜万言</div>
+      <div class="sealsq">卷一百六十八</div>
+    </div>
+  </div>
+  <p class="lamplede">
+    崇祯九年暮春，江西分宜县学的教谕宋应星，同知县在钤山饮酒看松。邸报送到了，上面有觐见一次就得了美官的人。他回了自己冷清的学署，点灯起稿，写到第二天天亮。
+    <span class="hint">点一下灯芯，等天亮</span>
+  </p>
+  <div class="dawnnote">诘朝。万言已成，凡十二议。</div>
+</header>
+
+<main>
+
+  <!-- 一夜 -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-no">其一</span><h2>一夜</h2></div>
+      <p class="sec-cap rv">书的来历，序言交代得比谁都老实：不是奉命之作，不是积年之作，是一趟被<em>邸报</em>扫了兴的春游，回家路上憋出来的一夜。</p>
+
+      <div class="oneight rv">
+        <div class="stop">
+          <div class="dot"></div>
+          <h3>暮春·钤山</h3>
+          <p>县令曹先生挈了清酒、负了诗囊同游，说定只寻松影鹂声，别的消息一概不见。</p>
+        </div>
+        <div class="stop">
+          <div class="dot"></div>
+          <h3>邸报至</h3>
+          <p>报上见有<q>立谈而得美官者</q>。奏议读了几遍，词意磊落，可惜着急的事一件没讲。</p>
+        </div>
+        <div class="stop">
+          <div class="dot"></div>
+          <h3>散归冷署</h3>
+          <p>席间被问起见识，答不上来。回到自己冷清的学署。</p>
+        </div>
+        <div class="stop">
+          <div class="dot"></div>
+          <h3>炊灯具草</h3>
+          <p>烧火点灯，起草。一个小县学官的全部家当：一盏灯。</p>
+        </div>
+        <div class="stop">
+          <div class="dot"></div>
+          <h3>继以诘朝</h3>
+          <p>一夜接一个早晨，不肯停笔。</p>
+        </div>
+        <div class="stop hot">
+          <div class="dot"></div>
+          <h3>万言成</h3>
+          <p>凡十二议，名之曰《野议》。库本去空白一万二千一百五十六字。</p>
+        </div>
+      </div>
+
+      <blockquote class="rq rv"><q>散归冷署，炊灯具草，继以诘朝，胡成万言，名之曰《野议》。</q><span class="qsrc">野议序</span></blockquote>
+
+      <div class="liangwu rv">
+        <div class="wu">
+          <span class="zi">无其胆</span>
+          <p>想直接跪到宫门前，递一封痛哭流涕的奏书，<q>尝思欲伏阙前，上痛哭之书，而无其胆</q>。</p>
+        </div>
+        <div class="wu">
+          <span class="zi">无其颜</span>
+          <p>想找当权的论理，把忧天的话说尽，<q>欲参当道，陈忧天之说，而无其颜</q>。</p>
+        </div>
+      </div>
+
+      <p class="note rv">胆和颜，他自己先招认了。所以这万言书不递宫门，不投当道，<q>以灯窗始之，闾巷终之</q>：从一盏灯下开始，到民间抄传为止。序末他还先替自己告了罪。</p>
+      <blockquote class="rq rv"><q>故有议而无文，罪我者其原之！</q><span class="qsrc">野议序：时事孔棘，岂暇计文章工拙之候哉</span></blockquote>
+      <p class="note rv">落款把身份、时间、地点全押在这里：<q>时崇祯丙子暮春下弦日，分宜教谕宋应星书于学署</q>。丙子是崇祯九年，公元一六三六年。距甲申之变，还有八年。</p>
+    </div>
+  </section>
+
+  <!-- 十二议 -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-no">其二</span><h2>十二道题本</h2></div>
+      <p class="sec-cap rv">十二议一口气排下来，从天讲到地，从钱讲到人：世运、进身、民财、士气、屯田、催科、军饷、练兵、学政、盐政、风俗、乱萌。像一份不肯抄两句套话的<em>奏疏底稿</em>，每一议都直接摊账。</p>
+
+      <div class="memgrid">
+        <div class="mem rv">
+          <span class="ord">其一</span>
+          <h3>世运议</h3>
+          <p>开篇先定调，不信气数已尽：<q>治极思乱，乱极思治</q>。十二议里唯一透着亮色的一议，把全书从绝望里捞起来。</p>
+        </div>
+        <div class="mem rv">
+          <span class="ord">其二</span>
+          <h3>进身议</h3>
+          <p>科举行了三百年，如今州县残破没人肯去赴任，<q>州县之缺不补者，三百有余</q>。他说是铨政坏了，不是人才没了。</p>
+        </div>
+        <div class="mem hot rv">
+          <span class="ord">其三</span>
+          <h3>民财议</h3>
+          <p>天下不缺银子，缺的是东西。此议有专页深读，见下。</p>
+        </div>
+        <div class="mem rv">
+          <span class="ord">其四</span>
+          <h3>士气议</h3>
+          <p>十组对句排比官气盛衰：盛时刀锯鼎镬不畏，衰时闻廷杖而股栗；盛时慨然挂冠，衰时贬章之下麾之不去。</p>
+        </div>
+        <div class="mem hot rv">
+          <span class="ord">其五</span>
+          <h3>屯田议</h3>
+          <p>一个兵一年种五十二天地就够自己吃，剩下三百多天照旧练兵。算法见"账目"页。</p>
+        </div>
+        <div class="mem hot rv">
+          <span class="ord">其六</span>
+          <h3>催科议</h3>
+          <p>税单比庄稼走得快。此议有专页深读，见下。</p>
+        </div>
+        <div class="mem rv">
+          <span class="ord">其七</span>
+          <h3>军饷议</h3>
+          <p>措饷五策，从上上到下下排开；顺手替皇帝算了省灯钱、裁贡品的细账。</p>
+        </div>
+        <div class="mem rv">
+          <span class="ord">其八</span>
+          <h3>练兵议</h3>
+          <p>没有生来就是兵的人，将才是关键：<q>遇宗泽、岳飞，则昨日之寇，今日即兵</q>。</p>
+        </div>
+        <div class="mem rv">
+          <span class="ord">其九</span>
+          <h3>学政议</h3>
+          <p>生员名额成了买卖，势要乡绅子弟<q>儿齿未毁，而斓衫业已荣身</q>；考不上的贫士，转脸流入寇中。</p>
+        </div>
+        <div class="mem rv">
+          <span class="ord">其十</span>
+          <h3>盐政议</h3>
+          <p>他连每人每年吃多少盐都算好了：<q>一人终岁必盐五十斤</q>，据此主张官煎民贩，把盐当粮食卖。</p>
+        </div>
+        <div class="mem hot rv">
+          <span class="ord">其十一</span>
+          <h3>风俗议</h3>
+          <p>从名片上的字看世风。小品见"名帖考"页。</p>
+        </div>
+        <div class="mem hot rv">
+          <span class="ord">其十二</span>
+          <h3>乱萌议</h3>
+          <p>全书收梢，也是哭出来的一议：贼从哪里来。此议有专页深读，见下。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 深读一：民财 -->
+  <section class="deep">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-no">深读一</span><h2>民财议：天下何尝少白金</h2></div>
+      <p class="sec-cap rv">当时朝野的共识是"民穷财尽"，穷的账都算在白银上：九边是中原的漏卮，辽饷是九边的漏卮。宋应星把这笔流行的账整个掀了，换了一种算法。</p>
+
+      <blockquote class="rq rv"><q>财之为言，乃通指百货，非专言阿堵也。今天下何尝少白金哉！所少者，田之五谷、山林之木、墙下之桑、洿池之鱼耳。</q><span class="qsrc">民财议</span></blockquote>
+
+      <div class="duo rv">
+        <div class="pan">
+          <h3>流行的账</h3>
+          <ul>
+            <li>问：财在哪里？<q>专言阿堵</q>，指白银。</li>
+            <li>答：银子流向九边，九边流向关外，故天下穷。</li>
+            <li>对策：搜括、加派、铸钱、开矿。</li>
+          </ul>
+        </div>
+        <div class="pan">
+          <h3>宋应星的账</h3>
+          <ul>
+            <li>财是<q>天生地宜，而人功运旋而出</q>的百货：谷、木、桑、鱼。</li>
+            <li>有此数物在手，<q>白镪黄金可以疾呼而至</q>，白银自己会来。</li>
+            <li>对策：让种田、伐木、养蚕、养鱼的人活得下去。</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="note rv">这是《天工开物》作者的经济观：财富是<b>物</b>，不是<b>银</b>；银只是物的跑腿。同一双眼睛看国库，先把账目从货币换算回实物。而走到民间，账目变成了人。</p>
+      <blockquote class="rq rv"><q>目见勤苦耕桑，而饥寒不免，以为此无益之事也</q><span class="qsrc">民财议：耕桑无益，始见寇而思归之</span></blockquote>
+    </div>
+  </section>
+
+  <!-- 深读二：催科 -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-no">深读二</span><h2>催科议：两张历的冲突</h2></div>
+      <p class="sec-cap rv">宋应星是江西人，懂稻。他把<em>农事的历</em>和<em>征税的历</em>并排一摆，荒唐自己就显形了：南方的稻，十之四立秋收，十之六要等到霜降、立冬；而征税，二月就开始了。</p>
+
+      <div class="cal rv">
+        <div class="row">
+          <div class="lab">稻历</div>
+          <div class="cell clash"><b>二月</b>下种</div>
+          <div class="cell">三月</div>
+          <div class="cell">四月</div>
+          <div class="cell">五月</div>
+          <div class="cell">六月</div>
+          <div class="cell mark"><b>七月</b>立秋，收十之四</div>
+          <div class="cell">八月</div>
+          <div class="cell mark"><b>九月</b>霜降</div>
+          <div class="cell mark"><b>十月</b>立冬，收十之六</div>
+          <div class="cell">十一月</div>
+          <div class="cell">十二月</div>
+          <div class="cell">正月</div>
+        </div>
+        <div class="row">
+          <div class="lab">征期</div>
+          <div class="cell clash"><b>二月</b>严征已起</div>
+          <div class="cell">追呼</div>
+          <div class="cell">追呼</div>
+          <div class="cell">追呼</div>
+          <div class="cell">六月</div>
+          <div class="cell">七月</div>
+          <div class="cell">八月</div>
+          <div class="cell">九月</div>
+          <div class="cell">十月</div>
+          <div class="cell">十一月</div>
+          <div class="cell">十二月</div>
+          <div class="cell">正月</div>
+        </div>
+      </div>
+      <p class="calnote">北方种麦，六月开征还算赶得上麦收；南方稻国，新谷没下种，税款先上门。</p>
+
+      <blockquote class="rq rv"><q>今方春二月，新谷尚未播种，而严征已起者纷纷矣。天运人事，一至此极耶！</q><span class="qsrc">催科议</span></blockquote>
+
+      <p class="note rv">更糟的是税目。同一户人家，十天里被轮番追的不是一笔税，是十笔名目不同的税。他把这十天排成了课表。</p>
+
+      <div class="ten rv">
+        <div class="d"><span class="g">甲</span><span class="t">条鞭</span></div>
+        <div class="d"><span class="g">乙</span><span class="t">辽饷</span></div>
+        <div class="d"><span class="g">丙</span><span class="t">蓟饷</span></div>
+        <div class="d"><span class="g">丁</span><span class="t">流饷</span></div>
+        <div class="d"><span class="g">戊</span><span class="t">陵工</span></div>
+        <div class="d"><span class="g">己</span><span class="t">王田</span></div>
+        <div class="d"><span class="g">庚</span><span class="t">兑米</span></div>
+        <div class="d"><span class="g">辛</span><span class="t">海米</span></div>
+        <div class="d"><span class="g">壬</span><span class="t">南米</span></div>
+        <div class="d"><span class="g">癸</span><span class="t">相连甲乙旧欠</span></div>
+      </div>
+      <blockquote class="rq rv"><q>甲日条鞭，乙日辽饷，丙日蓟饷，丁日流饷，戊日陵工，己日王田，庚日兑米，辛日海米，壬日南米</q><span class="qsrc">催科议：一年之中，强半在城</span></blockquote>
+      <p class="note rv">充里长的都是自己种地的人，进城挨点卯、受杖疮，税没替完，自家的麦子烂在地里。这一议的结论只有一句：<b>已经寇乱的地方，乱压不下去；没乱的地方，天天被催向乱</b>。</p>
+    </div>
+  </section>
+
+  <!-- 深读三：乱萌 -->
+  <section class="deep">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-no">深读三</span><h2>乱萌议：贼从哪里来</h2></div>
+      <p class="sec-cap rv">全书最后一议，回答那个没人敢认真回答的问题：半天下的寇盗，是什么人。他不问"贼有多少"，先问<em>贼是什么成分</em>。</p>
+
+      <blockquote class="rq rv"><q>其真正杀人不厌，名盗不羞，斩绝性善之根者，百人之中三五人而止。</q><span class="qsrc">乱萌议</span></blockquote>
+
+      <div class="band rv">
+        <div class="bandbar">
+          <div class="seg s1">三五</div>
+          <div class="seg s2">二十馀</div>
+          <div class="seg s3">七十</div>
+        </div>
+        <div class="bandlegend">
+          <span><i style="background:var(--gold)"></i>真盗不羞，斩绝性善之根</span>
+          <span><i style="background:var(--gold-line)"></i>习久染成同恶，终不可反</span>
+          <span><i style="background:rgba(232,228,220,0.82)"></i>胁从莫可如何，中悔无因</span>
+        </div>
+      </div>
+      <blockquote class="rq rv"><q>其馀胁从莫可如何，中悔无因革面者，尚居十分之七也。</q><span class="qsrc">乱萌议</span></blockquote>
+
+      <p class="note rv">十分之七是可以回头的人。所以这支队伍的来路，他一笔一笔画给你看：像追一条河的干流。</p>
+
+      <div class="chain rv">
+        <span class="hop"><b>秦</b> 巩延之间，逃兵倡之，饥民和之</span>
+        <span class="arw">→</span>
+        <span class="hop">渡河而东，<b>晋</b>地民恨怒而思反</span>
+        <span class="arw">→</span>
+        <span class="hop">五省总督有抚无征，五省气合声连</span>
+        <span class="arw">→</span>
+        <span class="hop"><b>豫</b>省望门投献，投寇勾连</span>
+        <span class="arw">→</span>
+        <span class="hop">全楚沿长江，无一块干净土</span>
+      </div>
+
+      <p class="note rv">支流也有名字：催征逼反的里长，<q>夫里长本良名，一旦为寇盗而不恤，挺而走险，急何能择也</q>；失馆断粮的贫士；被苦刑逼供、扳连全家的小民。兵与寇在他那里本是一册两面的账，<q>遇宗泽、岳飞，则昨日之寇，今日即兵。逢朱泚、姚令言，则辰刻之兵，巳刻即寇</q>。</p>
+    </div>
+  </section>
+
+  <!-- 账目 -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-no">其三</span><h2>账目</h2></div>
+      <p class="sec-cap rv">这个作者谈论国事的方式是<b>算</b>。全书到处是数目：一个兵的口粮、一个人的盐、一批商人的本钱、一场灯会的省项。把政策折成数目，是他递给读者的一把算盘。</p>
+
+      <div class="ledger rv">
+        <div class="li"><span class="k">一卒一年下田</span><span class="fill"></span><span class="v">五十二日足食</span></div>
+        <div class="li"><span class="k">一人一年吃盐</span><span class="fill"></span><span class="v">五十斤</span></div>
+        <div class="li"><span class="k">万历盛时广陵盐商资本</span><span class="fill"></span><span class="v">不下三千万两</span></div>
+        <div class="li"><span class="k">这笔资本每年子息</span><span class="fill"></span><span class="v">九百万两</span></div>
+        <div class="li"><span class="k">崇祯四年元宵沿用旧灯</span><span class="fill"></span><span class="v">省六十馀万</span></div>
+        <div class="li"><span class="k">内使报账的京靴官价</span><span class="fill"></span><span class="v">每双七钱</span></div>
+      </div>
+
+      <blockquote class="rq rv"><q>圣主辛未张灯，元宵仍用旧灯悬挂，遂省六十余万。</q><span class="qsrc">军饷议</span></blockquote>
+      <p class="note rv">军饷议替宫里算的账还有：江西袁州每年解进粗麻布，内府拿去蘸油当火把烧，一年上万金；信州解进的棂纱纸，专用于糊宫窗，一年十万金。他一条条列出来，只问一句：<q>岂一年即为敝弃，而明年必易新者</q>？</p>
+      <p class="note rv">屯田议里那笔最有名的算法，干脆替一个兵把全年排了班：锄荒二十日，播种二日，粪溉十日，耨草十日，收获燥干十日。</p>
+      <blockquote class="rq rv"><q>一年之内只费五十二日以足食，其余三百一十余日，尚可超距投石，命中并枪。</q><span class="qsrc">屯田议</span></blockquote>
+    </div>
+  </section>
+
+  <!-- 名帖考 -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-no">其四</span><h2>名帖考</h2></div>
+      <p class="sec-cap rv">风俗议里藏着一则极小的考据：京官名帖上的字，多大才算体面。他把三朝的名帖排在一起，竟排出了一条世风的曲线。</p>
+
+      <div class="tie rv">
+        <div class="tiecard c1"><span class="nm">宋应星谨拜</span><span class="cap">嘉靖：字业已大极</span></div>
+        <div class="tiecard c2"><span class="nm">宋应星谨拜</span><span class="cap">隆万：复降而小</span></div>
+        <div class="tiecard c3"><span class="nm">宋应星谨拜</span><span class="cap">天启壬戌：方大极</span></div>
+      </div>
+
+      <p class="note rv">天启壬戌的名帖大到什么地步？<b>凑顶止空一字</b>：名字顶着纸边写，只留一个字的空。他说破了这个细节的意思。</p>
+      <blockquote class="rq rv"><q>学问未大，功业未大，而只以名姓自大，亦人心不古之一端也。</q><span class="qsrc">风俗议</span></blockquote>
+      <p class="note rv">连名片用几号字，都是时代的脉搏。这一议里同类的细节还有：庶人不该戴的梁冠人人戴了，缙绅媵妾的冠与嫡妻没了分别。名器乱了，先乱在头上。</p>
+    </div>
+  </section>
+
+  <!-- 对读 -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="sec-no">其五</span><h2>同一盏灯，另一部书</h2></div>
+      <p class="sec-cap rv">写《野议》这段时间前后，宋应星还写定了另一部书。两部书出自同一间学署、同一双手，讲的却是两个世界。</p>
+
+      <div class="duok rv">
+        <div class="hands">
+          <div class="hand">
+            <b>格物之手</b>
+            写稻种、水车、蜂窑、舟车、纸料，把器物的工序一条条拆给后人。<br>
+            <a href="tiangong-kaiwu.html">看〈天工开物〉导读</a>
+          </div>
+          <div class="mid">灯</div>
+          <div class="hand">
+            <b>论政之手</b>
+            写军饷、税册、盐引、兵额，把王朝的亏空一笔笔摊开。<br>
+            <a href="#night">回看〈野议〉此页</a>
+          </div>
+        </div>
+        <p class="note" style="margin-top:26px">会算五谷的人，才算得清赋税；懂工序的人，才看得出催科先于播种有多荒唐。《野议》里的每一笔账，背后都站着那个写<b>乃粒、乃服、彰施</b>的人：他不相信空谈，只相信物与数。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 收梢 -->
+  <section class="coda">
+    <div class="wrap">
+      <div class="big rv">
+        <q>野议及此，涕泣继之，不知所云矣！</q>
+        <span class="qsrc">乱萌议 · 全书最后一句</span>
+      </div>
+      <p class="after rv">万言书没有递上去。它写完的那个早晨，灯灭了，天亮了，县学照常点名。此后八年，甲申之变，书里担心的事大半应验。这部书留下的不是奏疏的效力，而是一个人在王朝末路上，替它算过的总账。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="fm"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），子藏笔记〈野议〉一书，明宋应星撰，库本去空白 12,156 字，卷首总目与自序，正文十二议（世运、进身、民财、士气、屯田、催科、军饷、练兵、学政、盐政、风俗、乱萌）。本页全部引文经脚本与库内文本去标点、异体归一逐字核验比对通过；库本疑误照录不改（民财议"守令视其□□为传舍"之□□为库本阙文，"櫺纱纸""棂纱纸"两处用字不一，均未引作正文）。</span>
+    <span class="fm"><b>库外申报</b>　宋应星，字长庚，江西奉新人，万历四十三年举人，此为通行说法，库本序内仅自署"分宜教谕"。崇祯丙子即崇祯九年（1636）；〈天工开物〉亦通行认为写定于分宜教谕任内、次年（崇祯十年）由涂绍煃资助刊行，本页仅作对读提示，未引库文。钤山在分宜县，明人游冶之地。宗泽、岳飞、朱泚、姚令言、颜真卿、虞允文诸人皆本书自引之例证。教谕为明代县学学官，掌训迪生员；邸报为明代传抄诏令奏章的官报，皆职官常识。</span>
+    <span class="fm"><b>上一篇同系列</b>　〈<a href="tiangong-kaiwu.html">天工开物</a>〉　<b>返回总目</b>　〈<a href="mulu.html">殆知阁导读总目</a>〉　第<b>二百六十六</b>篇</span>
+    <span class="fm"><b>读法提醒</b>　本书是崇祯九年的一封私拟政论，救急之策带着明代士大夫的立场与想象：对民变成因的分析虽有"胁从十分之七"的同情笔墨，剿抚的框架仍是王朝视角；文中"寇""虏"等称呼是当时人的用语。屯田、盐政诸策是书生议论，未经施行检验。以历史眼光读之，不代表编者与导读立场。</span>
+  </div>
+</footer>
+
+<div id="qbank" hidden>
+  <li>散归冷署，炊灯具草，继以诘朝，胡成万言，名之曰《野议》。
+  <li>尝思欲伏阙前，上痛哭之书，而无其胆；欲参当道，陈忧天之说，而无其颜。
+  <li>故有议而无文，罪我者其原之！
+  <li>时崇祯丙子暮春下弦日，分宜教谕宋应星书于学署。
+  <li>治极思乱，乱极思治
+  <li>州县之缺不补者，三百有余。
+  <li>财之为言，乃通指百货，非专言阿堵也。今天下何尝少白金哉！所少者，田之五谷、山林之木、墙下之桑、洿池之鱼耳。
+  <li>天生地宜，而人功运旋而出
+  <li>白镪黄金可以疾呼而至
+  <li>目见勤苦耕桑，而饥寒不免，以为此无益之事也
+  <li>今方春二月，新谷尚未播种，而严征已起者纷纷矣。天运人事，一至此极耶！
+  <li>甲日条鞭，乙日辽饷，丙日蓟饷，丁日流饷，戊日陵工，己日王田，庚日兑米，辛日海米，壬日南米
+  <li>一年之内只费五十二日以足食，其余三百一十余日，尚可超距投石，命中并枪。
+  <li>圣主辛未张灯，元宵仍用旧灯悬挂，遂省六十余万。
+  <li>一人终岁必盐五十斤
+  <li>遇宗泽、岳飞，则昨日之寇，今日即兵。逢朱泚、姚令言，则辰刻之兵，巳刻即寇。
+  <li>其真正杀人不厌，名盗不羞，斩绝性善之根者，百人之中三五人而止。
+  <li>其馀胁从莫可如何，中悔无因革面者，尚居十分之七也。
+  <li>夫里长本良名，一旦为寇盗而不恤，挺而走险，急何能择也
+  <li>儿齿未毁，而斓衫业已荣身
+  <li>学问未大，功业未大，而只以名姓自大，亦人心不古之一端也。
+  <li>野议及此，涕泣继之，不知所云矣！
+  <li>岂一年即为敝弃，而明年必易新者
+</div>
+
+<script>
+(function () {
+  var night = document.getElementById('night');
+  night.addEventListener('click', function () { night.classList.toggle('day'); });
+  night.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); night.classList.toggle('day'); }
+  });
+
+  var els = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window)) {
+    for (var j = 0; j < els.length; j++) els[j].classList.add('in');
+    return;
+  }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.05 });
+  for (var k = 0; k < els.length; k++) io.observe(els[k]);
+})();
+</script>
+</body>
+</html>
