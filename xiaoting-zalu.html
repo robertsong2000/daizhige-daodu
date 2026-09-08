@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>啸亭杂录 · 殆知阁导读 247</title>
+<style>
+  :root {
+    --ink: #191917; --ink2: #1f1e1b; --ink3: #26241f;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --gold: #c9963f; --gold2: #a87c33; --red: #c0453c;
+    --hair: rgba(232,228,220,0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  body.locked { overflow: hidden; }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 26px; }
+  q { quotes: none; color: var(--paper); }
+  q::before { content: "「"; color: var(--gold); }
+  q::after { content: "」"; color: var(--gold); }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ===== 首屏：门钉 ===== */
+  .gate {
+    position: fixed; inset: 0; z-index: 60; display: flex;
+    transition: opacity 1.2s ease 0.9s, visibility 1.2s ease 0.9s;
+  }
+  .gate.open { opacity: 0; visibility: hidden; pointer-events: none; }
+  .leaf {
+    flex: 1; position: relative; overflow: hidden;
+    background:
+      repeating-linear-gradient(90deg, rgba(232,228,220,0.045) 0 3px, transparent 3px 128px),
+      linear-gradient(180deg, #201d18, #14120e 62%, #0e0d0a);
+    transition: transform 1.4s cubic-bezier(0.7, 0, 0.25, 1);
+    box-shadow: 0 0 60px rgba(0,0,0,0.7) inset;
+  }
+  .leaf.L { border-right: 1px solid rgba(201,150,63,0.22); }
+  .gate.open .leaf.L { transform: translateX(-103%); }
+  .gate.open .leaf.R { transform: translateX(103%); }
+  .studs {
+    position: absolute; inset: 9dvh 12%;
+    display: grid; grid-template-columns: repeat(9, 1fr); grid-template-rows: repeat(9, 1fr);
+    gap: clamp(6px, 1.4dvh, 14px);
+  }
+  .stud {
+    border-radius: 50%;
+    background: radial-gradient(circle at 34% 30%, #ecd28e, var(--gold) 46%, #7c5c22 78%, #3c2d10);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.65), 0 0 0 1px rgba(0,0,0,0.5);
+  }
+  .hole {
+    border-radius: 50%; border: 1px solid rgba(201,150,63,0.4);
+    background: radial-gradient(circle at 50% 45%, #000, #100e0b 70%);
+    box-shadow: 0 0 0 4px rgba(0,0,0,0.55), 0 0 18px rgba(201,150,63,0.25);
+    cursor: pointer; padding: 0; min-width: 0; min-height: 0;
+    animation: breathe 2.6s ease-in-out infinite;
+  }
+  .hole:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+  @keyframes breathe {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(0,0,0,0.55), 0 0 12px rgba(201,150,63,0.18); }
+    50% { box-shadow: 0 0 0 4px rgba(0,0,0,0.55), 0 0 26px rgba(192,69,60,0.55); }
+  }
+  .gate-cap {
+    position: absolute; bottom: 4dvh; left: 0; right: 0; text-align: center;
+    color: var(--dim); font-size: 14.5px; letter-spacing: 0.18em; pointer-events: none;
+  }
+  .gate-cap b { color: var(--gold); font-weight: 600; }
+  .gate-plate {
+    position: absolute; top: 5dvh; left: 0; right: 0; text-align: center;
+    color: var(--faint); font-size: 13px; letter-spacing: 0.5em; pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .leaf, .gate { transition: none; }
+    .hole { animation: none; }
+  }
+
+  /* ===== 卷首 ===== */
+  .hero { padding: 16dvh 0 40px; position: relative; }
+  .kicker { font-size: 13.5px; letter-spacing: 0.4em; color: var(--faint); }
+  h1 { font-size: clamp(52px, 9vw, 112px); font-weight: 700; letter-spacing: 0.12em; line-height: 1.12; margin: 18px 0 10px; }
+  h1 em { font-style: normal; color: var(--gold); }
+  .ord { font-size: 14px; color: var(--dim); letter-spacing: 0.14em; margin-bottom: 26px; }
+  .lede { max-width: 40em; color: var(--dim); font-size: 16.5px; }
+  .lede b { color: var(--paper); font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+  .chips a {
+    font-size: 13.5px; letter-spacing: 0.12em; color: var(--dim);
+    border: 1px solid var(--hair); padding: 6px 14px; border-radius: 2px;
+  }
+  .chips a:hover { color: var(--gold); border-color: rgba(201,150,63,0.5); text-decoration: none; }
+
+  /* ===== 写帖人 ===== */
+  .who { padding: 44px 0 8px; border-top: 1px solid var(--hair); }
+  .sec-k { font-size: 12.5px; letter-spacing: 0.34em; color: var(--gold); margin-bottom: 20px; }
+  .who-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .who-card { border-left: 2px solid rgba(201,150,63,0.45); padding: 4px 0 4px 18px; }
+  .who-card h3 { font-size: 17px; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .who-card h3 small { display: block; font-size: 12.5px; color: var(--faint); letter-spacing: 0.08em; margin-top: 2px; }
+  .who-card p { font-size: 14.5px; color: var(--dim); }
+
+  /* ===== 卷次档条 ===== */
+  .juan { padding: 46px 0 12px; }
+  .jbar { display: flex; height: 46px; margin: 6px 0 10px; }
+  .jseg {
+    position: relative; background: linear-gradient(180deg, rgba(201,150,63,0.85), rgba(168,124,51,0.85));
+    border-right: 1px solid var(--ink); cursor: default;
+  }
+  .jseg:hover { background: linear-gradient(180deg, #dcae56, var(--gold2)); }
+  .jseg.xu {
+    background: repeating-linear-gradient(135deg, rgba(201,150,63,0.5) 0 6px, rgba(201,150,63,0.18) 6px 12px);
+  }
+  .jseg.xu:hover { background: repeating-linear-gradient(135deg, rgba(220,174,86,0.75) 0 6px, rgba(201,150,63,0.3) 6px 12px); }
+  .jseg.fu { background: var(--red); min-width: 6px; }
+  .jseg span {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font-size: 11.5px; color: rgba(20,18,14,0.9); white-space: nowrap;
+  }
+  .jleg { display: flex; gap: 22px; font-size: 13px; color: var(--faint); letter-spacing: 0.1em; }
+  .jleg i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+  .jnote { font-size: 14px; color: var(--dim); margin-top: 14px; max-width: 62em; }
+  .jnote b { color: var(--gold); font-weight: 600; }
+
+  /* ===== 六案通用 ===== */
+  .case { padding: 60px 0 26px; border-top: 1px solid var(--hair); }
+  .case-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 8px; }
+  .case-no {
+    font-size: 13px; color: var(--gold); border: 1px solid rgba(201,150,63,0.5);
+    padding: 3px 10px; letter-spacing: 0.3em; white-space: nowrap;
+  }
+  .case-head h2 { font-size: clamp(26px, 3.6vw, 38px); letter-spacing: 0.14em; font-weight: 700; }
+  .case-date { font-size: 13px; color: var(--faint); letter-spacing: 0.12em; margin-left: auto; white-space: nowrap; }
+  .case-lede { color: var(--dim); font-size: 15.5px; max-width: 62em; margin-bottom: 26px; }
+  .case-lede b { color: var(--paper); }
+
+  /* 案一 破门 */
+  .door-grid { display: grid; grid-template-columns: 5fr 6fr; gap: 34px; }
+  .linqing { background: var(--ink2); border: 1px solid var(--hair); padding: 22px 22px 18px; }
+  .linqing h3 { font-size: 16px; letter-spacing: 0.14em; color: var(--gold); margin-bottom: 10px; }
+  .linqing p { font-size: 14.5px; color: var(--dim); }
+  .linqing q { font-size: 15px; }
+  .warns { margin-top: 22px; }
+  .warn { display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 12px 0; border-top: 1px dashed var(--hair); }
+  .warn i { font-style: normal; color: var(--gold); font-size: 13px; }
+  .warn p { font-size: 14.5px; color: var(--dim); }
+  .warn q { font-size: 15px; }
+  .warn-final { margin-top: 16px; font-size: 16px; grid-template-columns: 1fr; }
+
+  .mapbox { background: var(--ink2); border: 1px solid var(--hair); padding: 18px 18px 14px; }
+  .mapbox svg { width: 100%; height: auto; display: block; }
+  .mbtns { display: flex; gap: 10px; margin-top: 12px; }
+  .mbtn {
+    font-size: 13px; letter-spacing: 0.14em; color: var(--dim); background: none;
+    border: 1px solid var(--hair); padding: 6px 14px; cursor: pointer; font-family: inherit;
+  }
+  .mbtn.on { color: var(--ink); background: var(--gold); border-color: var(--gold); font-weight: 700; }
+  .map-cap { font-size: 13px; color: var(--faint); margin-top: 10px; }
+  .map-cap q { font-size: 13.5px; }
+
+  .rt { fill: none; stroke-width: 2; opacity: 0.12; transition: opacity 0.4s ease; }
+  .rt-e { stroke: var(--red); stroke-dasharray: 6 5; }
+  .rt-w { stroke: var(--red); }
+  .rt-r { stroke: var(--gold); stroke-dasharray: 2 6; }
+  svg.on-e .rt-e { opacity: 1; }
+  svg.on-w .rt-w { opacity: 1; }
+  svg.on-r .rt-r { opacity: 1; }
+  .mk { opacity: 0.15; transition: opacity 0.4s ease; }
+  svg.on-e .mk-e, svg.on-w .mk-w, svg.on-r .mk-r { opacity: 1; }
+  .wall { fill: none; stroke: rgba(232,228,220,0.4); stroke-width: 2.5; }
+  .hall { fill: rgba(232,228,220,0.06); stroke: rgba(232,228,220,0.28); }
+  .glabel { fill: var(--paper); font-size: 11px; letter-spacing: 0.08em; }
+  .glabel.sm { fill: var(--dim); font-size: 9.5px; }
+  .glabel.gd { fill: var(--gold); }
+  .gate-sq { fill: rgba(201,150,63,0.25); stroke: var(--gold); stroke-width: 1; }
+  .pulse { animation: pulse 2.2s ease-out infinite; transform-origin: center; transform-box: fill-box; }
+  @keyframes pulse { 0% { opacity: 0.9; } 70% { opacity: 0.15; } 100% { opacity: 0.9; } }
+
+  .moonbox { margin: 40px 0 0; background: linear-gradient(180deg, var(--ink2), var(--ink)); border: 1px solid var(--hair); padding: 26px 28px; }
+  .moonbox .mt { font-size: 12.5px; letter-spacing: 0.3em; color: var(--faint); margin-bottom: 12px; }
+  .moon-line { font-size: 16.5px; margin: 6px 0; }
+  .moon-line .who2 { color: var(--faint); font-size: 13px; margin-right: 12px; letter-spacing: 0.1em; }
+  .moon-note { font-size: 14px; color: var(--dim); margin-top: 12px; max-width: 58em; }
+
+  .aftermath { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 34px; }
+  .am-card { background: var(--ink2); border: 1px solid var(--hair); padding: 20px 22px; }
+  .am-card h4 { font-size: 15px; letter-spacing: 0.16em; color: var(--gold); margin-bottom: 8px; }
+  .am-card p { font-size: 14.5px; color: var(--dim); }
+  .echoes { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 22px; }
+  .echo { border-top: 2px solid rgba(192,69,60,0.55); padding-top: 12px; }
+  .echo h4 { font-size: 14.5px; letter-spacing: 0.14em; margin-bottom: 6px; }
+  .echo p { font-size: 14px; color: var(--dim); }
+
+  /* 案二 认亲 */
+  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--hair); }
+  .duel-col { padding: 26px 26px 22px; }
+  .duel-col + .duel-col { border-left: 1px solid var(--hair); }
+  .duel-col h3 { font-size: 16px; letter-spacing: 0.16em; margin-bottom: 10px; }
+  .duel-col .role { font-size: 12.5px; letter-spacing: 0.24em; color: var(--faint); margin-bottom: 14px; }
+  .duel-col p { font-size: 14.5px; color: var(--dim); }
+  .duel-col .slap { font-size: 17px; }
+  .duel-col.claim h3 { color: var(--dim); }
+  .duel-col.call h3 { color: var(--red); }
+  .flipbtns { display: flex; gap: 10px; margin: 22px 0 0; }
+  .fbtn {
+    font-size: 13px; letter-spacing: 0.2em; color: var(--dim); background: none;
+    border: 1px solid var(--hair); padding: 6px 16px; cursor: pointer; font-family: inherit;
+  }
+  .fbtn.on { color: var(--ink); background: var(--gold); border-color: var(--gold); font-weight: 700; }
+  .flip-pane { display: none; margin-top: 18px; background: var(--ink2); border: 1px solid var(--hair); padding: 22px 24px; }
+  .flip-pane.show { display: block; }
+  .flip-pane p { font-size: 14.5px; color: var(--dim); }
+  .flip-pane q { font-size: 15px; }
+
+  /* 案三 血衣 */
+  .steps { max-width: 760px; }
+  .step { display: grid; grid-template-columns: 34px 110px 1fr; gap: 16px; padding: 15px 8px; border-top: 1px dashed var(--hair); transition: background 0.3s ease; }
+  .step:hover { background: var(--ink2); }
+  .step i { font-style: normal; color: var(--gold); font-size: 13px; text-align: center; }
+  .step.blood i { color: var(--red); }
+  .step h4 { font-size: 15px; letter-spacing: 0.12em; font-weight: 600; }
+  .step p { font-size: 14px; color: var(--dim); grid-column: 3; }
+  .step q { font-size: 14.5px; }
+  .step h4 .when { display: block; font-size: 11.5px; color: var(--faint); letter-spacing: 0.06em; font-weight: 400; }
+
+  /* 案四 空印 */
+  .sealwrap { display: grid; grid-template-columns: 7fr 3fr; gap: 40px; align-items: center; }
+  .bigpull { font-size: clamp(19px, 2.5vw, 25px); line-height: 2.1; }
+  .bigpull q::before, .bigpull q::after { font-size: 0.7em; }
+  .seal-disc {
+    width: 190px; height: 190px; border-radius: 50%; margin: 0 auto;
+    border: 3px solid rgba(192,69,60,0.75); display: grid; place-items: center;
+    color: var(--red); transform: rotate(-8deg); position: relative;
+    box-shadow: 0 0 34px rgba(192,69,60,0.18) inset;
+  }
+  .seal-disc::before {
+    content: ""; position: absolute; inset: 9px; border: 1px solid rgba(192,69,60,0.5); border-radius: 50%;
+  }
+  .seal-disc b { font-size: 44px; letter-spacing: 0.2em; font-weight: 700; transform: translateX(0.1em); }
+  .seal-note { text-align: center; font-size: 13px; color: var(--faint); margin-top: 14px; letter-spacing: 0.1em; }
+  .seal-stat { text-align: center; font-size: 15px; margin-top: 16px; }
+
+  /* 案五 戏语 */
+  .jest { max-width: 640px; margin: 0 auto; background: var(--ink2); border: 1px solid var(--hair); border-top: 3px solid rgba(201,150,63,0.55); padding: 28px 30px 24px; }
+  .jest h3 { font-size: 15px; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 12px; }
+  .jest p { font-size: 15px; color: var(--dim); }
+  .jest q { font-size: 18px; }
+  .jest .after { font-size: 13.5px; color: var(--faint); margin-top: 12px; }
+
+  /* 案六 夜溃 */
+  .night {
+    margin-top: 26px; background: linear-gradient(180deg, #100f0c, var(--ink));
+    border: 1px solid var(--hair); padding: 64px 26px 58px; text-align: center;
+  }
+  .night .nt { font-size: 12.5px; letter-spacing: 0.36em; color: var(--faint); margin-bottom: 22px; }
+  .night q { font-size: clamp(17px, 2.2vw, 21px); line-height: 2.15; max-width: 34em; display: inline-block; }
+  .night .hint2 { font-size: 12.5px; color: var(--faint); margin-top: 26px; letter-spacing: 0.2em; }
+  .night .lamp { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); margin: 0 auto 0; opacity: 0.7; }
+  .clang { animation: tremor 0.55s ease; }
+  @keyframes tremor {
+    0%, 100% { transform: translate(0, 0); }
+    20% { transform: translate(-3px, 1px); }
+    40% { transform: translate(3px, -1px); }
+    60% { transform: translate(-2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+  }
+
+  /* 掩卷 */
+  .coda { padding: 64px 0 30px; border-top: 1px solid var(--hair); }
+  .coda p { max-width: 62em; color: var(--dim); font-size: 15.5px; margin-bottom: 16px; }
+  .coda p b { color: var(--paper); }
+  .coda .fin { color: var(--gold); letter-spacing: 0.2em; font-size: 15px; margin-top: 26px; }
+
+  footer { border-top: 1px solid var(--hair); padding: 40px 0 64px; font-size: 13.5px; color: var(--faint); }
+  footer b { color: var(--dim); font-weight: 600; }
+  footer .fm { display: block; margin-bottom: 10px; }
+
+  @media (max-width: 860px) {
+    .door-grid, .aftermath, .echoes, .who-grid, .sealwrap { grid-template-columns: 1fr; }
+    .duel { grid-template-columns: 1fr; }
+    .duel-col + .duel-col { border-left: none; border-top: 1px solid var(--hair); }
+    .case-date { display: none; }
+    .step { grid-template-columns: 26px 84px 1fr; }
+  }
+</style>
+</head>
+<body class="locked">
+
+<div class="gate" id="gate" role="presentation">
+  <div class="leaf L" id="leafL"><div class="studs" id="studsL"></div></div>
+  <div class="leaf R"><div class="studs" id="studsR"></div></div>
+  <div class="gate-plate">殆知阁导读</div>
+  <div class="gate-cap">门钉九九八十一枚　<b>癸酉年九月十五，少了一枚</b>　点它破门</div>
+</div>
+<noscript>
+  <style> .gate { display: none; } body.locked { overflow: auto; } </style>
+</noscript>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">殆知阁导读 · 卷一百六十（禁中）</div>
+    <h1>啸<em>亭</em>杂录</h1>
+    <div class="ord mono">第 247 篇　清 宗室昭梿撰　史藏志存记录本　去空白 257,307 字</div>
+    <p class="lede">礼亲王昭梿，清初铁帽子王之首的后人，嘉庆二十年冬被夺爵圈禁三年。他写的这部笔记，写的是他自己住了半辈子的那座城：<b>谁贪，谁迂，谁该死，谁冤枉，谁在奏折里装睡</b>。紫禁城差点丢掉的那一天，他本人就骑马在宫里追贼。</p>
+    <nav class="chips">
+      <a href="#c1">破门</a>
+      <a href="#c2">认亲</a>
+      <a href="#c3">血衣</a>
+      <a href="#c4">空印</a>
+      <a href="#c5">戏语</a>
+      <a href="#c6">夜溃</a>
+    </nav>
+  </div>
+</header>
+
+<section class="who">
+  <div class="wrap">
+    <div class="sec-k">写帖人</div>
+    <div class="who-grid">
+      <div class="who-card">
+        <h3>身<small>礼亲王，铁帽子王之首</small></h3>
+        <p>始祖代善，太祖之子，清初诸铁帽王位列第一。传到昭梿，是第十代礼亲王。王府在西皇城根，他从小看的、听的、吃的席面，全是帝国最高层的一手货。</p>
+      </div>
+      <div class="who-card">
+        <h3>罪<small>嘉庆二十年革爵圈禁</small></h3>
+        <p>嘉庆二十年冬，昭梿因苛待庄头、凌辱大臣等罪名被夺去王爵，圈禁三年。放出后王爵另授他人，晚年只领过一个主事衔。这部书大体写成于他失爵前后：旁人写宫廷靠传闻，他写宫廷靠记忆。</p>
+      </div>
+      <div class="who-card">
+        <h3>笔<small>啸亭是书斋名</small></h3>
+        <p>全书满纸「余」字：颁赏的名单里有他，追贼的人堆里有他，审林清那天他佩刀随往。他不遮掩同僚的蠢，也不讳言自家的败，宗室写禁中而敢这样直笔，清代笔记里几乎没有第二部。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="juan">
+  <div class="wrap">
+    <div class="sec-k">库本实测</div>
+    <div class="jbar" aria-label="卷次条目分布">
+      <div class="jseg" style="width:14.6%" title="正录卷一 70 目"><span>一</span></div>
+      <div class="jseg" style="width:13.6%" title="正录卷二 65 目"><span>二</span></div>
+      <div class="jseg" style="width:1.0%" title="正录卷三 5 目"><span></span></div>
+      <div class="jseg" style="width:6.3%" title="正录卷四 30 目"><span>四</span></div>
+      <div class="jseg" style="width:1.4%" title="正录卷五 1 目"><span></span></div>
+      <div class="jseg" style="width:4.2%" title="正录卷六 20 目"><span>六</span></div>
+      <div class="jseg" style="width:9.8%" title="正录卷七 47 目"><span>七</span></div>
+      <div class="jseg" style="width:12.9%" title="正录卷八 62 目"><span>八</span></div>
+      <div class="jseg" style="width:16.5%" title="正录卷九 79 目"><span>九</span></div>
+      <div class="jseg" style="width:20.9%" title="正录卷十 100 目"><span>十</span></div>
+      <div class="jseg xu" style="width:15.0%" title="续录卷一 72 目"><span>续一</span></div>
+      <div class="jseg xu" style="width:10.9%" title="续录卷二 52 目"><span>续二</span></div>
+      <div class="jseg xu" style="width:15.3%" title="续录卷三 73 目"><span>续三</span></div>
+      <div class="jseg xu" style="width:16.3%" title="续录卷四 78 目"><span>续四</span></div>
+      <div class="jseg xu" style="width:12.3%" title="续录卷五 59 目"><span>续五</span></div>
+      <div class="jseg fu" style="width:0.6%" title="附录 1 目"></div>
+    </div>
+    <div class="jleg">
+      <span><i style="background:var(--gold)"></i>正录十卷 479 目</span>
+      <span><i style="background:repeating-linear-gradient(135deg, rgba(201,150,63,0.5) 0 4px, rgba(201,150,63,0.18) 4px 8px)"></i>续录五卷 334 目</span>
+      <span><i style="background:var(--red)"></i>附录 1 目</span>
+    </div>
+    <p class="jnote">库本把正续两编抄在一起，卷名重号：正录卷三是全库最薄的一卷，只收〈记辛亥败兵事〉等五篇长战记；卷五干脆<b>一篇〈缅甸归诚本末〉独占一卷</b>，是乾隆征缅的编年长卷。短条目堆在正录卷九、卷十和续录里，读时须当心卷名撞车。</p>
+  </div>
+</section>
+
+<section class="case" id="c1">
+  <div class="wrap">
+    <div class="case-head">
+      <span class="case-no mono">案壹</span>
+      <h2>破门</h2>
+      <span class="case-date mono">嘉庆十八年九月十五 · 1813</span>
+    </div>
+    <p class="case-lede">天理教教主林清结连宫内太监，<b>二百人分东西两路直入紫禁城</b>。这是清代离皇帝最近的一次武力突袭，昭梿全程在场：下面这张图上的每条路线，都是他亲眼看着走完或堵死的。</p>
+
+    <div class="door-grid">
+      <div>
+        <div class="linqing">
+          <h3>林清其人</h3>
+          <p>浙江人氏，客居京郊宋家庄，做过提督的弄童，也解些武技，被教中推为法祖。书里给他画像只用一句，又抬又贬，神形俱足：</p>
+          <p style="margin-top:10px"><q>其人颀身黧面，髯张如猬，自以智谋过人，其实愚鲁异常。</q></p>
+        </div>
+        <div class="warns">
+          <div class="warn"><i class="mono">报一</i><p>他步行街市，风吹开衣襟，露出坎卦腰牌，被路人看在眼里；官府因怕株连太监，无人敢究。</p></div>
+          <div class="warn"><i class="mono">报二</i><p>在朋友家吃酒，醉后说出大逆之语；有司照旧装聋。</p></div>
+          <div class="warn"><i class="mono">报三</i><p>卢沟司巡检探得其谋申报县里，任步军统领的吉伦嫌事涉宫禁不肯究讯，事发前几天还带着酒去香界寺吟诗。</p></div>
+          <div class="warn warn-final"><p>参将攀着他的轿子劝他留京弹压，得到的回答是：<q>近日太平乃尔，尔作此疯语耶？</q></p></div>
+        </div>
+      </div>
+
+      <div class="mapbox">
+        <svg id="palace" viewBox="0 0 460 340" aria-label="紫禁城癸酉之变攻防示意图" class="on-w on-e on-r">
+          <rect class="wall" x="30" y="20" width="400" height="300"></rect>
+          <rect class="gate-sq" x="200" y="14" width="60" height="13"></rect>
+          <text class="glabel gd" x="230" y="10" text-anchor="middle">神武门</text>
+          <rect class="gate-sq" x="200" y="313" width="60" height="13"></rect>
+          <text class="glabel gd" x="230" y="338" text-anchor="middle">午门</text>
+          <rect class="gate-sq" x="423" y="228" width="13" height="26"></rect>
+          <text class="glabel gd" x="440" y="226" text-anchor="middle">东华门</text>
+          <rect class="gate-sq" x="24" y="228" width="13" height="26"></rect>
+          <text class="glabel gd" x="20" y="226" text-anchor="middle">西华门</text>
+          <rect class="hall" x="95" y="112" width="76" height="52"></rect>
+          <text class="glabel" x="133" y="142" text-anchor="middle">养心殿</text>
+          <rect class="hall" x="176" y="188" width="42" height="22"></rect>
+          <text class="glabel" x="197" y="184" text-anchor="middle">隆宗门</text>
+          <rect class="hall" x="248" y="188" width="42" height="22"></rect>
+          <text class="glabel" x="269" y="184" text-anchor="middle">景运门</text>
+          <rect class="hall" x="252" y="240" width="44" height="18"></rect>
+          <text class="glabel sm" x="274" y="270" text-anchor="middle">协和门</text>
+          <rect class="hall" x="330" y="230" width="62" height="42"></rect>
+          <text class="glabel sm" x="361" y="254" text-anchor="middle">文颖馆</text>
+          <rect class="hall" x="58" y="240" width="58" height="36"></rect>
+          <text class="glabel sm" x="87" y="288" text-anchor="middle">尚衣监</text>
+          <rect class="hall" x="205" y="112" width="52" height="30"></rect>
+          <text class="glabel sm" x="231" y="106" text-anchor="middle">内膳房</text>
+          <polyline class="rt rt-e" points="423,241 296,249 269,210"></polyline>
+          <polyline class="rt rt-w" points="37,241 87,258 340,252 197,210"></polyline>
+          <polyline class="rt rt-r" points="230,27 230,158"></polyline>
+          <g class="mk mk-e">
+            <circle cx="423" cy="241" r="4" fill="var(--red)"></circle>
+            <text class="glabel sm" x="404" y="266" text-anchor="end" fill="var(--red)">东路十数人</text>
+          </g>
+          <g class="mk mk-w">
+            <circle cx="37" cy="241" r="4" fill="var(--red)"></circle>
+            <text class="glabel sm" x="52" y="266" fill="var(--red)">西路全队</text>
+          </g>
+          <g class="mk mk-r">
+            <circle cx="230" cy="27" r="4" fill="var(--gold)"></circle>
+            <text class="glabel sm" x="238" y="152" fill="var(--gold)">诸王率火器营入</text>
+          </g>
+          <g class="mk mk-w">
+            <circle cx="133" cy="138" r="9" fill="none" stroke="var(--gold)" class="pulse"></circle>
+            <circle cx="133" cy="138" r="3.5" fill="var(--gold)"></circle>
+            <text class="glabel sm gd" x="133" y="124" text-anchor="middle">皇次子鸟枪击贼</text>
+          </g>
+        </svg>
+        <div class="mbtns">
+          <button class="mbtn on" data-k="on-e" type="button">东路</button>
+          <button class="mbtn on" data-k="on-w" type="button">西路</button>
+          <button class="mbtn on" data-k="on-r" type="button">援兵</button>
+        </div>
+        <p class="map-cap">十五日午时。东路在东华门与卖煤人争道，露刃被觉，司阍急掩门，只涌入陈爽等十几人；西路由西华门全队杀入，因尚衣监一枚补缀钱的旧怨领路屠戮，直扑隆宗门。文颖馆里的编修听见门外<b>履声橐然</b>，贼人劈面问的却是：<q>金銮殿在何所？</q>宫外那位后来在隆宗门下督战的礼亲王，当日正在府里下棋，<q>余在邸方与僮手弈，闻变，骋马入</q>。</p>
+      </div>
+    </div>
+
+    <div class="moonbox">
+      <div class="mt">入夜 · 一句月光</div>
+      <p class="moon-line"><span class="who2">穆克登阿</span><q>天已昏黑，奈何？</q></p>
+      <p class="moon-line"><span class="who2">昭梿</span><q>今十五夜，有月光照曜。</q></p>
+      <p class="moon-line"><span class="who2">穆克登阿</span><q>月光终不及日。</q></p>
+      <p class="moon-line"><span class="who2">昭梿</span><q>月光固皎如昼也。</q></p>
+      <p class="moon-note">先答月光是为安众心，对方偏不解意，只好指着自己的心口再点一次，他才改口。一句拆穿宫里人说话的规矩：<b>大家要的不是事实，是士气。</b></p>
+    </div>
+
+    <div class="aftermath">
+      <div class="am-card">
+        <h4>捕林清</h4>
+        <p>十六日番役张吉等到宋家庄，扣门良久，林清身着燕服出来应门。张吉伪告：<q>城中事已有成，奉相公命，延请入朝。</q>林清大喜过望，正要登车，他姐姐闯出来拦车说吉凶未卜不可独往，被推倒在地，车已进了南苑门。</p>
+      </div>
+      <div class="am-card">
+        <h4>罪己</h4>
+        <p>十九日嘉庆回宫，下罪己诏，诸臣跪读呜咽。他在乾清宫面谕群臣，说到痛处，满殿只有哭声：</p>
+        <p style="margin-top:8px"><q>我大清以前何等强盛，今乃致有此事，皆朕凉德之咎。</q></p>
+      </div>
+    </div>
+
+    <div class="echoes">
+      <div class="echo">
+        <h4>那伦之死</h4>
+        <p>明珠后人，少时家富，日易一面涤器银盆，晚年一顶帽子戴几十年被人笑。事变那天他应值太和门，有人劝他缓行，他说：<q>国家世臣，当此等事敢不急赴所守耶？</q>奔到熙和门下，门扇已闭，贼至，被害。</p>
+      </div>
+      <div class="echo">
+        <h4>曹福昌的义气</h4>
+        <p>曹伦是独石口的都司，家贫附逆，其子曹福昌约为城内内应。临刑前对刽子手说：临刑前对刽子手说：<q>我是可交之人，至死不卖友以求生也。</q>昭梿记下这句话，没评一个字。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="case" id="c2">
+  <div class="wrap">
+    <div class="case-head">
+      <span class="case-no mono">案贰</span>
+      <h2>认亲</h2>
+      <span class="case-date mono">乾隆庚子 · 1780</span>
+    </div>
+    <p class="case-lede">乾隆南巡回銮驻跸涿州，一个僧人领着个小孩来接驾，自称是履端王流落在外的次子。<b>皇家的户口本上，这孩子四年前已因天花「死亡」。</b></p>
+
+    <div class="duel">
+      <div class="duel-col claim">
+        <h3>来者</h3>
+        <div class="role">自称 皇孙</div>
+        <p>相貌端庄，坐军机处的榻上见诸位相国，端坐并不起身，唤和珅直呼其名：你是皇祖身边近臣，不可让天家骨肉湮没。满殿相国无人敢接这话，皇帝本人也早已风闻那孩子死得蹊跷，疑心他真是皇孙。</p>
+      </div>
+      <div class="duel-col call">
+        <h3>拆穿的</h3>
+        <div class="role">军机司员 保成</div>
+        <p>一个司员走上去，抬手就是一记耳光，一句话把满殿的迟疑打醒：</p>
+        <p class="slap" style="margin-top:8px"><q>汝何处村童，为人所绐，乃敢为此灭门计乎？</q></p>
+        <p style="margin-top:8px">童子惶惧，供出实情：树村刘姓人家孩子，僧人所教。僧人斩于市，童子戍伊犁。</p>
+      </div>
+    </div>
+
+    <div class="flipbtns">
+      <button class="fbtn on" data-p="p1" type="button">正案</button>
+      <button class="fbtn" data-p="p2" type="button">别录</button>
+    </div>
+    <div class="flip-pane show" id="p1">
+      <p>此案当时人比作汉代的隽不疑识破假卫太子。但昭梿记下结案后听来的另一种说法：王府太监说那孩子痘殇时<b>其实没死</b>，是被嫡妃用别的尸首调了包，命弄童弃之荒野。于是结尾一句，读来脊背发凉：</p>
+      <p style="margin-top:8px"><q>僧人之教伪童，盖亦有所凭藉，非无因而至者也。</q></p>
+    </div>
+    <div class="flip-pane" id="p2">
+      <p>更奇的是后话：那孩子流放伊犁后再度自称皇孙招摇惑众，被松筠斩了。一次行骗是罪，两次行骗，倒是像笃定自己有半个真身份。真伪之间，只剩那座王府自己的沉默。</p>
+    </div>
+  </div>
+</section>
+
+<section class="case" id="c3">
+  <div class="wrap">
+    <div class="case-head">
+      <span class="case-no mono">案叁</span>
+      <h2>血衣</h2>
+      <span class="case-date mono">嘉庆己巳 · 1809</span>
+    </div>
+    <p class="case-lede">新进士李毓昌奉委查赈淮安水灾，查出山阳知县王伸汉冒增户口。知县行贿不成，<b>他的长随们把东家灌了毒酒，再用帛勒死，报了个自缢。</b></p>
+
+    <div class="steps">
+      <div class="step"><i class="mono">一</i><h4>委查赈务<span class="when">戊辰科进士</span></h4><p>故事，凡委员下乡查赈，漫不省察，只收陋规而已。李毓昌偏要真查。</p></div>
+      <div class="step"><i class="mono">二</i><h4>访得冒赈<span class="when">山阳县</span></h4><p>王伸汉冒增户口侵蚀赈银，被他访察属实，将欲举发。</p></div>
+      <div class="step"><i class="mono">三</i><h4>正色拒贿</h4><p>知县托太守说情，又遣其仆以贿进言，他答：<q>某虽不肖，敢欺君纳贿耶？明日并以此禀诸制府可也。</q></p></div>
+      <div class="step blood"><i class="mono">四</i><h4>赴宴归寺<span class="when">寓古寺　寂阒无人</span></h4><p>当晚在县令的席面上应酬到夜，回寺已深，次日一早就要解缆启程。长随李祥、顾祥与姚升受包祥之命，谋害灭口。</p></div>
+      <div class="step blood"><i class="mono">五</i><h4>毒酒</h4><p>夜半一个人喝闷酒，仆役们把毒酒递了上去。<q>公饮觉之，遂停杯，血流于颐。仆等愈惧，因以帛勒死之，以自缢闻。</q></p></div>
+      <div class="step blood"><i class="mono">六</i><h4>装缢通禀</h4><p>王伸汉贿通检验者，朦胧通禀。灵柩归里，家人几乎信了。</p></div>
+      <div class="step"><i class="mono">七</i><h4>血衣上控</h4><p>其叔在亵衣中看见血迹，上控都察院。皇帝震怒，缇骑缉获诸仆，尽得其实。</p></div>
+      <div class="step"><i class="mono">八</i><h4>昭雪旌表<span class="when">王伸汉置典刑　诸仆皆正法</span></h4><p>朝廷追赠他知府，儿子得荫举人功名，御制诗旌之。民间另传托梦授江都城隍之位，昭梿照录，只批四字：其语近诞。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="case" id="c4">
+  <div class="wrap">
+    <div class="case-head">
+      <span class="case-no mono">案肆</span>
+      <h2>空印</h2>
+      <span class="case-date mono">嘉庆己巳 · 1809</span>
+    </div>
+    <p class="case-lede">同年冬天，工部书吏王书常<b>私刻假印冒领国库</b>，年年得手。制度上要几道大员签押核验，实际上全靠各人抬不抬眼皮。</p>
+
+    <div class="sealwrap">
+      <p class="bigpull"><q>伺大员谈笑会饮时，将稿文雁行斜进，诸大员不复寓目，仰视屋梁，手画大诺而已。</q></p>
+      <div>
+        <div class="seal-disc"><b>假印</b></div>
+        <p class="seal-note">雁行斜进 · 仰视屋梁</p>
+        <p class="seal-stat mono"><q>每岁耗银至数十余万两</q></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="case" id="c5">
+  <div class="wrap">
+    <div class="case-head">
+      <span class="case-no mono">案伍</span>
+      <h2>戏语</h2>
+      <span class="case-date mono">和珅一则</span>
+    </div>
+    <div class="jest">
+      <h3>和相善谑</h3>
+      <p>宫廷演礼那天，诸王大臣队列齐整，和珅笑了一句：</p>
+      <p style="margin:10px 0"><q>今日如孙武子教演女儿兵矣！</q></p>
+      <p>安南送来金座狮象，底座是空的，他脱口惋惜：可惜中空，不然能多熔多少黄金。外国使臣在旁笑出声。昭梿记完补一刀：翻〈闻见后录〉见章惇也专说市井笑话讨皇帝欢心，<q>今古权奸如出一辙</q>。</p>
+    </div>
+  </div>
+</section>
+
+<section class="case" id="c6">
+  <div class="wrap">
+    <div class="case-head">
+      <span class="case-no mono">案陆</span>
+      <h2>夜溃</h2>
+      <span class="case-date mono">乾隆征缅 · 木果木</span>
+    </div>
+    <p class="case-lede">将军温福在金川前线日日置酒高宴，逼走谏言的骁将，坐失战机。<b>大军一溃，溃的不是阵地，是人心。</b></p>
+
+    <div class="night" id="night">
+      <div class="lamp"></div>
+      <div class="nt">夜半 · 美诺结营</div>
+      <p><q>兵方安眠，适有持铜沃水者，误落于地，有声铿然，溃兵即惊曰：“追者至矣！”因群起东走，势不可遏，其丧胆也若此。</q></p>
+      <div class="hint2">点这段引文 · 听那一声铜响</div>
+    </div>
+  </div>
+</section>
+
+<section class="coda">
+  <div class="wrap">
+    <div class="sec-k">掩卷</div>
+    <p>大多数清人笔记写宫廷，是趴在宫墙外猜。〈啸亭杂录〉是<b>墙里人写的墙里事</b>：颁赏、演礼、杀贼、审逆、罪己诏，作者全在现场，连大臣救场不成、当场改口的丢脸对话都照录不误。他写和珅的浅薄，写书吏的空印，写大臣画诺时仰头看的那根梁，也写自家王公在御河边逍遥雅步、被骂作无心肝人。</p>
+    <p>读法建议：先读案壹〈癸酉之变〉，看作者怎样把一场宫变写成第一人称纪实；再读〈伪皇孙事〉〈李毓昌〉〈私造假印案〉三条短案，体会他立案卷的笔法；若想看他的长篇本事，翻正录卷五〈缅甸归诚本末〉，一篇顶一卷的征缅编年。</p>
+    <p class="fin">门钉补上了。墙里人记下的那声铿然，留给了墙外的人。</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="fm"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），史藏志存记录〈啸亭杂录〉一书，清宗室昭梿撰，库本去空白 257,307 字，正录十卷、续录五卷，另附录一条与校记数行。本页全部引文经脚本与库内文本去标点、异体归一逐字核验比对通过；库本个别私造偏旁与缺字（如〈亲定陵寝〉条之佩韦字），引文均已避开。</span>
+    <span class="fm"><b>库外申报</b>　嘉庆十八年即公元 1813 年，乾隆庚子即 1780 年，嘉庆己巳即 1809 年；昭梿革爵圈禁之由与年分、礼亲王世系序次为通行史载，非出库本；六案选目与「禁中」框架为导读语。</span>
+    <span class="fm"><b>上一篇同系列</b>　〈<a href="jiuming-qiyuan.html">九命奇冤</a>〉　<b>返回总目</b>　〈<a href="mulu.html">殆知阁导读总目</a>〉　第<b>二百四十七</b>篇</span>
+    <span class="fm"><b>读法提醒</b>　库本多处的教门诬为狐怪所传、贵族扈从虐杀婢仆与咸福晋殉葬诸事，及对民变的轻蔑立场，皆古人闻见与时代局限，请以历史眼光读之，不代表编者与导读立场。</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var svg = document.getElementById('palace');
+
+  /* 首屏门钉：九九八十一枚，左扇正中一枚为空钉 */
+  function studs(id, holeAt){
+    var box = document.getElementById(id);
+    for (var i = 0; i < 81; i++) {
+      var d = document.createElement('div');
+      if (i === holeAt) { d.className = 'hole'; d.setAttribute('role','button'); d.setAttribute('tabindex','0'); d.setAttribute('aria-label','空门钉，点它破门'); }
+      else { d.className = 'stud'; }
+      box.appendChild(d);
+    }
+  }
+  studs('studsL', 40);
+  studs('studsR', -1);
+
+  var gate = document.getElementById('gate');
+  function openGate(){
+    if (gate.classList.contains('open')) return;
+    gate.classList.add('open');
+    document.body.classList.remove('locked');
+  }
+  gate.addEventListener('click', openGate);
+  gate.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openGate(); }
+  });
+
+  /* 攻防图路线开关 */
+  var btns = document.querySelectorAll('.mbtn');
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      b.classList.toggle('on');
+      svg.classList.toggle(b.dataset.k);
+    });
+  });
+
+  /* 认亲：正案别录 */
+  var fbs = document.querySelectorAll('.fbtn');
+  fbs.forEach(function(b){
+    b.addEventListener('click', function(){
+      fbs.forEach(function(x){ x.classList.remove('on'); });
+      document.querySelectorAll('.flip-pane').forEach(function(p){ p.classList.remove('show'); });
+      b.classList.add('on');
+      document.getElementById(b.dataset.p).classList.add('show');
+    });
+  });
+
+  /* 夜溃：铿然一声 */
+  var night = document.getElementById('night');
+  night.addEventListener('click', function(){
+    var q = night.querySelector('q');
+    q.classList.remove('clang');
+    void q.offsetWidth;
+    q.classList.add('clang');
+  });
+})();
+</script>
+</body>
+</html>
