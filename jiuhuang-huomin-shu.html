@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>救荒活民书 · 殆知阁导读</title>
+<style>
+  :root{
+    --ink:#191917;
+    --ink2:#1f1f1d;
+    --paper:#e8e4dc;
+    --paper-ink:#262218;
+    --gold:#c9963f;
+    --gold-dim:rgba(201,150,63,.35);
+    --gold-faint:rgba(201,150,63,.14);
+    --dim:#8f887a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    line-height:1.9;
+  }
+  .mono{font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace}
+  a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold-dim)}
+  a:hover{border-bottom-color:var(--gold)}
+
+  /* ---------- 首屏：廒仓 ---------- */
+  .hero{
+    min-height:96vh;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    position:relative;overflow:hidden;
+    padding:48px 20px 40px;
+    background:
+      radial-gradient(1200px 520px at 50% -10%, rgba(201,150,63,.07), transparent 62%),
+      var(--ink);
+  }
+  .kick{
+    font-size:12px;letter-spacing:6px;color:var(--dim);
+    border:1px solid var(--gold-faint);
+    padding:6px 18px 6px 24px;margin-bottom:44px;
+  }
+  /* 仓：屋盖、仓身、乳钉门、门缝金光 */
+  .barn{position:relative;width:264px;height:312px;margin-bottom:52px}
+  .barn .ridge{
+    position:absolute;top:0;left:74px;right:74px;height:6px;
+    background:linear-gradient(180deg,#3a3126,#241f16);
+    border-top:1px solid var(--gold-dim);
+  }
+  .barn .roof{
+    position:absolute;top:6px;left:2px;right:2px;height:64px;
+    background:linear-gradient(180deg,#2c2822 0%,#211e18 100%);
+    clip-path:polygon(17% 0,83% 0,100% 100%,0 100%);
+    border-bottom:none;
+  }
+  .barn .roof::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
+    background:var(--gold-dim);
+  }
+  .barn .body{
+    position:absolute;top:70px;left:10px;right:10px;bottom:36px;
+    background:
+      repeating-linear-gradient(90deg, rgba(232,228,220,.035) 0 1px, transparent 1px 26px),
+      linear-gradient(180deg,#232320,#1c1c1a);
+    border:1px solid var(--gold-dim);
+    border-top:none;
+  }
+  .barn .door{
+    position:absolute;top:12px;bottom:12px;width:calc(50% - 9px);
+    background:
+      radial-gradient(circle at 9px 9px, var(--gold-faint) 2.5px, transparent 3px),
+      radial-gradient(circle at 9px 9px, var(--gold-faint) 2.5px, transparent 3px),
+      linear-gradient(180deg,#26251f,#1e1d19);
+    background-size:22px 22px,22px 22px,100% 100%;
+    background-position:6px 8px,17px 19px,0 0;
+    border:1px solid rgba(201,150,63,.22);
+    transition:transform .7s ease;
+  }
+  .barn .door.l{left:7px;transform-origin:left center}
+  .barn .door.r{right:7px;transform-origin:right center}
+  .barn:hover .door.l{transform:translateX(-14px)}
+  .barn:hover .door.r{transform:translateX(14px)}
+  .barn .seam{
+    position:absolute;top:82px;bottom:48px;left:50%;width:7px;
+    transform:translateX(-50%);
+    background:linear-gradient(180deg, transparent, rgba(201,150,63,.85) 30%, rgba(232,200,120,.95) 50%, rgba(201,150,63,.85) 70%, transparent);
+    filter:blur(.4px);
+    box-shadow:0 0 26px 4px rgba(201,150,63,.34);
+    animation:breathe 3.6s ease-in-out infinite;
+  }
+  @keyframes breathe{0%,100%{opacity:.75}50%{opacity:1}}
+  .barn .foot{
+    position:absolute;left:0;right:0;bottom:0;height:34px;
+    background:linear-gradient(180deg,#262521,#1b1a17);
+    border:1px solid var(--gold-dim);
+  }
+  .barn .foot::before,.barn .foot::after{
+    content:"";position:absolute;bottom:-9px;width:16px;height:9px;background:#211f1b;
+  }
+  .barn .foot::before{left:22px}
+  .barn .foot::after{right:22px}
+  .barn .slip{
+    position:absolute;top:88px;right:-46px;
+    writing-mode:vertical-rl;
+    background:var(--paper);color:var(--paper-ink);
+    font-size:15px;letter-spacing:7px;
+    padding:16px 7px 12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.55);
+  }
+  .barn .slip::before{
+    content:"";position:absolute;top:-22px;left:50%;
+    width:1px;height:22px;background:var(--gold-dim);
+  }
+  h1{
+    font-size:clamp(34px,6vw,58px);
+    font-weight:600;letter-spacing:20px;text-indent:20px;
+    color:var(--paper);
+  }
+  .pos{
+    margin-top:18px;color:var(--dim);font-size:15px;letter-spacing:3px;
+  }
+  .pos b{color:var(--gold);font-weight:600}
+  .hero .down{
+    margin-top:46px;color:var(--dim);font-size:12px;letter-spacing:4px;
+  }
+
+  /* ---------- 档案行 ---------- */
+  .file-line{
+    max-width:960px;margin:0 auto;
+    padding:14px 24px;border-top:1px solid var(--gold-faint);border-bottom:1px solid var(--gold-faint);
+    display:flex;flex-wrap:wrap;gap:8px 26px;
+    font-size:12.5px;color:var(--dim);
+  }
+  .file-line span b{color:var(--gold);font-weight:500}
+
+  main{max-width:1060px;margin:0 auto;padding:0 24px}
+  section{padding:88px 0 20px;border-top:1px solid transparent}
+  .kick2{
+    display:inline-block;font-size:13px;letter-spacing:5px;color:var(--gold);
+    padding-bottom:6px;margin-bottom:40px;
+    border-bottom:1px solid var(--gold-dim);
+  }
+  .cols{display:grid;grid-template-columns:1.35fr .9fr;gap:56px;align-items:start}
+  p.body{font-size:15.5px;color:#cfc9bc;margin-bottom:18px;text-align:justify}
+  p.body b{color:var(--gold);font-weight:600}
+
+  /* 引文：纸底 */
+  q{
+    display:block;
+    background:var(--paper);color:var(--paper-ink);
+    border-left:3px solid var(--gold);
+    padding:16px 20px;
+    font-size:15px;line-height:2.05;letter-spacing:.6px;
+    text-align:justify;
+    quotes:none;
+  }
+  q em{font-style:normal;color:#7a5210;background:rgba(201,150,63,.22);padding:0 3px}
+  .qsrc{display:block;margin-top:8px;font-size:12px;color:var(--dim);letter-spacing:2px;text-align:right}
+
+  /* 其一：竖排引文柱 */
+  .pillar{
+    display:flex;flex-direction:row;justify-content:flex-end;gap:18px;
+    height:520px;
+  }
+  .pillar .pq{
+    writing-mode:vertical-rl;
+    background:var(--paper);color:var(--paper-ink);
+    border-left:none;border-right:3px solid var(--gold);
+    padding:22px 14px;font-size:14.5px;line-height:2.2;letter-spacing:3px;
+    height:100%;max-width:190px;
+  }
+  .pillar .pq.short{height:64%;align-self:flex-end;opacity:.94}
+
+  /* 其二：三架格 */
+  .shelf{display:flex;flex-direction:column;gap:0}
+  .shelf .row{
+    display:grid;grid-template-columns:64px 1fr 120px;gap:26px;
+    padding:26px 0;border-bottom:1px solid var(--gold-faint);
+    align-items:start;
+  }
+  .shelf .tab{
+    writing-mode:vertical-rl;
+    background:#241f16;color:var(--gold);
+    border:1px solid var(--gold-dim);
+    font-size:17px;letter-spacing:8px;
+    padding:16px 6px;justify-self:start;
+  }
+  .shelf .desc{font-size:14.5px;color:#cfc9bc}
+  .shelf .desc small{display:block;color:var(--dim);margin-top:6px;font-size:12.5px}
+  .shelf .cnt{text-align:right;color:var(--dim);font-size:12.5px;line-height:2}
+  .shelf .cnt b{display:block;font-size:22px;color:var(--gold);font-weight:600}
+
+  /* 其三：五策签 */
+  .slats{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
+  .slat{
+    writing-mode:vertical-rl;
+    background:var(--paper);color:var(--paper-ink);
+    height:470px;padding:20px 12px;
+    flex:1;
+    box-shadow:0 3px 14px rgba(0,0,0,.4);
+    position:relative;
+  }
+  .slat::before{ /* 签头 */
+    content:"";position:absolute;top:-7px;left:10px;right:10px;height:7px;
+    background:linear-gradient(180deg,#3a3126,#241f16);
+    border:1px solid var(--gold-dim);border-bottom:none;
+  }
+  .slat h3{
+    font-size:21px;font-weight:600;letter-spacing:10px;
+    color:#7a5210;margin-left:14px;
+  }
+  .slat q{
+    display:inline;background:none;border:none;padding:0;
+    font-size:13.5px;line-height:2.15;letter-spacing:2px;
+    color:var(--paper-ink);text-align:left;
+    margin-right:12px;
+  }
+  .slats .note{flex-basis:100%}
+  .sln{
+    margin-top:16px;font-size:12.5px;color:var(--dim);letter-spacing:1px;
+  }
+  .slat:nth-child(2){margin-top:26px}
+  .slat:nth-child(3){margin-top:0}
+  .slat:nth-child(4){margin-top:26px}
+  .slat:nth-child(5){margin-top:0}
+
+  /* 其四：讳灾 */
+  .gate{
+    background:var(--paper);color:var(--paper-ink);
+    padding:44px 40px;position:relative;
+  }
+  .gate::before{
+    content:"災";position:absolute;right:18px;top:10px;
+    font-size:88px;color:rgba(122,82,16,.13);font-weight:600;
+  }
+  .gate q{background:none;border-left:none;padding:0;font-size:17.5px;line-height:2.3}
+  .funnel{margin:40px 0 8px;font-size:15px}
+  .funnel .fv{display:block;padding:4px 0}
+  .funnel .fv:nth-child(odd){color:var(--gold)}
+  .funnel .fv:nth-child(2){padding-left:44px}
+  .funnel .fv:nth-child(3){padding-left:88px}
+  .funnel .fv:nth-child(4){padding-left:132px;color:#cfc9bc}
+  .funnel .fv:nth-child(5){padding-left:176px;color:#cfc9bc}
+  .case{
+    margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;
+  }
+
+  /* 其五：米价阶梯 */
+  .market{display:grid;grid-template-columns:.95fr 1.25fr;gap:56px;align-items:start}
+  .steps{display:flex;flex-direction:column;gap:0}
+  .step{
+    border:1px solid var(--gold-dim);
+    background:linear-gradient(180deg,#232019,#1d1b16);
+    padding:16px 20px 14px;
+    display:flex;align-items:baseline;justify-content:space-between;
+  }
+  .step .lab{font-size:13px;color:var(--dim);letter-spacing:2px}
+  .step .val{font-size:26px;color:var(--paper);letter-spacing:2px}
+  .step .val small{font-size:13px;color:var(--dim)}
+  .step.hot{border-color:var(--gold)}
+  .step.hot .val{color:var(--gold)}
+  .step.fall{background:linear-gradient(180deg,#20301f00,#1d1b16),linear-gradient(180deg,#1e2a1e,#1d1b16)}
+  .step.fall .val{color:#8fae7e}
+  .arr{width:0;height:0;margin:6px 0 6px 46px;
+    border-left:9px solid transparent;border-right:9px solid transparent;}
+  .arr.up{border-bottom:11px solid var(--gold)}
+  .arr.dn{border-top:11px solid #8fae7e;margin-left:auto;margin-right:46px}
+
+  /* 其六：青州规程 */
+  .tl{display:flex;gap:0;margin:34px 0 48px}
+  .tl .node{flex:1;position:relative;padding:0 18px 0 6px}
+  .tl .node::before{
+    content:"";position:absolute;top:6px;left:6px;right:0;height:1px;
+    background:var(--gold-faint);
+  }
+  .tl .node::after{
+    content:"";position:absolute;top:0;left:6px;width:13px;height:13px;
+    background:var(--ink);border:2px solid var(--gold);
+  }
+  .tl .node b{display:block;margin-top:22px;font-size:14.5px;color:var(--gold);letter-spacing:1px}
+  .tl .node span{display:block;font-size:12.5px;color:var(--dim)}
+  .docs{display:flex;flex-direction:column;gap:34px}
+  .doc{
+    background:var(--paper);color:var(--paper-ink);
+    padding:26px 28px;position:relative;
+  }
+  .doc::before{
+    content:"指 挥";position:absolute;top:0;right:22px;
+    background:#7a5210;color:var(--paper);
+    font-size:11.5px;letter-spacing:5px;padding:4px 10px 4px 15px;
+  }
+  .doc h4{font-size:16px;color:#7a5210;letter-spacing:2px;margin-bottom:6px}
+  .doc .dsub{font-size:12.5px;color:#6d6350;margin-bottom:16px}
+  .bars{margin:14px 0 6px}
+  .brow{display:grid;grid-template-columns:120px 1fr 64px;gap:12px;align-items:center;margin-bottom:8px}
+  .brow .bl{font-size:13px;color:#4a4132}
+  .brow .btrack{background:rgba(38,34,24,.08);height:18px;position:relative}
+  .brow .bar{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#8a6a2a,#b98d3e)}
+  .brow .bv{font-size:12.5px;color:#6d6350;text-align:right}
+  .doc q{background:none;border-left:3px solid #b98d3e;padding:10px 14px;font-size:14px;margin-top:10px}
+  .doc .bside{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .miniq{font-size:13.5px;color:#4a4132;border-left:2px solid #b98d3e;padding:6px 12px;margin-top:12px}
+
+  /* 其七：边角 */
+  .odd{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .odd .cell{
+    border:1px solid var(--gold-faint);
+    background:linear-gradient(180deg,#201f1b,#1b1a17);
+    padding:22px 20px;
+  }
+  .odd .cell h4{font-size:15px;color:var(--gold);letter-spacing:3px;margin-bottom:12px}
+  .odd .cell p{font-size:13px;color:#b5ae9f;line-height:2;margin-bottom:12px;text-align:justify}
+  .odd q{font-size:13px;padding:10px 12px;letter-spacing:.4px}
+
+  /* 其八：拾遗账簿 */
+  .shiyi{display:grid;grid-template-columns:70px 1fr 1fr;gap:44px;align-items:start}
+  .shiyi .vlab{
+    writing-mode:vertical-rl;font-size:24px;letter-spacing:16px;color:var(--gold);
+    border-right:1px solid var(--gold-faint);padding-right:16px;height:300px;
+  }
+  .ledger{
+    background:var(--paper);color:var(--paper-ink);padding:22px 24px;
+  }
+  .ledger .lrow{
+    display:grid;grid-template-columns:88px 1fr;gap:16px;align-items:baseline;
+    padding:10px 0;border-bottom:1px dashed rgba(38,34,24,.25);
+  }
+  .ledger .lrow:last-child{border-bottom:none}
+  .ledger .lk{font-size:13px;color:#7a5210;letter-spacing:2px}
+  .ledger .lv{font-size:13.5px;line-height:1.9}
+
+  /* 其九：馆臣与校记 */
+  .judge{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+  .colnote{
+    border:1px dashed var(--gold-dim);
+    padding:24px 26px;font-size:13.5px;color:#b5ae9f;line-height:2.1;
+  }
+  .colnote b{color:var(--gold);font-weight:600}
+
+  /* ---------- 页脚 ---------- */
+  footer.page{
+    margin-top:90px;border-top:1px solid var(--gold-faint);
+    background:#161614;
+  }
+  footer.page .wrap{max-width:1060px;margin:0 auto;padding:44px 24px 30px}
+  footer.page .row{
+    font-size:12.5px;color:var(--dim);line-height:2.1;margin-bottom:16px;text-align:justify;
+  }
+  footer.page .row b{color:var(--gold);font-weight:600;letter-spacing:2px}
+  footer.page .fin{
+    text-align:center;color:#5f594e;font-size:12px;letter-spacing:8px;
+    padding:18px 0 8px;border-top:1px solid rgba(201,150,63,.1);
+  }
+  #qbank{display:none}
+
+  @media (max-width:860px){
+    .cols,.market,.case,.judge{grid-template-columns:1fr}
+    .pillar{height:auto;justify-content:flex-start;flex-direction:column;gap:14px}
+    .pillar .pq{writing-mode:horizontal-tb;height:auto;max-width:none}
+    .slats{flex-wrap:wrap}
+    .slat{writing-mode:horizontal-tb;height:auto;min-width:100%;flex:100%}
+    .slat h3{margin:0 0 10px;letter-spacing:6px}
+    .slat .sq{margin:0;display:block}
+    .slat:nth-child(2),.slat:nth-child(4){margin-top:0}
+    .odd{grid-template-columns:1fr 1fr}
+    .shiyi{grid-template-columns:1fr}
+    .shiyi .vlab{writing-mode:horizontal-tb;height:auto;border-right:none;border-bottom:1px solid var(--gold-faint);padding:0 0 10px}
+    .tl{flex-direction:column;gap:26px}
+    .barn{transform:scale(.86)}
+    .barn .slip{right:-30px}
+    h1{letter-spacing:10px;text-indent:10px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ 首屏 ═══ -->
+<header class="hero">
+  <div class="kick">殆知阁导读 · 卷一百六十六 荒政</div>
+  <div class="barn">
+    <div class="ridge"></div>
+    <div class="roof"></div>
+    <div class="body">
+      <div class="door l"></div>
+      <div class="door r"></div>
+      <div class="seam"></div>
+    </div>
+    <div class="foot"></div>
+    <div class="slip">救荒活民书</div>
+  </div>
+  <h1>救荒活民书</h1>
+  <div class="pos">南宋董煟进呈的一部<b>救灾操作手册</b>：水旱霜蝗年年有，官府该怎么办，这里一步步写明</div>
+  <q style="max-width:640px;margin-top:40px">臣闻水旱霜蝗之变何世无之，然救荒无术，则民有流离饿莩、转死沟壑之患。</q>
+  <div class="down">移仓门可启 · 门缝里是常平仓的陈米</div>
+</header>
+
+<div class="file-line">
+  <span>史藏政书类 · 邦计之属</span>
+  <span>三卷 加 <b>拾遗</b></span>
+  <span>库本去空白 <b>43,201</b> 字</span>
+  <span>「煟曰」按语 <b>110</b> 见</span>
+  <span>四库提要称<b>有禆实用</b></span>
+</div>
+
+<main>
+
+<!-- ═══ 其一 其人其书 ═══ -->
+<section>
+  <div class="kick2">其一 · 等不及做官的人</div>
+  <div class="cols">
+    <div>
+      <p class="body">董煟，字季兴，鄱阳人，<b>绍熙五年（1194）中进士</b>，尝知瑞安县。中进士那年他已不年轻，自序里说自己半生坎坷，头发牙齿都稀疏了，担心蒲柳之质经不起风雪，等不到亲手施行的那天。所以先把书写好，进呈皇帝，求一道圣旨颁行州县：让天下官员照单执行。</p>
+      <p class="body">他给自己找的榜样是<b>富弼</b>。庆历八年河北大水，流民涌向京东，富弼在青州主政，活人五十余万。董煟把这件事记在书里下卷，连同四件官府文书原件一并抄录，本页第六节照登。自序里那句自我期许，把「中书二十四考」都比了下去：做官做到极致不过是熬满考课，救活几十万人是另一回事。</p>
+      <p class="body">四库馆臣替这本书算了两笔账：宋史食货志里的蠲免优恤之典，此书能补其缺；「劝分」这项宋代特有政令，史书失载，全靠它存形。馆臣的断语只四个字：<b>有禆实用</b>。</p>
+    </div>
+    <div class="pillar">
+      <q class="pq">窃慕先朝冨弼活河朔饥民五十余万，私心以为贤于中书二十四考远矣。</q>
+      <q class="pq short">半生竒蹇，晚叨一第，而忧患薫心，齿髪疎落，深恐蒲栁之资不任风雪。</q>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 其二 三卷体例 ═══ -->
+<section>
+  <div class="kick2">其二 · 一部手册的三层结构</div>
+  <div class="shelf">
+    <div class="row">
+      <div class="tab">卷上</div>
+      <div class="desc">考古以证今。自《尚书》黎民阻饥、成汤六问、《周礼》荒政十二，下逮春秋告籴、汉唐诏令，逐条抄经史原文，逐条以「煟曰」作按语。
+        <small>最见性情的是按语不客气：讲着周礼，忽然转回来骂当世郡县讳言灾伤。</small>
+        <q>政不节欤，使民疾欤，何以不雨而至斯极也。</q>
+        <span class="qsrc">卷上 · 成汤祷雨之辞</span>
+      </div>
+      <div class="cnt"><b>74</b>见煟曰<br>历数唐虞至宋</div>
+    </div>
+    <div class="row">
+      <div class="tab">卷中</div>
+      <div class="desc">开列当世可行的整套办法。二十个条目：常平、义仓、劝分、禁遏籴、不抑价、检旱、贷种、恤农、遣使、弛禁、鬻爵、度僧、治盗、和籴、存恤流民、劝种二麦、借贷内库、赈粜、赈济、赈贷，末附救荒仙方与淳熈令格式公文七道，报灾该填什么表，书里连空表格都留好了。
+        <small>这一卷是全书的操作面板，下一节拆开看。</small>
+      </div>
+      <div class="cnt"><b>20</b>策<br>附公文格式七道</div>
+    </div>
+    <div class="row">
+      <div class="tab">卷下</div>
+      <div class="desc">尽录本朝名臣贤士的议论与施行。自田锡论救灾至苏次参赈济法，四十余家，两宋救荒事迹按人立目；富弼青州一节收官府文书原件四件，连流民房宿钱都替你想到。
+        <small>值得注意的是：卷下再无一处「煟曰」，编者退场，让案例自己说话。</small>
+      </div>
+      <div class="cnt"><b>40+</b>家<br>煟曰 0 见</div>
+    </div>
+    <div class="row">
+      <div class="tab">拾遗</div>
+      <div class="desc">三卷之外另附一束：除蝗条令、捕蝗法、数州赈济法，以及朱熹崇安社仓奏请与崇安、金华、清江三处社仓规约。第八、九节各取一件。
+        <small>蝗虫可不可以打，董煟在拾遗前有一段表态。</small>
+      </div>
+      <div class="cnt"><b>16</b>见煟曰<br>规约三种</div>
+    </div>
+  </div>
+  <q style="margin-top:34px">上卷考古以证今，中卷条陈今日救荒之策，下卷则备述本朝名臣贤士之所议论施行，可鉴可戒，可为矜式者，以备缓急观览，名曰救荒活民书。</q>
+  <span class="qsrc">原序 · 三卷分工</span>
+</section>
+
+<!-- ═══ 其三 五策 ═══ -->
+<section>
+  <div class="kick2">其三 · 门后五策</div>
+  <p class="body">卷中开篇先把救荒的全景收拢成一句话，五策是骨架，其余十五策都是枝叶。抽出来看，每一策都配着库本原话。</p>
+  <q style="margin:26px 0 40px">救荒之法不一，而大致有五：常平以赈粜，义仓以赈济，不足则劝分于有力之家，又遏籴有禁，抑价有禁，能行五者，则亦庶乎其可矣。</q>
+  <span class="qsrc">卷中 · 总纲</span>
+  <div class="slats">
+    <div class="slat">
+      <h3>常平</h3>
+      <q class="sq">常平之法专为凶荒赈粜，谷贱则増价而籴，使不害农；谷贵则减价而粜，使不病民。</q>
+    </div>
+    <div class="slat">
+      <h3>义仓</h3>
+      <q class="sq">义仓，民间储蓄以备水旱者也，一遇凶歉，直当给以还民。</q>
+    </div>
+    <div class="slat">
+      <h3>劝分</h3>
+      <q class="sq">民户有米，得价粜钱，何待官司之劝。</q>
+    </div>
+    <div class="slat">
+      <h3>禁遏籴</h3>
+      <q class="sq">一路饥则邻路为之闭籴，一郡饥则邻郡为之闭籴。</q>
+    </div>
+    <div class="slat">
+      <h3>不抑价</h3>
+      <q class="sq">官抑其价，则客米不来。若他处腾涌，而此间之价独低，则谁肯兴贩？</q>
+    </div>
+    <div class="sln note">五策的白话：官仓平价，贱买贵卖；民仓民有，凶年还民；劝富户出粜可以，摊派必坏事；邻境饥荒不许闭籴截粮；最反常识的是最后一条：官府压价，米反而进不来。</div>
+  </div>
+</section>
+
+<!-- ═══ 其四 讳灾 ═══ -->
+<section>
+  <div class="kick2">其四 · 灾是怎样被吞掉的</div>
+  <p class="body">手册开出的第一味药不在仓廪，在官僚系统的舌头。董煟把报灾这一环单独拎出来写了检旱一策，按语近乎痛陈：制度设计得再好，第一道关口是官不肯承认有灾。</p>
+  <div class="gate">
+    <q>灾伤水旱而告之官，岂民间之得已。今之守令专办财赋，<em>贪丰熟之美名</em>，<em>讳闻荒歉之事</em>，<em>不受灾伤之状</em>，责令里正伏熟。</q>
+    <span class="qsrc">卷中 · 检旱</span>
+  </div>
+  <p class="body" style="margin-top:30px">上卷讲《周礼》荒政时他已埋过同一根刺：古人以散利薄征居首，今之郡县专促财赋。灾报被压下来，层层误的是谁？下引文是赈济一策里的名句，他排了一张表格，说明赈济物资在基层的实际流向。</p>
+  <div class="funnel">
+    <q>抄劄之时，里正乞覔，<em>强梁者得之</em>，善弱者不得也；<em>附近者得之</em>，逺僻者不得也。</q>
+    <span class="qsrc">卷中 · 赈济</span>
+  </div>
+  <div class="case">
+    <div>
+      <p class="body">不报灾有政绩逻辑：报了灾要检放、要蠲免、要赈济，哪一样都是钱粮窟窿。淳熈元年孝宗亲自下御札要求从实检放，宪司揭榜许民户越级陈状；等帐目报到户部，户部搬出「陈诉旱伤之限至八月终止」的令文，超限不合受理，一概不放。民户仗着宪司的榜文不肯照额输纳，官府照旧催科。</p>
+    </div>
+    <q>人户恃宪司榜示不肯输纳鞭挞过多反为民害。</q>
+  </div>
+  <span class="qsrc">卷中 · 检旱引淳熈元年事</span>
+</section>
+
+<!-- ═══ 其五 不抑价 ═══ -->
+<section>
+  <div class="kick2">其五 · 米价是用来放的</div>
+  <div class="market">
+    <div class="steps">
+      <div class="step">
+        <span class="lab">二浙阻饥 · 市价</span>
+        <span class="val">百二十<small>文一斗</small></span>
+      </div>
+      <div class="arr up"></div>
+      <div class="step hot">
+        <span class="lab">仲淹增榜 · 官府放价</span>
+        <span class="val">百八十<small>文一斗</small></span>
+      </div>
+      <div class="arr dn"></div>
+      <div class="step fall">
+        <span class="lab">商贾辐凑之后</span>
+        <span class="val">价亦随减</span>
+      </div>
+    </div>
+    <div>
+      <p class="body">五策里最反直觉的一条，董煟给了两个案例。范仲淹知杭州，二浙大饥，粮价正涨，他不但不压价，反而把官价抬到市价之上，还满城贴榜，写明杭州缺粮、米价几何。四方商贾闻讯昼夜兼程运米赶来，米一多，价格自己落下来了。包拯知庐州同理：不限米价，贩米者愈多，不日米贱。</p>
+      <q>谷价方涌，防计百二十文，仲淹増至百八十，众不知所为，仍多出榜文，具述杭饥及米价所増之数，于是商贾闻之，晨夕争先，惟恐后，且虞后者继来，米既辐凑，价亦随减。</q>
+      <span class="qsrc">卷中 · 不抑价（防＝斗，库本讹字，见文末校记）</span>
+      <q style="margin-top:16px">包拯知庐州，亦不限米价，而贾至益多，不日米贱。</q>
+      <span class="qsrc">卷中 · 不抑价</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 其六 青州规程 ═══ -->
+<section>
+  <div class="kick2">其六 · 庆历八年的难民手册</div>
+  <p class="body">下卷收的四件青州文书，是全书最硬的部分：不是议论，是可以照着执行的规程。河北灾伤流民涌向青、淄、潍、登、莱五州，富弼居中调度，把安置拆成住房、口粮、遣归三件事，件件定到数字。</p>
+  <div class="tl">
+    <div class="node"><b>庆历八年十月</b><span>榜文降下，五州勒限征房劝粜</span></div>
+    <div class="node"><b>皇祐元年正月</b><span>流民抄劄已毕，起支口粮</span></div>
+    <div class="node"><b>皇祐元年五月</b><span>麦熟，支路粮，各任便归乡</span></div>
+  </div>
+  <div class="docs">
+    <div class="doc">
+      <h4>「擘画屋舍安泊流民事指挥」</h4>
+      <div class="dsub">第一步：腾房。按户等摊派空闲房屋，城郭与乡村两套标准，立定期限，官数须足。</div>
+      <div class="bside">
+        <div class="bars">
+          <div class="brow"><span class="bl">坊郭第一等</span><div class="btrack"><div class="bar" style="width:71%"></div></div><span class="bv">五间</span></div>
+          <div class="brow"><span class="bl">坊郭第二等</span><div class="btrack"><div class="bar" style="width:43%"></div></div><span class="bv">三间</span></div>
+          <div class="brow"><span class="bl">坊郭第三等</span><div class="btrack"><div class="bar" style="width:29%"></div></div><span class="bv">两间</span></div>
+          <div class="brow"><span class="bl">坊郭四五等</span><div class="btrack"><div class="bar" style="width:14%"></div></div><span class="bv">一间</span></div>
+        </div>
+        <div class="bars">
+          <div class="brow"><span class="bl">乡村第一等</span><div class="btrack"><div class="bar" style="width:100%"></div></div><span class="bv">七间</span></div>
+          <div class="brow"><span class="bl">乡村第二等</span><div class="btrack"><div class="bar" style="width:71%"></div></div><span class="bv">五间</span></div>
+          <div class="brow"><span class="bl">乡村第三等</span><div class="btrack"><div class="bar" style="width:43%"></div></div><span class="bv">三间</span></div>
+          <div class="brow"><span class="bl">乡村四五等</span><div class="btrack"><div class="bar" style="width:29%"></div></div><span class="bv">两间</span></div>
+        </div>
+      </div>
+      <q>第一等五间，第二等三间，第三等两间，第四等五等一间。</q>
+      <span class="qsrc">坊郭户征房则例</span>
+      <q>第一等七间，第二等五间，第三等三间，第四等五等两间。</q>
+      <span class="qsrc">乡村户征房则例</span>
+    </div>
+    <div class="doc">
+      <h4>「支散流民斛防画一指挥」</h4>
+      <div class="dsub">第二步：发粮。官员分片包干，按户抄劄人口，一人执厯子代全家领米，领取后当场毁抹防重领；十五岁以下减半，五岁以下不支。</div>
+      <q>流民所支米豆，十五岁以上，毎人日支一升；十五岁以下，毎人日给五合；五岁以下男女，不在支给。</q>
+      <span class="qsrc">口粮则例 · 毎＝每</span>
+    </div>
+    <div class="doc">
+      <h4>「晓示流民许令诸般采取营运事指挥」与约束条款</h4>
+      <div class="dsub">第三步：遣归。二麦将熟，按口预支一个月路粮；沿途河口免税渡钱，客店不得收流民房宿钱。</div>
+      <q>自五月初一日筭至五月终，一并支与流民充路粮，令各任便归乡。</q>
+      <q>出榜青淄等州河口，晓示与免流民税渡钱，仍不得邀难住滞。</q>
+      <q>晓示道店，不得要流民房宿钱事。</q>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 其七 边角 ═══ -->
+<section>
+  <div class="kick2">其七 · 手册边角上的四件物事</div>
+  <div class="odd">
+    <div class="cell">
+      <h4>救荒仙方</h4>
+      <p>唐永宁三年，黄门侍郎刘景先进表，称得太白山隐士传方：黑豆与大麻子蒸捣为丸，服之可以辟谷。董煟把这篇原样收进卷中，年号可疑（唐无永宁）也照录不删，大约在他看来，连荒诞也是救荒史的组成部分。</p>
+      <q>第一顿七日不饥，第二顿四十九日不饥，第三顿得三百日不饥，第四顿得三千四百日不饥，如更服永不饥也。</q>
+    </div>
+    <div class="cell">
+      <h4>度牒换米</h4>
+      <p>淳熈九年令广东福建晓谕愿为僧道之民，每名备米三百石，方可换得度牒。有人批评这会败坏佛门，董煟的账算得很直接：游民本就甚多，一本度牒度一人出家，换来的米能活十人之命。</p>
+      <q>今日度牒一本，度一人为僧，而活有十人之命，何惮而不为。</q>
+    </div>
+    <div class="cell">
+      <h4>鬻爵格目</h4>
+      <p>乾道七年定劝诱富室赈济立定格目，纳米石数直接折算官阶。名器固不可滥，但董煟说，饥荒之年借它活百姓之命，权以济事，复何患焉。</p>
+      <q>无官人一千五百石，补进义校尉。</q>
+    </div>
+    <div class="cell">
+      <h4>封剑斩渠</h4>
+      <p>治盗一策是手册里最冷的一面：凶年饥岁，民不肯就死必起为盗，倘不约束，便会啸聚坐大。乾道间饶郡大饥，通守柴瑾把剑封送诸县，只留一句话。</p>
+      <q>敢为渠魁者斩之，群盗望风遯匿。</q>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 其八 拾遗 ═══ -->
+<section>
+  <div class="kick2">其八 · 蝗可捕，谷可借</div>
+  <div class="shiyi">
+    <div class="vlab">拾遗</div>
+    <div>
+      <p class="body">有人拿「以人胜天」讥姚崇捕蝗，董煟不接这一套。他把天灾分成两类：类与人力无关，听之；类人力可为，必救。蝗蝻落地，有捕瘗之法；旱伤在田，有车戽之利。守宰该做的是激发百姓自为方略。</p>
+      <q style="margin-top:24px">凡水与霜，非人力所为，姑得任之；至于旱伤，则有车戽之利；蝗蝻，则有捕瘗之法。凡可以用力者，岂可坐视而不救耶。</q>
+      <span class="qsrc">拾遗 · 捕蝗法前按语</span>
+    </div>
+    <div>
+      <p class="body">社仓规约是拾遗里最有人情味的部分。朱熹在崇安创社仓，谷本五百石，散谷还谷都在一册账簿上办，不立契券；犯约的罚则也轻得出奇：第一次不许再借，第二次除名。</p>
+      <div class="ledger" style="margin-top:24px">
+        <div class="lrow"><span class="lk">谷本</span><span class="lv"><q style="display:inline;background:none;border:none;padding:0;font-size:13.5px;color:var(--paper-ink)">社仓谷本五百石</q></span></div>
+        <div class="lrow"><span class="lk">借还</span><span class="lv"><q style="display:inline;background:none;border:none;padding:0;font-size:13.5px;color:var(--paper-ink)">借谷上簿不立契【还谷就簿内销】</q></span></div>
+        <div class="lrow"><span class="lk">罚则</span><span class="lv"><q style="display:inline;background:none;border:none;padding:0;font-size:13.5px;color:var(--paper-ink)">社众于规约犯一事不借一年再犯出籍</q></span></div>
+      </div>
+      <span class="qsrc">拾遗 · 「崇安社仓条约」</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 其九 馆臣与校记 ═══ -->
+<section>
+  <div class="kick2">其九 · 馆臣的赞语与挑错</div>
+  <div class="judge">
+    <div>
+      <p class="body">四库馆臣对此书评价落在「实用」二字：宋代的蠲免优恤典章，此书撮其大要，可补宋志之缺；「劝分」这项政令史所失载，赖此书存形。赞语之后紧跟着挑错：书中把常平仓记到隋、义仓记到唐太宗，两处都断晚了一截（常平创于西汉，义仓立于隋开皇，此为库外通识），提要直言不能远考本原。</p>
+      <q style="margin-top:20px">劝分亦宋之政令，史所失载而此书有焉。</q>
+      <q style="margin-top:14px">以常平为始自隋，义仓为始自唐太宗，皆不能逺考本原。</q>
+      <span class="qsrc">卷首提要</span>
+    </div>
+    <div class="colnote">
+      <b>库本校记</b><br>
+      · 防字讹：库本防字多为斗、策、借之讹，如谷价方涌防计百二十文之防当作斗、给降防子当作会子、救荒之防当作策、那防房屋当作借，引文悉照录。<br>
+      · 义仓条脱字：「岂可吝而不而遽有徳色哉」，不下当有发字。<br>
+      · 荒政十二条：「七曰礼」上疑脱眚字，「十有一曰索神」疑脱鬼字。<br>
+      · 异体照录：冨増毎熈竒栁薫髪疎呉覔遯兊糓 囏 覩 攄 厯 逺 徳之属，皆仍库本之旧。<br>
+      · 库本另有个别私用区讹字，本页引文均已避开。
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══ 页脚 ═══ -->
+<footer class="page">
+  <div class="wrap">
+    <div class="row"><b>文本来源</b>　殆知阁古代文献简体库（<a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a>），史藏政书〈救荒活民书〉，宋董煟撰，库本去空白 43,201 字，三卷加拾遗：卷上考古以证今，卷中条陈救荒之策二十目附淳熈令格式，卷下辑两宋名臣救荒事迹四十余家，拾遗收除蝗条令、捕蝗法与社仓规约三种。本页引文八十八处、去重四十九条（q 元素、「」文书名与页尾清单）经脚本与库内文本去标点、空白归一逐字核验通过，页尾藏引文全清单。目录：<a href="mulu.html">殆知阁导读总目</a>。</div>
+    <div class="row"><b>库外申报</b>　董煟生平仅据卷首提要（字季兴、鄱阳人、绍熙五年进士、尝知瑞安县），其编书进呈的具体年份、后续仕历与后世刊本源流均系库外；常平创于西汉、义仓立于隋开皇之考订，及中国现存最早的系统性救荒专书之定位，属库外通识；范仲淹、包拯、富弼诸事的系年对读宋史方得完备，本书仅记其略；救荒仙方条「唐永宁三年」年号可疑，照录并已申报。青州四件文书的系年（庆历八年十月榜文、皇祐元年正月起支、五月初一路粮）均出库内文书本文。</div>
+    <div class="row"><b>时代局限提醒</b>　本书是朝廷与官府立场的救灾手册，劝分、鬻爵、度牒诸策本质是以权力筹粮，治盗一策的封剑斩渠更见严刑路线，对荒年民众的描摹皆自上而下；救荒仙方属古代方术虚妄之谈，绝无辟谷之效，切勿仿行，本页仅作古籍文献导读，不构成任何医疗建议。文中仓储、赈济数字反映宋代制度与文书面貌，须对读宋史食货志方得全貌。愿读者以历史眼光观之。</div>
+    <div class="fin">殆知阁导读　二百六十四</div>
+  </div>
+</footer>
+
+<div id="qbank" hidden>
+  <ul>
+    <li>臣闻水旱霜蝗之变何世无之，然救荒无术，则民有流离饿莩、转死沟壑之患。</li>
+    <li>窃慕先朝冨弼活河朔饥民五十余万，私心以为贤于中书二十四考远矣。</li>
+    <li>半生竒蹇，晚叨一第，而忧患薫心，齿髪疎落，深恐蒲栁之资不任风雪。</li>
+    <li>上卷考古以证今，中卷条陈今日救荒之策，下卷则备述本朝名臣贤士之所议论施行，可鉴可戒，可为矜式者，以备缓急观览，名曰救荒活民书。</li>
+    <li>政不节欤，使民疾欤，何以不雨而至斯极也。</li>
+    <li>救荒之法不一，而大致有五：常平以赈粜，义仓以赈济，不足则劝分于有力之家，又遏籴有禁，抑价有禁，能行五者，则亦庶乎其可矣。</li>
+    <li>常平之法专为凶荒赈粜，谷贱则増价而籴，使不害农；谷贵则减价而粜，使不病民。</li>
+    <li>义仓，民间储蓄以备水旱者也，一遇凶歉，直当给以还民。</li>
+    <li>民户有米，得价粜钱，何待官司之劝。</li>
+    <li>一路饥则邻路为之闭籴，一郡饥则邻郡为之闭籴。</li>
+    <li>官抑其价，则客米不来。若他处腾涌，而此间之价独低，则谁肯兴贩？</li>
+    <li>灾伤水旱而告之官，岂民间之得已。今之守令专办财赋，贪丰熟之美名，讳闻荒歉之事，不受灾伤之状，责令里正伏熟。</li>
+    <li>今之郡县专促办财赋，而讳言灾伤，州县之官有抑民吿诉者，检视之官有不敢保明分数者。</li>
+    <li>抄劄之时，里正乞覔，强梁者得之，善弱者不得也；附近者得之，逺僻者不得也。</li>
+    <li>人户恃宪司榜示不肯输纳鞭挞过多反为民害。</li>
+    <li>谷价方涌，防计百二十文，仲淹増至百八十，众不知所为，仍多出榜文，具述杭饥及米价所増之数，于是商贾闻之，晨夕争先，惟恐后，且虞后者继来，米既辐凑，价亦随减。</li>
+    <li>包拯知庐州，亦不限米价，而贾至益多，不日米贱。</li>
+    <li>第一等五间，第二等三间，第三等两间，第四等五等一间。</li>
+    <li>第一等七间，第二等五间，第三等三间，第四等五等两间。</li>
+    <li>流民所支米豆，十五岁以上，毎人日支一升；十五岁以下，毎人日给五合；五岁以下男女，不在支给。</li>
+    <li>自五月初一日筭至五月终，一并支与流民充路粮，令各任便归乡。</li>
+    <li>出榜青淄等州河口，晓示与免流民税渡钱，仍不得邀难住滞。</li>
+    <li>晓示道店，不得要流民房宿钱事。</li>
+    <li>第一顿七日不饥，第二顿四十九日不饥，第三顿得三百日不饥，第四顿得三千四百日不饥，如更服永不饥也。</li>
+    <li>今日度牒一本，度一人为僧，而活有十人之命，何惮而不为。</li>
+    <li>每名备米三百石请换度牒。</li>
+    <li>无官人一千五百石，补进义校尉。</li>
+    <li>敢为渠魁者斩之，群盗望风遯匿。</li>
+    <li>凡水与霜，非人力所为，姑得任之；至于旱伤，则有车戽之利；蝗蝻，则有捕瘗之法。凡可以用力者，岂可坐视而不救耶。</li>
+    <li>社仓谷本五百石</li>
+    <li>借谷上簿不立契【还谷就簿内销】</li>
+    <li>社众于规约犯一事不借一年再犯出籍</li>
+    <li>劝分亦宋之政令，史所失载而此书有焉。</li>
+    <li>以常平为始自隋，义仓为始自唐太宗，皆不能逺考本原。</li>
+    <li>犹古书中之有禆实用者也。</li>
+    <li>擘画屋舍安泊流民事指挥</li>
+    <li>支散流民斛防画一指挥</li>
+    <li>晓示流民许令诸般采取营运事指挥</li>
+    <li>崇安社仓条约</li>
+  </ul>
+</div>
+
+</body>
+</html>
