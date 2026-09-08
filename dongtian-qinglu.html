@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>洞天清录 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #1e1d1b; --ink-3: #242320;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --zhu: #5f9270; --zhu-dim: rgba(95,146,112,0.55); --zhu-faint: rgba(95,146,112,0.14);
+    --hairline: rgba(232,228,220,0.12);
+    --rust: rgba(95,146,112,0.30);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 2.0; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  a { color: inherit; }
+
+  /* 右侧细目栏 */
+  .rail {
+    position: fixed; right: 0; top: 0; bottom: 0; width: 118px; z-index: 5;
+    border-left: 1px solid var(--hairline);
+    padding: 30px 0 24px 10px;
+    display: flex; flex-direction: column; justify-content: center; gap: 2px;
+    background: linear-gradient(270deg, rgba(25,25,23,0.9), rgba(25,25,23,0));
+  }
+  .rail .rt { font-size: 11px; letter-spacing: 0.34em; color: var(--paper-faint); writing-mode: vertical-rl; margin-bottom: 14px; margin-left: 4px; }
+  .rail a {
+    display: flex; align-items: center; gap: 8px; text-decoration: none;
+    color: var(--paper-faint); font-size: 12.5px; letter-spacing: 0.12em; padding: 3px 0;
+    transition: color 0.25s;
+  }
+  .rail a i { font-style: normal; width: 18px; height: 1px; background: var(--paper-faint); opacity: 0.45; transition: all 0.25s; flex: none; }
+  .rail a.on { color: var(--paper); }
+  .rail a.on i { width: 30px; background: var(--zhu); opacity: 1; }
+  .rail a:hover { color: var(--zhu); }
+  @media (max-width: 1020px) { .rail { display: none; } }
+
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 28px; }
+  @media (min-width: 1021px) { .wrap { padding-right: 150px; } }
+
+  /* 首屏：琴面 */
+  .mian { position: relative; min-height: 100dvh; overflow: hidden; display: flex; align-items: center; }
+  .mian svg.crack { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .mian .shade { position: absolute; inset: 0; background: radial-gradient(ellipse 90% 70% at 38% 50%, rgba(25,25,23,0.24), rgba(25,25,23,0.86) 82%); pointer-events: none; }
+  .mian .in { position: relative; width: 100%; max-width: 1180px; margin: 0 auto; padding: 90px 32px; display: flex; justify-content: space-between; align-items: stretch; gap: 40px; }
+  .statement { max-width: 640px; align-self: center; }
+  .statement .cap { font-size: 13px; letter-spacing: 0.5em; color: var(--zhu); margin-bottom: 26px; }
+  .statement h1 { font-size: clamp(30px, 4.6vw, 52px); font-weight: 700; line-height: 1.72; letter-spacing: 0.06em; margin-bottom: 30px; }
+  .statement h1 em { font-style: normal; color: var(--zhu); }
+  .statement .who { font-size: 14.5px; color: var(--paper-dim); letter-spacing: 0.16em; margin-bottom: 8px; }
+  .statement .pitch { font-size: 15px; color: var(--paper-dim); max-width: 460px; margin-top: 14px; padding-top: 16px; border-top: 1px solid var(--hairline); }
+  .plaque { flex: none; writing-mode: vertical-rl; display: flex; gap: 18px; align-items: flex-start; }
+  .plaque h2 { font-size: clamp(44px, 5.4vw, 72px); font-weight: 700; letter-spacing: 0.3em; line-height: 1.2; }
+  .plaque .sub { font-size: 13.5px; color: var(--paper-dim); letter-spacing: 0.42em; padding-top: 8px; }
+  .plaque .seal { border: 1px solid var(--zhu-dim); color: var(--zhu); font-size: 12px; letter-spacing: 0.3em; padding: 8px 7px; margin-top: 10px; }
+  @media (max-width: 760px) {
+    .mian .in { flex-direction: column-reverse; padding-top: 70px; }
+    .plaque { writing-mode: horizontal-tb; }
+    .plaque .seal { writing-mode: vertical-rl; }
+    .statement h1 { font-size: 26px; }
+  }
+  .scroll-hint { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); font-size: 11px; letter-spacing: 0.4em; color: var(--paper-faint); }
+
+  section { padding: 92px 0 40px; }
+  section + section { border-top: 1px solid var(--hairline); }
+  .shead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 10px; }
+  .shead .no { font-size: 12px; letter-spacing: 0.28em; color: var(--zhu); }
+  .shead h3 { font-size: clamp(26px, 3vw, 34px); font-weight: 700; letter-spacing: 0.12em; }
+  .shead .count { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  .lede { color: var(--paper-dim); max-width: 620px; margin-bottom: 34px; }
+
+  q { font-style: normal; quotes: none; }
+  .qblock { border-left: 2px solid var(--zhu-dim); padding: 4px 0 4px 20px; margin: 26px 0; }
+  .qblock p { font-size: 17px; letter-spacing: 0.04em; }
+  .qblock .src { display: block; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.14em; margin-top: 10px; }
+  .qinline { color: var(--paper); border-bottom: 1px solid var(--zhu-dim); }
+  .note { font-size: 13px; color: var(--paper-faint); margin-top: 8px; margin-bottom: 26px; padding-left: 22px; }
+
+  /* 乐地：白驹过隙三分账 */
+  .gapbar { margin: 36px 0 10px; }
+  .gapbar .track { display: flex; height: 52px; border: 1px solid var(--hairline); }
+  .gapbar .t1 { flex: 2 1 0; background: repeating-linear-gradient(135deg, rgba(232,228,220,0.05) 0 6px, transparent 6px 12px); display: flex; align-items: center; justify-content: center; }
+  .gapbar .t2 { flex: 1 1 0; background: rgba(232,228,220,0.14); display: flex; align-items: center; justify-content: center; }
+  .gapbar .lbl { font-size: 12.5px; letter-spacing: 0.2em; color: var(--paper-dim); }
+  .gapbar .legend { display: flex; justify-content: space-between; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.12em; margin-top: 10px; flex-wrap: wrap; gap: 8px; }
+  .sliver { margin-top: 14px; }
+  .sliver .cap { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.14em; margin-bottom: 6px; }
+  .sliver .bar { height: 7px; background: rgba(232,228,220,0.07); position: relative; }
+  .sliver .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 1.2%; background: var(--zhu); }
+  .sliver .bar i::after { content: ""; position: absolute; top: -4px; bottom: -4px; right: -1px; width: 3px; background: var(--zhu); }
+
+  /* 断纹两样 */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 30px 0; }
+  @media (max-width: 680px) { .duo { grid-template-columns: 1fr; } }
+  .duo .cell { border: 1px solid var(--hairline); padding: 18px 18px 14px; background: var(--ink-2); }
+  .duo .cell h4 { font-size: 14px; letter-spacing: 0.22em; color: var(--paper-dim); margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .duo .cell h4 b { color: var(--zhu); font-weight: normal; font-size: 12px; }
+  .duo svg { width: 100%; height: 120px; display: block; }
+  .duo .cell p { font-size: 13.5px; color: var(--paper-faint); margin-top: 8px; }
+
+  /* 断纹三等清单 */
+  .cracklist { border-top: 1px solid var(--hairline); margin-top: 8px; }
+  .cracklist .row { display: grid; grid-template-columns: 110px 1fr; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--hairline); }
+  @media (max-width: 620px) { .cracklist .row { grid-template-columns: 1fr; gap: 6px; } }
+  .cracklist .nm { font-size: 16px; letter-spacing: 0.14em; color: var(--paper); }
+  .cracklist .nm small { display: block; font-size: 11px; color: var(--zhu); letter-spacing: 0.2em; margin-top: 6px; }
+  .cracklist .tx { font-size: 14.5px; color: var(--paper-dim); }
+
+  /* 故事卡（瀑布寻材） */
+  .story { border: 1px solid var(--hairline); background: var(--ink-2); padding: 30px 32px; margin: 34px 0; position: relative; }
+  .story::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--zhu), transparent 70%); }
+  .story h4 { font-size: 15px; letter-spacing: 0.26em; color: var(--zhu); margin-bottom: 14px; }
+  .story p { font-size: 15px; color: var(--paper-dim); margin-bottom: 12px; }
+  .story p:last-child { margin-bottom: 0; }
+
+  /* 器面卡片：砚 */
+  .yan-face { height: 120px; border: 1px solid var(--hairline); margin: 26px 0 6px; position: relative; background: radial-gradient(ellipse 120% 100% at 50% 0%, #2a2926, #201f1d 70%); overflow: hidden; }
+  .yan-face .eye { position: absolute; border-radius: 50%; background: radial-gradient(circle at 45% 40%, #4a6f56, #2f3d33 55%, #243028 72%); box-shadow: 0 0 0 1px rgba(95,146,112,0.35), 0 0 0 5px rgba(95,146,112,0.10); }
+  .yan-face .cap { position: absolute; right: 14px; bottom: 10px; font-size: 11px; letter-spacing: 0.3em; color: var(--paper-faint); }
+
+  /* 铜面三等 */
+  .tabs { display: flex; gap: 0; border: 1px solid var(--hairline); border-bottom: none; margin-top: 30px; }
+  .tabs button {
+    flex: 1; background: none; border: none; border-right: 1px solid var(--hairline); color: var(--paper-faint);
+    font-family: inherit; font-size: 14px; letter-spacing: 0.22em; padding: 13px 0; cursor: pointer; transition: all 0.25s;
+  }
+  .tabs button:last-child { border-right: none; }
+  .tabs button.on { color: var(--ink); background: var(--zhu); }
+  .bronze { border: 1px solid var(--hairline); padding: 34px 32px 26px; position: relative; overflow: hidden; min-height: 250px; transition: background 0.5s; }
+  .bronze .blot { position: absolute; border-radius: 50%; filter: blur(18px); transition: opacity 0.6s; }
+  .bronze[data-v="tu"] { background: #1d211d; }
+  .bronze[data-v="shui"] { background: #1e211f; }
+  .bronze[data-v="chuan"] { background: #211d1c; }
+  .bronze .bq { position: relative; z-index: 2; display: none; }
+  .bronze .bq.on { display: block; }
+  .bronze .bq p { font-size: 16.5px; letter-spacing: 0.04em; }
+  .bronze .bq .src { display: block; font-size: 12px; color: var(--paper-faint); margin-top: 12px; letter-spacing: 0.14em; }
+  .bronze .fleck { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: rgba(196,90,74,0.85); z-index: 1; }
+
+  /* 方子卡 */
+  .fangzi { border: 1px dashed var(--zhu-dim); padding: 26px 30px; margin: 30px 0; background: var(--zhu-faint); }
+  .fangzi h4 { font-size: 14px; letter-spacing: 0.3em; color: var(--zhu); margin-bottom: 10px; }
+  .fangzi p { font-size: 15px; }
+
+  /* 石面 */
+  .peaks { height: 130px; margin: 26px 0 6px; border: 1px solid var(--hairline); position: relative; overflow: hidden; background: var(--ink-2); }
+  .peaks svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* 纸面揭层 */
+  .peel { perspective: 900px; border: 1px solid var(--hairline); margin: 30px 0; position: relative; min-height: 210px; overflow: hidden; background: #35302a; }
+  .peel .li { padding: 30px 32px; }
+  .peel .li .tag { font-size: 11px; letter-spacing: 0.34em; color: var(--paper-faint); display: block; margin-bottom: 10px; }
+  .peel .li .tag b { color: var(--zhu); font-weight: normal; }
+  .peel .biao { position: absolute; inset: 0; background: linear-gradient(160deg, #4a453c, #3b362f 70%); padding: 30px 32px; transition: transform 0.55s cubic-bezier(0.22, 0.9, 0.3, 1), opacity 0.55s; transform-origin: top left; z-index: 3; box-shadow: 6px 8px 24px rgba(0,0,0,0.45); }
+  .peel .biao .tag { color: var(--paper-dim); }
+  .peel:hover .biao { transform: translate(9%, 7%) rotate(2.4deg); opacity: 0.16; }
+  .peel .hint { position: absolute; right: 16px; bottom: 12px; font-size: 11px; letter-spacing: 0.3em; color: var(--paper-faint); z-index: 4; }
+
+  /* 画面织纹 */
+  .hua-face { height: 110px; border: 1px solid var(--hairline); margin: 26px 0 6px; background: repeating-linear-gradient(0deg, rgba(232,228,220,0.05) 0 1px, transparent 1px 4px), repeating-linear-gradient(90deg, rgba(232,228,220,0.05) 0 1px, transparent 1px 4px), var(--ink-2); position: relative; overflow: hidden; }
+  .hua-face .cap { position: absolute; left: 14px; bottom: 10px; font-size: 11px; letter-spacing: 0.3em; color: var(--paper-faint); }
+
+  /* 尾声 */
+  .final { background: linear-gradient(180deg, transparent, rgba(95,146,112,0.05)); }
+  .final .stamp { display: inline-block; border: 1px solid var(--zhu-dim); color: var(--zhu); font-size: 12px; letter-spacing: 0.3em; padding: 8px 14px; margin-bottom: 22px; }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 46px 0 60px; font-size: 13px; color: var(--paper-faint); line-height: 2.1; }
+  footer.page a { color: var(--paper-dim); }
+</style>
+</head>
+<body>
+
+<nav class="rail" aria-label="细目">
+  <div class="rt">洞天清录</div>
+  <a href="#s-xu"><i></i>乐地</a>
+  <a href="#s-qin"><i></i>琴面</a>
+  <a href="#s-yan"><i></i>砚面</a>
+  <a href="#s-ding"><i></i>铜面</a>
+  <a href="#s-shi"><i></i>石面</a>
+  <a href="#s-mo"><i></i>纸面</a>
+  <a href="#s-hua"><i></i>画面</a>
+  <a href="#s-jian"><i></i>真伪之间</a>
+</nav>
+
+<!-- 首屏：一面开了片的琴 -->
+<header class="mian" id="top">
+  <svg class="crack" id="crackHero" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+  <div class="shade"></div>
+  <div class="in">
+    <div class="statement">
+      <div class="cap">鉴 赏 家 的 指 南</div>
+      <h1><q>琴不歴五百岁不断，<br>愈久则断愈多。</q><br><em><q>然真断纹如剑锋，伪则否。</q></em></h1>
+      <div class="who">南宋 · 赵希鹄《洞天清录》</div>
+      <div class="pitch">一部教人在满眼假货里认出真东西的小书：看裂纹、听叩声、掐木纹、揭纸背、闻铜腥。真假之间，南宋人的五感比今天的检测报告更忙。</div>
+    </div>
+    <div class="plaque">
+      <h2>洞天清录</h2>
+      <div class="sub">开封赵希鹄 撰</div>
+      <div class="seal">嘉熙庚子</div>
+    </div>
+  </div>
+  <div class="scroll-hint">循 纹 而 下</div>
+</header>
+
+<main>
+<!-- 乐地 -->
+<section id="s-xu">
+  <div class="wrap">
+    <div class="shead"><span class="no">序</span><h3>人生得闲，先算一笔账</h3><span class="count">原序</span></div>
+    <p class="lede">四库提要数过这本书的家底：十一门，一百三十八条。琴三十二、砚十二、钟鼎彝器二十、怪石十一、砚屏五、笔格三、水滴二、翰墨四、石刻五、纸花印色十五、画二十九。开门第一件事，赵希鹄不谈器物，先替读者算了一笔人生的账。</p>
+    <div class="gapbar">
+      <div class="track">
+        <div class="t1"><span class="lbl">风雨忧愁</span></div>
+        <div class="t2"><span class="lbl">得闲</span></div>
+      </div>
+      <div class="legend"><span>白驹过隙之喻</span><span>其二居忧，其一得闲</span></div>
+    </div>
+    <div class="sliver">
+      <div class="cap">知而能享用的，又百之一二</div>
+      <div class="bar"><i></i></div>
+    </div>
+    <div class="qblock">
+      <p><q>人生一世，如白驹过隙，而风雨忧愁辄居三分之二，其间得闲者才三之一分耳。<span class="src">《洞天清录》原序</span></q></p>
+    </div>
+    <p>有人拿这三分之一去享受声色，赵希鹄认为亏了。他给「清修好古」的尘外之客指了另一条路。</p>
+    <div class="qblock">
+      <p><q>殊不知吾辈自有乐地，悦目初不在色，盈耳初不在声。<span class="src">《洞天清录》原序</span></q></p>
+    </div>
+    <div class="qblock">
+      <p><q>明窗净几，罗列布置，篆香居中，佳客玉立相映。时取古人妙迹以观，鸟篆蜗书，竒峰逺水，摩娑钟鼎，亲见商周。端砚涌岩泉，焦桐鸣玉佩。不知人世所谓受用清福，孰有逾此者乎？<span class="src">《洞天清录》原序</span></q></p>
+    </div>
+    <p>这段书房场景，是后世《遵生八笺》《长物志》一路清赏文字的源头。而全书真正要对付的，是场景背后涌动的东西：既然老先生们都靠这些器物安顿余生，仿造的生意自然闻风而至，假的也就来了。</p>
+    <div class="qblock">
+      <p><q>是境也，阆苑瑶池未必是过。人鲜知之，良可悲也。<span class="src">《洞天清录》原序</span></q></p>
+    </div>
+  </div>
+</section>
+
+<!-- 琴面 -->
+<section id="s-qin">
+  <div class="wrap">
+    <div class="shead"><span class="no">门一</span><h3>琴面</h3><span class="count">三十二条</span></div>
+    <p class="lede">全书的门面是古琴。辨琴的第一证据不是音色，不是款识，而是漆面上的裂纹：一件日用器被弦日夜激荡几百年，漆与桐木慢慢分离，时间自己会写字。</p>
+    <div class="duo">
+      <div class="cell">
+        <h4>真断纹 <b>有剑锋</b></h4>
+        <svg id="crackTrue" viewBox="0 0 300 120" aria-hidden="true"></svg>
+        <p>裂纹两侧带起细小的漆刺，如剑之锋。</p>
+      </div>
+      <div class="cell">
+        <h4>伪断纹 <b>无剑锋</b></h4>
+        <svg id="crackFake" viewBox="0 0 300 120" aria-hidden="true"></svg>
+        <p>火烘、雪罨、小刀刻画，纹路光滑，一摸便知。</p>
+      </div>
+    </div>
+    <div class="cracklist">
+      <div class="row"><div class="nm">蛇腹断<small>横纹，节节相似</small></div><div class="tx">横纹一条条截过琴面，间隔一寸或二寸，像蛇腹下的纹路。是常见的一等。</div></div>
+      <div class="row"><div class="nm">细纹断<small>千百条细纹</small></div><div class="tx">细密停匀，多在琴的两侧，近岳处则无。</div></div>
+      <div class="row"><div class="nm">梅花断<small>极古之证</small></div><div class="tx">纹如梅花头。首屏琴面上那一朵竹青色的，就是它。</div></div>
+    </div>
+    <div class="qblock">
+      <p><q>有梅花断，其纹如梅花头，此为极古，非千余载不能有也。<span class="src">《洞天清录》古琴辨 · 断纹</span></q></p>
+    </div>
+    <div class="qblock">
+      <p><q>然真断纹如剑锋，伪则否。<span class="src">《洞天清录》古琴辨 · 断纹</span></q></p>
+    </div>
+    <p>造假的手段写在《伪断纹》条里：信州薄连纸上光漆一层，上加灰，纸一断便有纹；或趁冬日把琴烘得极热，拿雪一激。</p>
+    <div class="qblock">
+      <p><q>或用小刀刻画于上，虽可俗眼，然决无剑锋，亦易辨。<span class="src">《洞天清录》古琴辨 · 伪断纹</span></q></p>
+    </div>
+    <div class="story">
+      <h4>一则寻材记 · 天台山夜瀑</h4>
+      <p>吴越忠懿王能琴，曾遣使者借廉访之名四处物色良材。使者宿天台山寺，夜里听见檐外瀑布声，晨起看，瀑水冲石处正对一根向日的屋柱。</p>
+      <div class="qblock" style="margin:18px 0 14px;">
+        <p><q>私念曰：若是桐木，则良琴处在是矣。以刀削之，果桐也。<span class="src">《洞天清录》古琴辨 · 取古材造琴</span></q></p>
+      </div>
+      <p>他赂寺僧易柱，驰驿进京，斵成两张琴：<q class="qinline">一曰洗凡，二曰清绝，遂为旷代之宝。</q>后来钱氏纳土，二琴进了御府。到南渡初年，它们流转到叶梦得手上。一块听了一夜瀑布的木头，就这样进了正史背景的收藏史。</p>
+    </div>
+    <p>琴要挂得当风处、弹得其所，赵希鹄为此写了近乎洁癖的清单：焚香只用烟少的，对花只配香清色不艳的，露下弹琴声不泛，深夜弹琴得一更之后、三更之前。也有他不肯通融的场面。</p>
+    <div class="qblock">
+      <p><q>弹琴舞鹤，未必能舞，观者閧然，弹者心不専，此与观优何异。<span class="src">《洞天清录》古琴辨 · 弹琴舞鹤</span></q></p>
+    </div>
+    <div class="qblock">
+      <p><q>弹琴之室宜实不宜虚，最宜重楼之下。<span class="src">《洞天清录》古琴辨 · 琴室</span></q></p>
+    </div>
+  </div>
+</section>
+
+<!-- 砚面 -->
+<section id="s-yan">
+  <div class="wrap">
+    <div class="shead"><span class="no">门二</span><h3>砚面</h3><span class="count">十二条</span></div>
+    <p class="lede">世人论砚言必称歙石，赵希鹄说他们不知有端溪；论端溪又只贵紫色，他说下岩旧坑根本只有漆黑与青花两种。三条失察，他一口气数完，然后带读者下矿。</p>
+    <div class="yan-face">
+      <span class="eye" style="left:12%; top:30%; width:22px; height:22px;"></span>
+      <span class="eye" style="left:19%; top:62%; width:14px; height:14px;"></span>
+      <span class="eye" style="left:31%; top:38%; width:30px; height:30px;"></span>
+      <span class="eye" style="left:46%; top:58%; width:16px; height:16px;"></span>
+      <span class="eye" style="left:56%; top:26%; width:20px; height:20px;"></span>
+      <span class="eye" style="left:68%; top:52%; width:26px; height:26px;"></span>
+      <span class="eye" style="left:82%; top:34%; width:15px; height:15px;"></span>
+      <div class="cap">石眼 · 端溪下岩旧坑</div>
+    </div>
+    <div class="qblock">
+      <p><q>须千夫堰水汲尽，深数文，篝文火下缒，深入穴中方得之。<span class="src">《洞天清录》古砚辨 · 端溪下岩旧坑</span></q></p>
+      <p class="note">库本「文」字如此，当作「丈」：上千人戽干坑水，点着火把缒入深穴。</p>
+    </div>
+    <p>好石靠人命换，于是赝品跟着行情走。辰沅州产一种黑石头，色深黑、质地粗燥，世人不知，常当成黑端溪出售，相去天渊。更要紧的是，一条完整的产业链已经就位。</p>
+    <div class="qblock">
+      <p><q>今端溪民负贩者多市辰沅研璞而归，刻作端溪様以人，江南士大夫被获重价。<span class="src">《洞天清录》古砚辨 · 他处石类端溪而非端溪者</span></q></p>
+      <p class="note">库本「以人」二字疑有讹脱，卖假砚给江南士大夫、收重价的生意，写得明明白白。</p>
+    </div>
+    <p>鉴定办法粗暴而有效：辰沅石雕工必繁缛，犀牛鱼鸟、荷莲水波、八角六花，繁复异常，虽极精工而材不堪用。真砚靠质地说话，假砚靠雕工吆喝，这条至今仍然通用。书里还留了一件传说中的绝品：</p>
+    <div class="qblock">
+      <p><q>石在临洮大河深水之底，非人力所致，得之为无价之宝。<span class="src">《洞天清录》古砚辨 · 洮河绿石砚</span></q></p>
+    </div>
+    <p>洮河绿石是北方最贵重的绿石，绿得发蓝，润得像玉，发墨不输端溪下岩。赵希鹄自己也没见过：老辈相传世上有洮砚，可谁也没亲眼见过。鉴定家坦然承认眼界的边界，反而更可信。</p>
+  </div>
+</section>
+
+<!-- 铜面 -->
+<section id="s-ding">
+  <div class="wrap">
+    <div class="shead"><span class="no">门三</span><h3>铜面</h3><span class="count">二十条</span></div>
+    <p class="lede">古铜器辨伪的枢纽是皮壳。赵希鹄把古铜分成三等，每一等是不同的埋藏史，也是三种不同的锈色。</p>
+    <div class="tabs" role="tablist">
+      <button class="on" data-v="tu">入土千年</button>
+      <button data-v="shui">坠水千年</button>
+      <button data-v="chuan">传世古</button>
+    </div>
+    <div class="bronze" data-v="tu" id="bronze">
+      <span class="blot" style="left:6%; top:18%; width:120px; height:90px; background:rgba(95,146,112,0.34);"></span>
+      <span class="blot" style="right:10%; top:8%; width:90px; height:70px; background:rgba(95,146,112,0.26);"></span>
+      <span class="blot" style="left:40%; bottom:6%; width:150px; height:80px; background:rgba(95,146,112,0.22);"></span>
+      <div class="bq on" data-v="tu">
+        <p><q>铜器入土千年，纯青如铺翠。<span class="src">《洞天清录》古钟鼎彝器辨 · 水土传世三等古铜器</span></q></p>
+      </div>
+      <div class="bq" data-v="shui">
+        <p><q>铜器坠水千年，则纯绿色而莹如玉。<span class="src">《洞天清录》古钟鼎彝器辨 · 水土传世三等古铜器</span></q></p>
+      </div>
+      <div class="bq" data-v="chuan">
+        <p><q>传世古则不曾入水，惟流传人间色紫褐而有朱砂班，甚者其班凸起如上等辰砂。<span class="src">《洞天清录》古钟鼎彝器辨 · 水土传世三等古铜器</span></q></p>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--paper-faint); margin-top:10px;">真锈的对手是一张作旧的方子。赵希鹄把它原样抄了下来，像法医记录凶器。</p>
+    <div class="fangzi">
+      <h4>伪古铜器方</h4>
+      <div class="qblock" style="margin:12px 0;">
+        <p><q>其法以水银杂锡汞，即今磨境药是也。<span class="src">《洞天清录》古钟鼎彝器辨 · 伪古铜器</span></q></p>
+        <p class="note" style="padding-left:0;">库本「境」同「镜」：磨镜药。新铜上匀涂，再以酽醋调药末刷出蜡茶色或漆色，急浸新汲水定色。</p>
+      </div>
+      <p>化学能骗过眼睛，骗不过耳朵与鼻子，气味与音色才是终审。</p>
+      <div class="qblock" style="margin:14px 0 0;">
+        <p><q>然古铜声彻而清，新铜声洪而浊，不能逃识者之鉴。<span class="src">《洞天清录》古钟鼎彝器辨 · 伪古铜器</span></q></p>
+      </div>
+    </div>
+    <p>这一门里最有趣味的是两条正名。世上所见的古刁斗，柄长一尺四五寸，斗仅容勺合，真拿来行军炊煮怕是只能热一杯酒。赵希鹄考定：</p>
+    <div class="qblock">
+      <p><q>此物乃王莽时铸威斗，厌胜家所用耳。<span class="src">《洞天清录》古钟鼎彝器辨 · 刁斗镌斗</span></q></p>
+    </div>
+    <p>另一条更翻案：铜犀、天禄、蟾蜍，口衔小盂，历代都当水滴（砚滴水器）收藏。他说是错的。</p>
+    <div class="qblock">
+      <p><q>口衘小盂者，皆古人以之贮油防灯，今误以为水滴耳。<span class="src">《洞天清录》水滴辨 · 铜水滴</span></q></p>
+      <p class="note">库本「防」当作「点」：这是灯台上的贮油盏。四库馆臣特别夸了这条，称它援引考证，大多确凿。</p>
+    </div>
+    <p>书里说古铜能辟祟，还举了范仲淹家古镜十二时辰依次自明的故事。迷信归迷信，那口镜子若真在，也够得上此刻的鉴伪标准：它的光泽只对时间兑现。</p>
+  </div>
+</section>
+
+<!-- 石面 -->
+<section id="s-shi">
+  <div class="wrap">
+    <div class="shead"><span class="no">门四</span><h3>石面</h3><span class="count">怪石、研屏、笔格、水滴 · 合二十一条</span></div>
+    <p class="lede">案头的小山也造假。灵璧石贵在声与质，不取峰峦，于是赝品方向完全跑偏。</p>
+    <div class="peaks">
+      <svg viewBox="0 0 760 130" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,130 L0,96 L60,70 L96,84 L150,40 L182,66 L240,52 L286,88 L340,60 L390,74 L452,30 L478,58 L540,46 L600,80 L660,56 L716,86 L760,72 L760,130 Z" fill="rgba(95,146,112,0.16)"/>
+        <path d="M0,130 L0,110 L80,92 L140,104 L210,78 L260,98 L330,84 L400,104 L470,72 L520,94 L590,82 L650,100 L720,88 L760,96 L760,130 Z" fill="rgba(95,146,112,0.28)"/>
+      </svg>
+    </div>
+    <div class="qblock">
+      <p><q>此石能收香，斋阁中有之，则香云终日盘旋不散。<span class="src">《洞天清录》怪石辨 · 灵璧石</span></q></p>
+    </div>
+    <p>能收香、叩起来声如金玉，这是灵璧的名声。染色太湖石冒充的赝品，声音也像，白脉也有，但赵希鹄给了一把刀的检验法。</p>
+    <div class="qblock">
+      <p><q>伪者多以太湖石染色为之，葢太湖石亦微有声，亦有白脉，然以利刀刮之则成屑。<span class="src">《洞天清录》怪石辨 · 灵璧石</span></q></p>
+    </div>
+    <p>太湖石自己也有作旧流水线：土人取大材，<q class="qinline">先雕刻，置急水中舂撞之，久如天成，或用烟薫或染之，色亦能黒。</q>雕完放进急流里撞到看不出刀工，再烟熏染色，一块「天然」峰石就出厂了。这部书之所以好读，是因为它记录的不是器物，而是围绕器物的全部人手。</p>
+    <p>砚屏一门里藏着全书最像电影的一段。洪迈《夷坚志》记一士夫赴官，轿夫夜里颠仆，其子妇半产，轿夫说路黑被一块石头绊了。老翁不信，亲自去看，那石头扁阔微吐，竟是良玉璞，青质白章，解作三片，云月山林、飞鸟之象历历分明。献入御府。只可惜无对（配不成一对），朝廷下旨寻人辏成三屏。一块绊倒轿夫的石头，最后嵌进了玉虚殿。</p>
+    <p>石里还有东坡的遗物：小有洞天，石下作座，<q class="qinline">座中蔵香炉，引数窍正对岩岫间，每焚香，则烟云满岫。</q>焚一炉香，满山生云，宋人的案头微缩景观，比任何摆件都奢侈。</p>
+  </div>
+</section>
+
+<!-- 纸面 -->
+<section id="s-mo">
+  <div class="wrap">
+    <div class="shead"><span class="no">门五</span><h3>纸面</h3><span class="count">翰墨、石刻、纸花印色 · 合二十四条</span></div>
+    <p class="lede">纸会撒谎，但撒不圆。这一门是全书最接近刑侦的部分：从一张纸的帘纹、颜色、乃至揭开的背层，读出它经历过的時間。</p>
+    <p>第一条就够惊心。唐人写经用硬黄纸，染过黄蘗防蠹，纸面莹滑如浆，善书者也爱用它。于是：</p>
+    <div class="qblock">
+      <p><q>今世所有二王真迹，或有硬黄纸，皆唐人仿书，非真迹也。<span class="src">《洞天清录》古翰墨真迹辨 · 硬黄纸</span></q></p>
+    </div>
+    <p>市场上标着王羲之真迹的硬黄本，全是唐人临摹。所谓真迹，从东晋到南宋，隔着一场持续九百年的集体误会。</p>
+    <p>作旧的手段是拿故纸浸汁染纸，杂朱砂做假印章，让墨色昏暗显得古。赵希鹄的破法是把纸揭起来看。</p>
+    <div class="qblock">
+      <p><q>鬻书者多以故纸浸汁染旧迹墨，又以杂朱作为印章，令昏暗。<span class="src">《洞天清录》古翰墨真迹辨 · 建安帖真迹</span></q></p>
+    </div>
+    <div class="peel" id="peel">
+      <div class="li">
+        <span class="tag">纸之 里 <b>新</b></span>
+        <q>若自然旧者，其表故色，其里必新，微掲视之，则见之矣。<span class="src">《洞天清录》古翰墨真迹辨 · 建安帖真迹</span></q>
+        <p style="font-size:13.5px; color:var(--paper-dim); margin-top:10px;">染出来的旧只到表层；真旧是岁月通体浸透，表故而里新。把鼠标放到纸上，揭一层看看。</p>
+      </div>
+      <div class="biao">
+        <span class="tag">纸之 表 故</span>
+        <p style="font-size:14.5px; color:var(--paper-dim);">浸汁染出的「旧」，色浮于表，微揭视之，里子是新的。</p>
+      </div>
+      <div class="hint">悬 停 揭 纸</div>
+    </div>
+    <p>石刻门里则是另一桩名案的勘验记录。定武兰亭被公认为兰亭刻石之冠，薛珦作帅时别刻一石换走原石，还在元石上镌损「清流映带」四字以惑人。赵希鹄列出五条辨法：看镌损的四字是一，看不损处的八行小形是二，看两行间界行的肥直是三，看盛字刀口的利钝是四，看痛字改笔的劲力是五。一件拓本的真伪，被拆成五处可指认的细节，几乎是一篇南宋的法庭科学报告。</p>
+  </div>
+</section>
+
+<!-- 画面 -->
+<section id="s-hua">
+  <div class="wrap">
+    <div class="shead"><span class="no">门六</span><h3>画面</h3><span class="count">二十九条</span></div>
+    <p class="lede">末门最长，辨画先辨气色，再辨装裱，最后辨人心。</p>
+    <div class="hua-face"><div class="cap">绢 经 纬 之 间</div></div>
+    <div class="qblock">
+      <p><q>古画色黒，或淡墨，则积尘所成，有一种古香可爱。若伪作者多作黄色而鲜明，不尘暗，此可辨也。<span class="src">《洞天清录》古画辨 · 古画色</span></q></p>
+    </div>
+    <p>绢的破绽同样具体。岁月磨出的破口自有形状，人为椎出的破处瞒不过手。</p>
+    <div class="qblock">
+      <p><q>古绢自然破者，必有鲫鱼口与雪丝，伪作者则否。<span class="src">《洞天清录》古画辨 · 画绢</span></q></p>
+    </div>
+    <p>辨完了画，赵希鹄顺手记下了同行的德行。米芾见不得好画压在别人家里：</p>
+    <div class="qblock">
+      <p><q>米元章就人借名画，辄模本以还，而取其元本，人莫能辨。<span class="src">《洞天清录》古画辨 · 摹临</span></q></p>
+    </div>
+    <p>借画，还摹本，留真迹，主家无人能辨。赵希鹄在句尾补了一刀：<q class="qinline">此人定非鉴赏之精也</q>。真赏家不干这个。</p>
+    <p>挂画他写成了一门功课：</p>
+    <div class="qblock">
+      <p><q>一室止可三四轴，观玩三五日，别易名笔，则诸轴皆见风日。<span class="src">《洞天清录》古画辨 · 挂画</span></q></p>
+    </div>
+    <p>轮换着挂，每轴都见风日；卷舒要交给谨慎的子弟，拂画只用马尾、丝拂，室中不可焚多烟之香，极暑不挂壁，大寒则须入匣防冻。装裱宁少勿频，每装一次，精神就损一分。最后是一句近乎忠告的冷话，藏画之家炫富，等于把祸事贴在门上。</p>
+    <div class="qblock">
+      <p><q>诚贾祸之媒，切宜谨之。<span class="src">《洞天清录》古画辨 · 古画绢</span></q></p>
+    </div>
+    <div class="story">
+      <h4>一则壁上故事 · 娼馆梅</h4>
+      <p>墨梅名家杨补之游临江城中，在乐工的矮壁上画了一枝折枝梅。</p>
+      <div class="qblock" style="margin:18px 0 14px;">
+        <p><q>作折枝梅于乐工矮壁，至今往来士夫多往观之，娼借此以壮门户。端平间为偷儿窃去其壁，车马顿希。<span class="src">《洞天清录》古画辨 · 杨补之</span></q></p>
+      </div>
+      <p>士大夫为看一枝梅涌入娼馆，门庭借此兴旺；墙被偷走那天，车马顿希。一幅画的流量，一堵墙的命运，赵希鹄用三十一个字写完了。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 尾声 -->
+<section id="s-jian" class="final">
+  <div class="wrap">
+    <div class="shead"><span class="no">卷外</span><h3>真伪之间</h3><span class="count">书的自己</span></div>
+    <p class="lede">最妙的是，这部教人辨伪的书，自己也长出了一部伪本。明代钱塘的书商钟人杰，在他辑的唐宋丛书里另收了一本《洞天清录》，与通行本迥异。四库馆臣翻开一看，里面有杨慎（明人）的说法，有宁王宸濠之名，还有永乐、宣德、成化的年号。</p>
+    <div class="qblock">
+      <p><q>希鹄何自知之？其为未见此本而刺取他书以赝其名，固不待辨矣。<span class="src">四库全书总目 · 洞天清录提要</span></q></p>
+    </div>
+    <p>南宋人怎么会知道身后一百多年的年号？一部辨伪手册，被别人用书里教的方法验明了自己的赝品。而真本的可信，恰好也靠书中的一处自我痕迹完成闭环：嘉熙庚子（1240 年），赵希鹄自岭右回宜春，在一户士人家见到一部齐梁间拓本的乐毅论。四库提要正是抓住这句自述，考出他是袁州宜春人。</p>
+    <div class="qblock">
+      <p><q>予嘉熙庚子自岭右回至宜春，见元本于一士人家。<span class="src">《洞天清录》古今纸花印色辨 · 乐毅论</span></q></p>
+    </div>
+    <p>除此之外，这个人在史书里没有下落。</p>
+    <div class="qblock">
+      <p><q>希鹄宗室子，宋史世系表列于燕王徳昭房下，葢太祖之后，其始末则不可考。<span class="src">四库全书总目 · 洞天清录提要</span></q></p>
+    </div>
+    <p>宋太祖的后裔，一生只留下一句话：嘉熙庚子，我在宜春看拓本。鉴定了一辈子真伪的人，自己的存在只能由一本讲鉴定的书来作证。他在原序里算过，人生得闲才三分之一，知而能享用的又百之一二。这百分之一他用在了明窗净几、摩娑钟鼎上，顺手替后人留下了满纸裂纹。<q class="qinline">琴不歴五百岁不断</q>，裂纹即年轮，伪者无锋。</p>
+    <div class="stamp">辨 订 是 否 · 贻 好 古 之 客</div>
+  </div>
+</section>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    文本来源：殆知阁简体库 子藏 · 笔记《洞天清录》一卷，<a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>。<br>
+    本篇引文均与库本逐字核验通过，库本讹字（歴、竒、様、専、掲、薫、蔵、黒、防、境、文等）照录并出校记。<br>
+    《洞天清录》为南宋赏鉴之书，其中辟祟厌胜、道俗之分等条目皆属当时观念，请以时代局限视之。
+  </div>
+</footer>
+
+<script>
+(function () {
+  var SVG = "http://www.w3.org/2000/svg";
+  function rnd32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function mk(tag, attrs, parent) {
+    var n = document.createElementNS(SVG, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    parent.appendChild(n); return n;
+  }
+  /* 一条裂纹：折线 + 可选剑锋毛刺 */
+  function crack(svg, r, W, H, x0, y0, dir, steps, opts) {
+    var x = x0, y = y0, a = dir, d = "M" + x.toFixed(1) + " " + y.toFixed(1), barbs = [];
+    for (var i = 0; i < steps; i++) {
+      a += (r() - 0.5) * (opts.wander || 0.9);
+      var len = (opts.len0 || 46) + r() * (opts.len1 || 52);
+      x += Math.cos(a) * len; y += Math.sin(a) * len;
+      d += " L" + x.toFixed(1) + " " + y.toFixed(1);
+      if (opts.barbs && r() < 0.72) {
+        var ba = a + (r() < 0.5 ? 1 : -1) * (Math.PI / 2) + (r() - 0.5) * 0.5;
+        var bl = 5 + r() * 7;
+        barbs.push([x, y, x + Math.cos(ba) * bl, y + Math.sin(ba) * bl]);
+      }
+    }
+    mk("path", { d: d, fill: "none", stroke: opts.stroke, "stroke-width": opts.w, opacity: opts.op, "stroke-linejoin": "miter" }, svg);
+    for (var j = 0; j < barbs.length; j++) {
+      mk("line", { x1: barbs[j][0].toFixed(1), y1: barbs[j][1].toFixed(1), x2: barbs[j][2].toFixed(1), y2: barbs[j][3].toFixed(1), stroke: opts.stroke, "stroke-width": opts.w * 0.7, opacity: opts.op * 0.9 }, svg);
+    }
+    return { x: x, y: y, a: a };
+  }
+  function plum(svg, cx, cy, r0) {
+    for (var k = 0; k < 6; k++) {
+      var ang = k * Math.PI / 3 + 0.35;
+      mk("line", {
+        x1: cx, y1: cy,
+        x2: (cx + Math.cos(ang) * r0).toFixed(1), y2: (cy + Math.sin(ang) * r0).toFixed(1),
+        stroke: "rgba(95,146,112,0.85)", "stroke-width": 1.4, opacity: 0.8
+      }, svg);
+    }
+    mk("circle", { cx: cx, cy: cy, r: 3.2, fill: "rgba(95,146,112,0.9)" }, svg);
+  }
+  /* 首屏大琴面 */
+  (function () {
+    var svg = document.getElementById("crackHero");
+    var W = 1600, H = 900, r = rnd32(20260909);
+    for (var i = 0; i < 15; i++) {
+      var edge = Math.floor(r() * 4), px, py;
+      if (edge === 0) { px = r() * W; py = -8; }
+      else if (edge === 1) { px = W + 8; py = r() * H; }
+      else if (edge === 2) { px = r() * W; py = H + 8; }
+      else { px = -8; py = r() * H; }
+      var dir = Math.atan2(H / 2 + (r() - 0.5) * H * 0.7 - py, W / 2 + (r() - 0.5) * W * 0.7 - px);
+      crack(svg, r, W, H, px, py, dir, 7 + Math.floor(r() * 7), {
+        barbs: true, stroke: "#e8e4dc",
+        w: 0.6 + r() * 0.7, op: 0.08 + r() * 0.13, len0: 38, len1: 60, wander: 0.8
+      });
+    }
+    plum(svg, W * 0.63, H * 0.38, 26);
+    var lbl = mk("text", { x: W * 0.63 + 34, y: H * 0.38 + 4, fill: "rgba(95,146,112,0.9)", "font-size": 15, "letter-spacing": 6 }, svg);
+    lbl.textContent = "梅花断";
+  })();
+  /* 真伪两样小图 */
+  (function () {
+    var t = document.getElementById("crackTrue"), f = document.getElementById("crackFake");
+    crack(t, rnd32(11), 300, 120, 150, -6, Math.PI / 2, 4, { barbs: true, stroke: "#e8e4dc", w: 1.1, op: 0.85, len0: 22, len1: 14, wander: 0.5 });
+    crack(t, rnd32(12), 300, 120, 80, -6, 1.9, 4, { barbs: true, stroke: "#e8e4dc", w: 0.8, op: 0.55, len0: 20, len1: 12, wander: 0.5 });
+    crack(t, rnd32(13), 300, 120, 222, -6, 1.25, 4, { barbs: true, stroke: "#e8e4dc", w: 0.8, op: 0.55, len0: 20, len1: 12, wander: 0.5 });
+    crack(f, rnd32(21), 300, 120, 150, -6, Math.PI / 2, 4, { barbs: false, stroke: "#e8e4dc", w: 1.1, op: 0.85, len0: 22, len1: 14, wander: 0.22 });
+    crack(f, rnd32(22), 300, 120, 80, -6, 1.9, 4, { barbs: false, stroke: "#e8e4dc", w: 0.8, op: 0.55, len0: 20, len1: 12, wander: 0.22 });
+    crack(f, rnd32(23), 300, 120, 222, -6, 1.25, 4, { barbs: false, stroke: "#e8e4dc", w: 0.8, op: 0.55, len0: 20, len1: 12, wander: 0.22 });
+  })();
+  /* 铜面三等 */
+  (function () {
+    var box = document.getElementById("bronze");
+    var btns = document.querySelectorAll(".tabs button");
+    var bqs = box.querySelectorAll(".bq");
+    function flecks(n) {
+      box.querySelectorAll(".fleck").forEach(function (f) { f.remove(); });
+      var r = rnd32(77);
+      for (var i = 0; i < n; i++) {
+        var f = document.createElement("span");
+        f.className = "fleck";
+        f.style.left = (5 + r() * 88) + "%";
+        f.style.top = (10 + r() * 76) + "%";
+        box.appendChild(f);
+      }
+    }
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        btns.forEach(function (x) { x.classList.remove("on"); });
+        b.classList.add("on");
+        var v = b.getAttribute("data-v");
+        box.setAttribute("data-v", v);
+        bqs.forEach(function (q) { q.classList.toggle("on", q.getAttribute("data-v") === v); });
+        flecks(v === "chuan" ? 14 : 0);
+      });
+    });
+    flecks(0);
+  })();
+  /* 细目栏 scrollspy */
+  (function () {
+    var links = document.querySelectorAll(".rail a");
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) {
+          links.forEach(function (a) { a.classList.remove("on"); });
+          var a = map[e.target.id]; if (a) a.classList.add("on");
+        }
+      });
+    }, { rootMargin: "-30% 0px -60% 0px" });
+    ["s-xu", "s-qin", "s-yan", "s-ding", "s-shi", "s-mo", "s-hua", "s-jian"].forEach(function (id) {
+      var s = document.getElementById(id); if (s) io.observe(s);
+    });
+  })();
+})();
+</script>
+</body>
+</html>
