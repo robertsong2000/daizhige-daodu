@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>河东记 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --ink2:#202020;
+  --paper:#e8e4dc;
+  --paper-dim:#b9b4a9;
+  --faint:#8f8a80;
+  --blue:#5e8fbb;
+  --blue-dim:rgba(94,143,187,.4);
+  --blue-faint:rgba(94,143,187,.12);
+  --serif:"Songti SC","Noto Serif SC","STSong","SimSun",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:var(--serif);
+  line-height:1.9;
+  font-size:17px;
+  overflow-x:hidden;
+}
+.mono{font-family:"SFMono-Regular",Consolas,Menlo,monospace}
+a{color:inherit}
+::selection{background:var(--blue);color:var(--ink)}
+
+/* ---------- 门首 ---------- */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.road{
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:34vh;
+  background:linear-gradient(to bottom, var(--ink) 0%, #23231f 46%, #2c2c26 100%);
+}
+.road::before{
+  content:"";
+  position:absolute;
+  left:50%;top:0;
+  width:3px;height:100%;
+  transform:translateX(-50%);
+  background:repeating-linear-gradient(to bottom, var(--blue-dim) 0 26px, transparent 26px 58px);
+  opacity:.7;
+}
+.road::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;top:0;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--blue-dim) 30%, var(--blue-dim) 70%, transparent);
+}
+.moon{
+  position:absolute;
+  top:12vh;right:12vw;
+  width:74px;height:74px;
+  border-radius:50%;
+  background:var(--blue-faint);
+  box-shadow:0 0 60px 18px var(--blue-faint), inset -14px -10px 0 rgba(94,143,187,.28);
+}
+.donkey{
+  position:absolute;
+  bottom:31vh;left:16vw;
+  width:120px;
+  opacity:.9;
+}
+.title-block{
+  position:relative;
+  z-index:3;
+  display:flex;
+  align-items:flex-start;
+  gap:34px;
+  padding:0 6vw;
+}
+.vtitle{
+  writing-mode:vertical-rl;
+  font-size:clamp(64px,10vw,118px);
+  letter-spacing:.28em;
+  font-weight:700;
+  color:var(--paper);
+  text-shadow:0 0 40px rgba(94,143,187,.25);
+}
+.vsub{
+  writing-mode:vertical-rl;
+  font-size:15px;
+  letter-spacing:.5em;
+  color:var(--blue);
+  margin-top:14px;
+}
+.hero-meta{
+  writing-mode:vertical-rl;
+  font-size:13px;
+  letter-spacing:.3em;
+  color:var(--faint);
+  margin-top:22px;
+}
+.hero-enter{
+  position:absolute;
+  bottom:5vh;left:50%;
+  transform:translateX(-50%);
+  z-index:3;
+  font-size:13px;
+  letter-spacing:.4em;
+  color:var(--faint);
+  animation:bob 2.6s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+.sign{
+  position:absolute;
+  bottom:33vh;right:14vw;
+  z-index:2;
+  border:1px solid var(--blue-dim);
+  padding:14px 10px;
+  writing-mode:vertical-rl;
+  font-size:17px;
+  letter-spacing:.34em;
+  color:var(--paper);
+  background:rgba(25,25,23,.72);
+}
+.sign small{
+  font-size:11px;
+  letter-spacing:.3em;
+  color:var(--blue);
+  margin-top:10px;
+}
+
+/* ---------- 通用段落 ---------- */
+.sect{
+  max-width:960px;
+  margin:0 auto;
+  padding:9vh 6vw;
+}
+.kicker{
+  display:flex;
+  align-items:baseline;
+  gap:16px;
+  margin-bottom:6vh;
+}
+.kicker .tag{
+  writing-mode:vertical-rl;
+  font-size:14px;
+  letter-spacing:.42em;
+  color:var(--ink);
+  background:var(--blue);
+  padding:14px 8px;
+  align-self:flex-start;
+}
+.kicker h2{
+  font-size:clamp(26px,3.6vw,38px);
+  letter-spacing:.12em;
+  font-weight:700;
+}
+.kicker p{
+  color:var(--faint);
+  font-size:14px;
+  margin-left:auto;
+  align-self:flex-end;
+}
+q{
+  display:block;
+  quotes:none;
+  border-left:2px solid var(--blue-dim);
+  padding:6px 0 6px 20px;
+  margin:18px 0;
+  color:var(--paper);
+}
+.src{
+  display:block;
+  font-size:12px;
+  letter-spacing:.2em;
+  color:var(--faint);
+  margin-top:8px;
+}
+.note{
+  color:var(--paper-dim);
+  font-size:15px;
+  margin:14px 0;
+}
+.note b{color:var(--blue);font-weight:700}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.reveal.on{opacity:1;transform:none}
+
+/* ---------- 门厅 · 书况 ---------- */
+.facts{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:1px;
+  background:rgba(232,228,220,.14);
+  border:1px solid rgba(232,228,220,.14);
+  margin-top:5vh;
+}
+.fact{
+  background:var(--ink);
+  padding:20px 18px;
+}
+.fact .k{font-size:12px;letter-spacing:.3em;color:var(--blue);margin-bottom:8px}
+.fact .v{font-size:15px;color:var(--paper)}
+.prose{
+  font-size:16.5px;
+  color:var(--paper-dim);
+  max-width:44em;
+}
+
+/* ---------- 正房 · 三娘子 ---------- */
+.room-tag{
+  display:inline-block;
+  border:1px solid var(--blue-dim);
+  color:var(--blue);
+  font-size:13px;
+  letter-spacing:.5em;
+  padding:8px 18px 8px 24px;
+  margin-bottom:4vh;
+}
+.act{
+  border-top:1px dashed rgba(232,228,220,.2);
+  padding:5.5vh 0;
+}
+.act-head{
+  display:flex;
+  align-items:baseline;
+  gap:14px;
+  margin-bottom:2.4vh;
+}
+.act-head .no{
+  font-size:13px;
+  color:var(--ink);
+  background:var(--paper);
+  padding:2px 10px;
+  letter-spacing:.2em;
+}
+.act-head h3{
+  font-size:22px;
+  letter-spacing:.18em;
+}
+.act-head .time{
+  margin-left:auto;
+  font-size:12.5px;
+  letter-spacing:.24em;
+  color:var(--blue);
+}
+.act p{color:var(--paper-dim);max-width:44em}
+
+/* 壁缝窥视 */
+.peep{
+  display:flex;
+  gap:4vw;
+  align-items:stretch;
+  margin:4vh 0;
+  flex-wrap:wrap;
+}
+.wall{
+  flex:0 0 130px;
+  background:repeating-linear-gradient(90deg,#23231f 0 11px,#1b1b18 11px 22px);
+  border:1px solid rgba(232,228,220,.14);
+  position:relative;
+  min-height:340px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.slit{
+  width:8px;
+  height:88%;
+  background:linear-gradient(to bottom, rgba(94,143,187,.05), rgba(94,143,187,.5) 30%, rgba(94,143,187,.5) 70%, rgba(94,143,187,.05));
+  box-shadow:0 0 18px 4px rgba(94,143,187,.28);
+  transition:width .5s ease;
+  position:relative;
+  cursor:pointer;
+}
+.wall:hover .slit, .wall.open .slit{width:120px}
+.slit-scene{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  opacity:0;
+  transition:opacity .5s ease;
+  pointer-events:none;
+  padding-bottom:14px;
+}
+.wall:hover .slit-scene, .wall.open .slit-scene{opacity:1}
+.slit-cap{
+  position:absolute;
+  bottom:-30px;
+  left:50%;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  font-size:11.5px;
+  letter-spacing:.3em;
+  color:var(--faint);
+}
+.peep-main{flex:1;min-width:300px}
+
+/* 耕种六步 */
+.steps{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:3vh 0;
+}
+.step{
+  flex:1 1 100px;
+  border:1px solid rgba(94,143,187,.3);
+  padding:14px 12px;
+  text-align:center;
+  font-size:14px;
+  color:var(--paper);
+  position:relative;
+  background:var(--blue-faint);
+}
+.step small{
+  display:block;
+  font-size:11.5px;
+  color:var(--faint);
+  letter-spacing:.1em;
+  margin-top:6px;
+}
+.step .glyph{font-size:26px;color:var(--blue);display:block;margin-bottom:4px}
+.step::after{
+  content:"→";
+  position:absolute;
+  right:-16px;top:50%;
+  transform:translateY(-50%);
+  color:var(--blue-dim);
+  font-size:13px;
+  z-index:2;
+}
+.step:last-child::after{content:""}
+
+/* 饼盘 */
+.bakes{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  margin:4vh 0;
+  align-items:center;
+}
+.pan{
+  display:flex;
+  gap:14px;
+  border:1px dashed rgba(232,228,220,.3);
+  padding:22px;
+  border-radius:8px;
+}
+.bake{
+  width:64px;height:64px;
+  border-radius:50%;
+  background:radial-gradient(circle at 34% 30%, #d9cdb4, #a8977a 72%);
+  box-shadow:inset 0 -4px 8px rgba(25,25,23,.35), 0 3px 8px rgba(0,0,0,.5);
+  position:relative;
+  cursor:pointer;
+  transition:transform .3s ease;
+}
+.bake::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  background-image:
+    radial-gradient(circle 3px at 30% 32%, #7a6a4f 96%, transparent),
+    radial-gradient(circle 3px at 58% 26%, #7a6a4f 96%, transparent),
+    radial-gradient(circle 3px at 44% 52%, #7a6a4f 96%, transparent),
+    radial-gradient(circle 3px at 66% 56%, #7a6a4f 96%, transparent),
+    radial-gradient(circle 3px at 26% 62%, #7a6a4f 96%, transparent);
+}
+.bake:hover{transform:rotate(-8deg) scale(1.06)}
+.bake.donkey{
+  background:#2c2c26;
+  box-shadow:inset 0 0 0 2px var(--blue-dim);
+}
+.bake.donkey::before{content:none}
+.bake.donkey::after{
+  content:"";
+  position:absolute;
+  inset:14px 12px;
+  background:
+    radial-gradient(circle 5px at 30% 40%, var(--blue) 96%, transparent),
+    radial-gradient(circle 5px at 70% 40%, var(--blue) 96%, transparent),
+    linear-gradient(transparent 56%, var(--blue-dim) 56%, var(--blue-dim) 62%, transparent 62%);
+  border-radius:46% 54% 40% 60% / 60% 60% 40% 40%;
+}
+.bake-cap{font-size:12.5px;color:var(--faint);letter-spacing:.18em;max-width:220px}
+.bake-line{font-size:14px;color:var(--blue);letter-spacing:.3em;min-height:2em;margin-top:10px}
+
+/* 易饼换位 */
+.swap{
+  display:flex;
+  align-items:center;
+  gap:26px;
+  margin:3vh 0;
+  font-size:14px;
+  color:var(--faint);
+}
+.swap .slot{
+  width:74px;height:74px;
+  border:1px solid rgba(232,228,220,.3);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  letter-spacing:.1em;
+  cursor:pointer;
+  transition:transform .55s ease, background .4s ease;
+  background:var(--ink);
+  text-align:center;
+  line-height:1.5;
+  padding:6px;
+}
+.swap .slot.flip{transform:translateX(96px)}
+.swap .slot.flip2{transform:translateX(-96px)}
+.swap .slot.mine{color:var(--paper);background:var(--blue-faint);border-color:var(--blue-dim)}
+.swap .slot.hers{color:var(--paper)}
+.swap .arrow{color:var(--blue-dim)}
+
+/* 厢房 */
+.rooms{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+  gap:18px;
+}
+.room{
+  border:1px solid rgba(232,228,220,.16);
+  padding:22px 20px 18px;
+  position:relative;
+  background:var(--ink2);
+  display:flex;
+  flex-direction:column;
+  transition:border-color .35s ease;
+}
+.room:hover{border-color:var(--blue-dim)}
+.room .door-no{
+  position:absolute;
+  top:-11px;left:16px;
+  background:var(--ink);
+  border:1px solid var(--blue-dim);
+  color:var(--blue);
+  font-size:11px;
+  letter-spacing:.26em;
+  padding:2px 10px;
+}
+.room .rname{
+  writing-mode:vertical-rl;
+  position:absolute;
+  top:20px;right:16px;
+  font-size:19px;
+  letter-spacing:.3em;
+  color:var(--paper);
+}
+.room .hook{
+  font-size:14px;
+  color:var(--faint);
+  max-width:20em;
+  margin:4px 0 10px;
+  padding-right:44px;
+}
+.room q{font-size:14.5px;margin:10px 0}
+.room .rnote{
+  margin-top:auto;
+  font-size:12.5px;
+  color:var(--paper-dim);
+  border-top:1px dashed rgba(232,228,220,.18);
+  padding-top:10px;
+}
+.room .rnote em{color:var(--blue);font-style:normal}
+/* 琉璃瓶 */
+.flask{
+  width:74px;height:98px;
+  margin:6px 0 10px;
+  border:1px solid var(--blue-dim);
+  border-radius:14px 14px 30px 30px / 10px 10px 44px 44px;
+  position:relative;
+  cursor:pointer;
+  overflow:hidden;
+  background:linear-gradient(160deg, rgba(94,143,187,.08), rgba(94,143,187,.02));
+}
+.flask::before{
+  content:"";
+  position:absolute;
+  top:-9px;left:50%;
+  transform:translateX(-50%);
+  width:26px;height:10px;
+  border:1px solid var(--blue-dim);
+  border-bottom:none;
+  border-radius:6px 6px 0 0;
+}
+.flask .shard{
+  position:absolute;
+  width:10px;height:5px;
+  background:var(--paper);
+  opacity:.9;
+  transition:all .9s cubic-bezier(.4,0,.2,1);
+  left:32px;top:-8px;
+}
+.flask.zap .shard{top:82px;left:34px;transform:scale(.28);opacity:.55}
+.flask .flabel{
+  position:absolute;
+  bottom:4px;left:0;right:0;
+  text-align:center;
+  font-size:10px;
+  letter-spacing:.14em;
+  color:var(--blue);
+}
+/* 飞砖 */
+.brick-btn{
+  border:1px solid var(--blue-dim);
+  background:none;
+  color:var(--blue);
+  font-family:var(--serif);
+  font-size:13px;
+  letter-spacing:.3em;
+  padding:7px 16px;
+  cursor:pointer;
+  margin:4px 0 8px;
+  align-self:flex-start;
+}
+.brick-btn:hover{background:var(--blue-faint)}
+.feast.gone .feast-txt{opacity:.14;filter:blur(2px)}
+.feast-txt{transition:all .8s ease}
+/* 虎皮 */
+.hide{
+  width:96px;height:64px;
+  margin:6px 0 8px;
+  position:relative;
+  cursor:pointer;
+}
+.hide .pelt{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(circle 9px at 26% 34%, #3a3a33 96%, transparent),
+    radial-gradient(circle 8px at 62% 30%, #3a3a33 96%, transparent),
+    radial-gradient(circle 9px at 44% 60%, #3a3a33 96%, transparent),
+    radial-gradient(circle 7px at 76% 62%, #3a3a33 96%, transparent),
+    linear-gradient(150deg, #a89572, #8a7854);
+  clip-path:polygon(4% 22%, 20% 4%, 34% 18%, 52% 2%, 70% 18%, 88% 6%, 100% 30%, 92% 58%, 100% 84%, 74% 100%, 40% 96%, 10% 100%, 0 70%, 8% 44%);
+  transition:filter .5s ease, transform .5s ease;
+}
+.hide.on .pelt{
+  filter:hue-rotate(0deg) brightness(1.15);
+  transform:scale(1.08) rotate(-4deg);
+  background:
+    radial-gradient(circle 9px at 26% 34%, #191917 96%, transparent),
+    radial-gradient(circle 8px at 62% 30%, #191917 96%, transparent),
+    radial-gradient(circle 9px at 44% 60%, #191917 96%, transparent),
+    radial-gradient(circle 7px at 76% 62%, #191917 96%, transparent),
+    linear-gradient(150deg, #c9b58c, #a89572);
+}
+.hide-cap{font-size:11.5px;color:var(--faint);letter-spacing:.2em}
+
+/* ---------- 账台 ---------- */
+.rules{
+  border:1px solid rgba(232,228,220,.18);
+  background:var(--ink2);
+  padding:34px 30px;
+}
+.rule{
+  display:flex;
+  gap:22px;
+  padding:20px 0;
+  border-bottom:1px dashed rgba(232,228,220,.16);
+  align-items:flex-start;
+}
+.rule:last-child{border-bottom:none}
+.rule .rn{
+  writing-mode:vertical-rl;
+  font-size:13px;
+  letter-spacing:.3em;
+  color:var(--ink);
+  background:var(--blue);
+  padding:10px 6px;
+  flex:0 0 auto;
+}
+.rule h4{font-size:17px;letter-spacing:.1em;margin-bottom:6px}
+.rule p{font-size:14px;color:var(--faint);max-width:38em}
+
+/* ---------- 离店 · 页脚 ---------- */
+.exit{
+  border-top:1px solid rgba(232,228,220,.18);
+  padding:8vh 6vw 10vh;
+  max-width:960px;
+  margin:0 auto;
+}
+.exit .bye{
+  writing-mode:vertical-rl;
+  font-size:26px;
+  letter-spacing:.5em;
+  color:var(--blue);
+  margin:0 auto 6vh;
+  width:max-content;
+  padding:6px 0;
+}
+.foot{
+  font-size:12.5px;
+  color:var(--faint);
+  line-height:2.1;
+}
+.foot b{color:var(--paper-dim);font-weight:700}
+.foot code{font-family:monospace;font-size:12px;color:var(--paper-dim)}
+.brays{
+  text-align:center;
+  margin-top:5vh;
+  font-size:13px;
+  letter-spacing:.5em;
+  color:var(--faint);
+  cursor:pointer;
+  user-select:none;
+}
+.brays span{transition:color .3s ease}
+.brays:hover span{color:var(--blue)}
+
+@media (max-width:720px){
+  body{font-size:16px}
+  .donkey{width:86px;left:6vw;bottom:36vh}
+  .sign{right:6vw;bottom:38vh}
+  .title-block{gap:18px}
+  .act-head .time{display:none}
+  .wall{flex:1 1 100%;min-height:260px}
+  .step::after{content:""}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 门首 ================= -->
+<header class="hero">
+  <div class="moon"></div>
+  <svg class="donkey" viewBox="0 0 120 80" aria-hidden="true">
+    <g fill="none" stroke="#8f8a80" stroke-width="2.4" stroke-linecap="round">
+      <path d="M28 62 L30 40 Q32 30 44 28 L74 28 Q86 30 88 42 L88 62"/>
+      <path d="M30 62 L28 74 M46 62 L46 74 M72 62 L72 74 M86 62 L90 74"/>
+      <path d="M88 34 Q100 30 102 20 Q103 14 98 12 M98 12 Q104 10 106 16"/>
+      <path d="M30 40 Q20 42 16 52"/>
+    </g>
+    <circle cx="100" cy="19" r="2.6" fill="#5e8fbb"/>
+  </svg>
+  <div class="road"></div>
+  <div class="sign">板桥店<small>汴州西 · 宿处</small></div>
+  <div class="title-block">
+    <h1 class="vtitle">河东记</h1>
+    <div class="vsub">唐人夜里的事情三十四件</div>
+    <div class="hero-meta">殆知阁导读 · 志怪</div>
+  </div>
+  <div class="hero-enter">天色已晚 ▾ 投宿请下</div>
+</header>
+
+<!-- ================= 门厅 · 书况 ================= -->
+<section class="sect">
+  <div class="kicker reveal">
+    <span class="tag">门厅</span>
+    <h2>先看看这家店</h2>
+    <p>卷首题名做证</p>
+  </div>
+  <p class="prose reveal">
+    《河东记》是唐代志怪小说集，署薛渔思撰，生平无考。库本卷首却把<b>李自良</b>也题在作者栏里，而李自良其实是本书最后一篇的主角：一位靠放鹰起家、被道士一纸天符推上太原节度使的将军。这是库本的小笔误，也是这本书气质的注脚，人与怪搅在一处，谁给谁署名都说不清。全书三十四题，两万四千余字，讲的全是夜里的事：黑店、幻宴、冥府、债转世的驴、说人话的马。其中<b>板桥三娘子</b>一篇，被学界称为唐代传奇里最不可思议的故事之一，后来远渡重洋，成为世界民间故事类型学里的常客。
+  </p>
+  <div class="facts reveal">
+    <div class="fact"><div class="k">书名</div><div class="v">河东记</div></div>
+    <div class="fact"><div class="k">撰者</div><div class="v">薛渔思（唐，生平无考）</div></div>
+    <div class="fact"><div class="k">库本字数</div><div class="v">去空白 24,117 字</div></div>
+    <div class="fact"><div class="k">篇目</div><div class="v">34 题，以 ○ 起头</div></div>
+    <div class="fact"><div class="k">题材</div><div class="v">志怪 · 行旅与冥判</div></div>
+  </div>
+</section>
+
+<!-- ================= 正房 ================= -->
+<section class="sect">
+  <div class="room-tag">正 房 · 三娘子房</div>
+  <div class="kicker reveal">
+    <span class="tag">正房</span>
+    <h2>板桥三娘子</h2>
+    <p>汴州官道 · 西去三十里</p>
+  </div>
+
+  <article class="act reveal">
+    <div class="act-head"><span class="no">一</span><h3>投宿</h3><span class="time">元和中 · 日暮</span></div>
+    <p>汴州往西的官道上，有一家客店。主人是个三十多岁的寡妇，没有儿女，没有亲属，以卖饭为业。她家偏偏非常富贵，养的驴特别多，往来的车马缺牲口，她就贱价出租接济，行客都说她有道行，所以远近的人都爱投她的店。这段开场，每句话都是伏笔。</p>
+    <q>唐汴州西有板桥店，店娃三娘子者，不知何従来。寡居，年三十余，无男女，亦无亲属。有舍数间，以鬻餐为业。然而家甚富贵，多有驴畜，往来公私车乘，有不逮者，辄贱其估以济之。人皆谓之有道，故远近行旅多归之。</q>
+    <span class="src">板桥三娘子</span>
+    <p>元和年间，许州客商赵季和要去东都，路过投宿。先到的六七位客人都占了靠外的床，季和来得最晚，被安排在最里面的一榻，<b>榻紧挨着主人房的墙壁</b>。命运的分配，就靠一个「来得晚」。</p>
+    <q>季和后至，最得深处一榻。榻邻比主人房壁</q>
+    <span class="src">板桥三娘子</span>
+  </article>
+
+  <article class="act reveal">
+    <div class="act-head"><span class="no">二</span><h3>窥耕</h3><span class="time">二更许 · 灯灭之后</span></div>
+    <p>半夜，客人都睡了，唯独季和辗转不寐。隔壁传来窸窸窣窣的动静，他凑到墙缝边，看见了一幅任何唐代人都无法解释的画面：三娘子点起烛，从巾箱里取出一副耒耜、一头木牛、一个木偶人，都是六七寸的小东西，含水一喷，<b>木头就动了</b>。小人牵牛驾犁，在床前一席地上耕起来，来来回回种荞麦。麦子转眼生、转眼开花、转眼成熟，小人收割脱粒，得七八升，又架上小磨磨成面，收起木人，就着这面烙了几张烧饼。</p>
+    <div class="peep">
+      <div class="wall">
+        <div class="slit">
+          <div class="slit-scene">
+            <svg width="104" height="96" viewBox="0 0 104 96" aria-hidden="true">
+              <line x1="8" y1="88" x2="96" y2="88" stroke="#5e8fbb" stroke-width="1.4"/>
+              <rect x="14" y="76" width="76" height="12" fill="none" stroke="#5e8fbb" stroke-width="1" stroke-dasharray="3 3"/>
+              <circle cx="30" cy="66" r="9" fill="none" stroke="#5e8fbb" stroke-width="1.4"/>
+              <line x1="30" y1="57" x2="30" y2="75" stroke="#5e8fbb" stroke-width="1.2"/>
+              <rect x="44" y="58" width="9" height="13" fill="#5e8fbb"/>
+              <line x1="48" y1="58" x2="56" y2="48" stroke="#5e8fbb" stroke-width="1.4"/>
+              <line x1="56" y1="48" x2="72" y2="52" stroke="#5e8fbb" stroke-width="1.4"/>
+              <circle cx="82" cy="70" r="3.4" fill="#5e8fbb"/>
+            </svg>
+          </div>
+        </div>
+        <div class="slit-cap">凑近壁缝 · 看二更的厨房</div>
+      </div>
+      <div class="peep-main">
+        <div class="steps">
+          <div class="step"><span class="glyph">耕</span>木人驾牛<small>床前一席地</small></div>
+          <div class="step"><span class="glyph">种</span>一裹荞麦<small>须臾生</small></div>
+          <div class="step"><span class="glyph">熟</span>花发麦熟<small>顷刻之间</small></div>
+          <div class="step"><span class="glyph">磨</span>小磨硙面<small>可得七八升</small></div>
+          <div class="step"><span class="glyph">饼</span>烙作烧饼<small>置于食床</small></div>
+        </div>
+        <q>即见三娘子向覆器下，取烛挑明之，后于巾厢中，取一副耒耜，并一木牛，一木偶人，各大六七寸，置于灶前，含水噀之。二物便行走，小人则牵牛驾耒耜，遂耕床前一席地，来去数出。</q>
+    <span class="src">板桥三娘子</span>
+        <q>又于厢中，取出一裹荞麦子，受于小人种之。须臾生，花发麦熟，令小人收割持践，可得七八升。又安置小磨子，硙成面讫，却收木人子于厢中，即取面作烧饼数枚。</q>
+    <span class="src">板桥三娘子</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="act reveal">
+    <div class="act-head"><span class="no">三</span><h3>变驴</h3><span class="time">鸡鸣 · 次日晨</span></div>
+    <p>天亮鸡叫，客人们收拾行装。三娘子先点起灯，把新烙的烧饼摆上食床，请客人当点心。季和一夜没睡，心里发毛，突然告辞出门，又偷偷趴在窗外往里看。他看见的是这样一幕。桌上这盘烧饼就是三娘子今晨的手笔，你可以点一点：</p>
+    <div class="bakes">
+      <div class="pan">
+        <div class="bake" data-dk></div>
+        <div class="bake" data-dk></div>
+        <div class="bake" data-dk></div>
+        <div class="bake" data-dk></div>
+      </div>
+      <div>
+        <div class="bake-cap">食床上的烧饼 · 三娘子亲烙</div>
+        <div class="bake-line" id="bakeLine">客人围床 · 正在用点心</div>
+      </div>
+    </div>
+    <q>乃见诸客围床，食烧饼未尽，忽一时踣地，作驴鸣，须臾皆变驴矣。三娘子尽驱入店后，而尽没其货财。</q>
+    <span class="src">板桥三娘子</span>
+    <p>六七位客人，转眼全成了驴，被赶进店后。他们的行李货物，尽数收入三娘子囊中。这家店就此形成了自己的经营闭环：招徕行旅，供给饭食，一夜变成驴畜，货物收归店主，驴再贱价租给下一批客人。<b>驴从哪里来？柜台后亲手烙。</b></p>
+  </article>
+
+  <article class="act reveal">
+    <div class="act-head"><span class="no">四</span><h3>易饼</h3><span class="time">月余后 · 再宿</span></div>
+    <p>最惊人的一笔在这里：季和看穿了一切，却<b>不报官、不声张</b>。书里写他「亦不告于人，私有慕其术者」，他想要这套法术。一个多月后他从东都回来，提前仿做了几张一模一样的荞麦烧饼，再次投宿。三娘子见老客回头，欢悦如初，那晚别无他客，招待愈厚。天亮时烧饼上盘，季和趁她转身，把自带的饼跟她盘里的换了一枚，她毫无察觉。</p>
+    <div class="swap">
+      <div class="slot hers" id="slotHers">三娘子<br>的饼</div>
+      <span class="arrow">⇄ 点击换饼</span>
+      <div class="slot mine" id="slotMine">季和<br>的饼</div>
+      <span class="bake-cap" id="swapCap">两枚饼看起来一模一样</span>
+    </div>
+    <q>季和乘间走下，以先有者易其一枚，彼不知觉也。</q>
+    <span class="src">板桥三娘子</span>
+    <p>临行时季和请三娘子撤下她烙的饼，留待别的客人，自己吃起随身那张。吃到一半，他殷勤相劝：<b>请主人也尝尝客人的烧饼。</b>她接过自己昨晚亲手种、亲手磨、亲手烙的那一枚，才入口，据地作驴声，立时变成了一头甚是壮健的驴。</p>
+    <q>才入口，三娘子据地作驴声，即立变为驴，甚壮健。</q>
+    <span class="src">板桥三娘子</span>
+  </article>
+
+  <article class="act reveal">
+    <div class="act-head"><span class="no">五</span><h3>放归</h3><span class="time">四年后 · 华岳庙东</span></div>
+    <p>季和骑着她走了四年，「周游他处，未尝阻失，日行百里」，木人木牛也被他收走，但他不得其术，试之不成，法术在他手里失传。四年 后骑到华山脚下，路旁一个老人拍手大笑，喊破了驴的身份，又替她说情。</p>
+    <q>板桥三娘子，何得作此形骸？</q>
+    <span class="src">板桥三娘子 · 老人语</span>
+    <q>彼虽有过，然遭君亦甚矣。可怜许，请従此放之。</q>
+    <span class="src">板桥三娘子 · 老人语</span>
+    <q>老人乃驴口鼻边，以两手擘开，三娘子自皮中跳出，宛复旧身。向老人拜讫，走去，更不知所之。</q>
+    <span class="src">板桥三娘子</span>
+    <p class="note">结局全书的温度都在这一段：<b>替她求情的是个陌生人，不是受害者。</b>老人那句「彼虽有过，然遭君亦甚矣」，一句话给这场黑店恩怨定了秤：她有罪，但四年的驴也偿得够了。三娘子从自己那张驴皮里跳出来，恢复旧身，拜了一拜，走了，再无下落。唐人写复仇写到这层宽恕，一千二百年后读仍然意外。</p>
+  </article>
+</section>
+
+<!-- ================= 厢房 ================= -->
+<section class="sect">
+  <div class="room-tag">厢 房 · 其余行旅</div>
+  <div class="kicker reveal">
+    <span class="tag">厢房</span>
+    <h2>这店里还住过这些人</h2>
+    <p>三十四题 · 拣七间开灯</p>
+  </div>
+  <div class="rooms">
+
+    <div class="room reveal">
+      <span class="door-no">天字壹号</span>
+      <span class="rname">胡媚儿</span>
+      <p class="hook">扬州街头的卖艺女子，怀里一只半升大的琉璃瓶，表里透明。百钱投进去，瓶中看去大如粟粒。</p>
+      <div class="flask" id="flask">
+        <div class="shard"></div><div class="shard"></div><div class="shard"></div>
+        <div class="flabel">点按投物</div>
+      </div>
+      <q>有人施与满此瓶子，则足矣。</q>
+    <span class="src">胡媚儿</span>
+      <q>媚儿乃微侧瓶口，大喝，诸车辂辂相继，悉入瓶，瓶中历历如行蚁然。</q>
+    <span class="src">胡媚儿 · 数十车税纲尽入一瓶</span>
+      <div class="rnote">她最后跳进瓶里消失，月余后有人看见她领着车队往东平去了。东平帅是李师道，其时割据反侧的藩镇。<em>瓶子去了哪里，昭然若揭。</em></div>
+    </div>
+
+    <div class="room reveal">
+      <span class="door-no">天字贰号</span>
+      <span class="rname">独孤遐叔</span>
+      <p class="hook">落第进士夜归，金光门外借宿破佛堂。半夜月下，十数人设宴踏歌而来，被胁迫入席的歌女，竟是他的妻子。</p>
+      <q class="feast-txt">今夕何夕，存耶没耶？良人去兮天之涯，园树伤心兮三见花。</q>
+    <span class="src">独孤遐叔 · 妻举金爵收泣而歌</span>
+      <button class="brick-btn" id="brickBtn">扪大砖 · 向坐飞击</button>
+      <div class="rnote feast" id="feast">砖才落地，满座人影悄然俱灭。遐叔狂奔回家，妻子却说昨夜只是梦见被人胁坐饮酒，梦中还见一块<b>大砖飞坠</b>。<em>砖是同一块砖，醒是两个醒。</em></div>
+    </div>
+
+    <div class="room reveal">
+      <span class="door-no">天字叁号</span>
+      <span class="rname">申屠澄</span>
+      <p class="hook">风雪夜投宿山家，与主人之女行酒令定情，结为夫妇，官罢归秦。路过旧居，妻子在壁角故衣下翻出一张积满灰尘的虎皮。</p>
+      <div class="hide" id="hide"><div class="pelt"></div></div>
+      <div class="hide-cap">点击虎皮 · 披之</div>
+      <q>琴瑟情虽重，山林志自深。常尤时节变，辜负百年心。</q>
+    <span class="src">申屠澄 · 妻和诗</span>
+      <q>不知此物尚在耶！</q>
+    <span class="src">申屠澄</span>
+      <div class="rnote">笑罢披皮，化虎哮吼而去。当年雪夜酒令「风雨如晦，鸡鸣不已」早已埋好结局：<em>她把山林之志藏在一桩人间婚姻里，藏了整整一任官。</em></div>
+    </div>
+
+    <div class="room reveal">
+      <span class="door-no">天字肆号</span>
+      <span class="rname">叶静能</span>
+      <p class="hook">汝阳王好饮无对手，术士叶静能荐来一个二尺高的道士常持蒲。谈天说地无所不通，陪王用大斛巨觥对饮。</p>
+      <q>某止此一杯，醉矣。</q>
+    <span class="src">叶静能 · 持蒲语</span>
+      <div class="rnote">再劝一杯，倒了。众人凑近一看，地上哪有道士，<em>是一只能装五斗的大酒榼。</em>全篇最短的一句醉话，和最响的一声着地。</div>
+    </div>
+
+    <div class="room reveal">
+      <span class="door-no">天字伍号</span>
+      <span class="rname">许琛</span>
+      <p class="hook">江陵书手许琛夜里被误追到阴司，途经一个国度：没有日月，终日昏暗，百万株古槐上群鸦鸣噪，靠鸦声分辨昼夜。</p>
+      <q>人死则有鬼，鬼复有死，若无此地，何以处之？</q>
+    <span class="src">许琛 · 鸦鸣国</span>
+      <div class="rnote">鸦鸣国是死鬼的安身之地，本地叫法叫「聻」。<em>鬼也要死，死后无地可去，只好给它们一国。</em>唐人把官僚系统一路修到了幽冥的尽头。</div>
+    </div>
+
+    <div class="room reveal">
+      <span class="door-no">天字陆号</span>
+      <span class="rname">卢従事</span>
+      <p class="hook">江陵卢传素养了五年的黑驹忽然开口说话，自称是他早亡的外甥通儿：生前挪用了舅舅卖宅的一百贯钱，冥府判他转生为畜，亲自还债。</p>
+      <q>既食丈人粟，又饱丈人刍。今日相偿了，永离三恶途。</q>
+    <span class="src">卢従事 · 黑驹留别诗</span>
+      <div class="rnote">黑驹把行情都打点好：明日市西北角有胡军将来买马，索价十万，他必还七十千，速成交。次日分毫不差。四天后，<em>那匹七十千的马夜里发黑汗死了。债清了，命也到了。</em></div>
+    </div>
+
+    <div class="room reveal">
+      <span class="door-no">天字柒号</span>
+      <span class="rname">踏歌鬼</span>
+      <p class="hook">鹳雀楼下，两个三丈高的鬼手拉手踏歌，唱的是一支市井味十足的顺口溜。</p>
+      <q>河水流溷溷，山头种荞麦。两个胡孙门底来，东家阿嫂决一百。</q>
+    <span class="src">踏歌鬼</span>
+      <div class="rnote">唱完就没入地中。<em>注意第二句：山头种荞麦。</em>三娘子的木人夜夜在床前种的，也是荞麦。一本书里，鬼和人种的是同一种庄稼。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 账台 ================= -->
+<section class="sect">
+  <div class="kicker reveal">
+    <span class="tag">账台</span>
+    <h2>行旅须知</h2>
+    <p>全书通读 · 抄给过路人五条</p>
+  </div>
+  <div class="rules reveal">
+    <div class="rule"><span class="rn">其一</span>
+      <div><h4>主人烙的饼，非饿勿食</h4><p>三娘子的烧饼吃不得。同理可推卢佩篇的药、蕴都师篇的莲花娘子：深夜主动送到你面前的殷勤，多半连着另一副皮囊。</p></div>
+    </div>
+    <div class="rule"><span class="rn">其二</span>
+      <div><h4>壁缝可以窥，窥者活</h4><p>满店客人里活下来的只有季和，全凭他「独季和转展不寐」，凑近那条缝看了一眼。在《河东记》的世界里，好奇心不是罪，是保命的器官。</p></div>
+    </div>
+    <div class="rule"><span class="rn">其三</span>
+      <div><h4>债是躲不掉的，形骸可以换</h4><p>欠一百贯转生为驴，杀猫三只偿命三条，抢来的文书必有道士登门。书中冥判纪律严明，唯一通融的是还债的姿势：可以是人，也可以是牲口。</p></div>
+    </div>
+    <div class="rule"><span class="rn">其四</span>
+      <div><h4>救人救到底，回报在路上</h4><p>韦丹花光冬衣从渔人刀下买鼋放生，后来一位神秘老人交给他一纸天曹禄命文书，此后每一任官的年月日分毫不差。善行在这本书里是有账期的。</p></div>
+    </div>
+    <div class="rule"><span class="rn">其五</span>
+      <div><h4>见怪莫多言</h4><p>三丈高的妇人驱着怪羊走过，丢下一句「卢五，见人莫多言」。踏歌鬼唱完即没，独孤遐叔的满座宾客砖落俱散。夜里的事，出得门就别提，提了也没人信。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 离店 ================= -->
+<footer class="exit">
+  <div class="bye">客 官 慢 走</div>
+  <div class="foot">
+    <p><b>篇目与文本</b>：〈河东记〉三十四题，题唐薛渔思撰（库本卷首误添书中人物李自良为作者），本文所据为殆知阁简体库 <code>史藏/志存记录/河东记.txt</code>，去空白 24,117 字。文中所有引文均照录库本，含「従」「尚」等异体写法，未经改字。</p>
+    <p><b>文本来源</b>：殆知阁古代文献简体库（<code>github.com/garychowcmu/daizhigev2</code>）。引文经脚本与库内文件逐字比对核验通过。</p>
+    <p><b>时代局限提醒</b>：本书为唐代志怪，篇中人鬼牲畜各有宿命，文中的冥判、报应、女性与身价描写均系唐人观念之存照，不代表今日之价值。导读解说为现代视角。</p>
+    <p><b>本篇</b>：殆知阁导读系列第三百零二篇 · 版式为板桥店投宿壳（夜路门首、壁缝窥耕、烧饼盘、厢房客房、账台行旅须知）。<a href="mulu.html">← 返回总目</a></p>
+    <div class="brays" id="bray" title="点一点"><span>店</span> <span>后</span> <span>忽</span> <span>有</span> <span>驴</span> <span>鸣</span> <span>一</span> <span>声</span></div>
+  </div>
+</footer>
+
+<script>
+// 滚动显现
+const io = new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// 烧饼变驴
+const line = document.getElementById('bakeLine');
+const cries = ['忽一时踣地 · 作驴鸣','须臾皆变驴矣','尽没其货财 · 驱入店后'];
+let dk = 0;
+document.querySelectorAll('.bake').forEach(b=>{
+  b.addEventListener('click',()=>{
+    if(b.classList.contains('donkey')) return;
+    b.classList.add('donkey');
+    line.textContent = cries[Math.min(dk,cries.length-1)];
+    dk++;
+  });
+});
+
+// 易饼换位
+const hers = document.getElementById('slotHers'), mine = document.getElementById('slotMine'), swapCap = document.getElementById('swapCap');
+let swapped = false;
+[hers,mine].forEach(s=>s.addEventListener('click',()=>{
+  if(swapped) return;
+  swapped = true;
+  hers.classList.add('flip2'); mine.classList.add('flip');
+  setTimeout(()=>{
+    hers.classList.remove('flip2'); mine.classList.remove('flip');
+    hers.classList.remove('hers'); hers.classList.add('mine');
+    hers.innerHTML = '季和<br>的饼';
+    mine.classList.remove('mine'); mine.classList.add('hers');
+    mine.innerHTML = '三娘子<br>的饼';
+    swapCap.textContent = '彼不知觉也 · 饼已易位';
+  },600);
+}));
+
+// 琉璃瓶
+const flask = document.getElementById('flask');
+const flabels = ['百钱投入 · 大如粟粒','万钱投入 · 亦如之','数十车税纲 · 悉入一瓶'];
+let fi = 0;
+flask.addEventListener('click',()=>{
+  if(fi < 3){
+    const s = document.createElement('div');
+    s.className = 'shard';
+    s.style.left = (18 + fi*14) + 'px';
+    flask.appendChild(s);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>s.style.top='82px'));
+    flask.querySelector('.flabel').textContent = flabels[fi];
+    fi++;
+  } else {
+    flask.querySelectorAll('.shard').forEach(x=>x.remove());
+    fi = 0;
+    flask.querySelector('.flabel').textContent = '点按投物';
+  }
+});
+
+// 飞砖破幻
+document.getElementById('brickBtn').addEventListener('click',()=>{
+  document.getElementById('feast').classList.add('gone');
+});
+
+// 虎皮
+document.getElementById('hide').addEventListener('click',function(){
+  this.classList.toggle('on');
+});
+
+// 壁缝点开（触屏）
+document.querySelector('.wall').addEventListener('click',function(){
+  this.classList.toggle('open');
+});
+
+// 驴鸣
+document.getElementById('bray').addEventListener('click',()=>{
+  const b = document.getElementById('bray');
+  b.style.letterSpacing = '.9em';
+  b.firstChild && (b.style.color = 'var(--blue)');
+  setTimeout(()=>{ b.style.letterSpacing = '.5em'; },420);
+});
+</script>
+</body>
+</html>
