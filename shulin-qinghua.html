@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>书林清话 · 殆知阁导读 三百零一</title>
+<style>
+:root{
+  --bg:#191917; --paper:#e8e4dc; --ink:#2c2a26; --dim:#6d675c;
+  --gold:#c9963f; --line:#35302a; --wood:#211c14; --red:#9e4a38;
+  --p2:#ddd5c4; --p3:#efe8d7;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg); color:var(--paper);
+  font-family:Georgia,"Songti SC","STSong","Noto Serif CJK SC","SimSun",serif;
+  -webkit-font-smoothing:antialiased}
+::selection{background:rgba(201,150,63,.35)}
+
+/* ---------- 雕版刷印 hero ---------- */
+.hero{min-height:94vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 18px 46px}
+.board{position:relative; width:min(660px,92vw); aspect-ratio:16/10; background:var(--wood);
+  border:1px solid #3a3225; box-shadow:0 30px 70px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.03);
+  display:grid; place-items:center; overflow:hidden}
+.board::before{content:""; position:absolute; inset:0; pointer-events:none;
+  background:
+   repeating-linear-gradient(90deg,rgba(255,240,200,.022) 0 3px,transparent 3px 9px),
+   radial-gradient(ellipse at 30% 18%,rgba(255,235,180,.05),transparent 62%)}
+.frame{position:absolute; inset:14px; border:1px solid rgba(232,228,220,.14); pointer-events:none}
+.fantitle{transform:scaleX(-1); color:rgba(232,228,220,.2);
+  font-size:clamp(58px,11vw,104px); letter-spacing:.12em; font-weight:600; position:relative}
+.fancols{position:absolute; top:50%; transform:translateY(-50%); writing-mode:vertical-rl;
+  color:rgba(232,228,220,.1); font-size:12px; letter-spacing:.6em}
+.fancols.l{left:36px} .fancols.r{right:36px}
+.sheet{position:absolute; inset:12px; background:var(--paper);
+  clip-path:inset(0 0 100% 0); transition:clip-path 2.1s cubic-bezier(.65,.05,.3,1);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
+  text-align:center; padding:22px}
+.hero.printed .sheet{clip-path:inset(0 0 0% 0)}
+.bar{position:absolute; left:0; right:0; top:-34px; height:30px; opacity:0;
+  background:linear-gradient(#d8cfba,#a89a77); box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.hero.printed .bar{animation:sweep 2.1s cubic-bezier(.65,.05,.3,1) forwards}
+@keyframes sweep{0%{opacity:1; top:0} 96%{opacity:1} 100%{opacity:0; top:100%}}
+.sheet .eb{font-size:12.5px; letter-spacing:.5em; color:#96865e}
+.sheet h1{font-size:clamp(44px,9vw,82px); letter-spacing:.18em; color:var(--ink); font-weight:600; line-height:1.35}
+.sheet .au{font-size:14.5px; letter-spacing:.3em; color:#6b6350}
+.sheet .pos{font-size:14.5px; line-height:2; color:#57503f; max-width:34em; margin-top:6px}
+.sheet .tag{margin-top:12px; border:2px solid var(--red); color:var(--red);
+  padding:6px 12px; font-size:13px; letter-spacing:.35em; transform:rotate(-3deg); opacity:.8}
+button.print{margin-top:28px; font:inherit; font-size:14px; letter-spacing:.35em; padding:12px 30px 12px 36px;
+  background:transparent; color:var(--gold); border:1px solid var(--gold); cursor:pointer; transition:background .3s}
+button.print:hover{background:rgba(201,150,63,.12)}
+.hero.printed button.print{display:none}
+.hint{margin-top:22px; font-size:12.5px; letter-spacing:.45em; color:#8a8375; opacity:0; transition:opacity 1.2s 1.4s}
+.hero.printed .hint{opacity:1}
+@media (prefers-reduced-motion:reduce){
+  .sheet{transition:none} .hero.printed .bar{animation:none}
+}
+
+/* ---------- 版口 sticky 导航 ---------- */
+.banxin{position:sticky; top:0; z-index:50; background:rgba(25,25,23,.96);
+  border-bottom:1px solid var(--line)}
+.banxin .in{max-width:1020px; margin:0 auto; display:flex; align-items:center; gap:20px;
+  padding:0 18px; height:50px; overflow-x:auto}
+.ft{display:flex; align-items:center; gap:9px; flex:none}
+.ft .fish{width:16px; height:11px; background:var(--paper); clip-path:polygon(0 0,100% 0,50% 100%)}
+.ft b{font-size:14px; letter-spacing:.25em; font-weight:600; white-space:nowrap}
+.banxin a{font-size:13px; letter-spacing:.18em; color:#8a8375; text-decoration:none; white-space:nowrap; padding:4px 0}
+.banxin a:hover{color:var(--gold)}
+
+/* ---------- 纸叶 ---------- */
+main.wrap{max-width:880px; margin:0 auto; padding:0 16px}
+section.leaf{background:var(--paper); color:var(--ink); margin:70px 0;
+  padding:54px 52px 50px; position:relative; box-shadow:0 24px 50px rgba(0,0,0,.45);
+  scroll-margin-top:72px}
+.kou{position:absolute; top:40px; right:-30px; width:30px; background:#dcd5c4;
+  border:1px solid #c4bca7; border-right:none; color:#7d7561;
+  writing-mode:vertical-rl; letter-spacing:.4em; font-size:12px; padding:16px 0; text-align:center}
+section.leaf.dark{background:#1f1c16; color:var(--paper)}
+section.leaf.dark .kou{background:#2a251c; border-color:#3a3324; color:#8a8375}
+.eyebrow{font-size:12.5px; letter-spacing:.45em; color:#96865e; margin:0 0 12px}
+section.leaf.dark .eyebrow{color:var(--gold)}
+h2{font-size:clamp(24px,4vw,31px); letter-spacing:.12em; font-weight:600; line-height:1.6; margin:0 0 20px}
+.leaf p{font-size:15.5px; line-height:2.15; margin:16px 0; color:#443e30}
+section.leaf.dark p{color:#cfc8b8}
+p.small{font-size:14px; color:#6b6350}
+section.leaf.dark p.small{color:#948b76}
+
+/* 引文块（出处注外置） */
+q.q{display:block; background:var(--p2); border-left:3px solid var(--gold);
+  padding:18px 22px; margin:22px 0 8px; font-size:17px; line-height:2.05; color:#3a352a}
+q.qbig{font-size:20px; letter-spacing:.04em}
+section.leaf.dark q.q{background:#262119; color:#ddd6c6}
+q.il{background:rgba(201,150,63,.16); padding:1px 6px; quotes:none; color:inherit}
+.qnote{font-size:12px; letter-spacing:.3em; color:#9a9078; margin:0 0 20px}
+section.leaf.dark .qnote{color:#7d7460}
+
+/* 朱批 */
+.zhupi{border:2px solid var(--red); background:var(--p3); padding:18px 22px; margin:26px 0 0;
+  position:relative}
+.zhupi::after{content:"验"; position:absolute; right:-10px; top:-14px; width:38px; height:38px;
+  border:2px solid var(--red); color:var(--red); display:flex; align-items:center; justify-content:center;
+  font-size:16px; background:var(--p3); transform:rotate(7deg)}
+.zhupi q.q{border-left:none; background:none; margin:0; padding:0}
+
+/* 三步卡 */
+.steps{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:26px 0}
+.step{background:#e2dbc9; padding:20px 18px; border-top:3px solid var(--gold);
+  font-size:14.5px; line-height:1.95; color:#4a4436}
+.step .n{display:block; font-size:12px; letter-spacing:.35em; color:#96865e; margin-bottom:9px}
+
+/* 墨围牌记复刻 */
+.mws{display:grid; grid-template-columns:1fr 1fr; gap:22px; margin:26px 0}
+.mwcard{background:var(--p3); border:1px solid #d8d0bb; padding:24px 20px; text-align:center}
+.mwcard .mw{display:inline-block; border:3px double #4a4436; padding:16px 24px; background:#f4efe2;
+  font-size:15.5px; line-height:2.15; letter-spacing:.12em; color:#39342a; margin:0 0 14px}
+.mwcard p{font-size:13.5px; line-height:1.95; color:#6b6350; text-align:left; margin:0}
+
+/* 榜文 */
+details.bang{border:1px solid #c4bba6; margin:26px 0; background:#f2ecdd}
+details.bang summary{cursor:pointer; padding:14px 20px; letter-spacing:.22em; font-size:14px;
+  color:#6b6350; list-style:none; user-select:none}
+details.bang summary::-webkit-details-marker{display:none}
+details.bang summary::before{content:"▸ "}
+details.bang[open] summary::before{content:"▾ "}
+.doc{padding:24px 28px 56px; border-top:1px dashed #c8c0aa; position:relative;
+  font-size:15px; line-height:2.15; color:#443e30;
+  background:repeating-linear-gradient(0deg,transparent 0 35px,rgba(120,100,60,.07) 35px 36px)}
+.doc .lead{font-size:13px; letter-spacing:.15em; color:#8a8171; margin:0 0 12px}
+.seal{position:absolute; right:20px; bottom:16px; width:58px; height:58px;
+  border:2px solid var(--red); color:var(--red); display:flex; align-items:center; justify-content:center;
+  font-size:22px; transform:rotate(-8deg); opacity:.7}
+
+/* 改名卡 */
+.rename{display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin:26px 0;
+  padding:22px 26px; border:1px dashed #b7ae97; background:var(--p3)}
+.name{font-size:30px; letter-spacing:.2em; color:#3a352a}
+.ar{font-size:13px; letter-spacing:.25em; color:var(--red); border:1px solid var(--red); padding:4px 10px}
+
+/* 翻卡 */
+.grid4{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin:26px 0}
+.card{perspective:900px; height:172px; cursor:pointer; outline:none}
+.card:focus-visible{box-shadow:0 0 0 2px var(--gold)}
+.ci{position:relative; width:100%; height:100%; transition:transform .7s; transform-style:preserve-3d}
+.card.flip .ci{transform:rotateY(180deg)}
+.cf,.cb{position:absolute; inset:0; backface-visibility:hidden; border:1px solid #c8bfa9;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  padding:18px; text-align:center}
+.cf{background:#e2dbc9}
+.cf .xu{font-size:12px; letter-spacing:.4em; color:#96865e; margin-bottom:10px}
+.cf .nm{font-size:24px; letter-spacing:.2em; color:#3a352a}
+.cb{background:var(--p3); transform:rotateY(180deg); font-size:14px; line-height:1.95; color:#4a4436}
+
+/* 台州案时间线 */
+.tl{margin-top:30px; border-left:2px solid #4a4232; padding-left:0; list-style:none}
+.tstop{position:relative; padding:0 0 28px 26px}
+.tstop::before{content:""; position:absolute; left:-8px; top:7px; width:13px; height:13px;
+  background:var(--gold); transform:rotate(45deg)}
+.tstop .t{font-size:13px; letter-spacing:.3em; color:var(--gold); margin:0 0 7px}
+.tstop p{margin:0; font-size:15px; line-height:2.05}
+.tstop q.q{font-size:16px; padding:14px 18px}
+
+/* 藏家五等 */
+.tabs{display:flex; flex-wrap:wrap; gap:10px; margin:26px 0 0}
+.tabs button{font:inherit; font-size:15px; letter-spacing:.2em; padding:9px 18px;
+  border:1px solid #c4bba6; background:transparent; color:#5a5344; cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+.pane{min-height:88px; margin-top:18px; padding:20px 22px; background:var(--p2);
+  font-size:15.5px; line-height:2.05; color:#4a4436}
+
+/* 作者小传 */
+.aside{margin-top:30px; padding:20px 24px; background:var(--p3); border:1px solid #d8d0bb;
+  font-size:14px; line-height:2.05; color:#5a5344}
+.aside b{letter-spacing:.1em}
+
+/* 收梢 */
+.shou{padding:96px 16px 30px; text-align:center}
+.sealbox{display:inline-block; border:1px solid var(--line); outline:1px solid var(--line);
+  outline-offset:6px; padding:36px 46px; max-width:560px}
+.sealbox h3{color:var(--paper); letter-spacing:.35em; font-size:20px; margin:0 0 14px; font-weight:600}
+.sealbox p{color:#8a8375; font-size:13.5px; line-height:2.15; margin:0}
+
+footer.page{margin-top:80px; border-top:1px solid var(--line); padding:30px 22px 46px}
+footer.page .wrap{max-width:860px; margin:0 auto; font-size:13px; color:#8a8375; line-height:2.1}
+footer.page b{color:var(--gold)}
+
+@media (max-width:640px){
+  section.leaf{padding:36px 22px}
+  .kou{display:none}
+  .steps,.grid4,.mws{grid-template-columns:1fr}
+  .rename{gap:12px} .name{font-size:22px}
+  .banxin .in{gap:14px}
+  .board{aspect-ratio:auto; height:440px}
+  .sheet{gap:8px}
+  .sheet .eb{font-size:11px; letter-spacing:.38em}
+  .sheet h1{font-size:40px; letter-spacing:.14em}
+  .sheet .au{font-size:13px}
+  .sheet .pos{font-size:13px; line-height:1.95; max-width:30em}
+}
+@media print{
+  .banxin,.hint,button.print{display:none}
+  section.leaf{box-shadow:none; margin:18px 0}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header class="hero" id="hero">
+  <div class="board">
+    <div class="frame"></div>
+    <div class="fancols l">行款疏密</div>
+    <div class="fancols r">纸墨相得</div>
+    <div class="fantitle">书林清话</div>
+    <div class="bar"></div>
+    <div class="sheet">
+      <span class="eb">殆知阁导读 三百零一 篇</span>
+      <h1>书林清话</h1>
+      <span class="au">清 叶德辉 撰</span>
+      <p class="pos">一部讲书的书：谁刻版，谁卖书，谁造假，谁打官司，以及一部书的价钱与命运。</p>
+      <span class="tag">已印</span>
+    </div>
+  </div>
+  <button class="print" id="printbtn" type="button">以纸覆版 刷印此书</button>
+  <p class="hint">向下 · 翻叶</p>
+</header>
+<noscript><style>.sheet{clip-path:inset(0)}button.print{display:none}.hint{opacity:1}</style></noscript>
+
+<nav class="banxin">
+  <div class="in">
+    <span class="ft"><span class="fish"></span><b>书林清话</b></span>
+    <a href="#e1">刻书缘起</a>
+    <a href="#e2">版权之争</a>
+    <a href="#e3">牌记</a>
+    <a href="#e4">明刻之祸</a>
+    <a href="#e5">书贾作伪</a>
+    <a href="#e6">台州公案</a>
+    <a href="#e7">藏家五等</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- 叶一 刻书缘起 -->
+  <section class="leaf" id="e1">
+    <span class="kou">卷一八六 · 叶一</span>
+    <p class="eyebrow">卷一 · 开篇立论</p>
+    <h2>刻书的人，最不朽</h2>
+    <p>藏书这件事，古人早有定论。司马光给儿子立过家训：金子传家，未必守得住；书传家，子孙未必肯读。叶德辉把这段话抄在全书第一篇，然后自己往前多走了一步：有一件事，积金、积书、积德三头全占，那就是刻书。</p>
+    <q class="q">积金以遗子孙，子孙未必能尽守；积书以遗子孙，子孙未必能尽读。</q>
+    <p class="qnote">卷一 引司马温公语</p>
+    <p>道理很快被一个人用一生验证。他是五代乱世里的四川书生毋昭裔。</p>
+    <div class="steps">
+      <div class="step"><span class="n">其一</span>年轻时向人借《文选》和《初学记》，对方当场给了难看的脸色。</div>
+      <div class="step"><span class="n">其二</span>他立下誓言：<q class="il">恨余贫不能力致，他日稍达，愿刻板印之，庶及天下学者。</q></div>
+      <div class="step"><span class="n">其三</span>后来他果然在蜀中显贵，践诺开雕；后蜀归宋，宋太祖在收缴的印本里见到卷尾的毋氏姓名，下令把书版发还毋家。刻书，刻出了一份传家的产业。</div>
+    </div>
+    <p>雕版兴于唐，盛于五代，大行于两宋。刻书从此成了一个行业：有人以它传家，有人以它营利，有人为它打官司，也有人为它丢了命。本书讲的，正是这个行业。</p>
+    <div class="aside"><b>刻书的人</b>　叶德辉，1864 年生，湖南湘潭人。藏书、刻书、骂人，样样出名；学问大，脾气更大。1927 年，他死于湖南时局变乱之中，而这部讲书的书，替他活到了今天。</div>
+  </section>
+
+  <!-- 叶二 版权之争 -->
+  <section class="leaf" id="e2">
+    <span class="kou">卷一八六 · 叶二</span>
+    <p class="eyebrow">卷二 · 最早的版权官司</p>
+    <h2>一块小木牌，吓退翻版书商</h2>
+    <p>版权不是舶来品。南宋书商已经懂得向官府备案、张榜禁止翻刻，口气和今天版权页上的警示一模一样。叶德辉在卷二里存下三份原始文书，字字像极出版合同。</p>
+    <p>第一份来自四川眉山。刻书人程舍人以宅为号，他们在《东都事略》的目录后面，钉了一块小木牌：</p>
+    <q class="q">眉山程舍人宅刊行。已申上司，不许覆板。</q>
+    <p class="qnote">卷二 录牌记原文</p>
+    <p>已申报官府，别人不许翻印。十六个字，一块木牌，是中国现存最早的版权声明实物。</p>
+    <p>第二份更正式。书商祝穆家刻成《方舆胜览》等书，怕书市之徒抢生意，直接把状子递到两浙转运司，要来一纸官榜，张挂到产书重镇衢州、婺州。嘉熙二年十二月的这份公文，把南宋出版维权的每个细节都留了下来：</p>
+    <details class="bang">
+      <summary>展开 官榜全文 · 转运司录白</summary>
+      <div class="doc">
+        <p class="lead">榜文大意：本宅自编自刻，花费浩大；书市之徒若翻版夺利，请官府追人毁版，断罪施行。原文如下。</p>
+        <q class="q">窃恐书市嗜利之徒，辄将上件书版翻开，或改换名目，或以节略《舆地纪胜》等书为名，翻开搀夺，致本宅徒劳心力，枉费钱本。</q>
+        <div class="seal">官</div>
+      </div>
+    </details>
+    <p>第三份来自学者家庭。段昌武的侄子把叔叔讲《毛诗》的毕生心血刻成书，特意向国子监申请公文一份，理由说得明白：</p>
+    <q class="q">倘或其他书肆嗜利翻板，则必窜易首尾，增损音义。</q>
+    <p class="qnote">卷二 录公据原文</p>
+    <p>从书坊到学者，从木牌到官榜，南宋人把盗版的痛与维权的路都走了一遍。距离中国第一部著作权法还有六百多年，但该有的招式，这里已经全有了。</p>
+  </section>
+
+  <!-- 叶三 牌记 -->
+  <section class="leaf" id="e3">
+    <span class="kou">卷一八六 · 叶三</span>
+    <p class="eyebrow">卷六 · 卷尾的小木牌</p>
+    <h2>卷尾的出生证</h2>
+    <p>宋人刻书，喜欢在卷尾或序后留一块墨线围成的小框，写几句交代，这叫牌记，也叫墨围、碑牌，元明书坊争相模仿。它的功能说穿了，就是一纸出生证兼广告。</p>
+    <div class="mws">
+      <div class="mwcard">
+        <div class="mw"><q class="il">本家今将《前后汉书》精加校证，并写作大字，锓版刊行，的无差错。收书英杰，伏望炳察。钱唐王叔远谨咨。</q></div>
+        <p>钱塘书商王叔远：书已精校，绝无差错，请各位收书行家明察。口气客气到近乎作揖。</p>
+      </div>
+      <div class="mwcard">
+        <div class="mw"><q class="il">建安魏仲立宅刊行，士大夫幸详察之。</q></div>
+        <p>福建建安的书商魏仲立更省字：书是我家刻的，请士大夫们多担待。</p>
+      </div>
+    </div>
+    <p>一块牌记，既是质量承诺，又是推销话术，还是防伪声明。今天书籍版权页的各个栏目，在这方寸小框里早已齐全。</p>
+  </section>
+
+  <!-- 叶四 明刻之祸 -->
+  <section class="leaf" id="e4">
+    <span class="kou">卷一八六 · 叶四</span>
+    <p class="eyebrow">卷七 · 明刻的病历</p>
+    <h2>明人刻书，越刻越坏</h2>
+    <p>谈到明代刻书，叶德辉火力全开。全书最重的判词，是他自己下的：</p>
+    <q class="q qbig">吾尝言明人好刻书，而最不知刻书。</q>
+    <p class="qnote">卷七</p>
+    <p>判词不是空话。他举的例子荒诞得像段子：明朝有位宗室，号月窗道人，翻刻宋人阮阅的《诗话总龟》，书没校好，先把作者的名字给改了。</p>
+    <div class="rename">
+      <span class="name">阮阅</span>
+      <span class="ar">改为</span>
+      <span class="name">阮一阅</span>
+    </div>
+    <p>连作者叫什么都不在乎，遑论正文。叶德辉把账算到一代人头上：</p>
+    <q class="q">嗟乎，明人虚伪之习，又岂独刻书一事也哉。</q>
+    <p class="qnote">卷七</p>
+    <p class="small">判得狠，但不全冤。明刻确有佳本，嘉靖翻宋、藩府刻书皆可观；坏在风气：一见古书就想改成自己顺眼的样子。这一条病根，叶德辉的手术刀挑得干净。</p>
+  </section>
+
+  <!-- 叶五 书贾作伪 -->
+  <section class="leaf" id="e5">
+    <span class="kou">卷一八六 · 叶五</span>
+    <p class="eyebrow">卷十 · 造假的流水线</p>
+    <h2>造一部假宋版</h2>
+    <p>宋本日少，价钱日贵，造假随之兴旺。叶德辉总结书估的伪术，万变不离一条流水线：</p>
+    <q class="q">自宋本日希，收藏家争相宝贵，于是坊估射利，往往作伪欺人，变幻莫测。</q>
+    <p class="qnote">卷十</p>
+    <div class="grid4">
+      <div class="card" role="button" tabindex="0" aria-label="术一 抽序，点按翻面">
+        <div class="ci">
+          <div class="cf"><span class="xu">术一</span><span class="nm">抽序</span></div>
+          <div class="cb">把重刊时新写的序言抽走，让人看不出这是后刻的本子。</div>
+        </div>
+      </div>
+      <div class="card" role="button" tabindex="0" aria-label="术二 改名，点按翻面">
+        <div class="ci">
+          <div class="cf"><span class="xu">术二</span><span class="nm">改名</span></div>
+          <div class="cb">铲掉原来的刻书年月与刻工姓名，或补或剜，冒充宋刊。</div>
+        </div>
+      </div>
+      <div class="card" role="button" tabindex="0" aria-label="术三 伪印，点按翻面">
+        <div class="ci">
+          <div class="cf"><span class="xu">术三</span><span class="nm">伪印</span></div>
+          <div class="cb">伪造名家收藏印，一方一方盖满全书，给假货编造流传有绪的身世。</div>
+        </div>
+      </div>
+      <div class="card" role="button" tabindex="0" aria-label="术四 移跋，点按翻面">
+        <div class="ci">
+          <div class="cf"><span class="xu">术四</span><span class="nm">移跋</span></div>
+          <div class="cb">把真本书上的题跋、签条移花接木，贴到伪本上遮丑。</div>
+        </div>
+      </div>
+    </div>
+    <p>四术合观，正是叶德辉原文的清单：</p>
+    <q class="q">或抽去重刊书序，或改补校刊姓名，或伪造收藏家图记钤满卷中，或移缀真本跋尾题签，掩其赝迹。</q>
+    <p class="qnote">卷十</p>
+    <p>破绽都藏在细节里。清宫天禄琳琅查出的十几部伪宋本，个个输在手工上：割补的痕迹对不拢，补纸的宽窄不一，有的甚至把校订的订字错刻成金字旁。造假是一门手艺，鉴定也是。</p>
+    <div class="zhupi">
+      <q class="q">书估无知妄作，真不直一噱矣。</q>
+    </div>
+  </section>
+
+  <!-- 叶六 台州公案（暗叶） -->
+  <section class="leaf dark" id="e6">
+    <span class="kou">卷一八六 · 叶六</span>
+    <p class="eyebrow">卷十 · 台州刻书案</p>
+    <h2>台州：刻书刻出假钞案</h2>
+    <p>这部书话里最黑的一页，是一桩牵动朱熹、一位知州、一批书版与两千六百多道假钞的大案。案卷藏在朱熹弹劾唐仲友的第六状里，叶德辉把它抄进了卷十。</p>
+    <ol class="tl">
+      <li class="tstop">
+        <p class="t">淳熙八年</p>
+        <p>台州知州唐仲友动用公使库经费，开雕《荀子》《扬子》。官刻，名正言顺。</p>
+      </li>
+      <li class="tstop">
+        <p class="t">雕工蒋辉</p>
+        <p>明州百姓，因伪造会子（假钞）事发，发配台州牢城服役，日常替书坊刻版糊口。</p>
+      </li>
+      <li class="tstop">
+        <p class="t">八月</p>
+        <p>婺州义乌县的弓手越境来捉蒋辉，伪造团伙案发。唐仲友一句话把人截下：<q class="il">你是弓手，捉我处兵士</q>。人留下，版照刻。</p>
+      </li>
+      <li class="tstop">
+        <p class="t">十月</p>
+        <p>蒋辉被带进知州私宅后堂清属堂，金婆婆管饭。三天后，唐仲友摊牌：</p>
+        <q class="q">我要做些会子。</q>
+        <q class="q">你莫管我，你若不依我说，便送你入狱囚杀，你是配军不妨。</q>
+        <p class="small">会子，即南宋官发纸币。雕版高手印纸币，专业完全对口。</p>
+      </li>
+      <li class="tstop">
+        <p class="t">十一月</p>
+        <p>梨木板十日雕成会子版；再雕《后典丽赋》打掩护；印钞纸从婺州乡下悄悄运进城。</p>
+      </li>
+      <li class="tstop">
+        <p class="t">十二月开印</p>
+        <p>会子纸起印，篆文官押一应俱全，熟手流水作业；金婆婆进出传箱，知州宅内夜夜开工。</p>
+        <q class="q">约二十次共印二千六百余道。</q>
+        <p class="qnote">卷十 录供状原文</p>
+      </li>
+      <li class="tstop">
+        <p class="t">次年七月</p>
+        <p>朱熹提举浙东，封存诸库，搜捕在即。蒋辉翻墙而逃，落地被捉。</p>
+      </li>
+    </ol>
+    <p>一位理学宗师的弹章，留下了一份古代出版业的黑暗档案：公款刻书的经费、雕版作坊的手艺、私宅里的印钞窝点，在案卷里连成一条线。后来的戏曲把这桩案子演义成风月故事，而原始供词里的世界，比风月冷得多。</p>
+  </section>
+
+  <!-- 叶七 藏家五等 -->
+  <section class="leaf" id="e7">
+    <span class="kou">卷一八六 · 叶七</span>
+    <p class="eyebrow">卷九 · 藏家的五张脸</p>
+    <h2>藏书家的五张脸</h2>
+    <p>书刻出来，总要有人接住。乾隆年间，洪亮吉在《北江诗话》里把藏书人分成五等；叶德辉抄录全文，嫌他分得不尽合理，又自己添了一等。</p>
+    <q class="q">藏书家有数等：钱少詹大昕、戴吉士震为考订家，</q>
+    <q class="q">鄞县范氏天一阁、钱唐吴氏瓶花斋、昆山徐氏传是楼为收藏家，吴门黄主事丕烈、邬镇鲍处士廷博为赏鉴家，吴门书估钱景开、陶五柳、湖南书估施汉英为掠贩家。</q>
+    <p class="qnote">卷九 引洪亮吉语</p>
+    <div class="tabs" role="tablist">
+      <button type="button" data-k="kao" aria-pressed="true">考订家</button>
+      <button type="button" data-k="jiao" aria-pressed="false">校雠家</button>
+      <button type="button" data-k="shou" aria-pressed="false">收藏家</button>
+      <button type="button" data-k="shang" aria-pressed="false">赏鉴家</button>
+      <button type="button" data-k="lve" aria-pressed="false">掠贩家</button>
+    </div>
+    <div class="pane" id="pane"></div>
+    <p>叶德辉的补充：</p>
+    <q class="q">按洪氏亦约略言之。吾谓考订、校雠，是一是二，而可统名之著述家。若专以刻书为事，则当云校勘家。</q>
+    <p class="qnote">卷九</p>
+    <p class="small">意思是：真把书刻好的手艺人，配单独立一等。全书用七条连缀的篇幅写毛晋汲古阁，正是给这一等立传。而读书人对这位刻书巨头的评语，一点不客气：</p>
+    <q class="q">汲古阁刻书富矣，每见所藏底本极精，曾不一校，反多臆改，殊为恨事。</q>
+    <p class="qnote">卷七 引黄丕烈语</p>
+    <p class="small">批语出自藏书家黄丕烈。底本极精而懒得校，反多臆改：这个毛病，今天做文献整理的人依然眼熟。</p>
+  </section>
+
+</main>
+
+<section class="shou">
+  <div class="sealbox">
+    <h3>书林清话</h3>
+    <p>一部雕版书的行业志：谁刻，谁卖，谁藏，谁造假，谁打官司。</p>
+    <p>下一部想读的书，或许就藏在它抄来的某块牌记里。</p>
+  </div>
+</section>
+
+<footer class="page">
+  <div class="wrap">
+    <p>殆知阁导读 第<b>三百零一</b>篇 · 2026 年 9 月编</p>
+    <p>校字记：库本"卢学士文弨"之"弨"为扩展区私用字，本页引文将该句分作两截避开此字；"钱唐"为库本原貌（今通作钱塘），照录未改。原书十卷并跋、一百二十六节，去空白约十八万字。</p>
+    <p>文本来源：殆知阁古代文献简体库 艺藏书法《书林清话》（github.com/robertsong2000/daizhigev20）。本篇引文经脚本与库内文件去标点空白归一逐字比对通过（二十处）；叶德辉议论带着清末藏书家的脾气与时代偏见，人物掌故亦间有可议，读者自酌。本页无任何外部依赖。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var hero=document.getElementById('hero');
+  document.getElementById('printbtn').addEventListener('click',function(){
+    hero.classList.add('printed');
+  });
+  document.querySelectorAll('.card').forEach(function(c){
+    c.addEventListener('click',function(){c.classList.toggle('flip');});
+    c.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();c.classList.toggle('flip');}
+    });
+  });
+  var PANES={
+    kao:'考订家：钱大昕、戴震。书是兵器，藏来考据，页页要读出结论。',
+    jiao:'校雠家：卢文弨、翁方纲。见错字就手痒，一部书校到能开药方。',
+    shou:'收藏家：宁波天一阁范氏、杭州瓶花斋吴氏、昆山传是楼徐氏。书即门第，楼在人在。',
+    shang:'赏鉴家：黄丕烈、鲍廷博。佞宋成癖，讲纸墨讲装潢，题跋写得比书还好看。',
+    lve:'掠贩家：陶五柳、钱景开、施汉英，都是书估。洪亮吉把他们排在最末，但没有他们，前四等的书根本无从聚起。'
+  };
+  var pane=document.getElementById('pane');
+  var btns=document.querySelectorAll('.tabs button');
+  function pick(b){
+    btns.forEach(function(x){x.setAttribute('aria-pressed','false');});
+    b.setAttribute('aria-pressed','true');
+    pane.textContent=PANES[b.dataset.k];
+  }
+  btns.forEach(function(b){b.addEventListener('click',function(){pick(b);});});
+  if(btns.length){pick(btns[0]);}
+})();
+</script>
+
+</body>
+</html>
