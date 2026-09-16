@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>备急灸法 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --ink2:#211f1c;
+  --ink3:#282520;
+  --paper:#e8e4dc;
+  --paper-dim:#b9b2a2;
+  --faint:#6e685c;
+  --bamboo:#5f9270;
+  --bamboo-deep:#3c6a4c;
+  --fire:#c9963f;
+  --fire-deep:#96682a;
+  --red:#c0453c;
+  --red-deep:#8c2f26;
+  --hairline:#33302a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif SC","SimSun",serif;
+  line-height:1.95;
+  overflow-x:hidden;
+}
+.mono{font-family:"SFMono-Regular",Menlo,Consolas,monospace;}
+
+/* ===== 顶部症签导航 ===== */
+.rail{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;justify-content:center;gap:4px;
+  padding:8px 10px 7px;
+  background:linear-gradient(to bottom,rgba(25,25,23,.96),rgba(25,25,23,.8));
+  backdrop-filter:blur(4px);
+  overflow-x:auto;scrollbar-width:none;
+}
+.rail::-webkit-scrollbar{display:none;}
+.rail a{
+  flex:0 0 auto;
+  font-size:12px;letter-spacing:2px;
+  color:var(--faint);
+  padding:2px 9px 3px;
+  border:1px solid var(--hairline);
+  border-radius:2px;
+  text-decoration:none;
+  transition:all .5s;
+  white-space:nowrap;
+}
+.rail a.lit{color:var(--paper);border-color:var(--bamboo);background:rgba(95,146,112,.14);}
+
+/* ===== 引文通用 ===== */
+.q{
+  position:relative;
+  background:var(--ink2);
+  border-left:3px solid var(--bamboo);
+  padding:12px 16px;
+  margin:10px 0;
+  font-size:15.5px;
+  color:var(--paper);
+  letter-spacing:.04em;
+}
+.q .qi{display:block;}
+.q .qn{display:block;margin-top:6px;font-size:12px;color:var(--faint);letter-spacing:.08em;}
+.q.rd{border-left-color:var(--red);}
+.q.gold{border-left-color:var(--fire);}
+.q.big{font-size:clamp(17px,2.2vw,21px);line-height:2.1;padding:18px 22px;}
+.q::before{
+  content:"";position:absolute;left:-3px;top:-1px;bottom:-1px;width:3px;
+  background:inherit;border-left:3px solid transparent;margin-left:-3px;
+}
+.vq{color:var(--paper-dim);}
+
+/* ===== HERO 一炷 ===== */
+.hero{
+  min-height:100vh;
+  position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 16px 48px;
+  background:radial-gradient(ellipse 90% 55% at 50% 8%,#26231e 0%,transparent 62%),var(--ink);
+}
+.eyebrow{
+  font-size:12px;letter-spacing:6px;color:var(--faint);margin-bottom:8px;text-align:center;
+}
+.eyebrow b{color:var(--bamboo);font-weight:normal;}
+.stage{
+  position:relative;
+  width:min(640px,94vw);
+  height:460px;
+  display:flex;align-items:center;justify-content:center;
+}
+.stage svg{width:100%;height:100%;display:block;}
+.cone-wrap{cursor:pointer;}
+.cone{transition:opacity .4s;}
+.ember{opacity:0;transition:opacity .8s;}
+.lit .ember{opacity:1;animation:embPulse 1.6s ease-in-out infinite;}
+@keyframes embPulse{0%,100%{opacity:.75;}50%{opacity:1;}}
+.smoke{stroke:rgba(232,228,220,0);stroke-width:2;fill:none;stroke-linecap:round;}
+.lit .smoke.s1{animation:smokeUp 5s linear infinite;}
+.lit .smoke.s2{animation:smokeUp 6.4s .9s linear infinite;}
+.lit .smoke.s3{animation:smokeUp 7.2s 1.8s linear infinite;}
+@keyframes smokeUp{
+  0%{stroke:rgba(232,228,220,.38);stroke-dashoffset:0;}
+  100%{stroke:rgba(232,228,220,0);stroke-dashoffset:-160;}
+}
+.jue{
+  position:absolute;
+  width:min(240px,42vw);
+  opacity:0;transform:translateY(10px);
+  transition:opacity .8s,transform .8s;
+  pointer-events:none;
+}
+.jue.on{opacity:1;transform:translateY(0);}
+.jue .fj{display:block;font-size:11.5px;letter-spacing:4px;color:var(--fire);margin-bottom:4px;}
+.jue .q{padding:8px 12px;font-size:13px;margin:0;}
+#jue1{left:0;top:16%;}
+#jue2{right:0;top:12%;}
+#jue3{left:2%;bottom:10%;}
+#jue4{right:0;bottom:16%;}
+.btn{
+  margin-top:18px;
+  background:none;border:1px solid var(--bamboo-deep);
+  color:var(--paper-dim);
+  font-family:inherit;
+  font-size:14px;letter-spacing:6px;text-indent:6px;
+  padding:9px 26px;cursor:pointer;
+  border-radius:2px;
+  transition:all .4s;
+}
+.btn:hover{color:var(--paper);border-color:var(--bamboo);background:rgba(95,146,112,.1);}
+.btn.done{border-color:var(--fire-deep);}
+/* 书名显形层 */
+.veil{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;gap:34px;
+  pointer-events:none;
+  opacity:0;transition:opacity 1.4s;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(25,25,23,.72) 30%,transparent 75%);
+}
+.veil.show{opacity:1;}
+.vtitle{
+  writing-mode:vertical-rl;
+  max-height:96%;
+  font-size:clamp(46px,7.2vw,86px);
+  font-weight:700;letter-spacing:.16em;
+  color:var(--paper);
+  text-shadow:0 0 26px rgba(201,150,63,.32);
+}
+.vtitle span{display:inline-block;opacity:0;transform:translateY(-12px);transition:opacity 1s,transform 1s;}
+.veil.show .vtitle span{opacity:1;transform:translateY(0);}
+.veil.show .vtitle span:nth-child(1){transition-delay:.15s;}
+.veil.show .vtitle span:nth-child(2){transition-delay:.4s;}
+.veil.show .vtitle span:nth-child(3){transition-delay:.65s;}
+.veil.show .vtitle span:nth-child(4){transition-delay:.9s;}
+.vsub{
+  writing-mode:vertical-rl;
+  font-size:14px;letter-spacing:.5em;color:var(--paper-dim);
+  opacity:0;transition:opacity 1s 1.2s;
+}
+.veil.show .vsub{opacity:1;}
+.stamp{
+  align-self:flex-end;
+  width:76px;height:76px;
+  display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  background:var(--red);
+  color:#f5efe6;
+  font-size:26px;font-weight:700;
+  border-radius:4px;
+  box-shadow:0 4px 16px rgba(140,47,38,.5);
+  transform:scale(1.8) rotate(4deg);opacity:0;
+  transition:transform .5s cubic-bezier(.2,1.6,.4,1),opacity .4s;
+}
+.veil.show .stamp{transform:scale(1) rotate(-3deg);opacity:1;transition-delay:1.4s;}
+.stamp i{font-style:normal;display:flex;align-items:center;justify-content:center;}
+.hint{
+  font-size:13px;letter-spacing:3px;color:var(--faint);
+  margin-top:14px;text-align:center;transition:opacity .6s;
+}
+
+/* ===== 通用 section ===== */
+section{position:relative;padding:86px 0 60px;}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px;}
+.sec-head{margin-bottom:30px;}
+.sec-no{
+  font-size:12px;letter-spacing:5px;color:var(--bamboo);margin-bottom:8px;
+}
+.sec-title{font-size:clamp(26px,4vw,38px);font-weight:700;letter-spacing:.1em;}
+.sec-lead{color:var(--paper-dim);font-size:15px;max-width:44em;margin-top:12px;}
+
+/* ===== 灵前案 ===== */
+.ling-grid{display:grid;grid-template-columns:230px 1fr;gap:34px;align-items:start;}
+@media(max-width:760px){.ling-grid{grid-template-columns:1fr;}}
+.altar{
+  background:var(--ink2);
+  border:1px solid var(--hairline);
+  padding:26px 18px 20px;
+  text-align:center;
+  border-radius:3px;
+}
+.paiz{display:inline-block;}
+.paiz .pz-txt{
+  writing-mode:vertical-rl;
+  font-size:21px;letter-spacing:.3em;font-weight:700;
+  color:var(--paper);
+  border:1px solid #4a4238;
+  border-top:5px double #4a4238;
+  padding:20px 12px 14px;
+  background:linear-gradient(to bottom,#241f19,#1d1a15);
+  margin:0 auto;
+}
+.candle{margin-top:22px;}
+.candle svg{width:56px;height:110px;display:block;margin:0 auto;}
+.flame{
+  transform-origin:50% 100%;
+  animation:flick 2.1s ease-in-out infinite;
+}
+@keyframes flick{
+  0%,100%{transform:scaleY(1) scaleX(1);}
+  30%{transform:scaleY(1.12) scaleX(.94) rotate(-2deg);}
+  60%{transform:scaleY(.92) scaleX(1.05) rotate(2deg);}
+}
+.altar-cap{font-size:12px;color:var(--faint);letter-spacing:3px;margin-top:12px;}
+.folds{display:flex;flex-direction:column;gap:12px;}
+.fold{
+  background:linear-gradient(135deg,#221f1a 0%,#1c1915 100%);
+  border:1px solid var(--hairline);
+  border-radius:3px;
+  cursor:pointer;
+  transition:border-color .4s;
+}
+.fold:hover{border-color:var(--bamboo-deep);}
+.fold-h{
+  display:flex;align-items:baseline;gap:12px;
+  padding:13px 16px;
+}
+.fold-h .fh-no{font-size:12px;color:var(--fire);letter-spacing:2px;flex:0 0 auto;}
+.fold-h .fh-t{font-size:16.5px;font-weight:700;letter-spacing:.08em;}
+.fold-h .fh-m{margin-left:auto;font-size:12px;color:var(--faint);transition:transform .4s;}
+.fold.open .fh-m{transform:rotate(45deg);}
+.fold-b{max-height:0;overflow:hidden;transition:max-height .8s ease;}
+.fold.open .fold-b{max-height:420px;}
+.fold-b-in{padding:2px 18px 16px;font-size:14px;color:var(--paper-dim);}
+.great-quote{margin-top:26px;}
+.gq-note{font-size:13px;color:var(--faint);letter-spacing:2px;margin-top:8px;text-align:right;}
+
+/* ===== 自序 ===== */
+.bian{
+  text-align:center;
+  padding:34px 18px 30px;
+  background:linear-gradient(to bottom,#2b2620,#211d18);
+  border:1px solid #4a4238;
+  border-radius:3px;
+  margin-bottom:26px;
+}
+.bian .q{
+  display:inline-block;
+  border:none;background:none;
+  font-size:clamp(20px,3.2vw,30px);
+  letter-spacing:.14em;
+  line-height:2;
+  padding:0;color:var(--paper);
+}
+.bian .qn{text-align:center;}
+.ord{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+.ord-card{
+  background:var(--ink2);
+  border:1px solid var(--hairline);
+  border-top:2px solid var(--bamboo-deep);
+  padding:18px;
+  border-radius:3px;
+  cursor:pointer;
+  transition:border-color .4s,background .4s;
+}
+.ord-card:hover{background:var(--ink3);}
+.ord-card h4{font-size:15px;letter-spacing:3px;color:var(--bamboo);margin-bottom:8px;font-weight:700;}
+.ord-card .q{font-size:14px;padding:9px 12px;}
+.ord-card p{font-size:13.5px;color:var(--paper-dim);margin-top:8px;}
+
+/* ===== 急症悬牌 ===== */
+.rack{
+  position:relative;
+  padding:34px 8px 10px;
+}
+.rod{
+  height:8px;border-radius:4px;
+  background:linear-gradient(to bottom,#4a4238,#332c24);
+  box-shadow:0 3px 8px rgba(0,0,0,.5);
+  margin:0 6px 0;
+}
+.cards{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:14px;margin-top:26px;
+  perspective:1200px;
+}
+.card{
+  position:relative;height:190px;
+  cursor:pointer;
+  transform-style:preserve-3d;
+  transition:transform .7s cubic-bezier(.5,.1,.3,1.2);
+}
+.card.flip{transform:rotateY(180deg);}
+.card .ring{
+  position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+  width:16px;height:16px;border:3px solid #4a4238;border-radius:50%;
+  background:none;z-index:2;
+}
+.cf,.cb{
+  position:absolute;inset:0;
+  backface-visibility:hidden;
+  border-radius:3px;
+  border:1px solid var(--hairline);
+  display:flex;flex-direction:column;
+}
+.cf{
+  background:linear-gradient(160deg,#2a2620 0%,#211d17 100%);
+  align-items:center;justify-content:center;gap:6px;
+}
+.cf .cz{font-size:clamp(24px,3vw,30px);font-weight:700;letter-spacing:.2em;text-indent:.2em;}
+.cf .ce{font-size:11px;letter-spacing:3px;color:var(--faint);}
+.cf .cf-tag{
+  position:absolute;bottom:10px;left:12px;right:12px;
+  font-size:11px;color:var(--bamboo);letter-spacing:2px;text-align:center;
+}
+.cb{
+  background:var(--ink2);
+  transform:rotateY(180deg);
+  padding:12px 13px;
+  overflow:hidden;
+}
+.cb .q{padding:7px 9px;font-size:12px;margin:6px 0;line-height:1.75;}
+.cb .cw{font-size:12px;color:var(--paper-dim);line-height:1.7;}
+.rack-count{
+  text-align:right;font-size:12.5px;letter-spacing:2px;color:var(--faint);margin-top:14px;
+}
+.rack-count b{color:var(--bamboo);font-weight:700;}
+/* 疮疡横案 */
+.heng{
+  margin-top:34px;
+  background:var(--ink2);
+  border:1px solid var(--hairline);
+  border-radius:3px;
+  padding:20px 20px 14px;
+}
+.heng h4{font-size:15px;letter-spacing:4px;color:var(--fire);margin-bottom:4px;}
+.heng .heng-lead{font-size:13.5px;color:var(--paper-dim);margin-bottom:10px;}
+.heng-row{
+  display:grid;grid-template-columns:86px 1fr;gap:14px;align-items:start;
+  padding:10px 0;border-top:1px dashed var(--hairline);
+}
+.heng-row .hl{
+  font-size:14px;font-weight:700;letter-spacing:2px;color:var(--paper);
+  border-right:2px solid var(--red-deep);
+  padding:2px 8px 2px 0;
+}
+.heng-row .q{padding:8px 12px;font-size:13.5px;margin:0 0 6px;}
+.heng-row .hw{font-size:12.5px;color:var(--paper-dim);}
+
+/* ===== 竹马四扇屏 ===== */
+.ping{
+  display:flex;gap:8px;align-items:stretch;
+  height:620px;
+}
+.pane{
+  flex:0 0 62px;
+  background:linear-gradient(to bottom,#26221c,#1e1a15);
+  border:1px solid var(--hairline);
+  border-radius:3px;
+  cursor:pointer;
+  overflow:hidden;
+  transition:flex-grow .8s cubic-bezier(.6,.05,.3,1);
+  display:flex;flex-direction:column;
+}
+.pane.open{flex-grow:1;cursor:default;}
+.pane-h{
+  flex:0 0 auto;
+  writing-mode:vertical-rl;
+  letter-spacing:.4em;
+  font-size:16px;font-weight:700;color:var(--paper-dim);
+  padding:16px 0;
+  margin:0 auto;
+  transition:color .4s;
+}
+.pane.open .pane-h{color:var(--bamboo);}
+.pane-b{flex:1;opacity:0;transition:opacity .7s .25s;padding:14px 16px 16px;overflow:hidden;min-width:0;overflow-y:auto;scrollbar-width:thin;}
+.pane.open .pane-b{opacity:1;}
+@media(max-width:760px){
+  .ping{flex-direction:column;height:auto;min-height:0;}
+  .pane{flex:0 0 auto;}
+  .pane.open{flex-grow:0;}
+  .pane-h{writing-mode:horizontal-tb;padding:10px 14px;margin:0;}
+  .pane-b{display:none;}
+  .pane.open .pane-b{display:block;overflow:visible;}
+}
+.pane-b svg{width:100%;max-width:380px;height:210px;display:block;margin:0 auto 8px;}
+.pane-b .q{font-size:13.5px;padding:9px 12px;}
+.pane-b .pw{font-size:13px;color:var(--paper-dim);}
+/* 脉行账 */
+.mai{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;
+  margin-top:26px;
+}
+.mai-card{
+  background:var(--ink2);border:1px solid var(--hairline);border-radius:3px;
+  padding:16px 18px;
+}
+.mai-card h5{font-size:13px;letter-spacing:3px;color:var(--fire);margin-bottom:6px;}
+.mai-card .num{font-size:clamp(26px,3.4vw,34px);font-weight:700;color:var(--paper);letter-spacing:.04em;}
+.mai-card .num small{font-size:14px;color:var(--paper-dim);font-weight:normal;}
+.mai-card .q{font-size:12.5px;padding:7px 10px;margin:8px 0 0;}
+.closing-duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px;}
+@media(max-width:700px){.closing-duo{grid-template-columns:1fr;}}
+
+/* ===== 八木 ===== */
+.mu-row{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+  margin-bottom:26px;
+}
+.mu{
+  writing-mode:vertical-rl;
+  background:linear-gradient(to bottom,#33302a,#26231d);
+  border:1px solid #4a4238;
+  border-radius:3px;
+  padding:18px 8px 12px;
+  font-size:17px;font-weight:700;letter-spacing:.3em;
+  color:var(--paper-dim);
+  cursor:pointer;
+  transition:all .5s;
+  position:relative;
+}
+.mu small{font-size:11px;letter-spacing:2px;color:var(--faint);margin-top:10px;font-weight:normal;}
+.mu.burnt{
+  background:linear-gradient(to bottom,#3a2a22,#221812);
+  border-color:#5a3a2c;
+  color:#c98f6a;
+  filter:none;
+}
+.mu.burnt::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:8px;
+  background:linear-gradient(to top,rgba(201,107,63,.55),transparent);
+}
+.lamp-zone{
+  display:grid;grid-template-columns:190px 1fr;gap:26px;align-items:center;
+  background:var(--ink2);border:1px solid var(--hairline);border-radius:3px;
+  padding:22px;
+}
+@media(max-width:700px){.lamp-zone{grid-template-columns:1fr;}}
+.lamp-zone svg{width:130px;height:190px;display:block;margin:0 auto;}
+.lamp-flame{opacity:0;transform-origin:50% 100%;transition:opacity 1.2s;}
+.lamp-flame.on{opacity:1;animation:flick 1.9s ease-in-out infinite;}
+.lamp-glow{opacity:0;transition:opacity 1.4s;}
+.lamp-glow.on{opacity:.55;}
+.lamp-zone .q{font-size:13.5px;padding:8px 12px;}
+.mu-verdict{
+  min-height:52px;margin:0 0 18px;
+  font-size:14px;color:var(--paper-dim);
+  display:flex;align-items:center;gap:12px;
+}
+.mu-verdict .q{margin:0;padding:8px 14px;font-size:14px;display:none;}
+.mu-verdict .q.show{display:block;}
+
+/* ===== 工役六条 ===== */
+.gongyi{display:flex;flex-direction:column;}
+.gy-row{
+  display:grid;grid-template-columns:120px 1fr;gap:18px;
+  padding:16px 6px;
+  border-top:1px solid var(--hairline);
+  cursor:pointer;
+  transition:background .4s;
+}
+.gy-row:first-child{border-top:none;}
+.gy-row:hover{background:rgba(95,146,112,.05);}
+.gy-row.on{background:rgba(95,146,112,.08);}
+.gy-name{
+  font-size:15px;font-weight:700;letter-spacing:3px;color:var(--bamboo);
+  padding-top:4px;
+}
+.gy-body .q{font-size:14px;padding:9px 13px;}
+.gy-note{font-size:13px;color:var(--paper-dim);max-height:0;overflow:hidden;transition:max-height .6s,opacity .6s;opacity:0;}
+.gy-row.on .gy-note{max-height:200px;opacity:1;padding-top:8px;}
+@media(max-width:620px){.gy-row{grid-template-columns:1fr;gap:4px;}}
+
+/* ===== 百日 ===== */
+.ri-grid{
+  display:grid;grid-template-columns:repeat(10,1fr);gap:7px;
+  margin:24px 0 18px;
+}
+.ri{
+  aspect-ratio:1;
+  border-radius:50%;
+  background:var(--ink2);
+  border:1px solid var(--hairline);
+  position:relative;
+}
+.ri.on{
+  background:radial-gradient(circle at 50% 42%,var(--fire) 0%,var(--fire-deep) 68%);
+  border-color:var(--fire-deep);
+  box-shadow:0 0 9px rgba(201,150,63,.45);
+}
+.ri-lab{font-size:12px;color:var(--faint);letter-spacing:2px;}
+.bai-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:6px;}
+.bai-msg{min-height:34px;font-size:14px;color:var(--paper-dim);}
+.bai-msg.warn{color:var(--red);}
+.bai-reveal{display:none;margin-top:18px;}
+.bai-reveal.show{display:block;}
+.jin-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;}
+.jin{
+  border:1px solid var(--red-deep);
+  color:var(--paper);
+  font-size:14px;letter-spacing:3px;
+  padding:8px 16px;
+  border-radius:2px;
+  background:rgba(140,47,38,.12);
+}
+
+/* ===== 附卷素笺 ===== */
+.fujian{
+  background:linear-gradient(150deg,#232019 0%,#1c1915 100%);
+  border:1px solid var(--hairline);
+  border-radius:3px;
+  padding:24px 24px 18px;
+  margin-top:30px;
+}
+.fujian h4{font-size:15px;letter-spacing:4px;color:var(--fire);margin-bottom:10px;}
+.fujian .q{font-size:14px;padding:9px 13px;}
+.fujian p{font-size:13.5px;color:var(--paper-dim);}
+
+/* ===== 接力 ===== */
+.relay{
+  position:relative;
+  margin:34px 0 10px;
+}
+.relay-line{
+  position:absolute;top:26px;left:6%;right:6%;height:2px;
+  background:linear-gradient(to right,var(--bamboo-deep),var(--fire-deep));
+  opacity:.7;
+}
+.relay-nodes{display:grid;grid-template-columns:repeat(4,1fr);position:relative;}
+@media(max-width:640px){
+  .relay-line{display:none;}
+  .relay-nodes{grid-template-columns:repeat(2,1fr);gap:20px;}
+}
+.rnode{
+  text-align:center;cursor:pointer;padding:0 6px;
+}
+.rnode .rdot{
+  width:54px;height:54px;border-radius:50%;
+  border:2px solid var(--hairline);
+  background:var(--ink2);
+  color:var(--paper-dim);
+  display:flex;align-items:center;justify-content:center;
+  font-size:21px;font-weight:700;
+  margin:0 auto 10px;
+  transition:all .45s;
+  position:relative;z-index:2;
+}
+.rnode.on .rdot{border-color:var(--fire);color:var(--fire);background:#26221a;box-shadow:0 0 14px rgba(201,150,63,.3);}
+.rnode .rt{font-size:12px;letter-spacing:2px;color:var(--faint);}
+.rnode.on .rt{color:var(--paper-dim);}
+.rnode .ry{font-size:13px;color:var(--paper);margin-top:2px;}
+.relay-panel{
+  margin-top:24px;
+  background:var(--ink2);
+  border:1px solid var(--hairline);
+  border-left:3px solid var(--fire);
+  border-radius:3px;
+  padding:18px 20px;
+  min-height:120px;
+}
+.relay-panel h4{font-size:16px;letter-spacing:3px;margin-bottom:8px;color:var(--paper);}
+.relay-panel p{font-size:13.5px;color:var(--paper-dim);}
+
+/* ===== 收梢 ===== */
+.coda{
+  padding:90px 0 70px;
+  text-align:center;
+  background:radial-gradient(ellipse 70% 50% at 50% 100%,#241f19 0%,transparent 70%),var(--ink);
+}
+.coda .vquotes{
+  display:flex;justify-content:center;gap:40px;
+  margin:26px 0 30px;
+  min-height:270px;
+}
+@media(max-width:620px){.coda .vquotes{gap:18px;}}
+.vq-block{
+  writing-mode:vertical-rl;
+  font-size:clamp(17px,2.4vw,22px);
+  letter-spacing:.34em;
+  color:var(--paper);
+  border-right:1px solid var(--hairline);
+  border-left:1px solid var(--hairline);
+  padding:14px 12px;
+  background:var(--ink2);
+}
+.coda-seal{
+  width:84px;height:84px;margin:6px auto 26px;
+  display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  background:var(--red);color:#f5efe6;
+  font-size:27px;font-weight:700;border-radius:4px;
+  transform:rotate(-2deg);
+  box-shadow:0 4px 16px rgba(140,47,38,.45);
+}
+.coda-seal i{font-style:normal;display:flex;align-items:center;justify-content:center;}
+.coda .hengzong{max-width:640px;margin:0 auto 30px;text-align:left;}
+.safe{
+  max-width:620px;margin:0 auto;
+  border:1px dashed var(--red-deep);
+  border-radius:3px;
+  padding:16px 20px;
+  font-size:13.5px;color:var(--paper-dim);
+  text-align:left;
+  line-height:1.9;
+}
+.safe b{color:var(--red);font-weight:700;}
+
+/* ===== 页脚 ===== */
+footer{border-top:1px solid var(--hairline);padding:34px 0 60px;font-size:13px;color:var(--faint);}
+footer .wrap p{margin-bottom:7px;line-height:1.9;}
+footer a{color:var(--paper-dim);}
+.xiaoji{margin-top:10px;}
+</style>
+</head>
+<body>
+
+<nav class="rail" id="rail">
+  <a href="#hero">下火</a>
+  <a href="#ling">灵前</a>
+  <a href="#zixu">自序</a>
+  <a href="#paizi">急牌</a>
+  <a href="#zhuma">竹马</a>
+  <a href="#bamu">八木</a>
+  <a href="#gongyi">工役</a>
+  <a href="#bairi">百日</a>
+  <a href="#fujuan">附卷</a>
+  <a href="#jieli">接力</a>
+  <a href="#coda">收梢</a>
+</nav>
+
+<!-- ================= HERO 一炷下火 ================= -->
+<header class="hero" id="hero">
+  <div class="eyebrow">殆知阁导读 <b>·</b> 医方卷</div>
+  <div class="stage" id="stage">
+    <svg viewBox="0 0 400 430" aria-hidden="true">
+      <defs>
+        <radialGradient id="gEmb" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffdf9e"/>
+          <stop offset="55%" stop-color="#c9963f"/>
+          <stop offset="100%" stop-color="rgba(201,150,63,0)"/>
+        </radialGradient>
+        <linearGradient id="gCone" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#d8cdaf"/>
+          <stop offset="100%" stop-color="#a89b78"/>
+        </linearGradient>
+        <clipPath id="cCone"><rect id="coneClip" x="130" y="200" width="140" height="140"/></clipPath>
+      </defs>
+      <!-- 穴位 -->
+      <g>
+        <ellipse cx="200" cy="348" rx="86" ry="26" fill="none" stroke="#3c6a4c" stroke-width="1.4" stroke-dasharray="5 6"/>
+        <ellipse cx="200" cy="348" rx="58" ry="17" fill="rgba(95,146,112,.08)" stroke="#5f9270" stroke-width="1.2"/>
+        <line x1="200" y1="322" x2="200" y2="336" stroke="#5f9270" stroke-width="1"/>
+        <line x1="200" y1="360" x2="200" y2="374" stroke="#5f9270" stroke-width="1"/>
+        <line x1="140" y1="348" x2="156" y2="348" stroke="#5f9270" stroke-width="1"/>
+        <line x1="244" y1="348" x2="260" y2="348" stroke="#5f9270" stroke-width="1"/>
+        <text x="200" y="402" text-anchor="middle" font-size="12" letter-spacing="6" fill="#6e685c">穴</text>
+      </g>
+      <!-- 烟 -->
+      <path class="smoke s1" d="M200 226 C188 196 214 176 200 146 C188 120 210 100 202 74" stroke-dasharray="10 26"/>
+      <path class="smoke s2" d="M196 226 C206 198 184 172 196 144 C206 118 186 96 194 70" stroke-dasharray="8 30"/>
+      <path class="smoke s3" d="M204 228 C192 202 216 180 206 152 C198 128 216 104 208 80" stroke-dasharray="12 24"/>
+      <!-- 艾炷（四段） -->
+      <g class="cone-wrap" id="coneWrap">
+        <ellipse class="ember" cx="200" cy="336" rx="52" ry="16" fill="url(#gEmb)"/>
+        <g clip-path="url(#cCone)">
+          <path id="coneBody" d="M148 336 L200 232 L252 336 Z" fill="url(#gCone)"/>
+          <path d="M164 314 Q200 300 236 314" fill="none" stroke="rgba(25,25,23,.28)" stroke-width="1.6"/>
+          <path d="M154 326 Q200 312 246 326" fill="none" stroke="rgba(25,25,23,.22)" stroke-width="1.4"/>
+          <path d="M178 292 Q200 282 222 292" fill="none" stroke="rgba(25,25,23,.2)" stroke-width="1.2"/>
+          <path d="M190 266 Q200 260 210 266" fill="none" stroke="rgba(25,25,23,.18)" stroke-width="1.2"/>
+        </g>
+        <rect id="coneTop" x="130" y="200" width="140" height="140" fill="rgba(25,25,23,0)" pointer-events="none"/>
+        <ellipse cx="200" cy="336" rx="52" ry="15" fill="none" stroke="rgba(25,25,23,.5)" stroke-width="1.5"/>
+      </g>
+    </svg>
+
+    <div class="jue" id="jue1">
+      <span class="fj">诀一 · 点灸</span>
+      <div class="q"><span class="qi">坐点无令俯仰，立点无令倾侧</span><span class="qn">点灸法</span></div>
+    </div>
+    <div class="jue" id="jue2">
+      <span class="fj">诀二 · 下火</span>
+      <div class="q"><span class="qi">欲令艾炷根下赤辉广三分</span><span class="qn">下火法</span></div>
+    </div>
+    <div class="jue" id="jue3">
+      <span class="fj">诀三 · 用火</span>
+      <div class="q"><span class="qi">古来用火灸病，忌八般木火，切宜避之</span><span class="qn">用火法</span></div>
+    </div>
+    <div class="jue" id="jue4">
+      <span class="fj">诀四 · 候天</span>
+      <div class="q"><span class="qi">灸临时且停，候待晴明即再下火灸</span><span class="qn">候天色法</span></div>
+    </div>
+
+    <div class="veil" id="veil">
+      <div class="vsub">宋闻人耆年辑</div>
+      <div class="vtitle"><span>备</span><span>急</span><span>灸</span><span>法</span></div>
+      <div class="stamp seal">
+        <i>回</i><i>返</i><i>生</i><i>死</i>
+      </div>
+    </div>
+  </div>
+  <button class="btn" id="fireBtn">下　火</button>
+  <div class="hint" id="heroHint">一炷艾，四句诀：点火，读诀，烧尽见书名</div>
+</header>
+
+<!-- ================= 灵前案 ================= -->
+<section id="ling">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-no">灵前案</div>
+      <h2 class="sec-title">先刻书的人，先死了母亲</h2>
+      <p class="sec-lead">淳佑乙巳（1245）五月，孙炬卿给这本书写序。序不是介绍，是一篇祭文：他的母亲死于一场讳疾忌灸的「谨重」。</p>
+    </div>
+    <div class="ling-grid">
+      <div class="altar">
+        <div class="paiz">
+          <div class="pz-txt vq">先妣山阴博古石氏</div>
+        </div>
+        <div class="candle">
+          <svg viewBox="0 0 56 110" aria-hidden="true">
+            <g class="flame">
+              <path d="M28 26 C33 36 34 42 28 48 C22 42 23 36 28 26 Z" fill="#c9963f"/>
+              <path d="M28 34 C30.5 39 31 42 28 45 C25 42 25.5 39 28 34 Z" fill="#f3d9a4"/>
+            </g>
+            <line x1="28" y1="48" x2="28" y2="56" stroke="#4a4238" stroke-width="2.4"/>
+            <rect x="20" y="56" width="16" height="42" fill="#e8e4dc" opacity=".88"/>
+            <path d="M20 70 h16 M20 82 h16" stroke="rgba(25,25,23,.12)" stroke-width="1.4"/>
+            <ellipse cx="28" y="0" cy="100" rx="20" ry="5" fill="#332c24"/>
+            <rect x="8" y="98" width="40" height="8" rx="2" fill="#4a4238"/>
+          </svg>
+        </div>
+        <div class="altar-cap">乌辛茶方，供于灵前</div>
+      </div>
+      <div class="folds" id="folds">
+        <div class="fold" data-i="0">
+          <div class="fold-h"><span class="fh-no">壹</span><span class="fh-t">头风有方</span><span class="fh-m">＋</span></div>
+          <div class="fold-b"><div class="fold-b-in">
+            <p>母亲素患头风，一年发作十几次，一发作就呕痰昏眩。后来得了一道乌辛茶方，川乌配细辛配茶芽，发作稀了，发了也好得快。孙炬卿自己会抄方配药，母亲的头风被他按住了，七十岁的老人胃口还好。</p>
+            <div class="q"><span class="qi">素患头风，岁十数作，作必呕痰</span><span class="qn">序二</span></div>
+            <div class="q"><span class="qi">因得默斋抚干叔父乌辛茶方，于是作少疏，虽作亦易愈</span><span class="qn">序二</span></div>
+          </div></div>
+        </div>
+        <div class="fold" data-i="1">
+          <div class="fold-h"><span class="fh-no">贰</span><span class="fh-t">疖发讳灸</span><span class="fh-m">＋</span></div>
+          <div class="fold-b"><div class="fold-b-in">
+            <p>右耳旁起了一粒小红点，第二天右颊右眼都肿了。医家敷药，脓慢慢出来，看着在好转。但医家把「头面上不可妄用针砭」的规矩守得太死，有人提议灸足三里把毒往下引，医生坚决不肯。</p>
+            <div class="q"><span class="qi">越八日忽有小红粟粒发右耳旁，次日右颊右目颇肿</span><span class="qn">序二</span></div>
+            <div class="q"><span class="qi">谨重太过，专守头面，不可妄施针砭之说</span><span class="qn">序二</span></div>
+            <div class="q rd"><span class="qi">有令灸三里穴下抽者，医持不可</span><span class="qn">序二</span></div>
+          </div></div>
+        </div>
+        <div class="fold" data-i="2">
+          <div class="fold-h"><span class="fh-no">叁</span><span class="fh-t">方至人逝</span><span class="fh-m">＋</span></div>
+          <div class="fold-b"><div class="fold-b-in">
+            <p>肿越来越硬，像疮却根大，像疖却无脓，外不热内不疼。十天之后，势已难挽。母亲到这时还安慰儿子：你抄方配药这么多年，怎么偏偏这个不晓得。仓促之间换了医生，都说无策。老人神识清明地走了。后来有客人带来蜀本灸经和竹马灸法，里面鬓疽、疔疮样样有灸法。</p>
+            <div class="q"><span class="qi">汝抄方嗜药，胡为不晓</span><span class="qn">序二 · 母亲遗言</span></div>
+            <div class="q"><span class="qi">客有携示蜀本《灸经》与竹马灸法者</span><span class="qn">序二</span></div>
+            <div class="q rd"><span class="qi">痛哉，痛哉</span><span class="qn">序二</span></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+    <div class="great-quote">
+      <div class="q big gold"><span class="qi">吾母不存而其方则存，其方存而后之人有早得而见之者，庶几乎吾母虽无及而犹及人也</span><span class="qn">序二 · 孙炬卿淳佑乙巳五月朔</span></div>
+      <div class="gq-note">母亲救不回来了，书救得回来别人。他把乌辛茶方和灸法一起刻版流传。</div>
+      <div class="q"><span class="qi">遂与乌辛茶方并刊以传焉</span><span class="qn">序二</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 自序 ================= -->
+<section id="zixu">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-no">自序</div>
+      <h2 class="sec-title">写书的人，是个乡间老医生</h2>
+      <p class="sec-lead">宝庆二年（1226）正月十五，医生闻人耆年把一辈子攒下的灸方写成这一卷。他行医四五十年，说自己靠这个养生，也靠这个利人。</p>
+    </div>
+    <div class="bian">
+      <div class="q"><span class="qi">凡为人子而不读医书，是谓不孝</span><span class="qn">备急灸法自序</span></div>
+    </div>
+    <div class="ord">
+      <div class="ord-card">
+        <h4>其一 · 方书难检</h4>
+        <div class="q"><span class="qi">然方书浩博，无虑万数，自非夙昔究心，未易寻检</span><span class="qn">自序</span></div>
+        <p>医书上万种，急症来了没工夫翻。急救手册要的就是薄、准、快。</p>
+      </div>
+      <div class="ord-card">
+        <h4>其二 · 艾最便宜</h4>
+        <div class="q"><span class="qi">其间惠而不费者，莫如针艾之术</span><span class="qn">自序</span></div>
+        <div class="q"><span class="qi">凡仓卒救人者，惟灼艾为第一</span><span class="qn">自序</span></div>
+        <p>针难传，药贵，一把艾绒随处可买。乡野无医无药处，它就是全部的家当。</p>
+      </div>
+      <div class="ord-card">
+        <h4>其三 · 锓木广传</h4>
+        <div class="q"><span class="qi">今将已试之方，编述成集，锓木以广其传</span><span class="qn">自序</span></div>
+        <div class="q"><span class="qi">施之无疑，用之有效，返死回生，妙夺造化</span><span class="qn">自序</span></div>
+        <p>全是自己试过的方，刻版印行，让人照着敢用、用了有效。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 急症悬牌 ================= -->
+<section id="paizi">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-no">急症悬牌</div>
+      <h2 class="sec-title">十六块牌，挂在家门口</h2>
+      <p class="sec-lead">书的正身是十六则急救灸方，从假死到难产，从毒蛇到疯狗。每块牌翻过来：灸哪里、灸几炷、怎么救。点击摘牌看背面。</p>
+    </div>
+    <div class="rack">
+      <div class="rod"></div>
+      <div class="cards" id="cards"></div>
+      <div class="rack-count">已翻 <b id="flipN">0</b> / 16</div>
+    </div>
+    <div class="heng">
+      <h4>疮疡五案</h4>
+      <div class="heng-lead">开卷第一症是发背：背上初起一粒粟米大的红点，不痛不痒，几日之间肿痛彻心，是全书里死得最快的一种。</div>
+      <div class="heng-row">
+        <div class="hl">发背</div>
+        <div>
+          <div class="q"><span class="qi">然数种中，死人速者，发背也</span><span class="qn">诸发等证</span></div>
+          <div class="q"><span class="qi">初如粟米大，或痛或痒</span><span class="qn">诸发等证</span></div>
+          <div class="hw">大蒜切片贴疮头，隔蒜下灸，痛就换蒜，不痛才停。治得早，都能活。</div>
+          <div class="q"><span class="qi">惟治之于初，皆得全生</span><span class="qn">诸发等证</span></div>
+        </div>
+      </div>
+      <div class="heng-row">
+        <div class="hl">疔疮</div>
+        <div>
+          <div class="q"><span class="qi">发于手足头面者，其死更速，惟宜早灸</span><span class="qn">疔疮</span></div>
+          <div class="hw">穴在腕纹上四寸，两筋之中，十四炷。</div>
+        </div>
+      </div>
+      <div class="heng-row">
+        <div class="hl">肠痈</div>
+        <div>
+          <div class="q"><span class="qi">治之错则杀人</span><span class="qn">肠痈 · 孙真人语</span></div>
+          <div class="hw">阑尾一类的病，认错了治法就要命。两肘尖各一百炷，药下脓血而愈。</div>
+        </div>
+      </div>
+      <div class="heng-row">
+        <div class="hl">附骨疽</div>
+        <div>
+          <div class="q"><span class="qi">凡有此患，宜早灸之</span><span class="qn">附骨疽</span></div>
+          <div class="hw">骨头上无故生脓，最容易被当成普通风湿，拖到洪肿就难了。</div>
+        </div>
+      </div>
+      <div class="heng-row">
+        <div class="hl">皮肤风毒</div>
+        <div>
+          <div class="q"><span class="qi">忽然遍身痛痒如虫啮</span><span class="qn">皮肤中毒风</span></div>
+          <div class="hw">痒得像虫咬，抓破流水，两臂屈肘处各灸二十一炷。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 骑竹马 ================= -->
+<section id="zhuma">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-no">骑竹马灸法</div>
+      <h2 class="sec-title">一根竹扛，两个穴，救一条背</h2>
+      <p class="sec-lead">全书的招牌是骑竹马灸法：让病人骑上竹扛，量出一对穴，左右各五七壮，专治发背痈疽。书里原有四张图，这里照着文字复演成四扇屏，逐扇点开。</p>
+    </div>
+    <div class="ping" id="ping">
+      <div class="pane open">
+        <div class="pane-h">第一 · 曲手点孔</div>
+        <div class="pane-b">
+          <svg viewBox="0 0 360 210" aria-hidden="true">
+            <path d="M60 150 Q70 96 128 92 L210 92" fill="none" stroke="#b9b2a2" stroke-width="7" stroke-linecap="round"/>
+            <path d="M210 92 Q246 90 262 108" fill="none" stroke="#b9b2a2" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="128" cy="92" r="6" fill="#c0453c"/>
+            <text x="128" y="72" font-size="12" fill="#c9963f" text-anchor="middle" letter-spacing="2">偃孔</text>
+            <path d="M262 108 q18 4 30 -6" fill="none" stroke="#6e685c" stroke-width="3" stroke-linecap="round"/>
+            <text x="262" y="140" font-size="11" fill="#6e685c" text-anchor="middle">把臂人</text>
+            <text x="60" y="184" font-size="12" fill="#6e685c">腕节正中一处凹窝，朱笔点定</text>
+          </svg>
+          <div class="q"><span class="qi">先令病患凭几曲手男左女右</span><span class="qn">骑竹马灸法</span></div>
+          <div class="q"><span class="qi">令对坐，把臂之人以朱点定</span><span class="qn">骑竹马灸法</span></div>
+          <p class="pw">病人凭几曲手，另有一人托住他的手臂，在腕纹正中的凹窝上点个朱记。男取左，女取右。</p>
+        </div>
+      </div>
+      <div class="pane">
+        <div class="pane-h">第二 · 挺臂量篾</div>
+        <div class="pane-b">
+          <svg viewBox="0 0 360 210" aria-hidden="true">
+            <path d="M50 110 L250 110" stroke="#b9b2a2" stroke-width="7" stroke-linecap="round"/>
+            <path d="M250 110 L296 88" stroke="#b9b2a2" stroke-width="6" stroke-linecap="round"/>
+            <line x1="72" y1="92" x2="72" y2="128" stroke="#5f9270" stroke-width="2"/>
+            <text x="72" y="146" font-size="11" fill="#5f9270" text-anchor="middle">腕纹</text>
+            <line x1="72" y1="86" x2="286" y2="86" stroke="#c9963f" stroke-width="2.4" stroke-dasharray="8 4"/>
+            <path d="M282 80 L292 86 L282 92" fill="none" stroke="#c9963f" stroke-width="2.2"/>
+            <text x="180" y="70" font-size="12" fill="#c9963f" text-anchor="middle" letter-spacing="3">竹篾一量</text>
+            <text x="50" y="184" font-size="12" fill="#6e685c">手臂伸直如持弓，篾子贴肉量到中指尖</text>
+          </svg>
+          <div class="q"><span class="qi">就以竹篾自横纹贴肉，量上至中指肉尖而止，不过指爪</span><span class="qn">骑竹马灸法</span></div>
+          <p class="pw">臂再挺直如弓，用竹篾从腕纹贴肉量到中指肉尖，指甲不算。这根篾就是他的「人身尺度」。</p>
+        </div>
+      </div>
+      <div class="pane">
+        <div class="pane-h">第三 · 屈指定寸</div>
+        <div class="pane-b">
+          <svg viewBox="0 0 360 210" aria-hidden="true">
+            <path d="M120 150 Q118 96 150 82 Q186 68 196 96" fill="none" stroke="#b9b2a2" stroke-width="7" stroke-linecap="round"/>
+            <line x1="163" y1="80" x2="171" y2="64" stroke="#c9963f" stroke-width="2.2"/>
+            <line x1="175" y1="83" x2="184" y2="68" stroke="#c9963f" stroke-width="2.2"/>
+            <text x="196" y="52" font-size="11" fill="#c9963f" text-anchor="middle">两斜纹为一寸</text>
+            <rect x="236" y="88" width="64" height="16" fill="none" stroke="#5f9270" stroke-width="2"/>
+            <line x1="268" y1="88" x2="268" y2="104" stroke="#5f9270" stroke-width="1.6"/>
+            <text x="268" y="126" font-size="11" fill="#5f9270" text-anchor="middle">篾压两节折断</text>
+            <text x="66" y="184" font-size="12" fill="#6e685c">中指中节的两道斜缝，就是他的一寸</text>
+          </svg>
+          <div class="q"><span class="qi">以薄竹片或以蜡纸条，量手中指中节横文，取上下截齐断，为一寸，男左女右</span><span class="qn">屈指量法例</span></div>
+          <p class="pw">寸不用尺量，用病人自己的中指量。同方一卷专讲这个量法：齐截一断，才是一寸。</p>
+        </div>
+      </div>
+      <div class="pane">
+        <div class="pane-h">第四 · 骑竹下火</div>
+        <div class="pane-b">
+          <svg viewBox="0 0 360 210" aria-hidden="true">
+            <line x1="40" y1="130" x2="320" y2="130" stroke="#c9963f" stroke-width="5" stroke-linecap="round"/>
+            <rect x="30" y="130" width="34" height="52" fill="#332c24"/>
+            <rect x="296" y="130" width="34" height="52" fill="#332c24"/>
+            <path d="M198 132 L189 76" fill="none" stroke="#b9b2a2" stroke-width="9" stroke-linecap="round"/>
+            <circle cx="188" cy="61" r="11" fill="none" stroke="#b9b2a2" stroke-width="5"/>
+            <path d="M192 86 Q222 96 238 118" fill="none" stroke="#b9b2a2" stroke-width="5" stroke-linecap="round"/>
+            <path d="M198 132 Q170 156 152 174" fill="none" stroke="#b9b2a2" stroke-width="6" stroke-linecap="round"/>
+            <path d="M198 132 Q226 156 244 174" fill="none" stroke="#b9b2a2" stroke-width="6" stroke-linecap="round"/>
+            <line x1="40" y1="188" x2="320" y2="188" stroke="#4a4238" stroke-width="2" stroke-dasharray="7 7"/>
+            <circle cx="192" cy="98" r="4.4" fill="#c0453c"/>
+            <circle cx="191" cy="112" r="4.4" fill="#c0453c"/>
+            <path d="M187 92 L192 82 L197 92 Z" fill="#c9963f"/>
+            <path d="M186 106 L191 96 L196 106 Z" fill="#c9963f"/>
+            <path d="M184 74 q-7 -13 1 -26 M200 74 q7 -13 -1 -26" fill="none" stroke="rgba(232,228,220,.4)" stroke-width="1.6"/>
+            <text x="196" y="204" font-size="12" fill="#6e685c" text-anchor="middle">尾闾骨坐上竹扛，两脚悬虚不着地，脊中量定两穴</text>
+          </svg>
+          <div class="q"><span class="qi">骑定竹扛，用身壁直靠</span><span class="qn">骑竹马灸法</span></div>
+          <div class="q"><span class="qi">两足悬虚，俱不要着地</span><span class="qn">骑竹马灸法</span></div>
+          <div class="q"><span class="qi">各灸五壮或七壮</span><span class="qn">骑竹马灸法</span></div>
+          <p class="pw">竹扛两头架凳，病人脱衣骑上，尾闾骨贴扛，两脚悬空，左右各一人扶稳。用那根篾从尾闾骨沿脊量上去，朱点两穴，一边五七壮。</p>
+        </div>
+      </div>
+    </div>
+    <div class="mai">
+      <div class="mai-card">
+        <h5>脉行账 · 一息</h5>
+        <div class="num">6 <small>寸</small></div>
+        <div class="q"><span class="qi">一呼脉行三寸，一吸脉行三寸</span><span class="qn">骑竹马灸法</span></div>
+      </div>
+      <div class="mai-card">
+        <h5>脉行账 · 一日</h5>
+        <div class="num">13500 <small>息</small></div>
+        <div class="q"><span class="qi">一日一夜一万三千五百息</span><span class="qn">骑竹马灸法</span></div>
+      </div>
+      <div class="mai-card">
+        <h5>脉行账 · 一日夜程</h5>
+        <div class="num">810 <small>丈</small></div>
+        <div class="q"><span class="qi">共计八百一十丈</span><span class="qn">骑竹马灸法</span></div>
+      </div>
+    </div>
+    <p class="sec-lead" style="margin-top:26px;">为什么偏偏是这两个穴？书的解释自成一体：脊旁是流注的总路，骑坐竹扛把一身悬空，艾火先到尾闾，热得像蒸，再走遍全身。</p>
+    <div class="q big"><span class="qi">凡痈疽只缘心火流滞而生，灸此二穴，心火实时流通，不过三日可以安愈</span><span class="qn">骑竹马灸法</span></div>
+    <div class="q"><span class="qi">妙在悬一身骑于竹扛之上</span><span class="qn">骑竹马灸法</span></div>
+    <div class="q"><span class="qi">其艾火即随流注先至尾闾，其热如蒸</span><span class="qn">骑竹马灸法</span></div>
+    <div class="closing-duo">
+      <div class="q"><span class="qi">深愿家家自晓，人人自理，不陷枉亡</span><span class="qn">江西传得元本跋</span></div>
+      <div>
+        <div class="q gold"><span class="qi">能忍一顷之灸，便有再生之理</span><span class="qn">骑竹马灸法</span></div>
+        <div class="q gold"><span class="qi">岂不诚大丈夫欤</span><span class="qn">骑竹马灸法</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 八木之忌 ================= -->
+<section id="bamu">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-no">用火法</div>
+      <h2 class="sec-title">八种木柴，碰不得火</h2>
+      <p class="sec-lead">艾要烧得干净，火本身有讲究。书中开了一张禁火单：八种木柴点的火，各有各的祸。逐根点签，看它们的罪名，八签烧尽，油灯才许亮。</p>
+    </div>
+    <div class="mu-verdict" id="muVerdict">
+      <span id="muHint">还有 8 根禁签没烧</span>
+      <div class="q" id="muQ"></div>
+    </div>
+    <div class="mu-row" id="muRow"></div>
+    <div class="lamp-zone">
+      <svg viewBox="0 0 130 190" aria-hidden="true">
+        <circle class="lamp-glow" id="lampGlow" cx="65" cy="64" r="52" fill="rgba(201,150,63,.28)"/>
+        <g class="lamp-flame" id="lampFlame">
+          <path d="M65 26 C72 40 73 48 65 56 C57 48 58 40 65 26 Z" fill="#c9963f"/>
+          <path d="M65 38 C68 44 68.5 48 65 51 C61.5 48 62 44 65 38 Z" fill="#f3d9a4"/>
+        </g>
+        <line x1="65" y1="56" x2="65" y2="72" stroke="#4a4238" stroke-width="3"/>
+        <path d="M18 96 Q65 118 112 96 L104 130 Q65 146 26 130 Z" fill="#332c24" stroke="#4a4238" stroke-width="1.4"/>
+        <path d="M26 130 L22 152 L108 152 L104 130" fill="#26221c" stroke="#4a4238" stroke-width="1.4"/>
+        <ellipse cx="65" cy="96" rx="47" ry="9" fill="#211d17"/>
+        <rect x="40" y="152" width="50" height="7" rx="2" fill="#4a4238"/>
+        <text x="65" y="180" font-size="11" fill="#6e685c" text-anchor="middle" letter-spacing="4">清油灯</text>
+      </svg>
+      <div>
+        <div class="q"><span class="qi">清油点灯，灯上烧艾茎，点灸是也</span><span class="qn">用火法</span></div>
+        <div class="q gold"><span class="qi">用蜡烛更佳</span><span class="qn">用火法</span></div>
+        <p style="font-size:13px;color:var(--paper-dim);">避了八木，用油灯或蜡烛引艾。书里还记了一桩细节：边地部落用镔铁击石取火，再用艾接住，也算避忌。库本此处有一处缺字占位，那一句便不从引了。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 灸法工役 ================= -->
+<section id="gongyi">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-no">灸法工役</div>
+      <h2 class="sec-title">下火之前，还有一套规程</h2>
+      <p class="sec-lead">真正的急救手册不只有穴和炷数，还有一册「操作规程」：怎么站、什么天气不能灸、灸多少要克制、灸完的疮怎么养。逐条点开。</p>
+    </div>
+    <div class="gongyi" id="gongyiList">
+      <div class="gy-row">
+        <div class="gy-name">点灸</div>
+        <div class="gy-body">
+          <div class="q"><span class="qi">灸时孔穴不正，无益于事，徒烧好肉</span><span class="qn">点灸法</span></div>
+          <div class="gy-note">体位先摆平直：坐点不俯仰，立点不倾侧。穴点歪了，白烧好肉，还白疼。</div>
+        </div>
+      </div>
+      <div class="gy-row">
+        <div class="gy-name">次序</div>
+        <div class="gy-body">
+          <div class="q"><span class="qi">凡病先灸于上，后灸于下，先灸于少，后灸于多</span><span class="qn">点灸法</span></div>
+          <div class="gy-note">先上后下，先少后多，一口气闷不得。</div>
+        </div>
+      </div>
+      <div class="gy-row">
+        <div class="gy-name">天时</div>
+        <div class="gy-body">
+          <div class="q"><span class="qi">灸时不得伤饱大饥，饮酒大醉</span><span class="qn">候天色法</span></div>
+          <div class="q"><span class="qi">恚怒呼骂，吁嗟叹息，一切不祥，忌之大吉</span><span class="qn">候天色法</span></div>
+          <div class="gy-note">吃太饱、饿过头、大醉不做；情绪翻江倒海也不做。书把心情写进了禁忌。</div>
+        </div>
+      </div>
+      <div class="gy-row">
+        <div class="gy-name">分寸</div>
+        <div class="gy-body">
+          <div class="q"><span class="qi">人身有三百六十五络，皆归于头</span><span class="qn">定灸多少法</span></div>
+          <div class="q"><span class="qi">若灸多令人头旋目眩，远视不明</span><span class="qn">定灸多少法</span></div>
+          <div class="gy-note">头面四肢不可多灸：络皆归头，火力过了，头晕眼花。救急不等于猛烧。</div>
+        </div>
+      </div>
+      <div class="gy-row">
+        <div class="gy-name">养疮</div>
+        <div class="gy-body">
+          <div class="q"><span class="qi">灸疮不发者，用故履底灸令热，熨之三日即发</span><span class="qn">发灸疮法</span></div>
+          <div class="gy-note">古人把发疮当药效的凭证：疮不发起，用旧鞋底烧热熨它三天。再配赤皮葱煨熟热熨，疮自发，脓自出。</div>
+        </div>
+      </div>
+      <div class="gy-row">
+        <div class="gy-name">戒语</div>
+        <div class="gy-body">
+          <div class="q"><span class="qi">上诸灸法皆救仓卒患难，所有人神血支血忌，及大风大雨，病患本命，并不避忌</span><span class="qn">卷末总跋</span></div>
+          <div class="gy-note">整册书唯一一句「破除迷信」的声明：急救不挑日子，不看凶煞，刮风下雨也照灸。规程讲克制，救命不讲忌讳。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 一炷百日 ================= -->
+<section id="bairi">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-no">一炷百日</div>
+      <h2 class="sec-title">被疯狗咬了，灸一百天</h2>
+      <p class="sec-lead">全书写得最沉重的一则：狂犬咬伤。春末夏初狗易发狂，咬人不觉要紧，等发狂已是死症。书里的办法是当日灸百炷，然后每天一炷，满一百天才算躲过。</p>
+    </div>
+    <div class="q"><span class="qi">春末夏初，犬多狂</span><span class="qn">治狂犬所咬</span></div>
+    <div class="q"><span class="qi">其被咬人则精神失守，发为狂疾</span><span class="qn">治狂犬所咬</span></div>
+    <div class="q"><span class="qi">便于所咬处灸百炷，自后日灸一炷，不可一日阙</span><span class="qn">治狂犬所咬</span></div>
+    <div class="ri-lab">百日灸历 · 点一下，过一天</div>
+    <div class="ri-grid" id="riGrid"></div>
+    <div class="bai-actions">
+      <button class="btn" id="riBtn">今日一炷</button>
+      <span class="bai-msg" id="riMsg">第 0 日 · 尚有百日要熬</span>
+    </div>
+    <div class="bai-reveal" id="baiReveal">
+      <div class="q big gold"><span class="qi">灸满百日，方得免祸</span><span class="qn">治狂犬所咬</span></div>
+      <div class="q rd"><span class="qi">终身勿食犬肉、蚕蛹，食之毒发即死</span><span class="qn">治狂犬所咬</span></div>
+      <div class="q rd"><span class="qi">大祸即至，死在旦夕</span><span class="qn">治狂犬所咬</span></div>
+      <div class="q"><span class="qi">又特忌初见疮较痛止，自言平复，此最可畏</span><span class="qn">治狂犬所咬</span></div>
+      <p style="font-size:13.5px;color:var(--paper-dim);margin-top:12px;">八百年前的作者已经弄明白两件事：这种病有潜伏期，熬过一段日子才算安全；最危险的是病人自己觉得好了。今天叫它狂犬病，暴露之后规范处置、接种疫苗，一针也不用等到第一百天。</p>
+      <div class="jin-row">
+        <span class="jin">终身忌 · 犬肉</span>
+        <span class="jin">终身忌 · 蚕蛹</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 附卷 ================= -->
+<section id="fujuan">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-no">附卷</div>
+      <h2 class="sec-title">卷末藏着一碗茶</h2>
+      <p class="sec-lead">孙炬卿重刊此书时，在后面附了一部经验药方。第一味，就是灵前供着的那碗茶。母亲的方子，跟着书活了下来。</p>
+    </div>
+    <div class="fujian">
+      <h4>石氏常服 · 乌辛茶</h4>
+      <div class="q"><span class="qi">石氏常服治头风乌辛茶</span><span class="qn">竹阁经验方 第一则</span></div>
+      <p>川乌一只，高丽细辛、茶芽各少许，姜煎，临发连进。卷末明写「石氏」二字，指的正是序二里那位头风被儿子按住几十年的母亲：山阴人，博古石氏。药方入书，人就没有真的走远。</p>
+      <h4 style="margin-top:18px;">又 · 一味藤花</h4>
+      <div class="q"><span class="qi">初开色白，数日则变黄，每枝黄白相间，故一名金银花</span><span class="qn">鹭鸶藤 · 苏沈良方</span></div>
+      <div class="q"><span class="qi">田夫野老，百发百中</span><span class="qn">鹭鸶藤酒</span></div>
+      <p>鹭鸶藤就是忍冬，篱落处处有，穷人家买不起贵药时靠它，作者记下一句大实话：田间老人用它，从未失手。金银花这个名字，就是在这类书里定下来的。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 接力 ================= -->
+<section id="jieli">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-no">四手接力</div>
+      <h2 class="sec-title">一本薄书，渡了七百五十年</h2>
+      <p class="sec-lead">从宝庆到光绪，从中国到东瀛再回来，这本书换了四双手。点每一家，看它到过哪里。</p>
+    </div>
+    <div class="relay">
+      <div class="relay-line"></div>
+      <div class="relay-nodes" id="relayNodes">
+        <div class="rnode on" data-k="0">
+          <div class="rdot">编</div>
+          <div class="rt">宝庆丙戌</div>
+          <div class="ry mono">1226</div>
+        </div>
+        <div class="rnode" data-k="1">
+          <div class="rdot">刊</div>
+          <div class="rt">淳佑乙巳</div>
+          <div class="ry mono">1245</div>
+        </div>
+        <div class="rnode" data-k="2">
+          <div class="rdot">渡</div>
+          <div class="rt">东瀛数百年</div>
+          <div class="ry mono">?</div>
+        </div>
+        <div class="rnode" data-k="3">
+          <div class="rdot">归</div>
+          <div class="rt">光绪庚寅</div>
+          <div class="ry mono">1890</div>
+        </div>
+      </div>
+      <div class="relay-panel" id="relayPanel"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 收梢 ================= -->
+<footer class="coda" id="coda">
+  <div class="wrap">
+    <div class="coda-seal seal">
+      <i>犹</i><i>广</i><i>在</i><i>陵</i>
+    </div>
+    <div class="hengzong">
+      <div class="q"><span class="qi">上诸灸法皆救仓卒患难，所有人神血支血忌，及大风大雨，病患本命，并不避忌</span><span class="qn">卷末总跋</span></div>
+    </div>
+    <div class="vquotes">
+      <div class="vq-block"><div class="q" style="border:none;background:none;padding:0;"><span class="qi">务发敬信心，疾速检用</span></div></div>
+      <div class="vq-block"><div class="q" style="border:none;background:none;padding:0;"><span class="qi">得此本能，多多转授他人，庶几与我同志也</span></div></div>
+    </div>
+    <div class="safe">
+      <b>时代局限提醒</b>：本书是十二世纪的急救方书，灸法、穴位与禁忌皆属古代医学经验，<b>不能替代现代急救</b>。遇溺水、自缢、心脏骤停、动物咬伤等急症，请立即拨打 120 并听从急救人员指引；狂犬病暴露请即刻到犬伤门诊规范处置、接种疫苗。文中疗法的有效性未经现代医学验证，仅供了解古籍。
+    </div>
+  </div>
+</footer>
+
+<footer>
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库医藏〈备急灸法〉景宋本（宋闻人耆年撰，宝庆二年自序；淳佑乙巳孙炬卿序刊并附竹阁经验方；光绪十六年罗嘉杰在横滨重刊）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；库本偶有形近讹字与缺字占位，引文所在各句已避而不断。</p>
+    <p class="xiaoji">校字记：隔蒜灸条「如钱浓」浓字疑当作厚，照录；用火篇镔铁击石句有缺字占位一处，该句避引；罗序「遍起沉」下疑脱一字，引文从短；「皂解一挺」解疑当作角，「疆邪恶鬼」疆疑当作强，均避引。</p>
+  </div>
+</footer>
+
+<script>
+/* ============ 导航点灯 ============ */
+(function(){
+  var links=document.querySelectorAll('#rail a');
+  var secs=['hero','ling','zixu','paizi','zhuma','bamu','gongyi','bairi','fujuan','jieli','coda'];
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(a){a.classList.toggle('lit',a.getAttribute('href')==='#'+e.target.id);});
+      }
+    });
+  },{rootMargin:'-40% 0px -55% 0px'});
+  secs.forEach(function(id){var el=document.getElementById(id);if(el)io.observe(el);});
+})();
+
+/* ============ HERO 烧艾显名 ============ */
+(function(){
+  var btn=document.getElementById('fireBtn'),
+      wrap=document.getElementById('coneWrap'),
+      stage=document.getElementById('stage'),
+      clip=document.getElementById('coneClip'),
+      veil=document.getElementById('veil'),
+      hint=document.getElementById('heroHint'),
+      burning=false;
+  var ys=[200,234,268,302,336];
+  function setClip(y){clip.setAttribute('y',420-(348-y+ (348-232)) - 60);}
+  function burn(){
+    if(burning)return;burning=true;
+    wrap.classList.add('lit');
+    btn.disabled=true;
+    hint.style.opacity=0;
+    var i=0;
+    var t=setInterval(function(){
+      i++;
+      if(i<=4){
+        clip.setAttribute('y',ys[i]);
+        document.getElementById('jue'+i).classList.add('on');
+      }else{
+        clearInterval(t);
+        setTimeout(function(){
+          veil.classList.add('show');
+          btn.classList.add('done');
+          btn.textContent='再灸一炷';
+          btn.disabled=false;
+          burning=false;
+        },500);
+      }
+    },900);
+  }
+  function reset(){
+    clip.setAttribute('y',ys[0]);
+    wrap.classList.remove('lit');
+    veil.classList.remove('show');
+    btn.classList.remove('done');
+    btn.textContent='下　火';
+    for(var i=1;i<=4;i++)document.getElementById('jue'+i).classList.remove('on');
+    hint.style.opacity=1;
+  }
+  btn.addEventListener('click',function(){
+    if(btn.classList.contains('done')){reset();setTimeout(burn,350);}
+    else burn();
+  });
+  wrap.addEventListener('click',function(){ if(!burning&&!veil.classList.contains('show'))burn(); });
+})();
+
+/* ============ 灵前三折 ============ */
+(function(){
+  var opened=0;
+  document.querySelectorAll('.fold').forEach(function(f){
+    f.addEventListener('click',function(){
+      f.classList.toggle('open');
+      if(f.classList.contains('open'))opened++;
+    });
+  });
+})();
+
+/* ============ 十六急症悬牌 ============ */
+(function(){
+  var data=[
+    {z:'卒忤死',e:'假死急救',q:'急以皂角末吹入两鼻即活',n:'卷末所附，俗称鬼打',w:'皂角研末吹鼻，救的是一口气没上来的假死。'},
+    {z:'夜魇不寤',e:'梦魇',q:'切忌火照，火照则魂魄不能归体',n:'魇死法',w:'梦魇先别点灯，黑里唤名，咬脚跟，再不醒才灸。'},
+    {z:'溺水',e:'救溺',q:'此法治溺水经一宿犹可活',n:'救溺水死',w:'落水隔夜还有一线：皂角末吹谷道，灸肚脐，水出即活。'},
+    {z:'自缢',e:'救缢',q:'极须按定其心，勿便截绳，当抱起解之',n:'自缢法',w:'先抱住人再解绳，别急着割。旧毡掩口鼻，竹筒对耳猛吹。'},
+    {z:'急喉痹',e:'喉肿',q:'须臾不治即杀人',n:'急喉痹',w:'喉肿说不出话，抢的就是这一会儿，两小指甲后各三炷。'},
+    {z:'鼻衄',e:'鼻血',q:'如左孔衄缚右足，右孔衄缚左足',n:'鼻衄',w:'左孔出血绑右脚小指，反之亦然，细索缚住就行。'},
+    {z:'妇人难生',e:'难产',q:'急灸右脚小指尖三炷，炷如绿豆大',n:'妇人难生',w:'胎手先出，灸右脚小指尖。扎脚妇人先用盐汤温洗再灸。'},
+    {z:'小肠气',e:'疝气',q:'灸两足大指上各七炷',n:'小肠气',w:'痛到打滚的急疝，两足大指上各七炷。'},
+    {z:'卒暴心痛',e:'心绞痛',q:'灸掌后三寸两筋间，左右各十四壮',n:'卒暴心痛 · 甄权法',w:'心口绞痛欲绝，腕后横纹三寸，两边一起下手。'},
+    {z:'转胞',e:'癃闭',q:'用盐填脐孔，大艾炷灸二十一炷',n:'转胞小便不通',w:'小便闭住烦闷欲死：盐填肚脐，大炷二十一，通了就停。'},
+    {z:'霍乱转筋',e:'转筋',q:'转筋在股内灸两内踝尖，转筋在股外，灸两外踝尖',n:'霍乱转筋 · 孙真人法',w:'抽筋在内侧灸内踝尖，在外侧灸外踝尖，脚块子就是穴。'},
+    {z:'风牙疼',e:'牙痛',q:'灸足外踝尖三炷，炷如绿豆大，患左灸右，患右灸左',n:'风牙疼 · 葛陶法',w:'牙疼不灸疼的那边，反倒灸对面的外踝尖。'},
+    {z:'精魅所淫',e:'癫邪',q:'用细索并两手大指缚之，灸三炷',n:'精魅鬼神所淫 · 华佗法',w:'两大拇指捆一起，半肉半甲各着一炷；艾火里问出鬼话，松绑即醒。'},
+    {z:'一切蛇伤',e:'蛇咬',q:'急于新咬处灸十四炷，则毒不行',n:'一切蛇伤 · 孙真人法',w:'新咬的伤口立刻灸十四炷拦毒；没有艾，纸捻烧到极痛也行。'},
+    {z:'犬咬',e:'普通犬咬',q:'即令三姓三人于所咬伤处，各人灸一炷即愈',n:'治犬咬 · 岐伯孙真人法',w:'请三位不同姓的人，各在伤口灸一炷，民间咒术的影子还在。'},
+    {z:'附骨疽',e:'骨疽',q:'凡有此患，宜早灸之',n:'附骨疽',w:'骨上无故生脓，最易误作风湿，趁早按疔疮穴灸。'}
+  ];
+  var box=document.getElementById('cards'),cnt=document.getElementById('flipN'),n=0;
+  data.forEach(function(d){
+    var c=document.createElement('div');
+    c.className='card';
+    c.innerHTML='<div class="ring"></div>'+
+      '<div class="cf"><div class="ce">急症</div><div class="cz">'+d.z+'</div><div class="cf-tag">'+d.e+'</div></div>'+
+      '<div class="cb"><div class="q"><span class="qi">'+d.q+'</span><span class="qn">'+d.n+'</span></div><div class="cw">'+d.w+'</div></div>';
+    c.addEventListener('click',function(){
+      if(!c.classList.contains('flip')){c.classList.add('flip');n++;cnt.textContent=n;}
+    });
+    box.appendChild(c);
+  });
+})();
+
+/* ============ 竹马四扇屏 ============ */
+document.querySelectorAll('.pane').forEach(function(p){
+  p.addEventListener('click',function(){
+    if(!p.classList.contains('open')){
+      document.querySelectorAll('.pane').forEach(function(q){q.classList.remove('open');});
+      p.classList.add('open');
+    }
+  });
+});
+
+/* ============ 八木禁火 ============ */
+(function(){
+  var mus=[
+    {m:'松',q:'松木火难差增病'},
+    {m:'柏',q:'柏木火伤神多汗'},
+    {m:'竹',q:'竹木火伤筋目暗'},
+    {m:'榆',q:'榆木火伤骨失志'},
+    {m:'桑',q:'桑木火伤肉肉枯'},
+    {m:'枣',q:'枣木火内伤吐血'},
+    {m:'枳',q:'枳实火大伤气脉'},
+    {m:'橘',q:'橘木火伤荣卫经络'}
+  ];
+  var row=document.getElementById('muRow'),
+      hint=document.getElementById('muHint'),
+      qBox=document.getElementById('muQ'),
+      left=8;
+  mus.forEach(function(d){
+    var el=document.createElement('div');
+    el.className='mu';
+    el.innerHTML=d.m+'<small>禁火签</small>';
+    el.addEventListener('click',function(){
+      if(el.classList.contains('burnt'))return;
+      el.classList.add('burnt');
+      qBox.classList.add('show');
+      qBox.innerHTML='<span class="qi">'+d.q+'</span><span class="qn">用火法</span>';
+      qBox.classList.add('rd');
+      left--;
+      hint.textContent=left>0?('还有 '+left+' 根禁签没烧'):'八木俱禁，油灯可点';
+      if(left===0){
+        document.getElementById('lampFlame').classList.add('on');
+        document.getElementById('lampGlow').classList.add('on');
+      }
+    });
+    row.appendChild(el);
+  });
+})();
+
+/* ============ 工役条陈 ============ */
+document.querySelectorAll('.gy-row').forEach(function(r){
+  r.addEventListener('click',function(){r.classList.toggle('on');});
+});
+
+/* ============ 百日灸历 ============ */
+(function(){
+  var grid=document.getElementById('riGrid'),
+      btn=document.getElementById('riBtn'),
+      msg=document.getElementById('riMsg'),
+      rev=document.getElementById('baiReveal'),
+      day=0,cells=[];
+  for(var i=0;i<100;i++){
+    var d=document.createElement('div');
+    d.className='ri';d.title=(i+1)+' 日';
+    grid.appendChild(d);cells.push(d);
+  }
+  function tick(){
+    if(day>=100)return;
+    cells[day].classList.add('on');day++;
+    if(day<100){
+      msg.textContent='第 '+day+' 日 · 尚有 '+(100-day)+' 日要熬';
+    }else{
+      msg.textContent='百日已满';
+      msg.classList.add('warn');
+      rev.classList.add('show');
+      btn.disabled=true;btn.textContent='满　百日';
+    }
+  }
+  btn.addEventListener('click',tick);
+  grid.addEventListener('click',function(e){
+    if(e.target.classList.contains('ri'))tick();
+  });
+})();
+
+/* ============ 四手接力 ============ */
+(function(){
+  var data=[
+    {t:'编 · 闻人耆年（1226）',
+     p:'宝庆二年正月十五，乡间老医生写成此卷，自序说方书万种无从翻检，急救只此一册。书中除十六则灸法外，还把量穴、下火、养疮的规程一一写足。',
+     q:'今将已试之方，编述成集，锓木以广其传',n:'自序'},
+    {t:'刊 · 孙炬卿（1245）',
+     p:'淳佑乙巳五月，孙炬卿把灸法和母亲的乌辛茶方一起刻版。序二里说，他平生抄方配药，母亲走后才见到竹马灸法，痛不可当，刻书是为了让后来人早一点见到。',
+     q:'吾母虽无及而犹及人也',n:'序二'},
+    {t:'渡 · 流落东瀛',
+     p:'宋刻本渡海去了日本，一去几百年无人识得。光绪年间，贵阳陈衡山在日本市上买到这部孙炬卿旧刻，携归赠友。',
+     q:'此二书流落东瀛垂数百载，几无知者',n:'罗嘉杰序'},
+    {t:'归 · 罗嘉杰横滨重刊（1890）',
+     p:'光绪庚寅（1890），罗嘉杰在横滨把书重新付梓，随信附来一句：此书归国，好教世人知道广陵散还没有失传。',
+     q:'庶知广陵散犹在人间也',n:'罗嘉杰序'}
+  ];
+  var nodes=document.querySelectorAll('.rnode'),
+      panel=document.getElementById('relayPanel');
+  function show(k){
+    nodes.forEach(function(nd,i){nd.classList.toggle('on',i===k);});
+    var d=data[k];
+    panel.innerHTML='<h4>'+d.t+'</h4>'+
+      '<div class="q"><span class="qi">'+d.q+'</span><span class="qn">'+d.n+'</span></div>'+
+      '<p>'+d.p+'</p>';
+  }
+  nodes.forEach(function(nd){
+    nd.addEventListener('click',function(){show(+nd.dataset.k);});
+  });
+  show(0);
+})();
+</script>
+<!-- JS 动态引文的静态核验副本 -->
+<div id="qb" style="display:none">
+  <div class="q"><span class="qi">急以皂角末吹入两鼻即活</span></div>
+  <div class="q"><span class="qi">切忌火照，火照则魂魄不能归体</span></div>
+  <div class="q"><span class="qi">此法治溺水经一宿犹可活</span></div>
+  <div class="q"><span class="qi">极须按定其心，勿便截绳，当抱起解之</span></div>
+  <div class="q"><span class="qi">须臾不治即杀人</span></div>
+  <div class="q"><span class="qi">如左孔衄缚右足，右孔衄缚左足</span></div>
+  <div class="q"><span class="qi">急灸右脚小指尖三炷，炷如绿豆大</span></div>
+  <div class="q"><span class="qi">灸两足大指上各七炷</span></div>
+  <div class="q"><span class="qi">灸掌后三寸两筋间，左右各十四壮</span></div>
+  <div class="q"><span class="qi">用盐填脐孔，大艾炷灸二十一炷</span></div>
+  <div class="q"><span class="qi">转筋在股内灸两内踝尖，转筋在股外，灸两外踝尖</span></div>
+  <div class="q"><span class="qi">灸足外踝尖三炷，炷如绿豆大，患左灸右，患右灸左</span></div>
+  <div class="q"><span class="qi">用细索并两手大指缚之，灸三炷</span></div>
+  <div class="q"><span class="qi">急于新咬处灸十四炷，则毒不行</span></div>
+  <div class="q"><span class="qi">即令三姓三人于所咬伤处，各人灸一炷即愈</span></div>
+  <div class="q"><span class="qi">凡有此患，宜早灸之</span></div>
+  <div class="q"><span class="qi">松木火难差增病</span></div>
+  <div class="q"><span class="qi">柏木火伤神多汗</span></div>
+  <div class="q"><span class="qi">竹木火伤筋目暗</span></div>
+  <div class="q"><span class="qi">榆木火伤骨失志</span></div>
+  <div class="q"><span class="qi">桑木火伤肉肉枯</span></div>
+  <div class="q"><span class="qi">枣木火内伤吐血</span></div>
+  <div class="q"><span class="qi">枳实火大伤气脉</span></div>
+  <div class="q"><span class="qi">橘木火伤荣卫经络</span></div>
+  <div class="q"><span class="qi">今将已试之方，编述成集，锓木以广其传</span></div>
+  <div class="q"><span class="qi">吾母虽无及而犹及人也</span></div>
+  <div class="q"><span class="qi">此二书流落东瀛垂数百载，几无知者</span></div>
+  <div class="q"><span class="qi">庶知广陵散犹在人间也</span></div>
+</div>
+</body>
+</html>
