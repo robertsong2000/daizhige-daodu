@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>醉翁谈录 · 说书人的手册 | 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --stone:#5e8fbb;
+  --stone-dim:#3c5c78; --stone-glow:rgba(94,143,187,.45);
+  --faint:#8a857b; --faint2:#57534a; --red:#a04438;
+  --serif:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--serif);line-height:1.9;font-size:16px;overflow-x:hidden}
+body.locked{overflow:hidden;height:100vh}
+body.shake{animation:shake .38s ease}
+@keyframes shake{0%{transform:translate(0,0)}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}100%{transform:translate(0,0)}}
+::selection{background:var(--stone);color:var(--ink)}
+.mono{font-family:"SFMono-Regular",Menlo,Consolas,monospace}
+
+/* ============ 首屏 书场 ============ */
+#stage{position:relative;min-height:100vh;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;
+  background:radial-gradient(ellipse 120% 90% at 50% 110%, #232320 0%, #1a1a18 55%, #141412 100%);transition:background 1.6s}
+#stage.lit{background:radial-gradient(ellipse 130% 100% at 50% 108%, #37362f 0%, #21201d 52%, #161614 100%)}
+#lamp{position:absolute;left:50%;bottom:34%;transform:translateX(-50%);width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(214,178,110,.22) 0%,rgba(214,178,110,.06) 45%,transparent 70%);
+  opacity:.25;pointer-events:none;transition:opacity 1.8s}
+#stage.lit #lamp{opacity:1}
+#table{position:relative;width:min(560px,88vw);height:150px;z-index:5}
+#table .top{position:absolute;top:0;left:50%;transform:translateX(-50%);width:100%;height:16px;border-radius:50%;
+  background:linear-gradient(#4a4238,#2e2921);box-shadow:0 10px 30px rgba(0,0,0,.6)}
+#table .leg{position:absolute;top:12px;width:14px;height:110px;background:linear-gradient(90deg,#2a251e,#3d362c,#2a251e)}
+#table .leg.l{left:12%}#table .leg.r{right:12%}
+#table .cloth{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:70%;height:22px;border-radius:6px;
+  background:repeating-linear-gradient(90deg,#54453a 0 26px,#4a3d33 26px 52px);opacity:.9}
+#muyu{position:absolute;left:50%;top:-44px;transform:translateX(-50%);width:96px;height:52px;cursor:pointer;border:none;
+  background:linear-gradient(160deg,#8a5a34,#6b4223 60%,#4e2f18);border-radius:12px 12px 16px 16px;z-index:6;
+  box-shadow:0 8px 18px rgba(0,0,0,.65),inset 0 2px 3px rgba(255,225,170,.35),inset 0 -6px 10px rgba(0,0,0,.45);
+  transition:transform .12s}
+#muyu::after{content:"";position:absolute;left:14px;top:10px;width:66px;height:6px;border-radius:4px;background:rgba(0,0,0,.35)}
+#muyu:hover{transform:translateX(-50%) translateY(-3px)}
+#muyu.hit{animation:hit .34s ease}
+@keyframes hit{0%{transform:translateX(-50%) translateY(0)}30%{transform:translateX(-50%) translateY(10px) scaleY(.82)}100%{transform:translateX(-50%) translateY(0)}}
+#ring{position:absolute;left:50%;bottom:36%;transform:translateX(-50%);width:20px;height:20px;border-radius:50%;
+  border:2px solid var(--stone-glow);opacity:0;pointer-events:none}
+#ring.go{animation:ringx 1.1s ease-out}
+@keyframes ringx{0%{opacity:.95;width:20px;height:20px}100%{opacity:0;width:560px;height:560px;bottom:calc(36% - 270px)}}
+#crack{position:absolute;left:50%;bottom:38%;transform:translateX(-50%);font-size:56px;color:var(--paper);opacity:0;pointer-events:none;letter-spacing:0}
+#crack.go{animation:crackx 1.2s ease-out}
+@keyframes crackx{0%{opacity:1;transform:translateX(-50%) scale(.6)}30%{opacity:1;transform:translateX(-50%) scale(1.15)}100%{opacity:0;transform:translateX(-50%) scale(1.3) translateY(-40px)}}
+#titleBox{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:4;
+  opacity:0;pointer-events:none;transition:opacity 1.6s ease .3s}
+#stage.lit #titleBox{opacity:1;pointer-events:auto}
+#stageTitle{writing-mode:vertical-rl;font-size:clamp(38px,7vw,64px);letter-spacing:.2em;color:var(--paper);
+  text-shadow:0 0 34px rgba(214,178,110,.25);height:min(58vh,460px)}
+#stageTitle em{font-style:normal;color:var(--stone)}
+#stageSub{margin-top:26px;font-size:15px;color:#a8a396;letter-spacing:.5em;text-indent:.5em}
+#stageTip{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:13px;color:var(--faint2);letter-spacing:.35em;z-index:4;transition:opacity 1s}
+#stage.lit #stageTip{opacity:0}
+#enterHint{margin-top:40px;font-size:13px;color:var(--faint2);letter-spacing:.4em;opacity:0;transition:opacity 1.2s 1.2s}
+#stage.lit #enterHint{opacity:1;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ============ 扇骨导航 ============ */
+#fan{position:fixed;right:18px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:50;opacity:0;transition:opacity .8s;pointer-events:none}
+#fan.on{opacity:1;pointer-events:auto}
+#fan .rib{display:flex;align-items:center;gap:7px;justify-content:flex-end;cursor:pointer;text-decoration:none}
+#fan .stick{width:3px;height:34px;border-radius:2px;background:#3a3833;transition:all .35s}
+#fan .tag{font-size:11px;color:var(--faint2);letter-spacing:.1em;opacity:0;transition:opacity .3s}
+#fan .rib:hover .tag{opacity:1}
+#fan .rib.act .stick{width:5px;height:46px;background:var(--stone);box-shadow:0 0 10px var(--stone-glow)}
+#fan .rib.act .tag{opacity:1;color:var(--stone)}
+
+/* ============ 正文 ============ */
+main{position:relative;z-index:2}
+section{position:relative;padding:110px 24px;max-width:880px;margin:0 auto}
+.kicker{font-size:12px;letter-spacing:.5em;color:var(--stone);margin-bottom:18px}
+.kicker::before{content:"";display:inline-block;width:26px;height:1px;background:var(--stone-dim);vertical-align:middle;margin-right:12px}
+h2{font-size:clamp(26px,4vw,38px);font-weight:600;letter-spacing:.14em;margin-bottom:30px}
+h2 .hnum{font-size:13px;color:var(--faint2);letter-spacing:.3em;display:block;margin-bottom:10px;font-weight:400}
+p{color:#c9c4b8;margin-bottom:18px;text-align:justify}
+p b{color:var(--paper);font-weight:600}
+p .st{color:var(--stone)}
+q.q{quotes:"「" "」";color:var(--paper)}
+blockquote.paperblock,div.q{display:block;background:linear-gradient(160deg,#ece8df,#e2ddd1);color:#2c2a25;
+  border-left:3px solid var(--stone);padding:26px 30px;margin:30px 0;font-size:17px;line-height:2.15;border-radius:2px;
+  box-shadow:0 10px 26px rgba(0,0,0,.35)}
+div.q .src{display:block;margin-top:12px;font-size:12.5px;color:#7d7869;letter-spacing:.2em}
+.side{float:right;width:150px;margin:6px 0 14px 26px;padding:16px 14px;border:1px solid #34322c;border-radius:3px;font-size:13px;line-height:2;color:var(--faint);background:#1e1d1a}
+.side b{display:block;color:var(--stone);font-size:12px;letter-spacing:.3em;margin-bottom:6px}
+.clear{clear:both}
+hr.sep{border:none;height:1px;background:linear-gradient(90deg,transparent,#3a3833 30%,#3a3833 70%,transparent);max-width:880px;margin:0 auto}
+
+/* 一 佚存 */
+#lost{max-width:880px}
+.route{display:flex;gap:0;align-items:stretch;margin:34px 0;flex-wrap:wrap}
+.route .node{flex:1;min-width:150px;padding:18px 16px;border:1px solid #34322c;position:relative;background:#1e1d1a}
+.route .node+.node{margin-left:-1px}
+.route .node b{display:block;color:var(--paper);font-size:15px;letter-spacing:.1em;margin-bottom:6px}
+.route .node span{font-size:12.5px;color:var(--faint);line-height:1.8;display:block}
+.route .node.hot b{color:var(--stone)}
+.route .node .yr{display:block;font-size:11px;color:var(--faint2);letter-spacing:.2em;margin-bottom:8px}
+
+/* 二 舌耕 */
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:34px 0}
+.skill{border:1px solid #34322c;background:#1e1d1a;padding:22px 20px;border-radius:3px;position:relative;overflow:hidden;transition:border-color .3s}
+.skill:hover{border-color:var(--stone-dim)}
+.skill b{display:block;font-size:17px;color:var(--paper);letter-spacing:.08em;margin-bottom:8px}
+.skill span{font-size:13px;color:var(--faint);line-height:1.9;display:block}
+.skill i{position:absolute;right:10px;top:6px;font-style:normal;font-size:34px;color:#2b2a25;font-family:var(--serif);opacity:.9}
+
+/* 三 八门 */
+.doors{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:14px;margin:36px 0 10px;perspective:1200px}
+.door{position:relative;height:196px;cursor:pointer;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.7,.3,1)}
+.door.open{transform:rotateY(180deg)}
+.dface{position:absolute;inset:0;backface-visibility:hidden;border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.dface.front{background:linear-gradient(165deg,#2a2925,#201f1c);border:1px solid #3d3b34}
+.dface.front::before{content:"";position:absolute;left:9px;top:9px;bottom:9px;width:2px;background:linear-gradient(#45423a,#2c2a25)}
+.dface.front .zi{font-size:44px;color:var(--paper);text-shadow:0 2px 12px rgba(0,0,0,.5)}
+.dface.front small{font-size:12.5px;color:var(--faint);letter-spacing:.35em}
+.dface.front small+small{color:var(--faint);opacity:.85}
+.dface.back{background:linear-gradient(160deg,#ece8df,#e0dbcf);color:#2c2a25;transform:rotateY(180deg);padding:16px;align-items:flex-start;justify-content:flex-start;overflow:hidden}
+.dface.back b{font-size:14px;letter-spacing:.2em;color:#7a4a3a;margin-bottom:8px}
+.dface.back .list{font-size:13.5px;line-height:2;color:#3a382f}
+.dface.back .cap{font-size:11.5px;color:#8a8272;margin-top:8px;letter-spacing:.1em}
+.doornote{font-size:13px;color:var(--faint);border-top:1px dashed #3a3833;padding-top:16px;line-height:2}
+.doornote .st{color:var(--stone)}
+
+/* 四 冷热 */
+#beatBox{margin:34px 0}
+#beat{display:flex;gap:5px;align-items:flex-end;height:88px;padding:14px;border:1px solid #34322c;border-radius:3px;background:#1e1d1a}
+#beat i{flex:1;background:#33312b;border-radius:2px;transition:height .35s,background .35s}
+.slider{display:flex;align-items:center;gap:16px;margin-top:16px;font-size:13px;letter-spacing:.2em;color:var(--faint)}
+input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:2px;background:#3a3833;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--stone);cursor:pointer;box-shadow:0 0 12px var(--stone-glow)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--stone);border:none;cursor:pointer}
+#beatSay{margin-top:14px;font-size:14px;color:var(--faint);min-height:2.6em;letter-spacing:.06em}
+#beatSay b{color:var(--stone)}
+.chops{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0}
+.chop{width:64px;height:64px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--red);color:#c8756a;
+  font-size:19px;border-radius:4px;position:relative;background:
+  repeating-linear-gradient(45deg,rgba(160,68,56,.07) 0 6px,transparent 6px 12px)}
+.chop small{position:absolute;bottom:-22px;font-size:11px;color:var(--faint2);letter-spacing:.1em;white-space:nowrap}
+
+/* 五 三妓 */
+#scrap{background:linear-gradient(160deg,#ece8df,#e3ded2);color:#2c2a25;border-radius:3px;padding:34px 34px 30px;margin:32px 0;
+  box-shadow:0 12px 30px rgba(0,0,0,.4);position:relative;min-height:290px}
+#scrap::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:repeating-linear-gradient(90deg,#b9b2a2 0 10px,transparent 10px 20px);opacity:.5}
+#scrap .line{font-size:19px;letter-spacing:.12em;padding:6px 0;min-height:44px;color:#3a382f;border-bottom:1px dashed #c4bcae;opacity:0;transform:translateY(8px);transition:all .5s}
+#scrap .line.in{opacity:1;transform:none}
+#scrap .line:last-child{border-bottom:none;color:#7a4a3a}
+#scrapNote{font-size:13px;color:#7d7869;margin-top:14px;letter-spacing:.08em}
+.grabs{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 6px}
+.grab{padding:12px 22px;border:1px solid #3d3b34;background:#1e1d1a;color:var(--paper);font-family:var(--serif);font-size:16px;cursor:pointer;border-radius:3px;letter-spacing:.15em;transition:all .25s}
+.grab:hover:not(:disabled){border-color:var(--stone);color:var(--stone)}
+.grab:disabled{opacity:.32;cursor:default}
+.grab .who{font-size:11px;color:var(--faint2);display:block;letter-spacing:.3em}
+#resetGrabs{background:none;border:none;color:var(--faint2);font-size:12px;cursor:pointer;font-family:var(--serif);letter-spacing:.2em;margin-left:6px}
+#resetGrabs:hover{color:var(--faint)}
+
+/* 六 花判 */
+.verdicts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin:32px 0}
+.verdict{background:linear-gradient(165deg,#ece8df,#e2ddd1);color:#2c2a25;padding:26px 26px 22px;border-radius:2px;position:relative;box-shadow:0 10px 26px rgba(0,0,0,.35)}
+.verdict::after{content:"判";position:absolute;top:14px;right:14px;width:38px;height:38px;border:2px solid rgba(160,68,56,.65);border-radius:50%;
+  color:rgba(160,68,56,.85);display:flex;align-items:center;justify-content:center;font-size:19px;transform:rotate(9deg)}
+.verdict h3{font-size:14px;letter-spacing:.15em;color:#7a4a3a;margin-bottom:14px;font-weight:600}
+.verdict .vq{font-size:16.5px;line-height:2.2;color:#3a382f}
+.verdict .vnote{font-size:12.5px;color:#8a8272;margin-top:14px;line-height:1.9;border-top:1px dashed #c4bcae;padding-top:10px}
+
+/* 七 两扇 */
+.fate{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:34px 0}
+@media (max-width:640px){.fate{grid-template-columns:1fr}}
+.leaf{border:1px solid #34322c;border-radius:3px;background:#1e1d1a;overflow:hidden}
+.leaf .head{padding:20px 22px;cursor:pointer;display:flex;align-items:baseline;justify-content:space-between;gap:10px;transition:background .3s}
+.leaf .head:hover{background:#242320}
+.leaf .head b{font-size:19px;letter-spacing:.2em;color:var(--paper)}
+.leaf.bad .head b{color:#c8756a}
+.leaf.good .head b{color:var(--stone)}
+.leaf .head span{font-size:11.5px;color:var(--faint2);letter-spacing:.2em}
+.leaf .body{max-height:0;overflow:hidden;transition:max-height .6s ease}
+.leaf.openleaf .body{max-height:1400px}
+.leaf .inner{padding:4px 22px 24px;font-size:14.5px;color:#c9c4b8;line-height:2.1;text-align:justify}
+.leaf .inner q.q{color:var(--paper)}
+.leaf .inner p{margin-bottom:12px}
+.leaf .tail{display:block;margin-top:12px;font-size:12px;color:var(--faint2);letter-spacing:.15em}
+
+/* 散场 */
+#curtain{position:relative;text-align:center;padding:130px 24px 120px;max-width:760px;margin:0 auto}
+#curtain .bulb{width:10px;height:10px;border-radius:50%;background:var(--stone);margin:0 auto 40px;box-shadow:0 0 24px var(--stone-glow);animation:flick 3.2s ease-in-out infinite}
+@keyframes flick{0%,100%{opacity:1}45%{opacity:.55}60%{opacity:.9}75%{opacity:.4}}
+#curtain .fin{font-size:26px;letter-spacing:.5em;text-indent:.5em;color:var(--paper);margin-bottom:34px}
+#curtain p{color:var(--faint);font-size:14.5px;text-align:center}
+
+footer{border-top:1px solid #2c2a25;padding:44px 24px 60px;font-size:12.5px;color:var(--faint2);line-height:2.2}
+footer .wrap{max-width:880px;margin:0 auto}
+footer a{color:var(--stone-dim);text-decoration:none}
+@media (max-width:640px){
+  section{padding:80px 20px}
+  #fan{display:none}
+  div.q,blockquote.paperblock{padding:20px 18px;font-size:15.5px}
+  #scrap{padding:24px 18px}
+}
+</style>
+</head>
+<body class="locked">
+
+<!-- ============ 书场开场 ============ -->
+<header id="stage">
+  <div id="lamp"></div>
+  <div id="titleBox">
+    <div id="stageTitle">醉翁<em>谈</em>录</div>
+    <div id="stageSub">宋 · 罗烨（话本伎艺）</div>
+    <div id="enterHint">往下 · 书归正传</div>
+  </div>
+  <div id="table">
+    <button id="muyu" aria-label="醒木"></button>
+    <div class="cloth"></div>
+    <div class="top"></div>
+    <div class="leg l"></div>
+    <div class="leg r"></div>
+  </div>
+  <div id="ring"></div>
+  <div id="crack">啪</div>
+  <div id="stageTip">点击醒木 · 开书</div>
+</header>
+
+<!-- ============ 扇骨导航 ============ -->
+<nav id="fan" aria-label="章节">
+  <a class="rib" href="#lost"><span class="tag">佚存</span><span class="stick"></span></a>
+  <a class="rib" href="#shegeng"><span class="tag">舌耕</span><span class="stick"></span></a>
+  <a class="rib" href="#bamen"><span class="tag">八门</span><span class="stick"></span></a>
+  <a class="rib" href="#lengre"><span class="tag">冷热</span><span class="stick"></span></a>
+  <a class="rib" href="#sanci"><span class="tag">夺笺</span><span class="stick"></span></a>
+  <a class="rib" href="#huapan"><span class="tag">花判</span><span class="stick"></span></a>
+  <a class="rib" href="#liangshan"><span class="tag">两扇</span><span class="stick"></span></a>
+  <a class="rib" href="#scattered"><span class="tag">散场</span><span class="stick"></span></a>
+</nav>
+
+<main>
+
+<!-- ============ 一 佚存 ============ -->
+<section id="lost">
+  <div class="kicker">开场白 · 书自身的故事</div>
+  <h2>一本在国内失传七百年的说书人手册</h2>
+  <aside class="side">
+    <b>库本档案</b>
+    据集藏小说本（两本中最全）
+    <br>去空白 <span class="mono">40,823</span> 字
+    <br>甲乙丙丁戊己庚辛壬癸十集
+    <br>库本存十九卷
+    <br>壬集卷一阙
+  </aside>
+  <p>南宋有门生意，叫<q class="q">说话</q>。不是今天口语里说话的说话，是讲故事：在瓦舍勾栏里，一张桌、一块醒木、一把折扇，把千古兴亡说给市井听。这门手艺养活了一批职业艺人，也养活了一批替他们编本子的书会才人。</p>
+  <p>〈醉翁谈录〉就是这个世界留下来的内部文件。编者罗烨，庐陵人，生平不详。甲集卷一〈舌耕叙引〉是全书前言，把说话这一行的内容、名目、书目、技巧一五一十记下来，等于一份<q class="q">舌耕</q>行当的执业手册；其余九集，收的是私情、烟花、负约、重圆各类故事，等于艺人的公共素材库。后世治小说史的人翻来覆去引用的宋代说话史料，一半出在这卷〈舌耕叙引〉里。</p>
+  <p>而它自己的命运，恰好也像一场评书：在故国失传，在海外存身。国内久佚，后来在日本发现一部旧抄本，一九四一年影印行世，号称<q class="q">观澜阁藏孤本宋椠</q>，学界考其成书实际可能已到宋末元初。今天简体库这本，据一九五七年上海古典文学出版社整理本校录。</p>
+  <div class="route">
+    <div class="node"><span class="yr">宋末元初</span><b>成书</b><span>罗烨辑话本材料与行话成编</span></div>
+    <div class="node"><span class="yr">明清</span><b>国内失传</b><span>中土无传本，书目几近无征</span></div>
+    <div class="node hot"><span class="yr">东渡</span><b>日本存身</b><span>旧抄本流出海外</span></div>
+    <div class="node hot"><span class="yr">1941</span><b>影印回归</b><span>观澜阁本影印，学界始见全豹</span></div>
+    <div class="node"><span class="yr">1957</span><b>排印整理</b><span>上海古典文学出版社本</span></div>
+  </div>
+  <p>换句话说：今天我们能知道宋朝说书人怎么干活，得谢谢这部书当年出了一次远门。</p>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 二 舌耕 ============ -->
+<section id="shegeng">
+  <div class="kicker">甲集卷一 · 舌耕叙引</div>
+  <h2>说书人的自我修养</h2>
+  <p>手册开篇先给行业定位。九流之末，小道也，可是口气一点不小。</p>
+  <div class="q">夫小说者，虽为末学，尤务多闻。非庸常浅识之流，有博览该通之理。幼习太平广记，长攻历代史书。
+    <span class="src">甲集卷一 · 小说开辟</span>
+  </div>
+  <p>末学，但要多闻。这份底气来自一张吓人的书单：说话人要通〈太平广记〉，要攻历代史书，要背得欧苏黄陈的佳句、李杜韩柳的篇章，还要懂草木山川之物类、州军县镇之程途。这是把半个图书馆当成上岗培训。</p>
+  <div class="skills">
+    <div class="skill"><i>记</i><b>幼习太平广记</b><span>志怪总库，灵怪门类的弹药库</span></div>
+    <div class="skill"><i>史</i><b>长攻历代史书</b><span>讲史有据，得其兴废谨按史书</span></div>
+    <div class="skill"><i>诗</i><b>欧苏黄陈佳句</b><span>论才词，随时掉书袋不掉链子</span></div>
+    <div class="skill"><i>路</i><b>州军县镇程途</b><span>地理里程烂熟，赶路戏不穿帮</span></div>
+  </div>
+  <p>开场定场诗也交代了这一行的江湖地位：一不靠权，二不靠钱，靠三寸不烂之舌当秤，称量天下是非。</p>
+  <div class="q">春浓花艳佳人胆，月黑风寒壮士心，讲论只凭三寸舌，秤评天下浅和深。
+    <span class="src">甲集卷一 · 小说引子</span>
+  </div>
+  <p>两句之内，全书两大门类的家底都报了：佳人胆，是烟粉私情；壮士心，是朴刀捍棒。而那杆秤的用法，说得再直白不过。</p>
+  <div class="q"><q class="q">说国贼怀奸从佞</q>，<q class="q">说忠臣负屈衔冤，铁心肠也须下泪</q>。
+    <span class="src">甲集卷一 · 小说开辟（库本两句之间原文为遗愚夫等辈生滇，滇字系讹，故引文分截）</span>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 三 八门 ============ -->
+<section id="bamen">
+  <div class="kicker">甲集卷一 · 小说开辟</div>
+  <h2>八扇门：南宋故事的货架</h2>
+  <p>手册最要紧的一页，是把说话的题材分成八门。这八个类名，后来成了整个中国通俗叙事的门牌：灵怪、烟粉、传奇、公案，兼朴刀、捍棒、妖术、神仙。每扇门背后，〈醉翁谈录〉都开了一张当时正在场上流传的书单。点门，看货。</p>
+  <div class="doors" id="doors"></div>
+  <p class="doornote">注意朴刀、捍棒两门的货单：<span class="st">青面兽</span>、<span class="st">杨令公</span>、<span class="st">花和尚</span>、<span class="st">武行者</span>，梁山泊成书之前，杨志、杨业、鲁智深、武松已经在书场上各有单行剧目了。妖术门里的<span class="st">聂隐娘</span>、<span class="st">红线盗印</span>，则是唐传奇被说书人收编的痕迹。这份书单是〈太平广记〉之外，宋代故事储量最密的一份存目，不少条目别处已无从查考。</p>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 四 冷热 ============ -->
+<section id="lengre">
+  <div class="kicker">甲集卷一 · 小说开辟</div>
+  <h2>手艺：冷与热的节拍器</h2>
+  <p>会背书单只是入了行，真正的手艺在节奏。手册里最被后人反复引用的一句话，是关于冷热处理的：平平无奇的过场要提得起来，高潮处反而要沉得住。拖一拖下面的滑杆，看这场戏的密度怎么变。</p>
+  <div class="q">讲论处不僀搭、不絮烦；敷演处有规模、有收拾。冷淡处提掇得有家数，热闹处敷演得越久长。
+    <span class="src">甲集卷一 · 小说开辟（僀为库本讹字，通行本作滞）</span>
+  </div>
+  <div id="beatBox">
+    <div id="beat"></div>
+    <div class="slider">
+      <span>冷淡</span>
+      <input type="range" id="tempo" min="0" max="100" value="35" aria-label="冷热滑杆">
+      <span>热闹</span>
+    </div>
+    <div id="beatSay"></div>
+  </div>
+  <p>还有一副行话口诀，四个字一板，念出来就是一块块腰牌。</p>
+  <div class="q">曰得词，念得诗，说得话，使得砌。
+    <span class="src">甲集卷一 · 小说开辟（砌指插科打诨的砌话）</span>
+  </div>
+  <div class="chops">
+    <div class="chop">词<small>会填会唱</small></div>
+    <div class="chop">诗<small>开口能念</small></div>
+    <div class="chop">话<small>正传在手</small></div>
+    <div class="chop">砌<small>诨话垫场</small></div>
+  </div>
+  <p>四样齐了，才算一个全须全尾的说话人。至于说到底图什么，手册倒是答得痛快：说得好，席上风生，座间星拱，听客爱听，就是这一行的饭碗与体面。</p>
+  <div class="q">自然使席上风生，不枉教坐间星拱。
+    <span class="src">甲集卷一 · 小说开辟</span>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 五 夺笺 ============ -->
+<section id="sanci">
+  <div class="kicker">丙集卷二 · 花衢实录</div>
+  <h2>一场抢词：柳七官人上下楼</h2>
+  <p>手册之外，全书大半是故事，主角多是市民世界的歌妓、士子、商贩、僧道。丙集卷二存了一组柳永故事，把这位奉旨填词的词人写成了勾栏里的顶流明星。</p>
+  <div class="q">柳耆卿，名永，建州崇安人也。
+    <span class="src">丙集卷二 · 柳屯田耆卿</span>
+  </div>
+  <div class="q">妓者爱其有词名，能移宫换羽；一经品题，声价十倍。
+    <span class="src">丙集卷二 · 三妓挟耆卿作词</span>
+  </div>
+  <p>被品题就声价十倍，于是词人的手稿成了抢手货。这一篇写柳永在丰乐楼前被三位相熟的歌妓前后堵住，各求把己名写进同一首词。三人你夺我挼，一张花笺差点扯碎。书里这场闹剧是分步上演的，这里照原样排一遍：依序点人，看词是怎么被抢着写成的。</p>
+  <div class="grabs">
+    <button class="grab" data-i="0"><span class="who">甲妓</span>张师师</button>
+    <button class="grab" data-i="1"><span class="who">次至</span>刘香香</button>
+    <button class="grab" data-i="2"><span class="who">又至</span>钱安安</button>
+    <button id="resetGrabs" type="button">重排</button>
+  </div>
+  <div id="scrap">
+    <div class="line">师师生得艳冶，</div>
+    <div class="line">香香于我情多，</div>
+    <div class="line">安安那更久比和，四个打成一个。</div>
+    <div class="line">幸自苍皇未款，新词写处多磨，几回扯了又重挼，奸字中心着我。</div>
+    <div id="scrapNote">笺上空空，且看谁的名字先进词。</div>
+  </div>
+  <p>师师耍峭而聪敏，酷喜填词和曲，第一个把名字塞了进去；香香不依，安安更嗔，柳永索性把三场拉扯都写进〈西江月〉过片：<q class="q">几回扯了又重挼</q>。一场争风吃醋，被当场做成了作品本身。词成之后，三妓转怒为喜，同席开宴，又各自和词一首，此事才算散场。</p>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 六 花判 ============ -->
+<section id="huapan">
+  <div class="kicker">庚集卷二 · 花判公案</div>
+  <h2>花判：官府文书成了段子</h2>
+  <p>所谓花判，是官员断案时不写八股判语，偏用诗词骈句下判，诙谐百出。这类判词在宋代官场自成风气，市井传为谈资，〈醉翁谈录〉庚集卷二整卷收的就是这个：一场场官司，最后落在一句妙语上。公堂在这里近于舞台，判官近于喜剧演员。</p>
+  <div class="verdicts">
+    <div class="verdict">
+      <h3>判夫出改嫁状 · 潭州张紫微</h3>
+      <div class="vq"><q class="q">淡红衫子淡红衣，状上论夫去不归，夫若不归任从稼，夫若归时我不知。</q></div>
+      <div class="vnote">丈夫久出不归，妻子投状请改嫁。判官允了，判词却像顺口溜：他回来我也不知道。稼为库本讹字，通行本作嫁。</div>
+    </div>
+    <div class="verdict">
+      <h3>子瞻判和尚游娼 · 杭州苏轼</h3>
+      <div class="vq"><q class="q">臂间刺道苦相思，这回还了相思债。</q></div>
+      <div class="vnote">僧人了然狎妓杀人，臂上刺着但愿同生极乐国，免教今世苦相煎。苏轼见款状，判词以踏莎行结案：这回还了相思债。判讫，押赴市曹处斩。诙谐到此为止，杀人偿命，毫不含糊。</div>
+    </div>
+  </div>
+  <p>花判一卷是市民视角的官场观察：百姓爱看官老爷出洋相，也爱看他们偶尔通人情。同一卷里还有僧人和尚相打被判各决黄檀十二、渡子虐待老母被重办的段子，笑料与劝诫掺在一起，正是书场口味的原样封存。</p>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 七 两扇 ============ -->
+<section id="liangshan">
+  <div class="kicker">辛集卷二 · 癸集卷一二</div>
+  <h2>负约与重圆：书场上的两扇门</h2>
+  <p>手册说，说话有两味主药：一味让人咬牙，一味让人落泪。辛集卷二收负约类，癸集收重圆故事，正好一对。点门。</p>
+  <div class="fate">
+    <div class="leaf bad">
+      <div class="head"><b>负约门</b><span>王魁负心桂英死报</span></div>
+      <div class="body"><div class="inner">
+        <p><q class="q">王魁者，魁非其名也，以其父兄昔名宦，故不书其名。</q>书场说到负心人，连名字都不肯给他留全。故事本身是全套的痴心女子负心汉模板：落第书生王魁流落莱州，妓女敫桂英自陈<q class="q">妾家所有，不下数百千</q>，供他读书赴考；两人同至海神祠盟誓，<q class="q">某与桂英，情好相得，誓不相负，若生离异，神当殛之</q>。王魁高中后悔婚，桂英自刎于海神祠，死后仗剑索命，追到试院里骂他：<q class="q">上穷碧落下黄泉，寻汝不见，汝却在此</q>。王魁求超度，桂英只回一句<q class="q">我只要汝命，何用佛害纸钱</q>，王魁终以刀自刺而死。</p>
+        <span class="tail">这个故事后来被搬成南戏〈王魁负桂英〉，负心汉叙事从此有了祖师爷。</span>
+      </div></div>
+    </div>
+    <div class="leaf good">
+      <div class="head"><b>重圆门</b><span>乐昌公主、无双、李亚仙</span></div>
+      <div class="body"><div class="inner">
+        <p>重圆故事是负约的反解药。癸集开卷是破镜重圆的正主：陈亡在即，徐德言与乐昌公主<q class="q">乃破一镜，两人各执一半</q>，约正月望日鬻于都市。库本录半镜题诗：<q class="q">照与人俱去，照归人不归，无复嫦娥影，空留明月辉</q>（首字照为镜之讹）。杨素当场还妻，席间公主题诗：<q class="q">今日何迁次，新官对旧官，笑啼俱不敢，方验作人难</q>。前夫后夫同席，笑也不敢，哭也不敢，二十个字把改朝换代里一个女子的处境写尽了。</p>
+        <p>同卷还有两味解药。李亚仙：<q class="q">李娃，长安娼女也，字亚仙，旧名一枝花</q>，郑元和被父鞭至假死、沦为乞丐，她自赎其身、供他成名，临别却劝他另娶高门。无双传里，古押衙设计窃出宫女无双，一句<q class="q">富平古押衙，人间有心人</q>，用好几条人命换一对夫妻偕老，代价重得让人不敢只当团圆看。</p>
+        <span class="tail">负心门教人恨，重圆门教人惜。两扇对开，就是书场的完整药方。</span>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 散场 ============ -->
+<section id="scattered">
+  <div class="kicker">散场</div>
+  <h2>且听下回分解</h2>
+  <p>手册最后一页其实是首诗，说得书这门生意通的、透的，又收得极轻。</p>
+  <div class="q">小说纷纷皆有之，须凭实学是根基。开天辟地通经史，博古明今历传奇。
+    <span class="src">甲集卷一 · 小说开辟附诗</span>
+  </div>
+  <div class="q">世间多少无穷事，历历从头说细微。
+    <span class="src">甲集卷一 · 小说开辟附诗末联</span>
+  </div>
+  <p>说书人散了场，醒木一响，客官请回。书归何处？归到这部在海外存了几百年的小册子里，归到简体库四十一年前整理的铅字排印本里。瓦舍勾栏早已拆尽，八门书单还在，冷热节拍还在，三寸舌那杆秤也还在。</p>
+</section>
+
+</main>
+
+<div id="curtain">
+  <div class="bulb"></div>
+  <div class="fin">散 场</div>
+  <p>本页引文均与殆知阁简体库〈醉翁谈录〉底本逐字核对。</p>
+</div>
+
+<footer>
+  <div class="wrap">
+    文本来源：殆知阁简体库〈醉翁谈录〉（集藏 · 小说），书目见 <a href="https://github.com/daizhigev20" rel="noopener">daizhigev20</a> 仓库<br>
+    引文经脚本与库内文件去标点空白归一逐字比对通过；库本讹字（僀、稼、照、巴、粮等）照录并在文内注明<br>
+    本书成于宋末元初，所记男女私情、狎妓、刑狱等内容为一时代风气之存录，请以历史眼光观之<br>
+    殆知阁导读 第 305 篇 2026 年 9 月
+  </div>
+</footer>
+
+<script>
+(function(){
+  var stage=document.getElementById('stage');
+  var muyu=document.getElementById('muyu');
+  var ring=document.getElementById('ring');
+  var crack=document.getElementById('crack');
+  var fan=document.getElementById('fan');
+  var opened=false;
+
+  function strike(){
+    if(opened){return}
+    opened=true;
+    muyu.classList.add('hit');
+    document.body.classList.add('shake');
+    ring.classList.add('go');
+    crack.classList.add('go');
+    setTimeout(function(){
+      stage.classList.add('lit');
+      fan.classList.add('on');
+      document.body.classList.remove('locked');
+    },650);
+    setTimeout(function(){muyu.classList.remove('hit');document.body.classList.remove('shake')},800);
+    muyu.removeEventListener('click',strike);
+    muyu.addEventListener('click',function(){
+      document.getElementById('shegeng').scrollIntoView({behavior:'smooth'});
+    });
+  }
+  muyu.addEventListener('click',strike);
+
+  /* 扇骨导航高亮 */
+  var ribs=[].slice.call(document.querySelectorAll('#fan .rib'));
+  var secs=ribs.map(function(r){return document.querySelector(r.getAttribute('href'))});
+  function highlight(){
+    var y=window.scrollY+window.innerHeight*0.4,cur=0;
+    secs.forEach(function(s,i){if(s&&s.offsetTop<=y){cur=i}});
+    ribs.forEach(function(r,i){r.classList.toggle('act',i===cur)});
+  }
+  window.addEventListener('scroll',highlight,{passive:true});
+
+  /* 八门数据：书目均见于库本小说开辟 */
+  var doors=[
+    {zi:'怪',name:'灵怪',cap:'此乃是灵怪之门庭',books:['红蜘蛛','铁瓮儿','水月仙','大槐王','妮子记','铁车记','葫芦儿','人虎传','太平钱','巴蕉扇','八怪国','无鬼论']},
+    {zi:'粉',name:'烟粉',cap:'此乃为烟粉之总龟',books:['推车鬼','灰骨匣','呼猿洞','闹宝录','燕子楼','贺小师','杨舜俞','青脚狼','错还魂','侧金盏','钱塘佳梦','锦庄春游','柳参军','牛渚亭']},
+    {zi:'奇',name:'传奇',cap:'此乃为之传奇',books:['莺莺传','爱爱词','张康题壁','钱榆骂海','鸳鸯灯','夜游湖','紫香囊','徐都尉','惠娘魄偶','王魁负心','卓文君','李亚仙','崔护觅水']},
+    {zi:'案',name:'公案',cap:'此乃谓之公案',books:['石头孙立','姜女寻夫','忧小十','驴垛儿','大烧灯','商氏儿','三现身','八角井','药巴子','独行虎','铁秤槌','河沙院','戴嗣宗','大相国寺','圣手二郎']},
+    {zi:'刀',name:'朴刀',cap:'此乃为朴刀局段',books:['大虎头','李从吉','杨令公','十条龙','青面兽','季铁铃','陶铁僧','赖五郎','圣人虎','王沙马海','燕四马八']},
+    {zi:'棒',name:'捍棒',cap:'此为捍棒之序头',books:['花和尚','武行者','飞龙记','梅大郎','斗刀楼','拦路虎','高拔钉','五郎为僧','狄昭认父']},
+    {zi:'仙',name:'神仙',cap:'此是神仙之套数',books:['种叟神记','月井文','金光洞','黄粮梦','粉合儿','马谏议','许岩','四仙斗圣','谢溏落海']},
+    {zi:'术',name:'妖术',cap:'此为妖术之事端',books:['聂隐娘','村邻亲','严师道','千圣姑','皮箧袋','骊山老母','贝州王则','红线盗印','鬼女报恩']}
+  ];
+  var wrap=document.getElementById('doors');
+  doors.forEach(function(d){
+    var el=document.createElement('div');el.className='door';
+    el.innerHTML='<div class="dface front"><span class="zi">'+d.zi+'</span><small>'+d.name+'</small><small style="letter-spacing:.15em">点门看货</small></div>'+
+      '<div class="dface back"><b>'+d.name+'门 · 存目</b><div class="list">'+
+      d.books.map(function(b){return '<span class="bk">'+b+'</span>'}).join('、')+
+      '</div><div class="cap">'+d.cap+'</div></div>';
+    el.addEventListener('click',function(){el.classList.toggle('open')});
+    wrap.appendChild(el);
+  });
+
+  /* 冷热节拍器 */
+  var beat=document.getElementById('beat'),bars=[],N=36;
+  for(var i=0;i<N;i++){var b=document.createElement('i');beat.appendChild(b);bars.push(b)}
+  var say=document.getElementById('beatSay');
+  var tempo=document.getElementById('tempo');
+  function render(){
+    var v=+tempo.value;
+    bars.forEach(function(b,i){
+      var wave=Math.sin(i*0.55+v*0.07)*0.5+0.5;
+      var h=14+wave*(v*0.72+8);
+      b.style.height=h.toFixed(1)+'px';
+      if(h>52){b.style.background='#5e8fbb'}else if(h>34){b.style.background='#43607a'}else{b.style.background='#33312b'}
+    });
+    if(v<30){say.innerHTML='过场要<b>提</b>：一句带过，交代行路，绝不恋战。'}
+    else if(v<70){say.innerHTML='冷热相济：淡处提掇<b>有家数</b>，热闹处也留一口气回旋。'}
+    else{say.innerHTML='高潮要<b>熬</b>：敷演得越久长，听客越是屏住呼吸不散。'}
+  }
+  tempo.addEventListener('input',render);render();
+
+  /* 三妓夺笺 */
+  var grabs=[].slice.call(document.querySelectorAll('.grab'));
+  var lines=[].slice.call(document.querySelectorAll('#scrap .line'));
+  var note=document.getElementById('scrapNote');
+  var step=0;
+  var notes=['师师先下手为强，名字进了首句。','香香夺笔再书，二人各得一句。','安安嗔其先我，一句并作一句，四人打成一个。','过片补完：几回扯了又重挼，这场拉扯进了词里。'];
+  grabs.forEach(function(g){
+    g.addEventListener('click',function(){
+      if(g.disabled){return}
+      var i=+g.dataset.i;
+      if(i!==step){return}
+      lines[i].classList.add('in');
+      g.disabled=true;
+      note.textContent=notes[i];
+      step++;
+      if(step===3){
+        setTimeout(function(){
+          lines[3].classList.add('in');
+          note.textContent='过片补完：一曲西江月成，三妓转怒为喜，同席开宴。';
+        },900);
+      }
+    });
+  });
+  document.getElementById('resetGrabs').addEventListener('click',function(){
+    step=0;
+    lines.forEach(function(l){l.classList.remove('in')});
+    grabs.forEach(function(g){g.disabled=false});
+    note.textContent='笺上空空，且看谁的名字先进词。';
+  });
+
+  /* 两扇门 */
+  [].slice.call(document.querySelectorAll('.leaf .head')).forEach(function(h){
+    h.addEventListener('click',function(){h.parentNode.classList.toggle('openleaf')});
+  });
+
+  highlight();
+})();
+</script>
+</body>
+</html>
