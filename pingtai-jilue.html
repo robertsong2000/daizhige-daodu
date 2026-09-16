@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>平台纪略 · 鸭阵过塘</title>
+<style>
+:root{
+  --bg:#191917;
+  --paper:#e8e4dc;
+  --ink:#171512;
+  --jin:#c9963f;
+  --jin-dim:rgba(201,150,63,.42);
+  --jin-faint:rgba(201,150,63,.16);
+  --zhu:#c0453c;
+  --faint:rgba(232,228,220,.42);
+  --dim:rgba(232,228,220,.72);
+  --line:rgba(232,228,220,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--paper);
+  font-family:"Noto Serif CJK SC","Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  line-height:1.85;
+  overflow-x:hidden;
+}
+::selection{background:var(--jin-dim);color:var(--ink)}
+.mono{font-family:"SFMono-Regular",Consolas,"Courier New",monospace}
+.wrap{max-width:1060px;margin:0 auto;padding:0 28px}
+
+#topbar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--jin);z-index:60}
+
+/* ===== 首屏：夜塘 ===== */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.kicker{font-size:13px;letter-spacing:.5em;color:var(--faint);text-indent:.5em;text-align:center}
+.hero-stage{position:relative;height:480px;max-width:1100px;width:96%;margin:18px auto 0}
+.hero-stage svg{width:100%;height:100%;display:block}
+.duck{fill:rgba(232,228,220,.55)}
+.duck.march{fill:var(--paper)}
+.hero-ui{position:relative;text-align:center;margin-top:6px}
+#goDucks{
+  background:none;border:1px solid var(--jin-dim);color:var(--jin);
+  font:inherit;font-size:15px;letter-spacing:.4em;text-indent:.4em;
+  padding:10px 30px;cursor:pointer;transition:.35s;
+}
+#goDucks:hover{border-color:var(--jin);background:var(--jin-faint)}
+.hero-title{
+  position:absolute;right:6%;top:50%;transform:translateY(-50%);
+  writing-mode:vertical-rl;text-orientation:upright;
+  font-size:82px;font-weight:700;letter-spacing:.22em;
+  color:var(--paper);height:470px;width:110px;
+  display:flex;align-items:center;justify-content:flex-start;
+  pointer-events:none;
+}
+.hero-title span{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.hero-title span.on{opacity:1;transform:none}
+.hero-seal{
+  position:absolute;right:calc(6% + 118px);top:50%;transform:translateY(-50%) rotate(-4deg) scale(.4);
+  writing-mode:vertical-rl;text-orientation:upright;
+  background:var(--zhu);color:#efe9df;font-size:30px;line-height:1.25;
+  padding:16px 9px;letter-spacing:.2em;opacity:0;transition:all .5s cubic-bezier(.2,1.4,.4,1);
+}
+.hero-seal.on{opacity:1;transform:translateY(-50%) rotate(-4deg) scale(1)}
+.hero-sub{
+  max-width:34em;margin:34px auto 0;font-size:16px;color:var(--dim);
+  opacity:0;transform:translateY(10px);transition:all .8s ease;
+}
+.hero-sub.on{opacity:1;transform:none}
+.hero-sub .who{display:block;margin-top:10px;font-size:13px;color:var(--faint);letter-spacing:.3em}
+.hint{font-size:12.5px;color:var(--faint);letter-spacing:.3em;margin-top:16px}
+
+/* ===== 干支日签轨 ===== */
+#dayrail{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:7px}
+#dayrail .day{
+  width:60px;text-align:center;padding:5px 0 6px;border:1px solid var(--line);
+  color:var(--faint);font-size:12px;line-height:1.4;transition:.4s;background:rgba(25,25,23,.72);
+}
+#dayrail .day b{display:block;font-size:14px;letter-spacing:.1em;font-weight:700}
+#dayrail .day i{display:block;font-style:normal;font-size:10.5px;letter-spacing:.15em}
+#dayrail .day.lit{border-color:var(--jin);color:var(--jin)}
+@media (max-width:1080px){#dayrail{display:none}}
+
+/* ===== 章节通用 ===== */
+main{padding-bottom:40px}
+.gate{padding:96px 0 30px;position:relative}
+.gn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border:1px solid var(--jin-dim);color:var(--jin);
+  font-size:20px;margin-bottom:14px;
+}
+.gate h2{font-size:29px;font-weight:700;letter-spacing:.12em;margin-bottom:8px}
+.gate .gt-sub{color:var(--faint);font-size:13.5px;letter-spacing:.25em;margin-bottom:26px}
+.gate p{max-width:46em;margin:14px 0;color:var(--dim);font-size:15.5px}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.rv.on{opacity:1;transform:none}
+
+/* 引文与出处 */
+.q{
+  color:var(--paper);border-left:2px solid var(--jin);
+  padding:6px 0 6px 18px;margin:18px 0;font-size:15.5px;max-width:44em;
+}
+.src{color:var(--faint);font-size:12.5px;margin:-12px 0 20px;padding-left:20px;letter-spacing:.12em}
+.ext{color:var(--faint);font-size:12.5px;border-left:1px solid var(--line);padding:4px 0 4px 16px;margin:16px 0;max-width:44em}
+
+/* ===== 门一 错书对质 ===== */
+.book-duel{display:flex;gap:34px;flex-wrap:wrap;margin-top:30px;align-items:stretch}
+.booklet{
+  flex:1 1 280px;min-height:330px;border:1px solid var(--line);padding:26px 24px;position:relative;
+  transition:transform .6s ease,box-shadow .6s ease,border-color .6s ease;
+}
+.booklet.bad{background:rgba(232,228,220,.03)}
+.booklet.good{background:linear-gradient(160deg,rgba(201,150,63,.13),rgba(201,150,63,.04))}
+.booklet h3{font-size:21px;letter-spacing:.2em;margin-bottom:4px}
+.booklet .bmeta{font-size:12px;color:var(--faint);letter-spacing:.15em;margin-bottom:16px}
+.booklet .tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:8px}
+.booklet .tags span{
+  border:1px solid var(--line);color:var(--dim);font-size:13px;padding:4px 13px;position:relative;transition:.3s;cursor:pointer;
+}
+.booklet .tags span.err{color:var(--zhu);border-color:rgba(192,69,60,.5)}
+.booklet .tags span.err::after{
+  content:"";position:absolute;left:-4px;right:-4px;top:50%;height:1px;background:var(--zhu);transform:rotate(-8deg);
+}
+.booklet.good.up{transform:translateY(-14px);border-color:var(--jin);box-shadow:0 18px 44px rgba(0,0,0,.5)}
+.booklet .verdict{margin-top:18px;font-size:13px;color:var(--faint);min-height:3em}
+
+/* ===== 门二 档案卡与鸭列队 ===== */
+.duo{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start;margin-top:26px}
+.archive{
+  flex:0 1 330px;perspective:900px;cursor:pointer;min-height:400px;
+}
+.archive .face{
+  position:absolute;backface-visibility:hidden;border:1px solid var(--jin-dim);
+  padding:26px 24px;min-height:400px;width:100%;transition:transform .8s cubic-bezier(.4,0,.2,1);
+  background:linear-gradient(170deg,rgba(232,228,220,.05),rgba(232,228,220,.015));
+}
+.archive .back{transform:rotateY(180deg)}
+.archive.flipped .front{transform:rotateY(180deg)}
+.archive.flipped .back{transform:rotateY(0)}
+.archive h3{font-size:24px;letter-spacing:.3em;margin-bottom:2px}
+.archive .anick{color:var(--jin);font-size:13px;letter-spacing:.25em;margin-bottom:18px}
+.archive .arow{border-bottom:1px dashed var(--line);padding:9px 0;font-size:14px;color:var(--dim)}
+.archive .arow b{color:var(--jin);font-weight:400;margin-right:10px;font-size:12.5px;letter-spacing:.2em}
+.archive .flip-tip{margin-top:14px;font-size:12px;color:var(--faint);letter-spacing:.2em}
+.pond-mini{flex:1 1 380px;border:1px solid var(--line);padding:22px}
+.pond-mini svg{width:100%;height:150px;display:block}
+.pond-mini .pm-btn{
+  margin-top:14px;background:none;border:1px solid var(--jin-dim);color:var(--jin);
+  font:inherit;font-size:13.5px;letter-spacing:.3em;text-indent:.3em;padding:8px 22px;cursor:pointer;transition:.3s;
+}
+.pond-mini .pm-btn:hover{background:var(--jin-faint)}
+.pond-mini .pm-note{font-size:13px;color:var(--faint);margin-top:12px;min-height:3em}
+
+/* ===== 门三 行军账 ===== */
+.march-account{margin-top:26px;border:1px solid var(--line);padding:28px 26px}
+.route{position:relative;height:120px;margin:10px 0 6px}
+.route .axisline{position:absolute;left:0;right:0;top:76px;height:1px;background:var(--line)}
+.route .tick{position:absolute;top:70px;width:1px;height:13px;background:var(--dim)}
+.route .tick i{position:absolute;top:16px;left:50%;transform:translateX(-50%);font-style:normal;font-size:12px;color:var(--faint);white-space:nowrap}
+.route .dot{
+  position:absolute;top:71px;left:0;width:11px;height:11px;border-radius:50%;
+  background:var(--jin);transform:translate(-50%,-50%);transition:left 1.8s cubic-bezier(.3,.6,.4,1);
+  box-shadow:0 0 0 5px rgba(201,150,63,.14);
+}
+.route .stop{position:absolute;top:30px;transform:translateX(-50%);font-size:12.5px;color:var(--faint);opacity:0;transition:.5s;white-space:nowrap;text-align:center}
+.route .stop b{display:block;color:var(--jin);font-weight:400}
+.route .stop.on{opacity:1}
+.ma-btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.ma-btns button{
+  background:none;border:1px solid var(--jin-dim);color:var(--jin);font:inherit;font-size:13.5px;
+  padding:7px 20px;cursor:pointer;letter-spacing:.2em;transition:.3s;
+}
+.ma-btns button:hover:not(:disabled){background:var(--jin-faint)}
+.ma-btns button:disabled{opacity:.32;cursor:default}
+.ma-log{margin-top:16px;font-size:14px;color:var(--dim);min-height:5.6em}
+.flipcard{perspective:800px;flex:1 1 300px;cursor:pointer;min-height:190px;position:relative}
+.flipcard .fc{
+  position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--jin-dim);
+  padding:22px;transition:transform .7s cubic-bezier(.4,0,.2,1);
+  background:linear-gradient(170deg,rgba(232,228,220,.05),rgba(232,228,220,.015));
+}
+.flipcard .b2{transform:rotateY(180deg)}
+.flipcard.flipped .f1{transform:rotateY(180deg)}
+.flipcard.flipped .b2{transform:rotateY(0)}
+.flipcard h4{font-size:15px;letter-spacing:.25em;color:var(--jin);font-weight:400;margin-bottom:10px}
+
+/* ===== 门四 悬案卷宗 ===== */
+.folders{margin-top:26px}
+.folder-tabs{display:flex;gap:10px;margin-bottom:-1px}
+.folder-tabs button{
+  background:none;border:1px solid var(--line);border-bottom:none;color:var(--faint);
+  font:inherit;font-size:14px;letter-spacing:.2em;padding:9px 24px;cursor:pointer;transition:.3s;
+}
+.folder-tabs button.act{color:var(--jin);border-color:var(--jin-dim);background:rgba(201,150,63,.07)}
+.folder-body{border:1px solid var(--jin-dim);padding:28px 26px;position:relative;min-height:380px}
+.case{display:none}
+.case.act{display:block}
+.case ol{list-style:none;margin:8px 0}
+.case ol li{border-bottom:1px dashed var(--line);padding:10px 0;color:var(--dim);font-size:14.5px;position:relative;padding-left:34px}
+.case ol li b{
+  position:absolute;left:0;top:12px;width:22px;height:22px;border:1px solid var(--jin-dim);
+  color:var(--jin);font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:400;
+}
+.stamp-grey{
+  position:absolute;right:26px;top:22px;border:2px solid rgba(232,228,220,.34);color:rgba(232,228,220,.5);
+  font-size:15px;letter-spacing:.35em;text-indent:.35em;padding:7px 14px;transform:rotate(9deg);
+}
+
+/* ===== 门五 殉节三牌 ===== */
+.martyrs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:26px}
+.mcard{border:1px solid var(--line);padding:22px 20px;cursor:pointer;transition:border-color .4s,transform .4s}
+.mcard:hover{border-color:var(--jin-dim)}
+.mcard h4{font-size:19px;letter-spacing:.15em;margin-bottom:2px}
+.mcard .mrank{font-size:12px;color:var(--faint);letter-spacing:.25em;margin-bottom:12px}
+.mcard .mbody{display:none;font-size:14px;color:var(--dim)}
+.mcard.open .mbody{display:block}
+.mcard .mplus{color:var(--jin);font-size:12px;letter-spacing:.25em;margin-top:12px}
+.mcard.open .mplus{display:none}
+.zici{margin-top:22px;border:1px solid var(--jin-dim);padding:24px 24px;background:linear-gradient(170deg,rgba(201,150,63,.07),transparent)}
+
+/* ===== 门六 戏箱 ===== */
+.trunk{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:26px}
+.drawer{border:1px solid var(--jin-dim);overflow:hidden}
+.drawer .dh{
+  padding:14px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  letter-spacing:.25em;color:var(--jin);font-size:15px;
+}
+.drawer .dh em{font-style:normal;transition:.4s}
+.drawer.open .dh em{transform:rotate(90deg)}
+.drawer .db{max-height:0;overflow:hidden;transition:max-height .6s ease;font-size:14px;color:var(--dim)}
+.drawer.open .db{max-height:340px}
+.drawer .db .inner{padding:4px 18px 18px}
+.rhyme{
+  margin:40px auto 0;display:flex;gap:30px;justify-content:center;flex-wrap:wrap;align-items:flex-start;
+}
+.rhyme .rline{
+  writing-mode:vertical-rl;text-orientation:upright;font-size:24px;letter-spacing:.35em;
+  color:var(--faint);height:250px;cursor:pointer;transition:color .5s;line-height:1.3;white-space:nowrap;
+}
+.rhyme .rline.lit{color:var(--paper)}
+.rhyme .rline.endlit{color:var(--zhu);text-shadow:0 0 18px rgba(192,69,60,.4)}
+.rhyme-note{text-align:center;color:var(--faint);font-size:13px;margin-top:18px;letter-spacing:.2em}
+
+/* ===== 门七 帅帐 ===== */
+.war-tent{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:26px}
+.tcard{border:1px solid var(--line);padding:22px 20px}
+.tcard h4{font-size:17px;letter-spacing:.2em;margin-bottom:2px}
+.tcard .trank{font-size:12px;color:var(--faint);letter-spacing:.2em;margin-bottom:12px}
+.flag-card{
+  margin-top:22px;border:1px solid var(--zhu);padding:22px 24px;display:flex;gap:26px;align-items:center;flex-wrap:wrap;
+}
+.flag-card .flag{
+  writing-mode:vertical-rl;text-orientation:upright;background:rgba(192,69,60,.16);
+  border:1px dashed rgba(192,69,60,.55);color:#d98d85;font-size:17px;letter-spacing:.3em;
+  padding:16px 10px;min-height:150px;
+}
+
+/* ===== 门八 七日轴 ===== */
+.week{margin-top:30px;overflow-x:auto;padding-bottom:8px}
+.week-track{display:flex;gap:0;min-width:760px;border-top:1px solid var(--jin-dim)}
+.wnode{flex:1;padding:20px 12px 0;position:relative;cursor:pointer}
+.wnode::before{
+  content:"";position:absolute;top:-6px;left:12px;width:11px;height:11px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--dim);transition:.3s;
+}
+.wnode .wg{color:var(--jin);font-size:15px;letter-spacing:.15em}
+.wnode .wl{font-size:12.5px;color:var(--faint);letter-spacing:.1em;margin-top:2px}
+.wnode.act::before{background:var(--jin);border-color:var(--jin);box-shadow:0 0 0 5px rgba(201,150,63,.14)}
+.wnode.act .wl{color:var(--dim)}
+.week-detail{border:1px solid var(--jin-dim);padding:26px 26px;margin-top:22px;min-height:230px}
+.wd-panel{display:none}
+.wd-panel.act{display:block}
+
+/* ===== 门九 擒王四格 ===== */
+.seize{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:26px}
+.spanel{border:1px solid var(--line);padding:20px;position:relative;opacity:.36;transition:.5s;cursor:pointer}
+.spanel.done{opacity:1;border-color:var(--jin-dim)}
+.spanel.cur{opacity:1;border-color:var(--jin);box-shadow:0 0 34px rgba(201,150,63,.09)}
+.spanel .sn{
+  width:30px;height:30px;border:1px solid var(--jin-dim);color:var(--jin);
+  display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:12px;
+}
+.spanel h4{font-size:16.5px;letter-spacing:.2em;margin-bottom:8px;font-weight:400}
+.spanel .st{display:none;font-size:13.5px;color:var(--dim)}
+.spanel.done .st{display:block}
+.sedan{
+  margin-top:24px;border:1px solid var(--line);padding:24px;display:flex;gap:26px;flex-wrap:wrap;align-items:center;
+}
+.sedan .chair{
+  writing-mode:vertical-rl;text-orientation:upright;border:1px solid var(--line);
+  color:var(--faint);font-size:15px;letter-spacing:.3em;padding:14px 9px;min-height:130px;
+}
+
+/* ===== 门十 风疫 ===== */
+.tabs3{display:flex;gap:10px;margin:26px 0 -1px}
+.tabs3 button{
+  background:none;border:1px solid var(--line);color:var(--faint);font:inherit;font-size:14px;
+  letter-spacing:.25em;padding:9px 26px;cursor:pointer;transition:.3s;
+}
+.tabs3 button.act{color:var(--jin);border-color:var(--jin-dim);background:rgba(201,150,63,.07)}
+.tab-body{border:1px solid var(--jin-dim);padding:26px;min-height:150px}
+.tb-panel{display:none}
+.tb-panel.act{display:block}
+
+/* ===== 门十一 条陈 ===== */
+.policies{counter-reset:pp;margin-top:26px}
+.pol{
+  border:1px solid var(--line);padding:22px 24px 22px 76px;margin-bottom:14px;position:relative;transition:border-color .4s;
+}
+.pol:hover{border-color:var(--jin-dim)}
+.pol::before{
+  counter-increment:pp;content:counter(pp,cjk-ideographic);
+  position:absolute;left:22px;top:22px;width:34px;height:34px;border:1px solid var(--jin-dim);
+  color:var(--jin);display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.pol h4{font-size:16px;letter-spacing:.2em;font-weight:400;margin-bottom:6px;color:var(--paper)}
+.pol p{font-size:14px;color:var(--dim);max-width:44em}
+.changhua{
+  margin-top:20px;border:1px dashed rgba(192,69,60,.55);padding:20px 24px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;
+}
+.changhua .seal2{
+  writing-mode:vertical-rl;text-orientation:upright;background:var(--zhu);color:#efe9df;
+  font-size:19px;letter-spacing:.25em;padding:12px 7px;transform:rotate(-3deg);
+}
+
+/* ===== 尾屏 ===== */
+.finale{padding:130px 0 90px;text-align:center;position:relative}
+.finale .fv{
+  writing-mode:vertical-rl;text-orientation:upright;margin:0 auto;
+  font-size:26px;letter-spacing:.3em;color:var(--paper);height:560px;width:70px;line-height:1.6;
+}
+.finale .fv span{opacity:0;transition:opacity 1.2s ease}
+.finale .fv span.on{opacity:1}
+.finale .bigseal{
+  writing-mode:vertical-rl;text-orientation:upright;display:inline-block;
+  background:var(--zhu);color:#efe9df;font-size:24px;letter-spacing:.28em;
+  padding:20px 10px;margin-top:44px;opacity:0;transform:rotate(-4deg) scale(.5);transition:all .6s cubic-bezier(.2,1.4,.4,1);
+}
+.finale .bigseal.on{opacity:1;transform:rotate(-4deg) scale(1)}
+.finale .loop{max-width:34em;margin:34px auto 0;color:var(--dim);font-size:15px;text-align:left}
+
+/* ===== 页脚 ===== */
+footer{border-top:1px solid var(--line);margin-top:70px;padding:38px 0 60px;color:var(--faint);font-size:13px}
+footer p{margin:6px 0;max-width:46em}
+footer a{color:var(--dim)}
+footer .warn{color:rgba(192,69,60,.75)}
+
+@media (max-width:720px){
+  .hero-title{font-size:58px;height:340px;width:78px;right:4%}
+  .hero-seal{right:calc(4% + 84px);font-size:22px}
+  .gate h2{font-size:24px}
+  .wrap{padding:0 18px}
+}
+</style>
+</head>
+<body>
+<div id="topbar"></div>
+
+<!-- ================= 首屏 夜塘 ================= -->
+<header class="hero">
+  <div class="kicker">殆知阁导读 · 海东兵燹</div>
+  <div class="hero-stage">
+    <svg viewBox="0 0 1200 480" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <defs>
+        <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#191917"/>
+          <stop offset="1" stop-color="#1e1d19"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="1200" height="480" fill="url(#skyG)"/>
+      <circle cx="920" cy="96" r="34" fill="rgba(232,228,220,.10)"/>
+      <circle cx="920" cy="96" r="23" fill="rgba(232,228,220,.13)"/>
+      <!-- 芦苇 -->
+      <g stroke="rgba(232,228,220,.28)" stroke-width="2.4" fill="none" stroke-linecap="round">
+        <path d="M78,318 C74,250 84,208 70,158"/>
+        <path d="M104,318 C102,262 116,226 108,178"/>
+        <path d="M132,318 C132,272 122,240 134,204"/>
+        <path d="M96,318 C94,282 88,258 92,232"/>
+      </g>
+      <g fill="rgba(232,228,220,.2)">
+        <ellipse cx="70" cy="152" rx="5" ry="14" transform="rotate(-9 70 152)"/>
+        <ellipse cx="108" cy="172" rx="5" ry="13" transform="rotate(6 108 172)"/>
+        <ellipse cx="134" cy="198" rx="4.6" ry="12" transform="rotate(-6 134 198)"/>
+      </g>
+      <!-- 水面 -->
+      <rect x="0" y="318" width="1200" height="162" fill="rgba(232,228,220,.03)"/>
+      <line x1="0" y1="318" x2="1200" y2="318" stroke="rgba(232,228,220,.2)" stroke-width="1"/>
+      <g id="ripples"></g>
+      <!-- 鸭群 -->
+      <g id="flock"></g>
+    </svg>
+    <div class="hero-title" id="heroTitle" aria-label="平台纪略"><span>平</span><span>台</span><span>纪</span><span>略</span></div>
+    <div class="hero-seal" id="heroSeal">鹿洲</div>
+  </div>
+  <div class="hero-ui">
+    <button id="goDucks" type="button">点 鸭 出 塘</button>
+    <div class="hint" id="heroHint">塘里这群鸭,早晚排着队进出,乡里人看了都说奇</div>
+    <div class="hero-sub" id="heroSub">
+      <div class="q">台湾雄踞海外，直关内地东南半壁。沿海六七省，门户相通。</div>
+      <span class="who">清 蓝鼎元 撰 · 康熙六十年之乱始末</span>
+    </div>
+  </div>
+</header>
+
+<!-- 干支日签轨 -->
+<nav id="dayrail" aria-label="战事日轨">
+  <div class="day" data-i="0"><b>己酉</b><i>结盟</i></div>
+  <div class="day" data-i="1"><b>辛亥</b><i>警动</i></div>
+  <div class="day" data-i="2"><b>辛酉</b><i>城陷</i></div>
+  <div class="day" data-i="3"><b>癸亥</b><i>僭号</i></div>
+  <div class="day" data-i="4"><b>丁亥</b><i>帅临</i></div>
+  <div class="day" data-i="5"><b>辛卯</b><i>出港</i></div>
+  <div class="day" data-i="6"><b>丙午</b><i>登岸</i></div>
+  <div class="day" data-i="7"><b>癸丑</b><i>复府</i></div>
+  <div class="day" data-i="8"><b>甲子</b><i>擒王</i></div>
+  <div class="day" data-i="9"><b>辛未</b><i>风灾</i></div>
+  <div class="day" data-i="10"><b>终笔</b><i>台湾平</i></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ 门一 错书 ============ -->
+<section class="gate" data-day="0" id="g1">
+  <div class="gn rv">壹</div>
+  <h2 class="rv">街角那本错书</h2>
+  <div class="gt-sub rv">一本战地实录的诞生,始于一肚子的火气</div>
+  <p class="rv">康熙六十年秋天,跟着大军平台湾回来的幕僚蓝鼎元,在街上撞见一本刚上市的小册子,讲的正是不久前那场把他卷进去半年的大乱。他高高兴兴买下,读不到一半就变了脸色:凡是亲身经过的人一眼就能看出,书里的地点、人名、时间、经过,几乎没一处对的。他怕的不是小贩卖书挣钱,是将来修史的人图省事,拿它当第一手材料。</p>
+  <div class="book-duel rv">
+    <div class="booklet bad" id="bkBad">
+      <h3>靖台实录</h3>
+      <div class="bmeta">市面坊刻,康熙六十年刊 · 道听途说之属</div>
+      <p style="font-size:14px">点击四处硬伤,看它们一一划掉:</p>
+      <div class="tags" id="badTags">
+        <span>其地</span><span>其人</span><span>其时</span><span>其事</span>
+      </div>
+      <div class="verdict" id="badVerdict">坊间快笔,半年成书,快则快矣。</div>
+    </div>
+    <div class="booklet good" id="bkGood">
+      <h3>平台纪略</h3>
+      <div class="bmeta">军中幕府亲历,东征逾载 · 目击手挥</div>
+      <div class="q">蓝子自东宁归，见有市「靖台实录」者，喜之甚，读不终篇，而愀然起，喟然叹也</div>
+      <div class="q">其地、其人、其时、其事，多谬误舛错。将天下后世以为实然，而史氏据以征信，为害可胜言哉</div>
+      <div class="verdict">外考:坊间那本《靖台实录》为黄耀烱所撰,康熙六十年刊行,今已罕见;蓝鼎元这本,就是冲着它来的。</div>
+    </div>
+  </div>
+  <p class="rv">他的火气里有一样很现代的东西:身在局中的人写本地、写当下,尚且满纸走样,何况隔着几百年、几千里去猜。</p>
+  <div class="q rv">以闽人言闽事，以今日之人言今日事</div>
+  <p class="rv">所以他敢署上这份底气:东征一年多,他在军幕里把风浪和战场都过了一遍。</p>
+  <div class="q rv">东征逾载，躬历行间。风涛戎马，磔鼠哀鸿，执馘献俘，招降殄孽</div>
+  <div class="q rv">中夜闻警，磨盾草檄，千里驱驰</div>
+  <div class="src">以上均自序</div>
+</section>
+
+<!-- ============ 门二 鸭王档案 ============ -->
+<section class="gate" data-day="0" id="g2">
+  <div class="gn rv">贰</div>
+  <h2 class="rv">鸭王档案</h2>
+  <div class="gt-sub rv">正史口中的贼首,档案里先是个养鸭的</div>
+  <div class="duo rv">
+    <div class="archive" id="arcCard" tabindex="0" role="button" aria-label="档案翻面">
+      <div class="face front">
+        <h3>朱一贵</h3>
+        <div class="anick">小名祖 · 后世唤作鸭母王</div>
+        <div class="arow"><b>原籍</b>漳州府长泰人,游手无艺,乡里都嫌</div>
+        <div class="arow"><b>履历</b>渡台后当过衙门差役,不久被革</div>
+        <div class="arow"><b>营生</b>在草地替人放鸭</div>
+        <div class="arow"><b>异相</b>鸭子早晚排成队伍进出,看过的乡民啧啧称奇</div>
+        <div class="arow"><b>人缘</b>过路的亡命客他都留饭,杀鸭设宴,招待得尽兴</div>
+        <div class="flip-tip">点卡片翻面,看乱世怎么用他</div>
+      </div>
+      <div class="face back">
+        <h3>起事底档</h3>
+        <div class="anick">康熙六十年春</div>
+        <div class="q">凤山县令缺，台郡太守王珍摄县篆，委政次子，颇逾闲，征收粮税苛刻</div>
+        <div class="q">以风闻捕治盟歃者数十人，违禁入内山砍竹木者百余人</div>
+        <p style="font-size:14px;color:var(--dim)">官府先把手伸向结拜的与砍竹的,于是有人替所有人记住了这笔账。</p>
+        <div class="q">今地方官长但知沉湎樗蒱耳，种种不堪，兵民瓦解，欲举大事，此其时乎</div>
+        <div class="q">我姓朱，若以明朝后裔耸乡村，归者必众</div>
+        <div class="src">后两句为黄殿等夜访罗汉门时的一问一答</div>
+      </div>
+    </div>
+    <div class="pond-mini">
+      <svg viewBox="0 0 420 150" aria-hidden="true">
+        <line x1="0" y1="96" x2="420" y2="96" stroke="rgba(232,228,220,.18)"/>
+        <rect x="0" y="96" width="420" height="54" fill="rgba(232,228,220,.03)"/>
+        <g id="miniFlock"></g>
+      </svg>
+      <button class="pm-btn" id="miniBtn" type="button">看 鸭 列 队</button>
+      <div class="pm-note" id="miniNote">鸭子的纪律,比衙门里那支官军强。</div>
+      <div class="q" style="margin-top:18px">居母顶草地饲鸭为生。其鸭旦暮编队出入，愚甿异焉</div>
+      <div class="src">本纪 · 朱一贵传前略</div>
+      <div class="q">奸匪过者，辄款延，烹鸭具馔，务尽欢</div>
+      <p style="font-size:13.5px;color:var(--faint)">四月初九夜里,黄殿庄中五十二人焚表结盟,竖起一面写着「大元帅朱」的旗。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 门三 行军账 ============ -->
+<section class="gate" data-day="1" id="g3">
+  <div class="gn rv">叁</div>
+  <h2 class="rv">三日,三十五里</h2>
+  <div class="gt-sub rv">一场被走路速度耽误的平叛</div>
+  <p class="rv">警报进城那天,军中点了个「素来谈兵头头是道」的游击周应龙,带四百人去打冈山。出发前幕僚们心里都有数:</p>
+  <div class="q rv">冈山距府治三十里，贼势未盛，疾趋可灭也</div>
+  <p class="rv">三十里,急行军半天的事。然后这位爷带着兵和征来的土番,走出了一段足以载进笑话史的速度。按一遍:</p>
+  <div class="march-account rv">
+    <div class="route" id="route">
+      <div class="axisline"></div>
+      <div class="tick" style="left:0"><i>府治 0 里</i></div>
+      <div class="tick" style="left:50%"><i>冈山 30 里</i></div>
+      <div class="dot" id="routeDot"></div>
+      <div class="stop" style="left:8%" data-s="0"><b>半路店</b>5 里</div>
+      <div class="stop" style="left:33%" data-s="1"><b>角带园</b>20 里</div>
+      <div class="stop" style="left:58%" data-s="2"><b>折向南路营</b>又 15 里</div>
+    </div>
+    <div class="ma-btns">
+      <button id="maGo" type="button">进 兵</button>
+      <button id="maReset" type="button" disabled>重 走</button>
+    </div>
+    <div class="ma-log" id="maLog">细雨沾泥。大军已在半路店扎营,今日行程:五里。</div>
+  </div>
+  <p class="rv">走不动还在其次,要命的是他路上下的那道赏格:</p>
+  <div class="duo rv">
+    <div class="flipcard" id="rewardCard" tabindex="0" role="button" aria-label="赏格翻面">
+      <div class="fc f1">
+        <h4>军中赏格</h4>
+        <div class="q">传令兵番杀贼一名赏银三两，杀贼目一名赏五两</div>
+        <p style="font-size:13px;color:var(--faint)">点击看这笔银子买来了什么</p>
+      </div>
+      <div class="fc b2">
+        <h4>三两银子的下场</h4>
+        <div class="q">土番性贪淫，杀良民四人，纵火燔民居，复毙八人；闻者股栗</div>
+        <div class="q">远近贼党借兵番杀掠为辞，鼓煽沿途村庄，迫胁居民，分授以帜</div>
+        <p style="font-size:13px;color:var(--faint)">官军替叛军把征兵告示贴遍了沿途村庄。</p>
+      </div>
+    </div>
+    <div style="flex:1 1 300px">
+      <p style="font-size:14.5px">此后赤山接战,前队一退,局面再没找回。各乡纷纷竖旗,响应的名册越拉越长:南路杜君英,起草潭、下埤头、新园、小琉球各路头目,全都约好了共事。官府用三天走完了三十里,叛军用同样三天走遍了大半个台湾。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 门四 悬案 ============ -->
+<section class="gate" data-day="1" id="g4">
+  <div class="gn rv">肆</div>
+  <h2 class="rv">两桩没头没尾的怪事</h2>
+  <div class="gt-sub rv">大乱前夜的预兆,一桩被当成疯话,一桩成了邪术</div>
+  <div class="folders rv">
+    <div class="folder-tabs">
+      <button class="act" data-c="0" type="button">高永寿案</button>
+      <button data-c="1" type="button">帝令旗案</button>
+    </div>
+    <div class="folder-body">
+      <div class="stamp-grey">不可得</div>
+      <div class="case act" data-c="0">
+        <ol>
+          <li><b>一</b>贩子高永寿救活一个快饿死在破庙里的病人<div class="q">有病者于破庙饿且死，永寿活之</div></li>
+          <li><b>二</b>数日后路遇此人,被领进深山,酒席已备,满座是贼<div class="q">遇前所活人，欷歔感泣，引之深山中，设酒殽相待，贼也</div></li>
+          <li><b>三</b>见了朱一贵,谋乱的底细听了个全<div class="q">与见朱一贵，刀鎗森列，言倡乱谋甚悉，邀永寿入伙，佯许之</div></li>
+          <li><b>四</b>他找机会溜走,先报南路营,没人信;报到府城、报到镇道,还是没人信<div class="q">赴南路营告变；弗信。至府，复告之镇道；镇道以为狂疾，会审严刑，坐妖言惑众</div></li>
+          <li><b>五</b>乱平之后,官府想起这桩旧案,押着他把当年那座山谷翻了个遍<div class="q">制府移檄粤东，唤高永寿至台，寻向日所见贼营故处，不可得。令往罗汉门看之，亦不是</div></li>
+        </ol>
+        <div class="q">昔日如梦如醉，想是命当受刑；今遍觅诸山，并无其处，亦异事也</div>
+        <div class="src">本纪原注 · 连作者也只能记下「亦异事也」四个字</div>
+      </div>
+      <div class="case" data-c="1">
+        <ol>
+          <li><b>一</b>乱前有个服饰怪异的僧人在街巷游走,自称天帝所遣,说月底有大难临头</li>
+          <li><b>二</b>教家家门口设香案,插黄纸小旗可免灾<div class="q">以黄纸为小旗，书「帝令」二字插案中，可免</div></li>
+          <li><b>三</b>等贼真的进了城,家家门口果然都插着旗<div class="q">官兵见者以为百姓从贼，多慌乱，以及于败</div></li>
+        </ol>
+        <p style="font-size:14.5px;color:var(--dim)">一句预言,一套仪式,一场人心瓦解。不管和尚是谁派来的,这套操作在两百年后的教科书里有个正经名字:战时心理战。康熙年间的人只来得及记下一个「怪」字。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 门五 春牛埔 ============ -->
+<section class="gate" data-day="2" id="g5">
+  <div class="gn rv">伍</div>
+  <h2 class="rv">春牛埔的三块牌子</h2>
+  <div class="gt-sub rv">五月初一,府城外的最后一战</div>
+  <p class="rv">官员家眷抢先渡海出逃的那几天,有个水师游击正在外海巡哨,赶回鹿耳门正撞见逃难船队。他留下的话成了全书最冷的一句:</p>
+  <div class="q rv">官者，兵民之望，官眷逃则人心散，大事去矣</div>
+  <div class="q rv">今日遑知有家哉</div>
+  <div class="src">其婿叩马请他先安顿家眷,他厉声答罢,驱众赴敌</div>
+  <p class="rv">初一战罢,府城陷落。战死的人里,有三块牌子立得最高,点开看:</p>
+  <div class="martyrs rv">
+    <div class="mcard" tabindex="0" role="button">
+      <h4>许云</h4>
+      <div class="mrank">水师副将 · 遍体重创</div>
+      <p style="font-size:13.5px;color:var(--faint)">自黎明杀到日中,箭尽炮尽,堕马步战</p>
+      <div class="mbody">
+        <div class="q">自黎明战至日中，矢穷炮尽</div>
+        <div class="q">云重创遍体，堕马步行，犹手刃数十贼</div>
+        <div class="q">生不能杀尽逆奴，死必来歼灭汝等</div>
+        <div class="src">左手被斫断犹骂不绝口,贼怒而剐其尸</div>
+      </div>
+      <div class="mplus">点 开</div>
+    </div>
+    <div class="mcard" tabindex="0" role="button">
+      <h4>李茂吉</h4>
+      <div class="mrank">把总 · 被执不屈</div>
+      <p style="font-size:13.5px;color:var(--faint)">押到南较场,挺立不跪</p>
+      <div class="mbody">
+        <div class="q">若兵耶</div>
+        <div class="q">把总微官耳。若壮士降，当以汝为将军</div>
+        <div class="q">我朝廷命官，岂从汝作贼</div>
+        <div class="q">头脑破裂，尚指贼痛骂如初，气绝乃已</div>
+        <div class="src">问者贼目戴穆,答罢他一脚踢翻贼案,挣断绳索去夺刀</div>
+      </div>
+      <div class="mplus">点 开</div>
+    </div>
+    <div class="mcard" tabindex="0" role="button">
+      <h4>游崇功</h4>
+      <div class="mrank">水师游击 · 马蹶战死</div>
+      <p style="font-size:13.5px;color:var(--faint)">单骑冲阵,杀数十人</p>
+      <div class="mbody">
+        <div class="q">官者，兵民之望，官眷逃则人心散，大事去矣</div>
+        <p style="font-size:14px">登岸赴敌,婿再劝,他答完上面那七个字便驱众赴敌。春牛埔上,他战至马倒。</p>
+      </div>
+      <div class="mplus">点 开</div>
+    </div>
+  </div>
+  <div class="zici rv">
+    <p style="font-size:14.5px">还有个不肯死的人:被俘的刘得紫,引颈等刀,贼人敬他名声不肯杀。他只求一件事:</p>
+    <div class="q">吾为天子命官，不可不死；但求埋吾帅尸首，死瞑目耳</div>
+    <p style="font-size:14.5px">收埋主帅之后,他被关进学宫的朱子祠,一心求死,偏偏死不成:</p>
+    <div class="q">进食，弗食。七日仍不死</div>
+    <div class="q">士民兵僧进粥苦劝，皆弗食</div>
+    <p style="font-size:14.5px">直到诸生来告诉他贼必可灭、当留身报仇,他才肯喝下那碗粥,活着等到了王师。绝食七天饿不死的人,靠一句劝活了下来。</p>
+  </div>
+</section>
+
+<!-- ============ 门六 戏服开国 ============ -->
+<section class="gate" data-day="3" id="g6">
+  <div class="gn rv">陆</div>
+  <h2 class="rv">戏箱里开出的朝廷</h2>
+  <div class="gt-sub rv">新王的冕服,是从戏班子借的</div>
+  <p class="rv">五月初,全台俱陷,新王登基。史书写这场开国大典,笔墨却全在服装道具上。拉开戏箱的四屉:</p>
+  <div class="trunk rv">
+    <div class="drawer"><div class="dh" role="button" tabindex="0">通天冠<em>›</em></div><div class="db"><div class="inner"><div class="q">通天冠、黄袍、玉带，皆取之优</div><p style="font-size:13.5px">全套行头从戏班租借,史笔一个「优」字,礼崩得干干净净。</p></div></div></div>
+    <div class="drawer"><div class="dh" role="button" tabindex="0">黄袍<em>›</em></div><div class="db"><div class="inner"><div class="q">群贼拥坐堂上呼万岁，伪号永和</div><p style="font-size:14px">国祚几何?民间马上替他算完了账,见下面那首童谣。</p></div></div></div>
+    <div class="drawer"><div class="dh" role="button" tabindex="0">玉带<em>›</em></div><div class="db"><div class="inner"><div class="q">伪职填街，摩肩触额，优伶服饰，搜括靡遗</div><p style="font-size:13.5px">国公、太师、尚书、都督,成街成巷的伪官,把全台戏服一扫而空。</p></div></div></div>
+    <div class="drawer"><div class="dh" role="button" tabindex="0">出行仪仗<em>›</em></div><div class="db"><div class="inner"><div class="q">或戴幞头，衣小袖，纱帽金冠，被甲骑牛</div><p style="font-size:13.5px">披着甲骑牛的将军,是这支「朝廷」的阅兵式。</p></div></div></div>
+  </div>
+  <p class="rv" style="text-align:center;margin-top:44px">当时民间就有四句童谣,竖着念一遍,一句一桌:</p>
+  <div class="rhyme rv" id="rhyme">
+    <div class="rline" role="button" tabindex="0">头戴明朝帽</div>
+    <div class="rline" role="button" tabindex="0">身穿清朝衣</div>
+    <div class="rline" role="button" tabindex="0">五月称永和</div>
+    <div class="rline" id="rhymeEnd" role="button" tabindex="0">六月还康熙</div>
+  </div>
+  <div class="rhyme-note rv">点各句点亮,末句点完见朱批</div>
+  <div class="rv" id="rhymeVerdict" style="display:none">
+    <div class="q">盖童孺妇女皆知其旦暮可灭而擒也</div>
+    <div class="src">作者的批语:连孩童和妇人都看得出这朝廷的寿命</div>
+  </div>
+</section>
+
+<!-- ============ 门七 帅帐 ============ -->
+<section class="gate" data-day="4" id="g7">
+  <div class="gn rv">柒</div>
+  <h2 class="rv">澎湖不许退,帅帐有三张牌</h2>
+  <div class="gt-sub rv">一句狠话守住退路,一句大话稳住全局,一句实话收住杀心</div>
+  <div class="war-tent rv">
+    <div class="tcard">
+      <h4>林亮</h4>
+      <div class="trank">澎湖右营守备 · 拒绝登舟</div>
+      <div class="q">朝廷以海外封疆付我等，正为缓急倚赖</div>
+      <div class="q">丈夫不死则已，死则死忠义耳</div>
+      <div class="q">请整兵配船，守御要害，俟贼至决一死战。战不捷而亮死，公等归亦未迟</div>
+      <p style="font-size:13.5px;color:var(--faint)">诸将议弃澎湖回厦门,他一人拦下,拔刀把已上船的官民家属赶回岸上。澎湖一守,守住了日后进兵的跳板。</p>
+    </div>
+    <div class="tcard">
+      <h4>施世骠</h4>
+      <div class="trank">水师提督</div>
+      <div class="q">台寇猖獗极矣，六七日间全郡俱陷，此殆非小敌也</div>
+      <p style="font-size:13.5px;color:var(--faint)">外考:他是施琅第六子。康熙二十二年他十五岁,跟着父亲从澎湖打进台湾;三十八年后故地重来的,换成了他自己。</p>
+    </div>
+    <div class="tcard">
+      <h4>蓝廷珍</h4>
+      <div class="trank">南澳总兵 · 蓝鼎元族兄</div>
+      <div class="q">草寇不足烦区处，某一登彼岸，大人可即奏报荡平也</div>
+      <p style="font-size:13.5px;color:var(--faint)">祭江誓师时对总督撂下的话。总督接他禀帖时先说了另一句:</p>
+      <div class="q">蓝总兵所见，事事与吾吻合，吾调此君，平台得人矣</div>
+    </div>
+  </div>
+  <p class="rv">但真正配得上「帅才」二字的,是登岸之前他就想清楚的那笔账。叛众号称三十万,杀是杀不完的:</p>
+  <div class="q rv">群盗皆穿窬乌合，畏死胁从，乖离涣散，一攻即靡</div>
+  <div class="q rv">止歼巨魁数人，余反侧概令自新，勿有所问，则人人有生之乐，无死之心，可不血刃平也</div>
+  <div class="flag-card rv">
+    <div class="flag">大清良民</div>
+    <div style="flex:1;min-width:230px">
+      <div class="q">门户旗帜书「大清良民」者即为良民，惟拒敌者乃斩之</div>
+      <p style="font-size:13.5px;color:var(--faint)">登岸当日全军传令:降者放回家,门口挂这面旗就算良民。后来跋里盘点全役,说这四个字才是头功。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 门八 七日 ============ -->
+<section class="gate" data-day="5" id="g8">
+  <div class="gn rv">捌</div>
+  <h2 class="rv">七日,复一省</h2>
+  <div class="gt-sub rv">六月的七天,轴上是七个干支</div>
+  <p class="rv">六月初一,舰队出厦门港,当夜在青水沟吃了一顿台风的前奏。点轴上每一站:</p>
+  <div class="week rv">
+    <div class="week-track" id="weekTrack">
+      <div class="wnode act" data-w="0"><div class="wg">辛卯</div><div class="wl">出港遇风</div></div>
+      <div class="wnode" data-w="1"><div class="wg">丙午</div><div class="wl">鹿耳门</div></div>
+      <div class="wnode" data-w="2"><div class="wg">丁未</div><div class="wl">入安平</div></div>
+      <div class="wnode" data-w="3"><div class="wg">己酉</div><div class="wl">破牛车阵</div></div>
+      <div class="wnode" data-w="4"><div class="wg">辛亥</div><div class="wl">夜登西港</div></div>
+      <div class="wnode" data-w="5"><div class="wg">壬子</div><div class="wl">弃舟决胜</div></div>
+      <div class="wnode" data-w="6"><div class="wg">癸丑</div><div class="wl">复府治</div></div>
+    </div>
+  </div>
+  <div class="week-detail rv">
+    <div class="wd-panel act" data-w="0">
+      <div class="q">六月朔日辛卯，楼船出厦门港。翼日至青水沟，飓风骤起，浪高桅末，几覆溺者数次</div>
+      <p style="font-size:14px;color:var(--dim)">三军色变,蓝廷珍亲自操舟,船队被吹散,风停后各自收拢再进。</p>
+    </div>
+    <div class="wd-panel" data-w="1">
+      <div class="q">海灵助顺，潮水涨高八尺</div>
+      <div class="q">遥望炮台火药堆积累累，亮命炮专攻</div>
+      <p style="font-size:14px;color:var(--dim)">鹿耳门口天险,靠一场恰到好处的涨潮渡过;炮台上的火药桶被林亮点名打中,一炬而定。这是全书里最像小说的两笔,作者照实录下。</p>
+    </div>
+    <div class="wd-panel" data-w="2">
+      <div class="q">复登安平镇城，竖立大军旗帜</div>
+      <div class="q">出示安民，盖日犹未晡也</div>
+      <p style="font-size:14px;color:var(--dim)">安平城里百姓争着给大军送饭,少壮的自告奋勇当向导。</p>
+    </div>
+    <div class="wd-panel" data-w="3">
+      <div class="q">贼目翁飞虎率所部乌龙旗为前锋，驱车拥盾冒炮火冲突</div>
+      <div class="q">蓝廷珍亲督大炮，连环齐发，倒贼乌龙旗，破牛车阵</div>
+      <p style="font-size:14px;color:var(--dim)">新王朝廷最后的野战本钱:牛车加盾牌。亲督大炮的,正是放话「一登彼岸」的那位总兵。</p>
+    </div>
+    <div class="wd-panel" data-w="4">
+      <div class="q">谋算必出万全，不可怙胜轻举。闻贼多在萧垄、麻豆间，西港仔乃其肘下</div>
+      <p style="font-size:14px;color:var(--dim)">有士民愿领路,让一千二百人从西港方向登岸,提督应了,蓝廷珍连夜叫停:那是人家肘弯底下,竹林四合,一军危矣。随后他自请亲往。</p>
+    </div>
+    <div class="wd-panel" data-w="5">
+      <div class="q">示军士必死无还心！今日战胜，明当直抵府治耳</div>
+      <p style="font-size:14px;color:var(--dim)">黎明登岸后,诸将问他为什么把船全放回去。竹林伏兵、夜劫营、甘蔗田里露刃而伏,这一天把贼胆打碎了。</p>
+    </div>
+    <div class="wd-panel" data-w="6">
+      <div class="q">府治恢复，在此一二日间耳</div>
+      <div class="q">万姓欢呼，复见天日，家家户外设香案，拜迎王师</div>
+      <p style="font-size:14px;color:var(--dim)">丙午登岸,癸丑复府,整整七天。两个月前从这里仓皇出逃的官眷,如今随军回来。</p>
+    </div>
+  </div>
+  <p class="rv">至于那面「大清良民」的旗,以及降者纵还的军令,让七日奇迹没有变成七日屠城。史笔自己最得意的就是这一点。</p>
+</section>
+
+<!-- ============ 门九 沟尾庄 ============ -->
+<section class="gate" data-day="8" id="g9">
+  <div class="gn rv">玖</div>
+  <h2 class="rv">沟尾庄,一顿庆功宴</h2>
+  <div class="gt-sub rv">鸭母王的最后一夜,轮回开始的地方</div>
+  <p class="rv">弃了府城的新王带残部北窜,吃住都成了问题。闰六月初五,他领着饥疲的部众进了沟尾庄讨吃食。庄上大族杨旭等人早已和官军定约,牛,是照杀的;饭,是管够的。四格看完这场局:</p>
+  <div class="seize rv" id="seize">
+    <div class="spanel cur done" data-s="0">
+      <div class="sn">一</div><h4>椎牛饷之</h4>
+      <div class="st"><div class="q">一贵率千人至沟尾庄索饭食，杨旭等椎牛饷之，许号召六庄乡壮相助</div><p style="font-size:13px">酒足饭饱,庄上还答应帮他召集六庄乡勇。</p></div>
+    </div>
+    <div class="spanel" data-s="1">
+      <div class="sn">二</div><h4>水灌贼炮</h4>
+      <div class="st"><div class="q">薄暮霖雨，旭备馆舍</div><div class="q">传集六庄乡壮，佯为守护</div><p style="font-size:13px">连日霖雨,庄民替「贵客」分宿各家,殷勤守护,顺手把火药淋了个透。</p></div>
+    </div>
+    <div class="spanel" data-s="2">
+      <div class="sn">三</div><h4>五鼓大哗</h4>
+      <div class="st"><div class="q">潜以水灌贼炮。夜五鼓，大哗，称官兵至，金鼓火炮齐鸣</div><p style="font-size:13px">五更天喊杀声起,湿透的火药一门也点不着。</p></div>
+    </div>
+    <div class="spanel" data-s="3">
+      <div class="sn">四</div><h4>牛车槛送</h4>
+      <div class="st"><div class="q">一贵尚自尊大，欲与提军抗礼，昂然而立</div><div class="q">叱之跪，一贵犹妄称「孤家」，词甚不逊</div><div class="q">廷珍怒，命捶其足。于是一贵及其党皆跪，伏罪请死</div><p style="font-size:13px">养鸭人的骨头到这一刻还硬着,自称孤家;腿上几棍,才跪了。</p></div>
+    </div>
+  </div>
+  <div class="sedan rv">
+    <div class="chair qv">闭舆中如妇人</div>
+    <div style="flex:1;min-width:250px">
+      <p style="font-size:14.5px">主犯槛送厦门之后,剩下的头目怎么送去?杜君英和陈福寿等人先后就抚,在军中好吃好喝逛了个月余。蓝廷珍的送法是演戏:</p>
+      <div class="q">欲授若辈备弁，令星速赴厦考验</div>
+      <div class="q">顺则善遣之行</div>
+      <div class="q">逆则于幕内捆手足，闭舆中如妇人，不动声色，市井可无有知者</div>
+      <p style="font-size:13.5px;color:var(--faint)">预备三艘船,顺从的好言送上船,不服从的绑了塞进妇人轿子抬走,街上没人看得出破绽。整把刀收进了袖子里。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 门十 风疫 ============ -->
+<section class="gate" data-day="9" id="g10">
+  <div class="gn rv">拾</div>
+  <h2 class="rv">庆功宴之后</h2>
+  <div class="gt-sub rv">史书把账算到了雍正元年</div>
+  <div class="tabs3 rv">
+    <button class="act" data-t="0" type="button">八月风灾</button>
+    <button data-t="1" type="button">军中大疫</button>
+    <button data-t="2" type="button">提督病故</button>
+  </div>
+  <div class="tab-body rv">
+    <div class="tb-panel act" data-t="0">
+      <div class="q">怪风暴雨，屋瓦齐飞。风雨中流火条条，竟夜烛天。海水骤涨</div>
+      <div class="q">郡无完宅，压溺死者数千人，浮尸蔽江，瓦桷充路</div>
+      <div class="q">施世骠、蓝廷珍各终夜露立风雨中</div>
+      <p style="font-size:14px;color:var(--dim)">平乱后第四十七天,一场台风把刚刚喘过气的台湾又打了一遍。</p>
+    </div>
+    <div class="tb-panel" data-t="1">
+      <div class="q">从征将士冒炎威、宿风露，恶气熏蒸，水土不服，疾病亡故者多</div>
+      <p style="font-size:14px;color:var(--dim)">林政、王万化两位参将和许华那员游击先后病故在任上,一个敌人也没输给。</p>
+    </div>
+    <div class="tb-panel" data-t="2">
+      <div class="q">以九月望日癸卯卒于军</div>
+      <p style="font-size:14px;color:var(--dim)">施世骠没等到来年。三十八年前随父克台的少年将军,第二次拿下台湾,把自己的最后一年也留在了这里。</p>
+    </div>
+  </div>
+  <p class="rv">乱事本身收尾收得并不利落。府城七日收复,余党却前赴后继地再叛,从盐水港、阿猴林一路清到山后番界,前后拖了快两年。卷末的总结算写得毫不留情面:</p>
+  <div class="q rv">朱一贵以喂鸭小夫，欻焉倡乱，不旬日间，全郡陷没，此岂智能所及料欤</div>
+  <div class="q rv">太平日久，文恬武嬉，兵有名而无人，民逸居而无教，官吏孳孳以为利薮，沈湎樗蒲，连宵达曙</div>
+  <div class="q rv">本实先拨，贼未至而众心已离，虽欲无败，弗可得己</div>
+  <div class="src">以上卷末「蓝鼎元曰」</div>
+  <p class="rv">他把乱源钉死在承平官场的蛀空上,又不肯让胜利者多贪功劳:</p>
+  <div class="q rv">今不动声色，七日恢复，巨魁就擒，孽从授首</div>
+  <div class="q rv">虽平台仅在七日，而拔尽根柢，东擒西剿，亦有两载艰难</div>
+  <p class="rv">全书最后一行结算,落在一个夏天的清晨:</p>
+  <div class="q rv">朱一贵孽党尽绝矣。台湾平</div>
+  <div class="src">雍正元年夏四月,距起事整整三年</div>
+</section>
+
+<!-- ============ 门十一 条陈 ============ -->
+<section class="gate" data-day="10" id="g11">
+  <div class="gn rv">拾壹</div>
+  <h2 class="rv">乱平之后的五张条陈</h2>
+  <div class="gt-sub rv">真正让这本书多活了两百年的,是附录里的治台方案</div>
+  <div class="policies rv">
+    <div class="pol">
+      <h4>半线设县</h4>
+      <div class="q">以愚管见，划诸罗县地而两之。于半线以上，另设一县，管辖六百里</div>
+      <p>诸罗县太大,北路八九百里只有一处县治。他的方案是把县一分为二,在半线另立新县。</p>
+    </div>
+    <div class="pol">
+      <h4>北路添兵</h4>
+      <div class="q">以八九百里险阻丛杂之边地，而委之北路一营八百九十名之兵</div>
+      <p>八百九十名兵守八九百里,他算得很清楚:聚不够用,散了立不起威信。</p>
+    </div>
+    <div class="pol">
+      <h4>开垦与城防</h4>
+      <div class="q">听开垦以尽地力，建城池以资守御</div>
+      <p>放开垦荒,把流民变成纳税的户口;筑城,把据点变成守得住的地方。</p>
+    </div>
+    <div class="pol">
+      <h4>义学教化</h4>
+      <div class="q">设义学，兴教化，奖孝弟力田之彦</div>
+      <p>他认定台民好斗不因饥寒,靠的是教化,不是威吓。</p>
+    </div>
+    <div class="pol">
+      <h4>三年之效</h4>
+      <div class="q">一年而民气可静，二年而疆圉可固，三年而礼让可兴</div>
+      <p>方案末尾的工期表,连同那句著名的判断:</p>
+      <div class="q">有地不可无人</div>
+      <div class="q">经营疆理，则为户口贡赋之区；废置空虚，则为盗贼祸乱之所</div>
+      <div class="q">利之所在，人所必趋。不归之民，则归之番、归之贼</div>
+      <p>放弃经营的空地不会永远是空地,只会长满别的东西。这是全书最硬的一段政治地理学。</p>
+    </div>
+  </div>
+  <div class="changhua rv">
+    <div class="seal2">彰化</div>
+    <div style="flex:1;min-width:250px">
+      <p style="font-size:14.5px;color:var(--dim)">外考:雍正元年,清廷在半线设彰化县,并增设淡水厅,与蓝鼎元的条陈一一对应。纸上写下的县名,两年后落在了地图上,至今还叫这个名字。</p>
+      <p style="font-size:14.5px;color:var(--dim)">而他对懈怠的警告,写在条陈的最后,像给所有后来的治理者留的便条:</p>
+      <div class="q">闲居无事，燕雀处堂，一旦事来，噬脐何及</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 尾屏 ============ -->
+<section class="finale" data-day="10">
+  <div class="fv" id="finV"><span class="qv">此作平台纪略者之意也</span></div>
+  <div class="bigseal" id="finSeal">东宁归笔</div>
+  <div class="loop rv">
+    <p>现在回到街角那本错书。同事兼读者王者辅在跋里夸这篇文章一口气写到底,让人生怕一口气读完,又点破全书的枢纽不在战阵,而在「不杀」二字;但真正的意思,蓝鼎元在自序里已经说完了:他不是要跟一本小册子争输赢,是怕后世修史的人随手一引,把错的当成真的。</p>
+    <p style="margin-top:12px">从这个意义上说,这是一本由目击者写给未来史家的勘误表。你正在读的这篇导读,能做的不过是把那张勘误表,再誊一遍。</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库<span class="qv">《平台纪略》</span>（清 · 蓝鼎元撰，史藏纪事本末，去空白 19,287 字，库本收自序、本纪一篇，卷末附蓝鼎元曰与王者辅跋）。</p>
+    <p>本页为殆知阁导读系列第 350 篇，系列总目见 <a href="https://github.com/robertsong/daizhige-daodu" rel="noopener">daizhige-daodu 仓库</a>。全部引文经脚本与库内文件去标点归一逐字比对，白话部分经六字窗反扫核验；蓝鼎元佐幕随军、施世骠家世、彰化县之设与《靖台实录》作者等均经公开资料核对。</p>
+    <p class="warn">时代局限提醒：本书成于十八世纪初，站在清廷官方立场叙述民变，对起事者称贼称逆、对官兵滥杀与株连亲属的记述直言不讳，文中死亡数字、功罪评断与夷夏观念均属那个时代的视角；请仅作历史文献理解。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+/* ---------- 鸭形 ---------- */
+function duck(x,y,s,dir){
+  var g=document.createElementNS("http://www.w3.org/2000/svg","g");
+  g.setAttribute("class","duck");
+  g.setAttribute("transform","translate("+x+","+y+") scale("+s+")");
+  var d="M-16,0 q0,-9 10,-9 q2,-8 9,-7 q6,1 5,7 l9,0 q3,0 3,3 q-1,6 -9,8 q-12,3 -21,1 q-6,-1 -6,-3 z";
+  var p=document.createElementNS("http://www.w3.org/2000/svg","path");
+  p.setAttribute("d",dir<0?d:d);
+  if(dir<0){p.setAttribute("transform","translate(6,0) scale(-1,1)");}
+  g.appendChild(p);
+  var w=document.createElementNS("http://www.w3.org/2000/svg","path");
+  w.setAttribute("d","M-18,7 q8,3 16,0 q8,-3 16,0");
+  w.setAttribute("stroke","rgba(232,228,220,.3)");
+  w.setAttribute("fill","none");
+  w.setAttribute("stroke-width","1.4");
+  g.appendChild(w);
+  return g;
+}
+/* ---------- 首屏鸭群 ---------- */
+var flock=document.getElementById("flock");
+var NS=6,ducks=[];
+for(var i=0;i<NS;i++){
+  var dx=180+Math.random()*760,dy=352+Math.random()*70;
+  var g=duck(dx,dy,.9+Math.random()*.35,Math.random()<.5?-1:1);
+  flock.appendChild(g);
+  ducks.push({g:g,x:dx,y:dy,ph:Math.random()*6.28});
+}
+var t0=performance.now();
+function bob(t){
+  var s=(t-t0)/1000;
+  ducks.forEach(function(d,i){
+    if(d.marching)return;
+    d.g.setAttribute("transform","translate("+(d.x+Math.sin(s*.4+d.ph)*7)+","+(d.y+Math.sin(s*1.1+d.ph)*2.4)+")");
+  });
+  requestAnimationFrame(bob);
+}
+requestAnimationFrame(bob);
+function ripple(x,y,delay){
+  setTimeout(function(){
+    var e=document.createElementNS("http://www.w3.org/2000/svg","ellipse");
+    e.setAttribute("cx",x);e.setAttribute("cy",y);
+    e.setAttribute("rx",4);e.setAttribute("ry",1.6);
+    e.setAttribute("stroke","rgba(232,228,220,.4)");e.setAttribute("fill","none");
+    document.getElementById("ripples").appendChild(e);
+    var st=performance.now();
+    (function grow(t){
+      var p=(t-st)/1400;
+      if(p>1){e.remove();return;}
+      e.setAttribute("rx",4+p*46);e.setAttribute("ry",1.6+p*9);
+      e.setAttribute("stroke","rgba(232,228,220,"+(0.4*(1-p))+")");
+      requestAnimationFrame(grow);
+    })(st);
+  },delay);
+}
+var heroGone=false;
+document.getElementById("goDucks").addEventListener("click",function(){
+  if(heroGone)return;heroGone=true;
+  var btn=this;btn.disabled=true;btn.style.opacity=.25;
+  var hint=document.getElementById("heroHint");
+  hint.textContent="鸭子排成一路纵队,把水痕划成了四个字";
+  ducks.forEach(function(d,i){d.marching=true;d.g.classList.add("march");});
+  /* 第一拍:排成纵队 */
+  var order=ducks.slice().sort(function(a,b){return a.x-b.x;});
+  order.forEach(function(d,i){
+    d.tx=200+i*46;d.ty=360;
+    d.g.style.transition="transform 1.4s ease";
+    d.g.setAttribute("transform","translate("+d.tx+","+d.ty+")");
+  });
+  for(var r=0;r<10;r++)ripple(240+r*70,366,r*160);
+  /* 第二拍:横渡 + 书名显形 */
+  setTimeout(function(){
+    order.forEach(function(d,i){
+      d.g.style.transition="transform 3.2s cubic-bezier(.4,.1,.6,1)";
+      d.g.setAttribute("transform","translate("+(d.tx+880)+","+(d.ty-6)+")");
+    });
+    var spans=document.querySelectorAll("#heroTitle span");
+    spans.forEach(function(sp,i){
+      setTimeout(function(){sp.classList.add("on");},700+i*380);
+    });
+    setTimeout(function(){document.getElementById("heroSeal").classList.add("on");},700+4*380);
+    setTimeout(function(){document.getElementById("heroSub").classList.add("on");},900+4*380);
+    setTimeout(function(){
+      order.forEach(function(d){
+        d.g.style.transition="opacity 1.2s ease";
+        d.g.style.opacity="0";
+      });
+    },2600);
+  },1500);
+});
+/* ---------- 档案翻面 ---------- */
+var arc=document.getElementById("arcCard");
+function flipArc(){arc.classList.toggle("flipped");}
+arc.addEventListener("click",flipArc);
+arc.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();flipArc();}});
+/* ---------- 小鸭列队 ---------- */
+var mf=document.getElementById("miniFlock"),mini=[];
+for(var m=0;m<7;m++){
+  var mx=40+m*52,my=88+(m%2?5:-4);
+  var mg=duck(mx,my,.62,-1);mf.appendChild(mg);
+  mini.push({g:mg,x:mx,y:my});
+}
+var lined=false;
+document.getElementById("miniBtn").addEventListener("click",function(){
+  lined=!lined;
+  mini.forEach(function(d,i){
+    var nx=lined?(60+i*40):(d.x),ny=lined?74:(d.y);
+    d.g.style.transition="transform .9s ease";
+    d.g.setAttribute("transform","translate("+nx+","+ny+")");
+  });
+  document.getElementById("miniNote").textContent=lined?
+    "旦暮编队,进退成行:这就是让乡民称奇的纪律。再点一次,散队。":
+    "鸭子的纪律,比衙门里那支官军强。";
+});
+/* ---------- 错书对质 ---------- */
+var badTags=document.querySelectorAll("#badTags span"),badN=0;
+badTags.forEach(function(tg){
+  tg.addEventListener("click",function(){
+    if(tg.classList.contains("err"))return;
+    tg.classList.add("err");badN++;
+    var v=document.getElementById("badVerdict");
+    if(badN===2)v.textContent="地点对不上,人名对不上,越划越多。";
+    if(badN===4){
+      v.textContent="四处硬伤划完,右边那本从案头立了起来。";
+      document.getElementById("bkGood").classList.add("up");
+    }
+  });
+});
+/* ---------- 行军账 ---------- */
+var maGo=document.getElementById("maGo"),maReset=document.getElementById("maReset"),
+    dot=document.getElementById("routeDot"),maLog=document.getElementById("maLog"),
+    stops=document.querySelectorAll(".route .stop"),maBusy=false;
+var maSteps=[
+  {pct:"16.6%",log:"第一日。细雨沾泥,兵番行五里,驻半路店。贼在三十里外。"},
+  {pct:"66%",log:"第二日。再进十五里,屯角带园。夜里贼出槺榔林,把总迎战败绩,军械拱手送了人。"},
+  {pct:"96%",log:"第三日。复行十五里,宿南路营。三十里外的敌军,此刻已在身后百里。"}
+];
+function setStops(n){stops.forEach(function(s,i){s.classList.toggle("on",i<n);});}
+maGo.addEventListener("click",function(){
+  if(maBusy)return;maBusy=true;maGo.disabled=true;
+  var i=0;
+  (function step(){
+    if(i>=maSteps.length){
+      maLog.textContent+=" 三日,三十五里,冈山还空着。";
+      maBusy=false;maReset.disabled=false;return;
+    }
+    var st=maSteps[i];
+    dot.style.left=st.pct;setStops(i+1);
+    maLog.textContent=st.log;i++;
+    setTimeout(step,2300);
+  })();
+});
+maReset.addEventListener("click",function(){
+  dot.style.left="0";setStops(0);
+  maLog.textContent="细雨沾泥。大军已在半路店扎营,今日行程:五里。";
+  maReset.disabled=true;maGo.disabled=false;
+});
+/* ---------- 赏格翻面 ---------- */
+var rc=document.getElementById("rewardCard");
+function flipRc(){rc.classList.toggle("flipped");}
+rc.addEventListener("click",flipRc);
+rc.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();flipRc();}});
+/* ---------- 卷宗 ---------- */
+document.querySelectorAll(".folder-tabs button").forEach(function(b){
+  b.addEventListener("click",function(){
+    document.querySelectorAll(".folder-tabs button").forEach(function(x){x.classList.remove("act");});
+    b.classList.add("act");
+    document.querySelectorAll(".case").forEach(function(c){
+      c.classList.toggle("act",c.dataset.c===b.dataset.c);
+    });
+  });
+});
+/* ---------- 三牌 ---------- */
+document.querySelectorAll(".mcard").forEach(function(mc){
+  function t(){mc.classList.toggle("open");}
+  mc.addEventListener("click",t);
+  mc.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();t();}});
+});
+/* ---------- 戏箱 ---------- */
+document.querySelectorAll(".drawer .dh").forEach(function(dh){
+  function t(){dh.parentElement.classList.toggle("open");}
+  dh.addEventListener("click",t);
+  dh.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();t();}});
+});
+/* ---------- 童谣 ---------- */
+var rhymeDone=0;
+document.querySelectorAll("#rhyme .rline").forEach(function(rl){
+  rl.addEventListener("click",function(){
+    if(rl.classList.contains("lit")||rl.classList.contains("endlit"))return;
+    rl.classList.add("lit");
+    if(rl.id==="rhymeEnd"){
+      setTimeout(function(){
+        rl.classList.remove("lit");rl.classList.add("endlit");
+        document.getElementById("rhymeVerdict").style.display="block";
+      },400);
+    }
+    rhymeDone++;
+  });
+});
+/* ---------- 七日轴 ---------- */
+document.querySelectorAll(".wnode").forEach(function(w){
+  w.addEventListener("click",function(){
+    document.querySelectorAll(".wnode").forEach(function(x){x.classList.remove("act");});
+    w.classList.add("act");
+    document.querySelectorAll(".wd-panel").forEach(function(p){
+      p.classList.toggle("act",p.dataset.w===w.dataset.w);
+    });
+  });
+});
+/* ---------- 擒王四格 ---------- */
+var sps=document.querySelectorAll(".spanel");
+function lightSeize(n){
+  sps.forEach(function(s,i){
+    s.classList.toggle("cur",i===n);
+    if(i<=n)s.classList.add("done");
+  });
+}
+sps.forEach(function(s,i){
+  s.addEventListener("click",function(){lightSeize(i);});
+});
+/* ---------- 风疫tabs ---------- */
+document.querySelectorAll(".tabs3 button").forEach(function(b){
+  b.addEventListener("click",function(){
+    document.querySelectorAll(".tabs3 button").forEach(function(x){x.classList.remove("act");});
+    b.classList.add("act");
+    document.querySelectorAll(".tb-panel").forEach(function(p){
+      p.classList.toggle("act",p.dataset.t===b.dataset.t);
+    });
+  });
+});
+/* ---------- 滚动显现 + 日轨 + 顶栏 ---------- */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("on");io.unobserve(e.target);}});
+},{threshold:.12});
+document.querySelectorAll(".rv").forEach(function(el){io.observe(el);});
+var fio=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(e.isIntersecting){
+      var sp=e.target.querySelector("span");
+      setTimeout(function(){sp.classList.add("on");},300);
+      setTimeout(function(){document.getElementById("finSeal").classList.add("on");},1600);
+      fio.unobserve(e.target);
+    }
+  });
+},{threshold:.4});
+fio.observe(document.getElementById("finV"));
+var railDays=document.querySelectorAll("#dayrail .day");
+var sections=document.querySelectorAll("[data-day]");
+function railUpd(){
+  var mid=window.innerHeight*.42,cur=-1;
+  sections.forEach(function(s){
+    var r=s.getBoundingClientRect();
+    if(r.top<mid&&r.bottom>mid)cur=parseInt(s.dataset.day,10);
+  });
+  railDays.forEach(function(d){
+    d.classList.toggle("lit",parseInt(d.dataset.i,10)<=cur);
+  });
+}
+document.addEventListener("scroll",function(){
+  railUpd();
+  var h=document.documentElement;
+  var p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);
+  document.getElementById("topbar").style.width=(p*100)+"%";
+},{passive:true});
+railUpd();
+})();
+</script>
+</body>
+</html>
