@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>淮南子 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --bamboo:#5f9270; --bamdim:rgba(95,146,112,.42);
+  --gold:#c9963f; --red:#c0453c; --faint:rgba(232,228,220,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","SimSun",serif;
+  line-height:1.95; overflow-x:hidden;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
+q.q,.q{
+  display:block;quotes:none;font-size:15px;letter-spacing:.05em;color:var(--paper);
+  background:rgba(232,228,220,.05);border-left:3px solid var(--bamdim);
+  padding:13px 18px;margin:13px 0;
+}
+.qv{color:var(--bamboo);border-bottom:1px dotted var(--bamdim)}
+.note{font-size:12.5px;color:var(--faint);letter-spacing:.04em}
+.who{font-size:13px;color:var(--faint);letter-spacing:.15em}
+h2.sect{
+  font-size:15px;letter-spacing:.5em;color:var(--bamboo);font-weight:normal;
+  margin:96px 0 6px;display:flex;align-items:center;gap:14px;
+}
+h2.sect::before{content:"";width:8px;height:8px;background:var(--bamboo);border-radius:50%}
+h2.sect::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--bamdim),transparent)}
+.sectsub{font-size:13px;color:var(--faint);margin-bottom:24px}
+
+/* ============ 首屏 星穹 ============ */
+#hero{min-height:100vh;position:relative;overflow:hidden;display:flex;align-items:center}
+#starfield{position:absolute;inset:0;z-index:0}
+.st{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--paper);animation:tw 4s infinite}
+@keyframes tw{0%,100%{opacity:.15}50%{opacity:.85}}
+#hero .wrap{display:flex;align-items:center;gap:34px;width:100%}
+.vsign{
+  writing-mode:vertical-rl;height:430px;flex:none;background:var(--paper);color:#26241f;
+  padding:26px 16px;display:flex;gap:14px;box-shadow:0 18px 50px rgba(0,0,0,.5);
+}
+.vsign .vt{font-size:44px;letter-spacing:.28em;white-space:nowrap;font-weight:normal}
+.vsign .vs{font-size:14px;letter-spacing:.5em;color:#6b665a;white-space:nowrap;border-left:1px solid #c9c2b2;padding-left:12px}
+#herotext{flex:1;min-width:0}
+#herokicker{font-size:13px;letter-spacing:.4em;color:var(--bamboo);margin-bottom:18px}
+#heroh1{font-size:clamp(24px,4.2vw,34px);line-height:1.6;font-weight:normal;letter-spacing:.06em;margin-bottom:14px}
+#heroh1 em{font-style:normal;color:var(--bamboo)}
+#herosub{font-size:14px;color:var(--faint);max-width:34em;margin-bottom:22px}
+.src{font-size:12px;letter-spacing:.3em;color:var(--faint)}
+.src b{font-weight:normal;color:var(--bamboo)}
+#scrolldown{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-size:12px;letter-spacing:.4em;color:var(--faint)}
+#herosky{position:absolute;right:6%;top:9%;width:min(300px,34vw);opacity:.9;z-index:1;animation:skydrift 240s linear infinite}
+@keyframes skydrift{to{transform:rotate(360deg)}}
+@media(max-width:760px){
+  #hero .wrap{flex-direction:column;justify-content:center;gap:26px;padding-top:70px}
+  .vsign{height:300px;padding:18px 12px}
+  .vsign .vt{font-size:30px}
+  #herosky{display:none}
+}
+
+/* ============ 斗柄历 ============ */
+#dialarea{display:flex;gap:38px;align-items:flex-start;flex-wrap:wrap}
+#dialbox{flex:none;width:min(480px,94vw);margin:0 auto}
+#dialbox svg{width:100%;height:auto;display:block}
+.ring{stroke:rgba(232,228,220,.14);fill:none}
+.ringdash{stroke:rgba(232,228,220,.09);fill:none;stroke-dasharray:3 6}
+.tick{stroke:rgba(232,228,220,.22)}
+.tick.lit{stroke:var(--bamboo);stroke-width:2}
+.cztext{font-size:13px;fill:rgba(232,228,220,.4);letter-spacing:2px}
+.cztext.lit{fill:var(--bamboo)}
+.jqtext{font-size:10.5px;fill:rgba(232,228,220,.38);letter-spacing:1px}
+.jqtext.lit{fill:var(--bamboo)}
+.pole{fill:var(--gold)}
+.dipstar{fill:var(--paper)}
+.dipline{stroke:rgba(232,228,220,.5);stroke-width:1}
+.dip{transform-box:view-box;transform-origin:240px 240px 0;transition:transform 1.1s cubic-bezier(.3,.7,.2,1)}
+#readout{flex:1;min-width:280px}
+#moname{font-size:30px;letter-spacing:.14em;font-weight:normal;margin-bottom:2px}
+#zhaoline{font-size:13px;color:var(--faint);letter-spacing:.1em;margin-bottom:8px}
+#zhaoline .qv{font-size:15px}
+.jqrow{display:flex;gap:14px;flex-wrap:wrap}
+.jqcard{flex:1;min-width:210px;border:1px solid rgba(95,146,112,.3);padding:12px 14px;margin-top:4px}
+.jqcard .jqn{font-size:17px;letter-spacing:.3em;color:var(--bamboo);margin-bottom:2px}
+#monbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+#monbtns button{
+  font-family:inherit;background:none;color:var(--faint);border:1px solid rgba(232,228,220,.18);
+  padding:5px 12px;font-size:13px;letter-spacing:.14em;cursor:pointer;transition:all .25s;
+}
+#monbtns button:hover{color:var(--paper);border-color:var(--bamdim)}
+#monbtns button.cur{color:var(--ink);background:var(--bamboo);border-color:var(--bamboo)}
+#dialnote{margin-top:20px}
+
+/* ============ 天倾三幕 ============ */
+#morow{display:flex;gap:18px;flex-wrap:wrap}
+.mo{flex:1;min-width:270px;border:1px solid rgba(232,228,220,.12);padding:18px;cursor:pointer;transition:border-color .4s}
+.mo.on{border-color:var(--bamdim)}
+.mo .mt{font-size:19px;letter-spacing:.22em;margin-bottom:2px}
+.mo .msrc{font-size:12px;letter-spacing:.25em;color:var(--faint);margin-bottom:10px}
+.mo svg{width:100%;height:150px;display:block}
+.mo q.q{font-size:13.5px;padding:10px 13px;margin-top:12px;border-left-width:2px;opacity:.72;transition:opacity .4s}
+.mo.on q.q{opacity:1;border-left-color:var(--bamboo)}
+.mohint{font-size:11.5px;color:var(--faint);letter-spacing:.2em;margin-top:2px}
+/* 触山 */
+.pillarTop{transition:transform 1s cubic-bezier(.34,1.3,.5,1);transform-origin:150px 74px}
+.mo.on .pillarTop{transform:rotate(9deg) translateY(5px)}
+.skygrp{transition:transform 1.2s}
+.mo.on .skygrp{transform:translateX(-16px)}
+/* 补天 */
+.stone{transition:transform 1s cubic-bezier(.3,.9,.3,1)}
+.mo.on .s1{transform:translate(38px,-80px)}
+.mo.on .s2{transform:translate(26px,-104px)}
+.mo.on .s3{transform:translate(14px,-106px)}
+.mo.on .s4{transform:translate(2px,-104px)}
+.mo.on .s5{transform:translate(-10px,-80px)}
+.crackline{opacity:.9;transition:opacity 1s .8s}
+.mo.on .crackline{opacity:0}
+/* 奔月 */
+.maid{transition:transform 1.6s cubic-bezier(.4,.1,.3,1)}
+.mo.on .maid{transform:translate(58px,-64px) scale(.72)}
+.pill{transition:opacity 1s .9s}
+.mo.on .pill{opacity:0}
+
+/* ============ 塞翁连环 ============ */
+#fuhuo{display:flex;gap:16px;margin-bottom:26px}
+.plq{flex:1;text-align:center;padding:14px 10px;border:1px solid rgba(232,228,220,.16);color:var(--faint);transition:all .4s}
+.plq .pt{font-size:24px;letter-spacing:.4em;text-indent:.4em}
+.plq .ps{font-size:12.5px;letter-spacing:.2em}
+.plq.hu.lit{border-color:rgba(94,143,187,.7);color:var(--paper);background:rgba(94,143,187,.12)}
+.plq.fu.lit{border-color:var(--bamboo);color:var(--ink);background:var(--bamboo)}
+#slips{display:flex;gap:0;flex-wrap:wrap;align-items:stretch}
+.slip{flex:1;min-width:185px;background:rgba(232,228,220,.04);border:1px solid rgba(232,228,220,.12);padding:12px 13px;position:relative;opacity:.4;transition:all .45s;margin-right:18px}
+.slip:last-child{margin-right:0}
+.slip::after{
+  content:"";position:absolute;right:-15px;top:50%;width:10px;height:10px;border-radius:50%;
+  border:2px solid rgba(232,228,220,.3);transform:translateY(-50%);
+}
+.slip:last-child::after{display:none}
+.slip.cur{opacity:1;border-color:var(--bamdim);transform:translateY(-5px);background:rgba(95,146,112,.09)}
+.slip.done{opacity:.82}
+.slip .sno{font-size:11px;letter-spacing:.3em;color:var(--faint)}
+.slip .stt{font-size:17px;letter-spacing:.14em;margin:2px 0 8px}
+.slip q.q{font-size:12.5px;padding:8px 11px;margin:8px 0 0}
+#swctrl{display:flex;align-items:center;gap:16px;margin-top:24px;flex-wrap:wrap}
+.btn{
+  font-family:inherit;background:none;color:var(--bamboo);border:1px solid var(--bamdim);
+  padding:8px 22px;font-size:14px;letter-spacing:.3em;text-indent:.3em;cursor:pointer;transition:all .3s;
+}
+.btn:hover{background:var(--bamboo);color:var(--ink)}
+#roundno{font-size:12.5px;color:var(--faint);letter-spacing:.2em}
+#swclose{display:none;margin-top:18px}
+#swclose.show{display:block}
+
+/* ============ 二十一篇 ============ */
+#shelf{display:flex;gap:9px;overflow-x:auto;padding:14px 4px 20px;scrollbar-width:thin}
+.tag{
+  flex:none;writing-mode:vertical-rl;height:150px;padding:12px 9px;cursor:pointer;
+  background:rgba(232,228,220,.05);border:1px solid rgba(232,228,220,.14);
+  font-size:16px;letter-spacing:.3em;color:var(--faint);transition:all .3s;
+}
+.tag:hover{color:var(--paper);border-color:var(--bamdim)}
+.tag.cur{color:var(--ink);background:var(--bamboo);border-color:var(--bamboo)}
+#tdetail{border:1px solid rgba(95,146,112,.3);padding:18px 20px;min-height:120px}
+#tname{font-size:22px;letter-spacing:.2em;font-weight:normal}
+#tsrc{font-size:12px;letter-spacing:.3em;color:var(--faint);margin:2px 0 10px}
+#gloss{font-size:13.5px;color:var(--faint);margin-top:10px}
+
+/* ============ 落款 纸底 ============ */
+#hong{margin:110px auto 0;max-width:920px}
+#hongin{
+  background:var(--paper);color:#2a2822;padding:52px 40px 44px;position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+#hongin .q{color:#2a2822;background:rgba(25,25,23,.05);border-left-color:rgba(25,25,23,.3)}
+#hongin p{color:#3a372f;margin-bottom:14px;font-size:14.5px}
+#hongin p b{font-weight:normal;color:#7c4a1e}
+#seal{
+  position:absolute;top:34px;right:36px;width:74px;height:74px;background:var(--red);color:var(--paper);
+  display:flex;align-items:center;justify-content:center;font-size:26px;letter-spacing:.1em;
+  writing-mode:vertical-rl;box-shadow:2px 3px 0 rgba(0,0,0,.18);
+}
+#hongtitle{font-size:22px;letter-spacing:.3em;margin-bottom:18px;font-weight:normal}
+#hongmeta{margin-top:26px;padding-top:16px;border-top:1px solid rgba(25,25,23,.2);font-size:12.5px;color:#6b665a;letter-spacing:.05em}
+
+footer{padding:70px 0 60px;text-align:center;font-size:12.5px;color:var(--faint);letter-spacing:.06em;line-height:2.2}
+footer a{color:var(--bamboo);text-decoration:none;border-bottom:1px dotted var(--bamdim)}
+footer .fseal{font-size:17px;letter-spacing:.5em;text-indent:.5em;color:var(--paper);margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<header id="hero">
+  <div id="starfield"></div>
+  <svg id="herosky" viewBox="0 0 300 300" aria-hidden="true">
+    <circle cx="150" cy="150" r="120" class="ring" fill="none"/>
+    <circle cx="150" cy="150" r="66" class="ringdash" fill="none"/>
+    <g id="herodip"></g>
+  </svg>
+  <div class="wrap">
+    <div class="vsign">
+      <div class="vt">淮南子</div>
+      <div class="vs">又名淮南鸿烈</div>
+    </div>
+    <div id="herotext">
+      <div id="herokicker">殆知阁导读 · 竹青</div>
+      <h1 id="heroh1">小时候听过的故事，<br>大半是从这本<em>谋反王爷</em>的书里流出来的</h1>
+      <p id="herosub">汉武帝的叔叔淮南王刘安主编。塞翁失马、嫦娥奔月、女娲补天、共工怒触不周山，还有二十四节气第一份完整名单，源头都在这二十一篇里。书献上去十几年后，作者因谋反案自尽，书留了下来。</p>
+      <div class="src">开卷 · <b>原道训</b></div>
+      <q class="q">夫道者，覆天载地，廓四方，柝八极，高不可际，深不可测</q>
+    </div>
+  </div>
+  <div id="scrolldown">往下，先转过一年</div>
+</header>
+
+<main class="wrap">
+
+  <section id="li">
+    <h2 class="sect">斗柄历</h2>
+    <p class="sectsub">二十四节气第一次被完整列出，就在〈天文训〉里。它给每个节气配了一枚斗柄方向和一条音律。点月份，看勺子转向哪里。</p>
+    <div id="dialarea">
+      <div id="dialbox">
+        <svg id="dial" viewBox="0 0 480 480" role="img" aria-label="斗柄节气转盘"></svg>
+      </div>
+      <div id="readout">
+        <h3 id="moname"></h3>
+        <p id="zhaoline">时则训 · <span class="qv" id="qzhao"></span></p>
+        <q class="q" id="qwu"></q>
+        <div class="jqrow">
+          <div class="jqcard"><div class="jqn" id="j1n"></div><q class="q" id="j1c"></q></div>
+          <div class="jqcard"><div class="jqn" id="j2n"></div><q class="q" id="j2c"></q></div>
+        </div>
+      </div>
+    </div>
+    <div id="monbtns"></div>
+    <p class="note" id="dialnote">天文训又总括其法：</p>
+    <q class="q">日行一度，十五日为一节，以生二十四时之变</q>
+    <q class="q">故曰：阳生于子，阴生于午</q>
+    <p class="note">校字记：库本谷雨条作加十日指辰，较他条疑脱一字；小暑条作加十五指丁，脱日字，且音比大吕与芒种条重出，律名传写有讹；秋分条雷臧之臧系臧否之臧。均照录。</p>
+  </section>
+
+  <section id="mo">
+    <h2 class="sect">天倾三幕</h2>
+    <p class="sectsub">共工触山、女娲补天、姮娥奔月：三个最古老的中国神话，都收在〈览冥训〉和〈天文训〉里。点画面，看它们动起来。</p>
+    <div id="morow">
+      <div class="mo" id="mo1">
+        <div class="mt">触山</div>
+        <div class="msrc">天文训</div>
+        <svg viewBox="0 0 300 150" aria-hidden="true">
+          <g class="skygrp">
+            <circle cx="60" cy="30" r="1.6" fill="#e8e4dc" opacity=".8"/>
+            <circle cx="90" cy="18" r="1.2" fill="#e8e4dc" opacity=".6"/>
+            <circle cx="46" cy="52" r="1.2" fill="#e8e4dc" opacity=".5"/>
+            <circle cx="74" cy="44" r="1" fill="#e8e4dc" opacity=".5"/>
+            <circle cx="246" cy="26" r="4.5" fill="#c9963f" opacity=".85"/>
+          </g>
+          <line x1="8" y1="128" x2="292" y2="128" stroke="rgba(232,228,220,.4)"/>
+          <rect x="144" y="44" width="12" height="86" fill="rgba(232,228,220,.55)"/>
+          <g class="pillarTop"><rect x="146" y="18" width="9" height="28" fill="rgba(232,228,220,.8)"/></g>
+          <line x1="150" y1="128" x2="150" y2="132" stroke="rgba(232,228,220,.4)"/>
+          <path d="M170 128 Q230 120 292 126" stroke="rgba(95,146,112,.5)" fill="none"/>
+        </svg>
+        <div class="mohint">点画面：天柱折，星辰西移</div>
+        <q class="q">昔者共工与颛顼争为帝，怒而触不周之山。天柱折，地维绝。天倾西北，故日月星辰移焉；地不满东南，故水潦尘埃归焉。</q>
+        <q class="q">天道曰圆，地道曰方</q>
+      </div>
+      <div class="mo" id="mo2">
+        <div class="mt">补天</div>
+        <div class="msrc">览冥训</div>
+        <svg viewBox="0 0 300 150" aria-hidden="true">
+          <path d="M30 96 A120 120 0 0 1 132 18" stroke="rgba(232,228,220,.55)" fill="none" stroke-width="2"/>
+          <path d="M168 18 A120 120 0 0 1 270 96" stroke="rgba(232,228,220,.55)" fill="none" stroke-width="2"/>
+          <line class="crackline" x1="134" y1="20" x2="166" y2="20" stroke="#c0453c" stroke-dasharray="4 4"/>
+          <circle class="stone s1" cx="80" cy="132" r="7" fill="#5f9270"/>
+          <circle class="stone s2" cx="108" cy="138" r="7" fill="#c9963f"/>
+          <circle class="stone s3" cx="136" cy="132" r="7" fill="#c0453c"/>
+          <circle class="stone s4" cx="164" cy="138" r="7" fill="#e8e4dc"/>
+          <circle class="stone s5" cx="192" cy="132" r="7" fill="#3a3a38" stroke="rgba(232,228,220,.4)"/>
+          <path d="M20 120 Q60 112 100 120 T180 120 T262 120" stroke="rgba(95,146,112,.45)" fill="none"/>
+        </svg>
+        <div class="mohint">点画面：五色石补上缺口</div>
+        <q class="q">于是女娲炼五色石以补苍天，断鳌足以立四极。杀黑龙以济冀州，积芦灰以止淫水。苍天补，四极正，淫水涸，冀州平，狡虫死，颛民生。</q>
+        <q class="q">考其功烈，上际九天，下契黄垆</q>
+      </div>
+      <div class="mo" id="mo3">
+        <div class="mt">奔月</div>
+        <div class="msrc">览冥训</div>
+        <svg viewBox="0 0 300 150" aria-hidden="true">
+          <path d="M232 22 A34 34 0 1 0 268 78 A26 26 0 1 1 232 22" fill="rgba(201,150,63,.8)"/>
+          <circle class="pill" cx="150" cy="112" r="4.5" fill="#c0453c"/>
+          <g class="maid">
+            <circle cx="106" cy="104" r="7" fill="rgba(232,228,220,.85)"/>
+            <path d="M106 111 L106 128 M106 115 L92 122 M106 115 L120 121 M106 128 L97 144 M106 128 L116 144" stroke="rgba(232,228,220,.85)" fill="none" stroke-width="2.4"/>
+          </g>
+          <path d="M18 138 Q90 130 160 136 T288 134" stroke="rgba(95,146,112,.4)" fill="none"/>
+        </svg>
+        <div class="mohint">点画面：窃药，身轻上天</div>
+        <q class="q">譬若羿请不死之药于西王母，姮娥窃以奔月，怅然有丧，无以续之。何则？不知不死之药所由生也。</q>
+        <q class="q">是故乞火不若取燧，寄汲不若凿井</q>
+      </div>
+    </div>
+    <p class="note">姮娥奔月在这里并不是正文故事，而是一个譬喻：药来路不明，丢了也无从再炼，所以乞火不如自取燧石。最早的月亮神话，原是一句关于求本的话。</p>
+  </section>
+
+  <section id="sw">
+    <h2 class="sect">塞翁连环</h2>
+    <p class="sectsub">〈人间训〉的祸福四环：亡马、归马、折髀、相保。每转一环，吊与贺互换一次。点下一环，转完可以再来。</p>
+    <div id="fuhuo">
+      <div class="plq hu" id="plqhu"><div class="pt">祸</div><div class="ps">人皆吊之</div></div>
+      <div class="plq fu" id="plqfu"><div class="pt">福</div><div class="ps">人皆贺之</div></div>
+    </div>
+    <div id="slips"></div>
+    <div id="swctrl">
+      <button class="btn" id="swbtn">开环</button>
+      <span id="roundno">未开</span>
+    </div>
+    <div id="swclose">
+      <div class="who">环满，书中收束一句</div>
+      <q class="q">故福之为祸，祸之为福，化不可极，深不可测也。</q>
+    </div>
+  </section>
+
+  <section id="p21">
+    <h2 class="sect">二十一篇</h2>
+    <p class="sectsub">书末〈要略〉是一篇自序，给前二十篇各写了一句提要。点签，读原话。</p>
+    <q class="q">夫作为书论者，所以纪纲道德，经纬人事，上考之天，下揆之地，中通诸理</q>
+    <div id="shelf"></div>
+    <div id="tdetail">
+      <h3 id="tname"></h3>
+      <div id="tsrc">要略</div>
+      <q class="q" id="tq"></q>
+      <p id="gloss"></p>
+    </div>
+    <p class="note">校字记：库本说山、说林两篇共用一条提要，不作分篇；篇目自叙作坠形，提要作地形，一名两写，均照录。</p>
+  </section>
+
+</main>
+
+<section id="hong">
+  <div class="wrap">
+    <div id="hongin">
+      <div id="seal">鸿烈</div>
+      <h3 id="hongtitle">书比人长寿</h3>
+      <p>主编刘安，汉高祖刘邦之孙，袭封淮南王，都寿春。这是个集体项目：高诱序里记了八位门客的名字，<b>苏飞、李尚、左吴、田由、雷被、毛被、伍被、晋昌</b>，加上诸儒大山、小山之徒，共讲论道德，著为此书。本名《鸿烈》，高诱下过判语：鸿，大也；烈，明也，大明之道。</p>
+      <p>书的运气比人好。建元年间刘安入朝，把它献上，据说武帝爱而秘之；到元狩元年，谋反案发，刘安自尽，淮南国除。人成了钦犯，书却留了下来，替他记住了所有故事的出处。</p>
+      <div class="who" style="color:#6b665a">要略自述</div>
+      <q class="q">若刘氏之书，观天地之象，通古今之事，权事而立制，度形而施宜</q>
+      <q class="q">故置之寻常而不塞，布之天下而不窕</q>
+      <div id="hongmeta">汉人所谓谋反，定谳出自朝廷，后世代有辨疑；书中天人感应、阴阳灾异诸说，亦皆时代所限，读者鉴之。</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fseal">淮南子</div>
+    文本来源：殆知阁简体库子藏诸子〈淮南子〉（去空白 158,675 字）·
+    仓库 <a href="https://github.com/garychowcmu/daizhigev2">github.com/garychowcmu/daizhigev2</a><br>
+    页面全部引文经脚本与库内文件去标点空白归一后逐字比对通过；库本脱讹之处照录，记于各节校字记。<br>
+    神话细节历代流传有异，本页一律以库本为准；刘安案与汉廷恩怨，亦请以史家考订为据。
+  </div>
+</footer>
+
+<div id="qb" hidden>
+  <span data-i="0" data-k="name">孟春之月</span><span data-i="0" data-k="zhao">孟春之月，招摇指寅</span><span data-i="0" data-k="wu">东风解冻，蛰虫始振苏，鱼上负冰，獭祭鱼，候雁北</span><span data-i="0" data-k="j1n">立春</span><span data-i="0" data-k="j1c">故曰距日冬至四十六日而立春，阳气冻解，音比南吕</span><span data-i="0" data-k="j2n">雨水</span><span data-i="0" data-k="j2c">加十五日指寅，则雨水，音比夷则</span>
+  <span data-i="1" data-k="name">仲春之月</span><span data-i="1" data-k="zhao">仲春之月，招摇指卯</span><span data-i="1" data-k="wu">始雨水，桃李始华，苍庚鸣，鹰化为鸠</span><span data-i="1" data-k="j1n">惊蛰</span><span data-i="1" data-k="j1c">加十五日指甲，则雷惊蛰，音比林锺</span><span data-i="1" data-k="j2n">春分</span><span data-i="1" data-k="j2c">加十五日指卯中绳，故曰春分则雷行，音比蕤宾</span>
+  <span data-i="2" data-k="name">季春之月</span><span data-i="2" data-k="zhao">季春之月，招摇指辰</span><span data-i="2" data-k="wu">虹始见，萍始生</span><span data-i="2" data-k="j1n">清明</span><span data-i="2" data-k="j1c">加十五日指乙，则清明风至，音比仲吕</span><span data-i="2" data-k="j2n">谷雨</span><span data-i="2" data-k="j2c">加十日指辰，则谷雨，音比姑洗</span>
+  <span data-i="3" data-k="name">孟夏之月</span><span data-i="3" data-k="zhao">孟夏之月，招摇指巳</span><span data-i="3" data-k="wu">蝼蝈鸣，丘蚓出，王瓜生，苦菜秀</span><span data-i="3" data-k="j1n">立夏</span><span data-i="3" data-k="j1c">故曰有四十六日而立夏，大风济，音比夹锺</span><span data-i="3" data-k="j2n">小满</span><span data-i="3" data-k="j2c">加十五日指巳，则小满，音比太蔟</span>
+  <span data-i="4" data-k="name">仲夏之月</span><span data-i="4" data-k="zhao">仲夏之月，招摇指午</span><span data-i="4" data-k="wu">小暑至，螳螂生，贝鵙始鸣，反舌无声</span><span data-i="4" data-k="j1n">芒种</span><span data-i="4" data-k="j1c">加十五日指丙，则芒种，音比大吕</span><span data-i="4" data-k="j2n">夏至</span><span data-i="4" data-k="j2c">加十五日指午，则阳气极，故曰有四十六日而夏至，音比黄锺</span>
+  <span data-i="5" data-k="name">季夏之月</span><span data-i="5" data-k="zhao">季夏之月，招摇指未</span><span data-i="5" data-k="wu">凉风始至，蟋蟀居奥，鹰乃学习</span><span data-i="5" data-k="j1n">小暑</span><span data-i="5" data-k="j1c">加十五指丁，则小暑，音比大吕</span><span data-i="5" data-k="j2n">大暑</span><span data-i="5" data-k="j2c">加十五日指未，则大暑，音比太蔟</span>
+  <span data-i="6" data-k="name">孟秋之月</span><span data-i="6" data-k="zhao">孟秋之月，招摇指申</span><span data-i="6" data-k="wu">凉风至，白露降，寒蝉鸣，鹰乃祭鸟</span><span data-i="6" data-k="j1n">立秋</span><span data-i="6" data-k="j1c">故曰有四十六日而立秋，凉风至，音比夹锺</span><span data-i="6" data-k="j2n">处暑</span><span data-i="6" data-k="j2c">加十五日指申，则处暑，音比姑洗</span>
+  <span data-i="7" data-k="name">仲秋之月</span><span data-i="7" data-k="zhao">仲秋之月，招摇指酉</span><span data-i="7" data-k="wu">凉风至，候雁来，玄鸟归，群鸟翔</span><span data-i="7" data-k="j1n">白露</span><span data-i="7" data-k="j1c">加十五日指庚，则白露降，音比仲吕</span><span data-i="7" data-k="j2n">秋分</span><span data-i="7" data-k="j2c">加十五日指酉中绳，故曰秋分雷臧，蛰虫北向，音比蕤宾</span>
+  <span data-i="8" data-k="name">季秋之月</span><span data-i="8" data-k="zhao">季秋之月，招摇指戌</span><span data-i="8" data-k="wu">候雁来，宾雀入大水为蛤，菊有黄华</span><span data-i="8" data-k="j1n">寒露</span><span data-i="8" data-k="j1c">加十五日指辛，则寒露，音比林锺</span><span data-i="8" data-k="j2n">霜降</span><span data-i="8" data-k="j2c">加十五日指戌，则霜降，音比夷则</span>
+  <span data-i="9" data-k="name">孟冬之月</span><span data-i="9" data-k="zhao">孟冬之月，招摇指亥</span><span data-i="9" data-k="wu">水始冰，地始冻，雉入大水为蜃，虹藏不见</span><span data-i="9" data-k="j1n">立冬</span><span data-i="9" data-k="j1c">故曰有四十六日而立冬，草木毕死，音比南吕</span><span data-i="9" data-k="j2n">小雪</span><span data-i="9" data-k="j2c">加十五日指亥，则小雪，音比无射</span>
+  <span data-i="10" data-k="name">仲冬之月</span><span data-i="10" data-k="zhao">仲冬之月，招摇指子</span><span data-i="10" data-k="wu">冰益壮，地始坼，鳱鴠不鸣，虎始交</span><span data-i="10" data-k="j1n">大雪</span><span data-i="10" data-k="j1c">加十五日指壬，则大雪，音比应锺</span><span data-i="10" data-k="j2n">冬至</span><span data-i="10" data-k="j2c">斗指子，则冬至，音比黄锺</span>
+  <span data-i="11" data-k="name">季冬之月</span><span data-i="11" data-k="zhao">季冬之月，招摇指丑</span><span data-i="11" data-k="wu">雁北向，鹊加巢，雉雊，鸡呼卵</span><span data-i="11" data-k="j1n">小寒</span><span data-i="11" data-k="j1c">加十五日指癸，则小寒，音比应锺</span><span data-i="11" data-k="j2n">大寒</span><span data-i="11" data-k="j2c">加十五日指丑，则大寒，音比无射</span>
+  <span data-s="0" data-k="t">马无故亡而入胡</span><span data-s="0" data-k="who">人皆吊之</span><span data-s="0" data-k="q">近塞上之人有善术者，马无故亡而入胡</span><span data-s="0" data-k="f">此何遽不为福乎</span>
+  <span data-s="1" data-k="t">其马将胡骏马而归</span><span data-s="1" data-k="who">人皆贺之</span><span data-s="1" data-k="q">居数月，其马将胡骏马而归</span><span data-s="1" data-k="f">此何遽不能为祸乎</span>
+  <span data-s="2" data-k="t">好骑堕而折其髀</span><span data-s="2" data-k="who">人皆吊之</span><span data-s="2" data-k="q">家富良马，其子好骑，堕而折其髀</span><span data-s="2" data-k="f">此何遽不为福乎</span>
+  <span data-s="3" data-k="t">父子相保</span><span data-s="3" data-k="who">人皆贺之</span><span data-s="3" data-k="q">居一年，胡人大入塞，丁壮者引弦而战，近塞之人，死者十九，此独以跛之故，父子相保</span><span data-s="3" data-k="f">此何遽不为福乎</span>
+  <span data-p="0" data-k="q">卢牟六合，混沌万物，象太一之容</span>
+  <span data-p="1" data-k="q">穷逐终始之化，嬴垀有无之精，离别万物之变，合同死生之形</span>
+  <span data-p="2" data-k="q">所以和阴阳之气，理日月之光，节开塞之时，列星辰之行</span>
+  <span data-p="3" data-k="q">所以穷南北之修，极东西之广，经山陵之形，区川谷之居</span>
+  <span data-p="4" data-k="q">所以上因天时，下尽地力，据度行当，合诸人则</span>
+  <span data-p="5" data-k="q">所以言至精之通九天也，至微之沦无形也</span>
+  <span data-p="6" data-k="q">所以原本人之所由生，而晓寤其形骸九窍</span>
+  <span data-p="7" data-k="q">所以明大圣之德，通维初之道，埒略衰世古今之变</span>
+  <span data-p="8" data-k="q">君人之事也</span>
+  <span data-p="9" data-k="q">破碎道德之论，差次仁义之分，略杂人间之事</span>
+  <span data-p="10" data-k="q">所以一群生之短修，同九夷之风气，通古今之论</span>
+  <span data-p="11" data-k="q">揽掇遂事之踪，追观往古之迹，察祸福利害之反</span>
+  <span data-p="12" data-k="q">所以箴缕縩繺之间，攕揳唲齵之郄也</span>
+  <span data-p="13" data-k="q">所以譬类人事之指，解喻治乱之体也</span>
+  <span data-p="14" data-k="q">所以明战胜攻取之数，形机之势，诈谲之变</span>
+  <span data-p="15" data-k="q">《说山》、《说林》者，所以窍窕穿凿百事之壅遏，而通行贯扃万物之窒塞者也。假譬取象，异类殊形</span>
+  <span data-p="16" data-k="q">假譬取象，异类殊形，以领理人之意</span>
+  <span data-p="17" data-k="q">所以观祸福之变，察利害之反，钻脉得失之迹</span>
+  <span data-p="18" data-k="q">所以为人之于道未淹，味论未深，见其文辞，反之以清静为常</span>
+  <span data-p="19" data-k="q">横八极，致高乘，上明三光，下和水土，经古今之道</span>
+  <span data-p="20" data-k="q">夫作为书论者，所以纪纲道德，经纬人事，上考之天，下揆之地，中通诸理</span>
+</div>
+
+<script>
+(function(){
+"use strict";
+var NS="http://www.w3.org/2000/svg";
+function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+
+/* 星空 */
+var sf=document.getElementById("starfield");
+for(var i=0;i<70;i++){
+  var s=document.createElement("div");s.className="st";
+  s.style.left=(Math.random()*100)+"%";
+  s.style.top=(Math.random()*100)+"%";
+  s.style.animationDelay=(Math.random()*4)+"s";
+  s.style.animationDuration=(2.5+Math.random()*4)+"s";
+  sf.appendChild(s);
+}
+
+/* 北斗：a摇光 b c 三星柄，d e f g 四星魁；可映射到任意中心与比例 */
+var DIP=[[150,45],[157,72],[166,98],[192,110],[200,138],[176,158],[152,140]];
+function drawDip(g,dx,dy,k){
+  function P(p){return [(p[0]-150)*k+dx,(p[1]-150)*k+dy];}
+  var pts=DIP.map(P);
+  for(var i=1;i<pts.length;i++){
+    g.appendChild(el("line",{x1:pts[i-1][0],y1:pts[i-1][1],x2:pts[i][0],y2:pts[i][1],class:"dipline"}));
+  }
+  g.appendChild(el("line",{x1:pts[6][0],y1:pts[6][1],x2:pts[3][0],y2:pts[3][1],class:"dipline"}));
+  for(var j=0;j<pts.length;j++){
+    g.appendChild(el("circle",{cx:pts[j][0],cy:pts[j][1],r:j==0?3.4:2.4,class:"dipstar"}));
+  }
+  var lb=P([150,30]);
+  g.appendChild(el("text",{x:lb[0],y:lb[1],"text-anchor":"middle",fill:"rgba(232,228,220,.5)","font-size":"11","letter-spacing":"3"})).textContent="招摇";
+}
+drawDip(document.getElementById("herodip"),150,150,1);
+
+/* 斗柄历转盘 */
+var qb={};
+document.querySelectorAll("#qb span").forEach(function(sp){
+  var i=sp.dataset.i,k=sp.dataset.k;
+  qb[i]=qb[i]||{};qb[i][k]=sp.textContent;
+});
+var NM=12;
+var CHEN="子丑寅卯辰巳午未申酉戌亥";
+var svg=document.getElementById("dial");
+var C=240;
+svg.appendChild(el("circle",{cx:C,cy:C,r:226,class:"ring"}));
+svg.appendChild(el("circle",{cx:C,cy:C,r:120,class:"ringdash"}));
+svg.appendChild(el("circle",{cx:C,cy:C,r:4,class:"pole"}));
+var ticks=[],jqs=[],czs=[];
+for(var m=0;m<NM;m++){
+  var A=-90+(m+2)*30;
+  for(var d=-1;d<=1;d+=2){
+    var ang=(A+d*8)*Math.PI/180;
+    var tx=C+207*Math.cos(ang),ty=C+207*Math.sin(ang);
+    var t=el("text",{x:tx,y:ty+4,"text-anchor":"middle",class:"jqtext"});
+    t.textContent=qb[m][d<0?"j1n":"j2n"];
+    svg.appendChild(t);jqs.push({node:t,m:m,d:d});
+    var a2=(A+d*8)*Math.PI/180;
+    var tk=el("line",{x1:C+218*Math.cos(a2),y1:C+218*Math.sin(a2),x2:C+226*Math.cos(a2),y2:C+226*Math.sin(a2),class:"tick"});
+    svg.appendChild(tk);ticks.push({node:tk,m:m,d:d});
+  }
+  var ae=A*Math.PI/180;
+  var cz=el("text",{x:C+168*Math.cos(ae),y:C+168*Math.sin(ae)+5,"text-anchor":"middle",class:"cztext"});
+  cz.textContent=CHEN[(m+2)%12];
+  svg.appendChild(cz);czs.push({node:cz,m:m});
+}
+var dip=el("g",{class:"dip"});
+drawDip(dip,240,240,0.85);
+svg.appendChild(dip);
+
+var monbtns=document.getElementById("monbtns");
+var SHORT=["孟春","仲春","季春","孟夏","仲夏","季夏","孟秋","仲秋","季秋","孟冬","仲冬","季冬"];
+SHORT.forEach(function(s,i){
+  var b=document.createElement("button");b.textContent=s;
+  b.addEventListener("click",function(){show(i);});
+  monbtns.appendChild(b);
+});
+var cur=-1;
+function show(i){
+  if(i===cur)return;cur=i;
+  document.getElementById("moname").textContent=qb[i].name;
+  document.getElementById("qzhao").textContent=qb[i].zhao;
+  document.getElementById("qwu").textContent=qb[i].wu;
+  document.getElementById("j1n").textContent=qb[i].j1n;
+  document.getElementById("j1c").textContent=qb[i].j1c;
+  document.getElementById("j2n").textContent=qb[i].j2n;
+  document.getElementById("j2c").textContent=qb[i].j2c;
+  dip.style.transform="rotate("+((i+2)*30)+"deg)";
+  jqs.forEach(function(o){o.node.classList.toggle("lit",o.m===i);});
+  ticks.forEach(function(o){o.node.classList.toggle("lit",o.m===i);});
+  czs.forEach(function(o){o.node.classList.toggle("lit",o.m===i);});
+  monbtns.querySelectorAll("button").forEach(function(b,k){
+    b.classList.toggle("cur",k===i);
+    if(k===i)b.setAttribute("aria-pressed","true");else b.removeAttribute("aria-pressed");
+  });
+}
+show(0);
+
+/* 天倾三幕 */
+document.querySelectorAll(".mo").forEach(function(mo){
+  mo.addEventListener("click",function(){mo.classList.toggle("on");});
+});
+
+/* 塞翁连环 */
+var qs={};
+document.querySelectorAll("#qb span").forEach(function(sp){
+  var s=sp.dataset.s;
+  if(s!==undefined){qs[s]=qs[s]||{};qs[s][sp.dataset.k]=sp.textContent;}
+});
+var HU={0:1,1:0,2:1,3:0};
+var STEPS=[0,1,2,3].map(function(i){return qs[i];});
+var slips=document.getElementById("slips");
+STEPS.forEach(function(s,i){
+  var d=document.createElement("div");d.className="slip";
+  var h='<div class="sno">第'+(i+1)+'环</div><div class="stt">'+s.t+'</div>';
+  h+='<q class="q">'+s.q+'</q><div class="who">'+s.who+'</div>';
+  h+='<q class="q">'+s.f+'</q>';
+  d.innerHTML=h;
+  slips.appendChild(d);
+});
+var swbtn=document.getElementById("swbtn"),roundno=document.getElementById("roundno"),swclose=document.getElementById("swclose");
+var step=-1,round=0;
+function paint(){
+  slips.querySelectorAll(".slip").forEach(function(sl,i){
+    sl.classList.toggle("cur",i===step);
+    sl.classList.toggle("done",i<step);
+  });
+  var hu=step<0?1:HU[step];
+  document.getElementById("plqhu").classList.toggle("lit",hu===1);
+  document.getElementById("plqfu").classList.toggle("lit",hu===0);
+  roundno.textContent=step<0?("第"+(round+1)+"轮，未开"):(step<3?("第"+(round+1)+"轮，第"+(step+1)+"环"):"第"+(round+1)+"轮，环满");
+  swbtn.textContent=step<0?"开环":(step<3?"下一环":"再看一轮");
+  swclose.classList.toggle("show",step===3);
+}
+swbtn.addEventListener("click",function(){
+  if(step<0){step=0;round=round;}
+  else if(step<3){step++;}
+  else{step=0;round++;}
+  paint();
+});
+paint();
+
+/* 二十一篇 */
+var PIAN=[
+ {n:"原道",g:"全书开山，道是万物的总门。"},
+ {n:"俶真",g:"从宇宙演化一路看到人生真伪。"},
+ {n:"天文",g:"天空的操作手册，节气律历都在这卷。"},
+ {n:"坠形",g:"大地志，山川物产与远国异民。"},
+ {n:"时则",g:"按月办事的官历，连天子四季衣色都定好了。"},
+ {n:"览冥",g:"讲天人感应，补天与奔月两案都收在卷中。"},
+ {n:"精神",g:"人从哪里来，形与神怎么相处。"},
+ {n:"本经",g:"批评文明过度，直指衰世之政。"},
+ {n:"主术",g:"君主的技术，无为而治的行政版。"},
+ {n:"缪称",g:"格言集，碎金式的仁义杂论。"},
+ {n:"齐俗",g:"风俗没有高下，礼义贵在合宜。"},
+ {n:"道应",g:"拿历史故事给老子作注。"},
+ {n:"泛论",g:"议论不拘一格，缝补世间的罅隙。"},
+ {n:"诠言",g:"解释言论，谈治乱之理。"},
+ {n:"兵略",g:"兵法一卷，先问该不该战，再讲怎么胜。"},
+ {n:"说山",g:"与说林合用一条提要：寓言段子集。"},
+ {n:"说林",g:"广见博喻，与说山同条共贯。"},
+ {n:"人间",g:"祸福相转的案例集，塞翁就在这卷。"},
+ {n:"修务",g:"驳绝对无为，主张勤勉修学。"},
+ {n:"泰族",g:"收束全书，回到礼乐教化。"},
+ {n:"要略",g:"全书自序，二十篇各给一句提要。"}
+];
+var pq={};
+document.querySelectorAll('#qb span[data-p]').forEach(function(sp){
+  pq[sp.dataset.p]=sp.textContent;
+});
+var shelf=document.getElementById("shelf");
+PIAN.forEach(function(p,i){
+  var t=document.createElement("div");t.className="tag";t.textContent=p.n;
+  t.setAttribute("role","button");t.tabIndex=0;
+  function pick(){pickpian(i);}
+  t.addEventListener("click",pick);
+  t.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();pick();}});
+  shelf.appendChild(t);
+});
+function pickpian(i){
+  shelf.querySelectorAll(".tag").forEach(function(t,k){t.classList.toggle("cur",k===i);});
+  document.getElementById("tname").textContent=PIAN[i].n;
+  document.getElementById("tq").textContent=pq[i];
+  document.getElementById("gloss").textContent="导读按："+PIAN[i].g;
+}
+pickpian(0);
+})();
+</script>
+</body>
+</html>
