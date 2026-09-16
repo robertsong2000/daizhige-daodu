@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>臣轨 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --ink2:#232320;
+  --paper:#e8e4dc;
+  --paper2:#ddd6c8;
+  --paper3:#d2cabb;
+  --gold:#c9963f;
+  --gold2:#a87a2e;
+  --cinnabar:#c0453c;
+  --cinnabar2:#96362f;
+  --faint:rgba(232,228,220,.55);
+  --dim:rgba(232,228,220,.82);
+  --zhuse:#b0766a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--dim);
+  font-family:"Noto Serif SC","Songti SC","SimSun","Source Han Serif SC",serif;
+  line-height:1.9;
+  overflow-x:hidden;
+}
+::selection{background:var(--gold);color:var(--ink)}
+
+/* ===== 左缘官印导航 ===== */
+#seals{
+  position:fixed;left:14px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:9px;z-index:50;
+}
+#seals a{
+  width:34px;height:34px;
+  border:1.5px solid rgba(232,228,220,.28);
+  color:rgba(232,228,220,.5);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;text-decoration:none;
+  transition:all .35s;
+  background:rgba(25,25,23,.6);
+}
+#seals a.on{
+  border-color:var(--cinnabar);
+  color:var(--paper);
+  background:var(--cinnabar);
+  box-shadow:0 0 0 1px rgba(192,69,60,.35),0 4px 14px rgba(192,69,60,.35);
+}
+#seals a:hover{border-color:var(--gold);color:var(--gold)}
+@media (max-width:1180px){#seals{display:none}}
+
+/* ===== 首屏：敕牒 ===== */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:64px 20px 40px;position:relative;
+}
+#hero::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 30%,rgba(201,150,63,.09),transparent 65%);
+  pointer-events:none;
+}
+.edict{
+  position:relative;
+  background:var(--paper);
+  color:#2a2723;
+  padding:52px 46px 44px;
+  max-width:660px;width:100%;
+  box-shadow:0 24px 60px rgba(0,0,0,.55);
+}
+.edict::before{
+  content:"";position:absolute;inset:9px;
+  border:1px solid rgba(176,118,106,.55);
+  pointer-events:none;
+}
+.edict::after{
+  content:"";position:absolute;inset:14px;
+  border:1px solid rgba(176,118,106,.3);
+  pointer-events:none;
+}
+.edict .corner{position:absolute;width:15px;height:15px;border-color:var(--gold2);border-style:solid;border-width:0}
+.edict .c1{top:3px;left:3px;border-top-width:2.5px;border-left-width:2.5px}
+.edict .c2{top:3px;right:3px;border-top-width:2.5px;border-right-width:2.5px}
+.edict .c3{bottom:3px;left:3px;border-bottom-width:2.5px;border-left-width:2.5px}
+.edict .c4{bottom:3px;right:3px;border-bottom-width:2.5px;border-right-width:2.5px}
+.edict .eyebrow{
+  text-align:center;font-size:12.5px;letter-spacing:.55em;text-indent:.55em;
+  color:#8a7a5c;margin-bottom:26px;
+}
+.edict .title-row{
+  display:flex;align-items:flex-start;justify-content:center;gap:34px;
+  margin-bottom:26px;
+}
+.edict h1{
+  writing-mode:vertical-rl;
+  font-size:78px;letter-spacing:.28em;color:#241f19;
+  font-weight:700;line-height:1;
+}
+.edict .aside{
+  writing-mode:vertical-rl;
+  font-size:15px;letter-spacing:.32em;color:#5c5346;
+  height:236px;display:flex;gap:16px;
+}
+.edict .aside .who{color:var(--cinnabar2)}
+.edict .seal-stamp{
+  align-self:flex-end;
+  width:46px;height:46px;background:var(--cinnabar);color:var(--paper);
+  font-size:13px;line-height:1.35;letter-spacing:.1em;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  writing-mode:vertical-rl;
+  box-shadow:inset 0 0 0 2px var(--paper),inset 0 0 0 3.5px var(--cinnabar);
+  opacity:.92;
+}
+.edict .lifenote{
+  border-top:1px solid rgba(176,118,106,.4);
+  padding-top:20px;font-size:14.5px;color:#4c453a;text-align:justify;
+}
+.edict .lifenote b{color:#241f19;font-weight:700}
+.edict .lifenote .gift{
+  display:block;margin-top:14px;padding:12px 16px;
+  background:rgba(176,118,106,.1);
+  border-left:3px solid var(--gold2);
+  color:#3d362c;font-size:14px;
+}
+.scroll-hint{
+  margin-top:38px;font-size:12px;letter-spacing:.5em;text-indent:.5em;
+  color:rgba(232,228,220,.4);
+  animation:breathe 2.6s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{opacity:.35}50%{opacity:.9}}
+
+/* ===== 命运线：骑缝章 ===== */
+#fate{
+  max-width:1020px;margin:26px auto 90px;padding:0 22px;
+}
+#fate .fhead{
+  text-align:center;font-size:13px;letter-spacing:.5em;text-indent:.5em;
+  color:rgba(232,228,220,.45);margin-bottom:34px;
+}
+.fateline{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:0;
+}
+.fate-node{
+  flex:1 1 150px;max-width:180px;min-width:145px;
+  padding:0 12px 30px;text-align:center;position:relative;
+}
+.fate-node .knob{
+  width:26px;height:26px;border-radius:50%;
+  margin:0 auto 16px;position:relative;
+  background:var(--ink);
+  border:2px solid rgba(201,150,63,.5);
+}
+.fate-node .knob::after{
+  content:"";position:absolute;inset:6px;border-radius:50%;
+  background:rgba(201,150,63,.45);
+  transition:all .4s;
+}
+.fate-node.lit .knob{border-color:var(--cinnabar)}
+.fate-node.lit .knob::after{background:var(--cinnabar);transform:scale(1.15)}
+.fate-node .yr{
+  font-size:15px;color:var(--gold);letter-spacing:.12em;margin-bottom:7px;
+}
+.fate-node .ft{font-size:13px;color:rgba(232,228,220,.68);line-height:1.75}
+.fate-node .ft b{color:var(--paper);font-weight:700}
+
+/* ===== 正文 ===== */
+main{max-width:860px;margin:0 auto;padding:0 20px 40px}
+.vol-sec{margin-bottom:74px}
+.vol-head{
+  display:flex;align-items:baseline;gap:16px;margin-bottom:8px;
+}
+.vol-no{
+  font-size:13px;color:var(--gold);letter-spacing:.3em;white-space:nowrap;
+}
+.vol-head h2{
+  font-size:27px;color:var(--paper);font-weight:700;letter-spacing:.18em;
+}
+.vol-head .tag{
+  font-size:12.5px;color:rgba(232,228,220,.4);letter-spacing:.2em;white-space:nowrap;
+}
+.vol-lead{font-size:15px;color:rgba(232,228,220,.75);margin-bottom:22px;text-align:justify}
+
+/* 格眼 */
+.geyan{
+  background:var(--paper);
+  color:#2e2a24;
+  padding:34px 36px 30px;
+  position:relative;
+  box-shadow:0 14px 40px rgba(0,0,0,.4);
+}
+.geyan::before{
+  content:"";position:absolute;inset:8px;
+  border:1px solid rgba(176,118,106,.5);
+  pointer-events:none;
+}
+.geyan .gtag{
+  position:absolute;top:-11px;left:26px;
+  background:var(--ink);color:var(--gold);
+  font-size:12px;letter-spacing:.35em;text-indent:.35em;
+  padding:2px 12px;
+}
+.geyan .gtag2{
+  position:absolute;top:-11px;right:26px;
+  background:var(--ink);color:rgba(232,228,220,.5);
+  font-size:12px;letter-spacing:.25em;padding:2px 12px;
+}
+/* 乌丝栏引文 */
+.q{
+  display:block;
+  border-left:3px solid #3a352d;
+  background:rgba(58,53,45,.06);
+  padding:13px 18px;
+  margin:18px 0;
+  font-size:16.5px;color:#241f19;line-height:2.05;
+  text-align:justify;
+}
+.q .src{
+  display:block;margin-top:8px;
+  font-size:12px;color:#8a7a5c;letter-spacing:.2em;
+}
+/* 夹注体例今注 */
+.zhu{
+  font-size:13.5px;color:#6b6152;line-height:1.95;
+  margin:10px 0 4px;padding-left:16px;
+  border-left:1px dashed rgba(107,97,82,.5);
+  text-align:justify;
+}
+.zhu b{color:#8a4a42;font-weight:700}
+
+/* ===== 六正六邪 ===== */
+.sixwrap{margin:24px 0 8px}
+.sixhead{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:12px;flex-wrap:wrap;gap:8px;
+}
+.sixhead .sh-t{font-size:15px;color:#241f19;letter-spacing:.2em;font-weight:700}
+.sixhead .sh-h{font-size:12px;color:#8a7a5c;letter-spacing:.15em}
+.sixgrid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+@media (max-width:620px){.sixgrid{grid-template-columns:1fr}}
+.sixcol{display:flex;flex-direction:column;gap:10px}
+.sixlabel{
+  text-align:center;font-size:13.5px;letter-spacing:.4em;text-indent:.4em;
+  padding:6px 0;margin-bottom:2px;
+}
+.sixlabel.zheng{background:rgba(201,150,63,.16);color:#7a5c22;border:1px solid rgba(201,150,63,.5)}
+.sixlabel.xie{background:rgba(192,69,60,.12);color:var(--cinnabar2);border:1px solid rgba(192,69,60,.5)}
+.scard{
+  border:1px solid rgba(138,122,92,.55);
+  background:rgba(255,255,255,.28);
+  padding:12px 14px;cursor:pointer;
+  transition:all .3s;
+}
+.scard:hover{background:rgba(255,255,255,.5)}
+.scard .sname{
+  font-size:15.5px;font-weight:700;color:#241f19;letter-spacing:.15em;
+  display:flex;align-items:center;gap:10px;
+}
+.scard .sname::after{
+  content:"";flex:1;height:1px;background:rgba(138,122,92,.35);
+}
+.scard .squote{
+  font-size:13px;color:#5c5346;margin-top:8px;line-height:1.8;
+  display:none;text-align:justify;
+}
+.scard .squote .verdict{
+  display:block;margin-top:6px;font-weight:700;letter-spacing:.08em;
+}
+.scard.open .squote{display:block}
+.scol-zheng .scard{border-left:3px solid var(--gold2)}
+.scol-zheng .scard .verdict{color:#7a5c22}
+.scol-xie .scard{border-left:3px solid var(--cinnabar);background:rgba(192,69,60,.05)}
+.scol-xie .scard:hover{background:rgba(192,69,60,.1)}
+.scol-xie .scard .verdict{color:var(--cinnabar2)}
+.sixhint{
+  text-align:center;font-size:12px;color:#8a7a5c;letter-spacing:.2em;margin-top:12px;
+}
+
+/* ===== 水济水 ===== */
+.shui{
+  margin:24px 0 6px;padding:20px;
+  background:rgba(58,53,45,.05);
+  border:1px dashed rgba(138,122,92,.5);
+  text-align:center;
+}
+.shui .btn{
+  display:inline-block;background:transparent;
+  border:1.5px solid #8a7a5c;color:#4c453a;
+  font-family:inherit;font-size:14px;letter-spacing:.3em;text-indent:.3em;
+  padding:9px 26px;cursor:pointer;transition:all .3s;
+}
+.shui .btn:hover{border-color:var(--gold2);color:#241f19;background:rgba(201,150,63,.12)}
+.shui .bowl{
+  max-height:0;overflow:hidden;transition:max-height .8s ease;
+}
+.shui .bowl.show{max-height:300px}
+.shui .water{
+  width:120px;height:64px;margin:20px auto 12px;position:relative;
+}
+.shui .water::before{
+  content:"";position:absolute;bottom:0;left:0;right:0;height:52px;
+  border:2px solid #5c5346;border-top:none;border-radius:0 0 60px 60px/0 0 34px 34px;
+}
+.shui .water::after{
+  content:"";position:absolute;left:8px;right:8px;top:14px;height:12px;
+  border-radius:50%;
+  background:linear-gradient(180deg,rgba(94,143,187,.4),rgba(94,143,187,.15));
+  animation:ripple 3s ease-in-out infinite;
+}
+@keyframes ripple{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.55)}}
+.shui .wtext{
+  font-size:14px;color:#4c453a;letter-spacing:.15em;
+}
+.shui .wtext em{font-style:normal;color:var(--cinnabar2)}
+
+/* ===== 三重闭 ===== */
+.threeclose{
+  display:flex;justify-content:center;gap:18px;margin:26px 0 10px;flex-wrap:wrap;
+}
+.closetab{
+  width:96px;padding:16px 0 12px;text-align:center;cursor:pointer;
+  background:rgba(255,255,255,.28);
+  border:1.5px solid rgba(138,122,92,.55);
+  transition:all .4s;
+}
+.closetab .cz{
+  font-size:26px;color:#5c5346;font-weight:700;display:block;
+  transition:all .4s;
+}
+.closetab .cn{font-size:11.5px;color:#8a7a5c;letter-spacing:.2em;display:block;margin-top:6px}
+.closetab.lit{
+  background:#241f19;border-color:#241f19;
+}
+.closetab.lit .cz{color:var(--gold)}
+.closetab.lit .cn{color:rgba(232,228,220,.6)}
+.close-note{
+  text-align:center;font-size:13px;color:#6b6152;min-height:22px;letter-spacing:.1em;
+}
+
+/* ===== 廉洁三案 ===== */
+.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 8px}
+@media (max-width:620px){.cases{grid-template-columns:1fr}}
+.casecard{
+  border:1px solid rgba(138,122,92,.55);
+  background:rgba(255,255,255,.3);
+  padding:18px 16px 16px;text-align:center;position:relative;
+  transition:transform .3s;
+}
+.casecard:hover{transform:translateY(-4px)}
+.casecard .glyph{
+  width:52px;height:52px;margin:0 auto 12px;
+  border:2px solid var(--gold2);color:#7a5c22;
+  display:flex;align-items:center;justify-content:center;
+  font-size:25px;font-weight:700;
+}
+.casecard:nth-child(2) .glyph{border-color:#5e8fbb;color:#43658a}
+.casecard:nth-child(3) .glyph{border-color:var(--cinnabar);color:var(--cinnabar2)}
+.casecard h4{font-size:14.5px;color:#241f19;letter-spacing:.15em;margin-bottom:8px}
+.casecard p{font-size:12.5px;color:#6b6152;line-height:1.8;text-align:justify}
+
+/* ===== 上书 ===== */
+.shangshu{margin:24px 0 6px;text-align:center}
+.shangshu .btn{
+  display:inline-block;background:transparent;
+  border:1.5px solid #8a7a5c;color:#4c453a;
+  font-family:inherit;font-size:14px;letter-spacing:.3em;text-indent:.3em;
+  padding:9px 26px;cursor:pointer;transition:all .3s;
+}
+.shangshu .btn:hover{border-color:var(--gold2);background:rgba(201,150,63,.12)}
+.shangshu .letter{
+  max-height:0;overflow:hidden;transition:max-height 1s ease;
+}
+.shangshu .letter.show{max-height:1200px}
+.letter-inner{
+  margin:20px auto 0;max-width:480px;
+  background:var(--paper2);
+  border:1px solid rgba(138,122,92,.6);
+  padding:26px 30px;
+  display:flex;justify-content:center;gap:22px;
+}
+.letter-inner .col{
+  writing-mode:vertical-rl;
+  font-size:14.5px;color:#332e26;line-height:2.1;letter-spacing:.12em;
+  max-height:340px;
+}
+.letter-inner .col .sign{color:var(--cinnabar2);letter-spacing:.3em}
+.letter-note{
+  font-size:13px;color:#6b6152;margin-top:14px;text-align:justify;line-height:1.9;
+}
+
+/* ===== 论曰 ===== */
+#lun{
+  margin:96px auto 70px;max-width:760px;padding:0 20px;text-align:center;
+}
+#lun .lun-t{
+  font-size:13px;letter-spacing:.6em;text-indent:.6em;
+  color:var(--gold);margin-bottom:30px;
+}
+#lun .bigq{
+  font-size:19px;line-height:2.3;color:var(--paper);letter-spacing:.06em;
+  margin-bottom:34px;
+}
+#lun .lun-coda{
+  font-size:14.5px;color:rgba(232,228,220,.6);text-align:justify;line-height:2.1;
+}
+#lun .lun-coda b{color:var(--gold)}
+
+/* ===== 页脚 ===== */
+footer{
+  border-top:1px solid rgba(232,228,220,.15);
+  margin-top:60px;padding:34px 20px 46px;
+  font-size:12.5px;color:rgba(232,228,220,.42);line-height:2.05;
+  text-align:center;
+}
+footer a{color:rgba(201,150,63,.75);text-decoration:none}
+footer a:hover{color:var(--gold)}
+footer .fwarn{display:block;margin-top:8px;color:rgba(192,69,60,.65)}
+
+/* 入场动画 */
+.fadein{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.fadein.vis{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav id="seals">
+  <a href="#c1" data-t="c1">同</a>
+  <a href="#c2" data-t="c2">忠</a>
+  <a href="#c3" data-t="c3">道</a>
+  <a href="#c4" data-t="c4">正</a>
+  <a href="#c5" data-t="c5">谏</a>
+  <a href="#c6" data-t="c6">信</a>
+  <a href="#c7" data-t="c7">密</a>
+  <a href="#c8" data-t="c8">廉</a>
+  <a href="#c9" data-t="c9">将</a>
+  <a href="#c10" data-t="c10">民</a>
+</nav>
+
+<header id="hero">
+  <div class="edict">
+    <span class="corner c1"></span><span class="corner c2"></span>
+    <span class="corner c3"></span><span class="corner c4"></span>
+    <div class="eyebrow">殆知阁导读 · 武周官箴</div>
+    <div class="title-row">
+      <div class="aside">
+        <div class="who">唐　武则天　撰</div>
+        <div>垂拱元年题款</div>
+        <div class="seal-stamp">事上轨模<br>臣下绳准</div>
+      </div>
+      <h1>臣轨</h1>
+    </div>
+    <div class="lifenote">
+      中国历史上唯一的女皇帝，给全体臣工编过一部教科书：两卷十章，从忠诚讲到廉政，从进谏讲到爱民。它进过考场、挤走过《老子》，随后随武周政权一起退出历史，在中原失传数百年，靠东渡日本的抄本一线仅存，直到江户学者把它印进丛书，才绕道回到中国书架。
+      <span class="gift">「<span class="qv">赠人以财者，唯申即目之欢；赠人以言者，能致终身之福。</span>」她在序里这样说，把这本书定位为送给百官的一句话。</span>
+    </div>
+  </div>
+  <div class="scroll-hint">向下展卷</div>
+</header>
+
+<section id="fate">
+  <div class="fhead">一 部 书 的 命 运</div>
+  <div class="fateline">
+    <div class="fate-node"><div class="knob"></div><div class="yr">上元二年前后</div><div class="ft"><b>北门学士</b><br>武则天召元万顷、刘祎之等文士入禁中修撰诸书，时人称他们为北门学士，此书由此发端</div></div>
+    <div class="fate-node"><div class="knob"></div><div class="yr">垂拱年间</div><div class="ft"><b>颁行百官</b><br>先有《百僚新诫》颁赐群臣，再改定为《臣轨》。库本卷末题款垂拱元年</div></div>
+    <div class="fate-node"><div class="knob"></div><div class="yr">长寿二年</div><div class="ft"><b>挤走《老子》</b><br>朝廷令贡举停习《老子》，改以《臣轨》为业。老子是李唐皇室认的祖先，请他出考场，是在拆李家的庙</div></div>
+    <div class="fate-node"><div class="knob"></div><div class="yr">唐亡以后</div><div class="ft"><b>失去靠山</b><br>武周一朝的官方课本随政权一同退场，渐渐无人再读</div></div>
+    <div class="fate-node"><div class="knob"></div><div class="yr">靖康之后</div><div class="ft"><b>中原失传</b><br>传本散亡，此书在中原的书架上消失了数百年，全靠东传日本的抄本一线仅存</div></div>
+    <div class="fate-node"><div class="knob"></div><div class="yr">江户至清末</div><div class="ft"><b>绕道回传</b><br>林衡辑《佚存丛书》刊行，此书随之回传，后收入《宛委别藏》《粤雅堂丛书》，罗振玉又为之重刊</div></div>
+  </div>
+</section>
+
+<main>
+
+<section class="vol-sec fadein" id="c1">
+  <div class="vol-head"><span class="vol-no">其一如</span><h2>同体</h2><span class="tag">卷上 · 同体章</span></div>
+  <p class="vol-lead">开宗明义的一章：君臣不是主仆，是一个身体。</p>
+  <div class="geyan">
+    <span class="gtag">卷上</span><span class="gtag2">同体章</span>
+    <blockquote class="q">夫人臣之于君也，犹四肢之载元首，耳目之为心使也。故知臣以君为心，君以臣为体。心安则体安，君泰则臣泰。</blockquote>
+    <div class="zhu">她引《尚书》「<span class="qv">臣作朕股肱耳目</span>」，把大臣比作天子的手脚和眼睛。话是漂亮话，只是「心安则体安」的前提，是心只能有一个。</div>
+    <blockquote class="q">夫欲构大厦者，必藉众材。虽楹柱栋梁、栱栌榱桷，长短方圆，所用各异，自非众材同体，则不能成其构。</blockquote>
+    <div class="zhu">大厦之喻接在后头：柱是柱，梁是梁，椽是椽，缺一件房子都立不起来。同体不等于同形，是说各安其位、共用一命。</div>
+  </div>
+</section>
+
+<section class="vol-sec fadein" id="c2">
+  <div class="vol-head"><span class="vol-no">其二如</span><h2>至忠</h2><span class="tag">卷上 · 至忠章</span></div>
+  <p class="vol-lead">全书最锋利的一段，讲的是「忠」的算术。</p>
+  <div class="geyan">
+    <span class="gtag">卷上</span><span class="gtag2">至忠章</span>
+    <blockquote class="q">利不可并，忠不可兼。不去小利，则大利不得；不去小忠，则大忠不至。故小利，大利之残也；小忠，大忠之贼也。</blockquote>
+    <div class="zhu"><b>小忠</b>是对上司个人的死忠，<b>大忠</b>是对江山百姓的担当。她要求臣子认清账目：守着小忠，大忠必废。至于这条标准后来如何用在她自己重用的酷吏身上，书里没有下文。</div>
+    <blockquote class="q">为人下者，其犹土乎！种之则五谷生焉，掘之则甘泉出焉。草木殖焉，禽兽育焉。多其功而不言。此忠臣之道也。</blockquote>
+    <div class="zhu">托名孔子的话，把臣子比作土：能长庄稼、能出泉水、能养万物，功劳大而不吭声。土的另一个含义她也清楚：踩在脚下。</div>
+  </div>
+</section>
+
+<section class="vol-sec fadein" id="c3">
+  <div class="vol-head"><span class="vol-no">其三如</span><h2>守道</h2><span class="tag">卷上 · 守道章</span></div>
+  <p class="vol-lead">一章道家气味最重，讲臣子立身的那个「道」字。</p>
+  <div class="geyan">
+    <span class="gtag">卷上</span><span class="gtag2">守道章</span>
+    <blockquote class="q">故道在身则言自顺，行自正，事君自忠，事父自孝。</blockquote>
+    <div class="zhu">这一章成串引《老子》《庄子》《文子》《管子》《淮南子》。一部官方臣道教科书，理论底色竟是黄老，倒也符合武周初年垂拱无为的政治姿态。</div>
+  </div>
+</section>
+
+<section class="vol-sec fadein" id="c4">
+  <div class="vol-head"><span class="vol-no">其四如</span><h2>公正</h2><span class="tag">卷上 · 公正章</span></div>
+  <p class="vol-lead">先立标准，再开清单。清单开得很狠。</p>
+  <div class="geyan">
+    <span class="gtag">卷上</span><span class="gtag2">公正章</span>
+    <blockquote class="q">忍所私而行大义，可谓公矣。</blockquote>
+    <blockquote class="q">智而用私，不若愚而用公。</blockquote>
+    <div class="zhu">她借《说苑》开了一张十二格的官员清单：前六种流芳，后六种遗臭。点开每一格，看看武周的干部标准。</div>
+    <div class="sixwrap">
+      <div class="sixhead"><span class="sh-t">六正六邪</span><span class="sh-h">据《说苑》· 点格展开</span></div>
+      <div class="sixgrid">
+        <div class="sixcol scol-zheng">
+          <div class="sixlabel zheng">六 正</div>
+          <div class="scard"><div class="sname">圣臣</div><div class="squote">萌芽未动，形兆未见，照然独见存亡之机，得失之要，预禁乎未然之前。<span class="verdict">如此者，圣臣也。</span></div></div>
+          <div class="scard"><div class="sname">大臣</div><div class="squote">虚心白意，进善通道，勉主以礼义，谕主以长策。<span class="verdict">如此者，大臣也。</span></div></div>
+          <div class="scard"><div class="sname">忠臣</div><div class="squote">进贤不懈，数称于往古行事，以励主意，庶几有益，以安国家。<span class="verdict">如此者，忠臣也。</span></div></div>
+          <div class="scard"><div class="sname">智臣</div><div class="squote">察见成败，早防而救之，引而复之，塞其间，绝其源，转祸以为福。<span class="verdict">如此者，智臣也。</span></div></div>
+          <div class="scard"><div class="sname">贞臣</div><div class="squote">守文奉法，任官职事，辞禄让赐，不受赠遗。<span class="verdict">如此者，贞臣也。</span></div></div>
+          <div class="scard"><div class="sname">直臣</div><div class="squote">国家昏乱，所为不谀，然而敢犯主之严颜，面言主之过失，不辞其诛。<span class="verdict">如此者，直臣也。</span></div></div>
+        </div>
+        <div class="sixcol scol-xie">
+          <div class="sixlabel xie">六 邪</div>
+          <div class="scard"><div class="sname">具臣</div><div class="squote">安官贪禄，营于私家，不务公事，怀其智，藏其能。<span class="verdict">如此者，具臣也。</span></div></div>
+          <div class="scard"><div class="sname">谀臣</div><div class="squote">主所言皆曰善，主所为皆曰可，隐而求主之所好而进之。<span class="verdict">如此者，谀臣也。</span></div></div>
+          <div class="scard"><div class="sname">奸臣</div><div class="squote">中实诐险，外貌小谨，巧言令色，又心疾贤。<span class="verdict">如此者，奸臣也。</span></div></div>
+          <div class="scard"><div class="sname">谗臣</div><div class="squote">智足以饬非，辨足以行说，反言易辞而成文章，内离骨肉之亲，外妒乱朝廷。<span class="verdict">如是者，谗臣也。</span></div></div>
+          <div class="scard"><div class="sname">贼臣</div><div class="squote">专权擅威，持操国事，以为轻重，于私门成党，以富其家。<span class="verdict">如此者，贼臣也。</span></div></div>
+          <div class="scard"><div class="sname">亡国之臣</div><div class="squote">谄主以邪，坠主不义，朋党比周，以蔽主明。<span class="verdict">如此者，亡国之臣也。</span></div></div>
+        </div>
+      </div>
+      <div class="sixhint">十二格点开，判词俱在</div>
+    </div>
+    <div class="zhu">十二个名目里，「贼臣」的定义是大权独揽、假传君命。写清单的人两年后称帝，此后二十年里，来俊臣、周兴这些名字，条条都往右一栏里掉。</div>
+  </div>
+</section>
+
+<section class="vol-sec fadein" id="c5">
+  <div class="vol-head"><span class="vol-no">其五如</span><h2>匡谏</h2><span class="tag">卷上 · 匡谏章</span></div>
+  <p class="vol-lead">要求臣子提意见的一章，写得格外用力。</p>
+  <div class="geyan">
+    <span class="gtag">卷上</span><span class="gtag2">匡谏章</span>
+    <blockquote class="q">君所谓可，据亦曰可；君所谓否，据亦曰否。若以水济水，谁能食之？同之不可也如是。</blockquote>
+    <div class="zhu">齐景公夸梁丘据「与我和」，晏子说那不叫和，叫同。和像一锅羹，水、火、醋、酱、盐、梅互相成全；同是一碗白水兑进一碗白水。武周朝堂上后来最常见的，恰是白水。</div>
+    <div class="shui">
+      <button class="btn" id="shuibtn">以水济水</button>
+      <div class="bowl" id="shuibowl">
+        <div class="water"></div>
+        <div class="wtext">一碗白水兑一碗白水，<em>谁能食之</em></div>
+      </div>
+    </div>
+    <blockquote class="q">用则留，不用则去，谓之谏；用则可，不用则死，谓之诤。</blockquote>
+    <div class="zhu">她给进谏分了级：话说了不听就走人的，算谏；说了不听就拿命抵的，才算诤。再往下还有辅、弼两级，能顶着君命把国家从危局里拽回来的，她称之为社稷之臣。</div>
+    <blockquote class="q">居于广廷作色端辩以犯君之严颜，前虽有乘轩之赏未为之动，后虽有斧锧之诛未为之惧者，此忠臣之勇也。</blockquote>
+    <div class="zhu">书中列了五种勇：工匠登高不惧，渔夫入水擒蛟，猎户搏熊，武士陷阵。排最后也排最前的，是站在大殿上板起面孔顶撞君王、赏赐不动心、刀斧不眨眼的这种。她说，君子最贵这一种。</div>
+  </div>
+</section>
+
+<section class="vol-sec fadein" id="c6">
+  <div class="vol-head"><span class="vol-no">其六如</span><h2>诚信</h2><span class="tag">卷下 · 诚信章</span></div>
+  <p class="vol-lead">卷下开篇，先让天地做示范。</p>
+  <div class="geyan">
+    <span class="gtag">卷下</span><span class="gtag2">诚信章</span>
+    <blockquote class="q">天行不信则不能成岁；地行不信则草木不大。</blockquote>
+    <div class="zhu">引《吕氏春秋》：四季不失信，一年才转得动；大地不失信，草木才肯生长。连天地都得守约，何况官府的一纸告示。</div>
+    <blockquote class="q">故君臣不信，则国政不安；父子不信，则家道不睦。</blockquote>
+    <div class="zhu">她把信用当作政权的地基来谈。这一章通篇没有讲权术，是全书里语气最干净的一章。</div>
+  </div>
+</section>
+
+<section class="vol-sec fadein" id="c7">
+  <div class="vol-head"><span class="vol-no">其七如</span><h2>慎密</h2><span class="tag">卷下 · 慎密章</span></div>
+  <p class="vol-lead">全书最像办公室生存指南的一章。</p>
+  <div class="geyan">
+    <span class="gtag">卷下</span><span class="gtag2">慎密章</span>
+    <blockquote class="q">忧患生于所忽，祸害兴于细微。故言易泄者，召祸之媒也；事不慎者，取败之道也。</blockquote>
+    <div class="zhu">她给「慎」排出三个段位，依次点亮。</div>
+    <div class="threeclose">
+      <div class="closetab" data-i="0"><span class="cz">闭心</span><span class="cn">大慎</span></div>
+      <div class="closetab" data-i="1"><span class="cz">闭口</span><span class="cn">次慎</span></div>
+      <div class="closetab" data-i="2"><span class="cz">闭门</span><span class="cn">下慎</span></div>
+    </div>
+    <div class="close-note" id="closenote">点牌看段位</div>
+    <blockquote class="q">故大慎者闭心；次慎者闭口；下慎者闭门。</blockquote>
+    <blockquote class="q">或问光：温室省中树皆何木也？光默而不应，更答以他语。</blockquote>
+    <div class="zhu">西汉孔光在宫中管机要十多年，家人随口问皇帝温室殿里种的都是什么树，他换了话题作答。书中把他树为「至慎」的榜样：不该说的，连一棵树的名字都不给。</div>
+  </div>
+</section>
+
+<section class="vol-sec fadein" id="c8">
+  <div class="vol-head"><span class="vol-no">其八如</span><h2>廉洁</h2><span class="tag">卷下 · 廉洁章</span></div>
+  <p class="vol-lead">三个不贪的故事，两千年来最干净的三个账本。</p>
+  <div class="geyan">
+    <span class="gtag">卷下</span><span class="gtag2">廉洁章</span>
+    <div class="cases">
+      <div class="casecard"><div class="glyph">玉</div><h4>子罕辞玉</h4><p>宋人得玉献宝，子罕不收：你拿玉当宝，我拿不贪当宝，收下则两失其宝。</p></div>
+      <div class="casecard"><div class="glyph">鱼</div><h4>公仪休拒鱼</h4><p>鲁相爱吃鱼，却拒不收鱼：丢了相位，谁还送鱼？</p></div>
+      <div class="casecard"><div class="glyph">帛</div><h4>季文子俭素</h4><p>鲁国上卿，家里侍女不穿绸，马不喂粟，自奉极俭，不肯独享。</p></div>
+    </div>
+    <blockquote class="q">我以不贪为宝，尔以玉为宝。若以与我，皆丧宝也，不若人有其宝。</blockquote>
+    <div class="zhu">子罕的回答成了后世一切辞玉辞金故事的母本。</div>
+    <blockquote class="q">以嗜鱼，故不受也。今为相，能自给鱼。今受鱼而免相，谁复给我鱼者？吾故不受也。</blockquote>
+    <div class="zhu">公仪休的账：爱吃鱼就别收鱼，收了鱼丢掉相位，往后没人送鱼，自己也买不起鱼。两千年后读，仍是最好的廉政数学。</div>
+    <blockquote class="q">妾不衣帛，马不食粟。</blockquote>
+    <div class="zhu">季文子八个字的府邸账目。有人劝他体面些，免得别国笑话鲁国，他答：让百姓穿衣吃饭，才是国家的体面。</div>
+  </div>
+</section>
+
+<section class="vol-sec fadein" id="c9">
+  <div class="vol-head"><span class="vol-no">其九如</span><h2>良将</h2><span class="tag">卷下 · 良将章</span></div>
+  <p class="vol-lead">从带兵讲到带人，最后落在一位母亲身上。</p>
+  <div class="geyan">
+    <span class="gtag">卷下</span><span class="gtag2">良将章</span>
+    <blockquote class="q">暑不张盖，寒不被裘。军井未达，将不言渴；军幕未辨，将不言倦。</blockquote>
+    <div class="zhu">行军暑天不撑伞盖，寒天不披皮裘，井没挖成不说渴，帐没搭好不说累。书中还记吴起亲口替士兵吮去毒疮，举他做爱兵的样板。</div>
+    <div class="shangshu">
+      <button class="btn" id="ssbtn">展读括母上书</button>
+      <div class="letter" id="ssletter">
+        <div class="letter-inner">
+          <div class="col">王所赐金帛，归悉藏之。乃曰：视便利田宅可买者。父子不同，执心各异，愿王勿遣。</div>
+        </div>
+        <div class="letter-note">赵王要用赵括换下廉颇，赵括的母亲上书反对：孩子他爹当年把大王赏赐分给部下，如今这孩子把赏赐全收回家买田。长平一战赵军覆没，赵王因为事先听过这番话，没有株连她。这是全书里唯一一次，一位没有官职的女性替「臣道」打了分。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="vol-sec fadein" id="c10">
+  <div class="vol-head"><span class="vol-no">其十如</span><h2>利人</h2><span class="tag">卷下 · 利人章</span></div>
+  <p class="vol-lead">压轴的一章，把「忠」最终落在百姓的饭碗上。</p>
+  <div class="geyan">
+    <span class="gtag">卷下</span><span class="gtag2">利人章</span>
+    <blockquote class="q">故人足者，非独人之足，国之足也；人匮者，非独人之匮，国之匮也。</blockquote>
+    <div class="zhu">百姓富足就是国家富足，百姓匮乏就是国家匮乏。她引《论语》反问：百姓不够用，君王哪来的足？</div>
+    <blockquote class="q">三年耕而余一年之蓄，九年耕而余三年之蓄，三十年耕而人余十年之蓄。</blockquote>
+    <div class="zhu">引《贾子》算粮食账：耕三年攒一年粮，耕九年攒三年粮。尧有九年水患、汤有七年大旱，路上却没有饿人的脸色，靠的就是这笔储蓄。</div>
+  </div>
+</section>
+
+</main>
+
+<section id="lun">
+  <div class="lun-t">论 曰</div>
+  <div class="bigq"><span class="qv">若使心归大道，情切至忠，务守公平，贵敦诚信，抱廉洁而为行，怀慎密以修身，奉上崇匡谏之规，恤下思利人之术，自然名实兼茂，禄位俱延。</span></div>
+  <div class="lun-coda">卷末论曰，把十章课业串成了一句话。历史给出的考语则是另一番样子：颁行它的政权二世而终，被请出考场的《老子》在李唐复了课，而这本教科书本身在中原散亡数百年，靠日本抄本一线仅存。书中倒有一句话，像是提前替这全部命运写好的批语：<b class="qv">荣辱无门，惟人所召。</b></div>
+</section>
+
+<footer>
+  <div>文本来源：殆知阁简体库《臣轨》（史藏职官类）；导读系列总目见 <a href="mulu.html">mulu.html</a>；仓库 <a href="https://github.com/robertsong/daizhige-daodu">daizhige-daodu</a></div>
+  <div>本篇引文均与库内文件逐字核验（去标点、夹注剥离后比对），小字夹注体例为编者今注</div>
+  <span class="fwarn">时代局限提醒：本书为武周政权的官方意识形态文本，其对君臣关系的想象以人身依附为前提；成书年代学界尚有异说，库本题款与通行说法并存，史事表述采通行说法。</span>
+</footer>
+
+<script>
+(function(){
+  var cards=document.querySelectorAll('.scard');
+  cards.forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('open')})});
+
+  var sb=document.getElementById('shuibtn');
+  if(sb){sb.addEventListener('click',function(){
+    document.getElementById('shuibowl').classList.toggle('show');
+  })}
+
+  var tabs=document.querySelectorAll('.closetab');
+  var note=document.getElementById('closenote');
+  var notes=['大慎者闭心：念头先管住，话自然出不了口','次慎者闭口：管不住心，至少管住嘴','下慎者闭门：心口都守不住，只好关门','三重闭齐了：大慎闭心，次慎闭口，下慎闭门'];
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){
+      t.classList.toggle('lit');
+      var n=document.querySelectorAll('.closetab.lit').length;
+      note.textContent=notes[Math.min(n,3)];
+    })
+  });
+
+  var ssb=document.getElementById('ssbtn');
+  if(ssb){ssb.addEventListener('click',function(){
+    var l=document.getElementById('ssletter');
+    l.classList.toggle('show');
+    ssb.textContent=l.classList.contains('show')?'卷起上书':'展读括母上书';
+  })}
+
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}
+    })
+  },{threshold:.12});
+  document.querySelectorAll('.fadein').forEach(function(el){obs.observe(el)});
+
+  var fns=document.querySelectorAll('.fate-node');
+  var fobs=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('lit')}
+    })
+  },{threshold:.4});
+  fns.forEach(function(n){fobs.observe(n)});
+
+  var links=document.querySelectorAll('#seals a');
+  var secs=['c1','c2','c3','c4','c5','c6','c7','c8','c9','c10'].map(function(id){return document.getElementById(id)});
+  var sobs=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(a){a.classList.toggle('on',a.getAttribute('data-t')===e.target.id)});
+      }
+    })
+  },{rootMargin:'-40% 0px -55% 0px'});
+  secs.forEach(function(s){if(s)sobs.observe(s)});
+})();
+</script>
+</body>
+</html>
