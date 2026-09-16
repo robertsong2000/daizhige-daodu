@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>角力记 · 殆知阁导读 313</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #262523;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --zhu: #c0453c; --zhu-soft: rgba(192,69,60,0.14); --zhu-line: rgba(192,69,60,0.45);
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  q { quotes: none; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 26px; }
+  ::selection { background: var(--zhu); color: var(--paper); }
+
+  /* ============ 首屏：角抵场 ============ */
+  .arena-sec { min-height: 96dvh; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+  .arena-top { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .kick { font-size: 13px; letter-spacing: 0.4em; color: var(--paper-faint); }
+  .kick b { color: var(--zhu); font-weight: normal; }
+  .arena-no { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .stage-zone { position: relative; margin: 12px auto 0; width: min(640px, 92vw); cursor: pointer; }
+  .stage-zone svg { width: 100%; height: auto; display: block; }
+  .vert-aside {
+    position: absolute; right: min(2vw, 18px); top: 50%; transform: translateY(-58%);
+    writing-mode: vertical-rl; font-size: 15px; color: var(--paper-dim);
+    letter-spacing: 0.34em; line-height: 2.3; height: 300px; pointer-events: none;
+  }
+  .vert-aside q { color: var(--paper-faint); }
+  .hero-title {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    text-align: center; opacity: 0; transition: opacity 0.9s ease 0.45s; pointer-events: none;
+  }
+  .stage-zone.down .hero-title { opacity: 1; }
+  .hero-title h1 { font-size: clamp(44px, 7vw, 76px); font-weight: 700; letter-spacing: 0.3em; text-indent: 0.3em; color: var(--paper); text-shadow: 0 2px 22px rgba(25,25,23,0.9); }
+  .hero-title .ht-sub { margin-top: 10px; font-size: 15px; letter-spacing: 0.28em; color: var(--zhu); }
+  .stage-hint { text-align: center; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.3em; margin-top: 6px; }
+  .stage-zone.down + .stage-hint { visibility: hidden; }
+  .hero-line { max-width: 30em; margin: 26px auto 0; text-align: center; color: var(--paper-dim); font-size: 16px; }
+  .hero-line q { color: var(--paper); }
+
+  /* SVG 场上人物 */
+  #gL, #gR { transition: transform 0.5s cubic-bezier(.3,.9,.4,1.2); }
+  #gR { transform-box: fill-box; transform-origin: 82% 96%; }
+  .stage-zone.down #gR { transform: rotate(64deg) translate(6px, 34px); }
+  .stage-zone.down #gL { transform: translate(-14px, 2px); }
+  .fall-dust { opacity: 0; transition: opacity 0.4s ease 0.4s; }
+  .stage-zone.down .fall-dust { opacity: 1; }
+
+  /* ============ 章节公用 ============ */
+  section.band { border-top: 1px solid var(--hairline); padding: 74px 0 84px; }
+  .band-head { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 40px; }
+  .band-seal {
+    flex: 0 0 auto; width: 44px; height: 44px; background: var(--zhu); color: var(--paper);
+    display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700;
+    border-radius: 4px; transform: rotate(-3deg); box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+  }
+  .band-title { font-size: clamp(24px, 3.4vw, 34px); font-weight: 700; letter-spacing: 0.12em; }
+  .band-sub { font-size: 14px; color: var(--paper-faint); letter-spacing: 0.22em; margin-top: 6px; }
+  .prose { color: var(--paper-dim); max-width: 44em; font-size: 16px; }
+  .prose q, .prose .qtxt { color: var(--paper); }
+
+  /* 纸底引文块 */
+  q.qb {
+    display: block; background: var(--paper); color: var(--ink);
+    padding: 18px 22px; margin: 14px 0; font-size: 16.5px; line-height: 2;
+    border-left: 4px solid var(--zhu); box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+    border-radius: 2px; quotes: none;
+  }
+  q.qb small { display: block; color: var(--paper-faint); font-size: 12.5px; margin-top: 8px; letter-spacing: 0.12em; color: #8a857a; }
+  q.qi {
+    background: var(--paper); color: var(--ink); padding: 1px 8px 2px; border-radius: 2px;
+    font-size: 0.94em; border-bottom: 2px solid var(--zhu-line); quotes: none; white-space: nowrap;
+  }
+
+  /* ============ 壹 救书：四格书架 ============ */
+  .shelf { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 34px 0 26px; }
+  .slot {
+    border: 1px solid var(--hairline); background: var(--ink-2); padding: 20px 16px 16px;
+    position: relative; min-height: 168px; transition: border-color 0.3s;
+  }
+  .slot .zi { font-size: 40px; font-weight: 700; line-height: 1.2; }
+  .slot .books { margin-top: 12px; font-size: 13.5px; color: var(--paper-dim); line-height: 1.9; }
+  .slot .books b { color: var(--paper); font-weight: normal; }
+  .slot.grail { cursor: pointer; border-color: var(--zhu-line); background: var(--zhu-soft); }
+  .slot.grail .zi { color: var(--zhu); }
+  .slot.grail .blank { font-size: 13px; color: var(--paper-dim); letter-spacing: 0.2em; margin-top: 12px; }
+  .slot.grail .stamp {
+    position: absolute; right: 12px; bottom: 12px; border: 2px solid var(--zhu); color: var(--zhu);
+    font-size: 17px; padding: 2px 9px; letter-spacing: 0.14em; transform: rotate(-8deg) scale(2.4);
+    opacity: 0; transition: all 0.35s cubic-bezier(.2,1.4,.4,1); font-weight: 700; border-radius: 3px;
+  }
+  .slot.grail.stamped .stamp { opacity: 1; transform: rotate(-8deg) scale(1); }
+  .slot.grail.stamped .blank { visibility: hidden; }
+  .debate { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 34px; }
+  .debate .dcard { border: 1px solid var(--hairline); padding: 20px 22px; background: var(--ink-2); }
+  .debate .who { font-size: 13px; letter-spacing: 0.3em; color: var(--zhu); margin-bottom: 10px; }
+
+  /* ============ 贰 名目五牌 ============ */
+  .name-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 22px; }
+  .ncard {
+    background: var(--ink-2); border: 1px solid var(--hairline); border-top: 3px solid var(--zhu);
+    padding: 18px 14px 14px; cursor: pointer; transition: transform 0.25s, border-color 0.25s; text-align: center;
+  }
+  .ncard:hover { transform: translateY(-4px); border-color: var(--zhu-line); }
+  .ncard .big { font-size: 30px; font-weight: 700; letter-spacing: 0.06em; }
+  .ncard .org { font-size: 12.5px; color: var(--paper-faint); margin-top: 8px; letter-spacing: 0.12em; }
+  .ncard .lane { font-size: 12.5px; color: var(--zhu); margin-top: 4px; }
+  .name-panel { border: 1px solid var(--hairline); background: var(--ink-2); padding: 26px 28px; min-height: 120px; }
+  .name-panel h3 { font-size: 20px; letter-spacing: 0.14em; margin-bottom: 12px; }
+  .name-panel h3 span { font-size: 13px; color: var(--paper-faint); margin-left: 12px; letter-spacing: 0.18em; font-weight: normal; }
+  .name-panel .prose { font-size: 15.5px; }
+  .np-item { display: none; }
+  .np-item.on { display: block; }
+
+  /* ============ 叁 场记 ============ */
+  .rope { position: relative; margin: 10px 0 26px; }
+  .rope::before { content: ""; position: absolute; left: 0; right: 0; top: 21px; border-top: 1px dashed rgba(232,228,220,0.25); }
+  .rope-row { display: flex; justify-content: space-between; position: relative; flex-wrap: wrap; gap: 8px 4px; }
+  .stop { flex: 1 1 0; min-width: 76px; background: none; border: none; color: var(--paper-dim); cursor: pointer; font-family: inherit; text-align: center; padding: 0 2px; }
+  .stop .dot { width: 13px; height: 13px; border-radius: 50%; background: var(--ink); border: 2px solid var(--paper-faint); margin: 15px auto 10px; transition: all 0.25s; display: block; }
+  .stop .era { font-size: 16px; letter-spacing: 0.08em; display: block; }
+  .stop .yr { font-size: 11px; color: var(--paper-faint); letter-spacing: 0.1em; display: block; margin-top: 2px; }
+  .stop:hover .dot { border-color: var(--paper); }
+  .stop.on { color: var(--paper); }
+  .stop.on .dot { background: var(--zhu); border-color: var(--zhu); box-shadow: 0 0 0 4px var(--zhu-soft); }
+  .stop.on .era { color: var(--zhu); }
+  .ring-notes { border: 1px solid var(--hairline); background: var(--ink-2); padding: 28px 30px; }
+  .rn-item { display: none; }
+  .rn-item.on { display: block; }
+  .rn-item h4 { font-size: 18px; letter-spacing: 0.1em; margin-bottom: 6px; color: var(--paper); }
+  .rn-item h4 em { font-style: normal; font-size: 13px; color: var(--zhu); margin-left: 12px; letter-spacing: 0.16em; }
+  .rn-item p { color: var(--paper-dim); font-size: 15.5px; margin: 10px 0; }
+
+  /* ============ 肆 列传 ============ */
+  .champ { display: grid; grid-template-columns: 300px 1fr; gap: 26px; margin-bottom: 30px; }
+  .champ-id { border: 1px solid var(--zhu-line); background: var(--zhu-soft); padding: 26px 22px; position: relative; }
+  .champ-id .cname { font-size: 30px; font-weight: 700; letter-spacing: 0.1em; }
+  .champ-id .ctag { font-size: 13px; color: var(--zhu); letter-spacing: 0.2em; margin-top: 8px; }
+  .champ-id .cquote { margin-top: 18px; }
+  .champ-id .cquote q.qb { font-size: 15px; padding: 12px 14px; }
+  .steps { display: flex; flex-direction: column; }
+  .step {
+    text-align: left; background: none; border: none; border-left: 2px solid var(--hairline);
+    color: var(--paper-faint); font-family: inherit; padding: 9px 0 9px 20px; cursor: pointer;
+    position: relative; transition: color 0.25s; font-size: 15.5px; letter-spacing: 0.04em;
+  }
+  .step::before {
+    content: ""; position: absolute; left: -7px; top: 16px; width: 12px; height: 12px; border-radius: 50%;
+    background: var(--ink); border: 2px solid var(--paper-faint); transition: all 0.25s;
+  }
+  .step:hover { color: var(--paper-dim); }
+  .step.on { color: var(--paper); border-left-color: var(--zhu); }
+  .step.on::before { background: var(--zhu); border-color: var(--zhu); }
+  .step .s-hi { display: none; font-size: 13.5px; color: var(--zhu); letter-spacing: 0.06em; }
+  .step.on .s-hi { display: inline; }
+  .step-panel { margin-top: 16px; }
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .gcard { border: 1px solid var(--hairline); background: var(--ink-2); padding: 20px; cursor: pointer; transition: border-color 0.25s; }
+  .gcard:hover, .gcard.open { border-color: var(--zhu-line); }
+  .gcard .gname { font-size: 20px; font-weight: 700; letter-spacing: 0.1em; }
+  .gcard .gtag { font-size: 13px; color: var(--zhu); margin-top: 4px; letter-spacing: 0.12em; }
+  .gcard .gbody { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .gcard.open .gbody { max-height: 900px; }
+  .gcard .gbody p { color: var(--paper-dim); font-size: 14.5px; margin-top: 14px; }
+  .gcard .gbody q.qb { font-size: 14.5px; padding: 12px 14px; }
+  .gcard .more { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.2em; margin-top: 12px; }
+  .gcard.open .more { visibility: hidden; }
+
+  /* ============ 伍 绝倒 ============ */
+  .laughs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .lcard { border: 1px solid var(--hairline); background: var(--ink-2); padding: 20px 18px; cursor: pointer; position: relative; min-height: 230px; transition: border-color 0.25s; }
+  .lcard:hover { border-color: var(--zhu-line); }
+  .lcard .lno { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.24em; }
+  .lcard .ltitle { font-size: 18px; font-weight: 700; margin-top: 8px; letter-spacing: 0.08em; }
+  .lcard .lset { font-size: 13.5px; color: var(--paper-dim); margin-top: 10px; line-height: 1.9; }
+  .lcard .lpay { margin-top: 12px; display: none; }
+  .lcard.open .lpay { display: block; }
+  .lcard .lpay q.qb { font-size: 14px; padding: 12px 14px; margin: 0; }
+  .lcard .jue {
+    position: absolute; right: 10px; top: 10px; border: 2px solid var(--zhu); color: var(--zhu);
+    font-size: 14px; padding: 1px 7px; letter-spacing: 0.1em; transform: rotate(9deg) scale(2.2);
+    opacity: 0; transition: all 0.3s cubic-bezier(.2,1.4,.4,1); font-weight: 700; border-radius: 3px;
+  }
+  .lcard.open .jue { opacity: 0.95; transform: rotate(9deg) scale(1); }
+  .lcard .tap { font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.2em; position: absolute; bottom: 12px; left: 18px; }
+  .lcard.open .tap { visibility: hidden; }
+
+  /* ============ 陆 风土 ============ */
+  .lands { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .land { border-top: 3px solid var(--zhu); background: var(--ink-2); border: 1px solid var(--hairline); border-top: 3px solid var(--zhu); padding: 20px 18px; }
+  .land .lname { font-size: 21px; font-weight: 700; letter-spacing: 0.14em; }
+  .land .lsub { font-size: 12.5px; color: var(--zhu); margin-top: 4px; letter-spacing: 0.14em; }
+  .land p { font-size: 14.5px; color: var(--paper-dim); margin-top: 12px; }
+  .land q.qb { font-size: 14px; padding: 12px 14px; }
+
+  /* ============ 尾声 ============ */
+  .coda { border-top: 1px solid var(--hairline); padding: 80px 0 60px; }
+  .poem-wall { display: flex; justify-content: center; gap: clamp(18px, 4vw, 44px); margin: 30px 0 10px; }
+  .poem-wall .pc {
+    writing-mode: vertical-rl; font-size: clamp(19px, 2.6vw, 26px); letter-spacing: 0.34em;
+    color: var(--paper); line-height: 1; padding-top: 0;
+  }
+  .poem-wall .pc b { color: var(--zhu); font-weight: 700; }
+  .poem-src { text-align: center; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.26em; margin-top: 22px; }
+  .corrigenda { margin-top: 52px; border: 1px solid var(--hairline); background: var(--ink-2); padding: 26px 30px; }
+  .corrigenda h3 { font-size: 16px; letter-spacing: 0.24em; color: var(--paper); margin-bottom: 14px; }
+  .corrigenda li { list-style: none; font-size: 14px; color: var(--paper-dim); padding: 5px 0 5px 18px; position: relative; }
+  .corrigenda li::before { content: "※"; position: absolute; left: 0; color: var(--zhu); font-size: 12px; top: 8px; }
+  .corrigenda li b { color: var(--paper); font-weight: normal; }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 34px 0 44px; }
+  footer.page .wrap { font-size: 13px; color: var(--paper-faint); line-height: 2.1; letter-spacing: 0.06em; }
+  footer.page a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px dotted var(--paper-faint); }
+
+  @media (max-width: 860px) {
+    .shelf { grid-template-columns: repeat(2, 1fr); }
+    .debate { grid-template-columns: 1fr; }
+    .name-cards { grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .ncard .big { font-size: 20px; }
+    .ncard .org { display: none; }
+    .champ { grid-template-columns: 1fr; }
+    .gallery { grid-template-columns: 1fr; }
+    .laughs { grid-template-columns: 1fr; }
+    .lcard { min-height: 0; padding-bottom: 30px; }
+    .lands { grid-template-columns: 1fr; }
+    .vert-aside { display: none; }
+    .rope-row { flex-wrap: wrap; }
+    .stop { flex: 1 1 22%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 · 角抵场 ================= -->
+<div class="arena-sec">
+  <div class="wrap">
+    <div class="arena-top">
+      <div class="kick">殆知阁导读 <b>第三百一十三篇</b></div>
+      <div class="arena-no">宋 调露子 撰 · 现存唯一一部角力专书</div>
+    </div>
+    <div class="stage-zone" id="stage" title="点场开扑">
+      <svg viewBox="0 0 640 400" aria-label="角抵场">
+        <ellipse cx="320" cy="330" rx="252" ry="42" fill="none" stroke="rgba(232,228,220,0.16)" stroke-width="1.5"/>
+        <ellipse cx="320" cy="330" rx="196" ry="31" fill="rgba(232,228,220,0.045)" stroke="rgba(192,69,60,0.4)" stroke-width="1" stroke-dasharray="5 7"/>
+        <!-- 左侧力士（纸白） -->
+        <g id="gL" stroke="#e8e4dc" stroke-linecap="round" fill="none">
+          <circle cx="238" cy="176" r="15" fill="#e8e4dc" stroke="none"/>
+          <path d="M238 196 L232 252" stroke-width="17"/>
+          <path d="M232 252 L206 316" stroke-width="9"/>
+          <path d="M232 252 L258 316" stroke-width="9"/>
+          <path d="M242 208 L288 236" stroke-width="9"/>
+          <path d="M240 224 L286 250" stroke-width="9"/>
+        </g>
+        <!-- 右侧力士（朱砂） -->
+        <g id="gR" stroke="#c0453c" stroke-linecap="round" fill="none">
+          <circle cx="404" cy="172" r="15" fill="#c0453c" stroke="none"/>
+          <path d="M404 192 L410 250" stroke-width="17"/>
+          <path d="M410 250 L436 316" stroke-width="9"/>
+          <path d="M410 250 L384 316" stroke-width="9"/>
+          <path d="M400 206 L352 238" stroke-width="9"/>
+          <path d="M402 222 L354 252" stroke-width="9"/>
+        </g>
+        <g class="fall-dust" stroke="rgba(163,158,147,0.7)" stroke-width="2" stroke-linecap="round">
+          <path d="M470 322 l14 -7"/><path d="M482 330 l16 -3"/><path d="M462 332 l10 6"/>
+        </g>
+        <text x="320" y="374" text-anchor="middle" font-size="12.5" letter-spacing="6" fill="rgba(110,106,97,0.9)" font-family="Songti SC, SimSun, serif">扑 倒 为 名</text>
+      </svg>
+      <div class="hero-title">
+        <h1>角力记</h1>
+        <div class="ht-sub">宋 调露子 撰</div>
+      </div>
+    </div>
+    <div class="stage-hint">点 一 下 场 子 ，见 分 晓</div>
+    <div class="vert-aside">
+      <q>惟力也岿然独存</q>
+    </div>
+    <div class="hero-line">
+      <q class="qi">夫角力者，宣勇气，量巧智也。</q>&nbsp;&nbsp;一场比试，把胆气与巧劲都摆在明处，这就是全书给角力下的定义。
+    </div>
+  </div>
+</div>
+
+<!-- ================= 壹 · 救书 ================= -->
+<section class="band">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="band-seal">壹</div>
+      <div>
+        <div class="band-title">从故纸堆里救出一部书</div>
+        <div class="band-sub">序 · 一桩自来处不明的出版事故</div>
+      </div>
+    </div>
+    <p class="prose">
+      孔夫子一句<q class="qi">子不语怪力乱神</q>，等于把四个题目划出了读书人的作文范围。可调露子环顾书架，发现怪、乱、神三家都偷偷开够了分店，只剩下第四个题目没人认领。书就是这样来的：他在市面上买了一捆废纸，从里面翻出一段讲角抵的旧文。
+    </p>
+    <q class="qb">顷于市货故纸束中，得古之杂说，于中一段，说角抵之戏，且多猥俗。愚居闲，遂加润之以故事，演成斯记。<small>序 · 全书的出生证明</small></q>
+    <p class="prose">
+      于是他给这部书做了一场理直气壮的辩护。有人质问：圣人不言，你何必有述？他的回答分两步。第一步，盘点货架。
+    </p>
+    <div class="shelf">
+      <div class="slot">
+        <div class="zi">怪</div>
+        <div class="books">有 <b>《齐谐记》</b><br>有 <b>《白泽图》</b></div>
+      </div>
+      <div class="slot">
+        <div class="zi">乱</div>
+        <div class="books">有 <b>《乱离》</b><br>有 <b>《妖乱》等志</b></div>
+      </div>
+      <div class="slot">
+        <div class="zi">神</div>
+        <div class="books">有 <b>《搜神》</b><br>有 <b>《幽明》等录</b></div>
+      </div>
+      <div class="slot grail" id="grailSlot">
+        <div class="zi">力</div>
+        <div class="blank">空 架 · 点 这 里 补 货</div>
+        <div class="stamp">角力记</div>
+      </div>
+    </div>
+    <p class="prose">
+      三家都有人写，<q class="qi">惟力也岿然独存</q>，这第四格空了几百年。第二步，他连「写这书的人会不会摔跤」的质疑都提前堵死了。
+    </p>
+    <div class="debate">
+      <div class="dcard">
+        <div class="who">或 曰</div>
+        <q class="qb">圣人所不言，子何须有述也？</q>
+      </div>
+      <div class="dcard">
+        <div class="who">调 露 子 答</div>
+        <q class="qb">志怪者，岂神耶？言力者，岂力耶？昔梁简文帝著《马槊谱》，而不闻萧纲是骑将也。<small>写骑马刺枪教程的萧纲，本人并不是骑将。写摔跤书的调露子，同理。</small></q>
+      </div>
+    </div>
+    <p class="prose" style="margin-top:30px">
+      至于这门手艺本身，序后那篇〈述旨〉给了它一个近乎哲学的身份：<q class="qi">斯亦兵阵之权舆，急竞之萌渐</q>，角力是兵阵的雏形、争斗的萌芽。再往下，他连猫和狗都被拉来作证：<q class="qi">始以轻爪弱牙面相击齿，终则斗</q>，玩耍玩着玩着就动了真气，所以有那句总纲：<q class="qi">夫有血气，必有斗心也。</q>拳脚的哲学，一句话讲完。
+    </p>
+  </div>
+</section>
+
+<!-- ================= 贰 · 名目 ================= -->
+<section class="band">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="band-seal">贰</div>
+      <div>
+        <div class="band-title">一场角力，有五个名字</div>
+        <div class="band-sub">名目 · 相搏 相费 相扑 角觝 角力</div>
+      </div>
+    </div>
+    <p class="prose">
+      同一件事，经书里叫相搏，街头叫相扑，荆楚蜀地另有土名，朝廷文书写作角觝，作者最后拍板：雅称角力，拿它当全书总目。五块牌子，点开看各自的来历。
+    </p>
+    <div class="name-cards" id="nameCards">
+      <div class="ncard on" data-t="np0"><div class="big">相搏</div><div class="org">经传古名</div><div class="lane">《谷梁传》</div></div>
+      <div class="ncard" data-t="np1"><div class="big">相费</div><div class="org">荆楚土名</div><div class="lane">岁时记所载</div></div>
+      <div class="ncard" data-t="np2"><div class="big">相扑</div><div class="org">市井俗名</div><div class="lane">《通俗文》</div></div>
+      <div class="ncard" data-t="np3"><div class="big">角觝</div><div class="org">汉家官名</div><div class="lane">《汉书》注</div></div>
+      <div class="ncard" data-t="np4"><div class="big">角力</div><div class="org">全书雅名</div><div class="lane">调露子定</div></div>
+    </div>
+    <div class="name-panel">
+      <div class="np-item on" id="np0">
+        <h3>相搏<span>经传古名</span></h3>
+        <p class="prose">最老的一个名字，出自鲁国史书。公子季友打了胜仗，却不愿让士兵替自己出气，要求跟莒拿单挑。</p>
+        <q class="qb">吾二人不相悦，士卒何罪？<small>《谷梁传》 · 让士兵退开，两人赤手解决</small></q>
+        <p class="prose">季友一度落在下风，左右急了，喊了一声刀名，递上鲁国宝刀，他才翻盘。原文顺手记了一笔刀的出处：<q class="qi">孟劳。</q>小注交代这是鲁国的宝刀，情急之中取来救主。</p>
+      </div>
+      <div class="np-item" id="np1">
+        <h3>相费<span>荆楚蜀地土名（库本作拼合字，上「扌」下「费」，音费）</span></h3>
+        <p class="prose">这个字的字形连今天的字库都装不下，简体库文件里只能以拼合符号存盘，本页只好以描述代之，引文避开。《荆楚岁时记》里记着，五月间荆楚一带结伴以此取乐，正就是扑；蜀地荆州一带，它就是争力竞倒的意思。书里还记了两个变音的俗写：相叉，读堆也行，读「丑佳反」也行，作者的评语只有四个字：<q class="qi">皆非雅正。</q></p>
+      </div>
+      <div class="np-item" id="np2">
+        <h3>相扑<span>市井俗名</span></h3>
+        <q class="qb">争倒曰相扑也，言其交相争也，今率土俗间只呼为相扑也。<small>《通俗文》 · 全国街头已经只认这个名字</small></q>
+        <p class="prose">名字的规则一句话讲清：<q class="qi">则取扑倒为名故也</q>，扑倒对方，才算赢。《晋书》给过一句居高临下的评语，<q class="qi">相扑，下技也。</q>这话几百年后还有人拿来挡架：襄城的王弘路遇邻郡的功曹刘子竺，对方挑衅说襄城人不会扑，王弘就用这句原话回敬：<q class="qi">相扑下技，不足以明优劣。</q>输了不丢人，赢的是涵养。另有一条音韵小知识，作者特意注明：<q class="qi">相字入声呼。</q></p>
+      </div>
+      <div class="np-item" id="np3">
+        <h3>角觝<span>汉家官名</span></h3>
+        <p class="prose">这个名字是汉武帝捧红的。元封初年始作角觝之戏；四年后，长安万人空巷。</p>
+        <q class="qb">至元封六年夏，京师民观角觝于上林、平乐观。<small>后来汉元帝初元五年，把这戏停了</small></q>
+        <p class="prose">注家们为这两个字吵了一轮：应劭说<q class="qi">角，技也。觝，相触也。</q>颜师古反驳：<q class="qi">觝，当也。非谓觝触。</q>作者判文颖的注为胜，理由是角字当作比较讲，与榷沽之榷同用。张衡《西京赋》里那场大汇演，正是它的舞台记录：<q class="qi">临回望之广场，呈角觝之妙戏。</q></p>
+      </div>
+      <div class="np-item" id="np4">
+        <h3>角力<span>全书雅名</span></h3>
+        <q class="qb">则角量力，其取工巧钝拙，分其胜负，故谓之角力。<small>角，是比较的意思；比的不止力气，还有巧拙</small></q>
+        <p class="prose">作者最后做个了断：<q class="qi">今会诸名，以「角力」为雅，故以为首目也。</q>五个名字就此定于一尊，书名也由此而来。他还补了一句学术判断：<q class="qi">究其始，则其来虽远，见史分明，则盛于西汉也。</q>这门技艺古已有之，鼎盛是在西汉。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 叁 · 场记 ================= -->
+<section class="band">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="band-seal">叁</div>
+      <div>
+        <div class="band-title">场记：从春秋到后唐</div>
+        <div class="band-sub">考古 · 一根界绳上的八个朝代</div>
+      </div>
+    </div>
+    <p class="prose">
+      〈考古〉一篇是这条绳子，串起一千五百年间的场子。点朝代，读当年的现场记录。
+    </p>
+    <div class="rope">
+      <div class="rope-row" id="ropeRow">
+        <button class="stop on" data-n="rn0"><span class="era">春秋</span><span class="dot"></span><span class="yr">君王之梦</span></button>
+        <button class="stop" data-n="rn1"><span class="era">汉</span><span class="dot"></span><span class="yr">戏始作</span></button>
+        <button class="stop" data-n="rn2"><span class="era">魏</span><span class="dot"></span><span class="yr">甘蔗仗</span></button>
+        <button class="stop" data-n="rn3"><span class="era">晋</span><span class="dot"></span><span class="yr">募勇士</span></button>
+        <button class="stop" data-n="rn4"><span class="era">北齐</span><span class="dot"></span><span class="yr">以扑行刑</span></button>
+        <button class="stop" data-n="rn5"><span class="era">隋</span><span class="dot"></span><span class="yr">禁与神力</span></button>
+        <button class="stop" data-n="rn6"><span class="era">唐</span><span class="dot"></span><span class="yr">全盛</span></button>
+        <button class="stop" data-n="rn7"><span class="era">后唐</span><span class="dot"></span><span class="yr">一拳之贵</span></button>
+      </div>
+    </div>
+    <div class="ring-notes">
+      <div class="rn-item on" id="rn0">
+        <h4>一场梦里开的场子<em>《左传》《谷梁》</em></h4>
+        <p>书里认定的最早记录，是一场梦：晋侯梦见与楚子徒手相搏。作者把它与季友搏莒拿、孔子之父叔梁纥的较力旧事并列，结论是四个字：<q class="qi">其来尚矣。</q>孔子的父亲叔梁纥，原来也在这条谱系里。</p>
+      </div>
+      <div class="rn-item" id="rn1">
+        <h4>汉武帝与上林观<em>名目转考古</em></h4>
+        <p>角觝戏始作于元封，京师之民蜂拥去看，是为全民项目之始。至于盛况，〈考古〉只用一句收束：<q class="qi">以西汉则盛行矣。</q></p>
+      </div>
+      <div class="rn-item" id="rn2">
+        <h4>魏文帝持甘蔗下殿<em>帝王亲自下场</em></h4>
+        <p>曹丕听说奋威将军刘展拳脚了得，敢空手夺白刃，心里不服，找了一样最不趁手的兵器。</p>
+        <q class="qb">帝持甘蔗为仗，下殿数交，二中其臂。<small>考古 · 皇帝拿两截甘蔗当短杖，几回合内击中对方手臂两次</small></q>
+        <p>作者点评：这是单比手技，不算争交竞力。但史书里帝王拿甘蔗打赢将军的名场面，仅此一条。</p>
+      </div>
+      <div class="rn-item" id="rn3">
+        <h4>庾东扑杀西域健胡<em>晋武帝的擂台</em></h4>
+        <p>西域来了个趫捷无敌的健胡，晋人没人能敌，武帝公开募勇士。应选的是庾东，就是后来大书法家庾翼、庾冰的父亲。</p>
+        <q class="qb">帝募勇士，惟东应选，遂扑杀之，名振殊俗。<small>考古 · 这一扑是出了人命的，异域为之震动</small></q>
+      </div>
+      <div class="rn-item" id="rn4">
+        <h4>后园的一场处决<em>北齐 · 以戏行刑</em></h4>
+        <p>南阳王高绰性情凶悖，后主不忍心公开处决他，想出的办法是让宠胡何猥荫跟他摔跤，摔死在后园。</p>
+        <q class="qb">使宠（一作龙）胡何猥荫于后园与绰相扑，因格而杀之。<small>考古 · 相扑在这里成了行刑方式；「宠」下库本注一作龙，照录</small></q>
+        <p>同卷还有齐国的王敬则，在御前把头发用红帛束起表演拍张；大将曹武则因一句<q class="qi">每好风景，招人拍张武戏</q>的传闻丢了七十万钱。作者按语：<q class="qi">拍张亦角力也。</q></p>
+      </div>
+      <div class="rn-item" id="rn5">
+        <h4>柳彧请禁与法通神力<em>隋 · 一禁一奇</em></h4>
+        <p>入隋为侍郎的柳彧，看不过正月十五的举国狂欢，上疏请禁。</p>
+        <q class="qb">都邑百姓每至正月十五曰，作角觝戏，递相夸竞，至于麋费。请禁之。<small>《隋书》 · 库本「曰」「日」互讹，照录</small></q>
+        <p>另一头是鄠县和尚法通，生得尪羸被众人轻视，愤而苦告观音。一日睡在庭树下，梦里有人送来三驴驮筋让他吃。</p>
+        <q class="qb">向梦有人遗三驴驮筋，令啖之，始尽一驮，闻母呼，觉。<small>只吃完一头驴的筋，就醒了，力气已经够用</small></q>
+        <p>恰逢西番道人在北门设扑无敌手，文帝头疼，召法通应敌。结果书里写得轻描淡写：<q class="qi">力者造通，为把赤豆麦，便粉碎。</q>对手一搭手，攥着的赤豆麦直接成了粉。</p>
+      </div>
+      <div class="rn-item" id="rn6">
+        <h4>唐朝场子全开<em>宝历、长庆、太和</em></h4>
+        <p>敬宗御三殿看两军教坊分朋对抗，戏酣之处，出了工伤。</p>
+        <q class="qb">有碎首折臂者，一更三点方罢。<small>考古 · 打到头破臂折，闹到一更三点才收场</small></q>
+        <p>长庆元年出了一桩少年救父案：羽林骑康宪被张莅醉后殴打几死，十四岁的儿子买得拿木插击破其头致死。刑部覆奏，皇帝的批复写得有情有法。</p>
+        <q class="qb">康买得童年能知子道，虽杀人当死，而父可哀，减死一等。<small>敕曰 · 十四岁少年救父，免死改流</small></q>
+        <p>太和三年南蛮犯蜀，一个刺发为僧的角力高手躲在佛寺廊下，撞上三名进城虚张声势的蛮兵。</p>
+        <q class="qb">榜可看否？<small>僧问 · 先借看告榜拖住两人</small></q>
+        <q class="qb">僧乃悉拽之，拉其头，摔于井中。<small>两人凑近看榜，被一并拽倒，头朝下塞进井里，剩一个跑了</small></q>
+      </div>
+      <div class="rn-item" id="rn7">
+        <h4>一拳换一个节度使<em>后唐庄宗</em></h4>
+        <p>庄宗李存勖自己就是角力行家，召角力名家王门关对扑，事前把赏格说得明明白白。</p>
+        <q class="qb">卿一拳倒者，与节制。<small>你一拳撂倒我，就授你节度使</small></q>
+        <q class="qb">及出手，果一拳下而仆。寻除幽州节度使。<small>考古 · 皇帝说到做到，一拳换一镇藩镇</small></q>
+        <p>同书还记着一位在左膊刺字的京兆力士，刺的五个字，口气大过阎罗：<q class="qi">生不怕阎罗王。</q></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 肆 · 列传 ================= -->
+<section class="band">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="band-seal">肆</div>
+      <div>
+        <div class="band-title">挂过名号的力人们</div>
+        <div class="band-sub">列传 · 一位宗师与六位奇人</div>
+      </div>
+    </div>
+    <div class="champ">
+      <div class="champ-id">
+        <div class="cname">蒙万嬴</div>
+        <div class="ctag">唐僖宗至后唐 · 名号即战绩</div>
+        <div class="cquote">
+          <q class="qb">及长，擅长多胜，受赐丰厚，万嬴乎号自此起。<small>赢到赏赐成山，「万嬴」就成了他的名字</small></q>
+        </div>
+      </div>
+      <div>
+        <div class="steps" id="champSteps">
+          <button class="step on" data-c="cs0">咸通中 · 选入小儿园<span class="s-hi">御驾经过处献技的孩子</span></button>
+          <button class="step" data-c="cs1">十四五岁 · 转入相扑朋<span class="s-hi">同龄人个个怕他手快</span></button>
+          <button class="step" data-c="cs2">得号万嬴<span class="s-hi">赢多赏厚，号由此起</span></button>
+          <button class="step" data-c="cs3">昭宗朝 · 头牌供奉<span class="s-hi">新进勇士到他手上都不灵</span></button>
+          <button class="step" data-c="cs4">随驾凤翔 · 流散华下<span class="s-hi">城围日久，一班艺人四散</span></button>
+          <button class="step" data-c="cs5">入两浙 · 事钱镠<span class="s-hi">钱王厚待，出场犹连胜</span></button>
+          <button class="step" data-c="cs6">年老 · 主伍子胥庙<span class="s-hi">长兴年间卒，宗师谢幕</span></button>
+        </div>
+        <div class="step-panel">
+          <p class="prose" id="champProse">他的少年偶像期在长安的小儿园：每逢皇帝出行，这一群孩子负责拳球弹鸟。转行进相扑朋才十四五岁，同龄人已经怕他的拳手轻捷；到昭宗朝成了头牌供奉，慕名来拜师的，书上写的是一句盛况。</p>
+        </div>
+      </div>
+    </div>
+    <q class="qb" style="max-width:640px">五陵年少，幽燕任侠，相从诣教者数百。<small>列传 · 拜在门下的有几百人</small></q>
+    <p class="prose" style="margin:18px 0 8px">
+      他跟老搭档乐工皇甫店在钱镠座上重逢，携手说起僖宗朝的长安旧事，同唱一曲〈鹊踏枝〉，<q class="qi">今已二十年也，不期同受遇于此。</q>晚年在两浙收山，钱王让他带徒指教，最后派去主管伍子胥庙，长兴年间卒于任上，算是力士里少有的善终。
+    </p>
+    <div class="gallery" id="gallery" style="margin-top:30px">
+      <div class="gcard">
+        <div class="gname">张季弘</div>
+        <div class="gtag">提驴过渠 · 败给一枚指痕</div>
+        <div class="gbody">
+          <p>勇而多力的左军张季弘，路遇村人赶驴挡道，<q class="qi">提驴四足，掷过水渠数步</q>。后来夜宿商山逆旅，听店主老妇哭诉新妇悖逆，自告奋勇要替主人料理。夜里新妇荷薪归来，在后园磐石上与他对质。</p>
+          <q class="qb">每言一事，引手于季弘石上，以中指画之，随手作痕，深可数寸。</q>
+          <q class="qb">季弘流汗神骇，但言道理不错，阖扉假寐，伺晨而发。</q>
+          <p>每说一件委屈，中指在石上一划，指痕深达数寸。天下第一力士满头大汗连声说你有理，天不亮就溜了。回去一问，新妇早已改嫁他乡。</p>
+        </div>
+        <div class="more">点 开 读 全 段</div>
+      </div>
+      <div class="gcard">
+        <div class="gname">管万敌</div>
+        <div class="gtag">扛鼎挟辀 · 遇掌大如箕者</div>
+        <div class="gbody">
+          <p>会昌年间左军壮士，膂力众人推服。东平酒肆里来了个旁若无人的麻衣客，万敌怒他轻慢。麻衣客提了个奇怪的规则。</p>
+          <q class="qb">请供奉拳某三拳后，乞搭供奉一搭。</q>
+          <p>说罢自己袒了膊，抱住楼柱站定。万敌拼尽全力三拳打过去。</p>
+          <q class="qb">尽力奋以三拳，如扣木石焉。</q>
+          <p>对方这才起身回敬，<q class="qi">掌大如箕，可丈余</q>，一掌拍下，楼都震了。众人拥着万敌谢罪，转眼麻衣客已不见踪影。万敌病了一个多月，力气从此衰减。</p>
+        </div>
+        <div class="more">点 开 读 全 段</div>
+      </div>
+      <div class="gcard">
+        <div class="gname">谢 建</div>
+        <div class="gtag">坐折寺碑 · 能诗的金刚</div>
+        <div class="gbody">
+          <q class="qb">身长八尺馀，胸臃博三尺，绝有力，少有对敌，惟李长子相次耳。</q>
+          <p>扬州人，略知书，能口述词章，醉心南宗禅学。去宗教寺问禅，听完讲席起身。</p>
+          <q class="qb">不觉坐折寺碑中断。</q>
+          <p>一坐之下把寺里的石碑坐成两截。他和惠照寺讲经的彦光法师是深交，亲手做好鱼羹请法师早日归净土，法师回了他一首火头金刚的偈子。</p>
+        </div>
+        <div class="more">点 开 读 全 段</div>
+      </div>
+      <div class="gcard">
+        <div class="gname">姚结耳</div>
+        <div class="gtag">扑遍天下 · 出家还俗皆威猛</div>
+        <div class="gbody">
+          <p>江南人，绰号相扑都知，南唐中主给他的赏赐格外厚。他有个愿心。</p>
+          <q class="qb">扑好手者遍，则出家为僧。</q>
+          <p>把天下的高手都摔遍，就剃度出家。果然都胜了，真去庐山开先寺剃染为禅者。可脾气没剃掉：在寺里犯了嗔念，抡起拳头要打同修，强自按住，改拔寺中巨树泄愤。</p>
+          <q class="qb">将巨树拔其根，劈其支干，褫其皮，如是数枝而止。</q>
+          <p>连拔带劈剥皮了好几棵，同修早跑了。</p>
+        </div>
+        <div class="more">点 开 读 全 段</div>
+      </div>
+      <div class="gcard">
+        <div class="gname">王愚子</div>
+        <div class="gtag">梦与金刚对 · 传了一套家学</div>
+        <div class="gbody">
+          <p>扬州人，生在杨吴，一身黑得像上了漆，小时候做梦与金刚相对，醒来就有了神力，好相扑而少有对偶，武义年中卒。他的儿子排行叫八四，从小得父亲真传，拳脚也硬，却偏偏迷上儒学，自己嫌这一行粗鄙。后来在李昪、李璟、李煜祖孙三代的宫廷里充当对头供奉，江南平后不知所终。一对父子，从梦里的金刚走进书斋，又从书斋走进亡国的宫廷。</p>
+        </div>
+        <div class="more">点 开 读 全 段</div>
+      </div>
+      <div class="gcard">
+        <div class="gname">石彦能</div>
+        <div class="gtag">石校书 · 儒生外皮的高手</div>
+        <div class="gbody">
+          <p>蜀送相扑高手述述去凤翔通好，路过魏宗弼门下。弼子想挫一挫蜀客的锋头，养了个有文才的角力客当奇兵，号为石校书。宾主一撺掇，石彦能假意逊让，被郄推官揭了头巾露出新剃的头皮，这才出手。</p>
+          <q class="qb">为石伺入腰交而倒。</q>
+          <p>一个腰下的动作放倒蜀中第一高手。述述羞愤交加，借口进厨房找吃的。</p>
+          <q class="qb">取庖刀欲自裁。</q>
+          <p>被厨工拦下，弼子这才摊牌：<q class="qi">石原是此技人。</q>厚赏了事。一场比试，输在情报不在力气。</p>
+        </div>
+        <div class="more">点 开 读 全 段</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 伍 · 旁闻绝倒 ================= -->
+<section class="band">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="band-seal">伍</div>
+      <div>
+        <div class="band-title">旁闻绝倒</div>
+        <div class="band-sub">杂说 · 五则力士笑话，皆出库本</div>
+      </div>
+    </div>
+    <p class="prose">
+      〈杂说〉是全书的相声专场，两处原文直接盖章「旁闻绝倒」。点签听包袱。
+    </p>
+    <div class="laughs">
+      <div class="lcard">
+        <div class="jue">绝倒</div>
+        <div class="lno">其一</div>
+        <div class="ltitle">怕酱的壮士</div>
+        <div class="lset">光启年间军中设扑，一位魁伟军汉连败三人。末席一个秀才说我也扑得，下场前先去厨房转了一圈，握着左拳微笑，夸口一根指头就够。两人相逼，秀才候他瞪眼之际摊开手掌。</div>
+        <div class="lpay">
+          <q class="qb">此辈怕酱。以涂于掌，此人见，果然自倒尔。</q>
+        </div>
+        <div class="tap">点 签 听 包 袱</div>
+      </div>
+      <div class="lcard">
+        <div class="jue">绝倒</div>
+        <div class="lno">其二</div>
+        <div class="ltitle">大针蒸字</div>
+        <div class="lset">相扑力士多半不识字，托人给魏府的哥哥寄东西，问写字先生针字怎么写。先生答金旁作十。力士嫌小气，非要一个大针字。</div>
+        <div class="lpay">
+          <q class="qb">勿交涉，此是小‘针’字，我交汝作。请教某曰，但作‘蒸’字是也。</q>
+        </div>
+        <div class="tap">点 签 听 包 袱</div>
+      </div>
+      <div class="lcard">
+        <div class="jue">绝倒</div>
+        <div class="lno">其三</div>
+        <div class="ltitle">赢遍和尚的僧</div>
+        <div class="lset">一位有勇气的沙门四方扬名，与人饮酒，散席后连扑皆胜。这位僧人不识字，捋着袖子自夸，念了两句自嘲又自得的顺口溜，两句都押在僧字上。</div>
+        <div class="lpay">
+          <q class="qb">我且为僧僧上了，为僧得了尽输僧。</q>
+        </div>
+        <div class="tap">点 签 听 包 袱</div>
+      </div>
+      <div class="lcard">
+        <div class="jue">绝倒</div>
+        <div class="lno">其四</div>
+        <div class="ltitle">捏弯的钥匙</div>
+        <div class="lset">钱镠八月十八看潮，宴罢斗牛，再开扑场。有一位管库房的一路看入了神，第二天取钥匙开锁，怎么也开不了，被主事者责问。对着签牌一看，钥匙确实是他的。</div>
+        <div class="lpay">
+          <q class="qb">方悟向观角力，不觉手握匙曲戾耳。</q>
+        </div>
+        <div class="tap">点 签 听 包 袱</div>
+      </div>
+      <div class="lcard">
+        <div class="jue">绝倒</div>
+        <div class="lno">其五</div>
+        <div class="ltitle">步打进士落第</div>
+        <div class="lset">僖宗幼年登基，身边宦官陪玩，内园常年养着角抵之徒随叫随到。皇帝自称步打进士，还觉得自己该中状元，问优人野猪。野猪的回话让皇帝只能笑笑。</div>
+        <div class="lpay">
+          <q class="qb">或遇尧舜禹汤知举，陛下不免落第。</q>
+        </div>
+        <div class="tap">点 签 听 包 袱</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 陆 · 风土 ================= -->
+<section class="band">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="band-seal">陆</div>
+      <div>
+        <div class="band-title">力士从哪里来</div>
+        <div class="band-sub">出处 · 四方风土志</div>
+      </div>
+    </div>
+    <p class="prose">
+      〈出处〉一篇是角力的地理。开篇一句总纲：<q class="qi">凡具勇力之人，侠气之类，合出幽燕，得崆峒之气。</q>但作者很快修正自己：<q class="qi">此技随君主之所好，必逐处而出也</q>。四块地界，各有各的办场法。
+    </p>
+    <div class="lands" style="margin-top:26px">
+      <div class="land">
+        <div class="lname">蜀</div>
+        <div class="lsub">上元作场 · 半年不休</div>
+        <p>桥市募勇，本地壮丁凑钱备酒，正月十五在学社山前的平地开场，新草如苗的时节一对对相决而去，赢了的骑马披彩游街。</p>
+        <q class="qb">观者如堵，巷无居人。从正月上元至五月方罢。</q>
+      </div>
+      <div class="land">
+        <div class="lname">荆楚</div>
+        <div class="lsub">五月结伴 · 中元再战</div>
+        <p>五月间结伴为相费之戏（字见贰章注），七月中元再来一轮。《吴兴杂录》给的解读带着季节感。</p>
+        <q class="qb">七月中元节，俗好角力、相扑，云秋瘴气也。</q>
+      </div>
+      <div class="land">
+        <div class="lname">两浙</div>
+        <div class="lsub">潮头过后 · 军家激勇</div>
+        <p>钱镠把看潮、斗牛、相扑排成一套仪程，目的说得直白。</p>
+        <q class="qb">每值八月十八曰浙江潮水大至，谓之看潮。是曰，必命僚属登楼而宴，及潮头已过，即斗牛，然后相扑。</q>
+        <p style="margin-top:10px">用意只有一句：<q class="qi">为军家出力而激勇也。</q></p>
+      </div>
+      <div class="land">
+        <div class="lname">东京</div>
+        <div class="lsub">行户管辖 · 遗俗犹在</div>
+        <p>汴京打从梁王时代起，恶少年在此云集；连屠宰行业都归相扑行管辖，理由颇为实用主义。</p>
+        <q class="qb">屠羊豕者行，必隶相扑管辖焉，贵益其脂膏尔，此亦近人馔之意也。<small>宰过的有膂力，顺带肥了行会</small></q>
+      </div>
+    </div>
+    <p class="prose" style="margin-top:24px">
+      最后一句留给断代：当年关中三辅此风最盛，唐亡之后却<q class="qi">寂寞无闻</q>，高手散投诸国；只有河南保留着庄宗的遗俗，习者不绝。一部书的地理，也是一部五代十国的势力图。
+    </p>
+  </div>
+</section>
+
+<!-- ================= 尾声 · 墙画诗 ================= -->
+<div class="coda">
+  <div class="wrap">
+    <div class="band-head">
+      <div class="band-seal" style="transform:rotate(3deg)">跋</div>
+      <div>
+        <div class="band-title">墙上一幅画，判了一场输赢</div>
+        <div class="band-sub">杂说末条 · 吴人顾著作题画诗</div>
+      </div>
+    </div>
+    <p class="prose">
+      全书最妙的一则压在末尾：有人题一幅相扑画，画上两个汉子缠作一团，谁也分不出胜负。诗人的判词是，别急，画里的墙会塌。
+    </p>
+    <div class="poem-wall">
+      <q class="pc">愚汉勾却白汉项</q>
+      <q class="pc">白人捉却愚人骰</q>
+      <q class="pc">如人莫辨输嬴者</q>
+      <q class="pc">直待墙<b>𬯎</b>始一交</q>
+    </div>
+    <div class="poem-src">杂 说 末 条 ，吴 人 题 画 ，库 本 照 录</div>
+    <div class="corrigenda">
+      <h3>校 字 记</h3>
+      <li><b>曰日互讹</b>：库本正月十五曰、八月十八曰、是曰等多处「日」讹作「曰」，引文一律照录。</li>
+      <li><b>嬴字</b>：蒙万嬴、输嬴，库本皆作「嬴」，非「赢」，照录。</li>
+      <li><b>拼合字</b>：荆楚土名一目库本作「■〈扌费〉」（上扌下费，音费），字库无此字，页面以描述代之，直接引文一律避开该字。</li>
+      <li><b>𬯎</b>：末句诗之「𬯎」（坍塌义）为扩展区生僻字，少数字体无字形，显示为方框时请换用全字库字体。</li>
+      <li><b>存疑字</b>：万嬴乎号之「乎」疑当作「之」；何猥荫之「猥」或作「维」；均为库本原貌，引文照录不改。</li>
+      <li><b>避引记号</b>：库本有「==」残留记号一处（僖宗条）、阙字方框「□」十余处（骋□捷、上古之□等），相关句子皆不入引文。</li>
+      <li><b>讹字照录</b>：身长八尺馀之「馀」、儿字辈写法等均依库本。</li>
+    </div>
+  </div>
+</div>
+
+<footer class="page">
+  <div class="wrap">
+    文本来源：殆知阁简体文库〈角力记〉（艺藏与武术部，北宋 调露子 撰，去空白六千七百余字）<br>
+    导读仓库：<a href="https://github.com/robertsong2000/daizhige-daodu">github.com/robertsong2000/daizhige-daodu</a><br>
+    本页引文经脚本与库内文件去标点归一逐字比对通过；古代文本历经传抄，讹缺在所难免，校字记已申报。文中所述皆古人风物观念，请以时代眼光读之。
+  </div>
+</footer>
+
+<script>
+  // 首屏开扑
+  var stage = document.getElementById('stage');
+  stage.addEventListener('click', function () { stage.classList.toggle('down'); });
+
+  // 四格书架补货
+  var grail = document.getElementById('grailSlot');
+  grail.addEventListener('click', function (e) { e.stopPropagation(); grail.classList.toggle('stamped'); });
+
+  // 名目五牌
+  var ncards = document.querySelectorAll('.ncard');
+  ncards.forEach(function (c) {
+    c.addEventListener('click', function () {
+      ncards.forEach(function (x) { x.classList.remove('on'); });
+      c.classList.add('on');
+      document.querySelectorAll('.np-item').forEach(function (p) { p.classList.remove('on'); });
+      document.getElementById(c.dataset.t).classList.add('on');
+    });
+  });
+
+  // 场记八站
+  var stops = document.querySelectorAll('.stop');
+  stops.forEach(function (s) {
+    s.addEventListener('click', function () {
+      stops.forEach(function (x) { x.classList.remove('on'); });
+      s.classList.add('on');
+      document.querySelectorAll('.rn-item').forEach(function (p) { p.classList.remove('on'); });
+      document.getElementById(s.dataset.n).classList.add('on');
+    });
+  });
+
+  // 蒙万嬴生涯
+  var steps = document.querySelectorAll('.step');
+  var champText = {
+    cs0: '他的少年偶像期在长安的小儿园：咸通年间入选，每逢皇帝出行，这一群孩子负责拳球弹鸟，是御前的杂技后备队。',
+    cs1: '转行进相扑朋才十四五岁，同龄人已经怕他的拳手轻捷。从踢球的孩子到职业力士，只隔一次选材。',
+    cs2: '赢得太多，「万嬴」从战绩变成了名字。唐人爱以战绩为号，他是唯一把号赢成名字的人。',
+    cs3: '昭宗朝成了头牌供奉，天南地北新来的勇士都赢了个遍，慕名拜师的多达数百人。',
+    cs4: '车驾避乱凤翔，城围日久，一行人退到华州，教坊艺人就此四散。宫廷艺人的乱世，跟皇帝的车驾绑在一起。',
+    cs5: '入两浙，钱王待他极厚，座上重逢旧日同僚，忆起僖宗朝同唱一曲，转眼二十年，各领钱帛置酒相会。',
+    cs6: '年老收山，钱王命他带徒指教，又派他去主管伍子胥庙，长兴年间卒。从踢球小儿到庙祝，一个完整的长安记忆样本。'
+  };
+  steps.forEach(function (s) {
+    s.addEventListener('click', function () {
+      steps.forEach(function (x) { x.classList.remove('on'); });
+      s.classList.add('on');
+      document.getElementById('champProse').textContent = champText[s.dataset.c];
+    });
+  });
+
+  // 列传六卡
+  document.querySelectorAll('.gcard').forEach(function (g) {
+    g.addEventListener('click', function () { g.classList.toggle('open'); });
+  });
+
+  // 绝倒五签
+  document.querySelectorAll('.lcard').forEach(function (l) {
+    l.addEventListener('click', function () { l.classList.toggle('open'); });
+  });
+</script>
+</body>
+</html>
