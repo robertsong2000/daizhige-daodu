@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>石头记索隐 · 幕影</title>
+<style>
+:root{
+  --bg:#191917;
+  --paper:#e8e4dc;
+  --ink:#2b2925;
+  --ink2:#5a564e;
+  --blue:#5e8fbb;
+  --blue-d:#3d688f;
+  --red:#c0453c;
+  --red-d:#8f352f;
+  --line:#3a3831;
+  --screen:#e9dec4;
+  --screen-d:#cfc0a0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:auto;}
+body{
+  background:var(--bg);
+  color:var(--paper);
+  font-family:"Songti SC","STSong","SimSun",Georgia,serif;
+  line-height:1.95;
+  overflow-x:hidden;
+}
+q{quotes:none;}
+::selection{background:var(--blue);color:var(--bg);}
+.wrap{max-width:960px;margin:0 auto;padding:0 22px;}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;}
+
+/* ============ 首屏 皮影台 ============ */
+.hero{
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:44px 16px 30px;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 108%, #26241d 0%, var(--bg) 62%);
+  position:relative;
+}
+.stage{
+  position:relative;
+  width:min(680px,94vw);
+  aspect-ratio:16/10;
+  margin-bottom:34px;
+}
+.beam{
+  height:26px;
+  background:linear-gradient(#2a2721,#221f19);
+  border:1px solid #35322a;
+  border-radius:8px 8px 0 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  z-index:5;
+}
+.beam b{
+  font-weight:normal;
+  letter-spacing:.55em;
+  text-indent:.55em;
+  color:#c8b98c;
+  font-size:15px;
+}
+.beam i{
+  position:absolute;
+  top:-13px;left:50%;
+  transform:translateX(-50%);
+  width:6px;height:13px;
+  background:#3d382e;
+  border-radius:3px 3px 0 0;
+}
+.frame{
+  position:relative;
+  height:calc(100% - 26px);
+  border:1px solid #35322a;
+  border-top:none;
+  border-radius:0 0 10px 10px;
+  background:linear-gradient(#1e1c17,#161512);
+  box-shadow:0 24px 60px rgba(0,0,0,.55), inset 0 0 60px rgba(0,0,0,.5);
+}
+.cols{
+  position:absolute;
+  top:-8px;bottom:-6px;
+  width:12px;
+  background:linear-gradient(#2c2921,#1d1b15);
+  border:1px solid #35322a;
+  z-index:6;
+}
+.cols.l{left:-7px;}
+.cols.r{right:-7px;}
+.screenbox{
+  position:absolute;
+  inset:14px 16px 16px;
+  overflow:hidden;
+  border-radius:6px;
+  background:
+    repeating-linear-gradient(90deg, rgba(120,100,60,.05) 0 2px, transparent 2px 6px),
+    radial-gradient(ellipse 85% 70% at 50% 46%, var(--screen) 0%, var(--screen-d) 78%, #b3a37f 100%);
+  filter:brightness(.55) saturate(.85);
+  transition:filter 1.4s ease;
+}
+.stage.open .screenbox{filter:brightness(1) saturate(1);}
+.lamp{
+  position:absolute;
+  left:50%;bottom:8%;
+  transform:translateX(-50%);
+  width:150px;height:150px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,214,140,.5) 0%, rgba(255,190,110,.14) 45%, transparent 70%);
+  animation:lampsway 6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes lampsway{
+  0%,100%{opacity:.75;transform:translateX(-52%) scale(1);}
+  50%{opacity:1;transform:translateX(-48%) scale(1.06);}
+}
+.stage.open .lamp{animation-duration:3.4s;}
+.yingren{
+  position:absolute;
+  left:33%;top:47%;
+  transform:translate(-50%,-50%);
+  width:30%;
+  opacity:.16;
+  transition:opacity 1.6s ease .3s, filter 1.6s ease .3s;
+  filter:blur(2px);
+}
+.stage.open .yingren{opacity:.92;filter:blur(0);}
+.yingren svg{display:block;width:100%;height:auto;}
+/* 幂层 */
+.mi{
+  position:absolute;
+  left:16px;right:16px;
+  height:23%;
+  z-index:8;
+  cursor:pointer;
+  background:
+    repeating-linear-gradient(0deg, rgba(232,228,220,.16) 0 3px, rgba(232,228,220,.05) 3px 9px),
+    rgba(214,205,186,.30);
+  border-top:1px solid rgba(232,228,220,.28);
+  border-bottom:1px solid rgba(232,228,220,.22);
+  backdrop-filter:blur(1px);
+  transition:transform 1s cubic-bezier(.6,.05,.3,1), opacity .9s ease, visibility 0s 1s;
+  display:flex;
+  align-items:center;
+}
+.mi:hover{background-color:rgba(228,220,202,.42);}
+.mi.up{
+  transform:translateY(-46vh);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+.mi .tag{
+  writing-mode:vertical-rl;
+  margin-left:5%;
+  font-size:12px;
+  letter-spacing:.35em;
+  color:#4a4538;
+  border:1px solid #4a4538;
+  padding:7px 3px;
+  border-radius:2px;
+  background:rgba(232,228,220,.32);
+}
+.mi .cap{
+  margin-left:7%;
+  color:#413c30;
+  font-size:14px;
+  letter-spacing:.12em;
+}
+.mi .hint{
+  margin-left:auto;
+  margin-right:5%;
+  font-size:12px;
+  color:#6a6250;
+  letter-spacing:.2em;
+}
+.mi1{top:8%;}
+.mi2{top:38.5%;}
+.mi3{top:69%;}
+/* 竖排书名 */
+.btitle{
+  position:absolute;
+  left:62%;top:46%;
+  transform:translate(-50%,-46%) scaleY(.6);
+  transform-origin:center bottom;
+  writing-mode:vertical-rl;
+  font-size:clamp(30px,4.6vw,42px);
+  letter-spacing:.14em;
+  height:78%;
+  max-height:290px;
+  color:#23211c;
+  opacity:0;
+  transition:opacity 1.3s ease .35s, transform 1.3s cubic-bezier(.2,.7,.3,1) .35s;
+  z-index:4;
+  pointer-events:none;
+  text-shadow:0 1px 0 rgba(255,250,235,.4);
+}
+.stage.open .btitle{opacity:1;transform:translate(-50%,-50%) scaleY(1);}
+.btitle small{
+  writing-mode:vertical-rl;
+  font-size:12px;
+  letter-spacing:.34em;
+  color:#57503f;
+  margin-right:14px;
+  margin-top:10px;
+}
+.seal{
+  position:absolute;
+  right:13%;bottom:12%;
+  width:44px;height:82px;
+  background:var(--red);
+  color:#f5ede2;
+  writing-mode:vertical-rl;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px;
+  letter-spacing:.14em;
+  border-radius:5px;
+  box-shadow:0 3px 10px rgba(0,0,0,.35);
+  transform:scale(2.1) rotate(-9deg);
+  opacity:0;
+  z-index:4;
+}
+.stage.open .seal{
+  animation:stamp .55s cubic-bezier(.3,1.4,.5,1) 1.5s forwards;
+}
+@keyframes stamp{
+  0%{transform:scale(2.1) rotate(-9deg);opacity:0;}
+  70%{transform:scale(.94) rotate(-3deg);opacity:1;}
+  100%{transform:scale(1) rotate(-3deg);opacity:.94;}
+}
+.meter{
+  text-align:center;
+  font-size:14px;
+  letter-spacing:.3em;
+  color:#8f8877;
+}
+.meter b{font-weight:normal;color:var(--blue);}
+.hero .eyebrow{
+  text-align:center;
+  font-size:13px;
+  letter-spacing:.5em;
+  text-indent:.5em;
+  color:#7d7666;
+  margin-bottom:26px;
+}
+.hero .eyebrow span{color:var(--blue);}
+.below{
+  margin-top:26px;
+  max-width:620px;
+  text-align:center;
+  color:#b5ad99;
+  font-size:15px;
+}
+
+/* ============ 通用节 ============ */
+.sec{padding:88px 0 30px;}
+.shead{
+  display:flex;
+  align-items:baseline;
+  gap:16px;
+  margin-bottom:10px;
+}
+.shead .no{
+  font-size:13px;
+  color:var(--blue);
+  letter-spacing:.3em;
+  border:1px solid var(--blue-d);
+  padding:3px 9px 3px 12px;
+  border-radius:2px;
+  flex:none;
+}
+.shead h2{
+  font-size:clamp(23px,3.4vw,30px);
+  font-weight:normal;
+  letter-spacing:.14em;
+}
+.shead .rod{
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg, var(--blue-d), transparent);
+  align-self:center;
+}
+.ssub{
+  color:#8f8877;
+  font-size:14.5px;
+  letter-spacing:.06em;
+  margin-bottom:34px;
+}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease, transform .9s ease;}
+.reveal.in{opacity:1;transform:none;}
+p.bt{
+  color:#cfc8b6;
+  font-size:16.5px;
+  margin-bottom:18px;
+  text-align:justify;
+}
+p.bt em{font-style:normal;color:var(--blue);}
+p.bt b.r{font-weight:normal;color:var(--red);}
+.quote{
+  margin:26px 0;
+  padding:20px 26px;
+  border-left:3px solid var(--blue-d);
+  background:rgba(94,143,187,.07);
+  border-radius:0 6px 6px 0;
+  font-size:17.5px;
+  color:var(--paper);
+  line-height:2.15;
+}
+.quote .src{
+  display:block;
+  margin-top:10px;
+  font-size:12.5px;
+  color:#847c6b;
+  letter-spacing:.08em;
+}
+.kv{
+  display:inline-block;
+  border:1px solid var(--blue-d);
+  color:var(--blue);
+  font-size:12.5px;
+  padding:1px 9px;
+  border-radius:20px;
+  margin:0 4px;
+  letter-spacing:.1em;
+}
+
+/* ============ 红字链 ============ */
+.chain{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  margin:38px 0 12px;
+  flex-wrap:wrap;
+}
+.chain .zi{
+  width:74px;height:74px;
+  border:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:34px;
+  color:#6e6757;
+  background:#201e19;
+  cursor:pointer;
+  transition:all .55s ease;
+  border-radius:4px;
+  user-select:none;
+}
+.chain .zi.lit{
+  border-color:var(--red);
+  color:#f2e8dc;
+  background:var(--red-d);
+  box-shadow:0 0 24px rgba(192,69,60,.35);
+}
+.chain .arr{
+  width:44px;
+  text-align:center;
+  color:#57513f;
+  font-size:18px;
+  transition:color .5s;
+}
+.chain .arr.lit{color:var(--red);}
+.chainhint{
+  text-align:center;
+  font-size:13px;
+  color:#7d7666;
+  letter-spacing:.2em;
+}
+
+/* ============ 三法签 ============ */
+.fas{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:36px;
+  perspective:1400px;
+}
+.fa{
+  position:relative;
+  min-height:300px;
+  cursor:pointer;
+  transform-style:preserve-3d;
+  transition:transform .8s cubic-bezier(.4,.1,.2,1);
+}
+.fa.flip{transform:rotateY(180deg);}
+.fa .face{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:26px 22px;
+  background:linear-gradient(#211f1a,#1a1813);
+  display:flex;
+  flex-direction:column;
+}
+.fa .back{transform:rotateY(180deg);background:linear-gradient(#23262c,#1b1d21);}
+.fa .front .qian{
+  font-size:38px;
+  color:var(--blue);
+  text-align:center;
+  margin:26px 0 18px;
+  letter-spacing:.1em;
+}
+.fa .front h3{
+  font-weight:normal;
+  text-align:center;
+  font-size:21px;
+  letter-spacing:.3em;
+  text-indent:.3em;
+  margin-bottom:8px;
+}
+.fa .front p{
+  text-align:center;
+  color:#847c6b;
+  font-size:13.5px;
+  margin-top:auto;
+}
+.fa .back h4{
+  font-weight:normal;
+  color:var(--blue);
+  font-size:15px;
+  letter-spacing:.2em;
+  margin-bottom:12px;
+}
+.fa .back p{font-size:14.5px;color:#c5beac;text-align:justify;}
+
+/* ============ 对影簿 ============ */
+.wingrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:36px;
+}
+.win{
+  position:relative;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:#1c1a15;
+  overflow:hidden;
+  cursor:pointer;
+  min-height:380px;
+  transition:border-color .5s;
+}
+.win:hover{border-color:#4a4739;}
+.win .lintel{
+  font-size:12px;
+  letter-spacing:.4em;
+  text-indent:.4em;
+  text-align:center;
+  color:#7a7261;
+  padding:9px 0 7px;
+  border-bottom:1px dashed #35322a;
+}
+.win .scr{
+  position:absolute;
+  top:37px;left:10px;right:10px;bottom:10px;
+  border-radius:4px;
+  background:
+    radial-gradient(ellipse 80% 62% at 50% 42%, #ddd2b6 0%, #c4b491 75%, #a8987a 100%);
+  overflow:hidden;
+  transition:filter .7s ease;
+  filter:brightness(.62);
+}
+.win .scr::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(90deg, rgba(90,70,40,.06) 0 2px, transparent 2px 7px);
+  pointer-events:none;
+}
+.win.lit .scr{filter:brightness(1.02);}
+.win .shadowman{
+  position:absolute;
+  left:50%;top:46%;
+  transform:translate(-50%,-50%);
+  width:44%;
+  opacity:.28;
+  filter:blur(1.5px);
+  transition:opacity .8s, filter .8s;
+}
+.win.lit .shadowman{opacity:.9;filter:none;}
+.win .novname{
+  position:absolute;
+  left:50%;top:47%;
+  transform:translate(-50%,-50%);
+  writing-mode:vertical-rl;
+  font-size:30px;
+  letter-spacing:.3em;
+  color:#28251e;
+  opacity:.85;
+  transition:opacity .6s, transform .6s;
+  z-index:2;
+}
+.win .novname small{
+  display:block;
+  writing-mode:vertical-rl;
+  font-size:12px;
+  color:#5d5545;
+  letter-spacing:.25em;
+  margin-top:14px;
+}
+.win.lit .novname{opacity:0;transform:translate(-50%,-50%) scale(.9);}
+.win .hist{
+  position:absolute;
+  left:12px;right:12px;top:47px;
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity .7s ease .25s, transform .7s ease .25s;
+  z-index:3;
+  text-align:center;
+}
+.win.lit .hist{opacity:1;transform:none;}
+.win .hist h3{
+  font-weight:normal;
+  font-size:26px;
+  letter-spacing:.22em;
+  color:#23211c;
+}
+.win .hist .meta{
+  font-size:12.5px;
+  color:#5a5240;
+  letter-spacing:.12em;
+  margin:4px 0 10px;
+}
+.win .evi{
+  position:absolute;
+  left:10px;right:10px;bottom:10px;
+  max-height:52%;
+  overflow:auto;
+  background:rgba(25,23,19,.92);
+  border:1px solid #35322a;
+  border-radius:4px;
+  padding:12px 14px;
+  opacity:0;
+  transform:translateY(12px);
+  transition:opacity .7s ease .45s, transform .7s ease .45s;
+  z-index:4;
+}
+.win.lit .evi{opacity:1;transform:none;}
+.win .evi p{
+  font-size:13.8px;
+  line-height:1.95;
+  color:var(--paper);
+  text-align:justify;
+}
+.win .evi p + p{margin-top:8px;}
+.win .evi .how{
+  display:block;
+  margin-top:9px;
+  font-size:12px;
+  color:var(--blue);
+  letter-spacing:.1em;
+}
+.win .tip{
+  position:absolute;
+  bottom:16px;left:50%;
+  transform:translateX(-50%);
+  font-size:11.5px;
+  letter-spacing:.3em;
+  color:#fffdf6;
+  background:rgba(40,38,30,.72);
+  padding:3px 12px;
+  border-radius:20px;
+  z-index:5;
+  transition:opacity .5s;
+}
+.win.lit .tip{opacity:0;}
+/* 影子条 */
+.shadowstrip{
+  margin-top:22px;
+  border:1px dashed var(--line);
+  border-radius:8px;
+  padding:20px 24px;
+  display:flex;
+  gap:26px;
+  align-items:center;
+  flex-wrap:wrap;
+  background:rgba(94,143,187,.04);
+}
+.shadowstrip .lbl{
+  writing-mode:vertical-rl;
+  font-size:15px;
+  letter-spacing:.4em;
+  color:var(--blue);
+  flex:none;
+  border-right:1px solid var(--line);
+  padding-right:18px;
+}
+.shadowstrip .bd{flex:1;min-width:260px;}
+.shadowstrip p{font-size:14.5px;color:#c5beac;text-align:justify;}
+.shadowstrip q{color:var(--paper);}
+
+/* ============ 伪朝官制 ============ */
+.yamen{
+  margin-top:36px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:linear-gradient(#201e19,#191813);
+  padding:26px 24px 30px;
+}
+.yamen .ym-head{
+  text-align:center;
+  margin-bottom:24px;
+}
+.yamen .ym-head h3{
+  font-weight:normal;
+  letter-spacing:.5em;
+  text-indent:.5em;
+  font-size:20px;
+  color:#cbb87f;
+}
+.yamen .ym-head p{font-size:13px;color:#847c6b;letter-spacing:.15em;}
+.desks{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+.desk{
+  border:1px solid #3a3729;
+  border-radius:6px;
+  padding:18px 16px;
+  background:rgba(232,228,220,.03);
+  cursor:pointer;
+  transition:border-color .4s, background .4s;
+  position:relative;
+}
+.desk:hover{border-color:var(--red-d);background:rgba(192,69,60,.06);}
+.desk .pair{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  font-size:19px;
+  letter-spacing:.1em;
+}
+.desk .pair .a{color:var(--paper);}
+.desk .pair .eq{color:#6a6350;font-size:14px;}
+.desk .pair .b{color:var(--blue);}
+.desk .note{
+  display:block;
+  text-align:center;
+  font-size:12.5px;
+  color:#847c6b;
+  margin-top:9px;
+  letter-spacing:.08em;
+  transition:color .4s;
+}
+.desk:hover .note{color:#c9a06a;}
+.desk .zhu{
+  display:block;
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .6s ease, margin .6s ease;
+  font-size:13.3px;
+  color:#d8d1bf;
+  line-height:1.9;
+  text-align:justify;
+}
+.desk:hover .zhu{max-height:340px;margin-top:12px;}
+.desks2{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+/* ============ 蔡胡公案 ============ */
+.debate{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  margin-top:36px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  overflow:hidden;
+}
+.side{padding:28px 26px;position:relative;}
+.side.hu{background:linear-gradient(#211f1a,#1b1914);border-right:1px solid var(--line);}
+.side.cai{background:linear-gradient(#20211f,#1a1b18);}
+.side h3{
+  font-weight:normal;
+  font-size:19px;
+  letter-spacing:.2em;
+  margin-bottom:4px;
+}
+.side.hu h3{color:#b3ab97;}
+.side.cai h3{color:var(--blue);}
+.side .yr{
+  font-size:12.5px;
+  color:#7a7261;
+  letter-spacing:.2em;
+  margin-bottom:16px;
+  display:block;
+}
+.side p{font-size:14.8px;color:#c5beac;text-align:justify;margin-bottom:14px;}
+.side q{color:var(--paper);}
+.side .stamp2{
+  position:absolute;
+  right:18px;top:20px;
+  width:44px;height:44px;
+  border:2px solid var(--red);
+  color:var(--red);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  writing-mode:vertical-rl;
+  font-size:14px;
+  letter-spacing:.1em;
+  border-radius:4px;
+  opacity:.85;
+  transform:rotate(6deg);
+}
+.aftermath{
+  margin-top:20px;
+  border:1px dashed var(--line);
+  border-radius:8px;
+  padding:18px 24px;
+  font-size:14.5px;
+  color:#b5ad99;
+  text-align:justify;
+}
+.aftermath b{font-weight:normal;color:var(--red);}
+
+/* ============ 尾屏 ============ */
+.fin-sec{
+  padding:110px 0 60px;
+  text-align:center;
+  position:relative;
+}
+.luo{
+  position:relative;
+  width:min(460px,86vw);
+  aspect-ratio:16/9;
+  margin:0 auto 34px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  overflow:hidden;
+  background:linear-gradient(#171613,#121110);
+  box-shadow:inset 0 0 44px rgba(0,0,0,.7);
+}
+.luo .dim{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse 70% 55% at 50% 55%, #d8cbae 0%, #b3a37f 70%, #8e8064 100%);
+  filter:brightness(.16);
+  transition:filter 2.2s ease;
+}
+.luo.gone .dim{filter:brightness(.04);}
+.luo .wick{
+  position:absolute;
+  left:50%;top:52%;
+  transform:translate(-50%,-50%);
+  width:10px;height:10px;
+  border-radius:50%;
+  background:#ffce8a;
+  box-shadow:0 0 18px 6px rgba(255,190,110,.5);
+  opacity:0;
+  transition:opacity 1.6s ease 1.4s;
+}
+.luo.gone .wick{opacity:1;animation:wickblink 3.2s ease-in-out infinite;}
+@keyframes wickblink{
+  0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.9;}
+  50%{transform:translate(-50%,-50%) scale(.82);opacity:.6;}
+}
+.luo .verse{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  writing-mode:vertical-rl;
+  font-size:clamp(20px,3.4vw,27px);
+  letter-spacing:.34em;
+  color:#e8e0cd;
+  opacity:0;
+  transition:opacity 1.8s ease 2.2s;
+  z-index:3;
+  text-shadow:0 0 14px rgba(0,0,0,.6);
+}
+.luo.gone .verse{opacity:1;}
+.luo .seal2{
+  position:absolute;
+  left:14%;bottom:12%;
+  width:46px;height:46px;
+  background:var(--red);
+  color:#f5ede2;
+  writing-mode:vertical-rl;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  letter-spacing:.12em;
+  border-radius:4px;
+  transform:rotate(-4deg);
+  opacity:0;
+  transition:opacity 1s ease 3s;
+  z-index:3;
+}
+.luo.gone .seal2{opacity:.94;}
+.fin-note{
+  max-width:640px;
+  margin:0 auto;
+  font-size:14px;
+  color:#8f8877;
+  text-align:justify;
+}
+.fin-tip{
+  margin-top:22px;
+  font-size:12.5px;
+  letter-spacing:.3em;
+  color:#6e6757;
+}
+
+/* ============ 页脚 ============ */
+footer.fin{
+  border-top:1px solid var(--line);
+  margin-top:70px;
+  padding:38px 22px 46px;
+  max-width:960px;
+  margin-left:auto;
+  margin-right:auto;
+}
+footer.fin p{
+  font-size:13.5px;
+  color:#8f8877;
+  margin-bottom:10px;
+  text-align:justify;
+}
+footer.fin b{font-weight:normal;color:#b5ad99;}
+footer.fin a{color:var(--blue);text-decoration:none;}
+footer.fin a:hover{text-decoration:underline;}
+
+/* ============ 响应式 ============ */
+@media (max-width:760px){
+  .fas{grid-template-columns:1fr;perspective:none;}
+  .fa{min-height:0;}
+  .fa .face{position:relative;}
+  .fa .back{position:absolute;inset:0;}
+  .wingrid{grid-template-columns:repeat(2,1fr);}
+  .desks{grid-template-columns:repeat(2,1fr);}
+  .desks2{grid-template-columns:1fr;}
+  .debate{grid-template-columns:1fr;}
+  .side.hu{border-right:none;border-bottom:1px solid var(--line);}
+  .mi .cap{font-size:12px;margin-left:5%;}
+  .mi .hint{display:none;}
+  .chain .zi{width:56px;height:56px;font-size:26px;}
+  .chain .arr{width:30px;font-size:15px;}
+}
+@media (max-width:520px){
+  .wingrid{grid-template-columns:1fr;}
+  .desks{grid-template-columns:1fr;}
+  .seal{
+    right:auto;left:7%;
+    width:38px;height:72px;
+    font-size:15px;
+  }
+  .hero .eyebrow{letter-spacing:.24em;text-indent:.24em;}
+  .below{font-size:13.5px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 首屏 ============ -->
+<header class="hero">
+  <p class="eyebrow">殆知阁导读 <span id="piaohao">第三百五十七篇</span> 子藏笔记 民国</p>
+  <div class="stage" id="stage">
+    <div class="beam"><i></i><b data-t>对影簿</b></div>
+    <div class="frame">
+      <div class="cols l"></div>
+      <div class="cols r"></div>
+      <div class="screenbox">
+        <div class="lamp"></div>
+        <div class="yingren">
+          <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+            <g fill="#26231d">
+              <circle cx="60" cy="26" r="15"/>
+              <path d="M52 40 Q36 46 34 66 L30 108 Q29 116 36 117 L44 116 44 96 40 150 Q39 158 47 159 L52 158 52 190 Q52 197 60 197 Q68 197 68 190 L68 158 73 159 Q81 158 80 150 L76 96 76 116 84 117 Q91 116 90 108 L86 66 Q84 46 68 40 Z"/>
+              <circle cx="60" cy="78" r="12" fill="#efe4cb" stroke="#26231d" stroke-width="3"/>
+            </g>
+          </svg>
+        </div>
+        <div class="btitle" data-t>石头记索隐<small>清康熙朝政治小说考</small></div>
+        <div class="seal" data-t>真事隐</div>
+      </div>
+      <div class="mi mi1" data-mi>
+        <span class="tag" data-t>幂一</span>
+        <span class="cap" data-t>最表面一层，谈家政而斥风怀</span>
+        <span class="hint" data-t>点击揭幂</span>
+      </div>
+      <div class="mi mi2" data-mi>
+        <span class="tag" data-t>幂二</span>
+        <span class="cap" data-t>进一层，纯乎言情之作</span>
+        <span class="hint" data-t>点击揭幂</span>
+      </div>
+      <div class="mi mi3" data-mi>
+        <span class="tag" data-t>幂三</span>
+        <span class="cap" data-t>再进一层，本事所在</span>
+        <span class="hint" data-t>点击揭幂</span>
+      </div>
+    </div>
+  </div>
+  <p class="meter" data-t>幂三层 · 已启 <b id="micount">零</b> 层</p>
+  <p class="below">这本三万六千字的小册子，把一部人情小说当密码本拆开重装：书里每个人都另有其人，书里每个字都可能不是它自己。幕布上先看见的，从来只是影子。</p>
+</header>
+
+<!-- ============ 一 总纲 ============ -->
+<section class="sec" id="gang">
+  <div class="wrap">
+    <div class="shead reveal"><span class="no mono" data-t>之一</span><h2>一册供状</h2><span class="rod"></span></div>
+    <p class="ssub reveal" data-t>总纲四百字，把整部《红楼梦》改写成一份政治档案</p>
+
+    <p class="bt reveal">蔡元培是前清的进士、翰林，民国首任教育总长、北大校长。他做了一件在今日看来近乎行为主义的事：拿考据金石的功夫去猜一部小说的谜。全书开篇第一句，就把《红楼梦》从闺阁里拎了出来：</p>
+
+    <div class="quote reveal"><q data-s="sz">《石头记》者，清康熙朝政治小说也。作者持民族主义甚挚。书中本事，在吊明之亡，揭清之失，而尤于汉族名士仕清者，寓痛惜之意。</q><span class="src" data-t>石头记索隐 · 之一</span></div>
+
+    <p class="bt reveal">既然是政治档案，为什么满纸儿女？他的解释是：作者给自己蒙了三层纱。读懂了这句话，就读懂了整本书的读法，也是本页首屏那三道幂的出处：</p>
+
+    <div class="quote reveal"><q data-s="sz">特于本事以上，加以数层障幂，使读者有“横看成岭侧成峰”之状况。</q><span class="src" data-t>石头记索隐 · 之一</span></div>
+
+    <p class="bt reveal">第一层纱下是家政，第二层纱下是言情，第三层纱下才是本事。而破案的钥匙，是一个字。蔡元培专门为它立了一条证据链，全书的机关都挂在这条链上。点击每一个字，看链条逐环亮起：</p>
+
+    <div class="chain reveal" id="chain">
+      <div class="zi" data-zi>红</div><span class="arr" data-arr>→</span>
+      <div class="zi" data-zi>朱</div><span class="arr" data-arr>→</span>
+      <div class="zi" data-zi>明</div><span class="arr" data-arr>→</span>
+      <div class="zi" data-zi>汉</div>
+    </div>
+    <p class="chainhint reveal" data-t>点击任意一字，红字链逐环点亮</p>
+
+    <div class="quote reveal"><q data-s="sz">书中红字，多影朱字。朱者，明也，汉也。</q><span class="src" data-t>石头记索隐 · 之一</span></div>
+
+    <p class="bt reveal">顺着这条链，怡红院、悼红轩、《红楼梦》曲，全部变成同一句话的回声：恋红即恋明。书从哪里开始讲这个故事？蔡元培找到了第一回的一场大火，把日子一换，火光就照出了年号：</p>
+
+    <div class="quote reveal"><q data-s="sz">这一日三月十五日，葫芦庙起火，烧了一夜，甄氏烧成瓦砾场。</q><span class="src" data-t>石头记索隐 · 之一（指甲申三月间明愍帝殉国）</span></div>
+
+    <p class="bt reveal">连人名都是密码。开卷两枚闲棋冷子，名字本身就是作者递给读者的第一张字条：</p>
+
+    <div class="quote reveal"><q data-s="sz">甄士隐即真事隐，贾雨村即假语存</q><span class="src" data-t>石头记索隐 · 之一（下句谓贾府即伪朝）</span></div>
+
+    <p class="bt reveal">而全书最大的一组密码，藏在性别的分界线上。女儿与男子，一个属水一个属泥，宝玉这句名言，在这册书里被重新安装了一套词源学：</p>
+
+    <div class="quote reveal"><q data-s="sz">书中女子多指汉人，男子多指满人。不独女子是水作的骨肉，男人是泥作的骨肉，与汉字满字有关也。</q><span class="src" data-t>石头记索隐 · 之一</span></div>
+
+    <p class="bt reveal">水属汉，泥属满；女儿属阳外之阴，也属被征服之民。整座大观园，就这样被读成了一张满汉关系的星图。</p>
+  </div>
+</section>
+
+<!-- ============ 二 三法 ============ -->
+<section class="sec" id="sanfa">
+  <div class="wrap">
+    <div class="shead reveal"><span class="no mono" data-t>之二</span><h2>三法推求</h2><span class="rod"></span></div>
+    <p class="ssub reveal" data-t>猜谜也要讲方法论，这是索隐派罕有的自我交代</p>
+
+    <p class="bt reveal">蔡元培知道猜谜最容易被讥为瞎猜，所以在第六版自序里，他把破案手法摊开成了三条。这大概是索隐派著作里最接近方法论自觉的一段：</p>
+
+    <div class="quote reveal"><q data-s="sz">知其所寄托之人物，可用三法推求：一、品性相类者。二、轶事有征者。三、姓名相关者。</q><span class="src" data-t>石头记索隐 · 附录二 第六版自序</span></div>
+
+    <p class="bt reveal">三条方法各有一件展品。每一支签的背面都夹着原件，点击翻面：</p>
+
+    <div class="fas reveal">
+      <div class="fa" data-fa>
+        <div class="face front">
+          <div class="qian" data-t>品性相类</div>
+          <h3 data-t>第一法</h3>
+          <p data-t>书里人的脾气，就是影外人的脾气</p>
+        </div>
+        <div class="face back">
+          <h4 data-t>例 · 冷僻推荪友</h4>
+          <p><q data-s="sz">以惜春之冷僻而推为荪友，用第一法也。</q><span class="src" data-t>附录二</span></p>
+          <p style="margin-top:10px" data-t>惜春孤介过头，恰如严绳孙之狷。后来他给惜春配的丫鬟叫入画，因为荪友以画名世，连丫鬟都是证据。</p>
+        </div>
+      </div>
+      <div class="fa" data-fa>
+        <div class="face front">
+          <div class="qian" data-t>轶事有征</div>
+          <h3 data-t>第二法</h3>
+          <p data-t>书里人的遭遇，对得上史册里的原案</p>
+        </div>
+        <div class="face back">
+          <h4 data-t>例 · 哭向金陵</h4>
+          <p><q data-s="sz">以凤姐哭向金陵而推为国柱，用第二法也。</q><span class="src" data-t>附录二</span></p>
+          <p style="margin-top:10px" data-t>凤姐判词哭向金陵事，对上了余国柱被参后江宁置产、协理宁国府历劫返金陵的影子。</p>
+        </div>
+      </div>
+      <div class="fa" data-fa>
+        <div class="face front">
+          <div class="qian" data-t>姓名相关</div>
+          <h3 data-t>第三法</h3>
+          <p data-t>一个名字里，埋着真姓名的偏旁或典故</p>
+        </div>
+        <div class="face back">
+          <h4 data-t>例 · 琴与探花</h4>
+          <p><q data-s="sz">以探春之名与探花有关而推为健庵。</q><span class="src" data-t>附录二</span></p>
+          <p style="margin-top:10px"><q data-s="sz">以宝琴之名与学琴于师襄之故事有关而推为辟疆，用第三法也。</q><span class="src" data-t>附录二</span></p>
+        </div>
+      </div>
+    </div>
+
+    <p class="bt reveal" style="margin-top:34px">他自己也承认，这类推理的极限就在眼前：每举一人，往往三法并用，孤证不入。这在今天看仍是先射箭后画靶，但至少是一张自觉的靶纸。</p>
+  </div>
+</section>
+
+<!-- ============ 三 对影簿 ============ -->
+<section class="sec" id="yingbu">
+  <div class="wrap">
+    <div class="shead reveal"><span class="no mono" data-t>之三</span><h2>对影簿</h2><span class="rod"></span></div>
+    <p class="ssub reveal" data-t>九扇皮影窗，幕面上是小说里的人，点亮后是册子认定的真人</p>
+
+    <p class="bt reveal">现在开簿。每一扇窗的幕面上立着一位金陵人物，点击挑亮幕灯，影子才会转身。簿上九人，是蔡元培逐一过堂后判定的名单：</p>
+
+    <div class="wingrid reveal">
+
+      <div class="win" data-win>
+        <div class="lintel" data-t>簿一 · 传国玺</div>
+        <div class="scr">
+          <div class="novname" data-t>贾宝玉<small>衔玉而生</small></div>
+          <div class="hist">
+            <h3 data-t>胤礽</h3>
+            <p class="meta" data-t>1674 至 1725，康熙朝皇太子，两立两废</p>
+          </div>
+          <div class="shadowman">
+            <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#26231d">
+                <circle cx="60" cy="26" r="15"/>
+                <path d="M52 40 Q36 46 34 66 L30 108 Q29 116 36 117 L44 116 44 96 40 150 Q39 158 47 159 L52 158 52 190 Q52 197 60 197 Q68 197 68 190 L68 158 73 159 Q81 158 80 150 L76 96 76 116 84 117 Q91 116 90 108 L86 66 Q84 46 68 40 Z"/>
+                <circle cx="60" cy="78" r="12" fill="#efe4cb" stroke="#26231d" stroke-width="3"/>
+              </g>
+            </svg>
+          </div>
+          <div class="evi">
+            <p><q data-s="sz">宝玉者，传国玺之义也</q><span class="how" data-t>玉即玺，衔玉而生即生而为储</span></p>
+            <p><q data-s="sz">手持一把明晃晃钢刀，砍进园来，见鸡杀鸡，见狗杀狗，见人就要杀人。</q><span class="how" data-t>魇魔法一场，对康熙谕中废太子疯颠状</span></p>
+          </div>
+        </div>
+        <span class="tip" data-t>点灯看影</span>
+      </div>
+
+      <div class="win" data-win>
+        <div class="lintel" data-t>簿二 · 绛珠草</div>
+        <div class="scr">
+          <div class="novname" data-t>林黛玉<small>潇湘馆主</small></div>
+          <div class="hist">
+            <h3 data-t>朱彝尊</h3>
+            <p class="meta" data-t>1629 至 1709，号竹垞，秀水人</p>
+          </div>
+          <div class="shadowman">
+            <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#26231d">
+                <circle cx="60" cy="26" r="14"/>
+                <path d="M60 40 Q44 48 42 70 Q38 96 44 128 Q40 152 46 176 Q48 194 60 194 Q72 194 74 176 Q80 152 76 128 Q82 96 78 70 Q76 48 60 40 Z"/>
+                <path d="M42 70 Q30 84 34 104 L40 100 Q38 84 46 74 Z"/>
+                <path d="M78 70 Q90 84 86 104 L80 100 Q82 84 74 74 Z"/>
+              </g>
+            </svg>
+          </div>
+          <div class="evi">
+            <p><q data-s="sz">绛珠影其氏也，居潇湘馆影其竹垞之号也。</q><span class="how" data-t>绛珠对朱，潇湘对竹垞，号与氏同锁一人</span></p>
+            <p><q data-s="sz">这那里像个小姐的绣房，竟比那上等的书房还好。</q><span class="how" data-t>刘老老一句闲话，暗写竹垞藏书插架</span></p>
+          </div>
+        </div>
+        <span class="tip" data-t>点灯看影</span>
+      </div>
+
+      <div class="win" data-win>
+        <div class="lintel" data-t>簿三 · 冷香丸</div>
+        <div class="scr">
+          <div class="novname" data-t>薛宝钗<small>山中高士</small></div>
+          <div class="hist">
+            <h3 data-t>高士奇</h3>
+            <p class="meta" data-t>1645 至 1704，号江村，南书房供奉</p>
+          </div>
+          <div class="shadowman">
+            <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#26231d">
+                <circle cx="60" cy="24" r="13"/>
+                <path d="M46 38 Q36 60 38 88 L34 150 Q34 160 44 160 L50 158 48 190 Q48 198 60 198 Q72 198 72 190 L70 158 76 160 Q86 160 86 150 L82 88 Q84 60 74 38 Q60 32 46 38 Z"/>
+                <path d="M40 52 Q56 44 80 52 L78 60 Q60 52 42 60 Z" fill="#efe4cb"/>
+              </g>
+            </svg>
+          </div>
+          <div class="evi">
+            <p><q data-s="sz">雪满山中高士卧．月明林下美人来。</q><span class="how" data-t>薛者雪也，借咏梅句拆出高士二字</span></p>
+            <p><q data-s="sz">适落马坠积潴中，未及浣也。</q><span class="how" data-t>江村堕马之案，对薛蟠滚成泥母猪一段</span></p>
+          </div>
+        </div>
+        <span class="tip" data-t>点灯看影</span>
+      </div>
+
+      <div class="win" data-win>
+        <div class="lintel" data-t>簿四 · 金麒麟</div>
+        <div class="scr">
+          <div class="novname" data-t>史湘云<small>枕霞旧友</small></div>
+          <div class="hist">
+            <h3 data-t>陈维崧</h3>
+            <p class="meta" data-t>1625 至 1682，号迦陵，一代词宗</p>
+          </div>
+          <div class="shadowman">
+            <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#26231d">
+                <circle cx="60" cy="24" r="13"/>
+                <path d="M50 37 Q38 44 36 62 L32 100 Q31 108 38 109 L44 108 42 148 Q42 156 50 157 L54 156 54 188 Q54 195 60 195 Q66 195 66 188 L66 156 70 157 Q78 156 78 148 L76 108 82 109 Q89 108 88 100 L84 62 Q82 44 70 37 Z"/>
+                <path d="M60 60 q14 4 16 20 q2 18 -8 30 q16 -6 18 -28 q2 -18 -10 -26 Z" fill="#efe4cb"/>
+              </g>
+            </svg>
+          </div>
+          <div class="evi">
+            <p><q data-s="sz">湘云佩金麒麟，当是其字陵字之借音</q><span class="how" data-t>麒麟之麟，借音迦陵之陵</span></p>
+            <p><q data-s="sz">竹垞尝与陈其年合刻所着曰《朱陈村词》，流传入禁中，故黛玉与史湘云凹晶馆联句。</q><span class="how" data-t>朱陈合刻一函，化作潇湘枕霞一夜联吟</span></p>
+          </div>
+        </div>
+        <span class="tip" data-t>点灯看影</span>
+      </div>
+
+      <div class="win" data-win>
+        <div class="lintel" data-t>簿五 · 槛外人</div>
+        <div class="scr">
+          <div class="novname" data-t>妙玉<small>栊翠庵主</small></div>
+          <div class="hist">
+            <h3 data-t>姜宸英</h3>
+            <p class="meta" data-t>1628 至 1699，号西溟，七十岁中探花</p>
+          </div>
+          <div class="shadowman">
+            <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#26231d">
+                <circle cx="60" cy="24" r="13"/>
+                <path d="M48 38 Q40 46 40 60 L36 96 Q36 104 42 104 L46 103 46 150 Q46 158 54 158 L58 157 58 192 Q58 199 60 199 Q62 199 62 192 62 157 66 158 74 158 74 150 74 103 78 104 Q84 104 84 96 L80 60 Q80 46 72 38 Z"/>
+                <circle cx="60" cy="66" r="9" fill="#efe4cb"/>
+              </g>
+            </svg>
+          </div>
+          <div class="evi">
+            <p><q data-s="sz">宝钗影高澹人，妙玉影姜西溟</q><span class="how" data-t>徐柳泉旧说，全书由此案起兴</span></p>
+            <p><q data-s="sz">你这么个人竟是大俗人，连水也尝不出来。</q><span class="how" data-t>一句冷笑，即西溟狷傲之传真</span></p>
+          </div>
+        </div>
+        <span class="tip" data-t>点灯看影</span>
+      </div>
+
+      <div class="win" data-win>
+        <div class="lintel" data-t>簿六 · 机心</div>
+        <div class="scr">
+          <div class="novname" data-t>王熙凤<small>脂粉英雄</small></div>
+          <div class="hist">
+            <h3 data-t>余国柱</h3>
+            <p class="meta" data-t>1624 至 1697，康熙朝武英殿大学士</p>
+          </div>
+          <div class="shadowman">
+            <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#26231d">
+                <circle cx="60" cy="24" r="13"/>
+                <path d="M50 37 Q40 44 38 60 L34 96 Q34 104 40 104 L44 103 44 148 Q44 156 52 156 L56 155 56 190 Q56 197 60 197 Q64 197 64 190 64 155 68 156 76 156 76 148 76 103 80 104 Q86 104 86 96 L82 60 Q80 44 70 37 Z"/>
+                <path d="M46 42 Q60 34 74 42 L72 50 Q60 42 48 50 Z" fill="#efe4cb"/>
+              </g>
+            </svg>
+          </div>
+          <div class="evi">
+            <p><q data-s="sz">余国柱(即书中之王熙凤)被参</q><span class="how" data-t>江宁置产营利，对协理宁国府一段</span></p>
+            <p data-t style="font-size:13px;color:#c9c2b0">时人谣刺：去了余秦桧，来了徐严嵩。册子里那位弄权铁槛寺的，领的就是这份奏参。</p>
+          </div>
+        </div>
+        <span class="tip" data-t>点灯看影</span>
+      </div>
+
+      <div class="win" data-win>
+        <div class="lintel" data-t>簿七 · 玫瑰刺</div>
+        <div class="scr">
+          <div class="novname" data-t>贾探春<small>秋爽斋主</small></div>
+          <div class="hist">
+            <h3 data-t>徐乾学</h3>
+            <p class="meta" data-t>1631 至 1694，号健庵，昆山人</p>
+          </div>
+          <div class="shadowman">
+            <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#26231d">
+                <circle cx="60" cy="24" r="13"/>
+                <path d="M50 37 Q42 44 40 58 L36 94 Q36 102 42 102 L46 101 46 148 Q46 156 54 156 L58 155 58 190 Q58 197 60 197 Q62 197 62 190 62 155 66 156 74 156 74 148 74 101 78 102 Q84 102 84 94 L80 58 Q78 44 70 37 Z"/>
+                <path d="M38 64 L52 60 48 74 34 78 Z M82 64 L68 60 72 74 86 78 Z" fill="#efe4cb"/>
+              </g>
+            </svg>
+          </div>
+          <div class="evi">
+            <p><q data-s="sz">五方宝物归东海，万国金珠贡澹人</q><span class="how" data-t>许三礼奏参语，上句指徐家，下句指高家</span></p>
+            <p><q data-s="sz">贾不假，白玉为堂金作马；阿房宫，三百里，住不下金陵一个史；东海缺少白玉床，龙王来请金陵王；丰年好大雪，珍珠如土金如铁。</q><span class="how" data-t>护官符即那份奏参对子的小说化身</span></p>
+          </div>
+        </div>
+        <span class="tip" data-t>点灯看影</span>
+      </div>
+
+      <div class="win" data-win>
+        <div class="lintel" data-t>簿八 · 艳雪图</div>
+        <div class="scr">
+          <div class="novname" data-t>薛宝琴<small>怀古诗十首</small></div>
+          <div class="hist">
+            <h3 data-t>冒襄</h3>
+            <p class="meta" data-t>1611 至 1693，号辟疆，如皋水绘园主</p>
+          </div>
+          <div class="shadowman">
+            <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#26231d">
+                <circle cx="60" cy="24" r="13"/>
+                <path d="M48 38 Q40 46 40 62 L36 100 Q36 108 42 108 L46 107 46 150 Q46 158 54 158 L58 157 58 192 Q58 199 60 199 Q62 199 62 192 62 157 66 158 74 158 74 150 74 107 78 108 Q84 108 84 100 L80 62 Q80 46 72 38 Z"/>
+                <path d="M60 44 l4 10 10 2 -8 7 2 11 -8 -6 -8 6 2 -11 -8 -7 10 -2 Z" fill="#efe4cb"/>
+              </g>
+            </svg>
+          </div>
+          <div class="evi">
+            <p><q data-s="sz">昨日朱楼梦，今宵水国吟。</q><span class="how" data-t>真真国女子诗，上句不忘故明，下句自指水绘园</span></p>
+            <p><q data-s="sz">余家及园事，凡有隙地，皆植梅。</q><span class="how" data-t>影梅庵忆语，对宝琴许配梅翰林家</span></p>
+          </div>
+        </div>
+        <span class="tip" data-t>点灯看影</span>
+      </div>
+
+      <div class="win" data-win>
+        <div class="lintel" data-t>簿九 · 藕榭</div>
+        <div class="scr">
+          <div class="novname" data-t>贾惜春<small>四姑娘</small></div>
+          <div class="hist">
+            <h3 data-t>严绳孙</h3>
+            <p class="meta" data-t>1623 至 1702，号荪友，藕荡渔人</p>
+          </div>
+          <div class="shadowman">
+            <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#26231d">
+                <circle cx="60" cy="24" r="13"/>
+                <path d="M50 37 Q42 44 40 60 L36 96 Q36 104 42 104 L46 103 46 148 Q46 156 54 156 L58 155 58 190 Q58 197 60 197 Q62 197 62 190 62 155 66 156 74 156 74 148 74 103 78 104 Q84 104 84 96 L80 60 Q78 44 70 37 Z"/>
+                <path d="M44 40 Q60 30 76 40 Q70 46 60 44 Q50 46 44 40 Z" fill="#efe4cb"/>
+              </g>
+            </svg>
+          </div>
+          <div class="evi">
+            <p><q data-s="sz">惜春，严荪友也。荪友为荐举鸿博四布衣之一，故曰四姑娘。</q><span class="how" data-t>四布衣对四姑娘，藕渔之号对藕榭之居</span></p>
+          </div>
+        </div>
+        <span class="tip" data-t>点灯看影</span>
+      </div>
+
+    </div>
+
+    <div class="shadowstrip reveal">
+      <span class="lbl" data-t>影外之影</span>
+      <div class="bd">
+        <p>簿上九人之外，还有一层递归：正主之外再立影子，大观园内部自成一套镜厅。袭人是宝钗的影子，晴雯与小红是黛玉的影子；连雨村高吟的一副对联，也被读成江村进身之阶的预演：</p>
+        <p style="margin-top:8px"><q data-s="sz">晴雯、小红等均为黛玉影子，袭人为宝钗影于是也。</q><span class="src" data-t>之一</span></p>
+        <p style="margin-top:8px"><q data-s="sz">玉在椟中求善价，钗于奁内待时飞。</q><span class="src" data-t>之一（读作雨村联句被赏之影子）</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 四 伪朝官制 ============ -->
+<section class="sec" id="yamen">
+  <div class="wrap">
+    <div class="shead reveal"><span class="no mono" data-t>之四</span><h2>伪朝水牌</h2><span class="rod"></span></div>
+    <p class="ssub reveal" data-t>贾府不是府，是一套完整的影子内阁</p>
+
+    <p class="bt reveal">对影簿解决人物，另一条线索解决机构。在这册书里，宁荣二府根本不是府，衙署水牌上写的是六部职掌，人人有编制。悬停每一块水牌，看朱批原文：</p>
+
+    <div class="yamen reveal">
+      <div class="ym-head">
+        <h3 data-t>贾府即伪朝</h3>
+        <p data-t>姓氏与职掌对照水牌 · 悬停展开朱批</p>
+      </div>
+      <div class="desks">
+        <div class="desk">
+          <div class="pair"><span class="a" data-t>贾政</span><span class="eq" data-t>主</span><span class="b" data-t>吏部</span></div>
+          <span class="note" data-t>政者，政事之府</span>
+          <span class="zhu"><q data-s="sz">贾政者，伪朝之吏部也。</q></span>
+        </div>
+        <div class="desk">
+          <div class="pair"><span class="a" data-t>贾赦</span><span class="eq" data-t>主</span><span class="b" data-t>刑部</span></div>
+          <span class="note" data-t>妻邢音刑，子妇尤即罪尤</span>
+          <span class="zhu"><q data-s="sz">贾赦，伪朝之刑部也，故其妻氏邢，(音同刑。)予妇氏尤。(罪尤。)</q></span>
+        </div>
+        <div class="desk">
+          <div class="pair"><span class="a" data-t>贾琏</span><span class="eq" data-t>主</span><span class="b" data-t>户部</span></div>
+          <span class="note" data-t>行二称琏二爷，掌财政</span>
+          <span class="zhu"><q data-s="sz">贾琏为户部，户部在六部位居次，故称琏；二爷，其所掌则财政也。</q></span>
+        </div>
+        <div class="desk">
+          <div class="pair"><span class="a" data-t>李纨</span><span class="eq" data-t>主</span><span class="b" data-t>礼部</span></div>
+          <span class="note" data-t>李礼同音，稻香村取稻道同音</span>
+          <span class="zhu"><q data-s="sz">李纨为礼部。(李礼同音。)</q></span>
+        </div>
+        <div class="desk">
+          <div class="pair"><span class="a" data-t>贾敷 贾敬</span><span class="eq" data-t>主</span><span class="b" data-t>教育</span></div>
+          <span class="note" data-t>敬敷五教，语出尚书</span>
+          <span class="zhu"><q data-s="sz">贾敷、贾敬，伪朝之教育也。</q><span style="color:#8f8877;font-size:12.5px" data-t>（书曰敬敷五教）</span></span>
+        </div>
+        <div class="desk">
+          <div class="pair"><span class="a" data-t>贾府</span><span class="eq" data-t>即</span><span class="b" data-t>伪朝</span></div>
+          <span class="note" data-t>代化代善，伪朝之化伪朝之善</span>
+          <span class="zhu"><q data-s="sz">所谓贾府，即伪朝也。</q></span>
+        </div>
+      </div>
+      <div class="desks2">
+        <div class="desk">
+          <div class="pair"><span class="a" data-t>娇杏</span><span class="eq" data-t>谐</span><span class="b" data-t>徼幸</span></div>
+          <span class="note" data-t>另册 · 降臣榜：洪承畴 范文程之流</span>
+          <span class="zhu"><q data-s="sz">作者于汉人之服从清室而安富尊荣者，如洪承畴、范文程之类，以娇杏代表之。娇杏即徼幸。</q></span>
+        </div>
+        <div class="desk">
+          <div class="pair"><span class="a" data-t>贾瑞</span><span class="eq" data-t>即</span><span class="b" data-t>假文天祥</span></div>
+          <span class="note" data-t>另册 · 贰臣榜：钱谦益之流</span>
+          <span class="zhu"><q data-s="sz">瑞字天祥，言其为假文天祥也。</q></span>
+        </div>
+      </div>
+      <p style="text-align:center;margin-top:22px;font-size:14px;color:#b5ad99">连雨村那句应制诗，也被收进册子当作定鼎的供词：</p>
+      <div class="quote" style="margin:16px auto 0;max-width:560px"><q data-s="sz">天上一轮才捧出，人间万姓仰头看。</q><span class="src" data-t>之一（知为代表满洲也）</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 五 蔡胡公案 ============ -->
+<section class="sec" id="liangan">
+  <div class="wrap">
+    <div class="shead reveal"><span class="no mono" data-t>之五</span><h2>蔡胡公案</h2><span class="rod"></span></div>
+    <p class="ssub reveal" data-t>一本小书的两版命运：索隐与考证的世纪对峙</p>
+
+    <p class="bt reveal">这本册子刊行后风行多年。1921 年，胡适发表《红楼梦考证》，把这类读法整体归入所谓猜谜一派，点名开火。1922 年 1 月，蔡元培出第六版，在自序里逐条回敬。两边各执一词，公案至今没有终审：</p>
+
+    <div class="debate reveal">
+      <div class="side hu">
+        <span class="stamp2" data-t>附会</span>
+        <h3 data-t>胡适判词</h3>
+        <span class="yr" data-t>1921 · 红楼梦考证</span>
+        <p>蔡氏此书被点名归入猜谜一派，考据家给出的评语不客气：</p>
+        <p><q data-s="sz">谓之走错了道路，谓之大笨伯笨谜，谓之很牵强的附会</q></p>
+        <p data-t style="font-size:13.5px;color:#a59d8a">考证派的进路：放下影射，去搜求作者、时代、版本的实证材料。</p>
+      </div>
+      <div class="side cai">
+        <span class="stamp2" data-t>商榷</span>
+        <h3 data-t>蔡元培答辩</h3>
+        <span class="yr" data-t>1922 · 第六版自序</span>
+        <p>老先生一字不让，先接下判词，再驳回判决：</p>
+        <p><q data-s="sz">我殊不敢承认。</q><q data-s="sz">然胡先生之言，实有不能强我以承认者。</q></p>
+        <p>并亮出本案的最终结论：</p>
+        <p><q data-s="sz">故鄙意《石头记》原本，必为康熙朝政治小说，为亲见高、徐、余、姜诸人者所草，后经曹雪芹增删，或亦许插入曹家故事，要未可以全书属之曹氏也。</q></p>
+      </div>
+    </div>
+
+    <div class="aftermath reveal">
+      <b data-t>案外一案</b>　这场对峙有个耐人寻味的注脚：胡适留美时期的札记里，也曾把《石头记》读成一部政治小说，多年后才转向自传说。考证派后来成了主流，但索隐一路并未绝祀，至今仍有传人。本页首屏那三道幂，两派其实都会认：一派说幂下是宫闱，一派说幂下是江宁织造的宅门。
+      <span class="src" style="display:block;margin-top:8px;font-size:12.5px;color:#7a7261" data-t>自序落款：<q data-s="sz">民国十一年一月三十日蔡元培</q></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 尾屏 ============ -->
+<section class="fin-sec" id="luomu">
+  <div class="wrap">
+    <div class="luo reveal" id="luo">
+      <div class="dim"></div>
+      <div class="wick"></div>
+      <div class="verse"><q data-s="sz">横看成岭侧成峰</q></div>
+      <div class="seal2" data-t>索隐</div>
+    </div>
+    <p class="fin-note reveal">灯灭幕黑，影子退回册页。今天读这册书，不必信其对影簿上的任何一判，考证派给出的答案显然更硬；但它示范了一种阅读的极限操作：把一部小说当成整个时代的密码本，逐字过堂。猜错了人物，猜对了一个时代的心事。至于幂下究竟是什么，苏东坡那句话仍是最好的判词。</p>
+    <p class="fin-tip reveal" data-t>书只三万六千字 · 影子却排到了两百年后</p>
+  </div>
+</section>
+
+<footer class="fin">
+  <p><b>文本来源</b>　殆知阁简体库〈石头记索隐〉，民国蔡元培撰，据子藏笔记本，去空白三万六千二百零八字，正文之一至之四，另收两篇附录：红楼梦考与第六版自序。导读仓库：<a href="https://github.com/robertsong/daizhige-daodu" target="_blank" rel="noopener">daizhige-daodu</a>。</p>
+  <p><b>引文核验</b>　页面所有引文经脚本与库内文件去标点归一后逐字比对通过；白话部分做六字窗反扫，与库本零重合。库本以着代著（引文照录）、老太大当作老太太等疑讹处避而不断，于文中以括注说明。</p>
+  <p><b>时代局限</b>　本书为民国初年索隐派红学代表作，其民族主义立场与影射方法带有鲜明时代印记，对影射对象的多处论断后世考据多有商榷，页面仅呈现其说并注明公案双方，非认同其结论。</p>
+</footer>
+
+<script>
+(function(){
+  var MING = ['零','一','二','三','四','五','六','七','八','九'];
+
+  /* 幂层 */
+  var stage = document.getElementById('stage');
+  var mis = document.querySelectorAll('[data-mi]');
+  var count = document.getElementById('micount');
+  mis.forEach(function(m){
+    m.addEventListener('click', function(){
+      if(m.classList.contains('up')) return;
+      m.classList.add('up');
+      var n = document.querySelectorAll('[data-mi].up').length;
+      count.textContent = MING[n] || n;
+      if(n === mis.length){ stage.classList.add('open'); }
+    });
+  });
+
+  /* 红字链 */
+  var chain = document.getElementById('chain');
+  var zis = chain.querySelectorAll('[data-zi]');
+  var arrs = chain.querySelectorAll('[data-arr]');
+  function lightChain(from){
+    for(var i=0;i<zis.length;i++){
+      if(i>=from){
+        (function(i){
+          setTimeout(function(){
+            zis[i].classList.add('lit');
+            if(arrs[i-1]) arrs[i-1].classList.add('lit');
+          }, (i-from)*260);
+        })(i);
+      }
+    }
+  }
+  zis.forEach(function(z, i){
+    z.addEventListener('click', function(){
+      if(z.classList.contains('lit')) return;
+      zis.forEach(function(x,j){ if(j<i) x.classList.add('lit'); });
+      lightChain(i);
+    });
+  });
+
+  /* 三法翻签 */
+  document.querySelectorAll('[data-fa]').forEach(function(f){
+    f.addEventListener('click', function(){ f.classList.toggle('flip'); });
+  });
+
+  /* 对影簿 */
+  document.querySelectorAll('[data-win]').forEach(function(w){
+    w.addEventListener('click', function(){
+      w.classList.toggle('lit');
+      var tip = w.querySelector('.tip');
+      if(tip) tip.textContent = w.classList.contains('lit') ? '熄灯归幕' : '点灯看影';
+    });
+  });
+
+  /* 尾屏灯灭 */
+  var luo = document.getElementById('luo');
+  var io1 = new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){
+        setTimeout(function(){ luo.classList.add('gone'); }, 700);
+        io1.unobserve(luo);
+      }
+    });
+  }, {threshold:.55});
+  io1.observe(luo);
+
+  /* 显现 */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  }, {threshold:.08});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>
