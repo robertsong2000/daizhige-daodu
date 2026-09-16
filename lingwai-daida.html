@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>岭外代答 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --ink2:#1e1d1a;
+  --paper:#e8e4dc;
+  --paper2:#dcd4c2;
+  --gold:#c9963f;
+  --gold-hi:#e3b569;
+  --gold-dim:rgba(201,150,63,.35);
+  --muted:#98917e;
+  --qink:#33302a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","STSong","SimSun",serif;
+  line-height:2;
+  overflow-x:hidden;
+}
+::selection{background:var(--gold);color:var(--ink)}
+.mono{font-family:"SF Mono",Consolas,monospace}
+.wrap{max-width:1020px;margin:0 auto;padding:0 22px}
+q,q::before,q::after{quotes:none;content:""}
+.q{font-style:normal;color:var(--qink)}
+.qv{font-style:normal;color:var(--gold-hi)}
+em{font-style:normal;color:var(--gold-hi)}
+
+/* ===== 首屏：问事窗 ===== */
+.scene{min-height:96vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:60px 0 40px}
+.eyebrow{letter-spacing:.5em;font-size:12px;color:var(--muted);text-indent:.5em}
+.scene .site{margin-top:14px;font-size:15px;color:var(--paper2);max-width:560px;text-align:center;line-height:2.2}
+.winbox{margin-top:44px;display:flex;flex-direction:column;align-items:center}
+.win{
+  width:min(330px,74vw);aspect-ratio:1/1.12;position:relative;border:6px solid #2b2822;
+  outline:1px solid rgba(201,150,63,.28);
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(227,181,105,.10), transparent 62%),
+    repeating-linear-gradient(0deg, transparent 0 24%, rgba(232,228,220,.07) 24% calc(24% + 2px)),
+    repeating-linear-gradient(90deg, transparent 0 24%, rgba(232,228,220,.07) 24% calc(24% + 2px)),
+    #14130f;
+  box-shadow:inset 0 0 40px rgba(0,0,0,.75);
+  transition:box-shadow 1.2s ease, background 1.2s ease;
+}
+.win.lit{
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(227,181,105,.34), rgba(201,150,63,.10) 58%, transparent 78%),
+    repeating-linear-gradient(0deg, transparent 0 24%, rgba(20,19,15,.9) 24% calc(24% + 3px)),
+    repeating-linear-gradient(90deg, transparent 0 24%, rgba(20,19,15,.9) 24% calc(24% + 3px)),
+    #262015;
+  box-shadow:inset 0 0 26px rgba(0,0,0,.5), 0 0 60px rgba(201,150,63,.16);
+}
+.win .bt{
+  position:absolute;inset:0 0 15% 0;display:flex;align-items:center;justify-content:center;
+  writing-mode:vertical-rl;letter-spacing:.3em;font-size:clamp(34px,7.5vw,46px);font-weight:700;
+  color:rgba(232,228,220,.10);transition:color 1.4s ease, text-shadow 1.4s ease;user-select:none;
+}
+.win.lit .bt{color:var(--paper);text-shadow:0 0 22px rgba(227,181,105,.5)}
+.win .sub{
+  position:absolute;left:0;right:0;bottom:6.5%;text-align:center;font-size:12.5px;letter-spacing:.34em;text-indent:.34em;
+  color:rgba(232,228,220,.0);transition:color 1.6s ease .3s;
+}
+.win.lit .sub{color:var(--gold-hi)}
+.knock{
+  margin-top:34px;background:none;border:1px solid var(--gold-dim);color:var(--gold-hi);
+  font-family:inherit;font-size:15px;letter-spacing:.5em;text-indent:.5em;padding:10px 26px;cursor:pointer;
+  transition:opacity .8s;
+}
+.knock:hover{border-color:var(--gold);background:rgba(201,150,63,.08)}
+.knock.gone{opacity:.25;pointer-events:none}
+.qslips{margin-top:30px;display:flex;flex-direction:column;gap:14px;max-width:640px;width:100%}
+.qslips .pslip{
+  background:var(--paper);color:var(--qink);padding:16px 22px;position:relative;
+  opacity:0;transform:translateY(14px);transition:opacity 1s ease,transform 1s ease;
+  box-shadow:0 6px 22px rgba(0,0,0,.45);font-size:15.5px;line-height:2.1;
+}
+.qslips.show .pslip{opacity:1;transform:none}
+.qslips .pslip:nth-child(2){transition-delay:.35s}
+.qslips .pslip .lead{color:#7a7466;font-size:12.5px;letter-spacing:.28em;display:block;margin-bottom:4px}
+.hint{margin-top:26px;color:var(--muted);font-size:13px;letter-spacing:.2em;opacity:0;transition:opacity 1.2s ease .9s}
+.hint.on{opacity:.85}
+.scrolldown{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);color:var(--muted);font-size:12px;letter-spacing:.4em;text-indent:.4em;opacity:.7}
+
+/* ===== 应酬账 ===== */
+.sec{padding:88px 0}
+.sechead{text-align:center;margin-bottom:46px}
+.sechead .cap{font-size:12px;letter-spacing:.5em;text-indent:.5em;color:var(--gold)}
+.sechead h2{font-size:26px;font-weight:700;margin-top:10px;letter-spacing:.14em}
+.sechead p{color:var(--muted);font-size:14.5px;margin-top:12px;max-width:620px;margin-left:auto;margin-right:auto;line-height:2.1}
+.books{display:flex;justify-content:center;flex-wrap:wrap;gap:18px}
+.tile{
+  width:150px;background:linear-gradient(#232019,#1c1a15);border:1px solid rgba(201,150,63,.22);
+  padding:18px 10px 14px;text-align:center;position:relative;
+}
+.tile::before{content:"";position:absolute;top:8px;left:8px;right:8px;height:3px;background:rgba(201,150,63,.3)}
+.tile .n{font-size:30px;color:var(--gold-hi);font-weight:700}
+.tile .n small{font-size:14px;font-weight:400}
+.tile .t{font-size:13px;color:var(--paper2);margin-top:6px;letter-spacing:.12em}
+.dui{
+  margin:34px auto 0;max-width:680px;font-size:13px;color:var(--muted);line-height:2.2;text-align:center;
+}
+.dui .qv{color:var(--gold-hi)}
+
+/* ===== 答牌抽读 ===== */
+.desksec{background:var(--ink2);border-top:1px solid rgba(201,150,63,.14);border-bottom:1px solid rgba(201,150,63,.14)}
+.desk{display:grid;grid-template-columns:248px 1fr;gap:30px;align-items:start}
+.rail{display:flex;flex-wrap:wrap;gap:9px;justify-content:flex-start;position:sticky;top:24px;padding-top:6px}
+.slip{
+  writing-mode:vertical-rl;background:linear-gradient(#2a251c,#211d16);border:1px solid rgba(201,150,63,.25);
+  color:var(--paper2);font-family:inherit;font-size:13.5px;letter-spacing:.24em;line-height:1.5;
+  padding:14px 8px 16px;cursor:pointer;min-height:148px;transition:all .35s ease;position:relative;
+}
+.slip:hover{border-color:var(--gold);color:var(--paper)}
+.slip.on{
+  background:var(--gold);color:var(--ink);border-color:var(--gold-hi);font-weight:700;
+  box-shadow:0 0 22px rgba(201,150,63,.35);transform:translateY(-6px);
+}
+.slip .gno{font-size:10px;letter-spacing:0;margin-top:10px;color:inherit;opacity:.65}
+.ansarea{min-height:520px}
+.gate{
+  font-size:12.5px;letter-spacing:.4em;color:var(--gold);margin-bottom:6px;
+  display:flex;align-items:center;gap:12px;
+}
+.gate::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--gold-dim),transparent)}
+.ans{display:none;animation:fadein .7s ease}
+.ans.on{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.ans h3{font-size:23px;font-weight:700;letter-spacing:.06em;margin-bottom:16px}
+.paper{
+  background:var(--paper);color:var(--qink);padding:22px 26px;margin:14px 0;
+  box-shadow:0 8px 26px rgba(0,0,0,.5);position:relative;font-size:16px;line-height:2.15;
+}
+.paper::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:rgba(51,48,42,.14)}
+.paper .q{display:block}
+.paper .src{display:block;text-align:right;font-size:12px;color:#8a8371;letter-spacing:.2em;margin-top:8px}
+.read{color:var(--paper2);font-size:15px;line-height:2.25;margin-top:14px}
+
+/* ===== 二十门 ===== */
+.gates{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.gcard{
+  border:1px solid rgba(201,150,63,.2);background:linear-gradient(#211f19,#1b1914);
+  padding:16px 14px 13px;transition:all .3s ease;cursor:default;
+}
+.gcard:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.4)}
+.gcard .gn{font-size:17px;font-weight:700;letter-spacing:.1em}
+.gcard .gc{float:right;font-size:13px;color:var(--gold-hi)}
+.gcard .gd{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.9;clear:both}
+.gsum{margin-top:22px;text-align:center;color:var(--muted);font-size:13.5px;line-height:2.1}
+.gsum .qv{color:var(--gold-hi)}
+
+/* ===== 尾屏 ===== */
+.finale{padding:110px 0 90px;text-align:center;position:relative}
+.finale .lastq{
+  display:inline-block;max-width:560px;background:var(--paper);color:var(--qink);
+  padding:26px 34px;font-size:19px;line-height:2.2;box-shadow:0 10px 30px rgba(0,0,0,.5);
+}
+.finale .lastread{margin-top:26px;color:var(--paper2);font-size:15px;max-width:620px;margin-left:auto;margin-right:auto;line-height:2.3}
+.seal{
+  margin:44px auto 0;width:84px;height:84px;border:3px solid #b4453a;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;transform:rotate(-8deg);
+  color:#c9564a;font-size:26px;font-weight:700;letter-spacing:.2em;text-indent:.2em;
+  box-shadow:inset 0 0 12px rgba(180,69,58,.35);opacity:.9;
+}
+footer{border-top:1px solid rgba(232,228,220,.14);padding:30px 0 40px;color:var(--muted);font-size:13px;line-height:2.1}
+footer a{color:var(--gold-hi);text-decoration:none}
+footer .fwarn{display:block;margin-top:10px;color:#a08c6a}
+
+@media (max-width:760px){
+  .desk{grid-template-columns:1fr;gap:18px}
+  .rail{position:static;justify-content:flex-start;overflow-x:auto;padding-bottom:8px}
+  .slip{writing-mode:horizontal-tb;min-height:0;padding:10px 14px;letter-spacing:.18em;line-height:1.9;white-space:nowrap}
+  .gates{grid-template-columns:repeat(2,1fr)}
+  .sec{padding:64px 0}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 首屏：叩窗 ============ -->
+<section class="scene">
+  <div class="wrap" style="text-align:center">
+    <div class="eyebrow">殆知阁古籍导读</div>
+    <p class="site">淳熙五年冬，一位温州人官满还乡。乡亲围着他问个不停：岭南的瘴气、海里的大船、用鼻子喝酒的边俗、万里外的朝圣路。他在桂林、钦州做了几年官，见得多，可问题太多，实在应答不过来。</p>
+    <div class="winbox">
+      <div class="win" id="win">
+        <span class="bt">岭外代答</span>
+        <span class="sub">宋 周去非 撰</span>
+      </div>
+      <button class="knock" id="knock">叩 窗 问 事</button>
+      <div class="qslips" id="qslips">
+        <div class="pslip"><span class="lead">书 序</span><q class="q">乃亲故相劳苦，问以绝域事，骤莫知所对者，盖数数然。</q></div>
+        <div class="pslip"><span class="lead">答 意</span><q class="q">应酬倦矣，有复问仆，用以代答。</q></div>
+      </div>
+      <div class="hint" id="hint">再有人问，就请他自己来翻这扇窗</div>
+    </div>
+  </div>
+  <div class="scrolldown">向下问事</div>
+</section>
+
+<!-- ============ 应酬账 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="cap">成 书 账</div>
+      <h2>一部被追问逼出来的书</h2>
+      <p>他早年随事笔记，攒下四百多条见闻，还乡途中连箱子都散失过。直到读到范成大的<em>桂海虞衡志</em>，又翻出旧日抄本，才重新编排成书。</p>
+    </div>
+    <div class="paper" style="max-width:680px;margin:0 auto 40px">
+      <span class="q">晚得范石湖『桂海虞衡志』，又于药裹得所钞名数，因次序之，凡二百九十四条。</span>
+      <span class="src">岭外代答序</span>
+    </div>
+    <div class="books">
+      <div class="tile"><div class="n">10<small> 卷</small></div><div class="t">自序记事</div></div>
+      <div class="tile"><div class="n">20<small> 门</small></div><div class="t">以类相从</div></div>
+      <div class="tile"><div class="n">294<small> 条</small></div><div class="t">序内自计</div></div>
+      <div class="tile"><div class="n">400<small> 余条</small></div><div class="t">早年笔记</div></div>
+    </div>
+    <p class="dui">条目数有一处小账：序内自称 <span class="qv">凡二百九十四条</span>，而点今本目录只得二百九十二目，两条出落在历代传抄里。这位作者的算术未必好，记性却一定好：全书把他听来的、看见的、抄来的南方，摆成了一间知识铺子。</p>
+  </div>
+</section>
+
+<!-- ============ 答牌抽读 ============ -->
+<section class="desksec sec">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="cap">答 牌 抽 读</div>
+      <h2>十问十答</h2>
+      <p>乡亲当年最想问的问题，替你列成答牌。点牌抽答，答文一律照录库本，问句才是今人代拟的。</p>
+    </div>
+    <div class="desk">
+      <div class="rail" id="rail">
+        <button class="slip on" data-t="a1">大船能有多大<span class="gno">其一</span></button>
+        <button class="slip" data-t="a2">下海的人回得来吗<span class="gno">其二</span></button>
+        <button class="slip" data-t="a3">酒能用鼻子喝吗<span class="gno">其三</span></button>
+        <button class="slip" data-t="a4">姻缘怎么定<span class="gno">其四</span></button>
+        <button class="slip" data-t="a5">不写字怎么立约<span class="gno">其五</span></button>
+        <button class="slip" data-t="a6">朝圣路有多远<span class="gno">其六</span></button>
+        <button class="slip" data-t="a7">北上的马怎么养<span class="gno">其七</span></button>
+        <button class="slip" data-t="a8">鸡骨头能问出什么<span class="gno">其八</span></button>
+        <button class="slip" data-t="a9">满街人牙为什么黑<span class="gno">其九</span></button>
+        <button class="slip" data-t="a10">世界尽头有什么<span class="gno">其十</span></button>
+      </div>
+      <div class="ansarea">
+
+        <div class="ans on" id="a1">
+          <div class="gate">器用门 木兰舟</div>
+          <h3>大船能有多大？</h3>
+          <div class="paper"><span class="q">浮南海而南，舟如巨室，帆若垂天之云，柂长数丈，一舟数百人，中积一年粮，豢豕酿酒其中，置死生于度外。</span><span class="src">器用门 木兰舟</span></div>
+          <p class="read">一条船几百人，舱里囤一年的粮，还养猪、酿酒。出了海就不再指望靠岸，索性把生死都搬到船上过。更西去大食海船的地界，传闻船上有集市、有织机，顺风也要走上几年才到。所以作者替这个词下了注脚：所谓木兰舟，说的就是一个大字。</p>
+          <div class="paper"><span class="q">盖其舟大载重，不忧巨浪而忧浅水也。</span><span class="src">器用门 木兰舟</span></div>
+          <p class="read">大船不怕浪，只怕搁浅。这句是全书海上经验的浓缩，也是船比命硬时代里少有的清醒。</p>
+        </div>
+
+        <div class="ans" id="a2">
+          <div class="gate">宝货门 珠池</div>
+          <h3>下海捞珠的人，回得来吗？</h3>
+          <div class="paper"><span class="q">不幸遇恶鱼，一缕之血浮于水面，舟人恸哭，知其已葬鱼腹也。</span><span class="src">宝货门 珠池</span></div>
+          <p class="read">合浦海里的珠池，采珠的蜑人腰间系绳、携篮潜下去捡蚌，装满了就抖绳让船上人拉。恶鱼袭来时，水面浮起一线血，船上人恸哭收绳。也有及时逃回的，落下断臂伤股。一颗珠的价钱，是这样标出来的。</p>
+          <div class="paper"><span class="q">冒死得之，尽为黠民以升酒斗粟，一易数两。</span><span class="src">宝货门 珠池</span></div>
+          <p class="read">更冷的是后半程：蜑人拼来的珠，转身就被奸猾的中间人用一升酒、一斗粟换走，几经转手到都城，价翻数十倍。作者把这条账也照实记下，等于替底层的命，留了一份对账单。</p>
+        </div>
+
+        <div class="ans" id="a3">
+          <div class="gate">蛮俗门 鼻饮</div>
+          <h3>酒真能用鼻子喝吗？</h3>
+          <div class="paper"><span class="q">以瓢盛少水，置盐及山姜汁数滴于水中，瓢则有窍，施小管如甁嘴，插诸鼻中，导水升脑，循脑而下入喉。</span><span class="src">蛮俗门 鼻饮</span></div>
+          <p class="read">不是传说，是邕州溪峒和钦州村落的日常操作：瓢上开孔插小管，插进鼻孔，让水先冲上头，再顺下去。讲究人家用银器，次一等的用锡、陶、葫芦。喝的时候嘴里还要嚼一片鱼鲊压住，水才不呛。</p>
+          <div class="paper"><span class="q">既饮必噫气，以为凉脑快膈，莫若此也。</span><span class="src">蛮俗门 鼻饮</span></div>
+          <p class="read">喝完必打一个嗝，自报体感：脑子凉了，胸口通了，没有比这更痛快的。作者顺带考据，史书说越人鼻饮，原来见到的就是这个。</p>
+        </div>
+
+        <div class="ans" id="a4">
+          <div class="gate">蛮俗门 踏摇 迎茅娘</div>
+          <h3>姻缘怎么定？没赶上的怎么办？</h3>
+          <div class="paper"><span class="q">男女各群，连袂而舞，谓之踏摇。</span><span class="src">蛮俗门 踏摇</span></div>
+          <p class="read">猺人每年十月初祭都贝大王，庙前把未婚的男女各聚成群，手牵着手的跳舞。看对了眼，男子就跳进女方人群，把心上人背回家，婚事当场定下，不必父母之命。这叫踏摇，是活人的姻缘。</p>
+          <div class="paper"><span class="q">钦、廉子未娶而死，则束茅为妇于郊，备鼓乐迎归而以合葬，谓之迎茅娘。</span><span class="src">蛮俗门 迎茅娘</span></div>
+          <p class="read">死人的姻缘也有办法：钦州廉州一带，少年没娶亲就死了，家里扎一个茅草新娘，在郊外备好鼓乐迎回来，与他合葬。作者觉得这是夷风，还搬出曹操嫁女给亡者的旧事对质，但记还是一丝不苟地记下了。</p>
+        </div>
+
+        <div class="ans" id="a5">
+          <div class="gate">蛮俗门 款塞</div>
+          <h3>不立文字，怎么赌咒立约？</h3>
+          <div class="paper"><span class="q">上山同路，下水同船，男儿带刀同一边，一点一齐，同杀盗贼。</span><span class="src">蛮俗门 款塞</span></div>
+          <p class="read">猺人归顺官府，要当众念誓词，这叫纳款。结盟的话说得极实在：同一条路上山，同一条船下水，带刀的都站同一边，齐心剿贼。这是乾道年间静江猺人纳款的现场记录，作者就在帅府听着。</p>
+          <div class="paper"><span class="q">其翻背者，生男成驴，生女成猪，举家绝灭。</span><span class="src">蛮俗门 款塞</span></div>
+          <p class="read">翻悔的咒最狠：赌上子孙与全家。而官府一侧的注脚只有一句冷冰冰的话，作者也照录了：<q class="qv">山例者，杀之也。</q>一份没有文字的契约，两边各自的底气都在这纸上了。</p>
+        </div>
+
+        <div class="ans" id="a6">
+          <div class="gate">外国门下 大食诸国</div>
+          <h3>万里之外的朝圣路，是什么光景？</h3>
+          <div class="paper"><span class="q">每岁遇佛忌辰，大食诸国王，皆遣人持宝贝金银施舍，以锦绮盖其方丈。</span><span class="src">外国门下 大食诸国</span></div>
+          <p class="read">大食诸国有个麻嘉国，是先知出世之地。书中记作<em>佛麻霞勿</em>，即穆罕默德的对音；麻嘉，就是今天的麦加。每逢忌辰，各国王遣使携金银施舍，用锦绮把圣所称起来的方丈盖住。</p>
+          <div class="paper"><span class="q">方丈后有佛墓，日夜常见霞光，人近不得，往往皆合眼走过。</span><span class="src">外国门下 大食诸国</span></div>
+          <p class="read">圣所后面是先知墓，书中说夜里也常见霞光，人走近不得，香客都合着眼从墓前经过。这条见闻是蕃商带来的二手消息，字里行间是南宋人对万里外另一大信仰中心的想象与敬意，错误不少，珍贵更甚。</p>
+        </div>
+
+        <div class="ans" id="a7">
+          <div class="gate">财计门 马纲</div>
+          <h3>大理的马，怎么走到临安？</h3>
+          <div class="paper"><span class="q">马之来也，涉地数千里，瘠甚。蛮缚其四足拽仆之，啖盐二斤许，纵之，旬日自肥矣。</span><span class="src">财计门 马纲</span></div>
+          <p class="read">南宋在邕州横山寨设场等马上门，大理、自杞的马队每年冬天赶来。马匹走了几千里瘴地，瘦得脱形；赶马人把它们捆翻在地喂两斤盐，放开十天，自己就肥了。这条催肥偏方，是市舶档案里才有的细节。</p>
+          <p class="read">过秤后按马匹高下配银定价，编成三十纲，每纲五十匹，配押纲官、兽医与牵马兵，一站站往朝廷送。押马也有诀窍，作者顺手记下：每晚喂几两盐，水草调顺，全纲不死，押纲官还能升官。</p>
+        </div>
+
+        <div class="ans" id="a8">
+          <div class="gate">志异门 鸡卜</div>
+          <h3>问不出答案时，问鸡骨头？</h3>
+          <div class="paper"><span class="q">其法有一十八变，大抵直而正或附骨者多吉，曲而斜或远骨者多凶。</span><span class="src">志异门 鸡卜</span></div>
+          <p class="read">雄鸡腿骨洗净，麻线束定，再从骨侧细窍里插竹签，或斜或直，共十八种变化，各自对应吉凶：直正附骨多吉，曲斜远骨多凶。这是流传千年的越人古法，作者把操作规程一步一步写全了。</p>
+          <div class="paper"><span class="q">昔汉武奉越祠鸡卜，其法无传，今始记之。</span><span class="src">志异门 鸡卜</span></div>
+          <p class="read">他还特意补了一句案底：汉武帝时鸡卜就进过祀典，法子失传千年，如今头一回有人把它记全。这份存档心，比信不信要紧。</p>
+        </div>
+
+        <div class="ans" id="a9">
+          <div class="gate">食用门 食槟榔</div>
+          <h3>满街人的牙齿，为什么是黑的？</h3>
+          <div class="paper"><span class="q">路上行人口似羊。</span><span class="src">食用门 食槟榔</span></div>
+          <p class="read">岭南待客不奉茶，先端槟榔：蒌叶抹上蚬灰，裹着嚼，先吐一口红水，随即面颊潮红。广州人从早到晚不离口，晚上要把盘子搁在枕边，醒了接着嚼，时人编段子嘲笑：满路行人的嘴，看着都像羊嘴。</p>
+          <div class="paper"><span class="q">实无益于瘴，彼病瘴纷然，非不食槟榔也。</span><span class="src">食用门 食槟榔</span></div>
+          <p class="read">当地人的说法是辟瘴消食，作者却找医生对质，结论毫不留情：槟榔降气也耗气，对防瘴没有用，你看满街生瘴病的，哪个不是照嚼不误。八百年前就有辟谣的人，辟完照旧没人听。</p>
+        </div>
+
+        <div class="ans" id="a10">
+          <div class="gate">外国门下 昆仑层期国</div>
+          <h3>世界的尽头，有什么？</h3>
+          <div class="paper"><span class="q">常有大鹏飞，蔽日移晷。有野骆驼，大鹏遇则呑之。</span><span class="src">外国门下 昆仑层期国</span></div>
+          <p class="read">昆仑层期国，一般认为远在远海连接非洲的方向。书里的笔是猎奇的：大鹏飞过，太阳都挪了位置才天亮；野骆驼碰上就被一口吞掉，拾到大鹏翅管，截开能当水桶。</p>
+          <div class="paper"><span class="q">又海岛多野人，身如黑漆，拳发。诱以食而擒之，动以千万，卖为蕃奴。</span><span class="src">外国门下 昆仑层期国</span></div>
+          <p class="read">玩笑话写完，笔锋落到人身上：海岛多野人，被食物诱捕，成千上万卖作蕃奴。这一条常被看作宋人关于东非与人口贩卖的远距离记录。猎奇是外壳，账是真实的。</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 二十门 ============ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="cap">铺 子 的 架 子</div>
+      <h2>十卷二十门</h2>
+      <p>全书像一间铺子，十卷是十进，二十门是二十排货架。从山川关塞一路摆到虫鱼志怪，等于把南宋人眼里的南方分门别类存了个底。</p>
+    </div>
+    <div class="gates">
+      <div class="gcard"><span class="gc mono">22目</span><div class="gn">地理门</div><div class="gd">五岭灵渠，写到天涯海角</div></div>
+      <div class="gcard"><span class="gc mono">6目</span><div class="gn">边帅门</div><div class="gd">帅司与诸州都监的职衔</div></div>
+      <div class="gcard"><span class="gc mono">10目</span><div class="gn">外国门上</div><div class="gd">安南真腊，到三佛齐阇婆</div></div>
+      <div class="gcard"><span class="gc mono">26目</span><div class="gn">外国门下</div><div class="gd">大秦大食木兰皮，直至极西</div></div>
+      <div class="gcard"><span class="gc mono">11目</span><div class="gn">风土门</div><div class="gd">瘴气巢居，兼记方言俗字</div></div>
+      <div class="gcard"><span class="gc mono">6目</span><div class="gn">法制门</div><div class="gd">在岭外做官的操作手册</div></div>
+      <div class="gcard"><span class="gc mono">8目</span><div class="gn">财计门</div><div class="gd">盐法买马，三座博易场</div></div>
+      <div class="gcard"><span class="gc mono">20目</span><div class="gn">器用门</div><div class="gd">端砚腰鼓，到木兰舟藤舟</div></div>
+      <div class="gcard"><span class="gc mono">10目</span><div class="gn">服用门</div><div class="gd">吉贝棉布，安南绢与婆裙</div></div>
+      <div class="gcard"><span class="gc mono">7目</span><div class="gn">食用门</div><div class="gd">槟榔异味，老鲊与买水</div></div>
+      <div class="gcard"><span class="gc mono">7目</span><div class="gn">香门</div><div class="gd">沉水香诸品的分级表</div></div>
+      <div class="gcard"><span class="gc mono">6目</span><div class="gn">乐器门</div><div class="gd">铜鼓腰鼓，与桂林傩面</div></div>
+      <div class="gcard"><span class="gc mono">7目</span><div class="gn">宝货门</div><div class="gd">珠池龙涎，砗磲与大贝</div></div>
+      <div class="gcard"><span class="gc mono">13目</span><div class="gn">金石门</div><div class="gd">生金水银，石燕与钟乳</div></div>
+      <div class="gcard"><span class="gc mono">45目</span><div class="gn">花木门</div><div class="gd">桂榕荔枝，到茉莉素馨</div></div>
+      <div class="gcard"><span class="gc mono">38目</span><div class="gn">禽兽门</div><div class="gd">象与孔雀，风狸山獭</div></div>
+      <div class="gcard"><span class="gc mono">11目</span><div class="gn">虫鱼门</div><div class="gd">蚺蛇瑇瑁，鬼蛱蝶天虾</div></div>
+      <div class="gcard"><span class="gc mono">9目</span><div class="gn">古迹门</div><div class="gd">铜柱秦城，绿珠井</div></div>
+      <div class="gcard"><span class="gc mono">15目</span><div class="gn">蛮俗门</div><div class="gd">鼻饮绣面，踏摇迎茅娘</div></div>
+      <div class="gcard"><span class="gc mono">15目</span><div class="gn">志异门</div><div class="gd">鸡卜蛊毒，与猴妖传说</div></div>
+    </div>
+    <p class="gsum">二十门合计，点今本目录得二百九十二目，与序内自称差出两条；蛮俗门里抛球定情那一条，目名用了个多数字体已打不出的马旁僻字，正是这本书历代传抄的缩影。</p>
+  </div>
+</section>
+
+<!-- ============ 尾屏 ============ -->
+<section class="finale">
+  <div class="wrap">
+    <div class="lastq"><q class="q">异时训方氏其将有考于斯！</q></div>
+    <p class="lastread">训方氏，是上古管采集四方风物的官。意思是：将来朝廷要考南方的事，这里有底可查。这话说得半是自嘲半是认真。后来谈南海交通与西南风土的书，确实几乎都要回头翻它。而它最初的功能朴素极了：替一个被问怕了的人，答一辈子的问题。</p>
+    <div class="seal">代答</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>文本来源：殆知阁简体库《岭外代答》（史藏地理类，去空白 61,415 字）；导读系列总目见 <a href="mulu.html">mulu.html</a>；仓库 <a href="https://github.com/robertsong/daizhige-daodu">daizhige-daodu</a></div>
+    <div>本篇引文均与库内文件逐字核验（去标点归一后比对），未经核验的文字不标引号</div>
+    <span class="fwarn">时代局限提醒：本书为南宋边官见闻与蕃商传闻的汇编，诸蕃地理多杂想象错讹；对岭外族群与海外诸国的记述带有时代成见，鸡卜蛊毒、冥婚等条目为信仰与旧俗的如实存档，不代表记译者与导读者的立场。</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var win = document.getElementById('win');
+  var knock = document.getElementById('knock');
+  var slips = document.getElementById('qslips');
+  var hint = document.getElementById('hint');
+  knock.addEventListener('click', function(){
+    win.classList.add('lit');
+    knock.classList.add('gone');
+    setTimeout(function(){ slips.classList.add('show'); }, 700);
+    setTimeout(function(){ hint.classList.add('on'); }, 1800);
+  });
+
+  var rail = document.getElementById('rail');
+  var buttons = rail.querySelectorAll('.slip');
+  var answers = document.querySelectorAll('.ans');
+  buttons.forEach(function(b){
+    b.addEventListener('click', function(){
+      buttons.forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      answers.forEach(function(a){ a.classList.remove('on'); });
+      var el = document.getElementById(b.getAttribute('data-t'));
+      if(el){ el.classList.add('on'); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
