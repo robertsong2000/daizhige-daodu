@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金陵琐事 · 殆知阁导读</title>
+<style>
+  :root{
+    --ink:#191917;
+    --ink2:#141412;
+    --paper:#e8e4dc;
+    --gold:#c9963f;
+    --gold-soft:rgba(201,150,63,0.16);
+    --smoke:#8b877d;
+    --stone:#242422;
+    --line:#3a3a36;
+    --red:#c0453c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+    line-height:1.95;
+    overflow-x:hidden;
+  }
+  a{color:var(--gold);text-decoration:none}
+  ::selection{background:var(--gold);color:var(--ink)}
+
+  /* ---------- 首屏：城楼更鼓 ---------- */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .hero svg{position:absolute;inset:0;width:100%;height:100%}
+  .hero-inner{position:relative;z-index:5;text-align:center;padding:0 20px}
+  .kick{font-size:12px;letter-spacing:0.5em;color:var(--smoke);margin-bottom:26px}
+  .kick b{color:var(--gold);font-weight:normal}
+  .hero-sub{max-width:560px;margin:0 auto;font-size:15px;color:var(--smoke);line-height:2.1}
+  .drum-btn{
+    margin:34px auto 0;display:flex;flex-direction:column;align-items:center;gap:10px;
+    background:none;border:none;cursor:pointer;color:var(--paper);font-family:inherit
+  }
+  .drum-face{
+    width:74px;height:74px;border-radius:50%;
+    background:radial-gradient(circle at 34% 30%, #6b3f33, #47261f 68%);
+    border:3px solid var(--gold);position:relative;
+    box-shadow:0 0 0 6px rgba(201,150,63,0.12), 0 8px 26px rgba(0,0,0,0.6);
+    transition:transform .2s
+  }
+  .drum-face::after{
+    content:"鼓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--gold);font-size:22px
+  }
+  .drum-btn:hover .drum-face{transform:scale(1.06)}
+  .drum-btn small{font-size:12px;color:var(--smoke);letter-spacing:0.3em}
+
+  .ripple{
+    position:absolute;left:50%;top:58%;width:14px;height:14px;border-radius:50%;
+    border:2px solid var(--gold);opacity:0;pointer-events:none
+  }
+  .hero.lit .ripple{animation:rip 2.4s ease-out forwards}
+  .hero.lit .ripple.r2{animation-delay:.35s}
+  .hero.lit .ripple.r3{animation-delay:.7s}
+  @keyframes rip{
+    0%{opacity:.9;transform:translate(-50%,-50%) scale(1)}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(38)}
+  }
+  .tower-win{opacity:0;transition:opacity 1.2s ease .3s}
+  .hero.lit .tower-win{opacity:1}
+  .titleVeil{
+    position:absolute;left:50%;top:9%;transform:translateX(-50%);
+    z-index:6;text-align:center;opacity:0;transition:opacity 1.6s ease .8s;pointer-events:none
+  }
+  .hero.lit .titleVeil{opacity:1}
+  .hero.lit .hero-inner{opacity:0.12;pointer-events:none}
+  .hero-inner{transition:opacity 1s ease}
+  .vt{
+    writing-mode:vertical-rl;display:inline-block;
+    font-size:clamp(34px,5vw,56px);letter-spacing:0.28em;
+    color:var(--paper);text-shadow:0 0 24px rgba(201,150,63,0.35);
+    min-height:300px
+  }
+  .vt-sub{display:block;margin-top:14px;font-size:13px;letter-spacing:0.5em;color:var(--gold)}
+  .seal{
+    margin:22px auto 0;width:64px;height:64px;border:2px solid var(--red);color:var(--red);
+    display:flex;align-items:center;justify-content:center;
+    writing-mode:vertical-rl;font-size:19px;letter-spacing:0.14em;
+    transform:rotate(-4deg) scale(2.6);opacity:0;transition:all .5s cubic-bezier(.2,1.6,.4,1) 1.8s;
+    border-radius:4px;background:rgba(192,69,60,0.08)
+  }
+  .hero.lit .seal{opacity:1;transform:rotate(-4deg) scale(1)}
+
+  /* ---------- 右缘五更更签 ---------- */
+  .rail{
+    position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:40;
+    display:flex;flex-direction:column;align-items:center;gap:4px
+  }
+  .rail-line{width:1px;height:120px;background:var(--line);position:relative}
+  .rail-line i{position:absolute;top:0;left:0;width:100%;height:0;background:var(--gold);transition:height .4s}
+  .station{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    font-size:10px;color:var(--smoke);background:var(--ink);transition:all .35s;cursor:default
+  }
+  .station b{font-weight:normal;font-size:13px;line-height:1.2}
+  .station.on{border-color:var(--gold);color:var(--gold);box-shadow:0 0 14px rgba(201,150,63,0.35)}
+  @media(max-width:900px){.rail{display:none}}
+
+  /* ---------- 通用段落 ---------- */
+  main{max-width:1020px;margin:0 auto;padding:0 22px 40px}
+  .geng{padding:110px 0 40px;position:relative}
+  .geng-head{display:flex;align-items:baseline;gap:18px;margin-bottom:14px;flex-wrap:wrap}
+  .geng-no{font-size:13px;letter-spacing:0.4em;color:var(--gold);white-space:nowrap}
+  .geng-title{font-size:clamp(26px,3.6vw,38px);letter-spacing:0.12em}
+  .geng-vol{font-size:12px;color:var(--smoke);border:1px solid var(--line);border-radius:999px;padding:2px 12px;letter-spacing:0.2em}
+  .geng-intro{color:var(--smoke);max-width:640px;margin-bottom:40px;font-size:15px}
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+  .rv.on{opacity:1;transform:none}
+  .hr{height:1px;background:linear-gradient(90deg,var(--gold),transparent);opacity:.4;margin-top:70px}
+
+  q{color:var(--paper);font-style:normal}
+  q::before,q::after{content:none}
+  .src{display:block;font-size:12px;color:var(--smoke);letter-spacing:0.18em;margin-top:10px}
+  .qcard{
+    background:var(--stone);border:1px solid var(--line);border-left:3px solid var(--gold);
+    border-radius:6px;padding:22px 24px;font-size:16px;line-height:2.1
+  }
+  .qcard .who{display:block;font-size:12px;color:var(--gold);letter-spacing:0.3em;margin-bottom:10px}
+
+  /* ---------- 一更：卡组与对联 ---------- */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr}}
+  .slip{background:var(--stone);border:1px solid var(--line);border-radius:8px;padding:24px 26px}
+  .slip h3{font-size:17px;letter-spacing:0.14em;margin-bottom:14px;color:var(--gold);font-weight:normal}
+  .slip p{font-size:15px;color:#cfcbc2;margin-bottom:12px}
+  .slip .ti-chip{display:inline-block;font-size:12px;color:var(--smoke);border:1px dashed var(--line);border-radius:4px;padding:1px 8px;margin-bottom:12px;letter-spacing:0.14em}
+  .duilian{display:flex;justify-content:center;gap:34px;padding:30px 10px 10px}
+  .lian{
+    writing-mode:vertical-rl;font-size:clamp(17px,2.2vw,22px);letter-spacing:0.32em;
+    background:linear-gradient(180deg,#a03a32,#7e2b25);color:#f3e6d8;
+    padding:26px 12px;border-radius:4px;box-shadow:0 6px 18px rgba(0,0,0,0.5);
+    transition:transform .4s
+  }
+  .lian:hover{transform:translateY(-6px)}
+  .flip-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+  .fc{perspective:900px;width:200px;height:118px;cursor:pointer}
+  .fc-in{position:relative;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d}
+  .fc.flip .fc-in{transform:rotateY(180deg)}
+  .fc-f,.fc-b{
+    position:absolute;inset:0;backface-visibility:hidden;border-radius:8px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    border:1px solid var(--line);padding:10px;text-align:center
+  }
+  .fc-f{background:var(--stone)}
+  .fc-f b{font-size:20px;letter-spacing:0.2em;font-weight:normal}
+  .fc-f small{color:var(--smoke);font-size:11px;margin-top:8px;letter-spacing:0.2em}
+  .fc-b{background:var(--gold-soft);border-color:var(--gold);transform:rotateY(180deg);font-size:13px;line-height:1.8}
+  .ledger{margin-top:14px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .ledger-row{
+    display:flex;justify-content:space-between;align-items:center;gap:14px;
+    padding:12px 18px;border-bottom:1px dashed var(--line);cursor:pointer;
+    background:var(--stone);transition:background .3s
+  }
+  .ledger-row:last-child{border-bottom:none}
+  .ledger-row:hover{background:#2b2b28}
+  .ledger-row .k{font-size:14px;letter-spacing:0.16em}
+  .ledger-row .v{font-size:13px;color:var(--smoke);opacity:0;max-width:0;overflow:hidden;white-space:nowrap;transition:all .5s}
+  .ledger.open .ledger-row .v{opacity:1;max-width:420px;white-space:normal}
+
+  /* ---------- 二更：诗签墙 ---------- */
+  .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  .tag{
+    background:var(--stone);border:1px solid var(--line);border-radius:6px;
+    padding:18px 20px;transition:all .35s;position:relative
+  }
+  .tag:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 10px 24px rgba(0,0,0,0.45)}
+  .tag q{font-size:16px;letter-spacing:0.06em}
+  .tag .au{display:block;margin-top:10px;font-size:12px;color:var(--smoke);letter-spacing:0.22em}
+  .tag .au b{color:var(--gold);font-weight:normal}
+  .tag::before{
+    content:"";position:absolute;left:0;top:14px;bottom:14px;width:2px;background:var(--gold);opacity:.5
+  }
+
+  /* ---------- 三更：横披与画轴 ---------- */
+  .hengpi{
+    background:var(--stone);border:1px solid var(--line);border-radius:8px;
+    padding:34px 30px;text-align:center;margin-bottom:24px
+  }
+  .hengpi q{font-size:clamp(17px,2.4vw,22px);letter-spacing:0.1em;line-height:2.2}
+  .duel{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0}
+  @media(max-width:720px){.duel{grid-template-columns:1fr}}
+  .pai{border:1px solid var(--line);border-radius:8px;padding:22px;background:var(--ink2)}
+  .pai h4{font-size:15px;letter-spacing:0.3em;color:var(--gold);margin-bottom:10px;font-weight:normal}
+  .pai p{font-size:14px;color:#cfcbc2}
+  .story{columns:1;max-width:760px;font-size:15px;color:#cfcbc2}
+  .story p{margin-bottom:14px}
+  .story .drop{float:left;font-size:52px;line-height:1;color:var(--gold);padding:6px 12px 0 0}
+
+  /* ---------- 四更：危城 ---------- */
+  .geng-danger .geng-title{color:#d8b98a}
+  .board{
+    display:flex;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:26px 0
+  }
+  .board>div{flex:1;padding:24px 16px;text-align:center;background:var(--stone)}
+  .board>div:first-child{background:#3a2320}
+  .board .num{font-size:clamp(34px,5vw,52px);color:var(--paper);line-height:1.2}
+  .board>div:first-child .num{color:#e08a80}
+  .board .cap{font-size:12px;color:var(--smoke);letter-spacing:0.24em;margin-top:8px}
+  .gate-bar{
+    height:10px;border-radius:5px;margin:6px auto 30px;max-width:520px;
+    background:repeating-linear-gradient(90deg,var(--gold) 0 18px,#7a5a26 18px 24px);
+    box-shadow:0 4px 12px rgba(0,0,0,0.6)
+  }
+  .books{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+
+  /* ---------- 五更：尚白斋 ---------- */
+  .zhai-card{
+    background:var(--paper);color:#2a2823;border-radius:10px;
+    padding:40px 34px;max-width:720px;margin:30px auto;position:relative;
+    box-shadow:0 14px 40px rgba(0,0,0,0.5)
+  }
+  .zhai-card::before{
+    content:"尚白斋客谈抄存";position:absolute;top:-14px;left:30px;
+    background:var(--gold);color:var(--ink);font-size:12px;letter-spacing:0.3em;
+    padding:3px 14px;border-radius:3px
+  }
+  .zhai-card p{font-size:15px;line-height:2.15;margin-bottom:16px}
+  .zhai-card q{color:#2a2823}
+  .zhai-card .src{color:#8a857a}
+  .poem-card{
+    text-align:center;border:1px solid var(--line);border-radius:8px;
+    background:var(--stone);padding:36px 20px;max-width:560px;margin:0 auto 26px
+  }
+  .poem-card q{font-size:clamp(18px,2.6vw,24px);letter-spacing:0.14em;line-height:2.4;display:block}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:760px;margin:26px auto 0}
+  .chips q{
+    font-size:13px;border:1px solid var(--line);border-radius:999px;
+    padding:5px 16px;color:#cfcbc2;letter-spacing:0.16em;transition:all .3s;cursor:default
+  }
+  .chips q:hover{border-color:var(--gold);color:var(--gold)}
+  .endline{text-align:center;margin:70px auto 20px;max-width:560px}
+  .endline q{font-size:clamp(20px,3vw,28px);letter-spacing:0.2em;color:var(--gold)}
+
+  /* ---------- 页脚 ---------- */
+  footer{border-top:1px solid var(--line);margin-top:90px;padding:44px 22px 60px;text-align:center}
+  footer p{font-size:12.5px;color:var(--smoke);max-width:680px;margin:0 auto 10px}
+  footer .warn{color:#a3766f}
+</style>
+</head>
+<body>
+
+<!-- ============ 首屏 ============ -->
+<header class="hero" id="hero">
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#191917"/><stop offset="1" stop-color="#22201c"/>
+      </linearGradient>
+    </defs>
+    <rect width="1440" height="900" fill="url(#sky)"/>
+    <g fill="#e8e4dc" opacity="0.5">
+      <circle cx="180" cy="130" r="1.4"/><circle cx="420" cy="90" r="1.1"/>
+      <circle cx="700" cy="150" r="1.3"/><circle cx="1030" cy="100" r="1.1"/>
+      <circle cx="1260" cy="170" r="1.4"/><circle cx="880" cy="60" r="1"/>
+    </g>
+    <circle id="moon" cx="1180" cy="170" r="44" fill="#e8e4dc" opacity="0.92"/>
+    <g id="wallG" fill="#21201d">
+      <rect x="0" y="700" width="1440" height="200"/>
+      <g id="crenels"></g>
+    </g>
+    <g id="tower">
+      <rect x="200" y="470" width="260" height="240" fill="#26241f"/>
+      <rect x="214" y="452" width="232" height="26" fill="#2c2a24"/>
+      <path d="M170 452 L330 372 L490 452 Z" fill="#2f2c25"/>
+      <path d="M196 392 L330 322 L464 392 Z" fill="#34302a"/>
+      <rect x="310" y="330" width="40" height="34" fill="#2f2c25"/>
+      <g class="tower-win" fill="#e9b45c">
+        <rect x="248" y="516" width="26" height="58" rx="12"/>
+        <rect x="317" y="516" width="26" height="58" rx="12"/>
+        <rect x="386" y="516" width="26" height="58" rx="12"/>
+      </g>
+      <g class="tower-win" fill="#c98f3f" opacity="0.85">
+        <path d="M313 710 L313 668 Q330 652 347 668 L347 710 Z"/>
+      </g>
+    </g>
+    <g fill="#1d1c19">
+      <rect x="1180" y="620" width="150" height="90"/>
+      <path d="M1170 620 L1255 570 L1340 620 Z" fill="#232119"/>
+    </g>
+  </svg>
+  <span class="ripple"></span><span class="ripple r2"></span><span class="ripple r3"></span>
+
+  <div class="titleVeil" id="titleVeil">
+    <span class="vt" data-t="金陵琐事">金陵琐事</span>
+    <span class="vt-sub">明 周晖 撰</span>
+    <span class="seal">细琐之事</span>
+  </div>
+
+  <div class="hero-inner">
+    <div class="kick">殆知阁导读 <b>三百三十五</b></div>
+    <p class="hero-sub">万历三十八年，闲住南京的周晖，从自家客谈笔记里拣出与南京有关的部分，抄成四卷。国史不收的，郡志装不下的，都在这里。</p>
+    <button class="drum-btn" id="gengDrum" type="button" aria-label="击更鼓">
+      <span class="drum-face"></span>
+      <small>击鼓开城</small>
+    </button>
+  </div>
+</header>
+
+<!-- ============ 五更更签 ============ -->
+<nav class="rail" id="rail" aria-hidden="true">
+  <div class="station" data-g="g1"><b>壹</b>皇城</div>
+  <div class="rail-line"><i id="railFill"></i></div>
+  <div class="station" data-g="g2"><b>贰</b>句场</div>
+  <div class="rail-line"><i></i></div>
+  <div class="station" data-g="g3"><b>叁</b>宝笈</div>
+  <div class="rail-line"><i></i></div>
+  <div class="station" data-g="g4"><b>肆</b>危城</div>
+  <div class="rail-line"><i></i></div>
+  <div class="station" data-g="g5"><b>伍</b>斋中</div>
+</nav>
+
+<main>
+
+  <!-- ============ 一更：皇城根下 ============ -->
+  <section class="geng" id="g1">
+    <div class="geng-head rv">
+      <span class="geng-no">一更</span>
+      <span class="geng-title">皇城根下</span>
+      <span class="geng-vol">原书卷一</span>
+    </div>
+    <p class="geng-intro rv">第一卷离皇帝最近。朱元璋定都南京之后的许多小事，正史懒得写，周晖写得认真，连皇帝往平民家里跑都记了不止一条。</p>
+
+    <div class="grid2">
+      <div class="slip rv">
+        <h3>皇帝住进平民家</h3>
+        <p>开国皇帝三次登门的，是处士陈遇。他替朱元璋出主意，却终身不肯做官，御笔还写过「中行先生」四个字送他。正德皇帝两度光顾的徐霖，是位填词作曲的名士。一武一文，都是布衣。</p>
+        <div class="qcard"><span class="who"><q>天子幸布衣家</q></span><q>太祖三幸陈遇家，武宗两幸徐霖家。陈参帷幄之谋，徐进词曲之技，陈徐皆布衣。</q></div>
+        <span class="src">三幸两幸，一条三十一个字，是全书最省笔墨的傲娇</span>
+        <p style="margin-top:12px">陈遇谢官的记录，全书反复出现：</p>
+        <div class="qcard"><q>每询以大计，皆称旨，命以官，始终不受。</q></div>
+      </div>
+
+      <div class="slip rv">
+        <h3>御笔春联</h3>
+        <p>过年的南京，御笔春联带着军功章的味道。这副赐给徐达的对联，纸色是后配的，话是原装的：</p>
+        <div class="qcard"><q>太祖御书春联，赐中山王徐公达云</q></div>
+        <div class="duilian">
+          <span class="lian"><q>破虏平蛮，功贯古今人第一。</q></span>
+          <span class="lian"><q>出将入相，才兼文武世无双。</q></span>
+        </div>
+      </div>
+
+      <div class="slip rv">
+        <h3>转世名册</h3>
+        <p>书里还夹着一本转世名册，点两下翻面看：</p>
+        <div class="flip-row">
+          <div class="fc" tabindex="0">
+            <div class="fc-in">
+              <div class="fc-f"><b>中山王 徐达</b><small>点此翻面</small></div>
+              <div class="fc-b"><q>中山王相传乃关云长后身。</q><br>赐宅的地基，前朝正好是关庙。</div>
+            </div>
+          </div>
+          <div class="fc" tabindex="0">
+            <div class="fc-in">
+              <div class="fc-f"><b>魏国公府 徐鹏举</b><small>点此翻面</small></div>
+              <div class="fc-b"><q>魏国公徐鹏举，母梦岳武穆入室，遂产公。因取武穆之字以为名。</q></div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:14px">岳飞的字就是鹏举。名字还没落地，转世手续已经办完。</p>
+      </div>
+
+      <div class="slip rv">
+        <h3>海瑞的遗物清单</h3>
+        <p>万历年间，都御史海瑞死在南京任上，同乡官员苏民怀去清点遗物。点下面三行，打开这只竹笼：</p>
+        <div class="ledger" id="ledger">
+          <div class="ledger-row"><span class="k">俸金</span><span class="v">八两</span></div>
+          <div class="ledger-row"><span class="k">葛布</span><span class="v">一端</span></div>
+          <div class="ledger-row"><span class="k">旧衣</span><span class="v">数件</span></div>
+        </div>
+        <p style="margin-top:14px">清单之外再无长物：</p>
+        <div class="qcard"><q>苏检点其宦囊竹笼中，俸金八两，葛布一端，旧衣数件而已。</q></div>
+        <p>王世贞后来给了九个字的定评：</p>
+        <div class="qcard"><q>不怕死，不爱钱，不立党。</q><span class="src">原文紧接：<q>此九字断尽海公生平。</q></span></div>
+      </div>
+    </div>
+
+    <div class="slip rv" style="margin-top:22px">
+      <h3>铁作坊的坐下权</h3>
+      <p>卷一还有一桩让御史自己脸红的公案。一位家住饮虹桥南的御史，每天上班路过铁作坊，工匠们坐着打铁，没人起身行礼。御史怒了，拿牌拘人问罪。工匠们的答辩书只有一句话：</p>
+      <div class="qcard"><q>某等坐不起身，相沿已久。</q></div>
+      <p>当年倪尚书就住本坊，亲口嘱咐坐着干活，别耽误打造。御史听完，转头对人说：</p>
+      <div class="qcard"><q>听众人之说，我尚惭悔。</q></div>
+    </div>
+
+    <div class="hr"></div>
+  </section>
+
+  <!-- ============ 二更：句场 ============ -->
+  <section class="geng" id="g2">
+    <div class="geng-head rv">
+      <span class="geng-no">二更</span>
+      <span class="geng-title">句场</span>
+      <span class="geng-vol">原书卷二</span>
+    </div>
+    <p class="geng-intro rv">第二卷几乎全是断句。周晖给一批被文学史忘掉的金陵诗人立了块小碑：每人一两句，不作解释。下面八枚诗签，都是原文。</p>
+
+    <div class="wall">
+      <div class="tag rv"><q>路远家难问，愁多酒易醒。</q><span class="au">史谨 <b>七星关</b></span></div>
+      <div class="tag rv"><q>长身惟食粟，老眼渐生花。</q><span class="au">汤胤绩 <b>漫兴</b></span></div>
+      <div class="tag rv"><q>绝壁秋声清漱玉，白沙月色烂堆银。</q><span class="au">夏煜 <b>康郎山奉旨</b></span></div>
+      <div class="tag rv"><q>沙上闲鸥如有约，堤边幽草不知名。</q><span class="au">顾言 <b>题画</b></span></div>
+      <div class="tag rv"><q>青天阁雨云归岫，紫气乘龙水入江。</q><span class="au">蒋谊 <b>八岁所作</b></span></div>
+      <div class="tag rv"><q>秋声出树晓无迹，云气入帘风满庭。</q><span class="au">史谨 <b>万松轩</b></span></div>
+      <div class="tag rv"><q>翠微深见寺，绿野暗啼莺。</q><span class="au">马俊 <b>和杜</b></span></div>
+      <div class="tag rv"><q>重阴接海蒸沙雨，轻雾连山煮石云。</q><span class="au">蒋主孝 <b>长啸</b></span></div>
+    </div>
+
+    <div class="slip rv" style="margin-top:22px">
+      <h3>连辞赋也较真</h3>
+      <p>卷二还记了一场辞赋内卷：御史余光写《二京赋》进呈，得了赏钞一千贯；山人盛时泰不服，觉得班固左思都靠两都三都成名，如今太平盛世不该让古人独美，也写了同题，写完只能盖酱坛子。较劲的人先走了运，较真的人留在了笔记里。</p>
+    </div>
+
+    <div class="hr"></div>
+  </section>
+
+  <!-- ============ 三更：宝笈 ============ -->
+  <section class="geng" id="g3">
+    <div class="geng-head rv">
+      <span class="geng-no">三更</span>
+      <span class="geng-title">宝笈</span>
+      <span class="geng-vol">原书卷三</span>
+    </div>
+    <p class="geng-intro rv">第三卷走进收藏圈。这一卷最像今天的艺术新闻：晒宝、打眼、开名单。</p>
+
+    <div class="hengpi rv">
+      <q>玄敬看毕，吐舌曰：“生平未见，生平未见。”</q>
+      <span class="src">苏州赏鉴家都穆，在金陵收藏家黄琳家看唐画之后的全部发言</span>
+    </div>
+
+    <p class="geng-intro rv">他进门时还放话：宋元的不稀罕，有唐人真迹吗。人家搬出王维两卷，又加数轴。周晖顺手给收藏圈分了类：</p>
+    <div class="qcard rv" style="max-width:720px"><q>世之收藏书画古玩者，品为好事、赏鉴两家，其论甚当。</q></div>
+    <div class="duel">
+      <div class="pai rv"><h4>赏鉴家</h4><p>书里点了九位金陵藏家的名，藏品什么样，一望便知。</p></div>
+      <div class="pai rv"><h4>好事家</h4><p>另点了三四位，判词只有一句：<q>观其所收藏者，便见矣。</q></p></div>
+    </div>
+
+    <div class="story rv">
+      <p><span class="drop">仙</span>卷三最长的一篇给了画士吴伟，人称小仙。湖广人，少年孤贫，十七岁游南京，成国公朱公一见惊呼此非仙人欤，从此得名。宪宗召他进京，要授官留用，他坚决辞归，回到南京开始落魄游。周晖跟他坐寺里聊过几次，评价极高，又补了一句要紧的观察：<q>小仙以狂名，然而言谨甚。</q></p>
+      <p>他的画有规矩：</p>
+    </div>
+    <div class="qcard rv" style="max-width:720px"><q>画亦不肯苟作，故亦不多见。</q></div>
+    <div class="qcard rv" style="max-width:720px;margin-top:14px"><q>或时出一幅，辄即与穷困人，而即为人传去，为富势家买取，云“得之小仙。”小仙实未尝为其人作。</q></div>
+    <p class="geng-intro rv" style="margin-top:14px">于是南京富贵人家买的吴伟，多半是假的。真迹跟着穷人走了，这大概是艺术市场最早的一条反向行情。</p>
+
+    <div class="hr"></div>
+  </section>
+
+  <!-- ============ 四更：危城 ============ -->
+  <section class="geng geng-danger" id="g4">
+    <div class="geng-head rv">
+      <span class="geng-no">四更</span>
+      <span class="geng-title">危城</span>
+      <span class="geng-vol">原书卷四</span>
+    </div>
+    <p class="geng-intro rv">第四卷的南京开始不安全。这一卷有两场保卫战和一本奢靡账。</p>
+
+    <div class="slip rv">
+      <h3>城门钥匙风波</h3>
+      <p>正德十四年，宁王在南昌起兵，锋头直指留都。南京连夜设防，早早绑了城里的内应，又预判贼必先攻安庆。乱平之后，权宦江彬带着边兵驻在城里，传旨要什么就有什么，唯独钥匙要不走。一天晚上，他派人索要城门锁钥，督府慌了，来请示大司马乔公。乔公答得干脆：</p>
+      <div class="qcard"><q>守备所以谨非常，城门锁钥孰敢索？亦孰敢与？虽天子诏，奈何？</q></div>
+      <p>索钥一事就此作罢。此后江彬每有假旨，乔公一律要求面奏核对，南京安稳度过这场惊吓。一根门闩，顶得上千言弹章：</p>
+      <div class="gate-bar"></div>
+    </div>
+
+    <div class="slip rv" style="margin-top:22px">
+      <h3>七十二人叩门</h3>
+      <p>嘉靖年间的倭警，是全书最丢脸的一页。周晖引当时人的见闻，账算得毫不留情：</p>
+      <div class="board">
+        <div><div class="num">七十二</div><div class="cap">倭寇人数</div></div>
+        <div><div class="num">八九百</div><div class="cap">南京军士阵亡</div></div>
+        <div><div class="num">十三</div><div class="cap">城门尽数关闭</div></div>
+      </div>
+      <div class="qcard"><q>历徽州、宁国、太平而至南京，才七十二人耳。</q></div>
+      <div class="qcard" style="margin-top:14px"><q>此七十二人不折一人，而去南京。十三门紧闭，倾城百姓皆点上城。</q></div>
+      <p style="margin-top:14px">养兵的开销他也没放过：</p>
+      <div class="qcard"><q>军卒月请粮八万，正为有事备耳。</q></div>
+      <div class="qcard" style="margin-top:14px"><q>今以七十二暴客，扣门即张皇如此，宁不大为朝廷辱耶？</q></div>
+      <p style="margin-top:14px">他还替当局惋惜：倭寇当夜在板桥农家酣睡，若派三四百人夜袭，可以一网打尽。胜负本属兵家常事，败了就缩，何谈用兵。</p>
+    </div>
+
+    <div class="slip rv" style="margin-top:22px">
+      <h3>快园落水</h3>
+      <p>危城也有荒唐的注脚。正德皇帝南巡，到徐霖的快园钓鱼，钓上一条金鱼，宦官们起哄高价争买，皇帝自己笑够了，脚下一滑掉进池子。园里后来建堂开池，纪念的就是这一跤：</p>
+      <div class="qcard"><q>钓鱼于园池，得一金鱼，宦官高价争买之。武宗取笑而已，又失足落池中，衣服尽湿。</q></div>
+      <div class="qcard" style="margin-top:14px"><q>园有宸幸堂、浴龙池，纪其实也。</q></div>
+      <p style="margin-top:14px">更玄的是一位松江来的僧人，病重夜里忽然催徐霖挪床避驾，天一亮宦官果然拥着皇帝到了。周晖的解释一本正经：圣天子的举动，鬼神会提前通知。僧人原话：</p>
+      <div class="qcard"><q>圣驾将到，幸速移床于僻静处以避之。</q></div>
+    </div>
+
+    <div class="slip rv" style="margin-top:22px">
+      <h3>奢靡账</h3>
+      <p>同卷还有一本账，记的都是金陵故事里的顶级排场。翻面看数：</p>
+      <div class="books">
+        <div class="fc" tabindex="0">
+          <div class="fc-in">
+            <div class="fc-f"><b>狐裘</b><small>赏雪宴客</small></div>
+            <div class="fc-b"><q>美之遂取狐裘十三领，人各服之。</q><br>赏雪宴席吃到深夜，一人发一件。</div>
+          </div>
+        </div>
+        <div class="fc" tabindex="0">
+          <div class="fc-in">
+            <div class="fc-f"><b>白银</b><small>一夜成楼</small></div>
+            <div class="fc-b"><q>旦送银二百两，与子仁造楼。</q><br>朋友说园楼正对塔景更妙，次日一早银子就到了。</div>
+          </div>
+        </div>
+        <div class="fc" tabindex="0">
+          <div class="fc-in">
+            <div class="fc-f"><b>宝石</b><small>颠不剌</small></div>
+            <div class="fc-b"><q>有颠不剌宝石一块，重七分，老米色。若照日，只见石光，所以为宝也。</q><br>张居正当国时，连太祖的收藏一并运去了北京。</div>
+          </div>
+        </div>
+        <div class="fc" tabindex="0">
+          <div class="fc-in">
+            <div class="fc-f"><b>火炉</b><small>银子打的</small></div>
+            <div class="fc-b"><q>中有银火炉一件，三丈围圆，乃抄没沈万三家物。</q><br>四十多只快船押运御器，这是其中一件。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+  </section>
+
+  <!-- ============ 五更：尚白斋 ============ -->
+  <section class="geng" id="g5">
+    <div class="geng-head rv">
+      <span class="geng-no">五更</span>
+      <span class="geng-title">尚白斋</span>
+      <span class="geng-vol">收梢</span>
+    </div>
+    <p class="geng-intro rv">巡城完毕，回到抄书人的书斋。卷一末尾藏着全书的文人之趣：穷书生陈藻，囊中只剩一枚铜钱，也要拿去打酒，还写诗自嘲。</p>
+
+    <div class="poem-card rv">
+      <q>苍崖先生屡绝粮，一钱犹自买琼浆。家人笑我多颠倒，不疗饥肠疗渴肠。</q>
+      <span class="src">条目原名：一钱觅酒</span>
+    </div>
+
+    <div class="zhai-card rv">
+      <p>至于整本书是什么，周晖在小序里交代得坦白。他先承认这些话全是席间听来的，藏了很多年，本来不肯示人；朋友劝他刊行，他怕文字遭殃，最后只挑出一部分：</p>
+      <p><q>盖国史之所未暇收，郡乘之所不能备者，不过细琐之事而已。以细琐之事与管穴之见相投，故摇笔纪之。</q></p>
+      <p>国史不收，郡志装不下，正好合自己的眼光，于是摇笔记下。这不是著作的姿态，是抄存者的姿态，也是这本书四百年后还能读的原因：大事有正史兜底，小事只有这里收着。</p>
+      <p>落款在卷首，只有一行：</p>
+      <p><q>万历庚戌谷雨，鸣岩山人周晖吉甫撰。</q></p>
+    </div>
+
+    <div class="chips rv">
+      <q>三老</q><q>天子幸布衣家</q><q>春联</q><q>前身</q><q>刚峰宦囊</q><q>一钱觅酒</q><q>见御史不起身</q><q>佳句</q><q>二京赋</q><q>收藏</q><q>赏鉴</q><q>吴小仙传</q><q>城门锁钥</q><q>倭贼</q><q>武宗钓鱼快园</q><q>驾到预知</q><q>豪举</q><q>颠不剌</q><q>银火炉</q><q>梅花水洗研</q>
+    </div>
+    <p class="geng-intro rv" style="text-align:center;margin-top:14px">以上二十条，全是原书条目名。全书四卷三百一十五条，哪一条都像街坊闲话，哪一条都有出处。</p>
+
+    <div class="endline rv">
+      <q>嗟夫！余诚金陵之人而已矣。</q>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>文本来源：殆知阁古代文献简体库《金陵琐事》四卷（明·周晖撰，志存记录类）。去空白七万一千字，四卷三百一十五条。</p>
+  <p>本页为殆知阁导读系列第 335 篇，系列总目见 <a href="https://github.com/robertsong/daizhige-daodu" rel="noopener">daizhige-daodu 仓库</a>。全部引文经脚本与库内文件去标点归一逐字比对，白话部分经六字窗反扫核验。</p>
+  <p class="warn">时代局限提醒：原文成书于明万历年间，涉及帝王、官绅、倭患等记述均属其时代语境，不代表今日立场；文中人物言行请置于历史脉络中理解。</p>
+</footer>
+
+<script>
+(function(){
+  var hero = document.getElementById('hero');
+  document.getElementById('gengDrum').addEventListener('click', function(){
+    hero.classList.add('lit');
+    this.querySelector('small').textContent = '城开夜话';
+  });
+
+  var crenels = document.getElementById('crenels');
+  var ns = 'http://www.w3.org/2000/svg';
+  for (var x = 0; x < 1440; x += 44){
+    var r = document.createElementNS(ns, 'rect');
+    r.setAttribute('x', x); r.setAttribute('y', 682);
+    r.setAttribute('width', 24); r.setAttribute('height', 20);
+    crenels.appendChild(r);
+  }
+
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('on'); });
+  }, {threshold:0.12});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  var stations = document.querySelectorAll('.station');
+  var fills = document.querySelectorAll('#railFill');
+  var secIO = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        var id = e.target.id;
+        stations.forEach(function(s){ s.classList.toggle('on', s.getAttribute('data-g') === id); });
+      }
+    });
+  }, {threshold:0.35});
+  ['g1','g2','g3','g4','g5'].forEach(function(id){ secIO.observe(document.getElementById(id)); });
+
+  var bar = document.getElementById('railFill');
+  window.addEventListener('scroll', function(){
+    var h = document.documentElement;
+    var p = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    bar.style.height = (p * 100) + '%';
+  }, {passive:true});
+
+  document.querySelectorAll('.fc').forEach(function(c){
+    var t = function(){ c.classList.toggle('flip'); };
+    c.addEventListener('click', t);
+    c.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); t(); } });
+  });
+
+  var ledger = document.getElementById('ledger');
+  ledger.addEventListener('click', function(){ ledger.classList.toggle('open'); });
+})();
+</script>
+</body>
+</html>
