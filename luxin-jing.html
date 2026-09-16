@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>颅囟经 · 呼吸的囟门 | 殆知阁导读 325</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #1e1d1b; --ink-3: #24231f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --bam: #5f9270; --bam-dim: rgba(95,146,112,0.4); --bam-faint: rgba(95,146,112,0.12);
+    --seal: #c0453c; --gold: #c9963f;
+    --hairline: rgba(232,228,220,0.14);
+    --serif: "Songti SC", "Noto Serif SC", "SimSun", "Source Han Serif SC", serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: var(--serif); line-height: 1.9; letter-spacing: 0.02em;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--bam); color: var(--ink); }
+  .mono { font-family: "SF Mono", "Menlo", "Consolas", monospace; }
+  q { quotes: none; }
+
+  /* ===== 顶部呼吸线 ===== */
+  .breathline {
+    position: fixed; top: 0; left: 0; height: 2px; width: 100%;
+    background: linear-gradient(90deg, transparent, var(--bam), transparent);
+    opacity: 0.5; z-index: 60;
+    animation: breathe 3.4s ease-in-out infinite;
+  }
+  @keyframes breathe { 0%,100% { opacity: 0.18; } 50% { opacity: 0.65; } }
+
+  /* ===== 右缘诊签导航 ===== */
+  .rail {
+    position: fixed; right: 18px; top: 50%; transform: translateY(-50%);
+    z-index: 55; display: flex; flex-direction: column; gap: 14px;
+  }
+  .rail a {
+    display: flex; align-items: center; gap: 8px; flex-direction: row-reverse;
+    text-decoration: none; color: var(--paper-faint); font-size: 11px;
+  }
+  .rail a i {
+    width: 7px; height: 7px; border-radius: 50%;
+    border: 1px solid var(--paper-faint); display: block; font-style: normal;
+    transition: all 0.35s;
+  }
+  .rail a span { opacity: 0; transition: opacity 0.3s; letter-spacing: 0.2em; writing-mode: vertical-rl; }
+  .rail a:hover span, .rail a.on span { opacity: 1; }
+  .rail a.on { color: var(--bam); }
+  .rail a.on i { background: var(--bam); border-color: var(--bam); box-shadow: 0 0 8px var(--bam-dim); }
+  @media (max-width: 900px) { .rail { display: none; } }
+
+  /* ===== 首屏 襁褓囟门 ===== */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    position: relative; flex-direction: column; cursor: default;
+  }
+  .kstamp {
+    position: absolute; top: 26px; left: 30px; font-size: 12px; letter-spacing: 0.3em;
+    color: var(--paper-faint);
+  }
+  .kstamp b { color: var(--bam); font-weight: normal; }
+  .hmeta {
+    position: absolute; top: 26px; right: 30px; text-align: right; font-size: 12px;
+    color: var(--paper-faint); line-height: 2;
+  }
+  .stage { position: relative; }
+  .swaddle-wrap { position: relative; cursor: pointer; }
+  .swaddle-wrap svg { display: block; width: min(240px, 52vw); height: auto; }
+  .bundle { animation: bundlebreath 3.4s ease-in-out infinite; transform-origin: 50% 60%; }
+  @keyframes bundlebreath { 0%,100% { transform: scale(1,1); } 50% { transform: scale(1.015,0.985); } }
+  .fontanelle { cursor: pointer; }
+  .fontanelle:focus { outline: none; }
+  .fontanelle:focus-visible { outline: 1px dashed var(--bam); outline-offset: 4px; }
+  .fontanelle-core { animation: fglo 3.4s ease-in-out infinite; }
+  @keyframes fglo { 0%,100% { opacity: 0.35; } 50% { opacity: 0.95; } }
+  .ripple {
+    fill: none; stroke: var(--bam); stroke-width: 1.2; opacity: 0; transform-origin: 120px 58px;
+  }
+  .ripple.go { animation: rip 1.6s ease-out forwards; }
+  @keyframes rip { 0% { opacity: 0.9; transform: scale(0.2); } 100% { opacity: 0; transform: scale(2.6); } }
+  .h-title {
+    margin-top: 34px; text-align: center; opacity: 0; transform: translateY(14px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+  }
+  .h-title.show { opacity: 1; transform: translateY(0); }
+  .h-title h1 {
+    font-size: clamp(44px, 9vw, 76px); font-weight: 400; letter-spacing: 0.22em;
+    color: var(--paper); writing-mode: horizontal-tb;
+  }
+  .h-title .hsub {
+    margin-top: 14px; font-size: 14px; color: var(--paper-dim); letter-spacing: 0.14em;
+  }
+  .h-title .hsub em { font-style: normal; color: var(--bam); }
+  .h-seal {
+    position: absolute; right: calc(50% - 190px); bottom: 26vh;
+    width: 52px; height: 52px; border: 1.5px solid var(--seal); color: var(--seal);
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+    letter-spacing: 0.12em; writing-mode: vertical-rl; border-radius: 4px; white-space: nowrap;
+    transform: rotate(6deg); opacity: 0; transition: opacity 1s ease 0.6s;
+    padding: 14px 4px; line-height: 1.3;
+  }
+  .h-seal.show { opacity: 0.85; }
+  .h-hint {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    font-size: 12px; color: var(--paper-faint); letter-spacing: 0.25em;
+    animation: hintfade 2.6s ease-in-out infinite;
+  }
+  @keyframes hintfade { 0%,100% { opacity: 0.25; } 50% { opacity: 0.8; } }
+
+  /* ===== 正文 ===== */
+  main { max-width: 880px; margin: 0 auto; padding: 40px 26px 60px; }
+  .register { position: relative; margin: 90px 0; }
+  .reg-tag {
+    position: absolute; left: -74px; top: 6px; writing-mode: vertical-rl;
+    font-size: 15px; letter-spacing: 0.34em; color: var(--bam);
+    border-left: 1px solid var(--bam-dim); padding-left: 10px; height: 120px;
+  }
+  .reg-no { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.3em; margin-bottom: 6px; }
+  .register h2 {
+    font-size: 27px; font-weight: 400; letter-spacing: 0.12em; margin-bottom: 24px;
+  }
+  .register h2 small { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.2em; margin-left: 14px; }
+  .register p { margin: 16px 0; font-size: 15.5px; color: rgba(232,228,220,0.88); }
+  .register p q {
+    color: var(--bam); padding: 0 2px;
+  }
+  .qcard {
+    background: var(--ink-2); border: 1px solid var(--hairline); border-left: 3px solid var(--bam);
+    padding: 20px 24px; margin: 22px 0; font-size: 15.5px; line-height: 2.1;
+  }
+  .qcard .src { display: block; margin-top: 10px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.15em; }
+  .reveal { opacity: 0; transform: translateY(22px); transition: all 0.9s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* 诊籍一 考源三签 */
+  .san-qian { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 26px 0; }
+  .san-qian .qian {
+    border: 1px solid var(--hairline); padding: 18px 16px; background: var(--ink-2);
+    position: relative; min-height: 130px;
+  }
+  .san-qian .qian::before {
+    content: attr(data-no); position: absolute; top: 10px; right: 12px;
+    font-size: 11px; color: var(--paper-faint); letter-spacing: 0.2em;
+  }
+  .san-qian .qian h4 { font-size: 15px; font-weight: 400; color: var(--bam); margin-bottom: 10px; letter-spacing: 0.08em; }
+  .san-qian .qian p { font-size: 13px; color: var(--paper-dim); line-height: 1.95; }
+  @media (max-width: 760px) { .san-qian { grid-template-columns: 1fr; } .reg-tag { display: none; } }
+  .qianyi-line { display: flex; align-items: stretch; gap: 0; margin: 30px 0 10px; }
+  .qianyi-line .stem { width: 1px; background: linear-gradient(var(--bam-dim), transparent); position: relative; }
+  .qianyi-line .steps { display: flex; flex-direction: column; gap: 12px; padding-left: 22px; flex: 1; }
+  .qianyi-line .step { position: relative; font-size: 14px; color: var(--paper-dim); }
+  .qianyi-line .step::before {
+    content: ""; position: absolute; left: -25px; top: 11px; width: 7px; height: 7px;
+    background: var(--ink); border: 1px solid var(--bam); border-radius: 50%;
+  }
+  .qianyi-line .step b { color: var(--paper); font-weight: normal; }
+
+  /* 诊籍二 脉案 */
+  .pulse-board {
+    border: 1px solid var(--hairline); background: var(--ink-2); padding: 26px 24px; margin: 24px 0;
+  }
+  .pulse-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .pulse-chip {
+    border: 1px solid var(--hairline); padding: 10px 18px; font-size: 14px; color: var(--paper-dim);
+    transition: all 0.4s; letter-spacing: 0.1em;
+  }
+  .pulse-chip.lit { border-color: var(--bam); color: var(--bam); box-shadow: inset 0 0 18px var(--bam-faint); }
+  .pulse-dot {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--bam);
+    margin: 18px auto; opacity: 0.25;
+  }
+  .pulse-dot.beat { animation: beatp 1.05s ease-in-out infinite; }
+  @keyframes beatp { 0%,100% { opacity: 0.2; transform: scale(0.85); } 18% { opacity: 1; transform: scale(1.25); } 36% { opacity: 0.5; } 50% { opacity: 1; transform: scale(1.1); } }
+  .pulse-verdict { text-align: center; font-size: 14px; color: var(--paper-dim); letter-spacing: 0.12em; min-height: 30px; }
+  .pulse-verdict b { color: var(--bam); font-weight: normal; }
+  .pulse-verdict b.dead { color: var(--seal); }
+  .btn {
+    display: inline-block; border: 1px solid var(--bam); color: var(--bam); background: none;
+    font-family: var(--serif); font-size: 13.5px; letter-spacing: 0.25em; padding: 9px 22px;
+    cursor: pointer; transition: all 0.3s; margin-top: 8px;
+  }
+  .btn:hover { background: var(--bam); color: var(--ink); }
+  .scalebar { margin-top: 22px; }
+  .scalebar .bar {
+    height: 10px; border: 1px solid var(--hairline); position: relative;
+    background: linear-gradient(90deg, rgba(192,69,60,0.5), rgba(201,150,63,0.35), var(--bam-faint), rgba(201,150,63,0.35), rgba(192,69,60,0.6));
+  }
+  .scalebar .bar i {
+    position: absolute; top: -6px; width: 1px; height: 22px; background: var(--paper-faint); font-style: normal;
+  }
+  .scalebar .cap { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--paper-faint); margin-top: 8px; letter-spacing: 0.06em; }
+
+  /* 诊籍三 七疳签架 */
+  .gan-rack { margin: 30px 0 10px; }
+  .gan-row { display: flex; gap: 0; align-items: flex-end; justify-content: center; flex-wrap: wrap; }
+  .gan-tag {
+    width: 96px; margin: 26px 5px 0; cursor: pointer; text-align: center;
+  }
+  .gan-tag .string { width: 1px; height: 26px; background: var(--paper-faint); margin: 0 auto; }
+  .gan-tag .wood {
+    border: 1px solid var(--hairline); background: var(--ink-2); padding: 14px 8px 12px;
+    transition: all 0.4s; min-height: 128px; display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .gan-tag .wood .zi { font-size: 20px; color: var(--paper-dim); transition: color 0.4s; }
+  .gan-tag .wood .key { font-size: 11px; color: var(--paper-faint); margin-top: 8px; letter-spacing: 0.05em; }
+  .gan-tag .wood .name { font-size: 13px; color: var(--paper-faint); margin-top: 6px; letter-spacing: 0.1em; transition: color 0.4s; }
+  .gan-tag.lit .wood { border-color: var(--bam); box-shadow: inset 0 0 24px var(--bam-faint); }
+  .gan-tag.lit .zi, .gan-tag.lit .name { color: var(--bam); }
+  .gan-note { text-align: center; font-size: 12.5px; color: var(--paper-faint); margin-top: 18px; letter-spacing: 0.1em; }
+  .gan-note b { color: var(--bam); font-weight: normal; }
+
+  /* 诊籍四 问命丸 */
+  .ming-stage {
+    border: 1px solid var(--hairline); background: var(--ink-2); padding: 34px 26px; margin: 26px 0;
+    text-align: center;
+  }
+  .ming-pill {
+    width: 64px; height: 64px; border-radius: 50%; margin: 0 auto;
+    background: radial-gradient(circle at 34% 30%, #4a423a, #26221d 70%);
+    border: 1px solid var(--hairline); box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+    cursor: pointer; transition: transform 0.2s; position: relative;
+  }
+  .ming-pill:hover { transform: translateY(-3px); }
+  .ming-pill::after {
+    content: "問"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: 22px; opacity: 0.8;
+  }
+  .sneeze-track { display: flex; justify-content: center; gap: 10px; min-height: 44px; margin: 20px 0 6px; flex-wrap: wrap; }
+  .sneeze-track span {
+    width: 34px; height: 34px; line-height: 34px; border: 1px dashed var(--hairline);
+    font-size: 15px; color: var(--paper-faint); opacity: 0; transform: scale(0.4);
+    transition: all 0.3s;
+  }
+  .sneeze-track span.pop { opacity: 1; transform: scale(1); color: var(--paper); border-style: solid; border-color: var(--paper-faint); }
+  .sneeze-track span.pop.win { color: var(--bam); border-color: var(--bam); }
+  .sneeze-track span.pop.warn { color: var(--gold); border-color: var(--gold); }
+  .sneeze-track span.pop.lose { color: var(--seal); border-color: var(--seal); }
+  .ming-verdict { min-height: 56px; font-size: 16px; letter-spacing: 0.1em; color: var(--paper-dim); }
+  .ming-verdict b { font-weight: normal; }
+  .ming-verdict .v-win { color: var(--bam); }
+  .ming-verdict .v-warn { color: var(--gold); }
+  .ming-verdict .v-lose { color: var(--seal); }
+  .ming-sub { font-size: 12.5px; color: var(--paper-faint); margin-top: 8px; }
+
+  /* 诊籍五 变蒸双轨 */
+  .track-board { border: 1px solid var(--hairline); background: var(--ink-2); padding: 30px 24px; margin: 26px 0; }
+  .track-label { font-size: 13px; color: var(--paper-dim); letter-spacing: 0.12em; margin: 12px 0 8px; display: flex; justify-content: space-between; }
+  .track-label b { font-weight: normal; color: var(--bam); }
+  .track-label.gold b { color: var(--gold); }
+  .track { position: relative; height: 34px; border-bottom: 1px solid var(--hairline); }
+  .track i {
+    position: absolute; bottom: 0; width: 1px; height: 16px; background: var(--bam-dim);
+  }
+  .track.gold i { background: rgba(201,150,63,0.5); }
+  .track i em {
+    position: absolute; bottom: 18px; left: -8px; font-size: 9.5px; font-style: normal;
+    color: var(--paper-faint); white-space: nowrap;
+  }
+  .track i.edge em { left: auto; right: -2px; }
+  .track-cap { font-size: 11.5px; color: var(--paper-faint); margin-top: 14px; letter-spacing: 0.06em; }
+
+  /* 诊籍六 火丹双婴 */
+  .dan-board { border: 1px solid var(--hairline); background: var(--ink-2); padding: 30px 22px; margin: 26px 0; }
+  .dan-figs { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; }
+  .dan-fig { text-align: center; }
+  .dan-fig .cap { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.3em; margin-top: 12px; }
+  .dan-fig svg { width: 130px; height: auto; }
+  .body-line { fill: none; stroke: rgba(232,228,220,0.4); stroke-width: 1.3; }
+  .body-fill { fill: rgba(232,228,220,0.03); stroke: none; }
+  .hot {
+    cursor: pointer;
+  }
+  .hot circle { fill: var(--ink); stroke: var(--paper-faint); stroke-width: 1; transition: all 0.3s; }
+  .hot text { fill: var(--paper-dim); font-size: 8.5px; transition: fill 0.3s; }
+  .hot:hover circle, .hot.on circle { stroke: var(--seal); fill: rgba(192,69,60,0.25); }
+  .hot:hover text, .hot.on text { fill: var(--paper); }
+  .hot.dotted circle { stroke-dasharray: 2 2; }
+  .dan-slip {
+    margin-top: 26px; border-top: 1px dashed var(--hairline); padding-top: 22px; min-height: 120px;
+  }
+  .dan-slip .d-title { font-size: 17px; color: var(--seal); letter-spacing: 0.08em; }
+  .dan-slip .d-body { margin-top: 10px; font-size: 15px; color: rgba(232,228,220,0.9); }
+  .dan-slip .d-tag {
+    display: inline-block; margin-top: 14px; font-size: 12px; border: 1px solid var(--bam-dim);
+    color: var(--bam); padding: 3px 12px; letter-spacing: 0.2em;
+  }
+  .dan-slip .d-hint0 { color: var(--paper-faint); font-size: 14px; }
+  .dan-legend { text-align: center; font-size: 12px; color: var(--paper-faint); margin-top: 20px; letter-spacing: 0.12em; }
+
+  /* 诊籍七 过错簿 */
+  .guo-book { margin: 30px 0; display: grid; gap: 18px; }
+  .guo-slip {
+    background: linear-gradient(105deg, rgba(232,228,220,0.055), rgba(232,228,220,0.02));
+    border: 1px solid var(--hairline); padding: 24px 26px; position: relative;
+  }
+  .guo-slip::before {
+    content: attr(data-who); position: absolute; top: -11px; left: 18px; background: var(--ink);
+    padding: 0 10px; font-size: 11.5px; color: var(--paper-faint); letter-spacing: 0.25em;
+  }
+  .guo-slip .big { font-size: 21px; color: var(--paper); letter-spacing: 0.06em; line-height: 2; }
+  .guo-slip .big q { color: var(--bam); }
+  .guo-slip p { font-size: 13.5px; color: var(--paper-dim); margin-top: 10px; }
+
+  /* 诊籍八 禁忌方 */
+  .taboo {
+    border: 1px solid rgba(192,69,60,0.4); background: linear-gradient(180deg, #201c1a, #1b1817);
+    padding: 36px 30px; margin: 30px 0; position: relative; overflow: hidden;
+  }
+  .taboo::after {
+    content: "禁"; position: absolute; right: -14px; bottom: -30px; font-size: 150px;
+    color: rgba(192,69,60,0.07); line-height: 1;
+  }
+  .taboo .t-kicker { font-size: 12px; color: var(--seal); letter-spacing: 0.3em; margin-bottom: 16px; }
+  .taboo .t-body { font-size: 17px; line-height: 2.2; }
+  .taboo .t-body q { color: var(--paper); }
+  .taboo .t-seal {
+    position: absolute; right: 26px; top: 30px; border: 1.5px solid var(--seal); color: var(--seal);
+    writing-mode: vertical-rl; padding: 12px 5px; font-size: 14px; letter-spacing: 0.18em; white-space: nowrap;
+    border-radius: 3px; transform: rotate(4deg); opacity: 0.85;
+  }
+  .taboo p { font-size: 13.5px; color: var(--paper-dim); margin-top: 14px; }
+
+  /* 勘记 */
+  .kanji-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 26px 0; }
+  .kanji-grid .cell { border: 1px solid var(--hairline); padding: 18px 18px 16px; background: var(--ink-2); }
+  .kanji-grid .cell h5 { font-size: 13.5px; font-weight: 400; color: var(--gold); letter-spacing: 0.12em; margin-bottom: 8px; }
+  .kanji-grid .cell p { font-size: 13px; color: var(--paper-dim); line-height: 1.95; }
+  .kanji-grid .cell p q { color: var(--paper-dim); }
+  @media (max-width: 700px) { .kanji-grid { grid-template-columns: 1fr; } }
+
+  /* 收梢 */
+  .coda {
+    margin: 110px 0 40px; display: flex; justify-content: center; gap: 40px; align-items: flex-start;
+  }
+  .coda .v-line {
+    writing-mode: vertical-rl; font-size: clamp(30px, 6vw, 46px); letter-spacing: 0.42em;
+    color: var(--paper); line-height: 1.6;
+  }
+  .coda .v-line q { color: var(--bam); quotes: none; }
+  .coda .coda-side { max-width: 300px; font-size: 13.5px; color: var(--paper-dim); padding-top: 14px; }
+  .coda .coda-seal {
+    margin-top: 22px; display: inline-flex; border: 1.5px solid var(--seal); color: var(--seal);
+    padding: 12px 8px; font-size: 13px; writing-mode: vertical-rl; letter-spacing: 0.2em; white-space: nowrap;
+    border-radius: 3px; transform: rotate(-3deg); opacity: 0.85;
+  }
+
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 60px; }
+  footer.page .wrap { max-width: 880px; margin: 0 auto; padding: 30px 26px 46px; font-size: 12.5px; color: var(--paper-faint); line-height: 2; }
+  footer.page a { color: var(--paper-dim); }
+
+  /* 隐藏引文库 */
+  #qb { display: none; }
+</style>
+</head>
+<body>
+<div class="breathline"></div>
+
+<nav class="rail" id="rail">
+  <a href="#s1" data-s="s1"><i></i><span>考源</span></a>
+  <a href="#s2" data-s="s2"><i></i><span>脉法</span></a>
+  <a href="#s3" data-s="s3"><i></i><span>病证</span></a>
+  <a href="#s4" data-s="s4"><i></i><span>问命</span></a>
+  <a href="#s5" data-s="s5"><i></i><span>变蒸</span></a>
+  <a href="#s6" data-s="s6"><i></i><span>火丹</span></a>
+  <a href="#s7" data-s="s7"><i></i><span>过错</span></a>
+  <a href="#s8" data-s="s8"><i></i><span>禁方</span></a>
+  <a href="#s9" data-s="s9"><i></i><span>勘记</span></a>
+</nav>
+
+<header class="hero" id="hero">
+  <div class="kstamp">殆知阁导读 · <b>三百二十五</b></div>
+  <div class="hmeta">医藏 · 儿科开山<br>唐末宋初 · 托名师巫</div>
+  <div class="stage">
+    <div class="swaddle-wrap" id="swaddle">
+      <svg viewBox="0 0 240 400" role="img" aria-label="襁褓婴儿，头顶囟门">
+        <g class="bundle">
+          <ellipse cx="120" cy="330" rx="86" ry="12" fill="rgba(0,0,0,0.35)"/>
+          <path d="M62 190 Q56 260 70 316 Q86 344 120 344 Q154 344 170 316 Q184 260 178 190 Q170 176 120 176 Q70 176 62 190 Z"
+                fill="#22211e" stroke="rgba(232,228,220,0.35)" stroke-width="1.3"/>
+          <path d="M58 214 L182 236" stroke="rgba(95,146,112,0.4)" stroke-width="1" fill="none"/>
+          <path d="M60 254 L180 276" stroke="rgba(95,146,112,0.35)" stroke-width="1" fill="none"/>
+          <path d="M64 294 L176 314" stroke="rgba(95,146,112,0.3)" stroke-width="1" fill="none"/>
+          <rect x="52" y="206" width="136" height="9" rx="4.5" fill="none" stroke="rgba(232,228,220,0.4)" stroke-width="1.1"/>
+          <rect x="56" y="268" width="128" height="9" rx="4.5" fill="none" stroke="rgba(232,228,220,0.35)" stroke-width="1.1"/>
+          <rect x="60" y="300" width="120" height="8" rx="4" fill="none" stroke="rgba(232,228,220,0.3)" stroke-width="1"/>
+        </g>
+        <circle cx="120" cy="112" r="66" fill="#22211e" stroke="rgba(232,228,220,0.4)" stroke-width="1.3"/>
+        <path d="M62 96 Q70 60 108 50 Q150 42 172 70" stroke="rgba(232,228,220,0.14)" stroke-width="1" fill="none"/>
+        <circle cx="120" cy="112" r="74" fill="none" stroke="rgba(95,146,112,0.10)" stroke-width="1"/>
+        <g class="fontanelle" id="fontanelle" tabindex="0" role="button" aria-label="点囟门">
+          <path d="M120 84 L138 112 L120 140 L102 112 Z" fill="rgba(95,146,112,0.1)" stroke="rgba(95,146,112,0.55)" stroke-width="1.2"/>
+          <path class="fontanelle-core" d="M120 98 L129 112 L120 126 L111 112 Z" fill="rgba(95,146,112,0.5)"/>
+          <circle class="ripple" id="rip1" cx="120" cy="112" r="30"/>
+          <circle class="ripple" id="rip2" cx="120" cy="112" r="30" style="animation-delay:0.25s"/>
+        </g>
+      </svg>
+    </div>
+    <div class="h-seal" id="hseal">幼科之源</div>
+  </div>
+  <div class="h-title" id="htitle">
+    <h1>颅囟经</h1>
+    <div class="hsub">一部只在《永乐大典》里活下来的儿科书 · 点<em>囟门</em>开卷</div>
+  </div>
+  <div class="h-hint" id="hhint">囟门在跳</div>
+</header>
+
+<main>
+
+<!-- 诊籍一 考源 -->
+<section class="register reveal" id="s1">
+  <div class="reg-tag">诊籍一</div>
+  <div class="reg-no">REGISTERED · ORIGIN</div>
+  <h2>考源<small>托名与辑佚</small></h2>
+  <p>这卷书没有作者。历代官修书目一路翻到《新唐书艺文志》，都找不到它；到宋代书目，才冒出一行著录，说此书二卷，出自一位名叫师巫的贤士之手。四库馆臣把来历看穿了，判定它是唐末宋初的托名之作，靠王冰注《素问》里"师氏藏之"一个短句，造出这位在崆峒山得书的师巫，再把师承一路抬到黄帝、王母那里，让自家方子显得来历通天。</p>
+  <div class="qcard"><q>疑是唐末宋初人所为，以王冰《素问注》第七卷内有师氏藏之一语，遂托名师巫以自神其说耳</q><span class="src">卷首 · 四库提要</span></div>
+  <p>书名倒是老实的。馆臣解释：</p>
+  <div class="qcard"><q>首骨曰颅，脑盖曰囟，殆因小儿初生，颅囟未合，证治各别，故取以名其书</q><span class="src">卷首 · 四库提要</span></div>
+  <p>婴儿头顶那块迟到的骨头，出生后一年多才悄悄合拢，留一扇软软的窗，医家叫囟。一部书的全部野心，押在这扇窗上。</p>
+  <div class="san-qian">
+    <div class="qian" data-no="签一"><h4>世无传本</h4><p>不着撰人，历代史志失载，独《永乐大典》收存其书，天下仅此一份孤本户口。</p></div>
+    <div class="qian" data-no="签二"><h4>托名自神</h4><p>师巫得之崆峒山，黄帝秘藏金匮，谱系一路写到天上，馆臣一笔拆穿。</p></div>
+    <div class="qian" data-no="签三"><h4>辑而复传</h4><p>馆臣从《永乐大典》把全书辑出，按宋代著录的旧貌分作两卷，这卷书才没有第二次死掉。</p></div>
+  </div>
+  <p>宋代儿科第一人钱乙，被写进正史方技传的起家履历只有一句话：</p>
+  <div class="qcard"><q>钱乙始以《颅囟经》著名，召至京师，视长公主女疾，授翰林医学</q><span class="src">卷首 · 四库提要引《宋史方技传》</span></div>
+  <div class="qianyi-line">
+    <div class="stem"></div>
+    <div class="steps">
+      <div class="step"><b>一部连作者都没有的书</b>，躺在类书残卷里</div>
+      <div class="step">被山东民间医生钱乙读透，<b>儿科一代圣手</b></div>
+      <div class="step">长公主的女儿病了，钱乙奉召入京，得授医官</div>
+      <div class="step">儿科从此成为一门独立的学问，源头都指向这扇<b>囟门</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- 诊籍二 脉法 -->
+<section class="register reveal" id="s2">
+  <div class="reg-tag">诊籍二</div>
+  <div class="reg-no">REGISTERED · PULSE</div>
+  <h2>纯阳脉法<small>小孩子的尺子</small></h2>
+  <p>全书正文第一句，就把小孩从大人的医学里摘了出来：</p>
+  <div class="qcard"><q>凡孩子三岁以下，呼为"纯阳"，元气未散</q><span class="src">卷上 · 脉法</span></div>
+  <p>纯阳，不是火气大，是说这具小身体是全新的一炉炭，元气没有分耗，脉跳、用药、看病的尺子全部要换：</p>
+  <div class="qcard"><q>呼之脉来三至，吸之脉来三至，呼吸定息一至，此为无患矣</q><span class="src">卷上 · 脉法</span></div>
+  <div class="pulse-board">
+    <div class="pulse-row">
+      <span class="pulse-chip" id="pc1">呼 · 三至</span>
+      <span class="pulse-chip" id="pc2">吸 · 三至</span>
+      <span class="pulse-chip" id="pc3">定息 · 一至</span>
+      <button class="btn" id="pulseBtn">候脉</button>
+    </div>
+    <div class="pulse-dot" id="pulseDot"></div>
+    <div class="pulse-verdict" id="pulseVerdict">一呼一吸之间六跳而安，照大人的五至去读，即差矣</div>
+    <div class="scalebar">
+      <div class="bar">
+        <i style="left:6%"></i><i style="left:38%"></i><i style="left:64%"></i><i style="left:92%"></i>
+      </div>
+      <div class="cap"><span>三至以下 · 冷候死脉</span><span>定息一至 · 平和</span><span>七至以上 · 有气有风</span><span>十五至以上 · 皆死</span></div>
+    </div>
+  </div>
+  <div class="qcard"><q>孩子脉呼吸十五至以上、三至以下，皆死矣</q><span class="src">卷上 · 脉法</span></div>
+</section>
+
+<!-- 诊籍三 病证 -->
+<section class="register reveal" id="s3">
+  <div class="reg-tag">诊籍三</div>
+  <div class="reg-no">REGISTERED · SIGNS</div>
+  <h2>病证<small>夜啼与七疳</small></h2>
+  <p>半夜啼哭不归鬼神管，归瘀血管。夜属阴，痛乘阴而发，所以天一黑就哭。一千年前，有人替夜哭的婴儿把账算进了肚子里：</p>
+  <div class="qcard"><q>初生小儿至夜啼者，是有瘀血腹痛，夜乘阴而痛则啼</q><span class="src">卷上 · 病证</span></div>
+  <p>疳，是这卷书着墨最多的字，三十八见。所谓七疳，把慢性消耗病的七种面相贴在看得见的地方：</p>
+  <div class="gan-rack">
+    <div class="gan-row">
+      <div class="gan-tag" data-g="0"><div class="string"></div><div class="wood"><div class="zi">目</div><div class="key">眼青揉痒</div><div class="name">肝疳</div></div></div>
+      <div class="gan-tag" data-g="1"><div class="string"></div><div class="wood"><div class="zi">齿</div><div class="key">齿焦</div><div class="name">骨疳</div></div></div>
+      <div class="gan-tag" data-g="2"><div class="string"></div><div class="wood"><div class="zi">鼻</div><div class="key">肉色鼻中干</div><div class="name">肺疳</div></div></div>
+      <div class="gan-tag" data-g="3"><div class="string"></div><div class="wood"><div class="zi">肤</div><div class="key">皮干肉裂</div><div class="name">筋疳</div></div></div>
+      <div class="gan-tag" data-g="4"><div class="string"></div><div class="wood"><div class="zi">发</div><div class="key">发焦黄</div><div class="name">血疳</div></div></div>
+      <div class="gan-tag" data-g="5"><div class="string"></div><div class="wood"><div class="zi">舌</div><div class="key">舌上生疮</div><div class="name">心疳</div></div></div>
+      <div class="gan-tag" data-g="6"><div class="string"></div><div class="wood"><div class="zi">嘴</div><div class="key">爱吃泥土</div><div class="name">脾疳</div></div></div>
+    </div>
+    <div class="gan-note">七张签翻亮对应库本原文 · <b id="ganCount">已亮 0 / 7</b></div>
+  </div>
+  <p>爱吃泥土一条，至今仍是儿科门诊要筛查的异食信号。另有两笔观察，冷静得不像一千年前的句子。其一：</p>
+  <div class="qcard"><q>孩子无故摇头，此是脑顶风</q><span class="src">卷上 · 病证</span></div>
+  <p>其二，肚大项细、肋骨棱棱，病因栏写的是奶水不足、辅食添得太早：</p>
+  <div class="qcard"><q>孩子无故肚大、项细、四肢消瘦，筋脉、骨节起</q><br><q>嚼食与吃早，成骨热疳劳</q><span class="src">卷上 · 病证</span></div>
+  <p>病名古旧，病历上写的其实是慢性营养不良。治法栏还叮嘱一句：先吃保童丸，续进柴胡一类的引子，药方散在各门。</p>
+</section>
+
+<!-- 诊籍四 问命丸 -->
+<section class="register reveal" id="s4">
+  <div class="reg-tag">诊籍四</div>
+  <div class="reg-no">REGISTERED · THE PILL</div>
+  <h2>问命丸<small>数喷嚏定生死</small></h2>
+  <p>病重的孩子，这卷书给出过一味判生死的药引：保童丸的变体，朱砂、麝香、蟾酥研成麻子大，点进鼻孔，然后数喷嚏。</p>
+  <div class="ming-stage">
+    <div class="ming-pill" id="mingPill" role="button" aria-label="点丸吹鼻" tabindex="0"></div>
+    <div class="sneeze-track" id="sneezeTrack"></div>
+    <div class="ming-verdict" id="mingVerdict">点丸吹鼻 · 数嚏</div>
+    <div class="ming-sub" id="mingSub">可反复点试，库本原文见下</div>
+  </div>
+  <div class="qcard"><q>但孩子病甚，即与吹之，或得七喷，可以治之；五喷即甚；三、两喷即死矣</q><span class="src">卷上 · 问命丸</span></div>
+  <p>全书最冷静的残忍在这里：不问神仙，只数喷嚏。蟾酥点鼻，激的是黏膜反射，测的是这具小身体还剩多少力气应答。数的是命数，不是运数。</p>
+</section>
+
+<!-- 诊籍五 变蒸 -->
+<section class="register reveal" id="s5">
+  <div class="reg-tag">诊籍五</div>
+  <div class="reg-no">REGISTERED · STEAMING</div>
+  <h2>变蒸<small>两本历的架</small></h2>
+  <p>婴儿隔几十日发一次低热、不好好吃奶，古人不当作病，叫变蒸：骨节与神智在蒸笼里各长一寸。本书记每六十日一变，还记下一个细节：</p>
+  <div class="qcard"><q>上唇有珠子如粟粒大，此呼为"变蒸珠子"</q><span class="src">卷上 · 变蒸条</span></div>
+  <p>而早它几百年成书的《诸病源候论》记三十二日一变。两本历打了几百年的架，后来的医书干脆都抄上：</p>
+  <div class="qcard"><q>《颅囟经》以六十日为一变，巢氏《病源》以三十二日为一变，说有不同，故兼存之。</q><span class="src">卷上 · 库本夹注</span></div>
+  <div class="track-board">
+    <div class="track-label"><span>本书 · 每六十日一变</span><b>十变而毕</b></div>
+    <div class="track" id="trackA"></div>
+    <div class="track-label gold"><span>巢氏《病源》 · 每三十二日一变</span><b>十九变而毕</b></div>
+    <div class="track gold" id="trackB"></div>
+    <div class="track-cap">横轴同为出生后六百日：同一架蒸笼，两本书给出两套时刻表，小注一并保存，不打断案。</div>
+  </div>
+</section>
+
+<!-- 诊籍六 火丹 -->
+<section class="register reveal" id="s6">
+  <div class="reg-tag">诊籍六</div>
+  <div class="reg-no">REGISTERED · FIRE MAP</div>
+  <h2>火丹十五图<small>把皮肤当地图</small></h2>
+  <p>卷下开门见山，黄帝问岐伯：小儿丹毒怎么分？答曰：</p>
+  <div class="qcard"><q>一十以上为毒，一十以下为丹。丹、毒一也</q><span class="src">卷下 · 火丹诸条</span></div>
+  <p>接着一句<q>今出此图，形状如后</q>，一次给出十五个名目、十五幅病灶图。序言里还留着一句罕见的火气：</p>
+  <div class="qcard"><q>喻人间男女，皆遭丹毒，至依此枉死者，复何限哉！良由信邪师之语，仍被恐之。</q><span class="src">卷下 · 火丹诸条</span></div>
+  <div class="dan-board">
+    <div class="dan-figs">
+      <div class="dan-fig">
+        <svg viewBox="0 0 120 268" aria-label="婴儿正面图">
+          <ellipse cx="60" cy="256" rx="34" ry="5" fill="rgba(0,0,0,0.3)"/>
+          <circle cx="60" cy="34" r="21" class="body-fill"/>
+          <circle cx="60" cy="34" r="21" class="body-line"/>
+          <path d="M46 58 Q60 64 74 58 L78 132 Q60 142 42 132 Z" class="body-fill"/>
+          <path d="M46 58 Q60 64 74 58 L78 132 Q60 142 42 132 Z" class="body-line"/>
+          <path d="M44 62 Q28 70 30 96 Q31 104 36 102" class="body-line"/>
+          <path d="M76 62 Q92 70 90 96 Q89 104 84 102" class="body-line"/>
+          <path d="M44 134 L44 196 L54 196 L56 140" class="body-line"/>
+          <path d="M76 134 L76 196 L66 196 L64 140" class="body-line"/>
+          <path d="M44 196 L44 246 M54 196 L54 246" class="body-line"/>
+          <path d="M66 196 L66 246 M76 196 L76 246" class="body-line"/>
+          <g class="hot" data-d="14"><circle cx="60" cy="38" r="6.5"></circle><text x="60" y="41" text-anchor="middle">15</text></g>
+          <g class="hot" data-d="12"><circle cx="40" cy="33" r="5.5"></circle><text x="40" y="36" text-anchor="middle">13</text></g>
+          <g class="hot" data-d="5"><circle cx="60" cy="12" r="5.5"></circle><text x="60" y="15" text-anchor="middle">6</text></g>
+          <g class="hot" data-d="0"><circle cx="41" cy="84" r="5.5"></circle><text x="41" y="87" text-anchor="middle">1</text></g>
+          <g class="hot" data-d="0"><circle cx="79" cy="84" r="5.5"></circle><text x="79" y="87" text-anchor="middle">1</text></g>
+          <g class="hot" data-d="1"><circle cx="60" cy="104" r="5.5"></circle><text x="60" y="107" text-anchor="middle">2</text></g>
+          <g class="hot" data-d="7"><circle cx="60" cy="120" r="5"></circle><text x="60" y="123" text-anchor="middle">8</text></g>
+          <g class="hot dotted" data-d="11"><circle cx="70" cy="70" r="4.5"></circle><text x="70" y="73" text-anchor="middle">12</text></g>
+          <g class="hot dotted" data-d="11"><circle cx="52" cy="94" r="4"></circle></g>
+          <g class="hot dotted" data-d="11"><circle cx="68" cy="96" r="4"></circle></g>
+          <g class="hot" data-d="8"><circle cx="31" cy="100" r="5"></circle><text x="31" y="103" text-anchor="middle">9</text></g>
+          <g class="hot" data-d="3"><circle cx="60" cy="150" r="5"></circle><text x="60" y="153" text-anchor="middle">4</text></g>
+          <g class="hot" data-d="2"><circle cx="49" cy="238" r="5"></circle><text x="49" y="241" text-anchor="middle">3</text></g>
+          <g class="hot" data-d="10"><circle cx="71" cy="238" r="5"></circle><text x="71" y="241" text-anchor="middle">11</text></g>
+        </svg>
+        <div class="cap">正 面</div>
+      </div>
+      <div class="dan-fig">
+        <svg viewBox="0 0 120 268" aria-label="婴儿背面图">
+          <ellipse cx="60" cy="256" rx="34" ry="5" fill="rgba(0,0,0,0.3)"/>
+          <circle cx="60" cy="34" r="21" class="body-fill"/>
+          <circle cx="60" cy="34" r="21" class="body-line"/>
+          <path d="M46 22 Q52 16 60 16 Q68 16 74 22 L74 30 L46 30 Z" fill="rgba(232,228,220,0.08)"/>
+          <path d="M46 58 Q60 64 74 58 L78 132 Q60 142 42 132 Z" class="body-fill"/>
+          <path d="M46 58 Q60 64 74 58 L78 132 Q60 142 42 132 Z" class="body-line"/>
+          <path d="M60 64 L60 128" stroke="rgba(232,228,220,0.25)" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M44 62 Q28 70 30 96" class="body-line"/>
+          <path d="M76 62 Q92 70 90 96" class="body-line"/>
+          <path d="M44 134 L44 196 L54 196 L56 140" class="body-line"/>
+          <path d="M76 134 L76 196 L66 196 L64 140" class="body-line"/>
+          <path d="M44 196 L44 246 M54 196 L54 246" class="body-line"/>
+          <path d="M66 196 L66 246 M76 196 L76 246" class="body-line"/>
+          <g class="hot" data-d="9"><circle cx="60" cy="22" r="5.5"></circle><text x="60" y="25" text-anchor="middle">10</text></g>
+          <g class="hot dotted" data-d="4"><circle cx="60" cy="95" r="8"></circle><text x="60" y="98" text-anchor="middle">5</text></g>
+          <g class="hot" data-d="6"><circle cx="47" cy="74" r="5"></circle><text x="47" y="77" text-anchor="middle">7</text></g>
+          <g class="hot" data-d="13"><circle cx="60" cy="112" r="5"></circle><text x="60" y="115" text-anchor="middle">14</text></g>
+        </svg>
+        <div class="cap">背 面</div>
+      </div>
+    </div>
+    <div class="dan-slip" id="danSlip">
+      <div class="d-hint0">点图上圆点，看这一丹起于何处、配何方</div>
+    </div>
+    <div class="dan-legend">虚线圆为遍身泛发之丹 · 十五丹中有丹有方，亦有有证无方者</div>
+  </div>
+  <p>十五方过半来自屋顶与灶台：四角茅草灰、灶下土、屋漏水、土蜂窠，调和物一律鸡子白或生油。以今天的药理学看近乎儿戏，但次序可敬：先定名目，再画病灶，把满身红斑切成十五格来认识，是拿皮肤画地图的最早尝试之一。</p>
+</section>
+
+<!-- 诊籍七 过错簿 -->
+<section class="register reveal" id="s7">
+  <div class="reg-tag">诊籍七</div>
+  <div class="reg-no">REGISTERED · BLAME</div>
+  <h2>过错簿<small>写给大人的罚单</small></h2>
+  <p>通读全卷会发现一条暗线：孩子的病，责任几乎总在旁人。序末一笔掉转笔锋，对准大人；乳母戒条一条张榜；连跳神烧纸都编进了护理常规。</p>
+  <div class="guo-book">
+    <div class="guo-slip" data-who="原序 · 末句">
+      <div class="big"><q>故小儿瘦疴，盖他人之过也</q></div>
+      <p>一部医书把结论写在门口：病在孩子身上，过错在别人手里。</p>
+    </div>
+    <div class="guo-slip" data-who="卷上 · 病证 · 乳母戒条">
+      <div class="big"><q>使孩子多胃毒、及赤、白两般恶痢，此乃是你母之过</q></div>
+      <p>库本"你"为"乳"之讹（见勘记）。乳母洗冷水澡，寒气伏于乳，孩子气脉未定就喂，恶痢由此起。同条给的改正法并不玄：</p>
+      <p style="margin-top:4px"><q>凡浴后，可令定息良久，候气定，揉与之，即全无患</q></p>
+    </div>
+    <div class="guo-slip" data-who="卷上 · 病证 · 师巫条">
+      <div class="big"><q>师巫烧钱，乳毋须预祝之，勿令着水喷儿，皆令惊、热入心，转成患害</q></div>
+      <p>跳神烧纸不禁止，只做风险告知：可以烧钱，不许朝孩子喷水。巫术时代的一页，写法却是护理手册的写法。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 诊籍八 禁忌方 -->
+<section class="register reveal" id="s8">
+  <div class="reg-tag">诊籍八</div>
+  <div class="reg-no">REGISTERED · TABOO</div>
+  <h2>禁忌方<small>巫术的残页</small></h2>
+  <p>卷下杂证末尾混进一方，与前后所有方子气质迥异：孩子数岁不会走路，去办丧事未久的人家，做一件不可声张的事。</p>
+  <div class="taboo">
+    <div class="t-kicker">卷下 · 禁忌又方</div>
+    <div class="t-body"><q>取葬家未开户，盗其饭食来以哺之，不过三日便起行。勿令人知之。</q></div>
+    <div class="t-seal">勿令人知</div>
+    <p>把逝者家的饭偷来喂孩子，三日能走。巫术时代的残页，四库馆臣一字未删。它肯留在辑本里，是馆臣的手艺，也是这卷书的诚实。</p>
+  </div>
+</section>
+
+<!-- 勘记 -->
+<section class="register reveal" id="s9">
+  <div class="reg-tag">勘 记</div>
+  <div class="reg-no">REGISTERED · NOTES</div>
+  <h2>勘记<small>馆臣五条与库本讹字</small></h2>
+  <p>书末自带一份考证，是四库馆臣辑校时留下的痕迹，如：</p>
+  <div class="kanji-grid">
+    <div class="cell"><h5>馆臣校正</h5><p><q>"灌"字、原本讹"蒲"，谨校正</q>；又<q>稀饧原本讹"稀锡"，谨校正</q>；注中<q>"生眼"讹"在眼"，谨校正</q>。脱"艾"字一条谨增。</p></div>
+    <div class="cell"><h5>有方已佚</h5><p>脉法条言"依后方合药"，馆臣按语直书<q>后方已佚，谨签出声明</q>。辑佚辑到方子缺席处，照缺不补。</p></div>
+    <div class="cell"><h5>乳讹作你</h5><p>库本"乳"字十处讹作"你"：不吃乳作不吃你、乳母作你母、与乳作与你。引文照录，读时以"乳"还之。</p></div>
+    <div class="cell"><h5>杂证重出</h5><p>卷下杂证一篇全篇重出两遍，重出本多一层异体：岁作歳、渴作渇、游作逰、每作毎；取铅霜法一条铅字进了扩展区，页面不展示。</p></div>
+    <div class="cell"><h5>有证无方</h5><p>十五火丹各有名目起处，熛火丹独无方：名目单与方药单两列对勘，馆臣照录其阙。</p></div>
+    <div class="cell"><h5>最小的一张方</h5><p>广利方主治惊痫发作不识人的急症，全方只此一味：<q>牛黄（一大豆）</q>。卷上有名目的丸散煎引近三十通，这是最省的一张。</p></div>
+  </div>
+</section>
+
+<!-- 收梢 -->
+<div class="coda reveal">
+  <div class="v-line"><q>盖他人之过也</q></div>
+  <div class="coda-side">
+    一千年前，有人把婴孩的病一页一页记下来，又在序末把笔尖掉转，指向大人。今天囟门闭合的时间写进了每一本育儿手册，这卷书自己几乎无人记得。
+    <br><span class="coda-seal">囟门在跳</span>
+  </div>
+</div>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    文本来源：殆知阁简体文库〈颅囟经〉（医藏，不着撰人，四库馆臣辑自《永乐大典》，厘为二卷，去空白八千六百余字）<br>
+    导读仓库：<a href="https://github.com/robertsong2000/daizhige-daodu">github.com/robertsong2000/daizhige-daodu</a><br>
+    本页引文经脚本与库内文件去标点归一逐字比对通过。校字记：库本"乳"十处讹作"你"，引文照录；菉豆、毎、歳、逰、渇皆库本原字照录；取铅霜法一条含扩展区字，页面不展示。古代文本历经传抄，讹缺在所难免，请以时代眼光读之：书中猪粪灰、灶下土涂丹，盗葬家饭食治不走路，虎睛蝉蜕入丸散，皆数百年前的方术与观念，今日读之当知其限，切勿效仿。
+  </div>
+</footer>
+
+<!-- 隐藏引文库（供 JS 与核验脚本） -->
+<div id="qb">
+  <q id="d0-n">伊火丹，从两胁起。</q><q id="d0-r">右用猪粪烧灰，并铁槽中泥，拌调涂之，日三。</q>
+  <q id="d1-n">神灶丹，从肚起。</q><q id="d1-r">右用土蜂窠、杏仁、腻粉、生油调涂，立差。</q>
+  <q id="d2-n">尿灶丹，从踝起。</q><q id="d2-r">右用屋四角头茅草，烧灰。使鸡子白调涂之。</q>
+  <q id="d3-n">胡吹灶丹，从阴囊上起。</q><q id="d3-r">右用水茄窠下泥，和苦酒涂之。</q>
+  <q id="d4-n">天火丹，从腹背、遍身起。</q><q id="d4-r">右用桦皮白末，和生油调涂之。亦用赤石脂、羊脂调涂之。</q>
+  <q id="d5-n">天雷丹，从头、项起。</q><q id="d5-r">右用阴干葱赤末，拌脂涂。又用灶下土、鸡子白调涂。</q>
+  <q id="d6-n">熛火丹，从背、甲起。</q>
+  <span id="d6-e">此丹有证无方：名目单载其起处，方药单未收，馆臣照录其阙。</span>
+  <q id="d7-n">胡漏灶丹，从脐中起。</q><q id="d7-r">右用屋漏水，调灶中土涂之。</q>
+  <q id="d8-n">废灶丹，从曲臂起。</q><q id="d8-r">右用屋四角茅草灰，鸡子白调涂之。</q>
+  <q id="d9-n">神气丹，从头、背上起。</q><q id="d9-r">右用牯牛骨烧灰，羊脂涂之。</q>
+  <q id="d10-n">土灶丹、从阴踝起。</q><q id="d10-r">右用屋四角茅草、灶横麻、及鸡子白调涂之。</q>
+  <q id="d11-n">朱黄丹，赤豆色，遍身上起。</q><q id="d11-r">右用慎火草捣汁，和酒调涂之。</q>
+  <q id="d12-n">萤火丹，从耳起。</q><q id="d12-r">右用慎火草捣汁涂之，生以醋调涂</q>
+  <q id="d13-n">野灶丹，从背脊起。</q><q id="d13-r">右用柔香茸蒴、赤小豆末，涂之，立差。</q>
+  <q id="d14-n">鬼火丹，从面上起。</q><q id="d14-r">右用灶下土，鸡子白调涂之，立差。</q>
+  <q id="gq0">眼青揉痒，是肝疳</q><q id="gq1">齿焦，是骨疳</q><q id="gq2">肉色鼻中干，是肺疳</q><q id="gq3">皮干肉裂，是筋疳</q><q id="gq4">发焦黄，是血疳</q><q id="gq5">舌上生疮，是心疳</q><q id="gq6">爱吃泥土，是脾疳</q>
+</div>
+
+<script>
+(function () {
+  // 首屏：点囟门
+  var title = document.getElementById('htitle');
+  var seal = document.getElementById('hseal');
+  var rips = [document.getElementById('rip1'), document.getElementById('rip2')];
+  var opened = false;
+  function open() {
+    rips.forEach(function (r) { r.classList.remove('go'); void r.getBBox && r.getBoundingClientRect(); r.classList.add('go'); });
+    if (!opened) {
+      opened = true;
+      title.classList.add('show');
+      seal.classList.add('show');
+      var hint = document.getElementById('hhint');
+      if (hint) hint.style.display = 'none';
+    }
+  }
+  var f = document.getElementById('fontanelle');
+  f.addEventListener('click', open);
+  f.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  document.getElementById('swaddle').addEventListener('click', open);
+
+  // 滚动浮现
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+  // 右缘导航高亮
+  var links = document.querySelectorAll('#rail a');
+  var spy = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (a) { a.classList.toggle('on', a.dataset.s === e.target.id); });
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  document.querySelectorAll('section.register').forEach(function (s) { spy.observe(s); });
+
+  // 候脉
+  var chips = [document.getElementById('pc1'), document.getElementById('pc2'), document.getElementById('pc3')];
+  var dot = document.getElementById('pulseDot');
+  var pverdict = document.getElementById('pulseVerdict');
+  var beating = false;
+  document.getElementById('pulseBtn').addEventListener('click', function () {
+    chips.forEach(function (c, i) { setTimeout(function () { c.classList.add('lit'); }, 260 * i); });
+    if (!beating) { beating = true; dot.classList.add('beat'); }
+    pverdict.innerHTML = '三至复三至，定息又一至，<b>此为无患</b>';
+  });
+
+  // 七疳签
+  var ganQ = [0,1,2,3,4,5,6].map(function (i) { return document.getElementById('gq' + i).textContent; });
+  var lit = 0;
+  document.querySelectorAll('.gan-tag').forEach(function (tag) {
+    tag.addEventListener('click', function () {
+      if (tag.classList.contains('lit')) return;
+      tag.classList.add('lit');
+      lit += 1;
+      document.getElementById('ganCount').textContent = '已亮 ' + lit + ' / 7';
+    });
+    tag.title = ganQ[+tag.dataset.g];
+  });
+
+  // 问命丸
+  var OUT = [
+    { n: 7, cls: 'win', word: '七喷 · <b class="v-win">可以治之</b>' },
+    { n: 5, cls: 'warn', word: '五喷 · <b class="v-warn">即甚</b>' },
+    { n: 3, cls: 'lose', word: '三喷 · <b class="v-lose">即死矣</b>' },
+    { n: 2, cls: 'lose', word: '两喷 · <b class="v-lose">即死矣</b>' }
+  ];
+  var track = document.getElementById('sneezeTrack');
+  var mv = document.getElementById('mingVerdict');
+  var busy = false;
+  document.getElementById('mingPill').addEventListener('click', function () {
+    if (busy) return;
+    busy = true;
+    track.innerHTML = '';
+    var pick = OUT[Math.floor(Math.random() * OUT.length)];
+    var i = 0;
+    (function tick() {
+      if (i >= pick.n) {
+        mv.innerHTML = pick.word;
+        busy = false;
+        return;
+      }
+      var s = document.createElement('span');
+      s.textContent = '嚏';
+      track.appendChild(s);
+      requestAnimationFrame(function () { requestAnimationFrame(function () { s.classList.add('pop', pick.cls); }); });
+      i += 1;
+      setTimeout(tick, 420);
+    })();
+  });
+
+  // 变蒸双轨
+  function buildTrack(id, step, cls) {
+    var t = document.getElementById(id);
+    for (var d = step; d <= 600; d += step) {
+      var i = document.createElement('i');
+      i.style.left = (d / 600 * 100) + '%';
+      if (d % 120 === 0 || d === step) {
+        var em = document.createElement('em');
+        em.textContent = d + '日';
+        i.appendChild(em);
+      }
+      if (d / 600 > 0.85) i.className = 'edge';
+      t.appendChild(i);
+    }
+  }
+  buildTrack('trackA', 60);
+  buildTrack('trackB', 32);
+
+  // 火丹十五图
+  var danSlip = document.getElementById('danSlip');
+  function gt(id) { var el = document.getElementById(id); return el ? el.textContent : ''; }
+  var TAGS = ['屋顶系', '灶台系', '屋顶系', '园圃系', '遍身泛发', '灶台系', '', '屋顶系', '屋顶系', '生灵系', '屋顶系', '生灵系', '生灵系', '田圃系', '灶台系'];
+  var LIT = { 5: '头顶项上', 12: '耳边', 14: '面部' };
+  document.querySelectorAll('.hot').forEach(function (h) {
+    h.addEventListener('click', function () {
+      var d = +h.dataset.d;
+      document.querySelectorAll('.hot').forEach(function (x) { x.classList.remove('on'); });
+      document.querySelectorAll('.hot[data-d="' + d + '"]').forEach(function (x) { x.classList.add('on'); });
+      var name = gt('d' + d + '-n');
+      var rem = gt('d' + d + '-r');
+      var html = '<div class="d-title">' + name + '</div>';
+      if (rem) { html += '<div class="d-body">' + rem + '</div>'; }
+      else { html += '<div class="d-body">' + gt('d6-e') + '</div>'; }
+      var tag = TAGS[d];
+      if (tag) { html += '<span class="d-tag">' + tag + '</span>'; }
+      danSlip.innerHTML = html;
+    });
+  });
+})();
+</script>
+</body>
+</html>
