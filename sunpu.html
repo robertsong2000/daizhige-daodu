@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>笋谱 · 破土读(殆知阁导读 336)</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --zhu:#5f9270;
+  --zhu-dim:#3f6a4d;
+  --smoke:#8b877d;
+  --stone:#232320;
+  --line:#3a3a36;
+  --shu:#c0453c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.95;
+  overflow-x:hidden;
+}
+q{quotes:"「" "」" "『" "』";color:#cfe0d2;font-style:normal}
+.paper-block q{color:#2e3b31}
+.paper-block .qn{color:#6a675c}
+.mono{font-family:"SFMono-Regular",Consolas,"Courier New",monospace}
+
+/* ===== 左缘竹节进度 ===== */
+#stalk{
+  position:fixed;left:14px;top:50%;transform:translateY(-50%);
+  z-index:40;display:flex;flex-direction:column;align-items:center;
+}
+#stalk .seg{
+  width:3px;height:44px;background:var(--line);
+  position:relative;transition:background .4s;
+}
+#stalk .seg i{
+  position:absolute;left:50%;transform:translateX(-50%);
+  width:9px;height:9px;border-radius:50%;
+  background:var(--stone);border:1px solid var(--line);
+  transition:all .4s;
+}
+#stalk .seg:first-child i{top:-5px}
+#stalk .seg.on{background:var(--zhu-dim)}
+#stalk .seg.on i{background:var(--zhu);border-color:var(--zhu);box-shadow:0 0 8px rgba(95,146,112,.7)}
+#stalk .seg:last-child{height:8px}
+#stalk .seg:last-child i{display:none}
+@media(max-width:760px){#stalk{display:none}#hero .moon{top:6%;right:9%;width:44px;height:44px}.hero-stage{padding-top:130px}}
+
+/* ===== 首屏:破土 ===== */
+#hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+#hero .sky{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 120% 60% at 50% 108%, rgba(63,106,77,.16), rgba(63,106,77,0) 60%),
+    linear-gradient(180deg, #141613 0%, var(--ink) 55%, #1a1d18 100%);
+}
+#hero .moon{
+  position:absolute;right:16%;top:12%;
+  width:54px;height:54px;border-radius:50%;
+  background:radial-gradient(circle at 38% 34%, #efece3 0%, #cfcabb 58%, #8f8b7e 100%);
+  box-shadow:0 0 34px rgba(232,228,220,.22);
+  opacity:.8;
+}
+#hero .bamboos{position:absolute;inset:0;pointer-events:none}
+#hero .bamboos b{
+  position:absolute;bottom:0;
+  width:7px;border-radius:4px 4px 0 0;
+  background:linear-gradient(180deg, #2c352c 0%, #1f261f 100%);
+  opacity:.55;
+}
+#hero .bamboos b::before{
+  content:"";position:absolute;left:-16px;top:14%;
+  width:32px;height:12px;border-radius:0 60% 0 60%;
+  background:#242d24;transform:rotate(-24deg);
+}
+#hero .bamboos b::after{
+  content:"";position:absolute;right:-15px;top:32%;
+  width:30px;height:11px;border-radius:60% 0 60% 0;
+  background:#202820;transform:rotate(22deg);
+}
+.hero-stage{
+  position:relative;z-index:2;
+  width:min(680px,92vw);
+  text-align:center;
+  padding:90px 0 120px;
+}
+.kicker{
+  font-size:12px;letter-spacing:.42em;color:var(--smoke);
+  margin-bottom:26px;
+}
+.title-wrap{
+  display:flex;align-items:center;justify-content:center;gap:34px;
+  min-height:220px;
+}
+.big-title{
+  writing-mode:vertical-rl;
+  font-size:clamp(64px,13vw,104px);
+  letter-spacing:.24em;
+  color:var(--paper);
+  text-shadow:0 0 26px rgba(95,146,112,.28);
+  display:inline-block;
+  opacity:.28;
+  transition:opacity .9s ease, text-shadow .9s ease;
+}
+.big-title.lit{opacity:1;text-shadow:0 0 30px rgba(95,146,112,.55)}
+.byline{
+  writing-mode:vertical-rl;
+  font-size:14px;letter-spacing:.3em;color:var(--smoke);
+  display:inline-block;
+}
+.soil-row{margin-top:6px;position:relative;height:150px}
+.mound{
+  position:absolute;left:50%;bottom:6px;transform:translateX(-50%);
+  width:min(360px,74vw);height:64px;
+  background:linear-gradient(180deg,#2e2b24 0%, #22201b 70%, #191713 100%);
+  border-radius:50% 50% 8px 8px / 100% 100% 0 0;
+  box-shadow:inset 0 6px 16px rgba(0,0,0,.6);
+}
+.mound .crack{
+  position:absolute;left:50%;bottom:34px;transform:translateX(-50%);
+  width:0;height:0;
+  border-left:13px solid transparent;border-right:13px solid transparent;
+  border-bottom:20px solid #0d0c0a;
+  opacity:0;transition:opacity .3s;
+}
+.mound.open .crack{opacity:1}
+.shoot{
+  position:absolute;left:50%;bottom:40px;transform:translateX(-50%);
+  width:30px;height:12px;
+  background:linear-gradient(180deg,#7ea88c 0%, #5f9270 40%, #3c5d49 100%);
+  border-radius:14px 14px 4px 4px;
+  transition:height 1.1s cubic-bezier(.34,1.2,.5,1);
+  box-shadow:0 0 18px rgba(95,146,112,.35);
+  cursor:pointer;
+}
+.shoot::before,.shoot::after{
+  content:"";position:absolute;left:50%;transform:translateX(-50%);
+  width:36px;height:9px;border-radius:0 0 50% 50%/0 0 100% 100%;
+  background:rgba(20,26,21,.55);
+}
+.shoot::before{top:22%}
+.shoot::after{top:52%}
+.shoot .tip{
+  position:absolute;left:50%;top:-13px;transform:translateX(-50%);
+  width:22px;height:16px;
+  background:#8fb99e;
+  clip-path:polygon(50% 0, 100% 100%, 0 100%);
+}
+.soil-hint{
+  position:absolute;left:50%;bottom:-34px;transform:translateX(-50%);
+  font-size:12px;letter-spacing:.3em;color:var(--smoke);
+  white-space:nowrap;cursor:pointer;
+}
+.hero-sub{
+  margin-top:52px;font-size:15px;color:var(--smoke);letter-spacing:.12em;
+}
+.hero-sub .zl{color:var(--zhu)}
+.scroll-hint{
+  margin-top:18px;font-size:12px;letter-spacing:.4em;color:var(--smoke);
+  animation:breathe 2.6s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{opacity:.35}50%{opacity:.95}}
+
+/* ===== 通用 ===== */
+section{position:relative;padding:110px 0}
+.wrap{width:min(980px,90vw);margin:0 auto}
+.sec-head{margin-bottom:44px}
+.sec-head .no{
+  font-size:12px;letter-spacing:.4em;color:var(--zhu);
+  margin-bottom:10px;
+}
+.sec-head h2{
+  font-size:clamp(26px,4.6vw,36px);font-weight:600;letter-spacing:.14em;
+}
+.sec-head .lead{margin-top:14px;color:var(--smoke);font-size:15px;max-width:640px}
+.paper-block{
+  background:var(--paper);color:#26251f;
+  border-radius:6px;padding:30px 30px 26px;
+  box-shadow:0 14px 40px rgba(0,0,0,.5);
+}
+.paper-block .pb-cap{
+  font-size:12px;letter-spacing:.34em;color:var(--zhu-dim);
+  margin-bottom:14px;
+}
+div.q{
+  background:rgba(95,146,112,.12);
+  border-left:3px solid var(--zhu);
+  padding:12px 16px;margin:14px 0;
+  font-size:15.5px;line-height:2;
+  color:#cfe0d2;
+}
+.paper-block div.q{background:rgba(95,146,112,.09);color:#2e3b31}
+.qn{font-size:12.5px;color:var(--smoke);margin-top:8px;letter-spacing:.04em}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+
+/* ===== S1 履历 ===== */
+.life-band{display:flex;gap:0;align-items:stretch;margin-bottom:34px}
+.life-band .st{
+  flex:1;position:relative;padding:18px 14px 16px;
+  border:1px solid var(--line);border-right:none;
+  background:var(--stone);
+}
+.life-band .st:last-child{border-right:1px solid var(--line)}
+.life-band .st::after{
+  content:"";position:absolute;right:-7px;top:50%;transform:translateY(-50%) rotate(45deg);
+  width:12px;height:12px;background:var(--ink);border-top:1px solid var(--line);border-right:1px solid var(--line);
+  z-index:2;
+}
+.life-band .st:last-child::after{display:none}
+.life-band .st b{
+  display:block;font-size:15px;color:var(--zhu);letter-spacing:.08em;margin-bottom:6px;font-weight:600;
+}
+.life-band .st span{font-size:12.5px;color:var(--smoke);line-height:1.7;display:block}
+.dossier{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.dossier .card{
+  border:1px solid var(--line);background:var(--stone);
+  padding:22px 22px 18px;border-radius:4px;
+}
+.dossier .card h3{
+  font-size:16px;color:var(--paper);letter-spacing:.1em;margin-bottom:10px;font-weight:600;
+}
+.dossier .card h3 em{font-style:normal;color:var(--zhu);font-size:12px;letter-spacing:.3em;margin-right:10px}
+.dossier .card p{font-size:14px;color:#b9b5aa;line-height:2}
+.vs-row{display:flex;gap:12px;margin:12px 0}
+.vs-row .vs{
+  flex:1;text-align:center;padding:10px 8px;border:1px dashed var(--line);border-radius:4px;
+  font-size:13.5px;color:#b9b5aa;
+}
+.vs-row .vs.win{border-color:var(--zhu-dim);color:var(--paper)}
+.vs-row .vs small{display:block;font-size:11px;color:var(--smoke);letter-spacing:.2em;margin-bottom:4px}
+.warnline{border-left:3px solid var(--shu);padding:8px 14px;margin-top:12px;font-size:13px;color:#c9a5a0;background:rgba(192,69,60,.07)}
+
+/* ===== S2 剥壳 ===== */
+.peel-stage{display:grid;grid-template-columns:300px 1fr;gap:44px;align-items:start}
+.shoot-tower{position:relative;height:460px}
+.shell{
+  position:absolute;left:50%;transform:translateX(-50%);
+  width:150px;height:44px;
+  background:linear-gradient(180deg,#6f9c80 0%, #4d7a5e 55%, #33543f 100%);
+  border-radius:0 0 46% 46%/0 0 70% 70%;
+  border-top:2px solid rgba(232,228,220,.28);
+  cursor:pointer;
+  transition:transform .55s ease, opacity .55s ease;
+  box-shadow:0 4px 10px rgba(0,0,0,.4);
+}
+.shell::after{
+  content:"剥";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:rgba(232,228,220,.85);
+}
+.shell:hover{filter:brightness(1.12)}
+.shell.off{transform:translateX(-50%) translateY(90px) rotate(14deg);opacity:0;pointer-events:none;cursor:default}
+.shell.off::after{content:""}
+.peel-count{
+  position:absolute;left:50%;bottom:-44px;transform:translateX(-50%);
+  font-size:12px;letter-spacing:.3em;color:var(--smoke);white-space:nowrap;
+}
+.name-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.name-item{
+  border:1px solid var(--line);border-radius:4px;padding:14px 16px;
+  background:var(--stone);opacity:.24;transform:translateX(14px);
+  transition:opacity .5s ease, transform .5s ease;
+}
+.name-item.in{opacity:1;transform:none}
+.name-item b{font-size:19px;color:var(--zhu);letter-spacing:.1em;margin-right:12px;font-weight:600}
+.name-item span{font-size:13px;color:#b9b5aa}
+.spring-note{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.spring-note .pn{
+  border:1px solid var(--line);border-radius:4px;padding:18px 20px;background:var(--stone);
+}
+.spring-note .pn h4{font-size:14px;color:var(--zhu);letter-spacing:.2em;margin-bottom:8px;font-weight:600}
+.spring-note .pn p{font-size:13.5px;color:#b9b5aa}
+
+/* ===== S3 版图 ===== */
+.tagwall{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:40px}
+.stag{
+  border:1px solid var(--line);border-radius:3px;
+  padding:10px 14px;background:var(--stone);
+  font-size:13.5px;color:#b9b5aa;position:relative;
+}
+.stag b{color:var(--paper);font-weight:600;margin-right:8px}
+.stag i{font-style:normal;font-size:11.5px;color:var(--smoke)}
+.stag.du{border-color:rgba(192,69,60,.55)}
+.stag.du::before{
+  content:"毒";position:absolute;right:-7px;top:-9px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--shu);color:#f2e9e2;font-size:11px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 8px rgba(192,69,60,.6);
+}
+.story-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.story-grid .sg{
+  border:1px solid var(--line);border-radius:4px;background:var(--stone);
+  padding:20px 18px 16px;position:relative;
+}
+.story-grid .sg h4{font-size:15px;color:var(--zhu);letter-spacing:.12em;margin-bottom:8px;font-weight:600}
+.story-grid .sg p{font-size:13px;color:#b9b5aa;line-height:1.95}
+
+/* ===== S4 灶间 ===== */
+.verdict{
+  display:flex;align-items:center;gap:26px;
+  border:1px solid var(--zhu-dim);border-radius:5px;
+  background:linear-gradient(90deg, rgba(95,146,112,.12), rgba(95,146,112,.02));
+  padding:26px 28px;margin-bottom:30px;
+}
+.verdict .stamp{
+  flex:0 0 auto;width:84px;height:84px;border-radius:50%;
+  border:2px solid var(--zhu);color:var(--zhu);
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-weight:700;
+  transform:rotate(-8deg);
+}
+.verdict .vt h3{font-size:18px;letter-spacing:.1em;margin-bottom:6px}
+.verdict .vt p{font-size:13.5px;color:#b9b5aa}
+.rules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:30px}
+.rules-grid .rule{
+  border:1px solid var(--line);border-radius:4px;background:var(--stone);
+  padding:16px 16px 14px;
+}
+.rules-grid .rule b{display:block;font-size:13px;color:var(--shu);letter-spacing:.22em;margin-bottom:8px;font-weight:600}
+.rules-grid .rule p{font-size:13px;color:#b9b5aa;line-height:1.95}
+.store-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:34px}
+.store-grid .sto{
+  border:1px solid var(--line);border-radius:4px;background:var(--stone);
+  padding:14px 14px 12px;font-size:12.5px;color:#b9b5aa;line-height:1.85;
+}
+.store-grid .sto b{display:block;color:var(--zhu);font-size:15px;letter-spacing:.14em;margin-bottom:5px;font-weight:600}
+.well-box{
+  display:flex;align-items:center;gap:30px;
+  border:1px solid var(--line);border-radius:5px;background:var(--stone);
+  padding:26px 28px;margin-bottom:30px;
+}
+.well{flex:0 0 auto;position:relative;width:150px;height:170px}
+.well .mouth{
+  position:absolute;left:50%;top:14px;transform:translateX(-50%);
+  width:96px;height:34px;border-radius:50%;
+  background:#0c0d0b;
+  border:7px solid #33342d;
+  box-shadow:inset 0 6px 14px #000;
+  z-index:2;
+}
+.well .body{
+  position:absolute;left:50%;top:26px;transform:translateX(-50%);
+  width:120px;height:120px;
+  background:linear-gradient(180deg,#33342d 0%, #242520 60%, #1b1c17 100%);
+  clip-path:polygon(16% 0, 84% 0, 66% 100%, 34% 100%);
+}
+.well .urn{
+  position:absolute;left:50%;top:20px;transform:translateX(-50%);
+  width:34px;height:40px;border-radius:8px 8px 12px 12px;
+  background:#6b5b3e;
+  transition:top 1.2s ease, opacity 1.2s ease;
+  z-index:1;
+}
+.well .urn.down{top:88px;opacity:.25}
+.well .tag9{
+  position:absolute;right:-8px;top:-6px;
+  font-size:11px;color:var(--zhu);border:1px solid var(--zhu-dim);
+  border-radius:3px;padding:2px 7px;letter-spacing:.14em;
+  opacity:0;transition:opacity .5s;
+  background:var(--ink);z-index:4;
+}
+.well .tag9.on{opacity:1}
+.well-box .wx p{font-size:13.5px;color:#b9b5aa;line-height:2}
+.btn{
+  display:inline-block;margin-top:14px;
+  border:1px solid var(--zhu-dim);color:var(--zhu);
+  background:none;border-radius:3px;
+  padding:8px 20px;font-size:13.5px;letter-spacing:.24em;
+  cursor:pointer;font-family:inherit;
+  transition:all .3s;
+}
+.btn:hover{background:rgba(95,146,112,.14)}
+.btn:disabled{opacity:.4;cursor:default}
+.result-stamp{
+  display:none;margin-left:14px;color:var(--zhu);font-size:14px;letter-spacing:.2em;
+}
+.result-stamp.on{display:inline}
+.med-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.med-grid .md{
+  border:1px dashed var(--line);border-radius:4px;
+  padding:14px 16px;font-size:13px;color:#b9b5aa;line-height:1.95;
+}
+.med-grid .md b{color:var(--paper);font-size:13.5px;display:block;margin-bottom:4px;letter-spacing:.08em}
+
+/* ===== S5 公案 ===== */
+.theft-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:34px}
+.tcard{perspective:900px}
+.tcard .inner{
+  position:relative;transform-style:preserve-3d;transition:transform .65s;
+  height:250px;cursor:pointer;
+}
+.tcard.flip .inner{transform:rotateY(180deg)}
+.tface{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border:1px solid var(--line);border-radius:5px;background:var(--stone);
+  padding:20px 20px 16px;display:flex;flex-direction:column;
+}
+.tface.back{transform:rotateY(180deg)}
+.tface h4{font-size:16px;color:var(--zhu);letter-spacing:.14em;margin-bottom:8px;font-weight:600}
+.tface h4 small{font-size:11px;color:var(--smoke);letter-spacing:.2em;margin-left:10px}
+.tface p{font-size:13.5px;color:#b9b5aa;line-height:2;flex:1}
+.tface .fh{font-size:11px;color:var(--smoke);letter-spacing:.26em;margin-top:10px}
+.meng-card{
+  border:1px solid var(--zhu-dim);border-radius:5px;
+  background:linear-gradient(120deg, rgba(95,146,112,.1), rgba(95,146,112,.02));
+  padding:26px 28px;margin-bottom:32px;
+}
+.meng-card h3{font-size:17px;letter-spacing:.12em;color:var(--paper);margin-bottom:10px}
+.meng-card h3 em{font-style:normal;font-size:12px;color:var(--zhu);letter-spacing:.3em;margin-right:12px}
+.meng-card p{font-size:14px;color:#b9b5aa;line-height:2.05}
+.odd-band{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.odd-band .od{
+  border:1px solid var(--line);border-radius:4px;background:var(--stone);
+  padding:20px 20px 16px;
+}
+.odd-band .od h4{font-size:15px;color:var(--zhu);letter-spacing:.1em;margin-bottom:8px;font-weight:600}
+.odd-band .od p{font-size:13px;color:#b9b5aa;line-height:1.95}
+.ledger{margin-top:14px;border:1px dashed var(--line);border-radius:4px;overflow:hidden;font-size:12.5px}
+.ledger .lr{
+  display:flex;justify-content:space-between;padding:8px 14px;
+  border-bottom:1px dashed var(--line);color:#b9b5aa;
+}
+.ledger .lr:last-child{border-bottom:none}
+.ledger .lr b{color:var(--shu);font-weight:600}
+
+/* ===== S6 清谈 ===== */
+.chat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:30px}
+.chat-grid .cg{
+  border:1px solid var(--line);border-radius:4px;background:var(--stone);
+  padding:22px 22px 16px;
+}
+.chat-grid .cg h4{font-size:15.5px;color:var(--zhu);letter-spacing:.12em;margin-bottom:10px;font-weight:600}
+.chat-grid .cg p{font-size:13.5px;color:#b9b5aa;line-height:2}
+.proverb-band{
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:30px 0;margin:34px 0 0;
+}
+.proverb-band h4{font-size:14px;color:var(--zhu);letter-spacing:.26em;margin-bottom:12px;font-weight:600}
+.proverb-band p{font-size:13.5px;color:#b9b5aa;line-height:2.05}
+.color-chips{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.color-chips .cc{
+  padding:6px 14px;border-radius:999px;font-size:13px;
+  border:1px solid var(--line);color:#b9b5aa;background:var(--stone);
+}
+.color-chips .cc.c1{border-color:#5e8fbb;color:#9db8d6}
+.color-chips .cc.c2{border-color:#8f8b7e;color:#c5c1b4}
+.color-chips .cc.c3{border-color:var(--shu);color:#d69a94}
+.color-chips .cc.c4{border-color:#7a5f9b;color:#a993c4}
+.color-chips .cc.c5{border-color:var(--zhu-dim);color:#9dc2a8}
+.color-chips .tail{font-size:12.5px;color:var(--smoke);margin-left:6px}
+
+/* ===== 尾屏 ===== */
+#coda{
+  position:relative;padding:130px 0 90px;text-align:center;overflow:hidden;
+  background:linear-gradient(180deg, var(--ink) 0%, #14170f 100%);
+}
+#coda .poem{
+  display:flex;justify-content:center;gap:44px;margin:34px 0 10px;
+}
+#coda .poem .col{
+  writing-mode:vertical-rl;display:inline-block;
+  font-size:clamp(26px,5vw,38px);letter-spacing:.34em;
+  color:var(--paper);
+}
+#coda .poem .col em{font-style:normal;color:var(--zhu)}
+#coda .src{font-size:12.5px;color:var(--smoke);letter-spacing:.16em}
+#coda .seal{
+  margin:44px auto 0;
+  width:118px;height:118px;border:3px solid var(--shu);border-radius:8px;
+  display:flex;flex-direction:column;justify-content:center;
+  transform:rotate(-4deg);
+  background:rgba(192,69,60,.08);
+  gap:2px;
+}
+#coda .seal span{
+  display:block;text-align:center;
+  font-size:31px;line-height:1.25;color:var(--shu);font-weight:700;letter-spacing:.35em;text-indent:.35em;
+}
+#coda .endline{margin-top:40px;font-size:13px;color:var(--smoke);letter-spacing:.3em}
+
+footer{padding:50px 0 60px;border-top:1px solid var(--line)}
+footer .wrap{width:min(980px,90vw)}
+footer p{font-size:12.5px;color:var(--smoke);line-height:2.1}
+footer a{color:var(--zhu);text-decoration:none;border-bottom:1px dotted var(--zhu-dim)}
+footer .warn{color:#b08a86}
+
+@media(max-width:860px){
+  .life-band{flex-direction:column}
+  .life-band .st{border-right:1px solid var(--line);border-bottom:none}
+  .life-band .st:last-child{border-bottom:1px solid var(--line)}
+  .life-band .st::after{display:none}
+  .dossier,.peel-stage,.name-list,.spring-note,.rules-grid,.med-grid,
+  .theft-row,.odd-band,.chat-grid{grid-template-columns:1fr}
+  .story-grid{grid-template-columns:1fr 1fr}
+  .store-grid{grid-template-columns:1fr 1fr}
+  .well-box{flex-direction:column;text-align:center}
+  .shoot-tower{height:420px}
+  .verdict{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- 左缘竹节进度 -->
+<div id="stalk" aria-hidden="true"></div>
+
+<!-- ============ 首屏:破土 ============ -->
+<header id="hero">
+  <div class="sky"></div>
+  <div class="moon"></div>
+  <div class="bamboos">
+    <b style="left:6%;height:52%"></b>
+    <b style="left:12%;height:74%"></b>
+    <b style="left:20%;height:40%"></b>
+    <b style="right:7%;height:66%"></b>
+    <b style="right:15%;height:46%"></b>
+    <b style="right:24%;height:80%"></b>
+  </div>
+  <div class="hero-stage">
+    <p class="kicker">四库谱录类 · 仿茶经体例</p>
+    <div class="title-wrap">
+      <span class="byline">宋 释赞宁 撰</span>
+      <h1 class="big-title" id="bigTitle">笋谱</h1>
+    </div>
+    <div class="soil-row">
+      <div class="mound" id="mound">
+        <span class="crack"></span>
+      </div>
+      <div class="shoot" id="shoot" title="点我破土"><span class="tip"></span></div>
+      <p class="soil-hint" id="soilHint">点土 · 助它破土</p>
+    </div>
+    <p class="hero-sub">一卷<span class="zl">笋</span>的小传：名字、山场、吃法、典故、闲话，五卷五个切面</p>
+    <p class="scroll-hint">向 下 入 山</p>
+  </div>
+</header>
+
+<!-- ============ S1 作者 ============ -->
+<section id="s1">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="no">一 · 写谱的人</p>
+      <h2>僧统的履历，与一桩除名悬案</h2>
+      <p class="lead">四库馆臣替这部书写提要时，先替作者打了一场笔仗：有人说作者是九僧里的惠崇，有人说作者是赞宁。翻出正史的艺文志对质，赞宁胜诉。</p>
+    </div>
+    <div class="paper-block rv">
+      <p class="pb-cap">提要判词</p>
+      <div class="vs-row">
+        <div class="vs"><small>晁公武记</small><q>晁公武读书志作僧恵崇撰</q></div>
+        <div class="vs"><small>陈振孙记</small><q>陈振孙书录解题作僧赞宁撰</q></div>
+        <div class="vs win"><small>正史定谳</small><q>考宋史艺文志亦作赞宁则振孙说是也</q></div>
+      </div>
+      <p class="qn">同册还钉着一份隔壁蘑菇小册的提要，那是宋人陈仁玉写的《菌谱》，别认错了门牌。</p>
+    </div>
+    <div style="height:26px"></div>
+    <div class="life-band rv">
+      <div class="st"><b>德清出家</b><span>俗姓高，在杭州龙兴寺落发</span></div>
+      <div class="st"><b>两浙僧统</b><span>吴越王钱镠署他管两浙佛教</span></div>
+      <div class="st"><b>召对宫中</b><span>宋太宗把他召进滋福殿问话</span></div>
+      <div class="st"><b>诏修高僧传</b><span>奉旨修本朝高僧传记</span></div>
+      <div class="st"><b>谥圆明大师</b><span>咸平年间加右街僧录衔，至道二年圆寂</span></div>
+    </div>
+    <div class="dossier rv">
+      <div class="card">
+        <h3><em>原本</em>赝本警报</h3>
+        <p>他另有一部《物类相感志》，流传到今天的全是假书。馆臣把话说死：</p>
+        <q>所着物类相感志岁乆散佚，世所传者皆赝本，惟此书犹其原本</q>
+      </div>
+      <div class="card">
+        <h3><em>体例</em>照着茶经搭架子</h3>
+        <p>全书五卷，一字当一卷的标题：名、出、食、事、说。馆臣一眼认出师承：</p>
+        <q>其标题葢仿陆羽茶经，援据奥博，所引古书多今世所不传，深有资于考证</q>
+      </div>
+      <div class="card" style="grid-column:1/-1">
+        <h3><em>悬案</em>韩愈的诗为什么没被收</h3>
+        <p>宋人王得臣替这本书做盘点：历代咏笋的诗，从梁元帝到唐杨师道都收了，偏偏韩愈那首二十六韵的和作不见踪影。是文献没传到，还是记仇？馆臣把可能都摆出来，末一句最像吐槽：</p>
+        <q>岂宁忿其排释氏而私懐去取耶</q>
+        <p class="warnline">韩愈曾上表谏迎佛骨，僧人记恨他，顺手在他头上除名，千年后的四库馆臣也只能猜。校字记：提要此处咏字下脱一笋字，照录避引。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S2 一之名 ============ -->
+<section id="s2">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="no">二 · 一之名</p>
+      <h2>剥开十层笋壳，一层一个名字</h2>
+      <p class="lead">古人给笋起了一打名字。点笋壳把它一层层剥掉，剥到底，就是赞宁给笋下的定义。</p>
+    </div>
+    <div class="peel-stage rv">
+      <div class="shoot-tower">
+        <div class="shell" style="top:0"></div>
+        <div class="shell" style="top:44px"></div>
+        <div class="shell" style="top:88px"></div>
+        <div class="shell" style="top:132px"></div>
+        <div class="shell" style="top:176px"></div>
+        <div class="shell" style="top:220px"></div>
+        <div class="shell" style="top:264px"></div>
+        <div class="shell" style="top:308px"></div>
+        <div class="shell" style="top:352px"></div>
+        <div class="shell" style="top:396px"></div>
+        <p class="peel-count" id="peelCount">已剥 0 层 · 共 10 层</p>
+      </div>
+      <div>
+        <div class="name-list" id="nameList">
+          <div class="name-item"><b>笋</b><span><q>生成谓之笋</q></span></div>
+          <div class="name-item"><b>萌</b><span><q>初生谓之萌</q></span></div>
+          <div class="name-item"><b>篛竹</b><span><q>土内皮中谓之篛也</q></span></div>
+          <div class="name-item"><b>□</b><span>箭竹之萌，库本此条正字讹缺，避引</span></div>
+          <div class="name-item"><b>虇</b><span><q>芦苇之初生</q></span></div>
+          <div class="name-item"><b>竹胎</b><span><q>故谓之竹胎也</q></span></div>
+          <div class="name-item"><b>竹牙</b><span><q>即牙目之牙也</q></span></div>
+          <div class="name-item"><b>茁</b><span><q>谓竹萌初生茁茁然</q></span></div>
+          <div class="name-item"><b>初篁</b><span><q>初始也篁竹也见梁简文帝集</q></span></div>
+          <div class="name-item"><b>竹子</b><span><q>张华神异经注子笋也</q></span></div>
+        </div>
+        <div class="paper-block" style="margin-top:20px">
+          <p class="pb-cap">剥到底的定义</p>
+          <div class="q">笋者竹之篛也，竹根曰鞭，鞭节之间乳赘而生者</div>
+          <p style="font-size:13.5px;color:#4a463c">竹根叫鞭，鞭节上鼓出的包，就是笋。整个名字系统，其实是一部笋的成长日志。</p>
+        </div>
+      </div>
+    </div>
+    <div class="spring-note rv">
+      <div class="pn">
+        <h4>八月小春</h4>
+        <p>竹在农历八月返一次春，书里叫小春：</p>
+        <q>大抵竹八月俗谓之小春，热欲去寒欲来，气至而凉，故曰小春</q>
+        <p style="margin-top:8px">这期间鞭头上也会冒笋，市面有人挖了去卖，书里记作伪笋，但马上替它平反：</p>
+        <q>俗谓之伪笋，言伪者音讹也，二笋也</q>
+        <p style="margin-top:8px">伪不是假货，是音讹，本字该是二笋，好比花谢再开、果落再结。</p>
+      </div>
+      <div class="pn">
+        <h4>种竹谚语</h4>
+        <p>竹鞭认方向，正月引鞭必朝西南，书里转述了一句民间口诀：</p>
+        <q>谚曰东家种竹，西家理地，谓其滋蔓而来生也</q>
+        <p style="margin-top:8px">东边家种竹，西边家只管把地弄松，来年笋自己会搬家过去。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S3 二之出 ============ -->
+<section id="s3">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="no">三 · 二之出</p>
+      <h2>笋的版图：从钱塘紫苞到交趾毒刺</h2>
+      <p class="lead">这一章是北宋的笋产地图。赞宁一条条记产地、记时令，也记下几种碰不得的：带朱点的是毒签。</p>
+    </div>
+    <div class="tagwall rv">
+      <div class="stag"><b>燕笋</b><i>钱唐，燕来时生</i></div>
+      <div class="stag"><b>天目笋</b><i>天目山，采于端午之后</i></div>
+      <div class="stag"><b>箭笋</b><i>会稽一带，腊月生</i></div>
+      <div class="stag"><b>郿竹笋</b><i>冬夏皆有</i></div>
+      <div class="stag"><b>竹王林笋</b><i>南地，多冬生</i></div>
+      <div class="stag"><b>孤竹笋</b><i>襄阳，三年一枚</i></div>
+      <div class="stag"><b>旋味笋</b><i>福州，苦久回甘</i></div>
+      <div class="stag"><b>镛竹笋</b><i>广州，竹黄疗风</i></div>
+      <div class="stag"><b>慈母山笋</b><i>江宁，常年禁伐</i></div>
+      <div class="stag"><b>卭竹笋</b><i>蜀中，春生</i></div>
+      <div class="stag"><b>对青竹笋</b><i>成都，一节两色</i></div>
+      <div class="stag"><b>慈竹笋</b><i>江南，四月生</i></div>
+      <div class="stag"><b>龙牙竹笋</b><i>永嘉，风雨护持</i></div>
+      <div class="stag"><b>月竹笋</b><i>每月一发</i></div>
+      <div class="stag"><b>三棱竹笋</b><i>川中，见云为吉</i></div>
+      <div class="stag du"><b>毛笋</b><i>海畔，通体生毛</i></div>
+      <div class="stag du"><b>交趾竹笋</b><i>中实有毒</i></div>
+      <div class="stag du"><b>棘竹笋</b><i>味美伤发</i></div>
+    </div>
+    <div class="story-grid rv">
+      <div class="sg">
+        <h4>竹王林笋</h4>
+        <p>竹王的出生记录，被赞宁抄进了笋的户口本：</p>
+        <div class="q">汉武世一女浣于胜水，见竹节随流，近女子推去又来，闻有音声，持归破之，得小儿男也，及长以竹为姓，立以为王</div>
+        <p>弃在野地的竹筒，就地长成一片林。</p>
+      </div>
+      <div class="sg">
+        <h4>相思崖桃竹</h4>
+        <div class="q">涪陵相思崖生此竹，昔有童子在崖下吹竹，神女见悦之，投以桃竹钗</div>
+        <p>一场崖下的笛声偶遇，崖名从此改叫相思。</p>
+      </div>
+      <div class="sg">
+        <h4>孤竹笋</h4>
+        <div class="q">襄阳薤山下有孤竹，三年方生一笋，及笋成竹，竹母已死矣</div>
+        <p>三年等一枚笋，笋成竹那天，母竹枯死。一代抵一代，像人的香火。</p>
+      </div>
+      <div class="sg">
+        <h4>龙牙竹笋</h4>
+        <div class="q">出永嘉大罗山，其竹长四五尺，稀节，人取必有大风雨雷电，人下山则止</div>
+        <p>想挖它？风雨雷电伺候。人一下山，天立刻放晴。</p>
+      </div>
+    </div>
+    <div class="spring-note rv" style="margin-top:22px">
+      <div class="pn">
+        <h4>毒签三枚</h4>
+        <p>海畔毛笋：<q>生海畔山，而竹与笋悉有毛，伤人则死</q>，泊船海岛千万别当野味。交趾竹笋：<q>出交趾，其为竹也，实中劲彊，有毒，彼土人锐以刺虎，中之则死</q>，笋也跟着内实。棘竹笋最冤：<q>其笋味肥，食之落人鬓发</q>，好吃，吃到头发掉光。校字记：棘竹笋条目首字为库本私用字，条名避引。</p>
+      </div>
+      <div class="pn">
+        <h4>城墙笋与怀中笋</h4>
+        <p>箣竹一身是刺：<q>其竹枝上刺，南人呼为箣，自根横生枝条，展转如织</q>，野火只烧得掉细枝嫩条，于是邕州拿它筑城：<q>邕州旧以为城，蛮蜒来侵，竟不能入</q>。慈竹正相反，<q>笋不外迸，只向里生</q>，像母亲把孩子拢在怀里。江宁慈母山的竹子做箫管，山上常年禁伐。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S4 三之食 ============ -->
+<section id="s4">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="no">四 · 三之食</p>
+      <h2>灶间规矩：五条非，一句蒸</h2>
+      <p class="lead">赞宁写吃笋，先立规矩再给答案，中间还夹着一场正文与夹注的顶嘴。</p>
+    </div>
+    <div class="verdict rv">
+      <div class="stamp">蒸</div>
+      <div class="vt">
+        <h3>全书灶间的最终判词</h3>
+        <div class="q">不然蒸最美味全，煻灰中煨，后入五味尤佳</div>
+        <p>蒸最能留味，煻灰里煨过再调味更妙。四库馆臣还读出一场潜台词官司：正文一条讲煮羹，夹注当场顶回去，馆臣判这注像后人偷偷加的：<q>注乃驳正其说，以为羮不如蒸</q>，又<q>似后人之所附益</q>。一部书里，注跟正文吵了一千年。</p>
+      </div>
+    </div>
+    <div class="rules-grid rv">
+      <div class="rule"><b>非 鲜</b><p>笋离土就开始倒计时，保鲜单位按天算：</p><q>采笋一日曰蔫，二日曰箊</q></div>
+      <div class="rule"><b>非 食</b><p>五连否定句，是灶间墙上贴的警告条：</p><q>采而停乆非鲜也，盛而苦风非藏也，拣之脱壳非治也，浄之入水非洗也，蒸煑不乆非食也</q></div>
+      <div class="rule"><b>非 生</b><p>煮要煮足一个时辰循环，尝到生味回炉重来。书里说得很重：笋不可生吃，生吃伤人。没煮熟的笋，是会教训人的。</p></div>
+    </div>
+    <div class="well-box rv">
+      <div class="well">
+        <div class="body"></div>
+        <div class="mouth"></div>
+        <div class="urn" id="urn"></div>
+        <span class="tag9" id="tag9">九月启封</span>
+      </div>
+      <div class="wx">
+        <h3 style="font-size:17px;letter-spacing:.1em;margin-bottom:8px;color:var(--paper)">生藏法：把夏天沉进井底</h3>
+        <p>没有冷藏的年代，赞宁记下的土办法近乎魔法：选肥笋覆进能容一石的陶器，密泥封死不许进风，留到无笋的季节开器；或截去笋尖盐汤煮过装瓶，灌冷盐汤封口，整瓶沉进井底。</p>
+        <div class="q">沈于井底，至九月，井水暖旱，取出如生</div>
+        <p>九月里拉上来，笋像刚从土里掰的。校字记：暖旱二字库本如此，照录。</p>
+        <button class="btn" id="sinkBtn">把瓮沉进井底</button>
+        <span class="result-stamp" id="wellStamp">取出如生</span>
+      </div>
+    </div>
+    <div class="store-grid rv">
+      <div class="sto"><b>葅</b><q>盐出水后加盐糯米粥藏，可以过暑月</q>，留到没笋的季节</div>
+      <div class="sto"><b>鲊</b><q>煮用盐米粥藏之，加以椒辛物，或炒熟油藏为醢，食极美矣</q></div>
+      <div class="sto"><b>糠藏</b><q>淡竹安盐中一宿，煑糠令冷藏之，再出别煑糠加盐藏之，五日可食</q></div>
+      <div class="sto"><b>干法</b>大笋去尖盐水渍后曝干，吃前<q>用时乆浸易水而渍，作羮如新笋也</q></div>
+      <div class="sto"><b>脯法</b>熟脯捶碎，姜醋渍过，火焙收进罐里，别让风碰它</div>
+      <div class="sto"><b>越箭干</b>小笋蒸过盐醋焙干，书里盖章：<q>凡笋宜蒸味全，今越箭干为美啖也</q></div>
+      <div class="sto"><b>结笋干</b>秦陇一带细长笋土盐结干贩去山东道，<q>浸而为臛菜，甚美</q></div>
+      <div class="sto"><b>取麻</b>篁竹麻竹正月里燎软抽丝，绩成竹麻，可作绳履纸筋，是笋的另一条命</div>
+    </div>
+    <div class="med-grid rv">
+      <div class="md"><b>解丹砂毒</b>炼丹吃坏的人有救了：<q>笋汁亦可除丹砂毒</q></div>
+      <div class="md"><b>止小儿呕</b>糟笋节里那点水，<q>最止小儿呕吐</q></div>
+      <div class="md"><b>解毒配伍</b><q>杀笋之毒，吴蜀姜，麻油</q>，两味厨房常备</div>
+      <div class="md"><b>甘苦归经</b><q>甘则脾藏食，苦则肝藏食</q>，甜笋走脾，苦笋走肝</div>
+      <div class="md"><b>刮肠箆</b><q>一说滑利大肠，无益于肺也，俗或谓之刮肠箆是也</q>，宋人早把笋当减肥菜，吃多益少损多</div>
+      <div class="md"><b>总纲</b><q>凡食笋之要，譬若治药，修炼得门则益人，反是则损</q>，把吃笋说成炼丹功课</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S5 四之事 ============ -->
+<section id="s5">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="no">五 · 四之事</p>
+      <h2>名士与偷笋贼，一场道德擂台</h2>
+      <p class="lead">第四卷是笋的典故库。谁家笋被偷、主人怎么接招，赞宁连记三案，一案的气度比一案大。</p>
+    </div>
+    <div class="theft-row rv">
+      <div class="tcard"><div class="inner">
+        <div class="tface">
+          <h4>何随<small>华阳国志</small></h4>
+          <p>撞见有人偷自家园笋，他不抓也不喊，拎着自己的鞋悄悄回家。</p>
+          <p class="fh">点 卡 看 原 文</p>
+        </div>
+        <div class="tface back">
+          <h4>原文</h4>
+          <div class="q">人有盗其园笋，随见挈屐而归，恐盗者见也</div>
+          <p class="fh">怕小偷看见鞋，认出自家园子，从此不敢再来</p>
+        </div>
+      </div></div>
+      <div class="tcard"><div class="inner">
+        <div class="tface">
+          <h4>沈道虔<small>隐士传</small></h4>
+          <p>有人拔屋后的笋，他请人捎话：留着想成林。转头买了大笋送过去。</p>
+          <p class="fh">点 卡 看 原 文</p>
+        </div>
+        <div class="tface back">
+          <h4>原文</h4>
+          <div class="q">人有拔屋后笋，令人止之曰，惜此笋欲成林，更有佳者，相与乃令人买大笋送与之</div>
+          <p class="fh">挡下贼手，再赔上一根更大的</p>
+        </div>
+      </div></div>
+      <div class="tcard"><div class="inner">
+        <div class="tface">
+          <h4>范元琰<small>梁书附传</small></h4>
+          <p>偷笋人要蹚一条沟，他索性砍树搭桥，方便对方来去。</p>
+          <p class="fh">点 卡 看 原 文</p>
+        </div>
+        <div class="tface back">
+          <h4>原文</h4>
+          <div class="q">元琰伐树为桥，与盗者过，盗人感其情而息意不盗</div>
+          <p class="fh">一座桥，把贼意拆了</p>
+        </div>
+      </div></div>
+    </div>
+    <div class="meng-card rv">
+      <h3><em>大案</em>孟宗哭竹</h3>
+      <p>二十四孝里哭竹生笋的主角，赞宁把他收进笋的列传：孟宗是江夏人，做军吏时不得志，夜里屋漏，哭着向母亲谢罪；母亲最爱吃笋，偏偏冬天将至，林中无笋：</p>
+      <div class="q">母性嗜笋，冬节将至，宗乃入林哀泣，笋为之生，得以供祭</div>
+    </div>
+    <div class="odd-band rv">
+      <div class="od">
+        <h4>高祖的竹皮冠</h4>
+        <p>刘邦做亭长时拿笋壳压冠，派卒去薛县整治，后来贵了照戴不误：<q>乃以竹皮为冠</q>，<q>所谓刘氏冠是也</q>。一枚笋壳，进了汉朝的冠服制度。</p>
+      </div>
+      <div class="od">
+        <h4>张芬的金笋弹弓</h4>
+        <p>唐代大力士张芬拿向阳巨笋做实验，罩笼培土，长到四尺才伐：<q>常拣向阳巨笋，纎以笼之，随长以土培之，常留寸许，度计髙四尺，数长乆方除笼伐之，一尺十节，其色如金</q>。这截金笋磨成弹丸，能在墙上写出天下太平四个字。</p>
+      </div>
+      <div class="od">
+        <h4>两位学士为一株笋绝交</h4>
+        <p>孟蜀时两位学士徐光溥与刘羲度同衙当值，庭中忽然迸出一株笋，两人各题一首。徐诗：<q>迸出班犀数十株</q>，又<q>用作丹梯得也无</q>；刘诗回敬：<q>徐徐出土非人种</q>，<q>从他长养譬如无</q>。一唱一和，人从此<q>二学士従兹不睦</q>。一支笋，拆散一对同僚。</p>
+      </div>
+      <div class="od">
+        <h4>夏侯彪之的天才账</h4>
+        <p>唐朝新繁县令夏侯彪之问里胥：笋一钱几茎？答五茎。他掏十千钱买五万茎，全寄存在林里养着，到秋天交割：</p>
+        <div class="ledger">
+          <div class="lr"><span>买入</span><span>十千钱 · 五万茎</span></div>
+          <div class="lr"><span>养至秋</span><span>一竿成竹十丈</span></div>
+          <div class="lr"><span>估值</span><b>五十万</b></div>
+        </div>
+        <div class="q" style="font-size:13px">竹笋一钱几茎，对曰五茎，取十千买五万茎……至秋成竹，一竿十丈，遂成五十万，贪猥不道</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S6 五之说 ============ -->
+<section id="s6">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="no">六 · 五之说</p>
+      <h2>竹庐清谈：龙孙、此君之子与一句名谚</h2>
+      <p class="lead">末卷是闲话，闲话里藏着两个名字的出处，和一句你今天还在用的口头禅。</p>
+    </div>
+    <div class="chat-grid rv">
+      <div class="cg">
+        <h4>龙孙，还是龙的孙子？</h4>
+        <p>笋在俗话里叫龙孙。赞宁较真：没听说龙能变竹，倒是竹能化龙，那辈分也该反过来。<q>俗闻呼笋为龙孙</q>，他考出结论：<q>理实竹为龙，龙且不生笋</q>，末了又认输保留：<q>故嘉言巧论呼为龙孙耳</q>。好听就行，家谱不追究。</p>
+      </div>
+      <div class="cg">
+        <h4>此君之子</h4>
+        <p>王徽之暂住别人家，先令人种竹，人问何必麻烦，他笑着给出那句千古名言：</p>
+        <div class="q">昔王子猷暂寄人家，便令种竹，或问暂居何烦，子猷笑曰，何可一日无此君</div>
+        <p>竹从此叫此君。赞宁顺着往下排辈分：</p>
+        <div class="q">今作谱者可命笋为此君之子也</div>
+        <p>写谱的人发话：笋，就是此君的儿子。</p>
+      </div>
+      <div class="cg">
+        <h4>竹的生日与墙下的猫</h4>
+        <p>民间给竹定了生日，五月十三，移竹要挑这天：<q>民间说竹有生日，即五月十三日也，移竹栽取宜此日</q>。更玄的是防偷笋偏方：隔墙有人偷笋的，就在自家墙下埋一只猫：</p>
+        <div class="q">偷笋闾阎人隔垣篱，必埋猫于家墙下，明年笋迸过矣</div>
+        <p>来年笋果然蹿过墙去。猫与笋之间的因果，赞宁照录不评。</p>
+      </div>
+      <div class="cg">
+        <h4>五色笋</h4>
+        <p>有人问笋有没有五色纹彩，赞宁报菜名：</p>
+        <div class="q">闽中赋有素笋赤笋，钱塘多紫桂笋</div>
+        <p>再补一句底线判断：<q>大约不过青绿色</q>。五花八门的名字，落到盘子里还是那一管青。</p>
+      </div>
+    </div>
+    <div class="proverb-band rv">
+      <h4>谚语压轴 · 一句老话的出生证明</h4>
+      <p>书末记了一则灶间故事：有位新妇处处不合婆心意，婆家岁暮忽然要笋羹。腊月哪来的笋？她二话不说就煮。妯娌问她哪弄来的，她答：</p>
+      <div class="q">妇曰且譍为贵，以顺攘逆责耳</div>
+      <p>先应下来再说，用顺从挡下刁难。婆婆听说后反悔自责，从此疼她。故事收在两条谚语上：</p>
+      <div class="q">谚曰腊月煑笋羮，大人道便是</div>
+      <div class="q" style="font-size:16.5px">恭敬不如从命，受训莫如从顺</div>
+      <p style="margin-top:10px">这句今天还挂在嘴边的老话，出生证明就在这部僧人的笋谱里。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 尾屏 ============ -->
+<footer id="coda">
+  <p class="kicker" style="margin-bottom:0">晚年寄书天目山 ｜ 问山中出产 ｜ 旧友僧答诗</p>
+  <div class="poem">
+    <span class="col">我本无根株</span>
+    <span class="col">只将<em>笋</em>为命</span>
+  </div>
+  <p class="src"><q>山中人事违，天眼中修定</q> ｜ 天目山旧友答诗</p>
+  <div class="seal"><span>此君</span><span>之子</span></div>
+  <p class="endline">笋谱终 · 宋右街僧录赞宁 撰</p>
+</footer>
+
+<footer>
+  <div class="wrap">
+    <p>文本来源:殆知阁古代文献简体库《笋谱》一卷(宋·释赞宁撰,四库本一卷,据艺藏草木鸟兽虫鱼本,去空白一万零五百一十七字)。</p>
+    <p>本页为殆知阁导读系列第 336 篇,系列总目见 <a href="https://github.com/robertsong/daizhige-daodu" rel="noopener">daizhige-daodu 仓库</a>。全部引文经脚本与库内文件去标点归一逐字比对,白话部分经六字窗反扫核验。</p>
+    <p class="warn">时代局限提醒:原文成书于北宋,涉及孝行感应、物性药效之记载均属其时代语境,不代表今日立场;文中食疗与毒性说法请勿据以实践。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- 左缘竹节进度 ---------- */
+var SECS=["hero","s1","s2","s3","s4","s5","s6","coda"];
+var stalk=document.getElementById("stalk");
+SECS.forEach(function(){
+  var d=document.createElement("div");d.className="seg";
+  d.innerHTML="<i></i>";
+  stalk.appendChild(d);
+});
+var segs=stalk.querySelectorAll(".seg");
+function litStalk(){
+  var from=window.scrollY+window.innerHeight*0.5, idx=0;
+  SECS.forEach(function(id,i){
+    var el=document.getElementById(id);
+    if(el && el.offsetTop<=from) idx=i;
+  });
+  segs.forEach(function(s,i){s.classList.toggle("on",i<=idx);});
+}
+window.addEventListener("scroll",litStalk,{passive:true});
+litStalk();
+
+/* ---------- 首屏破土 ---------- */
+var mound=document.getElementById("mound"),
+    shoot=document.getElementById("shoot"),
+    bigTitle=document.getElementById("bigTitle"),
+    soilHint=document.getElementById("soilHint"),
+    grown=false;
+function grow(){
+  if(grown)return;grown=true;
+  mound.classList.add("open");
+  shoot.style.height="104px";
+  setTimeout(function(){bigTitle.classList.add("lit");},650);
+  soilHint.textContent="破土 · 拔节 · 一天一尺";
+}
+shoot.addEventListener("click",grow);
+soilHint.addEventListener("click",grow);
+
+/* ---------- 剥笋壳 ---------- */
+var shells=document.querySelectorAll(".shell"),
+    items=document.querySelectorAll("#nameList .name-item"),
+    pc=document.getElementById("peelCount"),
+    peeled=0;
+shells.forEach(function(sh,i){
+  sh.style.zIndex=20-i;
+  sh.addEventListener("click",function(){
+    if(sh.classList.contains("off"))return;
+    sh.classList.add("off");
+    if(items[i]){items[i].classList.add("in");}
+    peeled++;
+    pc.textContent="已剥 "+peeled+" 层 · 共 10 层";
+  });
+});
+
+/* ---------- 井底沉瓮 ---------- */
+var urn=document.getElementById("urn"),
+    sinkBtn=document.getElementById("sinkBtn"),
+    tag9=document.getElementById("tag9"),
+    wellStamp=document.getElementById("wellStamp"),
+    sunk=false;
+sinkBtn.addEventListener("click",function(){
+  if(sunk)return;sunk=true;
+  urn.classList.add("down");
+  sinkBtn.disabled=true;sinkBtn.textContent="瓮已入井";
+  setTimeout(function(){tag9.classList.add("on");},1300);
+  setTimeout(function(){
+    urn.classList.remove("down");
+    wellStamp.classList.add("on");
+    sinkBtn.textContent="九月启封";
+    sinkBtn.disabled=false;
+  },3400);
+});
+
+/* ---------- 翻卡 ---------- */
+document.querySelectorAll(".tcard").forEach(function(c){
+  c.addEventListener("click",function(){c.classList.toggle("flip");});
+});
+
+/* ---------- 滚动显现 ---------- */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}
+  });
+},{threshold:.12});
+document.querySelectorAll(".rv").forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
