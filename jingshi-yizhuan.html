@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>京氏易传 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --ink2:#211f1c;
+  --paper:#e8e4dc;
+  --paper-dim:#b5afa2;
+  --cinnabar:#c0453c;
+  --cinnabar-soft:rgba(192,69,60,.14);
+  --dim:#7a7568;
+  --line:#2c2a25;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.9;
+  overflow-x:hidden;
+}
+a{color:inherit}
+.wrap{max-width:1060px;margin:0 auto;padding:0 28px}
+.mono{font-family:"Songti SC","Noto Serif CJK SC",serif}
+
+/* ---------- hero ---------- */
+.hero{min-height:92vh;display:flex;align-items:center;position:relative;border-bottom:1px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;width:100%;padding-top:70px;padding-bottom:70px}
+.kicker{font-size:13px;letter-spacing:.35em;color:var(--dim)}
+.hero h1{
+  font-size:clamp(52px,9vw,96px);
+  letter-spacing:.18em;
+  font-weight:600;
+  margin:18px 0 6px;
+  line-height:1.15;
+}
+.hmeta{font-size:15px;color:var(--paper-dim);letter-spacing:.2em}
+.hmeta em{font-style:normal;color:var(--cinnabar)}
+.hsub{margin-top:26px;font-size:17px;color:var(--paper);max-width:34em}
+.hsub b{color:var(--cinnabar);font-weight:600}
+.seal{
+  display:inline-block;margin-top:34px;
+  border:2px solid var(--cinnabar);color:var(--cinnabar);
+  padding:10px 16px;font-size:15px;letter-spacing:.3em;
+  writing-mode:vertical-rl;line-height:1.5;
+  box-shadow:inset 0 0 0 3px var(--ink),inset 0 0 0 4px var(--cinnabar);
+  opacity:.9;
+}
+.hex-stage{position:relative;display:flex;flex-direction:column-reverse;gap:14px;padding:10px 0}
+.yao{height:26px;position:relative}
+.yao .bar{position:absolute;left:0;right:0;top:0;bottom:0;background:#3a372f}
+.yao.yang .bar{background:var(--cinnabar);opacity:0;transform:scaleX(.2);transform-origin:left}
+.yao.yang.lit .bar{opacity:1;transform:scaleX(1);transition:all .8s cubic-bezier(.2,.7,.2,1)}
+.yao.yin{display:flex;gap:16px}
+.yao.yin .half{flex:1;height:26px;background:#3a372f}
+.yao .tag{
+  position:absolute;right:-58px;top:50%;transform:translateY(-50%);
+  font-size:12px;color:var(--dim);letter-spacing:.1em;white-space:nowrap;
+}
+.yao.lit .tag{color:var(--paper-dim)}
+.hex-cap{position:absolute;left:0;bottom:-46px;font-size:12px;color:var(--dim);letter-spacing:.2em}
+
+/* ---------- 章签导航 ---------- */
+.chapter-nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(25,25,23,.96);backdrop-filter:blur(4px);
+  border-bottom:1px solid var(--line);
+}
+.chapter-nav .wrap{display:flex;gap:2px;overflow-x:auto}
+.chapter-nav a{
+  padding:13px 18px;font-size:14px;color:var(--dim);text-decoration:none;
+  letter-spacing:.15em;border-bottom:2px solid transparent;white-space:nowrap;
+}
+.chapter-nav a:hover{color:var(--paper)}
+.chapter-nav a.on{color:var(--cinnabar);border-color:var(--cinnabar)}
+
+/* ---------- 章节 ---------- */
+section{padding:96px 0 40px}
+.sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:44px}
+.sec-no{
+  font-size:13px;color:var(--cinnabar);letter-spacing:.25em;
+  border:1px solid rgba(192,69,60,.5);padding:3px 10px;
+}
+.sec-head h2{font-size:clamp(26px,4vw,36px);letter-spacing:.14em;font-weight:600}
+.sec-head .en{font-size:13px;color:var(--dim);letter-spacing:.2em;margin-left:auto;white-space:nowrap}
+.prose{font-size:16.5px;color:var(--paper);max-width:40em}
+.prose p{margin-bottom:1.4em}
+.prose .hl{color:var(--cinnabar)}
+.note{font-size:13.5px;color:var(--dim);max-width:40em}
+
+.two-col{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:start}
+
+/* ---------- 简牍引文 ---------- */
+.slips{display:flex;flex-direction:column;gap:22px;margin-top:6px}
+.slip{
+  position:relative;
+  background:linear-gradient(180deg,#26231e,#211e1a);
+  border:1px solid #35322a;
+  padding:18px 22px 16px 48px;
+  font-size:15.5px;line-height:2;
+  color:var(--paper);
+}
+.slip::before{
+  content:"";position:absolute;left:18px;top:24px;width:9px;height:9px;
+  border:1.5px solid var(--cinnabar);border-radius:50%;
+}
+.slip::after{
+  content:"";position:absolute;left:22px;top:34px;bottom:-22px;width:1px;
+  background:linear-gradient(180deg,rgba(192,69,60,.45),rgba(192,69,60,0));
+}
+.slip:last-child::after{display:none}
+.slip .src{
+  display:block;margin-top:8px;font-size:12px;color:var(--dim);letter-spacing:.2em;
+}
+.slip.big{font-size:18px;padding-left:52px;color:#f0ece2}
+.slip .q{color:inherit}
+
+/* ---------- 八宫 ---------- */
+.palace-tabs{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 30px}
+.palace-tabs button{
+  background:none;border:1px solid var(--line);color:var(--paper-dim);
+  font-family:inherit;font-size:17px;padding:8px 0;width:52px;cursor:pointer;
+  letter-spacing:0;transition:all .25s;
+}
+.palace-tabs button:hover{border-color:var(--paper-dim);color:var(--paper)}
+.palace-tabs button.on{background:var(--cinnabar);border-color:var(--cinnabar);color:#fff}
+.bian{display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:start}
+.gua-face{position:sticky;top:86px}
+.gua-name{font-size:44px;letter-spacing:.2em;margin-bottom:4px}
+.gua-sub{font-size:13px;color:var(--dim);letter-spacing:.15em;margin-bottom:22px}
+.gua-bars{display:flex;flex-direction:column-reverse;gap:11px}
+.gb{height:22px;position:relative}
+.gb .solid{position:absolute;inset:0;background:#3f3b32;transition:background .4s}
+.gb.on .solid{background:var(--cinnabar)}
+.gb.yin{display:flex;gap:13px}
+.gb.yin .half{flex:1;height:22px;background:#3f3b32}
+.gb .pos{position:absolute;left:-34px;top:50%;transform:translateY(-50%);font-size:11px;color:#4c483e}
+.stages{display:flex;flex-wrap:wrap;gap:8px}
+.stages button{
+  background:none;border:1px solid var(--line);color:var(--paper-dim);
+  font-family:inherit;font-size:14px;padding:7px 14px;cursor:pointer;transition:all .25s;
+}
+.stages button.on{border-color:var(--cinnabar);color:var(--cinnabar);background:var(--cinnabar-soft)}
+.stage-detail{margin-top:26px;min-height:96px}
+.stage-detail h4{font-size:22px;letter-spacing:.12em;margin-bottom:6px}
+.stage-detail h4 span{color:var(--cinnabar);font-size:15px;margin-right:12px;letter-spacing:.2em}
+.stage-detail p{font-size:15px;color:var(--paper-dim);max-width:34em}
+
+/* 六枚谓之签 */
+.wei-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:52px}
+.wei-card{border:1px solid var(--line);padding:20px 20px 16px;position:relative}
+.wei-card::before{content:"";position:absolute;top:-1px;left:20px;width:34px;height:3px;background:var(--cinnabar)}
+.wei-card h5{font-size:30px;color:var(--cinnabar);letter-spacing:0;font-weight:600;margin-bottom:10px}
+.wei-card .q{display:block;font-size:13.5px;color:var(--paper-dim);line-height:1.9}
+.wei-card p{font-size:13px;color:var(--dim);margin-top:10px;line-height:1.8}
+
+/* ---------- 纳甲表 ---------- */
+.najia-table{width:100%;border-collapse:collapse;margin:34px 0 8px;font-size:15px}
+.najia-table th{
+  font-weight:400;font-size:12.5px;color:var(--dim);letter-spacing:.2em;
+  text-align:left;padding:10px 12px;border-bottom:1px solid #3a372f;
+}
+.najia-table td{padding:13px 12px;border-bottom:1px solid var(--line);transition:background .3s}
+.najia-table td.ys{color:var(--cinnabar);letter-spacing:.1em}
+.najia-table td.gx{color:var(--paper)}
+.najia-table tr:hover td{background:rgba(232,228,220,.04)}
+.najia-table .jin{color:var(--dim);font-size:13px}
+
+/* ---------- 卦气轮 ---------- */
+.wheel-zone{display:grid;grid-template-columns:400px 1fr;gap:52px;align-items:center;margin-top:20px}
+.wheel-box{position:relative;width:100%;max-width:400px}
+.wheel-box svg{width:100%;height:auto;display:block}
+.w-pointer{
+  position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  color:var(--cinnabar);font-size:15px;
+}
+.w-center{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;pointer-events:none;width:52%;
+}
+.w-center .w-name{font-size:26px;letter-spacing:.15em}
+.w-center .w-info{font-size:12px;color:var(--dim);margin-top:6px;letter-spacing:.05em}
+.w-center .w-line{font-size:11.5px;color:var(--paper-dim);margin-top:10px;line-height:1.8}
+.qline{margin-top:26px}
+
+/* ---------- 四易 ---------- */
+.si-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px}
+.si-card{border:1px solid var(--line);padding:26px 22px;position:relative;overflow:hidden}
+.si-card::after{
+  content:"";position:absolute;right:-24px;bottom:-24px;width:80px;height:80px;
+  border:1px solid rgba(192,69,60,.25);transform:rotate(45deg);
+}
+.si-card h5{font-size:24px;letter-spacing:.15em;color:var(--cinnabar);margin-bottom:8px}
+.si-card .lv{font-size:12.5px;color:var(--dim);letter-spacing:.2em;margin-bottom:14px}
+.si-card p{font-size:13.5px;color:var(--paper-dim);line-height:1.9}
+
+/* ---------- 书劫时间线 ---------- */
+.rob{position:relative;margin-top:14px;padding-left:30px}
+.rob::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:1px;background:#3a372f}
+.rob-item{position:relative;padding:0 0 44px}
+.rob-item::before{
+  content:"";position:absolute;left:-27px;top:10px;width:11px;height:11px;
+  border:2px solid var(--cinnabar);border-radius:50%;background:var(--ink);
+}
+.rob-item h4{font-size:17px;letter-spacing:.12em;margin-bottom:4px}
+.rob-item h4 span{color:var(--cinnabar);font-size:13px;margin-right:14px;letter-spacing:.15em}
+.rob-item p{font-size:15px;color:var(--paper-dim);max-width:36em;margin-bottom:12px}
+
+/* ---------- 尾屏 ---------- */
+.finale{padding:120px 0 60px;text-align:center;border-top:1px solid var(--line);margin-top:60px}
+.finale .bigq{font-size:clamp(26px,4.6vw,42px);letter-spacing:.12em;line-height:2;max-width:22em;margin:0 auto;color:#f0ece2}
+.finale .bigq .q{color:inherit}
+.finale .subq{margin-top:18px;font-size:15px;color:var(--dim);letter-spacing:.25em}
+.bagong-table{
+  margin:70px auto 0;max-width:560px;text-align:left;
+  border-collapse:collapse;font-size:15.5px;width:100%;
+}
+.bagong-table td{padding:9px 14px;border-bottom:1px solid var(--line)}
+.bagong-table td.g{color:var(--cinnabar);letter-spacing:.2em;width:3.2em}
+.bagong-table td.b{letter-spacing:.14em;color:var(--paper)}
+.bagong-cap{margin-top:14px;font-size:12.5px;color:var(--dim);letter-spacing:.2em}
+.luokuan{margin-top:80px;font-size:14px;color:var(--dim);letter-spacing:.4em}
+
+footer{border-top:1px solid var(--line);padding:40px 0 60px;font-size:13px;color:var(--dim);line-height:2.3}
+footer a{color:#9a9586;text-decoration:none;border-bottom:1px dotted #4a473f}
+footer .qv{color:#9a9586}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(22px);transition:all .9s cubic-bezier(.2,.7,.2,1)}
+.rv.on{opacity:1;transform:none}
+
+#qb{position:absolute;left:-9999px;top:0;visibility:hidden}
+
+@media(max-width:920px){
+  .hero .wrap{grid-template-columns:1fr;gap:60px;padding-top:56px;padding-bottom:80px}
+  .hex-stage{max-width:340px;margin:0 auto}
+  .two-col,.bian,.wheel-zone{grid-template-columns:1fr;gap:34px}
+  .gua-face{position:static}
+  .wei-grid{grid-template-columns:repeat(2,1fr)}
+  .si-grid{grid-template-columns:repeat(2,1fr)}
+  .wheel-box{max-width:330px;margin:0 auto}
+  .hex-cap{position:static;margin-top:14px}
+}
+@media(max-width:560px){
+  .wei-grid,.si-grid{grid-template-columns:1fr}
+  .wrap{padding:0 18px}
+  .bian{grid-template-columns:1fr}
+  .gua-face .gua-bars{max-width:280px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="kicker">殆知阁导读 · 三百二十八</div>
+      <h1>京氏易传</h1>
+      <div class="hmeta">汉 京房撰　<em>库本三卷</em>　卷内题京房易传</div>
+      <p class="hsub">一台运转了两千年的<b>排卦机器</b>。造它的人被处死在长安街头，机器却一路活到今天：街头卦摊摇出的每一枚铜钱，落进哪一宫、配哪一支干、算哪一门亲戚，用的还是他定下的章程。</p>
+      <div class="seal">八宫之祖</div>
+    </div>
+    <div class="hex-stage" id="hexStage">
+      <div class="yao yang" style="animation-delay:0s"><div class="bar"></div><span class="tag">初九</span></div>
+      <div class="yao yang" style="animation-delay:.2s"><div class="bar"></div><span class="tag">九二</span></div>
+      <div class="yao yang" style="animation-delay:.4s"><div class="bar"></div><span class="tag">九三</span></div>
+      <div class="yao yang" style="animation-delay:.6s"><div class="bar"></div><span class="tag">九四</span></div>
+      <div class="yao yang" style="animation-delay:.8s"><div class="bar"></div><span class="tag">九五</span></div>
+      <div class="yao yang" style="animation-delay:1s"><div class="bar"></div><span class="tag">上九</span></div>
+      <div class="hex-cap">乾卦六爻，纯阳之体，八宫的起点</div>
+    </div>
+  </div>
+</header>
+
+<nav class="chapter-nav" id="chapNav">
+  <div class="wrap">
+    <a href="#zhuan">其人</a>
+    <a href="#bagong">八宫</a>
+    <a href="#najia">纳甲</a>
+    <a href="#guaqi">卦气</a>
+    <a href="#siyi">四易</a>
+    <a href="#shujie">书劫</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- 章一 -->
+<section id="zhuan">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-no">壹</span>
+      <h2>改姓的人</h2>
+      <span class="en">其人</span>
+    </div>
+    <div class="two-col">
+      <div class="prose rv">
+        <p>京房，西汉元帝时人，约生于前77年。他本来姓李，因为精通音律，照着律例给自己改了姓，字君明。这门手艺他没拿去谱曲，而是拿去听天地：风角、灾异、占候，样样都通，最后拜在焦延寿门下学《易》。</p>
+        <p>老师看学生看得极准。焦延寿说过一句狠话：得我学问而送掉性命的，一定是京生。后来果然应验：京房拿灾异说事，直指朝政，弹劾宠臣，被政敌反手构陷，下狱弃市，死时四十一岁。</p>
+        <p>人和书从此分了家。人没了，他留下的那套排卦章程却活了下来。全书三卷，前两卷把六十四卦分成八族逐卦过堂，卷下是总纲。开卷第一卦乾，落笔就定了整套话事的口气。</p>
+      </div>
+      <div class="slips rv">
+        <div class="slip">
+          <span class="q">纯阳用事。象配天，属金。与坤为飞伏，居世。</span>
+          <span class="src">卷上 · 乾</span>
+        </div>
+        <div class="slip">
+          <span class="q">阳极阴生。八卦例诸。</span>
+          <span class="src">卷上 · 乾</span>
+        </div>
+        <div class="slip">
+          <span class="q">人事吉凶，见乎其象，造化分乎有无。</span>
+          <span class="src">卷上 · 乾</span>
+        </div>
+      </div>
+    </div>
+    <div class="two-col" style="margin-top:64px">
+      <div class="prose rv">
+        <p>库本卷末附了一页师承家谱：孔子传《易》，五传到汉初田何，再传丁光、田王孙、孟喜、焦延寿，焦延寿传京房，京房再往下传三家。家谱收尾那句，几乎是一声感慨。</p>
+      </div>
+      <div class="slips rv">
+        <div class="slip big">
+          <span class="q">延寿授房。房授东海殷嘉，河东姚平，河南乘弘。由是易有京房之学，而传盛矣。</span>
+          <span class="src">卷末 · 后序</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 章二 -->
+<section id="bagong">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-no">贰</span>
+      <h2>八变成六十四</h2>
+      <span class="en">八宫</span>
+    </div>
+    <div class="prose rv">
+      <p>京氏体系的心脏叫<span class="hl">八宫</span>。六十四卦不再按上下篇流水排，而是分作八族：乾、震、坎、艮、坤、巽、离、兑各领一族。每族从一卦纯卦起头，自下往上一爻一爻地变：初爻变是一世，二爻再变是二世，变到五世还不算完，第四爻先退回来叫<span class="hl">游魂</span>，下三爻整个退回本家叫<span class="hl">归魂</span>。一族八变，八族六十四。点下面宫签，看每一族怎么变。</p>
+    </div>
+    <div class="palace-tabs rv" id="palaceTabs">
+      <button data-p="乾" class="on">乾</button>
+      <button data-p="震">震</button>
+      <button data-p="坎">坎</button>
+      <button data-p="艮">艮</button>
+      <button data-p="坤">坤</button>
+      <button data-p="巽">巽</button>
+      <button data-p="离">离</button>
+      <button data-p="兑">兑</button>
+    </div>
+    <div class="bian rv">
+      <div class="gua-face">
+        <div class="gua-name" id="guaName">乾</div>
+        <div class="gua-sub" id="guaSub">乾宫本宫</div>
+        <div class="gua-bars" id="guaBars"></div>
+      </div>
+      <div>
+        <div class="stages" id="stageTabs"></div>
+        <div class="stage-detail" id="stageDetail"></div>
+      </div>
+    </div>
+    <div class="wei-grid">
+      <div class="wei-card rv"><h5>世</h5><span class="q">而为一卦之主者，谓之世。</span><p>一族八卦，每卦认一爻做主，这一爻就是问事的落点。</p></div>
+      <div class="wei-card rv"><h5>应</h5><span class="q">而为主之相者，谓之应。</span><p>与世隔三位遥遥相对的那一爻，主客彼此照面。</p></div>
+      <div class="wei-card rv"><h5>飞</h5><span class="q">世之所位，而阴阳之肆者，谓之飞。</span><p>摆在明面上的那一爻。</p></div>
+      <div class="wei-card rv"><h5>伏</h5><span class="q">以隐显佐神明者，谓之伏。</span><p>明面底下还压着一卦，藏而不露，用时才请出来。</p></div>
+      <div class="wei-card rv"><h5>建</h5><span class="q">起乎世而周乎内外，参乎本数以纪月者，谓之建。</span><p>给卦配月份。</p></div>
+      <div class="wei-card rv"><h5>积</h5><span class="q">终之始之，极乎数而不可穷以纪日者，谓之积。</span><p>给卦配日子，转不完的一圈。</p></div>
+    </div>
+    <div class="two-col" style="margin-top:60px">
+      <div class="prose rv">
+        <p>这八个名目是机器的齿轮。卷中坤宫一段把道理说得最干净：卦就是变，变就是来回。</p>
+      </div>
+      <div class="slips rv">
+        <div class="slip">
+          <span class="q">升降反复，不能久处，千变万化，故称乎易。易者，变也。</span>
+          <span class="src">卷中 · 坤</span>
+        </div>
+        <div class="slip">
+          <span class="q">是书兆乾坤之二象，以成八卦，凡八变而六十有四。</span>
+          <span class="src">卷末 · 后序</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 章三 -->
+<section id="najia">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-no">叁</span>
+      <h2>干支入卦</h2>
+      <span class="en">纳甲</span>
+    </div>
+    <div class="two-col">
+      <div class="prose rv">
+        <p>光有卦形还不够。京家把天干地支搬进爻里，后世叫<span class="hl">纳甲</span>：乾、坤各分得两个干，坎离、震巽、艮兑其余六卦两两一对，各配进六爻。再把每爻的五行跟本宫五行攀亲戚：生我的是父母，我生的是子孙，书里叫福德；克我的是官鬼，我克的是妻财，书里叫宝贝；同我的是兄弟。这套亲戚名单，两千年没换过一个字。</p>
+        <p>乾宫属金，六爻纳甲排开，就是下面这张表。卦摊先生嘴里念的子孙爻、官鬼爻，源头全在这里。</p>
+      </div>
+      <div class="slips rv">
+        <div class="slip">
+          <span class="q">分天地乾坤之象，益之以甲乙壬癸，震巽之象配庚辛，坎离之象配戊己，艮兑之象配丙丁。</span>
+          <span class="src">卷下</span>
+        </div>
+        <div class="slip">
+          <span class="q">水配位为褔德，木入金乡居宝贝，土临内象为父母，火来四上嫌相敌，金入金乡木渐微。</span>
+          <span class="src">卷上 · 乾</span>
+        </div>
+        <div class="slip">
+          <span class="q">八卦鬼为系爻，财为制爻，天地为义爻，福德为宝爻，同气为专爻。</span>
+          <span class="src">卷下</span>
+        </div>
+      </div>
+    </div>
+    <table class="najia-table rv">
+      <tr><th>爻位</th><th>纳甲</th><th>五行</th><th>书中名目</th><th>后来叫法</th><th>备注</th></tr>
+      <tr><td class="ys">初九</td><td>甲子</td><td>水</td><td class="gx">福德</td><td class="jin">子孙</td><td class="jin">金生水，我生者</td></tr>
+      <tr><td class="ys">九二</td><td>甲寅</td><td>木</td><td class="gx">宝贝</td><td class="jin">妻财</td><td class="jin">金克木，我克者</td></tr>
+      <tr><td class="ys">九三</td><td>甲辰</td><td>土</td><td class="gx">父母</td><td class="jin">父母</td><td class="jin">土生金，生我者</td></tr>
+      <tr><td class="ys">九四</td><td>壬午</td><td>火</td><td class="gx">嫌相敌</td><td class="jin">官鬼</td><td class="jin">火克金，克我者</td></tr>
+      <tr><td class="ys">九五</td><td>壬申</td><td>金</td><td class="gx">同位</td><td class="jin">兄弟</td><td class="jin">与我同类</td></tr>
+      <tr><td class="ys">上九</td><td>壬戌</td><td>土</td><td class="gx">父母</td><td class="jin">父母</td><td class="jin">宗庙之位，乾宫世爻所在</td></tr>
+    </table>
+    <p class="note rv">书中原文「褔德」用字如此，照录。库本夹注逐爻配了干支五行，本表即据卷上乾卦与卷下爻例排成。</p>
+  </div>
+</section>
+
+<!-- 章四 -->
+<section id="guaqi">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-no">肆</span>
+      <h2>卦气轮</h2>
+      <span class="en">卦气</span>
+    </div>
+    <div class="prose rv">
+      <p>卷下还有一张历法表：二十四节气，每个节气配定一爻，节与中气两两<span class="hl">同用</span>。立春配坎卦初六，跑过半年，对面的立秋用的还是这一爻；夏至配兑宫初九，同用的冬至正对着它。把十二支摆上圈，还能看出名堂：支是逆着走的。</p>
+    </div>
+    <div class="wheel-zone rv">
+      <div class="wheel-box">
+        <div class="w-pointer">▼</div>
+        <svg id="wheelSvg" viewBox="0 0 400 400" aria-label="卦气轮"></svg>
+        <div class="w-center">
+          <div class="w-name" id="wName">立春</div>
+          <div class="w-info" id="wInfo"></div>
+          <div class="w-line" id="wLine"></div>
+        </div>
+      </div>
+      <div>
+        <div class="slips">
+          <div class="slip">
+            <span class="q">阴从午，阳从子，子午分行。子左行，午右行，左右凶吉。</span>
+            <span class="src">卷下</span>
+          </div>
+          <div class="slip qline">
+            <span class="q" id="qShow">立春正月节在寅，坎卦初六，立秋同用。</span>
+            <span class="src">卷下 · 卦气</span>
+          </div>
+        </div>
+        <p class="note" style="margin-top:22px">点轮上任一节气，看它和谁共用一爻。淡色扇区即同用的那一位。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 章五 -->
+<section id="siyi">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-no">伍</span>
+      <h2>四易与王相</h2>
+      <span class="en">四易</span>
+    </div>
+    <div class="two-col">
+      <div class="prose rv">
+        <p>世爻升到一二位，管地上事；升到三位四位，管人间事；升到五位上位，管天上事；游魂归魂，归鬼事。一卦由此分出四层，问什么，看哪层。爻的旺衰另有一套口风：当令则吉，失令则凶，相冲则破，相刑则败。这些词后来成了所有命书的通用零件。</p>
+      </div>
+      <div class="slips rv">
+        <div class="slip">
+          <span class="q">孔子云：“易有四易，一世二世为地易，三世四世为人易，五世六世为天易，游魂归魂为鬼易”。</span>
+          <span class="src">卷下</span>
+        </div>
+        <div class="slip">
+          <span class="q">于六十四卦，遇王则吉，废则凶，冲则破，刑则败，死则危，生则荣。</span>
+          <span class="src">卷下</span>
+        </div>
+        <div class="slip">
+          <span class="q">故易所以断天下之理，定之以人伦，而明王道。</span>
+          <span class="src">卷下</span>
+        </div>
+      </div>
+    </div>
+    <div class="si-grid">
+      <div class="si-card rv"><h5>地易</h5><div class="lv">初爻二爻</div><p>最贴地面的两层，问眼前生计、一家琐事，落在这里看。</p></div>
+      <div class="si-card rv"><h5>人易</h5><div class="lv">三爻四爻</div><p>人事居中，功名、交往、纠纷，多半落在这一层。</p></div>
+      <div class="si-card rv"><h5>天易</h5><div class="lv">五爻上位</div><p>最高两层属天，问大势、问天时，往这里看。</p></div>
+      <div class="si-card rv"><h5>鬼易</h5><div class="lv">游魂归魂</div><p>魂魄不定、往返不居的两卦，管幽冥不明之事。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 章六 -->
+<section id="shujie">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-no">陆</span>
+      <h2>书劫</h2>
+      <span class="en">书劫</span>
+    </div>
+    <div class="prose rv">
+      <p>机器活得比书久。今天这三卷，是一部长书烧剩的残稿。库本卷末，宋朝人替它算过一笔遗存账，一路记下来是这样的。</p>
+    </div>
+    <div class="rob">
+      <div class="rob-item rv">
+        <h4><span>西汉</span>八十九篇</h4>
+        <p>班固编目录时，京家著作著录三种，共 89 篇，是《易》学里最煊赫的一家。</p>
+        <div class="slips"><div class="slip"><span class="q">《汉、艺文志》，《易、京氏》凡三种，八十九篇。</span><span class="src">卷末 · 晁公武</span></div></div>
+      </div>
+      <div class="rob-item rv">
+        <h4><span>隋唐</span>章句在，占候散</h4>
+        <p>十卷《京氏章句》还在目录上，占候之书开始散架。到唐朝，一部《逆刺》只剩三卷。</p>
+        <div class="slips"><div class="slip"><span class="q">至唐《逆刺》三卷，而亡其八卷。</span><span class="src">卷末 · 晁公武</span></div></div>
+      </div>
+      <div class="rob-item rv">
+        <h4><span>1093</span>去高丽找书</h4>
+        <p>宋人想出的办法是海淘：哲宗元佑年间，高丽进书的单子里真有一部《京氏周易占》，整整十卷。</p>
+        <div class="slips"><div class="slip"><span class="q">元佑八年，高丽进书，有《京氏周易占》十卷。</span><span class="src">卷末 · 晁公武</span></div></div>
+      </div>
+      <div class="rob-item rv">
+        <h4><span>北宋</span>十分之一</h4>
+        <p>晁公武盘完家底，给了一个冷数字：传下来的，只有原来的十分之一。</p>
+        <div class="slips"><div class="slip"><span class="q">京氏之书，幸而与存者，才十之一，尚何离夫师说邪。</span><span class="src">卷末 · 晁公武</span></div></div>
+      </div>
+      <div class="rob-item rv">
+        <h4><span>34年</span>边郡校书</h4>
+        <p>文字烂到没法读，晁说之从 1082 年读起，读了三十四年，才在边地的屋子里把它一句句读通。今天能看到这架机器的图纸，靠的是这份笨功夫。</p>
+        <div class="slips">
+          <div class="slip"><span class="q">文字颠倒舛讹，不可训知。</span><span class="src">卷末 · 后序</span></div>
+          <div class="slip"><span class="q">今三十有四年矣，乃能以其象数，辨正文字之舛谬，于边郡山房寂寞之中，而私识之。</span><span class="src">卷末 · 后序</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 尾屏 -->
+<section class="finale" id="finale">
+  <div class="wrap">
+    <div class="bigq rv"><span class="q">卜筮非袭于吉，唯变所适。穷理尽性于兹矣。</span></div>
+    <div class="subq rv">卷下终，全书所余即此</div>
+    <table class="bagong-table rv">
+      <tr><td class="g">干</td><td class="b"><span class="q">姤遁否观剥晋大有</span></td></tr>
+      <tr><td class="g">震</td><td class="b"><span class="q">豫解恒升井大过随</span></td></tr>
+      <tr><td class="g">坎</td><td class="b"><span class="q">节屯既济革丰明夷师</span></td></tr>
+      <tr><td class="g">艮</td><td class="b"><span class="q">贲大畜损睽履中孚渐</span></td></tr>
+      <tr><td class="g">坤</td><td class="b"><span class="q">复临泰大壮夬需比</span></td></tr>
+      <tr><td class="g">巽</td><td class="b"><span class="q">小畜家人益无妄噬嗑颐蛊</span></td></tr>
+      <tr><td class="g">离</td><td class="b"><span class="q">旅鼎未济蒙涣讼同人</span></td></tr>
+      <tr><td class="g">兑</td><td class="b"><span class="q">困萃咸蹇谦小过归妹</span></td></tr>
+    </table>
+    <p class="bagong-cap rv">八宫卦序，据库本卷末所附表照录</p>
+    <div class="luokuan rv">卷二百一十一 · 穷变</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库 易藏〈<span class="qv">京氏易传</span>〉，去空白约两万九千字；库藏总目见 <a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>。</p>
+    <p>引文经脚本与库内文件去标点、异体归一后逐字比对，白话转述经反向扫描核对，未混入库本原文。</p>
+    <p>本篇为古籍导读。占卜、卦象、灾异之说是两千年前的世界观产物，吉凶断语并无科学依据；人生大事，请凭事实与理性决断，勿问卦摊。</p>
+  </div>
+</footer>
+
+<!-- 卦气引文库：JS 动态换行显示，静态留档供核验 -->
+<div id="qb">
+  <span class="q">立春正月节在寅，坎卦初六，立秋同用。</span>
+  <span class="q">雨水正月中在丑，巽卦初六，处暑同用。</span>
+  <span class="q">惊蛰二月节在子，震卦初九，白露同用。</span>
+  <span class="q">春分二月中在亥，兑卦九四，春秋分同用。</span>
+  <span class="q">清明三月节在戌，艮卦六四，寒露同用。</span>
+  <span class="q">谷雨三月中在酉，离卦九四，霜降同用。</span>
+  <span class="q">立夏四月节在申，坎卦六四，立冬同用。</span>
+  <span class="q">小满四月中在未，巽卦六四，小雪同用。</span>
+  <span class="q">芒种五月节在午，干宫九四，大雪同用。</span>
+  <span class="q">夏至五月中在巳，兑宫初九，冬至同用。</span>
+  <span class="q">小暑六月节在辰，艮宫初六，小寒同用。</span>
+  <span class="q">大暑六月中在卯，离宫初九，大寒同用。</span>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- hero 点亮 ---------- */
+var heroYao=document.querySelectorAll('#hexStage .yao');
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    heroYao.forEach(function(y){y.classList.add('lit');});
+  },150);
+});
+
+/* ---------- 八宫 ---------- */
+var HEX={
+  乾:{pure:"111111",names:["姤","遁","否","观","剥","晋","大有"],wuxing:"金"},
+  震:{pure:"100100",names:["豫","解","恒","升","井","大过","随"],wuxing:"木"},
+  坎:{pure:"010010",names:["节","屯","既济","革","丰","明夷","师"],wuxing:"水"},
+  艮:{pure:"001001",names:["贲","大畜","损","睽","履","中孚","渐"],wuxing:"土"},
+  坤:{pure:"000000",names:["复","临","泰","大壮","夬","需","比"],wuxing:"土"},
+  巽:{pure:"011011",names:["小畜","家人","益","无妄","噬嗑","颐","蛊"],wuxing:"木"},
+  离:{pure:"101101",names:["旅","鼎","未济","蒙","涣","讼","同人"],wuxing:"火"},
+  兑:{pure:"110110",names:["困","萃","咸","蹇","谦","小过","归妹"],wuxing:"金"}
+};
+var STAGE_T=["本宫","一世","二世","三世","四世","五世","游魂","归魂"];
+var STAGE_D=[
+  "八族各以纯卦起头，六爻全是自家本色。",
+  "初爻生变，族内第二卦立。",
+  "二爻随之生变，阴阳又换一层。",
+  "三爻换过，内外成对峙之局。",
+  "四爻再变，阳面只剩一爻。",
+  "五爻全换，本宫气息只剩最后一丝。",
+  "第四爻退回本家，魂魄不安，谓之游魂。",
+  "内三爻一起归位，本宫收族，谓之归魂。"
+];
+function flip(s,i){var a=s.split("");a[i]=a[i]==="1"?"0":"1";return a.join("");}
+function stages(p){
+  var pure=HEX[p].pure,r=[pure],i;
+  for(i=0;i<5;i++){r.push(flip(r[r.length-1],i));}
+  r.push(flip(r[5],3));
+  var g=r[6].split("");g[0]=pure[0];g[1]=pure[1];g[2]=pure[2];r.push(g.join(""));
+  return r;
+}
+var curP="乾",curS=0;
+var tabsEl=document.getElementById('palaceTabs');
+var stEl=document.getElementById('stageTabs');
+var barsEl=document.getElementById('guaBars');
+var nameEl=document.getElementById('guaName');
+var subEl=document.getElementById('guaSub');
+var detEl=document.getElementById('stageDetail');
+
+stEl.innerHTML=STAGE_T.map(function(t,i){
+  return '<button data-i="'+i+'"'+(i===0?' class="on"':'')+'>'+t+'</button>';
+}).join('');
+
+function renderBars(){
+  var bits=stages(curP)[curS];
+  var html='';
+  for(var i=0;i<6;i++){
+    var pos=['初','二','三','四','五','上'][i]+(bits[i]==='1'?'九':'六');
+    if(bits[i]==='1'){
+      html+='<div class="gb on"><span class="pos">'+pos+'</span><div class="solid"></div></div>';
+    }else{
+      html+='<div class="gb yin"><span class="pos">'+pos+'</span><div class="half"></div><div class="half"></div></div>';
+    }
+  }
+  barsEl.innerHTML=html;
+  nameEl.textContent=(curS===0?curP:HEX[curP].names[curS-1]);
+  subEl.textContent=curP+'宫 · '+STAGE_T[curS]+' · 五行属'+HEX[curP].wuxing;
+  detEl.innerHTML='<h4><span>'+STAGE_T[curS]+'</span>'+(curS===0?curP:HEX[curP].names[curS-1])+'</h4><p>'+STAGE_D[curS]+'</p>';
+  stEl.querySelectorAll('button').forEach(function(b,i){b.classList.toggle('on',i===curS);});
+}
+tabsEl.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  tabsEl.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});
+  b.classList.add('on');curP=b.dataset.p;curS=0;renderBars();
+});
+stEl.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  curS=+b.dataset.i;renderBars();
+});
+renderBars();
+
+/* ---------- 卦气轮 ---------- */
+var JQ=[
+  ["立春","寅",0],["雨水","丑",1],["惊蛰","子",2],["春分","亥",3],
+  ["清明","戌",4],["谷雨","酉",5],["立夏","申",6],["小满","未",7],
+  ["芒种","午",8],["夏至","巳",9],["小暑","辰",10],["大暑","卯",11],
+  ["立秋","",0],["处暑","",1],["白露","",2],["秋分","",3],
+  ["寒露","",4],["霜降","",5],["立冬","",6],["小雪","",7],
+  ["大雪","",8],["冬至","",9],["小寒","",10],["大寒","",11]
+];
+var YAO=["坎卦初六","巽卦初六","震卦初九","兑卦九四","艮卦六四","离卦九四",
+         "坎卦六四","巽卦六四","干宫九四","兑宫初九","艮宫初六","离宫初九"];
+var NS="http://www.w3.org/2000/svg";
+var svg=document.getElementById('wheelSvg');
+var CX=200,CY=200,R1=152,R0=92;
+function pt(r,a){var rad=(a-90)*Math.PI/180;return [CX+r*Math.cos(rad),CY+r*Math.sin(rad)];}
+function sectorPath(a0,a1){
+  var p1=pt(R1,a0),p2=pt(R1,a1),p3=pt(R0,a1),p4=pt(R0,a0);
+  return 'M'+p1[0].toFixed(2)+' '+p1[1].toFixed(2)+
+    ' A'+R1+' '+R1+' 0 0 1 '+p2[0].toFixed(2)+' '+p2[1].toFixed(2)+
+    ' L'+p3[0].toFixed(2)+' '+p3[1].toFixed(2)+
+    ' A'+R0+' '+R0+' 0 0 0 '+p4[0].toFixed(2)+' '+p4[1].toFixed(2)+' Z';
+}
+var sel=-1,paths=[],labels=[];
+for(var i=0;i<24;i++){
+  var a0=i*15,a1=a0+15,mid=a0+7.5;
+  var path=document.createElementNS(NS,'path');
+  path.setAttribute('d',sectorPath(a0,a1));
+  path.setAttribute('fill','#26231e');
+  path.setAttribute('stroke','#191917');
+  path.setAttribute('stroke-width','2');
+  path.style.cursor='pointer';
+  (function(idx){
+    path.addEventListener('click',function(){select(idx);});
+  })(i);
+  svg.appendChild(path);paths.push(path);
+  var lp=pt(124,mid);
+  var t=document.createElementNS(NS,'text');
+  t.setAttribute('x',lp[0].toFixed(1));t.setAttribute('y',lp[1].toFixed(1));
+  t.setAttribute('text-anchor','middle');
+  t.setAttribute('dominant-baseline','middle');
+  t.setAttribute('font-size','11');
+  t.setAttribute('fill','#8b8578');
+  t.setAttribute('font-family','inherit');
+  t.style.cursor='pointer';
+  t.textContent=JQ[i][0];
+  (function(idx){
+    t.addEventListener('click',function(){select(idx);});
+  })(i);
+  svg.appendChild(t);labels.push(t);
+  var tp=pt(103,mid);
+  if(JQ[i][1]){
+    var t2=document.createElementNS(NS,'text');
+    t2.setAttribute('x',tp[0].toFixed(1));t2.setAttribute('y',tp[1].toFixed(1));
+    t2.setAttribute('text-anchor','middle');
+    t2.setAttribute('dominant-baseline','middle');
+    t2.setAttribute('font-size','10.5');
+    t2.setAttribute('fill','#5c574c');
+    t2.setAttribute('font-family','inherit');
+    t2.style.pointerEvents='none';
+    t2.textContent=JQ[i][1];
+    svg.appendChild(t2);
+  }
+}
+var qShow=document.getElementById('qShow');
+var qb=document.getElementById('qb');
+var wName=document.getElementById('wName');
+var wInfo=document.getElementById('wInfo');
+var wLine=document.getElementById('wLine');
+function select(i){
+  sel=i;
+  var partner=(i+12)%24;
+  paths.forEach(function(p,idx){
+    p.setAttribute('fill',idx===i?'#c0453c':(idx===partner?'#332a24':'#26231e'));
+    p.setAttribute('stroke',idx===partner?'#c0453c':'#191917');
+    p.setAttribute('stroke-width',idx===partner?'1.5':'2');
+    if(idx===partner){p.setAttribute('stroke-dasharray','4 4');}else{p.removeAttribute('stroke-dasharray');}
+  });
+  labels.forEach(function(l,idx){
+    l.setAttribute('fill',idx===i?'#fff':(idx===partner?'#c0453c':'#8b8578'));
+  });
+  var item=JQ[i],ownerIdx=partner,otherName=JQ[partner][0];
+  if(item[1]===""){ownerIdx=i;otherName=JQ[partner][0];}
+  wName.textContent=item[0];
+  if(item[1]){
+    wInfo.textContent='支在'+item[1]+'，所用一爻：'+YAO[item[2]];
+    wLine.textContent='对面'+otherName+'，两节气同用一爻';
+  }else{
+    wInfo.textContent='与'+otherName+'同用一爻：'+YAO[item[2]];
+    wLine.textContent='与立春相隔半年的节气，共此一爻';
+  }
+  if(item[0]==="冬至"){
+    wLine.textContent='一年至暗处，同用的夏至在正对面';
+  }
+  qShow.textContent=qb.children[item[2]].textContent;
+}
+select(0);
+
+/* ---------- reveal ---------- */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('on');io.unobserve(en.target);}});
+},{threshold:.12});
+document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+
+/* ---------- 章签高亮 ---------- */
+var navLinks=document.querySelectorAll('#chapNav a');
+var secs=[].map.call(navLinks,function(a){return document.querySelector(a.getAttribute('href'));});
+var navIO=new IntersectionObserver(function(es){
+  es.forEach(function(en){
+    if(en.isIntersecting){
+      navLinks.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+en.target.id);});
+    }
+  });
+},{rootMargin:'-40% 0px -55% 0px'});
+secs.forEach(function(s){if(s)navIO.observe(s);});
+})();
+</script>
+</body>
+</html>
