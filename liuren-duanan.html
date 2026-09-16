@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>六壬断案 · 殆知阁导读三〇六</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --paper2:#ded9cf;
+  --cinnabar:#c0453c;
+  --cinnabar-dim:rgba(192,69,60,.55);
+  --faint:rgba(232,228,220,.42);
+  --hair:rgba(232,228,220,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.95;
+  overflow-x:hidden;
+}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+.mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+
+/* 首屏壬盘 */
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative}
+#hero .inner{display:flex;align-items:center;gap:8vw;flex-wrap:wrap;justify-content:center}
+#pan{
+  width:min(340px,80vw);height:min(340px,80vw);border-radius:50%;
+  border:3px double rgba(192,69,60,.7);
+  position:relative;cursor:pointer;flex:none;
+  background:radial-gradient(circle at 50% 42%,rgba(192,69,60,.10),transparent 68%);
+  box-shadow:0 0 60px rgba(192,69,60,.12), inset 0 0 40px rgba(0,0,0,.5);
+}
+#pan .ring{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(232,228,220,.22);
+  transition:transform 2.6s cubic-bezier(.16,.9,.24,1);
+}
+#pan .ring.earth{inset:5.5%;border-color:rgba(232,228,220,.16)}
+#pan .ring.sky{inset:24%}
+#pan .zh{
+  position:absolute;inset:0;pointer-events:none;
+}
+#pan .zh span{
+  position:absolute;transform:translate(-50%,-50%);
+  font-size:19px;color:rgba(232,228,220,.9);
+}
+#pan .ring.sky .zh span{color:rgba(232,228,220,.6)}
+#pan .hub{
+  position:absolute;inset:36.5%;border-radius:50%;
+  border:1px solid rgba(192,69,60,.5);
+  background:rgba(232,228,220,.04);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;user-select:none;
+}
+#pan .hub b{font-size:17px;letter-spacing:4px;color:var(--cinnabar);font-weight:normal;transition:opacity .6s}
+#pan .hub .four{display:none;flex-direction:column;line-height:1.7;font-size:15px;color:var(--paper)}
+#pan.spun .hub b{display:none}
+#pan.spun .hub .four{display:flex}
+#pan .tip{
+  position:absolute;left:50%;bottom:-46px;transform:translateX(-50%);
+  font-size:12.5px;color:var(--faint);letter-spacing:2px;white-space:nowrap;
+}
+#titler{
+  opacity:0;transform:translateY(18px);transition:opacity 1.4s ease .2s,transform 1.4s ease .2s;
+}
+#pan.spun ~ #titler{opacity:1;transform:none}
+#hero.opened #titler{opacity:1;transform:none}
+#titler .eyebrow{font-size:13px;letter-spacing:6px;color:var(--cinnabar);margin-bottom:14px}
+#titler h1{
+  font-size:clamp(44px,7vw,76px);font-weight:normal;letter-spacing:14px;
+  writing-mode:vertical-rl;line-height:1.28;color:var(--paper);
+  text-shadow:0 0 34px rgba(192,69,60,.25);
+}
+#titler .sub{margin-top:20px;font-size:15px;color:rgba(232,228,220,.66);max-width:30em}
+#titler .sub em{font-style:normal;color:var(--cinnabar)}
+@media (max-width:760px){
+  #hero .inner{gap:40px;padding:60px 0}
+  #titler h1{writing-mode:horizontal-tb;letter-spacing:10px;font-size:52px}
+}
+
+/* 章节公共 */
+section{padding:76px 0 30px}
+.shead{display:flex;align-items:baseline;gap:16px;margin-bottom:10px}
+.shead .tag{
+  font-size:12px;letter-spacing:3px;color:var(--ink);
+  background:var(--cinnabar);padding:3px 10px 2px;flex:none;
+}
+.shead h2{font-size:26px;font-weight:normal;letter-spacing:5px;color:var(--paper)}
+.shead .en{font-size:12px;color:var(--faint);letter-spacing:2px}
+.lead{color:rgba(232,228,220,.78);max-width:44em;margin:8px 0 30px}
+.lead em{font-style:normal;color:var(--cinnabar)}
+.fadein{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.fadein.vis{opacity:1;transform:none}
+
+/* 案由统计签 */
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin:26px 0 8px}
+.stats .s{
+  border:1px solid var(--hair);padding:10px 16px;min-width:130px;
+}
+.stats .s b{display:block;font-size:21px;color:var(--paper);font-weight:normal;font-family:"SFMono-Regular",Consolas,monospace}
+.stats .s i{font-style:normal;font-size:12px;color:var(--faint);letter-spacing:2px}
+
+/* 祈雪时辰轨 */
+.track{margin:38px 0 14px;position:relative}
+.track .line{height:2px;background:var(--hair);position:relative}
+.track .fill{position:absolute;left:0;top:0;height:2px;background:var(--cinnabar);width:0;transition:width 2.2s ease}
+.track .stops{display:flex;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:14px}
+.track .stop{flex:1;min-width:120px;position:relative;padding-top:6px}
+.track .stop:before{
+  content:"";position:absolute;top:-21px;left:6px;width:9px;height:9px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--cinnabar-dim);transition:background .8s,border-color .8s;
+}
+.track.vis .stop:before{background:var(--cinnabar);border-color:var(--cinnabar)}
+.track .stop b{display:block;font-weight:normal;color:var(--paper);letter-spacing:1px}
+.track .stop i{font-style:normal;font-size:12.5px;color:var(--faint);line-height:1.7;display:block}
+
+/* 雪尺 */
+.ruler{margin:34px 0 6px;max-width:560px}
+.ruler .bar{
+  position:relative;height:34px;border:1px solid rgba(232,228,220,.3);
+  display:flex;background:rgba(232,228,220,.03);
+}
+.ruler .cu{
+  flex:1;border-right:1px solid var(--hair);position:relative;
+}
+.ruler .cu:last-child{border-right:none}
+.ruler .cu:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;color:rgba(232,228,220,.25)}
+.ruler .snow{
+  position:absolute;left:0;top:0;bottom:0;width:0;
+  background:linear-gradient(90deg,rgba(232,228,220,.34),rgba(232,228,220,.13));
+  transition:width 2.6s ease;
+  border-right:2px solid rgba(232,228,220,.75);
+}
+.ruler.vis .snow{width:58.333%}
+.ruler .lab{display:flex;justify-content:space-between;font-size:12px;color:var(--faint);margin-top:6px}
+.ruler .lab b{color:var(--paper);font-weight:normal}
+
+/* 引文 */
+.qblk{margin:26px 0;position:relative;padding-left:20px;border-left:2px solid rgba(192,69,60,.5)}
+q.sq{quotes:"「" "」";color:var(--paper);display:block;font-size:16.5px;line-height:2.15}
+q.sq:before,q.sq:after{color:var(--cinnabar)}
+.qsrc{font-size:12.5px;color:var(--faint);margin-top:6px;letter-spacing:1px}
+.qnote{font-size:13.5px;color:rgba(232,228,220,.55);margin-top:8px;line-height:1.9}
+.qnote em{font-style:normal;color:var(--cinnabar-dim)}
+.iv{quotes:"「" "」";color:var(--paper)}
+.iv:before,.iv:after{color:var(--cinnabar-dim)}
+p{color:rgba(232,228,220,.8)}
+p em{font-style:normal;color:var(--cinnabar)}
+
+/* 验章 */
+.verdict{
+  position:relative;border:1px solid var(--hair);background:rgba(232,228,220,.03);
+  padding:18px 20px;margin:16px 0;
+}
+.verdict .seal{
+  position:absolute;right:14px;top:12px;width:44px;height:44px;
+  border:2px solid var(--cinnabar);color:var(--cinnabar);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;transform:rotate(8deg);letter-spacing:0;
+  opacity:0;transition:opacity .8s ease,transform .8s ease;
+  box-shadow:0 0 14px rgba(192,69,60,.2);
+}
+.verdict.vis .seal{opacity:.92;transform:rotate(-4deg)}
+.verdict .vlab{font-size:12px;letter-spacing:3px;color:var(--cinnabar-dim);margin-bottom:6px}
+.verdict p{font-size:15px}
+
+/* 竹签手筋 */
+.slips{display:flex;gap:18px;flex-wrap:wrap;margin:30px 0 8px;perspective:900px}
+.slip{
+  flex:1;min-width:200px;max-width:280px;height:190px;cursor:pointer;position:relative;
+  transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.8,.3,1);
+}
+.slip.flip{transform:rotateY(180deg)}
+.slip .f,.slip .b{
+  position:absolute;inset:0;backface-visibility:hidden;
+  border:1px solid rgba(192,69,60,.4);background:linear-gradient(180deg,rgba(192,69,60,.07),rgba(232,228,220,.02));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:18px;text-align:center;
+}
+.slip .f b{font-size:22px;font-weight:normal;letter-spacing:5px;color:var(--paper);writing-mode:vertical-rl;line-height:1.6}
+.slip .f i{font-style:normal;font-size:11.5px;color:var(--faint);margin-top:14px;letter-spacing:2px}
+.slip .b{transform:rotateY(180deg);justify-content:flex-start;text-align:left}
+.slip .b b{font-weight:normal;font-size:14px;color:var(--cinnabar);letter-spacing:2px;margin-bottom:6px}
+.slip .b p{font-size:13.5px;line-height:1.9;color:rgba(232,228,220,.75)}
+
+/* 案卷簿 */
+.books{margin-top:26px}
+.book{
+  border:1px solid var(--hair);background:
+    repeating-linear-gradient(90deg,rgba(232,228,220,.028) 0 1px,transparent 1px 26px),
+    rgba(232,228,220,.02);
+  padding:26px 28px 22px;margin:0 0 30px;position:relative;
+}
+.book:nth-child(odd){margin-right:9%}
+.book:nth-child(even){margin-left:9%}
+@media (max-width:820px){.book:nth-child(odd),.book:nth-child(even){margin:0 0 30px}}
+.book .bhead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+.book .bu{font-size:11.5px;letter-spacing:2px;color:var(--ink);background:rgba(192,69,60,.85);padding:2px 8px}
+.book .bno{font-size:12px;color:var(--faint)}
+.book h3{font-size:21px;font-weight:normal;letter-spacing:3px;color:var(--paper)}
+.book .bcase{font-size:13px;color:var(--faint);margin:2px 0 10px}
+
+/* 一卦作传时间线 */
+.bioline{position:relative;margin:44px 0 10px;padding:0 4px}
+.bioline .axis{position:absolute;left:0;right:0;top:11px;height:1px;background:rgba(232,228,220,.2)}
+.bioline .axis:after{content:"";position:absolute;right:-1px;top:-4px;border-left:9px solid rgba(232,228,220,.4);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.bstops{display:flex;flex-wrap:wrap;gap:26px;position:relative}
+.bstop{flex:1;min-width:190px;padding-top:26px;position:relative}
+.bstop:before{
+  content:"";position:absolute;top:5px;left:0;width:13px;height:13px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--cinnabar);
+}
+.bstop .yr{font-size:13px;color:var(--cinnabar);letter-spacing:2px}
+.bstop .dt{font-size:12px;color:var(--faint);font-family:"SFMono-Regular",Consolas,monospace}
+.bstop b{display:block;font-weight:normal;color:var(--paper);margin-top:2px}
+.bstop p{font-size:13.5px;color:rgba(232,228,220,.66);line-height:1.85}
+
+/* 版本 */
+.srcs{margin:26px 0;border-top:1px solid var(--hair)}
+.src{display:flex;gap:16px;padding:13px 4px;border-bottom:1px solid var(--hair);align-items:baseline}
+.src .n{font-size:12px;color:var(--cinnabar);font-family:"SFMono-Regular",Consolas,monospace;flex:none;width:2em}
+.src .t{flex:1}
+.src .t b{font-weight:normal;color:var(--paper);letter-spacing:1px}
+.src .t i{font-style:normal;font-size:13px;color:var(--faint);display:block;line-height:1.8}
+.numwar{display:flex;flex-wrap:wrap;gap:14px;margin:26px 0 8px}
+.numwar .nw{flex:1;min-width:150px;border:1px solid rgba(192,69,60,.35);padding:14px 16px;position:relative}
+.numwar .nw b{display:block;font-size:26px;font-weight:normal;color:var(--paper);font-family:"SFMono-Regular",Consolas,monospace}
+.numwar .nw i{font-style:normal;font-size:12px;color:var(--faint);letter-spacing:1px}
+.numwar .nw.hot{border-color:var(--cinnabar)}
+.numwar .nw.hot b{color:var(--cinnabar)}
+.miss{font-size:13px;color:rgba(232,228,220,.6);margin-top:12px}
+.miss .mono{color:rgba(192,69,60,.8)}
+
+/* 收梢 */
+.coda{margin:60px 0 20px;text-align:center}
+.coda .line{width:60px;height:2px;background:var(--cinnabar);margin:0 auto 22px}
+.coda p{max-width:34em;margin:0 auto;font-size:16px;color:rgba(232,228,220,.72)}
+.coda p b{font-weight:normal;color:var(--cinnabar)}
+
+footer{
+  border-top:1px solid var(--hair);
+  margin-top:60px;padding:32px 20px 46px;
+  font-size:12.5px;color:rgba(232,228,220,.42);line-height:2.05;text-align:center;
+}
+footer a{color:rgba(192,69,60,.75);text-decoration:none}
+footer a:hover{color:var(--cinnabar)}
+footer .fwarn{display:block;margin-top:8px;color:rgba(192,69,60,.6)}
+</style>
+</head>
+<body>
+
+<header id="hero">
+  <div class="inner">
+    <div>
+      <div id="pan" title="点盘发课">
+        <div class="ring earth" id="ering"></div>
+        <div class="ring sky" id="sring"></div>
+        <div class="hub"><b>发课</b><span class="four"><span>己卯</span><span>寅将</span><span>酉时</span></span></div>
+        <div class="tip">天盘待转，点一下</div>
+      </div>
+    </div>
+    <div id="titler">
+      <div class="eyebrow">殆知阁导读 · 三〇六</div>
+      <h1>六壬断案</h1>
+      <div class="sub">宋人邵彦和的占课记录簿。一册没有判决书的<em>判案集</em>：审的不是人，是干支；结的不是案，是<em>日后应验</em>的一句实录。</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="c1" class="fadein">
+  <div class="shead"><span class="tag">案由</span><h2>一部自己会长出案情记录的书</h2></div>
+  <p class="lead">六壬是古法占课的一种：取当日日辰与问事时辰，把十二地支做成两张圆盘，地盘不动，天盘随手一转，落定便成一副<em>「课」</em>。术士据三传四课断吉凶。此书是南宋邵彦和的断课实录，门人记下问者、记下断语，多数案子后面还补记一句<em>后来如何</em>。于是这本书在术数书里格外扎眼：它不止教你算，它还留着<b>回执</b>。</p>
+  <div class="stats">
+    <div class="s"><b>79,745</b><i>去空白字数</i></div>
+    <div class="s"><b>216</b><i>案头线（实存案号 215）</i></div>
+    <div class="s"><b>四集十二部</b><i>元亨利贞 · 天时至杂占</i></div>
+    <div class="s"><b>1065 至 1133</b><i>邵彦和生卒，据弁言</i></div>
+  </div>
+  <p class="qnote">邵彦和，两浙路人，生卒据清辑本弁言推得；现存断案密集落在戊申、己酉两年（1128 至 1130），是他六十三到六十五岁间的日常业务底账。弁言称其门人辑录成书，原本早散，今本是清人程铨集五个抄本拼合的辑本。</p>
+</section>
+
+<section id="c2" class="fadein">
+  <div class="shead"><span class="tag">天时部</span><h2>头一案：太守求雪，限时限刻</h2><span class="en">建炎三年冬 · 案 01</span></div>
+  <p class="lead">全帙第一案不是家宅，不是功名，是一场<em>公关危机</em>。建炎三年十一月，久晴无雪，韩太守率属官祭坛祈雪，求而不应。有人搬来邵彦和。他起了一课，当着满堂官说：雪已在路上，几时风、几时雨、几时雪、积多厚，都给了时刻表。</p>
+  <div class="track fadein">
+    <div class="line"><div class="fill"></div></div>
+    <div class="stops">
+      <div class="stop"><b>巳时</b><i>风起，天气骤冷</i></div>
+      <div class="stop"><b>未时</b><i>微雨</i></div>
+      <div class="stop"><b>亥时</b><i>雪至，厚七寸</i></div>
+      <div class="stop"><b>次日未时</b><i>雪止</i></div>
+    </div>
+  </div>
+  <div class="qblk fadein">
+    <q class="sq" data-n="1">数日来，天气和暖，宛如三九月，州县虽然祈雪，皆无响应，今得此课，明日天色必变，巳时风起转寒，未时有雨，亥时作雪，厚有七寸。</q>
+    <div class="qsrc">元集天时部 · 案 01 断语</div>
+  </div>
+  <p class="fadein">满堂官员的反应写进了案卷：当天晴暖如春三月，雪从何来？第二天一早，众人将信将疑地站到坛上，然后照着时刻表，一项一项兑现。</p>
+  <div class="verdict fadein">
+    <span class="seal">验</span>
+    <div class="vlab">案卷后附应验</div>
+    <p><q class="iv" data-n="2">次早众官在坛，待至巳时，果然风起。霎时云合，未时微雨，众官散后，北风大作，甚冷，二更后下雪，至次日未时方止，果积七寸。</q></p>
+    <div class="qnote">库本原文此段紧接断语之后，是门人记下的现场回执。书中此类<em>验</em>语散见各部，本页凡引必附案号。</div>
+  </div>
+  <div class="ruler fadein">
+    <div class="bar"><div class="snow"></div><div class="cu"></div><div class="cu"></div><div class="cu"></div><div class="cu"></div><div class="cu"></div><div class="cu"></div><div class="cu"></div><div class="cu"></div><div class="cu"></div><div class="cu"></div><div class="cu"></div><div class="cu"></div></div>
+    <div class="lab"><b>果积七寸</b><span>以十二寸为尺示意</span></div>
+  </div>
+</section>
+
+<section id="c3" class="fadein">
+  <div class="shead"><span class="tag">手筋</span><h2>邵公怎么把话算出来</h2><span class="en">三根竹签 · 点签翻面</span></div>
+  <p class="lead">他的断语看着像神谕，底下其实是<em>一套可以复述的算术</em>：支与支相冲则事动，数字相乘得里程，藏字拆字得姓氏。抽三根签看看。</p>
+  <div class="slips fadein">
+    <div class="slip"><div class="f"><b>冲则动</b><i>点击翻面</i></div><div class="b"><b>三个亥冲一个巳</b><p>他自占搬家那课，原局巳火不动，行至辛亥年，太岁、月建、日辰凑出三个亥水，一齐去冲巳，又逢驿马临冲，遂断身动。</p></div></div>
+    <div class="slip"><div class="f"><b>数起里</b><i>点击翻面</i></div><div class="b"><b>亥四丑八</b><p>占逃人藏在何处，他取藏方两个地支的先天数相乘：四八相乘得三十二里。里程、年限，多以此法凑出。</p></div></div>
+    <div class="slip"><div class="f"><b>藏字见姓</b><i>点击翻面</i></div><div class="b"><b>壬加水，汪</b><p>日逢水，卦里见亥，亥中藏着一个壬干，壬再添水旁，合出一个汪字。逃犯藏身的那户人家，姓汪。姓氏从卦里加水加出来。</p></div></div>
+  </div>
+  <div class="qblk fadein">
+    <q class="sq" data-n="3">至辛亥年巳亥相冲，而寅申又冲，十月又是亥月，三个亥冲巳，又寅马加亥，得冲而动</q>
+    <div class="qsrc">贞集出行部 · 案 155 自占动静析语</div>
+  </div>
+  <p class="fadein">这套算术未必经得起推敲，但在案卷里它自洽、可复盘：断语给出的每个数、每个方位，析语里都能指出是从哪根筹上拨出来的。</p>
+</section>
+
+<section id="c4" class="fadein">
+  <div class="shead"><span class="tag">断案簿</span><h2>四件存案</h2><span class="en">亡盗、疾病、财产诸部</span></div>
+  <p class="lead">十二部二百余案，问什么的都有。这里存四件：一件抓贼，一件看病，一件看生意，一件抓的还是贼。</p>
+
+  <div class="books">
+    <div class="book fadein">
+      <div class="bhead"><span class="bu">亡盗</span><span class="bno">案 191</span><h3>逃犯藏在哪里</h3></div>
+      <div class="bcase">己酉年十月，有司占捕捉逃犯，寅将辰时</div>
+      <p>问的是官面上最实际的问题：人跑了，去哪抓。他直接给出地址、距离、视野里会看到什么。</p>
+      <div class="qblk">
+        <q class="sq" data-n="4">其人逃往买卖人汪家后空猪圈内藏匿，亥四丑八，去此三十二里，有婢在宅前着孝衣洗酒器</q>
+        <div class="qsrc">贞集亡盗部 · 案 191 断语</div>
+        <div class="qnote">下文接一句<em class="qv">「在崩败东厕内，可往擒之」</em>，连藏身处再退一层的退路都点了名。</div>
+      </div>
+      <div class="verdict">
+        <span class="seal">验</span>
+        <div class="vlab">断语里的姓氏学</div>
+        <p><q class="iv" data-n="5">水日见亥，亥内有壬，壬加水，汪姓也。</q></p>
+        <div class="qnote">这是全书最像侦探小说的一笔：方位、里数、婢女孝衣、姓氏，全部从同一副盘上拆出来。</div>
+      </div>
+    </div>
+
+    <div class="book fadein">
+      <div class="bhead"><span class="bu">疾病</span><span class="bno">案 170</span><h3>一位庸医的论文代写</h3></div>
+      <div class="bcase">己酉年九月，郎中樊某起课，他去治项秀才的病</div>
+      <p>医生治病前先找术士断病根，这在案卷里不止一见。此案妙在结局：邵公断出病人思虑成疾的隐情，郎中便把这份诊断当成自己的脉案。</p>
+      <div class="qblk">
+        <q class="sq" data-n="6">当时樊亦庸医，因先生之断，假托诊脉为名，言其病症，人皆惊异以为神医。</q>
+        <div class="qsrc">贞集疾病部 · 案 170 案后记</div>
+      </div>
+      <p>病根也被原原本本记下：项秀才妻母去世，前去奔丧，与舅嫂暗生私情，舅嫂赠手帕为信，归途失落，被妻子拾去收藏。他郁郁成疾，形销骨立，又开不了口。直到郎中借来的诊断说破，妻子取出手帕还他，一场病才算见了底。</p>
+      <div class="verdict">
+        <span class="seal">验</span>
+        <div class="vlab">案卷后附</div>
+        <p><q class="iv" data-n="7">及闻樊郎中之言，妻乃出帕还之；樊深戒利害，服药而愈。</q></p>
+      </div>
+    </div>
+
+    <div class="book fadein">
+      <div class="bhead"><span class="bu">财产</span><span class="bno">案 169</span><h3>行医的叶八：屋上兽头断财运</h3></div>
+      <div class="bcase">戊申年腊月，行医的叶八来问生意</div>
+      <p>叶八是位开业医生，生意清淡。邵公断出的病灶不在医术，在屋顶：他家屋脊立着兽头，西北邻家也有一个，两兽头隔街相对，财气被抵在中间。叶八听了把兽头拆了。</p>
+      <div class="qblk">
+        <q class="sq" data-n="8">有一妇人害反胃者，医肝不医胃；有一小儿中风气者，通水脏不得治风</q>
+        <div class="qsrc">元集宅墓部 · 案 169 断语（节）</div>
+        <div class="qnote">断语里竟附了两张<em>临床处方思路</em>：反胃治肝不治胃，小儿惊风利水脏不通风木。</div>
+      </div>
+      <div class="verdict">
+        <span class="seal">验</span>
+        <div class="vlab">拆兽头之后</div>
+        <p><q class="iv" data-n="9">杨七小娘子患翻胃，前请数十医，经年不效，是日请叶治之，叶思先生之言，遂调治肝经即效，得钱二十余缗。</q></p>
+        <div class="qnote">案后记续云：三月间徐参议六岁的孙子中风，叶八依法给孩子利水脏，六七天后能走了，<em class="qv">「又获钱三百余缗」</em>。从此医名大噪。兽头灵不灵另说，两张处方思路倒是记得有鼻子有眼。</div>
+      </div>
+    </div>
+
+    <div class="book fadein">
+      <div class="bhead"><span class="bu">亡盗</span><span class="bno">案 192</span><h3>家贼</h3></div>
+      <div class="bcase">十月，李四官家失了钱谷，起课占贼</div>
+      <p>失钱失谷，报了盗。他看一眼三传的走向：三传没出日辰与支辰两个位置，转了一圈又回到宅上，于是给出一个让主人不痛快的答案。</p>
+      <div class="qblk">
+        <q class="sq" data-n="10">是贼不出门也。当主本家眷属为脚耳。后却知是大兄二兄之子，偷回房中，三日后方携出使用。</q>
+        <div class="qsrc">贞集亡盗部 · 案 192 断语与案后记</div>
+        <div class="qnote">库本此案析语末有<em class="qv">「仔细研读」</em>四字批注，辑者特意留给后学。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="c5" class="fadein">
+  <div class="shead"><span class="tag">终身部</span><h2>一卦作传</h2><span class="en">案 155 · 邵先生自占动静</span></div>
+  <p class="lead">邵彦和没有传记传世。他给自己起过一课，问的只是<em>动不动身</em>。门人把这案记进出行部，顺手记下了他的余生。</p>
+  <div class="qblk fadein">
+    <q class="sq" data-n="11">我欲占动静，今申生于巳，亥生于申，寅生于亥，巳生于寅，宅上又是勾陈入庙，至辛亥年十月方得身动。日往当往东北，近二百里。又转西北晚处，终于东北之上，年六十九矣。</q>
+    <div class="qsrc">贞集出行部 · 案 155 断语</div>
+  </div>
+  <div class="bioline fadein">
+    <div class="axis"></div>
+    <div class="bstops">
+      <div class="bstop"><span class="yr">辛亥 · 1131</span><span class="dt mono">辛亥年十月十七日</span><b>动身</b><p>一百八十里路，进婺州境。</p></div>
+      <div class="bstop"><span class="yr">壬子 · 1132</span><span class="dt mono"></span><b>再迁</b><p>乡中出发，先东北后西北，经严州。</p></div>
+      <div class="bstop"><span class="yr">癸丑 · 1133</span><span class="dt mono"></span><b>终</b><p>再回婺州，最后停在衙门里。是年他六十九岁，与断语相合。</p></div>
+    </div>
+  </div>
+  <div class="qblk fadein">
+    <q class="sq" data-n="12">果辛亥十月十七辛巳起行，过婺州，自乡里行一百八十里，壬子年过严州，自乡中从东北过西北，癸丑又到婺州，终于衙中。</q>
+    <div class="qsrc">案 155 断语后附应验，一行未删</div>
+  </div>
+  <p class="fadein">六百年后，清人程铨辑此书时，正是拿这桩案替先生补了履历：断语说日后往东北走，将近二百里，验语说走了一百八十里到婺州，那么乡里当在婺州西南；再拿壬子年取道严州的方位一夹，籍贯便落在<em>太末</em>，即今浙江龙游一带。一桩搬家的小卦，成了这位术数家留在纸面上的全部生平。</p>
+  <div class="qblk fadein">
+    <q class="sq" data-n="13">婺州西南一百八十里，是为太末人。</q>
+    <div class="qsrc">弁言按语</div>
+  </div>
+</section>
+
+<section id="c6" class="fadein">
+  <div class="shead"><span class="tag">版本</span><h2>五本归一，数字打架</h2><span class="en">清乾隆丙午 · 程铨辑本</span></div>
+  <p class="lead">这本案卷簿的命运和它记的案子一样曲折。程铨在弁言里交代了搜书经过：他自少年时代起见到邵氏断案就抄，攒了三十年，只得五个残本。其中一册的来历最好：乾隆丙午年（1786）春，方仰松游杭州，满市找不到像样的六壬书，最后在书肆上买到这册缺头缺尾的抄本。</p>
+  <div class="qblk fadein">
+    <q class="sq" data-n="14">最后得此册于肆中，缺其首尾不全，然其古者之官衔，元明以后所无，知为宋人之遗书也。</q>
+    <div class="qsrc">弁言引方仰松自记</div>
+    <div class="qnote">断代断得干脆：书中官衔制度元明两朝都对不上，那就是宋人的东西。一句<em>版本鉴定</em>，靠的是典章，不是字体。</div>
+  </div>
+  <p class="fadein">其实早在南宋，这批断案就已被书商盯上：程铨读凌福之《毕法赋》序，得知早在理宗朝宝庆年间之前，已有人把邵氏案例改头换面拿去卖钱。原本于是越传越乱，五个抄本没有两个句子完全相同。</p>
+  <div class="srcs fadein">
+    <div class="src"><span class="n mono">壹</span><span class="t"><b>明万历梦醒头陀钞本</b><i>附在《捷要》里传世</i></span></div>
+    <div class="src"><span class="n mono">贰</span><span class="t"><b>《口鉴》注文所存</b><i>以注家引文的方式零星保存</i></span></div>
+    <div class="src"><span class="n mono">叁</span><span class="t"><b>《前知书》所引</b><i>类书式的摘引，语句已非原貌</i></span></div>
+    <div class="src"><span class="n mono">肆</span><span class="t"><b>方仰松杭州书肆购得残册</b><i>乾隆丙午（1786）三月二日入手，缺首尾</i></span></div>
+    <div class="src"><span class="n mono">伍</span><span class="t"><b>宋人原书一册</b><i>存己酉年上半年案记，止于六月半</i></span></div>
+  </div>
+  <div class="qblk fadein">
+    <q class="sq" data-n="15">凡兹五本，多寡不齐，语句亦异，乃细心考订，择其理长者，分类编次之，共得二百一十六例。</q>
+    <div class="qsrc">弁言</div>
+  </div>
+  <p class="fadein">辑本留下的几笔账，至今对不上。弁言自称辑得例数二百一十六，紧接着开列的分目清单加起来却是二百一十八；库本册首编到二二二号，中间缺了七个号又重出一个号；本页实测案头线恰是二百一十六。</p>
+  <div class="numwar fadein">
+    <div class="nw hot"><b>216</b><i>程铨自称辑得例数</i></div>
+    <div class="nw"><b>218</b><i>弁言分目清单合计</i></div>
+    <div class="nw"><b>215</b><i>库本实存不同案号</i></div>
+    <div class="nw"><b>222</b><i>册首最大编号</i></div>
+  </div>
+  <p class="miss">缺号：79、151、175、177、187、188、218。七个空位，五个残本拼合的针脚，全缝在这里。</p>
+</section>
+
+<div class="coda fadein">
+  <div class="line"></div>
+  <p>占不占得中，另当别论。难得的是有人把<em>占过的每一案</em>连验收单一并存档，六百年后残本凑齐，我们才看得见一位南宋术士的日常：替官府追逃，替医生断病，替东家防贼，最后替自己算了一场搬家。</p>
+</div>
+
+</main>
+
+<footer>
+  <div>文本来源：殆知阁简体库《六壬断案》（易藏术数类，清程铨辑宋邵彦和断案）；导读系列总目见 <a href="mulu.html">mulu.html</a>；仓库 <a href="https://github.com/robertsong/daizhige-daodu">daizhige-daodu</a></div>
+  <div>本篇引文均经脚本与库内文件去标点归一逐字比对通过；小字为编者今注，非原文</div>
+  <span class="fwarn">时代局限提醒：本书为术数占验记录，六壬推占不具预测效力；案中应验云云出自门人与辑者的记录立场，请以社会史与民俗史料视之，勿据以占断决事。</span>
+</footer>
+
+<script>
+(function(){
+  var zh=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  var N=12; /* 盘面十二辰 */
+  var skyspans=[];
+  function ring(el,seq,R){
+    seq.forEach(function(ch,i){
+      var a=(i/N)*2*Math.PI-Math.PI/2;
+      var d=document.createElement('div');
+      d.className='zh';
+      d.innerHTML='<span style="left:'+(50+R*Math.cos(a))+'%;top:'+(50+R*Math.sin(a))+'%">'+ch+'</span>';
+      el.appendChild(d);
+    });
+  }
+  ring(document.getElementById('ering'),zh,42);
+  ring(document.getElementById('sring'),zh,40);
+  document.querySelectorAll('#sring .zh span').forEach(function(s){skyspans.push(s)});
+  var pan=document.getElementById('pan'),spins=0;
+  pan.addEventListener('click',function(){
+    spins++;
+    var deg;
+    if(spins===1){deg=210;} /* 寅将加酉时：天盘转过七位 */
+    else{deg=spins*210+(spins%2?150:210);}
+    document.getElementById('sring').style.transform='rotate('+deg+'deg)';
+    skyspans.forEach(function(s){s.style.transform='translate(-50%,-50%) rotate('+(-deg)+'deg)'});
+    pan.classList.add('spun');
+    document.getElementById('hero').classList.add('opened');
+    document.querySelector('#pan .tip').textContent='己卯日酉时起课';
+  });
+  var iobs=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('vis');
+        iobs.unobserve(e.target);
+      }
+    });
+  },{threshold:.25});
+  document.querySelectorAll('.fadein,.track,.ruler,.verdict').forEach(function(el){iobs.observe(el)});
+  document.querySelectorAll('.slip').forEach(function(s){
+    s.addEventListener('click',function(){s.classList.toggle('flip')});
+  });
+})();
+</script>
+</body>
+</html>
