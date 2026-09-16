@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>导读 · 公孙龙子</title>
+<style>
+  :root{
+    --bg:#191917; --ink:#2a2822; --paper:#e8e4dc; --dim:#8f897c;
+    --faint:#5a5548; --zhu:#c0453c; --line:#3a372f; --panel:#211f1c;
+    --song:"Songti SC","STSong","NSimSun","SimSun","Noto Serif CJK SC",serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--paper);font-family:var(--song);line-height:1.9;letter-spacing:.02em}
+  a{color:inherit}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+
+  /* ---------- 首屏：关城 ---------- */
+  .hero{position:relative;height:100dvh;min-height:620px;overflow:hidden;cursor:pointer}
+  .hero svg{position:absolute;inset:0;width:100%;height:100%}
+  .gate-say{position:absolute;top:12%;left:50%;transform:translateX(-50%);white-space:nowrap;
+    color:var(--dim);font-size:15px;letter-spacing:.3em;transition:opacity .8s}
+  .cta{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);white-space:nowrap;
+    color:var(--faint);font-size:13px;letter-spacing:.35em;animation:breath 2.6s ease-in-out infinite;transition:opacity .8s}
+  @keyframes breath{0%,100%{opacity:.45}50%{opacity:1}}
+  .plates{position:absolute;left:50%;bottom:190px;transform:translateX(-50%);width:min(620px,88%);
+    display:flex;flex-direction:column;gap:10px;z-index:5}
+  .plate{background:var(--paper);color:var(--ink);padding:9px 20px;font-size:16.5px;line-height:1.8;
+    opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s;box-shadow:0 6px 24px rgba(0,0,0,.45)}
+  .plate b{color:var(--zhu);font-weight:normal;margin-right:10px;font-size:13px;letter-spacing:.2em}
+  .hero.s1 .plate:nth-child(1){opacity:1;transform:none;transition-delay:.05s}
+  .hero.s1 .plate:nth-child(2){opacity:1;transform:none;transition-delay:.55s}
+  .hero.s1 .plate:nth-child(3){opacity:1;transform:none;transition-delay:1.05s}
+  .hero.s4 .gate-say,.hero.s4 .cta{opacity:0;animation:none}
+  .hero-title{position:absolute;top:7%;left:50%;transform:translateX(-50%);display:flex;gap:20px;align-items:flex-start;
+    opacity:0;transition:opacity 1.1s;z-index:6;pointer-events:none}
+  .hero.s4 .hero-title{opacity:1}
+  .ht{writing-mode:vertical-rl;font-size:52px;letter-spacing:14px;height:270px;white-space:nowrap;
+    color:var(--paper);text-shadow:0 2px 18px rgba(0,0,0,.7)}
+  .hseal{writing-mode:vertical-rl;border:2px solid var(--zhu);color:var(--zhu);font-size:15px;
+    padding:10px 5px;letter-spacing:6px;height:150px;margin-top:96px;white-space:nowrap;transform:rotate(-3deg);
+    box-shadow:0 0 0 1px rgba(192,69,60,.25) inset}
+  /* 城门开合与马 */
+  .doorL,.doorR{transition:transform 1s ease-in}
+  .hero.open .doorL{transform:translateX(-68px)}
+  .hero.open .doorR{transform:translateX(68px)}
+  .horse{transition:transform 2.6s cubic-bezier(.45,.05,.35,1)}
+  .hero.cross .horse{transform:translateX(-575px)}
+  .hero.cross .guard{opacity:.35}
+  .guard{transition:opacity 1s}
+
+  /* ---------- 章节通用 ---------- */
+  section{padding:88px 0 40px}
+  .kick{color:var(--zhu);font-size:13px;letter-spacing:.4em;margin-bottom:14px}
+  h2{font-size:27px;font-weight:normal;letter-spacing:.08em;margin-bottom:26px;color:var(--paper)}
+  h3{font-size:18px;font-weight:normal;color:var(--paper);letter-spacing:.1em;margin-bottom:12px}
+  p{color:#c9c3b6;font-size:15.5px}
+  .note{color:var(--dim);font-size:13.5px}
+  .q{display:block;background:var(--panel);border-left:3px solid var(--zhu);padding:13px 18px;margin:14px 0;
+    color:var(--paper);font-size:16px;line-height:2}
+  .q small{display:block;color:var(--dim);font-size:12.5px;margin-top:6px;letter-spacing:.15em}
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .8s,transform .8s}
+  .rv.on{opacity:1;transform:none}
+
+  /* ---------- 篇目签架 ---------- */
+  .tags{display:grid;grid-template-columns:repeat(14,1fr);gap:10px;margin:34px 0 10px}
+  .tag{writing-mode:vertical-rl;height:172px;display:flex;align-items:center;justify-content:center;
+    font-size:14.5px;letter-spacing:3px;text-decoration:none;color:var(--paper);white-space:nowrap}
+  .tag.live{background:var(--panel);border:1px solid var(--line);padding:14px 0}
+  .tag.live:hover{border-color:var(--zhu);color:var(--zhu)}
+  .tag.live i{font-style:normal;color:var(--faint);font-size:11px;margin-top:8px}
+  .tag.gone{border:1px dashed #3a362c;color:#4a4538;font-size:13px}
+  .tag.gone em{font-style:normal;letter-spacing:1px}
+
+  /* ---------- 白马五答 ---------- */
+  .qa{display:grid;grid-template-columns:86px 1fr;gap:16px;margin:26px 0;align-items:start}
+  .role{background:var(--panel);border:1px solid var(--line);text-align:center;padding:10px 0;font-size:14px;
+    color:var(--dim);letter-spacing:.25em;align-self:start;margin-top:4px}
+  .role.a{color:var(--zhu);border-color:rgba(192,69,60,.5)}
+  .gloss{color:var(--dim);font-size:14px;margin-top:8px}
+  .aside{background:var(--panel);border:1px solid var(--line);padding:20px 24px;margin-top:34px}
+  .aside .kick{margin-bottom:8px}
+
+  /* ---------- 迹府三折 ---------- */
+  .folds{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:30px 0}
+  .fold{background:var(--panel);border:1px solid var(--line);padding:20px 20px 24px;position:relative}
+  .fold .no{position:absolute;top:-13px;left:18px;background:var(--zhu);color:var(--bg);font-size:12px;
+    padding:2px 12px;letter-spacing:.3em}
+  .fold .q{border-left:none;border-top:2px solid rgba(192,69,60,.55);font-size:15px}
+  .verdict{display:inline-block;border:2px solid var(--zhu);color:var(--zhu);padding:12px 20px;font-size:17px;
+    letter-spacing:.25em;transform:rotate(-2deg);margin:10px 0}
+  .duel{background:var(--panel);border:1px solid var(--line);padding:20px 24px;margin-top:18px}
+
+  /* ---------- 坚白石实验台 ---------- */
+  .lab{display:grid;grid-template-columns:340px 1fr;gap:30px;margin:30px 0;align-items:start}
+  .stone-box svg{width:100%;height:auto;display:block}
+  .lab-ctl button{background:var(--panel);border:1px solid var(--line);color:var(--paper);font-family:var(--song);
+    font-size:16px;padding:10px 26px;margin-right:12px;cursor:pointer;letter-spacing:.2em}
+  .lab-ctl button.on{border-color:var(--zhu);color:var(--zhu)}
+  .mode{display:none}
+  .mode.show{display:block}
+  .stone-lb{transition:opacity .6s}
+  .lab[data-mode="eye"] .lb-jian{opacity:.12}
+  .lab[data-mode="hand"] .lb-bai{opacity:.12}
+  .lab[data-mode="eye"] .hatch{opacity:.12}
+  .lab[data-mode="hand"] .patch{opacity:.2}
+
+  /* ---------- 通变三卡 ---------- */
+  .cases{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
+  .case{background:var(--panel);border:1px solid var(--line);padding:20px}
+  .case h3{color:var(--zhu);letter-spacing:.3em}
+  .case .q{font-size:15px}
+
+  /* ---------- 版本时间线 ---------- */
+  .tl{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:34px}
+  .st{border-top:2px solid var(--line);padding-top:16px;position:relative}
+  .st::before{content:"";position:absolute;top:-5px;left:0;width:8px;height:8px;background:var(--zhu);transform:rotate(45deg)}
+  .st .era{color:var(--zhu);font-size:14px;letter-spacing:.35em;margin-bottom:10px}
+  .st p{font-size:13.5px;color:var(--dim)}
+  .st .q{font-size:13.5px;padding:9px 12px;margin:10px 0;line-height:1.9}
+  .colophon{background:var(--panel);border:1px solid var(--line);padding:18px 22px;margin-top:36px}
+
+  /* ---------- 尾屏 ---------- */
+  .final{padding:120px 0 90px;text-align:center;border-top:1px solid var(--line);margin-top:70px}
+  .final .kick{letter-spacing:.5em}
+  .fin-q{display:flex;justify-content:center;gap:38px;margin:44px 0 30px}
+  .fin-q span{writing-mode:vertical-rl;font-size:34px;letter-spacing:12px;height:400px;color:var(--paper);white-space:nowrap}
+  .fin-q span:nth-child(2){font-size:24px;color:var(--dim);margin-top:60px}
+  .fin-seal{display:inline-block;border:2px solid var(--zhu);color:var(--zhu);font-size:20px;letter-spacing:8px;
+    padding:10px 14px 10px 22px;transform:rotate(2deg);margin-bottom:30px}
+  .back{display:inline-block;margin-top:30px;color:var(--dim);font-size:13.5px;letter-spacing:.2em;text-decoration:none}
+  .back:hover{color:var(--zhu)}
+
+  footer{border-top:1px solid var(--line);padding:40px 0 60px;margin-top:20px}
+  footer p{color:var(--faint);font-size:12.5px;line-height:2}
+  footer a{color:var(--dim)}
+
+  @media (max-width:860px){
+    .tags{grid-template-columns:repeat(7,1fr)}
+    .folds,.cases{grid-template-columns:1fr}
+    .lab{grid-template-columns:1fr}
+    .tl{grid-template-columns:1fr;gap:26px}
+    .qa{grid-template-columns:64px 1fr;gap:10px}
+    .ht{font-size:40px;height:210px;letter-spacing:10px}
+    .fin-q span{font-size:26px;height:320px;letter-spacing:8px}
+    .fin-q span:nth-child(2){font-size:18px;height:320px}
+    section{padding:64px 0 26px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 首屏：关城验马 ============ -->
+<header class="hero" id="gate">
+  <svg viewBox="0 0 1200 640" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <clipPath id="opclip">
+        <path d="M540,620 L540,420 A60,60 0 0 1 660,420 L660,620 Z"/>
+      </clipPath>
+    </defs>
+    <circle cx="185" cy="112" r="34" fill="#1e1c17" stroke="#6b665a" stroke-width="1.5" opacity=".85"/>
+    <circle cx="173" cy="104" r="5" fill="#2a2720"/><circle cx="196" cy="122" r="3.5" fill="#2a2720"/>
+    <!-- 路面 -->
+    <rect x="0" y="578" width="1200" height="62" fill="#221f19"/>
+    <line x1="0" y1="578" x2="1200" y2="578" stroke="#33301f" stroke-width="2" opacity=".7"/>
+    <!-- 城墙 -->
+    <rect x="0" y="352" width="1200" height="288" fill="#262218"/>
+    <line x1="0" y1="346" x2="1200" y2="346" stroke="#262218" stroke-width="24" stroke-dasharray="36 20"/>
+    <!-- 门楼 -->
+    <polygon points="446,190 754,190 700,136 500,136" fill="#2e2a20"/>
+    <rect x="456" y="190" width="16" height="168" fill="#2b2820"/>
+    <rect x="728" y="190" width="16" height="168" fill="#2b2820"/>
+    <rect x="574" y="290" width="52" height="46" fill="#211e17" stroke="#3d382c" stroke-width="2"/>
+    <text x="600" y="324" text-anchor="middle" font-size="27" fill="#b8b2a4" font-family="Songti SC,STSong,SimSun,serif">关</text>
+    <!-- 门洞与门扇 -->
+    <path d="M540,620 L540,420 A60,60 0 0 1 660,420 L660,620 Z" fill="#12110d"/>
+    <g clip-path="url(#opclip)">
+      <g class="doorL"><rect x="541" y="404" width="58" height="216" fill="#2b2820" stroke="#454031" stroke-width="2"/>
+        <circle cx="588" cy="520" r="4" fill="#5a5548"/></g>
+      <g class="doorR"><rect x="601" y="404" width="58" height="216" fill="#2b2820" stroke="#454031" stroke-width="2"/>
+        <circle cx="612" cy="520" r="4" fill="#5a5548"/></g>
+    </g>
+    <!-- 守关者 -->
+    <g class="guard" fill="#35311f">
+      <circle cx="506" cy="452" r="8"/>
+      <rect x="498" y="462" width="16" height="38"/>
+      <line x1="522" y1="416" x2="522" y2="506" stroke="#35311f" stroke-width="4"/>
+    </g>
+    <!-- 白马 -->
+    <g transform="translate(796,578)">
+      <g class="horse" fill="#e8e4dc">
+        <ellipse cx="0" cy="-72" rx="86" ry="33"/>
+        <path d="M50,-92 L86,-152 L126,-146 L112,-110 L74,-62 Z"/>
+        <rect x="100" y="-168" width="60" height="27" rx="12"/>
+        <path d="M106,-166 L113,-183 L122,-166 Z"/>
+        <path d="M126,-166 L134,-181 L141,-166 Z"/>
+        <rect x="-72" y="-46" width="12" height="46"/>
+        <rect x="-44" y="-46" width="12" height="42"/>
+        <rect x="34" y="-46" width="12" height="46"/>
+        <rect x="60" y="-46" width="12" height="42"/>
+        <path d="M-84,-90 C-118,-82 -124,-46 -110,-20 L-98,-26 C-108,-50 -100,-74 -76,-78 Z"/>
+        <path d="M92,-138 L66,-102 L80,-96 L104,-126 Z" fill="#d5d0c4"/>
+      </g>
+    </g>
+  </svg>
+  <div class="gate-say">关吏拦马 · 马不得过</div>
+  <div class="plates">
+    <p class="plate q">白马非马可乎？曰：可。</p>
+    <p class="plate q">马者所以命形也，白者所以命色也；命色者非命形也，故曰白马非马。</p>
+    <p class="plate q">求马，黄黒马皆可致；求白马，黄黒马不可致。</p>
+  </div>
+  <div class="hero-title"><span class="hseal">白马非马</span><span class="ht">公孙龙子</span></div>
+  <div class="cta">点 城 门 ，听 它 自 辩</div>
+</header>
+
+<main>
+  <!-- ============ 篇目签架 ============ -->
+  <section id="pian" class="rv">
+    <div class="wrap">
+      <div class="kick">篇目 · 十四去八</div>
+      <h2>签架上六根实签，八根空签</h2>
+      <p>汉书艺文志给这本书记了十四篇的账。到宋代再清点，八篇已经没了，只剩这六根。空着的八格不是装饰，是书的伤口。</p>
+      <div class="q">其书汉志着录者十四篇，至宋时八篇已亡，今仅存迹府、白马、指物、通变、坚白、名实凡六篇。</div>
+      <p class="note">四库提要原话。</p>
+      <div class="tags">
+        <a class="tag live" href="#jifu">迹府<i>第一</i></a>
+        <a class="tag live" href="#baima">白马论<i>第二</i></a>
+        <span class="tag gone"><em>佚</em></span>
+        <span class="tag gone"><em>佚</em></span>
+        <span class="tag gone"><em>佚</em></span>
+        <span class="tag gone"><em>佚</em></span>
+        <a class="tag live" href="#zhiwu">指物论<i>第三</i></a>
+        <a class="tag live" href="#tongbian">通变论<i>第四</i></a>
+        <span class="tag gone"><em>佚</em></span>
+        <span class="tag gone"><em>佚</em></span>
+        <span class="tag gone"><em>佚</em></span>
+        <a class="tag live" href="#jianbai">坚白论<i>第五</i></a>
+        <a class="tag live" href="#mingshi">名实论<i>第六</i></a>
+        <span class="tag gone"><em>佚</em></span>
+      </div>
+      <p class="note">空签按次序插在实签之间，只是示意：亡掉的八篇连篇名都没有留全。</p>
+    </div>
+  </section>
+
+  <!-- ============ 白马论 ============ -->
+  <section id="baima" class="rv">
+    <div class="wrap">
+      <div class="kick">白马论 · 五答</div>
+      <h2>一句话，五步抬杠</h2>
+      <p>原文是主客对答。客人步步紧逼，主人接得干净，把五步摆开看：</p>
+
+      <div class="qa">
+        <div class="role a">答</div>
+        <div>
+          <div class="q">使白马乃马也，是所求一也；所求一者，白者不异马也。</div>
+          <p class="gloss">白马若就是马，那求马和求白马就是同一件事，说两遍都多余。</p>
+        </div>
+      </div>
+      <div class="qa">
+        <div class="role a">答</div>
+        <div>
+          <div class="q">求马，黄黒马皆可致；求白马，黄黒马不可致。</div>
+          <p class="gloss">要马，黄的黑的都算数；点名要白马，厩里只剩白马应门。这一条是全篇最硬的证据。</p>
+        </div>
+      </div>
+      <div class="qa">
+        <div class="role">客难</div>
+        <div>
+          <div class="q">天下非有无色之马也，天下无马可乎？</div>
+          <p class="gloss">照你这么讲，天下岂不是一匹马都没有了？</p>
+        </div>
+      </div>
+      <div class="qa">
+        <div class="role a">答</div>
+        <div>
+          <div class="q">马者，无去取于色，故黄黒皆所以应。</div>
+          <div class="q">白马者言白定所白也，定所白者非白也。</div>
+          <p class="gloss">单说马，是对颜色不挑不拣；白马是专挑了白色的马。挑过的和没挑的，不是一回事。</p>
+        </div>
+      </div>
+      <div class="qa">
+        <div class="role a">答</div>
+        <div>
+          <div class="q">无去者非有去也，故曰白马非马。</div>
+          <p class="gloss">收梢干脆：没挑的，不等于挑了。</p>
+        </div>
+      </div>
+
+      <div class="aside">
+        <div class="kick">馆臣按语</div>
+        <div class="q">乃假指物以混是非，借白马而齐物我，冀时君有悟而正名实。</div>
+        <p>四库馆臣看得明白：这话不是酒桌玩具，是摆给君主看的一堂正名课。辩的是马，说的是名号和实货对不对得上账。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 迹府 ============ -->
+  <section id="jifu" class="rv">
+    <div class="wrap">
+      <div class="kick">迹府 · 孔子后裔来拜师</div>
+      <h2>他把孔子的后人辩到没话</h2>
+      <p>迹府是全书唯一的记事篇。开头交代他一生的动机，就一句话：</p>
+      <div class="q">疾名实之散乱，因资材之所长，为守白之论。</div>
+      <p>看不惯名字和东西对不上账，这是他全部学问的起点。下面这场实战，对手来头不小：孔子后裔孔穿，在赵国平原君家堵住他。</p>
+
+      <div class="folds">
+        <div class="fold">
+          <span class="no">折一</span>
+          <p>孔穿开条件：拜师可以，先废掉那门看家学问。</p>
+          <div class="q">素闻先生髙谊，愿为弟子久，但不取先生以白马为非马耳。请去此术，则穿请为弟子。</div>
+        </div>
+        <div class="fold">
+          <span class="no">折二</span>
+          <p>公孙龙把话挑明：我靠这门学问立身，先废了它再拜师，等于先教我、再拜我，顺序已经倒了。</p>
+          <div class="q">先生之言悖。</div>
+          <div class="q">先教而后师之者，悖。</div>
+        </div>
+        <div class="fold">
+          <span class="no">折三</span>
+          <p>然后他搬出孔子本人。楚王丢了弓：</p>
+          <div class="q">楚王遗弓，楚人得之，又何求乎？</div>
+        </div>
+      </div>
+
+      <div class="q">仲尼闻之曰：楚王仁义而未遂也。亦曰人亡弓、人得之而已，何必楚？</div>
+      <div class="q">仲尼异楚人于所谓人。</div>
+      <p>孔子把楚人和天下人分开谈，公孙龙把白马和马分开谈，是同一条路数。我这条学问，祖师爷试过。</p>
+      <span class="verdict q">孔穿无以应焉</span>
+
+      <div class="duel">
+        <h3>同一场辩论，两份战报</h3>
+        <p>这场对决还有另一个版本：孔丛子里写的恰恰相反，赢的是孔穿。四库提要一句话点破：</p>
+        <div class="q">战国时门户角立，各欲自尊其说，故其不同如此。</div>
+        <p class="note">各尊各的师门，战报各写各的。读先秦诸子，得随身带这一句提醒。末尾公孙龙自己补了一刀：</p>
+        <div class="q">欲推是辨以正名实而化天下焉。</div>
+      </div>
+
+      <div class="duel">
+        <h3>附案：齐王说自己爱士</h3>
+        <p>同卷还有一场。尹文问齐王：一个人忠孝信顺样样全，敢用吗？齐王说求之不得。再问：这人受了欺负却不还手，还要吗？齐王说这种丢人的货色不要。尹文说：人没变，王的话变了。</p>
+        <div class="q">事君则忠，事亲则孝，交友则信，处乡则顺，有此四行，可谓士乎？</div>
+        <div class="q">赏罚是非，相与四缪，虽十黄帝不能治也。</div>
+        <p class="gloss">赏和罚自己打架，是非互相拆台，十个黄帝也治不好这个国。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 坚白论 ============ -->
+  <section id="jianbai" class="rv">
+    <div class="wrap">
+      <div class="kick">坚白论 · 一块石头两副感官</div>
+      <h2>眼睛看得见白，摸不着硬</h2>
+      <p>这是全书最像科学实验的一篇。石头摆在那里，坚、白、石三个名号并举，他说一次只能得二：</p>
+      <div class="q">坚白石三可乎？曰：不可。曰：一可乎？曰：可。</div>
+      <div class="q">无坚得白，其举也二；无白得坚，其举也二。</div>
+      <div class="lab" data-mode="none">
+        <div class="stone-box">
+          <svg viewBox="0 0 340 300" aria-hidden="true">
+            <ellipse cx="170" cy="176" rx="120" ry="86" fill="#2e2b23" stroke="#454031" stroke-width="2"/>
+            <path class="patch" d="M118,132 C142,108 188,106 214,124 C236,140 232,168 208,180 C180,194 136,188 120,168 C110,156 108,144 118,132 Z" fill="#e8e4dc" opacity=".9"/>
+            <g class="hatch" stroke="#8f897c" stroke-width="3" opacity=".85">
+              <line x1="128" y1="196" x2="164" y2="232"/>
+              <line x1="150" y1="190" x2="196" y2="236"/>
+              <line x1="176" y1="190" x2="216" y2="230"/>
+              <line x1="200" y1="196" x2="228" y2="222"/>
+            </g>
+            <text class="stone-lb lb-bai" x="166" y="152" font-size="26" fill="#2a2822" font-family="Songti SC,STSong,SimSun,serif">白</text>
+            <text class="stone-lb lb-jian" x="176" y="222" font-size="26" fill="#e8e4dc" font-family="Songti SC,STSong,SimSun,serif">坚</text>
+            <text x="30" y="60" font-size="15" fill="#8f897c" font-family="Songti SC,STSong,SimSun,serif">目之所接</text>
+            <text x="228" y="288" font-size="15" fill="#8f897c" font-family="Songti SC,STSong,SimSun,serif">手之所拊</text>
+          </svg>
+        </div>
+        <div class="lab-ctl">
+          <p style="margin-bottom:14px">用哪副感官去接这块石头？</p>
+          <button id="btnEye">目见</button>
+          <button id="btnHand">手拊</button>
+          <div class="mode" id="modeEye">
+            <div class="q">视不得其所坚而得其所白者，无坚也。</div>
+            <p class="gloss">眼睛拿走了颜色，拿不走硬度。硬度没进视野，不等于不在。</p>
+          </div>
+          <div class="mode" id="modeHand">
+            <div class="q">拊不得其所白而得其所坚，得其坚也，无白也。</div>
+            <p class="gloss">手拿走了硬度，拿不走颜色。</p>
+          </div>
+          <p class="note" style="margin-top:16px">坚与白都圈在石头里，谁也搬不出去。</p>
+          <div class="q">坚白域于石，恶乎离？</div>
+        </div>
+      </div>
+      <div class="q">离也者，藏也。</div>
+      <p>没被感知的那个属性，不是不在，是自己藏了起来。客人再追问：两副感官各管各的班，谁也替不了谁。</p>
+      <div class="duel">
+        <h3>再推一步：火也看不见</h3>
+        <div class="q">且犹白以目以火见，而火不见，则火与目不见，而神见，神不见，而见离。</div>
+        <p>看东西要靠眼睛，眼睛要靠火光，可火自己看不见；照这么推下去，那个真正在看的，谁都指不出来。两千年后有人管这叫意识的困难问题，他只给了一个字：离。</p>
+        <p class="note">谢希深注在此篇末尾留了一笔：公孙龙与孔穿在平原君家还对辩过臧三耳，一只羊三只耳朵的怪题。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 通变论 ============ -->
+  <section id="tongbian" class="rv">
+    <div class="wrap">
+      <div class="kick">通变论 · 狂举三案</div>
+      <h2>硬凑的名，凑不出真的物</h2>
+      <p>这一篇专办错案：两个东西硬归一个名字，会发生什么。</p>
+      <div class="cases">
+        <div class="case">
+          <h3>案一</h3>
+          <div class="q">曰：二有一乎？曰：二无一。</div>
+          <p>二里面没有一：两个合成的东西，不能再当单个数。</p>
+        </div>
+        <div class="case">
+          <h3>案二</h3>
+          <div class="q">羊合牛非马。</div>
+          <div class="q">牛合羊非鸡。</div>
+          <p>羊合牛，凑不成马；牛合羊，也凑不成鸡。硬归一个名，谁都当不成。</p>
+        </div>
+        <div class="case">
+          <h3>案三</h3>
+          <div class="q">青以白非黄，白以青非碧。</div>
+          <div class="q">木贼金者碧，碧则非正举矣。</div>
+          <p>颜色在他手里照样谈政治：青是臣，白是君，两色相染谁也压不住谁，杂出的第三色叫碧，就是臣掩了君。</p>
+        </div>
+      </div>
+      <div class="q" style="margin-top:26px">举是谓乱名，是狂举。</div>
+      <p>判词只有几个字：乱名，狂举。名号一乱，账就没法对了。</p>
+    </div>
+  </section>
+
+  <!-- ============ 指物论 ============ -->
+  <section id="zhiwu" class="rv">
+    <div class="wrap">
+      <div class="kick">指物论 · 全书最绕</div>
+      <h2>名称和东西，谁欠谁的</h2>
+      <div class="q" style="font-size:22px;line-height:2.2;text-align:center;border-left:none;border-top:2px solid rgba(192,69,60,.55);border-bottom:2px solid rgba(192,69,60,.55)">物莫非指，而指非指。</div>
+      <p>物都是被指称的，但指称本身不是物。他还立了更狠的一句：</p>
+      <div class="q">指也者，天下之所无也；物也者，天下之所有也。以天下之所有，为天下之所无，未可。</div>
+      <div class="q">天下无指，物无可以谓物。</div>
+      <p>天下的概念算「无」，天下的东西算「有」，拿「无」去抵「有」的账，抵不了；可没有名称，东西又连叫都叫不出来。这一篇战国以后吵了两千年，第一遍读不懂，不丢人。</p>
+    </div>
+  </section>
+
+  <!-- ============ 版本账 ============ -->
+  <section id="banben" class="rv">
+    <div class="wrap">
+      <div class="kick">版本 · 从十四到六</div>
+      <h2>一本书的伤口清单</h2>
+      <div class="tl">
+        <div class="st">
+          <div class="era">战国</div>
+          <div class="q">龙与毛公等并游平原君之门。</div>
+          <p>提要替他跑了一遍履历：赵人，平原君门客。庄子拿他与杨朱并数。</p>
+          <div class="q">庄子谓惠子曰：儒墨杨秉四，与夫子为五。秉即龙也。</div>
+        </div>
+        <div class="st">
+          <div class="era">西汉</div>
+          <div class="q">淮南鸿烈解称：公孙龙粲于辞而贸名。</div>
+          <div class="q">杨子法言称：公孙龙诡辞数万。</div>
+          <p>汉志记十四篇。时人留给他的两句话：辞太艳，名太乱。</p>
+        </div>
+        <div class="st">
+          <div class="era">宋</div>
+          <p>八篇亡佚。好在书身边一直跟着一位话痨注家，六篇靠他陪到今天。</p>
+          <div class="q">此本之注，乃宋谢希深所撰，文义颇浅近。</div>
+        </div>
+        <div class="st">
+          <div class="era">明</div>
+          <div class="q">明钟惺刻此书，改其名为辩言。</div>
+          <p>书商嫌原名不够劲。清代四库把它改了回来。</p>
+        </div>
+        <div class="st">
+          <div class="era">清</div>
+          <div class="q">义虽恢诞，而文颇离奇可喜。</div>
+          <p>陈振孙讥它浅陋迂僻，四库馆臣回敬了这八个字。六篇传到今天。</p>
+        </div>
+      </div>
+      <div class="colophon">
+        <h3>校字记</h3>
+        <p class="note">黒当作黑、髙当作高、廐当作厩、鬬当作斗、柰当作奈，皆库本原字照录；提要里萟文志之萟一类的字，未入引文；同册另钉鬼谷子提要一份，本页不取；文件末行只剩公孙龙子四字。去空白一万零一百一十一字，其中正文九千一百二十一字。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 名实论收梢 ============ -->
+  <section id="mingshi" class="final">
+    <div class="wrap">
+      <div class="kick">名实论 · 收梢</div>
+      <p style="max-width:640px;margin:0 auto">吵了一路白马坚白，最后一篇落回他真正想说的话：名要副实。名对了才叫得应，叫不应，就是名不副实。</p>
+      <div class="q" style="max-width:640px;margin:26px auto">天地与其所产焉，物也。</div>
+      <div class="q" style="max-width:640px;margin:14px auto">其名正则唯乎其彼此焉。</div>
+      <div class="q" style="max-width:640px;margin:14px auto">夫名实谓也。知此之非此也，知此之不在此也，则不谓也。</div>
+      <div class="fin-q">
+        <span>至矣哉古之明王</span>
+        <span>审其名实慎其所谓</span>
+        <span>至矣哉古之明王</span>
+      </div>
+      <div class="fin-seal q">名实</div>
+      <p style="max-width:640px;margin:0 auto" class="note">这本书写给谁看，提要那句话说尽了：等着君主自己醒。醒没醒不知道，逻辑学在这里拐了个弯，一拐两千年。</p>
+      <a class="back" href="mulu.html">返回总目</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库 子藏〈<span class="qv">公孙龙子</span>〉（四库本），去空白约一万字；库藏总目见 <a href="https://github.com/robertsong2000/daizhigev20">github.com/robertsong2000/daizhigev20</a>。</p>
+    <p>引文经脚本与库内文件去标点、异体归一后逐字比对，白话转述经反向扫描核对，未混入库本原文。</p>
+    <p>本篇为古籍导读。名家之辩是两千多年前的语言与逻辑实验，取其思辨趣味可也；其说归于君王正名的时代课题，今日读来，当知其限。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var hero=document.getElementById('gate');
+  var played=false;
+  hero.addEventListener('click',function(){
+    if(played)return; played=true;
+    hero.classList.add('s1');
+    setTimeout(function(){hero.classList.add('open');},1900);
+    setTimeout(function(){hero.classList.add('cross');},2100);
+    setTimeout(function(){hero.classList.add('s4');},4500);
+  });
+  /* 坚白石实验台 */
+  var lab=document.querySelector('.lab'),bE=document.getElementById('btnEye'),bH=document.getElementById('btnHand'),
+      mE=document.getElementById('modeEye'),mH=document.getElementById('modeHand');
+  function setMode(m){
+    lab.setAttribute('data-mode',m);
+    bE.classList.toggle('on',m==='eye'); bH.classList.toggle('on',m==='hand');
+    mE.classList.toggle('show',m==='eye'); mH.classList.toggle('show',m==='hand');
+  }
+  bE.addEventListener('click',function(){setMode(lab.getAttribute('data-mode')==='eye'?'none':'eye');});
+  bH.addEventListener('click',function(){setMode(lab.getAttribute('data-mode')==='hand'?'none':'hand');});
+  /* 滚动浮现 */
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('on');io.unobserve(en.target);}});
+  },{threshold:.08});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
