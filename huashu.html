@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>化书 · 万化</title>
+<style>
+:root{
+  --mo:#191917;      /* 墨底 */
+  --zhi:#e8e4dc;     /* 纸白 */
+  --sha:#c0453c;     /* 朱砂 */
+  --sha2:#d9695f;
+  --hui:#8a857c;
+  --hui2:#55524c;
+  --xian:#2c2b28;
+  --serif:"Songti SC","STSong","SimSun","Noto Serif SC",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--mo);color:var(--zhi);font-family:var(--serif);line-height:1.9;font-size:17px;overflow-x:hidden}
+q{quotes:none !important}
+q::before,q::after{content:none !important}
+::selection{background:var(--sha);color:var(--zhi)}
+a{color:inherit}
+
+/* 右缘读环进度 */
+#prg{position:fixed;right:14px;top:50%;transform:translateY(-50%);width:52px;height:52px;z-index:60;opacity:.85}
+#prg svg{width:100%;height:100%;transform:rotate(-90deg)}
+#prg .bgc{fill:none;stroke:var(--xian);stroke-width:3}
+#prg .fgc{fill:none;stroke:var(--sha);stroke-width:3;stroke-linecap:round;stroke-dasharray:138.2;stroke-dashoffset:138.2;transition:stroke-dashoffset .2s linear}
+#prg b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--hui2);font-weight:normal;transition:color .5s,text-shadow .5s}
+#prg.done b{color:var(--sha);text-shadow:0 0 12px rgba(192,69,60,.8)}
+
+/* 首屏 */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 20px 40px;position:relative}
+.ringwrap{position:relative;width:min(78vmin,560px);height:min(78vmin,560px);margin-bottom:26px}
+.ringwrap svg{width:100%;height:100%;display:block;overflow:visible}
+#oring{fill:none;stroke:var(--hui2);stroke-width:1.6;stroke-dasharray:5 9;transform-origin:300px 300px;animation:slowspin 80s linear infinite}
+#oring2{fill:none;stroke:var(--xian);stroke-width:8;transform-origin:300px 300px;animation:slowspin 140s linear infinite reverse}
+.ringwrap.on #oring{stroke:var(--sha);animation-duration:9s}
+.ringwrap.on #oring2{stroke:#3a2724;animation-duration:20s}
+@keyframes slowspin{to{transform:rotate(360deg)}}
+.gn{position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:1px solid var(--hui2);display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--hui2);background:var(--mo);transition:all .6s}
+.gn.lit{border-color:var(--sha);color:var(--sha);box-shadow:0 0 22px rgba(192,69,60,.35);transform:scale(1.12)}
+#vtitle{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);writing-mode:vertical-rl;display:flex;gap:18px;opacity:0;transition:opacity 1.4s ease .6s}
+.ringwrap.on #vtitle{opacity:1}
+#vtitle span{display:inline-block;font-size:88px;line-height:1;letter-spacing:16px;color:var(--zhi);text-shadow:0 0 30px rgba(232,228,220,.25)}
+#hero-seal{position:absolute;right:6%;bottom:8%;width:58px;height:58px;border:2px solid var(--sha);color:var(--sha);display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;font-size:22px;line-height:1;place-items:center;opacity:0;transform:scale(1.7) rotate(9deg);transition:all .45s cubic-bezier(.2,.8,.3,1);background:rgba(192,69,60,.06)}
+#hero-seal i{font-style:normal}
+.ringwrap.on #hero-seal{opacity:.92;transform:scale(1) rotate(-3deg)}
+.eyebrow{color:var(--sha);letter-spacing:.35em;font-size:14px;margin-bottom:10px}
+#hero h1{position:absolute;left:-9999px;top:0}
+#hero .meta{color:var(--hui);font-size:15px;letter-spacing:.12em}
+#hero .cap{margin-top:18px;max-width:640px;text-align:center;color:var(--zhi)}
+#hero .cap .il{border-bottom:1px solid var(--xian);padding-bottom:2px}
+#hero .cap .dot{color:var(--hui2);margin:0 10px}
+#btn-hua{margin-top:26px;background:none;border:1px solid var(--sha);color:var(--sha);font-family:var(--serif);font-size:17px;letter-spacing:.5em;padding:10px 26px 10px 32px;cursor:pointer;transition:all .3s}
+#btn-hua:hover{background:var(--sha);color:var(--zhi)}
+#hint{margin-top:14px;color:var(--hui2);font-size:13px;letter-spacing:.1em}
+
+/* 通用舞台 */
+main{max-width:1060px;margin:0 auto;padding:0 26px}
+.stage{padding:86px 0 30px;position:relative}
+.slip{position:absolute;left:-26px;top:86px;writing-mode:vertical-rl;background:var(--sha);color:var(--zhi);padding:16px 7px;font-size:17px;letter-spacing:.3em;border-radius:2px}
+.stagewrap{padding-left:74px}
+.kicker{color:var(--hui2);font-size:13px;letter-spacing:.28em;margin-bottom:6px}
+.stage h2{font-size:31px;font-weight:normal;letter-spacing:.08em;margin-bottom:8px}
+.stage h2 em{font-style:normal;color:var(--sha)}
+.lead{color:var(--hui);max-width:760px;margin-bottom:26px}
+.lead b,.prose b{color:var(--zhi);font-weight:normal}
+
+/* 纸白引文块 */
+.q{display:block;background:var(--zhi);color:#24221f;padding:18px 22px;margin:14px 0;font-size:16.5px;line-height:2;border-left:3px solid var(--sha);position:relative}
+.q .src{display:block;color:#8a8178;font-size:13px;margin-top:6px;letter-spacing:.05em}
+.il{background:rgba(232,228,220,.07);padding:1px 6px;border-bottom:1px dashed var(--hui2);color:var(--zhi)}
+.qian2{color:var(--sha)}
+
+/* 公案 */
+#an .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:22px 0 30px}
+.card{perspective:900px;height:210px}
+.card .in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s}
+.card.flip .in{transform:rotateY(180deg)}
+.card .f,.card .b{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--xian);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center}
+.card .f{background:#1f1e1b}
+.card .f b{font-size:24px;letter-spacing:.15em;font-weight:normal}
+.card .f small{color:var(--hui2);margin-top:10px;font-size:12px;letter-spacing:.2em}
+.card .b{background:var(--zhi);color:#24221f;transform:rotateY(180deg);font-size:14.5px;line-height:1.85;text-align:left}
+.card .b b{color:var(--sha)}
+#an .bio{border:1px solid var(--xian);padding:20px 24px;margin-top:6px}
+#an .bio h3{font-weight:normal;color:var(--sha);letter-spacing:.2em;font-size:15px;margin-bottom:14px}
+#an .bio ol{list-style:none;display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+#an .bio li{border-top:1px solid var(--hui2);padding-top:10px;font-size:14px;color:var(--hui)}
+#an .bio li b{display:block;color:var(--zhi);font-size:15.5px;font-weight:normal;margin-bottom:4px}
+
+/* 大化链 */
+#hua .duo{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:start;margin-top:8px}
+.chain{border:1px solid var(--xian);padding:18px 20px 20px;background:#1d1c19}
+.chain h3{font-weight:normal;font-size:15px;letter-spacing:.2em;color:var(--hui);margin-bottom:12px}
+.chain h3 b{color:var(--sha);font-weight:normal}
+ol.chem{list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+ol.chem li{border:1px solid var(--hui2);padding:3px 10px;font-size:14.5px;color:var(--hui);transition:all .4s;cursor:pointer}
+ol.chem li.lit{border-color:var(--sha);color:var(--zhi);background:rgba(192,69,60,.16)}
+ol.chem li:nth-child(6n).lit{color:var(--sha)}
+.chbtns{margin-top:14px;display:flex;gap:10px}
+.chbtns button{background:none;border:1px solid var(--hui2);color:var(--hui);font-family:var(--serif);font-size:13px;padding:4px 14px;cursor:pointer;letter-spacing:.15em}
+.chbtns button:hover{border-color:var(--sha);color:var(--sha)}
+#sheng{position:relative;width:100%;max-width:330px;margin:0 auto}
+#sheng svg{width:100%;height:auto;display:block}
+#sheng .sring{fill:none;stroke:var(--hui2);stroke-width:1.2}
+#sheng .sdash{fill:none;stroke:var(--sha);stroke-width:1.4;stroke-dasharray:3 10;opacity:.6}
+#sheng text{fill:var(--hui);font-size:19px;font-family:var(--serif)}
+#sheng text.lit{fill:var(--sha)}
+#sheng-cap{text-align:center;color:var(--hui2);font-size:13px;margin-top:8px;letter-spacing:.1em}
+
+/* 格物 */
+#jing .lensmachine{display:grid;grid-template-columns:300px 1fr;gap:26px;align-items:stretch;border:1px solid var(--xian);padding:22px;background:#1d1c19}
+#lensbox{position:relative;background:var(--zhi);min-height:220px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#glyph{font-size:64px;color:#24221f;transition:transform .6s cubic-bezier(.3,.9,.3,1);display:inline-block}
+#glyph.g-gui{transform:scale(1.9)}
+#glyph.g-zhu{transform:scale(.5)}
+#glyph.g-di{transform:none}
+#glyph.g-yu{transform:rotate(180deg)}
+.lensside h3{font-weight:normal;letter-spacing:.15em;color:var(--sha);font-size:16px;margin-bottom:8px}
+.lensnote{color:var(--hui);font-size:14.5px;min-height:56px;margin-bottom:12px}
+.lensbtns{display:flex;gap:10px}
+.lensbtns button{width:52px;height:52px;border:1px solid var(--hui2);background:none;color:var(--zhi);font-family:var(--serif);font-size:21px;cursor:pointer;transition:all .3s}
+.lensbtns button.sel{border-color:var(--sha);color:var(--sha);box-shadow:0 0 14px rgba(192,69,60,.3)}
+#q4jing{margin-top:12px}
+.qwall{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}
+.qitem{border:1px solid var(--xian);background:#1d1c19;cursor:pointer;transition:border-color .3s}
+.qitem:hover{border-color:var(--hui2)}
+.qitem h4{font-weight:normal;padding:12px 16px;font-size:16px;letter-spacing:.15em;display:flex;justify-content:space-between;align-items:center}
+.qitem h4 i{font-style:normal;color:var(--hui2);font-size:13px;transition:transform .3s}
+.qitem .body{display:none;padding:0 16px 16px;border-top:1px solid var(--xian)}
+.qitem.open .body{display:block}
+.qitem.open h4 i{transform:rotate(45deg)}
+.qitem.open{border-color:var(--sha)}
+.qitem .body p{font-size:13.5px;color:var(--hui);margin:10px 0 6px}
+
+/* 德仁 */
+#dao .bow{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.bowrow{border:1px solid var(--xian);padding:16px 18px;background:#1d1c19}
+.bowrow .step{display:flex;align-items:center;gap:10px;margin:8px 0}
+.bowrow .step q{display:inline-block;background:none;color:var(--zhi);padding:0;margin:0;font-size:16px}
+.bowrow .arr{color:var(--sha)}
+.bowrow .tag{font-size:12.5px;color:var(--hui2);letter-spacing:.2em}
+.threecol{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:18px}
+.pcard{border:1px solid var(--xian);padding:18px;background:#1d1c19}
+.pcard h4{font-weight:normal;color:var(--sha);letter-spacing:.18em;font-size:15px;margin-bottom:10px}
+.pcard p{font-size:14px;color:var(--hui);margin-bottom:8px}
+
+/* 食化 */
+#shi .head7{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+#duoban{border:1px solid var(--xian);background:#1d1c19;padding:18px 20px}
+#duoban h3{font-weight:normal;font-size:15px;color:var(--hui);letter-spacing:.2em;margin-bottom:10px}
+#duoban h3 b{color:var(--sha);font-weight:normal}
+.drow{display:flex;align-items:center;gap:12px;padding:7px 6px;border-bottom:1px dashed #2c2b28;cursor:pointer;transition:background .3s}
+.drow:hover{background:rgba(232,228,220,.04)}
+.drow .dq{flex:0 0 auto;font-size:15.5px;color:var(--hui);transition:color .3s}
+.drow .bar{flex:1;height:8px;background:#2c2b28;position:relative;overflow:hidden}
+.drow .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#6e3a34,var(--sha));transition:width .6s}
+.drow.lit .dq{color:var(--zhi)}
+.drow.lit .bar i{width:var(--w)}
+#duocnt{margin-top:12px;font-size:13.5px;color:var(--hui2);letter-spacing:.1em}
+#duocnt b{color:var(--sha);font-weight:normal}
+.slips{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:22px}
+.slip2{border-left:3px solid var(--hui2);padding:12px 16px;background:#1d1c19;transition:border-color .3s}
+.slip2:hover{border-color:var(--sha)}
+.slip2 h5{font-weight:normal;color:var(--sha);font-size:14px;letter-spacing:.2em;margin-bottom:6px}
+.slip2 p{font-size:13.5px;color:var(--hui)}
+
+/* 俭化 */
+#jian .bpgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0 26px}
+.bp{border:1px solid var(--xian);background:#1d1c19;padding:12px 10px;text-align:center;font-size:14.5px;color:var(--hui);cursor:pointer;transition:all .35s}
+.bp:hover{border-color:var(--hui2)}
+.bp.lit{border-color:var(--sha);color:var(--zhi);background:rgba(192,69,60,.13)}
+#jian .sanhuang{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 26px}
+#jian .sanhuang q{display:inline-block;background:none;border:1px solid var(--hui2);color:var(--hui);padding:4px 12px;font-size:15px;margin:0;transition:all .4s}
+#jian .sanhuang q.lit{border-color:var(--sha);color:var(--zhi)}
+#jian .sanhuang .arr{color:var(--sha)}
+#jian .twocol{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+.bigq{font-size:21px;line-height:2.1;letter-spacing:.04em}
+#btn-jian{margin:14px 0;background:none;border:1px solid var(--hui2);color:var(--hui);font-family:var(--serif);padding:6px 18px;font-size:13.5px;letter-spacing:.2em;cursor:pointer}
+#btn-jian:hover{border-color:var(--sha);color:var(--sha)}
+
+/* 双影 */
+#ying table{width:100%;border-collapse:collapse;margin:16px 0 24px;font-size:14.5px}
+#ying th{font-weight:normal;color:var(--hui2);text-align:left;padding:8px 12px;border-bottom:1px solid var(--hui2);font-size:13px;letter-spacing:.15em}
+#ying td{padding:10px 12px;border-bottom:1px solid #26241f;vertical-align:top;color:var(--hui)}
+#ying td:first-child{color:var(--zhi)}
+#ying .il{font-size:13.5px}
+.fanglist{display:flex;flex-wrap:wrap;gap:10px}
+.fanglist span{border:1px dashed var(--hui2);padding:4px 12px;font-size:13.5px;color:var(--hui)}
+.fanglist span b{color:var(--sha);font-weight:normal}
+
+/* 尾屏 */
+#fin{position:relative;padding:120px 26px 60px;text-align:center;overflow:hidden}
+#fin .arcs{position:absolute;left:50%;top:40px;transform:translateX(-50%);width:min(70vmin,420px);height:min(70vmin,420px);pointer-events:none}
+#fin .arcs circle{fill:none;stroke:var(--xian);stroke-width:1.4;stroke-dasharray:880;stroke-dashoffset:880;transition:stroke-dashoffset 2.2s ease}
+body.fin-on #fin .arcs circle{stroke-dashoffset:0}
+body.fin-on #fin .arcs circle:last-child{transition-delay:.5s}
+#fin .zhq{position:relative;writing-mode:vertical-rl;height:400px;margin:10px auto 30px;font-size:23px;line-height:2.2;letter-spacing:.3em;color:var(--zhi)}
+#finseal{margin:6px auto 40px;width:74px;height:74px;border:2px solid var(--sha);display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;place-items:center;font-size:24px;line-height:1;color:var(--sha);opacity:.25;transform:scale(.8);transition:all .6s;background:rgba(192,69,60,.05)}
+#finseal i{font-style:normal}
+body.fin-on #finseal{opacity:.95;transform:scale(1) rotate(-3deg)}
+.fnote{max-width:760px;margin:0 auto;text-align:left;border-top:1px solid var(--xian);padding-top:22px;color:var(--hui);font-size:13.5px;line-height:2}
+.fnote p{margin-bottom:10px}
+.fnote b{color:var(--zhi);font-weight:normal}
+.fnote a{color:var(--sha);text-decoration:none}
+
+/* 显现 */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:860px){
+  body{font-size:16px}
+  .stage{padding:66px 0 20px}
+  .slip{left:-14px;top:66px;padding:12px 5px;font-size:15px}
+  .stagewrap{padding-left:52px}
+  .stage h2{font-size:25px}
+  #an .cards{grid-template-columns:1fr;height:auto}
+  .card{height:auto;min-height:0}
+  .card .in{transform-style:flat;height:auto}
+  .card .f{position:static;min-height:96px;cursor:pointer}
+  .card.flip .f{display:none}
+  .card .b{position:static;transform:none;display:none}
+  .card.flip .b{display:flex;backface-visibility:visible}
+  #hua .duo,#jing .lensmachine,#dao .bow,#shi .head7,#jian .twocol{grid-template-columns:1fr}
+  .threecol{grid-template-columns:1fr}
+  .qwall{grid-template-columns:1fr}
+  .slips{grid-template-columns:1fr}
+  #jian .bpgrid{grid-template-columns:repeat(2,1fr)}
+  #an .bio ol{grid-template-columns:1fr 1fr}
+  #vtitle span{font-size:64px;letter-spacing:10px}
+  #prg{right:8px;width:44px;height:44px}
+}
+</style>
+</head>
+<body>
+
+<div id="prg" aria-hidden="true">
+  <svg viewBox="0 0 52 52"><circle class="bgc" cx="26" cy="26" r="22"/><circle class="fgc" id="fgc" cx="26" cy="26" r="22"/></svg>
+  <b id="prg-c">化</b>
+</div>
+
+<header id="hero">
+  <p class="eyebrow">卷二百三十三 · 万化</p>
+  <h1>化书</h1>
+  <div class="ringwrap" id="ringwrap">
+    <svg viewBox="0 0 600 600" aria-hidden="true">
+      <circle id="oring2" cx="300" cy="300" r="264"/>
+      <circle id="oring" cx="300" cy="300" r="236"/>
+    </svg>
+    <span class="gn" style="left:50%;top:32px" data-g="0">虚</span>
+    <span class="gn" style="left:calc(100% - 32px);top:50%" data-g="1">神</span>
+    <span class="gn" style="left:50%;top:calc(100% - 32px)" data-g="2">气</span>
+    <span class="gn" style="left:32px;top:50%" data-g="3">形</span>
+    <div id="vtitle"><span>化</span><span>书</span></div>
+    <div id="hero-seal" aria-hidden="true"><i>紫</i><i>霄</i></div>
+  </div>
+  <p class="meta">五代 谭峭 撰 · 六卷一百零九目</p>
+  <p class="cap"><q class="il">虚化神神化气气化形</q><span class="dot">·</span><q class="il">形化气气化神神化虚</q></p>
+  <button id="btn-hua" type="button">点 化</button>
+  <p id="hint">点一下,看一粒虚怎么变成一部书</p>
+</header>
+
+<main>
+
+<section class="stage" id="an">
+  <div class="slip">案</div>
+  <div class="stagewrap">
+    <div class="reveal">
+      <p class="kicker">齐丘子之谜</p>
+      <h2>一桩冒名<em>一千年</em>的公案</h2>
+      <p class="lead">书是真的,作者也真的存在,可书名底下那一行署名被人换过。谭峭把写成的书送给南唐权臣宋齐丘求序,齐丘顺手签上自己的名字,一时此书通行本的名字就叫「齐丘子」。连给谭峭立传的《续仙传》都没敢提他写过这本书,因为书当时挂在别人名下。直到北宋道士陈景元作跋,引陈抟的话把这事抖了出来,此书才正名为谭峭所作。</p>
+    </div>
+    <div class="cards reveal">
+      <div class="card"><div class="in">
+        <div class="f"><b>齐丘子</b><small>旧题通行名</small></div>
+        <div class="b"><p>书成之后题了别人的名字。宋晁公武编书目时,仍把它著录在宋齐丘名下;四库馆臣提及时还转述了宋人张耒骂齐丘的一句重话,「犬鼠之雄，盖不足道」。</p></div>
+      </div></div>
+      <div class="card"><div class="in">
+        <div class="f"><b>谭子化书</b><small>正名之本</small></div>
+        <div class="b"><p>陈抟转述谭峭当年留话,「愿子序之，流于后世」;又下一断语,「齐丘夺为己有而序之」。八个字的托付,换来一场千年的顶替。</p></div>
+      </div></div>
+      <div class="card"><div class="in">
+        <div class="f"><b>化书</b><small>库本两署</small></div>
+        <div class="b"><p>同一本书,两个底本署名不一样:四库本卷端题「南唐　谭峭　撰」,而道藏太玄部本题<q class="il" data-s="td">紫霄真人谭景升撰</q>。一个是读书人的本名,一个是修道者的道号。</p></div>
+      </div></div>
+    </div>
+    <div class="bio reveal">
+      <h3>谭峭小传 · 据续仙传与四库提要</h3>
+      <ol>
+        <li><b>司业之子</b>唐国子司业谭洙之子,泉州人,父训以进士业,他偏要读道书。</li>
+        <li><b>辞家游山</b>终南、太白、太行、王屋、嵩、华、泰山,遍游名山,一去不返。</li>
+        <li><b>嵩山十年</b>师事道士十余年,得辟谷养气之术,后来居南岳炼丹。</li>
+        <li><b>醉游而去</b>传里说他「入水不濡，入火不灼」,末了入青城山,不知所终。</li>
+        <li><b>身后正名</b>书曾被窃名,数百年后靠一道跋文要了回来。</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="stage" id="hua">
+  <div class="slip">化</div>
+  <div class="stagewrap">
+    <div class="reveal">
+      <p class="kicker">道化 · 死生</p>
+      <h2>向下的链,<em>转不完的环</em></h2>
+      <p class="lead">开篇是一台机器:虚化成神,神化成气,气化成形,形一旦坐实,万物就堵死了。往下,是二十二环的滑坡链,从一缕虚一路化到兵败国亡,一环扣一环,每环只多吞一口。往上,是一个转不完的环:死复化虚,虚复化神,绕回起点。这本书的世界观全在这两件东西里。</p>
+    </div>
+    <div class="duo reveal">
+      <div class="chain">
+        <h3>大化链 · <b>二十二环</b>,点一环亮一环,或一触全溃</h3>
+        <ol class="chem" id="dahua">
+          <li><q class="il">虚化神</q></li><li><q class="il">神化气</q></li><li><q class="il">气化形</q></li><li><q class="il">形化精</q></li><li><q class="il">精化顾盻</q></li>
+          <li><q class="il">顾盻化揖让</q></li><li><q class="il">揖让化升降</q></li><li><q class="il">升降化尊卑</q></li><li><q class="il">尊卑化分别</q></li><li><q class="il">分别化冠冕</q></li>
+          <li><q class="il">冠冕化车辂</q></li><li><q class="il">车辂化宫室</q></li><li><q class="il">宫室化掖卫</q></li><li><q class="il">掖卫化燕享</q></li><li><q class="il">燕享化奢荡</q></li>
+          <li><q class="il">奢荡化聚敛</q></li><li><q class="il">聚敛化欺罔</q></li><li><q class="il">欺罔化刑戮</q></li><li><q class="il">刑戮化悖乱</q></li><li><q class="il">悖乱化甲兵</q></li>
+          <li><q class="il">甲兵化争夺</q></li><li><q class="il">争夺化败亡</q></li>
+        </ol>
+        <div class="chbtns"><button id="btn-qu" type="button">一触全溃</button><button id="btn-chong" type="button">重来</button></div>
+        <q class="q">虚化神神化气气化形形化精精化顾盻而顾盻化揖让<span class="src">大化 · 上半段</span></q>
+        <q class="q">奢荡化聚敛聚敛化欺罔欺罔化刑戮刑戮化悖乱悖乱化甲兵甲兵化争夺争夺化败亡<span class="src">大化 · 下半段</span></q>
+        <q class="q">其来也势不可遏<span class="src">大化</span></q>
+      </div>
+      <div>
+        <div id="sheng">
+          <svg viewBox="0 0 340 340" aria-hidden="true">
+            <circle class="sring" cx="170" cy="170" r="130"/>
+            <circle class="sdash" cx="170" cy="170" r="130"/>
+            <circle id="comet" r="4" fill="#c0453c">
+              <animateMotion dur="14s" repeatCount="indefinite" path="M 170,40 A 130,130 0 1,1 169.9,40"/>
+            </circle>
+            <text x="170" y="46" text-anchor="middle" data-t="1">虚</text>
+            <text x="246" y="70" text-anchor="middle" data-t="1">神</text>
+            <text x="294" y="136" text-anchor="middle" data-t="1">气</text>
+            <text x="294" y="216" text-anchor="middle" data-t="1">血</text>
+            <text x="246" y="281" text-anchor="middle" data-t="1">形</text>
+            <text x="170" y="306" text-anchor="middle" data-t="1">婴</text>
+            <text x="94" y="281" text-anchor="middle" data-t="1">童</text>
+            <text x="46" y="216" text-anchor="middle" data-t="1">少</text>
+            <text x="46" y="136" text-anchor="middle" data-t="1">壮</text>
+            <text x="94" y="70" text-anchor="middle" data-t="1">老</text>
+            <text x="170" y="177" text-anchor="middle" data-t="1">死</text>
+          </svg>
+        </div>
+        <p id="sheng-cap">死生环 · 点一下,让它带着你转</p>
+        <q class="q">虚化神神化气气化血血化形形化婴婴化童童化少少化壮壮化老老化死<span class="src">死生 · 前半环</span></q>
+        <q class="q">死复化为虚虚复化为神神复化为气气复化为物化化不间犹环之无穷<span class="src">死生 · 后半环</span></q>
+      </div>
+    </div>
+    <div class="reveal">
+      <q class="q">物有善于蛰藏者或可以御大寒或可以去大饥或可以万岁不死<span class="src">蛰藏 · 冬眠者名单,长生术的原型是一只冬虫</span></q>
+      <q class="q">世人皆知苋葅可以剖鼈而不知朱草可以剖人<span class="src">正一 · 开卷第一句象,草能破鳖,也能破人</span></q>
+      <q class="q">稚子弄影不知为影所弄狂夫侮像不知为像所侮<span class="src">稚子</span></q>
+      <q class="q">化天下者不知为天下所化<span class="src">稚子 · 你以为你在改造世界,其实是世界在改造你</span></q>
+    </div>
+  </div>
+</section>
+
+<section class="stage" id="jing">
+  <div class="slip">镜</div>
+  <div class="stagewrap">
+    <div class="reveal">
+      <p class="kicker">术化 · 格物</p>
+      <h2>四镜与<em>一群小实验</em></h2>
+      <p class="lead">十世纪的道士笔记里,藏着一整面墙的观察记录。最亮的是四镜:他自己攒了四面镜,同一张脸,有的照大,有的照小,有的照正,有的照倒,分明是凸面、凹面、平面、抛物面的一套民间光学。旁边还有声学、气象学、还有一条一千年前就学会听声开饭的鱼。</p>
+    </div>
+    <div class="lensmachine reveal">
+      <div id="lensbox"><span id="glyph" data-t="1">形</span></div>
+      <div class="lensside">
+        <h3>四镜试镜台</h3>
+        <p class="lensnote" id="lensnote">同一张脸。换一面镜,大、小、正、倒,全看镜子站在哪里。他说这不止是光学:照你的镜子不同,你的形象就不同,谁在替你定妆,得心里有数。</p>
+        <div class="lensbtns">
+          <button data-l="gui" type="button">圭</button>
+          <button data-l="zhu" type="button">珠</button>
+          <button data-l="di" type="button">砥</button>
+          <button data-l="yu" type="button">盂</button>
+        </div>
+        <q class="q" id="q4jing">小人常有四镜一名圭一名珠一名砥一名盂圭视者大珠视者小砥视者正盂视者倒<span class="src">四镜 · 一套十世纪的镜组</span></q>
+      </div>
+    </div>
+    <div class="qwall reveal">
+      <div class="qitem"><h4>阳燧 <i>+</i></h4><div class="body">
+        <p>取火与取水的两面铜器,他从中读出的却是感应二字。</p>
+        <q class="q">阳燧召火方诸召水感激之道斯不逺矣<span class="src">阳燧</span></q>
+        <q class="q">外视者昏内视者明<span class="src">阳燧 · 十种视法只剩这一句最经用</span></q>
+      </div></div>
+      <div class="qitem"><h4>动静 <i>+</i></h4><div class="body">
+        <p>摩擦生火、蒸发成云、井水投汤结雹,一串物态变化的古人版。</p>
+        <q class="q">动静相磨所以化火也燥湿相蒸所以化水也水火相勃所以化云也汤盎投井所以化雹也饮水雨日所以化虹霓也<span class="src">动静</span></q>
+      </div></div>
+      <div class="qitem"><h4>声气 <i>+</i></h4><div class="body">
+        <p>一口气讲清声与气的互推,顺手把音乐抬到可以号召风霜的地位。</p>
+        <q class="q">气由声也声由气也气动则声发声发则气振气振则风行而万物变化也<span class="src">声气</span></q>
+      </div></div>
+      <div class="qitem"><h4>庚辛 <i>+</i></h4><div class="body">
+        <p>两条凭栏喂鱼,一条栏响如策,一条栏响如堂。后来只要听见栏响,不投饵鱼也浮上来抢食。条件反射,比巴甫洛夫的狗早了将近九百年。</p>
+        <q class="q">庚氏穴池搆竹为凭槛登之者其声策策焉<span class="src">庚辛</span></q>
+        <q class="q">每凭槛投饵鱼必踊跃而出<span class="src">庚辛</span></q>
+        <q class="q">不投饵亦踊跃而出<span class="src">庚辛 · 声音本身成了开饭铃</span></q>
+      </div></div>
+      <div class="qitem"><h4>魍魉 <i>+</i></h4><div class="body">
+        <p>他看巫师跳神,看出的是一套来去分明的表演切换。</p>
+        <q class="q">每来则饮食言语皆神每去则饮食言语皆人<span class="src">魍魉 · 神来神去,只隔着一场饭</span></q>
+      </div></div>
+      <div class="qitem"><h4>狐狸 <i>+</i></h4><div class="body">
+        <p>妖怪再会幻术,照不进一面无心的镜子。镜子的定力来自它什么都不想。</p>
+        <q class="q">不能幻明镜之鉴者明镜无心之故也<span class="src">狐狸</span></q>
+      </div></div>
+      <div class="qitem"><h4>蠮螉 <i>+</i></h4><div class="body">
+        <p>古人以为蜾蠃捉螟蛉是给它当儿子,他偏观察出万物的性情形体都没有定数。</p>
+        <q class="q">随物大小俱得其真<span class="src">蠮螉</span></q>
+        <q class="q">蠢动无定情万物无定形<span class="src">蠮螉</span></q>
+      </div></div>
+      <div class="qitem"><h4>游云 <i>+</i></h4><div class="body">
+        <p>百步外镜子照得见人,人却看不见自己的影,他拿这一验讲看与被看的不对等。</p>
+        <q class="q">百歩之外镜则见人人不见影斯为验也<span class="src">游云</span></q>
+      </div></div>
+      <div class="qitem"><h4>虚实 <i>+</i></h4><div class="body">
+        <p>地上一块砖没人怕,竿头一块砖没人敢踩:吓人的从来不是砖的高度,是心里的落差。</p>
+        <q class="q">方咫之木置于地之上使人蹈之而有余方尺之木置于竿之端使人踞之而不足非物有小大盖心有虚实<span class="src">虚实 · 恐高症的最早病历之一</span></q>
+      </div></div>
+      <div class="qitem"><h4>环舞 <i>+</i></h4><div class="body">
+        <p>转圈的人以为房子在转,他由此拆穿一切错觉的著作权。</p>
+        <q class="q">作环舞者宫室皆转瞰廻流者头目自旋<span class="src">环舞</span></q>
+        <q class="q">惟清静者物不能欺<span class="src">环舞</span></q>
+      </div></div>
+      <div class="qitem"><h4>铅丹 <i>+</i></h4><div class="body">
+        <p>有人炼丹代替吃饭,他冷冷补了一句:岁丰能饱,岁俭照饿,饿饱都在你自己心里,丹不背锅。</p>
+        <q class="q">术有火錬铅丹以代谷食者<span class="src">铅丹</span></q>
+        <q class="q">何患乎一日百食何虑乎百日一食<span class="src">铅丹</span></q>
+      </div></div>
+      <div class="qitem"><h4>耳目 <i>+</i></h4><div class="body">
+        <p>魂魄在魅,血气在醉,七窍在囚,五根在役。他把自己拆成一间被各种租客住满的房子。</p>
+        <q class="q">所以知魂魄魅我血气醉我七窍囚我五根役我<span class="src">耳目</span></q>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section class="stage" id="dao">
+  <div class="slip">政</div>
+  <div class="stagewrap">
+    <div class="reveal">
+      <p class="kicker">德化 · 仁化</p>
+      <h2>上头铸剑,<em>底下用剑</em></h2>
+      <p class="lead">政治卷里他只写对称:你造什么,就被什么反噬。天子造弓矢威慑天下,天下就盗弓矢反过来对付天子;君子造礼乐防备小人,小人就盗礼乐僭越君子。防盗的结论不是加固,而是别让防盗本身成为赃物的来源。</p>
+    </div>
+    <div class="bow reveal">
+      <div class="bowrow">
+        <span class="tag">弓矢之盗</span>
+        <div class="step"><q>天子作弓矢以威天下</q><span class="arr">→</span></div>
+        <div class="step"><q>天下盗弓矢以侮天子</q></div>
+      </div>
+      <div class="bowrow">
+        <span class="tag">礼乐之盗</span>
+        <div class="step"><q>君子作礼乐以防小人</q><span class="arr">→</span></div>
+        <div class="step"><q>小人盗礼乐以僭君子</q></div>
+      </div>
+    </div>
+    <div class="threecol reveal">
+      <div class="pcard"><h4>太和</h4>
+        <p>怨盗贼之前先照镜子:盗贼是谁召来的。</p>
+        <q class="q">慎勿怨盗贼盗贼惟我召慎勿怨叛乱叛乱禀我教<span class="src">太和</span></q>
+      </div>
+      <div class="pcard"><h4>蝼蚁之国</h4>
+        <p>他给蚂蚁写了一章乌托邦:宫室、台、粮、肉,一切与众共享,病痛共担,于是无怨无叛。</p>
+        <q class="q">蝼蚁之有君也一拳之宫与众处之<span class="src">蝼蚁</span></q>
+        <q class="q">故我病则众病我痛则众痛怨何由起叛何由始<span class="src">蝼蚁</span></q>
+      </div>
+      <div class="pcard"><h4>飞蛾</h4>
+        <p>全书的处世警句:扑火的人不是看不见火,是回不了头。</p>
+        <q class="q">若飞蛾之投夜烛苍蝇之触暁牕知徃而不知返知进而不知退<span class="src">飞蛾</span></q>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stage" id="shi">
+  <div class="slip">粮</div>
+  <div class="stagewrap">
+    <div class="reveal">
+      <p class="kicker">食化</p>
+      <h2>三日不食的<em>算术</em></h2>
+      <p class="lead">食化卷是全书最狠的部分。他先立一条底线,再把一石粮食从头到尾的盘剥链摆给你看:一张写着七夺的账,数下来是九笔;一根丝从王手里到吏手里,层层加码,最后落到鞭挞与刑戮。说它是五代的政治经济学,不算夸张。</p>
+    </div>
+    <div class="head7 reveal">
+      <div>
+        <q class="q">一日不食则惫二日不食则病三日不食则死民事之急无甚于食<span class="src">七夺 · 底线只有三天</span></q>
+        <q class="q">王取其丝吏取其纶王取其纶吏取其綍取之不已至于欺罔<span class="src">丝纶 · 加派的算式</span></q>
+        <q class="q">欺罔不已至于鞭挞鞭挞不已至于盗窃盗窃不已至于杀害杀害不已至于刑戮<span class="src">丝纶 · 四步到头</span></q>
+        <div class="slips">
+          <div class="slip2"><h5>鸱鸢</h5><p>饿殍之间,他写下全书最重的一句定性:<q class="il">食为五常之本五常为食之末</q>道德不是空中楼阁,是饭桌上的事。</p></div>
+          <div class="slip2"><h5>战欲</h5><p>饿到极处的人听不进大道理:<q class="il">况民腹常馁民情常迫而谕以仁义其可信乎讲以刑政其可畏乎</q></p></div>
+        </div>
+      </div>
+      <div id="duoban">
+        <h3>七夺账板 · <b>题曰七夺,账面九笔</b>,点一笔亮一笔</h3>
+        <div class="drow" style="--w:100%"><span class="dq"><q class="il">王者夺其一</q></span><span class="bar"><i></i></span></div>
+        <div class="drow" style="--w:96%"><span class="dq"><q class="il">卿士夺其一</q></span><span class="bar"><i></i></span></div>
+        <div class="drow" style="--w:92%"><span class="dq"><q class="il">兵吏夺其一</q></span><span class="bar"><i></i></span></div>
+        <div class="drow" style="--w:88%"><span class="dq"><q class="il">战伐夺其一</q></span><span class="bar"><i></i></span></div>
+        <div class="drow" style="--w:84%"><span class="dq"><q class="il">工艺夺其一</q></span><span class="bar"><i></i></span></div>
+        <div class="drow" style="--w:80%"><span class="dq"><q class="il">商贾夺其一</q></span><span class="bar"><i></i></span></div>
+        <div class="drow" style="--w:76%"><span class="dq"><q class="il">道释之族夺其一</q></span><span class="bar"><i></i></span></div>
+        <div class="drow" style="--w:72%"><span class="dq"><q class="il">稔亦夺其一</q></span><span class="bar"><i></i></span></div>
+        <div class="drow" style="--w:68%"><span class="dq"><q class="il">俭亦夺其一</q></span><span class="bar"><i></i></span></div>
+        <p id="duocnt">已点 <b id="duon">0</b> 笔 · 连丰年歉年都不放过</p>
+      </div>
+    </div>
+    <div class="slips reveal">
+      <div class="slip2"><h5>巫像</h5><p>嗜欲的排行榜,人排在所有猛兽前面:<q class="il">虎狼不过于嗜肉蛟龙不过于嗜血而人无所不嗜</q></p></div>
+      <div class="slip2"><h5>雀鼠</h5><p>他替被骂作雀鼠的穷人算账,账底只有两句:<q class="il">民之瘠也由剜其肌民之馁也由夺其哺</q></p></div>
+      <div class="slip2"><h5>兴亡</h5><p>兴亡的机关不在天命,在肚子:<q class="il">茍其饥也无所不食茍其廹也无所不为斯所以为兴亡之机</q></p></div>
+      <div class="slip2"><h5>燔骨</h5><p>饿过的人知道,这句是写实:<q class="il">痛苦可忘无所不欺性命可轻无所不为</q></p></div>
+      <div class="slip2"><h5>鸱鸢续</h5><p>最后给粮食定的身价:<q class="il">其物甚卑其用甚尊其名尤细其化尤大是谓无价之货</q></p></div>
+      <div class="slip2"><h5>饥思啖牛</h5><p>写饿的名句,四个字一顿:<q class="il">饥思啖牛渴思饮海</q></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="stage" id="jian">
+  <div class="slip">俭</div>
+  <div class="stagewrap">
+    <div class="reveal">
+      <p class="kicker">俭化</p>
+      <h2>十个俭于,<em>一部刹车</em></h2>
+      <p class="lead">骂完掠夺,他给出全书唯一的药方:俭。不是抠门,是给欲望装刹车。十档刹车从耳目一路装到心,最后一档直接通向生死之外。他还留了一句总纲,像给历代财政写好的墓志铭。</p>
+    </div>
+    <div class="bpgrid reveal" id="bpg">
+      <div class="bp"><q class="il">俭于听可以飬虚</q></div>
+      <div class="bp"><q class="il">俭于视可以飬神</q></div>
+      <div class="bp"><q class="il">俭于言可以飬气</q></div>
+      <div class="bp"><q class="il">俭于私可以获富</q></div>
+      <div class="bp"><q class="il">俭于公可以保贵</q></div>
+      <div class="bp"><q class="il">俭于门闼可以无盗贼</q></div>
+      <div class="bp"><q class="il">俭于环卫可以无叛乱</q></div>
+      <div class="bp"><q class="il">俭于职官可以无奸佞</q></div>
+      <div class="bp"><q class="il">俭于嫔嫱可以保夀命</q></div>
+      <div class="bp"><q class="il">俭于心可以出生死</q></div>
+    </div>
+    <div class="reveal">
+      <div class="sanhuang" id="sh-chain">
+        <q class="il">君俭则臣知足</q><span class="arr">→</span>
+        <q class="il">臣俭则士知足</q><span class="arr">→</span>
+        <q class="il">士俭则民知足</q><span class="arr">→</span>
+        <q class="il">民俭则天下知足</q>
+      </div>
+      <button id="btn-jian" type="button">点亮这条传导链</button>
+    </div>
+    <div class="twocol reveal">
+      <div>
+        <q class="q bigq">自古及今未有亡于俭者也<span class="src">损益 · 全书最硬的一句断语</span></q>
+        <q class="q">俭者均食之道也食均则仁义生仁义生则礼乐序礼乐序则民不怨民不怨则神不怒太平之业也<span class="src">太平 · 俭的全套推演</span></q>
+        <q class="q">俭可以为万化之柄<span class="src">化柄 · 刹车装在万化手里</span></q>
+      </div>
+      <div>
+        <q class="q">奢者心常贫俭者心常富<span class="src">天牧 · 富贫的另一种算法</span></q>
+        <q class="q">一人知俭则一家富王者知俭则天下富<span class="src">悭号 · 他要给吝啬鬼平反</span></q>
+        <q class="q">悬雕笼事玉粒飬黄雀黄雀终不乐<span class="src">雕笼 · 笼子再精致,也不是给黄雀住的</span></q>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stage" id="ying">
+  <div class="slip">影</div>
+  <div class="stagewrap">
+    <div class="reveal">
+      <p class="kicker">双影</p>
+      <h2>一本书的<em>两个影子</em></h2>
+      <p class="lead">简体库里收了两个底本:子藏的四库本干净,道藏太玄部本讹字多。同一句话在两本书里长得不一样,对读反而看清了抄书人的手。</p>
+    </div>
+    <div class="reveal">
+      <table>
+        <tr><th>读法</th><th>四库本</th><th>道藏太玄部本</th></tr>
+        <tr><td>卷端署名</td><td><q class="il">南唐　谭峭　撰</q></td><td><q class="il" data-s="td">紫霄真人谭景升撰</q></td></tr>
+        <tr><td>囚我的窍</td><td><q class="il">七窍囚我</q></td><td><q class="il" data-s="td">十窍囚我</q></td></tr>
+        <tr><td>那只环</td><td><q class="il">犹环之无穷</q></td><td><q class="il" data-s="td">由环之无穷</q></td></tr>
+        <tr><td>蛇雀句</td><td><q class="il">蛇化为雀化为蛤</q>脱一龟字</td><td><q class="il" data-s="td">蛇化为龟雀化为蛤</q>完整</td></tr>
+        <tr><td>开篇题目</td><td>无题,径入正文</td><td>题「紫极宫碑」</td></tr>
+      </table>
+      <p class="lead" style="margin-bottom:10px">四库本里,「防」是最忙的替身演员,一场书演了五个角色,全是别的字:</p>
+      <div class="fanglist">
+        <span><q class="il">雀防之魅</q> 当作雀<b>鼠</b>之魅</span>
+        <span><q class="il">防语</q> 当作<b>谗</b>语</span>
+        <span><q class="il">心防防兮</q> 当作心<b>冥冥</b>兮</span>
+        <span><q class="il">力不可防</q> 当作力不可<b>拔</b></span>
+        <span><q class="il">防吻</q> 当作<b>唇</b>吻</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer id="fin">
+  <svg class="arcs" viewBox="0 0 420 420" aria-hidden="true">
+    <circle cx="210" cy="210" r="190"/>
+    <circle cx="210" cy="210" r="164"/>
+  </svg>
+  <p class="zhq reveal"><q>我谦则民自谦我俭则民自俭机在此不在彼柄在君不在人</q></p>
+  <div id="finseal" aria-hidden="true"><i>化</i><i>化</i><i>不</i><i>间</i></div>
+  <div class="fnote">
+    <p><b>文本来源</b>：殆知阁简体库〈化书〉，谭峭撰于五代，子藏四库本去空白一万一千九百三十六字，六卷一百零九目（含卷首无题开篇），参校道藏太玄部本。作者生平与夺书公案据续仙传、陈景元跋引陈抟语及四库提要，并经网络核对。导读仓库：<a href="https://github.com/robertsong/daizhige-daodu" target="_blank">daizhige-daodu</a>。</p>
+    <p><b>引文核验</b>：页面所有引文经脚本分别与四库本、道藏本库内文件去标点归一后逐字比对通过；白话部分做六字窗反扫，与库本零重合。库本飬、錬、茍、廹、暁、牕、徃、歩、賔、夀等俗字照录；「犬鼠之雄，盖不足道」等书外引文据四库提要转述。</p>
+    <p><b>阅读提醒</b>：本书是五代道教学者的政论与自然观察，五行化生、炼丹服食之说属时代认识，铅丹代谷食一节切勿当真模仿；其对民众的俯视口吻与术数化表述亦带时代局限，请以批判眼光阅读。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var ring=document.getElementById('ringwrap');
+  function dianhua(){
+    if(ring.classList.contains('on'))return;
+    ring.classList.add('on');
+    var gns=ring.querySelectorAll('.gn');
+    gns.forEach(function(g,i){setTimeout(function(){g.classList.add('lit');},500+i*420);});
+  }
+  ring.addEventListener('click',dianhua);
+  document.getElementById('btn-hua').addEventListener('click',function(e){e.stopPropagation();dianhua();});
+
+  /* 显现 */
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+  },{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+  /* 读环进度 */
+  var fgc=document.getElementById('fgc'),prg=document.getElementById('prg');
+  function onScroll(){
+    var h=document.documentElement;
+    var p=h.scrollTop/(h.scrollHeight-h.clientHeight);
+    if(p>1)p=1;
+    fgc.style.strokeDashoffset=(138.2*(1-p)).toFixed(1);
+    if(p>0.985)prg.classList.add('done');else prg.classList.remove('done');
+    if(p>0.92&&!document.body.classList.contains('fin-on'))document.body.classList.add('fin-on');
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+
+  /* 公案卡 */
+  document.querySelectorAll('#an .card .f').forEach(function(f){
+    f.addEventListener('click',function(){f.closest('.card').classList.toggle('flip');});
+  });
+
+  /* 大化链 */
+  var dahua=document.getElementById('dahua'),steps=[].slice.call(dahua.children),si=0,timer=null;
+  function stepNext(){
+    if(si>=steps.length){clearInterval(timer);timer=null;return;}
+    steps[si].classList.add('lit');si++;
+  }
+  dahua.addEventListener('click',stepNext);
+  document.getElementById('btn-qu').addEventListener('click',function(){
+    if(timer)return;
+    timer=setInterval(function(){
+      if(si>=steps.length){clearInterval(timer);timer=null;return;}
+      steps[si].classList.add('lit');si++;
+    },110);
+  });
+  document.getElementById('btn-chong').addEventListener('click',function(){
+    if(timer){clearInterval(timer);timer=null;}
+    steps.forEach(function(s){s.classList.remove('lit');});si=0;
+  });
+
+  /* 死生环 */
+  var snodes=[].slice.call(document.querySelectorAll('#sheng text')),sni=0,score=0,srunning=false;
+  document.getElementById('sheng').addEventListener('click',function(){
+    if(srunning)return;srunning=true;score=0;
+    var t=setInterval(function(){
+      snodes.forEach(function(n){n.classList.remove('lit');});
+      snodes[sni].classList.add('lit');
+      sni++;score++;
+      if(sni>=snodes.length)sni=0;
+      if(score>=26){clearInterval(t);srunning=false;snodes.forEach(function(n){n.classList.remove('lit');});}
+    },240);
+  });
+
+  /* 四镜 */
+  var glyph=document.getElementById('glyph'),note=document.getElementById('lensnote');
+  var notes={
+    gui:'圭镜:照出来的是巨人。他把结论用在人身上,把你照大的那面镜,多半是捧你的人。',
+    zhu:'珠镜:照出来的是芥子。把你照小的那面镜,让你自己先矮了半截。',
+    di:'砥镜:不放大不缩小,端端正正。他最喜欢这面,因为它什么都不做。',
+    yu:'盂镜:一盆水里,人是倒的。水里那个你,脚朝上,却是同一张脸。'
+  };
+  document.querySelectorAll('.lensbtns button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.lensbtns button').forEach(function(x){x.classList.remove('sel');});
+      b.classList.add('sel');
+      glyph.className='g-'+b.dataset.l;
+      note.textContent=notes[b.dataset.l];
+    });
+  });
+
+  /* 格物签 */
+  document.querySelectorAll('.qitem').forEach(function(qi){
+    qi.querySelector('h4').addEventListener('click',function(){qi.classList.toggle('open');});
+  });
+
+  /* 七夺账板 */
+  var duon=document.getElementById('duon'),dcnt=0;
+  document.querySelectorAll('.drow').forEach(function(r){
+    r.addEventListener('click',function(){
+      r.classList.toggle('lit');
+      dcnt+=r.classList.contains('lit')?1:-1;
+      if(dcnt<0)dcnt=0;
+      duon.textContent=dcnt;
+    });
+  });
+
+  /* 俭于对牌 */
+  document.querySelectorAll('.bp').forEach(function(b){
+    b.addEventListener('click',function(){b.classList.toggle('lit');});
+  });
+  document.getElementById('btn-jian').addEventListener('click',function(){
+    var qs=[].slice.call(document.querySelectorAll('#sh-chain .q')),i=0;
+    qs.forEach(function(q){q.classList.remove('lit');});
+    var t=setInterval(function(){
+      if(i>=qs.length){clearInterval(t);return;}
+      qs[i].classList.add('lit');i++;
+    },380);
+  });
+})();
+</script>
+</body>
+</html>
