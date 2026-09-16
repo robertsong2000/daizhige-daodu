@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>乡言解颐 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --ink2:#211f1c;
+  --paper:#e8e4dc;
+  --paper-dim:#b9b2a2;
+  --faint:#6e685c;
+  --blue:#5e8fbb;
+  --blue-deep:#3f6a94;
+  --red:#c0453c;
+  --red-deep:#8c2f26;
+  --wood:#3a3129;
+  --wood2:#2a241e;
+  --gold:#c9963f;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif SC","SimSun",serif;
+  line-height:1.9;
+  overflow-x:hidden;
+}
+.mono{font-family:"SFMono-Regular",Menlo,Consolas,monospace;}
+
+/* ===== 年事签（顶部进度） ===== */
+.nianqian{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;justify-content:center;gap:4px;
+  padding:8px 10px 7px;
+  background:linear-gradient(to bottom,rgba(25,25,23,.96),rgba(25,25,23,.82));
+  backdrop-filter:blur(4px);
+  overflow-x:auto;scrollbar-width:none;
+}
+.nianqian::-webkit-scrollbar{display:none;}
+.nq{
+  flex:0 0 auto;
+  font-size:12px;letter-spacing:2px;
+  color:var(--faint);
+  padding:2px 9px 3px;
+  border:1px solid #33302a;
+  border-radius:2px;
+  cursor:default;
+  transition:all .5s;
+  white-space:nowrap;
+  text-decoration:none;
+}
+.nq.lit{color:var(--paper);border-color:var(--red);background:rgba(192,69,60,.12);}
+
+/* ===== HERO 门神对脸儿 ===== */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;
+  padding:70px 16px 40px;
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -10%,#26231e 0%,transparent 60%),
+    var(--ink);
+}
+.hero-eyebrow{
+  font-size:12px;letter-spacing:6px;color:var(--faint);
+  margin-bottom:26px;text-align:center;
+}
+.hero-eyebrow b{color:var(--blue);font-weight:normal;}
+.stage{
+  position:relative;
+  width:min(680px,94vw);
+  height:440px;
+  display:flex;align-items:center;justify-content:center;
+}
+/* 门框与门 */
+.gate{
+  position:relative;
+  width:400px;height:400px;
+  transform:translateY(6px);
+}
+.lianbei{
+  position:absolute;top:-38px;left:50%;transform:translateX(-50%);
+  width:170px;height:34px;
+  background:var(--red-deep);
+  color:var(--paper);
+  border:1px solid #5a3a2c;
+  border-radius:3px;
+  font-size:15px;letter-spacing:8px;text-indent:8px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 10px rgba(0,0,0,.5);
+}
+.menkuang{
+  position:absolute;inset:0;
+  border:14px solid var(--wood);
+  border-top-width:22px;
+  background:var(--wood2);
+  box-shadow:inset 0 0 40px rgba(0,0,0,.7),0 20px 50px rgba(0,0,0,.55);
+  border-radius:4px;
+  overflow:hidden;
+}
+.men{
+  position:absolute;top:0;bottom:0;width:49.5%;
+  background:linear-gradient(160deg,#4a3a2c 0%,#3a2e22 55%,#332818 100%);
+  transition:transform 1.4s cubic-bezier(.6,.05,.3,1);
+  overflow:hidden;
+  cursor:pointer;
+  z-index:5;
+}
+.men::after{
+  content:"";position:absolute;top:14px;bottom:14px;width:3px;
+  background:rgba(232,228,220,.10);
+}
+.men.l{left:0;border-right:1px solid rgba(0,0,0,.6);}
+.men.l::after{right:6px;}
+.men.r .shen{transform:translateX(-50%) scaleX(-1);}
+.men.r{right:0;border-left:1px solid rgba(0,0,0,.6);}
+.men.r::after{left:6px;}
+.men .mknob{
+  position:absolute;top:52%;width:11px;height:11px;border-radius:50%;
+  background:#a98d52;box-shadow:0 0 6px rgba(0,0,0,.6);
+}
+.men.l .mknob{right:9px;}
+.men.r .mknob{left:9px;}
+/* 门神剪影 */
+.shen{
+  position:absolute;top:44px;left:50%;transform:translateX(-50%);
+  width:82%;height:74%;
+}
+.shen svg{width:100%;height:100%;display:block;}
+/* 门缝光 */
+.guang{
+  position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%) scaleY(0);
+  width:14px;z-index:2;
+  background:linear-gradient(to bottom,#f3d9a4,#c9963f 55%,#8a6a2b);
+  filter:blur(6px);
+  opacity:0;
+  transition:opacity 1.2s .5s;
+  transform-origin:center;
+}
+.gate.open .guang{opacity:.9;transform:translateX(-50%) scaleY(1);}
+.gate.open .men.l{transform:translateX(-46%);}
+.gate.open .men.r{transform:translateX(46%);}
+/* 书名 */
+.shuming{
+  position:absolute;z-index:8;
+  top:50%;left:50%;
+  transform:translate(-50%,-58%);
+  writing-mode:vertical-rl;
+  font-size:52px;letter-spacing:16px;
+  color:var(--paper);
+  text-shadow:0 0 24px rgba(201,150,63,.35);
+  opacity:0;pointer-events:none;
+  transition:opacity 1.6s 1s;
+  white-space:nowrap;
+}
+.shuming small{
+  display:block;
+  font-size:13px;letter-spacing:6px;
+  color:var(--paper-dim);
+  margin-top:18px;
+}
+.gate.open .shuming{opacity:1;}
+/* 印 */
+.yin{
+  position:absolute;z-index:9;
+  top:calc(50% + 128px);left:50%;
+  transform:translate(-50%,0) scale(.6) rotate(-8deg);
+  width:58px;height:58px;
+  background:var(--red);
+  border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  writing-mode:vertical-rl;
+  font-size:23px;letter-spacing:3px;color:var(--paper);
+  font-weight:bold;
+  box-shadow:0 3px 12px rgba(192,69,60,.4),inset 0 0 0 2px rgba(232,228,220,.35);
+  opacity:0;
+  transition:opacity 1s 2.2s,transform 1s 2.2s;
+}
+.gate.open .yin{opacity:.95;transform:translate(-50%,0) scale(1) rotate(-4deg);}
+/* 春联小牌 */
+.chunlian{
+  position:absolute;top:8px;width:30px;
+  writing-mode:vertical-rl;
+  background:#26221c;
+  border:1px solid #3d3529;
+  color:var(--faint);
+  font-size:12px;letter-spacing:4px;
+  padding:10px 3px;
+  transition:all 1.2s;
+  z-index:1;
+}
+.chunlian.cl-l{left:-46px;top:34px;}
+.chunlian.cl-r{right:-46px;top:34px;}
+.gate.open .chunlian{color:var(--red);border-color:var(--red-deep);background:#2a1f18;}
+.hero-hint{
+  margin-top:34px;
+  font-size:13px;color:var(--faint);letter-spacing:3px;
+  text-align:center;
+  transition:opacity .8s;
+}
+.hero-lede{
+  max-width:640px;
+  margin:14px auto 0;
+  font-size:15px;color:var(--paper-dim);
+  text-align:center;line-height:2.1;
+  opacity:0;transition:opacity 1.4s 1.6s;
+}
+.gate.open ~ .hero-foot .hero-lede, .opened .hero-lede{opacity:1;}
+.hero-foot{display:flex;flex-direction:column;align-items:center;}
+
+/* ===== 通用节 ===== */
+section{max-width:900px;margin:0 auto;padding:92px 20px 30px;position:relative;}
+.sec-eyebrow{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:6px;
+}
+.sec-eyebrow .tag{
+  font-size:12px;letter-spacing:4px;color:var(--blue);
+  border:1px solid rgba(94,143,187,.4);
+  padding:2px 10px 3px;border-radius:2px;
+}
+.sec-eyebrow .tag.rd{color:var(--red);border-color:rgba(192,69,60,.45);}
+.sec-eyebrow .line{flex:1;height:1px;background:#33302a;}
+h2{
+  font-size:26px;font-weight:normal;letter-spacing:5px;
+  margin:10px 0 8px;
+}
+h2 em{font-style:normal;color:var(--red);}
+.sec-sub{font-size:13px;color:var(--faint);letter-spacing:2px;margin-bottom:26px;}
+p.body{font-size:15px;color:var(--paper-dim);margin-bottom:16px;}
+p.body b{color:var(--paper);font-weight:normal;}
+
+/* 引文纸底 */
+.q{
+  background:linear-gradient(150deg,#22201c,#1d1b18);
+  border-left:3px solid var(--blue);
+  padding:16px 20px;
+  margin:18px 0;
+  font-size:15.5px;color:var(--paper);
+  line-height:2.15;
+  border-radius:0 4px 4px 0;
+  position:relative;
+}
+.q.rd{border-left-color:var(--red);}
+.q .qi{display:block;}
+.q .qi + .qi{margin-top:10px;}
+.qn{
+  display:block;
+  font-size:12px;color:var(--faint);letter-spacing:1px;
+  margin-top:8px;
+}
+.qn::before{content:"◈ ";color:var(--blue);}
+.srcnote{
+  display:inline-block;
+  font-size:12px;color:var(--faint);
+  margin:4px 0 14px;
+}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s,transform .9s;}
+.rv.on{opacity:1;transform:none;}
+
+/* ===== S1 自序 ===== */
+.xu-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.xu-card{
+  background:#1d1b18;border:1px solid #2f2c26;border-radius:5px;
+  padding:20px 22px;
+}
+.xu-card h3{font-size:15px;letter-spacing:3px;color:var(--blue);margin-bottom:10px;font-weight:normal;}
+.xu-card p{font-size:13.5px;color:var(--paper-dim);}
+.heku-row{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;}
+.heku{
+  flex:1 1 160px;
+  background:rgba(94,143,187,.06);
+  border:1px solid rgba(94,143,187,.25);
+  border-radius:4px;
+  padding:14px 16px;
+  font-size:14px;
+}
+.heku b{display:block;color:var(--blue);font-size:13px;letter-spacing:3px;margin-bottom:6px;font-weight:normal;}
+.heku span{color:var(--paper-dim);font-size:13px;}
+
+/* ===== S2 日头弧 ===== */
+.rihu-wrap{background:#1d1b18;border:1px solid #2f2c26;border-radius:6px;padding:26px 20px 18px;margin:22px 0;}
+.rihu-svg{display:block;width:100%;height:150px;}
+.rihu-stations{
+  display:flex;justify-content:space-between;gap:4px;
+  margin-top:6px;flex-wrap:wrap;
+}
+.rst{
+  flex:1;min-width:76px;
+  background:none;border:1px solid #3a362e;border-radius:3px;
+  color:var(--faint);font-family:inherit;
+  font-size:13px;letter-spacing:2px;
+  padding:7px 2px;cursor:pointer;
+  transition:all .4s;
+}
+.rst:hover{color:var(--paper);}
+.rst.on{color:var(--paper);border-color:var(--blue);background:rgba(94,143,187,.12);}
+.rihu-out{
+  margin-top:16px;min-height:88px;
+  font-size:14px;color:var(--paper-dim);
+  padding:0 6px;
+}
+.rihu-out b{color:var(--blue);font-weight:normal;font-size:16px;letter-spacing:2px;}
+.tian-chips{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;}
+.tchip{
+  background:#1d1b18;border:1px solid #3a362e;border-radius:30px;
+  padding:8px 20px;font-size:14px;color:var(--paper-dim);cursor:pointer;
+  transition:all .4s;font-family:inherit;
+}
+.tchip.on{border-color:var(--blue);color:var(--paper);background:rgba(94,143,187,.10);}
+.tchip-out{min-height:110px;}
+.yue-pai{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;}
+.yue-card{background:rgba(94,143,187,.05);border:1px solid rgba(94,143,187,.2);border-radius:5px;padding:16px 18px;}
+.yue-card b{color:var(--blue);font-weight:normal;letter-spacing:2px;}
+
+/* ===== S3 三笑 ===== */
+.xiao-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px;}
+.xiao-card{
+  perspective:1000px;height:330px;cursor:pointer;
+}
+.xiao-inner{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;
+  transition:transform .9s cubic-bezier(.5,.1,.3,1.1);
+}
+.xiao-card.flip .xiao-inner{transform:rotateY(180deg);}
+.xiao-face{
+  position:absolute;inset:0;
+  backface-visibility:hidden;
+  border:1px solid #33302a;border-radius:6px;
+  padding:20px 18px;
+  display:flex;flex-direction:column;
+  background:#1d1b18;
+}
+.xiao-face .no{
+  font-size:34px;color:var(--red);opacity:.85;
+  font-family:Georgia,serif;line-height:1;
+}
+.xiao-face h4{font-size:17px;letter-spacing:3px;margin:12px 0 8px;font-weight:normal;color:var(--paper);}
+.xiao-face .backhint{font-size:12px;color:var(--faint);letter-spacing:2px;margin-top:auto;}
+.xiao-back{
+  transform:rotateY(180deg);
+  background:linear-gradient(160deg,#241f19,#1d1b18);
+  border-color:var(--red-deep);
+  font-size:13.5px;color:var(--paper-dim);
+  justify-content:flex-start;
+}
+.xiao-back h5{font-size:13px;color:var(--red);letter-spacing:3px;margin-bottom:10px;font-weight:normal;}
+.xiao-back p{margin-bottom:8px;}
+/* 联牌互换 */
+.duilian{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin:14px 0 6px;height:120px;
+}
+.duipai{
+  writing-mode:vertical-rl;
+  background:var(--red-deep);
+  color:var(--paper);
+  border:1px solid #5a3a2c;border-radius:3px;
+  font-size:15px;letter-spacing:5px;
+  padding:14px 8px;
+  height:116px;
+  box-shadow:0 3px 8px rgba(0,0,0,.4);
+  transition:transform .7s cubic-bezier(.5,.1,.3,1.2);
+}
+.duipai.sw{transform:translateY(-16px) rotate(2deg);}
+.duix-btn{
+  background:none;border:1px solid var(--red);color:var(--red);
+  border-radius:30px;font-family:inherit;font-size:12px;letter-spacing:3px;
+  padding:6px 16px;cursor:pointer;margin-top:6px;
+  transition:all .3s;
+}
+.duix-btn:hover{background:rgba(192,69,60,.15);}
+.duix-note{font-size:12px;color:var(--faint);margin-top:8px;min-height:20px;}
+
+/* ===== S4 市声三器 ===== */
+.qi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px;}
+.qi-card{
+  background:#1d1b18;border:1px solid #2f2c26;border-radius:6px;
+  padding:22px 20px;position:relative;overflow:hidden;
+}
+.qi-card .glyph{
+  font-size:40px;color:var(--blue);opacity:.5;line-height:1;
+  font-family:Georgia,serif;
+}
+.qi-card h4{font-size:17px;letter-spacing:3px;margin:12px 0 4px;font-weight:normal;}
+.qi-card .who{font-size:12px;color:var(--faint);letter-spacing:2px;margin-bottom:10px;}
+.wangzi{
+  display:inline-block;
+  background:#26221c;border:1px solid #3d3529;border-radius:3px;
+  color:var(--paper-dim);font-size:12.5px;letter-spacing:2px;
+  padding:6px 12px;margin-top:10px;cursor:pointer;
+  transition:all .6s;font-family:inherit;
+}
+.wangzi:hover{color:var(--gold);border-color:#5a4a28;transform:translateY(-3px);}
+
+/* ===== S5 新年十事签墙 ===== */
+.shi-wall{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px;
+}
+.shi{
+  background:#1d1b18;border:1px solid #33302a;border-radius:5px;
+  cursor:pointer;transition:border-color .4s;
+  position:relative;
+}
+.shi:hover{border-color:#4a453a;}
+.shi .head{
+  display:flex;align-items:center;gap:10px;
+  padding:13px 16px;
+}
+.shi .dot{
+  width:9px;height:9px;border-radius:2px;
+  background:#3a362e;transform:rotate(45deg);
+  transition:all .4s;flex:0 0 auto;
+}
+.shi.lit .dot{background:var(--red);box-shadow:0 0 8px rgba(192,69,60,.5);}
+.shi h4{font-size:15.5px;letter-spacing:3px;font-weight:normal;color:var(--paper);}
+.shi .body{
+  max-height:0;overflow:hidden;
+  transition:max-height .7s ease;
+  padding:0 16px;
+}
+.shi.lit .body{max-height:420px;padding-bottom:16px;}
+.shi .body p{font-size:13.5px;color:var(--paper-dim);margin-bottom:8px;}
+.shi .body .q{margin:10px 0 0;font-size:13.5px;padding:12px 14px;}
+
+/* ===== S6 七事灶牌 ===== */
+.zao{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  margin:24px 0 8px;
+}
+.zao-pai{
+  width:86px;height:112px;
+  background:linear-gradient(170deg,#24211b,#1c1a16);
+  border:1px solid #3d3930;
+  border-radius:4px;
+  cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;
+  transition:all .45s;
+  position:relative;
+}
+.zao-pai .zi{
+  font-size:30px;color:var(--paper-dim);
+  transition:color .4s;
+  writing-mode:vertical-rl;letter-spacing:4px;
+}
+.zao-pai .sm{font-size:11px;color:var(--faint);letter-spacing:1px;transition:color .4s;}
+.zao-pai:hover{border-color:#57503f;transform:translateY(-4px);}
+.zao-pai.lit{border-color:var(--red);background:linear-gradient(170deg,#2c231c,#221c16);}
+.zao-pai.lit .zi{color:var(--red);}
+.zao-out{
+  background:#1d1b18;border:1px solid #2f2c26;border-radius:5px;
+  padding:20px 22px;margin-top:18px;min-height:130px;
+}
+.zao-out h4{font-size:14px;color:var(--red);letter-spacing:3px;font-weight:normal;margin-bottom:8px;}
+.zao-out p{font-size:14px;color:var(--paper-dim);}
+.koutu{
+  margin-top:22px;
+  background:rgba(192,69,60,.05);
+  border:1px dashed rgba(192,69,60,.35);
+  border-radius:6px;
+  padding:20px 22px;
+}
+.koutu h4{font-size:14px;color:var(--red);letter-spacing:3px;font-weight:normal;margin-bottom:10px;}
+.koutu p{font-size:14px;color:var(--paper-dim);}
+
+/* ===== 尾屏 ===== */
+.coda{
+  max-width:900px;margin:60px auto 0;
+  padding:70px 20px 40px;
+  border-top:1px solid #2b2822;
+  position:relative;
+}
+.coda-stage{
+  display:flex;justify-content:center;gap:38px;
+  align-items:flex-start;
+  min-height:340px;
+}
+.codav{
+  writing-mode:vertical-rl;
+  font-size:21px;letter-spacing:9px;
+  color:var(--paper);
+  line-height:2.3;
+  height:330px;
+}
+.codav.small{font-size:13px;letter-spacing:4px;color:var(--paper-dim);height:300px;line-height:2.6;}
+.codav .b{color:var(--blue);}
+.coda-yin{
+  width:64px;height:64px;
+  background:var(--red);
+  border-radius:5px;
+  writing-mode:vertical-rl;
+  display:flex;align-items:center;justify-content:center;
+  font-size:25px;letter-spacing:4px;color:var(--paper);font-weight:bold;
+  box-shadow:0 3px 14px rgba(192,69,60,.4),inset 0 0 0 2px rgba(232,228,220,.35);
+  align-self:flex-end;
+  margin-bottom:8px;
+}
+.coda-note{
+  text-align:center;font-size:13px;color:var(--faint);
+  margin-top:34px;letter-spacing:2px;
+}
+
+/* ===== 页脚 ===== */
+.pagefoot{
+  border-top:1px solid #2b2822;
+  margin-top:40px;
+  padding:26px 20px 46px;
+  max-width:900px;margin-left:auto;margin-right:auto;
+  font-size:12px;color:var(--faint);line-height:2;
+}
+.pagefoot a{color:var(--blue);text-decoration:none;}
+
+/* ===== 响应式 ===== */
+@media(max-width:720px){
+  .stage{height:400px;}
+  .gate{transform:scale(.82);}
+  .xu-grid,.yue-pai{grid-template-columns:1fr;}
+  .xiao-grid,.qi-grid{grid-template-columns:1fr;}
+  .xiao-card{height:auto;min-height:280px;}
+  .shi-wall{grid-template-columns:1fr 1fr;}
+  .shuming{font-size:40px;letter-spacing:10px;}
+  .chunlian.cl-l{left:-26px;}
+  .chunlian.cl-r{right:-26px;}
+  .coda-stage{gap:20px;}
+  .codav{font-size:17px;letter-spacing:6px;height:300px;}
+  .rst{min-width:60px;font-size:12px;}
+}
+</style>
+</head>
+<body>
+
+<!-- 年事签 -->
+<nav class="nianqian" id="nianqian">
+  <a class="nq" href="#s1">瓮斋自道</a>
+  <a class="nq" href="#s2">天部日头</a>
+  <a class="nq" href="#s3">地部一笑</a>
+  <a class="nq" href="#s4">人部市声</a>
+  <a class="nq" href="#s5">新年十事</a>
+  <a class="nq" href="#s6">开门七事</a>
+  <a class="nq" href="#coda">解颐收梢</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="hero">
+  <div class="hero-eyebrow">殆知阁导读 · 儒藏杂记 <b>清道光宝坻乡音</b></div>
+  <div class="stage">
+    <div class="gate" id="gate">
+      <div class="lianbei">乡言解颐</div>
+      <div class="menkuang">
+        <div class="chunlian cl-l">口中有味</div>
+        <div class="chunlian cl-r">纸上生风</div>
+        <div class="guang"></div>
+        <div class="men l" id="menL">
+          <div class="shen">
+            <svg viewBox="0 0 120 200">
+              <g fill="#e8e4dc">
+                <path d="M60 14 L88 30 L88 44 L74 40 L74 58 L86 66 L86 128 L96 132 L96 150 L60 158 L24 150 L24 132 L34 128 L34 66 L46 58 L46 40 L32 44 L32 30 Z" opacity=".92"/>
+                <path d="M42 78 q18 -10 36 0 l0 8 q-18 -8 -36 0 Z" opacity=".55"/>
+                <path d="M40 96 q20 12 40 0 l0 34 q-20 10 -40 0 Z" opacity=".4"/>
+              </g>
+              <g class="eyeL" fill="#191917">
+                <rect class="eye" x="46" y="46" width="12" height="3" rx="1.5"/>
+              </g>
+              <g class="eyeOpen" fill="#c0453c" opacity="0">
+                <circle cx="52" cy="47" r="4.5"/>
+              </g>
+            </svg>
+          </div>
+          <div class="mknob"></div>
+        </div>
+        <div class="men r" id="menR">
+          <div class="shen">
+            <svg viewBox="0 0 120 200">
+              <g fill="#e8e4dc">
+                <path d="M60 14 L88 30 L88 44 L74 40 L74 58 L86 66 L86 128 L96 132 L96 150 L60 158 L24 150 L24 132 L34 128 L34 66 L46 58 L46 40 L32 44 L32 30 Z" opacity=".92"/>
+                <path d="M42 78 q18 -10 36 0 l0 8 q-18 -8 -36 0 Z" opacity=".55"/>
+                <path d="M40 96 q20 12 40 0 l0 34 q-20 10 -40 0 Z" opacity=".4"/>
+              </g>
+              <g class="eyeR" fill="#191917">
+                <rect class="eye" x="62" y="46" width="12" height="3" rx="1.5"/>
+              </g>
+              <g class="eyeOpen" fill="#c0453c" opacity="0">
+                <circle cx="68" cy="47" r="4.5"/>
+              </g>
+            </svg>
+          </div>
+          <div class="mknob"></div>
+        </div>
+        <div class="shuming">乡言解颐<small>清 李光庭 道光己酉自序</small></div>
+        <div class="yin">解颐</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-foot">
+    <div class="hero-hint" id="heroHint">点一对门神 · 让它们对脸儿睁眼，门就开了</div>
+    <p class="hero-lede" id="heroLede">一位年近八旬的宝坻老人，病中把七十年里听熟的家乡话一笔笔记下来：天上的太阳、集上的招牌、门上的神像、灶边的柴米，样样有说法，样样可笑。书名四字，用今天的话讲，就是「拿乡下来的话，逗你一乐」。</p>
+  </div>
+</header>
+
+<!-- S1 自序 -->
+<section id="s1">
+  <div class="sec-eyebrow"><span class="tag">自序</span><span class="line"></span></div>
+  <h2 class="rv">瓮斋老人病中答客</h2>
+  <div class="sec-sub rv">道光己酉年冬月自识，次年春杪补题两首，末署七十有八</div>
+  <div class="xu-grid rv">
+    <div class="xu-card">
+      <h3>其人</h3>
+      <p>李光庭（1773-1860），字搢扬，号朴园，别号瓮斋老人，直隶宝坻人。乾隆六十年（1795）举人，做过内阁典籍，晚年居京师，儿子们都在京城长大。年近八旬的那个冬天，他大病一场，坐也苦，行也苦，卧也苦，索性不苦了，转头来记小时候听熟的话。</p>
+    </div>
+    <div class="xu-card">
+      <h3>其书</h3>
+      <p>全书五卷，按天、地、人、物四部分部：天部记风云雷月的叫法，地部记集市村庄，人部记士农工商医卜优伶，物部记造屋、消寒、过年、开伙的种种名目与老话。每条先摆乡言，再考出处，末了常缀一首自打油诗。</p>
+    </div>
+  </div>
+  <div class="heku-row rv">
+    <div class="heku"><b>一问</b><span>坐也苦，行也苦，卧也苦，到底苦什么？</span></div>
+    <div class="heku"><b>自答</b><span>笔没停，舌头还在，乡音没丢，就不算真苦。</span></div>
+    <div class="heku"><b>成书</b><span>口里念着，笔下写着，叫两个儿子抄录校对，定名「解颐」。</span></div>
+  </div>
+  <div class="q rv">
+    <span class="qi">追忆七十年间故乡之谣谚歌诵，耳熟能详者，此心甚惬然也。</span>
+    <span class="qn">自序 · 老人自陈著书缘起</span>
+  </div>
+  <div class="q rd rv">
+    <span class="qi">生于乡而不知乡之俗，昧矣。知乡之俗而不闻乡之言，聋矣。</span>
+    <span class="qn">自序 · 写给两个在京城长大的儿子：不认得家乡的土，是瞎；听得懂乡音却不曾听过，是聋</span>
+  </div>
+</section>
+
+<!-- S2 天部 -->
+<section id="s2">
+  <div class="sec-eyebrow"><span class="tag">卷一 · 天部</span><span class="line"></span></div>
+  <h2 class="rv">太阳的六种叫法</h2>
+  <div class="sec-sub rv">乡下人不用钟表，一天的时辰全写在太阳的位置上</div>
+  <p class="body rv">从天亮到天黑，老人记下了太阳在每个位置的乡言：出门看天色，开口叫「老爷儿」，一日之内有六站。点一站，看一站。</p>
+  <div class="rihu-wrap rv">
+    <svg class="rihu-svg" viewBox="0 0 700 150" preserveAspectRatio="none">
+      <path d="M30 140 Q350 -80 670 140" fill="none" stroke="#3a362e" stroke-width="1.5" stroke-dasharray="5 5"/>
+      <line x1="10" y1="140" x2="690" y2="140" stroke="#33302a" stroke-width="1"/>
+      <circle id="sun" cx="30" cy="140" r="11" fill="#c9963f" opacity=".95"/>
+      <g id="stDots"></g>
+    </svg>
+    <div class="rihu-stations" id="riStations"></div>
+    <div class="rihu-out" id="riOut"></div>
+  </div>
+  <div class="q rv">
+    <span class="qi">太阳刚露嘴，平明时也。</span>
+    <span class="qi">正午曰晌午，西偏曰贴晌午，再曰大贴晌午。</span>
+    <span class="qn">卷一天部 · 日。太阳的脸嘴、晌午的偏正，一天被嘴与头分成了刻度</span>
+  </div>
+  <div class="q rv">
+    <span class="qi">农叟炙背负暄，谓之晒爷爷，冬日可爱也。</span>
+    <span class="qi">谓作事性急者曰狗吃了日头去了么？</span>
+    <span class="qn">卷一天部 · 日。冬天晒太阳叫晒爷爷；骂人性急，问狗是不是把日头吞了</span>
+  </div>
+
+  <h2 class="rv" style="margin-top:56px;">天的四张用法签</h2>
+  <p class="body rv">天字后面接什么，全看你要拿它干什么用。老人一口气数出四种「天」，各有各的营生。</p>
+  <div class="tian-chips rv" id="tianChips"></div>
+  <div class="tchip-out rihu-out rv" id="tianOut"></div>
+  <div class="q rv">
+    <span class="qi">曰打麦天，曰晒书天，曰捣衣天，曰赶集天，适其用也。</span>
+    <span class="qn">卷一天部 · 天。天不是背景，是日程表</span>
+  </div>
+
+  <h2 class="rv" style="margin-top:56px;">看月牙儿，占年成</h2>
+  <p class="body rv">天部最动人的是两条占年成的农谚：月初牙儿朝向哪边，八月半云遮不遮月，都牵着地里的收成。老人照单全收，又老老实实补一句，也有应不应。</p>
+  <div class="yue-pai rv">
+    <div class="yue-card"><b>月牙谚</b><div class="q" style="margin:12px 0 0;"><span class="qi">月牙儿仰，粮食长。月牙儿歪，粮食衰。</span></div></div>
+    <div class="yue-card"><b>元宵谚</b><div class="q rd" style="margin:12px 0 0;"><span class="qi">八月十五云遮月，正月元宵雪打灯。</span></div></div>
+  </div>
+</section>
+
+<!-- S3 地部三笑 -->
+<section id="s3">
+  <div class="sec-eyebrow"><span class="tag rd">卷二 · 地部</span><span class="line"></span></div>
+  <h2 class="rv">解颐三笑</h2>
+  <div class="sec-sub rv">书名叫「解颐」，颐是腮帮子，解颐就是开口笑。老人把最好笑的三件事翻成牌，一张一张翻给你看</div>
+  <div class="xiao-grid rv">
+    <div class="xiao-card" data-x="1">
+      <div class="xiao-inner">
+        <div class="xiao-face">
+          <div class="no">壹</div>
+          <h4>满墙招牌</h4>
+          <p style="font-size:13px;color:var(--paper-dim);">一个乡下人进京办年货，得了句口诀，一路找招牌最多的铺子。</p>
+          <div class="backhint">点击翻牌 · 笑点在后头</div>
+        </div>
+        <div class="xiao-face xiao-back">
+          <h5>笑点</h5>
+          <p>招牌最多的那一家，新牌挂满一面照墙，他欢欢喜喜凑近一看，每块牌上都有个封字，以为人家封了不卖，白白跑回来。</p>
+          <p>那面墙，是会馆的。</p>
+        </div>
+      </div>
+    </div>
+    <div class="xiao-card" data-x="2">
+      <div class="xiao-inner">
+        <div class="xiao-face">
+          <div class="no">贰</div>
+          <h4>联贴反了</h4>
+          <p style="font-size:13px;color:var(--paper-dim);">乡下人不识字，两副对子贴串了门，也没人看出毛病。</p>
+          <div class="backhint">点击翻牌 · 可亲手贴一贴</div>
+        </div>
+        <div class="xiao-face xiao-back">
+          <h5>动手换一换</h5>
+          <div class="duilian">
+            <div class="duipai" id="dpA">人口平安</div>
+            <div class="duipai" id="dpB">肥猪满圈</div>
+          </div>
+          <button class="duix-btn" id="dpBtn">换一联试试</button>
+          <div class="duix-note" id="dpNote">屋里屋外，各归各位，再点一次就串了门。</div>
+        </div>
+      </div>
+    </div>
+    <div class="xiao-card" data-x="3">
+      <div class="xiao-inner">
+        <div class="xiao-face">
+          <div class="no">叁</div>
+          <h4>半截琵琶</h4>
+          <p style="font-size:13px;color:var(--paper-dim);">老人游楚地见过的怪招牌，记在自打油诗里。</p>
+          <div class="backhint">点击翻牌 · 知音难觅</div>
+        </div>
+        <div class="xiao-face xiao-back">
+          <h5>笑点</h5>
+          <p>乐器铺子不挂整琵琶，偏偏挂半截，会看的自然懂：懂行才认得出这是琵琶。</p>
+          <div class="q" style="margin:8px 0 0;"><span class="qi">却笑琵琶悬半截，知音谁识尾同焦。</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="q rv" style="margin-top:24px;">
+    <span class="qi">看门前招牌多者，诸物皆备。</span>
+    <span class="qi">既封矣，是不卖了。</span>
+    <span class="qi">怏怏而返。其所见乃会馆也。</span>
+    <span class="qn">卷四物部集市招牌条 · 一句口诀、一墙封字、一场空跑，三句话说完一个笑话</span>
+  </div>
+  <div class="q rv">
+    <span class="qi">乡人不识字，有以人口平安与肥猪满圈互易者。</span>
+    <span class="qn">卷四物部 · 新年十事「春联」。两句吉利话换了门，屋里贴了猪圈话，猪圈门口倒保起平安来</span>
+  </div>
+</section>
+
+<!-- S4 人部 -->
+<section id="s4">
+  <div class="sec-eyebrow"><span class="tag">卷三 · 人部</span><span class="line"></span></div>
+  <h2 class="rv">市声三器</h2>
+  <div class="sec-sub rv">人部二十一目，从士农工商到医卜优伶。这里挑三样靠「一件东西」吃饭的行当：瞽者的钹、铺子的秤、戏班的旗</div>
+  <div class="qi-grid rv">
+    <div class="qi-card">
+      <div class="glyph">⌾</div>
+      <h4>报君知</h4>
+      <div class="who">卜 · 瞽者行脚</div>
+      <p style="font-size:13.5px;color:var(--paper-dim);">算命的盲人边走边敲小钹，这钹有个正经名字，乡人不知道，只按它的动静随口叫它。</p>
+      <span class="wangzi" data-q="bao">展开原文</span>
+    </div>
+    <div class="qi-card">
+      <div class="glyph">⚖</div>
+      <h4>公道老儿</h4>
+      <div class="who">商贾 · 秤锤</div>
+      <p style="font-size:13.5px;color:var(--paper-dim);">铺子里的秤砣和砝码都有名有姓，论起辈分来还是祖孙。秤锤抬得高，掌柜的有说法。</p>
+      <span class="wangzi" data-q="gong">展开原文</span>
+    </div>
+    <div class="qi-card">
+      <div class="glyph">旗</div>
+      <h4>老郎望子</h4>
+      <div class="who">优伶 · 戏班招牌</div>
+      <p style="font-size:13.5px;color:var(--paper-dim);">大栅栏的戏馆像酒楼一样挑着幌子，少年人凑钱看戏，先看招牌再进园子。</p>
+      <span class="wangzi" data-q="lang">展开原文</span>
+    </div>
+  </div>
+  <div id="qiOut"></div>
+</section>
+
+<!-- S5 新年十事 -->
+<section id="s5">
+  <div class="sec-eyebrow"><span class="tag rd">卷四 · 物部上</span><span class="line"></span></div>
+  <h2 class="rv">新年十事，点灯六盏</h2>
+  <div class="sec-sub rv">物部上有一组「新年十事」，从颁历到蒸馒头，一整个腊月正月的事它都管。点一盏，亮一桩</div>
+  <div class="shi-wall rv">
+    <div class="shi">
+      <div class="head"><span class="dot"></span><h4>时宪书</h4></div>
+      <div class="body">
+        <p>历书下乡，靠的是灶王马上的节气。县吏硬要送一本，主人家不要，吏的一句话把散筵席说成了分家的预言。</p>
+        <div class="q"><span class="qi">留下一本好，世上靡有不散的筵席，万一分家之时，将灶王马打坏，再找宪书可就迟了。</span></div>
+      </div>
+    </div>
+    <div class="shi">
+      <div class="head"><span class="dot"></span><h4>门神</h4></div>
+      <div class="body">
+        <p>双扇门上贴的一对儿，乡言叫得亲热，单扇门上独一位，也有名号。首屏那两扇门，用的正是这个典故。</p>
+        <div class="q rd"><span class="qi">双扇门曰对脸儿，单扇门曰独坐儿。</span></div>
+      </div>
+    </div>
+    <div class="shi">
+      <div class="head"><span class="dot"></span><h4>春联</h4></div>
+      <div class="body">
+        <p>车门上多写四个大字。一位王比部给自家车棚题的对子，把牲口的一生写得又实又清白。</p>
+        <div class="q"><span class="qi">吃草吃麸还吃料；拉人拉水不拉钱。</span></div>
+      </div>
+    </div>
+    <div class="shi">
+      <div class="head"><span class="dot"></span><h4>爆竹</h4></div>
+      <div class="body">
+        <p>本意是烧竹子，后来改用纸扎，名字没改。四句乡谚把过年的账全排好了。</p>
+        <div class="q rd"><span class="qi">糖瓜祭灶，新年来到。闺女要花，小儿要爆。</span></div>
+      </div>
+    </div>
+    <div class="shi">
+      <div class="head"><span class="dot"></span><h4>扫舍</h4></div>
+      <div class="body">
+        <p>扫房之前要先跟一位神打招呼，请假条只有十个字。</p>
+        <div class="q"><span class="qi">土地奶奶躲躲儿，扫了房子供果儿。</span></div>
+      </div>
+    </div>
+    <div class="shi">
+      <div class="head"><span class="dot"></span><h4>年画</h4></div>
+      <div class="body">
+        <p>扫完房就贴年画。老人说这是小孩儿的把戏，转念又承认，画里的孝子与农忙，讲给孩子听，也是一门功课。</p>
+        <div class="q"><span class="qi">扫舍之后，便贴年画，稚子之戏耳。</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S6 开门七事 -->
+<section id="s6">
+  <div class="sec-eyebrow"><span class="tag rd">卷五 · 物部下</span><span class="line"></span></div>
+  <h2 class="rv">开门七件事</h2>
+  <div class="sec-sub rv">七件事，件件底下压着一句乡言。点一块灶牌，读一句老话</div>
+  <div class="zao rv" id="zaoRow"></div>
+  <div class="zao-out rv" id="zaoOut"><h4>灶牌 · 七选一</h4><p>七块牌都点亮，才算开得了门。</p></div>
+  <div class="koutu rv">
+    <h4>村妪口诀 · 老人记下的原声</h4>
+    <p>七事之外，他还记了一串村里老太太的口头话，说是「曲尽人情」，句句押韵，句句扎心。</p>
+    <div class="q" style="margin:14px 0 0;"><span class="qi">叫他抱抱柴，他漓漓拉拉来。叫他烧烧火，他两眼瞪着我。</span></div>
+    <div class="q rd" style="margin:10px 0 0;"><span class="qi">省了一把盐，酸了一缸酱。</span></div>
+  </div>
+  <div class="q rv" style="margin-top:22px;">
+    <span class="qi">书画琴棋诗酒花，当年件件不离他。而今七事都更变，柴米油盐酱醋茶。</span>
+    <span class="qn">卷五开门七事引《随园诗话》：风雅与过日子的分界线</span>
+  </div>
+  <div class="q rd rv">
+    <span class="qi">夏商周秦汉唐器；柴米油盐酱醋人。</span>
+    <span class="qn">老人自撰的自嘲联 · 上联说自己收古董，下联认自己是过日子的俗人</span>
+  </div>
+</section>
+
+<!-- 尾屏 -->
+<footer class="coda" id="coda">
+  <div class="coda-stage rv">
+    <div class="codav small qv">瓮斋老人题句 <span class="b">时年七十有八</span></div>
+    <div class="codav qv">病中怀抱几时平<br>背我青春又放行<br>好日从来难再得<br>此身原不合常轻</div>
+    <div class="codav small qv">底事乡言归著作<br><span class="b">一编聊为解颐成</span></div>
+    <div class="coda-yin">解颐</div>
+  </div>
+  <div class="coda-note rv">乡音不载于庙堂，却在一部小书里活到了今天。听完这一炉灶火，你家乡的老话，还剩几句在嘴边？</div>
+</footer>
+
+<div class="pagefoot">
+  <p>文本来源：殆知阁简体库儒藏修身治家部〈乡言解颐〉（清李光庭撰，道光己酉年自序本）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+  <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；库本偶有形近讹字，引文所在各句已避而不断。</p>
+  <p>本书成于清道光年间，所记方言俗谚与生活名物皆为一时一地之旧俗，读者鉴其时代局限；乡言释义以原书自注为准，与今义或有出入。</p>
+</div>
+
+<script>
+/* ============ hero 门神 ============ */
+(function(){
+  var gate=document.getElementById('gate'),
+      mL=document.getElementById('menL'), mR=document.getElementById('menR'),
+      hint=document.getElementById('heroHint'), lede=document.getElementById('heroLede'),
+      opened=false;
+  function wake(men){
+    var closed=men.querySelector('.eyeL,.eyeR'), open=men.querySelector('.eyeOpen');
+    if(closed){closed.setAttribute('opacity','0');}
+    if(open){open.setAttribute('opacity','1');}
+  }
+  function tryOpen(){
+    if(mL.dataset.awake&&mR.dataset.awake&&!opened){
+      opened=true;
+      gate.classList.add('open');
+      document.body.classList.add('opened');
+      hint.style.opacity='0';
+      setTimeout(function(){hint.textContent='门开了 · 里头是一位老人在说乡音';hint.style.opacity='.9';},1200);
+    }
+  }
+  mL.addEventListener('click',function(){if(!opened){mL.dataset.awake=1;wake(mL);tryOpen();}});
+  mR.addEventListener('click',function(){if(!opened){mR.dataset.awake=1;wake(mR);tryOpen();}});
+})();
+
+/* ============ reveal ============ */
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+})();
+
+/* ============ 年事签点亮 ============ */
+(function(){
+  var links=document.querySelectorAll('.nq');
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      var id=e.target.id;
+      links.forEach(function(a){if(a.getAttribute('href')==='#'+id){a.classList.toggle('lit',e.isIntersecting);}});
+    });
+  },{threshold:.25});
+  document.querySelectorAll('section[id],footer[id]').forEach(function(s){io.observe(s);});
+})();
+
+/* ============ 日头弧 ============ */
+(function(){
+  var stations=[
+    {n:'未出头',t:'太阳还没出头',d:'天蒙蒙亮，昧爽时分。日头还没露面，先叫它一声。',x:30,y:140},
+    {n:'刚露嘴',t:'太阳刚露嘴',d:'平明时分，日头的下缘刚碰到地平线，像张开了嘴。',x:122,y:58},
+    {n:'晌午',t:'正午，叫晌午',d:'太阳走到头顶，正午。晌，一日之半。',x:350,y:16},
+    {n:'贴晌午',t:'西偏，叫贴晌午',d:'过了正午，日头往西偏，贴近晌午的尾巴。',x:455,y:32},
+    {n:'大贴晌午',t:'再偏，叫大贴晌午',d:'再偏下去，就「大贴」了。一个贴字，两步偏西。',x:555,y:70},
+    {n:'亚山',t:'日头平西，叫亚山',d:'夕阳贴着山，眼看要落进山那边去了。',x:670,y:140}
+  ];
+  var wrap=document.getElementById('riStations'),
+      out=document.getElementById('riOut'),
+      sun=document.getElementById('sun'),
+      dots=document.getElementById('stDots'),
+      NS='http://www.w3.org/2000/svg';
+  stations.forEach(function(s,i){
+    var b=document.createElement('button');
+    b.className='rst';b.textContent=s.n;
+    b.addEventListener('click',function(){
+      wrap.querySelectorAll('.rst').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      sun.setAttribute('cx',s.x);sun.setAttribute('cy',s.y);
+      out.innerHTML='<b>'+s.t+'</b><br>'+s.d;
+    });
+    wrap.appendChild(b);
+    var c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',s.x);c.setAttribute('cy',s.y);c.setAttribute('r','2.5');
+    c.setAttribute('fill','#57503f');dots.appendChild(c);
+  });
+  wrap.querySelector('.rst').click();
+})();
+
+/* ============ 天部用法签 ============ */
+(function(){
+  var chips=[
+    {n:'打麦天',d:'麦收时节的天。抢在雨前把麦打完，这是庄稼人一年里最紧的一段日子。'},
+    {n:'晒书天',d:'伏天暴晒书籍衣物，防蛀防霉。读书人的一年，也有属于自己的一种天。'},
+    {n:'捣衣天',d:'秋深捣衣，准备寒衣。砧声一起，冬天就不远了。'},
+    {n:'赶集天',d:'逢五排十的集期。乡下的日历不在纸上，在集上。'}
+  ];
+  var row=document.getElementById('tianChips'),out=document.getElementById('tianOut');
+  chips.forEach(function(c){
+    var b=document.createElement('button');
+    b.className='tchip';b.textContent=c.n;
+    b.addEventListener('click',function(){
+      row.querySelectorAll('.tchip').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      out.innerHTML='<b>'+c.n+'</b><br>'+c.d;
+    });
+    row.appendChild(b);
+  });
+  row.firstChild.click();
+})();
+
+/* ============ 三笑翻牌 ============ */
+document.querySelectorAll('.xiao-card').forEach(function(card){
+  card.addEventListener('click',function(){card.classList.toggle('flip');});
+});
+/* 联牌互换 */
+(function(){
+  var a=document.getElementById('dpA'),b=document.getElementById('dpB'),
+      btn=document.getElementById('dpBtn'),note=document.getElementById('dpNote'),
+      swapped=false;
+  btn.addEventListener('click',function(){
+    swapped=!swapped;
+    a.classList.toggle('sw',swapped);b.classList.toggle('sw',swapped);
+    note.textContent=swapped
+      ?'贴串了：堂屋门口挂上猪圈的话，猪圈门上倒保起平安。这正是那位不识字乡人干的事。'
+      :'屋里屋外，各归各位，再点一次就串了门。';
+  });
+})();
+
+/* ============ 市声三器 ============ */
+(function(){
+  var data={
+    bao:{t:'卜 · 瞽者',h:'乡言只管它叫打铛铛碰点儿',q:'有以木槌击小钹者，名为报君知，乡人不知，但曰打铛铛碰点儿。',
+         note:'卷三 · 人部「卜」：盲人走街的响器本有雅名，乡音只描它的声音。'},
+    gong:{t:'商贾 · 秤',h:'秤锤是老儿，砝码是孙子',q:'市肆谓砝码为招财童子，谓秤锤为公道老儿。',
+         note:'卷四物部「天平秤」：掌柜的把秤锤举得极高，问其故，答是老辈儿抬头，见一分喜。'},
+    lang:{t:'优伶 · 戏班',h:'先看招牌，再进园子',q:'大栅栏戏馆似酒楼，高悬望子；好朋友囊钱会茶票，先看招牌。',
+         note:'卷三 · 人部「优伶」：老人忆少年游，京师戏园的幌子与座次全是规矩。'}
+  };
+  var row=document.getElementById('qiOut');
+  document.querySelectorAll('.wangzi').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var d=data[btn.dataset.q];
+      row.innerHTML='<div class="q rd rv on"><span class="qi">'+d.q+'</span><span class="qn">'+d.note+'</span></div>'+
+        '<p class="srcnote">'+d.t+' · '+d.h+'</p>';
+      row.scrollIntoView({behavior:'smooth',block:'nearest'});
+    });
+  });
+})();
+
+/* ============ 新年十事签墙 ============ */
+document.querySelectorAll('.shi').forEach(function(s){
+  s.addEventListener('click',function(){s.classList.toggle('lit');});
+});
+
+/* ============ 灶牌 ============ */
+(function(){
+  var items=[
+    {z:'柴',q:'打了一冬柴，煮锅腊八粥',n:'烧一冬的柴，末了只熬得一锅腊八粥。诫人白忙一场，落一场空欢喜。',rd:0},
+    {z:'米',q:'当家才知柴米贵',n:'不当家不知柴米贵，物力不可不惜。这句至今还活着。',rd:0},
+    {z:'油',q:'沉了一船芝苏，水面上撇油花',n:'一船芝麻沉了，只在水面撇点油花。丢了大的，捡小的。',rd:0},
+    {z:'盐',q:'省了一把盐，酸了一缸酱',n:'省盐的结果是坏了一缸酱。抠错了地方，省小钱吃大亏。',rd:1},
+    {z:'酱',q:'打煞卖盐的，苦了作酱的',n:'盐行倒了霉，酱园跟着苦。上游打个喷嚏，下游重感冒，调和失宜也。',rd:0},
+    {z:'醋',q:'养女随娘好赔送，棒槌两把醋一瓮',n:'陪嫁的寒酸里带着理直气壮：棒槌两把，醋一瓮，日子照样过。',rd:1},
+    {z:'茶',q:'白日挨门子吃茶，夜晚点灯儿絮麻',n:'白天串门吃茶，夜里点灯纺麻。日子紧，人情不紧。',rd:0}
+  ];
+  var row=document.getElementById('zaoRow'),out=document.getElementById('zaoOut'),lit=0;
+  items.forEach(function(it){
+    var d=document.createElement('div');
+    d.className='zao-pai';
+    d.innerHTML='<span class="zi">'+it.z+'</span><span class="sm">灶牌</span>';
+    d.addEventListener('click',function(){
+      if(!d.classList.contains('lit')){d.classList.add('lit');lit++;}
+      out.innerHTML='<h4>'+(it.rd?'村妪原声':'七事乡言')+' · '+it.z+'</h4>'+
+        '<div class="q'+(it.rd?' rd':'')+'" style="margin:6px 0 10px;"><span class="qi">'+it.q+'</span></div>'+
+        '<p>'+it.n+'</p>';
+      if(lit===7){out.innerHTML+='<p style="color:var(--red);margin-top:10px;">七牌全亮 · 门可以开了。</p>';}
+    });
+    row.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>
