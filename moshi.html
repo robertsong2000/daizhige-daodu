@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>墨史 · 研墨读(殆知阁导读 331)</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --gold:#c9a227;
+  --gold-dim:#8a7326;
+  --smoke:#8b877d;
+  --stone:#262624;
+  --line:#3a3a36;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.9;
+  overflow-x:hidden;
+}
+.mono{font-family:"SFMono-Regular",Consolas,"Courier New",monospace}
+
+/* ============ 首屏:砚 ============ */
+#yan-screen{
+  position:relative;
+  height:190vh;
+}
+#yan-sticky{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.yan-stage{position:relative;width:min(560px,86vw);height:min(560px,86vw)}
+.yan-halo{
+  position:absolute;inset:12%;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(20,22,18,.9) 30%, rgba(20,22,18,0) 72%);
+  filter:blur(2px);
+}
+.pond{
+  position:absolute;inset:20%;
+  border-radius:46% 54% 50% 50% / 48% 46% 54% 52%;
+  background:radial-gradient(circle at 42% 38%, #2e3028 0%, #1c1e19 62%, #121310 100%);
+  box-shadow:inset 0 0 60px rgba(0,0,0,.85), 0 0 0 10px #20211d, 0 0 0 13px #33342e, 0 18px 50px rgba(0,0,0,.7);
+}
+.water{
+  position:absolute;inset:9%;
+  border-radius:inherit;
+  background:#0d0f0c;
+  opacity:.55;
+  transition:opacity .2s linear;
+}
+.sheen{
+  position:absolute;left:24%;top:18%;width:34%;height:12%;
+  border-radius:50%;
+  background:linear-gradient(105deg, rgba(232,228,220,.16), rgba(232,228,220,0));
+  transform:rotate(-18deg);
+}
+/* 墨锭:绕砚公转 */
+.stick-orbit{
+  position:absolute;left:50%;top:50%;
+  width:0;height:0;
+}
+.stick{
+  position:absolute;
+  width:150px;height:52px;
+  left:-75px;top:-26px;
+  transform-origin:center;
+  transform:rotate(-32deg);
+}
+.stick .body{
+  position:absolute;inset:0;
+  background:linear-gradient(160deg, #0b0b0a 0%, #23231f 45%, #0d0d0b 100%);
+  border-radius:7px;
+  box-shadow:0 6px 18px rgba(0,0,0,.8), inset 0 1px 0 rgba(232,228,220,.12);
+}
+.stick .face{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;
+  font-size:26px;letter-spacing:6px;
+  color:var(--gold);
+  text-shadow:0 0 6px rgba(201,162,39,.4);
+}
+.stick .face small{font-size:11px;letter-spacing:2px;color:var(--gold-dim);align-self:flex-end;padding-bottom:4px}
+/* 研出的墨晕 */
+.blots{position:absolute;inset:0;pointer-events:none}
+.blots i{
+  position:absolute;left:50%;top:50%;
+  width:10px;height:10px;margin:-5px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(10,10,9,.95) 0%, rgba(10,10,9,0) 70%);
+  opacity:0;
+}
+/* 首屏书名:从墨色中显形 */
+.title-veil{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:18px;
+  opacity:0;
+  transform:scale(.96);
+  transition:opacity .5s ease, transform .8s ease;
+}
+.title-veil.on{opacity:1;transform:scale(1)}
+.title-veil .big{
+  writing-mode:vertical-rl;
+  font-size:clamp(58px,12vw,96px);
+  letter-spacing:.28em;
+  color:var(--gold);
+  text-shadow:0 0 22px rgba(201,162,39,.35);
+  display:inline-block;
+}
+.title-veil .sub{
+  font-size:15px;letter-spacing:.35em;color:var(--smoke);
+}
+.title-veil .seal{
+  margin-top:6px;
+  border:1px solid var(--gold-dim);
+  color:var(--gold);
+  font-size:12px;letter-spacing:.3em;
+  padding:5px 12px 5px 15px;
+  border-radius:2px;
+}
+.scroll-hint{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+  font-size:12px;letter-spacing:.4em;color:var(--smoke);
+  animation:bob 2.4s ease-in-out infinite;
+}
+@keyframes bob{50%{transform:translate(-50%,8px)}}
+
+/* ============ 十站工序栏 ============ */
+#gongwei{
+  position:fixed;right:14px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:2px;
+  z-index:40;
+}
+#gongwei .g{
+  display:flex;align-items:center;gap:7px;
+  font-size:11px;letter-spacing:.15em;
+  color:#54524a;
+  transition:color .4s;
+}
+#gongwei .g i{
+  display:block;width:5px;height:14px;
+  background:#3a3a34;
+  border-radius:1px;
+  transition:background .4s, box-shadow .4s;
+}
+#gongwei .g.on{color:var(--gold)}
+#gongwei .g.on i{background:var(--gold);box-shadow:0 0 8px rgba(201,162,39,.7)}
+@media(max-width:880px){#gongwei{display:none}}
+
+/* ============ 正文 ============ */
+main{position:relative}
+section.ch{
+  max-width:720px;
+  margin:0 auto;
+  padding:110px 26px 60px;
+}
+.kicker{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:8px;
+}
+.kicker .tag{
+  font-size:12px;letter-spacing:.3em;
+  color:var(--gold);
+  border:1px solid var(--gold-dim);
+  padding:3px 10px 3px 13px;
+  border-radius:2px;
+}
+.kicker .gong{
+  font-size:12px;letter-spacing:.3em;color:var(--smoke);
+}
+h2.st{
+  font-size:clamp(26px,5vw,36px);
+  font-weight:600;
+  letter-spacing:.14em;
+  margin:6px 0 30px;
+  color:var(--paper);
+}
+h2.st span.hi{color:var(--gold)}
+section.ch p{margin:0 0 22px;text-align:justify;font-size:16.5px}
+q{
+  display:block;
+  quotes:none;
+  background:linear-gradient(180deg, rgba(201,162,39,.07), rgba(201,162,39,.03));
+  border-left:2px solid var(--gold-dim);
+  padding:14px 18px;
+  margin:0 0 22px;
+  color:#d8d3c6;
+  font-size:15.5px;
+  line-height:2.05;
+}
+.src{display:block;font-size:12.5px;color:var(--smoke);letter-spacing:.08em;margin:-12px 0 22px}
+em{font-style:normal;color:var(--gold)}
+.kw{color:var(--gold)}
+.note{
+  font-size:13.5px;color:var(--smoke);
+  border-top:1px dashed var(--line);
+  padding-top:12px;
+}
+
+/* ============ 墨签名册墙 ============ */
+.wall{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(96px,1fr));
+  gap:10px;
+  margin:8px 0 26px;
+}
+.wall .tag-item{
+  writing-mode:vertical-rl;
+  display:flex;align-items:center;justify-content:center;
+  min-height:118px;
+  padding:10px 6px;
+  background:linear-gradient(165deg,#111110,#1d1d19);
+  border:1px solid var(--line);
+  border-radius:3px;
+  font-size:14.5px;letter-spacing:.22em;
+  color:#b6b1a3;
+  box-shadow:inset 0 0 18px rgba(0,0,0,.6);
+}
+.wall .tag-item b{font-weight:600;color:var(--paper)}
+.wall .tag-item.hot{
+  border-color:var(--gold-dim);
+  color:var(--gold);
+  box-shadow:inset 0 0 18px rgba(0,0,0,.6), 0 0 12px rgba(201,162,39,.15);
+}
+
+/* ============ 防伪背印卡 ============ */
+.fangwei{
+  border:1px solid var(--line);
+  border-radius:4px;
+  padding:22px;
+  margin:6px 0 26px;
+  background:#141413;
+}
+.fangwei h4{font-size:14px;letter-spacing:.28em;color:var(--gold);margin-bottom:14px;font-weight:600}
+.fangwei q.sealq{display:block;background:none;border:0;padding:0;margin:0;color:#cfc9ba;font-size:26px;letter-spacing:8px;text-align:center;line-height:1.6}
+.fangwei .seal-face{
+  position:relative;
+  margin:0 auto 14px;
+  max-width:340px;
+  text-align:center;
+  border:2px solid #3c3c36;
+  border-radius:4px;
+  padding:16px 8px;
+  background:#0e0e0d;
+  font-size:26px;letter-spacing:8px;
+  color:#cfc9ba;
+}
+.fangwei .seal-face s{
+  text-decoration:none;position:relative;cursor:pointer;
+  transition:color .3s, text-shadow .3s;
+}
+.fangwei .seal-face s:hover,.fangwei .seal-face s.lit{
+  color:var(--gold);
+  text-shadow:0 0 10px rgba(201,162,39,.8);
+}
+.fangwei p{font-size:14px;color:var(--smoke);text-align:center;margin:0}
+.fangwei .hint{font-size:12.5px;text-align:center;color:#6a675e;margin-top:10px}
+
+/* ============ 身价时间线 ============ */
+.lifeline{
+  margin:10px 0 30px;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:18px 0 6px;
+}
+.lifeline .rail{
+  display:flex;overflow-x:auto;
+  gap:0;
+  scrollbar-width:thin;
+}
+.lifeline .stage{
+  min-width:150px;flex:1;
+  padding:0 14px 14px;
+  border-left:1px dashed var(--line);
+  position:relative;
+}
+.lifeline .stage:first-child{border-left:0}
+.lifeline .stage::before{
+  content:"";
+  position:absolute;left:-4px;top:-23px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--line);
+}
+.lifeline .stage.on::before{background:var(--gold);box-shadow:0 0 8px rgba(201,162,39,.7)}
+.lifeline .y{font-size:12px;color:var(--gold-dim);letter-spacing:.14em;margin-bottom:4px}
+.lifeline .t{font-size:14.5px;color:#c9c4b5;line-height:1.7}
+.lifeline .stage.on .t{color:var(--paper)}
+
+/* ============ 锦囊摸墨 ============ */
+.pouches{
+  display:flex;gap:18px;flex-wrap:wrap;
+  margin:8px 0 26px;
+}
+.pouch{
+  flex:1;min-width:220px;
+  border:1px solid var(--line);
+  border-radius:50% 50% 8px 8px / 34% 34% 8px 8px;
+  background:linear-gradient(180deg,#26241c 0%, #171610 70%);
+  min-height:150px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  transition:transform .35s ease, border-color .35s;
+  user-select:none;
+}
+.pouch:hover{transform:translateY(-4px);border-color:var(--gold-dim)}
+.pouch .lbl{font-size:15px;letter-spacing:.3em;color:var(--smoke)}
+.pouch .verdict{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;padding:16px;
+  opacity:0;pointer-events:none;
+  background:rgba(12,12,10,.92);
+  border-radius:inherit;
+  transition:opacity .4s;
+}
+.pouch.open .verdict{opacity:1}
+.pouch .verdict b{color:var(--gold);font-size:16px;letter-spacing:.1em}
+.pouch .verdict span{font-size:13px;color:var(--smoke);line-height:1.8}
+.pouch .verdict .w{font-size:11px;letter-spacing:.3em;color:#5c594f;border:1px solid var(--line);padding:2px 8px;border-radius:2px}
+
+/* ============ 煮墨对决 ============ */
+.duel{
+  border:1px solid var(--line);
+  border-radius:4px;
+  background:#131311;
+  padding:24px;
+  margin:8px 0 26px;
+}
+.duel .pots{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.duel .pot{
+  width:150px;text-align:center;
+}
+.duel .vessel{
+  width:104px;height:64px;
+  margin:0 auto 8px;
+  border:2px solid #4a4740;
+  border-top-width:1px;
+  border-radius:6px 6px 14px 14px;
+  position:relative;
+  background:linear-gradient(180deg,#1c1b18,#111110);
+  overflow:hidden;
+}
+.duel .vessel .liq{
+  position:absolute;left:0;right:0;bottom:0;height:40%;
+  background:#15140f;
+  transition:background .6s;
+}
+.duel .pot.boiling .vessel .liq{background:#0a0a08;animation:rol 1s infinite}
+@keyframes rol{50%{transform:translateY(-2px)}}
+.duel .vessel .cap{
+  position:absolute;left:50%;top:-13px;transform:translateX(-50%) rotate(-4deg);
+  width:56px;height:12px;
+  background:#3c3931;
+  border-radius:3px;
+  transition:transform .5s, top .5s;
+}
+.duel .pot.cracked .vessel .cap{transform:translateX(-50%) rotate(-24deg) translateY(-8px)}
+.duel .pot.whole .vessel .cap{transform:translateX(-50%) rotate(6deg) translateY(-10px)}
+.duel .pot h5{font-size:14px;letter-spacing:.2em;color:#b6b1a3;margin-bottom:2px}
+.duel .pot .st8{font-size:12px;color:var(--smoke);min-height:20px}
+.duel .pot.cracked .st8{color:#c0453c}
+.duel .pot.whole .st8{color:var(--gold)}
+.duel .fire{
+  display:block;margin:0 auto;
+  background:none;border:1px solid var(--gold-dim);
+  color:var(--gold);font-size:13px;letter-spacing:.3em;
+  padding:8px 22px 8px 26px;border-radius:2px;cursor:pointer;
+  font-family:inherit;
+}
+.duel .fire:disabled{opacity:.4;cursor:default}
+.duel .clock{
+  text-align:center;font-size:13px;color:var(--smoke);letter-spacing:.2em;
+  margin-top:12px;min-height:22px;
+}
+.duel .verdict8{
+  display:none;
+  text-align:center;
+  margin-top:14px;
+  font-size:17px;letter-spacing:.12em;
+  color:var(--gold);
+}
+.duel .verdict8.show{display:block}
+
+/* ============ 痴人谱 ============ */
+.chip-row{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 24px}
+.chip{
+  font-size:13.5px;letter-spacing:.06em;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:7px 16px;
+  color:#b6b1a3;
+}
+.chip b{color:var(--gold);font-weight:600;margin-right:8px}
+
+/* ============ 收梢 ============ */
+#end-screen{
+  position:relative;height:120vh;
+}
+#end-sticky{
+  position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
+}
+#end-sticky .dry{
+  font-size:clamp(22px,4.4vw,34px);
+  letter-spacing:.22em;
+  color:var(--gold);
+  opacity:0;transform:translateY(14px);
+  transition:opacity .9s, transform .9s;
+  text-align:center;
+}
+#end-sticky .dry.on{opacity:1;transform:none}
+#end-sticky .small8{font-size:13px;letter-spacing:.3em;color:var(--smoke)}
+#end-sticky .seal2{
+  writing-mode:vertical-rl;
+  border:2px solid #a03c33;
+  color:#c8574c;
+  font-size:17px;letter-spacing:.3em;
+  padding:12px 6px;
+  border-radius:3px;
+  transform:rotate(-3deg);
+  box-shadow:0 0 0 1px rgba(160,60,51,.25);
+  opacity:0;transition:opacity 1.2s .4s;
+}
+#end-sticky .seal2.on{opacity:.92}
+
+/* ============ 页脚 ============ */
+footer{
+  border-top:1px solid var(--line);
+  max-width:720px;margin:0 auto;
+  padding:36px 26px 60px;
+  font-size:13px;color:var(--smoke);line-height:2.1;
+}
+footer a{color:var(--gold-dim);text-decoration:none;border-bottom:1px dotted var(--gold-dim)}
+footer .warn{margin-top:10px;padding-left:12px;border-left:2px solid var(--line)}
+</style>
+</head>
+<body>
+
+<!-- 首屏:研墨 -->
+<div id="yan-screen">
+  <div id="yan-sticky">
+    <div class="yan-stage">
+      <div class="yan-halo"></div>
+      <div class="pond">
+        <div class="water" id="waterEl"></div>
+        <div class="sheen"></div>
+        <div class="blots" id="blots"></div>
+      </div>
+      <div class="stick-orbit" id="orbitEl">
+        <div class="stick" id="stickEl">
+          <div class="body"></div>
+          <div class="face">墨史<small>元·陆友</small></div>
+        </div>
+      </div>
+      <div class="title-veil" id="titleVeil">
+        <div class="big">墨史</div>
+        <div class="sub">给磨出来的东西 立一部传</div>
+        <div class="seal">烟麝万年杵</div>
+      </div>
+    </div>
+    <div class="scroll-hint">研 墨 请 向 下</div>
+  </div>
+</div>
+
+<!-- 十站工序 -->
+<nav id="gongwei" aria-hidden="true"></nav>
+
+<main>
+
+<!-- 一 · 入山:这是一本什么书 -->
+<section class="ch" data-gong="0">
+  <div class="kicker"><span class="tag">壹 · 入山</span><span class="gong">墨史图十事之一</span></div>
+  <h2 class="st">匠人入传<span class="hi">,文人靠边</span></h2>
+  <p>元朝苏州有个布商的儿子,叫陆友。家里几代人做买卖,唯独他偏要读书,苦学不辍,能诗,八分隶楷都拿得起,见识极广。奎章阁的柯九思博士、学士虞集都叹服他的眼力,想荐他入见皇帝,没等办成,两位先丢了官,他也回南方隐居,取号砚北生。诗文后来散佚,留下的只有几部偏门小书:砚史、印史,还有这本《墨史》。</p>
+  <p>这本书干的事很简单:从曹魏到宋金,把手上算得上一流的制墨人,一个个写进传里。</p>
+  <q>于魏得韦诞一人于晋得张金一人于刘宋得张永一人于唐得李阳冰以下十九人于宋得柴珣以下一百三十余人于金得刘法杨文秀二人</q>
+  <span class="src">四库全书总目提要·墨史</span>
+  <p>再附高丽、契丹与西域的墨,末了附杂记廿五则。四库馆臣给的考语是:搜罗冷僻,内容丰赡。</p>
+  <p>看清楚这本册子的脾气:它的传主不是帝王将相,不是文人骚客,是匠人。一个人的名字能被烧进墨里、印在墨背,让几百年后的读书人磨着写字时念出来,这就是这本书认的功名。</p>
+  <div class="wall">
+    <span class="tag-item"><b>韦诞</b>·魏</span>
+    <span class="tag-item">张永·宋</span>
+    <span class="tag-item"><b>李廷珪</b>·南唐</span>
+    <span class="tag-item">张遇·易水</span>
+    <span class="tag-item hot">潘谷·伊洛</span>
+    <span class="tag-item">沈珪·嘉禾</span>
+    <span class="tag-item">蒲大韶·阆中</span>
+    <span class="tag-item">戴彦衡·新安</span>
+    <span class="tag-item">杨文秀·金</span>
+  </div>
+  <p class="note">本页据殆知阁简体库《墨史》三卷本导读。全书正文一万二千余字,卷上魏晋宋唐,卷中宋,卷下宋金与四夷,附杂记。</p>
+</section>
+
+<!-- 二 · 起灶:韦诞 -->
+<section class="ch" data-gong="1">
+  <div class="kicker"><span class="tag">贰 · 起灶</span><span class="gong">墨史图十事之二</span></div>
+  <h2 class="st">第一炉火<span class="hi">:臣墨</span></h2>
+  <p>传主第一人,韦诞,字仲将,京兆人,曹魏的书法家。洛阳、许都、邺城三地的宫观刚落成,皇帝下诏让他题匾,当作永制。配发的御用笔墨他嫌不合手,于是上了一道奏,把写字这行当的工具论说得斩钉截铁:</p>
+  <q>夫欲善其事必利其器若用张芝笔左伯纸及臣墨兼此三具又得臣手然后可以逞径丈之势方寸千言</q>
+  <p>张芝的笔,左伯的纸,再添上他自家造的墨。墨在这里第一次有了归属:是我的,是我造的,敢跟天下最好的笔纸并列。萧子良后来给王僧虔的回信里,夸仲将之墨只用了四个字:一点如漆。</p>
+  <p>从这一炉火起,墨有了署名。往后一千多年,这门手艺的传人,一个一个都要在墨上刻下自己的名字,再等后人来验。</p>
+</section>
+
+<!-- 三 · 采松:李家渡江 -->
+<section class="ch" data-gong="2">
+  <div class="kicker"><span class="tag">叁 · 采松</span><span class="gong">墨史图十事之三</span></div>
+  <h2 class="st">易水人渡江<span class="hi">,奚家的姓</span></h2>
+  <p>全书的正传,给了一对父子:李超、李廷珪。唐末天下大乱,北方的墨匠往南逃。</p>
+  <q>唐末流离渡江覩歙中可居造墨故有名焉</q>
+  <p>父亲李超看中歙州这地方,留了下来。此地多美松,松烟是好墨的命。后来南唐国主赏识他儿子的手艺,赐了国姓,所以世人只知李廷珪,不知他本姓奚。</p>
+  <p>但陆友不这么记。他翻检墨经、新安志和各家著录,把一笔糊涂账理成了案:奚家一房,鼐的儿子名超;另一房,鼏的儿子名起,这是易水的奚家;歙州另有李超,其子廷珪,这是歙州的李家。两家住地不同,姓名偏偏相同。他给出的判词是:</p>
+  <q>族有奚李之异居有易歙之分</q>
+  <p>再拿实物作证:有人收得一种老墨,印文是宣府奚庭珪五字。陆友据此断定,奚姓一支籍在宣,李姓一支居歙,两族并行,名偶同而已。所谓江南赐姓,他认为是附会。这段考据被四库提要点名表扬,说它破了俗说,于考据有功。</p>
+</section>
+
+<!-- 四 · 发火:廷珪墨什么样 -->
+<section class="ch" data-gong="3">
+  <div class="kicker"><span class="tag">肆 · 发火</span><span class="gong">墨史图十事之四</span></div>
+  <h2 class="st">十年磨一挺<span class="hi">,刃可裁纸</span></h2>
+  <p>廷珪墨到底好在哪?陆友记下一连串目击证词。先说质地:</p>
+  <q>其坚如玉其文如犀冩逾数十幅不耗一二分</q>
+  <p>硬得像玉,纹路像犀角,写几十幅字,磨下去不到一两分。再说一个更狠的。学者徐铉小时候得到一挺李超墨,长不到一尺,细得像根筷子,和弟弟徐锴共用,每天写字不下五千,整整十年才磨完:</p>
+  <q>幼年尝得李超墨一挺长不过尺细裁如筯与其弟锴共用之日书不下五千字凡十年乃尽磨处边际有刃可以裁纸</q>
+  <p>磨秃的地方,边缘锋利得能裁纸。这不是修辞,是墨的致密程度:胶与烟捣得极透,内部没有一丝松懈,磨到最后一毫米还是一整块料。</p>
+  <p>识货的人自然有。蔡襄在仁宗朝的宫宴上,看见一位大臣得到李超墨,自己伯父得了廷珪墨,大臣面露遗憾。蔡襄悄悄问:能换吗?大臣只知廷珪名头大,欢欢喜喜换了。宴罢出门,分道扬镳之际,蔡襄在马背上深深一揖,补了这句:</p>
+  <q>还知廷珪是李超儿否</q>
+  <p>你现在知道,廷珪是李超的儿子了吧。父亲墨难求,儿子墨出名,识货的次序颠倒,是一整个收藏圈的讽刺画。</p>
+</section>
+
+<!-- 五 · 取煤:防伪 -->
+<section class="ch" data-gong="4">
+  <div class="kicker"><span class="tag">伍 · 取煤</span><span class="gong">墨史图十事之五</span></div>
+  <h2 class="st">墨背上的<span class="hi">防伪码</span></h2>
+  <p>名一出来,仿家就到:借着廷珪的姓,照着廷珪的样做墨,连数百年老墨研磨时还带龙脑香气这一点,都被拿去当卖点。陆友记下的鉴定法更硬核:翻过来,看背印。</p>
+  <q>歙傍欠字之左足与州字之中或其李字之中画与子字之足贯又与庭字丰之竖画墨字之右角贯视之上下相通者为真</q>
+  <p>翻成人话:墨背印七个字,<span class="kw">歙州</span><span class="kw">李廷珪</span><span class="kw">墨</span>。<span class="kw">歙</span>字左边的欠部,笔画末端要伸进<span class="kw">州</span>字中间;<span class="kw">李</span>字中间的一竖,要和<span class="kw">子</span>字的脚贯通,又和<span class="kw">庭</span>字丰部的竖画、<span class="kw">墨</span>字的右角贯通。笔画与笔画上下相连,才是真品。</p>
+  <div class="fangwei" id="fwCard">
+    <h4>背印鉴定 · 点笔画验真</h4>
+    <div class="seal-face">
+      <q class="sealq"><s data-k="1">歙</s><s data-k="1">州</s><s data-k="2">李</s><s data-k="2">廷</s><s data-k="3">珪</s><s data-k="1">墨</s></q>
+    </div>
+    <p id="fwRead">欠部之足,贯于州字之中。</p>
+    <div class="hint">据墨经所载,真品印文笔画互相贯连,上下相通。点击上方各字试读。</div>
+  </div>
+  <p>一锭墨做到要靠笔画的贯通来验真伪,这门手艺的行情,可见一斑。价格随后起飞。苏魏公家藏一挺,四寸长,黑色世间无物可及,研之无声。有人拿蜀中冷金纸试墨,只有廷珪墨压得住。到了宣和年间,行情定型:</p>
+  <q>至宣和年黄金可得李氏之墨不可得</q>
+</section>
+
+<!-- 六 · 烹胶:一锭墨的一生 -->
+<section class="ch" data-gong="5">
+  <div class="kicker"><span class="tag">陆 · 烹胶</span><span class="gong">墨史图十事之六</span></div>
+  <h2 class="st">国宝的散场<span class="hi">,从车载到入药</span></h2>
+  <p>廷珪父子的墨最后去了哪?陆友把听来的下落排成一串,读来像一部长剧的分幕。</p>
+  <div class="lifeline" id="lifeline">
+    <div class="rail">
+      <div class="stage"><div class="y">开宝末</div><div class="t">南唐亡,李家墨当作战利品入库,管库的没当回事</div></div>
+      <div class="stage"><div class="y">其后</div><div class="t">翻修相国寺的大门楼要黑漆,从库里整车往外拉,拉走的全是李家墨</div></div>
+      <div class="stage"><div class="y">其后</div><div class="t">盖<span class="kw">玉清</span>昭应宫,又调去当了漆料</div></div>
+      <div class="stage"><div class="y">宣和</div><div class="t">黄金买得到,墨反倒绝了市</div></div>
+      <div class="stage"><div class="y">庆历</div><div class="t">一丸墨涨到万钱,有价无货</div></div>
+      <div class="stage"><div class="y">终局</div><div class="t">赵普家产妇垂危,古墨烧红研末,酒服而愈;诸子干脆把余墨全煅了分家</div></div>
+    </div>
+  </div>
+  <p>第一幕是亡国:墨和俘获物同账,管库的压根不觉得它贵。第二幕最刺眼:修相国寺的门楼要黑漆,管库的用车拉着往外送,送的全是廷珪父子的墨。第三幕接着挥霍:宫里盖起<span class="kw">玉清</span>昭应宫,墨被调去做漆饰。三幕下来,天下第一墨被当成涂料,一车一车刷在了门楼上。</p>
+  <p>然后行情反转,万钱一丸,黄金难求。再然后是最魔幻的一幕:开国功臣赵普家里,那箧从洛阳故宫得到的李氏墨,因产妇血晕病危,医者要古墨入药,取一枚扔进烈火,烧红研末,酒服,救了人。诸兄弟一看墨能救命还能分家,索性把整箧墨全煅了,平均分配。自此李氏墨世上更少。</p>
+  <p>陆友自己平生五见廷珪墨,一处处记下铭文、形制、递藏来历,末了对其中一挺存疑:料子样子都对,胶的功夫已经散了,怕是假货。五次目击,一次存疑,这是藏书家的诚实。</p>
+</section>
+
+<!-- 七 · 和剂:潘谷 -->
+<section class="ch" data-gong="6">
+  <div class="kicker"><span class="tag">柒 · 和剂</span><span class="gong">墨史图十事之七</span></div>
+  <h2 class="st">墨仙<span class="hi">潘谷</span></h2>
+  <p>宋代墨工里最有传奇色彩的一个,伊洛之间的墨师。墨又精又好,价钱统一不二,穷读书人不带钱,留张字据就能取墨,他也不催账。苏轼听说这做派,评了五个字:</p>
+  <q>非市道人也</q>
+  <p>他的手艺神到什么程度?黄鲁直把一方廷珪墨转赠秦少游。这位后生爱极,收在锦囊里。墨师潘谷路过,他取出给墨师看。潘谷用手隔着锦囊一摸,当即下拜,说:真的廷珪。又摸另一枚:</p>
+  <q>此李承晏软剂今不易得</q>
+  <div class="pouches">
+    <div class="pouch" data-v="a">
+      <span class="lbl">锦 囊 一</span>
+      <div class="verdict">
+        <b>真廷珪</b>
+        <span>隔囊一拊,拜而后言:畴昔在平甫家所见,与此为二。</span>
+        <span class="w">潘谷手断</span>
+      </div>
+    </div>
+    <div class="pouch" data-v="b">
+      <span class="lbl">锦 囊 二</span>
+      <div class="verdict">
+        <b>谷廿年造</b>
+        <span>又拊一枚:自家廿年前手制,如今精力不济,再无此墨。开囊验看,果然。</span>
+        <span class="w">潘谷手断</span>
+      </div>
+    </div>
+  </div>
+  <p>第二枚更奇:他摸出那是自己二十年前造的墨,还补一句,如今精力不济,再造不出了。取出来一看,果然。苏轼后来写诗赠他,两句像谶语:</p>
+  <q>一朝入海寻李白空看人间画墨仙</q>
+  <p>结局真应了诗。他忽然把积年的债券一把火烧了,喝足三天酒,疯疯癫癫奔到街上,一头扎进井里。捞的人下去看,他盘坐在井底,手里还捻着一串念珠。</p>
+  <q>忽取积劵焚之饮酒三日发狂浪走赴井死人下视之葢趺坐井之中尚持念珠也</q>
+  <p>烧券,是把手艺人的账目清干净;盘坐捻珠,是把这具身体也安置妥当。一个匠人的死,死得比大多数传记里的名士都体面。</p>
+</section>
+
+<!-- 八 · 成造:万杵 -->
+<section class="ch" data-gong="7">
+  <div class="kicker"><span class="tag">捌 · 成造</span><span class="gong">墨史图十事之八</span></div>
+  <h2 class="st">煮墨<span class="hi">:万杵定胜负</span></h2>
+  <p>真定有两位墨工,刘宁与张顺,各自尊自家手艺,谁也不服谁。有位官员出钱请他们制墨,临行两人各以新墨来献,张顺力说自己更胜,刘宁说:别吵,煮一下就知道了。</p>
+  <p>两口汤壶架在炭火上熬到滚,两边各投进一枚墨,从巳时煮到酉时,约莫四个时辰。开锅:张顺的墨融烂开裂,刘宁的墨坚硬如初,叩之琅然有声。张顺心服口服。刘宁揭晓谜底:</p>
+  <q>二煤与胶皆一所以异者万杵耳</q>
+  <div class="duel" id="duelCard">
+    <div class="pots">
+      <div class="pot" id="potZ">
+        <div class="vessel"><div class="liq"></div><div class="cap"></div></div>
+        <h5>张 顺 墨</h5>
+        <div class="st8">待火</div>
+      </div>
+      <div class="pot" id="potL">
+        <div class="vessel"><div class="liq"></div><div class="cap"></div></div>
+        <h5>刘 宁 墨</h5>
+        <div class="st8">待火</div>
+      </div>
+    </div>
+    <button class="fire" id="fireBtn">点 火 熬 之</button>
+    <div class="clock" id="duelClock"></div>
+    <div class="verdict8" id="duelVerdict">差就差在这一万杵上。</div>
+  </div>
+  <p>原料一样,火候一样,唯一的差别是捣的次数:一万杵。没有秘方,没有仙授,就是功夫到位与否。这句话可以刻在任何一行手艺的门楣上。</p>
+</section>
+
+<!-- 九 · 入灰:风骨与俗手 -->
+<section class="ch" data-gong="8">
+  <div class="kicker"><span class="tag">玖 · 入灰</span><span class="gong">墨史图十事之九</span></div>
+  <h2 class="st">匠人守的<span class="hi">几条规矩</span></h2>
+  <p>这本列传里,匠人有匠人的尊严,也有匠人的禁忌。挑几条说。</p>
+  <p><em>其一,不用不该用的料。</em>南渡后复古殿的供御墨,出自新安戴彦衡。宫里的中官想在御苑设墨灶,就近砍九里松来烧烟,戴彦衡死活不肯:</p>
+  <q>松当用黄山所产此平地松岂可用人重其有守</q>
+  <p><em>其二,不加不该加的香。</em>隐士王迪论墨:龙脑麝香一进墨,压掉松烟本色,还招潮气毁墨,俗手才猛加香料。他论好墨只两个字:轻,清,烟与胶都讲究一个远字。</p>
+  <p><em>其三,不冒不该冒的名。</em>蜀中墨匠蒲大韶,墨上题了自家字号:锦屏蒲舜美。中贵人拿去进御,高宗问是谁的手笔,答:是蜀地墨匠。皇帝当场把墨掷在地上:</p>
+  <q>一墨工而敢妄作名字可罪也</q>
+  <p>从此墨上只印姓名,不再题字号。后半场更沉:他接了几千斤的官单,误了工期,官府派人抓人,船翻江心,两位墨工都没了。匠人在那个时代的分量,御案上一掷,江心里一船,都称得出斤两。</p>
+</section>
+
+<!-- 十 · 磨试:痴人谱 -->
+<section class="ch" data-gong="9">
+  <div class="kicker"><span class="tag">拾 · 磨试</span><span class="gong">墨史图十事之十</span></div>
+  <h2 class="st">买墨的人<span class="hi">,和被墨磨的人</span></h2>
+  <p>卷尾那堆杂记,收的全是墨的狂热爱好者。历代积累下来,好墨在文人圈里成了一种信仰。几个症状最深的:</p>
+  <div class="chip-row">
+    <span class="chip"><b>司马光</b>攒墨数百斤,子孙为念</span>
+    <span class="chip"><b>吕行甫</b>人称墨颠</span>
+    <span class="chip"><b>滕苏二公</b>晴暖日研墨当饮品</span>
+    <span class="chip"><b>李公择</b>见了好墨就下手抢</span>
+  </div>
+  <p>司马光一生没有别的嗜好,单单攒墨,攒了几百斤。有人问他攒这个做什么,他答:</p>
+  <q>吾欲子孙知吾所用此物何为也</q>
+  <p>想让子孙知道,我这辈子是用什么写字的。这批墨他一克没舍得用,只为给后人留一个自己案头的证词。而收藏家石昌言得了廷珪墨,锁进柜子不许人磨。有人看不下去,回敬一句全卷最狠的话:</p>
+  <q>子不磨墨墨将磨子</q>
+  <p>你不磨墨,墨就要磨你了。墨是拿岁月和松烟换来的一小块凝固的夜,它等着被磨成字;你把它锁进柜子,锁住的是你自己这辈子。</p>
+  <p>最后补一桩东坡轶事收梢。潘衡到儋耳投奔苏轼,起灶烧松学制墨,夜里失火,几乎烧了整座屋。第二天从灰堆里扒出煤几两,没有胶法,拿牛皮胶硬和,成不了锭,只得指头大的疙瘩几十块,苏轼当场笑倒。后来潘衡去江西卖墨,自称得东坡海上秘法,价钱翻了几倍。东坡的儿子拆穿:先人哪有什么法,那一夜失火罢了。</p>
+  <p>苏轼自己北归,船到广州翻了,四箱墨全沉进江里,一辈子的珍藏一夜散尽。到毗陵病逝时,身边只剩三块墨:潘谷造的两丸,和一丸李家古墨。一辈子写字的人,临终存货是墨仙的手笔。</p>
+</section>
+
+</main>
+
+<!-- 收梢 -->
+<div id="end-screen">
+  <div id="end-sticky">
+    <div class="small8">砚 池 水 尽</div>
+    <div class="dry" id="dryLine">墨成字,字成文,文外无墨。</div>
+    <div class="seal2" id="endSeal">万杵</div>
+  </div>
+</div>
+
+<footer>
+  <p>文本来源:殆知阁古代文献简体库《墨史》三卷(元·陆友撰,四库全书谱录类器物之属)。</p>
+  <p>本页为殆知阁导读系列第 331 篇,系列总目见 <a href="https://github.com/robertsong/daizhige-daodu" rel="noopener">daizhige-daodu 仓库</a>。全部引文经脚本与库内文件去标点归一逐字比对,白话部分经六字窗反扫核验。</p>
+  <p class="warn">时代局限提醒:原文成书于元代,涉及鉴藏、器用之观念与工艺记载均属其时代语境,不代表今日立场;文中人物言行请置于历史脉络中理解。</p>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- 十站工序栏 ---------- */
+var GONG=["入山","起灶","采松","发火","取煤","烹胶","和剂","成造","入灰","磨试"];
+var gw=document.getElementById("gongwei");
+GONG.forEach(function(n){
+  var d=document.createElement("div");d.className="g";
+  d.innerHTML="<i></i><span>"+n+"</span>";
+  gw.appendChild(d);
+});
+var gs=gw.querySelectorAll(".g");
+
+/* ---------- 首屏研墨 ---------- */
+var orbit=document.getElementById("orbitEl");
+var stick=document.getElementById("stickEl");
+var water=document.getElementById("waterEl");
+var veil=document.getElementById("titleVeil");
+var blots=document.getElementById("blots");
+var blotEls=[];
+for(var i=0;i<9;i++){
+  var b=document.createElement("i");
+  var ang=Math.random()*6.283, rr=12+Math.random()*22;
+  b.style.marginLeft=(Math.cos(ang)*rr)+"%";
+  b.style.marginTop=(Math.sin(ang)*rr)+"%";
+  b.style.transform="scale("+(0.7+Math.random()*1.4)+")";
+  blots.appendChild(b);blotEls.push(b);
+}
+function onScroll(){
+  var h=window.innerHeight;
+  var y=window.scrollY;
+  var p=Math.min(1,Math.max(0,y/(h*0.9)));
+  var spin=p*Math.PI*5;
+  orbit.style.transform="rotate("+spin+"rad) translateX("+(p*20+6)+"%)";
+  stick.style.transform="rotate("+(-32+spin*57.3)+"deg)";
+  water.style.opacity=String(0.55+p*0.45);
+  water.style.background="radial-gradient(circle at 42% 38%, rgba(12,12,10,"+(0.25+p*0.75)+") 0%, rgba(8,9,7,0.95) 70%)";
+  for(var j=0;j<blotEls.length;j++){
+    var on=j<Math.floor(p*blotEls.length);
+    blotEls[j].style.opacity=on?String(0.5+Math.random()*0.2):"0";
+  }
+  if(p>0.62){veil.classList.add("on")}
+  else{veil.classList.remove("on")}
+}
+window.addEventListener("scroll",onScroll,{passive:true});
+onScroll();
+
+/* ---------- 章节点亮工序站 ---------- */
+var secs=document.querySelectorAll("section.ch[data-gong]");
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(e.isIntersecting){
+      var k=+e.target.getAttribute("data-gong");
+      gs.forEach(function(g,i){g.classList.toggle("on",i<=k)});
+    }
+  });
+},{threshold:0.18});
+secs.forEach(function(s){io.observe(s)});
+
+/* ---------- 防伪卡 ---------- */
+var fwMsgs={
+  "1":"欠部之足,贯于州字之中。",
+  "2":"李字中画,与子字之足相贯。",
+  "3":"珪字右角,与墨字竖画相通。"
+};
+var fwRead=document.getElementById("fwRead");
+document.querySelectorAll(".fangwei .seal-face s").forEach(function(s){
+  s.addEventListener("click",function(){
+    document.querySelectorAll(".fangwei .seal-face s").forEach(function(x){x.classList.remove("lit")});
+    s.classList.add("lit");
+    fwRead.textContent=fwMsgs[s.getAttribute("data-k")]||"";
+  });
+});
+
+/* ---------- 身价时间线 ---------- */
+var stages=document.querySelectorAll("#lifeline .stage");
+var io2=new IntersectionObserver(function(es){
+  es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("on")}});
+},{threshold:0.6});
+stages.forEach(function(s){io2.observe(s)});
+
+/* ---------- 锦囊 ---------- */
+document.querySelectorAll(".pouch").forEach(function(p){
+  p.addEventListener("click",function(){p.classList.toggle("open")});
+});
+
+/* ---------- 煮墨对决 ---------- */
+var fireBtn=document.getElementById("fireBtn");
+var clock=document.getElementById("duelClock");
+var potZ=document.getElementById("potZ");
+var potL=document.getElementById("potL");
+var verdict=document.getElementById("duelVerdict");
+var seq=[
+  ["巳时 · 二汤壶炽炭","使沸,各投一笏"],
+  ["午时 · 煮了一个时辰","汤大沸,两墨相持"],
+  ["未时 · 又一炷香","张墨边缘微微发软"],
+  ["申时 · 汤色渐深","刘墨叩之,琅然有声"],
+  ["酉时 · 开锅"]
+];
+var timer=null;
+fireBtn.addEventListener("click",function(){
+  fireBtn.disabled=true;
+  potZ.classList.add("boiling");potL.classList.add("boiling");
+  potZ.querySelector(".st8").textContent="熬之";potL.querySelector(".st8").textContent="熬之";
+  var i=0;
+  timer=setInterval(function(){
+    clock.textContent=seq[i].length>1?seq[i][0]+" · "+seq[i][1]:seq[i][0];
+    i++;
+    if(i>=seq.length){
+      clearInterval(timer);
+      potZ.classList.remove("boiling");potL.classList.remove("boiling");
+      potZ.classList.add("cracked");potL.classList.add("whole");
+      potZ.querySelector(".st8").textContent="融烂开裂";
+      potL.querySelector(".st8").textContent="坚硬如初";
+      verdict.classList.add("show");
+      fireBtn.disabled=false;fireBtn.textContent="再 煮 一 回";
+    }
+  },1100);
+});
+
+/* ---------- 收梢 ---------- */
+var endScr=document.getElementById("end-screen");
+var dry=document.getElementById("dryLine");
+var seal=document.getElementById("endSeal");
+var io3=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(e.isIntersecting){dry.classList.add("on");seal.classList.add("on")}
+  });
+},{threshold:0.5});
+io3.observe(endScr);
+
+})();
+</script>
+</body>
+</html>
