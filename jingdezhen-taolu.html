@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>景德镇陶录 · 殆知阁导读 321</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#1e1d1b; --paper:#e8e4dc; --faint:rgba(232,228,220,.55);
+  --cel:#5f9270; --celdim:rgba(95,146,112,.45); --gold:#c9963f; --redd:#c0453c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","SimSun",serif;
+  line-height:1.95; overflow-x:hidden;
+}
+.wrap{max-width:860px; margin:0 auto; padding:0 22px; position:relative; z-index:2}
+q.q,.q{
+  display:block; quotes:none; font-size:15px; letter-spacing:.05em;
+  background:rgba(232,228,220,.05); border-left:3px solid var(--celdim);
+  padding:13px 18px; margin:13px 0;
+}
+.q .ql{display:block}
+.vq{color:var(--cel); border-bottom:1px dotted var(--celdim)}
+.note{font-size:12.5px; color:var(--faint); letter-spacing:.04em}
+p{margin:12px 0; text-align:justify}
+h2.sect{
+  font-size:15px; letter-spacing:.5em; color:var(--cel); font-weight:normal;
+  margin:96px 0 6px; display:flex; align-items:center; gap:14px;
+}
+h2.sect::before{content:""; width:11px; height:11px; border:1px solid var(--cel); border-radius:50% 50% 0 0}
+h2.sect::after{content:""; flex:1; height:1px; background:linear-gradient(90deg,var(--celdim),transparent)}
+.sectsub{font-size:13px; color:var(--faint); margin-bottom:26px}
+.reveal{opacity:0; transform:translateY(26px); transition:opacity 1s ease, transform 1s ease}
+.reveal.on{opacity:1; transform:none}
+
+/* ============ 火照（右下角随读进度） ============ */
+#zhao{
+  position:fixed; right:20px; bottom:22px; z-index:60; width:86px; text-align:center;
+  font-size:11px; color:var(--faint); letter-spacing:.14em; pointer-events:none;
+}
+#zhaopiece{
+  width:58px; height:44px; margin:0 auto 6px; position:relative;
+  background:#7a6248; border-radius:3px 7px 5px 2px; transform:rotate(-4deg);
+  box-shadow:inset 0 0 10px rgba(0,0,0,.45);
+  transition:background 1.2s ease, box-shadow 1.2s ease, transform 1.2s ease;
+}
+#zhaopiece::after{
+  content:""; position:absolute; left:50%; top:46%; width:14px; height:14px;
+  transform:translate(-50%,-50%); border-radius:50%;
+  background:var(--ink); box-shadow:inset 0 1px 4px rgba(0,0,0,.8);
+}
+body.s-liu #zhaopiece{background:#a58a67}
+body.s-jin #zhaopiece{background:#d9c8a8}
+body.s-zhi  #zhaopiece{background:#f2ecdf; transform:rotate(2deg); box-shadow:inset 0 0 6px rgba(120,110,90,.3), 0 4px 14px rgba(0,0,0,.5)}
+body.s-kai  #zhaopiece{background:#f7f3e8; transform:rotate(0)}
+#zhaostage{color:var(--paper); opacity:.75}
+@media (max-width:640px){#zhao{transform:scale(.82); right:10px; bottom:12px}}
+
+/* ============ 首屏 窑门 ============ */
+#hero{min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden}
+#kiln{
+  position:relative; width:min(560px,92vw); height:min(520px,72vh);
+  display:flex; align-items:flex-end; justify-content:center; padding-bottom:54px;
+}
+#arch{
+  position:absolute; inset:auto 0 0 0; height:88%; margin:0 auto; width:78%;
+  border:2px solid rgba(232,228,220,.14); border-bottom:none;
+  border-radius:300px 300px 0 0;
+  background:
+    radial-gradient(120% 90% at 50% 100%, rgba(201,150,63,.10), transparent 60%),
+    var(--ink2);
+  box-shadow:inset 0 -60px 90px rgba(0,0,0,.55), 0 0 90px rgba(0,0,0,.5);
+  overflow:hidden;
+}
+#arch::before{
+  content:""; position:absolute; inset:12px; border:1px solid rgba(232,228,220,.07);
+  border-bottom:none; border-radius:280px 280px 0 0;
+}
+#fire{position:absolute; inset:auto 0 0 0; height:0; transition:height 2.6s cubic-bezier(.3,.7,.3,1);
+  background:linear-gradient(180deg, transparent, rgba(192,69,60,.34) 42%, rgba(201,150,63,.5) 78%, rgba(232,180,90,.34));}
+#fire::before,#fire::after{content:""; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  width:60%; height:70%; filter:blur(18px); border-radius:50% 50% 0 0;}
+#fire::before{background:rgba(192,69,60,.5)}
+#fire::after{background:rgba(232,180,90,.4); width:38%; height:52%}
+#kiln.lit #fire{height:72%; animation:brea 3.4s ease-in-out .4s infinite}
+@keyframes brea{0%,100%{height:72%}50%{height:64%}}
+#mname{
+  position:relative; z-index:3; writing-mode:vertical-rl; white-space:nowrap;
+  font-size:clamp(44px,9vw,66px); letter-spacing:.22em; font-weight:700;
+  color:var(--paper); text-shadow:0 0 26px rgba(0,0,0,.8);
+  opacity:0; transition:opacity 2s ease 1s, text-shadow 2s ease 1s;
+}
+#kiln.lit #mname{opacity:1; text-shadow:0 0 34px rgba(232,180,90,.28)}
+#mlian{position:absolute; top:12%; z-index:3; display:flex; gap:190px}
+#mlian span{
+  writing-mode:vertical-rl; white-space:nowrap; font-size:15px; letter-spacing:.42em;
+  color:rgba(232,228,220,.4);
+}
+#mlian .vq{color:inherit; border-bottom:none}
+#meng{position:absolute; left:50%; bottom:6px; transform:translateX(-50%); z-index:5;
+  background:none; border:1px solid var(--celdim); color:var(--cel);
+  font-family:inherit; font-size:14px; letter-spacing:.3em; padding:9px 26px 9px 32px;
+  cursor:pointer; transition:opacity .8s;}
+#kiln.lit #meng{opacity:0; pointer-events:none}
+#msub{position:absolute; bottom:64px; left:0; right:0; text-align:center; z-index:4;
+  font-size:13.5px; color:rgba(232,228,220,.88); letter-spacing:.22em;
+  text-shadow:0 1px 10px rgba(0,0,0,.95), 0 0 4px rgba(0,0,0,.9);
+  opacity:0; transition:opacity 1.6s ease 2s;}
+#kiln.lit #msub{opacity:1}
+#mdown{position:absolute; bottom:26px; left:50%; transform:translateX(-50%); z-index:4;
+  font-size:12px; color:var(--faint); letter-spacing:.3em; opacity:0; transition:opacity 1.4s ease 3s}
+#kiln.lit #mdown{opacity:1}
+
+/* ============ 窑位内容 ============ */
+.sect3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+.sect2{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
+@media (max-width:720px){.sect3,.sect2{grid-template-columns:1fr}}
+.card{border:1px solid var(--hairline,rgba(232,228,220,.12)); padding:18px 18px 14px; background:rgba(232,228,220,.025)}
+.card h4{font-size:14.5px; letter-spacing:.3em; color:var(--cel); font-weight:normal; margin-bottom:8px}
+.card .cnote{font-size:13px; color:var(--faint); margin-top:8px}
+
+/* 年号印 */
+#nianhao{display:flex; gap:34px; align-items:center; margin:26px 0 8px; flex-wrap:wrap}
+#nhseal{
+  width:112px; height:112px; background:var(--cel); color:#f2efe6; flex:none;
+  display:grid; grid-template-columns:1fr 1fr; place-items:center;
+  font-size:40px; font-weight:700; line-height:1; padding:10px;
+  box-shadow:0 6px 22px rgba(0,0,0,.45); transform:rotate(-2deg);
+}
+#nhseal span{display:block}
+#nhline{flex:1; min-width:240px; font-size:14px; color:var(--faint); line-height:2.1}
+#nhline b{color:var(--paper); font-weight:normal; font-size:16px; letter-spacing:.1em}
+
+/* 五级链 */
+#chain{margin:26px 0 6px}
+.rung{display:flex; align-items:baseline; gap:18px; border-top:1px dashed rgba(232,228,220,.14); padding:12px 4px}
+.rung:first-child{border-top:none}
+.rung .rt{flex:none; width:9.5em; font-size:17px; letter-spacing:.08em; color:var(--paper)}
+.rung .rt em{font-style:normal; color:var(--cel)}
+.rung .rd{font-size:13px; color:var(--faint)}
+.rung .mark{font-size:11.5px; color:var(--gold); border:1px solid rgba(201,150,63,.4); padding:1px 8px; margin-left:10px; letter-spacing:.1em}
+.chipq{font-size:13.5px; letter-spacing:.03em}
+.chipq .pp{display:inline-block; background:rgba(95,146,112,.13); border:1px solid rgba(95,146,112,.28);
+  padding:1px 9px; margin:4px 4px 2px 0; color:var(--paper)}
+
+/* 工序横带 */
+#strip{display:flex; gap:14px; overflow-x:auto; padding:8px 4px 20px; scroll-snap-type:x mandatory}
+#strip .step{flex:0 0 250px; scroll-snap-align:start; border:1px solid rgba(232,228,220,.12); background:rgba(232,228,220,.025); padding:16px}
+#strip .step h4{font-size:15px; letter-spacing:.24em; color:var(--cel); font-weight:normal}
+#strip .step .no{font-size:11px; color:var(--faint); letter-spacing:.2em}
+#strip .step p{font-size:13px; color:var(--faint); margin-top:8px}
+#strip::-webkit-scrollbar{height:5px}
+#strip::-webkit-scrollbar-thumb{background:rgba(95,146,112,.35)}
+
+/* 火候三段 */
+#huohou{display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin:26px 0; border:1px solid rgba(232,228,220,.12)}
+#huohou .hh{padding:18px 16px 14px; border-left:1px solid rgba(232,228,220,.12)}
+#huohou .hh:first-child{border-left:none}
+#huohou .hh h4{font-size:16px; letter-spacing:.3em; color:var(--gold); font-weight:normal; margin-bottom:6px}
+#huohou .hh p{font-size:13px; color:var(--faint)}
+@media (max-width:720px){#huohou{grid-template-columns:1fr}#huohou .hh{border-left:none; border-top:1px solid rgba(232,228,220,.12)}}
+.ganxi{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:14px 0}
+.ganxi span{text-align:center; border:1px solid rgba(232,228,220,.14); padding:7px 2px; font-size:14.5px; letter-spacing:.1em}
+.ganxi span i{display:block; font-style:normal; font-size:11px; color:var(--faint); letter-spacing:.06em; margin-top:2px}
+
+/* 市场 */
+#market{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media (max-width:720px){#market{grid-template-columns:1fr}}
+.stall{border:1px solid rgba(232,228,220,.12); padding:16px; background:rgba(232,228,220,.025)}
+.stall h4{font-size:14.5px; letter-spacing:.26em; color:var(--cel); font-weight:normal; margin-bottom:4px}
+.stall .tag{display:inline-block; font-size:11px; letter-spacing:.18em; color:var(--gold); border:1px solid rgba(201,150,63,.35); padding:0 8px; margin-bottom:8px}
+.stall p{font-size:13px; color:var(--faint)}
+.stall.bad h4{color:var(--redd)}
+.stall.bad{border-color:rgba(192,69,60,.3)}
+
+/* 窑神时间线 */
+#shen{position:relative; margin:30px 0; padding-left:30px}
+#shen::before{content:""; position:absolute; left:8px; top:6px; bottom:6px; width:1px; background:linear-gradient(180deg,var(--cel),rgba(201,150,63,.5),rgba(192,69,60,.6))}
+.shenstep{position:relative; margin-bottom:34px}
+.shenstep::before{content:""; position:absolute; left:-27px; top:9px; width:9px; height:9px; border-radius:50%; background:var(--ink); border:2px solid var(--cel)}
+.shenstep:last-child::before{border-color:var(--redd)}
+.shenstep h4{font-size:15px; letter-spacing:.2em; margin-bottom:4px}
+.shenstep h4 small{color:var(--faint); font-size:12px; letter-spacing:.12em; margin-left:10px}
+.shenstep p{font-size:13.5px; color:var(--faint)}
+
+/* 收梢 开窑 */
+#coda{text-align:center; padding:40px 0 30px}
+#kaiBtn{background:none; border:1px solid var(--celdim); color:var(--cel); font-family:inherit;
+  font-size:15px; letter-spacing:.5em; padding:13px 40px 13px 48px; cursor:pointer; transition:all .8s}
+#kaiBtn:hover{background:rgba(95,146,112,.1)}
+#kaiout{max-height:0; overflow:hidden; transition:max-height 1.6s ease}
+#kaiout.open{max-height:900px}
+#luo{display:inline-block; margin:30px auto 0; border:1px solid rgba(232,228,220,.16); padding:22px 34px}
+#luo .lt{font-size:20px; letter-spacing:.34em; margin-bottom:10px}
+#luo .ld{font-size:13px; color:var(--faint); letter-spacing:.14em; line-height:2.1}
+#dyseal{display:inline-block; background:var(--redd); color:var(--paper); writing-mode:vertical-rl; white-space:nowrap;
+  font-size:13px; letter-spacing:.12em; padding:10px 7px; margin-left:18px; vertical-align:middle; transform:rotate(-3deg)}
+
+footer{border-top:1px solid rgba(232,228,220,.12); margin-top:80px; padding:34px 0 60px; color:var(--faint); font-size:13px}
+footer .fx{display:flex; gap:20px; align-items:flex-start}
+footer .seal{flex:none; width:54px; height:54px; background:var(--cel); color:#f2efe6; display:grid; place-items:center; font-size:17px; letter-spacing:0}
+footer a{color:var(--celdim)}
+</style>
+</head>
+<body>
+
+<div id="zhao" aria-hidden="true">
+  <div id="zhaopiece"></div>
+  <div>火照</div>
+  <div id="zhaostage">生坯</div>
+</div>
+
+<header id="hero">
+  <div id="kiln">
+    <div id="mlian"><span class="vq">瓷器之成</span><span class="vq">窑火是赖</span></div>
+    <div id="arch"></div>
+    <div id="fire"></div>
+    <div id="mname" data-t="bt">景德镇陶录</div>
+    <div id="msub">清嘉庆二十年成书　昌南蓝浦原撰　门人郑廷桂补辑　十卷</div>
+    <button id="meng" onclick="document.getElementById('kiln').classList.add('lit')">点　火</button>
+    <div id="mdown">往下读，火照会从土色烧成瓷色</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <p class="note" style="margin-top:34px">书里说，烧窑之前先取一块破坯，中间挖一个圆孔，塞进窑眼，烧到什么火候，用铁钩探出来看：孔内皆熟，方可歇火。这篇导读也照此办理，你往下滚，右下角那枚火照就是进度。</p>
+
+  <h2 class="sect reveal">窑位一 · 以年号为名的小镇</h2>
+  <p class="sectsub reveal">一座镇子，被皇帝的年号改名，从此连外洋都只认这四个字。</p>
+
+  <div id="nianhao" class="reveal">
+    <div id="nhseal"><span>景</span><span>德</span><span>年</span><span>制</span></div>
+    <div id="nhline">
+      景德镇原本叫昌南镇，在昌江之南。宋真宗景德年间，这里烧的瓷器被指定进御，器底写下年号，于是镇子干脆改叫景德镇。<br>
+      <b>一座城镇以年号为名，此后沿用一千年。</b>
+    </div>
+  </div>
+
+  <q class="q reveal">景德镇属浮梁之兴西乡，去城二十五里，在昌江之南，故称昌南镇。</q>
+  <q class="q reveal">水土宜陶，陈以来，土人多业此。至宋景德年始置镇，奉御董造，因改名景德镇。</q>
+  <p class="reveal">改名之前，这地方的瓷器已经出过一次风头。唐武德年间，镇民陶玉带着瓷器进关中，人称假玉器，还被拿去进贡，昌南镇的瓷名从此打响。到了宋代，库本记得更直白：</p>
+  <q class="q reveal">真宗命进御，瓷器底书“景德年制”四字，其器尤光致茂美，当时则效著行海内，于是天下咸称景德镇瓷器，而昌南之名遂微。</q>
+  <p class="reveal">旧名被新名吃掉，是这本书开篇讲的第一件事。</p>
+
+  <h2 class="sect reveal">窑位二 · 一座厂的编制</h2>
+  <p class="sectsub reveal">厂子在珠山上，周回约三里。二十三种作、六式窑、四座神祠，各司其职。</p>
+
+  <p class="reveal">厂里编制最壮观的是作。库本一口气报出二十三个：</p>
+  <div class="q chipq reveal"><span class="pp">大器作</span><span class="pp">小器作</span><span class="pp">仿古作</span><span class="pp">雕镶作</span><span class="pp">印作</span><span class="pp">画作</span><span class="pp">创新作</span><span class="pp">锥龙作</span><span class="pp">写字作</span><span class="pp">色彩作</span><span class="pp">漆作</span><span class="pp">匣作</span><span class="pp">染作</span><span class="pp">泥水作</span><span class="pp">大木作</span><span class="pp">小木作</span><span class="pp">船作</span><span class="pp">铁作</span><span class="pp">竹作</span><span class="pp">索作</span><span class="pp">桶作</span><span class="pp">东碓作</span><span class="pp">西碓作</span></div>
+  <p class="note reveal">以上二十三名，是御窑厂内的作坊编制，从做瓷器到造船打铁编竹索，一座厂里装着一条完整的产业链。窑又分六式：青窑、龙钢窑、风火窑、色窑、爁熿窑、匣窑。</p>
+  <p class="reveal">厂里还养着神。库本列得很平静：</p>
+  <q class="q reveal">厂内神司三：曰佑陶灵祠、曰真武殿、曰关帝庙。厂外神祠一：曰师主庙。</q>
+  <p class="reveal">连工匠上工的班次都以五行编队：<span class="vq">以水、火、金、木、土五行别役</span>。而全书讲陶业组织最凝练的，是卷三那架五级的梯子：</p>
+
+  <div id="chain" class="reveal">
+    <div class="rung"><span class="rt"><em>陶</em>有窑</span><span class="rd">窑是烧的场所，柴窑、槎窑、包青窑等五式，统称风火</span></div>
+    <div class="rung"><span class="rt">窑有<em>户</em></span><span class="rd">户是经营窑的人家，自烧的、搭烧的、囵烧的各有营法</span><span class="mark">库本讹处见校字记</span></div>
+    <div class="rung"><span class="rt">户有<em>工</em></span><span class="rd">自拉坯至烧窑，十几行工，名目俱全</span></div>
+    <div class="rung"><span class="rt">工有<em>作</em></span><span class="rd">一户所造，官古、脱胎、洋器等十八作</span></div>
+    <div class="rung"><span class="rt">作有<em>家</em></span><span class="rd">家有精粗之分，青花、淡描、彩色，凡三家</span></div>
+  </div>
+  <p class="reveal">从一座窑到一户人，从一个工到一器，再到一个名家，五级一路收窄，把几万人的镇子装进一条链。</p>
+
+  <h2 class="sect reveal">窑位三 · 坯变瓷的路上</h2>
+ <p class="sectsub reveal">从土到瓷要过的关口，每一关都有人为它定了规矩。左右滑动看工序。</p>
+
+  <div id="strip" class="reveal">
+    <div class="step"><span class="no">其一</span><h4>取土</h4>
+      <p>土要采石舂练，好的土有记号。</p>
+      <q class="q">部有黑花如鹿角菜形者佳。</q>
+    </div>
+    <div class="step"><span class="no">其二</span><h4>修模</h4>
+      <p>圆器一器一模，尺寸全凭模子画一。</p>
+      <q class="q">大抵一尺之坯经烧后得七八寸，亦收缩之理然也。</q>
+    </div>
+    <div class="step"><span class="no">其三</span><h4>做坯</h4>
+      <p>轮车拉坯，手上的分寸就是机器。</p>
+      <q class="q">拉者坐于车上，以小竹竿拨车使疾转，双手按泥随拉之，千百不差毫黍。</q>
+    </div>
+    <div class="step"><span class="no">其四</span><h4>画坯</h4>
+      <p>画的人不染，染的人不画，流水线在一器之内分工。</p>
+      <q class="q">一器动累什百画者，则画而不染；染者，则染而不画，所以一其手而不分其心也。</q>
+    </div>
+    <div class="step"><span class="no">其五</span><h4>荡泑</h4>
+      <p>大件不上浸釉，用竹筒蒙纱吹上去。</p>
+      <q class="q">以竹筒蒙细纱吹之，俱视器之大小与泑之厚薄别其吹之遍数，有三四遍至十七八遍者。</q>
+    </div>
+    <div class="step"><span class="no">其六</span><h4>开窑</h4>
+      <p>窑门一开，紫红色扑面，工人以冷水湿布护身入内。</p>
+      <q class="q">工匠用布数十层制成手套，蘸以冷水护手；复用湿布裹头面肩背，入窑搬匣。</q>
+    </div>
+  </div>
+
+  <p class="reveal">分工细到什么程度？卷一记印坯一行附带的一句，是全书最不动声色的一条社会史料：</p>
+  <q class="q reveal">又有乳料之工，用矮凳贮料，钵上装直木安瓷槌乳之，有双手乳者，有左、右乳者。疾、瞽、老、幼多资生焉。</q>
+  <p class="reveal">捣料的活计不需要双目健全，镇里病人、盲人、老人、孩子都靠它吃饭。一门手艺养活一镇，不挑人。</p>
+
+  <h2 class="sect reveal">窑位四 · 火候</h2>
+  <p class="sectsub reveal">同一窑坯，生熟全在火里。烧龙缸的规矩，把火候拆成了三段。</p>
+
+  <div id="huohou" class="reveal">
+    <div class="hh"><h4>溜火</h4><p>小火缓烧，像小滴流慢慢起火，把水气一点点逼干。</p></div>
+    <div class="hh"><h4>紧火</h4><p>大攻，缸匣先红后白，前后通亮，才算烧透。</p></div>
+    <div class="hh"><h4>止火</h4><p>封门，窨一昼夜，再等十日，窑凉透了才开门。</p></div>
+  </div>
+  <q class="q reveal">烧时溜火七日夜。溜，缓小也，如小滴流缓缓起火，使水气渐干渐熟，然后紧火二日夜，缸匣既红而复白色，前后通明亮，方止火封门，又十日窑冷方开。</q>
+  <p class="note reveal">一口龙缸，柴百三十扛起算，天雨另计。七日夜、二日夜、十日，是它的火账。</p>
+  <p class="reveal">火候没有仪表，全凭口诀与验看。卷四把口诀收成一组对句：</p>
+  <div class="ganxi reveal">
+    <span class="vq">窑干</span><span class="vq">坯干</span><span class="vq">柴干</span>
+    <span class="vq">土细</span><span class="vq">料细</span><span class="vq">工夫细</span>
+  </div>
+  <q class="q reveal">瓷器固须精造，陶成则全赖火候。大都窑干、坯干、柴干，则少折裂、色晦之患；土细、料细、工夫细，则无粗糙、滓斑之虞。</q>
+  <p class="reveal">而窑里到底熟没熟，靠的就是你在右下角看到的那件东西。收买瓷土的商人用它验货，烧窑的窑户用它验火：</p>
+  <q class="q reveal">陶户收买釉不，先于船中提少许捏成块，上划各土客字号，烧窑日置之火眼内，待烧熟用铁钩探出，验辩货色，谓之“试照”。</q>
+  <q class="q reveal">因取破坯一片，中挖一圆孔，置窑眼内，用钩探验生熟。若坯片孔内皆熟，则窑渐陶成，然后可歇火。</q>
+  <p class="reveal">一片挖了孔的破坯，就是全镇的质量标准。</p>
+
+  <h2 class="sect reveal">窑位五 · 瓷器街上的生意经</h2>
+  <p class="sectsub reveal">卷四是一册市井账：有保险，有造假，有地摊，有外贸。</p>
+
+  <div id="market">
+    <div class="stall reveal"><h4>包青窑</h4><span class="tag">保险</span>
+      <p>搭烧的坯若烧坏，窑主照数赔。镇上的烧造风险，有人专门承保。</p>
+      <q class="q">何谓包青？盖凡搭坯入其窑，必陶成皆青品，有苦窳不青器，则另偿包烧者。</q>
+    </div>
+    <div class="stall bad reveal"><h4>过江器</h4><span class="tag">骗局</span>
+      <p>暗损未裂的瓷器贱价收来，涂药固住再卖，看着完好，一沾热汤就破，只配盛干冷东西。</p>
+      <q class="q">过光瓷器、皆暗损未坏者。此诈伪之流贱市而涂固之。然沾热汤即破，只可盛干冷物，俗呼为过江器。</q>
+    </div>
+    <div class="stall reveal"><h4>黄家洲</h4><span class="tag">地摊</span>
+      <p>面河两里，遍地瓷摊，小贩提着大篮子收零货，略有毛病的器物里也能淘出佳品，俗呼提洲篮者。</p>
+    </div>
+    <div class="stall reveal"><h4>满窑店</h4><span class="tag">行会</span>
+      <p>装窑是专门一行，开店营业，主雇有定。此业后来分作两邦，店号三十余间，连地界都划开了。</p>
+      <q class="q">今则镇分二邦，共计满窑店三十二间，各有首领，俗呼为满窑头。凡都、鄱二邦满、柴、槎窑，皆分地界。</q>
+    </div>
+    <div class="stall reveal"><h4>洋器</h4><span class="tag">外贸</span>
+      <p>专做出口的生意，商人多是广东人，货装上洋船就走，式样新奇，年年不同。</p>
+      <q class="q">洋器专售外洋者。商多粤东人，贩去与洋鬼子载市。式多奇巧，岁无定样。</q>
+    </div>
+    <div class="stall reveal"><h4>镇子有多大</h4><span class="tag">账面</span>
+      <p>库本引各家杂记记镇况：全镇烟户号称十万余家，吃陶饭的占到七八成，土著只占两三成。</p>
+      <div class="q"><span class="ql">昌南镇陶器行于九域施及外洋事陶之人动以数万计</span><span class="ql">列市受厘延衰十三里许烟火逾十万家陶户与市肆当十之七八土著居民十之二三</span></div>
+    </div>
+  </div>
+  <p class="reveal">这些杂记里流传最久的是一首窑民行，后来几乎成了景德镇的城徽：</p>
+  <div class="q reveal" style="text-align:center; font-size:17px; letter-spacing:.14em"><span class="ql">景德产佳瓷，产器不产手。</span><span class="ql">工匠来八方，器成天下走。</span></div>
+  <p class="note reveal">库本所引窑民行，作者姓氏库本作沉，通作沈。镇上不产匠人，四方的人为陶饭聚到这里。</p>
+
+  <h2 class="sect reveal">窑位六 · 窑神</h2>
+  <p class="sectsub reveal">从传说里的陶正，到殉火的役夫，厂里那座佑陶灵祠供的是人。</p>
+
+  <div id="shen">
+    <div class="shenstep reveal"><h4>宁封子<small>列仙传</small></h4>
+      <p>黄帝的陶正。传说有人来求掌火之术，烟出五色，后来他把自己也烧了进去，随烟上下。窑火的神性，最早安在一位制陶官身上。</p>
+      <div class="q"><span class="ql">宁封子为黄帝陶正</span><span class="ql">有一人过之请为之掌火能出五色烟</span><span class="ql">久则以教封子封子积火自烧</span><span class="ql">遂能随烟气上下</span></div>
+    </div>
+    <div class="shenstep reveal"><h4>师主庙<small>詹珊记</small></h4>
+      <p>庙里供的师主姓赵名慨，晋朝人，相传以道术济生灵，明洪熙间被祀为陶之神，庙建在厂内。神是本行当的前辈。</p>
+    </div>
+    <div class="shenstep reveal"><h4>童宾殉火<small>唐英龙缸记</small></h4>
+      <p>万历年间造青龙大缸，屡烧不成，督造越紧，役夫越苦。相传陶役童宾不忍同役之苦，纵身投火，缸竟烧成。后来唐英在佑陶灵祠西侧见到那口缸：口圈俱全，只缺了底，是当年落选的损器，被他请回祠堂供奉。</p>
+      <div class="q"><span class="ql">明万历造先昰写累造弗成督者益力</span><span class="ql">神童公悯同役之苦独舍生殉火缸乃成</span></div>
+      <div class="q"><span class="ql">此器之成沾溢者神膏血也</span><span class="ql">团结者神骨肉也</span><span class="ql">清白翠璨者神精忱猛气也</span></div>
+      <p>釉水是膏血，胎骨是骨肉，青翠是精神。风火神的香火，就是这么来的。</p>
+    </div>
+  </div>
+
+  <h2 class="sect reveal">窑尾 · 这本书自己也被火烧过</h2>
+  <p class="sectsub reveal">一部写窑火的书，走了一遍自己的火候。</p>
+
+  <p class="reveal">蓝浦是昌南本地人，一生住在镇上，随时记录镇里的陶事，书没编完就去世了，稿子在败箧里压了将近二十年。门人郑廷桂去官署教书时，知县刘丙问起镇陶无专书，郑廷桂把遗稿拿了出来：</p>
+  <q class="q reveal">辑为是录卷帙末终而逝葢湮废败箧中垂二十年矣</q>
+  <q class="q reveal">遗腹子殇殒无嗣师母氏汪孑然孀居抱遗书而无所与谋</q>
+  <p class="reveal">师母汪氏抱着无处交付的遗稿，弟子落拓无力刊刻，直到嘉庆十六年新知县到任，见稿跃然而起，命他续成付刻。嘉庆二十年，书成十卷。这位知县自己也是个有心人，序里交代他写书的本钱：</p>
+  <q class="q reveal">案籍镇广豪数十里业陶数千户其人五方错杂贤不肖并处</q>
+  <q class="q reveal">又公事偶间辄微行入陶肆以察良莠以稽勤怠</q>
+  <p class="reveal">公事之余，便衣走进作坊，看手艺，查勤惰。半个世纪后，兵火烧到浮梁，书版毁于战火；同治九年，丹徒人张少嵒捐俸重刻，这部书才又从灰里站了起来。</p>
+
+  <div id="coda" class="reveal">
+    <button id="kaiBtn" onclick="document.getElementById('kaiout').classList.add('open'); document.body.classList.add('s-kai')">开　窑</button>
+    <div id="kaiout">
+      <div id="luo">
+        <div class="lt">景德镇陶录</div>
+        <div class="ld">嘉庆乙亥秋八月　门人郑廷桂续成十卷<br>同治庚午小春　丹徒张少嵒捐俸重刻<br>蓝浦殁而书传　梨枣烬而版复　是为一窑之变</div>
+        <div id="dyseal">风火</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="fx">
+      <div class="seal">陶录</div>
+      <div>
+        文本来源：殆知阁简体库艺藏器物<span data-t="bt">景德镇陶录</span>（去空白 35,344 字）·
+        仓库 <a href="https://github.com/garychowcmu/daizhigev2">github.com/garychowcmu/daizhigev2</a><br>
+        页面全部引文经脚本与库内文件去标点空白归一后逐字比对通过；无标点各条按库本原样分行照录。<br>
+        校字记：卷三级库本作「兀（丌）有工」，按上下文当为「户有工」之形讹；「沉怀清」当作沈；柴窑条「者般」即这般；「先昰写」「验辩」「广豪」「延衰」「片褚」「末终」「付剖劂」「扮榆」等皆库本讹字，照录不校改；童宾条库本「神童-公」衍连字符，页面去符照录。<br>
+        书中所记烧造诸法、行会市规皆嘉庆间景德镇之见闻，时代所限，读者鉴之。
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+  var stages=[['s-kai','开窑',0.93],['s-zhi','止火',0.82],['s-jin','紧火',0.4],['s-liu','溜火',0.08],['','生坯',0]];
+  function upd(){
+    var h=document.documentElement.scrollHeight-innerHeight;
+    var f=h>0?scrollY/h:0;
+    for(var i=0;i<stages.length;i++){
+      if(f>=stages[i][2]){
+        document.body.className=stages[i][0];
+        document.getElementById('zhaostage').textContent=stages[i][1];
+        break;
+      }
+    }
+  }
+  addEventListener('scroll',upd,{passive:true}); upd();
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('on'); });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+})();
+</script>
+
+</body>
+</html>
