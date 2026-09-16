@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>乐毅图齐七国春秋后集 · 复城七十</title>
+<style>
+:root{
+  --bg:#191917; --bg2:#141413; --paper:#e8e4dc; --ink:#1c1b19;
+  --red:#c0453c; --red2:#e06a55; --gold:#a67c3d; --dim:#8b867c; --faint:#55524b;
+  --line:rgba(232,228,220,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--paper);
+  font-family:"Songti SC","STSong","NSimSun","SimSun",serif;
+  line-height:1.9; overflow-x:hidden;
+}
+.mono{font-family:"Courier New",monospace}
+::selection{background:var(--red); color:var(--paper)}
+
+/* 顶栏 */
+.topbar{
+  position:fixed; top:0; left:0; right:0; z-index:60;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 18px; font-size:12px; letter-spacing:.2em;
+  background:linear-gradient(to bottom, rgba(20,20,19,.92), rgba(20,20,19,0));
+  color:var(--dim);
+}
+.topbar b{color:var(--paper); font-weight:normal}
+
+/* 右缘阵旗轨 */
+.rail{
+  position:fixed; right:14px; top:50%; transform:translateY(-50%);
+  z-index:55; display:flex; flex-direction:column; gap:18px;
+}
+.rail a{
+  width:14px; height:14px; display:block; position:relative; opacity:.35;
+  transition:opacity .3s;
+}
+.rail a::before{
+  content:""; position:absolute; left:6px; top:0; width:2px; height:14px;
+  background:var(--faint);
+}
+.rail a::after{
+  content:""; position:absolute; left:8px; top:1px;
+  border-top:5px solid transparent; border-bottom:5px solid transparent;
+  border-left:0 solid var(--faint); transition:border-left-color .3s, border-left-width .3s;
+}
+.rail a.on{opacity:1}
+.rail a.on::before{background:var(--red)}
+.rail a.on::after{border-left:9px solid var(--red)}
+.rail a:hover{opacity:1}
+@media (max-width:760px){ .rail{display:none} }
+
+/* 首屏 */
+.hero{
+  position:relative; min-height:100dvh; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:flex-end;
+}
+.sky{position:absolute; inset:0; transition:background 2.5s;
+  background:
+    radial-gradient(120% 70% at 50% 100%, #23211d 0%, rgba(35,33,29,0) 60%),
+    linear-gradient(to bottom, #101010 0%, #191917 70%);
+}
+.hero.dawn .sky{
+  background:
+    radial-gradient(90% 55% at 62% 88%, rgba(192,69,60,.34) 0%, rgba(192,69,60,0) 62%),
+    radial-gradient(120% 70% at 50% 100%, #2a241e 0%, rgba(42,36,30,0) 60%),
+    linear-gradient(to bottom, #131110 0%, #1b1815 70%);
+}
+.scene{position:absolute; inset:0; width:100%; height:100%}
+.star{fill:#3c3931}
+
+/* 牛群 */
+.bulls{position:absolute; left:0; bottom:16%; width:100%; height:34%; pointer-events:none}
+.bull{position:absolute; bottom:0; left:-24vw; opacity:0; will-change:transform,opacity}
+.bull svg{display:block; fill:#0e0e0d; transform:scaleX(-1)}
+.hero.go .bull{animation:charge linear forwards}
+@keyframes charge{
+  0%{transform:translateX(0); opacity:0}
+  8%{opacity:1}
+  88%{opacity:1}
+  100%{transform:translateX(150vw); opacity:0}
+}
+.bull .torch{opacity:0}
+.hero.go .bull .torch{opacity:1; animation:torch .5s ease-in .1s}
+.bull .bodyline{stroke:var(--red2); stroke-width:1.4; fill:none; opacity:0}
+.hero.go .bull .bodyline{opacity:.55}
+@keyframes torch{0%{opacity:0}100%{opacity:1}}
+
+/* 燕营 */
+.tent{transform-origin:50% 100%; transition:transform .7s ease-in .0s}
+.hero.go .tent{transform:rotate(var(--fall,26deg)) translateY(10px)}
+.campflag{transition:transform .6s}
+.hero.go .campflag{transform:rotate(-14deg)}
+.fire{opacity:0; transition:opacity 1.6s ease 1.9s}
+.hero.go .fire{opacity:1}
+.fire f{display:none}
+
+/* 首屏 UI */
+.hero-ui{
+  position:relative; z-index:5; padding:0 22px 20px;
+  display:flex; flex-direction:column; align-items:center; gap:14px;
+}
+.kicker{
+  font-size:11px; letter-spacing:.34em; color:var(--dim);
+  border:1px solid var(--line); padding:6px 16px;
+}
+.vtitle{
+  position:absolute; right:max(4vw,26px); top:12dvh; z-index:6;
+  writing-mode:vertical-rl; text-orientation:upright;
+  font-size:clamp(46px,7vw,84px); letter-spacing:.18em; line-height:1;
+  color:var(--paper); text-shadow:0 0 26px rgba(232,228,220,.14);
+  opacity:0; transform:translateY(26px);
+  transition:opacity 1.4s ease 2.5s, transform 1.4s ease 2.5s;
+}
+.hero.go .vtitle{opacity:1; transform:translateY(0)}
+.vsub{
+  position:absolute; right:calc(max(4vw,26px) + clamp(52px,8vw,96px)); top:13dvh; z-index:6;
+  writing-mode:vertical-rl; text-orientation:upright;
+  font-size:14px; letter-spacing:.4em; color:var(--dim);
+  opacity:0; transition:opacity 1.4s ease 3s;
+}
+.hero.go .vsub{opacity:1}
+.seal{
+  position:absolute; left:max(4vw,26px); bottom:24dvh; z-index:6;
+  width:92px; height:92px; display:grid; grid-template-columns:1fr 1fr;
+  border:2px solid var(--red); color:var(--red);
+  font-size:30px; line-height:1; opacity:0; transform:scale(1.5) rotate(-14deg);
+  transition:opacity .35s ease 3.4s, transform .35s ease 3.4s;
+}
+.hero.go .seal{opacity:.92; transform:scale(1) rotate(-6deg)}
+@media (max-width:760px){ .seal{bottom:auto; top:18dvh; left:18px; width:72px; height:72px; font-size:23px} }
+.seal span{display:flex; align-items:center; justify-content:center}
+.hint{
+  margin-top:2dvh; z-index:7; cursor:pointer; user-select:none;
+  background:none; border:1px solid var(--red); color:var(--red2);
+  font-family:inherit; font-size:14px; letter-spacing:.3em;
+  padding:12px 30px 12px 34px; transition:all .4s;
+  animation:breath 2.4s ease-in-out infinite;
+}
+@keyframes breath{0%,100%{box-shadow:0 0 0 rgba(192,69,60,0)}50%{box-shadow:0 0 22px rgba(192,69,60,.35)}}
+.hero.go .hint{display:none}
+.heropos{position:relative; z-index:6; display:flex; gap:18px; flex-wrap:wrap; justify-content:center; padding:0 16px}
+.q.mini{
+  flex:1 1 300px; max-width:430px;
+}
+.q.mini p{font-size:14px}
+
+/* 通用区块 */
+main{position:relative; z-index:5}
+section{max-width:880px; margin:0 auto; padding:88px 22px 30px}
+.shead{display:flex; align-items:baseline; gap:16px; margin-bottom:26px}
+.schip{
+  flex:none; font-size:12px; letter-spacing:.24em; color:var(--bg);
+  background:var(--paper); padding:4px 12px 4px 14px;
+}
+h2{font-size:clamp(24px,3.4vw,34px); font-weight:normal; letter-spacing:.12em}
+p.body{margin:0 0 18px; color:#cfcac0; font-size:16px}
+p.body b{color:var(--paper); font-weight:normal}
+em{font-style:normal; color:var(--red2)}
+.qv{color:var(--red2); border-bottom:1px dotted rgba(192,69,60,.5)}
+.src{display:block; margin:10px 0 20px; font-size:12.5px; color:var(--faint); letter-spacing:.06em}
+
+/* 引文卡 */
+.q{
+  background:#201f1c; border-left:3px solid var(--red);
+  padding:20px 24px; margin:6px 0 22px; position:relative;
+}
+.q p{color:var(--paper); font-size:16.5px; letter-spacing:.06em}
+.q .who{display:block; font-size:12px; letter-spacing:.24em; color:var(--red2); margin-bottom:8px}
+.qi{
+  background:#201f1c; border-left:3px solid var(--red);
+  padding:14px 20px; margin:0 0 2px;
+}
+.qi p{color:var(--paper); font-size:15.5px}
+.qi.inl{
+  display:inline; background:none; border:none; border-bottom:1px dotted rgba(192,69,60,.5);
+  padding:0; margin:0; color:var(--red2);
+}
+.zchip.qi{background:none; padding:3px 10px; margin:0}
+.lrow .qi{background:none; border:none; padding:0; margin:0; display:inline; color:var(--paper)}
+.hidden .qi{background:none; border:none; padding:0; margin:0; display:inline; color:inherit}
+.vpoem.q{background:none; border:none; padding:0; margin:0}
+.qstack{margin:6px 0 22px}
+.qnote{
+  font-size:12.5px; color:var(--dim); background:rgba(232,228,220,.05);
+  border:1px dashed var(--line); padding:10px 14px; margin:-8px 0 22px;
+}
+
+/* 军筹 */
+.tallies{display:flex; flex-wrap:wrap; gap:12px; margin:24px 0 8px}
+.tally{
+  border:1px solid var(--line); padding:10px 16px; min-width:96px; text-align:center;
+}
+.tally b{display:block; font-size:26px; color:var(--red2); font-weight:normal}
+.tally i{font-style:normal; font-size:12px; color:var(--dim); letter-spacing:.14em}
+
+/* 两把尺子 */
+.rulers{margin:30px 0 8px; border:1px solid var(--line); padding:26px 20px 20px; position:relative}
+.ruler{margin-bottom:26px}
+.ruler h4{font-size:12px; letter-spacing:.3em; color:var(--dim); font-weight:normal; margin-bottom:10px}
+.rticks{display:flex; align-items:flex-end; gap:0; height:44px; position:relative}
+.rtick{flex:1; border-left:1px solid var(--faint); position:relative}
+.rtick::after{content:""; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--faint)}
+.rtick span{
+  position:absolute; bottom:8px; left:6px; font-size:11.5px; color:#bdb7ab; white-space:nowrap; letter-spacing:.04em;
+}
+.ruler.real .rticks{height:56px}
+.ruler.real .gapzone{position:absolute; bottom:0; height:30px;
+  background:repeating-linear-gradient(135deg, rgba(192,69,60,.16) 0 6px, rgba(192,69,60,0) 6px 12px);
+  border-left:1px dashed var(--red); border-right:1px dashed var(--red);
+}
+.gapnote{
+  display:none; margin-top:14px; font-size:13.5px; color:var(--red2);
+  border-top:1px dashed var(--line); padding-top:12px;
+}
+.rulers.open .gapnote{display:block}
+.gapbtn{
+  margin-top:6px; background:none; border:1px dashed var(--red); color:var(--red2);
+  font-family:inherit; font-size:12.5px; letter-spacing:.2em; padding:6px 14px; cursor:pointer;
+}
+
+/* 三碗饭 */
+.bowls{display:flex; flex-direction:column; gap:2px; margin:6px 0 4px}
+
+/* 卦谜 */
+.gua{display:flex; gap:14px; margin:0 0 22px; flex-wrap:wrap}
+.guacard{
+  flex:1 1 180px; border:1px solid var(--line); padding:16px; text-align:center;
+}
+.guacard .sym{font-size:56px; line-height:1.2; color:var(--red2)}
+.guacard .nm{font-size:13px; color:var(--dim); letter-spacing:.2em; margin-top:6px}
+.guacard .lost{color:var(--faint)}
+.guacard .tag{font-size:11px; color:var(--bg); background:var(--gold); padding:1px 8px; letter-spacing:.2em}
+
+/* 装备 */
+.gear{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:6px 0 14px}
+@media (max-width:640px){ .gear{grid-template-columns:repeat(2,1fr)} }
+.gearc{
+  border:1px solid var(--line); padding:14px 12px; cursor:pointer; text-align:center;
+  transition:all .25s; user-select:none;
+}
+.gearc .g{font-size:20px; display:block; margin-bottom:4px}
+.gearc .t{font-size:13.5px; color:#cfcac0; letter-spacing:.1em}
+.gearc.on{border-color:var(--red); background:rgba(192,69,60,.1); box-shadow:0 0 18px rgba(192,69,60,.18)}
+.gearc.on .t{color:var(--paper)}
+.gearnote{min-height:44px; font-size:13px; color:var(--dim); margin-bottom:20px}
+.gearnote b{color:var(--red2); font-weight:normal}
+
+/* 战书 */
+.packet{margin:10px 0 24px; perspective:900px}
+.pflap{
+  height:58px; border:1px solid var(--line); border-bottom:none; cursor:pointer;
+  background:#211f1c; display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px; font-size:13.5px; color:var(--dim); letter-spacing:.2em;
+  transform-origin:top; transition:transform .6s, opacity .5s;
+}
+.pflap::before{content:"封"; color:var(--red); border:1px solid var(--red); padding:2px 8px; font-size:12px}
+.packet.open .pflap{transform:rotateX(64deg); opacity:.25}
+.pletter{border:1px solid var(--line); border-top:none; padding:22px; display:none; position:relative}
+.packet.open .pletter{display:block}
+.stamp{
+  position:absolute; right:18px; top:14px; color:var(--red); border:2px solid var(--red);
+  font-size:22px; letter-spacing:.2em; padding:4px 10px; transform:rotate(-12deg) scale(0);
+  transition:transform .3s cubic-bezier(.2,2,.4,1) .45s;
+}
+.packet.open .stamp{transform:rotate(-12deg) scale(1)}
+
+/* 阵谱 */
+.zhenlist{display:flex; flex-wrap:wrap; gap:8px; margin:4px 0 22px}
+.zchip{border:1px solid var(--line); font-size:13px; padding:3px 10px; color:#c4beb1; letter-spacing:.08em}
+.zchip.hot{border-color:var(--red); color:var(--red2)}
+
+/* 击鼓对垒 */
+.drumbox{border:1px solid var(--line); padding:22px; margin:6px 0 24px}
+.drumrow{display:flex; align-items:center; justify-content:center; gap:16px; min-height:74px}
+.dside{flex:1; text-align:center}
+.dside .who{font-size:11px; letter-spacing:.3em; color:var(--dim); display:block; margin-bottom:4px}
+.dside .zn{font-size:clamp(18px,2.6vw,24px); letter-spacing:.1em; color:var(--paper); opacity:0; transition:opacity .4s}
+.dside .zn.show{opacity:1}
+.dside .zn.mystery{color:var(--red2); text-shadow:0 0 16px rgba(192,69,60,.5)}
+.drummid{flex:none; font-size:12px; color:var(--faint); letter-spacing:.1em}
+.drumctl{display:flex; justify-content:center; margin-top:16px}
+.drum{
+  background:none; border:1px solid var(--red); color:var(--red2); cursor:pointer;
+  font-family:inherit; font-size:14px; letter-spacing:.3em; padding:10px 26px 10px 30px;
+}
+.drum:disabled{opacity:.35; cursor:default}
+.dverdict{text-align:center; font-size:13px; color:var(--dim); margin-top:12px; min-height:22px}
+
+/* 破阵咒 */
+.chantbox{border:1px solid var(--line); padding:24px; margin:6px 0 24px; position:relative; overflow:hidden}
+.mist{
+  position:absolute; inset:0; pointer-events:none; transition:opacity 2.2s;
+  background:
+    radial-gradient(40% 60% at 22% 60%, rgba(10,10,10,.96), rgba(10,10,10,0) 70%),
+    radial-gradient(46% 64% at 66% 40%, rgba(12,12,11,.94), rgba(12,12,11,0) 70%),
+    radial-gradient(30% 50% at 44% 80%, rgba(8,8,8,.9), rgba(8,8,8,0) 70%);
+}
+.chantbox.clear .mist{opacity:0}
+.chantreveal{opacity:0; transition:opacity 1.8s ease .6s; position:relative; z-index:2}
+.chantbox.clear .chantreveal{opacity:1}
+.chantctl{display:flex; align-items:center; gap:16px; margin-top:16px; position:relative; z-index:2}
+.chantbtn{
+  background:none; border:1px solid var(--paper); color:var(--paper); cursor:pointer;
+  font-family:inherit; font-size:14px; letter-spacing:.26em; padding:10px 22px 10px 26px;
+}
+.meter{flex:1; height:6px; background:rgba(232,228,220,.1); position:relative}
+.meter i{position:absolute; inset:0; right:100%; background:var(--red); transition:right .4s}
+.chantcnt{font-size:12.5px; color:var(--dim); letter-spacing:.14em}
+
+/* 对读账 */
+.ledger{border:1px solid var(--line); margin:6px 0 24px}
+.lrow{display:grid; grid-template-columns:1.1fr 1fr 1.3fr; border-bottom:1px solid var(--line)}
+.lrow:last-child{border-bottom:none}
+.lrow>div{padding:14px 16px; font-size:13.5px; color:#cfcac0}
+.lrow .h{background:rgba(232,228,220,.05); color:var(--dim); font-size:12px; letter-spacing:.2em}
+.lrow b{color:var(--paper); font-weight:normal; display:block; margin-bottom:4px}
+.lrow .mid{border-left:1px solid var(--line); border-right:1px solid var(--line)}
+@media (max-width:680px){ .lrow{grid-template-columns:1fr} .lrow .mid{border:none; border-top:1px solid var(--line); border-bottom:1px solid var(--line)} }
+
+/* 尾屏 */
+.tail{
+  margin-top:70px; border-top:1px solid var(--line);
+  padding:80px 22px 60px; position:relative; overflow:hidden;
+}
+.tailin{max-width:880px; margin:0 auto; display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap}
+.vpoem{
+  writing-mode:vertical-rl; text-orientation:upright; margin-left:auto;
+  font-size:clamp(20px,3vw,30px); letter-spacing:.34em; line-height:2; color:var(--paper);
+}
+.tailmeta{flex:1 1 300px}
+.tailmeta .seal2{
+  display:inline-grid; grid-template-columns:1fr 1fr; width:76px; height:76px;
+  border:2px solid var(--red); color:var(--red); font-size:24px; margin-bottom:22px;
+}
+.tailmeta .seal2 span{display:flex; align-items:center; justify-content:center}
+footer{max-width:880px; margin:0 auto; padding:0 22px 60px; position:relative}
+.fnotes{font-size:12.5px; color:var(--faint); line-height:2.1; border-top:1px dashed var(--line); padding-top:20px}
+.fnotes a{color:var(--dim)}
+.hidden{position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01s !important; transition-duration:.01s !important}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span>殆知阁导读 · <b id="pianhao">三六三</b></span>
+  <span>元至治刊 · 全相平话五种</span>
+</div>
+
+<nav class="rail" aria-label="章节">
+  <a href="#s1" title="话说是本什么书"></a>
+  <a href="#s2" title="金台先斗一口闲气"></a>
+  <a href="#s3" title="无道之君的三碗饭"></a>
+  <a href="#s4" title="卦里藏着一场大火"></a>
+  <a href="#s5" title="超自然加时赛"></a>
+  <a href="#s6" title="抄史的手筋"></a>
+</nav>
+
+<header class="hero" id="hero">
+  <div class="sky"></div>
+  <svg class="scene" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs><filter id="fblur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="7"/></filter></defs>
+    <g class="stars">
+      <circle class="star" cx="140" cy="90" r="1.3"/><circle class="star" cx="320" cy="60" r="1"/>
+      <circle class="star" cx="520" cy="110" r="1.4"/><circle class="star" cx="760" cy="70" r="1"/>
+      <circle class="star" cx="940" cy="130" r="1.2"/><circle class="star" cx="1100" cy="80" r="1"/>
+      <circle class="star" cx="620" cy="40" r="1.1"/><circle class="star" cx="60" cy="170" r="1"/>
+    </g>
+    <line x1="0" y1="470" x2="1200" y2="470" stroke="#2c2a25" stroke-width="2"/>
+    <rect x="0" y="470" width="1200" height="150" fill="#151513"/>
+    <!-- 即墨城 -->
+    <g fill="#26241f">
+      <rect x="60" y="392" width="300" height="80"/>
+      <rect x="60" y="380" width="24" height="14"/><rect x="108" y="380" width="24" height="14"/>
+      <rect x="156" y="380" width="24" height="14"/><rect x="204" y="380" width="24" height="14"/>
+      <rect x="252" y="380" width="24" height="14"/><rect x="300" y="380" width="24" height="14"/>
+      <path d="M188 472 v-52 a22 22 0 0 1 44 0 v52 z" fill="#101010"/>
+      <rect x="176" y="352" width="68" height="30"/>
+      <path d="M172 352 h76 l-10 -18 h-56 z" fill="#1d1b17"/>
+    </g>
+    <!-- 燕营 -->
+    <g class="camp">
+      <g class="tent" style="--fall:22deg"><path d="M850 470 l52 -64 l52 64 z" fill="#211f1a"/><line x1="902" y1="406" x2="902" y2="392" stroke="#3a3831" stroke-width="2"/></g>
+      <g class="tent" style="--fall:30deg"><path d="M980 470 l46 -56 l46 56 z" fill="#232019"/><line x1="1026" y1="414" x2="1026" y2="398" stroke="#3a3831" stroke-width="2"/></g>
+      <g class="tent" style="--fall:18deg"><path d="M1100 470 l40 -50 l40 50 z" fill="#211f1a"/></g>
+      <g class="campflag"><line x1="930" y1="392" x2="930" y2="330" stroke="#3a3831" stroke-width="2"/><path d="M930 330 h44 l-10 8 l10 8 h-44 z" fill="#312e28"/></g>
+      <g class="campflag"><line x1="1060" y1="398" x2="1060" y2="344" stroke="#3a3831" stroke-width="2"/><path d="M1060 344 h36 l-8 7 l8 7 h-36 z" fill="#312e28"/></g>
+    </g>
+    <g class="fires" filter="url(#fblur)">
+      <circle class="fire" cx="880" cy="452" r="16" fill="rgba(224,106,85,.5)"/>
+      <circle class="fire" cx="1000" cy="458" r="22" fill="rgba(192,69,60,.45)"/>
+      <circle class="fire" cx="1120" cy="452" r="14" fill="rgba(224,106,85,.5)"/>
+      <circle class="fire" cx="946" cy="466" r="10" fill="rgba(166,124,61,.5)"/>
+    </g>
+  </svg>
+
+  <div class="bulls" aria-hidden="true"></div>
+
+  <span class="vtitle vq" data-t="七国春秋平话">七国春秋平话</span>
+  <span class="vsub vq" data-t="元刊话本">乐毅图齐七国春秋后集</span>
+
+  <div class="seal" aria-hidden="true">
+    <span>七</span><span>复</span><span>十</span><span>城</span>
+  </div>
+
+  <div class="hero-ui">
+    <div class="kicker">元至治刊 建安虞氏 · 全相平话五种之一</div>
+    <button class="hint" id="ignite">点牛尾之火</button>
+    <div class="heropos">
+      <div class="q mini"><p>七雄战斗乱春秋，兵革相持不肯休；<br>专务霸强为上国，从兹安肯更尊周？</p></div>
+      <div class="q mini"><p>战国诸侯号七雄，干戈终日互相攻；<br>燕邦乐毅齐孙膑，谋略纵横七国中。</p></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="s1">
+  <div class="shead"><span class="schip">话说</span><h2>话说是本什么书</h2></div>
+  <p class="body">这是一册<b>元朝人摆的战国评书</b>。元至治年间（一三二一到一三二三），福建建安虞氏书坊刻了一套《全相平话五种》，半页版画半页文字，是现存很早的带版画讲史话本之一，五种今藏日本内阁文库，本册是其中第二种，全题《乐毅图齐七国春秋后集》。「后集」二字很有意思：它默认有一部讲孙庞斗智的「前集」，而前集没有传下来。于是开卷先用三百字把马陵道捉庞涓、报刖足之仇的旧账飞快赶完，像替没存下来的前集收了个尾，正文从齐王问政孟子讲起。</p>
+  <p class="body">据集藏话本类库本，去空白约三万五千八百字，分上中下三卷，每卷一万二千字上下。前两卷是<b>乐毅图齐</b>：燕昭王筑台招贤，乐毅挂帅，济西一鼓，连下七十城，齐湣王惨死即墨火起；卷下画风陡变，成了<b>孙膑破燕</b>：青牛讲和、迷魂阵、鬼谷先生下山，一路打到诸国进奉、众人封神。所以这册书其实是两本书缝在一起的：一半照着史书念，一半放开了编。</p>
+  <p class="body">先看一眼两把尺子。<span class="qi inl">孙乐相逢</span>照理隔着一整个时代：马陵之战在前三四一年，乐毅伐齐在前二八四年，中间五十七年。平话不管这个，让孙膑从马陵道一路活到火牛阵，全程在线。</p>
+  <div class="rulers" id="rulers">
+    <div class="ruler real">
+      <h4>真史这把尺</h4>
+      <div class="rticks">
+        <div class="rtick"><span>前341 马陵道</span></div>
+        <div class="rtick"></div>
+        <div class="gapzone" style="left:33.3%; width:33.4%"></div>
+        <div class="rtick"><span>五十七年，孙膑该百岁开外</span></div>
+        <div class="rtick"></div>
+        <div class="rtick"><span>前284 乐毅伐齐</span></div>
+      </div>
+    </div>
+    <div class="ruler">
+      <h4>平话这把尺</h4>
+      <div class="rticks">
+        <div class="rtick"><span>马陵旧账</span></div>
+        <div class="rtick"><span>伐燕救父</span></div>
+        <div class="rtick"><span>金台拜帅</span></div>
+        <div class="rtick"><span>七十城</span></div>
+        <div class="rtick"><span>火牛阵</span></div>
+        <div class="rtick"><span>鬼谷下山</span></div>
+      </div>
+    </div>
+    <button class="gapbtn" id="gapbtn">看这个时差怎么办</button>
+    <div class="gapnote">不办。平话的七国是个玩具箱：孙膑诈死又复生，白起来讨七国将印，吴起的两个儿子一个叫吴广一个叫吴能，孟尝君的门客冯欢和平原君的门客毛遂同框押队，末了鬼谷先生和黄伯杨两位老神仙亲自下场。真史只负责提供骨架和几句好台词。</div>
+  </div>
+  <p class="body">再听一眼它的<b>说书引擎</b>。转场靠「却说」，卖关子靠反问，掉书袋靠塞诗。顺手数了几处：</p>
+  <div class="tallies">
+    <div class="tally"><b>44</b><i>却说</i></div>
+    <div class="tally"><b>34</b><i>诗曰</i></div>
+    <div class="tally"><b>15</b><i>性命如何</i></div>
+    <div class="tally"><b>9</b><i>怎见得</i></div>
+    <div class="tally"><b>7</b><i>且看</i></div>
+    <div class="tally"><b>2</b><i>有诗为证</i></div>
+    <div class="tally"><b>2</b><i>正传</i></div>
+  </div>
+  <span class="src">计数经脚本在本册库本检索复核。「性命如何」十五见，是全书最常用的扣子：每次刀斧手抡起家伙，正文必先问一句。</span>
+</section>
+
+<section id="s2">
+  <div class="shead"><span class="schip">却说</span><h2>金台先斗一口闲气</h2></div>
+  <p class="body">五国伐齐的战因，平话给出的是<b>一条舌头的闲气</b>。乐毅下山谋主，路上遇见孙子，两人寒暄。孙子劝他：燕国不可辅佐，顺嘴把自己破魏擒涓的功业摆了一遍。乐毅背后嘟囔一句：你不过是吃过刖足的亏罢了。一首诗把梁子结死：</p>
+  <div class="q"><p>孙乐相逢话已投，一来一往志难侔。<br>谁知乐毅扶燕后，翻作庞涓刖足仇。</p></div>
+  <p class="body">于是乐毅先投齐，湣王一句「太平要征夫做什么」把他顶了回去；再投魏；听说燕昭王<span class="qi inl">卑身厚币以招贤者</span>，连夜奔燕。黄金台这一段，是全书抄史抄得最亮的场合。郭隗给昭王讲千金市骨：</p>
+  <div class="qstack">
+    <div class="qi"><p>死马且买之，况生者乎！马今至矣。</p></div>
+    <div class="qi"><p>今王必欲致士，先从隗始。况贤于隗者，岂远千里哉？</p></div>
+  </div>
+  <div class="qnote">《战国策·燕策》原文更长，平话把五百金、涓人这些枝叶剪掉，只留最响的两句。又按：《策》只说昭王「为隗筑宫而师之」，筑台置千金是后世越筑越高的传说，平话照单全收，还配了一篇托名「徐景山」的黄金台赋，来历成谜。</div>
+  <p class="body">拜帅的排场也齐全：问天一卜，<span class="qi inl">果是龙马生其一角</span>，再下三尺甘雨，君臣捧毂推轮，乐毅挂印，还要了先斩后奏的誓剑。济西一鼓破齐之后，副元帅剧辛劝他见好就收，先抢边城；乐毅答了一段全书文言味最正的话：</p>
+  <div class="q"><span class="who">剧辛问</span><p>齐大燕小，赖诸侯之助，以破其军。宜及时收取其边城，以益燕国，此长久之利也。</p></div>
+  <div class="q"><span class="who">乐毅答</span><p>齐王伐功矜能，谋不逮下，废黜贤良，信任谄谀，政令乖戾，百姓弗堪。今因其败而进攻之，其民必叛，而齐可图也。</p></div>
+  <div class="qnote">这一问一答与《资治通鉴》周赧王三十一年所记几乎逐字相合（通鉴作「政令戾虐，百姓怨怼」，平话小异），等于把编年史的台词直接搬上书场。</div>
+</section>
+
+<section id="s3">
+  <div class="shead"><span class="schip">话说</span><h2>无道之君的三碗饭</h2></div>
+  <p class="body">七十城陷落后，齐湣王逃难。平话给这位亡国之君安排了三顿饭，<b>每一碗都吃在道德判词里</b>。第一碗，淄河边洗衣妇人给的：</p>
+  <div class="q"><p>王曰：“我乃是齐王也。”妇人言曰：“可惜饭与这无道之君吃！”</p></div>
+  <p class="body">第二碗，躲进上大夫苏代家里，苏代的老母亲亲自端出来，又亲自骂回去：</p>
+  <div class="q"><p>待不吃，腹内饥渴；待吃，君子不吃挨赖之食。齐王烦恼下泪。</p></div>
+  <p class="body">第三碗没吃完，燕兵围了庄。书里还有第四位妇女的场面话，是王孙贾的母亲。王孙贾跟随的齐王失踪，母亲一句话把儿子重新推上街市，后来他袒右臂聚众，手刃了卖主的淖齿：</p>
+  <div class="q"><span class="who">贾母</span><p>汝朝出而晚来，则吾倚门而望；汝暮出而不还，则吾倚闾而望。汝今事王，王出走，汝至知其处，汝尚何归焉？</p></div>
+  <p class="body">平话的史论不放在朝堂上，全放在灶台边。而湣王真正的死讯，用的是全书抄史最密的一段，楚将淖齿当着他的面问了三次<span class="qi inl">王知之乎</span>：</p>
+  <div class="q"><span class="who">淖齿数王</span><p>千乘、博昌之间，方数百里，雨血沾衣，王知之乎？”齐王曰：“知之。”齿曰；“嬴、博之间，地坼及泉，王知之乎？”王曰：“知之。”齿曰：“有人当阙而哭者，求之不得，去则闻其声，王知之乎？”王曰：“知之。”齿曰：“雨血者，天以告也；地坼者，地以告也；当阙而哭者，人以告也。而王不戒焉，何得无诛！</p></div>
+  <div class="qnote">校字记：这段的祖本是《战国策·齐策》，但《策》里齐王三次都答「不知」，到《资治通鉴》才改成「知之」，平话抄的是通鉴一系。一字之差，罪名从「昏聩不悟」变成「明知故犯」。库本「齿曰；」一处逗号作分号，前后「王曰」「齐王曰」称谓不一，均照录。</div>
+  <p class="body">齐王落到淖齿手里，献给乐毅，乐毅数他三罪，行刑的场面极烈，不引。倒是其后一笔有真光：燕军过画邑，闻处士王烛贤，下令环画三十里之内不得入，请他出来做官。王烛答：</p>
+  <div class="q"><p>吾闻忠臣不事二君，烈女不更二夫。齐王不用吾谏，吾退耕于野，国破君亡，吾不能存，而又欲劫之以兵；与其不义而生，不若死！</p></div>
+  <p class="body">遂自经。乐毅备下衣衾棺椁，把他好好安葬了，随后整军禁掠，祀桓公管仲，宽赋除暴。<em>《史记》此处作「贞女不更二夫」，结尾作「固不如烹」</em>，平话换字改句，气口更急，是说书人自己的嗓子。</p>
+</section>
+
+<section id="s4">
+  <div class="shead"><span class="schip">且看</span><h2>卦里藏着一场大火</h2></div>
+  <p class="body">乐毅围即墨莒城三年不下。平话在这里改写了一个关键人物：史书里给燕惠王进反间的是田单，平话让<b>孙子亲自跑到燕国去使坏</b>，把乐毅换成骑劫。乐毅接诏大怒，说了句<span class="qi inl">正中瘸汉之计</span>，只能回朝。另一头，即墨城里众公子写信去云梦山请孙子出山，孙子不来，只回了一封信，信上<span class="qi inl">只画得二个卦</span>：</p>
+  <div class="gua">
+    <div class="guacard">
+      <div class="sym lost">■■</div>
+      <div class="nm">库本缺字</div>
+      <div class="nm">页面补画 ☲ 离为火</div>
+    </div>
+    <div class="guacard">
+      <div class="sym lost">■■</div>
+      <div class="nm">库本缺字</div>
+      <div class="nm">页面补画 ☵上☳下 解</div>
+    </div>
+  </div>
+  <div class="q"><p>上卦‘■■’乃离卦，离为火；下卦‘■■’解卦，解字乃牛角上安刀，此是火牛阵也。</p></div>
+  <div class="qnote">库本这封信恰好缺了两个卦象，缺字方块照录；离上坎下震动的「解」卦，页面替库本补画。以卦谜传军机，是说书人的手筋，也是这册书最漂亮的一处机关。</div>
+  <p class="body">卦谜解开，即墨城里开始<b>武装一千多头牛</b>。装备清单是全书描写最卖力的一段：</p>
+  <div class="q"><p>即墨城里构刷上等庄家好牛，得一千余只，于牛角上施枪，腿上安刃，尾上扎火把，膏油灌于其上；又用青红被缠于牛身上，画五采龙文；头上戴龙膝面具；颔下戴鼓，鼓里盛着铁球子，摇响如雷。</p></div>
+  <div class="gear" id="gear">
+    <div class="gearc"><span class="g">↟</span><span class="t">牛角施枪</span></div>
+    <div class="gearc"><span class="g">⇂</span><span class="t">腿上安刃</span></div>
+    <div class="gearc"><span class="g">✦</span><span class="t">尾扎火把</span></div>
+    <div class="gearc"><span class="g">◈</span><span class="t">五采龙文被</span></div>
+    <div class="gearc"><span class="g">◐</span><span class="t">龙膝面具</span></div>
+    <div class="gearc"><span class="g">◉</span><span class="t">颈鼓铁球</span></div>
+  </div>
+  <div class="gearnote" id="gearnote">逐件点开看门道。</div>
+  <p class="body">牛备好了，还要下战书。这份战书是全书最好笑的文书：</p>
+  <div class="packet" id="packet">
+    <div class="pflap" id="pflap">即墨田单，致燕营骑劫：今夜有客，望批回执</div>
+    <div class="pletter">
+      <div class="q"><p>吾今用上等剑客，担住云，表申东海龙王请五百条毒龙，今晚来到，共你大战。</p></div>
+      <div class="q"><p>骑劫即时批了战书曰：“依命。”</p></div>
+      <div class="stamp">依命</div>
+    </div>
+  </div>
+  <p class="body">把火牛阵写成东海龙王借兵，对面居然盖了章。是夜城头鼓响，千道火起，牛群裹着龙文被冲进燕营，燕兵只当真是龙喷火，弃甲而走。书里引胡曾咏史诗收这场大火：</p>
+  <div class="q"><p>即墨门开纵火牛，燕师营里血波流；<br>固存不得田单术，齐国寻城一土丘。</p></div>
+  <p class="body">骑劫单马逃回燕国，被燕王斩了。田单复七十余城，封安平君。按理书到这里就该完了。</p>
+</section>
+
+<section id="s5">
+  <div class="shead"><span class="schip">却说</span><h2>卷下：超自然加时赛</h2></div>
+  <p class="body">平话偏不收场。乐毅借来五十万大军卷土重来，孙子单人独骑，青牛双拐，进了燕营谈判。他给自己算的账是这样：</p>
+  <div class="q"><p>你不敢杀我，百万军中，我杀你，万载标名；你杀我，千年骂名。</p></div>
+  <p class="body">谈不拢，就赛阵。全书点名之阵<b>十九种</b>：</p>
+  <div class="zhenlist">
+    <span class="zchip qi">七星八斗阵</span><span class="zchip qi">六十四卦阵</span><span class="zchip qi">黑杀天王阵</span><span class="zchip qi">五虎靠山阵</span><span class="zchip qi">靠山白虎阵</span><span class="zchip qi">青龙出水阵</span><span class="zchip qi">金关铁锁阵</span><span class="zchip qi">三才阵</span><span class="zchip qi">九天玄女阵</span><span class="zchip qi">混天一气阵</span><span class="zchip qi">八卦阵</span><span class="zchip qi">火牛阵</span><span class="zchip qi">毒龙喷火阵</span><span class="zchip qi">六龙出水阵</span><span class="zchip qi">白虎阵</span><span class="zchip qi">众星捧月阵</span><span class="zchip qi">四斗临水河流阵</span><span class="zchip qi">八卦分位阵</span><span class="zchip hot qi">迷魂阵</span>
+  </div>
+  <p class="body">孙子连破数阵，乐毅把师父黄伯杨搬下山来，布下全书最狠的一阵。狠不在杀，在厌胜：</p>
+  <div class="q"><p>向燕阵中列八足马四疋；怀胎妇人各用七个取胎，埋于七处；四角头埋四面日月七星旗；阴阳不辨，南北不分；此为迷魂阵。若是打阵入来，直至死不能得出。</p></div>
+  <div class="q"><span class="who">张左君解阵</span><p>此者迷魂阵，使八足马，七个怀身妇人，埋在日月旗下，反阴作阳。</p></div>
+  <p class="body">张左君又说，此阵<span class="qi inl">出在阴书第十三篇中</span>。</p>
+  <p class="body">阵里困住了袁达、李牧他们，连孙子共四人，一困月余。解铃还须系铃人，救兵去云梦山请鬼谷先生。老神仙先摆了一路谱：<span class="qi inl">吾是楚国之民，不受齐王水土</span>，被苏代再三苦请，这才坐上双虎车下山。接下来是卷下最好看的一场戏，两位老神仙阵前互报名阵，像两个门派对暗号：</p>
+  <div class="drumbox">
+    <div class="drumrow">
+      <div class="dside"><span class="who">鬼谷布阵</span><span class="zn" id="za"></span></div>
+      <div class="drummid">对</div>
+      <div class="dside"><span class="who">伯杨看阵</span><span class="zn" id="zb"></span></div>
+    </div>
+    <div class="dverdict" id="dverdict">击鼓，看两位老神仙斗阵。</div>
+    <div class="drumctl"><button class="drum" id="drum">击鼓</button></div>
+  </div>
+  <p class="body">斗到最后一阵，轮到孙子看，他认输认得很诚实：</p>
+  <div class="q"><p>吾师曾交我，吾嫌不好，不学。即今悔之晚矣。</p></div>
+  <p class="body">年轻时不肯学的功课，成了一百日之灾。解开这场灾的是一本失而复得的参考书：鬼谷的三卷阴书早年借给终南山张晃，张晃洞中失窃，正发愁，一个渔叟在沧河钓鱼捡到仙鹤遗书，送上门来。有诗为证：</p>
+  <div class="q"><p>三卷阴书洞中失，岂知渔叟送将来！</p></div>
+  <p class="body">依书破阵，用桃枝五色绒线，七员小将披头仗剑，先取厌物，再念咒。咒只十四个字，一共念七遍，<b>点满七遍，阵里的黑气就散了</b>：</p>
+  <div class="chantbox" id="chantbox">
+    <div class="mist"></div>
+    <div class="chantreveal">
+      <div class="q"><p>天灵灵，地灵灵，新草生，解迷魂！</p></div>
+      <div class="q"><p>虎脱槛车逞牙爪，龙离铁网长精神；<br>恨心不舍攻燕国，活捉伯杨乐毅身！</p></div>
+    </div>
+    <div class="chantctl">
+      <button class="chantbtn" id="chantbtn">念咒</button>
+      <div class="meter"><i id="meter"></i></div>
+      <span class="chantcnt" id="chantcnt">已念 0 遍，须七遍</span>
+    </div>
+  </div>
+  <p class="body">孙子灾满出阵，五国合兵，白起、乐毅、黄伯杨都遭擒。收场的方式很有平话特色：四国每家赔十万贯金宝，给齐王赈济百姓；阵亡小将李虎被鬼谷当场「立化」，封作城隍土地，立庙为神；黄伯杨封回风仙人，乐毅封奉圣仙人，鬼谷封普惠仙人，各自还山。<b>「天下太平」是靠一笔赔偿金和一场集体封神凑出来的。</b></p>
+</section>
+
+<section id="s6">
+  <div class="shead"><span class="schip">有诗为证</span><h2>抄史的手筋</h2></div>
+  <p class="body">最后把这本平话的<b>底料来源</b>摆上台面。它的作者案头明显摊着史书，抄得理直气壮，文中还两处自标「正传」二字，恰都落在抄史最紧的关口。随手对了几笔账：</p>
+  <div class="ledger">
+    <div class="lrow"><div class="h">平话这一段</div><div class="h mid">从哪里来</div><div class="h">改了什么</div></div>
+    <div class="lrow">
+      <div><b>淖齿三问，齐王答「知之」三见</b>地字句与结句均同通鉴</div>
+      <div class="mid">《资治通鉴》周赧王三十一年</div>
+      <div>几乎照搬；而《战国策·齐策》原作「不知」三见、地坼至泉。罪名因此由昏聩改判明知故犯</div>
+    </div>
+    <div class="lrow">
+      <div><b class="qi">伐功矜能</b>、<b class="qi">谋不逮下</b>，乐毅答剧辛</div>
+      <div class="mid">同在《通鉴》该年</div>
+      <div>仅「政令戾虐，百姓怨怼」改作「<span class="qi">政令乖戾，百姓弗堪</span>」两个词</div>
+    </div>
+    <div class="lrow">
+      <div><b>王烛自经：</b><b class="qi">忠臣不事二君</b></div>
+      <div class="mid">《史记·田单列传》</div>
+      <div>《史记》作「贞女」，结句「固不如烹」；平话作「烈女」「不若死」，换了字，也换了嗓子</div>
+    </div>
+    <div class="lrow">
+      <div><b>郭隗千金市骨，乐毅自魏往</b></div>
+      <div class="mid">《战国策·燕策》</div>
+      <div>剪去五百金、涓人枝叶；「筑宫而师之」放大成筑台置千金</div>
+    </div>
+  </div>
+  <p class="body">对完账回头看，这本书的读法就清楚了：<b>历史给骨架和台词，说书人给血肉和嗓门</b>。通鉴的句子负责庄严，平话的舌头负责热闹；庄严的部分经得起对读，热闹的部分经得起大笑。两头都成立，是讲史平话最高的手艺。</p>
+</section>
+
+</main>
+
+<div class="tail">
+  <div class="tailin">
+    <div class="tailmeta">
+      <div class="seal2" aria-hidden="true">
+        <span>千</span><span>复</span><span>古</span><span>城</span>
+      </div>
+      <p class="body">七十城复了。一册元朝书坊里的战国，火是真火，牛是真牛，龙是借来的龙，史是抄来的史。孙膑活了一百岁，只为等这场夜里的火。</p>
+      <div class="tallies" style="margin-top:18px">
+        <div class="tally"><b>3</b><i>卷</i></div>
+        <div class="tally"><b>19</b><i>点名之阵</i></div>
+        <div class="tally"><b>15</b><i>扣子问句</i></div>
+        <div class="tally"><b>13</b><i>缺字方块</i></div>
+      </div>
+    </div>
+    <div class="vpoem q"><p>纵横斗智乐孙辈，青史昭垂万世名。</p></div>
+  </div>
+</div>
+
+<footer>
+  <div class="fnotes">
+    文本来源：殆知阁简体库〈集藏话本类〉<span class="vq">七国春秋平话</span>，书目见 <span class="mono">github.com/robertsong/daizhige-daodu</span> 仓库；刊本信息参〈全相平话五种〉通行著录。<br>
+    引文经脚本与库内文件去标点归一逐字比对通过；白话叙述经六字窗反扫，无原文连串。<br>
+    本书为元代讲史话本，人事多虚，与史无涉；且含旧时观念与酷烈笔墨，阅读请以时代眼光视之。
+  </div>
+</footer>
+
+<div class="hidden" id="vault">
+  <span class="qi">六龙出水阵</span><span class="qi">白虎阵</span><span class="qi">众星捧月阵</span><span class="qi">四斗临水河流阵</span><span class="qi">混天一气阵</span><span class="qi">八卦分位阵</span>
+</div>
+
+<script>
+(function(){
+  var hero=document.getElementById('hero');
+
+  // 牛群剪影
+  var bullSVG='<svg width="120" height="76" viewBox="0 0 120 76">'
+    +'<path class="bodyline" d="M30 38 q28 -20 62 -12"/>'
+    +'<path d="M14 52 l4 -14 q2 -8 12 -10 l8 -12 6 2 -4 12 q34 -8 58 2 l4 8 12 2 2 8 -10 4 q-2 10 -12 10 l-2 14 h-8 l-2 -12 h-30 l-2 12 h-8 l-2 -12 q-16 0 -20 -6 z"/>'
+    +'<path d="M10 30 l-8 -8 10 -2 4 8 z"/>'
+    +'<circle cx="30" cy="38" r="2" fill="#c0453c"/>'
+    +'<g class="torch"><rect x="92" y="18" width="4" height="14" fill="#5a452a"/>'
+    +'<path d="M94 6 q8 8 0 16 q-8 -8 0 -16" fill="#e06a55"/>'
+    +'<path d="M94 10 q4 5 0 10 q-4 -5 0 -10" fill="#a67c3d"/></g>'
+    +'</svg>';
+
+  var bulls=document.querySelector('.bulls');
+  var N=8, sizes=[.55,.7,.62,.85,.75,1,.68,.9], delays=[0,.25,.5,.7,.95,1.2,1.45,1.7], durs=[2.6,2.9,2.7,3.1,2.8,3.2,2.9,3.3];
+  for(var i=0;i<N;i++){
+    var d=document.createElement('div');
+    d.className='bull';
+    d.style.bottom=(4+Math.random()*36)+'%';
+    d.style.transform='scale('+sizes[i]+')';
+    d.style.animationDuration=durs[i]+'s';
+    d.style.animationDelay=(delays[i]+.15)+'s';
+    d.innerHTML=bullSVG;
+    bulls.appendChild(d);
+  }
+  // 首屏的领头牛（未点燃，可点）
+  var lead=document.createElement('div');
+  lead.className='bull';
+  lead.style.bottom='2%'; lead.style.left='4vw'; lead.style.transform='scale(1.25)';
+  lead.style.opacity='1'; lead.style.transition='opacity .3s';
+  lead.innerHTML=bullSVG.replace('class="torch"','class="torch unlit"');
+  lead.style.cursor='pointer';
+  bulls.appendChild(lead);
+
+  var ignited=false;
+  function go(){
+    if(ignited) return; ignited=true;
+    lead.style.opacity='0';
+    hero.classList.add('go');
+    try{ history.replaceState(null,'','#hero'); }catch(e){}
+  }
+  document.getElementById('ignite').addEventListener('click',go);
+  lead.addEventListener('click',go);
+
+  // 右缘阵旗
+  var links=document.querySelectorAll('.rail a');
+  var secs=[].map.call(links,function(a){return document.querySelector(a.getAttribute('href'))});
+  function rail(){
+    var y=window.scrollY+window.innerHeight*0.4, idx=-1;
+    secs.forEach(function(s,i){ if(s && s.offsetTop<=y) idx=i; });
+    links.forEach(function(a,i){ a.classList.toggle('on',i===idx); });
+  }
+  window.addEventListener('scroll',rail); rail();
+
+  // 时差
+  document.getElementById('gapbtn').addEventListener('click',function(){
+    document.getElementById('rulers').classList.toggle('open');
+  });
+
+  // 装备拆解
+  var notes=[
+    '枪绑在角上：冲营时第一接触点，平话所谓「施枪」，是从真实火牛传说里长出来的细节。',
+    '刀刃绑在小牛腿侧：牛矮兵高，刃口专挑马腿与脚踝，等于给牛群配了步兵的活儿。',
+    '尾上扎火把膏油灌之：点火在尾不在背，烧痛了牛才往前冲，方向由城门统一放出。',
+    '青红被画五采龙文：夜里看不清牛，只看得清「龙」，这是给对面准备的视觉欺诈。',
+    '面具：库本作「龙膝面具」，疑为「龙虎」之讹，照录存疑。作用同龙文被，把牛伪装成怪兽。',
+    '颔下鼓内盛铁球：一千多头牛跑起来，鼓声铁球声如雷，燕营误以为后有大军压阵。'
+  ];
+  var gear=document.querySelectorAll('.gearc');
+  var gnote=document.getElementById('gearnote');
+  gear.forEach(function(c,i){
+    c.addEventListener('click',function(){
+      var on=c.classList.contains('on');
+      gear.forEach(function(x){x.classList.remove('on')});
+      if(!on){ c.classList.add('on'); gnote.innerHTML='<b>'+c.querySelector('.t').textContent+'：</b>'+notes[i]; }
+      else gnote.textContent='逐件点开看门道。';
+    });
+  });
+
+  // 战书
+  document.getElementById('pflap').addEventListener('click',function(){
+    document.getElementById('packet').classList.toggle('open');
+  });
+
+  // 击鼓对垒：回合数据取自隐藏 vault，避免 JS 字面量重复
+  var v=document.querySelectorAll('#vault .qi');
+  var rounds=[[v[0].textContent,v[1].textContent,'伯杨识得，变金关铁锁阵反困。'],
+              [v[2].textContent,v[3].textContent,'伯杨识得。'],
+              [v[4].textContent,v[5].textContent,'伯杨识得，斗成平手。'],
+              ['迷魂阵','','孙子不识，四人陷阵，百日之灾始。']];
+  var ri=-1, za=document.getElementById('za'), zb=document.getElementById('zb'),
+      dv=document.getElementById('dverdict'), drum=document.getElementById('drum');
+  drum.addEventListener('click',function(){
+    ri++;
+    if(ri>=rounds.length){ ri=rounds.length-1; }
+    var r=rounds[ri];
+    za.classList.remove('show'); zb.classList.remove('show');
+    void za.offsetWidth;
+    za.textContent=r[0]; zb.textContent=r[1]||'不识';
+    za.classList.add('show'); zb.classList.add('show');
+    zb.classList.toggle('mystery',!r[1]);
+    dv.textContent=(ri+1)+'／'+rounds.length+'阵：'+r[2];
+    if(ri===rounds.length-1){ drum.disabled=true; drum.textContent='阵毕'; }
+  });
+
+  // 破阵咒
+  var cnt=0, need=7;
+  var btn=document.getElementById('chantbtn'), met=document.getElementById('meter'),
+      cc=document.getElementById('chantcnt'), box=document.getElementById('chantbox');
+  btn.addEventListener('click',function(){
+    if(cnt>=need) return;
+    cnt++;
+    met.style.right=(100-cnt/need*100)+'%';
+    cc.textContent='已念 '+cnt+' 遍，'+(cnt<need?'须七遍':'黑气散了');
+    if(cnt>=need){
+      btn.disabled=true; btn.textContent='阵解';
+      box.classList.add('clear');
+    }
+  });
+})();
+</script>
+</body>
+</html>
