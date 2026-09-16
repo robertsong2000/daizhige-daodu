@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>丸经 · 捶丸场记 | 殆知阁导读 319</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #26251f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --bam: #5f9270; --bam-dim: rgba(95,146,112,0.35); --bam-faint: rgba(95,146,112,0.14);
+    --flag: #c0453c;
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+    padding-right: 56px;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  q { color: var(--paper); quotes: none; }
+  .sec { max-width: 860px; margin: 0 auto; padding: 90px 28px 20px; }
+  .stamp {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-size: 13px; letter-spacing: 0.3em; color: var(--bam);
+    border: 1px solid var(--bam-dim); padding: 6px 16px 6px 19px; margin-bottom: 34px;
+  }
+  .stamp::before { content: ""; width: 7px; height: 7px; background: var(--bam); }
+  h2 { font-size: 30px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 20px; }
+  h2 small { font-size: 14px; font-weight: 400; color: var(--paper-faint); letter-spacing: 0.2em; margin-left: 14px; }
+  .prose { color: var(--paper-dim); font-size: 16px; margin-bottom: 22px; }
+  .prose b { color: var(--paper); font-weight: 700; }
+  .quote {
+    border-left: 2px solid var(--bam-dim); padding: 4px 0 4px 20px; margin: 26px 0;
+    font-size: 16.5px; color: var(--paper);
+  }
+  .qnote { display: block; font-size: 12.5px; color: var(--paper-faint); margin-top: 6px; letter-spacing: 0.08em; }
+  .note-card {
+    background: var(--bam-faint); border: 1px solid var(--bam-dim);
+    padding: 16px 20px; font-size: 14.5px; color: var(--paper-dim); margin: 18px 0;
+  }
+  .note-card b { color: var(--bam); }
+
+  /* 首屏 */
+  .hero { min-height: 92dvh; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 20px; max-width: 1020px; margin: 0 auto; padding: 40px 28px 30px 40px; }
+  .hero-title { writing-mode: vertical-rl; font-size: clamp(88px, 13vw, 148px); font-weight: 700; letter-spacing: 0.22em; line-height: 1; }
+  .hero-title em { font-style: normal; color: var(--bam); }
+  .hero-right { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .field { width: 100%; max-width: 560px; display: block; }
+  .hero-sub { text-align: center; color: var(--paper-dim); font-size: 15px; letter-spacing: 0.12em; margin-top: 6px; }
+  .hero-sub .meta { display: block; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.24em; margin-top: 8px; }
+  .hero-verse { min-height: 30px; text-align: center; color: var(--bam); font-size: 15.5px; letter-spacing: 0.1em; opacity: 0; transition: opacity 0.9s ease; }
+  .hero-verse.show { opacity: 1; }
+  .down { text-align: center; color: var(--paper-faint); font-size: 12.5px; letter-spacing: 0.3em; margin-top: 26px; }
+  .down i { display: block; font-style: normal; font-size: 18px; animation: bob 2.2s infinite ease-in-out; }
+  @keyframes bob { 0%,100% { transform: translateY(0);} 50% { transform: translateY(7px);} }
+
+  /* 球道 */
+  .track { position: fixed; right: 18px; top: 0; bottom: 0; width: 34px; z-index: 40; pointer-events: none; }
+  .track .rail { position: absolute; left: 50%; top: 64px; bottom: 64px; border-left: 1px dashed rgba(232,228,220,0.22); }
+  .track .ball { position: absolute; left: 50%; transform: translate(-50%, 50%); width: 11px; height: 11px; border-radius: 50%; background: var(--paper); box-shadow: 0 0 0 3px rgba(232,228,220,0.14); top: calc(100% - 64px); transition: top 0.1s linear; }
+  .track .hole { position: absolute; left: 50%; transform: translateX(-50%); top: 40px; }
+  .track .flagpole { position: absolute; left: 50%; top: 14px; width: 2px; height: 30px; background: var(--paper-faint); transform-origin: bottom center; transform: translateX(-50%) rotate(72deg); transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.3, 1.1); }
+  .track .flagcloth { position: absolute; left: 50%; top: 14px; width: 0; height: 0; border-left: 15px solid var(--flag); border-top: 6px solid transparent; border-bottom: 6px solid transparent; transform-origin: left center; transform: rotate(72deg); opacity: 0.85; transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.3, 1.1); }
+  .track.done .flagpole { transform: translateX(-50%) rotate(0deg); }
+  .track.done .flagcloth { transform: rotate(0deg); }
+  .track .seal { position: absolute; left: 50%; transform: translateX(-50%) scale(0.4); top: 76px; font-size: 11px; letter-spacing: 0.18em; color: #f0e8da; background: var(--flag); padding: 5px 7px 5px 9px; opacity: 0; transition: all 0.7s ease 0.5s; writing-mode: vertical-rl; }
+  .track.done .seal { opacity: 1; transform: translateX(-50%) scale(1); }
+  @media (max-width: 760px) { .track { display: none; } body { padding-right: 0; } .hero { grid-template-columns: 1fr; padding-left: 28px; } .hero-title { writing-mode: horizontal-tb; font-size: clamp(58px, 16vw, 90px); letter-spacing: 0.14em; text-align: center; } }
+
+  /* 弄丸九丸 */
+  .nine { display: flex; gap: 14px; margin: 26px 0 10px; flex-wrap: wrap; }
+  .nine .wan { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--paper-faint); background: transparent; cursor: pointer; transition: all 0.3s ease; }
+  .nine .wan:hover { border-color: var(--bam); }
+  .nine .wan.on { background: var(--bam); border-color: var(--bam); box-shadow: 0 0 14px var(--bam-dim); }
+  .army-seal { display: inline-block; font-size: 15px; letter-spacing: 0.34em; color: #f0e8da; background: var(--flag); padding: 8px 10px 8px 14px; opacity: 0; transform: scale(0.6) rotate(-8deg); transition: all 0.6s ease; margin: 12px 0; }
+  .army-seal.show { opacity: 1; transform: scale(1) rotate(-3deg); }
+
+  /* 两派对峙 */
+  .duel { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; margin: 30px 0 16px; align-items: stretch; }
+  .duel .side { border: 1px solid var(--hairline); padding: 26px 24px; background: var(--ink-2); }
+  .duel .side h4 { font-size: 20px; letter-spacing: 0.2em; color: var(--bam); margin-bottom: 12px; }
+  .duel .side p { font-size: 14.5px; color: var(--paper-dim); }
+  .duel .mid { display: flex; align-items: center; justify-content: center; padding: 0 16px; }
+  .duel .seal2 { writing-mode: vertical-rl; background: var(--bam); color: #f0e8da; font-size: 14px; letter-spacing: 0.3em; padding: 14px 7px; }
+  @media (max-width: 700px) { .duel { grid-template-columns: 1fr; } .duel .mid { padding: 12px 0; } }
+
+  /* 十形剖面 */
+  .terrain { margin: 30px 0 8px; }
+  .terrain svg { width: 100%; height: auto; display: block; }
+  .t-label { cursor: pointer; }
+  .t-label text { fill: var(--paper-dim); font-size: 15px; font-family: inherit; letter-spacing: 2px; transition: fill 0.25s; }
+  .t-label:hover text { fill: var(--bam); }
+  .t-label.on text { fill: var(--bam); font-weight: 700; }
+  .t-seg { fill: none; stroke: rgba(232,228,220,0.3); stroke-width: 2; transition: stroke 0.25s; }
+  .t-seg.on { stroke: var(--bam); stroke-width: 3.5; }
+  .t-read { min-height: 76px; border-top: 1px solid var(--hairline); padding-top: 16px; margin-top: 6px; font-size: 14.5px; color: var(--paper-dim); }
+  .t-read b { color: var(--bam); }
+
+  /* 持权四棒 */
+  .batons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 26px 0; }
+  .baton { border: 1px solid var(--hairline); background: var(--ink-2); text-align: center; padding: 20px 10px 16px; }
+  .baton .b-name { font-size: 21px; letter-spacing: 0.14em; color: var(--paper); }
+  .baton .b-stance { font-size: 12.5px; color: var(--bam); letter-spacing: 0.26em; margin-top: 8px; }
+  .baton .b-tip { font-size: 13px; color: var(--paper-faint); margin-top: 8px; }
+  @media (max-width: 700px) { .batons { grid-template-columns: repeat(2, 1fr); } }
+
+  /* 招谱 */
+  .moves-cap { display: flex; gap: 22px; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.14em; margin-bottom: 14px; }
+  .moves-cap b { color: var(--bam); }
+  .moves { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 7px; }
+  .moves q { display: block; text-align: center; font-size: 13.5px; padding: 8px 4px; border: 1px solid var(--hairline); color: var(--paper-dim); background: var(--ink-2); quotes: none; transition: all 0.25s; }
+  .moves q:hover { color: var(--paper); border-color: var(--bam-dim); background: var(--bam-faint); }
+  .moves.old q { color: var(--paper-faint); font-style: normal; }
+
+  /* 御奸条款 */
+  .rules { border-top: 1px solid var(--hairline); }
+  .rule { display: grid; grid-template-columns: 150px 1fr auto; gap: 18px; padding: 18px 4px; border-bottom: 1px solid var(--hairline); align-items: baseline; }
+  .rule .r-name { font-size: 16.5px; letter-spacing: 0.1em; color: var(--bam); font-weight: 700; }
+  .rule .r-body { font-size: 14.5px; color: var(--paper-dim); }
+  .rule .r-fine { font-size: 12px; color: #e8b7ad; background: rgba(192,69,60,0.18); border: 1px solid rgba(192,69,60,0.4); padding: 3px 9px; white-space: nowrap; }
+  .rule q { color: var(--paper); }
+  @media (max-width: 700px) { .rule { grid-template-columns: 1fr; gap: 6px; } }
+
+  /* 场边碎语 */
+  .gossip { display: flex; flex-wrap: wrap; gap: 26px; justify-content: center; margin: 34px 0 10px; }
+  .gossip .slip { background: #ece7de; color: #2b2a26; padding: 20px 22px; max-width: 250px; font-size: 14.5px; line-height: 1.9; box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+  .gossip .slip:nth-child(1) { transform: rotate(-2.2deg); }
+  .gossip .slip:nth-child(2) { transform: rotate(1.6deg) translateY(10px); }
+  .gossip .slip:nth-child(3) { transform: rotate(-1.2deg); }
+  .gossip .slip:nth-child(4) { transform: rotate(2.4deg) translateY(8px); }
+  .gossip .slip q { color: #2b2a26; }
+  .gossip .slip .who { display: block; margin-top: 10px; font-size: 11.5px; color: #7a7468; letter-spacing: 0.16em; }
+
+  /* 筹政 */
+  .ledger { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin: 26px 0; }
+  @media (max-width: 700px) { .ledger { grid-template-columns: 1fr; } }
+  .ledger h4 { font-size: 16px; letter-spacing: 0.22em; color: var(--bam); margin-bottom: 12px; border-bottom: 1px solid var(--bam-dim); padding-bottom: 8px; }
+  .ledger p { font-size: 14.5px; color: var(--paper-dim); margin-bottom: 10px; }
+  .chips { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
+  .chip { border: 1px solid var(--bam-dim); color: var(--paper); font-size: 13.5px; padding: 7px 14px; background: var(--bam-faint); letter-spacing: 0.1em; }
+  q.chiprow { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; color: inherit; }
+
+  /* 收梢 */
+  .ending { text-align: center; padding: 110px 28px 90px; }
+  .ending .sixwant { font-size: 16px; letter-spacing: 0.14em; color: var(--paper-dim); margin-bottom: 30px; }
+  .ending .sixwant q { color: var(--paper); }
+  .ending .luo { font-size: 13.5px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  .ending .big { font-size: 74px; font-weight: 700; color: var(--bam); letter-spacing: 0.2em; margin: 34px 0 8px; }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 36px 0 60px; }
+  footer.page .wrap { max-width: 860px; margin: 0 auto; padding: 0 28px; font-size: 13px; color: var(--paper-faint); line-height: 2.1; letter-spacing: 0.06em; }
+  footer.page a { color: var(--paper-dim); text-decoration: none; border-bottom: 1px dotted var(--paper-faint); }
+</style>
+</head>
+<body>
+
+<div class="track" id="track">
+  <div class="hole"><svg width="18" height="8" viewBox="0 0 18 8"><ellipse cx="9" cy="4" rx="8" ry="3.2" fill="none" stroke="rgba(232,228,220,0.4)" stroke-width="1.4"/></svg></div>
+  <div class="flagpole"></div>
+  <div class="flagcloth"></div>
+  <div class="seal">上窝</div>
+  <div class="rail"></div>
+  <div class="ball" id="trackBall"></div>
+</div>
+
+<header class="hero">
+  <h1 class="hero-title">丸<em>经</em></h1>
+  <div class="hero-right">
+    <svg class="field" viewBox="0 0 560 200" id="fieldSvg">
+      <line x1="20" y1="168" x2="540" y2="168" stroke="rgba(232,228,220,0.25)" stroke-width="1.5"/>
+      <path d="M20 168 H540" stroke="none"/>
+      <line x1="20" y1="169" x2="540" y2="169" stroke="rgba(95,146,112,0.22)" stroke-width="7" stroke-dasharray="1 10" stroke-linecap="round"/>
+      <ellipse cx="452" cy="168" rx="16" ry="4" fill="none" stroke="var(--paper-dim)" stroke-width="1.4"/>
+      <line x1="452" y1="168" x2="452" y2="118" stroke="var(--paper-faint)" stroke-width="2"/>
+      <path d="M452 118 l30 8 l-30 8 z" fill="var(--flag)" id="heroFlag"/>
+      <rect x="120" y="162" width="13" height="13" fill="none" stroke="rgba(232,228,220,0.35)" stroke-width="1.2" stroke-dasharray="3 3"/>
+      <line x1="168" y1="150" x2="206" y2="172" stroke="var(--bam)" stroke-width="3.5" stroke-linecap="round"/>
+      <rect x="158" y="142" width="10" height="20" rx="3" fill="var(--bam)" transform="rotate(24 163 152)"/>
+      <circle id="heroBall" cx="128" cy="163" r="7" fill="var(--paper)" style="cursor:pointer"/>
+    </svg>
+    <div class="hero-sub">
+      捶丸场记，一册元代球场章程
+      <span class="meta">元阙名撰，二卷三十二章，津逮秘书本</span>
+    </div>
+    <div class="hero-verse" id="heroVerse"><q>捶丸，古战国之遗策也。</q></div>
+    <div class="down">点球开赛，顺球道而下<i>↓</i></div>
+  </div>
+</header>
+
+<main>
+
+  <section class="sec" id="s1">
+    <div class="stamp">序 弄丸退兵</div>
+    <h2>一颗球，先是一支奇兵<small>丸经集叙</small></h2>
+    <p class="prose">书一开篇不讲规则，先讲一个战场故事。楚庄王围宋，得到一位市南勇士，名唤熊宜僚。此人不用剑，用丸。</p>
+    <div class="quote">
+      <q>昔者楚庄王偃兵宋都，得市南勇士熊宜僚者，工于丸，士众称之，以当五百人。乘以剑而不动，捶九丸于手，一军停战而观之。庄王免于敌而霸。</q>
+      <span class="qnote">丸经集叙，序所记弄丸事</span>
+    </div>
+    <p class="prose">九丸在手里转，两军停下来看。捶丸的出身，是止战之术。往下翻几行，作者又抬出圣人替游戏正名。</p>
+    <div class="note-card">
+      孔子说过：<q>饱食终日，无所用心，不有博奕者乎，为之犹贤乎已</q>，此语被序作者顺手接来，给捶丸领了一张圣门许可证。
+    </div>
+    <p class="prose">再往下，名单里出现两位帝王级玩家。</p>
+    <div class="quote">
+      <q>至宋徽宗、金章宗，皆爱捶丸，盛以锦囊，击以彩棒，碾玉缀顶，饰金缘边</q>
+      <span class="qnote">丸经集叙。球装锦囊，棒漆彩纹，玉碾其顶，金镶其边，是帝王规格的球具</span>
+    </div>
+    <div class="nine" id="nineWan">
+      <button class="wan" aria-label="丸"></button><button class="wan" aria-label="丸"></button><button class="wan" aria-label="丸"></button><button class="wan" aria-label="丸"></button><button class="wan" aria-label="丸"></button><button class="wan" aria-label="丸"></button><button class="wan" aria-label="丸"></button><button class="wan" aria-label="丸"></button><button class="wan" aria-label="丸"></button>
+    </div>
+    <div class="army-seal" id="armySeal">一军停战</div>
+    <p class="prose">点满九丸。对这本书来说，球不是玩物：序的结论是它<b>收的是放心，养的是血脉</b>，闲时是养生术，忙时是练兵法。</p>
+    <div class="quote">
+      <q>诚足以收其放心，养其血脉，而怡怿乎神情者矣。不以勇胜，不以力争，斯可以正己而求诸身者也。由是观之，抑亦卫生之微奥，而训将练兵之一伎也。</q>
+      <span class="qnote">丸经集叙，序之结论</span>
+    </div>
+  </section>
+
+  <section class="sec" id="s2">
+    <div class="stamp">崇古章 门派</div>
+    <h2>窝脚与会儿，一场千年门派之争</h2>
+    <p class="prose">球场上有两派人，互不服气。崇古章的注文里，把两家的招法、难易、门户之见全抖了出来。</p>
+    <div class="duel">
+      <div class="side">
+        <h4>窝脚</h4>
+        <p>使撺棒。球能走、能飞，还能收窝。法度多，人不易学。旁人眼里最深的功夫。</p>
+      </div>
+      <div class="mid"><div class="seal2">同一理</div></div>
+      <div class="side">
+        <h4>会儿</h4>
+        <p>打扑棒。球能飞不能走，收不了窝。法度少，人人易学，是新手上路的那一派。</p>
+      </div>
+    </div>
+    <div class="quote">
+      <q>窝脚只使撺棒，能走，能飞，能收窝，法度更多，人不易学；会儿只打扑棒，能飞不能走，又不能收窝，法度更少，人甚易学。</q>
+      <span class="qnote">崇古章注文</span>
+    </div>
+    <p class="prose">作者两边都不站：今人多是不懂全部法度，才说别人只是窝脚。他的判词只有一句。</p>
+    <div class="quote"><q>殊不知艺到精处，同一理而已，岂有差别？</q></div>
+  </section>
+
+  <section class="sec" id="s3">
+    <div class="stamp">因地章 十形</div>
+    <h2>十种地形，一份球场剖面图</h2>
+    <p class="prose">捶丸球场不设在平地，专挑起伏的园林。因地章把地形分成十形，各有各的打法。点剖面图上的字，看每形长什么样。</p>
+    <div class="quote">
+      <q>地形有平者、有凸者、有凹者、有峻者、有仰者、有阻者、有妨者、有迎者、有里者、有外者</q>
+      <span class="qnote">因地章</span>
+    </div>
+    <div class="terrain">
+      <svg viewBox="0 0 900 150" id="terrainSvg">
+        <g id="tsegs">
+          <path class="t-seg" data-t="0" d="M10 100 H95"/>
+          <path class="t-seg" data-t="1" d="M95 100 Q135 45 175 100"/>
+          <path class="t-seg" data-t="2" d="M175 100 Q215 135 255 100"/>
+          <path class="t-seg" data-t="3" d="M255 100 L295 30 L335 100"/>
+          <path class="t-seg" data-t="4" d="M335 100 Q380 55 425 100"/>
+          <path class="t-seg" data-t="5" d="M425 100 L465 100 M465 100 L465 35 L505 100"/>
+          <path class="t-seg" data-t="6" d="M505 100 L540 100 Q550 88 560 100 L595 100"/>
+          <path class="t-seg" data-t="7" d="M595 100 Q640 60 685 100"/>
+          <path class="t-seg" data-t="8" d="M685 100 L725 78 L765 100"/>
+          <path class="t-seg" data-t="9" d="M765 100 L805 122 L845 100 L885 100"/>
+        </g>
+        <g id="tlabels">
+          <g class="t-label" data-t="0"><text x="52" y="128" text-anchor="middle">平</text></g>
+          <g class="t-label" data-t="1"><text x="135" y="34" text-anchor="middle">凸</text></g>
+          <g class="t-label" data-t="2"><text x="215" y="134" text-anchor="middle">凹</text></g>
+          <g class="t-label" data-t="3"><text x="295" y="22" text-anchor="middle">峻</text></g>
+          <g class="t-label" data-t="4"><text x="380" y="62" text-anchor="middle">仰</text></g>
+          <g class="t-label" data-t="5"><text x="465" y="22" text-anchor="middle">阻</text></g>
+          <g class="t-label" data-t="6"><text x="550" y="74" text-anchor="middle">妨</text></g>
+          <g class="t-label" data-t="7"><text x="640" y="64" text-anchor="middle">迎</text></g>
+          <g class="t-label" data-t="8"><text x="725" y="66" text-anchor="middle">里</text></g>
+          <g class="t-label" data-t="9"><text x="805" y="140" text-anchor="middle">外</text></g>
+        </g>
+        <line x1="10" y1="112" x2="885" y2="112" stroke="rgba(232,228,220,0.12)" stroke-width="1"/>
+      </svg>
+      <div class="t-read" id="tRead">地形十名，注文一一作解：<b>点上图中的字</b>，看每一形的地貌口诀。</div>
+    </div>
+    <div class="quote" style="margin-top:26px">
+      <q>诸形绝无曰平，龟背曰凸，中低曰凹，势颇曰峻，之上曰仰，前隔曰阻，唇碍曰妨，可反曰迎，左高曰里，右高曰外</q>
+      <span class="qnote">因地章注文，十形口诀</span>
+    </div>
+    <div class="note-card">
+      场地还有里程规格：<q>远无百步之遥</q>，<q>近必盈丈之外</q>。最远不超百步，最近也要留足一丈，球场的尺寸分寸，这里都定死了。
+    </div>
+  </section>
+
+  <section class="sec" id="s4">
+    <div class="stamp">试艺章 持权</div>
+    <h2>四种棒，四种身体姿势</h2>
+    <p class="prose">权，就是棒。全书给棒分了四种用法，配套四种身体姿势：立着、蹲着、走着、飞着。什么地形出什么棒。</p>
+    <div class="batons">
+      <div class="baton"><div class="b-name">撺棒</div><div class="b-stance">行者</div><div class="b-tip">贴地走球的主力，不减膝</div></div>
+      <div class="baton"><div class="b-name">扑棒</div><div class="b-stance">飞者</div><div class="b-tip">单手持棒，让球飞起来</div></div>
+      <div class="baton"><div class="b-name">杓棒</div><div class="b-stance">蹲者</div><div class="b-tip">鹰嘴形的杓棒要蹲打，时人叫减膝</div></div>
+      <div class="baton"><div class="b-name">单手杓棒</div><div class="b-stance">飞者</div><div class="b-tip">鹰嘴当蹲，亦可单手击飞</div></div>
+    </div>
+    <p class="prose">注里补了一句要领：立运的撺棒要成套置办，全副十数、中副八数、小副则次之；出棒讲的是<b>持欲固、运欲和</b>，手对心。收束也只一句。</p>
+    <div class="quote">
+      <q>心手相对，古之法也</q>
+      <span class="qnote">试艺章</span>
+    </div>
+    <p class="prose">击球那一瞬的眼法，现形章给了八个字。</p>
+    <div class="quote">
+      <q>击不他视，专睹其丸。他视伤权，专睹必利</q>
+      <span class="qnote">现形章</span>
+    </div>
+    <div class="note-card">
+      什么时候下场也有讲究。审时章注：<q>天朗气清，惠风和畅，饫饱之余，心无所碍，取择良友三三五五，于园林清胜之处，依法捶击。</q><q>风雨阴晦、大寒大暑，不与</q>。
+    </div>
+  </section>
+
+  <section class="sec" id="s5">
+    <div class="stamp">制器章 招谱</div>
+    <h2>五十四式棒法招名<small>已上新法三十七，已上古法一十七</small></h2>
+    <p class="prose">制器章末尾附了一张清单，像武术挂谱，又像高尔夫杆法表。前三十七式标「已上新法」，后十七式标「已上古法」。以下全数照录，一格一式。</p>
+    <div class="moves-cap"><b>新法三十七式</b><span>倒棒斜插花、燕尾、翻卷帘、井里拔，皆是场上绝活</span></div>
+    <div class="moves">
+      <q>正棒头打八面</q><q>倒棒斜插花</q><q>卧棒斜插花</q><q>撺棒斜插花</q><q>皮塔斜插花</q><q>燕尾斜插花</q><q>倒棒翻卷帘</q><q>底板基儿</q><q>胲里基儿</q><q>两肩基儿</q><q>山口四面基儿</q><q>山口四面打皮塔</q><q>山口打棒尾</q><q>背身打土儿</q><q>背身打翻杖</q><q>背身弹棒</q><q>背身正棒</q><q>背身扑棒</q><q>竹撅儿打四边</q><q>皮塔打八面</q><q>近双弹棒</q><q>远双弹棒</q><q>三根弹棒</q><q>叠柄弹棒</q><q>三撅三球弹棒</q><q>双撅双球倒棒打撺</q><q>井里拔</q><q>正棒头翻撅儿</q><q>棒尾皮塔</q><q>棒尾打四边</q><q>棒上安偏棒</q><q>棒上安正棒</q><q>棍儿飐棒</q><q>前撅翻过后</q><q>后撅掀过前</q><q>棍子翻撅儿</q><q>杓儿翻撅儿</q>
+    </div>
+    <div class="moves-cap" style="margin-top:26px"><b>古法一十七式</b><span>土尖、砖角、翻杖、靴尖，是老辈传下的名字</span></div>
+    <div class="moves old">
+      <q>土尖</q><q>砖角</q><q>球上球</q><q>翻杖</q><q>直杖</q><q>纽杖</q><q>靴尖</q><q>雁点头</q><q>泥撅儿</q><q>泥虾蟆</q><q>正棒头</q><q>倒棒头</q><q>土尖棒尾</q><q>飐棒</q><q>积棒</q><q>打燕尾</q><q>远近小土儿</q>
+    </div>
+  </section>
+
+  <section class="sec" id="s6">
+    <div class="stamp">定基 处用 御奸</div>
+    <h2>球场反作弊条例</h2>
+    <p class="prose">规则书写到这个份上，一半篇幅其实在防人。画基、安球、行棒，处处立罚，桩桩对着真发生过的事。这一章像一份元代球场的纪律手册。</p>
+    <div class="rules">
+      <div class="rule">
+        <div class="r-name">先立总纲</div>
+        <div class="r-body"><q>捶丸之制，全式为上，破式次之，违式出之</q>，姿态不合式样，直接请出场。</div>
+        <div class="r-fine">违式出之</div>
+      </div>
+      <div class="rule">
+        <div class="r-name">基上留洁</div>
+        <div class="r-body">画好的球基神圣不可侵犯：<q>足不踏基，手不拭基</q>。基内不许试棒，无易基，无毁基。</div>
+        <div class="r-fine">犯者论罚</div>
+      </div>
+      <div class="rule">
+        <div class="r-name">窝边五尺</div>
+        <div class="r-body"><q>窝边周围五尺内不许人行，恐凶恶之徒埇土阻球、作坑陷球。窝边行者，同班皆输</q>。注家想得很周到：有人会堵土挡球、挖坑陷球。</div>
+        <div class="r-fine">同班皆输</div>
+      </div>
+      <div class="rule">
+        <div class="r-name">不许作局</div>
+        <div class="r-body">同伴故意把球安到难打处再换好基，两头都不许再击：<q>故动复择基，两反不许作</q>。作者批注四个字，御奸之术。</div>
+        <div class="r-fine">往还不许击</div>
+      </div>
+      <div class="rule">
+        <div class="r-name">真假活球</div>
+        <div class="r-body">崇古章画过一幅作弊群像：<q>有等人场上引著十余伴当，将一般颜色球儿打在死处，却放一个在好处做活球</q>；趁人不备，<q>俟人眼不见，把他人球儿踢在死处，小厮每蹅在土里，然后拿死球。如此者，真可耻也</q>。</div>
+        <div class="r-fine">真可耻也</div>
+      </div>
+      <div class="rule">
+        <div class="r-name">打劫除名</div>
+        <div class="r-body">两人私下串通、分班时暗让对方，是谓阴结为奸；屡教不改升级成另一种：<q>若彼二人自欲分开而复如此者，名曰打劫，不可以入会矣</q>。</div>
+        <div class="r-fine">不可以入会</div>
+      </div>
+      <div class="rule">
+        <div class="r-name">连坐条款</div>
+        <div class="r-body">换球、输了想再击一次，代价是全队买单：<q>既易既复，同朋尽败</q>，注云<q>若易球，若重击，非但本人为输，同班尽皆作输。虽曾得胜，亦不为胜</q>。</div>
+        <div class="r-fine">同班尽输</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="s7">
+    <div class="stamp">承式 崇古 场边碎语</div>
+    <h2>输不起的人，书里早画好了像</h2>
+    <p class="prose">规则之外，这册球场手册还收了几句球场俚语，专骂输不起的人。捡四张贴在场边。</p>
+    <div class="gossip">
+      <div class="slip">
+        <q>废球棒，磨靴底。眼睛饱，肚里饥。桦皮脸，拖狗皮。输便怒，赢便喜。吃别人，不回礼。此之谓也</q>
+        <span class="who">承式章所引俚语</span>
+      </div>
+      <div class="slip">
+        <q>赢即矜能逞语，输即发怒便走，或至骂仆嗔朋，抛球掷棒。此非闲雅君子，真小人耳。</q>
+        <span class="who">承式章注文，摔棒离场实录</span>
+      </div>
+      <div class="slip">
+        有人嘴上说得样样精，上场却一筹都展不开，输光全场。俚语送他八个字：<q>高者不说，说者不高。</q>
+        <span class="who">崇古章注文</span>
+      </div>
+      <div class="slip">
+        心不明、性子急，输了还强辩不服的，也有八个字候着：<q>有智赢，无智输。</q>
+        <span class="who">崇古章注文</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="s8">
+    <div class="stamp">衍数 运筹 制财 筹政</div>
+    <h2>赌筹，一场游戏的经济学</h2>
+    <p class="prose">捶丸带彩。多少人开一局、筹怎么发、彩物怎么封顶，账算得极细，还带着一点做人道理。</p>
+    <div class="ledger">
+      <div>
+        <h4>会数分班</h4>
+        <div class="quote"><q>十数九数为大会，八数七数为中会，六数五数为小会，四数三数为一朋，二人为单对。</q><span class="qnote">衍数章，人数即赛制</span></div>
+        <p>双数可分班，单数不可分。一天至多赌两会，为的是惜物。</p>
+        <h4 style="margin-top:22px">筹制</h4>
+        <q class="chiprow"><span class="chip">大筹二十</span><span class="chip">中筹十五</span><span class="chip">小筹一十</span></q>
+        <p>二十筹为满。赢到十九筹差一枚，彩物便不可得，今日也不许拿昨日赢的来抵，注文叫它义聚之道。</p>
+      </div>
+      <div>
+        <h4>彩物管理学</h4>
+        <div class="quote"><q>富不出微财</q>，<q>贫不出重货</q>，<q>富出微财则耻，贫出重货则竭</q><span class="qnote">制财章，量力下注</span></div>
+        <p>会打的人财力不绝，不会打的无方将竭。手头越紧心越慌，越慌越输。</p>
+        <h4 style="margin-top:22px">兵诀收底</h4>
+        <div class="quote"><q>先度后动，百发百中；先动后度，百发百蹶</q><span class="qnote">举要章</span></div>
+        <p>故曰：<q>差之毫厘，失之千里</q>。把球技写成兵法，这本书是认真的。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="ending">
+    <div class="sixwant">
+      <q>心欲宁</q>　<q>志欲逸</q>　<q>气欲平</q>　<q>体欲安</q>　<q>貌欲恭</q>　<q>言欲讷</q>
+      <span class="qnote">知人章，球场之上的修身单子</span>
+    </div>
+    <div class="big">上窝</div>
+    <div class="luo"><q>龙集壬午孟春上浣，书于宁志斋之西轩。</q></div>
+  </div>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    文本来源：殆知阁简体文库〈丸经〉（艺藏竞技部，元 阙名 撰，二卷三十二章，去空白九千三百余字）<br>
+    导读仓库：<a href="https://github.com/robertsong2000/daizhige-daodu">github.com/robertsong2000/daizhige-daodu</a><br>
+    本页引文经脚本与库内文件去标点归一逐字比对通过。校字记：库本以「〈土引〉」「〈土仑〉」「〈饣甫〉」等记拼合缺字，引文避之；知人章「君子哉1」之「1」为叹号之讹，避引；集叙「饰金缘边」下「深」字与下文文气不属，引至「饰金缘边」止；试艺章四棒注文括号错乱处，页面以白话述之，不录原句。古代文本历经传抄，讹缺在所难免，请以时代眼光读之：书中赌筹行乐、待傲章以四种残疾为不可与嬉之人（<q>跛足、目盲、伛偻、耳聋，不可与也</q>），皆数百年前观念，今日读之当知其限。
+  </div>
+</footer>
+
+<script>
+  // 球道滚动
+  var track = document.getElementById('track');
+  var ball = document.getElementById('trackBall');
+  function onScroll() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+    var railH = window.innerHeight - 128;
+    ball.style.top = (64 + (1 - p) * railH) + 'px';
+    if (p > 0.985) track.classList.add('done'); else track.classList.remove('done');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // 首屏点球
+  var heroBall = document.getElementById('heroBall');
+  var heroVerse = document.getElementById('heroVerse');
+  var heroPlayed = false;
+  heroBall.addEventListener('click', function () {
+    if (heroPlayed) return;
+    heroPlayed = true;
+    heroBall.style.transition = 'cx 1.1s cubic-bezier(0.3,0.7,0.4,1)';
+    heroBall.setAttribute('cx', '446');
+    var flag = document.getElementById('heroFlag');
+    flag.style.transformOrigin = '452px 126px';
+    flag.style.transition = 'transform 1.2s ease 0.9s';
+    flag.style.transform = 'rotate(18deg)';
+    setTimeout(function () { heroVerse.classList.add('show'); }, 700);
+  });
+
+  // 九丸点灯
+  var wans = document.querySelectorAll('#nineWan .wan');
+  wans.forEach(function (w) {
+    w.addEventListener('click', function () {
+      w.classList.toggle('on');
+      var lit = document.querySelectorAll('#nineWan .wan.on').length;
+      if (lit === 9) document.getElementById('armySeal').classList.add('show');
+      else document.getElementById('armySeal').classList.remove('show');
+    });
+  });
+
+  // 十形剖面
+  var tNotes = [
+    '<b>平</b>：诸形绝无曰平。地一平，人人都能到，拼的是不失手。',
+    '<b>凸</b>：龟背曰凸。形如龟背，难从当中打，得看左右两边形势再取路。',
+    '<b>凹</b>：中低曰凹。两边高中间低，走中间就好，到家不难。',
+    '<b>峻</b>：势颇曰峻。球停在陡坡、窝在坡下，千万别发力，要轻轻缓打。',
+    '<b>仰</b>：之上曰仰。仰面向上的缓坡，顺着势走。',
+    '<b>阻</b>：前隔曰阻。球与窝当中隔了一道，必须打高飞越过去。',
+    '<b>妨</b>：唇碍曰妨。后面有碍难运棒，站位要对得端端正正，用巧劲。',
+    '<b>迎</b>：可反曰迎。窝后立着墙或树石，球千万别落在窝边，小心被迎面弹回。',
+    '<b>里</b>：左高曰里。左边地势高、窝在右，就着势往右让。',
+    '<b>外</b>：右高曰外。右边地势高、窝在左，就着势往左让。'
+  ];
+  document.querySelectorAll('.t-label').forEach(function (lab) {
+    lab.addEventListener('click', function () {
+      var t = lab.dataset.t;
+      document.querySelectorAll('.t-label').forEach(function (x) { x.classList.remove('on'); });
+      document.querySelectorAll('.t-seg').forEach(function (x) { x.classList.remove('on'); });
+      lab.classList.add('on');
+      document.querySelector('.t-seg[data-t="' + t + '"]').classList.add('on');
+      document.getElementById('tRead').innerHTML = tNotes[+t];
+    });
+  });
+</script>
+</body>
+</html>
