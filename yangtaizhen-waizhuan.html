@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>杨太真外传 · 钗盒两分 | 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#201f1d; --paper:#e8e4dc; --mut:#8d8778; --dim:#5b574d;
+  --blue:#5e8fbb; --blue-soft:#31465c; --cinnabar:#c0453c; --line:#2e2d29;
+  --song:"Songti SC","STSong","NSimSun","Noto Serif CJK SC","Source Han Serif SC",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--song);line-height:1.9;font-size:16px;overflow-x:hidden}
+::selection{background:var(--blue);color:var(--ink)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+
+/* ---------- 首屏 ---------- */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:
+   radial-gradient(1.5px 1.5px at 12% 22%,rgba(232,228,220,.9) 50%,transparent 51%),
+   radial-gradient(1px 1px at 28% 64%,rgba(232,228,220,.5) 50%,transparent 51%),
+   radial-gradient(1.5px 1.5px at 44% 15%,rgba(232,228,220,.6) 50%,transparent 51%),
+   radial-gradient(1px 1px at 58% 40%,rgba(232,228,220,.45) 50%,transparent 51%),
+   radial-gradient(2px 2px at 71% 12%,rgba(232,228,220,.85) 50%,transparent 51%),
+   radial-gradient(1px 1px at 83% 58%,rgba(232,228,220,.5) 50%,transparent 51%),
+   radial-gradient(1.5px 1.5px at 92% 30%,rgba(232,228,220,.7) 50%,transparent 51%),
+   radial-gradient(1px 1px at 6% 78%,rgba(232,228,220,.4) 50%,transparent 51%),
+   radial-gradient(1px 1px at 36% 86%,rgba(232,228,220,.35) 50%,transparent 51%),
+   radial-gradient(1.5px 1.5px at 64% 78%,rgba(232,228,220,.55) 50%,transparent 51%),
+   linear-gradient(180deg,#131418 0%,#191917 55%,#191917 100%);}
+#hero .milky{position:absolute;top:-20%;left:-30%;width:160%;height:70%;
+  background:linear-gradient(100deg,transparent 30%,rgba(94,143,187,.07) 45%,rgba(232,228,220,.05) 50%,rgba(94,143,187,.07) 55%,transparent 70%);
+  filter:blur(2px);transform:rotate(-8deg)}
+.star{position:absolute;font-size:11px;letter-spacing:.35em;color:var(--mut);writing-mode:vertical-rl}
+.star b{display:block;width:5px;height:5px;border-radius:50%;background:var(--paper);box-shadow:0 0 10px 2px rgba(232,228,220,.55);margin:0 auto 8px}
+.star.s1{top:9%;left:10%}
+.star.s2{top:9%;right:10%}
+.hero-in{position:relative;z-index:2;display:flex;gap:min(6vw,72px);align-items:center;padding:48px 24px}
+.hero-title{writing-mode:vertical-rl;font-size:clamp(44px,7vw,84px);letter-spacing:.28em;font-weight:700;
+  color:var(--paper);text-shadow:0 0 26px rgba(94,143,187,.35);opacity:0;transform:translateY(24px);transition:all 1.4s ease .5s}
+#hero.open .hero-title{opacity:1;transform:none}
+.hero-side{max-width:400px}
+.eyebrow{font-size:12px;letter-spacing:.4em;color:var(--blue);margin-bottom:18px}
+.hero-side h2{font-size:20px;font-weight:400;line-height:2;color:var(--paper)}
+.hero-side p{font-size:14px;color:var(--mut);margin-top:14px;line-height:2}
+.hero-quote{margin-top:20px;font-size:15px;color:var(--paper);border-left:2px solid var(--blue);padding-left:14px;
+  opacity:0;transition:opacity 1.2s ease 1.6s}
+#hero.open .hero-quote{opacity:1}
+.qn{font-size:12px;color:var(--dim);letter-spacing:.1em}
+.qn::before{content:"〔"}.qn::after{content:"〕"}
+.q{color:var(--paper)}
+#btn-open{margin-top:26px;background:none;border:1px solid var(--blue);color:var(--blue);
+  font-family:var(--song);font-size:14px;letter-spacing:.4em;padding:12px 26px 12px 32px;cursor:pointer;transition:all .5s}
+#btn-open:hover{background:var(--blue);color:var(--ink)}
+.hero-veil{position:absolute;inset:auto 0 0 0;z-index:1;pointer-events:none}
+
+/* 钗与盒 SVG */
+#gift{width:min(320px,60vw);cursor:pointer}
+#gift .chai-a,#gift .chai-b,#gift .he-lid{transition:transform 1.3s cubic-bezier(.6,.05,.2,1)}
+#hero.open .chai-a{transform:translate(-26px,6px) rotate(-9deg)}
+#hero.open .chai-b{transform:translate(26px,-4px) rotate(7deg)}
+#hero.open .he-lid{transform:translateY(-14px) rotate(-14deg)}
+#gift .glow{opacity:0;transition:opacity 1.5s ease .9s}
+#hero.open .glow{opacity:1}
+
+/* ---------- 左缘金钗导航 ---------- */
+#rail{position:fixed;left:26px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;align-items:center;gap:0;transition:opacity .5s}
+#rail .stem{position:relative;width:2px;height:420px;background:var(--line);display:flex;flex-direction:column;justify-content:space-between;align-items:center;transition:all 1s}
+#rail.split .stem{background:linear-gradient(180deg,var(--line) 0 44%,transparent 44% 56%,var(--line) 56% 100%)}
+#rail.join .stem{background:var(--blue)}
+#rail .node{width:9px;height:9px;border:1px solid var(--dim);border-radius:50%;background:var(--ink);cursor:pointer;transition:all .5s;flex:none}
+#rail .node.on{background:var(--blue);border-color:var(--blue);box-shadow:0 0 8px rgba(94,143,187,.6)}
+#rail .tag{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--dim);letter-spacing:.2em;writing-mode:vertical-rl;white-space:nowrap}
+#rail .tag b{color:var(--blue);font-weight:400}
+@media(max-width:960px){#rail{display:none}}
+
+/* ---------- 场景通用 ---------- */
+main{position:relative;z-index:2}
+.scene{max-width:820px;margin:0 auto;padding:110px 24px 40px;opacity:.28;transform:translateY(20px);transition:opacity 1s,transform 1s}
+.scene.rv{opacity:1;transform:none}
+.kicker{font-size:12px;letter-spacing:.42em;color:var(--blue);margin-bottom:10px}
+.scene h3{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:.12em;margin-bottom:8px}
+.scene .lead{color:var(--mut);font-size:15px;max-width:640px;margin-bottom:34px}
+.p{margin:16px 0;font-size:15.5px;color:var(--paper);max-width:640px}
+.note{font-size:13px;color:var(--mut);border-top:1px dashed var(--line);margin-top:26px;padding-top:14px;max-width:640px}
+.hr{width:56px;height:1px;background:var(--blue);margin:44px auto 0;opacity:.6}
+
+/* 时间线 */
+.tl{border-left:1px solid var(--line);margin:26px 0 6px;padding-left:26px;max-width:640px}
+.tl .tp{position:relative;padding:14px 0}
+.tl .tp::before{content:"";position:absolute;left:-31px;top:24px;width:9px;height:9px;border-radius:50%;border:1px solid var(--dim);background:var(--ink);transition:all .6s}
+.tl .tp.on::before{background:var(--blue);border-color:var(--blue);box-shadow:0 0 8px rgba(94,143,187,.6)}
+.tl .ty{font-size:12px;letter-spacing:.3em;color:var(--blue);margin-bottom:4px}
+.tl .tt{font-size:15px}
+
+/* 翻牌 */
+.flip{perspective:900px;display:inline-block;cursor:pointer}
+.flip .in{position:relative;transition:transform .8s cubic-bezier(.5,.05,.2,1);transform-style:preserve-3d}
+.flip.fl .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:20px 22px;border:1px solid var(--line);background:var(--ink2)}
+.flip .f{position:relative;z-index:2}
+.flip .b{position:absolute;inset:0;transform:rotateY(180deg);border-color:var(--blue-soft);display:flex;flex-direction:column;justify-content:center}
+.flip .flab{font-size:11px;letter-spacing:.3em;color:var(--blue);margin-bottom:8px}
+.flip .b .flab{color:var(--cinnabar)}
+
+/* 三姨 */
+.aunts{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0}
+.aunt{position:relative;width:150px;height:150px;cursor:pointer}
+.aunt .box{position:absolute;inset:0;border:1px solid var(--line);background:var(--ink2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:opacity .6s}
+.aunt .box b{font-size:19px;letter-spacing:.2em;font-weight:700}
+.aunt .box span{font-size:11px;letter-spacing:.3em;color:var(--dim)}
+.aunt .gift2{position:absolute;inset:0;border:1px solid var(--blue-soft);background:var(--ink2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px;opacity:0;transition:opacity .6s;font-size:13px;text-align:center}
+.aunt:hover .box,.aunt.open .box{opacity:0}
+.aunt:hover .gift2,.aunt.open .gift2{opacity:1}
+
+/* 说卡切换 */
+.saybar{display:flex;gap:10px;margin:20px 0 14px}
+.saybar button{background:none;border:1px solid var(--line);color:var(--mut);font-family:var(--song);font-size:13px;letter-spacing:.25em;padding:9px 18px;cursor:pointer;transition:all .4s}
+.saybar button.on{border-color:var(--blue);color:var(--blue)}
+.saypanel{border:1px solid var(--line);background:var(--ink2);padding:26px 26px 20px;max-width:640px;min-height:190px}
+.saypanel .sh{font-size:13px;letter-spacing:.3em;color:var(--blue);margin-bottom:10px}
+#svg-moon,#svg-mtn{display:none;margin:6px 0 12px}
+.saypanel[data-say="moon"] #svg-moon{display:block}
+.saypanel[data-say="mtn"] #svg-mtn{display:block}
+.honesty{margin-top:16px;border-left:2px solid var(--cinnabar);padding:4px 0 4px 14px;font-size:14px;color:var(--paper)}
+
+/* 花笺 */
+.jians{display:flex;gap:16px;flex-wrap:wrap;margin:24px 0}
+.jian{width:200px;border:1px solid var(--line);background:var(--ink2);padding:18px;cursor:pointer;transition:border-color .5s,transform .5s}
+.jian:hover{transform:translateY(-4px)}
+.jian .jh{font-size:11px;letter-spacing:.3em;color:var(--dim);margin-bottom:10px;transition:color .5s}
+.jian .jt{font-size:15px;line-height:2.1;filter:blur(5px);opacity:.35;transition:filter 1s,opacity 1s}
+.jian.on{border-color:var(--blue-soft)}
+.jian.on .jh{color:var(--blue)}
+.jian.on .jt{filter:none;opacity:1}
+
+/* 骰子 */
+.dice-row{display:flex;align-items:center;gap:28px;margin:24px 0;flex-wrap:wrap}
+#dice{width:64px;height:64px;border:1px solid var(--blue);position:relative;cursor:pointer;background:var(--ink2);transition:transform .18s;flex:none}
+#dice.rolling{animation:shake .16s linear infinite}
+@keyframes shake{0%{transform:rotate(0)}25%{transform:rotate(8deg)}50%{transform:rotate(-6deg)}75%{transform:rotate(4deg)}100%{transform:rotate(0)}}
+.pip{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--paper);transform:translate(-50%,-50%)}
+.pip.red{background:var(--cinnabar)}
+.dice-note{max-width:420px;font-size:14px;color:var(--mut)}
+.dice-note .ci{display:block;margin-top:10px;color:var(--cinnabar);letter-spacing:.15em;opacity:0;transition:opacity .8s;font-size:15px}
+.dice-note .ci.on{opacity:1}
+
+/* 雪衣女 */
+.parrot{border:1px solid var(--line);background:var(--ink2);max-width:640px;padding:24px;margin:22px 0;cursor:pointer}
+.parrot .steps{display:flex;flex-direction:column;gap:2px;margin-top:10px}
+.parrot .stp{display:flex;gap:14px;align-items:baseline;padding:10px 0;border-bottom:1px dashed var(--line);opacity:.22;transition:opacity .8s}
+.parrot .stp:last-child{border-bottom:none}
+.parrot .stp.on{opacity:1}
+.parrot .sn{font-size:11px;color:var(--blue);letter-spacing:.2em;flex:none;width:52px}
+.parrot .hint{font-size:12px;color:var(--dim);letter-spacing:.25em;margin-top:14px}
+
+/* 驿路 */
+#lu{border:1px solid var(--line);background:var(--ink2);max-width:640px;padding:26px 22px 14px;margin:22px 0}
+#lu svg{width:100%;display:block}
+#lu .station{fill:var(--ink);stroke:var(--dim);stroke-width:1}
+#lu .station.lit{fill:var(--blue);stroke:var(--blue);filter:drop-shadow(0 0 4px rgba(94,143,187,.8))}
+#lu .road{stroke:var(--line);stroke-width:1;stroke-dasharray:4 5}
+#lu .lbl{fill:var(--mut);font-size:11px;letter-spacing:2px}
+#btn-yi{margin:4px 0 14px;background:none;border:1px solid var(--blue);color:var(--blue);font-family:var(--song);font-size:13px;letter-spacing:.35em;padding:9px 20px 9px 24px;cursor:pointer;transition:all .4s}
+#btn-yi:hover{background:var(--blue);color:var(--ink)}
+.twist{display:inline-block;margin-top:16px;border:1px dashed var(--cinnabar);color:var(--cinnabar);font-size:13px;letter-spacing:.15em;padding:10px 18px;opacity:0;transition:opacity 1s}
+.twist.on{opacity:1}
+
+/* 屏风 */
+#ping{border:1px solid var(--line);background:linear-gradient(180deg,#1a1c20,#191917);max-width:640px;padding:28px 26px;margin:24px 0;cursor:pointer;transition:border-color .8s}
+#ping.open{border-color:var(--blue-soft);cursor:default}
+#ping .ph{font-size:13px;letter-spacing:.3em;color:var(--mut);margin-bottom:16px;transition:opacity .6s}
+#ping.open .ph{opacity:0;height:0;margin:0;overflow:hidden}
+.names{display:flex;flex-wrap:wrap;gap:6px;max-height:0;overflow:hidden;transition:max-height 1.4s ease}
+#ping.open .names{max-height:520px}
+.names i{font-style:normal;font-size:12.5px;color:var(--paper);border:1px solid var(--line);padding:3px 9px;opacity:0;transform:translateY(6px);transition:opacity .5s,transform .5s}
+#ping.open .names i{opacity:1;transform:none}
+#ping .after{max-height:0;overflow:hidden;opacity:0;transition:max-height 1.2s ease .8s,opacity 1s ease 1s}
+#ping.open .after{max-height:600px;opacity:1}
+#ping .after .p{font-size:14.5px}
+
+/* 马嵬 */
+#s8 .darkband{border:1px solid #3a2624;background:linear-gradient(180deg,#211716,#191917);padding:28px 26px;max-width:640px;margin:24px 0}
+.zhen{display:flex;flex-direction:column;gap:2px}
+.zhen .zl{display:flex;align-items:baseline;gap:16px;padding:12px 0;border-bottom:1px dashed #33241f;cursor:pointer}
+.zhen .zl:last-child{border-bottom:none}
+.zhen .zi{font-size:17px;letter-spacing:.28em;color:var(--paper);flex:none;width:200px;transition:color .5s}
+.zhen .zl.on .zi{color:var(--cinnabar)}
+.zhen .zv{font-size:12.5px;color:var(--dim);opacity:0;transition:opacity .7s;flex:1}
+.zhen .zl.on .zv{opacity:1;color:var(--mut)}
+.saylist{margin:24px 0;max-width:640px}
+.say{display:flex;gap:14px;padding:10px 0;align-items:baseline}
+.say .who{flex:none;font-size:12px;letter-spacing:.25em;color:var(--blue);border:1px solid var(--line);padding:2px 10px;min-width:44px;text-align:center}
+.say .who.di{color:var(--mut)}
+#lisu{margin:30px 0 8px;max-width:640px}
+
+/* 骰子重四点布局 */
+.p4 .pip{background:var(--cinnabar)}
+
+/* 仙山 */
+.journey{border-left:1px solid var(--line);margin:26px 0;padding-left:26px;max-width:640px}
+.journey .jt2{position:relative;padding:16px 0}
+.journey .jt2::before{content:"";position:absolute;left:-31px;top:26px;width:9px;height:9px;border-radius:50%;border:1px solid var(--dim);background:var(--ink)}
+.journey .jt2 .jh2{font-size:12px;letter-spacing:.3em;color:var(--blue);margin-bottom:4px}
+.oathbox{border:1px solid var(--blue-soft);background:var(--ink2);max-width:640px;padding:26px;margin:24px 0;cursor:pointer;transition:border-color .6s}
+.oathbox.open{cursor:default;border-color:var(--blue)}
+.oathbox .oh{display:flex;align-items:center;gap:16px;font-size:13px;letter-spacing:.3em;color:var(--blue)}
+.oathbox .twinstar{width:12px;height:12px;flex:none}
+.oathbox .oathbody{max-height:0;overflow:hidden;opacity:0;transition:max-height 1.3s ease,opacity 1s ease .3s}
+.oathbox.open .oathbody{max-height:700px;opacity:1}
+.oathkey{margin-top:16px;border-left:2px solid var(--cinnabar);padding-left:14px;font-size:14px;color:var(--paper)}
+
+/* 尾声 */
+.relics{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:24px 0;max-width:760px}
+.relic{border:1px solid var(--line);background:var(--ink2);padding:18px;font-size:13.5px}
+.relic .rh{font-size:11px;letter-spacing:.3em;color:var(--blue);margin-bottom:10px}
+.tiles{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}
+.tile{border:1px solid var(--line);background:var(--ink2);padding:16px 18px;min-width:170px;flex:1}
+.tile .th{font-size:20px;letter-spacing:.15em;color:var(--paper);margin-bottom:8px}
+.tile .th em{font-style:normal;color:var(--cinnabar)}
+.tile .tb{font-size:12.5px;color:var(--mut)}
+.zither{margin:34px auto;max-width:560px;text-align:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 10px}
+.zither .zh{font-size:12px;letter-spacing:.4em;color:var(--mut);margin-bottom:16px}
+.zither .zb{font-size:19px;line-height:2.3;letter-spacing:.12em}
+/* 合钗 */
+#hechai{display:flex;flex-direction:column;align-items:center;margin:40px 0 10px;gap:18px}
+#hechai svg{width:min(300px,70vw)}
+#hechai .hc-a,#hechai .hc-b{transition:transform 1.6s cubic-bezier(.6,.05,.2,1)}
+#hechai.joined .hc-a{transform:translate(30px,0)}
+#hechai.joined .hc-b{transform:translate(-30px,0)}
+#btn-he{background:none;border:1px solid var(--blue);color:var(--blue);font-family:var(--song);font-size:14px;letter-spacing:.4em;padding:12px 26px 12px 32px;cursor:pointer;transition:all .5s}
+#btn-he:hover{background:var(--blue);color:var(--ink)}
+#seal{width:92px;height:92px;position:relative;opacity:0;transform:scale(1.6) rotate(-8deg);transition:all .5s cubic-bezier(.2,2,.4,1)}
+#seal.on{opacity:1;transform:scale(1) rotate(-8deg)}
+#seal .sq{position:absolute;inset:0;border:2px solid var(--cinnabar)}
+#seal .st{position:absolute;inset:8px;border:1px solid rgba(192,69,60,.55)}
+#seal .sx{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;place-items:center;font-size:26px;color:var(--cinnabar);font-weight:700}
+#seal .sx span{display:block}
+
+/* 页脚 */
+footer{border-top:1px solid var(--line);margin-top:90px;padding:44px 24px 60px;text-align:center}
+footer .fnote{max-width:680px;margin:0 auto;font-size:12.5px;color:var(--dim);line-height:2.2}
+footer .fnote b{color:var(--mut);font-weight:400}
+footer a{color:var(--blue);text-decoration:none}
+#top-mark{font-size:11px;letter-spacing:.5em;color:var(--dim);margin-bottom:18px}
+
+@media(max-width:640px){
+  .scene{padding:80px 18px 30px}
+  .hero-in{flex-direction:column-reverse;text-align:center;gap:30px}
+  .hero-title{writing-mode:horizontal-tb;letter-spacing:.2em;font-size:40px}
+  .star{display:none}
+  .jian{width:100%}
+  .aunt{width:calc(50% - 7px);height:130px}
+  .zhen .zi{width:150px;font-size:15px}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 ================= -->
+<header id="hero">
+  <div class="milky"></div>
+  <div class="star s1"><b></b>牵牛</div>
+  <div class="star s2"><b></b>织女</div>
+  <div class="hero-in">
+    <div class="hero-side">
+      <div class="eyebrow">殆知阁导读 · 传奇之部</div>
+      <h2>正史只肯给她一行册文。<br>这部传奇把她的生死，一路写到了海上仙山。</h2>
+      <p>册妃之夜授下的一付金钗钿合，十多年后在仙山折成两半，成为人间仅存的一句誓言的凭证。乐史把正史不敢细写的地方全部补齐：她怎么进宫，怎么被逐，怎么死，又怎么在方士的传说里"复堕下界"。</p>
+      <div class="hero-quote"><span class="q">是夕，授金钗钿合。</span> <span class="qn">册妃之夕</span></div>
+      <button id="btn-open">分钗启盒</button>
+    </div>
+    <h1 class="hero-title" data-t="yang-tai-zhen">杨太真外传</h1>
+    <svg id="gift" viewBox="0 0 300 300" aria-hidden="true">
+      <ellipse class="glow" cx="150" cy="150" rx="120" ry="60" fill="none" stroke="#5e8fbb" stroke-opacity=".25"/>
+      <g class="chai-a">
+        <line x1="150" y1="150" x2="60" y2="60" stroke="#5e8fbb" stroke-width="3" stroke-linecap="round"/>
+        <line x1="66" y1="70" x2="52" y2="46" stroke="#5e8fbb" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="150" cy="150" r="4" fill="#5e8fbb"/>
+      </g>
+      <g class="chai-b">
+        <line x1="150" y1="150" x2="240" y2="60" stroke="#5e8fbb" stroke-width="3" stroke-linecap="round"/>
+        <line x1="234" y1="70" x2="248" y2="46" stroke="#5e8fbb" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="150" cy="150" r="4" fill="#5e8fbb"/>
+      </g>
+      <g class="he">
+        <rect x="96" y="168" width="108" height="52" fill="none" stroke="#e8e4dc" stroke-opacity=".85" stroke-width="2"/>
+        <rect x="90" y="152" width="120" height="16" fill="none" stroke="#e8e4dc" stroke-opacity=".85" stroke-width="2" class="he-lid"/>
+        <circle cx="120" cy="194" r="2.4" fill="#c0453c"/><circle cx="140" cy="194" r="2.4" fill="#c0453c"/>
+        <circle cx="160" cy="194" r="2.4" fill="#c0453c"/><circle cx="180" cy="194" r="2.4" fill="#c0453c"/>
+      </g>
+      <text x="150" y="258" text-anchor="middle" fill="#5b574d" font-size="12" letter-spacing="6">牵牛 · 织女</text>
+    </svg>
+  </div>
+</header>
+
+<!-- ================= 左缘金钗 ================= -->
+<nav id="rail" aria-label="进度">
+  <div class="stem">
+    <i class="node" data-go="s1"></i><i class="node" data-go="s2"></i><i class="node" data-go="s3"></i>
+    <i class="node" data-go="s4"></i><i class="node" data-go="s5"></i><i class="node" data-go="s6"></i>
+    <i class="node" data-go="s7"></i><i class="node" data-go="s8"></i><i class="node" data-go="s9"></i>
+    <i class="node" data-go="s10"></i><i class="node" data-go="s11"></i>
+    <span class="tag">钗折其半 <b>决再相见</b></span>
+  </div>
+</nav>
+
+<main>
+
+<!-- ================= 一 入宫 ================= -->
+<section class="scene" id="s1">
+  <div class="kicker">第一程 · 从寿邸到凤凰园</div>
+  <h3>一年之内，三个身份</h3>
+  <p class="lead">蜀州司户的女儿，幼年失怙，寄养在叔父家。她留给地理的第一个痕迹是一口水，留给历史的第一个身份是王妃。</p>
+  <div class="p">她的出生带着一件小事：幼时失足落水，那片水从此改名。库本顺手补了两个同款地名作注，昭君村与绿珠江，凡有人在此落水，水就以人传。</div>
+  <div class="p"><span class="q">贵妃生于蜀。尝误坠池中，后人呼为落妃池。</span> <span class="qn">开篇</span></div>
+  <div class="tl" id="tl1">
+    <div class="tp"><div class="ty">开元廿三年</div><div class="tt">先嫁寿王。<span class="q">归于寿邸</span>，这一年她约十六岁。</div></div>
+    <div class="tp"><div class="ty">开元二十八年</div><div class="tt">玄宗令高力士把她从寿王府接出来<span class="q">，度为女道士，号太真，住内太真宫。</span> <span class="qn">转内</span></div></div>
+    <div class="tp"><div class="ty">天宝四载</div><div class="tt"><span class="q">于凤凰园册太真宫女道士杨氏为贵妃，半后服用。</span> <span class="qn">册妃</span>册文里只给四字规格：仪服减皇后一等。</div></div>
+    <div class="tp"><div class="ty">进见之日</div><div class="tt">奏霓裳一曲，夜里授下信物。<span class="q">是夕，授金钗钿合。</span> <span class="qn">钗盒初授</span>玄宗亲手把紫磨金步摇插上她的鬓发，对后宫说了那句名言：<span class="q">朕得杨贵妃，如得至宝也。</span>高兴到当场作曲，曲名就叫<span class="q">《得宝子》</span>。</div></div>
+  </div>
+  <div class="note">从王妃到女道士再到贵妃，每一步的年月库本都记得毫不含糊。这一串日期后来成了史家考据她生年的关键材料。</div>
+  <div class="hr"></div>
+</section>
+
+<!-- ================= 二 霓裳 ================= -->
+<section class="scene" id="s2">
+  <div class="kicker">第二程 · 一支曲子的两份来历</div>
+  <h3>仙山与月宫，都算数</h3>
+  <p class="lead">《霓裳羽衣曲》从哪来的？库本给了两个说法，一个登山，一个登月，然后坦白：都对不上，都抄给你。</p>
+  <div class="saybar">
+    <button class="on" data-say="mtn">说甲 望山</button>
+    <button data-say="moon">说乙 游月</button>
+  </div>
+  <div class="saypanel" data-say="mtn">
+    <div class="sh">自三乡驿远望女儿山而起意</div>
+    <svg id="svg-mtn" viewBox="0 0 560 110" aria-hidden="true">
+      <path d="M0 96 L90 44 L150 88 L230 26 L320 92 L410 50 L500 96" fill="none" stroke="#3c5a76" stroke-width="1.6"/>
+      <circle cx="470" cy="26" r="12" fill="none" stroke="#8d8778" stroke-width="1"/>
+      <text x="440" y="30" fill="#8d8778" font-size="11">女儿山</text>
+      <rect x="240" y="78" width="56" height="18" fill="none" stroke="#5b574d"/>
+      <text x="248" y="92" fill="#5b574d" font-size="10">三乡驿</text>
+    </svg>
+    <div class="p">刘禹锡见过玄宗的御制诗，追和了一首，其中两句正好给这幅画配了字幕：<span class="q">三乡驿上望仙山，归作《霓裳羽衣曲》。</span> <span class="qn">刘禹锡诗</span></div>
+  </div>
+  <div class="saypanel" data-say="moon" hidden>
+    <div class="sh">《逸史》所记，罗公远携帝游月宫</div>
+    <svg id="svg-moon" viewBox="0 0 560 110" aria-hidden="true">
+      <circle cx="280" cy="54" r="40" fill="none" stroke="#5e8fbb" stroke-opacity=".6"/>
+      <circle cx="266" cy="40" r="1.6" fill="#e8e4dc"/><circle cx="292" cy="52" r="1.6" fill="#e8e4dc"/><circle cx="276" cy="66" r="1.6" fill="#e8e4dc"/>
+      <path d="M60 100 Q170 46 280 54 Q390 62 500 100" fill="none" stroke="#8d8778" stroke-dasharray="3 5"/>
+      <text x="70" y="94" fill="#5b574d" font-size="10">掷桂枝化银桥</text>
+    </svg>
+    <div class="p">天宝初年八月十五，罗公远在宫中陪玄宗赏月，<span class="q">乃取一枝桂，向空掷之，化为一桥，其色如银。</span>两人走上桥去，行数十里，罗公远说<span class="q">此月宫也。</span>宫里有<span class="q">仙女数百，素练宽衣，舞于广庭。</span>玄宗偷偷记下曲调，回宫交给伶官复原。</div>
+  </div>
+  <div class="honesty">两份来历，库本不肯只留一份：<span class="q">以二说不同，乃备录于此</span>。这是全书的方法论：传说打架，就把打架的现场原样端给读者。这也是"外传"这类写作的自白书，正史之外，多说并存。</div>
+  <div class="p" style="margin-top:22px">曲子后来等到了它的舞者。木兰殿上木兰花开，皇帝情绪不高，贵妃醉中起舞，库本记下了那一幕的杀伤力：<span class="q">方知回雪流风，可以回天转地。</span> <span class="qn">木兰殿</span></div>
+  <div class="hr"></div>
+</section>
+
+<!-- ================= 三 满门 ================= -->
+<section class="scene" id="s3">
+  <div class="kicker">第三程 · 一门贵妃三夫人</div>
+  <h3>权倾天下的杨家</h3>
+  <p class="lead">贵妃得宠，三个姐姐同日封夫人，堂兄赐名国忠一路拜相。库本记恩宠，像记账。</p>
+  <div class="p"><span class="q">宫中呼贵妃为娘子，礼数同于皇后。</span> <span class="qn">宫中礼数</span>三夫人各有所赐，把三张名刺翻过来看看。</div>
+  <div class="aunts">
+    <div class="aunt"><div class="box"><b>韩国夫人</b><span>大姨</span></div><div class="gift2">同日拜命，<span class="q">皆月给钱十万，为脂粉之姿。</span></div></div>
+    <div class="aunt"><div class="box"><b>虢国夫人</b><span>三姨</span></div><div class="gift2"><span class="q">然虢国不施妆粉，自炫美艳，常素面朝天。</span>赐照夜玑</div></div>
+    <div class="aunt"><div class="box"><b>秦国夫人</b><span>八姨</span></div><div class="gift2">赐七叶冠。听宫中乐舞那日她端坐受礼，皇帝自报乐籍讨缠头，她答得干脆：大唐天子的阿姨岂会没钱。</div></div>
+  </div>
+  <div class="p"><span class="q">自此杨氏权倾天下，每有嘱请，台省府县，若奉诏敕。</span> <span class="qn">权倾</span>民间的羡慕编成了歌谣：<span class="q">生女勿悲酸，生男勿喜欢。</span> <span class="qn">时谣</span></div>
+  <div class="flip" id="f-lushan"><div class="in">
+    <div class="f"><div class="flab">伏笔 · 安禄山</div><div style="font-size:14px">范阳节度使在宴席上只拜贵妃，不拜皇帝。点击看他的答话。</div></div>
+    <div class="b"><div class="flab">禄山奏对</div><div style="font-size:14px">上问<span class="q">胡不拜我而拜妃子，意者何也？</span>禄山答<span class="q">胡家不知其父，只知其母。</span>玄宗笑了，还下令让杨家兄妹与他结拜。</div></div>
+  </div></div>
+  <div class="note">最热闹的地方埋着最冷的一条线：这个"只知其母"的义子，七年后起兵的名义正是诛杨。</div>
+  <div class="p" style="margin-top:24px">恩宠也不是单行道。五载七月她因妒悍触怒皇帝被送出宫，当天中午皇帝就不吃饭了，半夜又开了坊门接回。九载二月她偷了宁王的紫玉笛再被逐出，这次她剪下了自己的头发：</div>
+  <div class="p"><span class="q">衣服之外，皆圣恩所赐。惟发肤是父母所生。今当即死，无以谢上。</span><span class="q">乃引刀剪其发一缭，附韬光以献。</span> <span class="qn">剪发</span>使者把头发搭在肩上奏明，皇帝大惊惋惜，立刻召还，从此更加宠爱。</div>
+  <div class="hr"></div>
+</section>
+
+<!-- ================= 四 亭北 ================= -->
+<section class="scene" id="s4">
+  <div class="kicker">第四程 · 沉香亭北</div>
+  <h3>金花笺上的三首</h3>
+  <p class="lead">开元年间留下的几本名贵牡丹，移栽在兴庆池东面的沉香亭前。花开那天，皇帝骑照夜白，贵妃坐步辇，梨园头牌捧着檀板正要唱旧词，皇帝拦住了。</p>
+  <div class="p"><span class="q">赏名花，对妃子，焉用旧乐词为。</span> <span class="qn">命词</span>金花笺当场发往翰林院，要李白立进三篇。三张笺，点一张亮一张。</div>
+  <div class="jians">
+    <div class="jian"><div class="jh">清平调 · 其一</div><div class="jt"><span class="q">云想衣裳花想容，春风拂槛露华浓。若非群玉山头见，会向瑶台月下逢。</span></div></div>
+    <div class="jian"><div class="jh">清平调 · 其二</div><div class="jt"><span class="q">一枝红艳露凝香，云雨巫山枉断肠。借问汉宫谁得似？可怜飞燕倚新妆。</span></div></div>
+    <div class="jian"><div class="jh">清平调 · 其三</div><div class="jt"><span class="q">名花倾国两相欢，长得君王带笑看。解释春风无限恨，沉香亭北倚阑干。</span></div></div>
+  </div>
+  <div class="p">歌罢，贵妃<span class="q">持玻璃七宝杯，酌西凉州葡萄酒，笑领歌，意甚厚。</span> <span class="qn">领歌</span>皇帝亲自吹玉笛倚曲，每段将换，故意放慢声音讨好她。谁也没想到，翻脸的引线就埋在第二首里。</div>
+  <div class="flip" id="f-li"><div class="in">
+    <div class="f"><div class="flab">转折 · 脱靴之耻</div><div style="font-size:14px">李白曾在宫中让高力士脱靴。点击看这笔账怎么算。</div></div>
+    <div class="b"><div class="flab">力士进言</div><div style="font-size:14px">后来她反复吟起这三首词，力士只说了一句：<span class="q">以飞燕指妃子，贱之甚矣。</span>赵飞燕是污名，是红颜祸水的原型。贵妃深以为然。库本补了一刀：<span class="q">上尝三欲命李白官，卒为宫中所捍而止。</span></div></div>
+  </div></div>
+  <div class="hr"></div>
+</section>
+
+<!-- ================= 五 殿上 ================= -->
+<section class="scene" id="s5">
+  <div class="kicker">第五程 · 殿上杂技场</div>
+  <h3>骰子、百尺竿与一只鹦鹉</h3>
+  <p class="lead">这一程全是游戏，但游戏里也藏着制度史：骰子的红点、神童的诗、还有一只会念经的鸟。</p>
+  <div class="dice-row">
+    <div id="dice" class="p4" title="点击掷骰"></div>
+    <div class="dice-note">帝妃采戏，皇帝眼看要输，全靠掷出两个四点翻盘。点击骰子试试，你掷不出别的。<span class="ci" id="ci"></span></div>
+  </div>
+  <div class="p">库本原文记得更省净：<span class="q">骰子宛转而成重四，遂令高力士赐绯，风俗因而不易。</span> <span class="qn">赐绯</span>今天骰子上那两点朱红，据说就是这次御赐。</div>
+  <div class="p">勤政楼上大摆声乐，教坊的王大娘善顶百尺竿，竿顶还装了木山，让小儿持节在山间出入歌舞。十岁的神童刘晏，官居秘书省正字，被召上楼，贵妃让他坐在膝上，替他施粉黛、拿巾栉，然后出题叫他以此竿为题作诗。孩子应声而成：</div>
+  <div class="p"><span class="q">楼前百戏竞争新，惟有长竿妙入神。谁谓绮罗翻有力，犹自嫌轻更著人。</span> <span class="qn">刘晏诗</span></div>
+  <div class="parrot" id="parrot">
+    <div class="flab" style="font-size:11px;letter-spacing:.3em;color:var(--blue)">雪衣女 · 点击推进</div>
+    <div class="steps">
+      <div class="stp"><span class="sn">其来</span><span>广南进贡白鹦鹉，能通人言，得名雪衣女。</span></div>
+      <div class="stp"><span class="sn">其梦</span><span class="q">雪衣女昨夜梦为鸷乌所搏。</span></div>
+      <div class="stp"><span class="sn">其学</span><span class="q">上令妃授以《多心经》，记诵精熟。</span></div>
+      <div class="stp"><span class="sn">其终</span><span>随驾出游，鹰从天降，一击而毙。<span class="q">遂瘗于苑中，呼为鹦鹉冢。</span></span></div>
+    </div>
+    <div class="hint">一只会念经的鸟，替这个盛世做了一个不祥的梦。</div>
+  </div>
+  <div class="p">还有一颗果子。南方进来的合欢果，帝妃对分而食，皇帝说<span class="q">此果似知人意，朕与卿固同一体，所以合欢。</span> <span class="qn">合欢果</span>当场命画工绘图，传于后世。盛世的一点甜，库本也舍得给足篇幅。</div>
+  <div class="hr"></div>
+</section>
+
+<!-- ================= 六 驿路 ================= -->
+<section class="scene" id="s6">
+  <div class="kicker">第六程 · 驰驿以进</div>
+  <h3>荔枝香</h3>
+  <p class="lead">她生在蜀地，嗜荔枝，而南海的荔枝比蜀地好。于是每年夏天，一条驿路为她跑起来。</p>
+  <div id="lu">
+    <svg viewBox="0 0 560 120" aria-hidden="true">
+      <line class="road" x1="40" y1="80" x2="520" y2="80"/>
+      <circle class="station" cx="40" cy="80" r="6"/>
+      <circle class="station" cx="160" cy="80" r="6"/>
+      <circle class="station" cx="280" cy="80" r="6"/>
+      <circle class="station" cx="400" cy="80" r="6"/>
+      <circle class="station" cx="520" cy="80" r="6"/>
+      <text class="lbl" x="28" y="108">南海</text>
+      <text class="lbl" x="148" y="108">驰驿</text>
+      <text class="lbl" x="262" y="108">中使</text>
+      <text class="lbl" x="388" y="108">入关</text>
+      <text class="lbl" x="486" y="108">华清宫</text>
+      <text class="lbl" x="150" y="34">暑热而熟，过夜即败味</text>
+    </svg>
+    <button id="btn-yi">发 驿</button>
+  </div>
+  <div class="p"><span class="q">妃子既生于蜀，嗜荔枝。南海荔枝，胜于蜀者，故每岁驰驿以进。然方暑热而熟，经宿则无味。后人不能知也。</span> <span class="qn">荔枝</span>末一句是全传里少见的冷笔：后人不知道，那年月吃到的早已不是枝头的味道。</div>
+  <div class="p">天宝十四载六月初一是她的生日。长生殿上，三十人以下的小部音声奏新曲，曲子还没名字，恰好南海荔枝进到，就势命名。库本记：<span class="q">会南海进荔枝，因以曲名《荔枝香》</span>，当时<span class="q">左右欢呼，声动山谷。</span> <span class="qn">荔枝香</span>一支出于水果的曲子，后来真的进了词牌谱。</div>
+  <div class="p" style="margin-top:26px">同一条驿路上还跑过别的私货。交趾贡的瑞龙脑香，皇帝赐她十枚，她私自派明驼使送了三枚给安禄山。库本连快递规格都记了：<span class="q">明驼使，腹下有毛，夜能明，日驰五百里</span>，<span class="q">持三枚遗禄山</span>。 <span class="qn">遗禄山</span></div>
+  <span class="twist" id="twist6">这条驿路的最后一趟，跑在第八程。</span>
+  <div class="hr"></div>
+</section>
+
+<!-- ================= 七 屏风 ================= -->
+<section class="scene" id="s7">
+  <div class="kicker">第七程 · 楼上夜宴</div>
+  <h3>虹霓屏风，三十二人</h3>
+  <p class="lead">一部隋文帝造、赐过文成公主的屏风，几经辗转到了杨家楼上。国忠午睡，就枕在它前面。</p>
+  <div id="ping">
+    <div class="ph">屏上美人皆是奇宝嵌成 · 点击屏风</div>
+    <div class="names"><span class="q">
+      <i>裂缯人也</i><i>定陶人也</i><i>穹庐人也</i><i>当垆人也</i><i>亡吴人也</i><i>步莲人也</i><i>桃源人也</i><i>斑竹人也</i><i>奉五官人也</i><i>温肌人也</i><i>曹氏投波人也</i><i>吴宫无双返香人也</i><i>拾翠人也</i><i>窃香人也</i><i>金屋人也</i><i>解佩人也</i><i>为云人也</i><i>董双成也</i><i>为烟人也</i><i>画眉人也</i><i>吹萧人也</i><i>笑人也</i><i>垓中人也</i><i>许飞琼也</i><i>赵飞燕也</i><i>金谷人也</i><i>小鬓人也</i><i>光发人也</i><i>薛夜来也</i><i>结绮人也</i><i>临春阁人也</i><i>扶风女也</i>
+    </span></div>
+    <div class="after">
+      <div class="p">三十几位前代美人从屏上下来，各自报了名号，全是文本里著名女性的花名册：浣纱的、当垆的、和亲的、宫倾的。接着纤腰伎人上场，自称<span class="q">楚章华踏谣娘也</span>，连臂而歌：<span class="q">三朵芙蓉是我流，大杨造得小杨收。</span> <span class="qn">踏谣娘歌</span>杨字两见，像一句没人听得懂的谶。</div>
+      <div class="p">国忠睁着眼看完全场，<span class="q">而身体不能动，口不能发声。</span>演出结束，<span class="q">俄而递为本艺。将呈讫，一一复归屏上。</span>他吓得奔下楼去，下令封锁。贵妃听说，也不想去看。</div>
+      <div class="p">这具屏风的下落也是一句冷收尾：<span class="q">禄山乱后，其物犹存。在宰相元载家，自后不知所在。</span> <span class="qn">屏风下落</span></div>
+    </div>
+  </div>
+  <div class="note">这段志怪插在全书最奢华的段落后面，功能接近预告片：屏上群美的名单里有亡吴的西施、垓下的虞姬，繁华的名单排得越长，收梢越冷。</div>
+  <div class="hr"></div>
+</section>
+
+<!-- ================= 八 马嵬 ================= -->
+<section class="scene" id="s8">
+  <div class="kicker">第八程 · 梨树之下</div>
+  <h3>马嵬</h3>
+  <p class="lead">天宝十五载的六月，潼关丢了，幸蜀的车队走到马嵬驿。军士停马，先杀国忠，然后围着驿站不走。库本在前面早已埋好四句谶诗，一句一句来对。</p>
+  <div class="darkband">
+    <div style="font-size:11px;letter-spacing:.3em;color:var(--cinnabar);margin-bottom:10px">术士李遐周诗 · 点击逐句应验</div>
+    <div class="zhen">
+      <div class="zl"><span class="zi">燕市人皆去</span><span class="zv"><span class="q">禄山即蓟门之士而来。</span></span></div>
+      <div class="zl"><span class="zi">函关马不归</span><span class="zv"><span class="q">哥舒翰之败潼关也。</span></span></div>
+      <div class="zl"><span class="zi">若逢山下鬼</span><span class="zv"><span class="q">嵬字，即马嵬驿也。</span></span></div>
+      <div class="zl"><span class="zi">环上系罗衣</span><span class="zv"><span class="q">贵妃小字玉环，及其死也，力士以罗巾缢焉。</span></span></div>
+    </div>
+    <div class="p" style="font-size:13.5px;color:var(--mut);margin-top:14px">谶诗全文：<span class="q">燕市人皆去，函关马不归。若逢山下鬼，环上系罗衣。</span>库本自注逐句坐实，等于让谶语当了叙事提纲。</div>
+  </div>
+  <div class="p">驿门内的小巷里，皇帝拄着杖歪着头站了很久。随驾的司录韦锷进言<span class="q">乞陛下割恩忍断，以宁国家。</span>高力士把话说透：<span class="q">国忠负罪，诸将讨之。贵妃即国忠之妹，犹在陛下左右，群臣能无忧怖？伏乞圣虑裁断。</span> <span class="qn">力士对</span></div>
+  <div class="saylist">
+    <div class="say"><span class="who">妃</span><span class="q">愿大家好注，妾诚负国恩，死无恨矣。乞容礼佛。</span></div>
+    <div class="say"><span class="who di">帝</span><span class="q">愿妃子善地受生。</span></div>
+  </div>
+  <svg id="lisu" viewBox="0 0 560 130" aria-hidden="true">
+    <line x1="60" y1="120" x2="60" y2="30" stroke="#3a332c" stroke-width="3"/>
+    <circle cx="60" cy="26" r="26" fill="none" stroke="#3a332c" stroke-width="1.4"/>
+    <path d="M30 40 Q60 60 90 40" fill="none" stroke="#3a332c"/>
+    <path d="M36 56 Q60 72 84 56" fill="none" stroke="#3a332c"/>
+    <line x1="120" y1="60" x2="120" y2="120" stroke="#c0453c" stroke-width="1.2" opacity=".9"/>
+    <text x="132" y="70" fill="#8d8778" font-size="11">佛堂前梨树</text>
+    <text x="300" y="44" fill="#5b574d" font-size="11">荔枝恰至</text>
+    <circle cx="290" cy="40" r="2" fill="#c0453c"/>
+  </svg>
+  <div class="p"><span class="q">力士遂缢于佛堂前之梨树下。</span> <span class="qn">缢</span>库本在此处落了一笔全书最狠的剪接：<span class="q">才绝，而南方进荔枝至。</span>她断气的那一刻，第六程那条驿路刚好到站。皇帝望着荔枝<span class="q">长号数息</span>，只能吩咐拿去祭她。</div>
+  <div class="p">陈玄礼验视，抬首确认，六军方解。她葬在西城外一里多的道北坎下，<span class="q">瘗于西郭之外一里许道北坎下。妃时年三十八。</span> <span class="qn">瘗</span>库本把地点与年龄一并记档。启程后皇帝在马上对乐工张野狐说：<span class="q">此去剑门，鸟啼花落，水绿山青，无非助朕悲悼妃子之由也。</span> <span class="qn">剑门语</span></div>
+  <div class="p" style="margin-top:20px">她生前爱用的两样头面，也早在童谣里写好了下落：<span class="q">妃常以假髻为首饰，而好服黄裙。</span>京师童谣唱<span class="q">义髻抛河里，黄裙逐水流。</span>库本补三字：<span class="q">至此应矣。</span> <span class="qn">童谣应</span></div>
+  <div class="hr"></div>
+</section>
+
+<!-- ================= 九 归途 ================= -->
+<section class="scene" id="s9">
+  <div class="kicker">第九程 · 栈道铃声</div>
+  <h3>归途五物</h3>
+  <p class="lead">入蜀的路上下着连雨。库本用五件小东西接住了这场丧事之后的漫长余生，一件比一件轻，一件比一件重。</p>
+  <div class="relics">
+    <div class="relic"><div class="rh">端正树</div>扶风道旁一株石楠生得团团如盖，皇帝赐名端正树，库本注四字：<span class="q">盖有所思也</span>。</div>
+    <div class="relic"><div class="rh">雨霖铃</div>斜谷栈道遇雨十余日，<span class="q">于栈道雨中闻铃声隔山相应</span>，遂采其声为曲<span class="q">，以寄恨焉</span>。 <span class="qn">雨霖铃</span></div>
+    <div class="relic"><div class="rh">锦香囊</div>改葬被劝止，密令中使潜移。启视时<span class="q">肌肤已消释矣。胸前犹有锦香囊在焉</span>，中使葬毕献上，<span class="q">上皇置之怀袖</span>。 <span class="qn">香囊</span></div>
+    <div class="relic"><div class="rh">凉州词</div>南内夜阑，闻里巷隐约有歌，次日寻来，果然是梨园旧人，唱的是<span class="q">歌《凉州》之词，贵妃所制也。上亲御玉笛，为之倚曲。曲罢相视，无不掩泣。</span> <span class="qn">凉州</span></div>
+    <div class="relic"><div class="rh">瑞龙脑</div>旧宴上一阵风把贵妃领巾吹到乐工贺怀智的幞头上，<span class="q">及归，觉满身香气</span>。他把幞头贮进锦囊收了一年，献还太上皇。上皇只说了五个字：<span class="q">此瑞龙脑香也。</span> <span class="qn">瑞龙脑</span></div>
+  </div>
+  <div class="p">五件事物串起来，是这半本传的真正主题：人没了，物还替人记着。词牌雨霖铃、凉州词的曲目，都被库本钉在了具体的那个雨天和那个夜晚。</div>
+  <div class="hr"></div>
+</section>
+
+<!-- ================= 十 仙山 ================= -->
+<section class="scene" id="s10">
+  <div class="kicker">第十程 · 海上仙山</div>
+  <h3>玉妃太真院</h3>
+  <p class="lead">一个叫杨通幽的道士从蜀地来，见太上皇思念不止，自称怀<span class="q">李少君之术</span>，能致亡者之神。全书最后一程，从这里出发。</p>
+  <div class="journey">
+    <div class="jt2"><div class="jh2">先索人间</div>人间地府两处寻遍，踪迹杳然。<span class="q">又能游神驭气，出天界、入地府求之，竟不见。</span> <span class="qn">两界</span></div>
+    <div class="jt2"><div class="jh2">再绝四海</div><span class="q">旁求四虚上下，东极，绝大海，跨蓬壶。</span> <span class="qn">蓬壶</span></div>
+    <div class="jt2"><div class="jh2">终至仙山</div><span class="q">忽见最高山，上多楼阁。</span><span class="q">西厢下有洞户，东向，阖其门，额署曰「玉妃太真院」。</span> <span class="qn">洞户</span>双鬟应门，碧衣传语<span class="q">玉妃方寝，请少待之。</span></div>
+    <div class="jt2"><div class="jh2">玉妃出</div><span class="q">妃冠金莲，紫绡，佩红玉，曳凤舄。</span> <span class="qn">妆束</span>相见后<span class="q">问皇帝安否，次问天宝十四载以还事。言讫悯然。</span></div>
+  </div>
+  <div class="p">她让碧衣女取来当年那付信物，<span class="q">折其半授使者</span>：钗掰下一股，盒分去一扇，带回一句<span class="q">为我谢太上皇，谨献是物，寻旧好也。</span> <span class="qn">折半</span>左缘那枝金钗，到这里断成两半。</div>
+  <div class="p">方士却不敢就走：信物可以伪造，恐怕<span class="q">恐金钗钿合，负新垣平之诈也</span>，请求<span class="q">请当时一事，不闻于他人者，验于太上皇。</span> <span class="qn">请验</span>新垣平是汉文帝朝造假祥瑞被族诛的方士，道士拿他自警，等于承认自己这一行造假成风。</div>
+  <div class="oathbox" id="oath">
+    <div class="oh">
+      <svg class="twinstar" viewBox="0 0 12 12"><circle cx="3" cy="3" r="1.6" fill="#5e8fbb"/><circle cx="9" cy="9" r="1.6" fill="#5e8fbb"/><line x1="3" y1="3" x2="9" y2="9" stroke="#5e8fbb" stroke-opacity=".5" stroke-dasharray="2 2"/></svg>
+      唯一无 second 人的现场 · 点击开启
+    </div>
+    <div class="oathbody">
+      <div class="p" style="margin-top:16px"><span class="q">玉妃茫然退立，若有所思</span>，然后说出了那个夜晚：<span class="q">昔天宝十载，侍辇避暑骊山宫。秋七月，牵牛织女相见之夕，上凭肩而望。因仰天感牛女事，密相誓心：「愿世世为夫妇。」</span> <span class="qn">密誓</span><span class="q">言毕，执手各呜咽。此独君王知之耳。</span></div>
+      <div class="oathkey">全书压舱的一句：<span class="q">此独君王知之耳。</span>能对上的不是物，是一件没有第三人在场的事。信物防伪防不住，人心的记忆防得住。这大概是传奇文里最早的一套"验证协议"。</div>
+      <div class="p" style="margin-top:14px">说完这桩，她把自己的处境也交代了：<span class="q">由此一念，又不得居此，复堕下界，且结后缘。</span>至于重逢，她给的是确定式：<span class="q">或为天，或为人，决再相见。好合如旧。</span>最后托使者带话：<span class="q">太上皇亦不久人间，幸惟自爱，无自苦耳。</span> <span class="qn">别语</span></div>
+    </div>
+  </div>
+  <div class="hr"></div>
+</section>
+
+<!-- ================= 十一 尾声 ================= -->
+<section class="scene" id="s11">
+  <div class="kicker">终程 · 刻木牵丝</div>
+  <h3>就枕之前</h3>
+  <p class="lead">回到长安的太上皇被迁入甘露殿。绝食，辟谷，玩一只紫玉笛。</div>
+  <div class="p"><span class="q">帝玩一紫玉笛，因吹数声，有双鹤下于庭，徘徊而去。</span> <span class="qn">双鹤</span>他告诉侍儿宫爱：<span class="q">吾奉上帝所命，为元始孔升真人，此期可再会妃子耳</span>，随即吩咐：<span class="q">我若就枕，慎勿惊我。</span> <span class="qn">就枕</span>宫爱听见睡里有声，进去看，<span class="q">已崩矣。</span> <span class="qn">崩</span></div>
+  <div class="p" style="margin-top:24px">库本卷末附了一则梦，把整场悲剧装进一套拆字。杨妃梦见与明皇同游骊山，行至兴元驿刚要用饭，宫中忽报起火；匆匆出驿，回头一看，驿中树木尽成灰焰。俄顷现出两条龙，皇帝骑白的，去如飞；她骑黑的，行迟迟，孤身无助，触着山峰坠入雾霭。次日一早，渔阳的叛书就到了。明皇替这个梦逐字对账：</div>
+  <div class="tiles">
+    <div class="tile"><div class="th">骊<em>与离</em>同</div><div class="tb">同游骊山，即是生离。<span class="q">骊与离同</span>。</div></div>
+    <div class="tile"><div class="th">驿<em>加木</em>成杨</div><div class="tb"><span class="q">驿木俱焚，驿与易同，加木于旁，杨字也。</span>驿旁添木，正合杨家姓。</div></div>
+    <div class="tile"><div class="th">益<em>加丝</em>成缢</div><div class="tb">梦里她被授益州牧之职，养蚕致丝，<span class="q">益旁加丝，缢字也。</span>死法早已写在梦里。</div></div>
+  </div>
+  <div class="p">梦里还有一问。<span class="q">帝后梦至一处，题曰东虚府。又至一院，题曰太一玉真元上妃院，入见太真，隔一云母屏对坐，不见其形。</span>太上皇隔着屏风问她：<span class="q">汝思我乎？</span>她答：<span class="q">人非木石，安得无情。</span>又许下后约：<span class="q">异日，当共跨晴晖，浮落景，游玉虚中。</span>通音信的路也指了：<span class="q">若遇雁府上人，可附信矣。</span>库本收束一句：<span class="q">后果遇鸿都道士于海上仙峰得钗合私言而回。</span> <span class="qn">附录</span>梦与正文，在此扣环。</div>
+  <div class="p" style="margin-top:20px">马嵬的土也对人间开过张：当地老妇捡得<span class="q">马嵬媪得锦拗袜一只，相传过客一玩百钱，前后获钱无数。</span> <span class="qn">袜子生意</span>库本跟着叹了两字：悲夫。</div>
+  <div class="zither">
+    <div class="zh">圣怀耿耿，傀儡场中</div>
+    <div class="zb"><span class="q">刻木牵丝作者翁，鸡皮鹤发与真同。须臾舞罢寂无事，还似人生一世中。</span></div>
+  </div>
+  <div class="p" style="text-align:center">一只傀儡戏的老艺人，演罢收线，人物一齐瘫倒。太上皇吟的是傀儡，说的是自己：盛世、爱情、溃逃、仙山，须臾舞罢。</div>
+  <div id="hechai">
+    <svg viewBox="0 0 300 120" aria-hidden="true">
+      <g class="hc-a"><line x1="86" y1="60" x2="140" y2="60" stroke="#5e8fbb" stroke-width="3" stroke-linecap="round"/><circle cx="86" cy="60" r="4" fill="#5e8fbb"/></g>
+      <g class="hc-b"><line x1="214" y1="60" x2="160" y2="60" stroke="#5e8fbb" stroke-width="3" stroke-linecap="round"/><circle cx="214" cy="60" r="4" fill="#5e8fbb"/></g>
+      <rect x="108" y="80" width="84" height="26" fill="none" stroke="#e8e4dc" stroke-opacity=".8" stroke-width="1.6"/>
+      <text x="150" y="30" text-anchor="middle" fill="#5b574d" font-size="11" letter-spacing="4">钗合一处 · 誓言复核</text>
+    </svg>
+    <button id="btn-he">合 钗</button>
+    <div id="seal"><div class="sq"></div><div class="st"></div><div class="sx"><span>相</span><span>决</span><span>见</span><span>再</span></div></div>
+  </div>
+  <div class="hr"></div>
+</section>
+
+</main>
+
+<footer>
+  <div id="top-mark">钗 盒 两 分</div>
+  <div class="fnote">
+    <p><b>文本来源</b>：殆知阁简体库〈杨太真外传〉，北宋乐史撰，存于子藏笔记部。导读仓库：<a href="https://github.com/robertsong/daizhige-daodu" target="_blank">daizhige-daodu</a>。</p>
+    <p><b>引文核验</b>：页面所有引文经脚本与库内文件去标点、归一异体后逐字比对通过；白话部分做六字窗反扫，与库本零重合。</p>
+    <p><b>阅读提醒</b>：本文为宋人传奇，掺入大量传说与志怪，人物、对话与年代细节不可尽信史。文中对古代宫廷、女性命运的记述均属时代产物，请以史料批判的眼光阅读。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var hero=document.getElementById('hero');
+  document.getElementById('btn-open').addEventListener('click',function(){hero.classList.add('open');});
+  hero.querySelector('#gift').addEventListener('click',function(){hero.classList.add('open');});
+
+  var rail=document.getElementById('rail');
+  var nodes=rail.querySelectorAll('.node');
+  nodes.forEach(function(n){n.addEventListener('click',function(){
+    document.getElementById(n.getAttribute('data-go')).scrollIntoView({behavior:'smooth'});
+  });});
+
+  var secs=[].slice.call(document.querySelectorAll('.scene'));
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add('rv');
+          var i=secs.indexOf(e.target);
+          nodes.forEach(function(n,j){n.classList.toggle('on',j<=i);});
+          if(i>=9){rail.classList.add('split');}else{rail.classList.remove('split');}
+        }
+      });
+    },{threshold:0.25});
+    secs.forEach(function(s){io.observe(s);});
+  }else{
+    secs.forEach(function(s){s.classList.add('rv');});
+  }
+
+  /* 霓裳两说 */
+  var btns=document.querySelectorAll('.saybar button');
+  var panels=document.querySelectorAll('.saypanel');
+  btns.forEach(function(b){b.addEventListener('click',function(){
+    btns.forEach(function(x){x.classList.toggle('on',x===b);});
+    panels.forEach(function(p){p.hidden=(p.getAttribute('data-say')!==b.getAttribute('data-say'));});
+  });});
+
+  /* 翻牌 */
+  document.querySelectorAll('.flip').forEach(function(f){
+    f.addEventListener('click',function(){f.classList.toggle('fl');});
+  });
+  document.querySelectorAll('.aunt').forEach(function(a){
+    a.addEventListener('click',function(){a.classList.toggle('open');});
+  });
+
+  /* 花笺 */
+  document.querySelectorAll('.jian').forEach(function(j){
+    j.addEventListener('click',function(){j.classList.add('on');});
+  });
+
+  /* 骰子 */
+  var dice=document.getElementById('dice'),ci=document.getElementById('ci'),rolled=false;
+  function pips(n){
+    var pos={1:[[50,50]],2:[[30,30],[70,70]],3:[[28,28],[50,50],[72,72]],4:[[30,30],[30,70],[70,30],[70,70]],
+             5:[[30,30],[30,70],[50,50],[70,30],[70,70]],6:[[30,28],[30,50],[30,72],[70,28],[70,50],[70,72]]};
+    dice.innerHTML='';
+    pos[n].forEach(function(p){
+      var s=document.createElement('i');s.className='pip'+(n===4?' red':'');
+      s.style.left=p[0]+'%';s.style.top=p[1]+'%';dice.appendChild(s);
+    });
+  }
+  pips(4);
+  dice.addEventListener('click',function(){
+    if(rolled)return;rolled=true;
+    dice.classList.add('rolling');
+    var k=0,iv=setInterval(function(){pips([2,3,5,6,1][k++%5]);},110);
+    setTimeout(function(){
+      clearInterval(iv);dice.classList.remove('rolling');pips(4);
+      ci.classList.add('on');
+      ci.textContent='重四！四点自此涂朱，成为定制。';
+    },1400);
+  });
+
+  /* 雪衣女 */
+  var parrot=document.getElementById('parrot'),stps=parrot.querySelectorAll('.stp'),ps=0;
+  parrot.addEventListener('click',function(){
+    if(ps<stps.length){stps[ps++].classList.add('on');}
+  });
+
+  /* 驿路 */
+  var stations=document.querySelectorAll('#lu .station'),tw6=document.getElementById('twist6');
+  document.getElementById('btn-yi').addEventListener('click',function(){
+    stations.forEach(function(s,i){setTimeout(function(){s.classList.add('lit');if(i===stations.length-1){tw6.classList.add('on');}},i*450);});
+  });
+
+  /* 屏风 */
+  document.getElementById('ping').addEventListener('click',function(){
+    var p=this;if(p.classList.contains('open'))return;
+    p.classList.add('open');
+    p.querySelectorAll('.names i').forEach(function(n,i){n.style.transitionDelay=(i*45)+'ms';});
+  });
+
+  /* 谶诗应验 */
+  document.querySelectorAll('.zhen .zl').forEach(function(z){
+    z.addEventListener('click',function(){z.classList.toggle('on');});
+  });
+
+  /* 密誓 */
+  document.getElementById('oath').addEventListener('click',function(){this.classList.add('open');});
+
+  /* 合钗 */
+  var hc=document.getElementById('hechai');
+  document.getElementById('btn-he').addEventListener('click',function(){
+    hc.classList.add('joined');
+    setTimeout(function(){document.getElementById('seal').classList.add('on');},1300);
+  });
+})();
+</script>
+</body>
+</html>
