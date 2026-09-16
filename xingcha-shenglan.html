@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>星槎胜览 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --ink2:#1d1c19;
+  --sea:#20242b;
+  --paper:#e8e4dc;
+  --paper2:#ddd5c5;
+  --gold:#c9963f;
+  --gold-hi:#e3b569;
+  --gold-dim:rgba(201,150,63,.38);
+  --muted:#9a937f;
+  --qink:#33302a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","STSong","SimSun",serif;
+  line-height:2;
+  overflow-x:hidden;
+}
+::selection{background:var(--gold);color:var(--ink)}
+.mono{font-family:"SF Mono",Consolas,monospace}
+.wrap{max-width:1020px;margin:0 auto;padding:0 22px}
+q,q::before,q::after{quotes:none;content:""}
+.q{font-style:normal;color:var(--qink)}
+.qd{font-style:normal;color:var(--paper)}
+em{font-style:normal;color:var(--gold-hi)}
+
+/* ===== 针盘（右下常驻） ===== */
+.lupan{position:fixed;right:26px;bottom:26px;width:96px;z-index:60;text-align:center;user-select:none}
+.lupan svg{display:block;margin:0 auto}
+.lupan .ring{stroke:rgba(232,228,220,.16);fill:none}
+.lupan .tick{stroke:rgba(232,228,220,.22)}
+.lupan .zi{fill:var(--muted);font-size:11px}
+.lupan .needle{transform-origin:40px 40px;transition:transform 1.1s cubic-bezier(.25,.9,.3,1.05)}
+.lupan .nmain{fill:var(--gold);filter:drop-shadow(0 0 4px rgba(201,150,63,.55))}
+.lupan .ntail{fill:rgba(232,228,220,.28)}
+.lupan .hub{fill:var(--paper)}
+.lupan b{display:block;font-size:11.5px;letter-spacing:.28em;color:var(--gold-hi);font-weight:400;margin-top:2px}
+@media (max-width:1180px){.lupan{right:14px;bottom:14px;width:70px}.lupan b{font-size:10px}}
+
+/* ===== 首屏 ===== */
+.hero{min-height:100vh;position:relative;display:flex;align-items:center;padding:76px 0 40px;overflow:hidden}
+.hero .bgrose{position:absolute;right:-180px;top:50%;transform:translateY(-50%);width:560px;height:560px;opacity:.16;animation:rose 240s linear infinite;pointer-events:none}
+@keyframes rose{from{transform:translateY(-50%) rotate(0)}to{transform:translateY(-50%) rotate(360deg)}}
+.hg{position:relative;z-index:2}
+.kick{font-size:13px;letter-spacing:.44em;color:var(--muted)}
+h1{font-size:clamp(46px,8.2vw,96px);font-weight:700;letter-spacing:.1em;line-height:1.25;margin:10px 0 2px;color:var(--paper)}
+.byline{font-size:15px;color:var(--muted);letter-spacing:.3em}
+.lead{margin-top:20px;font-size:16.5px;color:#cfc9bc;max-width:600px}
+.cta{display:inline-block;margin-top:34px;color:var(--gold-hi);text-decoration:none;font-size:15px;
+  letter-spacing:.4em;border:1px solid var(--gold-dim);padding:11px 26px 11px 32px;transition:.3s}
+.cta:hover{background:var(--gold);color:var(--ink)}
+.route{margin-top:60px;position:relative;height:132px}
+.route svg{display:block;width:100%;height:112px;overflow:visible}
+.route .path{fill:none;stroke:var(--gold-dim);stroke-width:1.6;stroke-dasharray:6 7}
+.route .draw{fill:none;stroke:var(--gold);stroke-width:1.6;
+  stroke-dasharray:1200;stroke-dashoffset:1200;animation:draw 3.4s ease .5s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.yanzi.shake{animation:yshake .9s ease}
+@keyframes yshake{
+  0%,100%{transform:none}12%{transform:translate(-6px,2px) rotate(-.6deg)}
+  28%{transform:translate(7px,-3px) rotate(.5deg)}46%{transform:translate(-5px,3px)}
+  64%{transform:translate(4px,-2px) rotate(-.4deg)}82%{transform:translate(-2px,1px)}
+}
+.route .st{fill:var(--ink);stroke:var(--gold);stroke-width:1.4}
+.route .stl{fill:var(--muted);font-size:11.5px;letter-spacing:.1em}
+.route .cap{font-size:12px;color:var(--muted);letter-spacing:.3em;margin-top:6px}
+
+/* ===== 泊位章 ===== */
+.sec{padding:88px 0 10px;position:relative}
+.bo-h{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.bo-h .po{font-size:12.5px;letter-spacing:.3em;color:var(--gold-hi);border:1px solid var(--gold-dim);padding:4px 10px 4px 13px}
+.bo-h h2{font-size:clamp(25px,3.8vw,37px);font-weight:700;letter-spacing:.14em}
+.bo-h .zhen{margin-left:auto;font-size:12.5px;color:var(--muted);letter-spacing:.24em}
+.sub{color:var(--muted);font-size:15px;max-width:800px;margin-bottom:26px}
+.sub .q{color:var(--paper)}
+p{max-width:800px;margin-bottom:18px;font-size:15.5px;color:#d8d2c5}
+.rv{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+.rv.in{opacity:1;transform:none}
+
+/* 引文卡 */
+.qcard{background:var(--paper);border-left:3px solid var(--gold);padding:20px 24px;margin:26px 0;
+  max-width:820px;box-shadow:6px 6px 0 rgba(0,0,0,.28)}
+.qcard .q{display:block;font-size:16px;line-height:2.1}
+.qnote{display:block;margin-top:10px;font-size:12.5px;letter-spacing:.2em;color:var(--gold);text-align:right}
+.dark .qnote{color:var(--gold-hi)}
+
+/* 泊一 双牌 */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:820px;margin:24px 0}
+.duo .cell{background:var(--ink2);border:1px solid rgba(232,228,220,.1);padding:16px 18px}
+.duo .cell b{display:block;font-size:13px;letter-spacing:.3em;color:var(--gold-hi);font-weight:400;margin-bottom:8px}
+.duo .cell .q{display:block;color:#cfc9bc;font-size:14.5px;line-height:2}
+
+/* 昆仑谚 */
+.yanzi{margin:40px 0;max-width:820px;position:relative;padding:38px 30px 30px;
+  background:var(--sea);border:1px solid rgba(201,150,63,.25)}
+.yanzi .q{display:block;font-size:clamp(21px,3.4vw,31px);line-height:2;color:var(--paper);
+  letter-spacing:.12em;font-weight:700}
+.yanzi .q i{font-style:normal;color:var(--gold-hi)}
+.yanzi .src{display:block;margin-top:12px;font-size:12.5px;letter-spacing:.2em;color:var(--muted);text-align:right}
+.yanzi .zhbtn{position:absolute;top:-16px;left:26px;background:var(--ink);border:1px solid var(--gold-dim);
+  color:var(--gold-hi);font-family:inherit;font-size:12.5px;letter-spacing:.24em;padding:5px 14px 5px 17px;cursor:pointer}
+.yz-needle{display:inline-block;width:26px;height:26px;vertical-align:-4px;margin-right:6px;transition:transform .4s}
+.yz-needle.spin{transition:transform 1.3s cubic-bezier(.2,.7,.2,1);transform:rotate(1440deg)}
+.yz-note{font-size:13px;color:var(--muted);margin-top:10px;letter-spacing:.14em}
+
+/* 泊四 竖诗条 */
+.poemcol{float:right;writing-mode:vertical-rl;font-size:16.5px;line-height:2.3;letter-spacing:.3em;
+  color:var(--gold-hi);height:240px;margin:0 0 14px 26px;padding:16px 14px;
+  border:1px solid var(--gold-dim);background:rgba(201,150,63,.05)}
+.poemcol small{font-size:11.5px;color:var(--muted);letter-spacing:.2em;margin-top:14px}
+.ku{display:block;font-size:13px;color:var(--muted);margin-top:-8px;margin-bottom:20px;letter-spacing:.06em}
+
+/* 泊五 佛迹与战 */
+.steps{display:flex;flex-wrap:wrap;gap:10px;max-width:820px;margin:26px 0 8px}
+.steps span{border:1px solid rgba(232,228,220,.16);color:var(--muted);font-size:14px;
+  letter-spacing:.18em;padding:8px 14px 8px 17px;transition:.4s}
+.steps span.lit{border-color:var(--gold);color:var(--paper)}
+.steps span.ransom{border-style:dashed}
+.steps span.ransom.lit{border-color:var(--gold-hi);color:var(--gold-hi)}
+.pao{margin:14px 0 6px;background:var(--ink);border:1px solid var(--gold-dim);color:var(--gold-hi);
+  font-family:inherit;font-size:13.5px;letter-spacing:.3em;padding:9px 20px 9px 24px;cursor:pointer}
+.flash{position:fixed;inset:0;background:var(--paper);opacity:0;pointer-events:none;z-index:80}
+.flash.on{animation:boom .55s ease}
+@keyframes boom{0%{opacity:0}18%{opacity:.85}100%{opacity:0}}
+.wan{color:var(--gold-hi)}
+
+/* 泊六 传闻亲验 */
+.rv2{max-width:820px;margin:24px 0}
+.rv2 .pane{display:none;background:var(--ink2);border:1px solid rgba(232,228,220,.12);padding:20px 24px}
+.rv2 .pane.on{display:block}
+.rv2 .pane b{display:block;font-size:13px;letter-spacing:.32em;color:var(--gold-hi);font-weight:400;margin-bottom:8px}
+.rv2 .pane .q{display:block;color:#cfc9bc;font-size:15px;line-height:2.1}
+.rv2btn{margin-top:14px;background:none;border:1px solid var(--gold-dim);color:var(--gold-hi);
+  font-family:inherit;font-size:13px;letter-spacing:.26em;padding:8px 18px 8px 22px;cursor:pointer}
+.rv2 .verdict{margin-top:10px;font-size:13px;color:var(--muted);letter-spacing:.1em}
+
+/* 泊七 三卡 */
+.tri{display:grid;grid-template-columns:1fr;gap:8px;max-width:820px}
+.tri .t{background:var(--ink2);border:1px solid rgba(232,228,220,.1);padding:18px 22px}
+.tri .t b{display:block;font-size:13.5px;letter-spacing:.3em;color:var(--gold-hi);font-weight:400;margin-bottom:6px}
+.tri .t .q{display:block;color:#cfc9bc;font-size:15px;line-height:2.05}
+.tri .t .n{display:block;margin-top:8px;font-size:12.5px;color:var(--muted);letter-spacing:.12em}
+
+/* 泊八 天方 */
+.tf{display:grid;grid-template-columns:1fr auto;gap:34px;align-items:start;max-width:860px}
+.tf .endpoem{writing-mode:vertical-rl;font-size:17px;line-height:2.5;letter-spacing:.32em;
+  color:var(--paper);height:300px;padding:18px 16px;border:1px solid var(--gold-dim);
+  background:rgba(201,150,63,.05)}
+.tf .endpoem small{font-size:11.5px;color:var(--muted);letter-spacing:.2em;margin-top:16px}
+@media (max-width:720px){.tf{grid-template-columns:1fr}.tf .endpoem{height:240px;margin:0 auto}}
+
+/* ===== 海图 ===== */
+.chartwrap{max-width:960px;margin:10px auto 0}
+.chart{position:relative;width:100%;padding-bottom:64%;background:var(--sea);
+  border:1px solid rgba(201,150,63,.22);overflow:hidden}
+.chart svg.sea{position:absolute;inset:0;width:100%;height:100%}
+.chart .dot{position:absolute;width:13px;height:13px;margin:-6.5px;border-radius:50%;
+  background:var(--gold);border:none;cursor:pointer;padding:0;transition:transform .25s}
+.chart .dot:hover{transform:scale(1.5)}
+.chart .dot.v2{background:var(--sea);border:1.6px solid var(--gold)}
+.chart .dot.act{box-shadow:0 0 0 5px rgba(201,150,63,.25)}
+.chart .dot .tip{display:none}
+.chart-card{background:var(--ink2);border:1px solid rgba(201,150,63,.25);padding:20px 24px;margin-top:16px}
+.chart-card .hd{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.chart-card .hd b{font-size:20px;letter-spacing:.2em;font-weight:700;color:var(--paper)}
+.chart-card .hd .v{font-size:11.5px;letter-spacing:.2em;border:1px solid var(--gold-dim);
+  color:var(--gold-hi);padding:2px 8px 2px 10px}
+.chart-card .hd .cp{margin-left:auto;font-size:12px;color:var(--muted);letter-spacing:.16em}
+.chart-card .prod{margin-top:8px;font-size:13.5px;color:var(--muted);letter-spacing:.05em}
+.chart-card .prod em{color:var(--gold-hi)}
+.chart-card .cpoem{margin-top:10px;font-size:16px;line-height:2.2;color:#cfc9bc;letter-spacing:.06em}
+.chart-cap{font-size:12.5px;color:var(--muted);letter-spacing:.2em;margin-top:12px}
+
+/* ===== 收梢 ===== */
+.endsec{padding:90px 0 60px}
+.jiaoji{font-size:13px;color:var(--muted);max-width:820px;line-height:2.1;
+  border-top:1px solid rgba(232,228,220,.12);padding-top:22px;margin-top:36px}
+.jiaoji b{color:var(--gold-hi);font-weight:400;letter-spacing:.3em;display:block;margin-bottom:8px;font-size:12.5px}
+
+footer{border-top:1px solid rgba(232,228,220,.14);padding:34px 0 120px;font-size:13px;color:var(--muted);line-height:2.2}
+footer a{color:var(--gold-hi);text-decoration:none}
+footer .fwarn{display:block;margin-top:12px;color:#b08a5a}
+
+@media (max-width:720px){
+  .duo,.tri{grid-template-columns:1fr}
+  .poemcol{float:none;margin:0 auto 20px;height:200px}
+  .hero .bgrose{right:-260px}
+  .lupan{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- 针盘 -->
+<div class="lupan" aria-hidden="true">
+  <svg viewBox="0 0 80 80" width="100%" height="auto">
+    <circle class="ring" cx="40" cy="40" r="36"/>
+    <circle class="ring" cx="40" cy="40" r="29" stroke-dasharray="2 4"/>
+    <g class="tick">
+      <line x1="40" y1="2" x2="40" y2="9"/><line x1="40" y1="71" x2="40" y2="78"/>
+      <line x1="2" y1="40" x2="9" y2="40"/><line x1="71" y1="40" x2="78" y2="40"/>
+    </g>
+    <text class="zi" x="40" y="15" text-anchor="middle">子</text>
+    <text class="zi" x="40" y="72" text-anchor="middle">午</text>
+    <text class="zi" x="10" y="43.5" text-anchor="middle">卯</text>
+    <text class="zi" x="70" y="43.5" text-anchor="middle">酉</text>
+    <g class="needle" id="needle">
+      <polygon class="nmain" points="40,12 44.5,44 40,40 35.5,44"/>
+      <polygon class="ntail" points="40,68 44,44 40,48 36,44"/>
+    </g>
+    <circle class="hub" cx="40" cy="40" r="2.6"/>
+  </svg>
+  <b id="zhenwei">针位·待发</b>
+</div>
+
+<!-- 首屏 -->
+<header class="hero">
+  <svg class="bgrose" viewBox="0 0 200 200" aria-hidden="true">
+    <g fill="none" stroke="#c9963f" stroke-width=".7">
+      <circle cx="100" cy="100" r="96"/><circle cx="100" cy="100" r="72"/><circle cx="100" cy="100" r="40"/>
+      <path d="M100 4 L110 90 L196 100 L110 110 L100 196 L90 110 L4 100 L90 90 Z" fill="rgba(201,150,63,.14)"/>
+      <path d="M100 30 L106 94 L170 100 L106 106 L100 170 L94 106 L30 100 L94 94 Z" fill="rgba(201,150,63,.2)"/>
+    </g>
+  </svg>
+  <div class="wrap hg">
+    <div class="kick">殆知阁简体库导读 · 史藏志存记录</div>
+    <h1>星槎胜览</h1>
+    <div class="byline">明 费信 撰 · 一册随军通事的海道手记</div>
+    <p class="lead">两卷四十四泊，泊泊以一首诗收梢。自永乐七年随船起航，至宣德八年收官，费信四渡重洋，把亲历与传闻一并记下、一一系诗。郑和船队的官方档册后来散佚，这一册私记，替后人存下了第一线的海道见闻。</p>
+    <a class="cta" href="#kaiyang">五虎门开洋</a>
+    <div class="route">
+      <svg viewBox="0 0 900 112">
+        <path class="path" d="M14 88 C 150 40, 250 96, 380 66 S 600 20, 700 58 S 840 84, 886 44"/>
+        <path class="draw" d="M14 88 C 150 40, 250 96, 380 66 S 600 20, 700 58 S 840 84, 886 44"/>
+        <circle class="st" cx="14" cy="88" r="4.5"/>
+        <circle class="st" cx="120" cy="60" r="3.5"/>
+        <circle class="st" cx="255" cy="83" r="3.5"/>
+        <circle class="st" cx="380" cy="66" r="3.5"/>
+        <circle class="st" cx="540" cy="34" r="3.5"/>
+        <circle class="st" cx="700" cy="58" r="3.5"/>
+        <circle class="st" cx="800" cy="76" r="3.5"/>
+        <circle class="st" cx="886" cy="44" r="4.5"/>
+        <text class="stl" x="14" y="108">刘家港</text>
+        <text class="stl" x="103" y="46">五虎门</text>
+        <text class="stl" x="232" y="104">占城</text>
+        <text class="stl" x="352" y="90">昆仑洋</text>
+        <text class="stl" x="512" y="22">满剌加</text>
+        <text class="stl" x="676" y="80">锡兰</text>
+        <text class="stl" x="776" y="98">古里</text>
+        <text class="stl" x="862" y="30">天方</text>
+      </svg>
+      <div class="cap">针路一线，自太仓至天方 · 全程约以昼夜计程</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- 泊一 开洋 -->
+<section class="sec" id="kaiyang" data-z="180" data-w="午">
+  <div class="wrap">
+    <div class="bo-h rv"><span class="po">泊一</span><h2>开洋</h2><span class="zhen">针位约午 · 自刘家港至占城</span></div>
+    <p class="sub rv">费信，字公晓，昆山人，早年替兄从军，戍守太仓。军中拣选随船人员，他以通事之职四次随行，公馀执笔，把一路见闻记成本书。全书的自我交代，只有这几句：</p>
+    <div class="qcard rv">
+      <q class="q">自永乐七年己丑，至宣德八年癸丑止，累从钦差正使太监郑和等往西洋各国开读赏赐。凡在公馀之暇，采辑诸番风俗、人物、土产之异，集成事序，咏其诗篇。</q>
+      <span class="qnote">卷二首 · 费信自述</span>
+    </div>
+    <p class="rv">永乐七年秋九月放洋，十月泊福建长乐，十二月的五虎门外，帆一齐张起来：</p>
+    <div class="qcard rv">
+      <q class="q">永乐七年己丑，上命正使太监郑和等统领官兵，驾使海船四十八号，往诸番国开读赏赐。是岁秋九月，自太仓刘家港开船，十月到福建长乐太平港泊。十二月，福建五虎门开洋，张十二帆，顺风十昼夜，至占城国。</q>
+      <span class="qnote">卷一 · 占城国</span>
+    </div>
+    <p class="rv">第一站占城的迎接排场，费信看得仔细：番王冠三山金花，乘象出郊，五百番兵执械随行，听诏时下象膝行。记完礼数，他笔锋一转，记了两桩更日常的事：</p>
+    <div class="duo rv">
+      <div class="cell"><b>食俗</b><q class="q">一国之食，鱼不腐烂不食，酿不生蛆不为美。</q></div>
+      <div class="cell"><b>作息</b><q class="q">酋长及民下非至午不起，非至子不睡。见月则饮酒歌舞为美。</q></div>
+    </div>
+  </div>
+</section>
+
+<!-- 泊二 昆仑洋 -->
+<section class="sec" id="kunlun" data-z="202.5" data-w="未">
+  <div class="wrap">
+    <div class="bo-h rv"><span class="po">泊二</span><h2>昆仑洋</h2><span class="zhen">针位约未 · 怕与贪的一泊</span></div>
+    <p class="sub rv">出占城南行，船过昆仑洋。水手把对这段水路的恐惧压进一句口诀，几百年后在下面这行字里仍听得见风声。按一下，看针失其路：</p>
+    <div class="yanzi rv" id="yanzi2">
+      <button class="zhbtn" id="zhbtn">针迷舵夫</button>
+      <q class="q">上怕七洲，下怕昆仑，针迷舵夫，人船莫存。</q>
+      <span class="src">卷一昆仑山 · 水手口诀</span>
+      <div class="yz-note" id="yznote">针路一迷，舵夫无措，存亡系于一线。</div>
+    </div>
+    <p class="rv">怕之外还有贪。南海上的硬通货龙涎香，库本先给了一个神话：春群龙交戏遗涎，番人驾独木舟去采：</p>
+    <div class="qcard rv">
+      <q class="q">每至春间，群龙所集于上，交戏而遗涎沫，番人乃架独木舟登此屿，采取而归。</q>
+      <span class="qnote">卷一 · 龙涎屿</span>
+    </div>
+    <p class="rv">神话讲完，账目立刻跟上，一两香换十二枚金钱，一斤之价折中国铜钱以万计：</p>
+    <div class="qcard rv">
+      <q class="q">官秤一两，用彼国金钱十二个，一斤该金钱一百九十二个，准中国铜钱四万九十文，尤其贵也。</q>
+      <span class="qnote">卷一 · 龙涎屿</span>
+    </div>
+  </div>
+</section>
+
+<!-- 泊三 满剌加 -->
+<section class="sec" id="manla" data-z="225" data-w="坤">
+  <div class="wrap">
+    <div class="bo-h rv"><span class="po">泊三</span><h2>满剌加</h2><span class="zhen">针位约坤 · 一纸开国</span></div>
+    <p class="sub rv">满剌加本是暹罗属下的小口岸，每年纳金四十两。永乐七年，一纸册封改写了它的身份：</p>
+    <div class="qcard rv">
+      <q class="q">永乐七年，皇上命正使太监郑和等赍捧诏敕，赐以双台银印，冠带袍服，建碑封域，为满剌加国，其暹罗始不敢扰。</q>
+      <span class="qnote">卷一 · 满剌加国</span>
+    </div>
+    <p class="rv">银印、冠带、建碑、封域，一个海港之国的出生证，寥寥数十字。权威的另一面是排场：船队在邻境九洲山采得六株巨香，番人的反应被费信一句录尽：</p>
+    <div class="qcard rv">
+      <q class="q">番人张目吐舌，悉皆称赞天兵赑屃之神，蛟龙走，兔虎奔也。</q>
+      <span class="qnote">卷一 · 九洲山</span>
+    </div>
+  </div>
+</section>
+
+<!-- 泊四 龙牙门 -->
+<section class="sec" id="longya" data-z="225" data-w="坤">
+  <div class="wrap">
+    <div class="bo-h rv"><span class="po">泊四</span><h2>龙牙门</h2><span class="zhen">针位约坤 · 海峡的獠牙</span></div>
+    <div class="poemcol rv"><q class="qd">山峻龙牙状，中通水激湍。居人为掳易，番舶往来难。</q><small>龙牙门诗前联</small></div>
+    <p class="sub rv">两山对峙如龙角，中通一水，今天的读者一眼认出：这就是新加坡海峡的旧影。六百年前的这条水道，在费信笔下先是形胜，随即笔锋转冷：</p>
+    <div class="qcard rv">
+      <q class="q">山门相对，若龙牙状，中通过船。</q>
+      <span class="qnote">卷二 · 龙牙门</span>
+    </div>
+    <div class="qcard rv">
+      <q class="q">掳掠为豪，遇有番船，则驾小船百只，迎敌数曰。</q>
+      <span class="qnote">卷二龙牙门 · 库本「数曰」为「数日」之讹，照录</span>
+    </div>
+    <p class="rv">一泊之地，先赞山水，再记劫掠，末句是对泛海之客的叮嘱。地理志的笔，有时也是航海安全告示。</p>
+  </div>
+</section>
+
+<!-- 泊五 锡兰 -->
+<section class="sec dark" id="xilan" data-z="270" data-w="酉">
+  <div class="wrap">
+    <div class="bo-h rv"><span class="po">泊五</span><h2>锡兰山</h2><span class="zhen">针位约酉 · 圣迹与兵燹同页</span></div>
+    <p class="sub rv">锡兰山国是全书的重头。费信先记下海边圣迹：盘石足印，长三尺许，水久不干，山中卧佛真身犹存：</p>
+    <div class="qcard rv">
+      <q class="q">海边有一盘石，上印足迹，长三尺许，常有水不干</q>
+      <span class="qnote">卷一 · 锡兰山国</span>
+    </div>
+    <p class="rv">圣迹之后紧接着一场夜战。国王拒命不恭，又图谋害船队，船队的应对写得不输演义：</p>
+    <div class="qcard rv">
+      <q class="q">其王亚烈苦奈儿负固不恭，谋害舟师。我正使太监郑和等深机密策，暗设兵器，三令五申，使众衔枚疾走，夜半之际，信炮一声，奋勇杀入，生擒其王。永乐九年，归献阙下。寻蒙恩宥，俾复归国，四夷悉钦。</q>
+      <span class="qnote">卷一 · 锡兰山国</span>
+    </div>
+    <button class="pao rv" id="paobtn">信炮一声 · 复演此夜</button>
+    <div class="steps rv" id="steps">
+      <span>负固不恭</span><span>深机密策</span><span>暗设兵器</span><span>衔枚疾走</span><span>信炮一声</span><span>生擒其王</span><span>归献阙下</span><span class="ransom">寻蒙恩宥</span><span class="ransom">俾复归国</span>
+    </div>
+    <p class="rv">注意最后两格虚线的转折：被生擒的国王押回南京，却得到<em>赦免放还</em>。大军压境，又把俘虏礼送回国，这一手比夜战更重，所以费信给它收了四个字：<span class="wan">四夷悉钦</span>。</p>
+    <div class="flash" id="flash"></div>
+  </div>
+</section>
+
+<!-- 泊六 翠蓝屿 -->
+<section class="sec" id="cuilan" data-z="270" data-w="酉">
+  <div class="wrap">
+    <div class="bo-h rv"><span class="po">泊六</span><h2>翠蓝屿</h2><span class="zhen">针位约酉 · 传闻与亲验</span></div>
+    <p class="sub rv">翠蓝屿一节，最见这个随军记录员的本分。岛上传闻骇人，他先亮态度：</p>
+    <div class="yanzi rv">
+      <q class="q">然闻此语，未可深信。</q>
+      <span class="src">卷一 · 翠蓝屿</span>
+    </div>
+    <div class="rv2 rv" id="rv2">
+      <div class="pane on" id="paneA">
+        <b>传闻</b>
+        <q class="q">传闻释迦佛经此山，浴于水，被窃其袈裟，佛誓云：后有穿衣者，必烂皮肉。</q>
+        <button class="rv2btn" id="rv2btn">宣德七年，帆至屿下</button>
+      </div>
+      <div class="pane" id="paneB">
+        <b>亲验</b>
+        <q class="q">山中之人驾独木舟来货椰实，舟中男妇果如前言，始知不谬矣。</q>
+        <div class="verdict">被迫停泊三昼夜，传闻当面兑现。八个字收案：始知不谬矣。</div>
+        <button class="rv2btn" id="rv2back">复观传闻</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 泊七 法与礼 -->
+<section class="sec" id="guli" data-z="247.5" data-w="庚">
+  <div class="wrap">
+    <div class="bo-h rv"><span class="po">泊七</span><h2>法与礼</h2><span class="zhen">针位约庚 · 古里、榜葛剌、苏禄</span></div>
+    <p class="sub rv">西行入印度洋，费信记下了几套让他印象深刻的秩序。古里的刑法最省事：</p>
+    <div class="tri rv">
+      <div class="t"><b>古里 · 以灰划地为禁</b><q class="q">行者让路，道不拾遗。法无刑杖，惟以石灰划地，乃为禁令。</q><span class="n">无刑杖，石灰一道即为禁令；路不拾遗，是全书给一国风俗的最高评价。</span></div>
+      <div class="t"><b>榜葛剌 · 迎诏的仪仗</b><q class="q">乃令银柱杖二人，皆穿白缠头，来引导前，五步一呼，至中则止。又金柱杖二人，接引如前礼。</q><span class="n">银杖金杖，五步一呼，国王叩谢加额后铺毯设宴，礼数周全如仪注。</span></div>
+      <div class="t"><b>苏禄 · 一颗巨珠的朝贡</b><q class="q">永乐十六年，其酋长感慕圣恩，乃挈妻携子涉海来朝，进献巨珠一颗，重七两伍钱，罕古莫能有也。皇上大悦，加劳厚赐金印冠带归国。</q><span class="n">酋长挈妻携子渡海来朝，献珠重七两伍钱。数年后苏禄国王病逝中国，葬于德州，其后裔留华守墓，成为一段续章。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 泊八 天方 -->
+<section class="sec" id="tianfang" data-z="292.5" data-w="戌">
+  <div class="wrap">
+    <div class="bo-h rv"><span class="po">泊八</span><h2>天方</h2><span class="zhen">针位约戌 · 全书最西一泊</span></div>
+    <div class="tf">
+      <div>
+        <p class="sub rv">四十四泊的最西一泊，记了一座礼拜寺：四方各九十间的殿宇，白玉柱，黄甘玉地。殿中一片方丈余的黑石，库本直书其天降之说，不疑一字。今天的读者一望即知，这是麦加的天房与玄石；而在费信笔下，它是四十四泊尽头最神圣的一块石头。</p>
+        <div class="qcard rv">
+          <q class="q">其寺分为四方，每方九十间，共三百六十间。皆白玉为柱，黄甘玉为地，中有黑石一片，方丈余，曰汉初天降也。</q>
+          <span class="qnote">卷二 · 天方国</span>
+        </div>
+        <p class="rv">天方之民白日避热不市，日落之后成夜市。全书在这座城里收帆，末诗的最后四句，是费信给自己的结语：</p>
+      </div>
+      <div class="endpoem rv"><q class="qd">尤念苍生志，承恩览远邦。采诗虽句俗，诚意献君王。</q><small>卷二 · 天方国诗尾</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- 海图 -->
+<section class="sec" id="chart" data-z="270" data-w="酉">
+  <div class="wrap">
+    <div class="bo-h rv"><span class="po">海图</span><h2>四十四泊</h2><span class="zhen">两卷各二十二泊 · 点泊读诗</span></div>
+    <p class="sub rv">全图依针路大势排布，西为卷一亲历之远境，东为卷二采辑之近岛。实心为卷一，空心为卷二。每一泊，都系着一首诗。</p>
+  </div>
+  <div class="chartwrap wrap">
+    <div class="chart rv" id="chartbox">
+      <svg class="sea" viewBox="0 0 100 64" preserveAspectRatio="none" aria-hidden="true">
+        <g stroke="rgba(201,150,63,.16)" fill="none" stroke-width=".22">
+          <circle cx="78" cy="30" r="40"/><circle cx="78" cy="30" r="26"/>
+          <path d="M85 8 C 70 22, 62 34, 44 44" stroke-dasharray="1 1.4"/>
+          <path d="M90 14 C 74 30, 60 40, 46 50" stroke-dasharray="1 1.4"/>
+        </g>
+      </svg>
+    </div>
+    <div class="chart-card rv" id="chartcard">
+      <div class="hd"><b id="ccname">占城国</b><span class="v" id="ccvol">卷一</span><span class="cp" id="ccnote"></span></div>
+      <div class="prod" id="ccprod"></div>
+      <div class="cpoem" id="ccpoem"></div>
+    </div>
+    <div class="chart-cap">另有小、大两处具喃之泊，库本拼合字残缺，未列于图；卷二淡洋一泊，库本脱条首记号，今照文中位置补入。</div>
+  </div>
+</section>
+
+<!-- 收梢 -->
+<section class="endsec" id="shao" data-z="0" data-w="子">
+  <div class="wrap">
+    <div class="bo-h rv"><span class="po">收梢</span><h2>一册私记的分量</h2><span class="zhen">针位归子 · 收帆</span></div>
+    <p class="rv">费信不是使团里官职最高的人，却和翻译马欢、幕僚巩珍一起，成了这场大航海留给后世仅有的三位亲历笔录者，三书并称。马欢的《瀛涯胜览》记风土更细，本系列已有专篇；费信独一份的，是给每一泊配一首诗，让地理志长出了韵脚。</p>
+    <p class="rv">此书传世分两卷、四卷两个系统，分合详略互有出入；大致卷一所记多亲历之状，卷二自真腊以下多系采辑。而郑和船队的官方档册后来散佚，相传与刘大夏匿档旧案有关，至今聚讼。正史失记之处，恰恰是这几册私记在替历史值班。</p>
+    <p class="rv">四十四泊，四十四首诗，一句一句念下去，像有人替你在六百年前的甲板上留了一盏灯。</p>
+    <div class="jiaoji rv">
+      <b>校字记</b>
+      库本系排印本：「曰」「日」多互讹（如十月二十三曰、迎敌数曰、乃曰中不市诸例），本页引文或避之、或照录并注；「驾使海船」之「使」疑为「驶」之讹，照录；「馀」字照录。卷二小、大具喃两条国名含拼合造字残留（口旁具字），引文全避；淡洋一条库本脱条首「○」号，本页据文中位置补入海图。
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>文本来源：殆知阁简体库《星槎胜览》（史藏志存记录类）；导读系列总目见 <a href="mulu.html">mulu.html</a>；仓库 <a href="https://github.com/robertsong/daizhige-daodu">daizhige-daodu</a></div>
+    <div>本篇引文连同四十四国之诗，均与库内文件逐字核验（去标点归一后比对）</div>
+    <span class="fwarn">时代局限提醒：本书为明初官方航海背景下的随行见闻录，对海外诸国的记述杂糅亲历、传闻与想象，涉及族群外貌习俗的语句带有时代成见；神话与史实常在同一页并置，请以史料之眼分辨。</span>
+  </div>
+</footer>
+
+<script>
+var POIS=[{"n": "占城国", "note": "", "poem": "圣运承天统，雍熙亿万春", "prod": "", "x": 68.7, "y": 38.1, "v": 1, "skip": false}, {"n": "宾童龙国", "note": "", "poem": "海峤宾童国，双溪水色清", "prod": "棋楠香、象牙", "x": 68.6, "y": 45.7, "v": 1, "skip": false}, {"n": "灵山", "note": "", "poem": "灵山方石岭，其下有泉流", "prod": "黑纹相对藤杖", "x": 68.9, "y": 44.0, "v": 1, "skip": false}, {"n": "昆仑山", "note": "", "poem": "鼎峙东西竺，节然瀛海区", "prod": "", "x": 66.5, "y": 48.8, "v": 1, "skip": false}, {"n": "交栏山", "note": "自占城、灵山起程，顺风十昼夜可到", "poem": "岌业交栏岛，丛林拥翠围", "prod": "豹、熊、鹿皮、玳瑁", "x": 68.5, "y": 76.2, "v": 1, "skip": false}, {"n": "暹罗国", "note": "自占城起程，顺风十昼夜可至", "poem": "海外暹罗国，山形似垒城", "prod": "罗斛香，焚极清远，亚于沉香", "x": 61.3, "y": 36.9, "v": 1, "skip": false}, {"n": "爪哇国", "note": "自占城起程，顺风二十昼夜可至其国", "poem": "古是阇婆国，曾遭鬼母殃", "prod": "", "x": 70.0, "y": 88.1, "v": 1, "skip": false}, {"n": "旧港", "note": "自爪哇国起程，顺风八昼夜至", "poem": "濒海沙泥地，田禾熟倍金", "prod": "黄熟香、速香、沉香、黄蜡并鹤顶之类", "x": 65.0, "y": 79.8, "v": 1, "skip": false}, {"n": "满剌加国", "note": "自旧港起程，顺风八昼夜至此", "poem": "满剌村寥落，山孤草木幽", "prod": "", "x": 62.8, "y": 65.7, "v": 1, "skip": false}, {"n": "九洲山", "note": "", "poem": "九洲山色秀，远见郁苍苍", "prod": "", "x": 61.4, "y": 61.4, "v": 1, "skip": false}, {"n": "苏门答剌国", "note": "", "poem": "一览苏门境，山泉划界流", "prod": "", "x": 58.7, "y": 58.3, "v": 1, "skip": false}, {"n": "花面国", "note": "", "poem": "蛮域观风异，融和草木深", "prod": "", "x": 59.0, "y": 59.0, "v": 1, "skip": false}, {"n": "龙牙犀角", "note": "", "poem": "遥望兹山势，龙牙犀角峰", "prod": "沉、速、降真、黄熟香、鹤顶、蜂蜜、砂糖", "x": 64.9, "y": 78.6, "v": 1, "skip": false}, {"n": "龙涎屿", "note": "", "poem": "一片平方石，群龙任往还", "prod": "", "x": 56.8, "y": 57.6, "v": 1, "skip": false}, {"n": "翠蓝屿", "note": "", "poem": "浩荡翠蓝屿，丛林茂不疏", "prod": "", "x": 54.6, "y": 42.4, "v": 1, "skip": false}, {"n": "锡兰山国", "note": "", "poem": "地广锡兰国，营商亚爪哇", "prod": "宝石、珍珠、龙涎、乳香", "x": 44.1, "y": 52.6, "v": 1, "skip": false}, {"n": "小■〈口具〉喃国", "note": "", "poem": "西海■〈口具〉喃国，诸番货殖通", "prod": "胡椒，亚于下里", "x": 40.5, "y": 50.2, "v": 1, "skip": true}, {"n": "柯枝国", "note": "", "poem": "嗟彼柯枝国，山连赤卤场", "prod": "胡椒甚广，富家俱置板仓贮之，以售商贩", "x": 40.3, "y": 47.9, "v": 1, "skip": false}, {"n": "古里国", "note": "", "poem": "古里通西域，山青景色奇", "prod": "胡椒，亚于下里，俱有仓廪贮之，待商之贩", "x": 39.8, "y": 44.5, "v": 1, "skip": false}, {"n": "忽鲁谟斯国", "note": "", "poem": "忽鲁谟斯国，边城傍海居", "prod": "", "x": 22.9, "y": 8.3, "v": 1, "skip": false}, {"n": "剌撒国", "note": "", "poem": "海丘名剌撒，绝雨亦无寒", "prod": "龙涎香、乳香、千里骆驼，馀无物也", "x": 14.8, "y": 38.1, "v": 1, "skip": false}, {"n": "榜葛剌国", "note": "", "poem": "葛剌宗西域，留传教不衰", "prod": "细布、撒哈剌、绒毯兜罗锦、水晶、玛瑙、珊瑚、珍珠、宝石、糖蜜、酥油、翠毛、各色手巾、被面", "x": 52.2, "y": 16.7, "v": 1, "skip": false}, {"n": "真腊国", "note": "", "poem": "真腊山冈远，荒城傍海涯", "prod": "黄腊、犀、象、孔雀、沉香、苏木、大风子油、翠毛", "x": 65.1, "y": 41.7, "v": 2, "skip": false}, {"n": "东西竺", "note": "其山与龙牙门相望", "poem": "东西分海境，民物异于常", "prod": "槟榔、木绵、椰心簟", "x": 63.7, "y": 69.5, "v": 2, "skip": false}, {"n": "淡洋", "note": "", "poem": "清流甘且淡，奔出海中央", "prod": "降香", "x": 62.9, "y": 59.0, "v": 2, "skip": false}, {"n": "龙牙门", "note": "在三佛齐之西北也", "poem": "山峻龙牙状，中通水激湍", "prod": "", "x": 65.0, "y": 68.1, "v": 2, "skip": false}, {"n": "龙牙善提", "note": "", "poem": "垒石为门限，天生在海洋", "prod": "速香、槟榔、椰子", "x": 64.9, "y": 80.7, "v": 2, "skip": false}, {"n": "吉里地闷", "note": "", "poem": "吉里东南海，居人卧饱餐", "prod": "", "x": 83.0, "y": 91.7, "v": 2, "skip": false}, {"n": "彭坑国", "note": "在暹逻之西", "poem": "嗟彼彭坑国，温和总是春", "prod": "黄熟香、沉香、片脑、花锡、降香", "x": 63.5, "y": 62.4, "v": 2, "skip": false}, {"n": "琉球国", "note": "", "poem": "翠霭是琉球，遐观碧海浮", "prod": "沙金、硫黄、黄腊", "x": 79.1, "y": 14.3, "v": 2, "skip": false}, {"n": "三岛国", "note": "", "poem": "幽然三岛国，花木茂常春", "prod": "黄腊、木绵布", "x": 80.4, "y": 27.4, "v": 2, "skip": false}, {"n": "麻逸国", "note": "在交栏山之西", "poem": "美哉麻逸国，山峻地宽平", "prod": "木绵、黄腊、玳瑁、槟榔、花布", "x": 79.0, "y": 39.3, "v": 2, "skip": false}, {"n": "假里马丁国", "note": "其地与交栏山相望海洋中", "poem": "假里山环翠，民风丑不知", "prod": "玳瑁、羖羊", "x": 68.6, "y": 75.5, "v": 2, "skip": false}, {"n": "重迦逻", "note": "", "poem": "迦逻山奇秀，修程接爪哇", "prod": "羖羊、鹦鹉、木绵、椰子、绵纱", "x": 72.2, "y": 90.0, "v": 2, "skip": false}, {"n": "渤泥国", "note": "", "poem": "渤泥沧海外，立国自何年", "prod": "降香、黄腊、玳瑁、片脑", "x": 73.7, "y": 60.7, "v": 2, "skip": false}, {"n": "苏禄国", "note": "", "poem": "苏禄分东海，居民几万家", "prod": "珍珠、降香、黄腊、玳瑁、竹布", "x": 78.7, "y": 57.1, "v": 2, "skip": false}, {"n": "大■〈口具〉喃国", "note": "", "poem": "大■〈口具〉喃方险，都栏与结盟", "prod": "胡椒、椰子、海鱼、槟榔", "x": 40.2, "y": 47.6, "v": 2, "skip": true}, {"n": "阿丹国", "note": "", "poem": "阿丹城庙石盘罗，黑色滋肥粟麦多", "prod": "九尾羖羊、千里骆驼、黑白花驴、驼蹄鸡、金钱豹", "x": 13.0, "y": 41.0, "v": 2, "skip": false}, {"n": "佐法儿国", "note": "", "poem": "佐法儿名国，周围石累城", "prod": "祖剌法、金钱豹、驼鸡、乳香、龙涎香", "x": 20.9, "y": 29.8, "v": 2, "skip": false}, {"n": "竹步国", "note": "", "poem": "岛夷名竹步，山赤见应愁", "prod": "狮子、金钱豹、驼鸡有六七尺高者、龙涎香、乳香、金箔", "x": 11.0, "y": 70.7, "v": 2, "skip": false}, {"n": "木骨都束国", "note": "", "poem": "木骨名题异，山红土色黄", "prod": "乳香、金钱豹，海内采龙涎香", "x": 13.3, "y": 66.7, "v": 2, "skip": false}, {"n": "溜洋国", "note": "", "poem": "溜山分且众，弱水即相通", "prod": "龙涎香、乳香", "x": 37.7, "y": 61.9, "v": 2, "skip": false}, {"n": "卜剌哇国", "note": "", "poem": "卜剌邦濒海，无田种稻禾", "prod": "马哈兽、花福禄、豹、麂、犀牛、没药、乳香、龙涎香、象牙、骆驼", "x": 11.4, "y": 68.8, "v": 2, "skip": false}, {"n": "天方国", "note": "", "poem": "罕见天方国，遗风礼义长", "prod": "金箔、宝石、珍珠、狮子、骆驼、祖剌法、豹、麂", "x": 8.5, "y": 20.5, "v": 2, "skip": false}];
+
+(function(){
+  /* 海图渲染 */
+  var box=document.getElementById('chartbox');
+  var ccn=document.getElementById('ccname'),ccv=document.getElementById('ccvol'),
+      ccnote=document.getElementById('ccnote'),ccprod=document.getElementById('ccprod'),
+      ccpoem=document.getElementById('ccpoem');
+  function show(p,dot){
+    ccn.textContent=p.n; ccv.textContent='卷'+p.v;
+    ccnote.textContent=p.note?('航程注：'+p.note):'';
+    ccprod.innerHTML=p.prod?('<em>地产</em>　'+p.prod):'';
+    ccpoem.textContent=p.poem;
+    var ds=box.querySelectorAll('.dot');
+    for(var i=0;i<ds.length;i++){ds[i].classList.remove('act');}
+    if(dot)dot.classList.add('act');
+  }
+  POIS.forEach(function(p){
+    if(p.skip)return;
+    var d=document.createElement('button');
+    d.className='dot'+(p.v==2?' v2':'');
+    d.style.left=p.x+'%'; d.style.top=p.y+'%';
+    d.setAttribute('aria-label',p.n);
+    d.addEventListener('click',function(){show(p,d);});
+    box.appendChild(d);
+    if(!window.__first){window.__first=d;}
+  });
+  show(POIS[0],window.__first);
+
+  /* 传闻亲验 */
+  var pa=document.getElementById('paneA'),pb=document.getElementById('paneB');
+  document.getElementById('rv2btn').addEventListener('click',function(){pa.classList.remove('on');pb.classList.add('on');});
+  document.getElementById('rv2back').addEventListener('click',function(){pb.classList.remove('on');pa.classList.add('on');});
+
+  /* 信炮复演 */
+  var steps=document.querySelectorAll('#steps span');
+  document.getElementById('paobtn').addEventListener('click',function(){
+    var fl=document.getElementById('flash');
+    fl.classList.remove('on'); void fl.offsetWidth; fl.classList.add('on');
+    steps.forEach(function(s){s.classList.remove('lit');});
+    steps.forEach(function(s,i){
+      setTimeout(function(){s.classList.add('lit');},350+i*300);
+    });
+  });
+
+  /* 针迷舵夫 */
+  var yz=document.getElementById('yanzi2');
+  document.getElementById('zhbtn').addEventListener('click',function(){
+    yz.classList.remove('shake'); void yz.offsetWidth; yz.classList.add('shake');
+  });
+
+  /* 针盘随章转向 */
+  var needle=document.getElementById('needle'),zw=document.getElementById('zhenwei');
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          needle.style.transform='rotate('+e.target.getAttribute('data-z')+'deg)';
+          zw.textContent='针位·'+e.target.getAttribute('data-w');
+        }
+      });
+    },{rootMargin:'-40% 0px -55% 0px'});
+    document.querySelectorAll('section[data-z]').forEach(function(s){obs.observe(s);});
+
+    var rv=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');rv.unobserve(e.target);}});
+    },{threshold:.08});
+    document.querySelectorAll('.rv').forEach(function(x){rv.observe(x);});
+  }else{
+    document.querySelectorAll('.rv').forEach(function(x){x.classList.add('in');});
+  }
+})();
+</script>
+</body>
+</html>
