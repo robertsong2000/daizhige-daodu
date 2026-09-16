@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>景德传灯录 · 灯灯相然</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --paper2:#ddd7ca;
+  --gold:#c9963f;
+  --gold-dim:#8a6a33;
+  --seal:#c0453c;
+  --dim:#8f8a7e;
+  --dim2:#6b675e;
+  --line:#3a3831;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","STSong","NSimSun","SimSun",serif;
+  line-height:1.9;
+  overflow-x:hidden;
+}
+.mono{font-family:"Courier New",monospace;letter-spacing:.05em;}
+a{color:var(--gold);text-decoration:none;}
+
+/* ============ 灯链脊柱 ============ */
+#spine{
+  position:fixed;left:0;top:0;bottom:0;width:64px;z-index:40;
+  border-right:1px solid var(--line);
+  display:flex;flex-direction:column;align-items:center;
+  padding:14vh 0 6vh;
+  gap:0;
+}
+#fireline{
+  position:fixed;left:31px;top:0;width:2px;height:0;z-index:41;
+  background:linear-gradient(to bottom,var(--gold),rgba(201,150,63,.25));
+  box-shadow:0 0 8px rgba(201,150,63,.6);
+}
+.station{
+  position:relative;width:100%;flex:0 0 auto;text-align:center;
+  padding:9px 0;cursor:default;
+}
+.station .wick{
+  display:block;width:2px;height:14px;background:var(--line);margin:0 auto;
+}
+.station .lamp{
+  display:block;width:16px;height:16px;margin:2px auto;border-radius:50%;
+  border:1px solid var(--dim2);background:#22211d;position:relative;
+  transition:all .6s;
+}
+.station .lamp::after{
+  content:"";position:absolute;left:50%;top:50%;width:0;height:0;
+  transform:translate(-50%,-50%);border-radius:50%;
+  transition:all .6s;
+}
+.station.lit .lamp{border-color:var(--gold);background:#2e2413;box-shadow:0 0 10px rgba(201,150,63,.8);}
+.station.lit .lamp::after{width:8px;height:8px;background:var(--gold);border-radius:50% 50% 50% 0;transform:translate(-50%,-60%) rotate(45deg);}
+.station .sname{
+  font-size:11px;color:var(--dim2);writing-mode:vertical-rl;letter-spacing:.2em;
+  margin:5px auto 0;display:block;transition:color .6s;
+}
+.station.lit .sname{color:var(--gold);}
+.station a{color:inherit;}
+@media(max-width:900px){#spine,#fireline{display:none;}}
+
+/* ============ 首屏 灯龛 ============ */
+.hero{
+  min-height:100vh;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 90% 70% at 50% 55%,#221f18 0%,var(--ink) 70%);
+  overflow:hidden;
+}
+.hero-inner{text-align:center;position:relative;z-index:2;padding:0 20px;}
+.kicker{
+  font-size:12px;letter-spacing:.5em;color:var(--dim);
+  margin-bottom:46px;text-indent:.5em;
+}
+.lamp-stage{position:relative;display:inline-block;cursor:pointer;}
+#lampSvg{width:190px;height:230px;display:block;filter:drop-shadow(0 0 0 rgba(201,150,63,0));transition:filter 1.2s;}
+.hero.lit #lampSvg{filter:drop-shadow(0 0 34px rgba(201,150,63,.55));}
+.flame{opacity:0;transform-origin:50% 100%;transform:scale(.1);transition:opacity .5s,transform 1.4s cubic-bezier(.2,1.6,.4,1);}
+.hero.lit .flame{opacity:1;transform:scale(1);}
+.flame-flick{transform-origin:50% 100%;animation:flick 2.2s ease-in-out infinite;}
+@keyframes flick{0%,100%{transform:scaleY(1) skewX(0deg);}30%{transform:scaleY(1.12) skewX(-2deg);}60%{transform:scaleY(.94) skewX(2deg);}}
+.hero.lit .glowring{opacity:1;}
+.glowring{opacity:0;transition:opacity 2.5s;}
+.hero-hint{
+  margin-top:26px;font-size:13px;letter-spacing:.6em;text-indent:.6em;
+  color:var(--dim);transition:opacity .8s;
+}
+.hero.lit .hero-hint{opacity:0;height:0;margin:0;overflow:hidden;}
+.title-wrap{
+  position:absolute;right:calc(50% - 190px);bottom:6%;
+  display:flex;flex-direction:row-reverse;gap:18px;align-items:flex-end;
+  opacity:0;transform:translateY(40px);transition:opacity 1.6s .5s,transform 1.6s .5s;
+  pointer-events:none;
+}
+.hero.lit .title-wrap{opacity:1;transform:translateY(0);}
+.vtitle{
+  writing-mode:vertical-rl;font-size:52px;letter-spacing:.28em;
+  color:var(--paper);font-weight:400;white-space:nowrap;
+  text-shadow:0 0 26px rgba(201,150,63,.35);
+}
+.vsub{
+  writing-mode:vertical-rl;font-size:14px;letter-spacing:.4em;color:var(--dim);
+  white-space:nowrap;padding-top:8px;
+}
+.vseal{
+  writing-mode:vertical-rl;width:46px;background:var(--seal);color:var(--paper);
+  font-size:19px;letter-spacing:.18em;line-height:1.25;
+  padding:12px 8px;text-align:center;white-space:nowrap;
+  box-shadow:2px 2px 0 rgba(0,0,0,.4);border-radius:3px;
+  transform:rotate(-2deg);align-self:flex-end;
+}
+@media(max-width:640px){
+  .title-wrap{position:static;margin-top:34px;justify-content:center;opacity:0;}
+  .hero.lit .title-wrap{opacity:1;}
+  .vtitle{font-size:40px;}
+  .hero-inner{padding-bottom:40px;}
+}
+.hero-facts{
+  margin-top:30px;font-size:13px;color:var(--dim);letter-spacing:.15em;
+  opacity:0;transition:opacity 1.4s 1.2s;
+}
+.hero.lit .hero-facts{opacity:1;}
+.hero-facts em{font-style:normal;color:var(--gold);}
+
+/* ============ 正文 ============ */
+main{max-width:820px;margin:0 auto;padding:0 26px 40px 90px;}
+@media(max-width:900px){main{padding-left:26px;}}
+section{padding:78px 0 30px;position:relative;}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:34px;flex-wrap:wrap;}
+.sec-no{
+  font-size:12px;color:var(--seal);border:1px solid var(--seal);
+  padding:2px 10px;letter-spacing:.3em;text-indent:.3em;border-radius:2px;white-space:nowrap;
+}
+.sec-ti{font-size:30px;letter-spacing:.2em;color:var(--paper);}
+.sec-ti small{font-size:14px;color:var(--dim);letter-spacing:.2em;margin-left:12px;}
+p{margin-bottom:20px;color:#cfcbc0;font-size:16px;text-align:justify;}
+p b{color:var(--paper);font-weight:400;}
+p .hl{color:var(--gold);}
+
+/* 引文 */
+.q{
+  background:var(--paper);color:#2a2822;
+  padding:20px 26px;margin:26px 0;position:relative;
+  font-size:16.5px;line-height:2.05;
+  border-left:3px solid var(--gold);
+  box-shadow:3px 3px 0 rgba(0,0,0,.35);
+}
+.q::before{
+  content:"";position:absolute;inset:4px;border:1px solid rgba(42,40,34,.18);
+  pointer-events:none;
+}
+.q .qn{
+  display:block;margin-top:10px;font-size:12px;color:#7a7365;letter-spacing:.15em;
+}
+.qi{display:block;}
+.qverse{
+  text-align:center;font-size:18px;letter-spacing:.12em;line-height:2.2;
+}
+.qbig{font-size:19px;}
+
+/* 对质卡 */
+.ka-row{display:grid;grid-template-columns:1fr;gap:18px;margin:30px 0;}
+.ka{
+  border:1px solid var(--line);background:#201e19;position:relative;cursor:pointer;
+  transition:border-color .5s;
+}
+.ka:hover{border-color:var(--gold-dim);}
+.ka .ask{
+  padding:16px 22px;font-size:16px;color:var(--paper);
+  border-bottom:1px dashed var(--line);
+}
+.ka .ask::before{content:"问";color:var(--seal);font-size:12px;border:1px solid var(--seal);padding:1px 6px;margin-right:12px;border-radius:2px;letter-spacing:.1em;}
+.ka .ans{
+  padding:16px 22px 18px;font-size:16.5px;color:var(--gold);
+  filter:blur(6px);opacity:.25;transition:filter .7s,opacity .7s;
+}
+.ka .ans::before{content:"答";color:var(--gold);font-size:12px;border:1px solid var(--gold-dim);padding:1px 6px;margin-right:12px;border-radius:2px;letter-spacing:.1em;}
+.ka.open .ans{filter:none;opacity:1;}
+.ka .tap{position:absolute;right:14px;top:14px;font-size:11px;color:var(--dim2);letter-spacing:.2em;}
+.ka.open .tap{opacity:0;}
+.ka .q,.bone .q,.gatha .q{
+  display:inline;background:none;border:0;padding:0;margin:0;box-shadow:none;color:inherit;
+}
+.ka .q::before,.bone .q::before,.gatha .q::before{content:none;}
+
+/* 皮肉骨髓 */
+.split4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:28px 0;}
+@media(max-width:700px){.split4{grid-template-columns:repeat(2,1fr);}}
+.bone{
+  background:#201e19;border:1px solid var(--line);padding:16px 12px;text-align:center;
+}
+.bone .bt{font-size:22px;color:var(--seal);letter-spacing:.3em;text-indent:.3em;margin-bottom:10px;}
+.bone .bq{font-size:12.5px;color:#b5b0a4;line-height:1.8;text-align:left;}
+
+/* 廊壁两偈 */
+.wall{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:32px 0;}
+@media(max-width:700px){.wall{grid-template-columns:1fr;}}
+.stele{
+  background:linear-gradient(160deg,#3a372f,#2b2922);
+  border:1px solid #4a463c;padding:30px 20px 26px;position:relative;
+  text-align:center;transition:box-shadow 1.2s;
+}
+.stele .who{font-size:12px;letter-spacing:.4em;text-indent:.4em;color:var(--dim);margin-bottom:18px;}
+.stele .gatha{
+  writing-mode:vertical-rl;margin:0 auto;height:250px;display:flex;justify-content:center;
+  font-size:19px;letter-spacing:.55em;line-height:2.4;color:#a39d8e;
+}
+.stele.night .gatha{color:var(--paper);text-shadow:0 0 16px rgba(201,150,63,.5);}
+.stele.night{box-shadow:0 0 30px rgba(201,150,63,.28),inset 0 0 40px rgba(201,150,63,.06);}
+.wallbtn{
+  display:block;margin:6px auto 0;background:none;border:1px solid var(--gold-dim);
+  color:var(--gold);font-family:inherit;font-size:13px;letter-spacing:.4em;text-indent:.4em;
+  padding:8px 20px;cursor:pointer;transition:all .5s;
+}
+.wallbtn:hover{background:rgba(201,150,63,.12);}
+.wallbtn.done{opacity:0;pointer-events:none;height:0;padding:0;margin:0;border:0;}
+
+/* 五叶枝 */
+.branch{margin:34px 0 12px;text-align:center;}
+.branch svg{max-width:100%;height:auto;}
+.leaves{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:20px 0 8px;}
+@media(max-width:700px){.leaves{grid-template-columns:repeat(2,1fr);}}
+.leaf{
+  background:#201e19;border:1px solid var(--line);border-top:2px solid var(--gold-dim);
+  padding:16px 10px;text-align:center;transition:border-color .4s;
+}
+.leaf:hover{border-top-color:var(--gold);}
+.leaf .lt{font-size:17px;color:var(--paper);letter-spacing:.2em;}
+.leaf .ls{font-size:12px;color:var(--dim);margin:8px 0 4px;letter-spacing:.1em;}
+.leaf .lc{font-size:20px;color:var(--gold);}
+
+/* 蜡烛 吹灯 */
+.candle-box{
+  border:1px solid var(--line);background:radial-gradient(ellipse at 50% 0%,#26231c,#1d1b16);
+  padding:34px 26px 30px;text-align:center;margin:34px 0;
+}
+#candle{cursor:pointer;display:inline-block;position:relative;}
+#candle svg{width:64px;height:130px;display:block;}
+.cflame{opacity:1;transition:opacity .4s;transform-origin:50% 100%;}
+.candle-box.blow .cflame{opacity:0;}
+.smoke{opacity:0;transition:opacity 1.2s .3s;}
+.candle-box.blow .smoke{opacity:.7;}
+.candle-hint{font-size:12px;color:var(--dim2);letter-spacing:.4em;text-indent:.4em;margin-top:8px;transition:opacity .4s;}
+.candle-box.blow .candle-hint{opacity:0;}
+.blow-reveal{max-height:0;overflow:hidden;opacity:0;transition:max-height 1.4s,opacity 1.2s .4s;}
+.candle-box.blow .blow-reveal{max-height:1000px;opacity:1;}
+
+/* 灯芯计数签 */
+.wicks{display:flex;gap:14px;flex-wrap:wrap;margin:30px 0;justify-content:center;}
+.wick-tag{
+  background:var(--paper);color:#2a2822;padding:14px 20px;text-align:center;
+  min-width:150px;box-shadow:3px 3px 0 rgba(0,0,0,.35);position:relative;
+}
+.wick-tag::before{
+  content:"";display:block;width:2px;height:12px;background:var(--seal);margin:0 auto 8px;
+}
+.wick-tag .wn{font-size:24px;color:var(--seal);letter-spacing:.05em;}
+.wick-tag .ww{font-size:12px;color:#6d675a;margin-top:4px;letter-spacing:.2em;}
+
+/* 磨砖 */
+.grind{border:1px solid var(--line);background:#201e19;padding:26px 24px;margin:30px 0;text-align:center;}
+#brick{
+  width:120px;height:64px;background:linear-gradient(145deg,#57503f,#3f3a2e);
+  border:1px solid #6a624c;margin:6px auto 16px;position:relative;cursor:pointer;
+  transition:transform .2s;
+}
+#brick::after{content:"塼";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#7d7460;font-size:20px;}
+.grind-step{font-size:13px;color:var(--dim);letter-spacing:.2em;min-height:24px;}
+#brick.grinding{animation:grindmove .5s ease-in-out infinite;}
+@keyframes grindmove{0%,100%{transform:translateX(-8px) rotate(-1deg);}50%{transform:translateX(8px) rotate(1deg);}}
+.grind-reveal{max-height:0;overflow:hidden;opacity:0;transition:all 1.2s;}
+.grind.done .grind-reveal{max-height:500px;opacity:1;}
+
+/* 尾屏 */
+.finale{
+  margin-top:70px;border-top:1px solid var(--line);
+  padding:70px 0 30px;text-align:center;position:relative;
+}
+.finale-lamp{margin-bottom:36px;}
+.finale .vpassage{
+  writing-mode:vertical-rl;margin:0 auto;height:330px;width:max-content;max-width:100%;
+  font-size:17px;letter-spacing:.3em;line-height:2.4;color:#c9c4b7;
+}
+.finale .vpassage .qelem{
+  display:inline;background:none;border:0;padding:0;margin:0;box-shadow:none;
+  color:var(--paper);
+}
+.finale .vpassage .qelem::before{content:none;}
+.finale .vpassage .vattr{white-space:nowrap;font-size:13px;color:var(--dim);}
+.finale-seal{
+  margin:40px auto 0;width:52px;background:var(--seal);color:var(--paper);
+  font-size:18px;letter-spacing:.15em;padding:10px 9px;line-height:1.3;
+  writing-mode:vertical-rl;white-space:nowrap;box-shadow:2px 2px 0 rgba(0,0,0,.4);
+  border-radius:3px;transform:rotate(2deg);
+}
+.finale-note{margin-top:44px;font-size:13px;color:var(--dim);letter-spacing:.3em;}
+
+/* 题记纸签 */
+.memo{
+  background:var(--paper2);color:#33302a;padding:26px 30px;margin:30px 0;
+  box-shadow:4px 4px 0 rgba(0,0,0,.35);position:relative;
+}
+.memo::before{
+  content:"题记";position:absolute;top:-12px;left:24px;background:var(--seal);
+  color:var(--paper);font-size:12px;letter-spacing:.3em;text-indent:.3em;
+  padding:3px 12px;border-radius:2px;
+}
+.memo p{color:#33302a;font-size:15px;margin-bottom:12px;}
+.memo p:last-child{margin-bottom:0;}
+.memo .mm{color:#8a2f28;}
+
+/* 七佛灯架 */
+.rack{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:30px 0;}
+@media(max-width:700px){.rack{grid-template-columns:repeat(4,1fr);}}
+.rack .rb{
+  border:1px solid var(--line);padding:14px 4px;text-align:center;background:#201e19;
+  font-size:12px;color:#b5b0a4;letter-spacing:.02em;position:relative;
+}
+.rack .rb::before{
+  content:"";display:block;width:8px;height:8px;border-radius:50%;margin:0 auto 8px;
+  border:1px solid var(--dim2);background:#22211d;
+}
+.rack .rb small{display:block;font-size:10.5px;color:var(--dim2);margin-top:6px;}
+
+footer{
+  border-top:1px solid var(--line);margin-top:60px;
+  padding:44px 26px 60px 90px;font-size:13px;color:var(--dim);line-height:2.1;
+}
+@media(max-width:900px){footer{padding-left:26px;}}
+footer a{border-bottom:1px dotted var(--gold-dim);}
+</style>
+</head>
+<body class="hero-pending">
+
+<div id="fireline"></div>
+<nav id="spine">
+  <div class="station" data-s="s0"><span class="wick"></span><span class="lamp"></span><span class="sname">引灯</span></div>
+  <div class="station" data-s="s1"><span class="wick"></span><span class="lamp"></span><span class="sname">七佛</span></div>
+  <div class="station" data-s="s2"><span class="wick"></span><span class="lamp"></span><span class="sname">西天</span></div>
+  <div class="station" data-s="s3"><span class="wick"></span><span class="lamp"></span><span class="sname">东土</span></div>
+  <div class="station" data-s="s4"><span class="wick"></span><span class="lamp"></span><span class="sname">传衣</span></div>
+  <div class="station" data-s="s5"><span class="wick"></span><span class="lamp"></span><span class="sname">分灯</span></div>
+  <div class="station" data-s="s6"><span class="wick"></span><span class="lamp"></span><span class="sname">五叶</span></div>
+  <div class="station" data-s="s7"><span class="wick"></span><span class="lamp"></span><span class="sname">长明</span></div>
+</nav>
+
+<header class="hero" id="hero">
+  <div class="hero-inner">
+    <div class="kicker">殆知阁导读 · 三五八</div>
+    <div class="lamp-stage" id="lampStage">
+      <svg id="lampSvg" viewBox="0 0 190 230">
+        <defs>
+          <radialGradient id="gGlow" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stop-color="#c9963f" stop-opacity=".55"/>
+            <stop offset="100%" stop-color="#c9963f" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="gFlame" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f4d489"/>
+            <stop offset="55%" stop-color="#c9963f"/>
+            <stop offset="100%" stop-color="#8a5a20"/>
+          </linearGradient>
+        </defs>
+        <circle class="glowring" cx="95" cy="70" r="78" fill="url(#gGlow)"/>
+        <g class="flame flame-flick">
+          <path d="M95 22 C104 40 110 52 110 66 C110 80 103 90 95 90 C87 90 80 80 80 66 C80 52 86 40 95 22 Z" fill="url(#gFlame)"/>
+          <path d="M95 48 C99 56 101 62 101 68 C101 75 98 80 95 80 C92 80 89 75 89 68 C89 62 91 56 95 48 Z" fill="#fbeec7" opacity=".85"/>
+        </g>
+        <rect x="92" y="92" width="6" height="18" fill="#54503f"/>
+        <ellipse cx="95" cy="118" rx="44" ry="12" fill="#37342a" stroke="#5b564a" stroke-width="1.5"/>
+        <path d="M51 118 C51 138 70 148 95 148 C120 148 139 138 139 118" fill="#2c2a21" stroke="#5b564a" stroke-width="1.5"/>
+        <rect x="60" y="148" width="70" height="10" fill="#37342a" stroke="#5b564a" stroke-width="1"/>
+        <path d="M72 158 L66 196 L124 196 L118 158 Z" fill="#2f2c23" stroke="#55503f" stroke-width="1"/>
+        <rect x="52" y="196" width="86" height="10" rx="2" fill="#37342a" stroke="#5b564a" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="hero-hint" id="heroHint">点 灯 开 卷</div>
+    <div class="hero-facts">宋 道原 撰 三十卷 公元一〇〇四年进呈 去空白四十一万余字</div>
+    <div class="title-wrap">
+      <span class="vtitle">景德传灯录</span>
+      <span class="vsub">灯录之祖</span>
+      <span class="vseal">灯灯相然</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= 引灯 ================= -->
+<section id="s0">
+  <div class="sec-head"><span class="sec-no">引灯</span><span class="sec-ti">为什么叫传灯<small>灯的比喻</small></span></div>
+  <p>禅家把师父印可弟子、把法门一代代交下去，叫<b>传灯</b>。灯是可以分的：一根灯芯点另一根灯芯，原来的火并不因此变暗，而黑暗却少了一片。这部书干的正是这件事：从七佛数起，经西天二十八位祖师、东土六位祖师，再往下分宗分派，一直数到宋初，把一千多年里每一位祖师怎么开悟、怎么接人、说过什么怪话，编成一串长长的灯谱。</p>
+  <p>它是禅宗第一部以灯为名的史书，后世续出的几种灯录都排在它后面，称五灯，它是五灯之首。宋真宗景德元年，僧人道原把它进呈朝廷，朝廷命杨亿等人花一年刊削定型，随后刻板入藏颁行，从此它成了第一部官修禅籍。书名里的<b class="hl">景德</b>，就是那个年号。</p>
+  <div class="q">自大师灭度至皇宋景德元年甲辰。凡三百三十年。<span class="qn">卷三末：五祖灭度到进书之年，作者自己算的账</span></div>
+  <div class="memo">
+    <p>进书始末，据宋人记载：道原于景德年间诣阙献书，真宗诏翰林学士杨亿、知制诰李维、太常丞王曙刊定，费时周岁，至大中祥符二年刻板，编入大藏颁行。此书原题<span class="mm">佛祖同参集</span>，定型后以年号为名。</p>
+    <p>后世统计全书载师承世系一千七百余人，录机缘语句者九百余人。三十卷末尾不载人物，专收历代歌铭，等于给全录配了一册歌集。</p>
+  </div>
+</section>
+
+<!-- ================= 七佛灯 ================= -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-no">灯一</span><span class="sec-ti">七佛灯<small>从时间深处点起</small></span></div>
+  <p>卷一开卷不急着讲人，先讲时间。佛经说这一劫里成佛的有一千尊，录里挑了离得最近的七位，每位留一篇四句偈，等于七盏样灯。</p>
+  <div class="q">古佛应世。绵历无穷。不可以周知而悉数也。<span class="qn">卷一·叙七佛</span></div>
+  <div class="rack">
+    <div class="rb vq">毗婆尸佛<small>波波罗树</small></div>
+    <div class="rb vq">尸弃佛<small>分陀利树</small></div>
+    <div class="rb vq">毗舍浮佛<small>婆罗树</small></div>
+    <div class="rb vq">拘留孙佛<small>尸利沙树</small></div>
+    <div class="rb vq">拘那含牟尼佛<small>乌暂婆罗树</small></div>
+    <div class="rb vq">迦叶佛<small>尼拘律树</small></div>
+    <div class="rb vq">释迦牟尼佛<small>毕钵罗树</small></div>
+  </div>
+  <div class="q"><span class="qi">身从无相中受生　　犹如幻出诸形象</span><span class="qi">幻人心识本来无　　罪福皆空无所住</span><span class="qn">卷一·毗婆尸佛偈，七佛之首的样灯</span></div>
+  <p>第一尊佛在自己那一劫里排队排到九百九十八位。录里给每位佛记户口一样的小传：种什么姓、住哪座城、坐什么树、说法几会、度人多少、侍者叫什么、儿子叫什么。第一盏灯就这么点起来。</p>
+  <div class="q">过去庄严劫第九百九十八尊<span class="qn">卷一·毗婆尸佛名下原注</span></div>
+  <div class="q">长阿含经云。七佛精进力。放光灭暗冥。各各坐诸树。于中成正觉。<span class="qn">卷一·叙七佛引经</span></div>
+</section>
+
+<!-- ================= 西天灯 ================= -->
+<section id="s2">
+  <div class="sec-head"><span class="sec-no">灯二</span><span class="sec-ti">西天灯<small>二十八祖半部难史</small></span></div>
+  <p>七佛之后，西天这二十八位祖师从迦叶尊者一路传到菩提达磨。这一段读起来半部是传法史，半部是难史：每传一衣，总有猜忌、外道、毒药和刀剑在路上等着。轮到第二十四位，师子尊者，遇上的是一位已经举刀的国王，他的回答只有一句。</p>
+  <div class="q">身非我有何吝于头。王即挥刃断尊者首。涌白乳高数尺。<span class="qn">卷二·师子尊者遇难</span></div>
+  <p>刀下的那句话，是整部西天传法史最硬的一句。也有不动刀的难：有位祖师遇到一个自夸会打哑谜的外道，约定不出声、以义决胜负，一来一回打了五十九个回合，外道张口结舌。</p>
+  <div class="q">如是往返五十九翻。外道杜口信伏。<span class="qn">卷二·默论之局</span></div>
+  <p>祖师们的偈子也是一递一盏：前一位付法必说一偈，后一位回敬一偈，像灯芯交接时那一下必亮的火苗。二十八传，灯交到达磨手上，准备渡海。</p>
+</section>
+
+<!-- ================= 东土灯 ================= -->
+<section id="s3">
+  <div class="sec-head"><span class="sec-no">灯三</span><span class="sec-ti">东土灯<small>达磨与三个字</small></span></div>
+  <p>达磨是西天第二十八位祖师，也是东土初祖。他到金陵见梁武帝，皇帝正忙着建寺抄经剃度僧人，想讨一句夸赞，讨来的却是三连冷水。下面三问三答，先猜猜看，再点开。</p>
+  <div class="ka-row">
+    <div class="ka"><span class="tap">点击开答</span>
+      <div class="ask"><span class="q">朕即位已来。造寺写经度僧不可胜纪。有何功德。</span></div>
+      <div class="ans"><span class="q">师曰。并无功德。</span></div>
+    </div>
+    <div class="ka"><span class="tap">点击开答</span>
+      <div class="ask"><span class="q">如何是圣谛第一义。</span></div>
+      <div class="ans"><span class="q">师曰。廓然无圣。</span></div>
+    </div>
+    <div class="ka"><span class="tap">点击开答</span>
+      <div class="ask"><span class="q">帝曰。对朕者谁。</span></div>
+      <div class="ans"><span class="q">师曰。不识。帝不领悟。</span></div>
+    </div>
+  </div>
+  <p>话不投机，他连夜北上，到了嵩山少林寺，从此不走了。</p>
+  <div class="q">面壁而坐终日默然。人莫之测。谓之壁观婆罗门。<span class="qn">卷三·少林面壁</span></div>
+  <p>有一位叫神光的法师，学问很好，觉得孔老庄易都没说到根本上，来少林门口站了一年。那年冬天雪下了一夜，他在门外立到天亮，雪没过膝盖。</p>
+  <div class="q">其年十二月九日夜天大雨雪。光坚立不动。迟明积雪过膝。<span class="qn">卷三·立雪</span></div>
+  <div class="q">汝久立雪中。当求何事。<span class="qn">卷三·达磨问</span></div>
+  <div class="q">光闻师诲励。潜取利刀自断左臂。置于师前。<span class="qn">卷三·断臂</span></div>
+  <p>达磨收下他，改名慧可。接下来是全录最有名的一段四句戏，注意每一句都短得像砍下来的。</p>
+  <div class="q">我心未宁。乞师与安。师曰。将心来与汝安。曰觅心了不可得。师曰。我与汝安心竟。<span class="qn">卷三·安心</span></div>
+  <p>临付法前，达磨让门人各说所得，说的都是各自看见的东西，他一一评成身上的四样：皮、肉、骨、髓。</p>
+  <div class="split4">
+    <div class="bone"><div class="bt">皮</div><div class="bq"><span class="q">不执文字不离文字而为道用。师曰。汝得吾皮。</span></div></div>
+    <div class="bone"><div class="bt">肉</div><div class="bq"><span class="q">一见更不再见。师曰。汝得吾肉。</span></div></div>
+    <div class="bone"><div class="bt">骨</div><div class="bq"><span class="q">四大本空五阴非有。而我见处无一法可得。师曰。汝得吾骨。</span></div></div>
+    <div class="bone"><div class="bt">髓</div><div class="bq"><span class="q">最后慧可礼拜后依位而立。师曰。汝得吾髓。</span></div></div>
+  </div>
+  <p>衣钵付给慧可，附四句偈。偈里那句<b class="hl">一华开五叶</b>，是整部灯录的预言：五叶，就是后来从曹溪分出的五家宗派。</p>
+  <div class="q"><span class="qi">吾本来兹土　　传法救迷情</span><span class="qi">一华开五叶　　结果自然成</span><span class="qn">卷三·达磨传法偈</span></div>
+  <div class="q">内传法印以契证心。外付袈裟以定宗旨。<span class="qn">卷三·付衣的双轨</span></div>
+  <p>达磨的下落，录里安排了一场中国志怪传统里最漂亮的谢幕：葬后三年，有人出使西域回来，在葱岭迎面撞见他。</p>
+  <div class="q">后三岁魏宋云奉使西域回。遇师于葱岭。见手携只履翩翩独逝。云问。师何往。师曰。西天去。<span class="qn">卷三·只履西归</span></div>
+  <div class="q">帝令启圹。唯空棺一只革履存焉<span class="qn">卷三·开棺，只余一鞋</span></div>
+</section>
+
+<!-- ================= 传衣灯 ================= -->
+<section id="s4">
+  <div class="sec-head"><span class="sec-no">灯四</span><span class="sec-ti">传衣灯<small>廊壁上的两首偈</small></span></div>
+  <p>五祖弘忍年事已高，让门人各写一偈，见地合了就传衣法。上座神秀众望所归，把偈题在廊壁上。碓房里有个舂了八个月米、不识字的火头僧卢慧能，听人念了一遍，说美是美，没说到底，夜里请人掌烛，自己念出偈来，叫童子写在秀偈旁边。两堵墙，就是后世禅门两派宗风各自的源头。</p>
+  <div class="q">告众曰。正法难解不可徒记吾言持为己任。汝等各自随意述一偈。若语意冥符。则衣法皆付。<span class="qn">卷三·弘忍悬赏</span></div>
+  <div class="wall">
+    <div class="stele">
+      <div class="who">神秀题壁</div>
+      <div class="gatha"><span class="q">身是菩提树　　心如明镜台　　时时勤拂拭　　莫遣有尘埃</span></div>
+    </div>
+    <div class="stele" id="steleNeng">
+      <div class="who">慧能夜书</div>
+      <div class="gatha"><span class="q">菩提本非树　　心镜亦非台　　本来无一物　　何假拂尘埃</span></div>
+    </div>
+  </div>
+  <button class="wallbtn" id="wallBtn">燃灯照壁</button>
+  <p>校字记：第二句库本作<span class="q" style="display:inline;padding:0 4px;border:0;box-shadow:none;font-size:15px;">心镜亦非台</span>，末句库本作<span class="q" style="display:inline;padding:0 4px;border:0;box-shadow:none;font-size:15px;">何假拂尘埃</span>，与通行本一字两异。</p>
+  <p>第二天五祖见了慧能的偈，当众说了句浇冷水的评语，转过身却在夜里把他叫进房，把衣法都传了。那盆冷水其实是保护。</p>
+  <div class="q">大师后见此偈云。此是谁作亦未见性。<span class="qn">卷三·五祖当众的评语</span></div>
+  <div class="q">昔达磨初至人未知信。故传衣以明得法。今信心已熟。衣乃争端止于汝身不复传也。<span class="qn">卷三·传衣也是封衣</span></div>
+  <p>传完衣，五祖送他到江边，说了句要命的话：得了这件衣的人，命像挂着的丝。又给他留了暗语，逢怀就停，遇会就藏，后来慧能果然隐在怀集、四会一带。</p>
+  <div class="q">所谓授衣之人命如悬丝也。<span class="qn">卷三·悬丝</span></div>
+  <div class="q">逢怀即止。遇会且藏。<span class="qn">卷三·逃亡路线</span></div>
+  <p>第二天早上全寺炸了锅。大家追问衣法传给了谁，五祖只答了三个字，一语双关：得衣的是那位行者，也是那个能字。</p>
+  <div class="q">复问衣法谁得耶。师曰。能者得。<span class="qn">卷三·能者得</span></div>
+  <p>最先追上去的是惠明将军，追到大庾岭。慧能把衣钵丢在石头上，惠明伸手去拿，拿不动，这才改口求法。慧能给他指的路子，只有反转念头一法。</p>
+  <div class="q">此衣表信可力争耶。任君将去。师遂举之如山不动。<span class="qn">卷三·衣如山</span></div>
+  <div class="q">不思善不思恶正恁么时。阿那个是明上坐本来面目。<span class="qn">卷三·大庾岭指示</span></div>
+  <div class="q">如人饮水冷暖自知。<span class="qn">卷三·惠明复述悟境</span></div>
+  <p>这段插曲还顺手留下一条校勘学小注：惠明本名慧明，为了避六祖名讳，改名道明。</p>
+  <div class="q">初名慧明。以避师上字故名道明。<span class="qn">卷三·避讳改名</span></div>
+  <p>卷五开卷点名：慧能门下录名四十三人，其中录下机缘语句的十九人，灯从这里开始分成许多支。</p>
+  <div class="q">第三十三祖慧能大师法嗣四十三人<span class="qn">卷五·门下点名册</span></div>
+</section>
+
+<!-- ================= 分灯 ================= -->
+<section id="s5">
+  <div class="sec-head"><span class="sec-no">灯五</span><span class="sec-ti">分灯<small>一块磨不成的镜子</small></span></div>
+  <p>六祖门下，怀让接了心印。怀让要去度的人叫马祖道一，整天关在传法院里坐禅。怀让不劝，只在他面前拿一块砖在石头上磨。点下面的砖，磨三下看会发生什么。</p>
+  <div class="grind" id="grind">
+    <div id="brick"></div>
+    <div class="grind-step" id="grindStep">点砖研磨 · 共三次</div>
+    <div class="grind-reveal">
+      <div class="q">大德坐禅图什么。一曰。图作佛。<span class="qn">卷五·怀让问</span></div>
+      <div class="q">磨塼岂得成镜耶。坐禅岂得成佛耶。<span class="qn">卷五·一句顶回</span></div>
+      <div class="q">如人驾车不行。打车即是。打牛即是。<span class="qn">卷五·车与牛</span></div>
+      <p style="margin-top:22px;">马祖一听，如饮醍醐。怀让再补一偈，把心地比成种子，说法比成雨水。</p>
+      <div class="q"><span class="qi">心地含诸种　　遇泽悉皆萌</span><span class="qi">三昧华无相　　何坏复何成</span><span class="qn">卷五·怀让付法偈</span></div>
+    </div>
+  </div>
+  <p>这块磨不成的砖，后来磨出了唐代禅门最大的宗师之一。马祖的门下再往下传，一花开出的五片叶子就快展开了。</p>
+</section>
+
+<!-- ================= 五叶灯 ================= -->
+<section id="s6">
+  <div class="sec-head"><span class="sec-no">灯六</span><span class="sec-ti">五叶灯<small>一华开五叶</small></span></div>
+  <div class="branch">
+    <svg viewBox="0 0 700 130" width="700" height="130">
+      <path d="M350 125 C350 100 350 80 350 62" stroke="#5b564a" stroke-width="3" fill="none"/>
+      <path d="M350 62 C280 52 220 44 120 40" stroke="#5b564a" stroke-width="2.5" fill="none"/>
+      <path d="M350 62 C300 44 270 30 220 22" stroke="#5b564a" stroke-width="2.5" fill="none"/>
+      <path d="M350 62 C350 36 350 22 350 10" stroke="#5b564a" stroke-width="2.5" fill="none"/>
+      <path d="M350 62 C400 44 430 30 480 22" stroke="#5b564a" stroke-width="2.5" fill="none"/>
+      <path d="M350 62 C420 52 480 44 580 40" stroke="#5b564a" stroke-width="2.5" fill="none"/>
+      <circle cx="120" cy="40" r="7" fill="none" stroke="#c9963f" stroke-width="1.5"/>
+      <circle cx="220" cy="22" r="7" fill="none" stroke="#c9963f" stroke-width="1.5"/>
+      <circle cx="350" cy="10" r="7" fill="#c9963f"/>
+      <circle cx="480" cy="22" r="7" fill="none" stroke="#c9963f" stroke-width="1.5"/>
+      <circle cx="580" cy="40" r="7" fill="none" stroke="#c9963f" stroke-width="1.5"/>
+    </svg>
+  </div>
+  <p>六祖以后灯分成五家。录是宋初编的，五家的祖师都在里面占了整卷整章。下面五片叶子，名下各标开山祖，和编者按库本检得的名字出现次数。</p>
+  <div class="leaves">
+    <div class="leaf"><div class="lt">沩仰宗</div><div class="ls">沩山灵祐 仰山慧寂</div><div class="lc">2 见</div></div>
+    <div class="leaf"><div class="lt">临济宗</div><div class="ls">临济义玄</div><div class="lc">59 见</div></div>
+    <div class="leaf"><div class="lt">曹洞宗</div><div class="ls">洞山良价 曹山本寂</div><div class="lc">2 见</div></div>
+    <div class="leaf"><div class="lt">云门宗</div><div class="ls">云门文偃</div><div class="lc">60 见</div></div>
+    <div class="leaf"><div class="lt">法眼宗</div><div class="ls">法眼文益</div><div class="lc">181 见</div></div>
+  </div>
+  <p style="font-size:13px;color:var(--dim2);">次数为编者就库本全文检索所得，宗名作专门名词者少，多是人名地名的散见。</p>
+  <p>五叶时代的语录，把接引人的手筋玩到了极限：答话答到没有一句是答案，才是答案。全录里最像灯的一则公案，主角是德山宣鉴。他去挑战龙潭崇信，一进门就舌战，天黑了，龙潭点了支蜡烛递他。</p>
+  <div class="candle-box" id="candleBox">
+    <div id="candle">
+      <svg viewBox="0 0 64 130">
+        <g class="smoke">
+          <path d="M32 26 C26 18 38 14 32 6" stroke="#8f8a7e" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+        <g class="cflame">
+          <path d="M32 4 C38 14 40 20 40 27 C40 34 36 38 32 38 C28 38 24 34 24 27 C24 20 26 14 32 4 Z" fill="url(#gFlame)"/>
+        </g>
+        <rect x="30" y="38" width="4" height="8" fill="#7d7460"/>
+        <rect x="20" y="46" width="24" height="70" rx="3" fill="#3a372f" stroke="#5b564a" stroke-width="1.5"/>
+        <rect x="14" y="112" width="36" height="12" rx="2" fill="#2f2c23" stroke="#55503f" stroke-width="1"/>
+      </svg>
+      <div class="candle-hint">点烛 · 再点一次吹灭</div>
+    </div>
+    <div class="blow-reveal">
+      <div class="q">龙乃点烛与师。师拟接。龙便吹灭。师乃礼拜。<span class="qn">卷十五·德山在龙潭</span></div>
+      <p style="margin-top:22px;">黑下来的一瞬，德山大悟，礼拜。第二天他走了，龙潭对众人说的那段话，等于替他背书。</p>
+      <div class="q">从今向去不疑天下老和尚舌头也。<span class="qn">卷十五·德山语</span></div>
+      <div class="q">可中有一个汉。牙如剑树口似血盆。一棒打不回头。<span class="qn">卷十五·龙潭语</span></div>
+    </div>
+  </div>
+  <p>灯在本录里到处是机关。有人拿佛经里的套话来问，答话的禅师直接把套话拆了。</p>
+  <div class="q">问百年暗室一灯能破。如何是一灯。师曰。论什么百年。<span class="qn">某禅师答问</span></div>
+  <div class="q">问法眼一灯分照天下。和尚一灯分付何人。师曰。法眼什么处分照来。<span class="qn">法眼门下答问</span></div>
+  <p>赵州从谂是全录问话最密的人，他问南泉什么是道，得到的四个字，后来成了禅门乃至后世的口头禅。</p>
+  <div class="q">异日问南泉。如何是道。南泉曰。平常心是道。师曰。还可趣向否。南泉曰。拟向即乖。<span class="qn">卷十·赵州参南泉</span></div>
+  <p>他还顺手给后世留了一个成语的早期标本。有人来参，他等了半天，说本想抛砖引玉，结果引来一块土坯。</p>
+  <div class="q">比来抛塼引玉。却引得个墼子<span class="qn">卷十·赵州语</span></div>
+  <div class="wicks">
+    <div class="wick-tag"><div class="wn">一百八十三</div><div class="ww">灯字全录所见</div></div>
+    <div class="wick-tag"><div class="wn">二十二</div><div class="ww">吃茶去全录所见</div></div>
+    <div class="wick-tag"><div class="wn">十四</div><div class="ww">面壁全录所见</div></div>
+  </div>
+  <p style="font-size:13px;color:var(--dim2);text-align:center;">计数为编者就库本全文检索所得。一句吃茶去，全录二十二位禅师说过，茶禅一味的底子就在这里。</p>
+</section>
+
+<!-- ================= 长明 ================= -->
+<section id="s7">
+  <div class="sec-head"><span class="sec-no">灯七</span><span class="sec-ti">长明<small>卷三十的歌</small></span></div>
+  <p>录的最后一卷不记人，专收历代歌铭：心王铭、信心铭、证道歌、参同契、显宗记，十几篇，等于全录的余音。三祖僧璨那篇开头的八个字，是整部禅门文献被引用最多的句子之一。</p>
+  <div class="q">至道无难唯嫌拣择。但莫憎爱洞然明白。<span class="qn">卷三十·信心铭</span></div>
+  <p>永嘉玄觉的证道歌唱得最放，一开口就是长镜头。</p>
+  <div class="q">君不见。绝学无为闲道人。不除妄想不求真。<span class="qn">卷三十·证道歌起句</span></div>
+  <div class="q">梦里明明有六趣。觉后空空无大千。<span class="qn">卷三十·证道歌</span></div>
+  <div class="finale">
+    <div class="finale-lamp">
+      <svg width="70" height="86" viewBox="0 0 70 86">
+        <g class="flame flame-flick" style="opacity:1;transform:none;">
+          <path d="M35 4 C40 13 42 18 42 24 C42 30 39 34 35 34 C31 34 28 30 28 24 C28 18 30 13 35 4 Z" fill="url(#gFlame)"/>
+        </g>
+        <rect x="33" y="34" width="4" height="10" fill="#54503f"/>
+        <ellipse cx="35" cy="50" rx="20" ry="6" fill="#37342a" stroke="#5b564a" stroke-width="1.2"/>
+        <path d="M15 50 C15 60 24 65 35 65 C46 65 55 60 55 50" fill="#2c2a21" stroke="#5b564a" stroke-width="1.2"/>
+      </svg>
+    </div>
+    <div class="vpassage">
+      <span class="q qelem">令灯灯相然相续不断至于今日。大众且道。相续个什么。</span>
+      <span class="vattr">卷十六 · 首山省念语</span>
+    </div>
+    <div class="finale-seal">灯灯相然</div>
+    <div class="finale-note">灯从七佛燃到宋初，每一代都有人接着点。读到这里，这一盏就算过手了。</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>文本来源：殆知阁简体库（佛藏 乾隆藏 此土著述本〈景德传灯录〉，全书三十卷，去空白四十一万余字）。系列总目见 <a href="mulu.html">殆知阁导读</a>，仓库 <a href="https://github.com/robertsong/daizhige-daodu">github.com/robertsong/daizhige-daodu</a>。</p>
+  <p>引文经脚本与库内文件去标点归一逐字比对通过（引文五十六处，白话反扫六字窗零撞；灯、吃茶去、面壁三项计数另经检索复核）。偈文、公案均照录库本，通行本用字不同处已在文中注明。</p>
+  <p>本书为宗教文献，成书于宋初，含神话与传说成分，祖师行历与史地细节历代考订不一，阅读时请以史料批判的眼光待之。</p>
+</footer>
+
+<script>
+(function(){
+  var hero=document.getElementById('hero');
+  var lit=false;
+  function ignite(){
+    if(lit)return;lit=true;
+    hero.classList.add('lit');
+    document.body.classList.remove('hero-pending');
+    setTimeout(passAll,900);
+  }
+  document.getElementById('lampStage').addEventListener('click',ignite);
+  document.getElementById('heroHint').addEventListener('click',ignite);
+
+  var stations=[].slice.call(document.querySelectorAll('.station'));
+  function lightOne(i){
+    var st=stations[i];if(!st||st.classList.contains('lit'))return;
+    st.classList.add('lit');
+  }
+  function passAll(){
+    stations.forEach(function(st,i){setTimeout(function(){lightOne(i);},i*260);});
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  function onScroll(){
+    var h=document.documentElement;
+    var p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);
+    document.getElementById('fireline').style.height=(p*100)+'%';
+  }
+  onScroll();
+
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting)return;
+      var id=e.target.id;
+      if(!lit&&id==='s0'){ignite();}
+      stations.forEach(function(st){if(st.getAttribute('data-s')===id)st.classList.add('lit');});
+    });
+  },{threshold:.25});
+  ['s0','s1','s2','s3','s4','s5','s6','s7'].forEach(function(id){io.observe(document.getElementById(id));});
+
+  [].slice.call(document.querySelectorAll('.ka')).forEach(function(k){
+    k.addEventListener('click',function(){k.classList.toggle('open');});
+  });
+
+  var wallBtn=document.getElementById('wallBtn');
+  wallBtn.addEventListener('click',function(){
+    document.getElementById('steleNeng').classList.add('night');
+    wallBtn.classList.add('done');
+  });
+
+  var grind=document.getElementById('grind'),brick=document.getElementById('brick'),gs=document.getElementById('grindStep'),gc=0;
+  brick.addEventListener('click',function(){
+    gc++;
+    if(gc<3){brick.classList.add('grinding');gs.textContent='研中 · '+gc+'／3';}
+    else{brick.classList.remove('grinding');grind.classList.add('done');gs.textContent='塼不成镜';}
+  });
+
+  var box=document.getElementById('candleBox');
+  document.getElementById('candle').addEventListener('click',function(){box.classList.toggle('blow');});
+})();
+</script>
+</body>
+</html>
