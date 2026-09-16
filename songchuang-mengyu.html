@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>松窗梦语 · 梦觉</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --paper2:#ddd6c8; --paper-dim:#b9b2a3;
+  --gold:#c9963f; --gold-dim:#8a6a2f; --cinnabar:#c0453c;
+  --hairline:rgba(201,150,63,.28);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:"Songti SC","Noto Serif SC","STSong","SimSun",serif;
+  line-height:1.9; letter-spacing:.04em;
+  overflow-x:hidden;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.qv{color:var(--gold)}
+small{font-weight:inherit}
+
+/* ============ 首屏：格子窗 ============ */
+.hero{min-height:96vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:60px 0 30px}
+.hero .hint{position:absolute;bottom:26px;font-size:13px;color:var(--paper-dim);letter-spacing:.5em;text-indent:.5em}
+.winbox{position:relative;width:min(620px,92vw)}
+.winbox svg{width:100%;display:block;cursor:pointer}
+.pane{opacity:.12;transition:opacity 1.4s ease}
+.pane.on{opacity:.92}
+.tname{font-size:clamp(38px,7vw,58px);letter-spacing:.28em;color:var(--paper);
+  writing-mode:vertical-rl;position:absolute;top:50%;left:50%;transform:translate(-50%,-54%);
+  text-shadow:0 0 26px rgba(201,150,63,.55);opacity:0;transition:opacity 2.2s ease 1s;pointer-events:none}
+.tname.show{opacity:1}
+.sub-sign{margin-top:26px;text-align:center;font-size:14.5px;color:var(--paper-dim);letter-spacing:.2em}
+
+/* ============ 引笺 ============ */
+.sec{padding:88px 0 30px}
+.kicker{color:var(--gold);font-size:13.5px;letter-spacing:.5em;margin-bottom:26px}
+.yin{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
+.yin-scroll{
+  writing-mode:vertical-rl; background:linear-gradient(180deg,#ece7dd,#ded7c8);
+  color:#2c2a24; padding:34px 26px; height:380px; max-width:46%; min-width:270px;
+  font-size:16.5px; line-height:2.15; letter-spacing:.14em;
+  box-shadow:6px 6px 0 rgba(0,0,0,.35); flex-shrink:0;
+}
+.yin-scroll .qv{color:#6e531f}
+.yin-note{flex:1;min-width:280px;font-size:15.5px;color:var(--paper)}
+.yin-note p{margin-bottom:1.1em}
+.yin-note .lead{font-size:19px;color:var(--paper);line-height:2}
+
+/* ============ 灯廊 ============ */
+.hall{margin-top:34px;border-top:1px solid var(--hairline)}
+.volband{display:flex;align-items:stretch;gap:0;border-bottom:1px solid var(--hairline);flex-wrap:wrap}
+.voltag{writing-mode:vertical-rl;font-size:13px;color:var(--gold-dim);padding:12px 10px;letter-spacing:.3em;border-right:1px solid var(--hairline);display:flex;align-items:center}
+.lampset{display:flex;flex-wrap:wrap;flex:1}
+.lamp{
+  min-width:96px;flex:1;padding:13px 6px 11px;text-align:center;cursor:pointer;
+  font-size:15px;color:var(--paper-dim);position:relative;transition:.45s;
+  border-right:1px dashed rgba(201,150,63,.16);user-select:none;
+}
+.lamp::after{content:"";position:absolute;left:50%;bottom:5px;transform:translateX(-50%);
+  width:5px;height:5px;border-radius:50%;background:#3a352b;transition:.45s}
+.lamp:hover{color:var(--paper)}
+.lamp.lit{color:var(--ink);background:linear-gradient(180deg,#efe9db,#ded5c0);text-shadow:none;font-weight:700}
+.lamp.lit::after{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.lamp.major{border-bottom:2px solid var(--gold)}
+.lampnote{min-height:64px;padding:20px 4px 8px;font-size:15px;color:var(--paper);opacity:0;transition:.6s}
+.lampnote.show{opacity:1}
+.lampnote b{color:var(--gold);font-weight:700;margin-right:.6em}
+
+/* ============ 深读卡通用 ============ */
+.deck{display:flex;gap:26px;flex-wrap:wrap;margin-top:34px}
+.card{
+  background:linear-gradient(160deg,#ece6d8,#dcd4c2); color:#2c2a24;
+  padding:28px 26px;flex:1;min-width:280px;position:relative;
+  box-shadow:7px 7px 0 rgba(0,0,0,.35);font-size:15px;
+}
+.card .cap{font-size:13px;letter-spacing:.35em;color:#6e531f;margin-bottom:14px}
+.card .qv{color:#5c451a}
+.card .note{margin-top:12px;font-size:14px;color:#56503f}
+.seal{
+  display:inline-block;color:var(--cinnabar);border:2px solid var(--cinnabar);
+  padding:2px 8px;font-size:13px;letter-spacing:.2em;transform:rotate(-4deg);margin-top:12px;
+}
+
+/* ============ 新鞋两联 ============ */
+.shoebox{display:flex;gap:20px;flex-wrap:wrap;margin-top:30px}
+.shoe{flex:1;min-width:260px;cursor:pointer;perspective:900px}
+.shoe .face{
+  background:linear-gradient(160deg,#ece6d8,#dcd4c2);color:#2c2a24;padding:26px 24px;
+  box-shadow:7px 7px 0 rgba(0,0,0,.35);transition:.7s;position:relative;font-size:15px;min-height:190px;
+}
+.shoe.flip .face{transform:rotateX(0)}
+.shoe .back{position:absolute;inset:0;background:#23211c;color:var(--paper);opacity:0;transition:.7s;padding:26px 24px;font-size:15px;display:flex;flex-direction:column;justify-content:center}
+.shoe.flipped .back{opacity:1}
+.shoe .back .qv{color:var(--gold)}
+.shoe .cap{font-size:13px;letter-spacing:.35em;color:#6e531f;margin-bottom:12px}
+.shoe .tap{position:absolute;right:16px;bottom:12px;font-size:12px;color:#8a8172}
+
+/* ============ 商路 ============ */
+.routemap{margin-top:30px;background:#15140f;border:1px solid var(--hairline);padding:18px}
+.routemap svg{width:100%;display:block}
+.node{cursor:pointer}
+.node circle{fill:#221f18;stroke:var(--gold-dim);stroke-width:1.2;transition:.4s}
+.node text{fill:var(--paper-dim);font-size:14px;transition:.4s}
+.node:hover circle,.node.on circle{fill:var(--gold);stroke:var(--paper)}
+.node:hover text,.node.on text{fill:var(--ink)}
+.rline{stroke:rgba(201,150,63,.3);stroke-dasharray:5 6;fill:none;animation:dash 22s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-320}}
+.routequote{min-height:74px;padding:20px 8px 6px;font-size:15.5px;color:var(--paper);opacity:.9}
+.routequote.hide{opacity:0}
+.balance{display:flex;gap:22px;flex-wrap:wrap;margin-top:26px}
+.pan{flex:1;min-width:250px;padding:22px 22px;background:#15140f;border:1px solid var(--hairline);cursor:pointer;transition:.5s;position:relative}
+.pan:hover{border-color:var(--gold)}
+.pan .hd{color:var(--gold);font-size:16px;letter-spacing:.25em;margin-bottom:10px}
+.pan .bd{font-size:14.5px;color:var(--paper-dim)}
+.pan .bd .qv{color:var(--gold)}
+
+/* ============ 军功册 ============ */
+.milwrap{display:flex;gap:22px;flex-wrap:wrap;margin-top:32px}
+.dossier{flex:1;min-width:270px;cursor:pointer;position:relative}
+.dossier .sheet{
+  background:linear-gradient(170deg,#e9e2d2,#d8cfba);color:#2c2a24;padding:24px 22px 30px;
+  box-shadow:7px 7px 0 rgba(0,0,0,.35);transition:transform .7s,opacity .7s;min-height:230px;position:relative;
+}
+.dossier.flipped .sheet{transform:rotateY(180deg);opacity:0;pointer-events:none}
+.dossier .truth{
+  position:absolute;inset:0;background:#1e1c16;border:1px solid var(--cinnabar);
+  color:var(--paper);padding:24px 22px;font-size:15px;opacity:0;transition:opacity .7s .25s;
+}
+.dossier.flipped .truth{opacity:1}
+.dossier .truth .qv{color:var(--gold)}
+.dossier .cap{font-size:13px;letter-spacing:.3em;color:#6e531f;margin-bottom:12px}
+.dossier .stampline{margin-top:16px}
+.dossier .tap{position:absolute;right:14px;bottom:10px;font-size:12px;color:#8a8172}
+.truth .tap{color:#6a6355}
+
+/* ============ 倭账链 ============ */
+.chain{margin-top:30px}
+.chainlink{
+  display:flex;gap:18px;align-items:flex-start;padding:16px 18px;border-left:3px solid var(--gold-dim);
+  background:rgba(201,150,63,.05);margin-bottom:12px;flex-wrap:wrap;
+}
+.chainlink .no{color:var(--gold);font-size:20px;line-height:1.4;min-width:30px}
+.chainlink .tx{flex:1;min-width:240px;font-size:15px}
+.chainlink .tx .qv{color:var(--gold)}
+.chainlink .who{font-size:12.5px;color:var(--paper-dim);letter-spacing:.2em}
+
+/* ============ 侈靡笺 ============ */
+.notes-wall{display:flex;gap:22px;flex-wrap:wrap;margin-top:30px}
+.slip{
+  background:linear-gradient(175deg,#ece7db,#dcd5c4);color:#2c2a24;padding:24px 22px;flex:1;min-width:260px;
+  box-shadow:6px 6px 0 rgba(0,0,0,.35);transform:rotate(-.6deg);font-size:15px;
+}
+.slip:nth-child(2){transform:rotate(.8deg)}
+.slip:nth-child(3){transform:rotate(-.4deg)}
+.slip .qv{color:#5c451a}
+
+/* ============ 占梦簿 ============ */
+.dreambook{margin-top:32px;border-top:2px solid var(--gold-dim)}
+.drow{
+  display:flex;gap:0;border-bottom:1px solid rgba(201,150,63,.2);cursor:pointer;flex-wrap:wrap;
+  transition:background .4s;
+}
+.drow:hover{background:rgba(201,150,63,.06)}
+.drow .dno{min-width:56px;text-align:center;color:var(--gold-dim);padding:16px 6px;font-size:15px;border-right:1px dashed rgba(201,150,63,.25)}
+.drow .dm{flex:1.2;min-width:220px;padding:16px 18px;font-size:15px}
+.drow .dv{flex:1;min-width:220px;padding:16px 18px;font-size:15px;color:var(--paper-dim);border-left:1px dashed rgba(201,150,63,.25)}
+.drow.on .dv{color:var(--paper)}
+.drow .dv::before{content:"应  ";color:var(--gold-dim);font-size:12.5px;letter-spacing:.2em}
+.drow .dm::before{content:"梦  ";color:var(--gold-dim);font-size:12.5px;letter-spacing:.2em}
+.drow .dv .qv{color:var(--gold)}
+.drow-broken{cursor:not-allowed}
+.drow-broken .dm,.drow-broken .dv{color:#5c5749}
+.brokenink{
+  display:inline-block;width:120px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);
+  vertical-align:middle;margin:0 8px;
+}
+.tomb{margin-top:34px;text-align:center;padding:40px 10px;border:1px solid var(--hairline);position:relative}
+.tomb .halfpane{
+  width:120px;height:150px;margin:0 auto 18px;border:1px solid var(--gold-dim);position:relative;overflow:hidden;
+}
+.tomb .halfpane::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(201,150,63,.32),rgba(201,150,63,0) 62%)}
+.tomb .t1{font-size:22px;letter-spacing:.4em;color:var(--paper)}
+.tomb .t2{margin-top:14px;font-size:14px;color:var(--paper-dim)}
+.tomb .qv{color:var(--gold)}
+
+/* ============ 页脚 ============ */
+footer.page{border-top:1px solid var(--hairline);padding:38px 0 60px;color:var(--paper-dim);font-size:13.5px;line-height:2.1}
+footer.page a{color:var(--gold-dim)}
+.corner{position:fixed;right:18px;bottom:18px;width:40px;height:40px;border:1px solid var(--gold-dim);
+  display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--gold);cursor:pointer;
+  background:rgba(25,25,23,.8);z-index:50;user-select:none}
+@media (max-width:640px){
+  .yin-scroll{max-width:100%;height:320px}
+  .drow .dv{border-left:none;border-top:1px dashed rgba(201,150,63,.25)}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 ================= -->
+<header class="hero">
+  <div class="winbox" id="winbox">
+    <svg viewBox="0 0 640 460" aria-label="格子窗">
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="42%" r="75%">
+          <stop offset="0%" stop-color="#f4e9c8"/>
+          <stop offset="60%" stop-color="#d9c390"/>
+          <stop offset="100%" stop-color="#a98b52"/>
+        </radialGradient>
+        <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#26241d"/>
+          <stop offset="100%" stop-color="#191813"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="640" height="460" fill="url(#night)"/>
+      <!-- 窗外松枝 -->
+      <g stroke="#3d3a2e" fill="none" stroke-width="3" opacity=".85">
+        <path d="M-10,120 C90,96 170,120 240,86 C300,58 356,74 410,50"/>
+        <path d="M120,108 C150,140 196,150 236,142"/>
+        <path d="M250,84 C292,110 340,104 386,88"/>
+        <path d="M330,62 C368,44 420,52 456,36"/>
+      </g>
+      <g fill="#2e3326" opacity=".9">
+        <ellipse cx="205" cy="128" rx="34" ry="7"/><ellipse cx="300" cy="96" rx="40" ry="8"/>
+        <ellipse cx="405" cy="60" rx="30" ry="6"/><ellipse cx="150" cy="104" rx="26" ry="6"/>
+        <ellipse cx="368" cy="94" rx="24" ry="5"/><ellipse cx="440" cy="42" rx="26" ry="5"/>
+      </g>
+      <!-- 窗框 -->
+      <rect x="70" y="70" width="500" height="330" fill="#211f19" stroke="#4a4232" stroke-width="10"/>
+      <rect x="82" y="82" width="476" height="306" fill="#15130e" stroke="#5c5138" stroke-width="2"/>
+      <!-- 六格窗纸（点亮层） -->
+      <g id="panes">
+        <rect class="pane" x="88"  y="88"  width="150" height="142" fill="url(#glow)"/>
+        <rect class="pane" x="246" y="88"  width="148" height="142" fill="url(#glow)"/>
+        <rect class="pane" x="402" y="88"  width="150" height="142" fill="url(#glow)"/>
+        <rect class="pane" x="88"  y="238" width="150" height="144" fill="url(#glow)"/>
+        <rect class="pane" x="246" y="238" width="148" height="144" fill="url(#glow)"/>
+        <rect class="pane" x="402" y="238" width="150" height="144" fill="url(#glow)"/>
+      </g>
+      <!-- 窗棂 -->
+      <g stroke="#4a4232" stroke-width="7">
+        <line x1="242" y1="82" x2="242" y2="388"/>
+        <line x1="398" y1="82" x2="398" y2="388"/>
+        <line x1="82" y1="234" x2="558" y2="234"/>
+      </g>
+      <g stroke="#5c5138" stroke-width="2" opacity=".8">
+        <line x1="163" y1="88" x2="163" y2="230"/><line x1="320" y1="88" x2="320" y2="230"/><line x1="477" y1="88" x2="477" y2="230"/>
+        <line x1="163" y1="238" x2="163" y2="382"/><line x1="320" y1="238" x2="320" y2="382"/><line x1="477" y1="238" x2="477" y2="382"/>
+        <line x1="88" y1="160" x2="238" y2="160"/><line x1="246" y1="160" x2="394" y2="160"/><line x1="402" y1="160" x2="552" y2="160"/>
+        <line x1="88" y1="310" x2="238" y2="310"/><line x1="246" y1="310" x2="394" y2="310"/><line x1="402" y1="310" x2="552" y2="310"/>
+      </g>
+      <!-- 案头灯影 -->
+      <ellipse cx="320" cy="440" rx="200" ry="16" fill="rgba(201,150,63,.14)"/>
+    </svg>
+    <div class="tname" id="tname">松窗梦语</div>
+  </div>
+  <div class="sub-sign"><qv>时万历癸巳，虎林山人八十三翁张瀚识。</qv></div>
+  <div class="hint">点 窗 入 梦</div>
+</header>
+
+<!-- ================= 引 ================= -->
+<section class="sec wrap" id="yin">
+  <div class="kicker">引 · 松窗之下</div>
+  <div class="yin">
+    <div class="yin-scroll">
+      <qv>余自罢归，屏绝俗尘，独处小楼。楹外一松，移自天目，虬干纵横，翠羽茂密，郁郁苍苍，四时不改，有承露沐雨之姿，凌霜傲雪之节。</qv>
+      <qv>或静思往昔，即四五年前事，恍惚如梦，忆记纷纭，百感皆为陈迹，谓既往为梦幻，而此时为暂寤矣。</qv>
+      <qv>安知梦时非觉，觉时非梦乎！</qv>
+      <qv>松窗长昼，随笔述事，既以自省，且以贻吾后人。</qv>
+    </div>
+    <div class="yin-note">
+      <p class="lead">万历二十一年，杭州一位八十三岁的退休尚书，在小楼里给自己的一生写了份结案报告。</p>
+      <p>他叫张瀚，仁和人，嘉靖十四年进士，官做到吏部尚书，掌天下铨选五年。因不肯替张居正留任夺情，被排挤回乡。退休后他在窗前种了一株天目山松，日夕坐对，把四十多年宦途见闻一条条写出，分作八卷三十三纪。</p>
+      <p>他给这套书写法找了个绝妙的比喻：往事如梦，可他又反问自己，安知今天醒着，不是下一场梦的开头？于是全书既像回忆录，又像一份梦境台账。更妙的是，这份台账写到最后一页，真的断了。</p>
+      <p>门生冯梦祯为他作传，说他眼睛亮得像电光，临终检点行囊，没有厚蓄。这册书在清光绪二十一年由杭州藏书家丁丙据旧钞本刻印流传，书里夹着一百二十九条校勘小注，是历代钞工替他改错的痕迹。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 八卷三十三纪灯廊 ================= -->
+<section class="sec wrap" id="hall">
+  <div class="kicker">三十三纪 · 一盏窗灯</div>
+  <p style="color:var(--paper-dim);font-size:15px;max-width:720px">全书不编年、不分类目成规，以「纪」为格，一纪一扇小窗：宦游是履历，四游是行踪，四夷是边情，士农工商是社会，天象花木是博物，梦寐是心事。点一盏灯，看一扇窗内的提要。</p>
+  <div class="hall" id="lampwall"></div>
+  <div class="lampnote" id="lampnote"></div>
+</section>
+
+<!-- ================= 深读一 · 新鞋 ================= -->
+<section class="sec wrap" id="shoe">
+  <div class="kicker">宦游记 · 一双新鞋的寓言</div>
+  <p style="color:var(--paper);font-size:16px;max-width:760px">全书第一则，是张瀚初入官场时，台长王廷相关于一双新鞋的当面教训。这则寓言后来被无数治家格言转引，源头在这里。点卡片看两面。</p>
+  <div class="shoebox">
+    <div class="shoe" onclick="this.classList.toggle('flipped')">
+      <div class="face">
+        <div class="cap">面 · 谨 慎</div>
+        <qv>昨雨后出街衢，一舆人蹑新履，自灰厂历长安街，皆择地而蹈，兢兢恐污其履，转入京城，渐多泥泞，偶一沾濡，更不复顾惜。</qv>
+        <div class="tap">翻 面</div>
+      </div>
+      <div class="back">
+        <div class="cap" style="color:var(--gold)">背 · 居身之道</div>
+        <qv>居身之道，亦犹是耳。傥一失足，将无所不至矣。</qv>
+        <p style="margin-top:10px;font-size:14px;color:var(--paper-dim)">轿夫穿新鞋时步步挑干处走，一旦沾泥便破罐破摔。王廷相拿这句送给了二十多岁的张瀚，张瀚自称记了一辈子。</p>
+      </div>
+    </div>
+    <div class="shoe" onclick="this.classList.toggle('flipped')">
+      <div class="face">
+        <div class="cap">面 · 同 榜</div>
+        <p>与孙植同榜中试，吏部誊本把名次抄错，误先取了他。孙植跑来质问，两人同去选郎处对质，查明是文书之误，双双暂留。</p>
+        <div class="tap">翻 面</div>
+      </div>
+      <div class="back">
+        <div class="cap" style="color:var(--gold)">背 · 同 心</div>
+        <p>一场乌龙没有变成官司，两人后来同遭母丧、同起复，各历三十余年，一起以尚书衔退休。张瀚记下这一笔时感叹：命里的显达与困顿各有定数，不值得计较。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="routebank" style="display:none" aria-hidden="true">
+  <qv data-k="hz">杭州其都会也，山川秀丽，人慧俗奢，米资于北，薪资于南，其地实啬而文侈。</qv>
+  <qv data-k="sz">东引松、常，中为姑苏。其民利鱼稻之饶，极人工之巧。</qv>
+  <qv data-k="hui">休、歙尤伙，故贾人几遍天下。</qv>
+  <qv data-k="jin">自昔多贾，西入陇、蜀，东走齐、鲁，往来交易，莫不得其所欲。至今西北贾多秦人。</qv>
+  <qv data-k="yue">多珠玑犀齿毒瑁金翠，皆自诸夷航海而至，故聚于粤之东。</qv>
+  <qv data-k="jd">四方财货骈集于五都之市。</qv>
+  <qv data-k="rao">独陶人窑缶之器，为天下利。</qv>
+</div>
+
+<!-- ================= 深读二 · 商路 ================= -->
+<section class="sec wrap" id="routes">
+  <div class="kicker">商贾纪 · 一份帝国物流报告</div>
+  <p style="color:var(--paper);font-size:16px;max-width:760px">三十三纪里最被后世经济史家引用的一篇。张瀚做官跑遍大半个帝国，把全国的商路、物产、商帮摸了一遍：哪里产什么、谁在长途贩运、钱往哪里流，写成一份四百多年前的「帝国物流报告」。点地图上的节点读原文。</p>
+  <div class="routemap">
+    <svg viewBox="0 0 980 330">
+      <path class="rline" d="M490,180 C560,110 640,90 730,96"/>
+      <path class="rline" d="M490,180 C420,120 340,110 250,120"/>
+      <path class="rline" d="M490,180 C500,240 560,262 640,258"/>
+      <path class="rline" d="M490,180 C390,246 300,252 216,240"/>
+      <path class="rline" d="M490,180 C600,180 700,180 800,186"/>
+      <path class="rline" d="M490,180 C300,60 180,66 96,86"/>
+      <g class="node" data-k="hz"><circle cx="490" cy="180" r="26"/><text x="490" y="186" text-anchor="middle">杭州</text></g>
+      <g class="node" data-k="sz"><circle cx="730" cy="96" r="20"/><text x="730" y="102" text-anchor="middle">三吴</text></g>
+      <g class="node" data-k="hui"><circle cx="640" cy="258" r="20"/><text x="640" y="264" text-anchor="middle">徽州</text></g>
+      <g class="node" data-k="jin"><circle cx="250" cy="120" r="20"/><text x="250" y="126" text-anchor="middle">晋秦</text></g>
+      <g class="node" data-k="yue"><circle cx="216" cy="240" r="20"/><text x="216" y="246" text-anchor="middle">广州</text></g>
+      <g class="node" data-k="jd"><circle cx="800" cy="186" r="20"/><text x="800" y="192" text-anchor="middle">京师</text></g>
+      <g class="node" data-k="rao"><circle cx="96" cy="86" r="20"/><text x="96" y="92" text-anchor="middle">饶州</text></g>
+    </svg>
+  </div>
+  <div class="routequote hide" id="routequote"></div>
+
+  <div class="balance">
+    <div class="pan">
+      <div class="hd">织 机 起 家</div>
+      <div class="bd"><qv>即余先世，亦以机杼起，而今三吴之以机杼致富者尤众。</qv><br><span style="font-size:13.5px;display:block;margin-top:8px">张家的起点是纺织作坊。他坦白承认自家靠机杼起家，又把这看作江南的普遍发家路径，一句家常话成了明代江南纺织业的第一手证词。</span></div>
+    </div>
+    <div class="pan">
+      <div class="hd">减 税 反 而 增 收</div>
+      <div class="bd"><qv>古者关市讥而不征，征商非圣朝所宜急。</qv><br><span style="font-size:13.5px;display:block;margin-top:8px">他任南京工部郎管关税时，与同僚合计减了两成商税，结果商人云集，<qv>国课较昔反增十之五</qv>。这条亲历，是他给「轻征薄赋反而多收」提供的个人账本。</span></div>
+    </div>
+    <div class="pan">
+      <div class="hd">互 市 与 海 市</div>
+      <div class="bd">给北虏开马市，年年输银百万换回驽马；让东南海上通商，花的是民间的钱货，无妨国计。他的判词：<qv>互市有损而无得，海市有利而无害，主计者何不思也？</qv><span style="font-size:13.5px;display:block;margin-top:8px">更狠的一句是：<qv>夷人不可无中国之利，犹中国不可无夷人之利，禁之使不得通，安能免其不为寇哉？</qv>禁海等于造寇，万历年间能把话说这么透，罕见。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 深读三 · 军功册 ================= -->
+<section class="sec wrap" id="military">
+  <div class="kicker">北虏纪 · 三页军功册</div>
+  <p style="color:var(--paper);font-size:16px;max-width:760px">嘉靖二十九年，俺答一路烧到北京西直门下。张瀚记录的边务现场，一半是寇，一半是「功」。军功册有三页，每页点开看背面。</p>
+  <div class="milwrap">
+    <div class="dossier" onclick="this.classList.toggle('flipped')">
+      <div class="sheet">
+        <div class="cap">捷 报 之 一</div>
+        <p style="font-size:17px;letter-spacing:.15em">榆林镇塘报：此番接仗，阵前取首级一百四十颗，文武并奖。</p>
+        <div class="stampline"><span class="seal">奉 旨 嘉 奖</span></div>
+        <div class="tap">点 开 验 功</div>
+      </div>
+      <div class="truth">
+        <div class="cap" style="color:var(--cinnabar)">验 功 者 回 来 说</div>
+        <qv>所见首非白头之妪，即初生之孩也。</qv>
+        <p style="margin-top:10px;font-size:14px;color:var(--paper-dim)">巡边的谢宪副亲口告诉张瀚：砍下的「首级」不是老太婆就是吃奶的娃娃，都是来不及跑的边民。庙堂照单全收，人人升赏。</p>
+        <div class="tap">再 点 收 册</div>
+      </div>
+    </div>
+    <div class="dossier" onclick="this.classList.toggle('flipped')">
+      <div class="sheet">
+        <div class="cap">捷 报 之 二</div>
+        <p style="font-size:17px;letter-spacing:.15em">宣大军门奏：阵斩敌酋妻孥，军中相庆。</p>
+        <div class="stampline"><span class="seal">上 感 天 叙</span></div>
+        <div class="tap">点 开 验 功</div>
+      </div>
+      <div class="truth">
+        <div class="cap" style="color:var(--cinnabar)">咸 宁 侯 的 私 下 话</div>
+        <qv>有数骑同妇人童子牧马，我军出其不意，纵兵杀之，得其尸。女童皆朱衣，遂谓吉囊妻子，喧然报功，实无是事也。</qv>
+        <p style="margin-top:10px;font-size:14px;color:var(--paper-dim)">因为尸体里的小女孩穿着红衣，就编成敌酋妻小的「大捷」。连武人仇鸾都听不下去，当面骂这是拿国事当儿戏。</p>
+        <div class="tap">再 点 收 册</div>
+      </div>
+    </div>
+    <div class="dossier" onclick="this.classList.toggle('flipped')">
+      <div class="sheet">
+        <div class="cap">捷 报 之 三</div>
+        <p style="font-size:17px;letter-spacing:.15em">庚戌之变，勤王兵十余万骑毕至，京师解严。</p>
+        <div class="stampline"><span class="seal">北 虏 遁 去</span></div>
+        <div class="tap">点 开 验 功</div>
+      </div>
+      <div class="truth">
+        <div class="cap" style="color:var(--cinnabar)">战 场 实 况</div>
+        <qv>庚戌，俺答入渔阳塞，犯京师，焚劫至西直门，窥陵寝，掠教场。</qv>
+        <qv>诸道兵相顾骇愕，莫敢前发一矢，仅尾之出境而已。乃收斩遗稚逃降八十余，以捷闻。</qv>
+        <p style="margin-top:10px;font-size:14px;color:var(--paper-dim)">十余万勤王兵眼睁睁目送敌军驮着抢来的财货慢慢走出边境，没人敢放一箭，最后杀掉八十多个掉队的难民孩童与降人，算作一场大捷上报。</p>
+        <div class="tap">再 点 收 册</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 深读四 · 倭账 ================= -->
+<section class="sec wrap" id="wo">
+  <div class="kicker">东倭纪 · 一笔算出来的倭患</div>
+  <p style="color:var(--paper);font-size:16px;max-width:760px">倭寇从哪里来？张瀚给出一条清晰得可怕的因果链：不是天降海贼，而是一笔烂账。链条五环，从上往下读。</p>
+  <div class="chain">
+    <div class="chainlink"><div class="no">壹</div><div class="tx">朝廷罢市舶司，本想把海外贸易的利权收归官府。结果<qv>罢市舶而利孔在下，奸豪外交内诇，海上无宁日矣</qv>。<div class="who">禁 得 越 紧 ， 私 市 越 盛</div></div></div>
+    <div class="chainlink"><div class="no">贰</div><div class="tx">番货到港，赊给奸商代销。奸商赖账，多则欠到万两，少则也有上千两，年年转辗不偿。倭人收不到货款。<div class="who">债 权 人 是 海 商</div></div></div>
+    <div class="chainlink"><div class="no">叁</div><div class="tx">倭人转而投靠贵官家，贵官欺负得更狠。索债无门，只有出海为盗一条路。倭人的原话是：<qv>我货本倭王物，尔价不我偿，何以复倭王？不杀尔欺负，掠尔金宝，誓不归！</qv><div class="who">讨 债 讨 成 了 倭 寇</div></div></div>
+    <div class="chainlink"><div class="no">肆</div><div class="tx">沿海的贫民被苛政与饥荒逼得走投无路，纷纷下海给他们做接应。头目多为中国人：<qv>中有狡猾如王五峰、徐碧峰、麻叶之徒，皆我华人，金冠龙袍，称王海岛。</qv><div class="who">倭 寇 集 团 的 董 事 会 全 是 自 己 人</div></div></div>
+    <div class="chainlink"><div class="no">伍</div><div class="tx">于是浙东大窘，朱纨以下巡抚接踵用兵，东南糜烂数十年。张瀚把这条链写进书里，等于给「海禁政策」递了一份事故报告：债主变海盗，账房变战场。<div class="who">政 策 的 账 ， 百 姓 拿 命 平</div></div></div>
+  </div>
+</section>
+
+<!-- ================= 深读五 · 侈靡笺 ================= -->
+<section class="sec wrap" id="hang">
+  <div class="kicker">风俗纪 · 杭州人的体面</div>
+  <p style="color:var(--paper);font-size:16px;max-width:760px">写完全帝国的张瀚，回头写家乡杭州，语气像个焦虑的家长。三张字笺，都是他的亲眼所见。</p>
+  <div class="notes-wall">
+    <div class="slip"><div class="cap" style="font-size:13px;letter-spacing:.3em;color:#6e531f;margin-bottom:12px">笺 一 · 穷 讲 究</div><p>不单富豪纨绮相望，<qv>即贫乏者，强饰华丽，扬扬矜诩，为富贵容</qv>。穷到吃不上饭，出门也要体面，这是他眼里杭州风俗的病根。</p></div>
+    <div class="slip"><div class="cap" style="font-size:13px;letter-spacing:.3em;color:#6e531f;margin-bottom:12px">笺 二 · 一 城 依 戏 吃 饭</div><p>富贵家出钱置办行头，招十几人搬戏开场，好事之徒竞写新词互相唱和。<qv>一郡城之内，衣食于此者，不知几千人矣</qv>。戏剧养活半城人口，这是晚明演艺经济的实录。</p></div>
+    <div class="slip"><div class="cap" style="font-size:13px;letter-spacing:.3em;color:#6e531f;margin-bottom:12px">笺 三 · 巨 宅 换 新 主</div><p>他数了数认识的高门：有人尸骨未寒，故宅已卖给他姓；近世几家巨族穷极壮丽地起园亭，如今宅子全换了新主。结论只有一句：逾制的奢靡，撑不过一代。</p></div>
+  </div>
+</section>
+
+<!-- ================= 深读六 · 占梦簿 ================= -->
+<section class="sec wrap" id="dreams">
+  <div class="kicker">梦寐纪 · 一本梦境台账</div>
+  <p style="color:var(--paper);font-size:16px;max-width:760px">三十三纪的倒数第二纪，张瀚记下了自己一生的梦，每一条都配上后来的「应验」。台账七行，逐行点开，最后一行是断账。这是全书最私人的部分，也停在全书最突然的地方。</p>
+  <div class="dreambook">
+    <div class="drow" onclick="this.classList.add('on')">
+      <div class="dno">一</div>
+      <div class="dm">做诸生时，同窗李生梦见官府剃度数十名僧，张瀚也在队列里，名次第三十六。他自己另梦见一个青脸鬼递来一只朱履，鞋里写着三十六。</div>
+      <div class="dv">那年乡试，中的名次是四十九。他的自注是一桩算术：<qv>一以四九，一以六七，数皆暗合。</qv></div>
+    </div>
+    <div class="drow" onclick="this.classList.add('on')">
+      <div class="dno">二</div>
+      <div class="dm">北上赶考前，梦见有人给他十文青钱，说掷在地上背面多者能中。一掷六背，再掷七背，那人说，数到这里，够了。</div>
+      <div class="dv"><qv>乃中式四十二。</qv>六七四十二，青钱的点数与放榜的名次严丝合缝。</div>
+    </div>
+    <div class="drow" onclick="this.classList.add('on')">
+      <div class="dno">三</div>
+      <div class="dm">嘉靖十三年岁首，一位紫衣人自空而降，自称上帝侍者，唱着诗讨一句话回命，赠他一只玉爵，说这是三清殿上的东西。</div>
+      <div class="dv">当年中乡榜，次年成进士。这是六行台账里押得最满的一行。</div>
+    </div>
+    <div class="drow" onclick="this.classList.add('on')">
+      <div class="dno">四</div>
+      <div class="dm">选官那年，友人孙斯立转述其妻的梦：梦见张瀚把家搬到了水中央，旁有红庙。他自己则梦见入朝领了一块木牌。</div>
+      <div class="dv">选出的官职是南京龙江关主事，<qv>监造战舰</qv>，官署在旷野，四面皆水，左邻朱门晏公祠。太太梦见了水与红庙，他梦见了木牌上的字，一一落位。</div>
+    </div>
+    <div class="drow" onclick="this.classList.add('on')">
+      <div class="dno">五</div>
+      <div class="dm">初仕时梦见金銮朝会，御座上是十岁的小皇帝，首座一位杨姓大公竟起身让他坐次席。</div>
+      <div class="dv"><qv>后三十年，历两朝，值万历改元，正当十龄。</qv>而他入京接掌的，正是病免的杨博留下的铨部，此前他在南京官居工部尚书。一场三十年前的梦，连座位次序都对上了。</div>
+    </div>
+    <div class="drow" onclick="this.classList.add('on')">
+      <div class="dno">六</div>
+      <div class="dm">任大名知府时与上级闹翻，拟辞职。五天后梦见那位尹公在山亭上设宴，请他题诗。诗里有两句地名：玉垒是蜀山，金城是陕地，他奇怪此地何来这些景致，尹公指着西南说，就在那里。</div>
+      <div class="dv">不久尹公因贪墨罢官，张瀚升任宪副，此后果然历官四川、陕西两省。那首诗成了地图。</div>
+    </div>
+    <div class="drow drow-broken">
+      <div class="dno">七</div>
+      <div class="dm">万历初年，他抱病将归，梦见再度入都，两朝衣冠的大臣引他到御前。小皇帝起立，亲手取出三册，每册封面题两个字：征治、进贤、安民。他刚要跪下……</div>
+      <div class="dv">底本在这里只剩三个字：<qv>余稽</qv><span class="brokenink"></span>旁注一行小字：<b>以下俱亡</b>。</div>
+    </div>
+  </div>
+  <div class="tomb">
+    <div class="halfpane"></div>
+    <div class="t1">以 下 俱 亡</div>
+    <div class="t2">一本写梦的书，最后一条梦没有做完。三册簿子里写了什么，那位八十三岁的作者没有等到写完，四百年前的钞手也没有抄到。<br>三十三纪到此，只剩半扇亮着的窗。</div>
+  </div>
+</section>
+
+<!-- ================= 页脚 ================= -->
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库（史藏志存记录）〈松窗梦语〉明代张瀚撰，附冯梦祯传与丁丙跋，库内文件去空白 87,430 字。</p>
+    <p>本篇引文三十三条，均经脚本与库内文件去标点、归一异体后逐字比对通过（比对前剔除库本一百二十九条【】校勘夹注）；白话部分为导读转述，非原文。</p>
+    <p>书目与校勘信息参考 <a href="https://github.com/garychowcmu/daizhigev2">daizhigev2</a> 仓库。本篇为古代文献导读，文中战争、冒功、倭患等记述皆时代所限，请以历史眼光阅读。</p>
+  </div>
+</footer>
+<div class="corner" id="corner" title="回到窗前">窗</div>
+
+<script>
+(function(){
+  // 首屏窗格点亮
+  var panes=document.querySelectorAll('.pane');
+  var lit=false;
+  function lightAll(){
+    if(lit)return; lit=true;
+    panes.forEach(function(p,i){ setTimeout(function(){p.classList.add('on');}, 350+i*420); });
+    setTimeout(function(){ document.getElementById('tname').classList.add('show'); }, 900);
+  }
+  document.getElementById('winbox').addEventListener('click', lightAll);
+  // 滚动过半自动点亮
+  window.addEventListener('scroll', function(){
+    if(window.scrollY>120) lightAll();
+  }, {passive:true});
+
+  // 三十三纪灯廊
+  var VOLS=[
+    {v:'卷一', js:[
+      {n:'宦游记', m:'全部故事的开头：一双新鞋、一次错选、一艘误期的御船。官场第一课由王廷相亲授。'},
+      {n:'南游记', m:'南下的宦途行踪，泛舟桐江登子陵钓台起笔，一路山水与公事并记。'}
+    ]},
+    {v:'卷二', js:[
+      {n:'北游纪', m:'北上纪程，京师风物与交游。'},
+      {n:'东游纪', m:'东行记闻。'},
+      {n:'西游纪', m:'西行记闻。'}
+    ]},
+    {v:'卷三', js:[
+      {n:'北虏纪', m:'俺答从崛起到受封顺义王的全程战报，也是一部冒功现场记录。'},
+      {n:'南夷纪', m:'南方土司与边地情事。'},
+      {n:'东倭纪', m:'倭患因果链：罢市舶、赖账、讨债、入海，环环相扣的一份事故报告。'},
+      {n:'西番纪', m:'西域与番族情事。'}
+    ]},
+    {v:'卷四', js:[
+      {n:'士人纪', m:'国朝名臣群像：刘基、宋濂、方孝孺、于谦、王守仁，一一立传。'},
+      {n:'三农纪', m:'农政与田赋。'},
+      {n:'百工纪', m:'工匠百艺。'},
+      {n:'商贾纪', m:'帝国物流报告：全国商路、商帮、盐茶之利，外加织机起家、减税增收、互市海市三段名论。'}
+    ]},
+    {v:'卷五', js:[
+      {n:'象纬纪', m:'天象占候。'},
+      {n:'堪舆纪', m:'地理形胜。'},
+      {n:'祥瑞纪', m:'祥异记录。'},
+      {n:'灾异纪', m:'灾变记录。'},
+      {n:'花木纪', m:'草木杂记。'},
+      {n:'鸟兽纪', m:'禽兽杂记。'}
+    ]},
+    {v:'卷六', js:[
+      {n:'方术纪', m:'医卜星相。'},
+      {n:'盛遇纪', m:'恩遇际会。'},
+      {n:'异闻纪', m:'奇闻异事。'},
+      {n:'先世纪', m:'先人轶事。'},
+      {n:'梦寐纪', m:'一生的梦与应验，最后一行断墨：以下俱亡。'}
+    ]},
+    {v:'卷七', js:[
+      {n:'权势纪', m:'权臣得势与倾覆。'},
+      {n:'忠廉纪', m:'忠臣廉吏。'},
+      {n:'时序纪', m:'岁时节令。'},
+      {n:'风俗纪', m:'杭州侈靡现场：穷讲究、戏班养活半城、巨宅频换新主。'},
+      {n:'自省纪', m:'自我检点。'}
+    ]},
+    {v:'卷八', js:[
+      {n:'铨部纪', m:'执掌吏部五年的选官内幕。'},
+      {n:'宗藩纪', m:'宗室藩封。'},
+      {n:'漕运纪', m:'漕粮运输。'},
+      {n:'两粤纪', m:'两广边务。'}
+    ]}
+  ];
+  var MAJOR={'宦游记':1,'北虏纪':1,'东倭纪':1,'商贾纪':1,'风俗纪':1,'梦寐纪':1};
+  var wall=document.getElementById('lampwall'), note=document.getElementById('lampnote');
+  var first=true;
+  VOLS.forEach(function(vol){
+    var band=document.createElement('div'); band.className='volband';
+    var tag=document.createElement('div'); tag.className='voltag'; tag.textContent=vol.v;
+    band.appendChild(tag);
+    var set=document.createElement('div'); set.className='lampset';
+    vol.js.forEach(function(j){
+      var l=document.createElement('div'); l.className='lamp'+(MAJOR[j.n]?' major':'');
+      l.textContent=j.n; l.setAttribute('data-t', j.n);
+      l.addEventListener('click', function(){
+        document.querySelectorAll('.lamp').forEach(function(x){x.classList.remove('lit')});
+        l.classList.add('lit');
+        note.innerHTML='<b>'+j.n+'</b>'+j.m;
+        note.classList.add('show');
+      });
+      set.appendChild(l);
+    });
+    band.appendChild(set); wall.appendChild(band);
+  });
+  // 默认点亮宦游记
+  var lamps=document.querySelectorAll('.lamp');
+  if(lamps.length){ lamps[0].click(); }
+
+  // 商路节点（引文读自静态 qbank）
+  var RQ={};
+  document.querySelectorAll('#routebank qv').forEach(function(q){ RQ[q.getAttribute('data-k')]=q.textContent; });
+  var rq=document.getElementById('routequote');
+  document.querySelectorAll('.node').forEach(function(n){
+    n.addEventListener('click', function(){
+      document.querySelectorAll('.node').forEach(function(x){x.classList.remove('on')});
+      n.classList.add('on');
+      var t=RQ[n.getAttribute('data-k')];
+      rq.innerHTML='<qv>'+t+'</qv>';
+      rq.classList.remove('hide');
+    });
+  });
+
+  // 回到窗前
+  document.getElementById('corner').addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+})();
+</script>
+</body>
+</html>
