@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>桯史 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --ink2:#22211e;
+  --paper:#e8e4dc;
+  --paper2:#ddd7cb;
+  --gold:#c9963f;
+  --gold2:#e3b96a;
+  --dim:#9a9284;
+  --dim2:#6e685c;
+  --red:#c0453c;
+  --serif:'Songti SC','STSong','Noto Serif CJK SC','SimSun',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{background:var(--ink);color:var(--paper);font-family:var(--serif);line-height:1.85;-webkit-font-smoothing:antialiased}
+a{color:var(--gold2)}
+
+/* 七弦进度 */
+.strings{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;flex-direction:column;gap:7px;padding:16px 26px 22px;pointer-events:none;background:linear-gradient(180deg,rgba(25,25,23,.96) 0%,rgba(25,25,23,.82) 55%,rgba(25,25,23,0) 100%)}
+.strings i{display:block;height:2px;background:#3a372f;border-radius:2px;transition:background .5s,box-shadow .5s}
+.strings i.on{background:var(--gold);box-shadow:0 0 8px rgba(201,150,63,.55)}
+
+.wrap{max-width:1060px;margin:0 auto;padding:0 26px}
+
+/* 首屏 */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:56px}
+.hero .wrap{display:flex;align-items:center;gap:30px;width:100%}
+.hero-main{flex:1;min-width:0}
+.hero-eyebrow{color:var(--dim);font-size:14px;letter-spacing:.35em;margin-bottom:26px}
+.hero-eyebrow b{color:var(--gold2);font-weight:normal;margin-left:14px;letter-spacing:.2em}
+.qin-stage{position:relative;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.qin-stage svg{width:100%;height:auto;display:block}
+.hero-lines{min-height:132px;margin-top:8px}
+.hero-lines p{color:var(--dim);font-size:15px;opacity:0;transform:translateY(8px);transition:opacity .8s,transform .8s;margin:4px 0}
+.hero-lines p.on{opacity:1;transform:none}
+.hero-lines p em{color:var(--paper);font-style:normal}
+.hero-hint{display:inline-block;margin-top:18px;color:var(--gold);font-size:14px;letter-spacing:.4em;border:1px solid rgba(201,150,63,.45);padding:7px 22px 7px 26px;border-radius:2px;animation:breath 2.4s ease-in-out infinite}
+.hero-hint.gone{display:none}
+@keyframes breath{0%,100%{opacity:.45}50%{opacity:1}}
+.bookname{writing-mode:vertical-rl;flex-shrink:0;text-align:start;opacity:0;transform:translateY(30px);transition:opacity 1.4s,transform 1.4s;position:relative;height:430px}
+.bookname.on{opacity:1;transform:none}
+.bookname h1{font-size:92px;letter-spacing:.28em;color:var(--paper);font-weight:normal;text-orientation:upright}
+.bookname .bn-sub{font-size:15px;color:var(--gold);letter-spacing:.34em;margin-top:16px;writing-mode:vertical-rl;text-orientation:mixed}
+.seal{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:64px;height:64px;background:var(--red);color:var(--paper);display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:upright;font-size:22px;letter-spacing:2px;border-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,.5);white-space:nowrap}
+
+/* 章节通用 */
+section{padding:96px 0 60px;position:relative}
+.sec-head{display:flex;align-items:baseline;gap:20px;margin-bottom:14px}
+.sec-no{color:var(--gold);font-size:14px;letter-spacing:.3em;white-space:nowrap}
+.sec-title{font-size:31px;font-weight:normal;letter-spacing:.1em}
+.wm{position:absolute;top:40px;right:2%;font-size:210px;line-height:1;color:rgba(232,228,220,.045);pointer-events:none;font-weight:bold;writing-mode:vertical-rl;letter-spacing:.1em}
+.sec-lede{color:var(--dim);max-width:740px;margin-bottom:34px;font-size:16px}
+.sec-lede em{color:var(--paper);font-style:normal}
+.divider{height:1px;background:linear-gradient(90deg,rgba(201,150,63,.55),rgba(201,150,63,.06));margin-top:52px}
+
+/* 引文 */
+.q{background:var(--paper);color:var(--ink);padding:20px 26px;margin:22px 0;border-radius:3px;position:relative;box-shadow:0 3px 16px rgba(0,0,0,.35)}
+.q::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold)}
+.q.gold::before{background:var(--red)}
+.qsrc{font-size:13px;color:var(--dim);margin:-10px 0 20px;letter-spacing:.08em}
+.qsrc b{color:var(--gold2);font-weight:normal}
+.qcite{font-size:17px}
+
+/* S1 谶书 */
+.shuo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:9px;max-width:720px;margin:26px 0 18px}
+.shuo-pai{background:var(--ink2);border:1px solid #3b382f;color:var(--dim);font-size:14px;text-align:center;padding:12px 0;border-radius:2px;transition:background .3s,color .3s,border-color .3s;animation:pop .45s ease}
+@keyframes pop{from{transform:scale(.6);opacity:.2}to{transform:scale(1);opacity:1}}
+.shuo-pai.mixed{background:rgba(201,150,63,.16);border-color:var(--gold);color:var(--gold2)}
+.btn{display:inline-block;background:none;border:1px solid var(--gold);color:var(--gold2);font-family:var(--serif);font-size:15px;letter-spacing:.3em;padding:9px 26px 9px 31px;border-radius:2px;cursor:pointer;transition:background .3s,color .3s}
+.btn:hover{background:var(--gold);color:var(--ink)}
+.btn:disabled{opacity:.35;cursor:default}
+.shuo-note{color:var(--dim);font-size:15px;min-height:30px;margin-top:12px}
+.shuo-note.on{color:var(--gold2)}
+
+/* S2 对话 */
+.duo{display:flex;gap:18px;max-width:760px;margin:30px 0;flex-wrap:wrap}
+.duo .speaker{flex:1;min-width:250px;background:var(--ink2);border:1px solid #3b382f;border-radius:3px;padding:20px 22px;min-height:170px}
+.duo .speaker.han{border-color:rgba(201,150,63,.5)}
+.speaker h4{font-size:14px;letter-spacing:.24em;color:var(--gold);margin-bottom:12px;font-weight:normal}
+.speaker p{font-size:16px;color:var(--paper);min-height:56px}
+.speaker p.mute{color:var(--dim2);letter-spacing:.3em}
+.speaker p.fade{animation:fadein .7s ease}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.duo-note{color:var(--dim);font-size:15px;max-width:760px;min-height:28px}
+
+/* S3 诗笺 */
+.jian-row{display:flex;gap:16px;flex-wrap:wrap;margin:30px 0 8px}
+.jian{width:152px;min-height:400px;background:var(--ink2);border:1px solid #3b382f;border-radius:2px;cursor:pointer;position:relative;overflow:hidden;transition:border-color .4s,transform .4s;writing-mode:vertical-rl;padding:24px 20px}
+.jian:hover{transform:translateY(-6px)}
+.jian h4{font-size:14px;letter-spacing:.3em;color:var(--gold);font-weight:normal;margin-bottom:14px;white-space:nowrap}
+.jian .tip{position:absolute;bottom:16px;right:14px;writing-mode:vertical-rl;color:var(--dim2);font-size:12px;letter-spacing:.2em;transition:opacity .4s}
+.jian .poem{writing-mode:vertical-rl;font-size:15px;line-height:1.95;letter-spacing:.14em;color:var(--paper);opacity:0;transition:opacity .7s .15s;max-height:0;overflow:hidden}
+.jian.on{border-color:var(--gold);background:#23211b}
+.jian.on .poem{opacity:1;max-height:352px}
+.jian.on .tip{opacity:0}
+.jian.shan{border-color:var(--red);background:#261d19}
+.jian.shan h4{color:var(--red)}
+.jian-note{color:var(--dim);font-size:15px;max-width:760px;margin-top:16px}
+.jian-note em{color:var(--gold2);font-style:normal}
+
+/* S4 三问 */
+.bingqing{display:flex;gap:28px;flex-wrap:wrap;margin-top:10px}
+.mingjuan{flex:1.1;min-width:300px;background:var(--paper);color:var(--ink);padding:30px 30px 24px;border-radius:3px;box-shadow:0 3px 16px rgba(0,0,0,.35);position:relative}
+.mingjuan::before{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:var(--red)}
+.mingjuan h4{font-size:14px;letter-spacing:.3em;color:#8a6a2c;margin-bottom:14px;font-weight:normal}
+.mingjuan .铭{font-size:18px;line-height:2.15;letter-spacing:.12em}
+.mingjuan .kuan{margin-top:16px;padding-top:14px;border-top:1px dashed #b5ac99;font-size:14.5px;color:#5c554a;line-height:2}
+.wen-stack{flex:1;min-width:300px}
+.wen{border:1px solid #3b382f;background:var(--ink2);border-radius:3px;padding:18px 22px;margin-bottom:14px;opacity:.28;transform:translateX(-10px);transition:opacity .6s,transform .6s,border-color .6s}
+.wen.on{opacity:1;transform:none;border-color:rgba(201,150,63,.55)}
+.wen h5{font-size:13.5px;letter-spacing:.28em;color:var(--gold);font-weight:normal;margin-bottom:8px}
+.wen p{font-size:15.5px}
+.wen p em{color:var(--gold2);font-style:normal}
+.flaw{display:flex;align-items:center;gap:18px;margin-top:10px}
+.flaw .zi{font-size:56px;line-height:1;color:var(--paper);position:relative;padding:6px 10px;border:2px dotted var(--red);border-radius:6px;flex-shrink:0}
+.flaw p{font-size:14px;color:var(--dim)}
+.panjue{border-left:4px solid var(--red)}
+
+/* S5 招牌 */
+.street{display:flex;align-items:center;gap:40px;margin:34px 0 10px;flex-wrap:wrap;min-height:150px}
+.zhipai{background:var(--paper);color:var(--ink);font-size:30px;letter-spacing:.2em;padding:18px 24px;border-radius:2px;box-shadow:0 6px 18px rgba(0,0,0,.5);position:relative;transition:transform .6s,opacity .6s}
+.zhipai::before{content:'';position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:3px;height:12px;background:#57503f}
+.zhipai span{transition:opacity .8s,transform .8s;display:inline-block}
+.zhipai span.out{opacity:0;transform:translateY(26px) rotate(14deg)}
+.zhipai.xisi{background:#2b2620;color:var(--gold2);border:1px solid var(--gold);transform:rotate(-3deg) translateY(10px);opacity:0;transition:opacity .8s,transform .8s}
+.zhipai.xisi.in{opacity:1}
+.street-cap{color:var(--dim);font-size:15px;min-height:30px;max-width:760px}
+
+/* S6 三幕 */
+.mu-row{display:flex;gap:16px;flex-wrap:wrap;margin:30px 0 6px}
+.mu{flex:1;min-width:260px;background:var(--ink2);border:1px solid #3b382f;border-radius:3px;padding:22px 24px;cursor:pointer;transition:border-color .4s,transform .4s}
+.mu:hover{transform:translateY(-4px)}
+.mu h4{font-size:14px;letter-spacing:.3em;color:var(--gold);font-weight:normal;margin-bottom:12px}
+.mu p{font-size:15px;color:var(--dim)}
+.mu .fold{max-height:0;overflow:hidden;transition:max-height .7s ease}
+.mu.on{border-color:var(--gold)}
+.mu.on .fold{max-height:420px}
+.mu .fold p{margin-top:12px;color:var(--paper)}
+.fanzi{margin:8px 0 14px;width:120px;height:60px;position:relative}
+.fanzi::before{content:'';position:absolute;inset:0;background:var(--paper);border-radius:0 0 60px 60px;clip-path:polygon(50% 0,100% 0,100% 55%,50% 100%,0 55%,0 0)}
+.fanzi span{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;font-size:10.5px;color:#5c4a22;line-height:1.5;padding-bottom:6px;text-align:center}
+.leiqi{font-size:26px;letter-spacing:.18em;color:var(--gold2);background:rgba(201,150,63,.1);border:1px dashed var(--gold);display:inline-block;padding:10px 20px;margin-top:6px;border-radius:2px}
+
+/* 尾屏 */
+.tail{padding:120px 0 60px;text-align:center;position:relative}
+.tail .qin-mini{opacity:.5}
+.tail-line{font-size:19px;color:var(--paper);max-width:640px;margin:30px auto 0}
+.tail-line em{color:var(--gold2);font-style:normal}
+.tail-data{color:var(--dim);font-size:14px;letter-spacing:.2em;margin-top:34px}
+.tail-seal{width:58px;height:58px;background:var(--red);color:var(--paper);display:inline-flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:upright;font-size:20px;letter-spacing:2px;border-radius:4px;margin-top:30px;white-space:nowrap}
+.colophon{max-width:820px;margin:70px auto 0;padding-top:26px;border-top:1px solid #33312a;text-align:left}
+.colophon p{font-size:13px;color:var(--dim2);line-height:2;margin:4px 0}
+.colophon a{color:var(--dim)}
+
+@media (max-width:760px){
+  .hero .wrap{flex-direction:column-reverse;gap:18px}
+  .bookname{height:300px}
+  .bookname h1{font-size:58px}
+  .sec-title{font-size:25px}
+  .wm{font-size:120px}
+  .strings{padding:10px 14px 8px;gap:5px}
+  section{padding:72px 0 40px}
+}
+</style>
+</head>
+<body>
+
+<nav class="strings" aria-hidden="true">
+  <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+</nav>
+
+<!-- 首屏：一张琴 -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-main">
+      <div class="hero-eyebrow">殆知阁导读 · 子藏笔记<b>岳珂的南宋现场</b></div>
+      <div class="qin-stage" id="qinStage">
+        <svg viewBox="0 0 760 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="一张古琴">
+          <defs>
+            <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#3a3227"/>
+              <stop offset=".5" stop-color="#2e2820"/>
+              <stop offset="1" stop-color="#241f18"/>
+            </linearGradient>
+          </defs>
+          <path d="M40 52 C40 30 90 24 190 24 L560 24 C680 24 724 44 724 78 L724 96 C724 132 676 152 556 152 L186 152 C88 152 40 146 40 122 L40 52 Z" fill="url(#wood)" stroke="#57503f" stroke-width="1.5"/>
+          <rect x="700" y="30" width="12" height="116" rx="3" fill="#57503f"/>
+          <rect x="52" y="36" width="10" height="104" rx="3" fill="#57503f"/>
+          <g id="stringsG" stroke="#9a9284" stroke-width="1.6" opacity=".85">
+            <line id="st1" x1="62" y1="40" x2="700" y2="40"/>
+            <line id="st2" x1="62" y1="54" x2="700" y2="54"/>
+            <line id="st3" x1="62" y1="68" x2="700" y2="68"/>
+            <line id="st4" x1="62" y1="82" x2="700" y2="82"/>
+            <line id="st5" x1="62" y1="96" x2="700" y2="96"/>
+            <line id="st6" x1="62" y1="110" x2="700" y2="110"/>
+            <line id="st7" x1="62" y1="124" x2="700" y2="124"/>
+          </g>
+          <g fill="#c9963f" opacity=".75" id="huiG">
+            <circle cx="140" cy="82" r="3.4"/><circle cx="196" cy="82" r="3.4"/><circle cx="250" cy="82" r="3.4"/>
+            <circle cx="304" cy="82" r="3.4"/><circle cx="358" cy="82" r="3.4"/><circle cx="412" cy="82" r="3.4"/>
+            <circle cx="466" cy="82" r="3.4"/><circle cx="520" cy="82" r="3.4"/><circle cx="574" cy="82" r="3.4"/>
+            <circle cx="622" cy="82" r="3.4"/><circle cx="656" cy="82" r="3.4"/><circle cx="678" cy="82" r="3.4"/><circle cx="692" cy="82" r="3.4"/>
+          </g>
+          <text x="380" y="176" text-anchor="middle" fill="#6e685c" font-size="12" letter-spacing="6">冰清 · 仲尼式</text>
+        </svg>
+      </div>
+      <div class="hero-lines" id="heroLines">
+        <p>南宋嘉定庚午，岳珂赴宴，坐上听人说起一张琴：十日前有士人抱来鬻卖，琴名<em>「冰清」</em>，满身断纹，识与不识都说是数百年物。</p>
+        <p>行家叶知几一见倾心，凑着主人耳边说，此等宝物，贵也不可错过。李家当下点头，百万钱成交；卖琴人还嫌价低，不肯撒手。</p>
+        <p>满座称贺之间，只有一个人起了疑。他不争，不驳，只是问了三个问题。</p>
+      </div>
+      <span class="hero-hint" id="heroHint">按 弦</span>
+    </div>
+    <div class="bookname" id="bookname">
+      <h1>桯史</h1>
+      <div class="bn-sub">宋 岳珂</div>
+      <div class="seal">桯史</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- 一 谶书 -->
+<section id="s1" data-s="0">
+  <div class="wm">谶</div>
+  <div class="sec-head"><span class="sec-no">第一弦</span><h2 class="sec-title">百本谶书，一场官方剧透</h2></div>
+  <p class="sec-lede">开卷第一条就有意思：唐代李淳风编的<em>推背图</em>，到了五代越传越凶，割据的枭雄拿它给孩子取名。宋太祖下诏禁书，可传了数百年的东西禁得住吗？他的办法不是烧，是<em>掺</em>。</p>
+  <div class="q"><span class="qcite">不必多禁，正当混之耳。</span></div>
+  <p class="qsrc">卷一 · <b>艺祖禁谶书</b></p>
+  <div class="q"><span class="qcite">乃命取旧本，自己验之外，皆紊其次第而杂书之，凡为百本，使与存者并行。</span></div>
+  <p class="qsrc">卷一 · <b>艺祖禁谶书</b></p>
+  <p class="sec-lede">官本打乱次序，做了一百套，和民间真本一起流通。真伪从此搅成一锅粥，预言再也验证不了谁。下面这套签，你能认出哪一本是原始次序吗：</p>
+  <div class="shuo-grid" id="shuoGrid"></div>
+  <div style="margin-top:14px">
+    <button class="btn" id="hunBtn">混 之</button>
+    <button class="btn" id="hunReset" style="margin-left:12px;display:none">复原</button>
+  </div>
+  <p class="shuo-note" id="shuoNote"></p>
+  <div class="q gold"><span class="qcite">于是传者懵其先后，莫知其孰讹；间有存者，不复验，亦弃弗藏矣。</span></div>
+  <p class="qsrc">卷一 · <b>艺祖禁谶书</b></p>
+  <div class="divider"></div>
+</section>
+
+<!-- 二 哑伴 -->
+<section id="s2" data-s="1">
+  <div class="wm">辩</div>
+  <div class="sec-head"><span class="sec-no">第二弦</span><h2 class="sec-title">派个不识字的，去陪第一辩才</h2></div>
+  <p class="sec-lede">南唐遣徐铉入宋。徐铉是江南文坛头牌，宋朝满朝担心没人接得住他的口才，请太祖亲自选人。太祖点了个<em>不识字的殿侍</em>。一路上，这场对话是这样的：</p>
+  <div class="duo">
+    <div class="speaker han">
+      <h4>骑省 · 徐铉</h4>
+      <p id="xuSay" class="fade">闻上国多博学之士，某此来，愿与高明谈文论道。</p>
+    </div>
+    <div class="speaker">
+      <h4>押伴 · 殿侍</h4>
+      <p id="dianSay" class="mute">（不言）</p>
+    </div>
+  </div>
+  <button class="btn" id="guoBtn">再 聒 一 次</button>
+  <p class="duo-note" id="duoNote" style="margin-top:14px"></p>
+  <div class="q" style="margin-top:30px"><span class="qcite">其人不能答，徒唯唯；骑省叵测，强聒而与之言。居数日，既无与之酬复者，亦倦且默矣。</span></div>
+  <p class="qsrc">卷一 · <b>徐铉入聘</b></p>
+  <p class="sec-lede" style="margin-top:26px">岳珂给这桩奇事下的按语是：满朝名儒未必辩不过他，只是大国之体，不屑如此。后来徐铉再为江南请缓师，数千言陈说，太祖一句话收尾：</p>
+  <div class="q gold"><span class="qcite">不须多言，江南亦何罪？但天下一家，卧榻之侧，岂容他人鼾睡耶！</span></div>
+  <p class="qsrc">卷一 · <b>徐铉入聘</b></p>
+  <div class="divider"></div>
+</section>
+
+<!-- 三 敌酋诗 -->
+<section id="s3" data-s="2">
+  <div class="wm">诗</div>
+  <div class="sec-head"><span class="sec-no">第三弦</span><h2 class="sec-title">敌国皇帝的临安幻想</h2></div>
+  <p class="sec-lede">金主完颜亮未得志时便好写诗，语出崛强。岳珂说他「蓄已不小」，收了他四首，恰好排成一个人的野心<em>升温曲线</em>。点笺读诗：</p>
+  <div class="jian-row">
+    <div class="jian" data-j="0">
+      <h4>驿竹 · 未遇</h4>
+      <div class="poem qv">孤驿潇潇竹一丛，不同凡卉媚春风。我心正与君相似，只待云梢拂碧空。</div>
+      <span class="tip">点击展开</span>
+    </div>
+    <div class="jian" data-j="1">
+      <h4>书壁 · 待时</h4>
+      <div class="poem qv">蛟龙潜匿隐沧波，且与虾蟆作混和。等待一朝头角就，撼摇霹雳震山河。</div>
+      <span class="tip">点击展开</span>
+    </div>
+    <div class="jian" data-j="2">
+      <h4>瓶桂 · 试手</h4>
+      <div class="poem qv">绿叶枝头金缕装，秋深自有别般香。一朝扬汝名天下，也学君王着赭黄。</div>
+      <span class="tip">点击展开</span>
+    </div>
+    <div class="jian shan" data-j="3">
+      <h4>吴山 · 得志</h4>
+      <div class="poem qv">万里车书盍混同，江南岂有别疆封？提兵百万西湖上，立马吴山第一峰。</div>
+      <span class="tip">点击展开</span>
+    </div>
+  </div>
+  <p class="jian-note">第四笺不是凭空写的。他遣降人施宜生来南宋贺节，队伍里<em>藏了画师</em>，把临安城邑和吴山西湖画了回去。图呈上来，他大喜，撤掉座间软屏换上江南图，还让画师把自己添在吴山绝顶、策马而立，诗就题在那张画上。</p>
+  <div class="q"><span class="qcite">隐画工于中，使图临安之城邑，及吴山、西湖之胜以归。</span></div>
+  <p class="qsrc">卷九 · <b>逆亮辞怪</b></p>
+  <p class="jian-note">路过汝阴时他还留过一首，尾联最凉：<em>繁华不识兴亡地，还在栏杆边依次开着</em>。</p>
+  <div class="q"><span class="qcite">繁花不识兴亡地，犹倚阑干次第开。</span></div>
+  <p class="qsrc">卷九 · <b>逆亮辞怪</b></p>
+  <p class="jian-note">他弑母迁汴之后那年中秋，月亮迟迟不出来，他等得冒火，词里全是杀气：</p>
+  <div class="q"><span class="qcite">虬髯捻断，星眸睁裂，惟恨剑锋不快。一挥截断紫云腰，子细看嫦娥体态。</span></div>
+  <p class="qsrc">卷九 · <b>逆亮辞怪</b>〈鹊桥仙〉</p>
+  <p class="jian-note">岳珂抄完这批诗词，鉴定只给了六个字：</p>
+  <div class="q gold"><span class="qcite">其桀骜之气，已溢于辞表。</span></div>
+  <p class="qsrc">卷九 · <b>逆亮辞怪</b></p>
+  <p class="jian-note"><em>版本按语</em>：吴山诗首句通行本多作「一混同」，库本原字是「盍」，本页照库本录。</p>
+  <div class="divider"></div>
+</section>
+
+<!-- 四 冰清三问 -->
+<section id="s4" data-s="3">
+  <div class="wm">辨</div>
+  <div class="sec-head"><span class="sec-no">第四弦</span><h2 class="sec-title">三个问题，问掉一百万钱</h2></div>
+  <p class="sec-lede">现在说回首屏那张琴。琴腹有铭，落款层层叠叠，年代、工匠、修琴人一应俱全。要拆穿它，岳珂没有动用任何仪器，只用了一次<em>袖子和三个问句</em>。</p>
+  <div class="bingqing">
+    <div class="mingjuan">
+      <h4>琴腹铭文</h4>
+      <div class="铭"><span class="qv">卓哉斯器，乐惟至正。音清韵高，月苦风劲。锁余神爽，泛绝机静。雪夜敲冰，霜天击磬。阴阳潜感，否臧前镜。人其审之，岂独知政。</span></div>
+      <div class="kuan"><span class="qv">大历三年三月三日，上底蜀郡雷氏斫</span><br><span class="qv">凤沼内书正元十一年七月八日再修，士雄记</span></div>
+      <div class="kuan" style="border:none;padding-top:8px">款署晋陵子。断纹、漆色、铭辞俱佳，坐上诸客传看，都说是唐物。</div>
+    </div>
+    <div class="wen-stack">
+      <div class="wen" id="w1">
+        <h5>问一 · 年号</h5>
+        <p>岳珂拿袖子盖住琴，只问一句：<em>「正元」，是哪一朝的年号？</em>座客笑答：唐德宗啊，这有什么可问的？</p>
+      </div>
+      <div class="wen" id="w2">
+        <h5>问二 · 矛盾</h5>
+        <p>他等的就是这句：<em>既然是唐琴，唐朝的雷家人，怎么会写宋朝才有的避讳字？</em></p>
+      </div>
+      <div class="wen" id="w3">
+        <h5>问三 · 铁证</h5>
+        <div class="flaw">
+          <div class="zi">贞</div>
+          <p>凤沼里那个「贞」字，照本朝文书令缺笔避讳，缺到为字不成。避的是宋仁宗的讳，可落款在大历，比仁宗早了二百年。</p>
+        </div>
+      </div>
+      <div class="wen" id="w4">
+        <h5>判</h5>
+        <p>造假的人熟用缺笔成了习惯，顺手就避了宋朝的讳。<em>预言家雷氏，提前两百年守了大宋的法。</em></p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:24px"><button class="btn" id="wenBtn">覆 袖 发 问</button></div>
+  <div class="q" style="margin-top:30px"><span class="qcite">正元前天圣二百年，雷氏乃预知避讳，必无此理，是盖为赝者。</span></div>
+  <p class="qsrc">卷九 · <b>冰清古琴</b></p>
+  <div class="q gold panjue"><span class="qcite">是犹佳琴，特非唐物而已。</span></div>
+  <p class="qsrc">卷九 · <b>冰清古琴</b>〈行家的台阶〉</p>
+  <p class="sec-lede" style="margin-top:10px">收尾很宋代：李家薄酬买下，价格砍掉了九成；卖琴人怒而无辞，改日路上遇见岳珂，低头快走。一张真琴，一个假朝代，全书最漂亮的一场对质。</p>
+  <div class="divider"></div>
+</section>
+
+<!-- 五 看命司 -->
+<section id="s5" data-s="4">
+  <div class="wm">谑</div>
+  <div class="sec-head"><span class="sec-no">第五弦</span><h2 class="sec-title">临安命理学内卷事件</h2></div>
+  <p class="sec-lede">南宋行都，观桥东有个算命先生，招牌挂出四个字，生意渐渐好了。同行们看红了眼，认为「司」是有司的司，一个卖技的岂敢自称衙门，正要联名告官，其中一人说：<em>不用，我有办法让他自己摘。</em></p>
+  <div class="street">
+    <div class="zhipai" id="pai1">看命<span id="siZi">司</span></div>
+    <div class="zhipai xisi" id="pai2">看命西司</div>
+  </div>
+  <div style="margin:8px 0 10px">
+    <button class="btn" id="zhangBtn">对 街 张 帜</button>
+  </div>
+  <p class="street-cap" id="streetCap"></p>
+  <div class="q" style="margin-top:26px"><span class="qcite">旦日徙居其对衢，亦易其标曰“看命西司”，过者多悟而笑，其人愧赧，亟撤不敢留。</span></div>
+  <p class="qsrc">卷十 · <b>看命司</b></p>
+  <p class="sec-lede">不告官，不斗殴，只在对面挂一块更荒唐的牌子，让路人替法律笑他。岳珂记下这一则，末尾自己交了底：这一条，是写给会笑的人看的。</p>
+  <div class="divider"></div>
+</section>
+
+<!-- 六 带汁诸葛亮 -->
+<section id="s6" data-s="5">
+  <div class="wm">泪</div>
+  <div class="sec-head"><span class="sec-no">第六弦</span><h2 class="sec-title">带汁诸葛亮</h2></div>
+  <p class="sec-lede">开禧北伐，是岳珂亲眼所见的正面战场，也是全书最沉的一卷。主帅郭倪自比孔明，故事分三幕，点击看走向：</p>
+  <div class="mu-row">
+    <div class="mu" id="m1">
+      <h4>幕一 · 题扇</h4>
+      <p>主帅的扇子上，题了杜甫咏诸葛亮的名句。</p>
+      <div class="fold">
+        <div class="fanzi"><span>三顾频烦<br>两朝开济</span></div>
+        <p>岳珂之兄在郭倪幕府，亲见他议论自负、无人敢撄。起初只当是少年戏剧；后来座上客的扇子纷纷都有了这两句。</p>
+      </div>
+    </div>
+    <div class="mu" id="m2">
+      <h4>幕二 · 点将</h4>
+      <p>嘉泰开禧间，郭倪位至殿岩，宾客盈门。</p>
+      <div class="fold">
+        <p>吴衡路过扬州，他迎面便说：斜谷祁山都太狭窄，哪如得了平衍开阔的地界，稳稳掉鞅，成个大功才痛快。席间斟酒，指着随军转运使说了一句话，满座都笑了。</p>
+      </div>
+    </div>
+    <div class="mu" id="m3">
+      <h4>幕三 · 溃师</h4>
+      <p>两路兵先后溃败，郭倪自知不能再振。</p>
+      <div class="fold">
+        <p>他对客落泪。座中好诙谐的法曹彭传师说了一句话，传出去了。</p>
+        <div style="margin-top:10px"><span class="leiqi qv">此带汁诸葛亮也。</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="q" style="margin-top:28px"><span class="qcite">真以为卧龙复出，遂逢当轴意，以兴六月之师。</span></div>
+  <p class="qsrc">卷十五 · <b>郭倪自比诸葛亮</b></p>
+  <p class="sec-lede" style="margin-top:26px">这一年五月，岳珂自己奉檄北上犒军。归来路上，王师已败，一路都是伤兵；沿途眢井里漂着尸首，井水都汲不得。多年后他重读少年时北上写的诗稿，把当时的心情记成了这样一句：</p>
+  <div class="q gold"><span class="qcite">暇日回思少年气锐，直前不慑者，为之心折，因书梗概，以起髀肉之悲。</span></div>
+  <p class="qsrc">卷十三 · <b>开禧北伐</b></p>
+  <div class="divider"></div>
+</section>
+
+</main>
+
+<!-- 尾屏 -->
+<footer class="tail">
+  <div class="wrap">
+    <svg class="qin-mini" width="300" height="70" viewBox="0 0 760 190" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M40 52 C40 30 90 24 190 24 L560 24 C680 24 724 44 724 78 L724 96 C724 132 676 152 556 152 L186 152 C88 152 40 146 40 122 L40 52 Z" fill="none" stroke="#57503f" stroke-width="4"/>
+      <g stroke="#6e685c" stroke-width="2"><line x1="62" y1="52" x2="700" y2="52"/><line x1="62" y1="72" x2="700" y2="72"/><line x1="62" y1="92" x2="700" y2="92"/><line x1="62" y1="112" x2="700" y2="112"/><line x1="62" y1="132" x2="700" y2="132"/></g>
+    </svg>
+    <p class="tail-line">旧说桯是座前承物的小案：客来闲话，随手记在案上，故以名书。岳珂把听来的故事逐条过秤：谶书掺假，辩才哑火，敌酋题诗，古琴认朝，招牌对笑，主帅垂泪。<em>传闻与讹传之间，只隔着一句「正元是哪一朝」的问法。</em></p>
+    <div class="tail-data">南宋岳珂撰，十五卷一百四十条，去空白八万二千余字</div>
+    <div class="tail-seal">桯史</div>
+    <div class="colophon">
+      <p>文本来源：殆知阁简体库子藏笔记部〈桯史〉（南宋岳珂撰）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+      <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；库本偶有形近讹字与缺字，引文所在各句已避而不断。</p>
+      <p>本书为南宋人记南渡前后朝野见闻，人物褒贬与掌故考订皆系一时之见，读者鉴其时代局限；完颜亮诸诗出自敌国传闻转录，真伪岳珂亦自存疑。</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* 首屏按弦 */
+  var stage=document.getElementById('qinStage'),
+      lines=document.querySelectorAll('#heroLines p'),
+      hint=document.getElementById('heroHint'),
+      book=document.getElementById('bookname'),
+      clicks=0;
+  stage.addEventListener('click',function(){
+    if(clicks>=3)return;
+    clicks++;
+    var st=document.getElementById('st'+(4-clicks));
+    if(st){st.setAttribute('stroke','#e3b96a');st.setAttribute('stroke-width','2.4');}
+    lines[clicks-1].classList.add('on');
+    if(clicks===3){
+      hint.classList.add('gone');
+      setTimeout(function(){book.classList.add('on');},350);
+    }else{
+      hint.textContent='按 弦（'+clicks+'/3）';
+    }
+  });
+
+  /* 七弦进度 */
+  var strings=document.querySelectorAll('.strings i'),
+      secs=document.querySelectorAll('section[data-s]'),
+      tail=document.querySelector('.tail');
+  function lit(n){for(var i=0;i<7;i++){strings[i].classList.toggle('on',i<=n);}}
+  window.addEventListener('scroll',function(){
+    var y=window.scrollY+window.innerHeight*0.42,n=-1;
+    secs.forEach(function(s){if(s.offsetTop<=y)n=+s.dataset.s;});
+    if(tail&&tail.offsetTop<=y)n=6;
+    if(n>=0)lit(n);else lit(-1);
+  },{passive:true});
+
+  /* S1 谶书混编 */
+  var cn=['壹','贰','叁','肆','伍','陆','柒','捌','玖','拾','拾壹','拾贰','拾叁','拾肆','拾伍','拾陆','拾柒','拾捌','拾玖','贰拾','贰拾壹','贰拾贰','贰拾叁','贰拾肆','贰拾伍','贰拾陆','贰拾柒','贰拾捌','贰拾玖','叁拾','叁拾壹','叁拾贰','叁拾叁','叁拾肆','叁拾伍','叁拾陆','叁拾柒','叁拾捌','叁拾玖','肆拾'];
+  var grid=document.getElementById('shuoGrid'),
+      hunBtn=document.getElementById('hunBtn'),
+      hunReset=document.getElementById('hunReset'),
+      shuoNote=document.getElementById('shuoNote'),
+      order=[];
+  function render(mixed){
+    grid.innerHTML='';
+    order.forEach(function(idx){
+      var d=document.createElement('div');
+      d.className='shuo-pai'+(mixed?' mixed':'');
+      d.textContent=cn[idx];
+      grid.appendChild(d);
+    });
+  }
+  for(var i=0;i<40;i++)order.push(i);
+  render(false);
+  hunBtn.addEventListener('click',function(){
+    for(var i=order.length-1;i>0;i--){
+      var j=Math.floor(Math.random()*(i+1)),t=order[i];order[i]=order[j];order[j]=t;
+    }
+    render(true);
+    hunReset.style.display='inline-block';
+    shuoNote.classList.add('on');
+    shuoNote.textContent='四十签已乱入官方百本。现在，谁还能验出原本的先后？';
+  });
+  hunReset.addEventListener('click',function(){
+    order.sort(function(a,b){return a-b;});
+    render(false);
+    hunReset.style.display='none';
+    shuoNote.classList.remove('on');
+    shuoNote.textContent='';
+  });
+
+  /* S2 哑伴 */
+  var xuLines=[
+    '闻上国多博学之士，某此来，愿与高明谈文论道。',
+    '天文、地理、字学、音韵，请不吝赐教。',
+    '先生何以始终不答？是轻我江南人么？',
+    '……（半日，竟无一字可接）'
+  ];
+  var xuSay=document.getElementById('xuSay'),
+      dianSay=document.getElementById('dianSay'),
+      guoBtn=document.getElementById('guoBtn'),
+      duoNote=document.getElementById('duoNote'),
+      round=0;
+  guoBtn.addEventListener('click',function(){
+    round++;
+    xuSay.classList.remove('fade');void xuSay.offsetWidth;xuSay.classList.add('fade');
+    xuSay.textContent=xuLines[Math.min(round,3)];
+    if(round<=3){dianSay.textContent='唯唯。';dianSay.classList.remove('mute');}
+    if(round===3){
+      duoNote.textContent='几日下来，问一句答两句都是这两个字，骑省先扛不住了。';
+      guoBtn.textContent='换 一 回 合';
+    }
+    if(round===4){
+      dianSay.textContent='（不言）';dianSay.classList.add('mute');
+      xuSay.textContent='闻殿下有意缓师，某愿陈说利害。';
+      duoNote.textContent='后来他真的再来过一次，换了个对手。';
+      guoBtn.disabled=true;
+    }
+  });
+
+  /* S3 诗笺 */
+  document.querySelectorAll('.jian').forEach(function(j){
+    j.addEventListener('click',function(){j.classList.toggle('on');});
+  });
+
+  /* S4 三问 */
+  var wenBtn=document.getElementById('wenBtn'),wstep=0;
+  var wens=[document.getElementById('w1'),document.getElementById('w2'),document.getElementById('w3'),document.getElementById('w4')];
+  wenBtn.addEventListener('click',function(){
+    wstep++;
+    if(wstep<=4){
+      wens[wstep-1].classList.add('on');
+      if(wstep===1)wenBtn.textContent='追 问';
+      if(wstep===2)wenBtn.textContent='示 证';
+      if(wstep===3)wenBtn.textContent='宣 判';
+      if(wstep===4){wenBtn.textContent='问 毕';wenBtn.disabled=true;}
+    }
+  });
+
+  /* S5 看命司 */
+  var zhangBtn=document.getElementById('zhangBtn'),
+      pai2=document.getElementById('pai2'),
+      siZi=document.getElementById('siZi'),
+      streetCap=document.getElementById('streetCap'),
+      zstep=0;
+  zhangBtn.addEventListener('click',function(){
+    zstep++;
+    if(zstep===1){
+      pai2.classList.add('in');
+      streetCap.textContent='第二天，对街支起一块新招牌：看命西司。路人一抬头，全笑了。';
+      zhangBtn.textContent='路 人 一 笑';
+    }
+    if(zstep===2){
+      siZi.classList.add('out');
+      streetCap.textContent='司字摘了，牌子连夜撤了。不用有司出面，有司之名自己走下门楣。';
+      zhangBtn.textContent='剧 终';
+      zhangBtn.disabled=true;
+    }
+  });
+
+  /* S6 三幕 */
+  document.querySelectorAll('.mu').forEach(function(m){
+    m.addEventListener('click',function(){m.classList.toggle('on');});
+  });
+})();
+</script>
+</body>
+</html>
