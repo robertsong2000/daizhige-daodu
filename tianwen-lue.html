@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天问略 · 剖天读（殆知阁导读 338）</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --bamboo:#5f9270;
+  --bamboo-dim:#41604b;
+  --cinnabar:#c0453c;
+  --smoke:#8b877d;
+  --stone:#222220;
+  --line:#3a3a36;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.95;
+  overflow-x:hidden;
+}
+.mono{font-family:"SFMono-Regular",Consolas,"Courier New",monospace}
+
+/* ===== 首屏:剖天 ===== */
+#cut-head{
+  position:relative;
+  height:200vh;
+}
+#cut-sticky{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.tower{
+  position:relative;
+  width:min(620px,88vw);
+  display:flex;flex-direction:column-reverse;
+  gap:6px;
+}
+.layer{
+  position:relative;
+  display:flex;align-items:center;justify-content:space-between;
+  border:1px solid var(--line);
+  background:var(--stone);
+  color:var(--smoke);
+  font:inherit;font-size:14px;
+  padding:9px 16px;
+  cursor:pointer;
+  opacity:.16;
+  transform:translateY(14px);
+  transition:opacity .6s ease,transform .6s ease,border-color .3s,color .3s,background .3s;
+  text-align:left;
+  width:100%;
+}
+.layer .ll{letter-spacing:.35em}
+.layer .lc{font-size:12px;color:var(--smoke)}
+.layer:nth-child(1){width:100%}
+.layer:nth-child(2){width:97%}
+.layer:nth-child(3){width:94%}
+.layer:nth-child(4){width:91%}
+.layer:nth-child(5){width:88%}
+.layer:nth-child(6){width:85%}
+.layer:nth-child(7){width:82%}
+.layer:nth-child(8){width:79%}
+.layer:nth-child(9){width:76%}
+.layer:nth-child(10){width:73%}
+.layer:nth-child(11){width:70%}
+.layer:nth-child(12){width:67%}
+.layer.on{opacity:1;transform:none}
+.layer.lit{border-color:var(--bamboo);color:var(--paper);background:#262b26}
+.layer .strike{
+  position:absolute;left:6%;right:6%;top:50%;height:2px;
+  background:var(--cinnabar);
+  transform:scaleX(0) rotate(-.5deg);
+  transform-origin:left center;
+  transition:transform .5s ease;
+}
+.layer.top.strike-on .strike{transform:scaleX(1) rotate(-.5deg)}
+.layer.top{border-color:#5a3630}
+.layer.top.lit{background:#2b2322;border-color:var(--cinnabar);color:#d9b7b2}
+.layer .zk{
+  position:absolute;right:-8px;top:-14px;
+  font-size:12px;color:var(--cinnabar);
+  opacity:0;transition:opacity .4s;
+}
+.layer.top.strike-on .zk{opacity:1}
+.bubble{
+  position:absolute;left:50%;bottom:calc(100% + 8px);
+  transform:translateX(-50%);
+  background:var(--paper);color:var(--ink);
+  font-size:13px;padding:5px 12px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+  z-index:3;
+}
+.layer.bub .bubble{opacity:1}
+.title-block{
+  position:absolute;
+  right:max(16px, calc(50% - 520px));
+  top:50%;transform:translateY(-50%);
+  writing-mode:vertical-rl;
+  height:430px;
+  opacity:0;transition:opacity 1.2s ease;
+}
+.title-block.show{opacity:1}
+.title-block > *{display:block;margin-left:16px}
+.btitle{
+  height:430px;
+  font-size:56px;letter-spacing:.32em;
+  color:var(--paper);
+  border-right:1px solid var(--line);
+  padding-right:22px;
+}
+.bmeta{
+  height:430px;
+  font-size:13px;color:var(--smoke);letter-spacing:.3em;
+}
+.bseal{
+  writing-mode:horizontal-tb;
+  width:max-content;
+  border:2px solid var(--cinnabar);color:var(--cinnabar);
+  font-size:15px;padding:6px 8px;letter-spacing:.2em;
+}
+.head-note{
+  position:absolute;bottom:4vh;left:0;right:0;
+  text-align:center;font-size:12px;color:var(--smoke);
+  letter-spacing:.4em;
+}
+
+/* ===== 左缘天层进度轨 ===== */
+#rail{
+  position:fixed;left:16px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column-reverse;gap:7px;
+  z-index:9;
+}
+#rail i{
+  display:block;width:5px;height:15px;
+  background:var(--line);transition:background .4s;
+}
+#rail i.lit{background:var(--bamboo)}
+#rail i.toplit{background:var(--cinnabar)}
+
+/* ===== 正文 ===== */
+main{max-width:760px;margin:0 auto;padding:0 26px}
+section{padding:64px 0 20px}
+.kicker{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:26px;
+}
+.qtag{
+  border:1px solid var(--cinnabar);color:var(--cinnabar);
+  font-size:13px;padding:3px 10px;letter-spacing:.25em;
+  flex:none;
+}
+.kicker h2{font-size:24px;font-weight:normal;letter-spacing:.14em;color:var(--paper)}
+section p{margin:0 0 18px;font-size:16.5px;color:#cfcabf}
+section p b{color:var(--paper);font-weight:normal}
+.q{
+  background:#20201d;
+  border-left:3px solid var(--bamboo);
+  padding:16px 20px;margin:20px 0;
+  color:#ddd8cc;font-size:15.5px;line-height:2.05;
+}
+.q.rel{border-left-color:var(--cinnabar)}
+.qn{font-size:12.5px;color:var(--smoke);margin:-12px 0 22px;letter-spacing:.12em}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+.reveal.vis{opacity:1;transform:none}
+
+/* 蚁行轮 */
+.wheelbox{
+  display:flex;align-items:center;gap:26px;
+  border:1px solid var(--line);background:var(--stone);
+  padding:22px;margin:24px 0;flex-wrap:wrap;
+}
+.wheelwrap{position:relative;width:132px;height:132px;flex:none}
+.wheel{
+  position:absolute;inset:0;border-radius:50%;
+  border:2px solid var(--bamboo-dim);
+  transition:transform 4.5s linear;
+}
+.wheel::before{
+  content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
+  background:var(--line);
+}
+.wheel::after{
+  content:"";position:absolute;left:50%;top:50%;width:100%;height:1px;
+  background:var(--line);transform:translate(-50%,-50%);
+}
+.ant{
+  position:absolute;left:50%;top:-5px;margin-left:-5px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--cinnabar);
+  transition:transform 4.5s linear;
+}
+.wheelbox.run .wheel{transform:rotate(-720deg)}
+.wheelbox.run .ant{transform:translateY(142px)}
+.wheelbox .wtxt{flex:1;min-width:220px;font-size:14.5px;color:var(--smoke);line-height:2}
+.wheelbox .wtxt em{font-style:normal;color:var(--paper)}
+button.act{
+  font:inherit;font-size:13px;color:var(--bamboo);
+  background:none;border:1px solid var(--bamboo-dim);
+  padding:6px 16px;cursor:pointer;letter-spacing:.2em;
+}
+button.act:hover{background:#262b26}
+
+/* 纬度梯 */
+.ladder{
+  border:1px solid var(--line);background:var(--stone);
+  padding:24px;margin:24px 0;
+}
+.ladder h3{font-size:14px;color:var(--smoke);font-weight:normal;letter-spacing:.25em;margin-bottom:16px}
+.rungs{display:flex;flex-wrap:wrap;gap:10px}
+.rung{
+  font:inherit;font-size:13.5px;color:var(--smoke);
+  border:1px solid var(--line);background:none;
+  padding:8px 13px;cursor:pointer;letter-spacing:.08em;
+  transition:all .3s;
+}
+.rung.on{border-color:var(--bamboo);color:var(--paper);background:#262b26}
+.rung i{display:block;font-style:normal;font-size:11.5px;color:var(--bamboo);margin-top:3px}
+.ladd-desc{
+  margin-top:18px;font-size:15px;color:#cfcabf;
+  border-left:2px solid var(--bamboo-dim);padding-left:14px;
+  min-height:3em;
+}
+
+/* 手隔目 */
+.eyebox{
+  border:1px solid var(--line);background:var(--stone);
+  padding:26px 22px;margin:24px 0;
+}
+.eyescope{
+  position:relative;height:120px;margin:10px 0 16px;
+}
+.eyedot,.handdot,.stardot{
+  position:absolute;top:50%;transform:translateY(-50%);
+  border-radius:50%;
+}
+.eyedot{left:6px;width:26px;height:26px;background:var(--paper)}
+.eyedot::after{content:"目";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink)}
+.handdot{left:34%;width:20px;height:20px;background:var(--bamboo);transition:left .8s ease}
+.handdot::after{content:"手";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink)}
+.stardot{right:8%;width:44px;height:44px;background:var(--cinnabar);transition:opacity .8s}
+.eyescope.near .handdot{left:11%}
+.eyescope.near .stardot{opacity:.14}
+.eyebox .wtxt{font-size:14.5px;color:var(--smoke);line-height:2}
+
+/* 钱影盘 */
+.basinbox{
+  border:1px solid var(--line);background:var(--stone);
+  padding:26px 22px;margin:24px 0;text-align:center;
+}
+.basin{
+  position:relative;width:min(300px,80%);height:110px;
+  margin:6px auto 18px;
+  border:3px solid var(--line);
+  border-radius:0 0 150px 150px / 0 0 60px 60px;
+  overflow:hidden;
+}
+.coin{
+  position:absolute;left:50%;bottom:26px;margin-left:-14px;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--cinnabar);color:var(--paper);
+  font-size:14px;display:flex;align-items:center;justify-content:center;
+  transform:scale(.55);transition:transform .9s ease .2s;
+}
+.water{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,#33473a,#26332a);
+  opacity:0;transition:opacity .8s ease;
+}
+.basinbox.filled .water{opacity:1}
+.basinbox.filled .coin{transform:scale(1)}
+.basinbox .wtxt{font-size:14.5px;color:var(--smoke);line-height:2}
+
+/* 削序终章 */
+.xu-card{
+  position:relative;
+  border:1px solid #4a3030;background:#241f1e;
+  padding:24px;margin:26px 0;
+}
+.xu-card::before{
+  content:"削";
+  position:absolute;right:14px;top:12px;
+  font-size:30px;color:var(--cinnabar);
+  border:2px solid var(--cinnabar);
+  padding:4px 8px;transform:rotate(8deg);
+  opacity:.85;
+}
+.xu-card h3{font-size:15px;color:#d9b7b2;font-weight:normal;letter-spacing:.2em;margin-bottom:8px}
+.twin{
+  display:flex;gap:14px;margin:26px 0;flex-wrap:wrap;
+}
+.twin > div{
+  flex:1;min-width:240px;
+  border:1px solid var(--line);background:var(--stone);
+  padding:18px;font-size:14.5px;color:#cfcabf;
+}
+.twin h4{font-size:14px;color:var(--bamboo);font-weight:normal;letter-spacing:.2em;margin-bottom:8px}
+.twin .zhu h4{color:var(--cinnabar)}
+
+/* 校字记 */
+.kh{
+  border:1px dashed var(--line);background:var(--stone);
+  padding:20px 22px;margin:26px 0;
+  font-size:14px;color:var(--smoke);line-height:2.1;
+}
+.kh h3{font-size:14px;color:var(--smoke);font-weight:normal;letter-spacing:.25em;margin-bottom:8px}
+.kh b{color:#cfcabf;font-weight:normal}
+
+/* 尾屏 */
+#coda{
+  min-height:88vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:34px;
+  text-align:center;padding:60px 26px;
+}
+.codaline{font-size:17px;color:#cfcabf;max-width:560px;line-height:2.2}
+.codaseal{
+  writing-mode:vertical-rl;
+  border:3px solid var(--cinnabar);color:var(--cinnabar);
+  font-size:30px;letter-spacing:.3em;
+  padding:16px 10px;
+}
+
+footer{
+  border-top:1px solid var(--line);
+  max-width:720px;margin:0 auto;
+  padding:36px 26px 60px;
+  font-size:13px;color:var(--smoke);line-height:2.1;
+}
+footer a{color:var(--bamboo-dim);text-decoration:none;border-bottom:1px dotted var(--bamboo-dim)}
+footer .warn{margin-top:10px;padding-left:12px;border-left:2px solid var(--line)}
+
+@media (max-width:900px){
+  #rail{display:none}
+  .title-block{position:static;transform:none;margin-top:26px;writing-mode:horizontal-tb;height:auto;text-align:center}
+  .title-block > *{margin-left:0}
+  .btitle{writing-mode:horizontal-tb;height:auto;font-size:40px;border-right:none;border-bottom:1px solid var(--line);padding:0 0 10px}
+  .bmeta{writing-mode:horizontal-tb;height:auto;letter-spacing:.2em;margin-top:8px}
+  #cut-sticky{flex-direction:column}
+  .bseal{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- 首屏:剖天 -->
+<div id="cut-head">
+  <div id="cut-sticky">
+    <div class="tower" id="tower">
+      <button class="layer" data-bub="离地最近的一重。日食就是它挡在太阳前面。"><span class="ll">月天</span><span class="lc">第一重</span></button>
+      <button class="layer" data-bub="比月亮高一级，从太阳前面过，算得出却看不见。"><span class="ll">水星天</span><span class="lc">第二重</span></button>
+      <button class="layer" data-bub="比水星大一圈，离得太远，遮不住太阳。"><span class="ll">金星天</span><span class="lc">第三重</span></button>
+      <button class="layer" data-bub="七政之中，太阳得中。"><span class="ll">日天</span><span class="lc">第四重</span></button>
+      <button class="layer" data-bub="火星所在，自此向上是外行星。"><span class="ll">火星天</span><span class="lc">第五重</span></button>
+      <button class="layer" data-bub="木星所在。"><span class="ll">木星天</span><span class="lc">第六重</span></button>
+      <button class="layer" data-bub="土星所在，七政到此为止。"><span class="ll">土星天</span><span class="lc">第七重</span></button>
+      <button class="layer" data-bub="恒星都钉在这一层，彼此远近永不改变。"><span class="ll">列宿天</span><span class="lc">第八重</span></button>
+      <button class="layer" data-bub="运动细微到只能靠推算，肉眼无从验证。"><span class="ll">九重天</span><span class="lc">微动</span></button>
+      <button class="layer" data-bub="同样只能推算的一重。"><span class="ll">十重天</span><span class="lc">微动</span></button>
+      <button class="layer" data-bub="每天自东向西转一周，带着底下十重一起转。"><span class="ll">宗动天</span><span class="lc">第十一重</span></button>
+      <button class="layer top" data-bub="馆臣说这是诬，洋人说这是家。这一层，四库没删干净。"><span class="ll">不动之天</span><span class="lc">常静</span><span class="strike"></span><span class="zk">朱批：妄谬，刊之</span></button>
+    </div>
+    <div class="title-block" id="tb">
+      <div class="bseal">剖天</div>
+      <div class="btitle">天问略</div>
+      <div class="bmeta">万历乙卯 · 泰西阳玛诺</div>
+    </div>
+    <div class="head-note" id="hn">滚 动 剖 天</div>
+  </div>
+</div>
+
+<div id="rail">
+  <i></i><i></i><i></i><i></i><i></i><i></i>
+  <i></i><i></i><i></i><i></i><i></i><i></i>
+</div>
+
+<main>
+
+<!-- 问一 -->
+<section id="s1">
+  <div class="kicker reveal"><span class="qtag">问一</span><h2>天有几重</h2></div>
+  <p class="reveal">一六一五年，北京刊刻了一本小书。作者是个葡萄牙人，取名问得直白：天有几重？他的答案也直白，一共十二重，一层套一层，像裹葱头。</p>
+  <div class="q reveal">十二重天其形皆圆各安本所各层相包如裹葱头日月五星列宿在其体内如木节在板一定不移各因本天之动而动焉</div>
+  <div class="qn">库本首问答语</div>
+  <p class="reveal">最顶上一重不是天体，是他带来的另一个世界。</p>
+  <div class="q rel reveal">最髙者即第十二重为天主上帝诸神圣处永静不动广大无比即天堂也</div>
+  <div class="qn">库本首问，馆臣斥为妄谬而此句仍在，照录</div>
+  <p class="reveal">这句话在第一问第一答里，全书开篇就站着，谁也没能把它删掉。</p>
+  <p class="reveal">十二重怎么转？底下十重每天被最外层带着转，自己又各自反向慢行。有人问两个方向相反的动怎么会不打架，他打了个比方，把天体力学说成一件小事：</p>
+  <div class="q reveal">又如车轮上有蚁行自南而北其轮之转自北而南实见此蚁行有二动而非相反何也一从自动一从外带故也</div>
+  <div class="qn">库本论二动</div>
+  <div class="wheelbox reveal" id="wb">
+    <div class="wheelwrap">
+      <div class="wheel" id="wh"></div>
+      <div class="ant" id="ant"></div>
+    </div>
+    <div class="wtxt"><em>轮向南转，蚁向北爬</em>，站在旁边看，这只蚁同时参与两个运动。天上的星也一样：自己往东走，被天带着往西走。点一下，看四百八十年的这套解释转起来。</div>
+    <button class="act" id="wbtn">转起来</button>
+  </div>
+</section>
+
+<!-- 问二 -->
+<section id="s2">
+  <div class="kicker reveal"><span class="qtag">问二</span><h2>太阳住几楼</h2></div>
+  <p class="reveal">十二重里，太阳不住最高层，自下往上数住第四层，恰恰是七政的正中间。理由带着一股道德味：太贵重的东西该居中。他接着说了一条今天看来仍然正确的事理：</p>
+  <div class="q reveal">光及余政者星月无光恒借日之光以为光试观月之于日合则魄逺则对则望随其近逺以为明暗焉</div>
+  <div class="qn">库本论月光</div>
+  <p class="reveal">月亮不发光，是面镜子；恒星也不发光，只是离得太远，镜子照不出阴晴圆缺。那么太阳有多大？书里给出的数很具体。</p>
+  <div class="q reveal">日天之髙自地面至太阳中心相隔一千六百万余里今视日轮如小车轮犹之二十里髙山视人如鸟矣</div>
+  <div class="qn">库本论日天之高</div>
+  <p class="reveal">按书里的说法，日地之间隔 1600 万里，太阳直径大得能装下 165 个地球还要再加零头。可正因为太远，我们抬头看见的，不过是个小车轮。</p>
+</section>
+
+<!-- 问三 -->
+<section id="s3">
+  <div class="kicker reveal"><span class="qtag">问三</span><h2>昼与夜的长短账</h2></div>
+  <p class="reveal">为什么冬天冷夏天热？他的答案不是距离，而是阳光斜射。可有人追着问：春秋两天太阳离天顶一样高，为什么一个暖一个凉？他的解释很调皮：</p>
+  <div class="q reveal">縁春日隂气塞满大地日光虽照难成温热秋日阳气焦灼无所不暴日轮虽下难成寒气</div>
+  <div class="qn">库本论寒暑</div>
+  <p class="reveal">春天大地还捂着一肚子湿冷，太阳晒不透；秋天大地晒了一夏，太阳斜了也凉不下来。同一角度，两样脾气。</p>
+  <div class="ladder reveal" id="ladder">
+    <h3>同一套算法，量遍天下：北极升高一度，昼夜改写一分</h3>
+    <div class="rungs">
+      <button class="rung" data-d="北纬 23.5 度，夏至白昼 53 刻 11 分，夜里还有 42 刻 4 分。">广州<i>53刻11分</i></button>
+      <button class="rung" data-d="北纬 29 度，夏至白昼 55 刻 7 分，比广州长了 2 刻。">南昌<i>55刻7分</i></button>
+      <button class="rung" data-d="北纬 32.5 度，夏至白昼 56 刻 6 分。书里拿它和顺天府对账，差出 3 刻。">南京<i>56刻6分</i></button>
+      <button class="rung" data-d="北纬 37 度，夏至白昼 58 刻 4 分。">济南<i>58刻4分</i></button>
+      <button class="rung" data-d="北纬 40 度，夏至白昼 59 刻 7 分，一夜只剩 36 刻 8 分。">京师<i>59刻7分</i></button>
+      <button class="rung" data-d="再往北，白昼不再按刻算：太阳几个月不落，几个月不起。他说这是西洋人亲眼走过的。">极北<i>整月不夜</i></button>
+    </div>
+    <div class="ladd-desc" id="ld">点一座城，看这份万历末年的昼夜表。</div>
+  </div>
+  <p class="reveal">极北那份账，他拿人身担保：</p>
+  <div class="q reveal">吾西国人亲所经厯其愈近北极者夏至日昼愈长夜愈短夏至日有全十二时为昼有全三十日为昼全六十日为昼全六月为昼厯厯身涉不可疑也</div>
+  <div class="qn">库本论极地长昼</div>
+  <p class="reveal">在全书的问答里，这是唯一一句不需要图、不需要算的话。历历身涉，四个字压住所有怀疑。</p>
+</section>
+
+<!-- 问四 -->
+<section id="s4">
+  <div class="kicker reveal"><span class="qtag">问四</span><h2>太阳缺了一角</h2></div>
+  <p class="reveal">日食在古代中国是天罚的警报。这本书给出的解释平心静气：</p>
+  <div class="q reveal">日蚀非日失其光乃月掩其光也月之天在日天之下朔时月轮正过日轮之下南北同经东西同纬故揜其光若有失之耳</div>
+  <div class="qn">库本论日食</div>
+  <p class="reveal">不是天狗，不是失德，是月亮准时路过。可月亮每个月都从太阳前面过一次，为什么不是月月日食？他搬出两条黄道相交的路标：</p>
+  <div class="q reveal">月道半出黄道北半出黄道南而为南北二交吾国所谓龙头龙尾是也</div>
+  <div class="qn">库本论月道二交</div>
+  <p class="reveal">龙头龙尾，中国历家的老词，被他借来当交食的闸门。只有月亮恰好走在闸门上，遮挡才成立。</p>
+  <p class="reveal">更惊人的是这一句。他说金星水星从太阳面前经过时，西洋历家亲眼看见日面上有小黑点。这是比望远镜专书更早写进中文的凌日与黑子记录：</p>
+  <div class="q reveal">吾国厯家遇金水二星与日同度恒见日轮中有黒防以星体不能全揜日体故也</div>
+  <div class="qn">库本论金水二星，防字照录，校记见下</div>
+  <p class="reveal">那为什么金星比月亮大，却遮不住太阳？他反手做了个实验给你：</p>
+  <div class="eyebox reveal" id="eyebox">
+    <div class="eyescope" id="eyescope">
+      <div class="eyedot"></div>
+      <div class="handdot"></div>
+      <div class="stardot"></div>
+    </div>
+    <div class="wtxt">挡不挡得住，不看个头，看远近。把手挪到眼前，一颗金星也够遮天。</div>
+    <button class="act" id="ebtn">手凑近眼睛</button>
+  </div>
+  <div class="q reveal">凡物以形相揜非惟论其大小又当计其逺近盖人目视物之时自目至物之体射两直线为直角形故愈近于目其物虽小而径愈大愈逺于目其物虽大而径愈小如上图甲为人目庚为物体甲乙甲巳为人目所射两直线则径愈近愈小愈逺愈大故戊大于丁而丁大于丙也试以人手隔目手愈近于目则愈揜物体矣</div>
+  <div class="qn">库本论远近之理</div>
+</section>
+
+<!-- 问五 -->
+<section id="s5">
+  <div class="kicker reveal"><span class="qtag">问五</span><h2>地是卵黄，影有尽头</h2></div>
+  <p class="reveal">月食的解释里，藏着全书中土读者最陌生的一句话：地是圆的，悬在正中央。</p>
+  <div class="q reveal">地球悬于十二重天之中央如鸡卵黄在青之中央故日由西照地地必有影射东照东必有影射西</div>
+  <div class="qn">库本论地影</div>
+  <p class="reveal">如鸡卵黄。地球悬在十二重的正中心，太阳从西边照，影子就甩向东边；月亮走进这道影子，就是月食。他还顺手算出这道影子有底：<span class="qv">其地影之尽可过第一第二重天至第三重天而不及第四重天</span>够不着第四重，所以只有月亮挨咬，星星们安然无恙。</p>
+  <p class="reveal">月食长短为什么不一样？月亮走的是一条带轮的轨道，靠近地球时穿过影子最粗的一段，食就久；远时穿过最细的一段，食就暂。一份交食理论，写得像过收费站。他还替月光记账：<span class="qv">居地面者其有月光朔日以后毎日多三刻望日以后毎日少三刻</span>过了初一，一天多三刻；过了望日，一天少三刻，一个月的阴晴，三刻三刻找零。</p>
+  <p class="reveal">最漂亮的一段留给一个日常骗局。有人说月食时日月都在地平线上，影子说不通。他答：你看见的月，未必是月。</p>
+  <div class="q reveal">令斟水满盘即仍八步或十余步而钱忽见之何也所视非钱体也钱影也然则地平之见月非月体也月影也</div>
+  <div class="qn">库本盘中钱影之喻</div>
+  <div class="basinbox reveal" id="basin">
+    <div class="basin">
+      <div class="water"></div>
+      <div class="coin">钱</div>
+    </div>
+    <div class="wtxt">盘底一枚钱，退到十几步外就看不见了。斟满水，钱又回来了，可你看见的不是钱，是钱的影子。地平线上的月亮，同理。</div>
+    <button class="act" id="bbtn">斟水</button>
+  </div>
+</section>
+
+<!-- 问六 -->
+<section id="s6">
+  <div class="kicker reveal"><span class="qtag">问六</span><h2>删掉的那篇序</h2></div>
+  <p class="reveal">这个故事的后半截，发生在一百六十年后。四库馆臣收书，给这本小书写了一段罕见的硬话：</p>
+  <div class="q rel reveal">盖欲借推测之有騐以证天主天堂之诬其用意极为诡谲然其考騐天象则实较古法为善</div>
+  <div class="qn">四库提要，馆臣语</div>
+  <p class="reveal">骂完了，笔锋一转，还是收下了：</p>
+  <div class="xu-card reveal">
+    <h3>四库总目对它的处置</h3>
+    <p style="color:#cfcabf;font-size:15px">荒诞的说法扔掉，精密的算法留下，自序整篇删去，正文里涉妄的句子刊削。可是馆臣的刀没删干净，开篇第一问，天堂还端端正正站在十二重的顶上。</p>
+    <div class="q rel" style="margin-bottom:0">今置其荒诞售欺之说而但取其精宻有据之术削去原序以免荧聴</div>
+  </div>
+  <div class="qn">四库提要，削去原序云云</div>
+  <div class="twin reveal">
+    <div><h4>洋人这一半</h4>阳玛诺，字演西，一五七四年生，一六五九年卒于杭州。入华近半个世纪，这是他最早的一部中文著作。他把算得准的天文摆在门口，把天堂放在第十二重，请读者一层层走上去。</div>
+    <div class="zhu"><h4>馆臣这一半</h4>纪昀们不否认算法精密，只否认天堂存在。他们删序、刊谬、存术，把一本书裁成两半：能算的天文归历法，不能算的天堂归妄谬。可惜刀口不齐，第一问漏了。</div>
+  </div>
+  <p class="reveal">十一年后，汤若望的《远镜说》才把望远镜正式讲给中土。而这本书里那些靠几何推出来的答案，日月食、地圆、地影有尽、极地长昼，每一条都等着几十年后的实测来兑现。</p>
+</section>
+
+<!-- 校字记 -->
+<div class="kh reveal">
+  <h3>校字记</h3>
+  库本为四库全书系统简体文本， OCR 讹字与异体字照录：<b>黑点之点讹作防</b>（金水二星条）；<b>掩字或作揜</b>，一书两见；<b>髙、逺、厯、畧、隂、毎</b>皆库本原形；末节月体透光一段库本有<b>【阙】</b>一处，正文至此中断，残文照录。
+</div>
+
+</main>
+
+<!-- 尾屏 -->
+<div id="coda">
+  <div class="codaseal reveal">叩天问穹</div>
+  <div class="codaline reveal">十二重之上是什么，洋人说是天堂，馆臣说是诬。这本小书替他们各自留了一半：一半在钦定的历法里活着，一半在开篇第一问里站着。</div>
+</div>
+
+<footer>
+  <p>文本来源：殆知阁古代文献简体库《天问略》一卷（明·泰西阳玛诺撰，据四库本，子部六天文算法类，去空白 11,603 字）。</p>
+  <p>本页为殆知阁导读系列第 338 篇，系列总目见 <a href="https://github.com/robertsong/daizhige-daodu" rel="noopener">daizhige-daodu 仓库</a>。全部引文经脚本与库内文件去标点归一逐字比对，白话部分经六字窗反扫核验。</p>
+  <p class="warn">时代局限提醒：原文成书于明末，其宇宙模型为前哥白尼体系，天堂之说属宗教语境；文中观念均属其时代，不代表今日立场，请置于历史脉络中理解。</p>
+</footer>
+
+<script>
+(function(){
+  var layers=[].slice.call(document.querySelectorAll('.layer'));
+  var rail=[].slice.call(document.querySelectorAll('#rail i'));
+  var head=document.getElementById('cut-head');
+  var tb=document.getElementById('tb');
+  var hn=document.getElementById('hn');
+
+  layers.forEach(function(l){
+    var bub=document.createElement('span');
+    bub.className='bubble';
+    bub.textContent=l.getAttribute('data-bub');
+    l.appendChild(bub);
+    l.addEventListener('click',function(){
+      layers.forEach(function(o){o.classList.remove('bub','lit')});
+      l.classList.add('bub','lit');
+      if(l.classList.contains('top')){l.classList.add('strike-on')}
+      if(!l._t){l._t=setTimeout(function(){l.classList.remove('bub');l._t=null},2200)}
+    });
+  });
+
+  function scrub(){
+    var r=head.getBoundingClientRect();
+    var total=head.offsetHeight-window.innerHeight;
+    var p=Math.min(1,Math.max(0,-r.top/(total*0.82)));
+    var n=Math.round(p*12);
+    layers.forEach(function(l,i){l.classList.toggle('on',i<n)});
+    rail.forEach(function(b,i){b.classList.toggle('lit',i<n)});
+    tb.classList.toggle('show',p>0.62);
+    if(p>0.62){hn.style.opacity=0}else{hn.style.opacity=1}
+    var last=layers[11];
+    if(p>0.85){last.classList.add('strike-on')}
+  }
+  window.addEventListener('scroll',scrub,{passive:true});
+  scrub();
+
+  var secs=[].slice.call(document.querySelectorAll('section'));
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('vis')}
+    });
+  },{threshold:0.12});
+  [].slice.call(document.querySelectorAll('.reveal')).forEach(function(el){io.observe(el)});
+
+  var sio=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        var idx=secs.indexOf(e.target);
+        rail.forEach(function(b,i){
+          b.classList.toggle('lit',i<=Math.min(idx+2,9));
+          b.classList.toggle('toplit',idx>=4&&i>9);
+        });
+      }
+    });
+  },{threshold:0.05});
+  secs.forEach(function(s){sio.observe(s)});
+
+  var wb=document.getElementById('wb');
+  document.getElementById('wbtn').addEventListener('click',function(){
+    if(wb.classList.contains('run')){
+      wb.classList.remove('run');
+      this.textContent='转起来';
+    }else{
+      wb.classList.add('run');
+      this.textContent='停下来';
+      setTimeout(function(){wb.classList.remove('run');var b=document.getElementById('wbtn');if(b){b.textContent='转起来'}},4700);
+    }
+  });
+
+  var ladder=document.getElementById('ladder');
+  var ld=document.getElementById('ld');
+  [].slice.call(ladder.querySelectorAll('.rung')).forEach(function(r){
+    r.addEventListener('click',function(){
+      [].slice.call(ladder.querySelectorAll('.rung')).forEach(function(o){o.classList.remove('on')});
+      r.classList.add('on');
+      ld.textContent=r.getAttribute('data-d');
+    });
+  });
+
+  var eb=document.getElementById('eyebox');
+  document.getElementById('ebtn').addEventListener('click',function(){
+    var sc=document.getElementById('eyescope');
+    if(sc.classList.toggle('near')){this.textContent='手放回去'}
+    else{this.textContent='手凑近眼睛'}
+  });
+
+  var bb=document.getElementById('basin');
+  document.getElementById('bbtn').addEventListener('click',function(){
+    var f=bb.classList.toggle('filled');
+    this.textContent=f?'倒掉':'斟水';
+  });
+})();
+</script>
+</body>
+</html>
