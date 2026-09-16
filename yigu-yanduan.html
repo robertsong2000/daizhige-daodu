@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>益古演段 · 殆知阁古籍导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #26251f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --bam: #5f9270; --bam-dim: rgba(95,146,112,0.35); --bam-faint: rgba(95,146,112,0.12);
+    --seal: #c0453c; --gold: #c9963f;
+    --hairline: rgba(232,228,220,0.14); --hairline-d: rgba(25,25,23,0.16);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Noto Serif CJK SC","Source Han Serif SC","Songti SC",SimSun,serif;
+    line-height: 1.9; overflow-x: hidden;
+  }
+  .mono { font-family: ui-monospace,"SF Mono",Menlo,Consolas,monospace; }
+  a { color: inherit; }
+  q { quotes: none; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px; }
+
+  nav#topnav {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    display: flex; align-items: center; gap: 26px;
+    padding: 14px 30px; font-size: 13px; letter-spacing: 2px;
+    background: rgba(25,25,23,0.82); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--hairline);
+  }
+  nav#topnav .brand { color: var(--bam); font-weight: 700; }
+  nav#topnav a { text-decoration: none; opacity: .62; transition: opacity .25s; }
+  nav#topnav a:hover { opacity: 1; }
+  nav#topnav .sp { flex: 1; }
+  nav#topnav .no { color: var(--bam); opacity: .85; }
+
+  header#hero { min-height: 100vh; position: relative; display: grid; place-items: center; overflow: hidden; }
+  #heroSvg { width: min(72vh, 92vw); max-width: 560px; display: block; }
+  #heroSvg .fieldRect { fill: none; stroke: var(--paper); stroke-width: 1.4; opacity: .5; }
+  #heroSvg .pool { fill: rgba(95,146,112,0.13); stroke: var(--bam); stroke-width: 1.6; }
+  #heroSvg .ripple { fill: none; stroke: var(--bam); opacity: 0; transform-box: fill-box; transform-origin: center; }
+  #heroSvg .ripple.r1 { animation: rip 3.6s ease-out infinite .4s; }
+  #heroSvg .ripple.r2 { animation: rip 3.6s ease-out infinite 2.2s; }
+  @keyframes rip { 0% { opacity: .55; transform: scale(.55); } 100% { opacity: 0; transform: scale(1.06); } }
+  #heroSvg .corner path {
+    fill: rgba(95,146,112,0.17); stroke: var(--bam); stroke-width: 1.2;
+    transition: transform 1.1s cubic-bezier(.6,.05,.2,1);
+    transform-box: fill-box; transform-origin: center; cursor: pointer;
+  }
+  #heroSvg .corner path:hover { fill: var(--bam-dim); }
+  #heroSvg .tick { stroke: var(--paper-dim); stroke-width: 1; }
+  #heroSvg .ticklab { fill: var(--paper-dim); font-size: 15px; letter-spacing: 3px; }
+  #heroSvg .yc {
+    fill: var(--paper); font-size: 58px; font-weight: 700; text-anchor: middle;
+    opacity: 0; transition: opacity .7s ease 1s; pointer-events: none;
+  }
+  header#hero.evolved .yc { opacity: 1; }
+  #heroSub {
+    position: absolute; left: 50%; bottom: 9vh; transform: translateX(-50%);
+    text-align: center; font-size: 15px; letter-spacing: 5px; color: var(--paper-dim);
+  }
+  #heroSub b { color: var(--paper); font-weight: 400; }
+  .heroBtns { position: absolute; right: 6vw; bottom: 10vh; display: flex; flex-direction: column; gap: 12px; }
+  .hbtn {
+    background: none; border: 1px solid var(--bam-dim); color: var(--bam);
+    font: inherit; font-size: 15px; letter-spacing: 6px; padding: 10px 16px 10px 22px;
+    cursor: pointer; transition: background .25s;
+  }
+  .hbtn:hover { background: var(--bam-faint); }
+  #heroQuote {
+    position: absolute; right: 5vw; top: 12vh; writing-mode: vertical-rl;
+    max-height: 56vh; font-size: 15px; letter-spacing: 6px; color: var(--paper-dim);
+    border-right: 1px solid var(--hairline); padding-right: 14px; line-height: 2.4;
+  }
+  #heroQuote::before { content: "自序"; color: var(--bam); letter-spacing: 4px; }
+  #heroHint { position: absolute; left: 6vw; top: 14vh; font-size: 12px; letter-spacing: 4px; color: var(--paper-faint); }
+
+  main section { padding: 110px 0 90px; }
+  main section.paper { background: var(--paper); color: var(--ink); }
+  .kicker { font-size: 12px; letter-spacing: 5px; color: var(--bam); margin-bottom: 14px; }
+  .paper .kicker { color: #3e6b4e; }
+  h2.st { font-size: 30px; font-weight: 700; letter-spacing: 10px; margin-bottom: 34px; }
+  .paper h2.st { color: var(--ink); }
+  main p.prose { max-width: 760px; margin: 0 0 22px; font-size: 16.5px; }
+
+  blockquote.bigq {
+    max-width: 780px; margin: 30px 0; padding: 22px 28px;
+    border-left: 3px solid var(--bam); background: rgba(95,146,112,0.06);
+    font-size: 18px; line-height: 2.2; letter-spacing: 1px;
+  }
+  .paper blockquote.bigq { background: rgba(25,25,23,0.035); }
+  blockquote.bigq .src { display: block; margin-top: 8px; font-size: 12.5px; letter-spacing: 3px; color: var(--paper-dim); }
+  .paper blockquote.bigq .src { color: var(--paper-faint); }
+
+  .duilie { display: grid; grid-template-columns: 1.2fr .9fr; gap: 46px; align-items: start; }
+  .zj { writing-mode: vertical-rl; height: 460px; font-size: 17px; letter-spacing: 5px;
+        line-height: 2.5; color: var(--ink); border-right: 1px solid var(--hairline-d);
+        padding-right: 18px; margin-left: auto; }
+  .zj .src { font-size: 12px; color: var(--bam); margin-top: 16px; letter-spacing: 3px; }
+
+  #tianyuan .an {
+    background: var(--ink); color: var(--paper); border: 1px solid var(--hairline);
+    padding: 40px 44px; margin: 36px 0;
+  }
+  #tianyuan .an .antag { font-size: 12px; letter-spacing: 4px; color: var(--bam); margin-bottom: 16px; }
+  #tianyuan .an q.timu { display: block; font-size: 17px; line-height: 2.2; letter-spacing: 1px; }
+  #tianyuan .an .da { display: inline-block; margin-top: 18px; border: 1px solid var(--bam-dim);
+        padding: 6px 18px; font-size: 15px; letter-spacing: 2px; color: var(--bam); }
+  .steps { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; margin: 40px 0 10px; counter-reset: st; }
+  .step { position: relative; padding: 18px 14px 16px 20px; border-top: 2px solid var(--hairline-d);
+          cursor: pointer; transition: border-color .3s, background .3s; }
+  .step::before { counter-increment: st; content: counter(st, cjk-ideographic);
+    position: absolute; top: -13px; left: 14px; background: var(--paper); padding: 0 8px;
+    font-size: 13px; color: var(--paper-faint); letter-spacing: 2px; transition: color .3s; }
+  .step.on { border-top-color: var(--bam); }
+  .step.on::before { color: var(--bam); }
+  .step q { display: block; font-size: 14.5px; line-height: 1.9; min-height: 84px; color: var(--ink); }
+  .step .today { display: block; margin-top: 10px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: 1px; }
+  .step .alg { display: block; margin-top: 8px; font-size: 14px; color: var(--bam); letter-spacing: 1px; }
+  .paper .step .today { color: #7c776c; }
+  .eqLine { margin: 26px 0 6px; font-size: 17px; letter-spacing: 1px; color: var(--ink); }
+  .eqLine.mono { color: #3e6b4e; }
+  #taiMark { display: inline-flex; align-items: center; gap: 10px; margin: 4px 0 0; font-size: 13px;
+             color: #7c776c; letter-spacing: 2px; }
+  #taiMark .tai { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--bam);
+             color: var(--bam); font-size: 16px; border-radius: 50%; }
+
+  #liushisi .shapebar { display: flex; flex-wrap: wrap; gap: 8px; margin: 34px 0 26px; max-width: 900px; }
+  .chip {
+    font: inherit; font-size: 13px; letter-spacing: 1px; cursor: pointer;
+    background: none; border: 1px solid var(--hairline-d); color: var(--ink);
+    padding: 5px 10px; transition: all .2s;
+  }
+  .chip:hover { border-color: var(--bam); color: #3e6b4e; }
+  .chip.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .chip.star { border-color: var(--bam); }
+  #casePanel { border: 1px solid var(--hairline-d); background: rgba(25,25,23,0.03);
+               padding: 34px 40px; min-height: 190px; max-width: 900px; }
+  #casePanel .cv { font-size: 12px; letter-spacing: 4px; color: #3e6b4e; margin-bottom: 14px; }
+  #casePanel .ct { display: block; font-size: 16.5px; line-height: 2.15; letter-spacing: .5px; }
+  #liushisi .fin { max-width: 900px; }
+
+  .fatile { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 34px 0 10px; max-width: 900px; }
+  .fat { border: 1px solid var(--hairline-d); padding: 22px 20px 18px; position: relative; }
+  .fat b { display: block; font-size: 26px; letter-spacing: 6px; color: #3e6b4e; margin-bottom: 8px; font-weight: 700; }
+  .fat span { font-size: 13.5px; color: var(--ink); opacity: .8; line-height: 1.9; display: block; }
+  .duibi { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 26px 0; max-width: 900px; }
+  .duibi .db { padding: 24px 26px; font-size: 15px; line-height: 2.05; }
+  .duibi .db.h { background: var(--ink); color: var(--paper); }
+  .duibi .db.z { background: rgba(192,69,60,0.09); border: 1px solid rgba(192,69,60,0.35); }
+  .duibi .db .tag { display: block; font-size: 12px; letter-spacing: 4px; margin-bottom: 10px; color: var(--bam); }
+  .duibi .db.z .tag { color: var(--seal); }
+
+  #cangxian .tl { position: relative; margin: 50px 0 10px; padding-left: 34px; max-width: 860px; }
+  #cangxian .tl::before { content: ""; position: absolute; left: 8px; top: 6px; bottom: 6px; width: 1px; background: var(--hairline); }
+  .node { position: relative; padding: 0 0 46px; }
+  .node::before { content: ""; position: absolute; left: -31px; top: 12px; width: 11px; height: 11px;
+    border-radius: 50%; background: var(--ink); border: 2px solid var(--bam); }
+  .node .yr { font-size: 22px; letter-spacing: 4px; color: var(--bam); margin-bottom: 8px; }
+  .node .yr small { font-size: 13px; color: var(--paper-dim); letter-spacing: 2px; margin-left: 12px; }
+  .node p { max-width: 700px; font-size: 15.5px; margin-bottom: 10px; }
+  .node q { display: block; max-width: 700px; font-size: 15px; line-height: 2.1;
+            color: var(--paper-dim); border-left: 2px solid var(--bam-dim); padding-left: 14px; margin: 8px 0; }
+
+  .shou { text-align: center; padding: 90px 0 110px; position: relative; }
+  .shou .seal {
+    display: grid; place-items: center; width: 92px; height: 92px; margin: 0 auto 30px;
+    border: 2px solid var(--seal); color: var(--seal); font-size: 30px; letter-spacing: 4px;
+    line-height: 1.3; font-weight: 700; transform: rotate(-2deg);
+    box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 4px rgba(192,69,60,.5);
+  }
+  .shou p { font-size: 17px; letter-spacing: 3px; color: var(--paper-dim); max-width: 640px; margin: 0 auto; }
+
+  footer.page { border-top: 1px solid var(--hairline); padding: 46px 0 60px; font-size: 13px;
+    line-height: 2.1; color: var(--paper-faint); }
+  footer.page a { color: var(--paper-dim); }
+  footer.page .xj { display: block; margin-top: 10px; color: var(--paper-dim); }
+
+  #qb { display: none; }
+
+  @media (max-width: 860px) {
+    nav#topnav { gap: 14px; font-size: 11px; padding: 12px 16px; letter-spacing: 1px; }
+    .duilie { grid-template-columns: 1fr; }
+    .zj { margin: 0; height: 380px; }
+    .steps { grid-template-columns: repeat(2, 1fr); row-gap: 26px; }
+    .step { padding-left: 16px; }
+    .fatile { grid-template-columns: repeat(2, 1fr); }
+    .duibi { grid-template-columns: 1fr; }
+    #heroQuote { display: none; }
+    #heroHint { display: none; }
+    .heroBtns { right: 5vw; bottom: 16vh; }
+    h2.st { font-size: 24px; letter-spacing: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="topnav">
+  <span class="brand">益古演段</span>
+  <a href="#jiangshi">讲席</a>
+  <a href="#tianyuan">天元</a>
+  <a href="#liushisi">六十四问</a>
+  <a href="#yanfa">演段之法</a>
+  <a href="#cangxian">藏与显</a>
+  <span class="sp"></span>
+  <span class="no mono" id="navNo">元 李冶</span>
+</nav>
+
+<header id="hero">
+  <div id="heroHint">水占之外，即是四隅<br>点一块田，或点演段</div>
+  <q id="heroQuote">术数虽居六艺之末而施之人事则最为切务</q>
+  <svg id="heroSvg" viewBox="0 0 640 720" aria-label="方田圆池图">
+    <rect class="fieldRect" x="120" y="80" width="400" height="400"/>
+    <circle class="pool" cx="320" cy="280" r="200"/>
+    <circle class="ripple r1" cx="320" cy="280" r="200"/>
+    <circle class="ripple r2" cx="320" cy="280" r="200"/>
+    <g class="corner" id="cTL"><path d="M120,80 L320,80 A200,200 0 0 0 120,280 Z"/></g>
+    <g class="corner" id="cTR"><path d="M320,80 L520,80 L520,280 A200,200 0 0 0 320,80 Z"/></g>
+    <g class="corner" id="cBL"><path d="M120,280 L120,480 L320,480 A200,200 0 0 1 120,280 Z"/></g>
+    <g class="corner" id="cBR"><path d="M520,280 L520,480 L320,480 A200,200 0 0 0 520,280 Z"/></g>
+    <line class="tick" x1="120" y1="66" x2="320" y2="66"/>
+    <text class="ticklab" x="220" y="56" text-anchor="middle">至步二十</text>
+    <text class="yc" id="yc0" x="160" y="632">益</text>
+    <text class="yc" id="yc1" x="267" y="632">古</text>
+    <text class="yc" id="yc2" x="373" y="632">演</text>
+    <text class="yc" id="yc3" x="480" y="632">段</text>
+  </svg>
+  <div class="heroBtns">
+    <button class="hbtn" id="btnYan">演段</button>
+    <button class="hbtn" id="btnYuan" style="border-color:var(--hairline);color:var(--paper-dim)">复原</button>
+  </div>
+  <div id="heroSub">元 <b>李冶</b> 撰　天元术入门第一书　三卷六十四问</div>
+</header>
+
+<main>
+
+<section id="jiangshi" class="paper">
+  <div class="wrap">
+    <div class="kicker">卷首 · 讲席</div>
+    <h2 class="st">一位老师的不平之鸣</h2>
+    <div class="duilie">
+      <div>
+        <p class="prose">己未年的夏天，是1259年。蒙古与南宋的战事未了，栾城人李冶在山中写下这篇自序。他要谈的不是兵事也不是天下，而是一件更小也更执拗的事：算学该怎么教。开篇先给算学正名，说它在六艺之中排最末，用处却最切；随即矛头一转，骂的是同行。</p>
+        <blockquote class="bigq"><q>今之为算者未必有刘李之工而褊心局见不肯晓然示人惟务隠互错糅故为溟涬黯黮惟恐学者得闚其彷佛也不然则又以浅近觕俗无足观者</q><span class="src">自序</span></blockquote>
+        <p class="prose">译成今天的话：本事未必赶得上刘徽与李淳风，心眼却小得很，故意把水搅浑，生怕学生看明白。更重的话还在后头。</p>
+        <blockquote class="bigq"><q>致使轩辕隶首之术三五错综之妙尽堕于市井沾沾之儿及夫荒村下里蚩蚩之民殊可悯悼</q><span class="src">自序</span></blockquote>
+        <p class="prose">一门手艺的失传，被他归罪于藏私的行家。对市井儿郎、荒村之民的轻蔑，是那个时代惯有的口气；但把账算在行家自己身上，说手艺坏就坏在不肯把话说明白，却是内行才写得出的判词。</p>
+        <p class="prose">那么这本书自己做了什么？它其实是一次再创作。底本来自一部旧算书，原作者姓甚名谁，连李冶也不知道，只称「近世有某」：</p>
+        <blockquote class="bigq"><q>其曰益古演段者盖当时某氏算书</q><span class="src">四库提要引冶序</span></blockquote>
+        <p class="prose">砚坚序说，李冶见到此书，既佩服作者的用心，又惋惜他藏着掖着：</p>
+        <blockquote class="bigq"><q>见其用心之勤惜其秘而未尽剖露繙图式绎条段可移则移之可补则补之</q><span class="src">砚坚序</span></blockquote>
+        <p class="prose">于是李冶动手大改：</p>
+        <blockquote class="bigq"><q>予犹恨其闭匿而不尽发遂再为移补条段细繙图式使粗知十百者便得入室啗其文顾不快哉</q><span class="src">自序</span></blockquote>
+        <p class="prose">书名里的「演段」二字，说的就是这件事：把原本藏着掖着的条段，一段一段演开来给你看。落款也值得多看一眼：</p>
+        <blockquote class="bigq"><q>时大元己未夏六月二十有四日栾城李冶序</q><span class="src">自序款</span></blockquote>
+      </div>
+      <q class="zj">今之为算者未必有刘李之工而褊心局见不肯晓然示人惟务隠互错糅故为溟涬黯黮惟恐学者得闚其彷佛也不然则又以浅近觕俗无足观者</q>
+    </div>
+  </div>
+</section>
+
+<section id="tianyuan" class="paper">
+  <div class="wrap">
+    <div class="kicker">卷上 · 心法</div>
+    <h2 class="st">立天元一，就是设未知数</h2>
+    <div class="an">
+      <div class="antag">第一问 · 全书开场</div>
+      <q class="timu">今有方田一段内有圆池水占之外计地一十三亩七分半并不记内圆外方只云从外田楞至内池楞四边各二十步问内圆外方各多少</q>
+      <span class="da">答：<q>答曰外田方六十步　内池径二十步</q></span>
+    </div>
+    <p class="prose">一块方田，中央挖了一口圆池。题面不告诉你田边多长、池径多大，只给四条小路的长度：<q>从外田楞至内池楞四边各二十步</q>。池藏在田心，量一量田埂到水边的距离，田和池的大小就都锁定了。解法的第一句，是全书的心法：</p>
+    <blockquote class="bigq"><q>法曰立天元一为内池径加倍至步</q><span class="src">第一问 法曰</span></blockquote>
+    <p class="prose">翻译过来只有一句：设池径为未知数。这就是天元术：在算板上立一个「元」，相当于今天初中课本里的「设 x」。未知数一立，题面里的每个条件都变成它的一条线索，凑出一个只含 x 的方程，开方即得答案。下面的六步，就是第一问走过的全过程。</p>
+    <div class="steps" id="steps">
+      <div class="step on"><q>立天元一为内池径</q><span class="today">设池径为 x</span><span class="alg mono">x</span></div>
+      <div class="step"><q>加倍至步</q><span class="today">至步加倍，便是方边</span><span class="alg mono">40 + x</span></div>
+      <div class="step"><q>以自增乗</q><span class="today">自乘得方田面积</span><span class="alg mono">(40 + x)²</span></div>
+      <div class="step"><q>三因四而一</q><span class="today">古率圆积为方积四分之三</span><span class="alg mono">3x²/4</span></div>
+      <div class="step"><q>与左相消</q><span class="today">移项同类相消，余式两边相等</span><span class="alg mono">2.5x² + 80x = 1700</span></div>
+      <div class="step"><q>开平方得二十步</q><span class="today">开方得池径二十，方边为两倍至步再加池径</span><span class="alg mono">x = 20</span></div>
+    </div>
+    <p class="eqLine">由方积里减去池积，剩下的正是「水占之外」的三千三百步：</p>
+    <p class="eqLine mono">(40 + x)² − ¾x² = 3300，展开并十分之：2.5x² + 80x − 1700 = 0</p>
+    <p id="taiMark"><span class="tai">太</span>天元式里，常数项旁标一枚「太」；「太」之旁，即今之等号右侧。</p>
+    <p class="prose" style="margin-top:30px">四库馆臣在旁边按了一句，把中西算学接上了头。清初西方代数以「借根方」之名传入，宫中学者这才认出：这套被忘记的方法，就是代数。</p>
+    <blockquote class="bigq"><q>按今借根方法即立天元一法详见
+　　御制数理精蕴兹不尽释</q><span class="src">四库馆臣按</span></blockquote>
+  </div>
+</section>
+
+<section id="liushisi" class="paper">
+  <div class="wrap">
+    <div class="kicker">三卷 · 总目</div>
+    <h2 class="st">六十四问，问问是田里挖了池</h2>
+    <p class="prose">砚坚序说原本「大小七十问」，李冶把它演定为六十四题：</p>
+    <blockquote class="bigq"><q>冶以为其蕴犹匿而未发因为之移补条目厘定图式演为六十四题以阐明奥义故踵其原名</q><span class="src">四库提要</span></blockquote>
+    <p class="prose">翻遍全书，没有一问离开田和池：方田含圆池、圆田含方池、直田含直池，还有梯田、环池，乃至「二方夹一圆」。像一位地产测量员的案头卷，也像一本故意只出一种题型的习题集：场景不变，条件每问换个说法，逼你把方法练成本能。点任意一问，看它的原题。</p>
+    <div class="shapebar" id="shapebar"></div>
+    <div id="casePanel"><div class="cv">卷上 · 第一问</div><div class="ct" id="caseText"></div></div>
+    <div class="fin" style="margin-top:44px">
+      <p class="prose">末一问收梢，是全书最繁的一道：方田中心一环池，给出内外两周之差与四角斜线，求内外周与田方。图注里一句话，把「演段」二字说到了底：</p>
+      <blockquote class="bigq"><q>今有方田一叚中心有环池水占之外计地四十七畆二百一十七步只云共环水内周不及外周七十二步</q><span class="src">第六十四问</span></blockquote>
+      <blockquote class="bigq"><q>答曰外周一百八十步　内周一百八步　田方
+　　一百一十五步</q><span class="src">第六十四问 答</span></blockquote>
+      <blockquote class="bigq"><q>其圆环以条
+　　叚命之只是一个方环内
+　　取四分之三也却加入三
+　　叚展起底</q><span class="src">第六十四问 图注</span></blockquote>
+      <p class="prose">库本图注有一「防」字，按文义当为朱字之讹：黑者为原问，朱者为展数，一黑一红两色图式，正是割补移位的两套痕迹。</p>
+    </div>
+  </div>
+</section>
+
+<section id="yanfa" class="paper">
+  <div class="wrap">
+    <div class="kicker">体例 · 四件套</div>
+    <h2 class="st">草、条段、图、义</h2>
+    <p class="prose">每问之下的体例，提要有一句总括：</p>
+    <blockquote class="bigq"><q>其中有草有条段有图有义草即古立天元一法条段即方田少广等法图则绘其加减开方之理义则随图解之</q><span class="src">四库提要</span></blockquote>
+    <div class="fatile">
+      <div class="fat"><b>草</b><span>天元之演，未知数的正式出场</span></div>
+      <div class="fat"><b>条段</b><span>方田少广一路旧法，几何的那一半</span></div>
+      <div class="fat"><b>图</b><span>把加减开方的道理画成图纸</span></div>
+      <div class="fat"><b>义</b><span>逐段解说，每一条杠的道理</span></div>
+    </div>
+    <p class="prose">代数与几何在这里互为表里：天元式算出结果，条段图说明为什么。条段法里最妙的一个词叫「虚隅」，义曰里举了第二问的例子：</p>
+    <blockquote class="bigq"><q>用二分半虚常法者是一个虚方内却有减余圆池补了七分半外欠二分半故以之为虚隅也</q><span class="src">第二问 义曰</span></blockquote>
+    <p class="prose">缺了的补、多余的拼，连方程里那个凑数的常数项，都要在图上给你找出一个看得见的位置。另有一处自我交代，可见作者性格：全书圆周率一律用古率，径一周三，误差不小，按语里说得坦白：</p>
+    <blockquote class="bigq"><q>按法内皆以径一周三方五斜七为率故各靣积分数与宻率不合葢此书専为明理而作宻率数繁碍于讲解故用古率以从简且其法既明即用宻率亦无不可</q><span class="src">第三问后 按</span></blockquote>
+    <div class="duibi">
+      <div class="db h"><span class="tag">天元术 · 代数</span>立一个未知数， 条件尽数化为一式，开方收工。抽象，快，一步到位。</div>
+      <div class="db z"><span class="tag">条段法 · 几何</span>割下来，补过去，每一块面积都看得见。慢，笨，但图上处处是道理。</div>
+    </div>
+  </div>
+</section>
+
+<section id="cangxian">
+  <div class="wrap">
+    <div class="kicker">流传 · 藏与显</div>
+    <h2 class="st">教人别藏私的书，自己被藏了三百年</h2>
+    <div class="tl">
+      <div class="node">
+        <div class="yr">1259<small>蒙古己未年夏</small></div>
+        <p>自序写定。此时元朝尚未建立，落款里的「大元」还是新定的国号。李冶晚年讲学授徒，把心血放在了这部小书和它的姊妹篇测圆海镜上。</p>
+      </div>
+      <div class="node">
+        <div class="yr">1282<small>至元壬午</small></div>
+        <p>测圆海镜先已刻梓，郧城砚坚作序推动此书付刊。他把读新书的体验说得很朴素：</p>
+        <q>辟如登坦途前无滞碍旁蹊曲径自可纵横而通</q>
+        <q>至元壬午仲秋二十六日郧城砚坚序</q>
+      </div>
+      <div class="node">
+        <div class="yr">明中叶<small>十六世纪前后</small></div>
+        <p>书渐渐没了。天元术竟成了无人能识的天书，明代算学名家读测圆海镜，竟不识天元，反过来说原作者卖关子：</p>
+        <q>顾应祥唐顺之等见测圆海镜而不解立天元一法遂谓秘其机以为竒则明之中叶业已散佚</q>
+        <p>一部自称「粗知十百」便可登堂入室的入门书，被当成了藏私的黑话书。</p>
+      </div>
+      <div class="node">
+        <div class="yr">1781<small>乾隆间</small></div>
+        <p>四库馆臣修书，从类书里把全帙辑出，此书复见于世：</p>
+        <q>今检永乐大典尚载有全编特录存之俾复见于世以为筭家之圭臬</q>
+        <p>把方法摊开的教科书，被历史藏了三百年；最后把它捞回来的，是另一部更大的类书。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="shou">
+  <div class="seal">演段</div>
+  <p>四隅归位，水占之外各得其数。<br>一部怕你看不懂的书，值得你慢慢读懂。</p>
+</section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    文本来源：殆知阁简体文库〈益古演段〉（子藏算法部，元 李冶 撰，三卷六十四问，去空白二万九千余字）<br>
+    导读仓库：<a href="https://github.com/robertsong2000/daizhige-daodu">github.com/robertsong2000/daizhige-daodu</a><br>
+    本页引文经脚本与库内文件去标点归一逐字比对通过。<span class="xj">校字记：叚、畆、靣、宻、葢、専、觕、隠、闚、繙、啗、竒、筭、乗皆库本原字，照录；卷下卷首题「益古演叚」为库本原貌；末问图注「防」字按文义疑为朱之讹；库本另有以私制字存录的「传」「展」等字，引文皆避未取；【】内为四库馆臣按语，引文未取。古代文本历经传抄，讹缺在所难免，请以时代眼光读之：书中以市井儿郎与蚩蚩之民称呼平民，语带轻蔑，提要则处处是钦定帝制的语境，皆数百年前观念，今日读之当知其限。</span>
+  </div>
+</footer>
+
+<div id="qb" hidden>
+    <q id="p1" data-v="卷上 第一问">今有方田一段内有圆池水占之外计地一十三亩七分半并不记内圆外方只云从外田楞至内池楞四边各二十步问内圆外方各多少
+　　答曰外田方六十步　内池径二十步</q>
+    <q id="p2" data-v="卷上 第二问">今有方田一段内有圆池水占之外计地一十三亩七分半并不记径面只云从外田南楞通内池北楞四十步问内圆外方各多少
+　　答曰同前</q>
+    <q id="p3" data-v="卷上 第三问">今有方田一段内有圆池水占之外计地一万一千三百二十八歩只云从外田角斜至内池楞各五十二步问靣径外方各多少
+　　答曰外田方一百二十步　内池径六十四步</q>
+    <q id="p4" data-v="卷上 第四问">今有方田一段内有圆池水占之外计地一万一千三百二十八步只云从外田角斜通池径得一百一十六步问靣径外方各多少
+　　答曰外田方一百二十步　内池径六十四步</q>
+    <q id="p5" data-v="卷上 第五问">今有方田一段内有圆池水占之外计地一十三亩二分只云内圆周不及外方周一百六十八步问方圆各多少
+　　答曰外方周二百四十步　内圆周七十二步</q>
+    <q id="p6" data-v="卷上 第六问">今有方田一段内有圆池水占之外计地二千六百七十三步只云内圆周与外方靣数等问各多少答曰外方靣内圆周各五十四步</q>
+    <q id="p7" data-v="卷上 第七问">今有方田一段内有圆池水占之外计地一千三百五十七步只云外方靣不及内池周一十四步问方圆各多少
+　　答曰方靣四十步　圆周五十四步</q>
+    <q id="p8" data-v="卷上 第八问">今有方田一段内有圆池水占之外有地一十三亩七分半只云内外方圆周共相和得三百步问方圆周各多少
+　　答曰外方周二百四十步　内圆周六十步</q>
+    <q id="p9" data-v="卷上 第九问">今有方田一段内有圆池水占之外计地三千一百六十八步只云内外周与实径共相得三百三十步问三事各多少
+　　答曰外方周二百四十步　实径十八步　圆周七十二步</q>
+    <q id="p10" data-v="卷上 第十问">今有方田一段内有圆池水占之外计地三千一百六十八步只云内外方圆周与斜径共相和得三百四十二步问三事各多少
+　　答曰外方周二百四十步　内圆周七十二步
+　　斜三十步</q>
+    <q id="p11" data-v="卷上 第十一问">今有圆田一段内有方池水占之外计地二十五亩余二百四步只云从外田楞至四边各三十二步问外圆内方各多少
+　　答曰外圆径一百步　内方靣三十六步</q>
+    <q id="p12" data-v="卷上 第十二问">今有圆田一段内有方池水占之外有地二十五亩零二百四步只云从外田楞通内方方靣六十八步问各数若干
+　　答曰外圆径一百步内方靣三十六步</q>
+    <q id="p13" data-v="卷上 第十三问">今有圆田一段内有方池水占之外计地五千步只云从外田楞至内池角四边各一十五步问方圆各多少
+　　答曰外圆径一百步　内方靣五十步</q>
+    <q id="p14" data-v="卷上 第十四问">今有圆田一段内有方池水占之外计地三百四十七步只云从田外楞通内池斜三十五步半问外圆内方各多少
+　　答曰外圆径三十六步　内方靣二十五步</q>
+    <q id="p15" data-v="卷上 第十五问">今有圆田一段内有方池水占之外计地三十三亩一百七十六步只云内方周不及外圆周一百五十二步问外圆内方各多少
+　　答曰外圆周三百六十步　内方周二百八步</q>
+    <q id="p16" data-v="卷上 第十六问">今有圆田一段内有方池水占之外计地三千五百六十四步只云内方周与外圆径等问等数各若干答曰内方周外圆径各七十二步</q>
+    <q id="p17" data-v="卷上 第十七问">今有圆田一段内有方池水占之外有地一千六百一十一步只云外圆径不及内方周四十二步问方圆各若干
+　　答曰外圆径五十四步　内方周九十六步</q>
+    <q id="p18" data-v="卷上 第十八问">今有圆田一段内有方池水占之外计地三百四十七步只云外圆周内方周共得二百八步问内外周各多少
+　　答曰外圆周一百八步　内方周一百步</q>
+    <q id="p19" data-v="卷上 第十九问">今有圆田一段内有方池水占之外计地三十三亩一百七十六步只云内外周与实径共相和得六百二步问三事各多少
+　　答曰外圆周三百六十步　内方周二百八步
+　　实径三十四步</q>
+    <q id="p20" data-v="卷上 第二十问">今有圆田一段内有方池水占之外计地二千四百七十五步只云内外周与斜径相和得二百五十九步半问三事各多少
+　　答曰外圆周一百八十步　内方周六十步　斜
+　　十九步半</q>
+    <q id="p21" data-v="卷上 第二十一问">今有方田三段共计积四千七百七十步只云方方相较等三方靣共并得一百八步问三方多少
+　　答曰大方靣五十七步　中方靣三十六步　小
+　　方靣一十五步</q>
+    <q id="p22" data-v="卷上 第二十二问">今有方田一段其西北隅被斜水占之外计地一千二百一十二步七分半只云从田东南隅至水楞四十五步半问田方靣多少
+　　答曰田方靣三十五步</q>
+    <q id="p23" data-v="卷中 第二十三问">今有圆方田各为叚共计积一千三百七步半只云方面大如圆径一十步圆依密率问面径各多少答曰方面三十一步　圆径二十一步</q>
+    <q id="p24" data-v="卷中 第二十四问">今有方圆田合一叚共计积一千四百六十七步只云方面与圆径相穿得五十四步问面径各多少答曰方面一十二步　圆径四十二步</q>
+    <q id="p25" data-v="卷中 第二十五问">今有方圆田各一叚共计积一千三百七步半只云方周大如圆周五十八步问方圆各多少【圆依密率】
+　　答曰方周一百二十四步　圆周六十六步</q>
+    <q id="p26" data-v="卷中 第二十六问">今有方圆田各一叚共计一千四百五十六步只云方周大如圆周方圆周共相和得二百步问二周各多少答曰方周一百二十八步　圆周七十二步</q>
+    <q id="p27" data-v="卷中 第二十七问">今有方圆田各一叚共计积二千二百八十六步只云方面不及圆径一十二步圆依密率问面径各多少答曰方面三十步　圆径四十二步</q>
+    <q id="p28" data-v="卷中 第二十八问">今有方圆田各一叚共计积二千二百八十六步只云方周不及圆周一十二步问周各若干【圆依密率】
+　　答曰方周一百二十步　圆周一百三十二步</q>
+    <q id="p29" data-v="卷中 第二十九问">今有方圆田各一叚共计积一千四百四十三步只云圆周大如方周方圆周并得一百九十八步问二周各多少
+　　答曰方周九十六步　圆周一百二步</q>
+    <q id="p30" data-v="卷中 第三十问">今有圆田二叚【一叚依圆三径一率一叚依密率】共积六百六十一步只云二径共相和得四十步问二径各数
+　　答曰密径一十四步　古径二十六步</q>
+    <q id="p31" data-v="卷中 第三十一问">今有直田一叚中心有圆池水占之外计地三千九百二十四步只云从外田角斜通内池径七十一步外田阔不及长九十四步问三事各多少
+　　答曰圆池径一十二步　田长一百二十六步
+　　阔三十二步</q>
+    <q id="p32" data-v="卷中 第三十二问">今有圆田一叚中心直池水占之外计地五千三百二十四步只云并内池长阔与外圆径等内池阔不及长三十六步问三事各多少
+　　答曰外田径一百步　内池长六十八步　濶三
+　　十二步</q>
+    <q id="p33" data-v="卷中 第三十三问">今有圆田一叚中心有直池水占之外计地七千三百步只云并内池长濶少田径五十五步阔不及长三十五步问三事各多少
+　　答曰田径一百步　内池长四十步　阔五步</q>
+    <q id="p34" data-v="卷中 第三十四问">今有圆田一叚内有直池水占之外计地六千步只云従内池四角斜至田楞各一十七步半其池阔不及长三十五步问三事各若干
+　　答曰圆田径一百步　池长六十步　濶二十五
+　　步</q>
+    <q id="p35" data-v="卷中 第三十五问">今有圆田一叚中心有直池水占之外计地五千七百六十步只云从外田东南楞至内池西北角通斜一百一十三步其内池阔不及长三十四步问三事各多少
+　　答曰外圆田径一百二十步　池长九十步　阔
+　　五十六步</q>
+    <q id="p36" data-v="卷中 第三十六问">今有圆田一叚中心有直池水占之外计地六千步只云従内池四角斜至田楞各一十七步半其内池长阔共相和得八十五步问三事各多少
+　　答曰外田径一百步　池长六十步　阔二十五
+　　步</q>
+    <q id="p37" data-v="卷中 第三十七问">今有圆田一叚中心有直池水占之外计地九千一百二十步只云従外田楞通内池斜一百一十六步半其内池长阔共相和得一百二十七步问三事各多少
+　　答曰圆田径一百二十步池长一百一十二步
+　　阔一十五步</q>
+    <q id="p38" data-v="卷中 第三十八问">今有水旱田各一叚共计积二千六百二十五步只云水田长阔共一百步其旱地阔不及长三十五步而不及水地阔十步问水旱地长阔各若干
+　　答曰水地长七十五步　阔二十五步　旱地长
+　　五十步　阔一十五步</q>
+    <q id="p39" data-v="卷中 第三十九问">今有直田一叚内有圆池水占之外计地三十九畆一分半只云従田两头至池各一百五步两畔至池各九步问三事各多少
+　　答曰田长二百三十四步　阔四十二步　池径
+　　二十四步</q>
+    <q id="p40" data-v="卷中 第四十问">今有直田一叚中心有圆池水占之外计地四亩五十三步只云外田长平和得七十六步太半步従田四角去池楞各一十八步问外田水池径各多少答曰田长五十步　阔二十六步太　池径二十
+　　步太</q>
+    <q id="p41" data-v="卷中 第四十一问">今有直田一叚中心有圆池水占之外计地三千九百二十四步只云従外田角斜通池径七十一步外田长阔相和得一百五十八步问三事各多少
+　　答曰圆径十二步　田长一百二十六步　阔三十二步</q>
+    <q id="p42" data-v="卷中 第四十二问">今有直田一叚中心有圆池水占之外计地一万八百步只云从外田角至水池楞六十五步其外田阔不及长七十步问二事各多少
+　　答曰田长一百五十步　阔八十步　圆池径四
+　　十步</q>
+    <q id="p43" data-v="卷下 第四十三问">今有圆田三叚【一依古法一依宻率一依徽率】共计地二十畆五十二步一百七十五分步之二十三只云宻径多于古径九步徽径多于宻径九步问三径各多少
+　　答曰古径三十六歩　宻径四十五步　徽径五
+　　十四步</q>
+    <q id="p44" data-v="卷下 第四十四问">今有梯田一叚长二百四十步并不知东西两濶只云从东头截长五十步计地三畆从西头截长三十步计地五畆问二濶各多少
+　　答曰东头元濶一十一步二分　西头元濶四十
+　　一步九分二厘</q>
+    <q id="p45" data-v="卷下 第四十五问">今有方田一叚中心有方田池占之外计地一畆只云从外田东南隅至内池西南隅一十三步问内外田方各多少
+　　答曰内池方七步　外田方一十七步</q>
+    <q id="p46" data-v="卷下 第四十六问">今有方圆田各一叚共计积一百二十七步只云其方面大如圆径圆径穿方斜共得二十步问面径各多少
+　　答曰方面一十步　圆径六步</q>
+    <q id="p47" data-v="卷下 第四十七问">今有直田一叚中心有小方池结角占之外计地二千七十九步只云从田二头至池角二十一步半两邉至池角七步半问三事各多少
+　　答曰长六十四步　濶三十六步　池方一十五步</q>
+    <q id="p48" data-v="卷下 第四十八问">今有方田一叚内有直池水占之外有地三百四十步只云其池广不及长四步又云从田楞通池长一十五步问三事各多少
+　　答曰田方二十步　内池长一十步　广六步</q>
+    <q id="p49" data-v="卷下 第四十九问">今有方田一叚内有小方池结角占之外计地一万八百步只云从外田楞至内池角各一十八步问内外方各多少
+　　答曰外田方一百二十步　内池方六十步</q>
+    <q id="p50" data-v="卷下 第五十问">今有方田一叚自有小方池结角占之外计地九千三百七十五步只云从外方角至内池面各五十七步半问内外方各多少
+　　答曰外田方一百步　内池方二十五步</q>
+    <q id="p51" data-v="卷下 第五十一问">今有方田一叚内有小方池结角占之外计地四十五畆只云从外田南邉斜通池北角一百二步问内外方各多少
+　　答曰外田方一百二十步　内池方六十步</q>
+    <q id="p52" data-v="卷下 第五十二问">今有方田一叚内有方池结角占之外计地三十九畆零一十五步只云从田东南角至内池西北面八十二步半问内外方面各多少
+　　答曰外田方面一百步　内池方面二十五步</q>
+    <q id="p53" data-v="卷下 第五十三问">今有方田一叚内有直池结角占之外计地八百五十步只云从田角通水长三十七步通水濶三十二步问三事各数
+　　答曰池长二十五步　濶一十五步　外田方三十
+　　五步</q>
+    <q id="p54" data-v="卷下 第五十四问">今有方田一叚内有直池结角占之外计地一千一百五十步只云从田角至水两头各一十四步至水两邉各一十九步问三事各多少
+　　答曰方四十五步　池长三十五步　濶二十五
+　　步</q>
+    <q id="p55" data-v="卷下 第五十五问">今有圆田一叚内有圆池水占之外计地二十三畆一分只云内外周径共相和得四百二十四步问内外周径各多少【图依宻率】
+　　答曰外周二百八十六步径九十一步　内周一百一十步径三十五步　实径二十八步</q>
+    <q id="p56" data-v="卷下 第五十六问">今有圆田一叚内有圆池水占之外计地二十三畆一分只云从外田通内池径六十三步问同前
+　　答同前</q>
+    <q id="p57" data-v="卷下 第五十七问">今有圆田一叚内有直池水占之外计地八千七百四十四步只云两头至田楞各二十一步两畔至田楞各四十五步问三事各数
+　　答曰田径一百二十四步　池长八十二步　濶
+　　三十四歩</q>
+    <q id="p58" data-v="卷下 第五十八问">今有圆田一叚内有直池占之外计地一千五百八十七步只云从田楞通地长四十二步通地濶三十七步问三事各数
+　　答曰田径五十四步　池长三十步　濶二十步</q>
+    <q id="p59" data-v="卷下 第五十九问">今有二方夹一圆失却圆水占外有田积一十一畆五分五厘其方圆相去重重径等问方圆各多少答曰内方面一十二步　圆径三十六步　外方
+　　面六十步</q>
+    <q id="p60" data-v="卷下 第六十问">今有二圆夹一方失却中方水占外有田积一十四畆一分七厘半其方圆相去重重径等问方圆各几何答曰内圆径一十八步　方面五十四步　外圆径九十步</q>
+    <q id="p61" data-v="卷下 第六十一问">今有方田一叚靠西北隅有圆池水占之外计地九百二十五步只云从外田东南隅至池楞二十五步问面径各多少
+　　答曰外田方面三十五步　内池径二十步</q>
+    <q id="p62" data-v="卷下 第六十二问">今有方田二叚靠西北隅有方池结角占外计地四畆一十五步只云从田东南隅斜至水方面一十九步问内外面各多少
+　　答曰外方面四十步　内方面二十五步</q>
+    <q id="p63" data-v="卷下 第六十三问">今有大圆田一叚大小方田二叚其小方田内有圆池水占之外共计积六万一千三百步只云小方田面至池楞三十步大方田面多于小方田面五十步其圆田径又多于大方田面五十步问四事各多少答曰小方田面一百步　池径四十步　大方田
+　　面一百五十步　圆田径二百步</q>
+    <q id="p64" data-v="卷下 第六十四问">今有方田一叚中心有环池水占之外计地四十七畆二百一十七步只云共环水内周不及外周七十二步又从田四角至水各五十步半问内外周及田方方各多少
+　　答曰外周一百八十步　内周一百八步　田方
+　　一百一十五步</q>
+</div>
+
+<script>
+(function () {
+  var NU = ['','一','二','三','四','五','六','七','八','九'];
+  function cn(n) {
+    if (n < 10) return NU[n];
+    if (n < 20) return '十' + (n % 10 ? NU[n % 10] : '');
+    return NU[Math.floor(n / 10)] + '十' + (n % 10 ? NU[n % 10] : '');
+  }
+  var STAR = {1:1, 22:1, 32:1, 59:1, 64:1};
+  var bar = document.getElementById('shapebar');
+  var qs = document.querySelectorAll('#qb q');
+  var caseV = document.querySelector('#casePanel .cv');
+  var caseT = document.getElementById('caseText');
+  function outerInner(t) {
+    if (t.indexOf('环池') > -1) return '环池';
+    var o = '田', i = '';
+    if (t.indexOf('方圆田') > -1) o = '方圆';
+    else if (t.indexOf('圆田') > -1) o = '圆';
+    else if (t.indexOf('直田') > -1) o = '直';
+    else if (t.indexOf('梯田') > -1) return '梯田';
+    else if (t.indexOf('二方夹一圆') > -1) return '二方夹圆';
+    else if (t.indexOf('水旱田') > -1) return '水旱田';
+    else if (t.indexOf('方田三段') > -1) return '三方';
+    else o = '方';
+    if (t.indexOf('直池') > -1) i = '直池';
+    else if (t.indexOf('圆池') > -1 || t.indexOf('圆水') > -1) i = '圆池';
+    else if (t.indexOf('方池') > -1 || t.indexOf('方田池') > -1) i = '方池';
+    return i ? o + '含' + i : o + '田';
+  }
+  function show(k) {
+    var q = document.getElementById('p' + k);
+    caseV.textContent = q.getAttribute('data-v');
+    caseT.textContent = q.textContent;
+    document.querySelectorAll('.chip').forEach(function (c) {
+      c.classList.toggle('on', +c.dataset.k === k);
+    });
+  }
+  qs.forEach(function (q, idx) {
+    var k = idx + 1;
+    var b = document.createElement('button');
+    b.className = 'chip' + (STAR[k] ? ' star' : '');
+    b.textContent = cn(k) + '·' + outerInner(q.textContent);
+    b.dataset.k = k;
+    b.addEventListener('click', function () { show(k); });
+    bar.appendChild(b);
+  });
+  show(1);
+
+  var steps = document.querySelectorAll('#steps .step');
+  steps.forEach(function (st, i) {
+    st.addEventListener('click', function () {
+      steps.forEach(function (s2, j) { s2.classList.toggle('on', j <= i); });
+    });
+  });
+
+  var hero = document.getElementById('hero');
+  var MV = {
+    cTL: 'translate(-60px, 430px) scale(0.42) rotate(-4deg)',
+    cTR: 'translate(-153px, 430px) scale(0.42) rotate(3deg)',
+    cBL: 'translate(153px, 230px) scale(0.42) rotate(2deg)',
+    cBR: 'translate(60px, 230px) scale(0.42) rotate(-3deg)'
+  };
+  function setMode(on) {
+    hero.classList.toggle('evolved', on);
+    ['cTL','cTR','cBL','cBR'].forEach(function (id, i) {
+      var p = document.getElementById(id).querySelector('path');
+      p.style.transform = on ? MV[id] : '';
+    });
+  }
+  document.getElementById('btnYan').addEventListener('click', function () { setMode(true); });
+  document.getElementById('btnYuan').addEventListener('click', function () { setMode(false); });
+  document.querySelectorAll('#heroSvg .corner path').forEach(function (p) {
+    p.addEventListener('click', function () { setMode(!hero.classList.contains('evolved')); });
+  });
+})();
+</script>
+</body>
+</html>
