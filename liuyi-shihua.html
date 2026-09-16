@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>六一诗话 | 殆知阁古籍导读</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#1e1c19; --paper:#e8e4dc; --paper-dim:#d8d2c5;
+  --stone:#5e8fbb; --stone-deep:#3c5f80; --seal:#c0453c;
+  --dim:#9a9486; --faint:#615c52; --line:#33302a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;line-height:2;font-size:16px}
+a{color:var(--stone);text-decoration:none}
+.wrap{max-width:940px;margin:0 auto;padding:0 22px}
+q{quotes:none}
+q::before{content:"「"}
+q::after{content:"」"}
+q.bare::before,q.bare::after{content:""}
+/* 顶栏 */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:60;height:3px;background:#000}
+#pbar{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--stone-deep),var(--stone))}
+/* 首屏 */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;text-align:center;padding:70px 20px 40px}
+#glow{position:absolute;left:50%;top:56%;width:640px;height:640px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(232,196,120,.16),rgba(232,196,120,.05) 42%,transparent 68%);opacity:0;transition:opacity 1.6s ease .2s;pointer-events:none}
+body.lit #glow{opacity:1}
+.kick{color:var(--faint);font-size:13px;letter-spacing:6px;margin-bottom:6px}
+.kick2{color:var(--dim);font-size:14px;letter-spacing:3px;margin-bottom:34px}
+.kick2 b{color:var(--stone);font-weight:normal}
+#lampBtn{background:none;border:none;cursor:pointer;display:block;margin:0 auto}
+#lampBtn svg{display:block}
+#lampBtn:focus-visible{outline:1px dashed var(--dim);outline-offset:6px}
+#flame{opacity:0;transform-origin:50% 100%;transform:scale(.2)}
+body.lit #flame{opacity:1;animation:flick 2.2s ease-in-out infinite}
+@keyframes flick{0%,100%{transform:scale(1) skewX(0)}30%{transform:scale(1.06,.95) skewX(1.6deg)}55%{transform:scale(.94,1.08) skewX(-1.8deg)}80%{transform:scale(1.03,.97) skewX(.8deg)}}
+#lampHint{color:var(--faint);font-size:13px;letter-spacing:5px;margin-top:14px;transition:opacity .6s}
+body.lit #lampHint{opacity:0}
+#xu{max-width:560px;margin:26px auto 0;opacity:0;transform:translateY(14px);transition:opacity 1s ease .7s,transform 1s ease .7s}
+body.lit #xu{opacity:1;transform:none}
+.qblock{display:block;background:var(--paper);color:#26231e;padding:16px 24px;font-size:17px;letter-spacing:1px;text-align:left}
+.qn{display:block;background:var(--paper);color:#26231e;padding:12px 20px;font-size:15px;letter-spacing:.5px;text-align:left}
+.src{display:block;color:#7a7263;font-size:12.5px;letter-spacing:2px;text-align:right;margin-top:5px}
+.ju{margin:16px 0}
+/* 首屏书名 */
+#nameRow{display:flex;align-items:flex-start;justify-content:center;gap:34px;margin-top:34px;opacity:0;transition:opacity 1.1s ease 1.3s}
+body.lit #nameRow{opacity:1}
+#bookName{writing-mode:vertical-rl;font-size:62px;font-weight:normal;letter-spacing:22px;height:400px;color:var(--paper);text-shadow:0 0 26px rgba(232,196,120,.25)}
+#bookName span{display:inline-block;opacity:0;transform:translateY(-8px);transition:opacity .7s ease,transform .7s ease}
+body.lit #bookName span{opacity:1;transform:none}
+body.lit #bookName span:nth-child(1){transition-delay:1.5s}
+body.lit #bookName span:nth-child(2){transition-delay:1.75s}
+body.lit #bookName span:nth-child(3){transition-delay:2s}
+body.lit #bookName span:nth-child(4){transition-delay:2.25s}
+#sideCol{display:flex;flex-direction:column;align-items:center;gap:16px;padding-top:8px}
+.byline{writing-mode:vertical-rl;color:var(--dim);font-size:15px;letter-spacing:8px;height:230px}
+.seal{writing-mode:vertical-rl;border:2px solid var(--seal);color:var(--seal);font-size:19px;letter-spacing:6px;padding:12px 7px;border-radius:3px;opacity:0;transform:rotate(-4deg) scale(1.5)}
+body.lit .seal{opacity:1;transform:rotate(-4deg) scale(1);transition:opacity .4s ease 2.6s,transform .35s ease 2.6s}
+#introNote{color:var(--dim);font-size:14.5px;max-width:620px;margin-top:30px;opacity:0;transition:opacity 1s ease 2.4s}
+body.lit #introNote{opacity:1}
+#sheng{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:26px;opacity:0;transition:opacity 1s ease 2.9s}
+body.lit #sheng{opacity:1}
+.shq{background:var(--ink2);border:1px solid var(--line);padding:10px 18px;font-size:14.5px;color:var(--paper-dim)}
+.shq i{font-style:normal;color:var(--stone);font-size:12px;letter-spacing:2px;margin-right:10px}
+.shq q{border-left:none;background:none;padding:0}
+/* 正文各话 */
+.sec{padding:78px 0 66px;border-top:1px solid var(--line);opacity:0;transform:translateY(16px);transition:opacity .9s ease,transform .9s ease}
+.sec.in{opacity:1;transform:none}
+.grid{display:grid;grid-template-columns:112px 1fr;gap:38px;align-items:start}
+.rail{position:sticky;top:84px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.railNo{color:var(--stone);border:1px solid var(--stone-deep);font-size:13px;letter-spacing:4px;padding:8px 6px;writing-mode:vertical-rl}
+.railTi{writing-mode:vertical-rl;font-size:24px;letter-spacing:12px;color:var(--paper)}
+.railLine{width:1px;height:64px;background:var(--line)}
+.body h3{font-size:13px;color:var(--stone);letter-spacing:5px;font-weight:normal;margin-bottom:18px}
+.hua{color:#cdc7ba;font-size:15.5px;margin:14px 0}
+.hua b{color:var(--paper);font-weight:normal}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.duo .ju{margin:0}
+.fu{display:inline-block;background:var(--ink2);border:1px solid var(--line);color:var(--dim);font-size:12.5px;letter-spacing:2px;padding:3px 12px;margin:10px 8px 0 0}
+.fu.zhu{color:var(--seal);border-color:#5c2e29}
+/* 补字局 */
+#buJu{background:var(--ink2);border:1px solid var(--line);padding:26px 24px;margin:20px 0}
+.puz{font-size:38px;letter-spacing:10px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.puz q{background:none;padding:0;color:var(--paper)}
+.slot{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border:1.5px dashed var(--faint);color:var(--seal);font-size:36px}
+#buJu.solved .slot{border-style:solid;border-color:var(--seal)}
+.cands{display:flex;gap:14px;justify-content:center;margin-top:22px}
+.cand{width:52px;height:52px;font-size:26px;font-family:inherit;background:var(--paper);color:#26231e;border:none;cursor:pointer;position:relative;transition:transform .15s}
+.cand:hover{transform:translateY(-3px)}
+.cand.miss{background:#3a352e;color:#7d7668;cursor:default;transform:none}
+.cand.miss::after{content:"不到";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-14deg);border:1.5px solid var(--seal);color:var(--seal);font-size:13px;letter-spacing:2px;padding:2px 5px;background:rgba(25,25,23,.85)}
+.buNote{display:none;margin-top:18px}
+#buJu.solved .buNote{display:block;animation:rise .8s ease}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.buNote .qn{margin:10px 0 0}
+/* 禁字纸 */
+#fPaper{background:var(--paper);color:#26231e;padding:24px 20px;margin:20px 0;position:relative}
+#fPaper::before{content:"约";position:absolute;right:14px;top:12px;border:1.5px solid var(--seal);color:var(--seal);font-size:15px;padding:3px 7px;transform:rotate(6deg)}
+#fChips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.fchip{width:46px;height:46px;font-size:22px;font-family:inherit;background:var(--ink2);color:var(--paper);border:none;cursor:pointer;position:relative}
+.fchip:hover{background:#2c2925}
+.fchip.on{color:#8b857a;background:#403a33;cursor:default}
+.fchip.on::after{content:"禁";position:absolute;right:-5px;top:-7px;border:1.5px solid var(--seal);background:var(--ink);color:var(--seal);font-size:11px;padding:1px 3px;transform:rotate(8deg)}
+.fmeta{text-align:center;color:#7a7263;font-size:13px;letter-spacing:2px;margin-top:12px}
+#biDao{display:block;margin:14px auto 0;width:120px;opacity:0;transform:rotate(0deg);transform-origin:80% 90%;transition:transform 1.2s cubic-bezier(.6,-0.2,.4,1.4),opacity .5s}
+#biDao.fall{opacity:1;transform:rotate(64deg) translateY(8px)}
+#geBi{display:none;text-align:center;margin-top:8px}
+#geBi.show{display:block;animation:rise .8s ease}
+#geBi .qn{display:inline-block}
+/* 失猫 */
+#maoWrap{position:relative;margin:20px 0}
+#maoPoem{cursor:pointer}
+#maoPoem::after{content:"点它";position:absolute;right:10px;bottom:8px;color:#a89f8d;font-size:12px;letter-spacing:3px;opacity:.75}
+#maoBox{position:absolute;left:-6px;top:-46px;width:78px;opacity:0;transform:translateY(26px);transition:all .7s ease;pointer-events:none}
+#maoBox.peek{opacity:1;transform:translateY(0) rotate(-6deg)}
+#maoSay{display:none;margin-top:14px}
+#maoWrap.peeked #maoSay{display:block;animation:rise .8s ease}
+/* 谶 */
+.chen{display:none;background:var(--ink2);border-left:3px solid var(--stone-deep);padding:14px 20px;margin:12px 0;align-items:center;gap:16px}
+.chen.show{display:flex;animation:rise .7s ease}
+.chen .cno{flex:none;color:var(--faint);font-size:13px;letter-spacing:2px;writing-mode:vertical-rl}
+.chen .ju{flex:1;margin:0}
+.chen .ju q{margin:0}
+.chen .ju q + q{margin-top:10px}
+.chen.zhu{border-left-color:var(--seal)}
+.chen.zhu .qn{background:none;color:var(--seal);font-size:19px;padding:0}
+#chenBtn{margin-top:14px}
+.act{font-family:inherit;background:none;border:1px solid var(--stone-deep);color:var(--stone);font-size:14px;letter-spacing:4px;padding:8px 22px;cursor:pointer}
+.act:hover{background:rgba(94,143,187,.12)}
+.act.done{opacity:.35;cursor:default}
+/* 骡 */
+#luoBand{background:#121110;border:1px solid var(--line);margin:26px 0 8px;padding:20px 18px 14px;position:relative;overflow:hidden}
+#luoBtn{margin:0 auto;display:block}
+#luoSvg{display:block;width:min(420px,90%);margin:6px auto 0}
+#luoSvg .mule{opacity:0}
+#luoBand.go #luoSvg .mule{animation:ride 3.4s linear forwards}
+@keyframes ride{0%{opacity:0;transform:translateX(-120px)}12%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translateX(120px)}}
+#luoAfter{display:none;margin-top:6px}
+#luoBand.go #luoAfter{display:block;animation:rise .9s ease .8s both}
+/* 尾屏 */
+#zhuba{padding:90px 0 70px;border-top:1px solid var(--line);text-align:center}
+#zhuLamp svg{display:block;margin:0 auto}
+#zhuFlame{transform-origin:50% 100%;transition:opacity 1.6s ease,transform 1.6s ease}
+#zhuba.out #zhuFlame{opacity:0;transform:scale(.3) translateY(3px)}
+#smoke{opacity:0}
+#zhuba.out #smoke{opacity:1;animation:smokeUp 4s ease-out .9s infinite}
+@keyframes smokeUp{0%{opacity:0;transform:translateY(6px)}25%{opacity:.55}100%{opacity:0;transform:translateY(-30px)}}
+#shui{margin:22px auto 0;max-width:520px}
+#shui .qn{font-size:19px;padding:16px 26px}
+.endHua{color:var(--dim);font-size:15px;max-width:640px;margin:20px auto;text-align:left}
+.endHua q{background:none;padding:0;color:var(--paper)}
+.bigClose{color:var(--paper);font-size:19px;letter-spacing:2px;margin:34px auto 8px;max-width:560px}
+.bigClose .qn{background:none;text-align:center;color:var(--paper-dim);font-size:19px;padding:0}
+.endSeal{margin-top:26px;display:inline-block}
+footer.page{border-top:1px solid var(--line);padding:34px 0 54px;color:var(--faint);font-size:13px;line-height:2.1}
+footer.page a{color:var(--dim)}
+@media (max-width:760px){
+  .grid{grid-template-columns:1fr;gap:20px}
+  .rail{position:static;flex-direction:row;justify-content:flex-start}
+  .railNo,.railTi,.byline{writing-mode:horizontal-tb;height:auto}
+  .railTi{letter-spacing:8px}
+  .byline{letter-spacing:4px;height:auto}
+  .railLine{width:44px;height:1px}
+  #bookName{font-size:46px;letter-spacing:14px;height:260px}
+  .duo{grid-template-columns:1fr}
+  #nameRow{gap:20px}
+}
+</style>
+</head>
+<body>
+<div id="topbar"><span id="pbar"></span></div>
+
+<!-- 首屏：掌灯 -->
+<header id="hero">
+  <div id="glow"></div>
+  <p class="kick">殆知阁古籍导读</p>
+  <p class="kick2">卷二百一十 <b>·</b> 资闲谈</p>
+  <button id="lampBtn" aria-label="点灯">
+    <svg width="190" height="230" viewBox="0 0 190 230" fill="none" aria-hidden="true">
+      <g stroke="#4a453c" stroke-width="2.5" fill="none">
+        <ellipse cx="95" cy="176" rx="62" ry="15"/>
+        <path d="M52 176 q-16 3 -14 12 q34 14 114 0 q2 -9 -14 -12"/>
+        <path d="M95 176 v-58"/>
+        <path d="M78 122 q17 12 34 0"/>
+      </g>
+      <line x1="95" y1="122" x2="95" y2="106" stroke="#8a8172" stroke-width="3.4" stroke-linecap="round"/>
+      <path id="flame" d="M95 104 q13 -14 6 -30 q-3 8 -9 11 q-4 8 -3 14 q2 5 6 5 z" fill="#e8c478"/>
+      <ellipse cx="95" cy="212" rx="46" ry="5" stroke="#2b2822" stroke-width="2" fill="none"/>
+    </svg>
+  </button>
+  <p id="lampHint">点 灯</p>
+
+  <div id="xu">
+    <div class="ju">
+      <q class="qblock">居士退居汝阴，而集以资闲谈也。</q>
+      <span class="src">全书自序，仅此一句</span>
+    </div>
+  </div>
+
+  <div id="nameRow">
+    <div id="sideCol">
+      <span class="byline">宋 欧阳修 撰</span>
+      <span class="seal">资闲谈</span>
+    </div>
+    <h1 id="bookName"><span>六</span><span>一</span><span>诗</span><span>话</span></h1>
+  </div>
+
+  <p id="introNote">中国第一部诗话的自序，只有这么一句。欧阳修晚年退居汝阴，把一辈子诗坛上的见闻、玩笑、官司与感慨记成二十八条，不立纲领，只供闲谈。诗话这一体，就从这盏灯下亮起来。</p>
+
+  <div id="sheng">
+    <span class="shq"><i>京师</i><q>卖花担上看桃李，拍酒楼头听管弦。</q></span>
+    <span class="shq"><i>西京</i><q>正梦寐中行十里，不言语处吃三杯。</q></span>
+    <span class="shq"><i>评</i><q>其语虽浅近，皆两京之实事也。</q></span>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- 话一：补一字 -->
+<section class="sec">
+  <div class="grid">
+    <aside class="rail"><span class="railNo">第一话</span><span class="railTi">补一字</span><span class="railLine"></span></aside>
+    <div class="body">
+      <h3>一句诗缺了一个字，满座名士各补各的</h3>
+      <p class="hua">北宋人读杜甫，手头常是残本。一次<b>陈从易</b>得到一部旧杜集，读到〈送蔡都尉〉，有句诗缺了末字。他把朋友请来，一人补一个字，谁也说服不了谁。你也来试试。</p>
+      <div id="buJu">
+        <div class="puz">
+          <q class="bare">身轻一鸟</q><span class="slot" id="slot"></span>
+        </div>
+        <div class="cands">
+          <button class="cand">疾</button>
+          <button class="cand">落</button>
+          <button class="cand">起</button>
+          <button class="cand">下</button>
+        </div>
+        <div class="buNote">
+          <q class="qblock">其后得一善本，乃是「身轻一鸟过」。</q>
+          <q class="qn">陈公时偶得杜集旧本，文多脱误，至《送蔡都尉》诗云「身轻一鸟」，其下脱一字。陈公因与数客各用一字补之，或云「疾」，或云「落」，或云「起」，或云「下」，莫能定。</q>
+          <p class="hua">四个字都是好字，四个字全不对。一个<b>过</b>字，写尽身手轻捷掠过之态。</p>
+          <q class="qblock">陈公叹服，以为虽一字，诸君亦不能到也。</q>
+        </div>
+      </div>
+      <p class="hua">一字之差，差在眼力。同书里的<b>周朴</b>更极端，人称他做诗：</p>
+      <div class="ju">
+        <q class="qblock">月锻季炼，未及成篇，已播人口。</q>
+        <span class="src">时人称朴诗</span>
+      </div>
+      <div class="duo">
+        <q class="qblock">风暖鸟声碎，日高花影重。</q>
+        <q class="qblock">晓来山鸟闹，雨过杏花稀。</q>
+      </div>
+      <p class="hua">磨一个月出一联，联联是佳句。可惜集子没传下来，欧阳修少年时还见过全本，后来只剩这几联残句。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 话二：论两联 -->
+<section class="sec">
+  <div class="grid">
+    <aside class="rail"><span class="railNo">第二话</span><span class="railTi">论两联</span><span class="railLine"></span></aside>
+    <div class="body">
+      <h3>灯下对谈，立了千年诗论的底子</h3>
+      <p class="hua">书里真正的座上宾是<b>梅尧臣</b>，字圣俞。欧阳修记下他的两段话，后世论诗的底子多半在这里。</p>
+      <div class="ju">
+        <q class="qblock">诗家虽率意，而造语亦难。若意新语工，得前人所未道者，斯为善也。必能状难写之景，如在目前；含不尽之意，见于言外，然后为至矣。</q>
+        <span class="src">圣俞对欧阳修说的原话</span>
+      </div>
+      <p class="hua">他举三联作比较：</p>
+      <div class="duo">
+        <div class="ju">
+          <q class="qblock">竹笼拾山果，瓦瓶担石泉。</q>
+          <span class="src">贾岛</span>
+        </div>
+        <div class="ju">
+          <q class="qblock">马随山鹿放，鸡逐野禽栖。</q>
+          <span class="src">姚合</span>
+        </div>
+      </div>
+      <div class="duo">
+        <div class="ju">
+          <q class="qblock">县古槐根出，官清马骨高。</q>
+          <span class="src">圣俞以为此联为工</span>
+        </div>
+      </div>
+      <p class="hua">前两联写山城小县的冷清，字字有着落；第三联不着一个穷字，穷相全从槐根与马骨里透出来。欧阳修追问：怎样的诗算「如在目前」，算「见于言外」？圣俞各举一例：</p>
+      <div class="duo">
+        <div class="ju">
+          <span class="fu">如在目前</span>
+          <q class="qblock">柳塘春水慢，花坞夕阳迟。</q>
+          <span class="src">严维</span>
+          <q class="qn">则天容时态，融和骀荡，岂不如在目前乎？</q>
+        </div>
+        <div class="ju">
+          <span class="fu zhu">见于言外</span>
+          <q class="qblock">鸡声茅店月，人迹板桥霜。</q>
+          <span class="src">温庭筠</span>
+          <q class="qn">则道路辛苦，羁愁旅思，岂不见于言外乎？</q>
+        </div>
+      </div>
+      <p class="hua">十个字没有一个人字，赶路人全在字外面。同一问下还配了一联：</p>
+      <div class="ju">
+        <q class="qblock">怪禽啼旷野，落日恐行人。</q>
+        <span class="src">贾岛</span>
+      </div>
+      <p class="hua">这段对谈之外还有个注脚：宰相<b>晏殊</b>偏偏最爱圣俞自己不看重的两联，圣俞只好自嘲，是不是大人恰好在句子里得了自己的意。欧阳修由此记下一句叹息：</p>
+      <q class="qblock">乃知自古文士，不独知己难得，而知人亦难也。</q>
+    </div>
+  </div>
+</section>
+
+<!-- 话三：谶一言 -->
+<section class="sec">
+  <div class="grid">
+    <aside class="rail"><span class="railNo">第三话</span><span class="railTi">谶一言</span><span class="railLine"></span></aside>
+    <div class="body">
+      <h3>酒席上一句玩笑，句句应验</h3>
+      <p class="hua">先交代背景。唐末诗人<b>郑谷</b>，诗集叫〈云台编〉，官至都官郎中，世人记不住名字，只管他的诗叫郑都官诗。因为浅白好懂，还被拿去教小孩认诗：</p>
+      <q class="qblock">以其易晓，人家多以教小儿，余为儿时犹诵之。</q>
+      <p class="hua">两百年后，梅圣俞晚年也做到都官。一天在欧阳修家喝酒，宾客<b>刘原父</b>忽然开了句玩笑。逐条点开，看它怎么一步步应验。</p>
+      <button class="act" id="chenBtn">开 谶</button>
+      <div class="chen"><span class="cno">一</span><div class="ju"><q class="qn">刘原父戏之曰：「圣俞官必止于此。」坐客皆惊。</q></div></div>
+      <div class="chen"><span class="cno">二</span><div class="ju"><q class="qn">昔有郑都官，今有梅都官也。</q><q class="qn">圣俞颇不乐。</q></div></div>
+      <div class="chen"><span class="cno">三</span><div class="ju"><q class="qn">未几，圣俞病卒。</q><q class="qn">余为序其诗为《宛陵集》，而今人但谓之「梅都官诗」。</q></div></div>
+      <div class="chen zhu"><span class="cno">四</span><div class="ju"><q class="qn">一言之谑，后遂果然，斯可叹也！</q></div></div>
+      <p class="hua">序里明明题着宛陵集，世人偏只记得那个不吉的官衔。一句酒话，成了盖在诗人身上的印。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 话四：禁十四字 -->
+<section class="sec">
+  <div class="grid">
+    <aside class="rail"><span class="railNo">第四话</span><span class="railTi">禁十四字</span><span class="railLine"></span></aside>
+    <div class="body">
+      <h3>一张纸，让满座诗僧搁了笔</h3>
+      <p class="hua">宋初有九个和尚以诗闻名，合集称〈九僧诗〉。有位进士<b>许洞</b>不服这路诗风，约一群诗僧分题斗诗，先铺开一张纸，立下一条规矩：</p>
+      <q class="qblock">因会诸诗僧分题，出一纸约曰：「不得犯此一字。」</q>
+      <div id="fPaper">
+        <div id="fChips">
+          <q class="bare" style="display:contents"><button class="fchip">山</button><button class="fchip">水</button><button class="fchip">风</button><button class="fchip">云</button><button class="fchip">竹</button><button class="fchip">石</button><button class="fchip">花</button><button class="fchip">草</button><button class="fchip">雪</button><button class="fchip">霜</button><button class="fchip">星</button><button class="fchip">月</button><button class="fchip">禽</button><button class="fchip">鸟</button></q>
+        </div>
+        <p class="fmeta">纸上十四字，一字一禁。已禁 <b id="fCount">0</b> / 14</p>
+      </div>
+      <p class="hua">山、水、风、月这些字全不许碰，等于缴了他们的械。</p>
+      <svg id="biDao" viewBox="0 0 120 60" aria-hidden="true">
+        <g stroke="#8a8172" stroke-width="4" stroke-linecap="round" fill="none">
+          <line x1="24" y1="46" x2="86" y2="14"/>
+          <path d="M86 14 l12 -6 -5 13 z" fill="#8a8172" stroke="none"/>
+        </g>
+        <ellipse cx="22" cy="49" rx="10" ry="4" fill="#403a33"/>
+      </svg>
+      <div id="geBi">
+        <q class="qn">于是诸僧皆阁笔。</q>
+      </div>
+      <p class="hua">九僧的诗集后来全亡了。欧阳修少年时听人传诵，还记得零星几句：</p>
+      <div class="duo">
+        <q class="qblock">马放降来地，雕盘战后云。</q>
+        <q class="qblock">春生桂岭外，人在海门西。</q>
+      </div>
+      <p class="hua">九个人的名字他只记得住一个：惠崇。其余八人，连他也忘了。</p>
+      <q class="qblock">其集已亡，今人多不知有所谓九僧者矣，是可叹也！</q>
+    </div>
+  </div>
+</section>
+
+<!-- 话五：笑三则 -->
+<section class="sec">
+  <div class="grid">
+    <aside class="rail"><span class="railNo">第五话</span><span class="railTi">笑三则</span><span class="railLine"></span></aside>
+    <div class="body">
+      <h3>闲谈的底色是玩笑，玩笑里有判断</h3>
+      <p class="hua">这部书好玩，因为欧阳修记笑话也记账。他先立了规矩：</p>
+      <q class="qblock">诗人贪求好句而理有不通，亦语病也。</q>
+      <p class="hua"><b>其一，肥妻子。</b>仁宗朝有位大官学白居易，句子写得省力，自夸一联：</p>
+      <q class="qblock">有禄肥妻子，无恩及吏民。</q>
+      <p class="hua">有人当场打趣：昨天大街上碰见一驾牛车，装得极重，瘦牛拉得直喘，车里莫非装的就是您家肥妻子？</p>
+      <q class="qblock">闻者传以为笑。</q>
+      <div id="maoWrap">
+        <div class="ju">
+          <q class="qblock" id="maoPoem">尽日觅不得，有时还自来。</q>
+          <span class="src">点这句诗</span>
+        </div>
+        <svg id="maoBox" viewBox="0 0 78 62" aria-hidden="true">
+          <g fill="none" stroke="#9a9486" stroke-width="3" stroke-linecap="round">
+            <path d="M14 34 q-4 -22 18 -24 q22 -2 26 16 q3 12 -6 20 q-12 10 -26 4 q-10 -5 -12 -16 z"/>
+            <path d="M20 14 l-6 -10 10 6 M44 12 l6 -10 2 12"/>
+            <circle cx="24" cy="28" r="1.6" fill="#9a9486"/><circle cx="40" cy="26" r="1.6" fill="#9a9486"/>
+            <path d="M30 36 q4 3 8 0"/>
+          </g>
+        </svg>
+        <div id="maoSay">
+          <p class="hua">本来夸的是好句难得、妙手偶得，碰上较真的读者，直接改行当寻猫启事：</p>
+          <q class="qblock">此是人家失却猫儿诗。</q>
+          <q class="qn" style="margin-top:10px">人皆以为笑也。</q>
+        </div>
+      </div>
+      <p class="hua"><b>其三，语病两桩。</b>贾岛哭和尚：</p>
+      <q class="qblock">写留行道影，焚却坐禅身。</q>
+      <p class="hua">读者一算账：影子留下了，身子烧掉了，活和尚给哭死了。</p>
+      <q class="qblock">时谓烧杀活和尚，此尤可笑也。</q>
+      <p class="hua">名句也逃不过。有人先夸再挑刺：</p>
+      <q class="qblock">姑苏台下寒山寺，半夜钟声到客船。</q>
+      <p class="hua">句是好句，只是半夜三更，寺里根本不敲钟。千年名句被人抓这个包，抓它的正是这部闲谈。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 话六：存一卷 -->
+<section class="sec">
+  <div class="grid">
+    <aside class="rail"><span class="railNo">第六话</span><span class="railTi">存一卷</span><span class="railLine"></span></aside>
+    <div class="body">
+      <h3>闲谈成了许多人留在世上的最后存档</h3>
+      <p class="hua">书里也记穷人。开篇便是一句判词：</p>
+      <q class="qblock">孟郊、贾岛皆以诗穷至死，而平生尤自喜为穷苦之句。</q>
+      <div class="duo">
+        <div class="ju">
+          <q class="qblock">借车载家具，家具少于车。</q>
+          <span class="src">孟郊〈移居〉</span>
+          <p class="hua" style="font-size:14px">搬家的车借来了，家当装不满车。</p>
+        </div>
+        <div class="ju">
+          <q class="qblock">坐闻西床琴，冻折两三弦。</q>
+          <span class="src">贾岛〈朝饥〉</span>
+          <p class="hua" style="font-size:14px">屋里冷到琴弦自己断，饿还在其次。</p>
+        </div>
+      </div>
+      <div class="ju">
+        <q class="qblock">暖得曲身成直身。</q>
+        <span class="src">孟郊〈谢人惠炭〉</span>
+        <q class="qn">人谓非其身备尝之，不能道此句也。</q>
+      </div>
+      <p class="hua">同款命运落在宋人身上。欧阳修贬官夷陵那年，许州一位小官<b>谢伯初</b>，字景山，寄来一首长韵，起句便是身世：</p>
+      <q class="qblock">江流无险似瞿塘，满峡猿声断旅肠。</q>
+      <q class="qblock">万里可堪人谪宦，经年应合鬓成霜。</q>
+      <div class="duo">
+        <div class="ju">
+          <q class="qblock">长官衫色江波绿，学士文华蜀锦张。</q>
+          <span class="src">两人唱和里传得最远的一联</span>
+        </div>
+      </div>
+      <p class="hua">谢伯初后来仕途不顺，困顿而终。诗集散了，家人也不知流落何处。三十五年后，欧阳修还能整首背出来：</p>
+      <q class="qblock">其寄余诗，殆今三十五年矣，余犹能诵之。</q>
+      <q class="qblock">盖其人不幸既可哀，其诗沦弃亦可惜，因录于此。</q>
+      <p class="hua">因为沦弃，所以录存。官修的书不收的人，靠一盏灯下的记性活着。</p>
+      <div id="luoBand">
+        <button class="act" id="luoBtn">夜有故人来见</button>
+        <svg id="luoSvg" viewBox="0 0 420 110" aria-hidden="true">
+          <g class="mule">
+            <g fill="#24211d" stroke="#3a362f" stroke-width="1.5">
+              <rect x="150" y="40" rx="16" width="120" height="34"/>
+              <rect x="248" y="22" width="14" height="30" rx="6" transform="rotate(18 255 37)"/>
+              <rect x="262" y="18" width="30" height="16" rx="7"/>
+              <line x1="272" y1="16" x2="268" y2="4" stroke-width="3"/>
+              <line x1="280" y1="16" x2="282" y2="4" stroke-width="3"/>
+              <line x1="162" y1="72" x2="158" y2="102" stroke-width="5"/>
+              <line x1="182" y1="72" x2="182" y2="102" stroke-width="5"/>
+              <line x1="238" y1="72" x2="234" y2="102" stroke-width="5"/>
+              <line x1="256" y1="72" x2="260" y2="102" stroke-width="5"/>
+              <path d="M152 48 q-16 2 -20 22" fill="none" stroke-width="3"/>
+            </g>
+          </g>
+          <line x1="10" y1="103" x2="410" y2="103" stroke="#2b2822" stroke-width="2"/>
+        </svg>
+        <div id="luoAfter">
+          <p class="hua">石延年，字曼卿，诗酒豪放。他死后，老友声称夜里见了他，自称鬼仙，管着一座芙蓉城，请不动旧友同游：</p>
+          <q class="qn">我今为鬼仙也，所主芙蓉城，欲呼故人往游，不得，忿然骑一素骡去如飞。</q>
+          <p class="hua">后来又降在亳州一个举子家，留诗一联而去：</p>
+          <q class="qn">莺声不逐春光老，花影长随日脚流。</q>
+          <p class="hua">怪事不可信，欧阳修却认真做了笔迹鉴定：</p>
+          <q class="qn">神仙事怪不可知，其诗颇类曼卿平生语，举子不能道也。</q>
+          <p class="hua">他家里还藏着曼卿用南唐澄心堂纸写的〈筹笔驿〉，纸、诗、字三绝，人没了，鬼话归鬼话，笔迹是真的。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- 烛跋 -->
+<section id="zhuba">
+  <div id="zhuLamp">
+    <svg width="130" height="150" viewBox="0 0 130 150" fill="none" aria-hidden="true">
+      <g stroke="#4a453c" stroke-width="2.5" fill="none">
+        <ellipse cx="65" cy="112" rx="40" ry="10"/>
+        <path d="M35 112 q-10 2 -9 8 q22 9 78 0 q1 -6 -9 -8"/>
+      </g>
+      <line x1="65" y1="112" x2="65" y2="100" stroke="#8a8172" stroke-width="3" stroke-linecap="round"/>
+      <path id="zhuFlame" d="M65 99 q10 -11 5 -24 q-2 6 -7 9 q-3 6 -2 11 q1 4 4 4 z" fill="#e8c478"/>
+      <path id="smoke" d="M68 68 q-6 -10 2 -18 q7 -7 2 -16" stroke="#5c574e" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="ju" id="shui">
+    <q class="qn">挑尽寒灯梦不成。</q>
+    <span class="src" style="color:var(--faint)">吕蒙正未第时诗句，被县令之子胡旦嘲为渴睡汉</span>
+  </div>
+  <p class="endHua">灯芯挑到头，觉也没睡成。第二年他高中榜首，让人带话回去：<q>渴睡汉状元及第矣。</q>胡旦回敬：等着，明年我也考个第二人，输你一着。结果次榜他照样中头名。一盏灯下两榜状元，谁也没睡成。</p>
+  <p class="endHua">全书二十八条，没有纲领，不分卷次，想到哪说到哪。可正是这种不分卷次的闲谈，立起了一种新文体：批评可以是聊天，掌故可以是学问，玩笑里立着判断，被埋没的人有名有姓地活在记性里。后世数百家的诗话，源头都是这盏灯。</p>
+  <div class="bigClose"><q class="qn">居士退居汝阴，而集以资闲谈也。</q></div>
+  <span class="seal endSeal">资闲谈</span>
+</section>
+
+<footer class="page">
+  <div class="wrap">
+    文本来源：殆知阁简体文库〈六一诗话〉（诗藏诗话本，宋欧阳修撰，一卷二十八条，去空白五千零五十六字）<br>
+    导读仓库：<a href="https://github.com/robertsong2000/daizhige-daodu">github.com/robertsong2000/daizhige-daodu</a><br>
+    本页引文经脚本与库内文件去标点归一逐字比对通过。校字记：姑苏寒山寺句库本作「台下」、通行本多作「城外」，一字之差照录库本；刘攽，库本作刘原父，照其字号；胡旦嘲语一句库本文字有讹夺，页面避引。古代文本历经传抄，讹缺在所难免，请以时代眼光读之：书中以官衔肥瘦相谑、以鬼仙传说记友，皆千年前的席间风气与传闻，今日读之当知其限。
+  </div>
+</footer>
+
+<script>
+(function(){
+  var lampBtn=document.getElementById('lampBtn');
+  lampBtn.addEventListener('click',function(){
+    if(document.body.classList.contains('lit'))return;
+    document.body.classList.add('lit');
+  });
+
+  var missed=0,tiles=document.querySelectorAll('.cand');
+  tiles.forEach(function(t){
+    t.addEventListener('click',function(){
+      if(t.classList.contains('miss'))return;
+      t.classList.add('miss');
+      missed++;
+      if(missed===tiles.length){
+        document.getElementById('buJu').classList.add('solved');
+        document.getElementById('slot').textContent='过';
+      }
+    });
+  });
+
+  var banned=0,chips=document.querySelectorAll('.fchip'),fCount=document.getElementById('fCount');
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      if(c.classList.contains('on'))return;
+      c.classList.add('on');
+      banned++;
+      fCount.textContent=banned;
+      if(banned===chips.length){
+        document.getElementById('biDao').classList.add('fall');
+        document.getElementById('geBi').classList.add('show');
+      }
+    });
+  });
+
+  var maoWrap=document.getElementById('maoWrap');
+  document.getElementById('maoPoem').addEventListener('click',function(){
+    document.getElementById('maoBox').classList.add('peek');
+    maoWrap.classList.add('peeked');
+  });
+
+  var chens=0,chenSteps=document.querySelectorAll('.chen'),chenBtn=document.getElementById('chenBtn');
+  chenBtn.addEventListener('click',function(){
+    if(chens<chenSteps.length){
+      chenSteps[chens].classList.add('show');
+      chens++;
+      if(chens===chenSteps.length)chenBtn.classList.add('done');
+    }
+  });
+
+  document.getElementById('luoBtn').addEventListener('click',function(){
+    document.getElementById('luoBand').classList.add('go');
+  });
+
+  var bar=document.getElementById('pbar');
+  addEventListener('scroll',function(){
+    var h=document.documentElement;
+    var max=h.scrollHeight-h.clientHeight;
+    bar.style.width=(max>0?(h.scrollTop/max*100):0)+'%';
+  },{passive:true});
+
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in')});
+  },{threshold:.12});
+  document.querySelectorAll('.sec').forEach(function(s){io.observe(s)});
+
+  var zb=document.getElementById('zhuba');
+  new IntersectionObserver(function(es,ob){
+    es.forEach(function(e){if(e.isIntersecting){zb.classList.add('out');ob.disconnect();}});
+  },{threshold:.35}).observe(zb);
+})();
+</script>
+</body>
+</html>
