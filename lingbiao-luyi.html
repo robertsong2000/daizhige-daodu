@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>岭表录异 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #141b1c;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --gold: #c9963f;
+    --gold-soft: rgba(201,150,63,0.16);
+    --seal: #c0453c;
+    --hairline: rgba(232,228,220,0.12);
+    --shell: #1d2321;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 26px; }
+  .mono { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+  /* ── 珠链顶栏 ─────────────────────────── */
+  .beadbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(20,22,21,0.92); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .beadbar .row {
+    max-width: 920px; margin: 0 auto; padding: 10px 26px;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .bead {
+    width: 15px; height: 15px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #565248, #2c2a26 70%);
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.6);
+    transition: all .5s;
+  }
+  .bead.lit {
+    background: radial-gradient(circle at 35% 30%, #fdfaf2, #cfc9bc 45%, #8d8678);
+    box-shadow: 0 0 10px rgba(232,228,220,0.35);
+  }
+  .beadbar .lbl { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .beadbar .lbl b { color: var(--gold); font-weight: 600; }
+  .beadbar .thread { flex: 1; height: 1px; background: var(--hairline); min-width: 30px; }
+  a.beadlink { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+  a.beadlink span { font-size: 11px; color: var(--paper-faint); letter-spacing: 0.18em; }
+  a.beadlink.on span { color: var(--paper-dim); }
+
+  /* ── 首屏 珠池 ─────────────────────────── */
+  .hero {
+    min-height: 96dvh; position: relative; overflow: hidden;
+    background:
+      radial-gradient(120% 60% at 50% 0%, #20282a 0%, var(--ink) 62%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero .sea {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+  }
+  .hero .inner { position: relative; text-align: center; z-index: 2; padding: 60px 20px; }
+  .kicker { font-size: 13px; letter-spacing: 0.5em; color: var(--paper-faint); }
+  .vtitle {
+    margin: 26px auto 10px; height: 330px; display: flex; justify-content: center;
+    writing-mode: vertical-rl; letter-spacing: 0.22em;
+  }
+  .vtitle span {
+    display: inline-block; font-size: 68px; font-weight: 700; color: var(--paper);
+    opacity: 0; transform: translateY(26px); transition: opacity 1.1s, transform 1.1s;
+    text-shadow: 0 0 26px rgba(201,150,63,0.0);
+  }
+  .vtitle.lit span { opacity: 1; transform: none; text-shadow: 0 0 26px rgba(201,150,63,0.28); }
+  .hero .who {
+    font-size: 15px; color: var(--paper-dim); letter-spacing: 0.14em; max-width: 30em; margin: 6px auto 0;
+  }
+  .diveline { margin-top: 34px; }
+  .divebtn {
+    font: inherit; cursor: pointer; color: var(--gold);
+    background: transparent; border: 1px solid rgba(201,150,63,0.55);
+    padding: 10px 30px; letter-spacing: 0.34em; font-size: 15px;
+    transition: background .4s, color .4s;
+  }
+  .divebtn:hover { background: var(--gold-soft); }
+  .diveline .hint { display: block; margin-top: 12px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.2em; }
+  .heroseal {
+    position: absolute; right: 8%; bottom: 12%;
+    width: 86px; height: 86px; border: 3px solid var(--seal); color: var(--seal);
+    display: grid; place-items: center; font-size: 30px; font-weight: 700; letter-spacing: 0.1em;
+    writing-mode: vertical-rl; opacity: 0; transform: scale(1.7) rotate(-14deg);
+    transition: opacity .5s, transform .5s cubic-bezier(.2,1.6,.4,1);
+  }
+  .heroseal.on { opacity: 0.92; transform: scale(1) rotate(-4deg); }
+
+  /* ── 章节 ─────────────────────────── */
+  section { padding: 78px 0 30px; }
+  .sechead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 8px; }
+  .secno {
+    font-size: 13px; color: var(--gold); letter-spacing: 0.3em; border: 1px solid rgba(201,150,63,0.4);
+    padding: 3px 10px 3px 13px;
+  }
+  h2 { font-size: 30px; font-weight: 600; letter-spacing: 0.16em; }
+  .secsub { color: var(--paper-dim); font-size: 15px; margin: 6px 0 30px; max-width: 40em; }
+
+  .rv { opacity: 0; transform: translateY(16px); transition: opacity .8s, transform .8s; }
+  .rv.on { opacity: 1; transform: none; }
+
+  /* 螺匣卡 */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .card {
+    background: var(--shell); border: 1px solid var(--hairline);
+    padding: 20px 22px 18px; position: relative;
+  }
+  .card h3 { font-size: 18px; letter-spacing: 0.14em; color: var(--gold); font-weight: 600; margin-bottom: 8px; }
+  .card h3 small { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.1em; margin-left: 10px; }
+  .card p { font-size: 15px; color: var(--paper-dim); }
+  .card .tag {
+    position: absolute; top: -1px; right: -1px; font-size: 11px; letter-spacing: 0.2em;
+    color: var(--ink); background: var(--paper-faint); padding: 2px 9px 2px 11px;
+  }
+  .card .tag.gold { background: var(--gold); }
+  .card .tag.seal { background: var(--seal); color: #f5efe6; }
+
+  q, .q {
+    display: block; quotes: none; margin: 12px 0 0;
+    background: rgba(232,228,220,0.06); border-left: 2px solid var(--gold);
+    padding: 10px 14px; font-size: 15px; color: var(--paper); line-height: 1.95;
+  }
+  .tieyao {
+    display: block; margin: 12px 0 0; background: rgba(201,150,63,0.07);
+    border: 1px dashed rgba(201,150,63,0.45); padding: 10px 14px;
+    font-size: 15px; color: var(--paper);
+  }
+  .src { display: block; margin-top: 8px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.14em; }
+
+  /* 风信：晕虹 + 翻牌 */
+  .ruu { height: 54px; margin: 8px 0 26px; }
+  .ruu path { stroke: url(#rg); stroke-width: 3; fill: none; opacity: 0.9; }
+  .flipset { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .flip {
+    background: var(--shell); border: 1px solid var(--hairline); cursor: pointer;
+    min-height: 128px; padding: 18px; position: relative; overflow: hidden;
+  }
+  .flip .face { font-size: 21px; letter-spacing: 0.3em; color: var(--paper-dim); transition: opacity .45s; }
+  .flip .back {
+    position: absolute; inset: 0; padding: 16px 18px; opacity: 0; transform: translateY(12px);
+    transition: opacity .45s, transform .45s; font-size: 14px; color: var(--paper);
+  }
+  .flip.open .face { opacity: 0; }
+  .flip.open .back { opacity: 1; transform: none; }
+  .flip .back b { color: var(--gold); display: block; margin-bottom: 4px; letter-spacing: 0.2em; }
+
+  /* 大事件卡：舞象 */
+  .big {
+    margin-top: 20px; background: linear-gradient(180deg, #101614, #171a18);
+    border: 1px solid rgba(201,150,63,0.3); padding: 34px 30px; position: relative; overflow: hidden;
+  }
+  .big h3 { font-size: 22px; letter-spacing: 0.22em; color: var(--paper); font-weight: 600; }
+  .big .stage { margin: 22px 0 6px; position: relative; height: 210px; }
+  .big .stage svg { width: 100%; height: 100%; }
+  .bigbtn {
+    font: inherit; cursor: pointer; background: transparent; color: var(--gold);
+    border: 1px solid rgba(201,150,63,0.5); padding: 7px 22px; letter-spacing: 0.3em; font-size: 14px;
+  }
+  .bigbtn:hover { background: var(--gold-soft); }
+  .big .step { display: block; margin-top: 14px; font-size: 15px; color: var(--paper-dim); opacity: 0; transform: translateY(10px); transition: opacity .8s, transform .8s; }
+  .big .step.on { opacity: 1; transform: none; }
+  .killseal {
+    position: absolute; right: 30px; top: 26px; width: 78px; height: 78px;
+    border: 3px solid var(--seal); color: var(--seal); display: grid; place-items: center;
+    font-size: 25px; font-weight: 700; writing-mode: vertical-rl; letter-spacing: 0.12em;
+    opacity: 0; transform: scale(1.6) rotate(-16deg); transition: all .45s cubic-bezier(.2,1.6,.4,1);
+  }
+  .killseal.on { opacity: 0.94; transform: scale(1) rotate(-5deg); }
+
+  /* 书劫卡 */
+  .rob { display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: center; }
+  .rob .scene { height: 190px; position: relative; overflow: hidden; background: #10171a; border: 1px solid var(--hairline); }
+  .rob .book {
+    position: absolute; left: 50%; top: 34px; width: 54px; height: 72px; margin-left: -27px;
+    background: #d8cfb8; transform-origin: 50% 0;
+    box-shadow: 0 3px 0 #b8ad90, 0 6px 0 #c9bfa4;
+    transition: transform 2.6s ease-in, opacity 2.6s;
+  }
+  .rob.go .book { transform: translateY(150px) rotate(9deg); opacity: 0.12; }
+  .rob .wave { position: absolute; left: 0; right: 0; bottom: 0; height: 56px; }
+  .rob .cap { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.2em; display: block; margin-top: 6px; }
+
+  /* 鲎 */
+  .hou { display: grid; grid-template-columns: 230px 1fr; gap: 24px; align-items: center; }
+  .hou .pair { position: relative; height: 150px; }
+  .hou svg { position: absolute; transition: transform 1.2s, opacity 1.2s; }
+  .hou .male { left: 60px; top: 6px; }
+  .hou .female { left: 40px; top: 44px; }
+  .hou.lifted .male { transform: translate(70px, -52px) rotate(16deg); opacity: 0.25; }
+  .hou.stopped .female { transition: none; }
+
+  /* 六国漂流 */
+  .voy { margin-top: 20px; border: 1px solid var(--hairline); background: var(--shell); }
+  .voy .tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--hairline); }
+  .voy .tabs button {
+    flex: 1; min-width: 96px; font: inherit; background: transparent; border: none; cursor: pointer;
+    color: var(--paper-faint); padding: 12px 6px; font-size: 14px; letter-spacing: 0.2em;
+    border-right: 1px solid var(--hairline);
+  }
+  .voy .tabs button:last-child { border-right: none; }
+  .voy .tabs button.on { color: var(--gold); background: rgba(201,150,63,0.08); }
+  .voy .pane { padding: 20px 24px; min-height: 150px; }
+  .voy .pane p { font-size: 15px; color: var(--paper-dim); }
+  .voy .pane .place { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.24em; display: block; margin-bottom: 8px; }
+
+  /* 版本账 时间线 */
+  .ledger { position: relative; margin-top: 26px; padding-left: 34px; }
+  .ledger::before {
+    content: ""; position: absolute; left: 9px; top: 6px; bottom: 6px; width: 1px;
+    background: linear-gradient(180deg, var(--gold), rgba(201,150,63,0.08));
+  }
+  .stop { position: relative; padding: 0 0 30px; }
+  .stop .pearl {
+    position: absolute; left: -34px; top: 8px; width: 19px; height: 19px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #565248, #2c2a26 70%);
+    transition: all .7s;
+  }
+  .stop.on .pearl {
+    background: radial-gradient(circle at 35% 30%, #fdfaf2, #cfc9bc 45%, #8d8678);
+    box-shadow: 0 0 12px rgba(232,228,220,0.4);
+  }
+  .stop .yr { font-size: 13px; color: var(--gold); letter-spacing: 0.3em; }
+  .stop h3 { font-size: 19px; font-weight: 600; letter-spacing: 0.12em; margin: 4px 0 6px; }
+  .stop p { font-size: 15px; color: var(--paper-dim); max-width: 44em; }
+
+  /* 尾屏 */
+  .fin {
+    min-height: 82dvh; display: flex; align-items: center; justify-content: center;
+    text-align: center; position: relative; overflow: hidden;
+    background: radial-gradient(110% 70% at 50% 100%, #1b2224 0%, var(--ink) 60%);
+  }
+  .fin .inner { position: relative; z-index: 2; padding: 70px 24px; }
+  .fin .pool { width: min(520px, 86vw); margin: 0 auto 8px; }
+  .fin .pool circle.ret {
+    fill: url(#pg); opacity: 0; transform: translateY(34px);
+    transition: opacity 1s, transform 1s;
+  }
+  .fin.done circle.ret { opacity: 1; transform: none; }
+  .fin .saying { font-size: 17px; color: var(--paper-dim); letter-spacing: 0.14em; max-width: 34em; margin: 18px auto 0; }
+  .finseal {
+    width: 96px; height: 96px; margin: 30px auto 0; border: 3px solid var(--seal); color: var(--seal);
+    display: grid; place-items: center; font-size: 22px; font-weight: 700; line-height: 1.3;
+    opacity: 0; transform: scale(1.6) rotate(-12deg); transition: all .55s cubic-bezier(.2,1.6,.4,1);
+  }
+  .fin.done .finseal { opacity: 0.94; transform: scale(1) rotate(-4deg); }
+  .finseal .two { writing-mode: vertical-rl; letter-spacing: 0.18em; }
+
+  footer { border-top: 1px solid var(--hairline); padding: 34px 0 46px; }
+  footer p { font-size: 13px; color: var(--paper-faint); line-height: 2; }
+  footer a { color: var(--paper-dim); }
+
+  @media (max-width: 760px) {
+    .grid, .grid3, .flipset { grid-template-columns: 1fr; }
+    .rob, .hou { grid-template-columns: 1fr; }
+    .vtitle span { font-size: 54px; }
+    .vtitle { height: 268px; }
+    h2 { font-size: 25px; }
+    .heroseal { right: 5%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 珠链进度 -->
+<nav class="beadbar" aria-label="阅读进度">
+  <div class="row">
+    <span class="lbl">珠<b id="beadnum">零</b></span>
+    <span class="thread"></span>
+    <a class="beadlink" href="#f1"><i class="bead"></i><span>风信</span></a>
+    <a class="beadlink" href="#f2"><i class="bead"></i><span>货宝</span></a>
+    <a class="beadlink" href="#f3"><i class="bead"></i><span>风物</span></a>
+    <a class="beadlink" href="#f4"><i class="bead"></i><span>草木</span></a>
+    <a class="beadlink" href="#f5"><i class="bead"></i><span>海错</span></a>
+    <a class="beadlink" href="#f6"><i class="bead"></i><span>珠还账</span></a>
+  </div>
+</nav>
+
+<!-- 首屏：珠池 -->
+<header class="hero">
+  <svg class="sea" viewBox="0 0 1000 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <radialGradient id="pg" cx="35%" cy="30%">
+        <stop offset="0%" stop-color="#fdfaf2"/>
+        <stop offset="45%" stop-color="#cfc9bc"/>
+        <stop offset="100%" stop-color="#8d8678"/>
+      </radialGradient>
+    </defs>
+    <g id="waves" stroke="rgba(232,228,220,0.10)" stroke-width="2" fill="none">
+      <path d="M0 560 Q 125 545 250 560 T 500 560 T 750 560 T 1000 560"/>
+      <path d="M0 610 Q 125 596 250 610 T 500 610 T 750 610 T 1000 610" opacity="0.7"/>
+      <path d="M0 660 Q 125 648 250 660 T 500 660 T 750 660 T 1000 660" opacity="0.5"/>
+      <path d="M0 715 Q 125 705 250 715 T 500 715 T 750 715 T 1000 715" opacity="0.35"/>
+      <path d="M0 775 Q 125 767 250 775 T 500 775 T 750 775 T 1000 775" opacity="0.22"/>
+    </g>
+    <ellipse cx="500" cy="812" rx="300" ry="42" fill="none" stroke="rgba(201,150,63,0.35)" stroke-dasharray="7 9"/>
+    <text x="500" y="880" text-anchor="middle" font-size="17" letter-spacing="10" fill="rgba(232,228,220,0.35)">廉州珠池</text>
+    <g id="diver" opacity="0" transform="translate(500,600)">
+      <circle cx="0" cy="-14" r="9" fill="#c9963f"/>
+      <path d="M-9 -3 L9 -3 L5 30 L-5 30 Z" fill="#a3803a"/>
+    </g>
+    <g id="pearls" opacity="0">
+      <circle cx="430" cy="540" r="7" fill="url(#pg)"/>
+      <circle cx="470" cy="520" r="5" fill="url(#pg)"/>
+      <circle cx="515" cy="545" r="8" fill="url(#pg)"/>
+      <circle cx="560" cy="525" r="5" fill="url(#pg)"/>
+      <circle cx="596" cy="548" r="6" fill="url(#pg)"/>
+    </g>
+  </svg>
+  <div class="inner">
+    <p class="kicker">殆知阁导读 · 卷二百一十七</p>
+    <h1 class="vtitle" id="vtitle"><span>岭</span><span>表</span><span>录</span><span>异</span></h1>
+    <p class="who">唐 · 刘恂。广州司马任期已满，启程北归，走到半路大唐亡了。他回不去长安，索性留在南海，把一座岭南写成一部博物志。</p>
+    <div class="diveline">
+      <button class="divebtn" id="dive">禀珠户 · 下水</button>
+      <span class="hint">点下水，珠与书名一同浮起</span>
+    </div>
+  </div>
+  <div class="heroseal" id="heroseal">珠还</div>
+</header>
+
+<main>
+
+<!-- 一 风信 -->
+<section id="f1">
+  <div class="wrap">
+    <div class="sechead rv"><span class="secno">壹</span><h2>风信</h2></div>
+    <p class="secsub rv">开卷不是名物，是天气预报。唐人没有卫星云图，靠看云的气色过日子：天边一道六七尺长的晕，像虹又不是虹，舟人见了就收帆。</p>
+    <svg class="ruu rv" viewBox="0 0 920 54" aria-hidden="true">
+      <defs><linearGradient id="rg" x1="0" x2="1">
+        <stop offset="0" stop-color="rgba(201,150,63,0.05)"/><stop offset="1" stop-color="rgba(201,150,63,0.85)"/>
+      </linearGradient></defs>
+      <path id="ruupath" d="M20 50 Q 460 -30 900 50"/>
+    </svg>
+    <div class="flipset">
+      <div class="flip rv" onclick="this.classList.toggle('open')">
+        <div class="face">飓 母</div>
+        <div class="back"><b>飓母</b>台风还没有名字的年代，它先是一枚晕圈。<q>南海秋夏，间或云物惨然，则其晕如虹，长六七尺。比候则飓风必发，故呼为“飓母”。</q></div>
+      </div>
+      <div class="flip rv" onclick="this.classList.toggle('open')">
+        <div class="face">瘴 母</div>
+        <div class="back"><b>瘴母</b>天上掉下来的病。从一粒弹丸大到车轮，然后四散，被砸中的人随即病倒。<q>岭表或见物自空而下，始如弹丸，渐如车轮，遂四散。人中之即病，谓之瘴母。</q></div>
+      </div>
+      <div class="flip rv" onclick="this.classList.toggle('open')">
+        <div class="face">沓 潮</div>
+        <div class="back"><b>沓潮</b>潮水没退尽，飓风又把新一波潮推上来，两股水叠在一起上岸。<q>当潮水未尽退之间，飓风作，而潮又至，遂至波涛溢岸，淹没人庐舍，荡失苗稼，沈溺舟船，南中谓之沓潮。</q></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 二 货宝 -->
+<section id="f2">
+  <div class="wrap">
+    <div class="sechead rv"><span class="secno">贰</span><h2>货宝</h2></div>
+    <p class="secsub rv">第二卷账页全是硬通货：珠、金、瑇瑁、铜鼓。这一页的每个条目背后，都站着一个以命相搏的行当。</p>
+
+    <div class="grid">
+      <div class="card rv">
+        <span class="tag gold">合浦</span>
+        <h3>珠池<small>太守亲监的贡品</small></h3>
+        <p>海中洲岛围出一口大池，疑心池底与海相通。珠户下水，太守监场，收上来的珠按个头论命：<q>如豌豆大者常珠。如弹丸者亦时有得，径寸照室，不可遇也。</q>「径寸照室」四字，是黑夜里一颗珠能照亮整间屋的意思，遇不遇得到，看天。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag">白州</span>
+        <h3>绿珠井<small>一斛珠换一个名字</small></h3>
+        <p>双角山下一眼井，井边的女子被石崇用珍珠买走，坠楼死了，井随她得名。<q>昔梁氏之女，有容貌，石季伦为交趾采访使，以真珠三斛买之。</q>这本书写风物，却总在风物里埋着人的下场。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag">澄州</span>
+        <h3>夜明金<small>少，但是贵</small></h3>
+        <p>五岭溪涧里淘金，一淘一天，常常颗粒无收。澄州的金最好，好在会发光。作者托朋友捎了二十两，朋友嫌少，收下住了一晚才服气。<q>金虽少，贵其夜明，有异于常金耳！</q></p>
+      </div>
+      <div class="card rv">
+        <span class="tag seal">致富经</span>
+        <h3>鹅鸭淘金<small>最离谱的一条</small></h3>
+        <p>浛洭县有人养鹅鸭，在禽粪里发现麸金片，于是加倍养，靠筛粪致富。书里写得一本正经。<q>常于屎中见麸金片，遂多养，收屎淘之，日得一两或半两，因而致富矣。</q></p>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:18px">
+      <div class="card rv">
+        <span class="tag">陇州</span>
+        <h3>紫石英<small>两头如箭镞</small></h3>
+        <p>山里出的紫石英个个五棱，两头尖如箭镞，煮水喝，暖而无毒，力气比北边的白石英大一倍。<q>其色淡紫，其质莹彻，随其大小，皆五棱，两头如箭镞</q>。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag seal">残忍</span>
+        <h3>瑇瑁<small>活取的辟邪物</small></h3>
+        <p>海岛夷人献上一只活瑇瑁，薛王当场活揭两片背甲系在臂上辟毒，龟疼得厉害，养好伤后又送回海里。<q>王令生取背甲小者二片，带于左臂上，以辟毒。龟被生揭其甲，甚极苦楚。</q>传说的验方是：死瑇瑁不灵，活过一道才灵。</p>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:18px">
+      <div class="card rv">
+        <span class="tag gold">重器</span>
+        <h3>铜鼓<small>酋豪厅堂的排面</small></h3>
+        <p>全铜铸成，面上遍饰虫鱼花草，敲起来不下于鼍鼓。后来高州牧童追一只蛤蟆，从蛮酋冢里掘出一面，鼓上铸满蛙形，时人恍然：<q>其上隐起，多铸蛙黾之状。疑其鸣蛤即鼓精也。</q></p>
+      </div>
+      <div class="card rv">
+        <span class="tag">爱州</span>
+        <h3>铜柱风波<small>差点被熔了卖钱</small></h3>
+        <p>刺史韦公干听说境内有汉代伏波将军的铜柱，想拆了熔铜卖钱。当地人视之为神物，哭求无效，直到都督韩约一封痛骂的公文到，才罢手。<q>使者果坏，是吾属为海人所杀矣。</q>一根柱子，两套账：一套算铜价，一套算香火。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 三 风物 -->
+<section id="f3">
+  <div class="wrap">
+    <div class="sechead rv"><span class="secno">叁</span><h2>风物</h2></div>
+    <p class="secsub rv">市井这一页最热闹：敲槽如鼓的舂堂、不用铁钉的海船、被赶鸭子上架的假和尚，以及一头宁死不肯跳舞的大象。</p>
+
+    <div class="grid">
+      <div class="card rv">
+        <span class="tag gold">声学</span>
+        <h3>舂堂<small>数里外的打击乐</small></h3>
+        <p>整段木头挖成槽，十根杵两边站开，男女相间舂稻，边干边敲槽帮打拍子，声音传出数里。<q>广南有舂堂，以浑木刳为槽。一槽两边约十杵，男女间立，以舂稻粮。敲磕槽舷，皆有遍拍；槽声若鼓，闻于数里。</q>这是带工号的劳动号子。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag">造船</span>
+        <h3>糖做的船<small>入水如漆</small></h3>
+        <p>商船不用一颗铁钉，用桄榔纤维捆扎船体，缝隙拿橄榄树脂调成胶泥封死，干了比漆还硬。<q>贾人船不用铁钉，只使桄榔须系缚，以橄榄糖泥之。糖干甚坚，入水如漆也。</q>九世纪的复合材料。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag">御寒</span>
+        <h3>鹅毛被<small>酋豪的羽绒服</small></h3>
+        <p>选细鹅毛夹进布帛，纵横缝衲成被，温柔不下于丝绵。俗话还说鹅毛性冷，最适合盖婴儿，能压惊痫。<q>南道之酋豪，多选鹅之细毛，夹以布帛，絮而为被，复纵横衲之，其温柔不下于挟纩也。</q></p>
+      </div>
+      <div class="card rv">
+        <span class="tag">文房</span>
+        <h3>没有兔子的笔<small>鹿毛野貍毛代用</small></h3>
+        <p>番禺城里没有狐兔，制笔师傅就地取材，拿鹿毛和野貍毛做笔，据说手感与兔毫不差。作者只遗憾没有机会试一把传说中的鼠须笔。<q>番禺地无狐兔，用鹿毛、野貍毛为笔。</q></p>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:18px">
+      <div class="card rv">
+        <span class="tag">市场</span>
+        <h3>獠市与岁节<small>两个冷知识</small></h3>
+        <p>邕州石溪口是夷人互市的地方，人称獠市；本地最重的四个节，排序也干脆利落。<q>岭表所重之节，腊一、伏二、冬三、年四。</q>腊月第一，过年反而殿后。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag seal">笑点</span>
+        <h3>假和尚<small>去年孔子，今年和尚</small></h3>
+        <p>南中小郡没有僧人，每逢宣读德音，只好临时抓人凑数。昭宗即位大赦，崖州抓来的一个不肯站队，太守追问，他答：<q>役次未当差遣编并。去岁已曾摄文宣王，今年又差作和尚。</q>去年扮孔子，今年扮和尚，排班也得讲资历。<q>见者莫不绝倒。</q></p>
+      </div>
+    </div>
+
+    <!-- 舞象 -->
+    <div class="big rv" id="elebox">
+      <h3>一头不肯下拜的大象</h3>
+      <div class="stage">
+        <svg viewBox="0 0 760 210" aria-hidden="true">
+          <g id="ele">
+            <ellipse cx="330" cy="128" rx="130" ry="52" fill="#2a2e2c" stroke="rgba(232,228,220,0.25)"/>
+            <circle cx="470" cy="86" r="40" fill="#2a2e2c" stroke="rgba(232,228,220,0.25)"/>
+            <path d="M500 100 q 34 12 30 62 q -2 22 -18 22" fill="none" stroke="#2a2e2c" stroke-width="16" stroke-linecap="round"/>
+            <path d="M466 60 l 8 -18" stroke="#c9963f" stroke-width="4"/>
+            <circle cx="480" cy="80" r="4" fill="#c0453c"/>
+            <rect x="240" y="66" width="180" height="30" rx="6" fill="rgba(201,150,63,0.28)"/>
+            <path d="M226 176 l 0 -22 M434 176 l 0 -22" stroke="#2a2e2c" stroke-width="18"/>
+          </g>
+          <text id="elecap" x="620" y="46" font-size="15" fill="rgba(232,228,220,0.0)">乐动，象不动</text>
+        </svg>
+      </div>
+      <span class="step" id="st1">玄宗养的舞象，安史乱后落进禄山手里。大宴诸酋，牵出来表演，教它下拜：</span>
+      <q class="step" id="st2">明皇所教之象，天宝之乱，禄山大宴诸酋，出象绐之曰：“此自南海奔至，以吾有天命，虽异类，见必拜舞。”左右教之，象皆努目不动，终不肯拜。禄山怒，尽杀之。</q>
+      <span class="step" id="st3">史书没记载人心，倒是记下了象的眼睛：努目，不动。这一段后来被写进正史，成了唐人给亡朝守节最重的一笔。</span>
+      <button class="bigbtn" id="elebtn">奏乐</button>
+      <div class="killseal" id="killseal">尽杀之</div>
+    </div>
+
+    <!-- 龙母 -->
+    <div class="grid" style="margin-top:20px">
+      <div class="card rv">
+        <span class="tag gold">传说源点</span>
+        <h3>龙母<small>悦城龙母庙的源头</small></h3>
+        <p>康州悦城孀妇温氏，绩布为生，在沙滩捡了五枚蛋放进绩筐，孵出五条小蛇，一斑四青，随手放回江里。她常在江边洗衣，蛇来戏前，乡里传开：<q>乡里咸谓之“龙母”，敬而事之。</q>至今悦城还有龙母祖庙，香火千年的起点，就在这只绩筐里。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag seal">异事</span>
+        <h3>迁冢<small>一夜搬走一座坟</small></h3>
+        <p>龙母卒后葬在江东岸，一夜风雨大作，天亮后坟不见了。<q>及明已移，其冢并四面草木悉移于西岸矣。</q>连草带土整座搬过对岸，乡人便信她是真龙接走了母亲。</p>
+      </div>
+    </div>
+
+    <!-- 六国漂流 -->
+    <div class="voy rv" id="voy">
+      <div class="tabs">
+        <button class="on" data-i="0">启程</button>
+        <button data-i="1">狗国</button>
+        <button data-i="2">野义国</button>
+        <button data-i="3">流虬国</button>
+        <button data-i="4">归航</button>
+      </div>
+      <div class="pane" id="voypane">
+        <span class="place">陵州 · 周遇的自述</span>
+        <p>刺史周遇不吃荤血，亲口对作者讲了一趟漂流：从青州出海回福建，遭恶风，飘了五天五夜，不知几千里，一路穿过六个国度。这是唐人版的奥德赛，按一按上面的签，逐站听他讲。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 四 草木 -->
+<section id="f4">
+  <div class="wrap">
+    <div class="sechead rv"><span class="secno">肆</span><h2>草木</h2></div>
+    <p class="secsub rv">中卷是一册南方果园图谱：会发光的鱼、会害臊的沙箸、替荔枝背锅的龙眼，全都记在名下。</p>
+
+    <div class="grid3">
+      <div class="card rv">
+        <h3>荔枝<small>珍果</small></h3>
+        <p>最好的荔枝形如小鸡蛋，壳微红，肉像凉玉。<q>形若小鸡子，近蒂稍平，皮壳微红，肉莹寒玉。</q></p>
+      </div>
+      <div class="card rv">
+        <h3>荔枝奴<small>龙眼</small></h3>
+        <p>龙眼紧跟荔枝上市，永远慢一步，得了个干活的诨名。<q>荔枝方过，龙眼即熟。南人谓之“荔枝奴”。以其常随于后也。</q></p>
+      </div>
+      <div class="card rv">
+        <h3>橄榄<small>盐换的丰收</small></h3>
+        <p>野橄榄树高难爬，果农在根部刻一方寸口子塞盐，一夜果子自己落光。<q>但刻其根下方寸许，纳盐于其中，一夕子皆自落。</q></p>
+      </div>
+      <div class="card rv">
+        <h3>倒捻子<small>桃金娘</small></h3>
+        <p>外紫内红没有核，甜软暖腹，吃前必捻蒂，名字就这么来的。<q>其子外紫内赤，无核，食之甜软，甚暖腹，兼益肌肉。</q></p>
+      </div>
+      <div class="card rv">
+        <h3>朱槿<small>佛桑</small></h3>
+        <p>从二月开到初冬，一丛一天开几百朵，可惜近闻无香。<q>一丛之上，日开数百朵，虽繁而有艳，但近而无香。暮落朝开，插枝即活</q>。</p>
+      </div>
+      <div class="card rv">
+        <h3>沙箸<small>会害羞</small></h3>
+        <p>海岸沙里长出的白骨样小管，可做酒筹，采它要快，慢一步就缩回沙里。<q>凡欲采者，轻步向前，及手急捋之，不然闻行者声，遽缩入沙中。</q></p>
+      </div>
+      <div class="card rv">
+        <h3>媚蝶<small>妆奁养的虫</small></h3>
+        <p>鹤子草喂出的双虫，老后蜕成赤黄蝶，越女收起来带在身上，唤作媚蝶。<q>越女收于妆奁中养之，如蚕，摘其草饲之，虫老不食而蜕为蝶，赤黄色，妇女收而带之，谓之媚蝶。</q></p>
+      </div>
+      <div class="card rv">
+        <h3>枫人<small>越巫的原料</small></h3>
+        <p>老枫树瘤，一夜雷雨后暗长数尺，越巫拿去雕神鬼，号称特别灵验。<q>越巫云：取之雕刻神鬼，则易致灵验。</q></p>
+      </div>
+      <div class="card rv">
+        <h3>秦吉了<small>比鹦鹉能说</small></h3>
+        <p>会学人话的红嘴鸟，嗓门大、咬字清，压鹦鹉一头。<q>善效人言，语音雄大，分明于鹦鹉。</q></p>
+      </div>
+      <div class="card rv">
+        <h3>罗浮巨竹<small>一竿做筏</small></h3>
+        <p>盐户逃进罗浮山第十三岭，撞见竹海，一竿围二丈余、三十九节，破开就是筏。<q>遇巨竹万千竿，连亘岩谷，竹围皆二丈余，有三十九节</q>。</p>
+      </div>
+      <div class="card rv">
+        <h3>箣竹城<small>带刺的城墙</small></h3>
+        <p>邕州旧城用箣竹围成，枝上全是刺，纵横如织，野火烧不尽，蛮兵进不来。<q>邕州旧以为城，蛮蜒来侵，竟不能入。</q></p>
+      </div>
+      <div class="card rv">
+        <h3>绿粉酒饼<small>南中酿法</small></h3>
+        <p>药汁拌粳米捣成绿粉，捏饼钻孔，挂在灶烟上，春冬七日、秋夏五日即熟，每酿一年下几只饼，各有定数。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 五 海错 -->
+<section id="f5">
+  <div class="wrap">
+    <div class="sechead rv"><span class="secno">伍</span><h2>海错</h2></div>
+    <p class="secsub rv">下卷全在水里：会自己跳上船的鱼阵、背着丈夫走路的鲎、给鳄鱼看家的一滩沉书，还有岭南人桌上的各种胆量。</p>
+
+    <div class="grid">
+      <div class="card rv">
+        <span class="tag gold">丰收</span>
+        <h3>跳鱼阵<small>鱼自己上船</small></h3>
+        <p>仲春登高望海，鱼群来时像一片宽两三百步的阵云。渔船迎头冲进鱼阵，不用网：<q>船冲鱼阵，不于罟网，但鱼儿自惊跳入船，逡巡而满。</q>唯一的技术要点是别贪心：<q>船去之时，不可当鱼阵之中，恐鱼多压沉故也。</q>丰收的烦恼是船会被鱼压沉。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag">鸳鸯</span>
+        <h3>鲎<small>雌常负雄</small></h3>
+        <p>鲎壳莹净得像一只青瓷碗，眼睛长在背，嘴藏在腹。雌的常把雄的驮在背上赶路，渔民捞必是一对。动手摘掉左边那只试试。<q>雌常负雄而行</q><q>捕者必双得之，若摘去雄者，雌者即自止背负之方行。</q></p>
+      </div>
+    </div>
+
+    <div class="hou rv" id="hou" style="margin-top:18px">
+      <div class="pair">
+        <svg class="male" width="120" height="60" viewBox="0 0 120 60"><path d="M14 40 Q 60 6 106 40 L 96 48 L 24 48 Z" fill="#3a4245" stroke="rgba(232,228,220,0.35)"/><path d="M104 44 L 118 52" stroke="#3a4245" stroke-width="4"/></svg>
+        <svg class="female" width="160" height="70" viewBox="0 0 160 70"><path d="M16 46 Q 80 8 144 46 L 132 56 L 28 56 Z" fill="#2c3335" stroke="rgba(232,228,220,0.3)"/><path d="M142 50 L 158 60" stroke="#2c3335" stroke-width="5"/></svg>
+      </div>
+      <div class="card" style="border:none;background:transparent;padding-left:0">
+        <h3>摘雄实验<small>点对面的鲎</small></h3>
+        <p>把雄鲎摘走，雌鲎不会另找，只是停下不动，等那只回来。古人拿这条当忠贞教材，实际是鲎的抱对习性：一到手就是两份，所以南海有句话，捕鲎的从不空网。</p>
+        <button class="bigbtn" id="houbtn" style="margin-top:10px">摘去雄者</button>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:20px">
+      <div class="card rv">
+        <span class="tag">夜光</span>
+        <h3>发光的鱼头<small>虚惊一场</small></h3>
+        <p>黄腊鱼烤干后夜里会发光，本地的常客自然不怕；北方客商吃剩一个鱼头扔在筐里，半夜亮起来，吓得不轻，拿烛一照是鱼头，吹烛又亮，越想越邪，问遍本地人才放下心。<q>去烛复明，以为不祥。</q><q>遍询土人，乃此鱼之常也。忧疑顿释。</q></p>
+      </div>
+      <div class="card rv">
+        <span class="tag seal">滩名</span>
+        <h3>鳄鱼滩<small>吓退过宰相的船队</small></h3>
+        <p>鳄鱼土黄身、修尾、口森锯齿，捕鹿的方式是列队吼叫，把崖上的鹿吓得自己摔下来。<q>鹿走崖岸之上，群鳄嗥叫其下，鹿怖惧落崖，多为鳄鱼所得，亦物之相摄伏也。</q>李德裕贬去潮州，船在鳄鱼滩坏掉，召船上昆仑奴下水捞书，奴才看了一眼就上来了：满滩都是鳄鱼。</p>
+      </div>
+    </div>
+
+    <!-- 书劫 -->
+    <div class="big rv" id="rob">
+      <h3>书劫 · 鳄鱼滩沉书</h3>
+      <div class="rob" style="margin-top:18px">
+        <div class="scene" id="robscene">
+          <div class="book"></div>
+          <svg class="wave" viewBox="0 0 240 56" preserveAspectRatio="none"><path d="M0 20 Q 30 8 60 20 T 120 20 T 180 20 T 240 20 L 240 56 L 0 56 Z" fill="rgba(34,52,56,0.9)"/></svg>
+        </div>
+        <div>
+          <p style="font-size:15px;color:var(--paper-dim)">李德裕是唐朝的宰相级藏书家，一生金石书画随船而行。贬潮州路上船毁于鳄鱼滩，他叫昆仑奴下水打捞，奴才们看到满滩鳄鱼，不敢靠近，一船平生收藏就此沉底。点右边的江面，看这一船书沉下去。</p>
+          <q>李太尉德裕贬官潮州，经鳄鱼滩，损坏舟船，平生宝玩古书图画一时沉失</q>
+          <span class="cap">点画面重演一次</span>
+          <button class="bigbtn" id="robbtn">浪起</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:20px">
+      <div class="card rv">
+        <span class="tag gold">共生</span>
+        <h3>海镜<small>蟹是它的胃</small></h3>
+        <p>两片圆壳合起来，壳内滑如云母，肚子里住着一只黄豆大的小蟹。海镜饿了，蟹出去觅食，蟹吃饱回壳，海镜也跟着饱。作者买过好几只做实验，火一逼蟹就爬出来，离开蚌腹立刻死。<q>海镜饥，则蟹出拾食，蟹饱归腹，海镜亦饱。</q></p>
+      </div>
+      <div class="card rv">
+        <span class="tag">遗民</span>
+        <h3>卢亭蚝<small>以蚝易酒</small></h3>
+        <p>卢亭人是卢循兵败后逃入海岛的余部后代，住在蚝壳垒的墙里，以斧凿蚝、烈火烤壳取肉，装进小竹筐赶墟换酒。<q>海夷卢亭往往以斧揳取壳，烧以烈火，蚝即启房。</q>一支晋朝流民的血脉，在唐代海边继续活着。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag">古注</span>
+        <h3>水母虾目<small>借来的眼睛</small></h3>
+        <p>水母没有口眼，肚皮下悬着几十只虾，虾见人就带它一起沉，所以古书说它以虾为目。<q>海镜，蟹为腹，水母即虾为目也。</q>一蟹一目，岭南人把共生观察了个遍。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag seal">八月禁</span>
+        <h3>蝤蛑<small>敢跟老虎打</small></h3>
+        <p>蟹里的巨无霸，大如升，八月发情期连老虎都敢夹。<q>八月，此物与虎斗，往往夹杀人也</q>。招潮子则相反，潮还没到就举螯眺望，像在接人：<q>潮欲来，皆出坎举螯如望</q>。</p>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:18px">
+      <div class="card rv">
+        <span class="tag seal">取胆</span>
+        <h3>蚺蛇胆<small>亲眼所见的贡品工艺</small></h3>
+        <p>大蛇吞鹿从尾巴咽起，头角卡在口里，等鹿在口中坏烂、角坠地后再整只咽下，此后极度虚弱，消完食反而比先前更壮。普安州的养蛇人家，年年五月初五担蛇进府取胆，作者在场：<q>两人舁一条在地上，即以十数拐子从头翻其身，旋以拐子案之，不得转侧</q>，割胆晒干上贡，再缝好刀口送回笼中，放归川泽。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag">破除迷信</span>
+        <h3>两头蛇<small>作者的抬杠时刻</small></h3>
+        <p>岭外两头蛇常见，一头真有口眼，另一头没有。作者不给它留神秘感：孙叔敖杀两头蛇是传说中的美德，可这里的人见惯不惊，日子照过。<q>昔孙叔敖见之不祥。乃杀而埋之。南人见之为常，其祸安在哉！</q>全书难得一见的质疑语气。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag">巨龟</span>
+        <h3>蟕蠵<small>龟吼如牛</small></h3>
+        <p>山龟里的巨种，人能站到背上让它驮着走。取壳讲究活的完整，用木楔顶出肉来，龟的叫声像牛，响遍山谷。<q>要全其壳，须以木楔出肉，龟吼如牛，声响山谷。</q>巧匠拿它煮压出瑇瑁纹，做梳篦杯器。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag gold">餐桌</span>
+        <h3>席上胆量<small>虾生、不乃羹、圣齑</small></h3>
+        <p>活虾浇浓酱醋，热锅一扣，虾往碟外蹦，唤作虾生；交趾贵客先上一盏鼻饮，满斟银杓从鼻孔灌入，仰头缓缓倾尽，再传给下一位：<q>即满斟一杓，内嘴入鼻，仰首徐倾之。饮尽，传杓如酒巡行之。</q>吃罢水牛肉还要啜一勺圣齑，也就是牛胃里半消化的草，据说这样肚子才不胀：<q>齑是牛肠胃中已化草，名曰“圣齑”。腹遂不胀</q>。北客到此，只敢吃肉，不敢啜齑。</p>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:18px">
+      <div class="card rv">
+        <span class="tag gold">黑科技</span>
+        <h3>养柑蚁<small>九世纪的生物防治</small></h3>
+        <p>岭南的蚂蚁种类极多，有人拿薄絮囊连枝带叶整窝卖，买家都是柑农：没有蚁的柑树，果子多蛀。于是一窝蚁就是一味农药，竞相买回去挂在树上。<q>南中柑子树无蚁者，实多蛀。故人竞买之，以养柑子也。</q>这条记进现代农业史，是中国利用天敌治虫最早的明确文献之一。</p>
+      </div>
+      <div class="card rv">
+        <span class="tag seal">珍馐</span>
+        <h3>蚁酱<small>酋长的私房菜</small></h3>
+        <p>溪洞酋长收蚁卵淘净腌酱，据说味道极像肉酱，招待规格极高，非官客亲友拿不到。<q>或云其味酷似肉酱，非官客亲友，不可得也。</q></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 六 珠还账 -->
+<section id="f6">
+  <div class="wrap">
+    <div class="sechead rv"><span class="secno">陆</span><h2>珠还账</h2></div>
+    <p class="secsub rv">最后算一本账：这本书自己的一生，比书里任何一条异物都曲折。五颗珠，五站，从散佚到归位。</p>
+
+    <div class="ledger">
+      <div class="stop rv"><i class="pearl"></i>
+        <span class="yr">唐末 · 五代</span>
+        <h3>写书的人回不去</h3>
+        <p>刘恂在唐昭宗朝出任广州司马，任期届满北上复命，正撞上唐亡前后的乱局。宋人赞宁记他：<span class="tieyao">官满，上京扰攘，遂居南海，作《岭表录》。</span>一个回不了长安的官员，把滞留地写成了传世的名物志。四库馆臣还从书里称「唐乾符」「昭宗即位」的口吻考出一笔：<span class="tieyao">殆书成於五代时欤</span>也就是说，书是唐亡之后才定稿的。</p>
+      </div>
+      <div class="stop rv"><i class="pearl"></i>
+        <span class="yr">宋</span>
+        <h3>被类书吃干抹净</h3>
+        <p>《太平寰宇记》《太平御览》《太平广记》大量征引此书，等于全书被类书拆成零件使用；丛书里只收了寥寥数页的残本，首尾不完。原件在流传中散佚。</p>
+      </div>
+      <div class="stop rv"><i class="pearl"></i>
+        <span class="yr">明</span>
+        <h3>最后一批碎片</h3>
+        <p>《永乐大典》辑录此书，条理比类书引文完整，成为原书面目最后的载体。此后六百年，世上再没有人见过整本的《岭表录异》。</p>
+      </div>
+      <div class="stop rv"><i class="pearl"></i>
+        <span class="yr">清 · 乾隆</span>
+        <h3>四库馆臣拼回三卷</h3>
+        <p>修四库全书时，馆臣从《永乐大典》里逐卷裒辑，再用类书引文补缀排比，复原三卷，仍是《唐志》著录的旧模样。<span class="tieyao">谨逐卷裒辑，而佐以旁见诸书者，排比其文，仍成三卷，以复《唐志》之旧。</span>馆臣自评已十得八九，今天通行的 124 条，就是这么一颗珠一颗珠捡回来的。</p>
+      </div>
+      <div class="stop rv"><i class="pearl"></i>
+        <span class="yr">民国 · 鲁迅</span>
+        <h3>一遍底本，一遍校本</h3>
+        <p>鲁迅辑录古籍的旧业里也有它：存世手稿有底本、校本两份，纸页留白与行间全是密批，后收入《鲁迅辑校古籍手稿》影印。你在这篇导读引文旁看到的那些夹注，注明脱字据何书补入、某字讹作某字，正是这套辑校传统的层层指纹。<span class="tieyao">唐人著述，传世者稀，断简残编，已足珍惜。</span><span class="tieyao">此更於放失之馀，复成完帙，使三四百年博物君子所未睹者，一旦顿还其旧观，弥足宝矣。</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 尾屏 -->
+<section class="fin" id="fin">
+  <div class="inner">
+    <svg class="pool" viewBox="0 0 520 190" aria-hidden="true">
+      <ellipse cx="260" cy="120" rx="230" ry="46" fill="none" stroke="rgba(201,150,63,0.4)" stroke-dasharray="6 8"/>
+      <circle class="ret" cx="120" cy="96" r="10"/>
+      <circle class="ret" cx="185" cy="86" r="13"/>
+      <circle class="ret" cx="255" cy="92" r="9"/>
+      <circle class="ret" cx="325" cy="82" r="14"/>
+      <circle class="ret" cx="398" cy="98" r="10"/>
+      <circle class="ret" cx="450" cy="112" r="7"/>
+    </svg>
+    <p class="saying">合浦的珠走了会自己回来。人还不了乡，书还不了世，末了都一颗一颗归了池。这口池空了六百年，现在算是满了。</p>
+    <div class="finseal"><span class="two">珠还合浦</span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库《岭表录异》三卷（唐 · 刘恂撰，清四库馆臣辑），引文已与库内文件逐字核验（去标点、异体归一比对），四库提要语单独核对辑录源文。仓库：<a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">daizhige-daodu</a>。</p>
+    <p>文中观念皆出唐人：瘴气、蛊毒、媚药、辟邪之说均属时代局限，姑妄听之，请勿当真服食。</p>
+  </div>
+</footer>
+
+</main>
+
+<script>
+(function(){
+  var beads = document.querySelectorAll('.beadbar .beadlink');
+  var counters = document.querySelectorAll('.beadbar .bead');
+  var lit = 0;
+  var cn = ['零','一','二','三','四','五','六'];
+
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('on'); }
+    });
+  }, {threshold: 0.12});
+  document.querySelectorAll('.rv,.stop').forEach(function(el){ io.observe(el); });
+
+  var secs = ['f1','f2','f3','f4','f5','f6'].map(function(id){ return document.getElementById(id); });
+  var io2 = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      var idx = secs.indexOf(e.target);
+      if(idx < 0) return;
+      var link = beads[idx];
+      var bead = link ? link.querySelector('.bead') : null;
+      if(e.isIntersecting && bead && !bead.classList.contains('lit')){
+        bead.classList.add('lit');
+        link.classList.add('on');
+        lit++;
+        document.getElementById('beadnum').textContent = cn[Math.min(lit,6)];
+      }
+    });
+  }, {threshold: 0.18});
+  secs.forEach(function(s){ io2.observe(s); });
+
+  var heroDone = false;
+  document.getElementById('dive').addEventListener('click', function(){
+    if(heroDone) return;
+    heroDone = true;
+    this.parentElement.style.opacity = '0';
+    setTimeout(function(){
+      document.getElementById('diver').setAttribute('opacity','1');
+      document.getElementById('diver').style.transition = 'transform 1.6s ease-in';
+      document.getElementById('diver').style.transform = 'translate(500px,700px)';
+    }, 100);
+    setTimeout(function(){
+      document.getElementById('pearls').setAttribute('opacity','1');
+      document.getElementById('pearls').style.transition = 'transform 1.4s ease-out';
+      document.getElementById('pearls').style.transform = 'translateY(-70px)';
+    }, 1500);
+    setTimeout(function(){
+      document.getElementById('vtitle').classList.add('lit');
+    }, 2600);
+    setTimeout(function(){
+      document.getElementById('heroseal').classList.add('on');
+    }, 3600);
+  });
+
+  var eleStep = 0;
+  document.getElementById('elebtn').addEventListener('click', function(){
+    eleStep++;
+    if(eleStep === 1){
+      document.getElementById('st1').classList.add('on');
+      document.getElementById('elecap').setAttribute('fill','rgba(232,228,220,0.55)');
+      this.textContent = '再奏';
+    } else if(eleStep === 2){
+      document.getElementById('st2').classList.add('on');
+      this.style.display = 'none';
+      setTimeout(function(){ document.getElementById('killseal').classList.add('on'); }, 900);
+      setTimeout(function(){ document.getElementById('st3').classList.add('on'); }, 1400);
+    }
+  });
+
+  document.getElementById('houbtn').addEventListener('click', function(){
+    var box = document.getElementById('hou');
+    box.classList.toggle('lifted');
+    this.textContent = box.classList.contains('lifted') ? '放回雄者' : '摘去雄者';
+  });
+
+  var robGo = false;
+  document.getElementById('robbtn').addEventListener('click', function(){
+    var sc = document.getElementById('robscene');
+    if(robGo){ sc.classList.remove('go'); robGo = false; return; }
+    sc.classList.add('go'); robGo = true;
+  });
+
+  var voyData = [
+    {p:'启程 · 陵州周遇自述', t:'刺史周遇不吃荤血，亲口讲给作者听：从青州出海回福建，遭恶风，飘了五天五夜，不知行了几千里，凡历六国。'},
+    {p:'第一站 · 狗国', t:'同船的新罗客认出这是什么地方。回头看，果然有人抱着狗探出头来，见船就跑。'},
+    {p:'第三站 · 野义国', t:'船触暗石损坏，上岸修船的人被食人族追，一人被擒。同舟五十余人齐上弓弩枪剑，射倒两个，对方才拖尸呼啸而去。连夜伐木下寨，野义怕弩，不再来。'},
+    {p:'第五站 · 流虬国', t:'这里的人穿麻布、有礼貌，抢着拿食物换铁钉。新罗客半通他们的语言，劝船队快走：此国怕华人漂来，认为会带来灾祸。'},
+    {p:'归航', t:'两日后遇岛取水，岛上山羊见人不躲，又肥又大，找不到牧人，索性捕了百只带走。一路有惊无险，回到闽中，这段见闻全靠他一句一句口述，作者记下。'}
+  ];
+  var voyPane = document.getElementById('voypane');
+  document.querySelectorAll('#voy .tabs button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#voy .tabs button').forEach(function(b){ b.classList.remove('on'); });
+      btn.classList.add('on');
+      var d = voyData[btn.dataset.i];
+      voyPane.innerHTML = '<span class="place">'+d.p+'</span><p>'+d.t+'</p>';
+    });
+  });
+
+  var finDone = false;
+  var io3 = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting && !finDone){
+        finDone = true;
+        setTimeout(function(){ document.getElementById('fin').classList.add('done'); }, 300);
+      }
+    });
+  }, {threshold: 0.5});
+  io3.observe(document.getElementById('fin'));
+})();
+</script>
+</body>
+</html>
