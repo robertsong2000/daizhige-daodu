@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>顾太清词选：推窗见梅</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#20201d; --paper:#e8e4dc; --dim:#a9a294;
+  --faint:#6e6a5f; --line:#3a382f; --cyan:#5e8fbb; --cyan2:#7fa8cd;
+  --zhu:#c0453c; --gold:#c9963f;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--serif);line-height:1.95;overflow-x:hidden}
+a{color:var(--cyan2);text-decoration:none}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px}
+.mono{font-family:"SF Mono",Consolas,"Noto Sans Mono CJK SC",monospace}
+
+/* ---------- 首屏 推窗见梅 ---------- */
+#top{min-height:100svh;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#131318 0%,#17181a 40%,#1a1b19 100%)}
+.win-stage{position:relative;z-index:2;max-width:640px;margin:0 auto;padding:11svh 20px 6svh;text-align:center}
+.winbox{position:relative;height:min(58svh,470px);min-height:360px;perspective:1200px;
+  border:10px solid #2c2820;border-radius:6px;background:#101114;
+  box-shadow:0 0 0 2px #3b352a,0 18px 50px rgba(0,0,0,.6)}
+.wview{position:absolute;inset:0;overflow:hidden;opacity:.25;transition:opacity 1.6s .5s}
+.winbox.open .wview{opacity:1}
+.wview svg{position:absolute;inset:0;width:100%;height:100%}
+.plumbranch{stroke:#3d3a33;fill:none;stroke-width:5;stroke-linecap:round}
+.plumtwig{stroke:#454138;fill:none;stroke-width:2.6;stroke-linecap:round}
+.pb{fill:#8f3b34;opacity:.55;transition:all 1.4s}
+.winbox.open .pb{fill:#c0453c;opacity:.95}
+.pb2{fill:#e0d8c8;opacity:.5;transition:all 1.4s 1.2s}
+.winbox.open .pb2{opacity:.9}
+.vname{position:absolute;right:13%;top:8%;writing-mode:vertical-rl;white-space:nowrap;
+  font-size:clamp(34px,6vw,56px);letter-spacing:.22em;font-weight:700;color:#efe9dc;
+  text-shadow:0 2px 18px rgba(0,0,0,.75);opacity:0;transition:opacity 1.5s 1.1s;
+  height:82%;overflow:hidden}
+.winbox.open .vname{opacity:1}
+.snow{position:absolute;top:-3%;border-radius:50%;background:#e8e4dc;opacity:0;
+  animation:snowfall linear infinite}
+.winbox.open .snow{opacity:.75}
+@keyframes snowfall{0%{transform:translateY(-10px) translateX(0)}25%{transform:translateY(160px) translateX(9px)}
+ 50%{transform:translateY(320px) translateX(-7px)}75%{transform:translateY(480px) translateX(11px)}
+ 100%{transform:translateY(640px) translateX(-5px)}}
+.shutter{position:absolute;top:0;bottom:0;width:50.5%;background:
+  repeating-linear-gradient(90deg,#241f18 0 12px,#2b251c 12px 14px),#241f18;
+  transition:transform 1.7s cubic-bezier(.25,.8,.3,1);z-index:4;backface-visibility:hidden}
+.shutter::after{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(180deg,transparent 0 52px,#171310 52px 55px)}
+.sh-l{left:0;border-right:3px solid #383125;transform-origin:left center;border-radius:0 3px 3px 0}
+.sh-r{right:0;border-left:3px solid #383125;transform-origin:right center;border-radius:3px 0 0 3px}
+.winbox.open .sh-l{transform:rotateY(-104deg)}
+.winbox.open .sh-r{transform:rotateY(104deg)}
+.hero-ui{position:relative;z-index:5;margin-top:30px}
+.eyebrow{font-size:13px;letter-spacing:.5em;color:var(--dim);margin-bottom:18px}
+.heroname{font-size:15px;letter-spacing:.34em;color:#cfc9bb}
+.sealyu{display:inline-grid;grid-template-columns:repeat(2,auto);gap:0 2px;background:var(--zhu);
+  color:#f2ece1;border-radius:4px;padding:9px 10px;font-size:19px;line-height:1.25;letter-spacing:0;
+  transform:rotate(-5deg);box-shadow:0 3px 14px rgba(0,0,0,.5);font-weight:700;
+  opacity:0;margin-top:20px;transition:opacity .6s 2.2s,transform .6s 2.2s}
+.sealyu.off{transform:rotate(-5deg) scale(.6)}
+.winbox.open ~ .hero-ui .sealyu{opacity:1;transform:rotate(-5deg) scale(1)}
+.sealyu i{font-style:normal;padding:0 3px}
+.sealyu i:nth-child(1){order:2}.sealyu i:nth-child(2){order:4}
+.sealyu i:nth-child(3){order:1}.sealyu i:nth-child(4){order:3}
+#tuiwin{margin-top:26px;display:inline-block;background:transparent;border:1px solid #4d4b40;color:var(--paper);
+  font-family:var(--serif);font-size:16px;letter-spacing:.5em;padding:13px 30px 13px calc(30px + .5em);
+  cursor:pointer;border-radius:2px;transition:all .5s}
+#tuiwin:hover{border-color:var(--cyan);color:var(--cyan2)}
+#tuiwin.off{opacity:0;pointer-events:none}
+.hero-lead{max-width:560px;margin:26px auto 0;text-align:left;font-size:16px;color:#ded8ca;
+  background:rgba(24,25,22,.9);border:1px solid #45443a;border-left:3px solid var(--cyan);
+  padding:18px 22px;border-radius:2px;opacity:0;transform:translateY(14px);transition:all 1.2s 1.2s}
+.hero-lead.on{opacity:1;transform:none}
+.hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:12px;color:var(--faint);
+  letter-spacing:.4em;z-index:5}
+
+/* ---------- 词笺卡 ---------- */
+section.jian{margin:88px auto}
+.card{background:var(--paper);color:#26241f;border-radius:3px;padding:34px 34px 30px;position:relative;
+  box-shadow:0 10px 34px rgba(0,0,0,.5)}
+.card::before{content:"";position:absolute;top:12px;bottom:12px;left:12px;width:1px;
+  background:repeating-linear-gradient(180deg,rgba(192,69,60,.4) 0 6px,transparent 6px 12px)}
+.card::after{content:"";position:absolute;top:12px;bottom:12px;right:12px;width:1px;
+  background:repeating-linear-gradient(180deg,rgba(192,69,60,.4) 0 6px,transparent 6px 12px)}
+.jhead{display:flex;align-items:baseline;gap:16px;margin-bottom:6px;flex-wrap:wrap}
+.jno{font-size:12px;letter-spacing:.32em;color:var(--zhu);border:1px solid rgba(192,69,60,.45);
+  padding:3px 10px;border-radius:2px}
+.jian h2{font-size:clamp(23px,3.6vw,30px);letter-spacing:.12em;color:#211f1a;font-weight:700}
+.jsub{font-size:13px;color:#7a7466;letter-spacing:.2em;margin-bottom:18px}
+.card p{font-size:16px;margin:0 0 14px;color:#333029}
+.card p b{color:#211f1a}
+.q{margin:16px 0;padding:14px 18px;background:#f2efe7;border-left:3px solid var(--cyan);
+  font-size:16.5px;color:#23211c;border-radius:2px;line-height:2}
+.q .qt{display:block;font-size:12.5px;color:#8a8375;letter-spacing:.22em;margin-top:6px}
+.qn{font-size:13px;color:#8a8375;letter-spacing:.14em;margin:-6px 0 16px;padding-left:4px}
+.rv{opacity:0;transform:translateY(20px);transition:all .9s cubic-bezier(.2,.7,.2,1)}
+.rv.on{opacity:1;transform:none}
+.bigchar{font-size:15px;color:#9c4a41}
+
+/* ---------- 对笺 ---------- */
+.duilian{display:grid;grid-template-columns:1fr 56px 1fr;gap:0;align-items:stretch;margin:20px 0 4px}
+.dnote{background:#f2efe7;border:1px solid #d8d2c2;border-radius:2px;padding:16px 16px 12px;position:relative}
+.dnote .who{display:block;font-size:12px;letter-spacing:.3em;color:#8a8375;margin-bottom:8px}
+.dnote .who em{font-style:normal;color:var(--cyan)}
+.dnote .dq{font-size:15.5px;color:#23211c;line-height:2.05}
+.dnote.right{background:#efece2}
+.hezhang{align-self:center;justify-self:center;width:40px;height:40px;border-radius:50%;
+  background:var(--zhu);color:#f2ece1;display:flex;align-items:center;justify-content:center;
+  font-size:19px;transform:rotate(-8deg);box-shadow:0 2px 10px rgba(0,0,0,.35)}
+@media (max-width:680px){
+  .duilian{grid-template-columns:1fr}
+  .hezhang{margin:10px auto}
+}
+
+/* ---------- 易安对位 ---------- */
+.yian{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0 6px}
+.ycard{background:#f2efe7;border:1px solid #d8d2c2;border-radius:2px;padding:16px;text-align:center}
+.ycard .ytag{font-size:12px;letter-spacing:.3em;color:var(--zhu)}
+.ycard .yword{font-size:19px;letter-spacing:.1em;color:#23211c;margin:8px 0 4px;font-weight:700}
+.ycard .ynote{font-size:13px;color:#7a7466;line-height:1.8}
+.ylink{grid-column:1 / 3;text-align:center;color:#b0a894;font-size:15px;letter-spacing:.3em}
+@media (max-width:620px){.yian{grid-template-columns:1fr}.ylink{grid-column:1}}
+
+/* ---------- 谜与戏 ---------- */
+.myst-list{margin:14px 0 6px}
+.myst{display:flex;justify-content:space-between;align-items:baseline;gap:10px;cursor:pointer;
+  padding:6px 10px;border-bottom:1px dashed #d8d2c2;font-size:15.5px;color:#333029}
+.myst:hover{background:#eeeade}
+.mnum{flex:0 0 auto;width:30px;height:30px;border-radius:3px;background:#e3ddcd;color:#e3ddcd;
+  display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .4s;
+  border:1px solid #cfc8b4;font-weight:700}
+.myst.done .mnum{background:var(--zhu);color:#f2ece1;border-color:var(--zhu)}
+.mhint{font-size:13.5px;color:#8a8375;margin-top:10px}
+#daodu-btn{margin:14px 0 6px;background:#211f1a;color:#e8e4dc;border:none;font-family:var(--serif);
+  font-size:14px;letter-spacing:.3em;padding:9px 20px;border-radius:2px;cursor:pointer;transition:all .4s}
+#daodu-btn:hover{background:var(--zhu)}
+.hwline{font-size:16.5px;color:#23211c;line-height:2.1;transition:all .3s}
+.hwline.rev .ch{display:inline-block;animation:flipin .55s both}
+@keyframes flipin{from{opacity:0;transform:rotateX(80deg)}to{opacity:1;transform:none}}
+.kong{display:flex;gap:18px;margin:16px 0 4px;flex-wrap:wrap}
+.kb{width:74px;height:74px;border-radius:50%;background:#211f1a;color:#e8e4dc;display:flex;
+  align-items:center;justify-content:center;font-size:25px;cursor:pointer;user-select:none;
+  box-shadow:0 6px 0 #0e0e0c;transition:transform .1s}
+.kb:active{transform:translateY(5px);box-shadow:0 1px 0 #0e0e0c}
+.kb.pop{animation:kbpop .5s}
+@keyframes kbpop{0%{transform:scale(1)}40%{transform:scale(1.22) rotate(4deg)}100%{transform:scale(1)}}
+
+/* ---------- 己亥对账 ---------- */
+.ledger{border:1px solid #d8d2c2;border-radius:2px;margin:18px 0 6px;overflow:hidden}
+.lrow{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:14px 16px;border-bottom:1px dashed #d8d2c2}
+.lrow:last-child{border-bottom:none}
+.lrow .ly{font-size:19px;color:var(--zhu);font-weight:700;letter-spacing:.1em}
+.lrow .lt{font-size:15px;color:#333029}
+@media (max-width:560px){.lrow{grid-template-columns:1fr;gap:4px}}
+
+/* ---------- 花枝进度 ---------- */
+#branch{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:40;width:64px;height:360px;pointer-events:none}
+#branch svg{width:100%;height:100%}
+.bpod{fill:#4a463c;transition:all .8s}
+.bpod.on{fill:var(--zhu)}
+@media (max-width:1180px){#branch{display:none}}
+
+/* ---------- 尾屏 ---------- */
+#coda{min-height:88svh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:linear-gradient(180deg,#17181a 0%,#141511 100%)}
+.codabox{text-align:center;position:relative;z-index:2;padding:60px 20px}
+.codabox .cw{font-size:clamp(26px,4.6vw,38px);letter-spacing:.3em;color:#efe9dc;margin-bottom:18px}
+.codabox .cs{font-size:14.5px;letter-spacing:.24em;color:var(--dim)}
+.codabox a{color:var(--cyan2);border-bottom:1px solid rgba(127,168,205,.4)}
+.coda-luo{margin-top:34px;font-size:13px;color:var(--faint);letter-spacing:.36em}
+
+/* ---------- 页脚 ---------- */
+footer.page{border-top:1px solid var(--line);padding:34px 0 46px;font-size:13px;color:var(--dim);line-height:2.1}
+footer.page a{color:var(--cyan2)}
+</style>
+</head>
+<body>
+
+<div id="branch" aria-hidden="true">
+  <svg viewBox="0 0 64 360">
+    <path d="M32 356 C 30 300, 40 260, 30 210 C 22 165, 38 120, 28 66" class="plumbranch" stroke-width="3"/>
+    <path d="M31 250 C 44 240, 50 228, 52 214" class="plumtwig"/>
+    <path d="M30 190 C 18 182, 14 170, 15 158" class="plumtwig"/>
+    <path d="M29 120 C 42 112, 48 100, 49 88" class="plumtwig"/>
+    <path d="M28 88 C 16 80, 13 68, 14 58" class="plumtwig"/>
+    <circle class="bpod" cx="52" cy="210" r="7"/>
+    <circle class="bpod" cx="15" cy="155" r="7"/>
+    <circle class="bpod" cx="49" cy="85" r="7"/>
+    <circle class="bpod" cx="14" cy="55" r="7"/>
+    <circle class="bpod" cx="30" cy="300" r="7"/>
+    <circle class="bpod" cx="33" cy="175" r="7"/>
+    <circle class="bpod" cx="27" cy="40" r="7"/>
+  </svg>
+</div>
+
+<header id="top">
+  <div class="win-stage">
+    <div class="winbox" id="winbox">
+      <div class="wview">
+        <svg viewBox="0 0 640 470" preserveAspectRatio="xMidYMid slice">
+          <rect x="0" y="0" width="640" height="470" fill="#121317"/>
+          <path d="M60 470 C 150 380, 240 340, 330 250 C 400 182, 470 150, 560 120" class="plumbranch"/>
+          <path d="M250 318 C 290 300, 318 272, 330 236" class="plumtwig"/>
+          <path d="M380 205 C 356 186, 344 160, 342 132" class="plumtwig"/>
+          <path d="M452 156 C 484 146, 508 128, 522 100" class="plumtwig"/>
+          <circle class="pb" cx="330" cy="236" r="9"/>
+          <circle class="pb" cx="342" cy="132" r="11"/>
+          <circle class="pb" cx="522" cy="100" r="9"/>
+          <circle class="pb" cx="252" cy="316" r="7"/>
+          <circle class="pb" cx="430" cy="150" r="8"/>
+          <circle class="pb2" cx="360" cy="252" r="5"/>
+          <circle class="pb2" cx="500" cy="122" r="6"/>
+          <circle class="pb2" cx="300" cy="280" r="5"/>
+        </svg>
+        <div class="vname" data-t="tm">顾太清词选</div>
+        <span class="snow" style="left:8%;width:5px;height:5px;animation-duration:9s;animation-delay:.2s"></span>
+        <span class="snow" style="left:22%;width:4px;height:4px;animation-duration:11s;animation-delay:1.4s"></span>
+        <span class="snow" style="left:36%;width:6px;height:6px;animation-duration:8s;animation-delay:.7s"></span>
+        <span class="snow" style="left:50%;width:4px;height:4px;animation-duration:12s;animation-delay:2.2s"></span>
+        <span class="snow" style="left:63%;width:5px;height:5px;animation-duration:9.5s;animation-delay:3.1s"></span>
+        <span class="snow" style="left:76%;width:3px;height:3px;animation-duration:13s;animation-delay:1.1s"></span>
+        <span class="snow" style="left:88%;width:6px;height:6px;animation-duration:10s;animation-delay:2.7s"></span>
+        <span class="snow" style="left:15%;width:3px;height:3px;animation-duration:14s;animation-delay:3.8s"></span>
+        <span class="snow" style="left:44%;width:5px;height:5px;animation-duration:10.5s;animation-delay:4.4s"></span>
+        <span class="snow" style="left:70%;width:4px;height:4px;animation-duration:9.8s;animation-delay:5.2s"></span>
+      </div>
+      <div class="shutter sh-l"></div>
+      <div class="shutter sh-r"></div>
+    </div>
+    <div class="hero-ui">
+      <div class="eyebrow">殆知阁导读 · 诗证卷</div>
+      <div class="heroname">清 · 顾春（太清）词选</div>
+      <div class="sealyu off" id="sealyu"><i>东</i><i>海</i><i>渔</i><i>歌</i></div>
+      <div><button id="tuiwin" type="button">推 窗</button></div>
+      <div class="hero-lead" id="herolead">雪夜的两扇木窗关着。推开，一枝老梅斜进窗来：
+        窗内是词，窗外是雪。她自题小照说，留取的是<span class="src">人间真眉目</span>。</div>
+      <div class="hint">滚动开卷</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="jian" id="s1">
+  <div class="card rv">
+    <div class="jhead"><span class="jno">笺一</span><h2>何人</h2></div>
+    <div class="jsub">名春，号太清，册页上的四个字之外还有半生不能写的姓</div>
+    <p>库本开卷给她的考语只有六个字：</p>
+    <div class="q">大清第一女词人</div>
+    <div class="qn">库本<span class="vt">顾太清词选</span>一书卷首小传</div>
+    <p>她本姓<b>西林觉罗</b>，乾隆朝大学士鄂尔泰一族的曾孙女。祖父鄂昌陷进文字狱，一门被抬出旗籍，落成罪户。到她议婚的年纪，本姓已不能写上婚书：嫁入荣亲王府做侧室，用的是母家的顾姓。库本开篇给她的身份留了一行：</p>
+    <div class="q">名春，字梅仙，又字子春，号太清</div>
+    <div class="qn">库本开篇小传，照录</div>
+    <p>姓是借的，名分是侧的，词却一点不含糊。有人寄词恭维她，她回寄一首〈金缕曲〉，把自家身世压成一句：</p>
+    <div class="q">况是女身芜薄命，愧樗材枉受虚名被。思量起，空挥涕。</div>
+    <div class="qn"><span class="vt">金缕曲·王子兰公子寿同寄词见誉，谱此致谢</span></div>
+    <p>这册书收她<b>八十三调</b>，另带回文诗两首、杂体一首；后面附亡夫奕绘词六首、友人徐德培的一篇题词。一册之内，半册是一家。</p>
+  </div>
+</section>
+
+<section class="jian" id="s2">
+  <div class="card rv">
+    <div class="jhead"><span class="jno">笺二</span><h2>唱和</h2></div>
+    <div class="jsub">同一张画他题她也题，同一座楼她和他各写一首</div>
+    <p>奕绘，号太素，乾隆曾孙、袭贝勒。夫妻二人同写词，同调互答，这册书里对着读。</p>
+
+    <div class="duilian rv">
+      <div class="dnote">
+        <span class="who">她题<span class="vt">高山流水·南谷清风阁落成</span></span>
+        <div class="dq">待何年归去，谈笑各争雄。</div>
+      </div>
+      <div class="hezhang">和</div>
+      <div class="dnote right">
+        <span class="who">他题<span class="vt">奕绘原词</span>（库本括注）</span>
+        <div class="dq">山楼四面敞清风，俯深林，户牖玲珑。雨后凭栏，直望尽海云东。</div>
+      </div>
+    </div>
+    <div class="qn">南谷在房山，是夫妇二人的别墅。一座楼，两首词，一唱一和</div>
+
+    <p>一张<b>梅竹双清图</b>，她自题，他也题：</p>
+    <div class="duilian rv">
+      <div class="dnote">
+        <span class="who">她题<span class="vt">意难忘·自题梅竹双清图</span></span>
+        <div class="dq">一径幽香。傍猗猗修竹，疏影彷徨。</div>
+      </div>
+      <div class="hezhang">和</div>
+      <div class="dnote right">
+        <span class="who">他题<span class="vt">意难忘·题太清梅竹双清图</span></span>
+        <div class="dq">同心其臭如兰。尽拈来微笑，悟处忘言。</div>
+      </div>
+    </div>
+
+    <p>定情的一首〈念奴娇〉，通篇是他眼里的她：</p>
+    <div class="q">十分怜爱，带七分羞涩，三分犹像。彤管琼琚留信物，难说无凭无据。眼角传言，眉头寄恨，约略花间遇。见人佯避，背人携手私语。</div>
+    <div class="qn">奕绘<span class="vt">念奴娇</span>上片</div>
+    <p>结拍把两个人算成一对：</p>
+    <div class="q">璧返秦庭，珠还合浦，缥缈神仙侣。</div>
+    <div class="qn">奕绘<span class="vt">念奴娇</span>结拍</div>
+    <p>婚后同骑出门是日常。一阕小令在小序里记得清楚：人骑在马上，词就成了。词里两行：</p>
+    <div class="q">鸳鸯冲破碧烟飞。三十六双花样好，同浴清溪。</div>
+    <div class="qn"><span class="vt">浪淘沙·春日同夫子游石堂，回经慈溪见鸳鸯无数，马上成小令</span></div>
+    <div class="q">海棠婀娜低红袖，杨柳轻盈荡绿烟。</div>
+    <div class="qn"><span class="vt">鹧鸪天·上巳同夫子游丰台</span></div>
+    <p>冬夜听丈夫论道到三更，她落的句子不是仰视：</p>
+    <div class="q">世人莫恋花香好，花到香浓是谢时。蜂酿蜜，蚕吐丝，功成安得没人知？</div>
+    <div class="qn"><span class="vt">鹧鸪天·冬夜听夫子论道，不觉漏三更矣，盆中残梅香发，有悟赋此</span></div>
+    <p>梦里也有来往。他记梦中句起笔就是十年：</p>
+    <div class="q">相见十年前，相思十年后。</div>
+    <div class="qn">奕绘<span class="vt">生查子·记梦中句</span></div>
+  </div>
+</section>
+
+<section class="jian" id="s3">
+  <div class="card rv">
+    <div class="jhead"><span class="jno">笺三</span><h2>易安</h2></div>
+    <div class="jsub">她题李清照丈夫的书，后人题她的集子</div>
+    <p>大学士阮元（芸台相国）把一部宋本〈金石录〉拿出来请她题词。赵明诚与李清照夫妇的书，落到了这一对夫妻手里。她落笔便认了对号：</p>
+    <div class="q">风雅唱随夸漱玉，夏鼎商彝细考。</div>
+    <div class="qn"><span class="vt">金缕曲·芸台相国属题宋本金石录</span>。漱玉，李清照词集名</div>
+    <p>到清末，徐德培为〈东海渔歌〉题了一首词，拿来作代序，两句递进：</p>
+    <div class="q">一笛渔歌，宛似中峰突起。</div>
+    <div class="qn">徐德培<span class="vt">绮罗香</span>题词，代序</div>
+    <p>结句五个字，替她盖章：</p>
+    <div class="q">易安而后此居士。</div>
+    <div class="qn">徐德培<span class="vt">绮罗香</span>结句</div>
+    <div class="yian rv">
+      <div class="ycard"><div class="ytag">她题的书眼</div><div class="yword">漱玉</div><div class="ynote">李清照集名<br>题金石录时认领</div></div>
+      <div class="ycard"><div class="ytag">后人题她</div><div class="yword">易安</div><div class="ynote">李清照号易安居士<br>题东海渔歌时奉还</div></div>
+      <div class="ylink">一对夫妻题一对夫妻</div>
+    </div>
+  </div>
+</section>
+
+<section class="jian" id="s4">
+  <div class="card rv">
+    <div class="jhead"><span class="jno">笺四</span><h2>词社</h2></div>
+    <div class="jsub">词题里站着一串闺中名字</div>
+    <p>京城闺阁有一圈词友：许云林、许云姜姊妹，沈湘佩，吴苹香。翻开这册词，小序里全是她们的行踪：看花、寄信、送别、画梅。</p>
+    <p>云姜从江南寄信来，她正在雨中。起句是拆开的两个动作：</p>
+    <div class="q">故人千里寄书来。快些开，慢些开。</div>
+    <div class="qn"><span class="vt">江城梅花引·雨中接云姜信</span></div>
+    <p>想人想到把句子绕成环（点一下，两句对调）：</p>
+    <div class="q" id="huanzi" style="cursor:pointer">
+      <span class="hz-a">雨丝丝，风细细，尽是销魂滋味。</span>
+      <span class="hz-b">风细细，雨丝丝，相思十二时。</span>
+    </div>
+    <div class="qn"><span class="vt">更漏子·怀云林</span>。两句首尾互衔，顺读倒读皆成句</div>
+    <p>后来云林妹病故。她写悼词，记得最后一面：</p>
+    <div class="q">幸莲舆北上，重赌容光。芳颜仍似玉，云鬓却成霜。</div>
+    <div class="qn"><span class="vt">意难忘·哭云林妹</span>。重赌，库本原文如此</div>
+    <p>与吴苹香更奇：从未见过面，只靠题词寄稿往来。她说两个人都老了，又说知音难觅：</p>
+    <div class="q">况卿乎与我年将老。</div>
+    <div class="qn"><span class="vt">金缕曲·题花帘词寄吴苹香女士，用本集中韵</span></div>
+    <div class="q">叹空谷、知音偏少。</div>
+    <div class="qn">同上</div>
+    <p>送别是常事。送别屏山姊、扶柩南归那一段，她把难处写进调子里：</p>
+    <div class="q">我本多愁君善病，两地情牵意惹。</div>
+    <div class="qn"><span class="vt">金缕曲·送屏山姊扶柩旋里</span></div>
+  </div>
+</section>
+
+<section class="jian" id="s5">
+  <div class="card rv">
+    <div class="jhead"><span class="jno">笺五</span><h2>花事</h2></div>
+    <div class="jsub">海棠、梅、牡丹，多半自画自题</div>
+    <p>她善画，词题里出现最多的花是<b>海棠</b>。咏白海棠一首，替海棠抱不平：</p>
+    <div class="q">不是封姨情太薄，是盈盈树底魂难忏。</div>
+    <div class="qn"><span class="vt">金缕曲·咏白海棠</span></div>
+    <p>自画自题折扇：</p>
+    <div class="q">特为玉楼人作画，三五朵，一枝横。</div>
+    <div class="qn"><span class="vt">醉红妆·自题海棠折扇</span></div>
+    <p>他又在她的白海棠扇头上题回去（库本词牌讹作金续曲，照录）：</p>
+    <div class="q">雪溅烟霏香露滴，笑世间、桃李成蹊径。</div>
+    <div class="qn">奕绘<span class="vt">金续曲·题太清画白海棠扇头</span>。一张扇，两支笔</div>
+    <p>题淡月疏梅，一句立住风骨：</p>
+    <div class="q">羞与众芳摇落，孤高竟不与、众芳争悦。</div>
+    <div class="qn"><span class="vt">暗香疏影·自题淡月疏梅</span></div>
+    <p>正月里自题的那柄墨牡丹团扇，起字一个侬字，牡丹偏不上红：</p>
+    <div class="q">侬，淡扫花枝待好风。瑶台种，不作可怜红。</div>
+    <div class="qn"><span class="vt">苍梧谣·正月三日自题墨牡丹扇</span></div>
+    <p>梦里也去看花：</p>
+    <div class="q">我欲遍游香雪海，惊梦醒，怨啼鸦。</div>
+    <div class="qn"><span class="vt">江城子·记梦</span></div>
+    <p>雪夜自题小照，把画画的态度一并说了：</p>
+    <div class="q">岂为平生偏爱雪，为人间留取真眉目。</div>
+    <div class="qn"><span class="vt">金缕曲·自题听雪小照</span></div>
+  </div>
+</section>
+
+<section class="jian" id="s6">
+  <div class="card rv">
+    <div class="jhead"><span class="jno">笺六</span><h2>戏与谜</h2></div>
+    <div class="jsub">藏十字的怨词、能倒读的律诗、空竹与秧歌</div>
+    <p><b>〈玉房怨〉</b>是一首元宵夜的怨词，二十来字里藏着从一到十（库本自带按语自解）。逐句点开看：</p>
+    <div class="q">
+      <div class="myst-list">
+        <div class="myst"><span>元宵夜，兀坐灯窗下。</span><span class="mnum">一</span></div>
+        <div class="myst"><span>问苍天，人在谁家？</span><span class="mnum">二</span></div>
+        <div class="myst"><span>恨玉郎，全无一点直心话。</span><span class="mnum">三</span></div>
+        <div class="myst"><span>叫奴欲罢不能罢。</span><span class="mnum">四</span></div>
+        <div class="myst"><span>吾今合口不言他。</span><span class="mnum">五</span></div>
+        <div class="myst"><span>论交情，曾不差。</span><span class="mnum">六</span></div>
+        <div class="myst"><span>染尘皂，难说清白话。</span><span class="mnum">七</span></div>
+        <div class="myst"><span>恨不得、一刀两断分两家。</span><span class="mnum">八</span></div>
+        <div class="myst"><span>可怜奴、手中无力能抛下。</span><span class="mnum">九</span></div>
+        <div class="myst"><span>我今设一计，教他无言可答。</span><span class="mnum">十</span></div>
+      </div>
+    </div>
+    <div class="qn"><span class="vt">玉房怨</span>全文。藏字之法见库本按语：如元字去兀是一，天字去人是二，繁体罢字无能是四</div>
+    <p><b>回文诗</b>两首，正读是律诗，逐字倒读另成新篇。点按钮试试第一首：</p>
+    <div id="huiwen" class="q">
+      <div class="hwline">秋江一钓野情闲，赤叶枫林映碧滩。</div>
+      <div class="hwline">游子客途乡渺渺，寺楼山曲路漫漫。</div>
+      <div class="hwline">幽窗夜火孤村远，阔岸荒沙落月残。</div>
+      <div class="hwline">舟泊晚凉初过雁，愁生更尽望江寒。</div>
+    </div>
+    <div class="qn"><span class="vt">回文诗</span>其一</div>
+    <button id="daodu-btn" type="button">倒 读</button>
+    <div class="q">
+      <div class="hwline">台高接影云山远，漠漠烟溪碧绕廊。</div>
+      <div class="hwline">回浪细翻平柳岸，小舟轻荡乱花塘。</div>
+    </div>
+    <div class="qn"><span class="vt">回文诗</span>其二，前两句</div>
+    <p><b>空竹</b>她也看，调名〈惜分钗〉，题里是看孩童抖空中。上片三个空字，下片三个冲字（戳一下试试）：</p>
+    <div class="q">偕天风，鼓其中。结采为绳，节竹为筒。</div>
+    <div class="qn"><span class="vt">惜分钗·看童子抖空中</span>，上片</div>
+    <div class="kong">
+      <span class="kb" id="kb1">空</span><span class="kb" id="kb2">空</span><span class="kb" id="kb3">冲</span>
+    </div>
+    <div class="q">实则能鸣，虚则能容。</div>
+    <div class="qn"><span class="vt">惜分钗</span>下片咏空竹之理</div>
+    <p>她也有看不下去的时候。京城里秧歌舞得满街都是，她写〈贺圣朝〉泼冷水：</p>
+    <div class="q">插秧种稻，何曾能够？古遗风不守。可怜浪费好时光，负良田千亩！</div>
+    <div class="qn"><span class="vt">贺圣朝·秧歌</span></div>
+  </div>
+</section>
+
+<section class="jian" id="s7">
+  <div class="card rv">
+    <div class="jhead"><span class="jno">笺七</span><h2>府变</h2></div>
+    <div class="jsub">道光十八年之后，寡居的侧室带着儿子们搬出王府</div>
+    <p>奕绘卒于道光十八年（1838）。此后她与诸子被挤出荣府，向定郡王投词求援。起句五个字：</p>
+    <div class="q">人世诚难料。</div>
+    <div class="qn"><span class="vt">金缕曲·上定郡王筠邻主人</span></div>
+    <p>中间一句是全家的实情：</p>
+    <div class="q">母子孤孀无人问，谁许王孙哀告。</div>
+    <div class="qn">同上</div>
+    <p>夜里做梦也惊，醒来写〈定风波〉，调名就叫恶梦：</p>
+    <div class="q">事事思量竟有因，半生尝尽苦酸辛。</div>
+    <div class="qn"><span class="vt">定风波·恶梦</span></div>
+    <p>旧年月只能从味道里回来。友人送蜜渍荔支，她想起南方的家：</p>
+    <div class="q">二十七年风景变，曾见。连林闽海野人家。</div>
+    <div class="qn"><span class="vt">定风波·谢云姜妹赠蜜渍荔支</span>。闽海，库本原文</div>
+    <p>另一次题记写得更直白：</p>
+    <div class="q">予不食此味廿六年矣</div>
+    <div class="qn"><span class="vt">清平乐</span>词题：<span class="vt">二月十日，金夫人惠芸苔菜</span>。词末又记：<span class="vt">好是江南二月，者般滋味香清</span></div>
+    <p>宫墙里的旧事也传到她笔下。听白头太监弹琴，她写：</p>
+    <div class="q">白头阿监抱琴来，未语眉先蹙。</div>
+    <div class="qn"><span class="vt">烛影摇红·听梨园太监陈进弹琴</span></div>
+    <div class="q">人间天上，四十年来，伤心惨目。</div>
+    <div class="qn">同上结拍。四十年的落差，弹琴人与听琴人各自心领</div>
+
+    <div class="ledger rv">
+      <div class="lrow"><div class="ly">己亥</div><div class="lt">道光十九年（1839），奕绘身后的第一个整年。惊蛰后一日她踏雪访友，归来雪更深了，在灯下题〈喝火令〉。</div></div>
+      <div class="lrow"><div class="ly">词证</div><div class="lt"><span class="vt">一路琼瑶，一路没车痕。一路远山近树，妆点玉乾坤</span>。词末自记书于灯下，是全书里最亮的一段归途。</div></div>
+      <div class="lrow"><div class="ly">同年</div><div class="lt">龚自珍同年写出己亥杂诗。后世把两个名字牵进一段丁香花公案，学界至今无实据。本页只对账词中的己亥纪年，流言不取。</div></div>
+    </div>
+    <div class="q" style="border-left-color:var(--zhu)">一路琼瑶，一路没车痕。一路远山近树，妆点玉乾坤。</div>
+    <div class="qn"><span class="vt">喝火令·己亥惊蛰后一日，雪中访云林，归途雪已深矣。遂题小词，书于灯下</span></div>
+  </div>
+</section>
+
+<section class="jian" id="s8">
+  <div class="card rv">
+    <div class="jhead"><span class="jno">笺八</span><h2>红楼影</h2></div>
+    <div class="jsub">词人之外，她还续过一部大红书</div>
+    <p>库本小传的末句，记了她另一重身份：</p>
+    <div class="q">晚年著有小说《红楼梦影》</div>
+    <div class="qn">库本开篇小传。她是唯一续写过红楼的女性小说家</div>
+    <p>曹雪芹友人敦敏的诗抄（<a href="maozhai-shichao.html">懋斋诗钞</a>，本卷第三十七篇导读）记着雪芹的行踪；一百多年后，一位满洲女词人接着写他笔下的人间。一条红楼线，在同一卷书架两头。</p>
+    <p>她咏茉莉的小词里，还埋了一个眼熟的词根：</p>
+    <div class="q">花气袭人喜欲狂，花前对酒乐非常。美人名字有余香。</div>
+    <div class="qn"><span class="vt">浣溪沙·立春前三日咏盆中茉莉</span>。花气袭人四字，后来正是红楼里一位丫头的名字</div>
+    <p>一册词选读完：借来的姓，署自家的画，题丈夫的扇，哭远嫁的友，求告无门的冬夜，雪中尽兴的归途。最后都收进八个字的词集名里，渔歌一曲，东海有声。</p>
+  </div>
+</section>
+
+</main>
+
+<footer id="coda">
+  <div class="codabox">
+    <div class="cw">雪窗常明</div>
+    <div class="cs">人去窗开，梅自落雪自落<br>词心不冷，是为天游阁</div>
+    <div class="coda-luo">殆知阁导读 第三百三十七篇 · <a href="mulu.html">回总目</a></div>
+  </div>
+</footer>
+
+<footer class="page">
+  <div class="wrap">
+    文本来源：殆知阁简体库（github.com/robertsong2000/daizhigev20）诗藏词集部〈顾太清词选〉一书，去空白约九千四百五十字，库本收太清词八十三调、回文诗二首、杂体一首，附奕绘词六首与徐德培的一篇题词。<br>
+    全部引文经脚本与库内文件去标点、归一异体后逐字比对通过；白话部分经反向扫描，六字窗与库本原文零重合。库本讹字（重赌、金续曲、璚）照录并在注中说明。<br>
+    时代局限：侧室名分、罪籍婚姻、吉凶感应与旧式性别观念皆当日习气，照录以存其真，不代表本页立场。丁香花公案属后人流言，本页不予采信。
+  </div>
+</footer>
+
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)}, $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+  // 推窗
+  $('#tuiwin').addEventListener('click',function(){
+    $('#winbox').classList.add('open');
+    this.classList.add('off');
+    setTimeout(function(){ $('#sealyu').classList.remove('off'); },2000);
+    setTimeout(function(){ $('#herolead').classList.add('on'); },1400);
+  });
+  // 显现
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target);} });
+  },{threshold:.12});
+  $$('.rv').forEach(function(el){ io.observe(el); });
+  // 花枝进度
+  var secs=$$('section.jian'), pods=$$('.bpod');
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      var i=secs.indexOf(e.target);
+      if(i>-1 && e.isIntersecting && pods[i]) pods[i].classList.add('on');
+    });
+  },{threshold:.2});
+  secs.forEach(function(s){ io2.observe(s); });
+  // 更漏子对调
+  var hz=$('#huanzi'), swapped=false;
+  hz.addEventListener('click',function(){
+    var a=hz.querySelector('.hz-a'), b=hz.querySelector('.hz-b');
+    swapped=!swapped;
+    hz.insertBefore(swapped?b:a, swapped?a:b);
+    hz.style.transition='none'; hz.style.opacity='.35';
+    setTimeout(function(){ hz.style.transition='opacity .5s'; hz.style.opacity='1'; },60);
+  });
+  // 玉房怨
+  $$('.myst').forEach(function(m){
+    m.addEventListener('click',function(){ m.classList.toggle('done'); });
+  });
+  // 回文倒读
+  var rev=false;
+  $('#daodu-btn').addEventListener('click',function(){
+    rev=!rev;
+    this.textContent=rev?'正 读':'倒 读';
+    $$('#huiwen .hwline').forEach(function(line,i){
+      var txt=line.textContent, out='';
+      if(rev){
+        var segs=txt.split(/([，。、？！])/), d=0;
+        segs.forEach(function(sg){
+          if(/^[，。、？！]$/.test(sg)){ out+=sg; return; }
+          for(var j=sg.length-1;j>=0;j--){ out+='<span class="ch" style="animation-delay:'+((i*4+d++)%13)*0.02+'s">'+sg[j]+'</span>'; }
+        });
+      } else { out=txt; }
+      line.innerHTML=out;
+      line.classList.toggle('rev',rev);
+    });
+  });
+  // 空竹
+  ['kb1','kb2','kb3'].forEach(function(id){
+    var el=document.getElementById(id);
+    el.addEventListener('click',function(){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); });
+  });
+})();
+</script>
+</body>
+</html>
