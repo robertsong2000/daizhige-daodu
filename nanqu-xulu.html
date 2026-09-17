@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>南词叙录 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --accent:#5e8fbb; --seal:#c0453c;
+  --wood:#8a6f52; --dim:#a29c8f; --line:rgba(232,228,220,.14);
+  --paperbg:#ded8cc;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;line-height:1.85;letter-spacing:.02em}
+a{color:var(--accent);text-decoration:none}
+.mono{font-family:"SFMono-Regular",Consolas,Menlo,monospace}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+
+/* ============ 首屏 句栏 ============ */
+#kai{position:relative;padding:88px 0 46px;text-align:center}
+.stagebox{position:relative;width:min(880px,94vw);margin:0 auto}
+#stage{display:block;width:100%;height:auto}
+.beam{fill:#3a332a}
+.beam2{fill:#4a4136}
+.pillar{fill:#463c2f}
+.floor{fill:#322b22}
+.plank{fill:#3c342a}
+.gCurt{cursor:pointer;transition:transform 1.1s cubic-bezier(.6,.05,.3,1),opacity 1.1s}
+.curt{fill:#5a3d33;stroke:#6e4c3f;stroke-width:1.2}
+.curtline{stroke:#4a3128;stroke-width:1;opacity:.75}
+.tassel{fill:#5e8fbb;opacity:.85}
+.gCurt.open{transform:translateX(-190px) rotate(-4deg);opacity:.06;pointer-events:none}
+.gCurt.cR.open{transform:translateX(190px) rotate(4deg)}
+.opened #stage .pieqian{opacity:.12;transition:opacity .8s .3s}
+.heroInner{position:absolute;left:50%;top:44%;transform:translate(-50%,-46%);text-align:center;opacity:0;transition:opacity .9s .5s;pointer-events:none}
+.opened .heroInner{opacity:1}
+.vtitle{writing-mode:vertical-rl;font-size:clamp(40px,7.6vw,70px);line-height:1.15;letter-spacing:.26em;color:var(--paper);margin:0 auto;height:min(52vh,410px);text-shadow:0 0 26px rgba(0,0,0,.55)}
+.heroSub{margin-top:10px;font-size:15px;color:var(--dim);letter-spacing:.14em}
+.heroSeal{display:inline-block;margin-top:16px;background:var(--seal);color:var(--paper);padding:9px 7px;border-radius:3px;box-shadow:0 0 0 1px rgba(232,228,220,.25) inset}
+.heroSeal span{display:block;writing-mode:vertical-rl;font-size:14px;line-height:1.3;letter-spacing:.18em;height:64px}
+.hint{position:absolute;left:50%;transform:translateX(-50%);bottom:-58px;color:var(--dim);font-size:14px;letter-spacing:.3em;animation:pulse 2.2s infinite}
+.opened~.hint,.opened .hint{display:none}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+.heroEye{max-width:640px;margin:74px auto 0;font-size:15.5px;color:var(--paper);opacity:.88;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 8px;text-align:center}
+.eyebrow{position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:13px;color:var(--dim);letter-spacing:.22em;white-space:nowrap}
+
+/* ============ 点戏簿 导航 ============ */
+#booknav{position:fixed;right:14px;bottom:14px;z-index:60;display:flex;gap:7px;background:rgba(25,25,23,.86);border:1px solid var(--line);border-radius:8px;padding:9px;backdrop-filter:blur(4px)}
+#booknav a{display:block;writing-mode:vertical-rl;font-size:13.5px;letter-spacing:.22em;color:var(--dim);padding:9px 5px;border:1px solid transparent;border-radius:4px;line-height:1.3;height:74px}
+#booknav a.on{color:var(--paper);background:rgba(94,143,187,.22);border-color:rgba(94,143,187,.55)}
+@media (max-width:720px){
+  #booknav{right:8px;left:8px;bottom:8px;justify-content:space-between;padding:6px}
+  #booknav a{writing-mode:horizontal-tb;height:auto;padding:6px 4px;letter-spacing:.08em;font-size:12.5px}
+}
+
+/* ============ 通用 section ============ */
+section{padding:74px 0 30px;position:relative}
+.shead{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sno{font-size:12px;color:var(--accent);letter-spacing:.3em;border:1px solid rgba(94,143,187,.5);padding:3px 8px;border-radius:3px}
+h2{font-size:29px;font-weight:600;letter-spacing:.2em}
+.slead{color:var(--dim);max-width:720px;margin-bottom:26px;font-size:15.5px}
+.q{background:var(--paperbg);color:#2a2620;padding:20px 24px;border-radius:4px;font-size:16.5px;line-height:2;box-shadow:0 2px 0 rgba(0,0,0,.4);position:relative}
+.q::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.qsrc{display:block;margin-top:8px;font-size:12.5px;color:#7a7263;letter-spacing:.12em}
+.qv{color:inherit}
+.two{display:grid;grid-template-columns:1.06fr .94fr;gap:26px;align-items:start}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+.stack>*+*{margin-top:16px}
+.note{font-size:13.5px;color:var(--dim);border-left:2px solid var(--line);padding-left:14px;margin-top:18px}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:2px 12px;font-size:12.5px;color:var(--dim);margin:3px 4px 3px 0}
+
+/* ============ 开场 三牌 ============ */
+.era{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.era .card{border:1px solid var(--line);border-radius:6px;padding:14px 16px;background:rgba(232,228,220,.045)}
+.era .card b{display:block;color:var(--accent);font-size:15px;letter-spacing:.16em;margin-bottom:6px;font-weight:600}
+.era .card p{font-size:13.8px;color:var(--paper);opacity:.85;line-height:1.8}
+@media (max-width:720px){.era{grid-template-columns:1fr}}
+.heartLine{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 6px}
+.heartLine .ft{border:1px solid rgba(192,69,60,.65);color:var(--paper);border-radius:4px;padding:5px 12px;font-size:13.5px;background:rgba(192,69,60,.13)}
+
+/* ============ 戏单墙 ============ */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 20px}
+.chips button{background:none;border:1px solid var(--line);color:var(--dim);border-radius:20px;padding:5px 15px;font-size:13.5px;cursor:pointer;font-family:inherit;letter-spacing:.06em}
+.chips button.on{color:var(--paper);border-color:var(--accent);background:rgba(94,143,187,.2)}
+.legend{font-size:13px;color:var(--dim);margin-bottom:16px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin:0 5px 0 12px;vertical-align:-1px}
+.legend i.wd{background:rgba(94,143,187,.75)}
+.legend i.fx{border:1px solid var(--seal)}
+.legend i.an{background:rgba(232,228,220,.25);border-radius:50%}
+#wall{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:10px}
+#wall.f-s li:not(.s){display:none}
+#wall.f-b li:not(.b){display:none}
+#wall.f-fx li:not(.fx){display:none}
+#wall.f-wd li:not(.wd){display:none}
+#wall.f-an li:not(.flip){display:none}
+.tile{position:relative;min-height:56px;border:1px solid var(--line);border-radius:5px;background:rgba(232,228,220,.05);display:flex;align-items:center;justify-content:center;padding:8px 10px;font-size:14.2px;text-align:center;line-height:1.5}
+.tile .tface{display:block;width:100%}
+.tile.wd{background:rgba(94,143,187,.30);border-color:rgba(94,143,187,.8)}
+.tile.fx{border:1px solid rgba(192,69,60,.85);background:rgba(192,69,60,.10)}
+.tile.flip{cursor:pointer}
+.tile.flip .corner{position:absolute;right:5px;top:5px;width:7px;height:7px;border-radius:50%;background:var(--paper);opacity:.55}
+.tile .tback{display:none;width:100%;font-size:12.3px;line-height:1.7;text-align:left;color:var(--paper)}
+.tile.flip.on .tface{display:none}
+.tile.flip.on .tback{display:block}
+.tile.flip.on{background:rgba(232,228,220,.12)}
+.tile .q{background:none;color:var(--paper);padding:2px 2px 2px 10px;font-size:12.3px;line-height:1.7;box-shadow:none}
+.tile .q::before{width:2px;background:var(--seal)}
+
+/* ============ 板穿 时间带 ============ */
+.tl{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:26px 0 8px;position:relative}
+.tl::before{content:"";position:absolute;left:2%;right:2%;top:21px;height:1px;background:var(--line)}
+.tn{position:relative;padding-top:44px}
+.tn i{position:absolute;top:12px;left:12px;width:19px;height:19px;border-radius:50%;border:2px solid var(--dim);background:var(--ink);transition:.5s}
+.tn.on i{border-color:var(--accent);background:var(--accent);box-shadow:0 0 12px rgba(94,143,187,.8)}
+.tn b{display:block;font-size:14.5px;letter-spacing:.14em;color:var(--accent);margin-bottom:6px;font-weight:600}
+.tn .q{font-size:13.8px;padding:12px 14px;line-height:1.85}
+.tn .q::before{width:2px}
+.tn .cap{font-size:12.3px;color:var(--dim);margin-top:8px;line-height:1.7}
+.tw{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.tw .q{font-size:14px}
+@media (max-width:860px){
+  .tl{grid-template-columns:1fr;gap:16px}
+  .tl::before{left:21px;top:2%;bottom:2%;width:1px;height:auto}
+  .tn{padding-top:0;padding-left:48px}
+  .tn i{top:2px;left:0}
+}
+
+/* ============ 四腔 ============ */
+#sec-qiang .q{margin-bottom:24px}
+.qcols{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:end}
+.qcol{border:1px solid var(--line);border-radius:6px 6px 0 0;background:rgba(232,228,220,.04);display:flex;flex-direction:column;cursor:pointer;transition:.35s;overflow:hidden}
+.qcol .nm{padding:12px 12px 8px;font-size:19px;letter-spacing:.2em;color:var(--paper);border-bottom:1px dashed var(--line)}
+.qcol .org{padding:8px 12px 2px;font-size:12.8px;color:var(--dim)}
+.qcol .use{padding:4px 12px 10px;display:flex;flex-wrap:wrap;gap:4px}
+.qcol .use span{font-size:11.8px;border:1px solid var(--line);border-radius:3px;padding:1px 6px;color:var(--paper);opacity:.8}
+.qcol .bar{margin:4px 12px 12px;border-radius:2px;background:linear-gradient(180deg,rgba(94,143,187,.85),rgba(94,143,187,.25));transition:height .6s}
+.qcol.kun .bar{background:linear-gradient(180deg,var(--seal),rgba(192,69,60,.25))}
+.qcol.on{border-color:var(--accent);background:rgba(94,143,187,.14);transform:translateY(-6px)}
+.qcol .crown{display:none;margin:0 12px 10px;padding:7px 10px;border-radius:4px;background:rgba(192,69,60,.2);font-size:13.5px;color:var(--paper)}
+.qcol.on .crown{display:block}
+.kunextra{margin-top:18px;display:none}
+.kunextra.on{display:block}
+@media (max-width:760px){.qcols{grid-template-columns:1fr 1fr}}
+
+/* ============ 行当 翻牌 ============ */
+.roles{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin:20px 0 8px}
+.role{border:1px solid var(--line);border-radius:6px;min-height:120px;cursor:pointer;position:relative;background:rgba(232,228,220,.045);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:12px 8px;transition:.3s}
+.role:hover{border-color:rgba(94,143,187,.6)}
+.role .zi{writing-mode:vertical-rl;font-size:30px;color:var(--accent);letter-spacing:.1em;margin-bottom:6px}
+.role small{font-size:11.5px;color:var(--dim);letter-spacing:.1em}
+.role .fq{display:none;position:absolute;inset:0;background:rgba(232,228,220,.1);backdrop-filter:blur(2px);padding:12px 10px;font-size:12.2px;line-height:1.72;color:var(--paper);overflow:auto}
+.role.open .fq{display:block}
+.role .q{background:none;box-shadow:none;padding:2px 2px 2px 9px;font-size:12.2px;line-height:1.72;color:var(--paper)}
+.role .q::before{width:2px}
+.terms{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.term{border:1px dashed var(--line);border-radius:6px;padding:12px 14px;font-size:13.6px;line-height:1.75}
+.term b{color:var(--accent);letter-spacing:.2em;font-weight:600;display:block;margin-bottom:4px}
+.term .q{background:none;box-shadow:none;padding:0 0 0 9px;font-size:12.8px;line-height:1.7;color:var(--paper)}
+.term .q::before{width:2px}
+@media (max-width:860px){.roles{grid-template-columns:repeat(4,1fr)}.terms{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.roles{grid-template-columns:repeat(3,1fr)}}
+
+/* ============ 碎语 词典 ============ */
+.dict{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.dw{border:1px solid var(--line);border-radius:6px;min-height:104px;cursor:pointer;position:relative;background:rgba(232,228,220,.045);padding:14px;transition:.3s}
+.dw:hover{border-color:rgba(94,143,187,.6)}
+.dw .w{font-size:23px;letter-spacing:.14em;color:var(--paper)}
+.dw .tag{position:absolute;right:10px;top:12px;font-size:10.5px;color:var(--accent);border:1px solid rgba(94,143,187,.5);border-radius:3px;padding:1px 5px}
+.dw .fq{display:none;position:absolute;inset:0;background:rgba(232,228,220,.1);padding:13px;font-size:12.6px;line-height:1.7;color:var(--paper);overflow:auto}
+.dw.open .fq{display:block}
+.dw .q{background:none;box-shadow:none;padding:0 0 0 9px;font-size:12.6px;line-height:1.7;color:var(--paper)}
+.dw .q::before{width:2px}
+@media (max-width:760px){.dict{grid-template-columns:repeat(2,1fr)}}
+.motto{max-width:560px;margin:6px 0 8px}
+
+/* ============ 收梢 ============ */
+#coda{padding-bottom:40px}
+.codastage{position:relative;margin-top:20px}
+.codastage svg{display:block;width:100%;height:auto}
+.codaText{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:row-reverse;gap:24px;align-items:center;justify-content:center}
+.codaText .qv{writing-mode:vertical-rl;font-size:19px;line-height:1.15;letter-spacing:.3em;color:var(--paper);height:260px;text-shadow:0 0 18px rgba(0,0,0,.6)}
+.codaText .qv.q2{font-size:13.5px;height:150px}
+.codaSeal{background:var(--seal);border-radius:3px;padding:8px 6px}
+.codaSeal span{display:block;writing-mode:vertical-rl;font-size:13px;line-height:1.3;letter-spacing:.16em;height:58px;color:var(--paper)}
+#lampG{cursor:pointer}
+#lampGlow{opacity:0;transition:opacity .8s}
+#lampG.on #lampGlow{opacity:1}
+#lampG.on .lampBody{fill:#e8c56a}
+@media (max-width:720px){
+  .codaText{position:static;transform:none;margin-top:14px;flex-wrap:wrap}
+}
+
+footer.plain{border-top:1px solid var(--line);margin-top:40px;padding:30px 0 110px;font-size:13.5px;color:var(--dim)}
+footer.plain p{margin-bottom:10px;max-width:860px}
+footer.plain a{color:var(--accent)}
+.xiaoji{font-size:12.8px;color:#8a8478}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s}
+.rv.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 句栏 ================= -->
+<section id="kai">
+  <div class="eyebrow">第三百七十五篇 · 殆知阁导读</div>
+  <div class="stagebox">
+    <svg id="stage" viewBox="0 0 880 470" role="img" aria-label="句栏戏台">
+      <rect class="beam" x="52" y="26" width="776" height="16" rx="2"/>
+      <rect class="beam2" x="34" y="42" width="812" height="10" rx="2"/>
+      <rect class="pieqian" x="352" y="58" width="176" height="34" rx="3" fill="#2e2820" stroke="#5e8fbb" stroke-opacity=".45"/>
+      <text class="pieqian" x="440" y="82" text-anchor="middle" font-size="19" letter-spacing="7" fill="#5e8fbb" font-family="inherit">鹘伶声嗽</text>
+      <rect class="pillar" x="76" y="52" width="15" height="380"/>
+      <rect class="pillar" x="789" y="52" width="15" height="380"/>
+      <rect class="floor" x="52" y="432" width="776" height="20"/>
+      <rect class="plank" x="90" y="410" width="700" height="8"/>
+      <rect class="plank" x="130" y="392" width="620" height="6" opacity=".6"/>
+      <g id="curL" class="gCurt cL">
+        <rect class="curt" x="91" y="52" width="270" height="358" rx="2"/>
+        <path class="curtline" d="M140,52 V410 M190,52 V410 M240,52 V410 M290,52 V410 M340,52 V410"/>
+        <rect class="tassel" x="86" y="402" width="8" height="26" rx="3"/>
+        <rect class="tassel" x="352" y="402" width="8" height="26" rx="3"/>
+      </g>
+      <g id="curR" class="gCurt cR">
+        <rect class="curt" x="519" y="52" width="270" height="358" rx="2"/>
+        <path class="curtline" d="M568,52 V410 M618,52 V410 M668,52 V410 M718,52 V410 M768,52 V410"/>
+        <rect class="tassel" x="514" y="402" width="8" height="26" rx="3"/>
+        <rect class="tassel" x="780" y="402" width="8" height="26" rx="3"/>
+      </g>
+      <text x="118" y="452" font-size="12" fill="#8a8478" letter-spacing="3">上场</text>
+      <text x="742" y="452" font-size="12" fill="#8a8478" letter-spacing="3">下场</text>
+    </svg>
+    <div class="heroInner">
+      <h1 class="vtitle">南词叙录</h1>
+      <div class="heroSub">明 徐渭 撰丨现存最早的南戏专论</div>
+      <div class="heroSeal"><span>天池道人</span></div>
+    </div>
+    <div class="hint">点 帘 开 卷</div>
+  </div>
+  <p class="heroEye">嘉靖己未夏，一位客居福建的病中人，把见得到的戏文挨个记下名字、写下评语，给后世留下宋元戏文仅存的一份完整账目。开场旧制里有他记的一笔：<span class="qv">「宋人凡句栏未出，一老者先出，夸说大意，以求赏，谓之「开呵」。今戏文首一出，谓之「开场」，亦遗意也。」</span></p>
+</section>
+<nav id="booknav"><a href="#sec-kai" data-t="sec-kai">开场</a><a href="#sec-dan" data-t="sec-dan">戏单</a><a href="#sec-pi" data-t="sec-pi">板穿</a><a href="#sec-qiang" data-t="sec-qiang">四腔</a><a href="#sec-hang" data-t="sec-hang">行当</a><a href="#sec-sui" data-t="sec-sui">碎语</a><a href="#coda" data-t="coda">收梢</a></nav>
+
+<!-- ================= 开场 ================= -->
+<section id="sec-kai">
+  <div class="wrap">
+    <div class="shead rv"><span class="sno mono">壹丨开场</span><h2>戏从何处来</h2></div>
+    <p class="slead rv">起点给得干脆：一部戏文史，从两部负心戏算起。</p>
+    <div class="era rv">
+      <div class="card"><b>起点</b><p>起点在宋光宗朝，温州人写的两部戏：〈赵贞女〉与〈王魁〉，后来被称作戏文之首。</p></div>
+      <div class="card"><b>更早的影子</b><p>也有人说宣和年间已经冒头，大盛是在渡江之后，俗名永嘉杂剧。</p></div>
+      <div class="card"><b>又一名</b><p>鹘伶声嗽，当时口语，意思是伶俐动听的腔调。</p></div>
+    </div>
+    <div class="two">
+      <div class="stack">
+        <div class="q rv">南戏始于宋光宗朝，永嘉人所作《赵贞女》，《王魁》二种实首之，故刘后村有「死后是非谁管得，满村听唱蔡中郎」之句。<span class="qsrc">叙论之一丨起源</span></div>
+        <div class="q rv">或云：「宣和间已滥觞，其盛行则自南渡，号曰「永嘉杂剧」，又曰「鹘伶声嗽」」。<span class="qsrc">叙论之一丨别称</span></div>
+        <div class="q rv">其曲，则宋人词而益以里巷歌谣，不叶宫调。<span class="qsrc">叙论之一丨曲体</span></div>
+      </div>
+      <div class="stack">
+        <p class="rv" style="font-size:15.5px">为什么是徐渭来记这笔账？他自己说得直白：北曲那边名录、曲目俱全，南戏却<strong>没有人选集，也没有人开单子</strong>。他嫌这是个缺口，病中无事，就自己补上。下面这段志语，是全书的由来。</p>
+        <div class="q rv">北杂剧有《点鬼簿》，院本有《乐府杂录》，曲选有《太平乐府》，记载详矣。惟南戏无人选集，亦无表其名目者，予尝惜之。客闽多病，咄咄无可与语，遂录诸戏文名，附以鄙见。岂曰成书，聊以消永日，忘歊蒸而已。嘉靖己未夏六月望，天池道人志。<span class="qsrc">卷尾志语丨全书的由来</span></div>
+      </div>
+    </div>
+    <p class="rv" style="margin-top:22px;font-size:15.5px">士大夫看不上它，理由是不讲宫调；徐渭替它答了一句：庄稼人市井女子顺口能唱，就是它的本事，谚语管这叫<strong>随心令</strong>。</p>
+    <div class="q rv motto">「永嘉杂剧」兴，则又即村坊小曲而为之，本无宫调，亦罕节奏，徒取其畸农、市女顺口可歌而已，谚所谓「随心令」者，即其技欤？<span class="qsrc">叙论之二丨随心令</span></div>
+  </div>
+</section>
+
+<!-- ================= 戏单 ================= -->
+<section id="sec-dan">
+  <div class="wrap">
+    <div class="shead rv"><span class="sno mono">贰丨戏单</span><h2>一百一十三出存目</h2></div>
+    <p class="slead rv">全书最要紧的部分就是这份单子：65 出宋元旧篇，48 出本朝新作，共 113 出。宋元戏文的存目，今天只有这一份是全的。金底五出是五大传奇，全在单上；朱框四出是负心戏文，恰好是这条河的源头。</p>
+    <div class="chips rv" id="chips">
+      <button data-f="" class="on">全部 113</button>
+      <button data-f="f-s">宋元旧篇 65</button>
+      <button data-f="f-b">本朝 48</button>
+      <button data-f="f-fx">负心 4</button>
+      <button data-f="f-wd">五大 5</button>
+      <button data-f="f-an">带按语 16</button>
+    </div>
+    <p class="legend rv">图例：<i class="wd"></i>五大传奇<i class="fx"></i>负心戏文<i class="an"></i>带角标者点一下翻面，读徐渭按语</p>
+    <ul id="wall">
+          <li class="tile s fx flip"><div class="tface"><span class="qv">《赵贞女蔡二郎》</span><i class="corner"></i></div><div class="tback"><div class="q">即旧伯喈弃亲背妇，为暴雷震死。里俗妄作也。实为戏文之首。</div></div></li>
+          <li class="tile s fx flip"><div class="tface"><span class="qv">《王魁负桂英》</span><i class="corner"></i></div><div class="tback"><div class="q">王魁名俊民，以状元及第。亦里俗妄作也。周密《齐东野语》辨之甚详。</div></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《陈巡检梅岭失妻》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《鬼元宵》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《王祥卧冰》</span></div></li>
+          <li class="tile s wd"><div class="tface"><span class="qv">《王十朋荆钗记》</span></div></li>
+          <li class="tile s wd"><div class="tface"><span class="qv">《杀狗劝夫》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《朱买臣休妻记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《莺莺西厢记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《司马相如题桥记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《陈光蕋江流和尚》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《孟姜女送寒衣》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《裴少俊墙头马上》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《柳耆卿花柳玩江楼》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《刘锡沉香太子》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《贺怜怜烟花怨》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《史弘肇故乡宴》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《苏小卿月下贩茶船》</span></div></li>
+          <li class="tile s fx"><div class="tface"><span class="qv">《陈叔万三负心》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《京娘怨燕子传书》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《欢喜冤家》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《乐昌公主破镜重圆》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《吕洞宾三醉岳阳楼》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《周处风云记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《王月英月下留鞋》</span></div></li>
+          <li class="tile s wd"><div class="tface"><span class="qv">《刘知远白兔记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《赵氏孤儿》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《苏秦衣锦还乡》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《赵普进梅谏》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《董秀才花月东墙记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《宋子京鹧鸪天》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《诈妮子莺燕争春》</span></div></li>
+          <li class="tile s wd"><div class="tface"><span class="qv">《蒋世隆拜月亭》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《崔君瑞江天暮雪》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《王公绰》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《柳文直正旦贺升平》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《秋夜銮城驿》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《秦桧东窗事犯》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《王孝子寻母》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《冯京三元记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《朱文太平钱》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《薛云卿鬼做媒》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《吕洞宾黄粱梦》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《贾似道木棉庵记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《何推官错勘尸》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《刘毅洞庭龙女》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《吕蒙正破窑记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《苏武牧羊记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《孟月梅锦香亭》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《张孜鸳鸯灯》</span></div></li>
+          <li class="tile s fx"><div class="tface"><span class="qv">《林招得三负心》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《唐伯亨八不知音》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《百花亭》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《冤家债主》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《刘文龙菱花镜》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《刘盼盼》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《生死夫妻》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《宝妆亭》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《教子寻亲》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《刘孝女金钗记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《借烛寻珠》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《多月亭》</span></div></li>
+          <li class="tile s flip"><div class="tface"><span class="qv">《闵子骞单衣记》</span><i class="corner"></i></div><div class="tback"><div class="q">高则诚作</div></div></li>
+          <li class="tile s wd"><div class="tface"><span class="qv">《蔡伯喈琵琶记》</span></div></li>
+          <li class="tile s"><div class="tface"><span class="qv">《王俊民休书记》</span></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《崔莺莺西厢记》</span><i class="corner"></i></div><div class="tback"><div class="q">李景云编</div></div></li>
+          <li class="tile b wd flip"><div class="tface"><span class="qv">《王十朋荆钗记》</span><i class="corner"></i></div><div class="tback"><div class="q">李景云编</div></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《天赐温凉□》</span><i class="corner"></i></div><div class="tback"><div class="q">教坊本</div></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《贾云华还魂记》</span><i class="corner"></i></div><div class="tback"><div class="q">溧阳人作</div></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《兰蕙联芳楼记》</span><i class="corner"></i></div><div class="tback"><div class="q">教坊本</div></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《琼奴传》</span><i class="corner"></i></div><div class="tback"><div class="q">教坊本</div></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《陈可中剔目记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《玉箫两世姻缘》</span></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《岳飞东窗事犯》</span><i class="corner"></i></div><div class="tback"><div class="q">用礼重编</div></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《商辂三元记》</span></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《冯京三元记》</span><i class="corner"></i></div><div class="tback"><div class="q">多市井语</div></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《邹知县湘湖记》</span><i class="corner"></i></div><div class="tback"><div class="q">多实事</div></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《冯国珍衣锦还乡》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《高汉卿罗囊记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《裴度还带记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《韩信筑坛拜将》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《张良圯桥进履》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《八不知犀合记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《桂英诬王魁》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《姜诗得鲤》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《张许双忠记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《孟宗泣竹》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《绣鞋记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《芙蓉屏记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《花园记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《银瓶记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《邓攸弃子抱侄》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《金钱记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《罗带记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《高文举》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《罗帕记》</span></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《五伦全备》</span><i class="corner"></i></div><div class="tback"><div class="q">邱文庄作</div></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《鸳鸯记》</span></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《香囊记》</span><i class="corner"></i></div><div class="tback"><div class="q">邵文明作</div></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《龙泉记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《三益记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《洪皓使虏记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《李白宫锦袍记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《娇红记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《破镜重圆》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《文林四景》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《丽情四景》</span></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《忠孝节义》</span><i class="corner"></i></div><div class="tback"><div class="q">方谕生作</div></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《百行传》</span></div></li>
+          <li class="tile b flip"><div class="tface"><span class="qv">《玉玦记》</span><i class="corner"></i></div><div class="tback"><div class="q">郑若庸作，故事太多</div></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《王阳明平逆记》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《中山狼白猿》</span></div></li>
+          <li class="tile b"><div class="tface"><span class="qv">《唐僧西游记》</span></div></li>
+    </ul>
+    <p class="note rv">单上小注：〈荆钗记〉与〈三元记〉各两见于两单，页面照录；压卷的〈琵琶记〉列在宋元单之末。另有今存最早的完整戏文〈张协状元〉不见于此单，其传本另有来历。</p>
+  </div>
+</section>
+
+<!-- ================= 板穿 ================= -->
+<section id="sec-pi">
+  <div class="wrap">
+    <div class="shead rv"><span class="sno mono">叁丨板穿</span><h2>一部琵琶记，护到卷尾</h2></div>
+    <p class="slead rv">单子末尾压着一部〈琵琶记〉。徐渭从头到尾护着它，连成书过程都记成了神话，却句句落在实处：小楼、按拍的脚、合而为一的烛。</p>
+    <div class="q rv">永嘉高经历明，避乱四明之栎社，惜伯喈之被谤，乃作《琵琶记》雪之，用清丽之词，一洗作者之陋，于是村坊小伎，进与古法部相参，卓乎不可及已。<span class="qsrc">叙论之一丨作意</span></div>
+    <div class="tl" id="tl">
+      <div class="tn rv"><i></i><b>一楼三年</b><div class="q">则成坐卧一小楼，三年而后成。<span class="qsrc">相传之一</span></div><p class="cap">闭门三年，只为把一个被冤枉的读书人写清楚。</p></div>
+      <div class="tn rv"><i></i><b>足按板穿</b><div class="q">其足按拍处，板皆为穿。<span class="qsrc">相传之二</span></div><p class="cap">脚是节拍器，地板替他记工时。</p></div>
+      <div class="tn rv"><i></i><b>双烛交辉</b><div class="q">尝夜坐自歌，二烛忽合而为一，交辉久之乃解。<span class="qsrc">相传之三</span></div><p class="cap">夜半自唱，两根烛火合到一处，久久才散。</p></div>
+      <div class="tn rv"><i></i><b>瑞光受旌</b><div class="q">好事者以其妙感鬼神<span class="qsrc">相传之四</span></div><p class="cap">绍兴城里为它起过一座瑞光楼以为旌表。</p></div>
+    </div>
+    <div class="rv" style="margin-top:18px">
+      <div class="sno mono" style="display:inline-block">附丨高皇双叹</div>
+      <div class="tw" style="max-width:760px">
+        <div class="q">五经、四书，布、帛、菽、粟也，家家皆有；高明《琵琶记》，如山珍、海错，贵富家不可无。<span class="qsrc">明太祖语一</span></div>
+        <div class="q">惜哉，以宫锦而制鞵也！<span class="qsrc">明太祖语二</span></div>
+      </div>
+      <p class="cap" style="font-size:12.3px;color:var(--dim);margin-top:8px">先夸是山珍海错，再叹拿宫锦做鞋；书里记下这句话之后，<span class="qv">「日令优人进演」</span>。</p>
+    </div>
+    <div class="q rv" style="margin-top:22px">或言：「《琵琶记》高处在《庆寿》、《成婚》、《弹琴》、《赏月》诸大套。」此犹有规模可寻。惟《食糠》、《尝药》、《筑坟》、《写真》诸作，从人心流出，严沧浪言「水中之月，空中之影」，最不可到。<span class="qsrc">叙论丨从人心流出</span></div>
+  </div>
+</section>
+
+<!-- ================= 四腔 ================= -->
+<section id="sec-qiang">
+  <div class="wrap">
+    <div class="shead rv"><span class="sno mono">肆丨四腔</span><h2>四路声腔，各划地盘</h2></div>
+    <p class="slead rv">同一台戏，四方唱法。徐渭给明代中期的声腔版图画了张草图，评语却只发给一路地盘最小的。点一点，看他把最漂亮的一句给了谁。</p>
+    <div class="q rv">今唱家称「弋阳腔」，则出于江西，两京、湖南、闽、广用之；称「余姚腔」者，出于会稽，常、润、池、太、扬、徐用之；称「海盐腔」者，嘉、湖、温、台用之。惟「昆山腔」止行于吴中，流丽悠远，出乎三腔之上，听之最足荡人，妓女尤妙此。<span class="qsrc">叙论丨四大声腔</span></div>
+    <div class="qcols rv" id="qcols">
+      <div class="qcol" data-k="y">
+        <div class="nm">弋阳腔</div><div class="org">出于江西</div>
+        <div class="use"><span class="qv">两京</span><span class="qv">湖南</span><span class="qv">闽</span><span class="qv">广</span></div>
+        <div class="bar" style="height:88px"></div>
+      </div>
+      <div class="qcol" data-k="y">
+        <div class="nm">余姚腔</div><div class="org">出于会稽</div>
+        <div class="use"><span class="qv">常</span><span class="qv">润</span><span class="qv">池</span><span class="qv">太</span><span class="qv">扬</span><span class="qv">徐</span></div>
+        <div class="bar" style="height:104px"></div>
+      </div>
+      <div class="qcol" data-k="y">
+        <div class="nm">海盐腔</div><div class="org">以地得名</div>
+        <div class="use"><span class="qv">嘉</span><span class="qv">湖</span><span class="qv">温</span><span class="qv">台</span></div>
+        <div class="bar" style="height:72px"></div>
+      </div>
+      <div class="qcol kun" data-k="k">
+        <div class="nm">昆山腔</div><div class="org">止行于吴中</div>
+        <div class="use"><span class="qv">吴中</span></div>
+        <div class="crown"><span class="qv">「流丽悠远，出乎三腔之上，听之最足荡人」</span></div>
+        <div class="bar" style="height:26px"></div>
+      </div>
+    </div>
+    <div class="kunextra rv" id="kunextra">
+      <div class="q" style="margin-top:16px">今昆山以笛、管、笙、琵按节而唱南曲者，字虽不应，颇相谐和，殊为可听，亦吴俗敏妙之事。<span class="qsrc">叙论丨笛管笙琵</span></div>
+      <p class="note">单上看，昆山那时地盘最小；这张草图画完之后的事，后来的戏曲史都知道了。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 行当 ================= -->
+<section id="sec-hang">
+  <div class="wrap">
+    <div class="shead rv"><span class="sno mono">伍丨行当</span><h2>后台七张面孔</h2></div>
+    <p class="slead rv">卷尾专设一门，考证行当名目的来路，几条读来像破案。点牌子翻面，看他的考语。</p>
+    <div class="roles rv">
+      <div class="role"><span class="zi">生</span><small>男子之称</small>
+        <div class="fq"><div class="q">即男子之称。史有董生、鲁生，乐府有刘生之属。</div></div></div>
+      <div class="role"><span class="zi">旦</span><small>花担出炉</small>
+        <div class="fq"><div class="q">宋伎上场，皆以乐器之类置篮中，担之以出，号曰「花担」。今陜西犹然。后省文为「旦」。</div></div></div>
+      <div class="role"><span class="zi">外</span><small>生外又一生</small>
+        <div class="fq"><div class="q">生之外又一生也，或谓之小生。</div></div></div>
+      <div class="role"><span class="zi">贴</span><small>旦外贴一旦</small>
+        <div class="fq"><div class="q">旦之外贴一旦也。</div></div></div>
+      <div class="role"><span class="zi">丑</span><small>墨粉涂面</small>
+        <div class="fq"><div class="q">以墨粉涂面，其形甚丑。</div></div></div>
+      <div class="role"><span class="zi">净</span><small>参军之讹</small>
+        <div class="fq"><div class="q">予意：即古「参军」二字，合而讹之耳。优中最尊。</div></div></div>
+      <div class="role"><span class="zi">末</span><small>居其末者</small>
+        <div class="fq"><div class="q">优中之少者为之，故居其末。</div></div></div>
+    </div>
+    <div class="terms rv">
+      <div class="term"><b>开场</b><div class="q">宋人凡句栏未出，一老者先出，夸说大意，以求赏，谓之「开呵」。今戏文首一出，谓之「开场」，亦遗意也。</div></div>
+      <div class="term"><b>宾白</b><div class="q">唱为主，白为宾，故曰宾、白，言其明白易晓也。</div></div>
+      <div class="term"><b>科</b><div class="q">相见、作揖、进拜、舞蹈、坐跪之类，身之所行，皆谓之科。</div></div>
+      <div class="term"><b>诨</b><div class="q">于唱白之际，出一可笑之语以诱坐客，如水之浑浑也。</div></div>
+    </div>
+    <p class="note rv">另有一目：库本行当门「传奇」条作「傅奇」，当系形近之讹，页面照录不改；其下解题云借为戏文之号，已非唐人之旧。</p>
+  </div>
+</section>
+
+<!-- ================= 碎语 ================= -->
+<section id="sec-sui">
+  <div class="wrap">
+    <div class="shead rv"><span class="sno mono">陆丨碎语</span><h2>一册行话小词典</h2></div>
+    <p class="slead rv">卷尾还挂着一部方言字义门，专收戏文里的行话俗字。今天的常语，当年是要一条条注解的冷知识。点词翻面。</p>
+    <div class="q rv motto">与其文而晦，曷若俗而鄙之易晓也？<span class="qsrc">叙论丨他的俗文学立场</span></div>
+    <div class="dict rv">
+      <div class="dw"><span class="w">忐忑</span><span class="tag">俗字</span><div class="fq"><div class="q">心不定貌。俗字也。</div></div></div>
+      <div class="dw"><span class="w">包弹</span><span class="tag">人名成词</span><div class="fq"><div class="q">包拯为中丞，善弹劾，故世谓物有可议者曰「包弹」。</div></div></div>
+      <div class="dw"><span class="w">九百</span><span class="tag">宋语</span><div class="fq"><div class="q">风魔也。宋人云：「九百尚在，六十犹痴」。</div></div></div>
+      <div class="dw"><span class="w">奴家</span><span class="tag">闽音犹存</span><div class="fq"><div class="q">妇人自称。今闽人犹然。</div></div></div>
+      <div class="dw"><span class="w">相公</span><span class="tag">最古</span><div class="fq"><div class="q">唐、宋谓执政曰「相公」。最古。</div></div></div>
+      <div class="dw"><span class="w">下官</span><span class="tag">最古</span><div class="fq"><div class="q">六朝以来，仕者见上，皆称「下官」，或曰「小官」。最古。</div></div></div>
+      <div class="dw"><span class="w">谢娘</span><span class="tag">今指妓</span><div class="fq"><div class="q">本谓文女，如谢道蕴是也。今以指妓。</div></div></div>
+      <div class="dw"><span class="w">行首</span><span class="tag">贵称</span><div class="fq"><div class="q">妓之贵称。居班行之首也。</div></div></div>
+      <div class="dw"><span class="w">辣浪</span><span class="tag">爽快</span><div class="fq"><div class="q">风流爽快也。</div></div></div>
+      <div class="dw"><span class="w">乔才</span><span class="tag">狡狯</span><div class="fq"><div class="q">狙诈也，狡狯也。</div></div></div>
+      <div class="dw"><span class="w">虚脾</span><span class="tag">虚情</span><div class="fq"><div class="q">虚情也。五脏为脾最虚。</div></div></div>
+      <div class="dw"><span class="w">恁</span><span class="tag">合音</span><div class="fq"><div class="q">「你每」二字，合呼为「恁」。</div></div></div>
+    </div>
+    <p class="note rv">「忐忑」二字，在这部书里还是登记在册的俗字；「包弹」因一位善弹劾的御史得名，一个词走了八百年，如今还在用。</p>
+  </div>
+</section>
+
+<!-- ================= 收梢 ================= -->
+<section id="coda">
+  <div class="wrap">
+    <div class="shead rv"><span class="sno mono">柒丨收梢</span><h2>空台一盏灯</h2></div>
+    <p class="slead rv">戏单写完，客病未愈，书以「岂曰成书」四字收梢。点灯，看最后一眼台。</p>
+    <div class="codastage rv">
+      <svg viewBox="0 0 880 320" role="img" aria-label="空戏台与一盏灯">
+        <rect class="beam" x="80" y="30" width="720" height="12" rx="2"/>
+        <rect class="pillar" x="100" y="42" width="12" height="230"/>
+        <rect class="pillar" x="768" y="42" width="12" height="230"/>
+        <rect class="floor" x="60" y="272" width="760" height="14"/>
+        <path d="M420,272 v-40 a20,20 0 0 1 40,0 v40 z" fill="#3a332a"/>
+        <g id="lampG">
+          <circle id="lampGlow" cx="640" cy="120" r="64" fill="rgba(232,197,106,.28)"/>
+          <line x1="640" y1="42" x2="640" y2="96" stroke="#4a4136" stroke-width="3"/>
+          <path class="lampBody" d="M640,96 m-26,24 a26,26 0 1 1 52,0 z" fill="#4a4136" stroke="#6a5c48" stroke-width="2"/>
+          <circle cx="640" cy="120" r="7" fill="#e8c56a"/>
+        </g>
+        <text x="440" y="300" text-anchor="middle" font-size="12" fill="#6a655b" letter-spacing="6">人散台空，单子留了下来</text>
+      </svg>
+      <div class="codaText">
+        <span class="qv">岂曰成书，聊以消永日，忘歊蒸而已。</span>
+        <span class="qv q2">嘉靖己未夏六月望，天池道人志。</span>
+        <div class="codaSeal"><span>消永日</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="plain">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库诗藏部明徐渭〈南词叙录〉（字文长，号天池道人；去空白约八千二百字，库内戏文目录前后重出两份、内容一致，页面取一份；全书含戏文存目一百一十三出、叙论十余则、行当门与方言字义门）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p>页面引文均经脚本与库内文件去标点、异体归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。</p>
+    <p class="xiaoji">校字记：库本行当门「传奇」作「傅奇」，形近之讹，照录；〈天赐温凉〉一目末字库中拆作「角戋」二字，页面以□代之；〈荆钗记〉〈三元记〉两单并收，照录；库本夹有后人眉注与校记（如何焯批语、今乐考证校字），页面一律不入引文。徐渭生平据明史文苑传与通行传记，非库内文本，库内名款唯「天池道人」。</p>
+    <p class="xiaoji">时代局限：本篇为古代文献导读，书中论乐的华夷之辨、对伎乐的品评与「负心」叙事中的两性观念皆属其时代，请以历史眼光阅读。</p>
+  </div>
+</footer>
+
+<script>
+/* ===== 点帘开卷 ===== */
+(function(){
+  var L=document.getElementById('curL'),R=document.getElementById('curR'),sec=document.getElementById('kai');
+  function openC(){L.classList.add('open');R.classList.add('open');sec.classList.add('opened');}
+  L.addEventListener('click',openC);R.addEventListener('click',openC);
+})();
+
+/* ===== 戏单翻面 ===== */
+document.querySelectorAll('#wall .tile.flip').forEach(function(t){
+  t.addEventListener('click',function(){t.classList.toggle('on');});
+});
+/* ===== 行当/词典翻面 ===== */
+document.querySelectorAll('.role,.dw').forEach(function(el){
+  el.addEventListener('click',function(){el.classList.toggle('open');});
+});
+
+/* ===== 戏单过滤 ===== */
+(function(){
+  var wall=document.getElementById('wall');
+  document.querySelectorAll('#chips button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#chips button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      wall.className=b.dataset.f;
+    });
+  });
+})();
+
+/* ===== 四腔点选 ===== */
+(function(){
+  var cols=document.querySelectorAll('.qcol'),extra=document.getElementById('kunextra');
+  cols.forEach(function(c){
+    c.addEventListener('click',function(){
+      cols.forEach(function(x){x.classList.remove('on');});
+      c.classList.add('on');
+      if(c.classList.contains('kun'))extra.classList.add('on');else extra.classList.remove('on');
+    });
+  });
+})();
+
+/* ===== 板穿时间带 ===== */
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+  },{threshold:.4});
+  document.querySelectorAll('#tl .tn').forEach(function(n){io.observe(n);});
+})();
+
+/* ===== 点灯 ===== */
+(function(){
+  var g=document.getElementById('lampG');
+  g.addEventListener('click',function(){g.classList.toggle('on');});
+})();
+
+/* ===== reveal + scrollspy ===== */
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+  var spy=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        document.querySelectorAll('#booknav a').forEach(function(a){a.classList.toggle('on',a.dataset.t===e.target.id);});
+      }
+    });
+  },{rootMargin:'-42% 0px -50% 0px'});
+  ['sec-kai','sec-dan','sec-pi','sec-qiang','sec-hang','sec-sui','coda'].forEach(function(id){
+    var el=document.getElementById(id);if(el)spy.observe(el);
+  });
+  document.querySelectorAll('#booknav a').forEach(function(a){
+    a.addEventListener('click',function(ev){
+      ev.preventDefault();
+      document.getElementById(a.dataset.t).scrollIntoView({behavior:'smooth'});
+    });
+  });
+})();
+</script>
+</body>
+</html>
