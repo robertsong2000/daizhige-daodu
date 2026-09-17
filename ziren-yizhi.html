@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>梓人遗制 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#201e1b; --ink3:#26231f; --line:#37332c;
+  --paper:#e8e4dc; --paper-dim:#b9b3a6; --paper-faint:#8f897c;
+  --bamboo:#5f9270; --bamboo-dim:#3f5f4b; --wood:#a98a5e; --wood-dim:#6f5638;
+  --sealred:#b4483d;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0 2px,transparent 2px 7px);
+  color:var(--paper);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC",serif;
+  line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:730px;margin:0 auto;padding:0 20px}
+a{color:var(--bamboo)}
+.q{
+  background:var(--ink3);border-left:3px solid var(--bamboo);
+  padding:10px 14px;margin:10px 0;border-radius:0 4px 4px 0;
+  color:var(--paper);font-size:14.5px;
+}
+.q .qi{font-style:normal}
+.src{font-size:12px;color:var(--paper-faint);margin:-4px 0 14px;padding-left:17px}
+/* ===== 折尺分节 ===== */
+.ruler{display:flex;gap:3px;height:36px;margin:52px 0 6px;align-items:stretch}
+.ruler i{flex:1;background:var(--paper);opacity:.10;border-radius:2px}
+.ruler i:nth-child(even){opacity:.22}
+.ruler i:nth-child(3n){opacity:.06}
+.rlabel{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+.rlabel b{font-size:20px;letter-spacing:2px;color:var(--paper)}
+.rlabel span{font-size:12.5px;color:var(--paper-faint);letter-spacing:1px}
+/* ===== 首屏 ===== */
+header.hero{padding:52px 0 10px}
+.kicker{font-size:12.5px;letter-spacing:3px;color:var(--bamboo);margin-bottom:8px}
+.hero-sub{font-size:13px;color:var(--paper-faint);margin-bottom:20px}
+.stage{
+  position:relative;background:var(--ink2);
+  border:1px solid var(--line);border-radius:8px;
+  padding:14px 10px 8px;overflow:hidden;
+}
+.stage::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 0%,rgba(95,146,112,.07),transparent 55%);
+}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:2px 8px 8px;font-size:12.5px;color:var(--paper-faint)}
+.hud b{color:var(--bamboo);font-weight:400}
+.hint{padding:4px 8px 0;font-size:12.5px;color:var(--paper-dim);letter-spacing:1px}
+#loom{display:block;width:100%;max-width:390px;margin:0 auto}
+#loom .part{cursor:pointer}
+#loom .part .body{fill:#2c2822;stroke:var(--wood-dim);stroke-width:1.6;transition:fill .35s,stroke .35s}
+#loom .part .hit{fill:#fff;opacity:0;pointer-events:all}
+#loom .part:hover .body{stroke:var(--wood)}
+#loom .part.lit .body{fill:rgba(95,146,112,.18);stroke:var(--bamboo)}
+#loom .plabel{font-size:11.5px;fill:var(--bamboo);opacity:0;transition:opacity .4s;letter-spacing:1px}
+#loom .part.lit .plabel{opacity:1}
+#loom .frame{fill:none;stroke:#3a352d;stroke-width:1.2}
+#loom .thread{stroke:#e8e4dc;opacity:.10;stroke-width:1}
+#loom .deco{fill:none;stroke:#2e2b25;stroke-width:1;stroke-dasharray:3 5}
+#loom .dim{font-size:10px;fill:#6a6458;letter-spacing:1px}
+.titlecol{
+  position:absolute;right:10px;top:46px;bottom:14px;z-index:2;
+  display:flex;align-items:flex-start;justify-content:flex-start;pointer-events:none;
+}
+.vt{
+  writing-mode:vertical-rl;font-size:46px;letter-spacing:14px;line-height:1;
+  color:var(--paper);opacity:0;transform:translateY(26px);
+  transition:opacity 1.2s ease,transform 1.2s ease;
+  text-shadow:0 0 22px rgba(0,0,0,.6);
+}
+.vt small{font-size:13px;letter-spacing:4px;color:var(--bamboo);margin-top:14px;display:inline-block}
+body.done .vt{opacity:1;transform:translateY(0)}
+.stamp{
+  width:64px;height:64px;border:2px solid var(--sealred);border-radius:6px;
+  display:grid;grid-template-columns:1fr 1fr;color:var(--sealred);
+  font-size:24px;line-height:1;margin-top:16px;
+  transform:rotate(-4deg) scale(1.6);opacity:0;
+  transition:opacity .5s ease .8s,transform .5s cubic-bezier(.2,1.4,.4,1) .8s;
+  background:rgba(180,72,61,.05);
+}
+.stamp i{font-style:normal;display:flex;align-items:center;justify-content:center}
+body.done .stamp{opacity:.92;transform:rotate(-4deg) scale(1)}
+.finale{display:none;margin-top:6px}
+body.done .finale{display:block}
+#reset{background:none;border:none;color:var(--paper-faint);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline dotted}
+/* ===== 序话 ===== */
+.shen{display:flex;gap:14px;align-items:flex-start;margin:18px 0}
+.shen .who{
+  flex:0 0 58px;height:150px;border:1px solid var(--line);border-radius:6px;
+  background:var(--ink2);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;
+}
+.shen .who b{writing-mode:vertical-rl;font-size:16px;letter-spacing:5px;font-weight:400}
+.shen .who span{font-size:10.5px;color:var(--paper-faint)}
+p.para{margin:12px 0;font-size:15px;color:var(--paper-dim)}
+p.para b{color:var(--paper);font-weight:400}
+/* ===== 七器名录 ===== */
+.mlist{border-top:1px solid var(--line)}
+.mrow{border-bottom:1px solid var(--line);padding:16px 2px 8px}
+.mhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.mhead .no{font-size:12px;color:var(--bamboo);letter-spacing:2px}
+.mhead h3{font-size:19px;font-weight:400;letter-spacing:2px}
+.mhead .gongtag{margin-left:auto;font-size:12px;color:var(--paper-faint)}
+.gongtag b{color:var(--bamboo);font-weight:400;font-size:15px}
+/* ===== 兽名翻卡 ===== */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+.fcard{position:relative;height:168px;cursor:pointer;perspective:800px}
+.fin,.fout{
+  position:absolute;inset:0;border-radius:6px;backface-visibility:hidden;
+  border:1px solid var(--line);padding:10px 10px;
+}
+.fin{background:var(--ink2);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px}
+.fin b{font-size:21px;font-weight:400;letter-spacing:3px}
+.fin span{font-size:11px;color:var(--paper-faint);letter-spacing:1px}
+.fout{background:var(--ink3);transform:rotateY(180deg);overflow:auto;font-size:11.5px;color:var(--paper-dim);line-height:1.7}
+.fout .q{font-size:11px;padding:6px 8px;margin:6px 0 0;border-left-width:2px;color:var(--paper)}
+.fout .src{margin:-2px 0 0;padding-left:10px;font-size:10px}
+.fcard.flip .fin{transform:rotateY(180deg)}
+.fcard.flip .fout{transform:rotateY(0)}
+.fout p{margin:0}
+/* ===== 功限所 ===== */
+.ledger{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:16px}
+.lgroup{padding:14px 16px 10px;border-bottom:1px dashed var(--line);background:var(--ink2)}
+.lgroup:last-child{border-bottom:none}
+.ltitle{font-size:13px;color:var(--wood);letter-spacing:2px;margin-bottom:8px}
+.lrows{display:flex;flex-wrap:wrap;gap:8px}
+.lrow{
+  flex:1 1 130px;border:1px solid var(--line);border-left:3px dotted var(--bamboo-dim);
+  border-radius:4px;padding:8px 10px;background:var(--ink);
+}
+.lrow em{display:block;font-style:normal;font-size:12px;color:var(--paper-dim)}
+.lrow b{font-size:22px;font-weight:400;color:var(--paper)}
+.lrow b s{text-decoration:none;font-size:12px;color:var(--paper-faint);margin-left:3px}
+.lsrc{margin-top:8px}
+.lsrc .q{font-size:12px;padding:7px 10px;margin:4px 0}
+.lsum{padding:12px 16px;background:var(--ink3);font-size:13.5px;color:var(--paper-dim);display:flex;justify-content:space-between}
+.lsum b{color:var(--bamboo);font-weight:400;font-size:17px}
+/* ===== 引古 ===== */
+.gu{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.gcard{border:1px solid var(--line);border-radius:6px;padding:12px 14px 6px;background:var(--ink2)}
+.gcard .q{background:none;border-left:none;border-top:2px solid var(--bamboo-dim);border-radius:0;padding:10px 0 0;margin:0;font-size:13.5px}
+.gcard .src{margin:2px 0 8px;padding-left:0}
+/* ===== 书劫 ===== */
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 6px}
+.num{border:1px solid var(--line);border-radius:6px;padding:12px 8px;text-align:center;background:var(--ink2)}
+.num b{display:block;font-size:23px;font-weight:400;color:var(--bamboo);letter-spacing:1px}
+.num span{font-size:11px;color:var(--paper-faint);letter-spacing:1px}
+/* ===== 尾屏 ===== */
+footer.coda{margin-top:60px;padding:46px 0 40px;background:linear-gradient(#191917,#151513);border-top:1px solid var(--line)}
+.coda-in{display:flex;justify-content:center;gap:30px;align-items:flex-start}
+.vq-block{writing-mode:vertical-rl;height:240px;font-size:16px;letter-spacing:4px;color:var(--paper)}
+.vq-block .q{background:none;border:none;padding:0;margin:0;font-size:inherit}
+.coda-seal{
+  width:72px;height:72px;border:2px solid var(--sealred);border-radius:6px;
+  display:grid;grid-template-columns:1fr 1fr;color:var(--sealred);
+  font-size:26px;transform:rotate(3deg);margin-top:80px;background:rgba(180,72,61,.05);
+}
+.coda-seal i{font-style:normal;display:flex;align-items:center;justify-content:center}
+.safe{margin-top:34px;border:1px dashed var(--line);border-radius:6px;padding:12px 16px;font-size:12.5px;color:var(--paper-faint)}
+.safe b{color:var(--wood);font-weight:400}
+footer.plain{padding:26px 0 50px;font-size:12.5px;color:var(--paper-faint);line-height:1.9}
+footer.plain a{color:var(--bamboo);text-decoration:none}
+.xiaoji{margin-top:8px}
+@media (max-width:620px){
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .gu{grid-template-columns:1fr}
+  .nums{grid-template-columns:repeat(2,1fr)}
+  .vt{font-size:36px;letter-spacing:10px}
+  .lrow{flex:1 1 44%}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏：立机子图 ================= -->
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">殆知阁导读 · 艺藏工艺</div>
+    <div class="hero-sub">一部元代木匠公开的图纸上，织机不走学名，走兽名与人体名。</div>
+    <div class="stage">
+      <div class="hint" id="hint">点件认名，认满十件书名自现</div>
+      <div class="hud">
+        <span>认件 <b id="cnt">0</b> / 10　<button id="reset" type="button">重认</button></span>
+        <span>立机子 · 图样</span>
+      </div>
+      <svg id="loom" viewBox="0 0 360 440" role="img" aria-label="立机子图样">
+        <!-- 建筑基线 -->
+        <line class="deco" x1="18" y1="408" x2="342" y2="408"/>
+        <line class="deco" x1="60" y1="30" x2="60" y2="400" stroke-dasharray="2 6"/>
+        <text class="dim" x="46" y="120" transform="rotate(-90 46 120)">五尺五寸</text>
+        <!-- 经线 -->
+        <g>
+          <line class="thread" x1="112" y1="100" x2="112" y2="292"/>
+          <line class="thread" x1="128" y1="100" x2="128" y2="292"/>
+          <line class="thread" x1="144" y1="100" x2="144" y2="292"/>
+          <line class="thread" x1="160" y1="100" x2="160" y2="292"/>
+          <line class="thread" x1="176" y1="100" x2="176" y2="292"/>
+          <line class="thread" x1="192" y1="100" x2="192" y2="292"/>
+          <line class="thread" x1="208" y1="100" x2="208" y2="292"/>
+          <line class="thread" x1="224" y1="100" x2="224" y2="292"/>
+          <line class="thread" x1="236" y1="100" x2="236" y2="292"/>
+        </g>
+        <!-- 机架（不可点） -->
+        <g class="frame">
+          <rect x="86" y="76" width="176" height="9" fill="#242019"/>
+          <rect x="86" y="76" width="10" height="330" fill="#242019"/>
+          <rect x="252" y="76" width="10" height="330" fill="#242019"/>
+        </g>
+        <!-- 马头 -->
+        <g class="part" data-name="马头">
+          <polygon class="body" points="30,77 40,66 92,66 92,88 40,88"/>
+          <rect class="hit" x="26" y="58" width="70" height="38"/>
+          <text class="plabel" x="30" y="56">马头</text>
+        </g>
+        <!-- 兔耳 -->
+        <g class="part" data-name="兔耳">
+          <polygon class="body" points="150,84 158,56 166,84"/>
+          <polygon class="body" points="182,84 190,56 198,84"/>
+          <rect class="hit" x="146" y="50" width="56" height="40"/>
+          <text class="plabel" x="168" y="44">兔耳</text>
+        </g>
+        <!-- 鸦儿木 -->
+        <g class="part" data-name="鸦儿木">
+          <path class="body" d="M104,142 h56 l6,6 l-6,6 h70 v-12 z"/>
+          <rect class="hit" x="100" y="134" width="140" height="26"/>
+          <text class="plabel" x="104" y="132">鸦儿木</text>
+        </g>
+        <!-- 悬鱼儿 -->
+        <g class="part" data-name="悬鱼儿">
+          <path class="body" d="M170,156 c8,6 8,20 0,28 c-8,-8 -8,-22 0,-28 z"/>
+          <polygon class="body" points="166,184 174,184 170,196"/>
+          <rect class="hit" x="156" y="152" width="28" height="50"/>
+          <text class="plabel" x="186" y="174">悬鱼儿</text>
+        </g>
+        <!-- 大五木 -->
+        <g class="part" data-name="大五木">
+          <rect class="body" x="92" y="204" width="164" height="9" rx="4"/>
+          <rect class="body" x="92" y="213" width="6" height="20"/>
+          <rect class="body" x="250" y="213" width="6" height="20"/>
+          <rect class="hit" x="88" y="198" width="172" height="40"/>
+          <text class="plabel" x="60" y="212">大五木</text>
+        </g>
+        <!-- 机胳膝 -->
+        <g class="part" data-name="机胳膝">
+          <rect class="body" x="244" y="256" width="26" height="11" transform="rotate(32 257 262)"/>
+          <rect class="hit" x="238" y="246" width="42" height="40"/>
+          <text class="plabel" x="196" y="250">机胳膝</text>
+        </g>
+        <!-- 卷轴 -->
+        <g class="part" data-name="卷轴">
+          <rect class="body" x="96" y="284" width="164" height="16" rx="8"/>
+          <ellipse class="body" cx="260" cy="292" rx="5" ry="8"/>
+          <rect class="hit" x="92" y="278" width="176" height="28"/>
+          <text class="plabel" x="52" y="296">卷轴</text>
+        </g>
+        <!-- 曲胳肘子 -->
+        <g class="part" data-name="曲胳肘子">
+          <circle class="body" cx="257" cy="330" r="10"/>
+          <line class="body" x1="257" y1="330" x2="172" y2="392" stroke="var(--wood-dim)" stroke-width="5"/>
+          <rect class="hit" x="240" y="314" width="42" height="42"/>
+          <text class="plabel" x="184" y="320">曲胳肘子</text>
+        </g>
+        <!-- 长脚踏 -->
+        <g class="part" data-name="长脚踏">
+          <polygon class="body" points="64,392 246,386 246,396 64,400"/>
+          <circle class="body" cx="251" cy="391" r="5"/>
+          <rect class="hit" x="60" y="380" width="196" height="26"/>
+          <text class="plabel" x="40" y="384">长脚踏</text>
+        </g>
+        <!-- 短脚踏 -->
+        <g class="part" data-name="短脚踏">
+          <polygon class="body" points="118,402 246,398 246,406 118,408"/>
+          <circle class="body" cx="251" cy="402" r="5"/>
+          <rect class="hit" x="114" y="394" width="142" height="20"/>
+          <text class="plabel" x="96" y="422">短脚踏</text>
+        </g>
+      </svg>
+      <div class="titlecol">
+        <div>
+          <div class="vt">梓人遗制<small>元 · 薛景石</small></div>
+          <div class="stamp seal"><i>遗</i><i>梓</i><i>制</i><i>人</i></div>
+        </div>
+      </div>
+      <div class="finale">
+        <div class="q"><span class="qi">每一器必离析其体而缕数之，分则各有其名，合则共成一器。</span><span class="qn">段成己序</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= 壹 序话 ================= -->
+<div class="ruler"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="rlabel"><b>壹 · 序话</b><span>匠不藏私</span></div>
+
+<p class="para">元中统年间，河中府万泉县有位木匠薛景石，字叔矩。他平日造车造织机，手艺高出同辈，却做了一件同辈都不肯做的事：把脑子里的尺寸和窍门一条一条写成书、绘成图，谁都能照着造。为他作序的段成己把行里的老规矩先挑明了：</p>
+<div class="q"><span class="qi">技苟有以过人，唯恐人之我若而分其利，常人之情也。</span><span class="qn">序</span></div>
+<p class="para">接着夸他反着来：讲得细到像师傅站在耳边交代，所以乐意替他说话。</p>
+<div class="q"><span class="qi">观景石之法，分布晓析，不啻面命提耳而诲之者，其用心焉何如</span><span class="qn">序</span></div>
+<p class="para">序里交代了这部书怎么来的：薛景石趁着砍料间隙的空当，追问每件器物图样的来历，参照当时的做法重新画图；全书<b>取数一百一十条，吃不准的地方宁可空着</b>。也交代了作者是谁：</p>
+<div class="q"><span class="qi">景石薛姓，字叔矩，河中万泉人。</span><span class="qn">序</span></div>
+<div class="q"><span class="qi">其所制作不失古法，而间出新意</span><span class="qn">序</span></div>
+<p class="para">在段成己眼里，木作这门手艺传得很早，分工却越传越含糊：</p>
+<div class="q"><span class="qi">古攻木之工七：轮、舆、弓、庐、匠，车、梓，今合而为二</span><span class="qn">序</span></div>
+<p class="para">更早还有位姜姓的人刻过一部同类的书，可惜粗略不全。薛景石这部取而精之，每一件器都拆开来讲：单独看，每根料有名字；合起来，正好是一台机器。序末点出全书的用意：</p>
+<div class="q"><span class="qi">规矩必度，各疏其下。使攻木者揽焉，所得可十九矣。</span><span class="qn">序</span></div>
+<p class="para">话说得老实：照这本册子做，十成里能会九成。</p>
+
+<!-- ================= 贰 七器名录 ================= -->
+<div class="ruler"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="rlabel"><b>贰 · 七器名录</b><span>一车六机</span></div>
+
+<p class="para">全书七件器，一件车、六部机，每件都按叙事、用材、功限三段写：来历、下料尺寸、完工工时，账目清楚。</p>
+
+<div class="mlist">
+  <div class="mrow">
+    <div class="mhead"><span class="no">其一</span><h3>五明坐车子</h3><span class="gongtag">至多 <b>八十七</b> 功</span></div>
+    <p class="para">牛拉的篷车。农家拉货那种，就是古时的役车；官家坐的那种带楼带檐，俗称五明车，又因常用骆驼拉而叫驼车。</p>
+    <div class="q"><span class="qi">其官寮所乘者即俗云五明车，又云驼车</span><span class="qn">叙事</span></div>
+    <div class="q"><span class="qi">坐车子一辆，脚楼子梯槛护泥杂物等相合完备皆全，高三尺脚者四十功，高四尺者五十四功，五尺者八十七功。</span><span class="qn">功限</span></div>
+  </div>
+  <div class="mrow">
+    <div class="mhead"><span class="no">其二</span><h3>华机子</h3><span class="gongtag">机身机楼 <b>各七</b> 功</span></div>
+    <p class="para">书里最排场的一部机：机顶有龙脊，机尾卧着牛，配脚踏与提综杠杆，织带花样的料子全靠它。</p>
+    <div class="q"><span class="qi">长八尺至八尺六寸，上至龙脊杆子，下至机身，共高八尺至八尺六寸，横广槾外三尺六寸。</span><span class="qn">用材</span></div>
+  </div>
+  <div class="mrow">
+    <div class="mhead"><span class="no">其三</span><h3>泛床子</h3><span class="gongtag">全备 <b>一点五</b> 功</span></div>
+    <p class="para">华机子的配套辅床，先在这张床上把提综的线排好，再搬上主机。</p>
+    <div class="q"><span class="qi">凡泛床子，是华机子内白踏搊蘸桩子打缯线上使用</span><span class="qn">用材</span></div>
+  </div>
+  <div class="mrow">
+    <div class="mhead"><span class="no">其四</span><h3>掉篗座</h3><span class="gongtag">全备 <b>一点一</b> 功</span></div>
+    <p class="para">绞线的小车床，把丝线绕上篗子，备纬接头都用它。</p>
+    <div class="q"><span class="qi">凡掉篗是打榥丝线经上使用</span><span class="qn">用材</span></div>
+  </div>
+  <div class="mrow">
+    <div class="mhead"><span class="no">其五</span><h3>立机子</h3><span class="gongtag">首屏图样即此</span></div>
+    <p class="para">全书的主角，一台竖起来的织机：脚踏一长一短，曲柄连杆把踩下去的劲送到机顶，素纱花罗都织得。它的零件还能换着装：</p>
+    <div class="q"><span class="qi">或就身做脚，或下栓短脚，或马头上安高梁豁丝木</span><span class="qn">用材</span></div>
+  </div>
+  <div class="mrow">
+    <div class="mhead"><span class="no">其六</span><h3>罗机子</h3><span class="gongtag">完备 <b>十七</b> 功</span></div>
+    <p class="para">织罗的机器。罗是经线相互绞转、布面带小孔的料子，透气凉快。机上配一把砍刀状的打纬刀，刀背开槽，斜钻蚁眼小孔。</p>
+    <div class="q"><span class="qi">罗机砍刀并杂物完备一十七功，如素者一十功。</span><span class="qn">功限</span></div>
+  </div>
+  <div class="mrow">
+    <div class="mhead"><span class="no">其七</span><h3>小布卧机子</h3><span class="gongtag">全份 <b>五点七</b> 功</span></div>
+    <p class="para">最家常的卧式小布机，织匠整个人坐在机身里干活。</p>
+    <div class="q"><span class="qi">卧机子一个，榺子箴框辊轴共各皆完备全五功七分</span><span class="qn">功限</span></div>
+  </div>
+</div>
+
+<!-- ================= 叁 部件谱 ================= -->
+<div class="ruler"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="rlabel"><b>叁 · 部件谱</b><span>兽名动物园，点卡翻面看尺寸</span></div>
+
+<p class="para">这台机器不吃学名：机顶弓着<b>龙脊</b>，探出<b>马头</b>，竖起<b>兔耳</b>，镇着<b>卧牛</b>，飞着<b>鸦儿</b>，垂着<b>悬鱼</b>，弯着<b>胳膝</b>和<b>胳肘</b>，连刀背上钻的小孔都叫<b>蚍蜉眼儿</b>。一张机子，半栏动物园。以下十六件，点卡翻面。</p>
+
+<div class="cards">
+  <div class="fcard"><div class="fin"><b>马头</b><span>立机子</span></div>
+    <div class="fout"><p>机顶向前探出的一段，像马低头，经线从这里引出去。</p>
+      <div class="q"><span class="qi">马头长二尺二寸，广六寸，厚一寸至一寸二分。机身前引出一尺七寸。</span></div>
+      <div class="src">立机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>兔耳</b><span>立机子</span></div>
+    <div class="fout"><p>机顶中央一对短木，像竖起的兔耳。</p>
+      <div class="q"><span class="qi">兔耳长六寸，广二寸四分，厚一寸。心内一个厚二寸。</span></div>
+      <div class="src">立机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>鸦儿木</b><span>立机子</span></div>
+    <div class="fout"><p>带鸦嘴缺口的小横木，管分经。</p>
+      <div class="q"><span class="qi">鸦儿木长九寸，方广二寸三分。</span></div>
+      <div class="src">立机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>悬鱼儿</b><span>立机子</span></div>
+    <div class="fout"><p>鸦儿木下垂的一条小鱼形木片，动一动，综便提一次。</p>
+      <div class="q"><span class="qi">悬鱼儿长一尺，广一寸八分，厚八分。</span></div>
+      <div class="src">立机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>大五木</b><span>立机子</span></div>
+    <div class="fout"><p>横贯机身的大轴，两头装掌手、垂手，是提综的总枢。</p>
+      <div class="q"><span class="qi">大五木长随两机身外楞齐。</span></div>
+      <div class="src">立机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>机胳膝</b><span>立机子</span></div>
+    <div class="fout"><p>机身上的膝弯托件，卷轴架在它外头。</p>
+      <div class="q"><span class="qi">机胳膝长一尺五寸，厚一寸二分。</span></div>
+      <div class="src">立机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>卷轴</b><span>立机子</span></div>
+    <div class="fout"><p>织成的布卷上来，轴面开一道水槽防滑。</p>
+      <div class="q"><span class="qi">卷轴长随机身胳膝外之齐径方广二寸，上开水槽。</span></div>
+      <div class="src">立机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>曲胳肘子</b><span>立机子</span></div>
+    <div class="fout"><p>像胳膊肘的曲柄连杆，把脚踏的劲传到机顶。</p>
+      <div class="q"><span class="qi">曲胳肘子长二尺二寸，广一寸六分，心内厚八分。</span></div>
+      <div class="src">立机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>长脚踏</b><span>立机子</span></div>
+    <div class="fout"><p>两块踏板一长一短，交替踩出梭口。</p>
+      <div class="q"><span class="qi">长脚踏长二尺四寸，广二寸，厚一寸四分。</span></div>
+      <div class="src">立机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>短脚踏</b><span>立机子</span></div>
+    <div class="fout"><p>短的踏板，与长脚踏配对。</p>
+      <div class="q"><span class="qi">短脚踏长一尺八寸，广厚长脚同</span></div>
+      <div class="src">立机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>龙脊杆子</b><span>华机子</span></div>
+    <div class="fout"><p>机顶当梁的骨干，像龙的脊背弓在机楼上。</p>
+      <div class="q"><span class="qi">龙脊杆子长随机身之长，厚随冲天立柱之方广。</span></div>
+      <div class="src">华机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>卧牛子</b><span>华机子</span></div>
+    <div class="fout"><p>机尾一大块横木压住机架，像一头卧倒的牛。</p>
+      <div class="q"><span class="qi">卧牛子长三尺六寸，随机身横之广径，广六寸，厚五寸。</span></div>
+      <div class="src">华机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>白踏椿子</b><span>华机子</span></div>
+    <div class="fout"><p>织纱用的提综杆，纱要绞转，全靠它翻跟头。</p>
+      <div class="q"><span class="qi">白踏椿子长二尺六寸，上广二寸，厚六分，下广二寸二分，厚八分。</span></div>
+      <div class="src">华机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>梭子</b><span>立机子</span></div>
+    <div class="fout"><p>两头收尖的织梭，中心钻一枚蚍蜉眼儿穿线。</p>
+      <div class="q"><span class="qi">梭子长一尺三寸至四寸，中心广一寸五分，厚一寸二分。</span></div>
+      <div class="src">立机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>砍刀</b><span>罗机子</span></div>
+    <div class="fout"><p>织罗的打纬刀，刀背开三道池槽，斜钻蚁眼小孔。</p>
+      <div class="q"><span class="qi">砍刀长二尺八寸，广三寸六分至四寸，厚一寸二分。背上三池槽各长四寸，心用斜钻蚍蜉眼儿。</span></div>
+      <div class="src">罗机子·用材</div></div></div>
+  <div class="fcard"><div class="fin"><b>辟恶圈</b><span>五明坐车子</span></div>
+    <div class="fout"><p>车楼门框上一圈辟邪的木圈，车也有自己的门神。</p>
+      <div class="q"><span class="qi">辟恶圈于楼子门前用之，下是地袱木，上是立椿子，内用水版</span></div>
+      <div class="src">五明坐车子·用材</div></div></div>
+</div>
+
+<!-- ================= 肆 功限所 ================= -->
+<div class="ruler"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="rlabel"><b>肆 · 功限所</b><span>一功是一人一日的活，定额开在纸上</span></div>
+
+<p class="para">这部书还是一张工价表：每件器、每根料该用几个人日，写得像官府的定额公文。下面把全书功限拢成一本账。</p>
+
+<div class="ledger">
+  <div class="lgroup">
+    <div class="ltitle">五明坐车子 · 整车</div>
+    <div class="lrows">
+      <div class="lrow"><em>脚高三尺</em><b data-g="40">四十<s>功</s></b></div>
+      <div class="lrow"><em>脚高四尺</em><b data-g="54">五十四<s>功</s></b></div>
+      <div class="lrow"><em>脚高五尺</em><b data-g="87">八十七<s>功</s></b></div>
+    </div>
+    <div class="lsrc"><div class="q"><span class="qi">坐车子一辆，脚楼子梯槛护泥杂物等相合完备皆全，高三尺脚者四十功，高四尺者五十四功，五尺者八十七功。</span><span class="qn">功限</span></div></div>
+  </div>
+  <div class="lgroup">
+    <div class="ltitle">罗机子与小布卧机子</div>
+    <div class="lrows">
+      <div class="lrow"><em>罗机带砍刀全份</em><b data-g="17">十七<s>功</s></b></div>
+      <div class="lrow"><em>罗机素者</em><b data-g="10">十<s>功</s></b></div>
+      <div class="lrow"><em>卧机全份</em><b data-g="5.7">五点七<s>功</s></b></div>
+    </div>
+    <div class="lsrc">
+      <div class="q"><span class="qi">罗机砍刀并杂物完备一十七功，如素者一十功。</span><span class="qn">罗机子·功限</span></div>
+      <div class="q"><span class="qi">卧机子一个，榺子箴框辊轴共各皆完备全五功七分</span><span class="qn">小布卧机子·功限</span></div>
+    </div>
+  </div>
+  <div class="lgroup">
+    <div class="ltitle">华机子 · 分件</div>
+    <div class="lrows">
+      <div class="lrow"><em>机身并机楼</em><b data-g="7">七<s>功</s></b></div>
+      <div class="lrow"><em>卧牛一件</em><b data-g="1">一<s>功</s></b></div>
+      <div class="lrow"><em>筬框全副</em><b data-g="1.5">一点五<s>功</s></b></div>
+      <div class="lrow"><em>特木儿六件</em><b data-g="0.8">零点八<s>功</s></b></div>
+      <div class="lrow"><em>弓棚架</em><b data-g="1.2">一点二<s>功</s></b></div>
+      <div class="lrow"><em>搊蘸十二扇</em><b data-g="3.2">三点二<s>功</s></b></div>
+    </div>
+    <div class="lsrc">
+      <div class="q"><span class="qi">机身机楼子共各七功。</span><span class="qn">功限</span></div>
+      <div class="q"><span class="qi">卧牛子一个一功。</span><span class="qn">功限</span></div>
+      <div class="q"><span class="qi">筬框一副全一功五分。</span><span class="qn">功限</span></div>
+      <div class="q"><span class="qi">特木儿六个八分功。</span><span class="qn">功限</span></div>
+      <div class="q"><span class="qi">弓棚架一功二分。</span><span class="qn">功限</span></div>
+      <div class="q"><span class="qi">搊蘸各一副一十二扇，全造三功二分。</span><span class="qn">功限</span></div>
+    </div>
+  </div>
+  <div class="lsum"><span>全书功限合计</span><b id="gsum"></b></div>
+</div>
+
+<!-- ================= 伍 引古 ================= -->
+<div class="ruler"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="rlabel"><b>伍 · 引古</b><span>匠人的参考文献</span></div>
+
+<p class="para">每件器前头都有一小段叙事，等于匠人的书单：车引考工记，机引淮南子与拾遗记。抄的不是闲话，轮辐三十对日月，盖弓二十八对星宿，器物是照着天地的比例造的。</p>
+
+<div class="gu">
+  <div class="gcard">
+    <div class="q"><span class="qi">天有时，地有气，材有美，工有巧，合此四者，然后可以为良。</span></div>
+    <div class="src">考工记 · 五明坐车子叙事引</div>
+  </div>
+  <div class="gcard">
+    <div class="q"><span class="qi">知者创物，巧者述之，守之世，谓之工。</span></div>
+    <div class="src">考工记 · 五明坐车子叙事引</div>
+  </div>
+  <div class="gcard">
+    <div class="q"><span class="qi">轮辐三十，以象日月也，盖弓二十有八，以象星也。</span></div>
+    <div class="src">考工记 · 辀人叙事引</div>
+  </div>
+  <div class="gcard">
+    <div class="q"><span class="qi">轮敝，三材不失职，谓之完。</span></div>
+    <div class="src">考工记 · 轮人叙事引</div>
+  </div>
+  <div class="gcard">
+    <div class="q"><span class="qi">后世为之机杼，胜复以便其用</span></div>
+    <div class="src">淮南子 · 华机子叙事引</div>
+  </div>
+  <div class="gcard">
+    <div class="q"><span class="qi">吴王赵夫人巧妙无比，人为吴宫三绝，机绝，针绝，丝绝。</span></div>
+    <div class="src">拾遗记 · 华机子叙事引</div>
+  </div>
+  <div class="gcard">
+    <div class="q"><span class="qi">圜盖象天，方与则地，轮法阴阳，动不相离。</span></div>
+    <div class="src">李尤小车铭 · 叙事引</div>
+  </div>
+  <div class="gcard">
+    <div class="q"><span class="qi">作车以大良，白槐之辐，茱萸之辋。</span></div>
+    <div class="src">石崇奴券 · 叙事引</div>
+  </div>
+</div>
+
+<!-- ================= 陆 书劫 ================= -->
+<div class="ruler"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="rlabel"><b>陆 · 书劫</b><span>靠一部大书活下来的小书</span></div>
+
+<p class="para">这部书后来没了下落，是被更大的一部书顺路救下的。明永乐年间朝廷修大典，按韵按字拆书收录，薛景石的手册被抄进两册：匠字册一册，前头还带着段成己那篇序，一车六机连同图纸都在；另有一册门字册收它的门格子诸篇。再后来大典散亡，正本至今无影，副本今存不足原书百分之一，这部小书跟着差点没的，只剩匠字册里那几件器的图和数。到一九三三年，中国营造学社把它校出来印进汇刊，朱启钤、刘敦桢校译，同年出了单行本。一部元代木匠的手册，兜转六百年，重新回到匠人与史家手里。</p>
+
+<div class="nums">
+  <div class="num"><b>18245</b><span>大典匠字册卷次</span></div>
+  <div class="num"><b>3518</b><span>大典门字册卷次</span></div>
+  <div class="num"><b>八百余</b><span>大典今存卷数</span></div>
+  <div class="num"><b>1933</b><span>营造学社校印年份</span></div>
+</div>
+<p class="para">书里还留了一句前辈同行的记录：早先姜氏刻过一部同类的书，粗略未备。薛景石的这部补上了那一缺，也让后世看清一件事：手艺史上最难得的不是秘籍，是把秘籍摊开的那只手。</p>
+<div class="q"><span class="qi">日者姜氏得《梓人攻造法》而刻之矣</span><span class="qn">序</span></div>
+<div class="q"><span class="qi">夫工人之为器，以利言也。</span><span class="qn">序</span></div>
+
+</main>
+
+<!-- ================= 尾屏 ================= -->
+<footer class="coda">
+  <div class="wrap">
+    <div class="coda-in">
+      <div class="vq-block"><div class="q"><span class="qi">规矩必度，各疏其下</span></div></div>
+      <div class="vq-block"><div class="q"><span class="qi">使攻木者揽焉，所得可十九矣</span></div></div>
+      <div class="coda-seal seal"><i>提</i><i>面</i><i>耳</i><i>命</i></div>
+    </div>
+    <div class="safe">
+      <b>时代局限提醒</b>：本书是十三世纪的手工业手册，尺、寸、功都是宋元旧制，不可直接换算使用；文中器制、尺寸与工时定额反映古代工艺经验，不构成现代木作、纺织或工程的施工依据。
+    </div>
+  </div>
+</footer>
+
+<footer class="plain">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库艺藏〈梓人遗制〉（元薛景石撰，段成己序，中统四年岁暮成书；原书久佚，今本自《永乐大典》卷一八二四五匠字册录出，一九三三年中国营造学社朱启钤、刘敦桢校译刊行）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。</p>
+    <p class="xiaoji">校字记：库本序末署名用字（已）与序首（己）不一致，页面从序首；「（纟炎）」「（且鸟）」「（钅匊）」等存字占位与「后？格」缺文、「祖，，然后」衍逗，引文所在各句均避而不断。</p>
+  </div>
+</footer>
+
+<script>
+/* ===== 点件认名 ===== */
+(function(){
+  var parts=document.querySelectorAll('#loom .part');
+  var cnt=document.getElementById('cnt');
+  var hint=document.getElementById('hint');
+  var found=0,total=parts.length;
+  parts.forEach(function(g){
+    g.addEventListener('click',function(){
+      if(g.classList.contains('lit'))return;
+      g.classList.add('lit');
+      found++;
+      cnt.textContent=found;
+      if(found===total){
+        document.body.classList.add('done');
+        hint.textContent='十件认全';
+      }
+    });
+  });
+  document.getElementById('reset').addEventListener('click',function(){
+    parts.forEach(function(g){g.classList.remove('lit');});
+    found=0;cnt.textContent='0';
+    document.body.classList.remove('done');
+    hint.textContent='点件认名，认满十件书名自现';
+  });
+})();
+/* ===== 翻卡 ===== */
+(function(){
+  document.querySelectorAll('.fcard').forEach(function(c){
+    c.addEventListener('click',function(){c.classList.toggle('flip');});
+  });
+})();
+/* ===== 功限合计 ===== */
+(function(){
+  var s=0;
+  document.querySelectorAll('.lrow b[data-g]').forEach(function(b){
+    var n=parseFloat(b.dataset.g);
+    if(!isNaN(n))s+=n;
+  });
+  document.getElementById('gsum').textContent='共 '+(Math.round(s*10)/10)+' 功';
+})();
+</script>
+</body>
+</html>
