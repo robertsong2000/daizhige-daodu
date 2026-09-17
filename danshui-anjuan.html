@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>淡防分府筑城案卷 · 导读</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --gold:#c9963f; --gold-dim:#8a6a34;
+  --cinnabar:#b04a3a; --blue:#5e8fbb; --gray:#8b877e; --bamboo:#5f9270;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:"Songti SC","Noto Serif CJK SC","SimSun",serif;line-height:1.9;overflow-x:hidden}
+.mono{font-family:"SFMono-Regular",Consolas,"Courier New",monospace}
+/* 朱丝栏底纹 */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(90deg,transparent 0 79px,rgba(201,150,63,.045) 79px 80px);}
+main{position:relative;z-index:1}
+/* ===== 首屏 卷宗匣 ===== */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:60px 20px}
+.dex{position:relative;width:min(560px,92vw);height:520px}
+.sheet{position:absolute;inset:0;background:var(--paper);border-radius:3px;
+  box-shadow:0 18px 50px rgba(0,0,0,.55);transition:transform 1s cubic-bezier(.2,.8,.2,1),opacity .9s}
+.sheet.s3{transform:rotate(-3.4deg) translate(-14px,10px);background:#dcd6ca}
+.sheet.s2{transform:rotate(2.2deg) translate(10px,4px);background:#e2ddd2}
+.sheet.s1{transform:rotate(-.8deg)}
+.sheet-lines{position:absolute;inset:18px;border:1px solid rgba(25,25,23,.14);
+  background:repeating-linear-gradient(180deg,transparent 0 30px,rgba(25,25,23,.07) 30px 31px)}
+.seal-open{position:absolute;right:26px;bottom:22px;width:74px;height:74px;border:3px solid var(--cinnabar);
+  border-radius:6px;color:var(--cinnabar);display:flex;align-items:center;justify-content:center;
+  font-size:15px;line-height:1.35;letter-spacing:2px;text-align:center;transform:rotate(8deg);
+  opacity:0;transition:opacity .8s .8s;font-weight:700;background:rgba(176,74,58,.04)}
+#hero.open .seal-open{opacity:.92}
+#hero.open .sheet.s3{transform:rotate(-6.5deg) translate(-58px,26px)}
+#hero.open .sheet.s2{transform:rotate(4.6deg) translate(52px,16px)}
+/* 封签 */
+.seal-tab{position:absolute;top:-20px;left:50%;transform:translateX(-50%) rotate(-1deg);cursor:pointer;
+  background:var(--gold);color:#221c10;padding:12px 34px 14px;font-size:19px;letter-spacing:7px;
+  box-shadow:0 8px 26px rgba(0,0,0,.5);border:1px solid #a37c30;transition:.6s;z-index:5;white-space:nowrap}
+.seal-tab small{display:block;font-size:10px;letter-spacing:3px;opacity:.75;text-align:center;margin-top:3px}
+#hero.open .seal-tab{transform:translateX(-50%) translateY(-64px) rotate(-6deg);opacity:0;pointer-events:none}
+.hint{position:absolute;bottom:34px;left:0;right:0;text-align:center;color:var(--gold-dim);font-size:13px;letter-spacing:4px}
+#hero.open .hint{opacity:0}
+.title-rise{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 1.2s .5s;pointer-events:none}
+#hero.open .title-rise{opacity:1}
+.vtitle{writing-mode:vertical-rl;font-size:clamp(28px,4.4vw,42px);letter-spacing:10px;color:#221f1a;font-weight:700;height:460px}
+.vtitle span{display:inline-block;margin-left:14px}
+.subtitle{margin-top:14px;color:#5c5344;font-size:15px;letter-spacing:5px}
+.lede{max-width:660px;margin:44px auto 0;padding:0 22px;color:#b9b3a6;font-size:15.5px;text-align:center}
+.lede em{font-style:normal;color:var(--gold)}
+/* ===== 左缘 公文旅行站线 ===== */
+#journey{position:fixed;left:18px;top:50%;transform:translateY(-50%);z-index:8;display:none}
+@media(min-width:1080px){#journey{display:block}}
+#journey .rail{position:relative;display:flex;flex-direction:column;gap:34px;align-items:center}
+#journey .rail::before{content:"";position:absolute;top:8px;bottom:8px;left:50%;width:1px;background:rgba(201,150,63,.25)}
+.jnode{position:relative;width:30px;height:30px;border:1px solid var(--gold-dim);border-radius:50%;
+  background:var(--ink);display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--gray);transition:.5s;cursor:pointer}
+.jnode.hit{border-color:var(--gold);color:var(--gold);box-shadow:0 0 12px rgba(201,150,63,.35)}
+/* ===== 章节 ===== */
+section.ch{max-width:860px;margin:0 auto;padding:110px 26px 60px;position:relative}
+.ch-head{display:flex;align-items:baseline;gap:16px;margin-bottom:30px}
+.ch-no{font-size:13px;color:var(--gold);letter-spacing:3px;border:1px solid var(--gold-dim);padding:3px 10px;white-space:nowrap}
+.ch-head h2{font-size:clamp(20px,3vw,27px);letter-spacing:4px;font-weight:700;color:var(--paper)}
+.ch-head .tag{margin-left:auto;font-size:12px;color:var(--gray);letter-spacing:2px;white-space:nowrap}
+p.body{font-size:16px;color:#c9c3b6;margin-bottom:18px;text-align:justify}
+p.body b{color:var(--paper);font-weight:700}
+.num{font-family:Consolas,monospace;color:var(--gold)}
+/* 引文块 */
+div.q{background:rgba(201,150,63,.07);border-left:3px solid var(--gold);padding:16px 20px;margin:20px 0;
+  font-size:15.5px;color:#e3ddcf;position:relative}
+div.q::before{content:"卷";position:absolute;top:-10px;left:-13px;background:var(--ink);color:var(--gold);
+  font-size:11px;padding:1px 5px;border:1px solid var(--gold-dim)}
+span.qv{color:#e8d9b0;border-bottom:1px dotted var(--gold-dim);padding:0 2px}
+span.src{display:block;margin-top:8px;font-size:12px;color:var(--gray);letter-spacing:1px}
+/* ===== 一 竹城 ===== */
+.bamboo-wall{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-end;margin:26px 0}
+.bstage{flex:1;min-width:280px;height:230px;position:relative;background:linear-gradient(180deg,rgba(232,228,220,.03),rgba(232,228,220,.07));border:1px solid rgba(201,150,63,.2)}
+.cane{position:absolute;bottom:26px;width:14px;background:linear-gradient(180deg,#6f9c74,#4a6b4e);border-radius:6px 6px 2px 2px;cursor:pointer;transition:1s;display:flex;justify-content:center}
+.cane i{width:2px;background:rgba(0,0,0,.25);height:100%;margin:0 5px}
+.cane.dead{background:linear-gradient(180deg,#6e675c,#4a463f);filter:saturate(.2)}
+.cane.dead::after{content:"";position:absolute;top:38%;left:38%;width:3px;height:34%;background:var(--ink);opacity:.5}
+.gate-lab{position:absolute;bottom:6px;font-size:11px;color:var(--gray);letter-spacing:2px;transform:translateX(-50%)}
+.bcap{flex:1;min-width:240px;font-size:14px;color:#b3ac9e}
+.bcap .k{color:var(--bamboo);letter-spacing:2px}
+.bbar{display:flex;gap:8px;margin-top:12px}
+.bbar button{background:none;border:1px solid var(--gold-dim);color:var(--gold);font-size:12px;padding:5px 12px;cursor:pointer;font-family:inherit;letter-spacing:2px}
+.bbar button.on{background:var(--gold);color:#221c10}
+/* ===== 二 连署单 ===== */
+.petition{background:var(--paper);color:#2a261e;padding:26px 24px 20px;margin:24px 0;position:relative;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.petition::before{content:"";position:absolute;inset:10px;border:1px solid rgba(42,38,30,.2);pointer-events:none}
+.pet-head{text-align:center;font-size:13px;letter-spacing:4px;color:#6b6353;margin-bottom:14px}
+.sig-grid{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.sig{font-size:13px;padding:3px 9px;border:1px solid rgba(42,38,30,.25);cursor:pointer;transition:.35s;position:relative;user-select:none;background:#efeae0}
+.sig .rank{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.sig.struck{opacity:.42}
+.sig.struck::after{content:"具呈";position:absolute;right:-7px;top:-9px;font-size:9px;color:var(--cinnabar);border:1px solid var(--cinnabar);padding:0 2px;transform:rotate(10deg);background:rgba(232,228,220,.9)}
+.pet-foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:12px;color:#6b6353}
+.pet-count{font-size:20px;color:var(--cinnabar);font-family:Consolas,monospace}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--gray);margin-top:10px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+/* ===== 三 文书旅行 ===== */
+.trip{display:flex;align-items:stretch;gap:0;margin:26px 0;overflow-x:auto;padding-bottom:8px}
+.station{flex:0 0 128px;position:relative;text-align:center;padding:0 6px}
+.station .dot{width:46px;height:46px;margin:0 auto;border:1px solid var(--gold-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--gray);background:var(--ink);cursor:pointer;transition:.4s}
+.station.lit .dot{border-color:var(--gold);color:var(--gold);box-shadow:0 0 14px rgba(201,150,63,.3)}
+.station .nm{font-size:13px;color:#c9c3b6;margin-top:8px;letter-spacing:2px}
+.station .bt{font-size:11px;color:var(--gray);min-height:34px;margin-top:4px;line-height:1.5}
+.station::after{content:"";position:absolute;top:23px;left:calc(50% + 25px);width:calc(100% - 50px);height:1px;background:rgba(201,150,63,.3)}
+.station:last-child::after{display:none}
+.reply{background:rgba(232,228,220,.05);border:1px dashed var(--gold-dim);padding:14px 18px;margin-top:8px;font-size:14px;color:#ddd6c8;display:none}
+.reply.show{display:block}
+.reply .who{color:var(--gold);font-size:12px;letter-spacing:2px;margin-bottom:4px}
+/* ===== 四 拆账杆 ===== */
+.ledger{background:rgba(232,228,220,.04);border:1px solid rgba(201,150,63,.22);padding:24px;margin:24px 0}
+.ledger h3{font-size:14px;letter-spacing:3px;color:var(--gold);margin-bottom:18px;font-weight:400}
+.lrow{display:grid;grid-template-columns:150px 1fr 110px;gap:12px;align-items:center;padding:7px 0;border-bottom:1px dotted rgba(201,150,63,.18);cursor:pointer}
+.lrow .it{font-size:14px;color:#c9c3b6}
+.lrow .bar{height:12px;background:rgba(232,228,220,.06);position:relative}
+.lrow .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,var(--gold-dim),var(--gold));transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.lrow .val{font-size:13px;color:var(--gray);font-family:Consolas,monospace;text-align:right}
+.lrow.lit .val{color:var(--gold)}
+.lrow.lit .it{color:var(--paper)}
+.ltotal{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px}
+.ltotal .lab{font-size:14px;letter-spacing:3px;color:var(--paper)}
+.ltotal .sum{font-size:26px;color:var(--gold);font-family:Consolas,monospace}
+.lnote{font-size:12.5px;color:var(--gray);margin-top:10px;line-height:1.8}
+/* ===== 五 四门城图 ===== */
+.walls{margin:26px 0;position:relative}
+.walls svg{width:100%;height:auto;display:block}
+.wseg{fill:rgba(232,228,220,.07);stroke:var(--gold-dim);stroke-width:2;cursor:pointer;transition:.4s}
+.wseg.lit{fill:rgba(201,150,63,.28);stroke:var(--gold)}
+.wgate{fill:#2a2620;stroke:var(--gold);stroke-width:1.5;pointer-events:none}
+.wlab{fill:#b3ac9e;font-size:13px;letter-spacing:2px}
+.winfo{min-height:88px;margin-top:12px;padding:14px 18px;border:1px solid rgba(201,150,63,.22);font-size:14px;color:#cfc8ba;line-height:1.9}
+.winfo .g{color:var(--gold);letter-spacing:3px}
+/* ===== 六 对账 ===== */
+.abacus{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:26px 0}
+@media(max-width:640px){.abacus{grid-template-columns:1fr}}
+.acard{border:1px solid rgba(201,150,63,.25);padding:20px;background:rgba(232,228,220,.04)}
+.acard h4{font-size:13px;letter-spacing:3px;color:var(--gold);font-weight:400;margin-bottom:12px}
+.alist{font-size:14px;color:#c9c3b6}
+.alist .r{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dotted rgba(201,150,63,.15)}
+.alist .r span:last-child{font-family:Consolas,monospace;color:var(--paper)}
+.alist .big{display:flex;justify-content:space-between;margin-top:10px;font-size:15px}
+.alist .big span:last-child{font-family:Consolas,monospace;color:var(--gold);font-size:19px}
+.balance{margin-top:20px;text-align:center;padding:18px;border:1px dashed var(--gold-dim)}
+.balance .b1{font-size:14px;color:var(--gray);letter-spacing:3px}
+.balance .b2{font-size:30px;color:var(--gold);font-family:Consolas,monospace;margin:6px 0}
+.balance .b3{font-size:13px;color:#b3ac9e}
+/* ===== 七 议叙翻牌 ===== */
+.rankwall{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:26px 0}
+.rcard{perspective:900px;height:150px;cursor:pointer}
+.rin{position:relative;width:100%;height:100%;transition:transform .8s;transform-style:preserve-3d}
+.rcard.flip .rin{transform:rotateY(180deg)}
+.rface{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;border:1px solid rgba(201,150,63,.3);background:rgba(232,228,220,.05)}
+.rface .money{font-size:22px;color:var(--gold);font-family:Consolas,monospace}
+.rface .cond{font-size:13px;color:#b3ac9e;margin-top:6px}
+.rback{position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;background:rgba(201,150,63,.13);border:1px solid var(--gold)}
+.rback .t{color:var(--gold);font-size:16px;letter-spacing:2px;font-weight:700}
+.rback .d{font-size:12px;color:#d8d2c4;margin-top:6px;line-height:1.7}
+/* ===== 八 领状 ===== */
+.receipts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin:26px 0}
+.pcard{perspective:900px;height:230px;cursor:pointer}
+.pin{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .8s}
+.pcard.flip .pin{transform:rotateY(180deg)}
+.pf{position:absolute;inset:0;backface-visibility:hidden;background:var(--paper);color:#2a261e;padding:16px;display:flex;flex-direction:column;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.pf .amt{font-size:26px;color:var(--cinnabar);font-family:Consolas,monospace}
+.pf .who2{font-size:14px;margin-top:4px;color:#4a4437}
+.pf .what{font-size:12.5px;color:#6b6353;margin-top:auto;line-height:1.7}
+.pb{position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);background:#f1ede4;color:#2a261e;padding:16px;font-size:12.8px;line-height:1.9;overflow:hidden;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.pb::before{content:"领 状";position:absolute;top:10px;right:12px;border:2px solid var(--cinnabar);color:var(--cinnabar);font-size:12px;padding:2px 5px;transform:rotate(9deg);opacity:.85}
+.pb .fine{margin-top:8px;color:var(--cinnabar)}
+/* ===== 尾屏 ===== */
+#fin{max-width:860px;margin:0 auto;padding:90px 26px 40px;text-align:center}
+.fin-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:30px 0}
+@media(max-width:680px){.fin-grid{grid-template-columns:1fr}}
+.pai{background:rgba(232,228,220,.05);border:1px solid rgba(201,150,63,.25);padding:26px 20px;position:relative;text-align:left}
+.pai h4{font-size:15px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;font-weight:400}
+.pai p{font-size:14px;color:#c9c3b6;line-height:1.9}
+.pai .hl{color:var(--paper)}
+.fang{margin-top:14px;border:2px solid var(--gold);padding:12px;text-align:center;cursor:pointer;transition:.5s;opacity:.55}
+.fang.done{opacity:1;box-shadow:0 0 22px rgba(201,150,63,.3)}
+.fang .zi{font-size:20px;letter-spacing:6px;color:var(--gold);font-weight:700}
+.fang .sub{font-size:11px;color:var(--gray);margin-top:4px}
+.chits{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.chit{background:#efe9da;color:#3a342a;font-size:12.5px;padding:8px 12px;transform:rotate(-.6deg);box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.chit:nth-child(2n){transform:rotate(.8deg)}
+.chit b{color:var(--cinnabar)}
+.fin-v{writing-mode:vertical-rl;margin:50px auto 0;font-size:19px;letter-spacing:10px;color:var(--gold);height:230px}
+.fstamp{display:inline-block;margin:26px auto 0;width:86px;height:86px;border:3px solid var(--cinnabar);color:var(--cinnabar);
+  display:flex;align-items:center;justify-content:center;font-size:16px;letter-spacing:3px;transform:rotate(-7deg);
+  line-height:1.5;text-align:center;opacity:.9;font-weight:700}
+/* 页脚 */
+footer{border-top:1px solid rgba(201,150,63,.25);margin-top:70px;padding:36px 26px 50px;text-align:center}
+footer p{font-size:12.5px;color:var(--gray);line-height:2;max-width:720px;margin:0 auto}
+footer a{color:var(--gold-dim);text-decoration:none}
+#qb{position:absolute;left:-9999px;top:0;visibility:hidden}
+@media(max-width:640px){
+  .lrow{grid-template-columns:110px 1fr 90px}
+  #journey{display:none}
+  .vtitle{height:400px;letter-spacing:7px;font-size:30px}
+  .dex{height:400px}
+}
+</style>
+</head>
+<body>
+<main>
+<!-- 首屏 -->
+<header id="hero">
+  <div class="dex">
+    <div class="sheet s3"></div>
+    <div class="sheet s2"></div>
+    <div class="sheet s1">
+      <div class="sheet-lines"></div>
+      <div class="seal-open">实用<br>实销</div>
+      <div class="title-rise">
+        <div class="vtitle"><span>淡</span><span>水</span><span>厅</span><span>筑</span><span>城</span><span>案</span><span>卷</span></div>
+        <div class="subtitle">一座城的钱粮账 · 道光六年 至 廿三年</div>
+      </div>
+    </div>
+    <div class="seal-tab" id="sealTab" role="button" tabindex="0">淡防分府 · 筑城案卷<small>点击拆封</small></div>
+  </div>
+  <div class="hint">▼ 拆 封 阅 卷</div>
+  <p class="lede">道光六年冬，台湾西北角的竹堑递上一纸呈文：这里设厅已近百年，却始终<em>没有一座石头城墙</em>。此后十七年，从士绅连署到皇帝上谕，从一丈城墙的发票到一枚迟到的牌坊，全部公文与账目被装订成这一册案卷。它不是史书，是一堆 <em>还没来得及销毁的票据</em>。</p>
+</header>
+
+<nav id="journey" aria-hidden="true"><div class="rail">
+  <div class="jnode" data-s="s1">呈</div>
+  <div class="jnode" data-s="s2">详</div>
+  <div class="jnode" data-s="s3">账</div>
+  <div class="jnode" data-s="s4">谕</div>
+  <div class="jnode" data-s="s5">状</div>
+  <div class="jnode" data-s="s6">坊</div>
+</div></nav>
+
+<!-- 一 竹城 -->
+<section class="ch" id="s1">
+  <div class="ch-head"><span class="ch-no">卷一 · 呈</span><h2>一座种竹子的城</h2><span class="tag">无城之厅</span></div>
+  <p class="body">竹堑，今天叫新竹。雍正年间清廷在这里设淡水厅，管大甲溪以北的半座台湾，但厅城一直不含糊地穷着：官方工程只有一道<em style="font-style:normal;color:var(--bamboo)">莿竹</em>。竹子会老，炮台会塌，到了道光初年，这道防御工事接近于修辞。</p>
+  <div class="bamboo-wall">
+    <div class="bstage" id="bstage">
+      <div class="bcap">
+        <div class="k">竹城三段人生</div>
+        <p style="margin-top:8px">雍正十一年，徐姓厅主环植莿竹四门；乾隆廿四年，继任者在四门上加盖炮台。风霜剥落之后，只剩下谯楼的四壁和残竹。点竹竿，看它枯掉；点按钮，回到哪个年代。</p>
+        <div class="bbar">
+          <button data-era="0" class="on">雍正十一年</button>
+          <button data-era="1">乾隆廿四年</button>
+          <button data-era="2">道光六年</button>
+        </div>
+        <p style="font-size:12px;color:var(--gray);margin-top:10px" id="eraNote">四门皆竹，气势完足。</p>
+      </div>
+    </div>
+  </div>
+  <p class="body">呈文里最难堪的一句，是拿自己跟别的县城比：台南、嘉义两城先建，凤山、彰化继之，<b>中部以南都算安稳，只有淡北这一隅，还光着</b>。设厅近百年而城郭阙如，官府自己也觉得不像话，只好在街口立栅栏、按时启闭，把一座城当一座村子管。</p>
+  <div class="qb-goes-here" hidden></div>
+</section>
+
+<!-- 二 连署 -->
+<section class="ch" id="s2">
+  <div class="ch-head"><span class="ch-no">卷二 · 连署</span><h2>一张签满全城的呈文</h2><span class="tag">道光六年冬</span></div>
+  <p class="body">丙戌冬月，一纸呈文递到厅衙。领衔的郑用锡，癸未科（1823）登第，是台湾史上第一位台湾本籍进士，人称开台进士；板桥林家的创始人林平侯，当时台湾数得着的巨富，也在其列。再往下，举人、拔贡、武举、生员、监生一路排开，最后压上一排<em style="font-style:normal;color:var(--gold)">商号</em>：恒利、逢泰等一串字号。人与商号在公文上平起平坐，各盖钤记。</p>
+  <div class="petition">
+    <div class="pet-head">具 呈 治 下 绅 民 铺 户 名 录</div>
+    <div class="sig-grid" id="sigGrid"></div>
+    <div class="legend">
+      <span><i style="background:var(--cinnabar)"></i>进士</span>
+      <span><i style="background:var(--gold)"></i>举人 拔贡 武举</span>
+      <span><i style="background:var(--blue)"></i>生员</span>
+      <span><i style="background:#9a958a"></i>监生 职员 贡生</span>
+      <span><i style="background:#7a6a52"></i>铺户</span>
+    </div>
+    <div class="pet-foot">
+      <span>已点 钤记：<span class="pet-count" id="sigCount">0</span> 人</span>
+      <span>点名字即盖「具呈」小印</span>
+    </div>
+  </div>
+  <p class="body">这份名单同时是一张地方权力结构图：进士出题目，士绅出面子，商人出银子，缺一角城都筑不起来。而呈文开篇把道理讲得极省：</p>
+</section>
+
+<!-- 三 文书旅行 -->
+<section class="ch" id="s3">
+  <div class="ch-head"><span class="ch-no">卷三 · 详批</span><h2>一纸公文的旅行</h2><span class="tag">衙门接力</span></div>
+  <p class="body">竹堑建城不花公款，走的是民办官督：士绅捐钱，官府核销。于是每一份文书都要在衙门之间旅行一遍。丁亥年夏，同知李慎彝把「兴工日期」的详文一口气誊了四份，分送督院、抚院、藩司、臬道，外加府、镇，每一站都得批。</p>
+  <div class="trip" id="trip">
+    <div class="station" data-k="0"><div class="dot">厅</div><div class="nm">淡水同知</div><div class="bt">李慎彝 详文四份分投</div></div>
+    <div class="station" data-k="1"><div class="dot">府</div><div class="nm">台湾府</div><div class="bt">批：妥为办理 再劝捐</div></div>
+    <div class="station" data-k="2"><div class="dot">司</div><div class="nm">布政使司</div><div class="bt">批：候各衙门批示</div></div>
+    <div class="station" data-k="3"><div class="dot">镇</div><div class="nm">台澎总镇</div><div class="bt">批：阅详已悉</div></div>
+    <div class="station" data-k="4"><div class="dot">院</div><div class="nm">督抚两院</div><div class="bt">直达 部院与上谕</div></div>
+  </div>
+  <div class="reply" id="replyBox"><div class="who"></div><div class="txt"></div></div>
+  <p class="body">一批公文读下来，「希候」「此复」「图说存」是高频词：每一站都不担责，只负责把球传给下一站。竹堑人递呈在丙戌冬月，报开工在丁亥年夏，中间半年，全耗在这些互相等待的批语里。</p>
+</section>
+
+<!-- 四 拆账 -->
+<section class="ch" id="s4">
+  <div class="ch-head"><span class="ch-no">卷四 · 账</span><h2>一丈城墙的发票</h2><span class="tag">工料细数</span></div>
+  <p class="body">案卷最厚的一部分是工料清册：以「一丈」为单位，把城墙拆成可以计价的零件。下面这一杆账，按库本东段数字逐项点亮：</p>
+  <div class="ledger">
+    <h3>每 造 城 垣 一 丈（东段库本价）</h3>
+    <div class="lrow" data-w="64.2"><span class="it">内山石条</span><span class="bar"><i></i></span><span class="val">六四・二两</span></div>
+    <div class="lrow" data-w="8.6"><span class="it">碎石 4.3 万觔</span><span class="bar"><i></i></span><span class="val">八・六两</span></div>
+    <div class="lrow" data-w="6"><span class="it">螺壳灰十二石</span><span class="bar"><i></i></span><span class="val">六两</span></div>
+    <div class="lrow" data-w="3.9"><span class="it">泥水大工廿六工</span><span class="bar"><i></i></span><span class="val">三・九两</span></div>
+    <div class="lrow" data-w="4"><span class="it">小工五十工</span><span class="bar"><i></i></span><span class="val">四两</span></div>
+    <div class="ltotal"><span class="lab">每丈合计（此五项）</span><span class="sum" id="meterSum">0.0 两</span></div>
+    <p class="lnote">大工每工工食一钱五分、小工八分；碎石以一万觔二两计。八百六十丈的城，是把这笔乘八百六十再叠上马道、垛口、城楼、濠沟之后的总数。库本数字偶有笔误（如石条以「丈」计价），照录不改。</p>
+  </div>
+  <p class="body">石料分两种：本地内山打的石条砌墙身；城门则用<em style="font-style:normal;color:var(--gold)">内地打运</em>的石版与石柱，也就是从福建一船一船海运过黑水沟。门扇用茄苳木，城楼梁柱用樟木，全是台湾本土树种。最家常的一味建材是螺壳灰：蚝壳烧成的灰浆，海边的混凝土。</p>
+</section>
+
+<!-- 五 四门 -->
+<section class="ch" id="s5">
+  <div class="ch-head"><span class="ch-no">卷五 · 城图</span><h2>四门四董事</h2><span class="tag">分段包干</span></div>
+  <p class="body">工程分四段式的包干：每段设董事三人经手，总理由林国华（板桥林家）、郑用锡，外加林祥麟，三人总揽，官员只管验收。点城门看各段规格：</p>
+  <div class="walls">
+    <svg viewBox="0 0 640 300" aria-label="竹堑城四段示意图">
+      <rect class="wseg" data-g="e" x="330" y="30" width="270" height="26" rx="3"></rect>
+      <rect class="wseg" data-g="n" x="574" y="30" width="26" height="220" rx="3"></rect>
+      <rect class="wseg" data-g="w" x="60" y="224" width="540" height="26" rx="3"></rect>
+      <rect class="wseg" data-g="s" x="60" y="30" width="26" height="220" rx="3"></rect>
+      <rect class="wgate" x="452" y="24" width="26" height="38"></rect>
+      <rect class="wgate" x="196" y="218" width="26" height="38"></rect>
+      <rect class="wgate" x="54" y="126" width="38" height="26"></rect>
+      <rect class="wgate" x="568" y="126" width="38" height="26"></rect>
+      <text class="wlab" x="452" y="86">东门</text>
+      <text class="wlab" x="186" y="270">西门</text>
+      <text class="wlab" x="8" y="120">南门</text>
+      <text class="wlab" x="576" y="120">北门</text>
+    </svg>
+    <div class="winfo" id="winfo">点任一段城墙，调它的工程档案。</div>
+  </div>
+  <p class="body">北门规格最高：炮台两座、水洞两个，其余三门各一座、一个。全城垛口合计九百七十四个，四门外濠沟与城墙等长，东西两座吊桥，城内堆房十六间。一笔账连吊桥的长度都写明了：长两丈六、阔五尺。</p>
+</section>
+
+<!-- 六 对账 -->
+<section class="ch" id="s6">
+  <div class="ch-head"><span class="ch-no">卷六 · 总账</span><h2>155,400 两的来路去路</h2><span class="tag">对账板</span></div>
+  <p class="body">钱从哪里来：督抚两位大员各捐养廉一千两开个头；通台大小官员匀凑番银两万元；大头是绅士商民的番银 194,760 元，按「一四折」折成纹银。番银是西班牙银元，一元折库平七钱二分左右，这笔汇率账案卷里写得清清楚楚。</p>
+  <div class="abacus">
+    <div class="acard">
+      <h4>收入 · 共捐 155,400.014 两</h4>
+      <div class="alist">
+        <div class="r"><span>督抚各捐养廉</span><span>2,000 两</span></div>
+        <div class="r"><span>通台官员匀捐番银 20,000 元</span><span>14,285.71 两</span></div>
+        <div class="r"><span>绅士商民番银 194,760 元</span><span>139,114.30 两</span></div>
+        <div class="big"><span>合计</span><span>155,400.014 两</span></div>
+      </div>
+    </div>
+    <div class="acard">
+      <h4>支出 · 共用 154,737.389 两</h4>
+      <div class="alist">
+        <div class="r"><span>全城工料</span><span>147,490.88 两</span></div>
+        <div class="r"><span>四祠两庙书院七处附设</span><span>7,246.51 两</span></div>
+        <div class="big"><span>合计</span><span>154,737.389 两</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="balance">
+    <div class="b1">收支相抵 · 剩</div>
+    <div class="b2" id="balanceNum">0</div>
+    <div class="b3">两整，案卷写明尚应剩余 662.625 两，还折回番银 920 余元。一座城修完，账面剩不到一千两，这在任何时代的工程里都算体面。</div>
+  </div>
+</section>
+
+<!-- 七 议叙 -->
+<section class="ch" id="s7">
+  <div class="ch-head"><span class="ch-no">卷七 · 谕</span><h2>银子的汇率是虚衔</h2><span class="tag">议叙 旌表</span></div>
+  <p class="body">朝廷的回礼有一套牌价，叫议叙：捐款达到某个数目，换纪录几笔、加级几等，都是官员考功簿上的虚彩头。翻翻这份牌价表：</p>
+  <div class="rankwall">
+    <div class="rcard"><div class="rin">
+      <div class="rface"><div class="money">一千四百两 ↑</div><div class="cond">并劝捐出力</div></div>
+      <div class="rback"><div class="t">加二级</div><div class="d">林国宝（捐职州同）加一级并纪录一次；从优改纪录三笔，共加二级</div></div>
+    </div></div>
+    <div class="rcard"><div class="rin">
+      <div class="rface"><div class="money">一千两 ↑</div><div class="cond">并劝捐出力</div></div>
+      <div class="rback"><div class="t">加一级</div><div class="d">刘献廷（库本呈文列生员，议叙册列副贡生，两册不同照录）从优议叙加一级；江日暲（捐职同知）照例加一级</div></div>
+    </div></div>
+    <div class="rcard"><div class="rin">
+      <div class="rface"><div class="money">七百两 ↑</div><div class="cond">举人陈维藻</div></div>
+      <div class="rback"><div class="t">纪录三次</div><div class="d">纪录是考功簿上的记功，攒够次数可抵一次罚过</div></div>
+    </div></div>
+    <div class="rcard"><div class="rin">
+      <div class="rface"><div class="money">六千两 ↑</div><div class="cond">生员林祥麟（已故）</div></div>
+      <div class="rback"><div class="t">乐善好施</div><div class="d">旌表建坊，官府给坊价三十两，坊由其家自立；坊成于其弟林祥云之手</div></div>
+    </div></div>
+  </div>
+  <p class="body">另有一册专收小额捐户的花红名册，收捐款三十两到三百两之间的一档：铺户林三益、监生陈毓瑛、业户张必荣、罗二妹、詹阿忠、汪玉蟾……逐一登记银数，分别给匾额或花红。再往下还有一句体恤：<b>捐不到三十两的，人数太多，零星琐碎，赏点花红就算了，免造报。</b>十五万两的大账，最后连几十两的小账都留了底。</p>
+</section>
+
+<!-- 八 领状 -->
+<section class="ch" id="s8">
+  <div class="ch-head"><span class="ch-no">卷八 · 状</span><h2>不敢冒领</h2><span class="tag">拆迁与工本</span></div>
+  <p class="body">城要扩建，旧北门一带的炮屋、店屋要清理。己丑年秋，一叠领状送进厅衙：领钱的人都要写这一句套语，白纸黑字。翻面看正身：</p>
+  <div class="receipts">
+    <div class="pcard"><div class="pin">
+      <div class="pf"><div class="amt">20 元</div><div class="who2">兵丁 陈飞元</div><div class="what">北门炮屋的修理工本。点背面看领状全文。</div></div>
+      <div class="pb">具领状提标兵丁陈飞元，今当大老爷台前，元领得北门炮屋修理工本银二十大员。不敢冒领，合具领状是实。</div>
+    </div></div>
+    <div class="pcard"><div class="pin">
+      <div class="pf"><div class="amt">40 元</div><div class="who2">蒋传祖</div><div class="what">买下旧炮台地基开小店，地基被清厘，官府给工本银了结。点背面看结状。</div></div>
+      <div class="pb">具领结状人蒋传祖，今当大老爷台前，结得祖承买江禧春旧北门炮台地基起小店一间，原契本未投税；即同园契，向吴神求借银为胎。今蒙清厘炮台地基，祖本不应买，仰邀赏给番银四十元，以为工本之资，该祖领回；祖甘愿将炮屋献出，以后原契永作废字。不敢冒结，合具领结状是实。</div>
+    </div></div>
+    <div class="pcard"><div class="pin">
+      <div class="pf"><div class="amt">60 元</div><div class="who2">本城民 黄福</div><div class="what">旧北门官地上自盖的店屋要交还官家，领银另创。另见黄桂香同款领状一款，银四十元。</div></div>
+      <div class="pb">具领状人本城内黄福，今当大老爷台前，领得屋价银六十大元，情愿将福前就旧北门内官地起盖店屋拆还归官，领银别创。不敢冒领，合具领状是实。</div>
+    </div></div>
+    <div class="pcard"><div class="pin">
+      <div class="pf"><div class="amt">10 元</div><div class="who2">目兵 张廷荣</div><div class="what">西门炮屋的修理工本，一纸领状连籍贯、兵种都要写全。另有本城民张长一款，银十五大员。</div></div>
+      <div class="pb">具领状标下建宁目兵张廷荣，今当大老爷台前，荣领得西门炮屋修理工本银十大元。不敢冒领是实。</div>
+    </div></div>
+  </div>
+  <p class="body">十元、十五元、二十元，每一笔都要具状画押、写明「不敢冒领」。十五万两的大工程落在纸上，是无数张这种十元二十元的小票子。</p>
+</section>
+
+<!-- 尾屏 -->
+<section id="fin">
+  <div class="ch-head" style="justify-content:center"><span class="ch-no">卷九 · 坊</span><h2>城好了，事还没完</h2></div>
+  <div class="fin-grid">
+    <div class="pai">
+      <h4>一枚迟到九年的坊</h4>
+      <p>道光十年秋，上谕嘉奖；十四年户部咨准：已故的生员林祥麟生前捐输六千两有奇，旌表建坊，给「乐善好施」坊额，官府发给坊价三十两，坊由其家自立。而淡水分府那份谕令建坊的文书，<span class="hl">落款已是道光廿三年腊月初一</span>，文内引用的札文却还写着十四年。批文在衙门之间旅行了至少九年，才变成一枚真的牌坊。点坊字，把三十两坊价发下去。</p>
+      <div class="fang" id="fang"><div class="zi">乐善好施</div><div class="sub">点击 发坊价三十两</div></div>
+    </div>
+    <div class="pai">
+      <h4>一张状纸的余音</h4>
+      <p>辛丑年冬，城已报竣十二年，工总书张清递上禀帖：督修每日在城，工程十成已有七八，水关还未收尾，屡次催总理郑鸦舍添雇泥水匠，<span class="qv">无如该总理持权在手，挨延月日，心存浮开</span>。分府曹的签单批得斩钉截铁：限五日修竣报验，逾期提究不贷。末行四个字，是全卷最急的官腔：</p>
+      <div class="chits">
+        <div class="chit">工总书张清禀：<b>心存浮开</b>，风雨阻停，催而不动</div>
+        <div class="chit">签单限五日修竣，另造工料清折禀复</div>
+        <div class="chit">签单末批：<b>火速 火速</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="fin-v">一卷公文 半座竹堑</div><br>
+  <div class="fstamp">实用<br>实销</div>
+</section>
+
+<footer>
+  <p>文本来源：殆知阁古代文献简体库〈<span class="qv">淡水厅筑城案</span>卷〉（史藏志存记录本，去空白约五万五千九百字）。仓库：<a href="https://github.com/robertsong/daizhige-daodu" target="_blank" rel="noopener">daizhige-daodu</a>。郑用锡为开台进士、林平侯为板桥林家创始人等背景为库外通行史料，页面已随文注明；城门题名等库本未载者不录。</p>
+  <p>引文经脚本与库内文件去标点、异体归一逐字比对通过；库本阙字（□）与残字（■〈〉）诸句避引或照录注明，番银折算、库本数字笔误均照录不改。</p>
+  <p>本卷为清代官署文书汇编，涉及械斗、捐纳买衔等内容系当时制度与观念的实录，仅作史料研读之用；请以时代局限视之。</p>
+</footer>
+
+<div id="qb" aria-hidden="true">
+  <span class="qv">窃御暴必藉范围，安民全资捍卫。台湾背山面海，闽、粤蚁聚蜂屯。</span>
+  <span class="qv">台、嘉城已建于前，凤、彰城又建于后；中南一带悉系苞桑，淡北偏隅独遗版筑。</span>
+  <span class="qv">溯自雍正十一年间，厅主徐环植莿竹，设有四门</span>
+  <span class="qv">乾隆二十四年间，厅主杨四城门上复增炮台</span>
+  <span class="qv">徒剩谯楼之四壁；风霜剥落，竟残渭户之千竿</span>
+  <span class="qv">且以郡县各置城垣，而厅治转同村落</span>
+  <span class="qv">命建栅栏，戒严启闭</span>
+  <span class="qv">竹堑民居辐辏，街市环连</span>
+  <span class="qv">约计工料总须银十五、六万，方足敷用。现已共捐番银八万元，甫得其半</span>
+  <span class="qv">余就佃户额收小租捐榖折价，以凑城工费用</span>
+  <span class="qv">道光六年十一月十四日，具呈林长青、郭成金、林平侯、郑用锡</span>
+  <span class="qv">具呈治下癸未科进士郑用锡、前候补同知林平侯</span>
+  <span class="qv">铺户恒利、逢泰、益吉、泉美</span>
+  <span class="qv">志切桑邦，心怀社稷；欢欣踊跃</span>
+  <span class="qv">周围计长八百六十丈，墙身高一丈五尺；雉堞九百七十四垛，高三尺</span>
+  <span class="qv">城外雉堞高一丈八尺，城内高一丈六尺；上宽一丈二尺，基底一丈六尺、深一丈</span>
+  <span class="qv">共炮台五座，水洞五个</span>
+  <span class="qv">城外濠沟通共长八百六十丈，南门濠沟阔一丈二尺、余俱阔八尺，各深七尺</span>
+  <span class="qv">四城改设道路四道，每面阔一丈二尺，通共长七百七十二丈三尺</span>
+  <span class="qv">城楼四座，每座二层，计高二丈零九寸</span>
+  <span class="qv">计四城堆房四座，共一十六间</span>
+  <span class="qv">每长一丈，应用本地内山采打石条二百一十四丈。每丈价银三钱</span>
+  <span class="qv">该配本地碎石四万三千觔。每一万觔价银二两</span>
+  <span class="qv">每工给工食银一钱五分</span>
+  <span class="qv">每工给工食银八分</span>
+  <span class="qv">计用内地打运大石版二千一百四十八丈五尺八寸。每丈价银九钱</span>
+  <span class="qv">计用茄苳木门扇一副，计一十二块。每块价银四两五钱</span>
+  <span class="qv">经手分建东段城垣。计长二百四十丈</span>
+  <span class="qv">城上炮台一座，水洞一个</span>
+  <span class="qv">吊桥一座，长二丈六尺，阔五尺</span>
+  <span class="qv">计长二百丈，雉堞二百三十四个</span>
+  <span class="qv">计长二百丈，雉堞二百零七个</span>
+  <span class="qv">北城董事罗秀丽、陈光义、郑琛</span>
+  <span class="qv">计长二百二十丈，雉堞二百五十七垛</span>
+  <span class="qv">城上炮台二座，水洞二个</span>
+  <span class="qv">四城总厂总理林国华、郑用锡、林祥麟</span>
+  <span class="qv">一手经理，实用实销</span>
+  <span class="qv">于道光七年六月初十日兴工、于道光九年八月二十日工竣</span>
+  <span class="qv">以上南门一段，总共用工料银三万二千四百八十七两二钱三分二厘</span>
+  <span class="qv">合计纹银并番折银共捐一十五万五千四百两零一分四厘</span>
+  <span class="qv">全城工料，共享银一十四万七千四百九十两八钱七分八厘</span>
+  <span class="qv">计工程七处，共享银七千二百四十六两五钱一分一厘</span>
+  <span class="qv">合计共享银一十五万四千七百三十七两三钱八分九厘</span>
+  <span class="qv">此外尚应剩余六百六十二两六钱二分五厘</span>
+  <span class="qv">该处绅民捐资改建石城、现已兴筑完固</span>
+  <span class="qv">共享银一十五万四千七百三十七两零</span>
+  <span class="qv">捐银一千四百两以上并劝捐出力之捐职州同林国宝，给予加一级纪录一次；系从优仪叙，应请给予纪录三次，共应给予加二级</span>
+  <span class="qv">捐银一千两以上并劝捐出力之副贡生刘献廷，给予加一级；系从优议叙，应请给予纪录三次</span>
+  <span class="qv">其照例议叙之捐银一千两以上捐职同知江日暲，给予加一级</span>
+  <span class="qv">捐银七百两以上举人陈维藻，给予纪录三次</span>
+  <span class="qv">题捐银三十两以上至三百两以下，按照银数，遵例分别递给匾额、花红</span>
+  <span class="qv">其有捐数不及三十两者，其银数即任各绅士劝捐之。内人数众多，零星琐碎，业已由厅酌赏花红，请免造报</span>
+  <span class="qv">具领状提标兵丁陈飞元，今当大老爷台前，元领得北门炮屋修理工本银二十大员。不敢冒领，合具领状是实</span>
+  <span class="qv">荣领得西门炮屋修理工本银十大元。不敢冒领是实</span>
+  <span class="qv">长领得北门炮台工本银十五大员。不敢冒领，合具领状是实</span>
+  <span class="qv">无如该总理持权在手，挨延月日，心存浮开</span>
+  <span class="qv">的限五日务须赶紧修理坚固，一律报竣</span>
+  <span class="qv">该总理毋得任意迁延，致干提究不贷。火速火速</span>
+  <span class="qv">捐银六千两以上，应照例准其旌表；由地方官给银三十两，听本家自行建坊，即给与「乐善好施」字样</span>
+  <span class="qv">除在库款提出纹银三十两给发外，合行谕建。为此，谕仰职员林祥云立即遵照旌表「乐善好施」四字建坊，毋违</span>
+  <span class="qv">务期工坚料实，俾资巩固</span>
+  <span class="qv">淡水厅筑城案</span>
+  <span class="qv" data-rk="0">署台湾府北路淡水同知，为报明堑城兴工日期事</span>
+  <span class="qv" data-rk="1">据详兴建城工日期已悉。希即督饬该总理等妥为办理，毋任□□□减；仍将当□城工经费，再为劝捐足数，以济巨工</span>
+  <span class="qv" data-rk="2">此案已奉两院宪批司，业经分别呈报移行遵办在案。仰即遵照另檄办理</span>
+  <span class="qv" data-rk="3">阅详已悉。希候督、抚两院宪暨各衙门批示。此复。图说存核</span>
+  <span class="qv">来详阅悉。希候臬道宪批示。此复</span>
+  <span class="qv" data-rk="4">福建淡水厅城垣并社稷等坛庙年久坍塌，业据官绅等捐修完竣，请分别议叙</span>
+</div>
+</main>
+<script>
+(function(){
+"use strict";
+var qb=[].map.call(document.querySelectorAll('#qb .qv'),function(e){return e.textContent});
+/* 拆封 */
+var hero=document.getElementById('hero');
+function openHero(){hero.classList.add('open');}
+document.getElementById('sealTab').addEventListener('click',openHero);
+document.getElementById('sealTab').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openHero();}});
+/* 竹城年代 */
+var canes=[["32%","86px"],["42%","120px"],["52%","96px"],["62%","132px"],["72%","78px"]];
+var stage=document.getElementById('bstage');
+var eraNote=document.getElementById('eraNote');
+canes.forEach(function(c,i){
+  var d=document.createElement('div');d.className='cane';d.style.left=c[0];d.style.height=c[1];
+  d.innerHTML='<i></i>';d.title='点我一节';
+  d.addEventListener('click',function(){d.classList.toggle('dead')});
+  stage.appendChild(d);
+  var g=document.createElement('span');g.className='gate-lab';g.style.left=(20+i*20)+'%';
+  g.textContent=['东','西','南','北','·'][i];if(i<4)stage.appendChild(g);
+});
+var eraTxt=['雍正十一年，徐姓厅主环植莿竹，四门皆竹，气势完足。',
+'乾隆廿四年，四门增筑炮台，竹上架铁。',
+'道光六年，竹老炮残，谯楼只剩四壁。竹竿点枯，城该重建了。'];
+document.querySelectorAll('.bbar button').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.bbar button').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    eraNote.textContent=eraTxt[+b.dataset.era];
+    var dead=+b.dataset.era===2;
+    document.querySelectorAll('.cane').forEach(function(c){c.classList.toggle('dead',dead)});
+  });
+});
+/* 连署单 */
+var sigs=[
+ ["郑用锡 进士","jin"],["林平侯 前候补同知","ju"],["林长青 举人","ju"],["郭成金 举人","ju"],
+ ["陈维藻 举人","ju"],["郑用鉴 拔贡","ju"],["温斌元 武举","ju"],["林国宝 职员","zhi"],
+ ["刘献廷 生员","sheng"],["郑廷珪 生员","sheng"],["王奠邦 生员","sheng"],["林茂堂 生员","sheng"],
+ ["陈凤鸣 生员","sheng"],["周沧海 生员","sheng"],["吴国步 监生","jian"],["林绍贤 监生","jian"],
+ ["曾青华 监生","jian"],["罗秀丽 监生","jian"],["郑琛 监生","jian"],["吴文治 监生","jian"],
+ ["苏国珍 监生","jian"],["温玉衡 监生","jian"],["林德修 监生","jian"],["周邦正 监生","jian"],
+ ["杨仰峰 监生","jian"],["刘祥光 监生","jian"],
+ ["恒利 铺户","pu"],["逢泰 铺户","pu"],["益吉 铺户","pu"],["泉美 铺户","pu"],
+ ["泉源泰 铺户","pu"],["振吉 铺户","pu"],["宁胜 铺户","pu"],["瑞吉 铺户","pu"],
+ ["宁茂 铺户","pu"],["振利 铺户","pu"],["瑞芳 铺户","pu"],["裕顺 铺户","pu"]
+];
+var col={jin:"var(--cinnabar)",ju:"var(--gold)",sheng:"var(--blue)",jian:"#9a958a",zhi:"#9a958a",pu:"#7a6a52"};
+var grid=document.getElementById('sigGrid'),cnt=document.getElementById('sigCount'),struck=0;
+sigs.forEach(function(s){
+  var el=document.createElement('span');el.className='sig';
+  el.innerHTML='<span class="rank" style="background:'+col[s[1]]+'"></span>'+s[0];
+  el.addEventListener('click',function(){el.classList.toggle('struck');
+    struck=grid.querySelectorAll('.struck').length;cnt.textContent=struck+' / '+sigs.length;});
+  grid.appendChild(el);
+});
+cnt.textContent='0 / '+sigs.length;
+/* 文书旅行 */
+var reply=document.getElementById('replyBox');
+var rkMap={};
+[].forEach.call(document.querySelectorAll('#qb .qv[data-rk]'),function(e){rkMap[e.dataset.rk]=e.textContent;});
+var stationNames=['淡水同知：详文','台湾府：批','布政使司：批','台澎总镇：批','督抚两院与部院'];
+document.querySelectorAll('.station').forEach(function(st){
+  st.addEventListener('click',function(){
+    document.querySelectorAll('.station').forEach(function(x){x.classList.remove('lit')});
+    st.classList.add('lit');
+    reply.classList.add('show');
+    reply.querySelector('.who').textContent=stationNames[+st.dataset.k];
+    reply.querySelector('.txt').textContent=rkMap[st.dataset.k];
+  });
+});
+/* 拆账杆 */
+var rows=document.querySelectorAll('.lrow'),sumEl=document.getElementById('meterSum'),sum=0;
+rows.forEach(function(r){
+  r.addEventListener('click',function(){
+    if(r.classList.contains('lit'))return;
+    r.classList.add('lit');
+    r.querySelector('.bar i').style.width=Math.min(100,+r.dataset.w/64.2*100)+'%';
+    sum+=+r.dataset.w;sumEl.textContent=sum.toFixed(1)+' 两';
+  });
+});
+/* 四门 */
+var segInfo={
+ e:'<span class="g">东段 · 董事曾、陈、洪三君</span><br>城身 240 丈，垛口 276；炮台 1 座，水洞 1 孔；濠沟同长 240 丈；吊桥长 2 丈 6 尺、阔 5 尺；改设道路共长 167.3 丈。',
+ n:'<span class="g">北段 · 董事罗、陈、郑三君</span><br>城身 220 丈，垛口 257；<b>炮台 2 座，水洞 2 孔</b>，全城火力最重；濠沟同长 220 丈；改设道路共长 187 丈。',
+ w:'<span class="g">西段 · 临海一面</span><br>城身 200 丈，垛口 234；炮台 1 座，水洞 1 孔；濠沟同长 200 丈；吊桥一座；移设道路共长 240 丈。',
+ s:'<span class="g">南段</span><br>城身 200 丈，垛口 207；炮台 1 座，水洞 1 孔；濠沟阔 1 丈 2 尺；<b>本段工料银 32,487.232 两</b>，四段中账目最完整留底。'
+};
+document.querySelectorAll('.wseg').forEach(function(sg){
+  sg.addEventListener('click',function(){
+    document.querySelectorAll('.wseg').forEach(function(x){x.classList.remove('lit')});
+    sg.classList.add('lit');
+    document.getElementById('winfo').innerHTML=segInfo[sg.dataset.g];
+  });
+});
+/* 翻牌 */
+document.querySelectorAll('.rcard,.pcard').forEach(function(c){
+  c.addEventListener('click',function(){c.classList.toggle('flip')});
+});
+/* 对账滚动数字 */
+var bal=document.getElementById('balanceNum'),target=662.625,played=false;
+function animBal(){
+  if(played)return;played=true;
+  var t0=null;
+  function step(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/1400);
+    bal.textContent=(target*p).toFixed(3)+' 两';
+    if(p<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+/* 站线点亮 */
+var map={s1:0,s2:0,s3:1,s4:1,s5:1,s6:1};
+var nodes=document.querySelectorAll('.jnode');
+var secIds=['s1','s2','s3','s4','s5','s6'];
+var idxOf={s1:0,s2:1,s3:2,s4:3,s5:4,s6:5};
+window.addEventListener('scroll',function(){
+  var hit=-1;
+  secIds.forEach(function(id,i){
+    var el=document.getElementById(id);
+    if(el&&el.getBoundingClientRect().top<window.innerHeight*0.55)hit=i;
+  });
+  nodes.forEach(function(n,i){n.classList.toggle('hit',i<=hit&&hit>=0)});
+  var balSec=document.getElementById('s6');
+  if(balSec){var r=balSec.getBoundingClientRect();
+    if(r.top<window.innerHeight*0.7&&r.bottom>0)animBal();}
+},{passive:true});
+/* 建坊 */
+var fang=document.getElementById('fang');
+fang.addEventListener('click',function(){
+  fang.classList.add('done');
+  fang.querySelector('.sub').textContent='坊价银三十两 已发 · 道光二十三年腊月';
+});
+})();
+</script>
+</body>
+</html>
