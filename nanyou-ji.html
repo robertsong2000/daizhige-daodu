@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>灯花三生 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --blue:#5e8fbb; --blue-dim:#3d5a76;
+  --ember:#b8723f; --mist:#22221f; --line:#37372f; --dim:#6b6b60;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:Georgia,"Times New Roman","Songti SC","STSong","SimSun",serif;
+  line-height:1.9; overflow-x:hidden;
+}
+::selection{background:var(--blue);color:var(--ink)}
+a{color:var(--blue)}
+
+/* ============ 左缘三生签 ============ */
+#san-rail{position:fixed;left:16px;top:50%;transform:translateY(-50%);height:58vh;width:2px;background:var(--line);z-index:40}
+#san-rail .node{position:absolute;left:-5px;width:12px;height:12px;border-radius:50%;background:var(--ink);border:1px solid var(--blue-dim);transition:.4s}
+#san-rail .node.on{background:var(--blue);border-color:var(--blue);box-shadow:0 0 10px rgba(94,143,187,.6)}
+#san-rail .tag{position:absolute;left:20px;transform:translateY(-50%);font-size:11px;letter-spacing:3px;color:var(--dim);white-space:nowrap;transition:.4s}
+#san-rail .tag.on{color:var(--blue)}
+@media (max-width:900px){#san-rail{display:none}}
+
+/* ============ 首屏 三目 ============ */
+#hero{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 85% 55% at 50% 30%, #201f1b 0%, var(--ink) 72%);overflow:hidden}
+#hero-top{position:absolute;top:34px;width:100%;text-align:center;font-size:13px;letter-spacing:6px;color:var(--dim)}
+#hero-top b{color:var(--paper);font-weight:normal}
+#eye-wrap{position:relative;width:min(760px,92vw);cursor:pointer;outline:none}
+#eyes{width:100%;height:auto;display:block}
+.lid{transform-origin:center;transition:transform 1.1s cubic-bezier(.2,.9,.3,1)}
+#eye3 .lid{transform:scaleY(.06)}
+#eye1 .lid,#eye2 .lid{transform:scaleY(.05)}
+body.opened #eye3 .lid{transform:scaleY(1)}
+body.opened #eye1 .lid,body.opened #eye2 .lid{transform:scaleY(1)}
+.iris{opacity:0;transition:opacity 1.2s ease .5s}
+body.opened .iris{opacity:1}
+#glow3{opacity:0;transition:opacity 1.4s ease .6s}
+body.opened #glow3{opacity:.5}
+.spark{fill:var(--ember);opacity:0}
+body.opened .spark{animation:pop 1.6s ease forwards}
+@keyframes pop{0%{opacity:0;transform:translate(0,0) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(160deg)}}
+#vtitle{position:absolute;right:8%;top:50%;transform:translateY(-46%);writing-mode:vertical-rl;height:max-content;
+  font-size:clamp(58px,10vw,104px);letter-spacing:.18em;color:var(--paper);
+  opacity:0;transition:opacity 1.4s ease .8s, transform 1.4s ease .8s;text-shadow:0 0 24px rgba(94,143,187,.35)}
+body.opened #vtitle{opacity:1;transform:translateY(-50%)}
+#alt-t{position:absolute;left:6%;bottom:16%;font-size:14px;color:var(--dim);letter-spacing:2px;
+  opacity:0;transition:opacity 1.2s ease 1.4s}
+body.opened #alt-t{opacity:1}
+#seal{position:absolute;left:8%;top:18%;width:88px;height:88px;border:2px solid var(--blue);color:var(--blue);
+  display:grid;grid-template-columns:1fr 1fr;opacity:0;transform:scale(1.7) rotate(9deg);
+  transition:all .5s cubic-bezier(.3,1.4,.5,1) 1.7s}
+body.opened #seal{opacity:.92;transform:scale(1) rotate(-4deg)}
+#seal span{display:flex;align-items:center;justify-content:center;font-size:30px}
+#hint{position:absolute;bottom:40px;width:100%;text-align:center;font-size:12px;letter-spacing:5px;color:var(--dim);
+  animation:breath 2.4s ease-in-out infinite;transition:opacity .6s}
+body.opened #hint{opacity:0}
+@keyframes breath{50%{opacity:.35}}
+@media (max-width:700px){
+  #vtitle{position:static;writing-mode:horizontal-tb;margin:14px auto 0;
+    font-size:44px;letter-spacing:.24em;text-align:center;white-space:nowrap;transform:none!important}
+  body.opened #vtitle{transform:none!important}
+  #seal{width:60px;height:60px;left:auto;right:4%;top:2%}
+  #seal span{font-size:20px}
+  #alt-t{position:static;margin:10px auto 0;text-align:center;max-width:88%;font-size:11.5px;letter-spacing:1px;line-height:1.7}
+}
+
+/* ============ 正文 ============ */
+main{max-width:920px;margin:0 auto;padding:20px 22px 60px}
+section{margin-top:110px}
+h2{font-size:25px;letter-spacing:4px;font-weight:normal;margin-bottom:8px}
+h2 i{font-style:normal;color:var(--blue);border:1px solid var(--blue-dim);font-size:14px;
+  padding:2px 9px;letter-spacing:3px;margin-right:14px;vertical-align:4px}
+.lede{color:var(--dim);font-size:15px;margin-bottom:26px;letter-spacing:1px}
+.rv{opacity:0;transform:translateY(26px);transition:all .9s ease}
+.rv.on{opacity:1;transform:none}
+
+.q{background:var(--mist);border-left:3px solid var(--blue);padding:16px 20px;margin:18px 0;
+  font-size:16.5px;line-height:2.05;position:relative}
+.q b{color:var(--blue);font-weight:normal;font-size:12.5px;letter-spacing:2px;display:block;margin-bottom:4px}
+.qv{color:inherit}
+.qn{display:block;text-align:right;color:var(--dim);font-size:12.5px;margin-top:6px;letter-spacing:1px}
+
+/* 灯与租契 */
+#s1-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+@media (max-width:760px){#s1-grid{grid-template-columns:1fr}}
+.lamp-box{background:var(--mist);padding:22px;text-align:center;position:relative;overflow:hidden}
+.lamp-flame{width:22px;height:52px;margin:0 auto;background:radial-gradient(ellipse at 50% 85%, var(--ember) 0%, #7a4a28 60%, transparent 100%);
+  border-radius:50% 50% 42% 42%;animation:flick 1.6s ease-in-out infinite}
+@keyframes flick{50%{transform:scaleY(.88) scaleX(1.06)}}
+.lamp-base{width:70px;height:8px;background:var(--line);margin:14px auto 0}
+.lamp-cap{font-size:13px;color:var(--dim);letter-spacing:3px;margin-top:14px}
+.deed{background:#e8e4dc;color:#26251f;padding:22px 24px;position:relative}
+.deed::before{content:"";position:absolute;inset:7px;border:1px solid #b9b3a5;pointer-events:none}
+.deed h3{font-size:15px;letter-spacing:5px;text-align:center;color:#7a4a28;font-weight:normal;margin-bottom:10px}
+.deed p{font-size:14.5px;line-height:2}
+.deed .flipch{display:inline-block;cursor:pointer;color:#a8433a;font-size:20px;font-weight:bold;
+  border-bottom:1px dashed #a8433a;min-width:1.2em;text-align:center;position:relative}
+.deed .flipch .a,.deed .flipch .b{display:block;transition:opacity .5s, transform .5s}
+.deed .flipch .b{position:absolute;left:0;right:0;top:0;opacity:0;transform:rotate(-90deg) scale(.6)}
+.deed.flipped .flipch .a{opacity:0;transform:rotate(90deg) scale(.6)}
+.deed.flipped .flipch .b{opacity:1;transform:none}
+.deed .deednote{font-size:12px;color:#8b8371;margin-top:10px;letter-spacing:1px}
+.deed .stamp{position:absolute;right:14px;bottom:12px;border:2px solid #a8433a;color:#a8433a;
+  font-size:13px;letter-spacing:2px;padding:2px 8px;transform:rotate(-7deg);opacity:0;transition:.5s .3s}
+.deed.flipped .stamp{opacity:.85}
+
+/* 三生带 */
+#stops{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media (max-width:860px){#stops{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){#stops{grid-template-columns:1fr}}
+.stop{background:var(--mist);padding:20px 18px;position:relative;border-top:2px solid var(--blue-dim)}
+.stop .dot{width:11px;height:11px;border-radius:50%;background:var(--ember);box-shadow:0 0 12px rgba(184,114,63,.8);margin-bottom:12px}
+.stop h3{font-size:20px;letter-spacing:3px;font-weight:normal}
+.stop .where{font-size:12.5px;color:var(--dim);letter-spacing:2px;margin:2px 0 10px}
+.stop p{font-size:14px;color:#c9c4b8;line-height:1.95}
+.stop .q{margin:12px 0 0;padding:10px 12px;font-size:13.5px;line-height:1.9}
+.stop .q b{display:none}
+
+/* 照破台 */
+#tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:860px){#tiles{grid-template-columns:1fr 1fr}}
+@media (max-width:540px){#tiles{grid-template-columns:1fr}}
+.tile{position:relative;aspect-ratio:4/3.1;background:var(--mist);cursor:pointer;overflow:hidden;outline:none}
+.tile .face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .5s, transform .5s;padding:14px;text-align:center}
+.tile .face .big{font-size:46px;color:var(--paper);letter-spacing:2px}
+.tile .face .sm{font-size:12.5px;color:var(--dim);letter-spacing:2px;margin-top:8px}
+.tile .true{position:absolute;inset:0;background:linear-gradient(160deg,#232733 0%,var(--mist) 70%);
+  display:flex;flex-direction:column;justify-content:center;padding:16px 18px;opacity:0;transform:translateY(12px);
+  transition:opacity .55s .35s, transform .55s .35s}
+.tile.lit .face{opacity:0;transform:scale(.92)}
+.tile.lit .true{opacity:1;transform:none}
+.tile .true h4{font-size:18px;color:var(--blue);letter-spacing:3px;font-weight:normal;margin-bottom:8px}
+.tile .true p{font-size:13px;color:#c9c4b8;line-height:1.9}
+.tile .beam{position:absolute;left:-30%;top:0;width:30%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(94,143,187,.35),transparent);opacity:0;pointer-events:none}
+.tile.lit .beam{animation:sweep .8s ease .1s}
+@keyframes sweep{0%{opacity:1;transform:translateX(0)}100%{opacity:1;transform:translateX(440%)}}
+.tile .corner{position:absolute;right:10px;top:8px;font-size:11px;color:var(--blue-dim);letter-spacing:2px}
+.tile.lit .corner{color:var(--blue)}
+
+/* 同场加映 */
+.side-strip{background:var(--mist);padding:18px 22px;margin-top:26px;border:1px dashed var(--line)}
+.side-strip h3{font-size:14px;letter-spacing:4px;color:var(--ember);font-weight:normal;margin-bottom:8px}
+.side-strip p{font-size:14.5px;color:#c9c4b8}
+.side-strip .q{margin:10px 0 0;font-size:14px;padding:10px 14px}
+
+/* 赃物账 */
+.ledger{border:1px solid var(--line)}
+.ledger .row{display:grid;grid-template-columns:1.1fr 1.6fr 1.6fr;border-bottom:1px solid var(--line)}
+.ledger .row:last-child{border-bottom:none}
+.ledger .row>div{padding:13px 16px;font-size:14.5px}
+.ledger .head>div{font-size:12.5px;letter-spacing:3px;color:var(--dim);background:var(--mist)}
+.ledger .item{color:var(--paper);letter-spacing:1px}
+.ledger .item small{display:block;color:var(--dim);font-size:12px;letter-spacing:1px}
+.ledger .m,.ledger .f{color:#c9c4b8}
+.ledger .q{margin:6px 0 0;padding:8px 12px;font-size:13px}
+.ledger .q b{display:none}
+.ledger .final{background:linear-gradient(90deg, rgba(94,143,187,.09), transparent)}
+@media (max-width:700px){
+  .ledger .row{grid-template-columns:1fr}
+  .ledger .head{display:none}
+  .ledger .row>div{border-bottom:1px dashed var(--line)}
+}
+
+/* 铁扇签 */
+#fan{background:var(--mist);border:1px solid var(--line);padding:24px 26px;position:relative}
+#fan .fh{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+#fan .fh h3{font-size:19px;letter-spacing:3px;font-weight:normal}
+#fan .fh span{font-size:12.5px;color:var(--dim);letter-spacing:2px}
+#fan p{font-size:14.5px;color:#c9c4b8;margin-top:10px}
+#fan .q{font-size:14px}
+
+/* 名分对牌 */
+#debate{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:820px){#debate{grid-template-columns:1fr}}
+.dcard{background:var(--mist);border-top:2px solid var(--ember);padding:18px}
+.dcard h3{font-size:16px;letter-spacing:3px;font-weight:normal;color:var(--paper)}
+.dcard .role{font-size:12px;color:var(--dim);letter-spacing:2px;margin-bottom:10px}
+.dcard .ex{font-size:14.5px;color:#c9c4b8;line-height:1.95}
+.dcard .vs{display:flex;gap:10px;margin-top:10px}
+.dcard .vs>div{flex:1;font-size:14px;padding:8px 10px;text-align:center}
+.dcard .vs .off{border:1px solid var(--line);color:var(--dim)}
+.dcard .vs .hg{border:1px solid var(--blue);color:var(--blue)}
+.twomothers{display:grid;grid-template-columns:120px 1fr 120px;gap:20px;align-items:center;margin-top:30px}
+@media (max-width:760px){.twomothers{grid-template-columns:90px 1fr 90px;gap:10px}}
+.plate{writing-mode:vertical-rl;background:var(--mist);border:1px solid var(--blue-dim);
+  padding:20px 14px;font-size:17px;letter-spacing:6px;text-align:center;color:var(--paper);min-height:220px;display:flex;align-items:center;justify-content:center}
+.plate em{font-style:normal;color:var(--ember);font-size:12.5px;letter-spacing:2px;display:block;margin-top:14px}
+.twomothers .mid{font-size:15px;color:#c9c4b8;line-height:2.05}
+
+/* 誓言板 */
+#vow{background:var(--mist);border:1px solid var(--line);padding:28px;position:relative;margin-top:26px}
+#vow h3{font-size:14px;letter-spacing:5px;color:var(--ember);font-weight:normal;margin-bottom:12px}
+#vow .q{background:transparent;border-left-color:var(--ember)}
+#vow .paid{position:absolute;right:22px;top:18px;border:2px solid var(--blue);color:var(--blue);
+  font-size:15px;letter-spacing:3px;padding:4px 10px;transform:rotate(8deg);opacity:0;transition:opacity .7s .4s}
+#vow.paidon .paid{opacity:.9}
+
+/* 校字记 */
+#jiaozi{margin-top:90px;border:1px dashed var(--line);padding:22px 24px}
+#jiaozi h3{font-size:14px;letter-spacing:5px;color:var(--dim);font-weight:normal;margin-bottom:10px}
+#jiaozi li{font-size:13.5px;color:#a8a396;margin:7px 0 7px 20px;line-height:1.9}
+
+/* 尾屏 */
+#end{margin-top:120px;padding:70px 20px 40px;text-align:center;position:relative;
+  background:radial-gradient(ellipse 70% 80% at 50% 100%, #201f1b 0%, var(--ink) 75%)}
+#endcol{writing-mode:vertical-rl;display:inline-block;font-size:30px;letter-spacing:.32em;color:var(--paper);
+  text-shadow:0 0 18px rgba(184,114,63,.35);margin-bottom:44px}
+#coda{max-width:640px;margin:0 auto;font-size:14.5px;color:#b5b0a4;text-align:left;line-height:2.1}
+#coda p{margin-bottom:12px}
+#luoqian{margin:36px auto 0;font-size:12.5px;color:var(--dim);letter-spacing:4px}
+
+footer{border-top:1px solid var(--line);margin-top:60px;padding:26px 22px 40px;text-align:center;
+  font-size:12.5px;color:var(--dim);line-height:2.1}
+footer a{color:var(--blue-dim)}
+</style>
+</head>
+<body>
+
+<aside id="san-rail" aria-hidden="true">
+  <div class="node" data-st="0" style="top:0%"></div><div class="tag" data-st="0" style="top:0%">生一 灯花</div>
+  <div class="node" data-st="1" style="top:33%"></div><div class="tag" data-st="1" style="top:33%">生二 灵光</div>
+  <div class="node" data-st="2" style="top:66%"></div><div class="tag" data-st="2" style="top:66%">生三 灵耀</div>
+  <div class="node" data-st="3" style="top:100%"></div><div class="tag" data-st="3" style="top:100%">本尊 华光</div>
+</aside>
+
+<header id="hero">
+  <div id="hero-top">四游记之一 · <b>神魔小说</b></div>
+  <div id="eye-wrap" tabindex="0" role="button" aria-label="点目开眼">
+    <svg id="eyes" viewBox="0 0 360 300">
+      <defs>
+        <radialGradient id="irisg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#8fb6da"/><stop offset="60%" stop-color="#5e8fbb"/><stop offset="100%" stop-color="#2e4760"/>
+        </radialGradient>
+        <radialGradient id="glowg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#5e8fbb" stop-opacity=".55"/><stop offset="100%" stop-color="#5e8fbb" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle id="glow3" cx="180" cy="92" r="86" fill="url(#glowg)"/>
+      <g id="eye3">
+        <g class="lid">
+          <path d="M180 34 C 204 66, 204 118, 180 150 C 156 118, 156 66, 180 34 Z" fill="#191917" stroke="#5e8fbb" stroke-width="2"/>
+        </g><circle class="iris" cx="180" cy="92" r="17" fill="url(#irisg)"/>
+        <circle class="iris" cx="180" cy="92" r="6.5" fill="#141a20"/>
+        
+      </g>
+      <g id="eye1">
+        <g class="lid">
+          <path d="M52 218 C 78 194, 134 194, 160 218 C 134 242, 78 242, 52 218 Z" fill="#191917" stroke="#4a4a41" stroke-width="1.6"/>
+        </g><circle class="iris" cx="106" cy="218" r="14" fill="url(#irisg)"/>
+        <circle class="iris" cx="106" cy="218" r="5.5" fill="#141a20"/>
+        
+      </g>
+      <g id="eye2">
+        <g class="lid">
+          <path d="M200 218 C 226 194, 282 194, 308 218 C 282 242, 226 242, 200 218 Z" fill="#191917" stroke="#4a4a41" stroke-width="1.6"/>
+        </g><circle class="iris" cx="254" cy="218" r="14" fill="url(#irisg)"/>
+        <circle class="iris" cx="254" cy="218" r="5.5" fill="#141a20"/>
+        
+      </g>
+      <g id="sparks">
+        <rect class="spark" x="177" y="24" width="6" height="6" style="--dx:-46px;--dy:-38px"/>
+        <rect class="spark" x="183" y="28" width="5" height="5" style="--dx:52px;--dy:-30px"/>
+        <rect class="spark" x="180" y="160" width="5" height="5" style="--dx:-58px;--dy:44px"/>
+        <rect class="spark" x="186" y="152" width="6" height="6" style="--dx:64px;--dy:36px"/>
+        <rect class="spark" x="172" y="60" width="4" height="4" style="--dx:-84px;--dy:16px"/>
+        <rect class="spark" x="192" y="120" width="4" height="4" style="--dx:88px;--dy:-10px"/>
+        <rect class="spark" x="176" y="96" width="4" height="4" style="--dx:-30px;--dy:96px"/>
+        <rect class="spark" x="188" y="76" width="4" height="4" style="--dx:26px;--dy:-92px"/>
+        <rect class="spark" x="180" y="140" width="5" height="5" style="--dx:-70px;--dy:-56px"/>
+        <rect class="spark" x="184" y="44" width="5" height="5" style="--dx:74px;--dy:58px"/>
+      </g>
+    </svg>
+    <div id="vtitle">南游记</div>
+    <div id="alt-t">又名<span class="qv">五显灵官大帝华光天王传</span>　明余象斗编</div>
+    <div id="seal"><span>本</span><span>照</span><span>相</span><span>破</span></div>
+  </div>
+  <div id="hint">点 目 开 眼</div>
+</header>
+
+<main>
+
+<!-- 生一 灯花 -->
+<section id="s1">
+  <h2 class="rv"><i>生一</i>灵山灯花</h2>
+  <p class="lede rv">这部书的主角，上岗之前是一盏灯。如来法堂里昼夜点着，听经听久了，灯花堆积，如来念咒，把它咒成了人。</p>
+  <div id="s1-grid">
+    <div class="rv">
+      <div class="lamp-box">
+        <div class="lamp-flame"></div>
+        <div class="lamp-base"></div>
+        <div class="lamp-cap">灵山法堂 · 长明灯</div>
+      </div>
+      <div class="q">我乃如来法堂前一盏油灯，昼夜煌煌，听经问法，灯花堆积，一日如来念咒，咒成人身。我这火之相，火之灵，火之听，火之起，你焉能烧我？<b>妙吉祥自报家门</b></div>
+      <div class="q">此人原是灵山寺如来面前一盏灯的灯花，堆积日久，后来如来念动真言，咒成华光。<b>玉帝殿上众臣的官方说法</b></div>
+    </div>
+    <div class="rv">
+      <div class="deed" id="deed">
+        <h3>灵山租契</h3>
+        <p>独火大王把灵山借与如来修行，<span class="qv">议定借他住一年还我</span>。到期去讨，文书上却成十年；再讨，<span class="qv">过了十年去取，说我写定借他住千年</span>。妖王凑近一看，<span class="qv">文书内又果是个干字</span>，有理说不清，憋了一肚子火。</p>
+        <div class="deednote">点一点那个字，替妖王看文书</div>
+        <div class="flipch" id="flipch"><span class="a">十</span><span class="b">千</span></div>
+        <div class="stamp">息诉</div>
+      </div>
+      <p style="font-size:14.5px;color:#c9c4b8;margin-top:16px">积怨在独火鬼，引火在孔雀童子一盏滚茶。妖王放五斗火烧灵山，如来以五百条逆龙护住；灯花化身妙吉祥看不过，一把三昧真火，把独火鬼烧死了。佛门难容杀戒，观音讨情，改判投胎。灯花下凡，先去马耳山。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 三生带 -->
+<section id="s2">
+  <h2 class="rv"><i>转生</i>一盏灯的四辈子</h2>
+  <p class="lede rv">灯花、灵光、灵耀、华光，一个魂四个名字。每转一世，随身多一件法宝，也多一桩官司。</p>
+  <div id="stops">
+    <div class="stop rv">
+      <div class="dot"></div>
+      <h3>灯花</h3>
+      <div class="where">灵山 · 法堂</div>
+      <p>听经的油灯被咒成人身，因烧死独火鬼被贬下界，观音保奏改投胎。五通与天眼，是如来临别给的行李。</p>
+    </div>
+    <div class="stop rv stop-l2">
+      <div class="dot"></div>
+      <h3>灵光</h3>
+      <div class="where">马耳山 · 王府</div>
+      <p>生下来就带三只眼。三朝会说话，看哥哥打输了，自己冲上去替父报仇。</p>
+      <div class="q"><span class="qv">幸今生此子，亦有三眼。异日长成，你父之仇可报。</span></div>
+      <div class="q"><span class="qv">战不十合，灵光把龙王一刀斩于马下。</span></div>
+    </div>
+    <div class="stop rv stop-l3">
+      <div class="dot"></div>
+      <h3>灵耀</h3>
+      <div class="where">斗牛宫 · 天王府</div>
+      <p>九曲珠里灭掉的灵光被天尊拾去，送进斗牛宫投胎，掌纹是出厂设置。</p>
+      <div class="q"><span class="qv">左手掌上有一‘灵’字，右手掌上有一‘耀’字，又有三个眼，便是我送来的。</span></div>
+      <p style="margin-top:10px">在八景宫骗出师父金刀，炼成随身法宝；后官拜火部元帅，又被贬去卯日宫点卯，忍无可忍题了反诗下界。</p>
+      <div class="q"><span class="qv">自恨时乖运不通，遭陷天罗地网中，卯薄之上分明写，上写华光反日宫。</span></div>
+    </div>
+    <div class="stop rv stop-l4">
+      <div class="dot"></div>
+      <h3>华光</h3>
+      <div class="where">婺源 · 萧家庄</div>
+      <p>第三度投胎，五通化作一网白米滚进胎里，二十个月生下一个肉球，剖开是五兄弟，脏腑各是一轮。</p>
+      <div class="q"><span class="qv">五通共化成一网白米，滚入安人胎中。</span></div>
+      <div class="q"><span class="qv">取名叫做萧显聪，次名显明，三名显正，四名显志，五名显德</span></div>
+      <div class="q"><span class="qv">内乃是金轮脏、银轮脏、铜轮脏、铁轮脏、华光脏</span></div>
+      <p style="margin-top:10px">五显之名，在此落地。同胎还有个妹妹琼娘。</p>
+      <div class="q"><span class="qv">必是前那朵琼花又来投胎。</span></div>
+    </div>
+  </div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8;margin-top:22px">琼娘的前身，是卷一分龙会后水退时开的那朵琼花：<span class="qv">上香三十三天，下香五湖四海，三界皆闻香味</span>。玉帝为它专门设过琼花会，华光在会上抢花自插，从此闯祸出名。而在小说刊行的同一时代，佛山粤剧行会已将会所命名为琼花会馆，供的祖师正是华光。一朵花的香火绵延，是这本书没写到的后话。</p>
+</section>
+
+<!-- 照破台 -->
+<section id="s3">
+  <h2 class="rv"><i>玩法</i>照破台</h2>
+  <p class="lede rv">这部书的发动机：谁都会变，天眼专管拆穿。下面六块牌子都是伪装，点开照一照。</p>
+  <div id="tiles">
+    <div class="tile rv" tabindex="0"><div class="beam"></div>
+      <div class="face"><div class="big">客商</div><div class="sm">推车上山口称赶路</div></div>
+      <div class="true"><h4>宋无忌</h4><p>天兵化装偷袭，火车藏杀机，反被华光变作哭脚的妇人连车坐走。</p><div class="q"><span class="qv">华光变作妇人，在界路悲哭，将臣火车坐去</span></div></div>
+    </div>
+    <div class="tile rv" tabindex="0"><div class="beam"></div>
+      <div class="face"><div class="big">灯蛾</div><div class="sm">深夜扑灭后园一炷夜香</div></div>
+      <div class="true"><h4>吉芝陀圣母</h4><p>趁夜吃掉求子的范氏太婆，顶着她的名字嫁进萧家庄，生下华光。</p><div class="q"><span class="qv">现出本相，是吉芝陀圣母</span></div></div>
+    </div>
+    <div class="tile rv" tabindex="0"><div class="beam"></div>
+      <div class="face"><div class="big">鲤鱼</div><div class="sm">扬州江上二丈长</div></div>
+      <div class="true"><h4>铁头太子</h4><p>分龙会酒醉闹席被推下天关，不敢回宫，变鲤鱼散心，搁浅被樵子割了一身肉。</p><div class="q"><span class="qv">变作一个大鲤鱼，身长二丈，在扬州江上游戏</span></div></div>
+    </div>
+    <div class="tile rv" tabindex="0"><div class="beam"></div>
+      <div class="face"><div class="big">天使</div><div class="sm">天曹差来借宝赴会</div></div>
+      <div class="true"><h4>华光</h4><p>金砖被骗走之后如法炮制，上凤凰山把玉环圣母的金塔借走，炼回自己的金砖。</p><div class="q"><span class="qv">摇身一变，变作假天使</span></div></div>
+    </div>
+    <div class="tile rv" tabindex="0"><div class="beam"></div>
+      <div class="face"><div class="big">天尊</div><div class="sm">清华宫法驾亲临地狱</div></div>
+      <div class="true"><h4>华光</h4><p>为探母亲下落，连装两回神明下酆都，都被守门的照妖镜当场照跑。</p><div class="q"><span class="qv">华光即变作太乙救苦天尊去到阴司二下酆都</span></div></div>
+    </div>
+    <div class="tile rv" tabindex="0"><div class="beam"></div>
+      <div class="face"><div class="big">猴狲</div><div class="sm">桃树上有毛茸茸的身影</div></div>
+      <div class="true"><h4>华光</h4><p>为给母亲戒馋，变作齐天大圣偷王母仙桃，留一地爪印，让真大圣背了一个月黑锅。</p><div class="q"><span class="qv">华光因此变作你去偷仙桃。</span></div></div>
+    </div>
+  </div>
+  <div class="side-strip rv">
+    <h3>同场加映 · 哪吒来了也没用</h3>
+    <p>哪吒领兵收华光，斗法一月不分胜负：绣球对金砖，紫金圈对风火轮，鬼兵对火鸦。八角头陀被砖打落犄角，吞世界鬼把他吞进肚里，反被肚里一把火烧出来，华光自己还纳闷。</p>
+    <div class="q"><span class="qv">我只道睡在床上，原来被此贼装在此。</span></div>
+    <p style="margin-top:10px">哪吒阵营最终赢的只有一把骗术：辟瘟使者假传师命讨走金砖。赃物账见下。</p>
+    <div class="q"><span class="qv">华光丢起金砖，哪咤撒起花花绣球；华光又丢起风火轮，哪咤也撒起红花紫金圈。</span></div>
+  </div>
+</section>
+
+<!-- 赃物账 -->
+<section id="s4">
+  <h2 class="rv"><i>账目</i>华光的赃物账</h2>
+  <p class="lede rv">主角是个惯偷，法术升级全靠借与骗。逐项过账，最后一件的下落最体面。</p>
+  <div class="ledger rv">
+    <div class="row head"><div>赃物</div><div>手法</div><div>下落</div></div>
+    <div class="row"><div class="item">金枪<small>灵虚殿后殿</small></div><div class="m">游山顺手拔了紫微大帝镇妖的金枪，放走两只火精。</div><div class="f"><span class="qv">盗我金枪，放走二妖</span>，大帝追债，一珠困死一世命。</div></div>
+    <div class="row"><div class="item">聚宝珠<small>东海龙宫</small></div><div class="f"><span class="qv">变作一个虾虫，下了海中，潜入龙宫</span>，寿宴上顺走。</div><div class="m">龙王兴师问罪，反被杀得大败，珠子再没下文。</div></div>
+    <div class="row"><div class="item">金刀<small>八景宫师父处</small></div><div class="m">变作师父，从金刀童子手里骗出，回炉一炼。</div><div class="f"><span class="qv">炼作一块三角金砖藏起身上</span>，日后第一法宝。</div></div>
+    <div class="row"><div class="item">金塔<small>凤凰山玉环圣母</small></div><div class="f"><span class="qv">摇身一变，变作假天使</span>，登门借宝赴会。</div><div class="m">圣母追讨不成，反赔上女儿。观音事后点破：<span class="qv">今把塔炼作一块三角金砖</span></div></div>
+    <div class="row"><div class="item">仙桃<small>王母金谷园</small></div><div class="m">变作齐天大圣上树摘桃，留一地爪迹栽赃。</div><div class="m">真悟空被限一个月破案，幸得众臣保本。</div></div>
+    <div class="row final"><div class="item">三角金砖<small>一路骗来的集成</small></div><div class="f">打上灵山，如来抬手一招。</div><div class="f"><span class="qv">将金砖收去，贴在胸前，燃成一个“万”字，藏起肉内。</span><span class="qv">后来如来胸前有个“万”字形，是因此而有。</span></div></div>
+  </div>
+  <p class="rv" style="font-size:14px;color:var(--dim);margin-top:14px">赃物账里唯一进了佛相的战利品。观音那句话补在下一栏。</p>
+</section>
+
+<!-- 铁扇签 -->
+<section id="s5">
+  <h2 class="rv"><i>支线</i>一场赌来的婚事</h2>
+  <div id="fan" class="rv">
+    <div class="fh"><h3>铁扇公主讨债</h3><span>金塔债的利息</span></div>
+    <p>华光骗走金塔，公主提铁扇兴师问罪，一扇把千里眼与顺风耳扇出三千里。华光被扇落北方风毒洞，老仙翁只给七粒干饭，吃完却送了他一句卦。</p>
+    <div class="q"><span class="qv">叫道快取七粒干饭，与华光吃。</span></div>
+    <div class="q"><span class="qv">恭喜元帅，喜事近矣。</span></div>
+    <p>服下镇风丹回去叫阵，赌约现写现兑：</p>
+    <div class="q"><span class="qv">今日与你赌赛三扇为期，倘若你三扇扇得我一根头发动，我与你拿去，将金塔还你。三扇若扇我一根头发不动，我拿你来作个妻子，金塔亦不还你。</span></div>
+    <p>三扇过后纹丝不动，公主被一把拉进洞房。塔没还，债主成了媳妇，此后救母一路的道具，一半是她张罗的。</p>
+  </div>
+</section>
+
+<!-- 两个母亲 -->
+<section id="s6">
+  <h2 class="rv"><i>救母</i>名分之辩</h2>
+  <p class="lede rv">龙瑞王在云端看见萧家庄有妖吃人，变作和尚把妖拎进了酆都。华光赶去讨人，讨出全书最绕的一个问题。</p>
+  <div class="q rv">华光曰：<span class="qv">她正是我母亲。</span>龙瑞王曰：<span class="qv">你这样一个人去认一个妖怪做母亲？</span><b>讨人讨出个哲学问题</b></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">妖的名字<span class="qv">吉芝陀圣母</span>，顶着范氏太婆的身份嫁人生子，所以阴司簿书上只查得到萧太婆。华光一路问到东岳庙、奈河渡口、阎王殿，同一场对话挨了三遍。</p>
+  <div id="debate">
+    <div class="dcard rv">
+      <h3>东岳大帝</h3><div class="role">东岳庙 · 六曹查簿</div>
+      <div class="ex">六曹回话：<span class="qv">只有萧太婆到，没有吉芝陀圣母来。</span>大帝咬定两个，华光咬定一个。</div>
+      <div class="vs"><div class="off"><span class="qv">是两个。</span></div><div class="hg"><span class="qv">总是一人。</span></div></div>
+      <div class="vs"><div class="off"><span class="qv">是两个。</span></div><div class="hg"><span class="qv">只是一个！</span></div></div>
+    </div>
+    <div class="dcard rv">
+      <h3>奈河渡子</h3><div class="role">阴司 · 渡口</div>
+      <div class="ex"><span class="qv">萧太婆在此啼哭而过，吉芝陀圣母这里未曾见来。</span></div>
+      <div class="vs"><div class="off"><span class="qv">是二个人。</span></div><div class="hg"><span class="qv">总是一个。</span></div></div>
+    </div>
+    <div class="dcard rv">
+      <h3>阎王</h3><div class="role">森罗殿 · 判官查簿</div>
+      <div class="ex"><span class="qv">只有萧太婆，没有吉芝陀圣母。</span>阎王跟着咬定两个。</div>
+      <div class="vs"><div class="off"><span class="qv">却是二人。</span></div><div class="hg"><span class="qv">一个为何说两个？</span></div></div>
+    </div>
+  </div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8;margin-top:22px">华光的标准答案，一口气说完：</p>
+  <div class="q rv"><span class="qv">吉芝陀圣母就是萧太婆，萧太婆就是吉芝陀圣母</span><b>他在三处复读的名分口诀</b></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">直到引魂使者领他进十伤门，才算问到底。门里哭的，才是被吃掉的那位真萧太婆。</p>
+  <div class="q rv"><span class="qv">因为萧长者四十无子，我每夜在后花园烧香求嗣，不想被一个扑灯蛾来将灯火扑灭，现出本相，是吉芝陀圣母，将我吃了，把骨头捽往深山。他变做我，在萧家受了胎，才生天王。我死在幽冥，枉屈无伸。</span><b>十伤门 · 真萧太婆的哭诉</b></div>
+  <div class="twomothers rv">
+    <div class="plate">吉芝陀圣母<em>生我的人</em></div>
+    <div class="mid">华光的回答只有一句：<span class="qv">原来亦是吾母，怎生是好？</span>吃人的生母要救，被吃的顶名母亲也认。他求阎王送真萧太婆去邓尚书家，投了个胎，转头继续救妖母。两个母亲，一个都不放下，这是全书最不讲理也最讲情的地方。</div>
+    <div class="plate">范氏萧太婆<em>顶名的人</em></div>
+  </div>
+</section>
+
+<!-- 仙桃案 -->
+<section id="s7">
+  <h2 class="rv"><i>救母</i>出狱第一句</h2>
+  <p class="lede rv">三下酆都，照妖镜前连败两阵，第三回凑齐全套法驾才把人捞出来。妖母出狱，开口第一句让全书降温。</p>
+  <div class="q rv"><span class="qv">我儿救得我出来甚好，但我要皮娥吃。</span><b>吉芝陀圣母 · 酆都门外</b></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">皮娥是什么，华光不懂，千里眼与顺风耳翻译：就是人。华光劝，母亲反问：</p>
+  <div class="q rv"><span class="qv">这就不孝，既没有皮娥我吃，要你救出我来做甚？</span><b>孝道的极限测试</b></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">华光没法子，出榜招医。揭榜的魔军本想下毒，被识破后献了个偏方：仙桃。于是有了照破台最后一格：变作齐天大圣偷桃栽赃。王母告到玉帝，悟空的答辩与那句俗语都在案卷里。</p>
+  <div class="q rv"><span class="qv">小厮醒来一看，不见了五六个仙桃，却是猴狲脚迹。</span><b>现场证物</b></div>
+  <div class="q rv"><span class="qv">臣自取经回来，已把一切贪心丢了，何得有盗心，此实不是小臣，恐其中有诈，也未可知</span><b>孙悟空自辩</b></div>
+  <div class="q rv"><span class="qv">半天下雨，不知来头。</span><b>悟空的委屈，一句顶一万句</b></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">桃吃了，馋压住了，黑锅却引来了花果山兵马。大圣的女儿月孛星请战，先看看描写，再看兵器。</p>
+  <div class="q rv"><span class="qv">但见他生得目大腰宽，口阔手粗，脚长头歪，脚声似打雷。遇了不死亦七八。</span><b>月孛星出场描写</b></div>
+  <div class="q rv"><span class="qv">那月孛星的骷髅十分利害，人被他叫名拷了，三日内自死。</span><b>敲一下就叫人头痛的骷髅</b></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">华光被敲得头痛眼昏。火炎王光佛赶来调停，只掏出一句老话：</p>
+  <div class="q rv"><span class="qv">自古道：‘好汉碰好汉。’</span><b>说和开场白</b></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">月孛星削去骷髅的拷处放人，两位好汉结为兄弟。妖母靠仙桃戒了馋，一段人肉公案，收在一场结拜里。</p>
+  <div class="q rv"><span class="qv">女儿已削去拷处，饶他命矣。</span><b>月孛星放话</b></div>
+</section>
+
+<!-- 闹三界 -->
+<section id="s8">
+  <h2 class="rv"><i>名声</i>闹三界</h2>
+  <p class="lede rv">天宫、中界、阴司都闯过，东岳庙查档没查出名分，华光把这笔账记在大帝头上，索性去放火。听闻自己名声不好，他的反应是真的去配得上它。</p>
+  <div class="q rv"><span class="qv">为何说我闹天曹、闹中界、闹阴司，人皆道我闹三界，不免去放火烧了东岳庙。</span><b>自我实现的预言</b></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">火放不起来，守庙的两头蛇先吐沙扑灭。丧门、吊客二神想出阴招：对着他连哭三声，人真被哭死了，装进纸棺材抬去天庭请赏。半路撞见师父火炎王光佛，一句谎话救回徒弟，又出主意烧棺。火一起，人醒了。</p>
+  <div class="q rv"><span class="qv">我不信，你哭得死我吗？</span><b>哭之前的华光</b></div>
+  <div class="q rv"><span class="qv">就放起火来，烧得那华光醒将起来</span><b>见火便醒</b></div>
+  <div class="q rv"><span class="qv">大骂炎光秃驴害死人。</span><b>二神事后控诉</b></div>
+</section>
+
+<!-- 誓言兑付 -->
+<section id="s9">
+  <h2 class="rv"><i>收梢</i>誓言兑付</h2>
+  <p class="lede rv">讨母途中，华光在灵山发过一个誓。如来记性很好，全书结尾就来收账，手段是把誓言按字面执行。</p>
+  <div id="vow" class="rv">
+    <h3>誓言板 · 原件照录</h3>
+    <div class="q"><span class="qv">华光若寻得母亲，不来皈依佛道，随侍师父，华光六根不得齐全。</span></div>
+    <div class="paid">兑 付</div>
+  </div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8;margin-top:22px">如来派弟子扮作街头把戏人，卖砍脚不疼的戏法。华光掏百金学费，先看师傅砍，再自己伸脚。</p>
+  <div class="q rv"><span class="qv">华光曰：“砍下恐疼。”那些人曰：“从前师父说不痛。”</span></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">左脚砍下来，果然一点不疼，右脚自己动手，接不上了。一声令下，狮子衔脚回灵山。</p>
+  <div class="q rv"><span class="qv">叫一声青鬃狮子衔去。</span></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">华光追上灵山，跪在殿前喊救命。如来把誓言念给他听：</p>
+  <div class="q rv"><span class="qv">我今就叫你六根不全。</span><b>字面执行</b></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">安脚、还天眼、皈依佛道，天庭依灵山表奏封赏：</p>
+  <div class="q rv"><span class="qv">加封华光为五封佛中上善王显头官大帝。</span><b>库本封号全文照录</b></div>
+  <p class="rv" style="font-size:14.5px;color:#c9c4b8">书末一句话交代谢幕后的业务范围，像一张香火执照：</p>
+  <div class="q rv"><span class="qv">华光永镇中界，万民求男生男、求女生女，买卖一本十利，读书者金榜提名，感显应验，永受祭享。</span><b>卷末收梢</b></div>
+</section>
+
+<!-- 校字记 -->
+<section id="jiaozi" class="rv">
+  <h3>校字记 · 库本用字照录</h3>
+  <ul>
+    <li>租契改字全靠讹字撑场：<span class="qv">文书内又果是个干字</span>，干当作千；反诗<span class="qv">卯薄之上分明写</span>作薄，正文却作卯簿。</li>
+    <li>如来回忆华光身世，一处作三瑰七魄，一处作三魂六魄，两数并存照录。</li>
+    <li>那面镜子破过两回，一回作梭婆镜，一回作娑婆镜。</li>
+    <li>宋无忌的头衔作人部元帅，同页邓化是火部，疑人当作火。</li>
+    <li>卷末封号五封佛之封，疑当作五显；金榜提名之提名，通行作题名，均照录。</li>
+    <li>山名风凰山与凤凰山两见，观音称佛母亦称老母，哪咤之咤、编着之着、皮娥之谓，皆依库本。</li>
+  </ul>
+</section>
+
+</main>
+
+<!-- 尾屏 -->
+<div id="end">
+  <div id="endcol" class="rv"><span class="qv">感显应验，永受祭享</span></div>
+  <div id="coda" class="rv">
+    <p>书里的灯花，书外真有庙。华光在道教神谱里称灵官马元帅、马天君，三只眼的造像与小说严丝合缝；闽台庙宇至今香火不断，香港把华光诞列入非物质文化遗产清单；粤剧戏班奉他为祖师，唤作华光师傅。</p>
+    <p>余象斗是福建建阳的书坊主，一边刻书一边编书，神魔与公案两条产品线都出自他的经营手腕。〈南游记〉就是他造神流水线上的一册：给民间本来就拜的五显神，配一部出身传奇。</p>
+    <p>至于华光抢过的那朵琼花，后来成了粤剧行会的名号。佛山琼花会馆故址流传一句话：未有八和，先有琼花。一朵花的香火，比书的版权活得长。</p>
+  </div>
+  <div id="luoqian">殆知阁导读 · 第 <span data-t="pno">三八四</span> 篇</div>
+</div>
+
+<footer>
+  文本来源：殆知阁简体库〈<span data-t="bk1">南游记</span>〉道藏藏外 <a href="https://github.com/raptazure/daizhige-daodu">daizhige-daodu 仓库</a><br>
+  引文已与库内文件逐字核验 · 原文照录「皮娥」「利害」「金榜提名」等库本用字<br>
+  神魔小说出自明代书坊商业编刊，神怪叙事与信仰观念属时代产物，今日读之当有分辨。导读系列第三八四篇（卷二百六十四 · 灯花）
+</footer>
+
+<script>
+(function(){
+  var wrap=document.getElementById('eye-wrap');
+  function open(){document.body.classList.add('opened');}
+  wrap.addEventListener('click',open);
+  wrap.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+
+  var deed=document.getElementById('deed');
+  document.getElementById('flipch').addEventListener('click',function(){deed.classList.toggle('flipped');});
+
+  document.querySelectorAll('.tile').forEach(function(t){
+    function tg(){t.classList.toggle('lit');}
+    t.addEventListener('click',tg);
+    t.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();tg();}});
+  });
+
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('on');io.unobserve(en.target);}});
+  },{threshold:.18});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+
+  var vow=document.getElementById('vow');
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){vow.classList.add('paidon');io2.unobserve(vow);}});
+  },{threshold:.5});
+  io2.observe(vow);
+
+  var marks=[document.getElementById('s1'),document.querySelector('.stop-l2'),
+             document.querySelector('.stop-l3'),document.getElementById('s6')];
+  var nodes=document.querySelectorAll('#san-rail .node'),tags=document.querySelectorAll('#san-rail .tag');
+  function rail(){
+    var c=0,mid=innerHeight*.42;
+    for(var i=0;i<marks.length;i++){
+      if(marks[i]&&marks[i].getBoundingClientRect().top<mid)c=i;
+    }
+    nodes.forEach(function(n,i){n.classList.toggle('on',i<=c);});
+    tags.forEach(function(t,i){t.classList.toggle('on',i===c);});
+  }
+  addEventListener('scroll',rail,{passive:true});rail();
+})();
+</script>
+</body>
+</html>
