@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>剑经 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --cinn:#c0453c; --bronze:#a08954;
+  --dim:#8d867a; --line:#3a352c; --pip:#2a2822;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:radial-gradient(1100px 560px at 30% -10%, #221f19, transparent), var(--ink);
+  color:var(--paper);
+  font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",STSong,SimSun,serif;
+  line-height:1.95;
+}
+@media (min-width:901px){ body{padding-left:110px} }
+a{color:var(--bronze)}
+::selection{background:var(--cinn); color:var(--paper)}
+
+/* ---------- 左缘棍刻度 ---------- */
+.staffrail{
+  position:fixed; left:22px; top:50%; transform:translateY(-50%);
+  z-index:60; display:flex; align-items:stretch; gap:10px;
+}
+.stick{
+  width:9px; border-radius:5px;
+  background:linear-gradient(180deg,#4a3d2b,#6b5738 30%,#4a3d2b 60%,#2f2a20);
+  box-shadow:0 0 0 1px #14120e, 0 0 18px rgba(0,0,0,.55);
+  position:relative;
+}
+.stick i{
+  position:absolute; left:50%; width:3px; height:2px; transform:translateX(-50%);
+  background:#191510; opacity:.55;
+}
+.ticks{display:flex; flex-direction:column; justify-content:space-between; padding:6px 0}
+.ticks a{
+  writing-mode:vertical-rl; text-decoration:none; color:var(--dim);
+  font-size:13px; letter-spacing:.15em; line-height:1;
+  padding:6px 3px; border-left:2px solid transparent; transition:.3s;
+}
+.ticks a.act{color:var(--cinn); border-left-color:var(--cinn)}
+.ticks a:hover{color:var(--paper)}
+@media (max-width:900px){ .staffrail{display:none} .hitcount{display:none} }
+
+/* ---------- 首屏 校场 ---------- */
+.hero{
+  position:relative; min-height:100vh; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.floor{
+  position:absolute; left:-10%; right:-10%; bottom:0; height:62vh;
+  background:linear-gradient(180deg, transparent, #14120d 55%);
+  transform:perspective(700px) rotateX(38deg); transform-origin:bottom;
+}
+.floor::before{
+  content:""; position:absolute; inset:0;
+  background:repeating-linear-gradient(90deg, transparent 0 78px, #262218 78px 80px);
+  opacity:.5;
+}
+.gun{
+  position:absolute; bottom:24vh; width:13px; height:46vh; border-radius:7px;
+  background:linear-gradient(90deg,#3c3122,#7a6540 45%,#544528 70%,#241f16);
+  box-shadow:0 0 24px rgba(0,0,0,.7);
+  transition:transform .12s ease-in;
+}
+.gun.a{left:calc(50% - 150px); transform:rotate(24deg); transform-origin:bottom center}
+.gun.b{left:calc(50% + 137px); transform:rotate(-24deg); transform-origin:bottom center}
+.hero.hit .gun.a{transform:rotate(3deg)}
+.hero.hit .gun.b{transform:rotate(-3deg)}
+.hero.recoil .gun.a{transform:rotate(17deg)}
+.hero.recoil .gun.b{transform:rotate(-17deg)}
+.clashring{
+  position:absolute; left:50%; bottom:56vh; width:16px; height:16px; margin-left:-8px;
+  border:2px solid var(--paper); border-radius:50%; opacity:0; pointer-events:none;
+}
+.hero.hit .clashring{animation:ring .55s ease-out}
+@keyframes ring{
+  0%{opacity:.95; transform:scale(.4)}
+  100%{opacity:0; transform:scale(9)}
+}
+.clashword{
+  position:absolute; left:50%; bottom:56vh; transform:translateX(-50%);
+  font-size:52px; color:var(--paper); opacity:0; pointer-events:none;
+  text-shadow:0 0 26px rgba(232,228,220,.4);
+}
+.hero.hit .clashword{animation:pop .6s ease-out}
+@keyframes pop{
+  0%{opacity:0; transform:translateX(-50%) scale(.6)}
+  25%{opacity:1; transform:translateX(-50%) scale(1.08)}
+  100%{opacity:0; transform:translateX(-50%) scale(1.5)}
+}
+.hero-in{
+  position:relative; z-index:5; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:18px;
+  transform:translateY(-11vh);
+}
+.kicker{color:var(--dim); letter-spacing:.35em; font-size:14px}
+.vtitle{
+  writing-mode:vertical-rl; font-size:clamp(64px,10vw,116px); letter-spacing:.18em;
+  font-weight:700; color:var(--paper); text-shadow:0 4px 30px rgba(0,0,0,.6);
+  height:4.6em; opacity:0; transform:translateY(36px);
+  transition:opacity 1s ease, transform 1s ease;
+}
+.vtitle span{display:inline-block}
+.hero.shown .vtitle{opacity:1; transform:none}
+.hsub{color:var(--bronze); letter-spacing:.22em; font-size:16px}
+.hline{max-width:560px; color:var(--paper); opacity:.85}
+.sealhit{
+  border:2px solid var(--cinn); color:var(--cinn); border-radius:4px;
+  padding:4px 12px; font-size:15px; letter-spacing:.3em; transform:rotate(-6deg) scale(.6);
+  opacity:0; transition:.45s cubic-bezier(.2,1.6,.4,1);
+}
+.hero.shown .sealhit{opacity:.92; transform:rotate(-6deg) scale(1)}
+.clashbtn{
+  margin-top:8px; background:none; border:1px solid var(--line); color:var(--paper);
+  font-family:inherit; font-size:15px; letter-spacing:.28em; padding:10px 26px;
+  border-radius:3px; cursor:pointer; transition:.3s;
+}
+.clashbtn:hover{border-color:var(--cinn); color:var(--cinn)}
+.scrolldown{position:absolute; bottom:26px; left:50%; transform:translateX(-50%); color:var(--dim); font-size:13px; letter-spacing:.3em}
+.hitcount{position:absolute; right:26px; bottom:26px; color:var(--dim); font-size:13px; letter-spacing:.2em}
+
+/* ---------- 版心 ---------- */
+main{max-width:860px; margin:0 auto; padding:40px 22px 80px}
+section{padding:72px 0 30px; border-top:1px solid var(--line)}
+.sh{
+  display:flex; align-items:baseline; gap:16px; margin-bottom:8px;
+}
+.sh em{font-style:normal; color:var(--cinn); font-size:14px; letter-spacing:.3em; border:1px solid var(--cinn); padding:2px 8px; border-radius:3px}
+.sh h2{font-size:26px; letter-spacing:.14em; font-weight:700}
+.sub{color:var(--dim); font-size:15px; margin-bottom:26px}
+.prose p{margin:14px 0; opacity:.92}
+.note{
+  border-left:3px solid var(--bronze); padding:10px 16px; margin:20px 0;
+  background:rgba(160,137,84,.07); font-size:15px; color:var(--dim);
+}
+.note b{color:var(--bronze)}
+.rv{opacity:0; transform:translateY(22px); transition:.8s ease}
+.rv.on{opacity:1; transform:none}
+
+/* ---------- 引文 ---------- */
+.q{
+  margin:20px 0; padding:16px 20px; border:1px solid var(--line); border-left:3px solid var(--cinn);
+  background:var(--pip); border-radius:3px; color:var(--paper);
+  font-size:17px; letter-spacing:.05em;
+}
+.q small{display:block; margin-top:8px; color:var(--dim); font-size:13px; letter-spacing:.15em}
+.qv{color:var(--bronze)}
+.qflow{display:flex; flex-wrap:wrap; gap:12px}
+.qflow .q{flex:1 1 240px; margin:0}
+
+/* ---------- 同法梯 ---------- */
+.ladder{display:flex; flex-wrap:wrap; gap:8px; margin:26px 0 10px}
+.ladder button{
+  flex:1 1 60px; background:var(--pip); border:1px solid var(--line); color:var(--dim);
+  font-family:inherit; font-size:21px; padding:14px 4px 10px; border-radius:3px; cursor:pointer;
+  transition:.25s; position:relative; letter-spacing:.1em;
+}
+.ladder button small{display:block; font-size:11px; letter-spacing:.12em; margin-top:6px; color:#6d675c}
+.ladder button.lit{border-color:var(--bronze); color:var(--paper)}
+.ladder button.cur{border-color:var(--cinn); color:var(--paper); box-shadow:0 0 14px rgba(192,69,60,.28); transform:translateY(-3px)}
+.lcap{
+  min-height:86px; border:1px dashed var(--line); border-radius:3px; padding:14px 18px; margin-top:6px;
+}
+.lcap .q{margin:0; border:none; background:none; padding:0; font-size:16px}
+.lcap p{color:var(--dim); font-size:14px; margin-top:8px}
+.same{font-size:21px; letter-spacing:.12em; color:var(--paper); text-align:center; margin-top:22px}
+.same .q{display:inline; border:none; background:none; padding:0; color:var(--cinn); font-size:21px}
+
+/* ---------- 诀签 ---------- */
+.beam{border-top:10px solid #3c3122; border-radius:2px; margin:8px 0 0}
+.trees{display:flex; gap:14px; justify-content:center; margin-top:0}
+.tree{flex:1 1 0; max-width:190px; text-align:center; cursor:pointer}
+.tree .cord{width:2px; height:26px; background:var(--line); margin:0 auto}
+.tree .tag{
+  border:1px solid var(--line); border-radius:3px; padding:12px 6px; background:var(--pip);
+  writing-mode:vertical-rl; margin:0 auto; letter-spacing:.3em; color:var(--dim);
+  font-size:16px; transition:.3s;
+}
+.tree .tag .q{display:none}
+.tree.open .tag{color:var(--paper); border-color:var(--bronze)}
+.tree.open .tag .q{display:block}
+.tree .tag .q{writing-mode:vertical-rl; border:none; background:none; padding:14px 4px; margin:10px 0 4px; font-size:16px; letter-spacing:.16em}
+.tree:hover .tag{border-color:var(--bronze)}
+.trees-note{text-align:center; color:var(--dim); font-size:14px; margin-top:18px}
+
+/* ---------- 大门小门 ---------- */
+.gatewrap{display:flex; gap:22px; flex-wrap:wrap; align-items:flex-start}
+.gatesvg{flex:1 1 380px; min-width:300px}
+.gatectl{flex:1 1 220px; min-width:220px}
+.gatectl .btns{display:flex; gap:10px; margin:12px 0}
+.gbtn{
+  flex:1; background:var(--pip); border:1px solid var(--line); color:var(--paper);
+  font-family:inherit; font-size:16px; letter-spacing:.2em; padding:10px 0; border-radius:3px; cursor:pointer; transition:.3s;
+}
+.gbtn.act{border-color:var(--cinn); color:var(--cinn)}
+.gcard{min-height:150px}
+.gcard .q{margin:0}
+.verbs{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:26px}
+.verb{
+  border:1px solid var(--line); border-radius:3px; padding:12px 6px 9px; text-align:center;
+  background:var(--pip); transition:.25s; cursor:default;
+}
+.verb b{font-size:22px; letter-spacing:.1em; display:block}
+.verb span{font-size:12px; color:var(--dim); display:block; margin-top:6px}
+.verb:hover{border-color:var(--cinn); transform:translateY(-2px)}
+
+/* ---------- 拍位机 ---------- */
+.paiwrap{border:1px solid var(--line); border-radius:4px; background:var(--pip); padding:18px; position:relative; overflow:hidden}
+.paiwrap svg{width:100%; height:auto; display:block}
+.ph{transition:none}
+.paibtns{display:flex; gap:12px; align-items:center; margin-top:14px}
+.fabtn{
+  background:var(--cinn); border:none; color:var(--paper); font-family:inherit;
+  font-size:17px; letter-spacing:.3em; padding:10px 34px; border-radius:3px; cursor:pointer; transition:.2s;
+}
+.fabtn:active{transform:scale(.96)}
+.paiscore{color:var(--dim); font-size:14px; letter-spacing:.15em}
+.paiscore b{color:var(--cinn)}
+.stamp{
+  position:absolute; top:14px; right:16px; border:2px solid var(--cinn); color:var(--cinn);
+  border-radius:4px; padding:5px 14px; font-size:20px; letter-spacing:.25em; transform:rotate(-8deg) scale(.5); opacity:0;
+  transition:.4s cubic-bezier(.2,1.6,.4,1); pointer-events:none;
+}
+.stamp.show{opacity:.95; transform:rotate(-8deg) scale(1)}
+.stamp.miss{border-color:var(--dim); color:var(--dim)}
+.paiout{min-height:64px; margin-top:10px}
+.paiout .q{margin:0; font-size:16px}
+
+/* ---------- 招名录 ---------- */
+.wall{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; margin-top:24px}
+.card{border:1px solid var(--line); border-radius:3px; background:var(--pip); padding:14px 16px; transition:.25s}
+.card:hover{border-color:var(--bronze); transform:translateY(-3px)}
+.card h4{font-size:19px; letter-spacing:.14em; font-weight:700}
+.card h4 i{font-style:normal; color:var(--cinn); font-size:12px; letter-spacing:.2em; margin-left:8px; vertical-align:2px}
+.card .q{margin:10px 0 0; padding:8px 10px; font-size:14px; border-left-width:2px}
+.card p{color:var(--dim); font-size:13.5px; margin-top:8px}
+
+/* ---------- 三师 ---------- */
+.masters{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:26px 0 8px}
+.master{
+  border:1px solid var(--line); border-radius:3px; background:var(--pip); text-align:center;
+  padding:16px 12px 12px; cursor:pointer; flex:1 1 150px; max-width:190px; transition:.3s;
+}
+.master .mname{writing-mode:vertical-rl; margin:0 auto; font-size:21px; letter-spacing:.3em; height:104px; color:var(--paper)}
+.master .mtag{color:var(--dim); font-size:12.5px; margin-top:10px; letter-spacing:.1em}
+.master.lit{border-color:var(--bronze); box-shadow:0 0 16px rgba(160,137,84,.2)}
+.mstrip{min-height:70px; margin-top:16px}
+.mstrip .q{margin:10px 0 0; font-size:15.5px}
+.unite{display:flex; justify-content:center; margin-top:20px}
+.unibtn{
+  background:none; border:1px solid var(--cinn); color:var(--cinn); font-family:inherit;
+  font-size:16px; letter-spacing:.3em; padding:10px 30px; border-radius:3px; cursor:pointer; transition:.3s;
+}
+.unibtn:hover{background:var(--cinn); color:var(--paper)}
+.uniseal{
+  display:none; margin:18px auto 0; width:74px; height:74px; border:2px solid var(--cinn); border-radius:6px;
+  color:var(--cinn); align-items:center; justify-content:center; font-size:24px; letter-spacing:.1em;
+  transform:rotate(-5deg); text-align:center; line-height:1.25;
+}
+.uniseal.show{display:flex; animation:stampin .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes stampin{0%{transform:rotate(-5deg) scale(1.7); opacity:0} 100%{transform:rotate(-5deg) scale(1); opacity:1}}
+.uniout{display:none; margin-top:18px}
+.uniout.show{display:block}
+
+/* ---------- 图佚与短札 ---------- */
+.lostwrap{display:flex; gap:22px; flex-wrap:wrap; align-items:stretch}
+.lost{
+  flex:1 1 250px; border:1px solid var(--line); border-radius:3px; background:var(--pip);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:260px; padding:20px;
+}
+.lost .box{font-size:64px; color:#4d463a; border:1px dashed #4d463a; padding:20px 34px; border-radius:3px; letter-spacing:.2em}
+.lost p{color:var(--dim); font-size:14px; margin-top:16px; text-align:center; letter-spacing:.1em}
+.sounds{flex:1.4 1 320px; display:flex; flex-direction:column; gap:12px}
+.sounds .q{margin:0; font-size:16px}
+.letter{
+  margin-top:30px; background:var(--paper); color:#26231d; border-radius:3px; padding:26px 28px;
+  position:relative; box-shadow:0 8px 30px rgba(0,0,0,.4);
+}
+.letter::before{content:""; position:absolute; top:0; bottom:0; left:44px; width:1px; background:rgba(192,69,60,.5)}
+.letter h4{letter-spacing:.25em; font-size:17px; margin-bottom:10px; color:var(--cinn)}
+.letter .q{color:#26231d; border-color:#b9ac93; background:none; border-left:3px solid var(--cinn)}
+.letter .q small{color:#7d745f}
+.letter p{font-size:15.5px; margin:10px 0; opacity:.92}
+
+/* ---------- 尾屏 ---------- */
+.coda{
+  border-top:1px solid var(--line); margin-top:40px; padding:90px 22px 40px;
+  text-align:center; position:relative; overflow:hidden;
+}
+.codaguns{position:relative; height:70px; max-width:520px; margin:0 auto 30px}
+.codaguns i{position:absolute; top:34px; height:7px; width:170px; border-radius:4px; background:#3a3226; opacity:.75}
+.codaguns i:first-child{left:6%; transform:rotate(6deg)}
+.codaguns i:last-child{right:6%; transform:rotate(-9deg)}
+.codaring{position:absolute; left:50%; top:20px; width:44px; height:44px; margin-left:-22px; border:1px solid #3a3226; border-radius:50%}
+.bigv{writing-mode:vertical-rl; margin:0 auto; font-size:clamp(26px,4.6vw,40px); letter-spacing:.3em; height:15em; color:var(--paper)}
+.bigv .q{writing-mode:vertical-rl; border:none; background:none; padding:0; margin:0; font-size:inherit; color:inherit; letter-spacing:inherit}
+.codasub{color:var(--dim); margin:26px auto 0; max-width:640px; font-size:15.5px}
+.codasub .q{border:none; background:none; padding:0; color:var(--paper); font-size:15.5px; display:inline}
+.seals{display:flex; gap:14px; justify-content:center; margin:26px 0}
+.seals span{border:2px solid var(--bronze); color:var(--bronze); border-radius:4px; padding:4px 10px; font-size:15px; letter-spacing:.2em; transform:rotate(-4deg)}
+.seals span.r{border-color:var(--cinn); color:var(--cinn)}
+.meta{max-width:720px; margin:20px auto 0; text-align:left; color:var(--dim); font-size:13.5px; line-height:1.9}
+.meta p{margin:8px 0}
+.meta a{color:var(--bronze)}
+</style>
+</head>
+<body>
+
+<nav class="staffrail" aria-hidden="true">
+  <div class="stick"><i style="top:12%"></i><i style="top:24%"></i><i style="top:36%"></i><i style="top:48%"></i><i style="top:60%"></i><i style="top:72%"></i><i style="top:84%"></i></div>
+  <div class="ticks">
+    <a href="#stage" data-s="stage">校场</a>
+    <a href="#pre" data-s="pre">约法</a>
+    <a href="#zong" data-s="zong">诀歌</a>
+    <a href="#men" data-s="men">门径</a>
+    <a href="#pai" data-s="pai">拍位</a>
+    <a href="#zhao" data-s="zhao">招名</a>
+    <a href="#shi" data-s="shi">三师</a>
+    <a href="#zha" data-s="zha">图札</a>
+    <a href="#kong" data-s="kong">空场</a>
+  </div>
+</nav>
+
+<header class="hero" id="stage">
+  <div class="floor" aria-hidden="true"></div>
+  <div class="gun a" aria-hidden="true"></div>
+  <div class="gun b" aria-hidden="true"></div>
+  <div class="clashring" aria-hidden="true"></div>
+  <div class="clashword" aria-hidden="true">响</div>
+  <div class="hero-in">
+    <p class="kicker">殆知阁导读 · 艺藏武术</p>
+    <h1 class="vtitle"><span>剑</span><span>经</span></h1>
+    <p class="hsub">明 俞大猷 撰 · 库本题〈剑〉</p>
+    <p class="hline">书名叫剑，页页教棍：抗倭名将写给行阵的一册武艺底本。两棍相交，以一声为度。</p>
+    <div class="sealhit">一响为度</div>
+    <button class="clashbtn" id="clashBtn" type="button">点场地 · 对一合</button>
+  </div>
+  <div class="scrolldown">向下 · 从一棍到百万人</div>
+  <div class="hitcount" id="hitcount"></div>
+</header>
+
+<main>
+
+<section id="pre">
+  <div class="sh"><em>壹</em><h2>约法：一人的打法，就是百万人的打法</h2></div>
+  <p class="sub">序 · 为什么一本棍法书敢叫剑经</p>
+  <div class="prose rv">
+    <p>俞大猷，字志辅，号虚江，福建晋江人，嘉靖十四年武会试登第，官至福建总兵，与戚继光并称俞龙戚虎。他自幼学艺，序里说得直白：学的是荆楚长剑。所谓长剑，是长杆的棍，不是短兵；所以这册书名带剑，通篇讲的却全是棍法。</p>
+    <p>序的野心不止于武艺。他从一具身体的屈伸，讲到五人一伍、五伍一两，一路排到军阵，断言行阵的道理全在一人身上：舍掉一个人去求阵法，等于缘木求鱼。师者的点拨也被他照录在卷首。</p>
+  </div>
+  <div class="q rv">猷学荆楚长剑，颇得其要法。吾师虚舟赵先生，见而笑曰：若知敌一人之法矣，讵知敌百万人之法本于是乎?<small>序 · 老师的一笑，逼出全书架构</small></div>
+  <div class="q rv">乃知天下之理原于约者，未尝不散于繁。散于繁者，未尝不原于约。<small>序 · 约与繁互为表里，是全书的推理骨架</small></div>
+  <div class="q rv">复以质之，先师曰：得之矣。<small>序 · 三个字的验收</small></div>
+  <div class="note rv"><b>书外一事</b>：嘉靖四十年俞大猷南下，路过嵩山少林寺，看僧人演武后说传习既久、真诀已失，带走两名年少武僧随军学了三年。这事记在他后来写的碑文里；戚继光则把这部书整篇收进自己的练兵书里夸它有效。一代名将的武艺底本，就这样进了两家的门户。</div>
+  <div class="prose rv">
+    <p>序里最漂亮的一段，是把人身拆成五体，再把伍法一层层套上去。点下面每一级，看他从一人排到一军。</p>
+  </div>
+  <div class="q rv">一人之斗，有五体焉：一身居中，二手二足，为之前后左右，有防有击，有立有踢，一体偏废，不能为也。<small>序 · 五体</small></div>
+  <div class="ladder rv" id="ladder">
+    <button data-k="ren" type="button">人<small>五体</small></button>
+    <button data-k="wu" type="button">伍<small>五人</small></button>
+    <button data-k="liang" type="button">两<small>五伍</small></button>
+    <button data-k="dui" type="button">队<small>五十卒</small></button>
+    <button data-k="che" type="button">车<small>四两一车</small></button>
+    <button data-k="sheng" type="button">乘<small>五乘</small></button>
+    <button data-k="pian" type="button">偏<small>五队</small></button>
+    <button data-k="jun" type="button">军<small>五偏</small></button>
+    <button data-k="zhen" type="button">阵<small>五军</small></button>
+  </div>
+  <div class="lcap rv" id="lcap">
+    <p>点任一级，看他的原文。</p>
+  </div>
+  <p class="same rv">同一法也：<span class="q">自一人以至百千万人，同一法也。</span></p>
+</section>
+
+<section id="zong">
+  <div class="sh"><em>贰</em><h2>诀歌：挂在梁上的四支签</h2></div>
+  <p class="sub">总诀歌是全书的口令，先背后练，点签展开</p>
+  <div class="beam rv"></div>
+  <div class="trees rv">
+    <div class="tree"><div class="cord"></div>
+      <div class="tag">总歌一<div class="q">中直八刚十二柔，上剃下滚分左右；打杀高低左右接，手动足进参互就。</div></div>
+    </div>
+    <div class="tree"><div class="cord"></div>
+      <div class="tag">总歌二<div class="q">却在他力前，柔乘他力后。彼忙我静待，知拍任君斗。</div></div>
+    </div>
+    <div class="tree"><div class="cord"></div>
+      <div class="tag">总歌三<div class="q">阴阳要转，两手要直；前脚要曲，后脚要直。一打一揭，遍身着力；步步进前，天下无敌。</div></div>
+    </div>
+    <div class="tree"><div class="cord"></div>
+      <div class="tag">又诀<div class="q">视不能如能，生疏莫临敌。后手须用功，遍身俱有力。</div></div>
+    </div>
+  </div>
+  <p class="trees-note rv">三支总歌一支又诀，末一支歌专门讲节奏：知拍两个字，是第四节的钥匙。</p>
+  <div class="qflow rv">
+    <div class="q">习钯简步十进，足如环无端。<small>习钯步法 · 走出来的圆</small></div>
+    <div class="q">凡日间将棍一打一揭，自习打揭，俱要自声，久则自有力，高不过目，低不过膝。<small>练法 · 出声与限高</small></div>
+    <div class="q">腰力为上，后手力次之，前手力又次之。<small>力的次序</small></div>
+  </div>
+</section>
+
+<section id="men">
+  <div class="sh"><em>叁</em><h2>门径：大门小门，两条路</h2></div>
+  <p class="sub">对打的一切都在两扇门里进出，点开关看两套应法</p>
+  <div class="gatewrap rv">
+    <div class="gatesvg">
+      <svg viewBox="0 0 600 330" role="img" aria-label="大门小门示意图">
+        <defs>
+          <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#6b5738"/><stop offset="1" stop-color="#3c3122"/>
+          </linearGradient>
+        </defs>
+        <line x1="80" y1="290" x2="520" y2="290" stroke="#3a352c" stroke-width="1"/>
+        <line x1="80" y1="40" x2="520" y2="40" stroke="#3a352c" stroke-width="1"/>
+        <circle cx="150" cy="40" r="26" fill="none" stroke="#8d867a" stroke-width="1.5"/>
+        <text x="150" y="47" text-anchor="middle" fill="#8d867a" font-size="16">他</text>
+        <rect x="150" y="66" width="300" height="9" rx="4" fill="url(#wg)" transform="rotate(-4 150 70)"/>
+        <circle cx="452" cy="290" r="26" fill="none" stroke="#e8e4dc" stroke-width="1.5"/>
+        <text x="452" y="297" text-anchor="middle" fill="#e8e4dc" font-size="16">我</text>
+        <rect x="150" y="252" width="300" height="9" rx="4" fill="url(#wg)" transform="rotate(4 450 256)"/>
+        <path id="gateA" d="M470 110 Q 560 170 470 240" fill="none" stroke="#c0453c" stroke-width="2" stroke-dasharray="7 6" opacity=".28"/>
+        <path id="gateB" d="M130 110 Q 40 170 130 240" fill="none" stroke="#a08954" stroke-width="2" stroke-dasharray="7 6" opacity=".28"/>
+        <text id="gateAT" x="548" y="172" text-anchor="middle" fill="#c0453c" font-size="17" opacity=".35" style="writing-mode:vertical-rl" letter-spacing="4">大门</text>
+        <text id="gateBT" x="52" y="172" text-anchor="middle" fill="#a08954" font-size="17" opacity=".35" style="writing-mode:vertical-rl" letter-spacing="4">小门</text>
+      </svg>
+    </div>
+    <div class="gatectl">
+      <div class="btns">
+        <button class="gbtn act" data-g="a" type="button">闭大门</button>
+        <button class="gbtn" data-g="b" type="button">闭小门</button>
+      </div>
+      <div class="gcard">
+        <div class="q" id="gqa">他闭大门，我折后脚，就下起，径杀他大门<small>大门之应</small></div>
+        <div class="q" id="gqb" style="display:none">他闭小门，我进前脚，就下揭起，径凿他小门<small>小门之应</small></div>
+      </div>
+      <p class="sub" style="margin:12px 0 0">门是他对着你的两半：持械手那半是大门，背后那半是小门。八个别字，是两扇门里来回的刀笔。</p>
+    </div>
+  </div>
+  <div class="verbs rv">
+    <div class="verb"><b>剪</b><span>拦腰截他棍</span></div>
+    <div class="verb"><b>揭</b><span>自下挑起</span></div>
+    <div class="verb"><b>压</b><span>乘势按落</span></div>
+    <div class="verb"><b>剃</b><span>贴杆削下</span></div>
+    <div class="verb"><b>杀</b><span>直取人身</span></div>
+    <div class="verb"><b>凿</b><span>对点直击</span></div>
+    <div class="verb"><b>磕</b><span>两杆一击</span></div>
+    <div class="verb"><b>当</b><span>临机挡住</span></div>
+  </div>
+  <div class="q rv">凡起手要打要杀，俱要在他门内，一尺之间<small>进手要在门内尺许，远了全是空枪</small></div>
+</section>
+
+<section id="pai">
+  <div class="sh"><em>肆</em><h2>拍位：旧力已老，新力未生</h2></div>
+  <p class="sub">全书的八字心法，做一台发劲机：白线扫过，红窗是唯一的机会</p>
+  <div class="q rv">却在他力前，柔乘他力后。彼忙我静待，知拍任君斗。<small>总歌二 · 拍位的第一张面孔</small></div>
+  <div class="paiwrap rv">
+    <svg viewBox="0 0 640 300" id="paiSvg" role="img" aria-label="旧力新力时机图">
+      <line x1="40" y1="250" x2="610" y2="250" stroke="#3a352c"/>
+      <line x1="40" y1="30" x2="40" y2="250" stroke="#3a352c"/>
+      <text x="600" y="272" text-anchor="end" fill="#8d867a" font-size="13">时</text>
+      <text x="26" y="40" fill="#8d867a" font-size="13">力</text>
+      <rect id="paiWin" x="356" y="30" width="92" height="220" fill="#c0453c" opacity=".13"/>
+      <line x1="356" y1="30" x2="356" y2="250" stroke="#c0453c" stroke-width="1" stroke-dasharray="4 4" opacity=".6"/>
+      <line x1="448" y1="30" x2="448" y2="250" stroke="#c0453c" stroke-width="1" stroke-dasharray="4 4" opacity=".6"/>
+      <path d="M50 240 C 160 210, 240 120, 320 60 C 380 22, 430 40, 470 110 C 500 160, 540 200, 600 220" fill="none" stroke="#8d867a" stroke-width="2.5"/>
+      <path d="M470 240 C 505 225, 530 180, 560 120 C 575 90, 588 66, 600 50" fill="none" stroke="#a08954" stroke-width="2" stroke-dasharray="6 5"/>
+      <text x="300" y="46" fill="#8d867a" font-size="14">旧力</text>
+      <text x="556" y="44" fill="#a08954" font-size="14">新力</text>
+      <line id="paiHead" class="ph" x1="50" y1="26" x2="50" y2="254" stroke="#e8e4dc" stroke-width="2"/>
+      <circle id="paiDot" cx="50" cy="240" r="5" fill="#e8e4dc"/>
+    </svg>
+    <div class="stamp" id="paiStamp">至妙</div>
+    <div class="paibtns">
+      <button class="fabtn" id="faBtn" type="button">发</button>
+      <span class="paiscore">在红窗内发劲算中：<b id="hitN">0</b> 中，<span id="missN">0</span> 失</span>
+    </div>
+    <div class="paiout" id="paiOut">
+      <p style="color:var(--dim); font-size:14px">白线是他出力的时刻，红线之间是他的旧力已尽、后力未接。在窗里按下发字试一试。</p>
+    </div>
+  </div>
+  <div class="qflow rv">
+    <div class="q">姑且忍之，待其旧力略过、新力未发，然后乘之，所以顺人之势、借人之力也。<small>问答 · 八字的用法</small></div>
+    <div class="q">我想出旧力略过、新力未发八个字，妙之至也，妙之至也!<small>他给自己的八字打了两个妙</small></div>
+    <div class="q">全书总要，只是乘他旧力略过、新力未发八字耳。至妙，至妙。<small>总结 · 千招归于一窗</small></div>
+  </div>
+  <div class="q rv">法曰：后人发，先人至。知此决不可一发便要伤人，徒使自势发尽，为他人反伤，戒之，戒之。<small>后发的纪律 · 发早了就是送破绽</small></div>
+  <div class="q rv">千言万语，总是哄他旧力过去，新力未发而乘之。<small>同一个道理的另一种说法</small></div>
+</section>
+
+<section id="zhao">
+  <div class="sh"><em>伍</em><h2>招名：一部棍法的动物志与器物志</h2></div>
+  <p class="sub">他给打法起的名字，一半是活物，一半是家什，点墙看原文</p>
+  <div class="wall rv">
+    <div class="card"><h4>直符送书<i>长驱</i></h4>
+      <div class="q">直符送书，杀难揭。</div>
+      <p>棍走直线像投递文书，压得死，揭不开。</p></div>
+    <div class="card"><h4>喜鹊过枝<i>转移</i></h4>
+      <div class="q">以上过枝，俱在下面，过入他棍，二尺即过。</div>
+      <p>鹊从这根枝跳那根枝，棍从下面换边，进二尺就换。</p></div>
+    <div class="card"><h4>二龙争珠<i>抢中</i></h4>
+      <div class="q">二龙争珠杀，就采下，不用提起棍，此全是手法。</div>
+      <p>两条龙抢一颗珠：抢中线时不抬棍，全凭手上功夫。</p></div>
+    <div class="card"><h4>鸡啄<i>点啄</i></h4>
+      <div class="q">他鸡啄我，须起凶棍，入剪他手前二尺之间。</div>
+      <p>像鸡啄米的一点，破它要往它手前二尺去剪。</p></div>
+    <div class="card"><h4>滴水献花<i>变势</i></h4>
+      <div class="q">我急变滴水，大进步捧他棍。</div>
+      <p>势低如水坠，跨一大步去捧住他的棍。</p></div>
+    <div class="card"><h4>铁门<i>固守</i></h4>
+      <div class="q">小剪变大剪(即铁门)杀。</div>
+      <p>小剪放大剪的一套关门打法，门板一样合上。</p></div>
+    <div class="card"><h4>铁牛入石<i>硬进</i></h4>
+      <div class="q">铁牛入石，我打去，他揭起，我将棍尾勿坠，就将棍尾倒抹上一下，即大剪他手，或即打他手。</div>
+      <p>牛撞石头不回头，棍尾不坠，反手一抹就剪手。</p></div>
+    <div class="card"><h4>盘山托<i>盘绕</i></h4>
+      <div class="q">大步起，高棍打，移步盘山托。</div>
+      <p>高打之后移步托住，像山路盘上去。</p></div>
+    <div class="card"><h4>黄龙转尾<i>甩尾</i></h4>
+      <div class="q">用黄龙转尾步赶，万无一失。</div>
+      <p>龙回头摆尾的一步赶法，他给保了险。</p></div>
+    <div class="card"><h4>马前斩草<i>顺势</i></h4>
+      <div class="q">马前斩草进三步杀。</div>
+      <p>骑在马上顺刀切草，进三步连着走。</p></div>
+    <div class="card"><h4>单鞭<i>深入</i></h4>
+      <div class="q">我从大门顺用单鞭深入。</div>
+      <p>一条鞭子直着抽进去，深了要防折。</p></div>
+    <div class="card"><h4>闭四门<i>坐守</i></h4>
+      <div class="q">坐低闭四门。</div>
+      <p>五个字一座城：坐低，四扇门全关上。</p></div>
+  </div>
+  <div class="qflow rv">
+    <div class="q">何尝叫人勿打，要哄他，棍来就我打；或打他棍，着响一声，便可进杀。<small>哄字诀 · 打是引信</small></div>
+    <div class="q">钯所以终对不得枪刀者，枪刀有哄，钯哄不得人也。<small>他也说器械的短处：钯不会骗人</small></div>
+    <div class="q">响而后进，进而后响，分别明白，可以语技矣。<small>响与进的先后，听得出才算入门</small></div>
+  </div>
+</section>
+
+<section id="shi">
+  <div class="sh"><em>陆</em><h2>三师：三传归一</h2></div>
+  <p class="sub">这册书是三个人传下来的，点牌看各家的原话</p>
+  <div class="masters rv">
+    <div class="master" data-m="li"><div class="mname">李良钦</div><div class="mtag">同乡剑师 · 提得最多</div></div>
+    <div class="master" data-m="liu"><div class="mname">刘邦协</div><div class="mtag">一传 · 省了拔剃</div></div>
+    <div class="master" data-m="lin"><div class="mname">林琰</div><div class="mtag">偏头关所得 · 附诗一首</div></div>
+  </div>
+  <div class="mstrip" id="mstrip"><p style="color:var(--dim); font-size:14px">点师牌，翻出各家的传授。</p></div>
+  <div class="unite rv"><button class="unibtn" id="uniBtn" type="button">合</button></div>
+  <div class="uniseal" id="uniSeal">合<br>一<br>家</div>
+  <div class="uniout" id="uniOut">
+    <div class="q">三教师，原来合一家。<small>总结第一句</small></div>
+    <div class="q">千言万语不外乎致人而不致于人一句<small>总结 · 全书压成一句兵法老话</small></div>
+    <div class="q">俱是顺人之势，借人之力，只要快便，又要似进实退而后进，则大胜矣。<small>总结 · 三家共法</small></div>
+    <div class="q">此当字，如曲中之拍位，妙不可言，故赞之曰：我他傍，前手直当，后直加拔，有神在中。<small>他给一个当字作赞</small></div>
+    <div class="q">千千万万步，俱有拍位。<small>拍位无处不在</small></div>
+  </div>
+  <div class="qflow rv">
+    <div class="q">一转阴阳，不可太早，临时一下，乃不费力，明之明之，折脚不如直入。<small>转阴阳的火候</small></div>
+    <div class="q">总是以静待动、以逸待劳，道理微乎微乎!李良钦，每每如此。<small>李师的待法</small></div>
+  </div>
+</section>
+
+<section id="zha">
+  <div class="sh"><em>柒</em><h2>图佚与短札</h2></div>
+  <p class="sub">图没有留下来，话都留下来了</p>
+  <div class="lostwrap rv">
+    <div class="lost">
+      <div class="box">■</div>
+      <p>库本此处标缺图一副。<br>图佚，页不代拟。</p>
+    </div>
+    <div class="sounds">
+      <div class="q">要在我右手前七八寸之间，与他棍尾相磕，一响为度。<small>磕棍的分寸：位置与响声双保险</small></div>
+      <div class="q">童教师曰：一声响处值千金，彼失提防我便嬴是也。<small>童教师把一声响捧成千金</small></div>
+      <div class="q">打时须记得进杀，千万千万。<small>他连说两遍千万</small></div>
+      <div class="q">彼抽退，勿急追；彼急进，勿遽离。<small>十二个字的追逃纪律</small></div>
+      <div class="q">伏回之枪，俱是哄我杀去，他即起弹杀我也。记之，记之。<small>记之记之，他反复敲黑板</small></div>
+    </div>
+  </div>
+  <div class="letter rv">
+    <h4>卷末短札 · 论杨家枪</h4>
+    <p>全书收在一句大话上：北方相传的杨家枪，阴阳虚实的道理跟他完全相通，最妙的是左右拿枪的手法，短处是撒手杀去脚步不进。他的药方是把两家长处并成一家。</p>
+    <div class="q">山东河南，各处教师相传杨家枪法，其中阴阳虚实之理，与我相同<small>卷末 · 先认同源</small></div>
+    <div class="q">今用彼之拿法兼我之进步，将枪收短，连脚赶上，且勿杀他，只管定他枪，则无敌于天下矣。<small>卷末 · 药方与豪言一起开出来</small></div>
+  </div>
+</section>
+
+</main>
+
+<div class="coda" id="kong">
+  <div class="codaguns" aria-hidden="true"><i></i><i></i><span class="codaring"></span></div>
+  <div class="bigv"><span class="q">世有真丈夫，当亮予志。</span></div>
+  <p class="codasub">序的落款没有客套。他把一生的打法写成口令，交给愿意下苦功的人：<span class="q">凡此意味，体认得真，亦有七日不食，弹琴咏歌之趣也。</span></p>
+  <div class="seals"><span>得之矣</span><span class="r">合一家</span></div>
+  <div class="meta">
+    <p>文本来源：殆知阁简体库艺藏〈剑经〉，题明俞大猷撰，库本题〈剑〉，去空白约九千八百字。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p>引文核验：页面全部引文经脚本与库内文件去标点、归一后逐字比对通过（共六十七处）；白话行文经六字窗反向扫描零撞。</p>
+    <p><b>时代局限提醒</b>：本书是冷兵器时代的搏杀技术与练兵手册，言打杀胜负，语境与今日相去甚远；序中论兵事的推断亦带时代印记。页面照录旧文原貌，仅为史料与武艺文献呈现，不代表今日立场。</p>
+  </div>
+</div>
+
+<div id="qb" style="display:none" aria-hidden="true">
+  <span class="qv">一人之斗，有五体焉：一身居中，二手二足，为之前后左右，有防有击，有立有踢，一体偏废，不能为也。</span>
+  <span class="qv">起伍之数，必五人</span>
+  <span class="qv">两之数，必五伍</span>
+  <span class="qv">队之数，必五十卒</span>
+  <span class="qv">必四两一车</span>
+  <span class="qv">车之数必五乘</span>
+  <span class="qv">偏之数必五队</span>
+  <span class="qv">军之数必五偏</span>
+  <span class="qv">阵之数必五军</span>
+  <span class="qv">全书总要，只是乘他旧力略过、新力未发八字耳。至妙，至妙。</span>
+  <span class="qv">法曰：后人发，先人至。知此决不可一发便要伤人，徒使自势发尽，为他人反伤，戒之，戒之。</span>
+  <span class="qv">上李良钦之传，学到此，一贯乎万矣。</span>
+  <span class="qv">李良钦师父每每用此二步。</span>
+  <span class="qv">上刘邦协之传，中间有拍位，不用拔剃洗落，只撒手杀，则又紧矣。</span>
+  <span class="qv">上在偏头关时，得之教师林琰者，其诗曰：壮士执金枪，只用九寸长；日月打一转，好将见阎王。</span>
+</div>
+
+<script>
+(function(){
+  var hero = document.getElementById('stage');
+  var hits = 0;
+  var words = ['正','脆','沉'];
+  function clash(){
+    hero.classList.remove('hit','recoil');
+    void hero.offsetWidth;
+    hero.classList.add('hit');
+    setTimeout(function(){ hero.classList.remove('hit'); hero.classList.add('recoil'); }, 620);
+    hits++;
+    document.getElementById('hitcount').textContent = '对' + hits + '合 · ' + words[hits % 3];
+    if(hits >= 1){ hero.classList.add('shown'); }
+  }
+  document.getElementById('clashBtn').addEventListener('click', clash);
+  hero.addEventListener('click', function(e){
+    if(e.target.closest('.clashbtn') || e.target.closest('.hero-in')) return;
+    clash();
+  });
+
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
+  }, {threshold:.15});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  var links = Array.prototype.slice.call(document.querySelectorAll('.ticks a'));
+  var secs = links.map(function(a){ return document.getElementById(a.dataset.s); });
+  function railUpd(){
+    var y = window.scrollY + window.innerHeight*0.4, cur = 0;
+    secs.forEach(function(s,i){ if(s.offsetTop <= y) cur = i; });
+    links.forEach(function(a,i){ a.classList.toggle('act', i === cur); });
+  }
+  window.addEventListener('scroll', railUpd, {passive:true}); railUpd();
+
+  document.querySelectorAll('.tree').forEach(function(t){
+    t.addEventListener('click', function(){ t.classList.toggle('open'); });
+  });
+
+  var caps = {
+    ren:  ['一人之斗，有五体焉：一身居中，二手二足，为之前后左右，有防有击，有立有踢，一体偏废，不能为也。','起点：一人即一军'],
+    wu:   ['起伍之数，必五人','伍'],
+    liang:['两之数，必五伍','两'],
+    dui:  ['队之数，必五十卒','队'],
+    che:  ['必四两一车','车'],
+    sheng:['车之数必五乘','乘'],
+    pian: ['偏之数必五队','偏'],
+    jun:  ['军之数必五偏','军'],
+    zhen: ['阵之数必五军','阵']
+  };
+  var ladder = document.getElementById('ladder');
+  var lcap = document.getElementById('lcap');
+  ladder.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    var ks = Array.prototype.slice.call(ladder.querySelectorAll('button'));
+    var i = ks.indexOf(b);
+    ks.forEach(function(k,j){ k.classList.toggle('lit', j < i); k.classList.toggle('cur', j === i); });
+    var c = caps[b.dataset.k];
+    lcap.innerHTML = '<div class="q">' + c[0] + '</div><p>' + c[1] + '：以上皆照录序文。</p>';
+  });
+
+  var gqa = document.getElementById('gqa'), gqb = document.getElementById('gqb');
+  var gA = document.getElementById('gateA'), gB = document.getElementById('gateB');
+  var gAT = document.getElementById('gateAT'), gBT = document.getElementById('gateBT');
+  document.querySelectorAll('.gbtn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.gbtn').forEach(function(x){ x.classList.remove('act'); });
+      btn.classList.add('act');
+      var a = btn.dataset.g === 'a';
+      gqa.style.display = a ? '' : 'none';
+      gqb.style.display = a ? 'none' : '';
+      gA.setAttribute('opacity', a ? '.9' : '.28'); gAT.setAttribute('opacity', a ? '.95' : '.35');
+      gB.setAttribute('opacity', a ? '.28' : '.9'); gBT.setAttribute('opacity', a ? '.35' : '.95');
+    });
+  });
+
+  var svg = document.getElementById('paiSvg');
+  var head = document.getElementById('paiHead'), dot = document.getElementById('paiDot');
+  var fabtn = document.getElementById('faBtn'), stamp = document.getElementById('paiStamp');
+  var out = document.getElementById('paiOut');
+  var hitN = document.getElementById('hitN'), missN = document.getElementById('missN');
+  var WIN0 = 356, WIN1 = 448, X0 = 50, X1 = 610;
+  var px = X0, dir = 1, last = null, hit = 0, miss = 0, paused = false, resumeAt = 0;
+  function tick(ts){
+    if(last == null) last = ts;
+    var dt = ts - last; last = ts;
+    if(!paused){
+      px += dir * dt * 0.28;
+      if(px > X1){ px = X1; dir = -1; } if(px < X0){ px = X0; dir = 1; }
+    }
+    head.setAttribute('x1', px); head.setAttribute('x2', px);
+    dot.setAttribute('cx', px);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  fabtn.addEventListener('click', function(){
+    var inWin = px >= WIN0 && px <= WIN1;
+    paused = true;
+    stamp.classList.remove('show','miss');
+    void stamp.offsetWidth;
+    if(inWin){
+      hit++; hitN.textContent = hit;
+      stamp.textContent = '至妙'; stamp.classList.add('show');
+      out.innerHTML = '<div class="q">全书总要，只是乘他旧力略过、新力未发八字耳。至妙，至妙。<small>正中红窗</small></div>';
+    }else{
+      miss++; missN.textContent = miss;
+      stamp.textContent = px < WIN0 ? '发早' : '发迟';
+      stamp.classList.add('show','miss');
+      out.innerHTML = '<div class="q">法曰：后人发，先人至。知此决不可一发便要伤人，徒使自势发尽，为他人反伤，戒之，戒之。<small>窗外发劲，全是破绽</small></div>';
+    }
+    resumeAt = setTimeout(function(){ paused = false; }, 900);
+  });
+
+  var mtexts = {
+    li:  ['上李良钦之传，学到此，一贯乎万矣。','李良钦师父每每用此二步。'],
+    liu: ['上刘邦协之传，中间有拍位，不用拔剃洗落，只撒手杀，则又紧矣。'],
+    lin: ['上在偏头关时，得之教师林琰者，其诗曰：壮士执金枪，只用九寸长；日月打一转，好将见阎王。']
+  };
+  var mstrip = document.getElementById('mstrip');
+  document.querySelectorAll('.master').forEach(function(m){
+    m.addEventListener('click', function(){
+      document.querySelectorAll('.master').forEach(function(x){ x.classList.remove('lit'); });
+      m.classList.add('lit');
+      var ts = mtexts[m.dataset.m];
+      mstrip.innerHTML = ts.map(function(t){ return '<div class="q">' + t + '</div>'; }).join('');
+    });
+  });
+
+  var uniBtn = document.getElementById('uniBtn');
+  uniBtn.addEventListener('click', function(){
+    document.querySelectorAll('.master').forEach(function(x){ x.classList.add('lit'); });
+    mstrip.innerHTML = ['li','liu','lin'].map(function(k){
+      return mtexts[k].map(function(t){ return '<div class="q">' + t + '</div>'; }).join('');
+    }).join('');
+    document.getElementById('uniSeal').classList.add('show');
+    document.getElementById('uniOut').classList.add('show');
+    uniBtn.disabled = true; uniBtn.style.opacity = .4;
+  });
+})();
+</script>
+</body>
+</html>
