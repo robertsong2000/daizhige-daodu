@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>撼龙经导读 · 寻龙</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#22211e; --ink3:#2a2823;
+  --paper:#e8e4dc; --paper2:#d8d2c4; --dim:#8f8a7e;
+  --c:#c0453c; --cl:#d9695f; --gold:#c9963f;
+  --song:"Songti SC","Noto Serif SC","SimSun",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--song);line-height:1.9;overflow-x:hidden}
+.mono{font-family:"SF Mono",Menlo,Consolas,monospace}
+::selection{background:var(--c);color:#fff}
+
+/* ============ 左缘 行龙九站 ============ */
+#spine{position:fixed;left:0;top:0;height:100vh;width:58px;z-index:40;display:flex;flex-direction:column;justify-content:center;pointer-events:none}
+#spine svg{width:100%;height:78vh}
+#spine .st{fill:#3a3831;stroke:#57544a;stroke-width:1}
+#spine .st.on{fill:var(--c);stroke:var(--cl)}
+#spine .ln{fill:none;stroke:#3a3831;stroke-width:1.5}
+#spine .ln.on{stroke:var(--c);opacity:.75}
+#spine .sp{font-size:10px;fill:#57544a}
+@media(max-width:760px){#spine{display:none}}
+
+/* ============ 首屏 ============ */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;user-select:none;-webkit-user-select:none}
+#mts{position:absolute;inset:0;width:100%;height:100%}
+#mts .m1{fill:#23221e}
+#mts .m2{fill:#2b2a24}
+#mts .m3{fill:#35332b}
+#mts .peak{fill:#403d33}
+#mts .stars{fill:#c9963f;opacity:.7}
+#merid{fill:none;stroke:var(--c);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:7 9;filter:drop-shadow(0 0 6px rgba(192,69,60,.8));opacity:0}
+#hero.grip #merid{opacity:1}
+#hero.done #merid{opacity:.3}
+#hero.grip #mts .m1,#hero.grip #mts .m2,#hero.grip #mts .m3,#hero.grip #mts .peak{animation:trem .12s infinite}
+@keyframes trem{0%{transform:translate(0,0)}25%{transform:translate(1.2px,-1px)}50%{transform:translate(-1px,1.2px)}75%{transform:translate(1px,1px)}100%{transform:translate(-1.2px,-1px)}}
+.hwrap{position:relative;z-index:5;text-align:center;padding:0 20px}
+.kick{font-size:13px;letter-spacing:6px;color:var(--dim);margin-bottom:26px}
+.kick b{color:var(--cl);font-weight:normal}
+#bname{writing-mode:vertical-rl;font-size:clamp(58px,10vw,104px);letter-spacing:.28em;margin:0 auto;color:transparent;-webkit-text-stroke:1.5px #5a574c;transition:all 1.4s ease;transform:translateY(26px)}
+#hero.done #bname{color:var(--paper);-webkit-text-stroke:1.5px var(--c);transform:translateY(0);text-shadow:0 0 34px rgba(192,69,60,.35)}
+.hsub{margin-top:34px;font-size:14px;color:var(--dim);letter-spacing:3px;opacity:0;transition:opacity 1.6s ease .8s}
+#hero.done .hsub{opacity:1}
+.hint{position:absolute;bottom:34px;left:0;right:0;text-align:center;font-size:13px;letter-spacing:4px;color:var(--dim);z-index:6}
+.hint .dot{display:inline-block;width:8px;height:8px;border:1px solid var(--c);border-radius:50%;margin:0 8px;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{background:transparent}50%{background:var(--c)}}
+#hero.done .hint{opacity:0;transition:opacity .8s}
+#sealH{position:absolute;z-index:7;width:96px;height:96px;right:calc(50% - 230px);top:calc(50% - 190px);opacity:0;transform:scale(1.7) rotate(-14deg)}
+#hero.done #sealH{opacity:1;transform:scale(1) rotate(-7deg);transition:all .5s cubic-bezier(.2,2,.4,1) 1.5s}
+#sealH .sf{width:100%;height:100%;border:3px solid var(--c);display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;border-radius:6px;background:rgba(192,69,60,.12)}
+#sealH .sf i{font-style:normal;display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--c);font-weight:bold}
+#sealH .sf i:nth-child(1){order:2}#sealH .sf i:nth-child(2){order:4}#sealH .sf i:nth-child(3){order:1}#sealH .sf i:nth-child(4){order:3}
+@media(max-width:760px){#sealH{right:12%;top:16%;width:72px;height:72px}#sealH .sf i{font-size:22px}}
+
+/* ============ 通用章节 ============ */
+main{position:relative;z-index:2}
+section{max-width:880px;margin:0 auto;padding:110px 26px 40px 92px}
+@media(max-width:760px){section{padding:80px 22px 30px}}
+.snum{font-size:12px;letter-spacing:5px;color:var(--c);margin-bottom:10px}
+h2.st{font-size:30px;letter-spacing:4px;font-weight:normal;margin-bottom:8px}
+h2.st em{font-style:normal;color:var(--cl)}
+.slede{color:var(--dim);font-size:14px;letter-spacing:2px;margin-bottom:34px}
+p.tx{font-size:16.5px;margin-bottom:20px;color:#cfc9bc}
+p.tx b{color:var(--paper);font-weight:normal;border-bottom:1px dotted var(--cl)}
+
+/* 引文块 */
+.q{display:block;background:linear-gradient(180deg,rgba(192,69,60,.10),rgba(192,69,60,.04));border-left:3px solid var(--c);padding:16px 22px;margin:22px 0;font-size:16px;letter-spacing:1px;color:var(--paper);position:relative}
+.q:before{content:"";position:absolute;left:-3px;top:0;width:3px;height:34%;background:var(--cl)}
+.q .src{display:block;font-size:12px;color:var(--dim);letter-spacing:2px;margin-top:10px}
+.qv{color:var(--cl)}
+.qnote{display:block;font-size:13px;color:var(--dim);margin:-12px 0 22px;letter-spacing:1px}
+
+/* 隐藏引文库(JS用) */
+#qb{display:none}
+
+/* ============ 一 窃函 ============ */
+.fugram{display:flex;gap:18px;flex-wrap:wrap;margin:30px 0}
+.fug{flex:1 1 240px;background:var(--ink2);border:1px solid #34322b;border-radius:8px;padding:22px 20px;position:relative;transition:transform .3s,border-color .3s}
+.fug:hover{transform:translateY(-4px);border-color:var(--c)}
+.fug .fl{font-size:12px;letter-spacing:3px;color:var(--c);margin-bottom:10px}
+.fug p{font-size:14.5px;color:#c5bfb2;line-height:1.85}
+#jade{width:84px;height:118px;margin:8px auto 0;display:block}
+
+/* ============ 二 九星 ============ */
+#stars9{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:30px 0}
+@media(max-width:640px){#stars9{grid-template-columns:repeat(2,1fr)}}
+.scard{background:var(--ink2);border:1px solid #34322b;border-radius:8px;padding:16px 14px 14px;text-align:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.scard:hover{border-color:var(--c);transform:translateY(-3px)}
+.scard svg{width:100%;height:74px;display:block}
+.scard .mtn{fill:#4a463a;transition:fill .3s}
+.scard:hover .mtn,.scard.lit .mtn{fill:var(--c)}
+.scard .nm{font-size:17px;letter-spacing:3px;margin-top:8px}
+.scard .sh{font-size:12px;color:var(--dim);letter-spacing:1px}
+.scard .dsc{font-size:12.5px;color:#a8a294;margin-top:6px;line-height:1.7;display:none;text-align:left}
+.scard.lit .dsc{display:block}
+.scard .op{font-size:11px;color:#57544a;letter-spacing:2px;margin-top:6px}
+.scard.lit .op{display:none}
+.scard.wu .mtn{fill:none;stroke:#57544a;stroke-dasharray:4 5}
+.scard.wu:hover .mtn,.scard.wu.lit .mtn{fill:none;stroke:var(--c)}
+
+/* ============ 三 缠关 ============ */
+#lockbar{display:flex;gap:6px;flex-wrap:wrap;margin:34px 0 10px}
+#lockbar i{flex:1 1 30px;height:44px;border:1px solid #3a3831;position:relative;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:11px;color:#57544a;cursor:pointer;transition:all .2s}
+#lockbar i.on{border-color:var(--c);color:var(--cl);background:rgba(192,69,60,.08)}
+#lockcap{font-size:13px;color:var(--dim);letter-spacing:2px;margin-bottom:26px}
+#lockcap b{color:var(--cl);font-weight:normal}
+.bigverse{font-size:clamp(20px,3.4vw,28px);letter-spacing:5px;line-height:2.3;margin:26px 0;color:var(--paper)}
+
+/* ============ 四 昆仑图 ============ */
+#map{background:var(--ink2);border:1px solid #34322b;border-radius:10px;padding:26px 18px 10px;margin:30px 0}
+#map svg{width:100%;height:auto;display:block}
+#map .rg{fill:none;stroke:#57544a;stroke-width:2;transition:stroke .4s}
+#map .rg.on{stroke:var(--cl)}
+#map .nd{fill:#3a3831;stroke:#57544a;transition:fill .4s}
+#map .nd.on{fill:var(--c);stroke:var(--cl)}
+#map .lb{font-size:13px;fill:#8f8a7e;transition:fill .4s}
+#map .lb.on{fill:var(--paper)}
+#mapcap{display:flex;gap:8px;flex-wrap:wrap;padding:0 8px 16px}
+#mapcap button{background:var(--ink);border:1px solid #3a3831;color:var(--dim);font-family:var(--song);font-size:13px;letter-spacing:2px;padding:6px 14px;border-radius:4px;cursor:pointer;transition:all .25s}
+#mapcap button.on{border-color:var(--c);color:var(--cl)}
+
+/* ============ 五 帝垣 ============ */
+.walls{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;margin:26px 0}
+#wallsvg{flex:0 0 250px;max-width:100%;cursor:pointer}
+#wallsvg rect{fill:none;stroke:#57544a;stroke-width:2}
+#wallsvg .gate{stroke:var(--c)}
+#wallsvg .star{fill:#3a3831;transition:fill .5s}
+#wallsvg .star.on{fill:var(--cl)}
+.wtxt{flex:1 1 320px;min-width:280px}
+
+/* ============ 六 疑龙 ============ */
+#tenq{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:30px 0}
+@media(max-width:640px){#tenq{grid-template-columns:1fr}}
+.tq{background:var(--ink2);border:1px solid #34322b;border-radius:6px;padding:14px 16px;cursor:pointer;transition:all .3s;position:relative}
+.tq:hover{border-color:var(--cl)}
+.tq .qn{font-size:11px;color:var(--c);letter-spacing:2px}
+.tq .qt{font-size:14.5px;letter-spacing:1px;margin-top:4px;color:#cfc9bc}
+.tq .ans{font-size:13px;color:var(--dim);margin-top:8px;line-height:1.8;display:none;border-top:1px dashed #3a3831;padding-top:8px}
+.tq.open .ans{display:block}
+#duel{display:flex;gap:16px;flex-wrap:wrap;margin:34px 0}
+.duelcard{flex:1 1 280px;background:var(--ink2);border:1px solid #34322b;border-radius:10px;padding:24px 22px;position:relative;transition:all .4s}
+.duelcard.flip{border-color:var(--c);background:linear-gradient(180deg,rgba(192,69,60,.13),var(--ink2))}
+.duelcard .tag{font-size:12px;letter-spacing:3px;color:var(--dim);margin-bottom:12px}
+.duelcard.flip .tag{color:var(--cl)}
+.duelcard p{font-size:15px;color:#c5bfb2;line-height:1.9}
+.duelcard .veil{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;letter-spacing:3px;color:#57544a;background:var(--ink2);cursor:pointer;transition:opacity .5s;border-radius:10px}
+.duelcard.flip .veil{opacity:0;pointer-events:none}
+
+/* ============ 七 认太极 ============ */
+.taiji{display:flex;gap:26px;flex-wrap:wrap;align-items:center;margin:30px 0}
+#tjsvg{flex:0 0 240px;max-width:100%}
+#tjsvg .halo{fill:none;stroke:#57544a;stroke-dasharray:3 4;cursor:pointer;transition:stroke .4s}
+#tjsvg .halo.on{stroke:var(--c);stroke-dasharray:none}
+#tjsvg .wtr{fill:rgba(94,143,187,.13)}
+#tjsvg .dsc2{font-size:12px;fill:#8f8a7e}
+.fourx{flex:1 1 300px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fx{border:1px solid #34322b;border-radius:6px;padding:12px 14px;background:var(--ink2)}
+.fx b{display:block;font-size:17px;color:var(--cl);letter-spacing:3px;font-weight:normal;margin-bottom:4px}
+.fx span{font-size:12.5px;color:#a8a294;line-height:1.7}
+
+/* ============ 八 十一杖 ============ */
+#rods{display:flex;flex-wrap:wrap;gap:10px;margin:30px 0}
+.rod{background:var(--ink2);border:1px solid #34322b;border-radius:6px;padding:12px 14px;cursor:pointer;transition:all .3s;text-align:center;min-width:88px}
+.rod:hover{border-color:var(--c);transform:translateY(-3px)}
+.rod svg{width:34px;height:44px;display:block;margin:0 auto 6px}
+.rod .st2{stroke:#8f8a7e;stroke-width:3;stroke-linecap:round;fill:none;transition:stroke .3s}
+.rod:hover .st2,.rod.open .st2{stroke:var(--c)}
+.rod .nm2{font-size:15px;letter-spacing:2px}
+.rod .us{font-size:11.5px;color:var(--dim);margin-top:3px}
+.rod .dt{display:none;font-size:12px;color:#a8a294;text-align:left;margin-top:8px;line-height:1.7;border-top:1px dashed #3a3831;padding-top:6px}
+.rod.open .dt{display:block}
+
+/* ============ 九 葬帖 ============ */
+#burials{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:30px 0}
+.bur{background:var(--ink2);border:1px solid #34322b;border-radius:8px;padding:18px 16px;position:relative;overflow:hidden;transition:all .3s}
+.bur:hover{border-color:var(--c)}
+.bur:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--c),transparent)}
+.bur h4{font-size:17px;letter-spacing:3px;font-weight:normal;color:var(--paper);margin-bottom:8px}
+.bur h4 span{font-size:11px;color:var(--c);margin-right:6px;letter-spacing:1px}
+.bur p{font-size:13px;color:#a8a294;line-height:1.75}
+
+/* ============ 尾屏 ============ */
+#fin{min-height:72vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px 60px;position:relative}
+#fin .fv{writing-mode:vertical-rl;font-size:clamp(22px,3.6vw,34px);letter-spacing:.5em;line-height:2.4;height:400px;color:var(--paper)}
+#fin .fv em{font-style:normal;color:var(--cl)}
+#sealF{margin-top:44px;width:84px;height:84px;border:3px solid var(--c);border-radius:6px;display:grid;grid-template-columns:1fr 1fr;background:rgba(192,69,60,.1);transform:rotate(-4deg)}
+#sealF i{font-style:normal;display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--c)}
+#sealF i:nth-child(1){order:2}#sealF i:nth-child(2){order:4}#sealF i:nth-child(3){order:1}#sealF i:nth-child(4){order:3}
+#fin .fsub{margin-top:30px;font-size:13px;color:var(--dim);letter-spacing:3px}
+
+/* ============ 页脚 ============ */
+footer{border-top:1px solid #2c2a24;padding:44px 26px 60px;font-size:13px;color:#6e6a5f;line-height:2.1;max-width:880px;margin:0 auto}
+footer .mono{font-size:12px}
+footer a{color:#8f8a7e}
+#pno{color:var(--cl)}
+</style>
+</head>
+<body>
+
+<!-- 左缘 行龙九站 -->
+<nav id="spine" aria-hidden="true">
+  <svg viewBox="0 0 58 760" preserveAspectRatio="xMidYMid meet">
+    <path class="ln" id="spln" d="M29 30 L29 116 L20 202 L38 288 L29 374 L20 460 L38 546 L29 632 L29 718"/>
+    <path class="ln" id="splnOn" d="M29 30 L29 116 L20 202 L38 288 L29 374 L20 460 L38 546 L29 632 L29 718" style="stroke-dasharray:1100;stroke-dashoffset:1100"/>
+    <g id="spdots"></g>
+    <text class="sp" x="12" y="356">行龙</text>
+    <text class="sp" x="12" y="386">九站</text>
+  </svg>
+</nav>
+
+<!-- 首屏 -->
+<header id="hero">
+  <svg id="mts" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="1200" height="800" fill="#191917"/>
+    <g class="stars">
+      <circle cx="130" cy="90" r="1.6"/><circle cx="300" cy="60" r="1.2"/><circle cx="520" cy="110" r="1.5"/>
+      <circle cx="760" cy="70" r="1.3"/><circle cx="960" cy="130" r="1.7"/><circle cx="1100" cy="80" r="1.2"/>
+      <circle cx="210" cy="160" r="1.1"/><circle cx="880" cy="180" r="1.1"/><circle cx="1050" cy="200" r="1.4"/>
+    </g>
+    <path class="m1" d="M0 560 L120 430 L260 540 L400 400 L520 520 L640 360 L780 500 L920 390 L1060 510 L1200 420 L1200 800 L0 800 Z"/>
+    <path class="m2" d="M0 640 L150 520 L300 620 L470 480 L620 600 L760 470 L900 590 L1050 500 L1200 580 L1200 800 L0 800 Z"/>
+    <path class="m3" d="M0 720 L180 620 L360 700 L540 600 L720 690 L900 610 L1080 690 L1200 640 L1200 800 L0 800 Z"/>
+    <path class="peak" d="M600 190 L660 330 L640 340 L600 260 L560 345 L540 330 Z"/>
+    <path id="merid" d="M180 700 L340 640 L480 560 L600 470 L600 240 L720 480 L880 540 L1040 620"/>
+  </svg>
+  <div class="hwrap">
+    <div class="kick">殆知阁导读<br><b id="kickVol">卷二五三 寻龙</b> · 旧题杨筠松作</div>
+    <h1 id="bname">撼龙经</h1>
+    <div class="hsub">北斗借来做山的名字，山借来写天下的大势</div>
+  </div>
+  <div id="sealH" aria-hidden="true"><div class="sf"><i>杨</i><i>救</i><i>贫</i><i>印</i></div></div>
+  <div class="hint">按住群山<span class="dot"></span>撼而显龙</div>
+</header>
+
+<main>
+
+<!-- 一 窃函 -->
+<section data-st="1">
+  <div class="snum">第一站 · 窃玉函的人</div>
+  <h2 class="st">正史无名，<em>江湖有名</em></h2>
+  <div class="slede">四库提要 · 相宅相墓一门</div>
+  <p class="tx">这本书的作者，是堪舆行里最大的一个谜。正史里查无此人，宋代官修书目干脆只录「杨救贫」三个字。四库馆臣把民间传说原样抄了下来：此人名益，赣州人，在唐末朝中执掌灵台，观天相地，官衔一路加到文臣散阶的顶层。广明年间黄巢破长安，他做了一件足以让王朝税吏追捕一辈子的事。</p>
+  <div class="q">筠松名益赣州人掌灵台地理官至金紫光禄大夫广明中遇黄巢犯阙窃禁中玉函秘术以逃<span class="src">四库提要</span></div>
+  <div class="qnote">※ 禁中之玉函，即皇家秘藏的相地之术。带着国宝级的禁书逃出火光里的都城，从此下江湖南。</div>
+  <p class="tx">馆臣的判词下得很干脆：这故事荒诞，不足为凭。但他们笔锋一转，还是承认了这本书的地位。</p>
+  <div class="q">无稽之谈盖不足尽信也然其书乃为世所盛传<span class="src">四库提要</span></div>
+  <div class="q">所论山川之性情形势颇能得其要领流传不废亦有以也<span class="src">四库提要</span></div>
+  <p class="tx">一部作者存疑的书，成了堪舆形法一脉的祖典。朝廷拆穿传说，江湖不理会朝廷：一千多年里，看山的人开口闭口都是「杨公」如何说。民间只记住他偷出秘术之后做的事，替穷人相地，分文不取。所以他不叫杨益，叫<b>救贫先生</b>。</p>
+  <div class="fugram">
+    <div class="fug">
+      <div class="fl">宫中的官</div>
+      <p>执掌灵台，管观天象、察地理，官至荣衔顶层。皇家地理的钥匙，就挂在他腰上。</p>
+    </div>
+    <div class="fug">
+      <svg id="jade" viewBox="0 0 84 118" aria-hidden="true">
+        <rect x="14" y="30" width="56" height="78" rx="8" fill="none" stroke="#c0453c" stroke-width="2.5"/>
+        <rect x="22" y="42" width="40" height="54" rx="4" fill="rgba(192,69,60,.12)" stroke="#8a4a44" stroke-width="1"/>
+        <path d="M42 8 L42 30" stroke="#c0453c" stroke-width="2.5"/>
+        <circle cx="42" cy="62" r="7" fill="none" stroke="#c0453c" stroke-width="2"/>
+        <text x="42" y="90" text-anchor="middle" font-size="13" fill="#c0453c">玉函</text>
+      </svg>
+      <div class="fl">偷走的匣子</div>
+      <p>玉函秘术出禁中，从此天文地理之秘流入民间。传说未必真，江湖宁信其有。</p>
+    </div>
+    <div class="fug">
+      <div class="fl">江湖的名</div>
+      <p>「救贫」二字是他的行医招牌：专为无力置好地的人看山，分文不取。书以人传，人以书圣。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 二 九星 -->
+<section data-st="2">
+  <div class="snum">第二站 · 九星形法</div>
+  <h2 class="st">把北斗搬上山，<em>山的名字就是星的名字</em></h2>
+  <div class="slede">九星山形牌 · 点开看形认山</div>
+  <p class="tx">全书的方法论一句话说完：山有九种基本形，各借一颗星的名字。贪狼是笋尖，巨门是方屏，禄存像一面顿鼓，文曲软得像鳝鱼游过的水痕，廉贞一团火焰，武曲一口倒扣的钟。点九张牌，看九种山。</p>
+  <div id="stars9">
+    <div class="scard" data-q="tanlang">
+      <svg viewBox="0 0 120 74"><path class="mtn" d="M60 4 L78 70 L64 66 L60 30 L54 66 L42 70 Z"/></svg>
+      <div class="nm">贪狼</div><div class="sh">尖笋峰</div>
+      <div class="dsc"></div><div class="op">点开</div>
+    </div>
+    <div class="scard" data-d="厚重端方，如贵人据案。行龙遇它，多是州县之基。">
+      <svg viewBox="0 0 120 74"><path class="mtn" d="M30 66 L30 18 L90 18 L90 66 L74 62 L74 34 L46 34 L46 62 Z"/></svg>
+      <div class="nm">巨门</div><div class="sh">方屏</div>
+      <div class="dsc">厚重端方，如贵人据案。行龙遇它，多是州县之基。</div><div class="op">点开</div>
+    </div>
+    <div class="scard" data-d="形如顿鼓，有脚有帏。九星里变化最多的一种，吉凶全看脚手。">
+      <svg viewBox="0 0 120 74"><path class="mtn" d="M28 66 A32 32 0 0 1 92 66 L78 66 A18 18 0 0 0 42 66 Z"/><path class="mtn" d="M36 66 L30 72 M84 66 L90 72 M60 66 L60 72"/></svg>
+      <div class="nm">禄存</div><div class="sh">顿鼓</div>
+      <div class="dsc">形如顿鼓，有脚有帏。天下之山都有它的变体，吉凶全看脚手齐不齐整。</div><div class="op">点开</div>
+    </div>
+    <div class="scard" data-d="柔软无骨，如鳝如蛇。柔顺最低调的一星，平地蛇行本是吉，散漫无收便是死鳝。">
+      <svg viewBox="0 0 120 74"><path class="mtn" d="M8 50 Q24 36 40 50 T72 50 T104 50 L112 58 L100 62 Q84 48 68 62 T36 62 T12 58 Z"/></svg>
+      <div class="nm">文曲</div><div class="sh">鳝行</div>
+      <div class="dsc">柔软无骨，如鳝如蛇。柔顺最低调，平地蛇行本是吉，散漫无收便是死鳝。</div><div class="op">点开</div>
+    </div>
+    <div class="scard" data-d="独火高焰，石骨嶙峋。威烈属阳，是众山的祖宗，一般不做结穴之山。">
+      <svg viewBox="0 0 120 74"><path class="mtn" d="M60 4 L70 34 L64 30 L74 58 L60 48 L52 66 L46 52 L38 60 L48 28 L54 32 Z"/></svg>
+      <div class="nm">廉贞</div><div class="sh">独火</div>
+      <div class="dsc">独火高焰，石骨嶙峋。威烈属阳，是众山的祖宗，自己一般不结穴。</div><div class="op">点开</div>
+    </div>
+    <div class="scard" data-d="如覆钟如覆釜，端严富贵。高者为钟矮者为釜，皆是吉星。">
+      <svg viewBox="0 0 120 74"><path class="mtn" d="M60 6 A30 34 0 0 1 90 62 L30 62 A30 34 0 0 1 60 6 Z M24 66 L96 66"/></svg>
+      <div class="nm">武曲</div><div class="sh">钟釜</div>
+      <div class="dsc">如覆钟如覆釜，端严富贵。高者为钟矮者为釜，主兵权韬略。</div><div class="op">点开</div>
+    </div>
+    <div class="scard" data-d="前头高卓尾后低，如旗拖走。乱石突兀，是九星里最凶的一种形，也是行龙的先锋。">
+      <svg viewBox="0 0 120 74"><path class="mtn" d="M30 68 L44 12 L88 30 L58 40 L74 68 Z"/></svg>
+      <div class="nm">破军</div><div class="sh">走旗</div>
+      <div class="dsc">山头昂、山尾拖，像一面败阵的旗。乱石突兀，最凶的一种形，也是大龙的先锋。</div><div class="op">点开</div>
+    </div>
+    <div class="scard" data-d="如幞头如卓斧，前高后低。常随武曲左右，入垣则是帝座旁的近侍之山。">
+      <svg viewBox="0 0 120 74"><path class="mtn" d="M34 66 L34 30 Q34 14 60 12 Q88 14 88 30 L88 66 L70 60 L70 36 L50 36 L50 60 Z"/></svg>
+      <div class="nm">左辅</div><div class="sh">幞头</div>
+      <div class="dsc">如幞头如卓斧，前高后低。常随武曲左右，入垣则是帝座旁的近侍。</div><div class="op">点开</div>
+    </div>
+    <div class="scard wu" data-q="wubi">
+      <svg viewBox="0 0 120 74"><path class="mtn" d="M20 60 Q34 46 48 60 T76 60 T104 60"/></svg>
+      <div class="nm">右弼</div><div class="sh">无形</div>
+      <div class="dsc"></div><div class="op">点开</div>
+    </div>
+  </div>
+  <p class="tx">贪狼尖、巨门方、禄存圆中带脚、文曲曲、廉贞火、武曲钟、破军斜、左辅帽，八星各有一形。第九星<b>右弼</b>翻遍全书也找不到它的标准像：它被称作隐曜，专在八星断绝处埋名。找它不找山，找水。</p>
+</section>
+
+<!-- 三 缠关 -->
+<section data-st="3">
+  <div class="snum">第三站 · 缠山关锁</div>
+  <h2 class="st"><span class="qv">一重缠是一重关</span>，<em>数护卫像数关防</em></h2>
+  <div class="slede">撼龙经最有名的一句 · 点亮千重锁</div>
+  <p class="tx">「撼龙」撼的不是一座山，是一整支山脉编队。真龙出行，身边有缠、有护、有送、有托，像大员出巡，前后都是仪仗。看龙先数护卫，护卫的重数，就是这条龙的品级。</p>
+  <div class="q bigverse">寻龙千万看纒山一重纒是一重关<span class="src">撼龙经 · 廉贞篇</span></div>
+  <div class="q bigverse">关门若有千重锁定有王侯居此间<span class="src">撼龙经 · 廉贞篇</span></div>
+  <div id="lockbar" aria-hidden="true"></div>
+  <div id="lockcap">护卫十里出宰相，两重也有典城之守，只一重便只做得丞簿小吏。<b>重数即品级</b>，点击重锁，看门内住着谁。</div>
+</section>
+
+<!-- 四 昆仑 -->
+<section data-st="4">
+  <div class="snum">第四站 · 昆仑出脉</div>
+  <h2 class="st">天下大势，<em>一图收尽</em></h2>
+  <div class="slede">歌诀里的中国山脉总论 · 按站推进</div>
+  <p class="tx">撼龙经的下半卷忽然抬头，从点穴的手艺跳到整个中国的地形：天下山脉是一家，祖山在昆仑，支脉散入四方。黄河与长江一北一南夹住这条干龙，行到山东入海。这是堪舆版的全国山脉总论，也是一份十二世纪的地理想象力档案。</p>
+  <div class="q">昆仑山脚出阗颜只只脚是破军山<span class="src">撼龙经 · 破军篇</span></div>
+  <div class="q">黄河在北大江南两水夹行势不绝<span class="src">撼龙经 · 破军篇</span></div>
+  <div id="map">
+    <svg viewBox="0 0 760 300" id="mapsvg">
+      <path class="rg" data-i="0" d="M40 220 C90 150 140 170 190 140"/>
+      <path class="rg" data-i="1" d="M190 140 C240 120 260 160 310 130"/>
+      <path class="rg" data-i="2" d="M310 130 C350 110 370 140 410 110"/>
+      <path class="rg" data-i="3" d="M410 110 C450 90 470 130 520 100"/>
+      <path class="rg" data-i="4" d="M520 100 C560 85 590 110 640 90"/>
+      <path class="rg" data-i="5" d="M640 90 C680 80 710 90 740 70"/>
+      <circle class="nd" data-i="0" cx="40" cy="220" r="7"/>
+      <circle class="nd" data-i="1" cx="190" cy="140" r="7"/>
+      <circle class="nd" data-i="2" cx="310" cy="130" r="7"/>
+      <circle class="nd" data-i="3" cx="410" cy="110" r="7"/>
+      <circle class="nd" data-i="4" cx="520" cy="100" r="7"/>
+      <circle class="nd" data-i="5" cx="640" cy="90" r="7"/>
+      <circle class="nd" data-i="6" cx="740" cy="70" r="7"/>
+      <text class="lb" data-i="0" x="40" y="252" text-anchor="middle">昆仑</text>
+      <text class="lb" data-i="1" x="190" y="172" text-anchor="middle">陇右</text>
+      <text class="lb" data-i="2" x="310" y="162" text-anchor="middle">大散关</text>
+      <text class="lb" data-i="3" x="410" y="142" text-anchor="middle">太行</text>
+      <text class="lb" data-i="4" x="520" y="132" text-anchor="middle">熊耳</text>
+      <text class="lb" data-i="5" x="640" y="122" text-anchor="middle">兖州东岳</text>
+      <text class="lb" data-i="6" x="738" y="122" text-anchor="middle">海门</text>
+    </svg>
+    <div id="mapcap">
+      <button data-i="0" class="on">昆仑起祖</button>
+      <button data-i="1">陇右如削</button>
+      <button data-i="2">关中设防</button>
+      <button data-i="3">太行东走</button>
+      <button data-i="4">平阳渐低</button>
+      <button data-i="5">鲁邦多贤</button>
+      <button data-i="6">旺气入海</button>
+    </div>
+  </div>
+  <p class="tx" id="maphint">歌诀一路数过去：陇右山峰尖如削，出的多是骑射悍人；太行以东地势渐平，行到东岳一带，圣贤辈出；最后龙脉入海，海门二山锁住浙东的旺气。这套说辞把山脉走向当成了人才地理学。</p>
+</section>
+
+<!-- 五 帝垣 -->
+<section data-st="5">
+  <div class="snum">第五站 · 帝垣</div>
+  <h2 class="st">亲勘帝垣的人，<em>走了自己没赶上的路</em></h2>
+  <div class="slede">托名之作的破绽，也是它的后话</div>
+  <p class="tx">歌诀末尾忽然出现第一人称：撰书人说他亲自到京师核对皇城的格局。问题来了，旧题作者死于唐末，而他笔下的帝垣，一般认为指的是后世那座南北短、东西长的都城。托名之作常在这里露馅：作者替自己预支了一次迟到几百年的实地考察。</p>
+  <div class="q">我到京师騐前说帝垣果有星罗列<span class="src">撼龙经 · 左辅篇</span></div>
+  <div class="walls">
+    <svg id="wallsvg" viewBox="0 0 250 210" aria-hidden="true">
+      <rect x="20" y="20" width="210" height="170" rx="4"/>
+      <rect x="20" y="20" width="150" height="170" rx="4" stroke-dasharray="4 6" stroke="#3a3831"/>
+      <path class="gate" d="M115 190 L125 168 L135 190" fill="none" stroke-width="3"/>
+      <path d="M20 105 L42 105 M208 105 L230 105 M95 20 L95 42 M95 168 L95 190" stroke="#57544a" stroke-width="2"/>
+      <g id="wstars"></g>
+      <text x="125" y="12" text-anchor="middle" font-size="11" fill="#8f8a7e">北</text>
+      <text x="125" y="205" text-anchor="middle" font-size="11" fill="#8f8a7e">南</text>
+    </svg>
+    <div class="wtxt">
+      <p class="tx">书里把都城当作一座放大的穴场：重重外卫，层层内垣，帝星居于中央。这套「垣局」的算法，后世的都城规划者未必当真，但它把「城市是山水的延续」这句话讲得再直白不过。</p>
+      <p class="tx">点一点城墙，看垣内星罗。重城之外更有重城，皇家镇国的山水，在书里是一张排好座位的名次表。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 六 疑龙 -->
+<section data-st="6">
+  <div class="snum">第六站 · 疑龙</div>
+  <h2 class="st">认出真龙之后，<em>难的是敢不敢下结论</em></h2>
+  <div class="slede">疑龙经三篇十问 · 点问签看答</div>
+  <p class="tx">撼龙经教人认山，疑龙经教人怀疑。认出真龙只是上半场，真龙临落穴时，偏偏先安排一个以假乱真的虚穴贴身相随。全书最动人的就是这个「疑」字：对着一座好山，什么时候收手，什么时候撒手。</p>
+  <div class="q">龙已识真无可疑尚有疑穴费心思<span class="src">疑龙经 · 下篇</span></div>
+  <div class="q">大抵真龙临落穴先为虚穴贴身随<span class="src">疑龙经 · 下篇</span></div>
+  <div class="q">譬如赍粮适千里岂无顿宿分内外<span class="src">疑龙经 · 上篇</span></div>
+  <div id="tenq">
+    <div class="tq"><div class="qn">一问</div><div class="qt"><span class="qv">抱养及僧道嗣续疑龙如何</span><div class="ans">过继的儿子、入寺为僧的继承人，不承本家血统，凭什么受祖坟荫庇？答：山川英气认的是当家之人，不认族谱。详见下方对质。</div></div></div>
+    <div class="tq"><div class="qn">三问</div><div class="qt"><span class="qv">公位盛衰疑龙如何</span><div class="ans">同一块地，兄弟各家为什么有的先盛有的先衰？答：山川之气有节律，后来接得住吉气的人家才能长盛。</div></div></div>
+    <div class="tq"><div class="qn">四问</div><div class="qt"><span class="qv">阳宅隂宅疑龙如何</span><div class="ans">住的地方和葬的地方是一回事吗？答：事同一理，但阳宅要大要宽，阴宅要小要巧。宅小则气不通，坟大则气不聚。</div></div></div>
+    <div class="tq"><div class="qn">七问</div><div class="qt"><span class="qv">形真假疑龙如何</span><div class="ans">像蛇像虎的地形怎么辨真伪？<span class="qv">蛇形必定有雌雄虎形相配无单只</span>，成双成对的才是活气，孤零零的一律可疑。</div></div></div>
+    <div class="tq"><div class="qn">九问</div><div class="qt"><span class="qv">穴有花假疑龙如何</span><div class="ans">花穴假穴怎么破？答：假穴藏在主山之后，虽有小环抱，水口必然走泄；花穴生在前，连臂为案看似团圆。前相后相合参，缺一个都不要下手。</div></div></div>
+    <div class="tq"><div class="qn">十问</div><div class="qt"><span class="qv">博换疑龙如何</span><div class="ans">山脉一路变形换貌，换到认不出怎么办？答：千变万变，回头还有祖宗星峰在。认得剥换的次序，就不怕它改头换面。</div></div></div>
+  </div>
+  <p class="tx">十问里最出格的是第一问。它把堪舆这门手艺逼到了宗法制的墙角：荫庇子孙的理论如果只认血统，抱养与出继的家庭就无处安放。书里的回答绕开了族谱。</p>
+  <div id="duel">
+    <div class="duelcard">
+      <div class="tag">宗法的一面</div>
+      <p>骨骸受气，荫及遗体：祖坟的福气顺着血脉往下传。那么抱来的儿子、出家的嗣子，都不在这条血脉上，理论到这里就断了线。</p>
+    </div>
+    <div class="duelcard" id="duelB">
+      <div class="tag">山川的一面</div>
+      <p class="q" style="margin:0 0 12px">大抵人是山川英<span class="src">变星篇</span></p>
+      <p class="q" style="margin:0">周家农务起后稷享国享年延八百秦人关内恃威权蚕灭诸侯二世绝<span class="src">变星篇</span></p>
+      <p style="margin-top:12px">周人从农事起家，国祚八百年；秦据关中之险，威权盖世却二世而亡。福荫认人，不认谱系：谁接住了山川的英气，谁就是受荫之人。</p>
+      <div class="veil">翻 · 看山的回答</div>
+    </div>
+  </div>
+  <p class="tx">这一问一答，是全书离现代最近的地方。一门看风水的手艺，在自己的逻辑里推出了<b>气随人不随姓</b>：传承的关键在人接不接得住，不在血统纯不纯。</p>
+</section>
+
+<!-- 七 认太极 -->
+<section data-st="7">
+  <div class="snum">第七站 · 认太极</div>
+  <h2 class="st">穴场有多大？<em>刚好躺得下一个人</em></h2>
+  <div class="slede">葬法倒杖 · 认太极分两仪求四象倍八卦</div>
+  <p class="tx">前面看的是万里江山，最后收束到一个蜗牛壳大的点。葬法倒杖给出的真穴尺度令人一惊：山势到头，草蛇灰线里浮出一圈微茫的水痕，圈出一块圆晕，这圆晕就叫太极。它的尺寸，以能容一个人侧卧为度。</p>
+  <div class="q">容人侧卧便是穴场<span class="src">葬法倒杖 · 认太极</span></div>
+  <div class="taiji">
+    <svg id="tjsvg" viewBox="0 0 240 240" aria-hidden="true">
+      <circle class="halo" data-i="0" cx="120" cy="120" r="96"/>
+      <circle class="halo" data-i="1" cx="120" cy="120" r="64"/>
+      <circle class="halo" data-i="2" cx="120" cy="120" r="34"/>
+      <path class="wtr" d="M34 120 A86 86 0 0 1 206 120 Q120 96 34 120"/>
+      <circle cx="120" cy="120" r="16" fill="rgba(192,69,60,.22)" stroke="#c0453c" stroke-width="1.5"/>
+      <text class="dsc2" x="120" y="232" text-anchor="middle">太极晕 · 小明堂</text>
+    </svg>
+    <div class="fourx">
+      <div class="fx"><b>脉</b><span>晕间微起一道脊，少阴之象。取中定基，缓用盖法，急用粘法。</span></div>
+      <div class="fx"><b>息</b><span>晕间微微有形，少阳之象。缓短者斩于顶，长者截于腰，低者坠其脚。</span></div>
+      <div class="fx"><b>窟</b><span>晕间微陷成窝，太阴之象。狭者正其心，阔者求其气，深者架起，浅者折中。</span></div>
+      <div class="fx"><b>突</b><span>晕间微隆成泡，太阳之象。单突挨实，双突取短，正突用斜，偏突用插。</span></div>
+    </div>
+  </div>
+  <p class="tx">认太极，分两仪，求四象，倍八卦：四步走完，落下十六种放棺的分寸。晕如初三夜的月亮，只露一线，看清楚全凭手艺人的眼力。</p>
+  <div class="q">如初三夜月様<span class="src">葬法倒杖 · 认太极</span></div>
+  <div class="q">四象者脉息窟突也<span class="src">葬法倒杖 · 求四象</span></div>
+  <div class="q">脉缓者用盖法当掲髙放棺以盖覆为义<span class="src">葬法倒杖 · 倍八卦</span></div>
+</section>
+
+<!-- 八 倒杖 -->
+<section data-st="8">
+  <div class="snum">第八站 · 倒杖</div>
+  <h2 class="st">十二法，<em>库本只发了十一根杖</em></h2>
+  <div class="slede">倒杖十二法 · 点杖看用法</div>
+  <p class="tx">杖是相地人手里那根杆子，倒杖即以杖定穴的十二种手法。点一根杖，看它的手感。校字记放在这里：库本标题称十二法，正文实列十一杖，十二之数历来各家补法不一，本页从缺。</p>
+  <div class="q">夫观龙观其起明穴明其止起乃动而生止乃静而死死处又寻生是名曰生气<span class="src">二十四砂葬法 · 总纲</span></div>
+  <div id="rods">
+    <div class="rod" data-d="脉缓中落，顺势正受。须有下手关栏回护、案山朝拱，福大而缓。"><svg viewBox="0 0 34 44"><path class="st2" d="M17 4 L17 40"/></svg><div class="nm2">顺杖</div><div class="us">脉缓</div><div class="dt"></div></div>
+    <div class="rod" data-d="脉急中冲，旁求倚穴。挫其急、归其缓，倚势下杖，得福甚速。"><svg viewBox="0 0 34 44"><path class="st2" d="M26 4 L8 40"/></svg><div class="nm2">逆杖</div><div class="us">脉急</div><div class="dt"></div></div>
+    <div class="rod" data-d="脉太急，从峰顶盖下。四周山势高峻环抱时，把穴缩回顶心，谓之降煞。"><svg viewBox="0 0 34 44"><path class="st2" d="M17 40 L17 16 M17 16 L9 4 M17 16 L25 4"/></svg><div class="nm2">缩杖</div><div class="us">脉甚急</div><div class="dt"></div></div>
+    <div class="rod" data-d="如悬笔垂珠。龙势雄猛落到平地时，抛穴离脉而葬，垒土为坟。"><svg viewBox="0 0 34 44"><path class="st2" d="M17 4 L17 22 M13 22 L21 22 M17 30 L17 40"/></svg><div class="nm2">离杖</div><div class="us">势猛</div><div class="dt"></div></div>
+    <div class="rod" data-d="山形俯而饱，气脉微茫。乘它的止处沉葬，做开金取水的功夫。"><svg viewBox="0 0 34 44"><path class="st2" d="M8 10 L17 22 L26 10 M17 22 L17 40"/></svg><div class="nm2">没杖</div><div class="us">形俯</div><div class="dt"></div></div>
+    <div class="rod" data-d="口小仰形，脉来浅促。顺着来脉凿孔穿入，撞插皆取侧势。"><svg viewBox="0 0 34 44"><path class="st2" d="M8 40 L26 16 M22 12 L26 16 L21 21"/></svg><div class="nm2">穿杖</div><div class="us">口小</div><div class="dt"></div></div>
+    <div class="rod" data-d="山长而横，借明堂收纳。杖贯其腰，贴脊实倚，如斗斧眼。"><svg viewBox="0 0 34 44"><path class="st2" d="M4 14 L30 30 M4 30 L30 14"/></svg><div class="nm2">鬭杖</div><div class="us">山长</div><div class="dt"></div></div>
+    <div class="rod" data-d="山长而直，脉行不停直泻而去。挑它稍作停歇的弱缓处骑脊下杖。"><svg viewBox="0 0 34 44"><path class="st2" d="M4 36 L14 20 L24 28 L30 8 M24 28 L24 36"/></svg><div class="nm2">截杖</div><div class="us">体直</div><div class="dt"></div></div>
+    <div class="rod" data-d="上段刚、下段柔，取两段交接处中扦。高低交替、干湿初分的界线上，缓急平分。"><svg viewBox="0 0 34 44"><path class="st2" d="M17 4 L17 18 M17 26 L17 40 M12 22 L22 22"/></svg><div class="nm2">对杖</div><div class="us">刚柔</div><div class="dt"></div></div>
+    <div class="rod" data-d="势强脉急，在山脚低缓处顶脉实粘。退离三尺，让悍急之气变得冲和。"><svg viewBox="0 0 34 44"><path class="st2" d="M10 40 L17 8 M17 8 L17 18 M13 26 L21 26"/></svg><div class="nm2">缀杖</div><div class="us">势强</div><div class="dt"></div></div>
+    <div class="rod" data-d="饶龙减虎，从过脉之中取穴。弃死气挨生气，向外取堂气，多结于乳突。"><svg viewBox="0 0 34 44"><path class="st2" d="M6 40 L14 12 M14 12 L20 24 L28 8 M20 24 L20 40"/></svg><div class="nm2">犯杖</div><div class="us">饶减</div><div class="dt"></div></div>
+  </div>
+</section>
+
+<!-- 九 葬帖 -->
+<section data-st="9">
+  <div class="snum">第九站 · 二十四砂</div>
+  <h2 class="st">葬帖九通，<em>各有一句要领</em></h2>
+  <div class="slede">附卷二十四砂 · 拣要领九帖</div>
+  <p class="tx">全书最后一卷是二十四张葬帖：每一种特殊地形配一种葬法，从深泥里的悬棺到平地垒起的坟包，细节精确到砖石与客土。拣九通摊开看。</p>
+  <div id="burials">
+    <div class="bur"><h4><span>其一</span>正葬</h4><p>来龙走了三四个节目，到这里结成穴，星势平和。开井、放棺、接气，坟头培高，朝向对正。</p></div>
+    <div class="bur"><h4><span>其二</span>打开</h4><p>金星顽而不化，表面平漫无纹。把圹挖深做成窝，棺悬其中，取中央温润之气，即所谓开金取水。</p></div>
+    <div class="bur"><h4><span>其三</span>悬棺</h4><p>脉急而无缓，穴在深泥。砖石砌起巨圹，圹内竖四柱，悬棺而下。</p></div>
+    <div class="bur"><h4><span>其四</span>垒坟</h4><p>平地上鼓起一个土突，中间有石，挖不得。只浅浅开井，客土培坟：先富后贵的格局。</p></div>
+    <div class="bur"><h4><span>其五</span>马鬛封</h4><p>高冈处有窟有突。金骨浅浅安在井内，葬后培坟不惊动旧土，坟顶微露一线鬛封，忌用砖石砌压。</p></div>
+    <div class="bur"><h4><span>其六</span>回龙顾祖</h4><p>来势急硬，翻身从回面结穴。顾祖迎堂，满山宗族都转过身来朝揖，穴宜迁高、深开金井。</p></div>
+    <div class="bur"><h4><span>其七</span>骑龙</h4><p>龙神走到尽头，有突兀可结。身后主山层层垒来，旧迹如草蛇灰线，脉过渡处看得分明。把穴退后高扦，深井下棺，把明堂补全。</p></div>
+    <div class="bur"><h4><span>其八</span>停驿</h4><p>高冈之上脉气收紧，穴情若有若无。脱卸到平洋结一个小穴，像驿道上停车驻马的地方。十字中点，深开金井。</p></div>
+    <div class="bur"><h4><span>其九</span>担凹</h4><p>龙横过而转跌降脉，穴如蜂腰。在仰掌之中直扦，棺吞进三分之一，深了反而伤穴。</p></div>
+  </div>
+</section>
+
+</main>
+
+<!-- 尾屏 -->
+<section id="fin">
+  <div class="fv"><span class="qv">天下山山有禄存</span><em>撼</em>而观之</div>
+  <div id="sealF" aria-hidden="true"><i>撼</i><i>龙</i><i>之</i><i>印</i></div>
+  <div class="fsub">山有九星，人有百态，认得性情，方才下手</div>
+</section>
+
+<!-- 隐藏引文库（JS 取词，纳入核验） -->
+<div id="qb">
+  <div class="q" data-k="tanlang">贪狼顿起笋生峰</div>
+  <div class="q" data-k="wubi">右弼一星本无形是以名为隠曜星</div>
+  <div class="q" data-k="wubi2">抛梭马迹线如丝蜘蛛过水上滩</div>
+  <div class="q" data-k="ashui">髙水一寸即是阿</div>
+</div>
+
+<footer>
+  <p><span id="pno">第叁百七十三篇</span> 殆知阁古代文献导读 · <span class="mono">hanlong-jing.html</span></p>
+  <p>文本来源：殆知阁简体库 <span class="mono">易藏/术数/撼龙经.txt</span>（附疑龙经、倒杖、砂葬诸法，去空白约二万六千字）。仓库：<a href="https://github.com/gudao/daizhige" target="_blank" rel="noopener">github.com/gudao/daizhige</a></p>
+  <p>本页全部引文经脚本与库内文件去标点、异体归一逐字比对通过；库本「防贞」为「廉贞」之讹、「二闯公位」之「闯」为「问」之讹、「认太极」条「圆晕在微之间」疑脱「茫」字，页面已避引或加注。</p>
+  <p>时代局限提醒：本书为古代堪舆术数文献，所述龙脉吉凶之说属前现代信仰体系，仅供了解传统地理思想与民俗文化，不构成任何现实决策依据。</p>
+</footer>
+
+<script>
+(function(){
+"use strict";
+/* ---------- 首屏 撼山 ---------- */
+var hero=document.getElementById('hero'),merid=document.getElementById('merid'),played=false;
+var L=merid.getTotalLength();
+merid.style.strokeDasharray=L;merid.style.strokeDashoffset=L;
+function shake(){
+  if(played)return;played=true;
+  hero.classList.add('grip');
+  merid.style.transition='none';merid.style.strokeDashoffset=L;
+  requestAnimationFrame(function(){
+    merid.style.transition='stroke-dashoffset 2.6s ease-in-out';
+    merid.style.strokeDashoffset=0;
+  });
+  setTimeout(function(){hero.classList.remove('grip');hero.classList.add('done');},2600);
+}
+hero.addEventListener('pointerdown',function(){shake();});
+hero.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();shake();}});
+hero.setAttribute('tabindex','0');
+
+/* ---------- 左缘 九站 ---------- */
+var secs=document.querySelectorAll('section[data-st]');
+var dots=document.getElementById('spdots'),NS='http://www.w3.org/2000/svg';
+var xs=[29,29,20,38,29,20,38,29,29],ys=[30,116,202,288,374,460,546,632,718];
+ys.forEach(function(y,i){
+  var c=document.createElementNS(NS,'circle');
+  c.setAttribute('cx',xs[i]);c.setAttribute('cy',y);c.setAttribute('r','6');
+  c.setAttribute('class','st');
+  dots.appendChild(c);
+});
+function upSpine(){
+  var mid=window.innerHeight*0.55,ok=0;
+  secs.forEach(function(s){
+    if(s.getBoundingClientRect().top<mid)ok=Math.max(ok,+s.dataset.st);
+  });
+  document.querySelectorAll('#spdots circle').forEach(function(d,i){
+    d.classList.toggle('on',i<ok);
+  });
+  document.getElementById('splnOn').style.strokeDashoffset=1100*(1-ok/9);
+}
+window.addEventListener('scroll',upSpine,{passive:true});upSpine();
+
+/* ---------- 九星 ---------- */
+var QB={};document.querySelectorAll('#qb .q').forEach(function(q){QB[q.dataset.k]=q.textContent;});
+document.querySelectorAll('.scard').forEach(function(card){
+  card.addEventListener('click',function(){
+    card.classList.toggle('lit');
+    var d=card.querySelector('.dsc');
+    if(card.dataset.q&&!d.textContent.trim()){
+      var k=card.dataset.q;
+      d.textContent=QB[k]+(k==='wubi'?'；'+QB['wubi2']+'；'+QB['ashui']+'，只为时师眼力浅。':'');
+    }
+  });
+});
+
+/* ---------- 千重锁 ---------- */
+var bar=document.getElementById('lockbar'),locked=false;
+for(var i=0;i<36;i++){var t=document.createElement('i');t.textContent=i+1;bar.appendChild(t);}
+bar.addEventListener('click',function(e){
+  var ts=[].slice.call(bar.children),idx=ts.indexOf(e.target);
+  if(idx<0)return;
+  if(locked){ts.forEach(function(x){x.classList.remove('on');});locked=false;return;}
+  for(var j=0;j<=idx;j++)ts[j].classList.add('on');
+  locked=true;
+});
+
+/* ---------- 昆仑图 ---------- */
+var mcaps=document.querySelectorAll('#mapcap button');
+var mapNotes=[
+'祖山在昆仑，山脚出阗颜。支脉四出，只只脚都是破军开路的形状。',
+'陇右一带山峰尖如削，尽是狼峰高卓。此间不出文墨，出的多是骑射悍人。',
+'歌诀说大军退卸过大散关，山河百二在此设防。重重缠护直到函谷，黄河如阙环抱。',
+'太行一脉东走，河北河南两处关防。大河自北拐弯相射，东西两山做了水口。',
+'过了熊耳，万里平川一路走低。大梁一带无山可认，平地寻龙最难，全凭两水夹送的走向。',
+'东岳一带如笔插天，分技劈脉处钟灵。鲁邦多圣贤，西北自古出英雄。',
+'直到江阴大海边，旺气连着闽越。海门二山合抱如环，缺处泄洪，龙到这里入海而止。'];
+mcaps.forEach(function(b){
+  b.addEventListener('click',function(){
+    var i=+b.dataset.i;
+    mcaps.forEach(function(x){x.classList.remove('on');});b.classList.add('on');
+    document.querySelectorAll('#mapsvg .rg').forEach(function(p,j){p.classList.toggle('on',j<i);});
+    document.querySelectorAll('#mapsvg .nd').forEach(function(c,j){c.classList.toggle('on',j<=i);});
+    document.querySelectorAll('#mapsvg .lb').forEach(function(c,j){c.classList.toggle('on',j<=i);});
+    document.getElementById('maphint').textContent=mapNotes[i];
+  });
+});
+
+/* ---------- 帝垣星 ---------- */
+var ws=document.getElementById('wstars');
+for(var k=0;k<15;k++){
+  var c2=document.createElementNS(NS,'circle');
+  c2.setAttribute('cx',60+(k%5)*26+(k>9?13:0));c2.setAttribute('cy',70+Math.floor(k/5)*34);c2.setAttribute('r','5');
+  c2.setAttribute('class','star');ws.appendChild(c2);
+}
+document.getElementById('wallsvg').addEventListener('click',function(){
+  var stars=document.querySelectorAll('#wstars .star');
+  var off=[].some.call(stars,function(s){return !s.classList.contains('on');});
+  stars.forEach(function(s,i){setTimeout(function(){s.classList.toggle('on',off);},i*70);});
+});
+
+/* ---------- 疑龙十问 ---------- */
+document.querySelectorAll('.tq').forEach(function(t){t.addEventListener('click',function(){t.classList.toggle('open');});});
+var duelB=document.getElementById('duelB');
+duelB.querySelector('.veil').addEventListener('click',function(){duelB.classList.add('flip');});
+
+/* ---------- 太极晕 ---------- */
+var halos=document.querySelectorAll('#tjsvg .halo');
+halos.forEach(function(h,i){
+  h.addEventListener('click',function(){
+    var allOn=true;
+    for(var j=0;j<3;j++)if(!halos[j].classList.contains('on'))allOn=false;
+    if(allOn){halos.forEach(function(x){x.classList.remove('on');});return;}
+    for(var j2=0;j2<=i;j2++)halos[j2].classList.add('on');
+  });
+});
+
+/* ---------- 十一杖 ---------- */
+document.querySelectorAll('.rod').forEach(function(r){
+  var d=r.querySelector('.dt');d.textContent=r.dataset.d;
+  r.addEventListener('click',function(){r.classList.toggle('open');});
+});
+})();
+</script>
+</body>
+</html>
