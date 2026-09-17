@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>隶释 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --gold:#c9963f;
+  --gold-dim:rgba(201,150,63,.45);
+  --stone:#262523;
+  --stone-2:#2e2c28;
+  --ghost:rgba(232,228,220,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif CJK SC","Noto Serif SC",SimSun,STSong,serif;
+  line-height:1.9;
+  overflow-x:hidden;
+}
+::selection{background:var(--gold);color:var(--ink)}
+.mono{font-family:"SF Mono",Menlo,Consolas,monospace}
+
+/* ---------- 补阙轨 ---------- */
+#rail{
+  position:fixed;left:14px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:10px;z-index:60;
+}
+#rail .tile{
+  width:38px;height:38px;border:1px solid rgba(232,228,220,.18);
+  background:var(--stone);color:rgba(232,228,220,.22);
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;border-radius:3px;transition:all .8s ease;
+}
+#rail .tile.lit{
+  color:var(--gold);border-color:var(--gold-dim);
+  background:linear-gradient(160deg,#32302b,#211f1c);
+  box-shadow:0 0 14px rgba(201,150,63,.15);
+}
+#rail .cap{
+  writing-mode:vertical-rl;font-size:11px;letter-spacing:6px;
+  color:rgba(232,228,220,.4);margin:4px auto 0;
+}
+
+/* ---------- 首屏 ---------- */
+header.hero{
+  min-height:100vh;display:grid;grid-template-columns:44% 56%;
+  align-items:center;position:relative;
+  padding:0 6% 0 12%;
+  gap:20px;
+}
+.hero-txt .kicker{
+  font-size:13px;letter-spacing:5px;color:var(--gold);
+  margin-bottom:22px;
+}
+.hero-txt .pianhao{
+  display:inline-block;border:1px solid var(--gold-dim);
+  padding:1px 12px;font-size:12px;letter-spacing:3px;
+  color:var(--gold);margin-bottom:26px;border-radius:2px;
+}
+.hero-txt p{font-size:15.5px;color:rgba(232,228,220,.82);max-width:30em;margin-bottom:14px}
+.hero-txt p.dim{color:rgba(232,228,220,.55);font-size:13.5px}
+.rubbtn{
+  margin-top:26px;display:inline-flex;align-items:center;gap:12px;
+  background:var(--stone-2);border:1px solid var(--gold-dim);color:var(--paper);
+  font-family:inherit;font-size:15px;letter-spacing:4px;
+  padding:12px 26px;cursor:pointer;border-radius:3px;user-select:none;
+  transition:background .3s;
+}
+.rubbtn:active{background:#3a372f}
+.rubbtn .dabber{
+  width:26px;height:26px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#4a463e,#242220 70%);
+  border:1px solid rgba(232,228,220,.2);
+  animation:dabmove 1.6s ease-in-out infinite;
+}
+@keyframes dabmove{0%,100%{transform:translateX(-4px)}50%{transform:translateX(4px)}}
+.rubhint{font-size:12px;color:rgba(232,228,220,.42);margin-top:12px;letter-spacing:2px}
+
+.stelewrap{position:relative;display:flex;justify-content:center;align-items:center;padding:30px 0}
+.stele{
+  width:min(400px,86%);aspect-ratio:3/4.1;position:relative;border-radius:6px;
+  background:
+    radial-gradient(ellipse at 30% 20%,rgba(232,228,220,.05),transparent 55%),
+    radial-gradient(ellipse at 75% 80%,rgba(0,0,0,.4),transparent 60%),
+    linear-gradient(165deg,#2c2a26,#1d1c1a 60%,#232120);
+  border:1px solid rgba(232,228,220,.1);
+  box-shadow:0 24px 60px rgba(0,0,0,.5),inset 0 0 40px rgba(0,0,0,.45);
+}
+.stele::before{
+  content:"";position:absolute;inset:14px;border:1px solid rgba(232,228,220,.08);
+  border-radius:3px;pointer-events:none;
+}
+.rub-progress{
+  position:absolute;bottom:-34px;left:50%;transform:translateX(-50%);
+  width:70%;height:3px;background:rgba(232,228,220,.1);border-radius:2px;overflow:hidden;
+}
+.rub-progress i{
+  display:block;height:100%;width:0%;background:var(--gold);
+  transition:width .12s linear;
+}
+/* 拓文层：墨底上纸白字 */
+.rubwen{
+  position:absolute;inset:14px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;
+  opacity:0;transition:opacity .5s ease;
+}
+.rubwen .t{
+  writing-mode:vertical-rl;font-size:96px;font-weight:700;letter-spacing:26px;
+  color:var(--paper);text-shadow:0 0 2px rgba(232,228,220,.35);
+}
+.rubwen .s{font-size:14px;letter-spacing:8px;color:rgba(232,228,220,.66)}
+.rubwen .seal{
+  margin-top:6px;width:58px;height:58px;border-radius:4px;
+  background:var(--gold);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  writing-mode:vertical-rl;font-size:15px;letter-spacing:2px;line-height:1.25;
+  opacity:.92;transform:rotate(-3deg);
+}
+/* 墨面层：拓上的墨 */
+.inklayer{
+  position:absolute;inset:14px;border-radius:3px;
+  background:
+    radial-gradient(ellipse at 42% 33%,rgba(0,0,0,.55),transparent 70%),
+    linear-gradient(150deg,rgba(10,10,9,.92),rgba(16,15,13,.88));
+  opacity:0;transition:opacity .4s ease;
+}
+.stele.rubbed .inklayer{opacity:1}
+.stele.rubbed .rubwen{opacity:1}
+.stele .wornghost{
+  position:absolute;inset:14px;display:flex;align-items:center;justify-content:center;
+  writing-mode:vertical-rl;font-size:96px;font-weight:700;letter-spacing:26px;
+  color:var(--ghost);
+}
+
+/* ---------- 通用节 ---------- */
+section{position:relative;padding:110px 6% 110px 12%;max-width:1060px}
+section .sno{
+  font-size:12px;letter-spacing:5px;color:var(--gold);margin-bottom:10px;
+  display:flex;align-items:center;gap:14px;
+}
+section .sno::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--gold-dim),transparent)}
+section h2{font-size:30px;font-weight:600;letter-spacing:3px;margin-bottom:30px}
+section p{font-size:15.5px;color:rgba(232,228,220,.82);max-width:42em;margin-bottom:16px}
+section p small{color:rgba(232,228,220,.5)}
+
+.q{
+  display:block;background:linear-gradient(150deg,#232220,#1e1d1a);
+  border-left:3px solid var(--gold);border-radius:0 4px 4px 0;
+  padding:14px 20px;margin:16px 0;font-size:15px;
+  color:rgba(232,228,220,.9);line-height:2;
+}
+.q .src{display:block;font-size:12px;color:rgba(232,228,220,.45);margin-top:6px;letter-spacing:1px}
+
+/* ---------- S1 对读台 ---------- */
+.duotai{margin-top:34px;border:1px solid rgba(232,228,220,.12);border-radius:6px;overflow:hidden;background:var(--stone)}
+.dt-tabs{display:flex;flex-wrap:wrap;border-bottom:1px solid rgba(232,228,220,.1)}
+.dt-tabs button{
+  flex:1;min-width:120px;background:transparent;border:none;color:rgba(232,228,220,.5);
+  font-family:inherit;font-size:14px;letter-spacing:2px;padding:13px 8px;cursor:pointer;
+  border-right:1px solid rgba(232,228,220,.08);transition:all .25s;
+}
+.dt-tabs button:last-child{border-right:none}
+.dt-tabs button em{display:block;font-style:normal;font-size:11px;letter-spacing:1px;color:rgba(232,228,220,.35);margin-top:3px}
+.dt-tabs button.on{color:var(--gold);background:rgba(201,150,63,.08);box-shadow:inset 0 -2px 0 var(--gold)}
+.dt-panel{padding:26px 28px;min-height:190px}
+.dt-panel h4{font-size:17px;letter-spacing:2px;color:var(--paper);margin-bottom:10px}
+.dt-panel h4 span{font-size:12px;color:var(--gold);letter-spacing:3px;margin-left:10px}
+.dt-panel p{font-size:14px;color:rgba(232,228,220,.7);margin-bottom:6px}
+
+/* ---------- S2 时间带 ---------- */
+.timeline{position:relative;margin:44px 0 10px;padding-top:10px}
+.timeline .axis{height:2px;background:linear-gradient(90deg,rgba(232,228,220,.16),rgba(232,228,220,.16))}
+.tl-row{display:flex;gap:0;overflow-x:auto;padding:14px 2px 26px;scrollbar-width:thin}
+.tl-node{
+  min-width:128px;flex:1;position:relative;cursor:pointer;padding:20px 10px 0;
+}
+.tl-node::before{
+  content:"";position:absolute;top:-4px;left:12px;width:10px;height:10px;border-radius:50%;
+  background:var(--stone-2);border:2px solid rgba(232,228,220,.3);transition:all .3s;
+}
+.tl-node .yr{font-size:13px;color:rgba(232,228,220,.55);letter-spacing:1px}
+.tl-node .tt{font-size:15px;color:rgba(232,228,220,.8);margin-top:4px;line-height:1.6}
+.tl-node.cracked::before{
+  border-color:#b0563f;background:#3a231d;box-shadow:0 0 10px rgba(176,86,63,.4);
+}
+.tl-node.cracked .tt::after{
+  content:"⌇";color:#b0563f;margin-left:6px;
+}
+.tl-node.on::before{background:var(--gold);border-color:var(--gold);box-shadow:0 0 10px rgba(201,150,63,.5)}
+.tl-node.on .yr{color:var(--gold)}
+.tl-detail{
+  min-height:64px;border-top:1px dashed rgba(232,228,220,.14);padding-top:16px;
+  font-size:14px;color:rgba(232,228,220,.72);
+}
+.tl-detail b{color:var(--gold);font-weight:600;letter-spacing:2px}
+.leafrow{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.leaf{
+  border:1px solid rgba(232,228,220,.16);border-radius:3px;padding:10px 20px;
+  font-size:14px;letter-spacing:3px;color:rgba(232,228,220,.6);
+  background:linear-gradient(150deg,#242320,#1f1e1b);cursor:pointer;transition:all .3s;
+}
+.leaf.lit{color:var(--gold);border-color:var(--gold-dim);box-shadow:0 0 12px rgba(201,150,63,.12)}
+.leafnote{font-size:12.5px;color:rgba(232,228,220,.45);margin-top:14px;min-height:22px}
+
+/* ---------- S3 考订签 ---------- */
+.kao-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:34px 0}
+.kao-card{
+  background:linear-gradient(155deg,#252420,#1e1d1a);border:1px solid rgba(232,228,220,.12);
+  border-radius:6px;padding:26px 20px;text-align:center;cursor:pointer;
+  transition:all .35s;position:relative;min-height:196px;
+}
+.kao-card .worn{font-size:64px;line-height:1.2;color:rgba(232,228,220,.3);transition:color .4s}
+.kao-card .lbl{font-size:12.5px;color:rgba(232,228,220,.45);letter-spacing:2px;margin-top:12px}
+.kao-card .res{font-size:13.5px;color:var(--gold);margin-top:8px;opacity:0;transition:opacity .4s;line-height:1.8}
+.kao-card.open .worn{color:var(--gold);text-shadow:0 0 18px rgba(201,150,63,.3)}
+.kao-card.open .res{opacity:1}
+.kao-card .hint{position:absolute;bottom:10px;left:0;right:0;font-size:11px;letter-spacing:3px;color:rgba(232,228,220,.25)}
+.kao-card.open .hint{display:none}
+.gongan{
+  margin-top:26px;background:linear-gradient(150deg,#26241f,#1f1e1a);
+  border:1px solid var(--gold-dim);border-radius:6px;padding:24px 28px;
+}
+.gongan h4{font-size:16px;letter-spacing:3px;color:var(--gold);margin-bottom:12px}
+
+/* ---------- S4 题名墙 ---------- */
+.qiang{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 10px}
+.qchip{
+  border:1px solid rgba(232,228,220,.16);border-radius:3px;background:var(--stone);
+  padding:7px 16px;font-size:14px;letter-spacing:2px;color:rgba(232,228,220,.75);
+  transition:all .3s;cursor:default;
+}
+.qchip:hover{border-color:var(--gold-dim);color:var(--gold)}
+.qchip .ab{color:var(--gold)}
+.countbtn{
+  margin-top:20px;background:transparent;border:1px solid var(--gold-dim);color:var(--gold);
+  font-family:inherit;font-size:13.5px;letter-spacing:3px;padding:9px 24px;
+  border-radius:3px;cursor:pointer;transition:background .3s;
+}
+.countbtn:hover{background:rgba(201,150,63,.08)}
+.countres{font-size:14px;color:rgba(232,228,220,.75);margin-top:14px;min-height:24px}
+.countres b{color:var(--gold);font-size:20px;letter-spacing:1px}
+
+/* ---------- S5 北望 ---------- */
+.beiwang{
+  margin-top:36px;border:1px solid rgba(232,228,220,.12);border-radius:6px;
+  background:linear-gradient(180deg,#201f1c 0%,#1a1917 100%);
+  padding:34px 30px;position:relative;overflow:hidden;
+}
+.bw-stage{position:relative;height:190px;margin-bottom:26px}
+.bw-hill{
+  position:absolute;bottom:0;left:0;right:0;height:70px;
+  background:linear-gradient(180deg,rgba(232,228,220,.05),transparent);
+  clip-path:polygon(0 100%,0 55%,12% 40%,26% 62%,40% 30%,55% 58%,70% 38%,84% 60%,100% 44%,100% 100%);
+}
+.bw-stele{
+  position:absolute;bottom:46px;width:26px;height:86px;border-radius:3px 3px 0 0;
+  background:#33312c;border:1px solid rgba(232,228,220,.14);
+  display:flex;align-items:flex-start;justify-content:center;padding-top:8px;
+  writing-mode:vertical-rl;font-size:10px;letter-spacing:2px;color:rgba(232,228,220,.28);
+  transition:all .6s ease;cursor:pointer;
+}
+.bw-stele.lit{
+  background:linear-gradient(180deg,#3a3527,#2b2820);border-color:var(--gold-dim);
+  color:var(--gold);box-shadow:0 0 16px rgba(201,150,63,.18);
+}
+.bw-btn{
+  background:transparent;border:1px solid var(--gold-dim);color:var(--gold);
+  font-family:inherit;font-size:14px;letter-spacing:4px;padding:10px 30px;
+  border-radius:3px;cursor:pointer;transition:background .3s;
+}
+.bw-btn:hover{background:rgba(201,150,63,.08)}
+.bw-btn:disabled{opacity:.4;cursor:default}
+.bw-cap{font-size:12.5px;color:rgba(232,228,220,.42);margin-top:12px;letter-spacing:1px;min-height:20px}
+.beiwang .finalq{margin-top:8px}
+
+/* ---------- 尾屏 ---------- */
+footer.coda{
+  min-height:64vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:90px 8% 40px;position:relative;
+}
+footer.coda .endline{
+  writing-mode:vertical-rl;font-size:23px;letter-spacing:14px;
+  color:rgba(232,228,220,.85);height:250px;margin-bottom:40px;
+}
+footer.coda .seal{
+  width:76px;height:76px;background:var(--gold);color:var(--ink);border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  writing-mode:vertical-rl;font-size:19px;letter-spacing:3px;line-height:1.3;
+  transform:rotate(2.5deg);box-shadow:0 8px 30px rgba(201,150,63,.25);
+  opacity:0;transition:opacity 1s ease;
+}
+footer.coda .seal.show{opacity:.94}
+footer.coda .coda-line{font-size:13.5px;color:rgba(232,228,220,.5);margin-top:36px;letter-spacing:2px}
+.footmeta{
+  margin-top:56px;padding-top:24px;border-top:1px solid rgba(232,228,220,.1);
+  font-size:12px;color:rgba(232,228,220,.38);line-height:2.1;max-width:640px;
+}
+.footmeta a{color:rgba(201,150,63,.75);text-decoration:none}
+.footmeta a:hover{text-decoration:underline}
+
+/* ---------- 响应式 ---------- */
+@media (max-width:900px){
+  header.hero{grid-template-columns:1fr;padding:80px 7% 60px;gap:40px;min-height:auto}
+  .stelewrap{order:-1}
+  #rail{
+    position:static;transform:none;flex-direction:row;justify-content:center;
+    margin:0 auto 46px;gap:8px;
+  }
+  #rail .cap{writing-mode:horizontal-tb;letter-spacing:3px;margin:0 0 0 8px;align-self:center}
+  section{padding:80px 7%}
+  .kao-grid{grid-template-columns:1fr;gap:14px}
+  .kao-card{min-height:0;padding:20px}
+  .rubwen .t{font-size:76px;letter-spacing:20px}
+  section h2{font-size:25px}
+}
+</style>
+</head>
+<body>
+
+<!-- 补阙轨 -->
+<div id="rail" aria-hidden="true">
+  <div class="tile">□</div>
+  <div class="tile">□</div>
+  <div class="tile">□</div>
+  <div class="tile">□</div>
+  <div class="cap">补 阙</div>
+</div>
+
+<!-- JS 动态引文的核验通道 -->
+<div id="qb" hidden>
+  <span class="qv">郦道元注水经亦云敷水北迳集灵宫</span>
+  <span class="qv">孝武皇帝修封禅之礼巡省五岳立宫其下宫曰集灵宫殿曰存仙殿门曰望仙门</span>
+  <span class="qv">所谓集灵宫者他书皆不见惟见此碑则余之集录不为无益矣</span>
+  <span class="qv">然则不独见于此碑矣而所谓存仙殿望仙门者诸书不载</span>
+  <span class="qv">岩岩西岳峻极穹苍</span>
+</div>
+
+<!-- 首屏：捶拓 -->
+<header class="hero">
+  <div class="hero-txt">
+    <div class="kicker">殆知阁简体库史藏 · 金石之属</div>
+    <div class="pianhao">第叁百六十八篇</div>
+    <p>一块汉碑在野外立了一千五百年，风吹、雨浸、苔封，字一个个磨掉。到宋代，字还能认的碑已经不多了。有个人做了一件笨功夫的事：把能找到的汉碑，一块一块，逐字抄下来，连磨掉的字缺在哪儿、抄不准的地方该当哪个字讲，都一条条记在下面。</p>
+    <p class="dim">这个人叫洪适，饶州鄱阳（今江西鄱阳）人，官做到宰相。乾道二年成书，凡二十七卷，后世尊为金石之学的开山。原碑多已不存，碑上的文字，很多全靠这部书活着。</p>
+    <p class="dim">这篇导读的读法，也照他的老规矩来：先捶拓，再补阙。</p>
+    <button class="rubbtn" id="rubBtn"><span class="dabber"></span><span>按住 捶拓</span></button>
+    <div class="rubhint">按住不放，拓包来回擦扫，墨透纸背</div>
+  </div>
+  <div class="stelewrap">
+    <div class="stele" id="stele">
+      <div class="wornghost">隶释</div>
+      <div class="inklayer"></div>
+      <div class="rubwen">
+        <div class="t">隶释</div>
+        <div class="s">宋 · 鄱阳洪适</div>
+        <div class="seal">金石有声</div>
+      </div>
+      <div class="rub-progress"><i id="rubBar"></i></div>
+    </div>
+  </div>
+</header>
+
+<!-- S1 对读台 -->
+<section id="s1">
+  <div class="sno">壹 · 一块碑，四双眼睛</div>
+  <h2>华山庙碑对读</h2>
+  <p>华山脚下的西岳庙，东汉延熹四年，太守袁逢把旧碑换了新的，照经传重写岳祀的来历，<q class="qv">延熹八年四月廿九日甲子</q>刻成。这块碑后来成了天下学隶书的人共同的老祖宗。</p>
+  <p>它也是一部书的履历表：郦道元作水经注，路过时记了一句，欧阳修把它录进《集古录》，赵明诚把它收进《金石录》，到洪适手里，第一次连碑上每一个字都被写定了下来。同一个人同一块碑，四双眼睛看到的东西不一样。点一点，换一双眼睛看。</p>
+  <div class="duotai">
+    <div class="dt-tabs" id="dtTabs">
+      <button data-p="0" class="on">郦道元<em>水经注</em></button>
+      <button data-p="1">欧阳修<em>集古录</em></button>
+      <button data-p="2">赵明诚<em>金石录</em></button>
+      <button data-p="3">洪适<em>隶释</em></button>
+    </div>
+    <div class="dt-panel" id="dtPanel"></div>
+  </div>
+</section>
+
+<!-- S2 一条碑的命 -->
+<section id="s2">
+  <div class="sno">贰 · 一条碑的命</div>
+  <h2>从延熹到嘉靖</h2>
+  <p>四库馆臣给这部书的考语只有一句重话：<q class="qv">自有碑刻以来推是书为最精博</q>。它并非侥幸得来。洪适的父亲洪皓出使金国被扣十五年，兄弟三人洪适、洪遵、洪迈皆以学问显名；乾道二年，书写成于他外任绍兴府的任上，第二年正月作序刻版。周必大说他耽嗜隶古，弟弟洪迈说兄长想把汉隶做成五种书：<q class="qv">曰释曰缵曰韵曰图曰续四者备矣惟韵书不成</q>。释、缵、图、续四部都成了，韵书没有完成。他在《隶续》自跋里记下所收规模：<q class="qv">碑碣二百五十有八</q>，今本正文十九卷，合水经注碑目、集古录、金石录等附录，共二十七卷。</p>
+  <p>而碑的命比书短得多。点时间带上的节点，看这块碑走过的一千四百年。</p>
+  <div class="timeline">
+    <div class="axis"></div>
+    <div class="tl-row" id="tlRow"></div>
+    <div class="tl-detail" id="tlDetail"></div>
+  </div>
+  <div class="leafrow" id="leafRow">
+    <div class="leaf">长垣本</div>
+    <div class="leaf">华阴本</div>
+    <div class="leaf">四明本</div>
+    <div class="leaf">顺德本</div>
+  </div>
+  <div class="leafnote" id="leafNote">原石毁后，全卷宋拓存世者仅此四本。点亮看一看它们各自的来历。</div>
+</section>
+
+<!-- S3 补阙的手艺 -->
+<section id="s3">
+  <div class="sno">叁 · 补阙的手艺</div>
+  <h2>某字当某字讲</h2>
+  <p>四库提要里说，欧、赵两家的书只存目录，不录碑文；这部书为考释隶字而作，<q class="qv">每篇皆依其文字冩之</q>。抄还不算完。每碑之下，洪适把磨灭的、借用的、写别体的字一条条疏在下面，某个字该当哪个字讲，讲错的地方也直言不讳。点开这三块磨损的字，看他的考订。</p>
+  <div class="kao-grid">
+    <div class="kao-card">
+      <div class="worn">癈</div>
+      <div class="lbl">碑上作「癈」</div>
+      <div class="res">当为「废」。<q class="qv">以癈为废</q>，形近而讹，洪适逐字注出。</div>
+      <div class="hint">点 击 考 订</div>
+    </div>
+    <div class="kao-card">
+      <div class="worn">女</div>
+      <div class="lbl">碑上作「女阳」</div>
+      <div class="res">即汝阳，袁逢的家乡。<q class="qv">女阳为汝阳</q>，汉人写地名尚省。</div>
+      <div class="hint">点 击 考 订</div>
+    </div>
+    <div class="kao-card">
+      <div class="worn">中</div>
+      <div class="lbl">碑上称宣帝为「中宗」</div>
+      <div class="res">汉碑实借「中」为「仲」，当作仲宗。洪适不客气：<q class="qv">以帝者庙号而借以它字不恭孰甚焉</q>。</div>
+      <div class="hint">点 击 考 订</div>
+    </div>
+  </div>
+  <div class="gongan">
+    <h4>附一桩公案：郭香察书</h4>
+    <p>碑末一行小字，落着书佐的姓名与「郭□察书」几个字。这行字聚讼了八百年：欧阳修的儿子欧阳棐读作书者名叫「郭香察」，洪适不同意，<q class="qv">郭香察书者察涖它人之书尔小欧阳以为郭香察所书非也</q>。察是查验，不是名字。一横之断，答案至今悬着。</p>
+  </div>
+</section>
+
+<!-- S4 阿字考 -->
+<section id="s4">
+  <div class="sno">肆 · 三百四十二个名字</div>
+  <h2>阿字考</h2>
+  <p>殽阬神祠碑的背面，密密刻着捐钱立碑的人名，三百四十二个，磨灭的就有三十多字。洪适赞它<q class="qv">其磨灭不可见者三十余字小而劲</q>，小字而笔力劲健，是汉隶神品。可他真正下功夫的，是这堆名字里一个不起眼的现象：很多人不叫本名，叫「阿某」。</p>
+  <p>他的解释带着一点烟火气：这些人想必是编户之民，不曾有表字可书，刻碑的人为求整齐，硬给每人加一个字，就像乡里妇人拿「阿」字挂在姓氏前头叫人。</p>
+  <div class="qiang">
+    <div class="qchip">刘兴<span class="ab">阿兴</span></div>
+    <div class="qchip">潘京<span class="ab">阿京</span></div>
+    <div class="qchip">北宫<span class="ab">世平</span></div>
+    <div class="qchip">夏侯<span class="ab">阿升</span></div>
+    <div class="qchip">仲东<span class="ab">阿东</span></div>
+    <div class="qchip">仲阿同</div>
+  </div>
+  <button class="countbtn" id="countBtn">数一数这一碑背</button>
+  <div class="countres" id="countRes"></div>
+</section>
+
+<!-- S5 北望 -->
+<section id="s5">
+  <div class="sno">伍 · 按图而求</div>
+  <h2>北望</h2>
+  <p>卷尾附了一卷《天下碑录》，无名氏所辑，洪适把其中东汉的部分删存下来，注明每块碑在哪里。录里许多碑，今天连名字都只剩下这一行注。</p>
+  <div class="beiwang">
+    <div class="bw-stage" id="bwStage">
+      <div class="bw-hill"></div>
+      <div class="bw-stele" style="left:8%">邉韶碑</div>
+      <div class="bw-stele" style="left:26%">钟繇碑</div>
+      <div class="bw-stele" style="left:44%">袁良碑</div>
+      <div class="bw-stele" style="left:62%">马融碣</div>
+      <div class="bw-stele" style="left:80%">唐公房碑</div>
+    </div>
+    <button class="bw-btn" id="bwBtn">北 望</button>
+    <div class="bw-cap" id="bwCap">淮水以北，是洪适回不去的中原。</div>
+    <div class="q finalq">他日中原复为王土则志古之士可以按图而求之</div>
+    <div class="src" style="display:block;font-size:12px;color:rgba(232,228,220,.45);margin-top:6px">天下碑录卷尾，洪适识语</div>
+  </div>
+  <p style="margin-top:26px"><small>录里说邉韶碑是蔡邕写的，如今亡了；钟繇碑断折、字迹磨灭；马融的墓碣也磨灭将尽。录里的「今」，是一千年前的某个宋朝。</small></p>
+</section>
+
+<!-- 尾屏 -->
+<footer class="coda" id="coda">
+  <div class="endline">石亡而文存</div>
+  <div class="seal" id="codaSeal">考隶精博</div>
+  <div class="coda-line" id="codaLine">洪适抄下去的那个下午，碑还站在这行文字的背后。</div>
+  <div class="footmeta">
+    文本来源：殆知阁简体库史藏〈隶释〉，南宋洪适撰，二十七卷，
+    <a href="https://github.com/rongyiwei/daizhige">github.com/rongyiwei/daizhige</a><br>
+    页面引文已逐字比对库内文件核验（去标点、异体归一）；白话转述经反向扫描核对，未搬用库本成句。<br>
+    碑毁于嘉靖三十四年关中大地震、宋拓四本名目等节点为后世金石学通说，系本书成书以后之事。<br>
+    古籍所言祠祀、祥瑞、名物皆受时代局限，仅供阅读参考，不代表今日认识。
+  </div>
+</footer>
+
+<script>
+/* ---------- 捶拓 ---------- */
+(function(){
+  var btn=document.getElementById('rubBtn'),stele=document.getElementById('stele'),
+      bar=document.getElementById('rubBar'),p=0,timer=null,done=false;
+  function stop(){clearInterval(timer);timer=null;}
+  function start(){
+    if(done)return;
+    if(timer)return;
+    timer=setInterval(function(){
+      p=Math.min(100,p+2);
+      bar.style.width=p+'%';
+      if(p>=100){stop();done=true;stele.classList.add('rubbed');}
+    },36);
+  }
+  btn.addEventListener('pointerdown',start);
+  ['pointerup','pointerleave','pointercancel'].forEach(function(e){btn.addEventListener(e,stop);});
+  btn.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter')start();});
+  btn.addEventListener('keyup',stop);
+})();
+
+/* ---------- 对读台 ---------- */
+(function(){
+  var qb=document.querySelectorAll('#qb .qv');
+  var panels=[
+    {t:'郦道元',s:'水经注 · 北魏',qs:[0],
+     n:'路过时借《汉书》地理志记了一句：敷水往北，经过集灵宫。他关心的是水，碑是顺手的路标。'},
+    {t:'欧阳修',s:'集古录 · 治平元年',qs:[1,2],
+     n:'录文之后他得意地记了一句：集灵宫这座建筑，别的书里都查不到，全靠这块碑。卷尾署着他治平元年落笔的日期。'},
+    {t:'赵明诚',s:'金石录 · 南宋初',qs:[3],
+     n:'赵明诚翻出《汉书》地理志与《水经注》，指出集灵宫别书也见；但存仙殿与望仙门两座殿门的名字，确实只有此碑有。公允，但殿与门到底是欧公先看见的。'},
+    {t:'洪适',s:'隶释 · 乾道二年',qs:[4],
+     n:'洪适不满足于录文与议论，把碑文逐字摹写，阙字注阙，别体注今字，连「郭香察书」这样的悬案也考在下面。四库馆臣给出的考语，把它推为历代碑刻著录之最。'}
+  ];
+  var tabs=document.getElementById('dtTabs'),panel=document.getElementById('dtPanel');
+  function show(i){
+    var p=panels[i],html='<h4>'+p.t+'<span>'+p.s+'</span></h4>';
+    p.qs.forEach(function(k){
+      html+='<div class="q">'+qb[k].textContent+'<span class="src">'+p.t+' 原文</span></div>';
+    });
+    html+='<p>'+p.n+'</p>';
+    panel.innerHTML=html;
+    tabs.querySelectorAll('button').forEach(function(b,j){b.classList.toggle('on',j===i);});
+  }
+  tabs.addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;show(+b.dataset.p);
+  });
+  show(0);
+})();
+
+/* ---------- 时间带 ---------- */
+(function(){
+  var nodes=[
+    {y:'东汉 · 延熹四年（161）',t:'袁逢修碑',d:'华山旧碑字迹漫漶，太守<b>袁逢</b>照经传重写祀典，立石纪事。'},
+    {y:'延熹八年（165）',t:'孙璆刻成',d:'袁逢调离，继任者<b>孙璆</b>接手完成，时在延熹八年夏初，郭香察书。'},
+    {y:'唐 · 建中四年（783）',t:'徐浩见之',d:'书家<b>徐浩</b>《古迹记》著录此碑，与蔡邕石经并称旷绝。'},
+    {y:'宋 · 治平元年（1064）',t:'欧阳修录之',d:'<b>欧阳修</b>《集古录》录其文，考出集灵宫之名仅见于此。'},
+    {y:'乾道二年（1166）',t:'洪适释之',d:'<b>洪适</b>《隶释》成书，碑文逐字写定，考订疏于碑下。'},
+    {y:'明 · 嘉靖三十四年（1555）',t:'原石毁',d:'关中大地震，<b>碑石毁</b>，三百年间摩挲它的手，从此再无一人。',c:1},
+    {y:'今',t:'拓本四存',d:'原石不存，宋拓<b>长垣、华阴、四明、顺德</b>四本传世，碑文赖《隶释》可按。'}
+  ];
+  var row=document.getElementById('tlRow'),det=document.getElementById('tlDetail');
+  nodes.forEach(function(n,i){
+    var d=document.createElement('div');
+    d.className='tl-node'+(n.c?' cracked':'');
+    d.innerHTML='<div class="yr">'+n.y+'</div><div class="tt">'+n.t+'</div>';
+    d.addEventListener('click',function(){
+      row.querySelectorAll('.tl-node').forEach(function(x){x.classList.remove('on');});
+      d.classList.add('on');det.innerHTML='<b>'+n.y+'</b>　'+n.d;
+    });
+    row.appendChild(d);
+  });
+  det.innerHTML='<b>点节点看这块碑的一千四百年</b>　延熹八年刻成的那个四月，谁也不知道它在等什么。';
+
+  var leaves=document.querySelectorAll('#leafRow .leaf'),
+      note=document.getElementById('leafNote'),
+      info=[
+        '长垣本：清代藏于长垣王氏，后归端方，今在日本，为四本中拓墨最精、存字最多者。',
+        '华阴本：曾长期藏于华阴当地，乾隆间入内府著录，今藏北京故宫博物院。',
+        '四明本：全张整幅裱装，保留碑的原大旧貌，今藏香港中文大学文物馆。',
+        '顺德本：清季藏于顺德李氏，残存半截，其后下落诸说不一，弥足珍贵。'
+      ];
+  leaves.forEach(function(l,i){
+    l.addEventListener('click',function(){
+      leaves.forEach(function(x){x.classList.remove('lit');});
+      l.classList.add('lit');note.textContent=info[i];
+    });
+  });
+})();
+
+/* ---------- 考订签 ---------- */
+document.querySelectorAll('.kao-card').forEach(function(c){
+  c.addEventListener('click',function(){c.classList.toggle('open');});
+});
+
+/* ---------- 数题名 ---------- */
+(function(){
+  var btn=document.getElementById('countBtn'),res=document.getElementById('countRes'),n=0;
+  btn.addEventListener('click',function(){
+    n++;
+    if(n===1){
+      res.innerHTML='洪适数过了：<b>342</b> 人。其中磨灭不可见的，三十余字。';
+      btn.textContent='再看一眼洪适怎么读这串名字';
+    }else{
+      res.innerHTML='他把「阿某」认作刻工替无名者硬添的字，乡里妇人以阿字挈姓，是同一种叫法。';
+      btn.disabled=true;
+    }
+  });
+})();
+
+/* ---------- 北望 ---------- */
+(function(){
+  var btn=document.getElementById('bwBtn'),
+      st=document.querySelectorAll('.bw-stele'),
+      cap=document.getElementById('bwCap'),
+      lines=[
+        '邉韶碑，立在开封城外，蔡邕书丹，录称今亡。',
+        '钟繇碑，立在尉氏县地界，录称断折、字迹磨灭。',
+        '袁良碑，立在太康县地界，石牛庙与墓下两说并存。',
+        '马融的墓碣，立在什邡，录称字迹磨灭，如今已亡。',
+        '唐公房碑，在兴元府，一人得道举家升天的故事原产地。'
+      ],i=0,started=false;
+  btn.addEventListener('click',function(){
+    if(i<st.length){
+      st[i].classList.add('lit');
+      cap.textContent=lines[i];i++;
+      if(i>=st.length){btn.textContent='再望一次';}
+    }else{
+      st.forEach(function(s){s.classList.remove('lit');});i=0;
+      cap.textContent='淮水以北，是洪适回不去的中原。';btn.textContent='北 望';
+    }
+  });
+})();
+
+/* ---------- 补阙轨 ---------- */
+(function(){
+  var tiles=document.querySelectorAll('#rail .tile'),chars=['石','亡','文','存'],k=0;
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting&&k<tiles.length){
+        tiles[k].textContent=chars[k];tiles[k].classList.add('lit');k++;
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:.35});
+  ['s1','s2','s3','s4'].forEach(function(id){io.observe(document.getElementById(id));});
+})();
+
+/* ---------- 尾屏钤印 ---------- */
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        setTimeout(function(){
+          document.getElementById('codaSeal').classList.add('show');
+          document.getElementById('codaLine').textContent='他抄下的每一个字，后来都成了原石本身。';
+        },600);
+        io.disconnect();
+      }
+    });
+  },{threshold:.5});
+  io.observe(document.getElementById('coda'));
+})();
+</script>
+</body>
+</html>
