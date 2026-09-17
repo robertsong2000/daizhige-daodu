@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>殆知阁导读：宋宝祐四年登科录</title>
+<style>
+:root{
+  --bg:#191917;
+  --paper:#e8e4dc;
+  --paper2:#ded8cc;
+  --gold:#c9963f;
+  --gold2:#e2b96b;
+  --gold-dim:#8a6c38;
+  --ink:#211d17;
+  --ink2:#59503e;
+  --seal:#c0453c;
+  --mist:rgba(232,228,220,.55);
+  --faint:rgba(232,228,220,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--paper);
+  font-family:"Songti SC","STSong","NSimSun","SimSun","Noto Serif CJK SC","Source Han Serif SC",serif;
+  font-size:17px;line-height:1.95;
+  overflow-x:hidden;
+}
+.mono{font-family:"Courier New","Songti SC",monospace}
+.q{color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding:0 24px}
+@media(max-width:640px){.wrap{padding:0 18px}}
+
+/* 通用收梢小字 */
+.note{font-size:13px;line-height:1.8;color:var(--dim,#8b8271)}
+.dark .note{color:rgba(232,228,220,.5)}
+.paper .note{color:#7d7361}
+
+/* 入场 */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.rv.on{opacity:1;transform:none}
+
+/* ============ 首屏：金榜 ============ */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;position:relative;padding:0 16px 48px}
+.rod{width:min(680px,92vw);height:10px;background:linear-gradient(180deg,#3a332a,#241f18);border-radius:5px;margin-top:0;position:relative;z-index:3;box-shadow:0 4px 14px rgba(0,0,0,.5)}
+.rod::before,.rod::after{content:"";position:absolute;top:2px;width:8px;height:6px;background:#57492f;border-radius:50%}
+.rod::before{left:14px}.rod::after{right:14px}
+.scroller{position:relative;width:min(560px,88vw);flex:1;display:flex;justify-content:center}
+.pscroll{
+  position:absolute;top:0;width:100%;
+  background:
+    repeating-linear-gradient(0deg,rgba(120,86,32,.14) 0 2px,transparent 2px 6px),
+    linear-gradient(180deg,#b9862f 0%,#c9963f 18%,#d3a44b 50%,#c9963f 82%,#b9862f 100%);
+  box-shadow:0 18px 44px rgba(0,0,0,.55),inset 0 0 60px rgba(60,38,8,.4);
+  height:16px;overflow:hidden;
+  transition:height 1.7s cubic-bezier(.2,.75,.25,1);
+  border-radius:0 0 4px 4px;
+}
+.pscroll::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 60% at 50% 0%,rgba(255,236,190,.25),transparent 60%)}
+.pscroll.open{height:min(78vh,660px)}
+.pinner{position:absolute;inset:0;display:flex;justify-content:center;align-items:flex-start;padding:34px 10px 20px}
+.ptitle{
+  writing-mode:vertical-rl;
+  font-size:clamp(34px,7vw,56px);letter-spacing:.24em;line-height:1.24;
+  color:#241a08;font-weight:700;
+  text-shadow:0 1px 0 rgba(255,232,180,.35);
+  white-space:nowrap;
+}
+.psub{
+  writing-mode:vertical-rl;margin:0 0 0 clamp(10px,3vw,26px);
+  font-size:clamp(14px,2.6vw,18px);letter-spacing:.5em;color:rgba(36,26,8,.78);
+  border-right:1px solid rgba(36,26,8,.4);padding-right:14px;
+}
+.pseal{
+  position:absolute;right:clamp(6px,4vw,30px);bottom:26px;
+  width:92px;height:92px;border:3px solid var(--seal);border-radius:50%;
+  color:var(--seal);display:flex;align-items:center;justify-content:center;
+  font-size:24px;letter-spacing:2px;font-weight:700;line-height:1.25;
+  writing-mode:vertical-rl;
+  transform:rotate(8deg) scale(0);opacity:.85;
+  background:rgba(232,228,220,.06);
+}
+.pseal.thud{animation:thud .5s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes thud{to{transform:rotate(8deg) scale(1)}}
+.unroll{
+  margin-top:26px;padding:10px 34px;font-size:15px;letter-spacing:6px;
+  background:none;border:1px solid rgba(201,150,63,.75);color:var(--gold2);
+  cursor:pointer;font-family:inherit;border-radius:2px;transition:.3s;
+}
+.unroll:hover{background:rgba(201,150,63,.14)}
+.hero-foot{margin-top:auto;padding-top:26px;text-align:center}
+.eyebrow{font-size:13px;letter-spacing:4px;color:rgba(232,228,220,.48)}
+.htitle{font-size:15px;letter-spacing:3px;color:var(--gold2);margin-top:10px}
+.hero-meta{font-size:13px;color:rgba(232,228,220,.45);margin-top:14px;line-height:2}
+.totop{position:fixed;right:16px;bottom:16px;z-index:50;font-size:12px;letter-spacing:2px;color:rgba(232,228,220,.55);text-decoration:none;border:1px solid var(--faint);padding:6px 12px;border-radius:2px;background:rgba(25,25,23,.8);transition:.3s}
+.totop:hover{color:var(--gold2);border-color:rgba(201,150,63,.6)}
+
+/* ============ 深色通栏小标 ============ */
+.kick{font-size:13px;letter-spacing:5px;color:var(--gold-dim);margin-bottom:14px}
+.dark .kick{color:rgba(201,150,63,.8)}
+.paper .kick{color:#a0762c}
+
+/* ============ 策问 ============ */
+.dark{background:var(--bg);color:var(--paper)}
+.sec{padding:96px 0}
+.sec-h{font-size:clamp(26px,4.6vw,38px);letter-spacing:6px;font-weight:700;margin-bottom:8px}
+.dark .sec-h{color:var(--paper)}
+.lead{max-width:640px;margin:18px 0 8px}
+.tiwen{
+  margin:44px 0 10px;padding:36px clamp(20px,5vw,54px);
+  border:1px solid rgba(201,150,63,.5);position:relative;
+  background:linear-gradient(160deg,rgba(201,150,63,.10),rgba(201,150,63,.02));
+}
+.tiwen::before{content:"策";position:absolute;top:-16px;left:26px;background:var(--bg);padding:0 10px;color:var(--gold);font-size:15px;letter-spacing:2px}
+.q-big{font-size:clamp(21px,3.6vw,29px);line-height:2.1;letter-spacing:2px;color:var(--gold2)}
+.q-mid{font-size:clamp(17px,2.6vw,21px);line-height:2.1;letter-spacing:1px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.chip{border:1px solid rgba(201,150,63,.4);color:rgba(232,228,220,.8);font-size:13px;letter-spacing:3px;padding:5px 14px;border-radius:2px}
+.pair{display:flex;gap:22px;flex-wrap:wrap;margin-top:34px}
+.pair .pq{flex:1 1 200px;border-top:1px solid rgba(201,150,63,.45);padding-top:14px;font-size:17px;letter-spacing:2px;color:var(--gold2)}
+.pair .pl{font-size:12px;letter-spacing:3px;color:rgba(232,228,220,.42);margin-top:6px}
+
+/* ============ 对策（纸面） ============ */
+.paper{background:var(--paper);color:var(--ink)}
+.paper .sec-h{color:var(--ink)}
+.paper .lead{color:var(--ink2)}
+.paper .q-mid{color:#33291a}
+.huan{display:flex;justify-content:center;margin:52px 0 12px}
+.hring{position:relative;width:min(340px,78vw);height:min(340px,78vw)}
+.hring .core{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(84px,20vw,128px);color:var(--gold);font-weight:700;letter-spacing:0;
+  text-shadow:0 2px 0 rgba(0,0,0,.06);
+}
+.orbit{position:absolute;inset:0;animation:spin 40s linear infinite}
+.orbit span{position:absolute;left:50%;top:50%;font-size:15px;letter-spacing:4px;color:var(--ink2);white-space:nowrap}
+.o1{transform:rotate(0deg) translateY(calc(min(340px,78vw)/-2 - 2px)) }
+.o2{transform:rotate(72deg) translateY(calc(min(340px,78vw)/-2 - 2px))}
+.o3{transform:rotate(144deg) translateY(calc(min(340px,78vw)/-2 - 2px))}
+.o4{transform:rotate(216deg) translateY(calc(min(340px,78vw)/-2 - 2px))}
+.o5{transform:rotate(288deg) translateY(calc(min(340px,78vw)/-2 - 2px))}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hcap{text-align:center;font-size:13px;letter-spacing:4px;color:#8b7f66;margin-bottom:44px}
+.qcard{
+  border-left:3px solid var(--gold);background:rgba(255,255,255,.42);
+  padding:20px 26px;margin:20px 0;box-shadow:0 2px 10px rgba(60,45,15,.08);
+}
+.qcard .src{font-size:12px;letter-spacing:3px;color:#a0762c;margin-top:10px}
+.judge{
+  margin-top:46px;border:1px solid rgba(160,118,44,.5);padding:26px clamp(18px,4vw,40px);
+  background:rgba(255,255,255,.35);
+}
+.judge-h{font-size:13px;letter-spacing:4px;color:#a0762c;margin-bottom:12px}
+.judge .q-mid{color:#33291a}
+
+/* ============ 民困五叠 ============ */
+.min{background:var(--paper2)}
+.stack{margin-top:44px}
+.strp{
+  border-left:3px solid var(--gold);padding:14px 20px;margin:10px 0;
+  background:rgba(255,255,255,.5);font-size:clamp(16px,2.7vw,20px);letter-spacing:1px;color:#332a1a;
+}
+.strp:nth-child(1){margin-left:0}
+.strp:nth-child(2){margin-left:clamp(0px,4vw,44px)}
+.strp:nth-child(3){margin-left:clamp(0px,8vw,88px)}
+.strp:nth-child(4){margin-left:clamp(0px,12vw,132px)}
+.strp:nth-child(5){margin-left:clamp(0px,16vw,176px)}
+.cry{
+  margin-top:34px;font-size:clamp(24px,5vw,38px);letter-spacing:6px;color:var(--seal);
+  font-weight:700;text-align:center;
+}
+
+/* ============ 唱名日程（黄签） ============ */
+.tags{display:flex;flex-wrap:wrap;gap:26px 22px;margin-top:48px;justify-content:center}
+.tag{
+  width:172px;background:linear-gradient(180deg,#d9b761,#c9963f 60%,#b78a34);
+  color:#2c1f08;padding:20px 16px 16px;position:relative;
+  box-shadow:0 10px 22px rgba(0,0,0,.4);transition:transform .35s;
+  border-radius:0 0 3px 3px;
+}
+.tag::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:#191917;box-shadow:0 0 0 2px #8a6c38}
+.tag::after{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:rgba(25,25,23,.28)}
+.tag:hover{transform:translateY(-8px)}
+.tag .d{font-size:13px;letter-spacing:3px;color:#5c440e;border-bottom:1px dashed rgba(44,31,8,.4);padding-bottom:8px;margin-bottom:10px;text-align:center}
+.tag .q{display:block;font-size:14.5px;line-height:1.85;color:#2c1f08}
+
+/* ============ 诗与同年帖 ============ */
+.poems{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin:44px 0 10px}
+.poem{border:1px solid rgba(160,118,44,.5);background:rgba(255,255,255,.4);padding:24px 22px}
+.poem .ph{font-size:13px;letter-spacing:4px;color:#a0762c;margin-bottom:14px}
+.poem .q{font-size:18px;letter-spacing:2px;line-height:2.2;color:#33291a;display:block}
+.poem .pv{writing-mode:vertical-rl;font-size:13px;color:#8b7f66;height:110px;margin-left:12px;letter-spacing:3px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;margin-top:48px}
+.tcard{perspective:1200px;height:300px;cursor:pointer}
+.tin{position:relative;width:100%;height:100%;transition:transform .8s cubic-bezier(.3,.8,.3,1);transform-style:preserve-3d}
+.tcard.flip .tin{transform:rotateY(180deg)}
+.face{
+  position:absolute;inset:0;backface-visibility:hidden;border:1px solid rgba(89,80,62,.45);
+  background:rgba(255,255,255,.55);padding:24px 20px;display:flex;flex-direction:column;
+}
+.face.back{transform:rotateY(180deg);background:#22201b;color:var(--paper);border-color:rgba(201,150,63,.5)}
+.tname{font-size:30px;letter-spacing:6px;font-weight:700;color:var(--ink)}
+.face.back .tname{color:var(--gold2)}
+.trank{margin-top:14px;font-size:15px;letter-spacing:1px;color:#33291a;line-height:2}
+.face.back .trank{color:rgba(232,228,220,.85)}
+.ttag{margin-top:auto;font-size:12px;letter-spacing:3px;color:#a0762c}
+.face.back .ttag{color:rgba(201,150,63,.85)}
+.fbadge{display:inline-block;font-size:11px;letter-spacing:2px;border:1px solid rgba(201,150,63,.55);color:var(--gold2);padding:2px 8px;border-radius:2px;margin-bottom:12px}
+.hint{font-size:12px;letter-spacing:3px;color:#a0762c;text-align:center;margin-top:16px}
+
+/* ============ 阙卷 ============ */
+.que{background:#141412}
+.que .lead{color:rgba(232,228,220,.72)}
+.artifact{
+  margin:30px 0;font-size:13.5px;letter-spacing:1px;color:rgba(201,150,63,.85);
+  border:1px dashed rgba(201,150,63,.45);display:inline-block;padding:10px 18px;background:rgba(201,150,63,.06);
+}
+.wall{margin-top:44px;border:1px solid var(--faint);padding:clamp(16px,3vw,30px);position:relative;background:rgba(232,228,220,.03)}
+.wlabels{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.wlab{border:1px solid rgba(201,150,63,.5);color:var(--gold2);font-size:13px;letter-spacing:4px;padding:4px 14px}
+.ghosts{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.ghost{height:56px;border:1px dashed rgba(232,228,220,.22);display:flex;align-items:center;justify-content:center;color:rgba(232,228,220,.25);font-size:16px;letter-spacing:2px;transition:.4s}
+.ghost.lit{border-color:rgba(201,150,63,.75);color:rgba(201,150,63,.9);background:rgba(201,150,63,.07)}
+.wcount{margin-top:22px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.wnum{font-size:clamp(30px,6vw,46px);color:var(--gold2);letter-spacing:2px}
+.wtotal{font-size:14px;letter-spacing:3px;color:rgba(232,228,220,.5)}
+.wsay{margin-top:10px;font-size:14px;color:rgba(232,228,220,.55);letter-spacing:1px}
+
+/* ============ 尾屏 ============ */
+.coda{padding:110px 0 60px;text-align:center;position:relative}
+.coda .vq{
+  writing-mode:vertical-rl;margin:0 auto;height:340px;
+  font-size:clamp(20px,3.6vw,27px);letter-spacing:10px;color:var(--gold2);line-height:2.4;
+}
+.coda .seal2{
+  width:84px;height:84px;border:3px solid var(--seal);border-radius:50%;margin:38px auto 0;
+  display:flex;align-items:center;justify-content:center;color:var(--seal);
+  writing-mode:vertical-rl;font-size:21px;letter-spacing:3px;font-weight:700;transform:rotate(-6deg);opacity:.9;
+}
+.coda .backline{margin-top:34px;font-size:13px;letter-spacing:4px;color:rgba(232,228,220,.4)}
+
+/* ============ 页脚 ============ */
+footer{border-top:1px solid var(--faint);padding:44px 0 70px;background:#141412}
+.frow{display:flex;gap:18px;margin:14px 0;align-items:flex-start}
+.frow .fk{flex:0 0 72px;font-size:12px;letter-spacing:4px;color:var(--gold-dim);padding-top:3px}
+.frow .fv{font-size:13px;line-height:2;color:rgba(232,228,220,.55);letter-spacing:.5px}
+.frow .fv a{color:rgba(201,150,63,.85);text-decoration:none;border-bottom:1px dotted rgba(201,150,63,.5)}
+
+@media(max-width:640px){
+  .sec{padding:70px 0}
+  .tag{width:46%}
+  .tcard{height:320px}
+  .coda .vq{height:300px}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 金榜 ================= -->
+<header class="hero" id="top">
+  <div class="rod"></div>
+  <div class="scroller">
+    <div class="pscroll" id="pscroll">
+      <div class="pinner">
+        <div class="pseal" id="pseal">亲擢第一</div>
+        <span class="psub"><span class="q" data-qid="q-bang">宋文天祥榜进士题名也</span></span>
+        <h1 class="ptitle"><span class="q" data-qid="q-title">宝祐四年登科录</span></h1>
+      </div>
+    </div>
+  </div>
+  <button class="unroll" id="btnUnroll" type="button">按 此 揭 榜</button>
+  <div class="hero-foot">
+    <div class="eyebrow">殆知阁导读之三百七十一 · 唱名卷</div>
+    <div class="htitle"><span class="q" data-qid="q-bang">宋文天祥榜进士题名也</span></div>
+    <p class="hero-meta">南宋理宗宝祐四年，公元一二五六年殿试的唱名底册<br>
+    四库本四卷，库内去空白约一万四千字</p>
+  </div>
+</header>
+<a class="totop" href="mulu.html">总目</a>
+
+<!-- ================= 策问 ================= -->
+<section class="dark sec">
+  <div class="wrap">
+    <div class="kick rv">卷一 · 五月初八，策题下发</div>
+    <h2 class="sec-h rv">一道皇帝的自问</h2>
+    <p class="lead rv" style="color:rgba(232,228,220,.72)">这不是寻常的策问，更像皇帝写给自己的检讨书：在位三十三年，勤政半生，为什么天下还是这副样子。题目开篇从天地大道讲起，落点却在人间的账上。</p>
+    <div class="tiwen rv">
+      <p class="q-big"><span class="q" data-qid="q-dayuan">「葢闻道之大原出于天，超乎无极太极之妙，而实不离乎日用事物之常」</span></p>
+      <p class="q-mid rv" style="margin-top:22px;color:rgba(232,228,220,.9)"><span class="q" data-qid="q-guayi">「朕以寡昧，临政愿治于兹，厯年志愈勤，道愈逺，窅乎其未眹也，朕心疑焉」</span></p>
+    </div>
+    <p class="lead rv" style="margin-top:30px;color:rgba(232,228,220,.72)">检讨落到八桩心事上，桩桩都在滴血：</p>
+    <p class="q-mid rv" style="color:rgba(232,228,220,.9)"><span class="q" data-qid="q-bashi">「天变洊臻，民生寡遂，人才乏而士习浮，国计殚而兵力弱，苻泽未清，边备孔棘，岂道不足以御世欤」</span></p>
+    <div class="chips rv">
+      <span class="chip">天变</span><span class="chip">民生</span><span class="chip">人才</span><span class="chip">士习</span><span class="chip">国计</span><span class="chip">兵力</span><span class="chip">边备</span>
+    </div>
+    <div class="pair rv">
+      <div><div class="pq"><span class="q" data-qid="q-buxizheng">「不息则乆，乆则证」</span></div><div class="pl">策问引《中庸》</div></div>
+      <div><div class="pq"><span class="q" data-qid="q-biantong">「变则通，通则乆」</span></div><div class="pl">策问引《易》</div></div>
+    </div>
+    <p class="note rv" style="margin-top:30px">从发题到唱名，只有十六天。</p>
+  </div>
+</section>
+
+<!-- ================= 对策 ================= -->
+<section class="paper sec">
+  <div class="wrap">
+    <div class="kick rv">卷四 · 廷对策</div>
+    <h2 class="sec-h rv">一个字的答案</h2>
+    <p class="lead rv">六百零一人里，有一个来自江西吉州的二十一岁考生（生年系库外通说）。他的对策九千余字，通篇只翻来覆去讲一个词。</p>
+    <div class="huan rv">
+      <div class="hring">
+        <div class="orbit">
+          <span class="o1">不息则乆</span><span class="o2">乆则证</span><span class="o3">变则通</span><span class="o4">通则乆</span><span class="o5">圣人之心</span>
+        </div>
+        <div class="core">不息</div>
+      </div>
+    </div>
+    <div class="hcap rv">对策的题眼，答成了一只转个不停的环</div>
+    <div class="qcard rv">
+      <p class="q-mid"><span class="q" data-qid="q-tongyi">「臣闻天地与道同一不息，圣人之心与天地同一不息」</span></p>
+      <div class="src">对策开宗</div>
+    </div>
+    <div class="qcard rv">
+      <p class="q-mid"><span class="q" data-qid="q-yibuxi">「何莫非道，所谓道者，一不息而已矣」</span></p>
+      <div class="src">立论收束</div>
+    </div>
+    <div class="qcard rv">
+      <p class="q-mid"><span class="q" data-qid="q-hengqu">「为天地立心，为生民立命，为徃圣继绝学，为万世开太平，亦不过以一不息之心充之」</span></p>
+      <div class="src">他顺手搬来了横渠四句（库外通说：语出张载）</div>
+    </div>
+    <div class="qcard rv">
+      <p class="q-mid"><span class="q" data-qid="q-shuizhong">「道之在天下，犹水之在地中，地中无徃而非水，天下无徃而非道；水一不息之流也，道一不息之用也」</span></p>
+      <div class="src">道的比喻</div>
+    </div>
+
+    <div class="judge rv">
+      <div class="judge-h">阅卷的人</div>
+      <p class="q-mid"><span class="q" data-qid="q-yinglin-guan">「覆考检防试巻官　从事郎改添差两浙西路安抚司干办公事王应麟」</span></p>
+      <p class="note" style="margin-top:12px">卷一官名单里这一行，是他在那次殿试里的差事（库本作「检防」，照录）。提要引宋史说，他读卷之后奏上的考语只有两句：</p>
+      <p class="q-mid" style="margin-top:14px"><span class="q" data-qid="q-yinglin-yu">「古谊若龟鉴，忠肝如铁石，敢为国家得人贺也」</span></p>
+      <p class="note" style="margin-top:12px">巧的是，同一甲第九名就是他的亲弟弟，提要顺手记了一笔：<span class="q" data-qid="q-yingfeng">「其一甲第九人为王应鳯，即应麟之弟，盖当时法制犹疎，未有回避之例耳」</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 民困 ================= -->
+<section class="paper min sec">
+  <div class="wrap">
+    <div class="kick rv">对策中段 · 策里的火气</div>
+    <h2 class="sec-h rv">民困四叠</h2>
+    <p class="lead rv">答到民生一节，这个二十一岁人的措辞陡然换了口气，四个「而民困」一叠压过一叠，最后一句几乎是喊出来的。</p>
+    <div class="stack">
+      <div class="strp rv"><span class="q" data-qid="q-mk1">「自琼林大盈积于私贮而民困</span></div>
+      <div class="strp rv"><span class="q" data-qid="q-mk2">自建章通天频于营缮而民困</span></div>
+      <div class="strp rv"><span class="q" data-qid="q-mk3">自献助叠见于豪家巨室而民困</span></div>
+      <div class="strp rv"><span class="q" data-qid="q-mk4">自和籴不间于闾阎下户而民困</span></div>
+      <div class="strp rv"><span class="q" data-qid="q-mk5">自所至贪官暴吏视吾民如家鸡圏豕，惟所咀啖而民困」</span></div>
+    </div>
+    <div class="cry rv"><span class="q" data-qid="q-mk6">呜呼，东南民力竭矣</span></div>
+  </div>
+</section>
+
+<!-- ================= 唱名日程 ================= -->
+<section class="dark sec">
+  <div class="wrap">
+    <div class="kick rv">卷一 · 仪式清单</div>
+    <h2 class="sec-h rv">十六天后，唱名</h2>
+    <p class="lead rv" style="color:rgba(232,228,220,.72)">集英殿上唱名之后，仪式一路做到七月：谢阙、谒庙、赐宴、拜黄甲、叙同年，赏钱一笔笔记到贯。新进士的功名，落成一张张纸面手续。八枚黄签，按日子挂在这里。</p>
+    <div class="tags">
+      <div class="tag rv"><div class="d">五月廿四</div><span class="q" data-qid="q-changming">五月二十四日，皇帝御集英殿唱名，赐进士文天祥以下及第、出身、同出身共六百一人，当日赴期集所</span></div>
+      <div class="tag rv"><div class="d">六月初一</div><span class="q" data-qid="q-qijiqian">六月一日，凖勅依格赐进士期集钱一千二百贯文，小录钱五百贯文</span></div>
+      <div class="tag rv"><div class="d">六月初七</div><span class="q" data-qid="q-xieque">六月七日，谢阙</span></div>
+      <div class="tag rv"><div class="d">六月十三</div><span class="q" data-qid="q-yexian">六月十三日，谒谢先圣先师兖国公邹国公</span></div>
+      <div class="tag rv"><div class="d">六月廿九</div><span class="q" data-qid="q-wenxi">六月二十九日，赐闻喜宴，同日降赐御诗于礼部贡院</span></div>
+      <div class="tag rv"><div class="d">七月初一</div><span class="q" data-qid="q-zaiji">七月一日，凖省劄为期集所支用不敷，再给降题名小录钱一千七百贯文</span></div>
+      <div class="tag rv"><div class="d">七月初四</div><span class="q" data-qid="q-baihuangjia">七月四日，拜黄甲，同日叙同年于礼部贡院</span></div>
+      <div class="tag rv"><div class="d">七月廿五</div><span class="q" data-qid="q-limbei">七月二十五日，立题名碑石于礼部贡院</span></div>
+    </div>
+    <p class="note rv" style="margin-top:34px">宴钱花超了，行在再补一笔；新进士的同录（题名小录）刻碑上石，一套流程走到才算完。</p>
+  </div>
+</section>
+
+<!-- ================= 诗与同年帖 ================= -->
+<section class="paper sec">
+  <div class="wrap">
+    <div class="kick rv">卷四卷尾 · 两首诗</div>
+    <h2 class="sec-h rv">君臣的一唱一和</h2>
+    <div class="poems">
+      <div class="poem rv">
+        <div class="ph">皇帝赐诗（卷末）</div>
+        <span class="q" data-qid="q-yuzhishi">「得贤功用真无敌，能为皇家立太平」</span>
+      </div>
+      <div class="poem rv">
+        <div class="ph">状元恭谢诗</div>
+        <span class="q" data-qid="q-gongxie1">「但坚圣志持常乆，须使生民见泰通」</span>
+        <span class="q" data-qid="q-baoen">「报恩惟有厉清忠」</span>
+        <p class="note" style="margin-top:12px">恭谢诗另有一句「第一胪」起头，其下一字在库本里未编码（当为「传」），该句避引。</p>
+      </div>
+    </div>
+    <p class="lead rv" style="margin-top:26px">赐诗与答诗里，君臣都还相信时间站在自己这边。这一榜被后世记住的，还有另外两个名字。</p>
+    <p class="q-mid rv" style="margin:20px 0 6px;color:#33291a"><span class="q" data-qid="q-sanjie">「其第二甲第二人为谢枋得，第二十七人为陆秀夫，与天祥并以孤忠劲节，搘拄纲常，数百年后睹其姓名，尚凛然生敬」</span></p>
+    <p class="note rv">四库馆臣的按语。三张同年帖，正面是榜上的位置，翻过去是二十多年后的结局（结局均系库外通说）。</p>
+    <div class="cards">
+      <div class="tcard rv" data-flip>
+        <div class="tin">
+          <div class="face">
+            <div class="tname">文天祥</div>
+            <div class="trank"><span class="q" data-qid="q-qinju">「天祥本列第五，理宗亲擢第一」</span></div>
+            <div class="ttag">吉州庐陵 · 第一甲</div>
+          </div>
+          <div class="face back">
+            <span class="fbadge">库外通说</span>
+            <div class="trank">状元及第当年，父亲病故，回乡守丧，到己未年才得授官。后官至右丞相，兵败被俘，囚于燕京三年余，四十七岁上就义于柴市，留下《正气歌》。</div>
+            <div class="ttag">一二八三 · 柴市</div>
+          </div>
+        </div>
+      </div>
+      <div class="tcard rv" data-flip>
+        <div class="tin">
+          <div class="face">
+            <div class="tname">谢枋得</div>
+            <div class="trank"><span class="q" data-qid="q-erjia2">「第二甲第二人」</span></div>
+            <div class="ttag">信州弋阳 · 第二甲</div>
+          </div>
+          <div class="face back">
+            <span class="fbadge">库外通说</span>
+            <div class="trank">宋亡后隐居卖卜，元廷征召不赴，被强押北上，居悯忠寺，见祭文痛国，绝食而死。</div>
+            <div class="ttag">一二八九 · 燕京</div>
+          </div>
+        </div>
+      </div>
+      <div class="tcard rv" data-flip>
+        <div class="tin">
+          <div class="face">
+            <div class="tname">陆秀夫</div>
+            <div class="trank">第二甲第二十七人（提要句式省「第二甲」，据上下文补足）</div>
+            <div class="ttag">楚州盐城 · 第二甲</div>
+          </div>
+          <div class="face back">
+            <span class="fbadge">库外通说</span>
+            <div class="trank">临安陷落后负帝海上，左丞相任上随行朝流亡。崖山军溃，负八岁末帝蹈海，南宋亡，他四十四岁。</div>
+            <div class="ttag">一二七九 · 崖山</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hint rv">点 卡 片，翻 看 结 局</div>
+    <p class="note rv" style="margin-top:22px">文天祥那张的背面还差一句交代，提要里有，是登第当年的事：<span class="q" data-qid="q-dingfuyou">「天祥是年登第后即丁父忧归，至己未始授籖书宁海节度判官防公事」</span></p>
+  </div>
+</section>
+
+<!-- ================= 阙卷 ================= -->
+<section class="que sec">
+  <div class="wrap">
+    <div class="kick rv">卷二卷三 · 名录正文</div>
+    <h2 class="sec-h rv">六百零一个空位</h2>
+    <p class="lead rv">按提要的体例，此录中间两卷是名录正文：每位进士的本贯、三代、治何经、年甲，一行一行抄下来。而在这份数字库本里，那两卷没有落成文字，只剩一行行章节占位符。</p>
+    <div class="artifact rv mono"><span class="q" data-qid="q-artifact">&lt;史部,传记类,总录之属,宋宝祐四年登科录,卷二&gt;</span></div>
+    <p class="lead rv">库里只剩这样一行字。刻本纸面上本来有六百零一个名字；数字化那一程，他们没有跟过来。四库馆臣拿到刻本时，名单就已经缺人：</p>
+    <p class="q-mid rv" style="margin-top:14px;color:rgba(232,228,220,.85)"><span class="q" data-qid="q-tuo24">「五甲第一百八十九人朱防以下，原本脱去二十四人」</span></p>
+    <div class="wall rv" id="wall">
+      <div class="wlabels"><span class="wlab">卷二</span><span class="wlab">卷三</span></div>
+      <div class="ghosts" id="ghosts"></div>
+      <div class="wcount">
+        <span class="wnum" id="wnum">0</span>
+        <span class="wtotal">／ 六百零一人</span>
+      </div>
+      <div class="wsay">唱名点到谁，谁的名字都没有落下来。提要只好替这卷书收一句：</div>
+      <p class="q-mid rv" style="margin-top:12px;color:rgba(232,228,220,.85)"><span class="q" data-qid="q-shenwu">「此录流传不朽，若有神物呵防者，岂偶然哉」</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 尾屏 ================= -->
+<section class="dark coda">
+  <div class="wrap">
+    <div class="vq rv"><span class="q" data-qid="q-linran">数百年后睹其姓名，尚凛然生敬</span></div>
+    <div class="seal2 rv">凛然生敬</div>
+    <div class="backline rv">碑石立在礼部贡院的那天，是七月廿五</div>
+  </div>
+</section>
+
+<!-- ================= 页脚 ================= -->
+<footer>
+  <div class="wrap">
+    <div class="frow">
+      <div class="fk">来　源</div>
+      <div class="fv">文本来源：殆知阁简体库史藏传记类〈<span class="q" data-qid="q-fulltitle">宋宝祐四年登科录</span>〉（四库本四卷，库内去空白约一万四千字）。简体库仓库：github.com/rongyiwei/daizhige 。导读系列总目见 <a href="mulu.html">mulu.html</a>，本篇为第三百七十一篇，属唱名卷（卷二百五十）。</div>
+    </div>
+    <div class="frow">
+      <div class="fk">核　验</div>
+      <div class="fv">页面引文均经脚本与库内文件去标点、异体归一后逐字比对通过；白话转述经反向扫描核对，未搬用库本成句。库本电子文以「防」代「策」，「御试防题」即「御试策题」，「朱防」即「朱策」；「乆」「逺」「巻」「葢」等俗形悉照录；恭谢诗「第一胪」下有一字未编码（当为「传」），该句避引。占位符一行系库内文件原样。</div>
+    </div>
+    <div class="frow">
+      <div class="fk">局　限</div>
+      <div class="fv">本书是科举时代的功名底册，以科第论人高下。文中三杰结局、文氏生年里甲、王应麟著述及「横渠四句」出处等均系库外通说，已在页面分别注明；唱名、期集、赐宴、立碑诸制为宋制记录，与今日制度无涉，阅读时请留意其时代语境。</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var ps=document.getElementById('pscroll');
+  var seal=document.getElementById('pseal');
+  var btn=document.getElementById('btnUnroll');
+  var opened=false;
+  function open(){
+    if(opened)return;opened=true;
+    ps.classList.add('open');
+    btn.style.opacity='0';btn.style.pointerEvents='none';
+    setTimeout(function(){seal.classList.add('thud');},1500);
+  }
+  btn.addEventListener('click',open);
+  setTimeout(function(){ if(!opened){/* 不自动开，留给读者 */} },400);
+
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);} });
+  },{threshold:.14});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+
+  document.querySelectorAll('[data-flip]').forEach(function(c){
+    c.addEventListener('click',function(){c.classList.toggle('flip');});
+  });
+
+  /* 空位墙 */
+  var ghosts=document.getElementById('ghosts');
+  var wnum=document.getElementById('wnum');
+  var slots=[];
+  for(var i=0;i<24;i++){
+    var d=document.createElement('div');d.className='ghost';d.textContent='□';
+    ghosts.appendChild(d);slots.push(d);
+  }
+  var started=false;
+  function run(){
+    if(started)return;started=true;
+    var target=601,cur=0,t0=null,dur=6000;
+    function step(ts){
+      if(!t0)t0=ts;
+      var p=Math.min(1,(ts-t0)/dur);
+      var eased=1-Math.pow(1-p,2.2);
+      cur=Math.floor(eased*target);
+      wnum.textContent=cur;
+      var lit=Math.floor(p*slots.length);
+      for(var j=0;j<lit;j++){slots[j].classList.add('lit');}
+      if(p<1){requestAnimationFrame(step);}
+    }
+    requestAnimationFrame(step);
+  }
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){run();io2.unobserve(e.target);} });
+  },{threshold:.3});
+  var wall=document.getElementById('wall');
+  if(wall){io2.observe(wall);}
+})();
+</script>
+</body>
+</html>
