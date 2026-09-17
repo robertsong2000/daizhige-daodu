@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>泰西水法 · 决渠</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #262521;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --zhu: #5f9270; --zhu-dim: #3e6150; --zhu-deep: #2c473a;
+    --seal: #c0453c; --jue: #c9963f;
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  a { color: var(--zhu); }
+
+  /* ===== 左缘水位计 ===== */
+  .gauge { position: fixed; left: 0; top: 0; bottom: 0; width: 56px; z-index: 40; pointer-events: none; }
+  .gauge .tube { position: absolute; left: 22px; top: 14vh; bottom: 12vh; width: 10px;
+    border: 1px solid rgba(232,228,220,0.18); border-radius: 5px; background: rgba(25,25,23,0.5); overflow: hidden; }
+  .gauge .water { position: absolute; left: 0; right: 0; bottom: 0; height: 0%;
+    background: linear-gradient(to top, var(--zhu-deep), var(--zhu)); transition: height .25s ease; }
+  .gauge .bub { position: absolute; left: 2px; width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(232,228,220,0.5); bottom: -6px; animation: bub 3.4s linear infinite; }
+  .gauge .bub:nth-child(2) { animation-delay: 1.1s; left: 4px; width: 3px; height: 3px; }
+  .gauge .bub:nth-child(3) { animation-delay: 2.3s; }
+  @keyframes bub { 0% { transform: translateY(0); opacity: 0 } 12% { opacity: .8 } 100% { transform: translateY(-46vh); opacity: 0 } }
+  .gauge .marks { position: absolute; left: 38px; top: 14vh; bottom: 12vh; display: flex; flex-direction: column; justify-content: space-between; }
+  .gauge .mk { writing-mode: vertical-rl; text-orientation: upright; font-size: 11px; letter-spacing: .3em; color: var(--paper-faint); }
+  .gauge .mk.on { color: var(--zhu); }
+  @media (max-width: 980px) { .gauge { display: none; } }
+
+  /* ===== 首屏 ===== */
+  .hero { position: relative; min-height: 92dvh; display: grid; grid-template-columns: 1.25fr .75fr;
+    align-items: center; gap: 20px; padding: 64px 84px 56px 108px; overflow: hidden; }
+  .kick { grid-column: 1 / -1; font-size: 13px; letter-spacing: .4em; color: var(--paper-faint); margin-bottom: 6px; }
+  .kick b { color: var(--zhu); font-weight: 400; }
+  .wheelbox { position: relative; height: 460px; }
+  .wheelbox svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .wheel { transform-box: fill-box; transform-origin: center; }
+  .hero.turned .wheel { animation: spin 2.6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .dropgo { opacity: 0; }
+  .hero.dripping .dropgo { animation: drip 0.9s ease-in infinite; }
+  @keyframes drip { 0% { transform: translateY(0); opacity: 0 } 18% { opacity: 1 } 100% { transform: translateY(34px); opacity: 0 } }
+  .heroside { position: relative; height: 420px; display: flex; align-items: center; gap: 20px; justify-content: flex-end; }
+  .bt { writing-mode: vertical-rl; text-orientation: upright; display: flex; gap: 4px; height: 300px; }
+  .bt .bzi { font-size: 62px; font-weight: 700; letter-spacing: 0; color: rgba(232,228,220,0.16);
+    transition: color .8s ease, text-shadow .8s ease; }
+  .bt .bzi.lit { color: var(--paper); text-shadow: 0 0 30px rgba(95,146,112,0.55); }
+  .who { writing-mode: vertical-rl; text-orientation: upright; font-size: 13px; letter-spacing: .32em;
+    color: var(--paper-dim); white-space: nowrap; height: 300px; }
+  .yseal { width: 44px; height: 84px; background: var(--seal); color: #f3ece1; writing-mode: vertical-rl;
+    text-orientation: upright; display: grid; place-items: center; font-size: 20px; letter-spacing: .22em;
+    opacity: 0; transform: rotate(-8deg) scale(1.55); transition: all .5s cubic-bezier(.2,1.4,.4,1);
+    box-shadow: 0 3px 12px rgba(0,0,0,.4); align-self: flex-end; }
+  .hero.turned .yseal { opacity: .92; transform: rotate(-8deg) scale(1); }
+  .hint { grid-column: 1 / -1; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 4px; }
+  .btn { cursor: pointer; background: none; border: 1px solid var(--zhu-dim); color: var(--zhu);
+    font-family: inherit; font-size: 15px; letter-spacing: .22em; padding: 10px 26px; transition: all .25s; }
+  .btn:hover { background: rgba(95,146,112,.12); border-color: var(--zhu); }
+  .hint .say { color: var(--paper-dim); font-size: 14px; }
+  .hero.turned .hint .btn { opacity: .4; pointer-events: none; }
+  .lead { grid-column: 1 / -1; max-width: 36em; color: var(--paper-dim); font-size: 15.5px; }
+  .lead .qv { color: var(--paper); }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; padding: 52px 26px 40px 30px; }
+    .wheelbox { height: 320px; } .heroside { height: 300px; justify-content: flex-start; }
+    .bt .bzi { font-size: 44px; } .bt, .who { height: 220px; }
+  }
+
+  /* ===== 通用节 ===== */
+  .sec { max-width: 880px; margin: 0 auto; padding: 84px 28px 26px; }
+  .sechead { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+  .sechead .num { width: 34px; height: 34px; border: 1px solid var(--zhu-dim); color: var(--zhu);
+    display: grid; place-items: center; font-size: 15px; flex: none; border-radius: 3px;
+    background: linear-gradient(135deg, rgba(95,146,112,.14), transparent); }
+  .sechead h2 { font-size: 25px; font-weight: 600; letter-spacing: .1em; }
+  .sec .kx { font-size: 12px; letter-spacing: .3em; color: var(--paper-faint); margin-bottom: 22px; padding-left: 50px; }
+  .prose { color: var(--paper-dim); font-size: 15.5px; max-width: 40em; }
+  .prose + .prose { margin-top: 14px; }
+  .prose .qv { color: var(--paper); }
+  .q { display: block; margin: 16px 0; padding: 14px 18px; border-left: 2px solid var(--zhu-dim);
+    background: var(--ink-2); color: var(--paper); font-size: 15px; line-height: 2; }
+  .q .src { display: block; margin-top: 6px; font-size: 12px; color: var(--paper-faint); letter-spacing: .12em; }
+  .rv { opacity: 0; transform: translateY(22px); transition: all .8s ease; }
+  .rv.in { opacity: 1; transform: none; }
+
+  /* ===== 一 六签吊牌 ===== */
+  .pole { height: 14px; margin: 46px auto 0; max-width: 760px; border-radius: 7px;
+    background: linear-gradient(#3a382f, #26251f); box-shadow: 0 3px 10px rgba(0,0,0,.5); }
+  .tags { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; max-width: 820px; margin: 0 auto; padding: 0 10px; }
+  .tag { transform-origin: top center; transform: rotate(-7deg); }
+  .tag:nth-child(2n) { transform: rotate(6deg); }
+  .tag .card { background: #2a2823; border: 1px solid rgba(95,146,112,0); border-top: none;
+    padding: 16px 10px 14px; text-align: center; transition: all .6s ease; min-height: 172px;
+    display: flex; flex-direction: column; gap: 8px; }
+  .tag .vno { font-size: 12px; color: var(--paper-faint); letter-spacing: .2em; }
+  .tag .nm { writing-mode: vertical-rl; text-orientation: upright; font-size: 21px; font-weight: 700;
+    letter-spacing: .12em; margin: 2px auto 0; white-space: nowrap; color: var(--paper-dim); transition: color .6s; }
+  .tag .note { font-size: 12px; color: var(--paper-faint); margin-top: auto; line-height: 1.6; }
+  .tag.lit .card { border-color: rgba(95,146,112,.55); background: linear-gradient(#253028, #20241f); }
+  .tag.lit .nm { color: var(--paper); }
+  .tag.lit .vno { color: var(--zhu); }
+  .tagslit { text-align: center; color: var(--paper-faint); font-size: 13px; margin-top: 26px; }
+  @media (max-width: 760px) { .tags { grid-template-columns: repeat(3, 1fr); } .tag .card { min-height: 150px; } }
+
+  /* ===== 二 双器 ===== */
+  .duoqi { display: grid; grid-template-columns: 1.15fr .85fr; gap: 26px; margin: 36px 0 8px; }
+  .machine { background: var(--ink-2); border: 1px solid var(--hairline); padding: 22px; }
+  .machine h3 { font-size: 18px; letter-spacing: .12em; margin-bottom: 4px; }
+  .machine .mtag { font-size: 12px; color: var(--zhu); letter-spacing: .18em; margin-bottom: 12px; }
+  .machine svg { width: 100%; height: auto; display: block; }
+  .screwline { stroke-dasharray: 2000; stroke-dashoffset: 2000; transition: stroke-dashoffset 2.8s ease; }
+  .machine.turned .screwline { stroke-dashoffset: 0; }
+  .pumpbar { height: 6px; margin-top: 16px; background: #1b1a17; border-radius: 3px; overflow: hidden; }
+  .pumpbar i { display: block; height: 100%; width: 0; background: var(--zhu); transition: width 1s ease; }
+  .machine.turned .pumpbar i { width: 78%; }
+  .mfoot { margin-top: 12px; font-size: 13.5px; color: var(--paper-dim); }
+  @media (max-width: 760px) { .duoqi { grid-template-columns: 1fr; } }
+
+  /* ===== 三 九砖 ===== */
+  .wall { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 36px 0; max-width: 640px; }
+  .brick { background: #2b2925; border: 1px solid rgba(232,228,220,0.1); cursor: pointer;
+    padding: 14px 16px; display: flex; align-items: baseline; gap: 12px; transition: all .35s; user-select: none; }
+  .brick:hover { border-color: var(--zhu-dim); }
+  .brick .zi { font-size: 24px; font-weight: 700; color: var(--paper-dim); transition: color .35s; }
+  .brick .ex { font-size: 12.5px; color: var(--paper-faint); line-height: 1.55; }
+  .brick.lit { background: #232c25; border-color: rgba(95,146,112,.5); }
+  .brick.lit .zi { color: var(--zhu); }
+  .brick.lit .ex { color: var(--paper-dim); }
+  .wallcount { color: var(--paper-faint); font-size: 13px; margin-top: -14px; margin-bottom: 26px; }
+  @media (max-width: 640px) { .wall { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ===== 四 对质与雪花 ===== */
+  .balance { display: grid; grid-template-columns: 1fr auto 1fr; gap: 22px; align-items: stretch; margin: 36px 0; }
+  .pan { background: var(--ink-2); border: 1px solid var(--hairline); padding: 20px 18px; }
+  .pan h4 { font-size: 16px; letter-spacing: .16em; color: var(--zhu); margin-bottom: 14px; text-align: center; }
+  .pan .stack { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+  .pan .lv { width: 150px; text-align: center; font-size: 17px; font-weight: 600; letter-spacing: .3em;
+    padding: 7px 0; background: rgba(232,228,220,0.05); border: 1px solid rgba(232,228,220,0.12); }
+  .pan .lv small { display: block; font-size: 11px; font-weight: 400; letter-spacing: .1em; color: var(--paper-faint); }
+  .pan .cap { margin-top: 14px; font-size: 12.5px; color: var(--paper-faint); text-align: center; line-height: 1.7; }
+  .vs { align-self: center; writing-mode: vertical-rl; text-orientation: upright; font-size: 15px;
+    letter-spacing: .3em; color: var(--seal); border-left: 1px solid var(--hairline); border-right: 1px solid var(--hairline); padding: 8px 6px; }
+  @media (max-width: 760px) { .balance { grid-template-columns: 1fr; } .vs { writing-mode: horizontal-tb; padding: 6px 0; text-align: center; } }
+
+  .snowbox { background: var(--ink-2); border: 1px solid var(--hairline); padding: 24px; margin: 34px 0 10px; }
+  .snowbox svg { width: 100%; max-width: 460px; display: block; margin: 0 auto; }
+  .snowops { display: flex; gap: 12px; justify-content: center; margin-top: 14px; }
+  .snowops .btn { font-size: 14px; padding: 8px 20px; }
+  .snowops .btn.on { background: rgba(95,146,112,.16); border-color: var(--zhu); }
+  .snowcap { text-align: center; color: var(--paper-faint); font-size: 13px; margin-top: 12px; }
+  .g6 { opacity: 0; transition: opacity .6s ease; }
+  .g8 { opacity: 0; transition: opacity .6s ease; }
+  .snowbox.show6 .g6, .snowbox.show8 .g8 { opacity: 1; }
+
+  /* ===== 五 五签 ===== */
+  .slips5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 36px 0 10px; }
+  .slip { background: #2a2823; border-top: 4px solid var(--zhu-dim); padding: 14px 12px 12px; transition: all .35s; }
+  .slip:hover { transform: translateY(-4px); }
+  .slip .mz { font-size: 15px; font-weight: 700; letter-spacing: .1em; margin-bottom: 6px; color: var(--paper); }
+  .slip .ds { font-size: 12.5px; color: var(--paper-dim); line-height: 1.65; }
+  .slip .no5 { font-size: 11px; color: var(--paper-faint); letter-spacing: .2em; margin-bottom: 4px; }
+  @media (max-width: 760px) { .slips5 { grid-template-columns: repeat(2, 1fr); } }
+
+  .carecards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 30px 0 8px; }
+  .care { position: relative; background: var(--ink-2); border: 1px solid var(--hairline); padding: 18px 16px;
+    cursor: pointer; transition: all .35s; min-height: 190px; }
+  .care:hover { border-color: var(--zhu-dim); }
+  .care h5 { font-size: 15px; color: var(--zhu); letter-spacing: .14em; margin-bottom: 8px; }
+  .care .face { font-size: 13.5px; color: var(--paper-dim); }
+  .care .back { position: absolute; inset: 0; padding: 16px; background: #1d1c1a; font-size: 13px;
+    color: var(--paper-dim); opacity: 0; transform: rotateY(90deg); transition: all .45s ease; }
+  .care.fl .back { opacity: 1; transform: none; }
+  .care.fl .face { visibility: hidden; }
+  .care .tip { position: absolute; right: 10px; bottom: 6px; font-size: 10.5px; color: var(--paper-faint); letter-spacing: .16em; }
+  @media (max-width: 760px) { .carecards { grid-template-columns: 1fr; } .care { min-height: 0; } }
+
+  /* ===== 六 蒸馏 ===== */
+  .stillbox { display: grid; grid-template-columns: 1.1fr .9fr; gap: 26px; align-items: start; margin: 36px 0 8px; }
+  .still { background: var(--ink-2); border: 1px solid var(--hairline); padding: 20px; }
+  .still svg { width: 100%; height: auto; display: block; }
+  .firep { opacity: 0; transform-box: fill-box; transform-origin: bottom center; }
+  .still.burn .firep { opacity: 1; animation: flick 0.7s ease-in-out infinite alternate; }
+  @keyframes flick { from { transform: scaleY(1) } to { transform: scaleY(1.35) translateY(-2px) } }
+  .vapor { opacity: 0; }
+  .still.burn .vapor { animation: vap 2.2s linear infinite; }
+  @keyframes vap { 0% { opacity: 0; transform: translate(0, 0) } 25% { opacity: .8 } 60% { opacity: .5; transform: translate(6px, -26px) } 100% { opacity: 0; transform: translate(12px, -52px) } }
+  .runlet { stroke-dasharray: 90; stroke-dashoffset: 90; transition: stroke-dashoffset 1.6s ease .8s; }
+  .still.burn .runlet { stroke-dashoffset: 0; }
+  .fill2 { transform-box: fill-box; transform-origin: bottom; transform: scaleY(0); transition: transform 2.4s ease 1.4s; }
+  .still.burn .fill2 { transform: scaleY(1); }
+  .dewdone { opacity: 0; transition: opacity .8s ease 3.4s; color: var(--zhu); font-size: 13px; letter-spacing: .2em; }
+  .still.burn .dewdone { opacity: 1; }
+  .stillnote { font-size: 13.5px; color: var(--paper-dim); }
+  @media (max-width: 760px) { .stillbox { grid-template-columns: 1fr; } }
+
+  /* ===== 尾屏 ===== */
+  footer.coda { position: relative; padding: 120px 28px 90px; text-align: center; overflow: hidden; }
+  footer.coda .zline { display: flex; justify-content: center; gap: 22px; align-items: flex-start; min-height: 240px; }
+  footer.coda .zbig { writing-mode: vertical-rl; text-orientation: upright; font-size: 40px; font-weight: 700;
+    letter-spacing: .3em; color: var(--paper); }
+  footer.coda .zseal { width: 46px; height: 90px; background: var(--seal); color: #f3ece1; writing-mode: vertical-rl;
+    text-orientation: upright; display: grid; place-items: center; font-size: 20px; letter-spacing: .2em;
+    transform: rotate(-7deg); box-shadow: 0 3px 12px rgba(0,0,0,.4); }
+  footer.coda .zm { max-width: 30em; margin: 30px auto 0; color: var(--paper-dim); font-size: 14.5px; text-align: left; }
+  footer.coda .boundary { max-width: 34em; margin: 26px auto 0; color: var(--paper-faint); font-size: 12.5px;
+    text-align: left; border-top: 1px solid var(--hairline); padding-top: 18px; line-height: 1.9; }
+
+  footer.plain { max-width: 880px; margin: 0 auto; padding: 30px 28px 60px; border-top: 1px solid var(--hairline);
+    color: var(--paper-faint); font-size: 13px; line-height: 2; }
+  footer.plain .xiaoji { margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="gauge">
+  <div class="tube">
+    <div class="water" id="gwater"></div>
+    <span class="bub"></span><span class="bub"></span><span class="bub"></span>
+  </div>
+  <div class="marks">
+    <span class="mk" data-at="0">溪</span>
+    <span class="mk" data-at="0.5">渠</span>
+    <span class="mk" data-at="0.97">山</span>
+  </div>
+</div>
+
+<header class="hero" id="hero">
+  <div class="kick">殆知阁导读第<b id="tkno">〇〇〇</b>篇 · 子藏农家</div>
+  <div class="wheelbox">
+    <svg viewBox="0 0 560 460" fill="none" aria-hidden="true">
+      <defs>
+        <radialGradient id="wg" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stop-color="#2b3a30"/><stop offset="100%" stop-color="#1e1d1a"/>
+        </radialGradient>
+      </defs>
+      <!-- 斜置轮 -->
+      <g transform="translate(250,215) rotate(-16)">
+        <g class="wheel" id="wheel">
+          <circle r="152" fill="url(#wg)" stroke="#3e6150" stroke-width="3"/>
+          <circle r="118" fill="none" stroke="#334c3e" stroke-width="1.5"/>
+          <circle r="30" fill="#191917" stroke="#5f9270" stroke-width="2"/>
+          <g stroke="#3a5a48" stroke-width="3">
+            <line x1="0" y1="-30" x2="0" y2="-146"/><line x1="0" y1="30" x2="0" y2="146"/>
+            <line x1="-30" y1="0" x2="-146" y2="0"/><line x1="30" y1="0" x2="146" y2="0"/>
+            <line x1="-22" y1="-22" x2="-104" y2="-104"/><line x1="22" y1="22" x2="104" y2="104"/>
+            <line x1="-22" y1="22" x2="-104" y2="104"/><line x1="22" y1="-22" x2="104" y2="-104"/>
+          </g>
+          <!-- 螺旋管（阿基米德螺线三圈） -->
+          <path id="screwp" fill="none" stroke="#26332b" stroke-width="13" stroke-linecap="round"
+            d="M0,0 m6,0 a6,6 0 1,1 -12,0 a12,12 0 1,1 24,0 a18,18 0 1,1 -36,0 a24,24 0 1,1 48,0 a30,30 0 1,1 -60,0 a36,36 0 1,1 72,0 a42,42 0 1,1 -84,0 a48,48 0 1,1 96,0 a54,54 0 1,1 -108,0 a60,60 0 1,1 120,0 a66,66 0 1,1 -132,0 a72,72 0 1,1 144,0 a78,78 0 1,1 -156,0 a84,84 0 1,1 168,0 a90,90 0 1,1 -180,0 a96,96 0 1,1 192,0 a102,102 0 1,1 -204,0 a108,108 0 1,1 216,0 a114,114 0 1,1 -228,0 a120,120 0 1,1 240,0 a126,126 0 1,1 -252,0 a132,132 0 1,1 264,0 a138,138 0 1,1 -276,0"/>
+          <path fill="none" stroke="#5f9270" stroke-width="3.5" stroke-linecap="round" class="screwline"
+            d="M0,0 m6,0 a6,6 0 1,1 -12,0 a12,12 0 1,1 24,0 a18,18 0 1,1 -36,0 a24,24 0 1,1 48,0 a30,30 0 1,1 -60,0 a36,36 0 1,1 72,0 a42,42 0 1,1 -84,0 a48,48 0 1,1 96,0 a54,54 0 1,1 -108,0 a60,60 0 1,1 120,0 a66,66 0 1,1 -132,0 a72,72 0 1,1 144,0 a78,78 0 1,1 -156,0 a84,84 0 1,1 168,0 a90,90 0 1,1 -180,0 a96,96 0 1,1 192,0 a102,102 0 1,1 -204,0 a108,108 0 1,1 216,0 a114,114 0 1,1 -228,0 a120,120 0 1,1 240,0 a126,126 0 1,1 -252,0 a132,132 0 1,1 264,0 a138,138 0 1,1 -276,0"/>
+          <!-- 爬升的水珠 -->
+          <circle id="climb" r="5" fill="#8fc7a3" opacity="0"/>
+          <!-- 轮缘出水斗 -->
+          <g transform="translate(0,-152)">
+            <path d="M-14,0 L14,0 L20,16 L-20,16 Z" fill="#3e6150"/>
+          </g>
+        </g>
+      </g>
+      <!-- 顶槽与滴口 -->
+      <g transform="translate(452,66)">
+        <rect x="-26" y="-16" width="52" height="18" rx="4" fill="#2b2925" stroke="#3e6150"/>
+        <circle class="dropgo" cx="0" cy="10" r="3.5" fill="#8fc7a3"/>
+      </g>
+      <g transform="translate(452,96)">
+        <rect x="-34" y="0" width="68" height="34" rx="5" fill="#22211d" stroke="#3e6150"/>
+        <rect id="topfill" x="-30" y="30" width="60" height="0" rx="3" fill="#2c473a"/>
+      </g>
+      <text x="250" y="436" text-anchor="middle" font-size="13" letter-spacing="6" fill="#6e6a61">龙尾之轮 · 水随轮转</text>
+    </svg>
+  </div>
+  <div class="heroside">
+    <div class="bt" aria-label="泰西水法">
+      <span class="bzi">泰</span><span class="bzi">西</span><span class="bzi">水</span><span class="bzi">法</span>
+    </div>
+    <div class="who">意大利 · 熊三拔</div>
+    <div class="yseal">决渠</div>
+  </div>
+  <div class="hint">
+    <button class="btn" id="btnHero">转轮引水</button>
+    <span class="say">点一下，轮转水升，水到书名自亮</span>
+  </div>
+  <p class="lead">万历四十年，北京。一位跟着利玛窦学汉语的意大利教士，把欧罗巴的提水机械、蓄水之法、乃至他对「水」这种东西的全部理解，编成了六卷图册交给徐光启。四库馆臣后来给过一个务实的评语：<span class="qv">竒器之中水法尤切于民用</span>。这本书不谈神学，只谈一件事：怎么把低处的水，弄到高处去。</p>
+</header>
+
+<!-- 一 · 器谱 -->
+<section class="sec" id="s1">
+  <div class="sechead"><span class="num">一</span><h2>六卷器谱</h2></div>
+  <p class="kx">全书分六卷　前两卷造器　中间蓄水找水　末尾讲理与图</p>
+  <p class="prose rv">这不是一本坐而论道的书。它的主体是一份份「器物说明书」：每一具机械从选材、尺寸、零件到用法，一样一样交代，像一间工坊交底。六卷各管一摊，挂在同一根横杆上。</p>
+  <div class="pole"></div>
+  <div class="tags" id="tags">
+    <div class="tag"><div class="card"><div class="vno">卷一</div><div class="nm">龙尾车</div><div class="note">河水篇：螺旋转轮，把江河之水一级级抬上高田</div></div></div>
+    <div class="tag"><div class="card"><div class="vno">卷二</div><div class="nm">玉衡车</div><div class="note">井水篇：双筒活塞，轮流上水，专给高原井灌</div></div></div>
+    <div class="tag"><div class="card"><div class="vno">卷二附</div><div class="nm">恒升车</div><div class="note">井水又一种：水升不断，另有双升、专筒两式</div></div></div>
+    <div class="tag"><div class="card"><div class="vno">卷三</div><div class="nm">水库记</div><div class="note">蓄水篇：挖池抹灰加顶盖，把雨雪存起来</div></div></div>
+    <div class="tag"><div class="card"><div class="vno">卷四</div><div class="nm">附余</div><div class="note">找水篇：望气盘试寻泉脉，打井验水，兼收水药</div></div></div>
+    <div class="tag"><div class="card"><div class="vno">卷五</div><div class="nm">或问</div><div class="note">水理篇：问答体讲水的道理，卷六收诸器图式</div></div></div>
+  </div>
+  <p class="tagslit" id="tagslit">签牌尚在暗处 · 往下读便一块块点亮</p>
+</section>
+
+<!-- 二 · 双器 -->
+<section class="sec" id="s2">
+  <div class="sechead"><span class="num">二</span><h2>两台机器</h2></div>
+  <p class="kx">龙尾车提河水　玉衡车抽井泉　都是「用水之力」而非人力肩挑</p>
+  <p class="prose rv">先看河边的这一台。它是一根斜插进水里的空管，管里盘着螺旋叶，轮子一转，水就被螺旋「嚼」着往上送。这正是西方古已有之的阿基米德螺旋泵。熊三拔替它算过账：</p>
+  <blockquote class="q rv">今作龙尾车物省而不烦用力少而得水多其大者一器所出若决渠焉累接而上可使在山<span class="src">〈卷一 · 龙尾车记〉</span></blockquote>
+  <p class="prose rv">他还替它辩护过一句：传统翻车靠人力踩，龙尾转起来以后，<span class="qv">入水不障水出水不帆风</span>，轴身自己不吃水的亏，也不吃风的亏，力气全用在提水上。</p>
+  <div class="duoqi">
+    <div class="machine rv" id="mach1">
+      <h3>龙尾车</h3>
+      <div class="mtag">螺旋提水 · 挈江河之水</div>
+      <svg viewBox="0 0 420 190" fill="none" aria-hidden="true">
+        <rect x="0" y="150" width="420" height="40" fill="#1e2a23"/>
+        <path d="M0,150 Q210,142 420,150" stroke="#3e6150" stroke-width="2"/>
+        <g transform="translate(60,150)">
+          <path d="M0,0 L260,-96" stroke="#4a463c" stroke-width="16" stroke-linecap="round"/>
+          <path d="M0,0 L260,-96" stroke="#26332b" stroke-width="9" stroke-linecap="round"/>
+          <path class="screwline" d="M0,0 L260,-96" stroke="#5f9270" stroke-width="3"/>
+        </g>
+        <circle cx="60" cy="150" r="17" fill="#191917" stroke="#5f9270" stroke-width="2"/>
+        <circle cx="320" cy="54" r="13" fill="#191917" stroke="#5f9270" stroke-width="2"/>
+        <path d="M320,44 L320,20" stroke="#3e6150" stroke-width="3"/>
+        <rect x="300" y="8" width="40" height="12" rx="3" fill="#2b2925" stroke="#3e6150"/>
+        <circle class="dropgo" cx="320" cy="26" r="3" fill="#8fc7a3"/>
+      </svg>
+      <div class="pumpbar"><i></i></div>
+      <p class="mfoot">水从下端入，沿螺道盘旋而上，大者出水如开闸，还能一级接一级，把水送上山。</p>
+    </div>
+    <div class="machine rv" id="mach2">
+      <h3>玉衡车</h3>
+      <div class="mtag">活塞双筒 · 挈井泉之水</div>
+      <svg viewBox="0 0 340 190" fill="none" aria-hidden="true">
+        <g transform="translate(90,120)">
+          <rect x="-22" y="-58" width="20" height="110" rx="4" fill="#26332b" stroke="#3e6150"/>
+          <rect x="2" y="-58" width="20" height="110" rx="4" fill="#26332b" stroke="#3e6150"/>
+          <rect x="-20" y="18" width="16" height="34" fill="#4a463c"/>
+          <rect x="4" y="2" width="16" height="50" fill="#4a463c"/>
+          <path d="M-12,18 L-12,-30" stroke="#8fc7a3" stroke-width="3"/>
+          <path d="M12,2 L12,-30" stroke="#8fc7a3" stroke-width="3"/>
+        </g>
+        <path d="M78,66 Q90,40 102,66" stroke="#3e6150" stroke-width="4" fill="none"/>
+        <path d="M114,52 Q90,26 66,52" stroke="#3e6150" stroke-width="4" fill="none"/>
+        <path d="M102,62 L150,62 L150,120" stroke="#3e6150" stroke-width="4" fill="none"/>
+        <path d="M150,120 Q170,150 210,150 L280,150" stroke="#3e6150" stroke-width="5"/>
+        <path d="M280,150 L280,96" stroke="#3e6150" stroke-width="5"/>
+        <rect x="262" y="60" width="36" height="36" rx="4" fill="#22211d" stroke="#3e6150"/>
+        <rect class="fill2" x="265" y="76" width="30" height="17" fill="#2c473a"/>
+        <circle cx="90" cy="120" r="46" fill="none" stroke="#334c3e" stroke-width="1.5" stroke-dasharray="4 5"/>
+        <text x="90" y="182" text-anchor="middle" font-size="12" letter-spacing="4" fill="#6e6a61">双筒交替 · 水出如趵突</text>
+      </svg>
+      <div class="pumpbar"><i style="transition-delay:.3s"></i></div>
+      <p class="mfoot">一杆横木压两根筒，这边吸那边吐，永不断流。井灌高原，<span class="qv">一人用之可当数人若以灌畦约省夫力五分之四</span>。</p>
+    </div>
+  </div>
+  <p class="prose rv">两台机器的关节，是几个不起眼的小零件：筒底一片会开合的铜舌，水进得来、回不去；壶里两片舌左右交替，水流便续而不断。玉衡车的井水出得急，书里给它找了个现成的比方：</p>
+  <blockquote class="q rv">玉衡者以衡挈柱其平如衡一升一降井水上出如趵突焉<span class="src">〈卷二 · 玉衡车记〉</span></blockquote>
+</section>
+
+<!-- 三 · 水库九事 -->
+<section class="sec" id="s3">
+  <div class="sechead"><span class="num">三</span><h2>水库九事</h2></div>
+  <p class="kx">造一座池　九道工序　点砖看活</p>
+  <p class="prose rv">第三卷忽然从机器转向土木：既然井泉靠不住，干脆把天上落下来的水存起来。书里给的理由很有生活气：欧洲山城的人把水当粮囤，<span class="qv">其人积水有如积谷谷防红腐水防漏渫</span>，囤粮怕霉，囤水怕漏，是同一种操心。筑池的章法拆成九件事，一块砖一道活：</p>
+  <div class="wall" id="wall">
+    <div class="brick"><span class="zi">具</span><span class="ex">备料：方石、砖、石灰、砂、瓦屑</span></div>
+    <div class="brick"><span class="zi">齐</span><span class="ex">配灰浆：灰砂瓦屑按分量和，越熟越牢</span></div>
+    <div class="brick"><span class="zi">凿</span><span class="ex">挖池：家池代积代用，野池化废为利</span></div>
+    <div class="brick"><span class="zi">筑</span><span class="ex">夯底砌墙：杵碪不厌其坚，灌浆不厌其满</span></div>
+    <div class="brick"><span class="zi">涂</span><span class="ex">抹面三遍：坚如石，密如脂，莹如镜</span></div>
+    <div class="brick"><span class="zi">盖</span><span class="ex">加顶：券穹斗穹盖穹，遮日头防脏水</span></div>
+    <div class="brick"><span class="zi">注</span><span class="ex">注水：先淀泥再入池，新水放过一个月才喝</span></div>
+    <div class="brick"><span class="zi">挹</span><span class="ex">取用：车上池梁，噏筩去池底的沉垢</span></div>
+    <div class="brick"><span class="zi">修</span><span class="ex">补漏：细石和灰牛乳调涂，缝隙自合</span></div>
+  </div>
+  <p class="wallcount" id="wallcount">已点 0 / 9 块</p>
+  <blockquote class="q rv">西方诸国因山为城者其人积水有如积谷谷防红腐水防漏渫其为计虑亦畧同之以故作为水库率令家有三年之畜虽遭大旱遇强敌莫我难焉<span class="src">〈卷三 · 水库记〉</span></blockquote>
+  <p class="prose rv">最妙的是一句闲笔：山城囤惯了陈水的人，<span class="qv">遇江河井泉之水犹鄙不肯尝也</span>，活水反倒嫌不干净。存水跟存粮一个理，陈的比新的金贵。这话是写给谁的，书里也点明了：北方凿井百里一泉，遇旱只能坐等，这一卷是请秦晋的君子们先看。</p>
+</section>
+
+<!-- 四 · 水理 -->
+<section class="sec" id="s4">
+  <div class="sechead"><span class="num">四</span><h2>水的道理</h2></div>
+  <p class="kx">第五卷或问 · 两种宇宙观在同一瓢水里碰头</p>
+  <p class="prose rv">卷五换了体裁，全是一问一答。问的人显然是中国士人，答的人按欧洲经院的老框架来。于是页面上出现了有趣的一幕：同一瓢水，两边各有一套「元素表」。</p>
+  <div class="balance rv">
+    <div class="pan">
+      <h4>四元行 · 或问所用</h4>
+      <div class="stack">
+        <div class="lv">火<small>最轻　在天</small></div>
+        <div class="lv">气<small>次轻　在水上</small></div>
+        <div class="lv">水<small>较轻　贴着地</small></div>
+        <div class="lv">土<small>至重　垫在最底</small></div>
+      </div>
+      <p class="cap">火气水土，越轻越往上，各自归位；水在本所，海水便是天下最低处的汇。</p>
+    </div>
+    <div class="vs">两表对质</div>
+    <div class="pan">
+      <h4>五行 · 问者所熟悉</h4>
+      <div class="stack">
+        <div class="lv">木<small></small></div>
+        <div class="lv">火<small></small></div>
+        <div class="lv">土<small></small></div>
+        <div class="lv">金<small></small></div>
+        <div class="lv">水<small></small></div>
+      </div>
+      <p class="cap">水火木金土，讲相生相克；土居当中，不垫底。多出的木与金，在四元行里没有位置。</p>
+    </div>
+  </div>
+  <p class="prose rv">照这套讲法，水本身没有味道，尝到的一切滋味都是外物掺进来的。所以验水头一条反而是求淡：</p>
+  <blockquote class="q rv">水元行也元行无味无味者真水凡味皆从外合之故试水以淡为主味佳者次之味恶为下<span class="src">〈卷四 · 试水美恶〉</span></blockquote>
+  <p class="prose rv">连潮汐也归到这套道理里：月亮是阴精，跟水是同类，同类相就，所以水面追着月亮隆起。书里问一句答一句，<span class="qv">月为阴精与水同物凡寰宇之内湿润阴寒皆月主之</span>。说法今天听来陌生，但「潮随月走」这个观察本身，古人早就抓到了。</p>
+
+  <div class="snowbox rv show6" id="snowbox">
+    <svg viewBox="0 0 480 360" fill="none" aria-hidden="true">
+      <circle cx="240" cy="180" r="52" fill="#26332b" stroke="#5f9270" stroke-width="2.5"/>
+      <g class="g6" id="g6" stroke="#8fc7a3"></g>
+      <g class="g8" id="g8" stroke="#c9963f"></g>
+      <text x="240" y="344" text-anchor="middle" font-size="13" letter-spacing="5" fill="#6e6a61" id="snowlab">圆滴抱团 · 天然六只围一只</text>
+    </svg>
+    <div class="snowops">
+      <button class="btn on" id="btn6">六围一</button>
+      <button class="btn" id="btn8">八围一</button>
+    </div>
+    <p class="snowcap">雨滴在空中各自成圆，落地成雪花时六瓣相拥。或问里给出的解释是一本几何账：<span class="qv">凡物方体相等聚成大方必以八围一圆体相等聚成大圆必以六围一此定理中之定数也</span>。圆的世界只能六只围一只，想八只围一只，请改用方的。</p>
+  </div>
+</section>
+
+<!-- 五 · 找水验水 -->
+<section class="sec" id="s5">
+  <div class="sechead"><span class="num">五</span><h2>找水与验水</h2></div>
+  <p class="kx">附余一卷　半部打井手册　半部水质标准</p>
+  <p class="prose rv">高原上想打井，先得猜水脉在哪。书里给的四招，招招带点巫术气，细看又全是观察：夜里蹲地窖看地气、铜盘抹油盖一夜收水汽、陶坯羊绒当吸湿纸、烧烟看它直不直。其中望气一法说得最玄也最实：</p>
+  <blockquote class="q rv">宜掘一地窖于天明辨色时人入窖以目切地望地面有气如烟腾腾上出者水气也气所出处水脉在其下<span class="src">〈卷四 · 气试〉</span></blockquote>
+  <p class="prose rv">水找着了，还要验好坏。五张签就是五种试法：</p>
+  <div class="slips5 rv">
+    <div class="slip"><div class="no5">其一</div><div class="mz">煮</div><div class="ds">煮开澄在白瓷里，碗底有沙土的是坏水；好水煮东西容易烂</div></div>
+    <div class="slip"><div class="no5">其二</div><div class="mz">日</div><div class="ds">对着日光看，水里有游丝浮气的差，清到底的好</div></div>
+    <div class="slip"><div class="no5">其三</div><div class="mz">味</div><div class="ds">淡的为贵，味好的次一等，怪味的垫底</div></div>
+    <div class="slip"><div class="no5">其四</div><div class="mz">称</div><div class="ds">同一种器皿轮着称，分量轻的赢</div></div>
+    <div class="slip"><div class="no5">其五</div><div class="mz">纸帛</div><div class="ds">白纸绢帛蘸水晾干，不留痕迹的是上等</div></div>
+  </div>
+  <p class="prose rv">验完还要养。井底压一层细石子，水就清而味美；再讲究些，往井里池里放几尾活物当清洁工：</p>
+  <blockquote class="q rv">畜之金鱼数头是食水虫或鲫鱼是食水垢<span class="src">〈卷三 · 注曰〉</span></blockquote>
+  <p class="prose rv">卷四又重提了一遍，说是井中养鱼，<span class="qv">能令水味美鱼食水虫及土垢故</span>。四百年后的人管这叫生物防污，那会儿的办法直白得多：让鱼替你上班。</p>
+  <div class="carecards">
+    <div class="care rv"><h5>震气 · 井里的隐形杀手</h5>
+      <div class="face">有些地脉里伏着气，人下井会九窍俱塞、闷绝而死。下探之前先吊一盏灯下去试。</div>
+      <div class="back">灯灭就是气未尽，等它散完再下。今天知道这是缺氧与可燃气，可四百年前的规程已经写成：<span class="qv">缒灯火下视之火不灭是气尽也</span>，并且警告遇气飒飒侵人要急起避之。这套「灯试」至今仍是下井作业的保命动作。</div>
+      <span class="tip">翻面</span></div>
+    <div class="care rv"><h5>灌田 · 忌正午</h5>
+      <div class="face">夏天浇地要赶早晚，正午的水浇下去如同泼开水，伤根。</div>
+      <div class="back"><span class="qv">如以热汤则伤其根故灌必早暮</span>。但书里补了一个例外：水稻不怕，反倒忌夜灌，因为夜里水太寒，容易生虫。同一条经验，旱作水作各有一套。</div>
+      <span class="tip">翻面</span></div>
+    <div class="care rv"><h5>羊绒 · 古代的湿度计</h5>
+      <div class="face">找不着陶坯时，拿一块羊绒替着当吸湿的物件。</div>
+      <div class="back">书里特意交代原理：羊绒本不吃潮，<span class="qv">得水气必足见也</span>，连它都湿透了，底下必有泉。一块羊毛，顶了后日湿度探头的班。</div>
+      <span class="tip">翻面</span></div>
+  </div>
+</section>
+
+<!-- 六 · 药露 -->
+<section class="sec" id="s6">
+  <div class="sechead"><span class="num">六</span><h2>一具蒸馏器</h2></div>
+  <p class="kx">水法附余末篇　温泉与药露　西方制药术的实物样本</p>
+  <p class="prose rv">卷四收在两样「能治病的水」上。温泉一段讲硫气入水，熏浴为主；药露一段则是一整页工艺流程：新鲜的花草果菜下锅，隔水蒸馏，凝出来的水就叫「露」。画的这具家伙，锅上扣一顶盔形的锡盖，盖顶蒙湿布降温，汽在盔壁上凝成水，顺壁汇进一圈槽，再从锡管斜斜引出来接瓶。</p>
+  <div class="stillbox">
+    <div class="still rv" id="still">
+      <svg viewBox="0 0 420 250" fill="none" aria-hidden="true">
+        <path class="firep" d="M150,206 q6,-16 0,-26 q10,8 8,26 Z" fill="#c9963f"/>
+        <path class="firep" d="M168,206 q8,-22 0,-34 q13,10 10,34 Z" fill="#c0453c"/>
+        <path class="firep" d="M186,206 q6,-14 0,-24 q9,7 7,24 Z" fill="#c9963f"/>
+        <path d="M120,206 L120,236 L316,236 L316,206" stroke="#3a382f" stroke-width="4" fill="none"/>
+        <path d="M150,206 L186,206" stroke="#1e1d1a" stroke-width="10"/>
+        <ellipse cx="218" cy="196" rx="86" ry="14" fill="#26332b" stroke="#5f9270" stroke-width="2"/>
+        <path d="M132,196 Q132,120 218,116 Q304,120 304,196" fill="rgba(95,146,112,0.10)" stroke="#5f9270" stroke-width="2.5"/>
+        <rect x="192" y="106" width="52" height="9" rx="4" fill="#3a5a48"/>
+        <rect x="200" y="98" width="36" height="8" rx="3" fill="#2c473a"/>
+        <path d="M304,150 L352,178" stroke="#4a463c" stroke-width="8" stroke-linecap="round"/>
+        <path class="runlet" d="M304,150 L352,178" stroke="#8fc7a3" stroke-width="3" stroke-linecap="round"/>
+        <rect x="342" y="176" width="40" height="52" rx="5" fill="#22211d" stroke="#3e6150"/>
+        <rect class="fill2" x="345" y="208" width="34" height="17" fill="#2c473a"/>
+        <circle class="vapor" cx="196" cy="180" r="4" fill="rgba(232,228,220,0.6)"/>
+        <circle class="vapor" cx="226" cy="176" r="5" fill="rgba(232,228,220,0.5)" style="animation-delay:.7s"/>
+        <circle class="vapor" cx="252" cy="182" r="3.5" fill="rgba(232,228,220,0.6)" style="animation-delay:1.3s"/>
+        <text x="218" y="88" text-anchor="middle" font-size="12" letter-spacing="4" fill="#6e6a61">盔盖蒙湿布 · 汽升遇冷化水</text>
+        <text x="362" y="244" text-anchor="middle" font-size="12" letter-spacing="3" fill="#8fc7a3" class="dewdone">露成</text>
+      </svg>
+      <div style="text-align:center; margin-top:10px"><button class="btn" id="btnStill">举火</button></div>
+    </div>
+    <div class="stillnote rv">
+      <p>为什么露比药本身好？书里拿人的消化打比方，饭食有三重加工，牙齿和脾胃各自替你「煮」过一遍；干药下肚，精华早耗了大半，全靠胃再干一遍重活。而露是药里最精的那一层，不必等身体加工：</p>
+      <blockquote class="q">今用诸水皆诸药之精华不待胃化脾传已成微妙裁下于咽即能流通宣越<span class="src">〈卷四 · 药露〉</span></blockquote>
+      <blockquote class="q">凡人饮食盖有三化一曰火化烹煮熟烂二曰口化细嚼缓咽三曰胃化蒸变传送<span class="src">〈卷四 · 药露〉</span></blockquote>
+      <p>火化、口化、胃化，这套三段论出自一位教士之口，写得像老中医的口吻；蒸馏器却是当时欧洲药铺里的家常设备。这半卷书等于把一间西方药房连图纸一起搬了过来。书末还交代，西方药肆大半卖露水，官府按时巡查，过期的露当众倒掉，写得颇有点让读者眼热的意思。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 尾屏 -->
+<footer class="coda" id="coda">
+  <div class="zline">
+    <div class="zbig"><span class="qv">累接而上可使在山</span></div>
+    <div class="zseal">决渠</div>
+  </div>
+  <p class="zm">书成四年后，作者病逝在回欧洲的申请途中；徐光启后来主持历局，还记得请这位老搭档的译笔做底子。那三台机器最终没有替换掉中国农村的翻车和辘轳，可这本书留下来了：它把「水」当成一门可以测量、可以计算、可以画图施工的学问搬进了中文世界。低处的水，从此在纸上先升到了高处。</p>
+  <p class="boundary">边界注：库本卷二作「玊衡车」与「玉衡车」互见，本页引文各照原文。「趵突」之喻、四元行之说、雪花六出之解，皆十七世纪欧洲经院自然哲学的框架，今天已有更准确的解释；试水五法、望气寻泉诸法亦受时代与观测条件所限，读者宜以历史眼光视之。卷六诸器图式库本未收，页内机械图形为示意重绘，非原书图样。</p>
+</footer>
+
+<footer class="plain">
+  <p>文本来源：殆知阁简体库子藏〈泰西水法〉（明熊三拔撰，六卷，去空白约二万三千字）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+  <p>页面引文均经脚本与库内文件去标点、异体归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。</p>
+  <p class="xiaoji">时代局限：本篇为古代文献导读，其中对水性与治水的理解、四元行学说及疗病之水诸说皆属其时代，请以历史眼光阅读。</p>
+</footer>
+
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)}, $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+  $('#tkno').textContent='三七七';
+
+  /* hero 引水 */
+  var hero=$('#hero'), played=false;
+  $('#btnHero').addEventListener('click', function(){
+    if(played) return; played=true;
+    hero.classList.add('turned');
+    var wheel=$('#wheel'), p=$('#screwp'), dot=$('#climb');
+    var L=p.getTotalLength(), t=0, turns=0;
+    var timer=setInterval(function(){
+      t+=0.012; turns+=0.012;
+      var u=(t%1);
+      var pt=p.getPointAtLength(L*u);
+      dot.setAttribute('cx',pt.x); dot.setAttribute('cy',pt.y);
+      dot.setAttribute('opacity', t<1?0.95:0);
+      if(turns>=1){
+        clearInterval(timer); dot.setAttribute('opacity',0);
+        hero.classList.add('dripping');
+        var tf=$('#topfill'), h=0;
+        var ti=setInterval(function(){
+          h+=1.2; tf.setAttribute('height',Math.min(h,30)); tf.setAttribute('y',30-Math.min(h,30));
+          if(h>=30){ clearInterval(ti);
+            setTimeout(function(){
+              hero.classList.remove('dripping');
+              var zis=$$('.bt .bzi'), i=0;
+              var zi=setInterval(function(){
+                zis[i].classList.add('lit'); i++;
+                if(i>=zis.length){ clearInterval(zi); $('.say').textContent='水到渠成 · 书名既出'; }
+              },340);
+            },300);
+          }
+        },40);
+      }
+    },30);
+  });
+
+  /* 水位计 */
+  function rail(){
+    var h=document.documentElement, pr=Math.min(1,Math.max(0,h.scrollTop/(h.scrollHeight-h.clientHeight||1)));
+    $('#gwater').style.height=(pr*100).toFixed(1)+'%';
+    $$('.gauge .mk').forEach(function(m){ m.classList.toggle('on', pr>=+m.dataset.at); });
+  }
+  addEventListener('scroll', rail, {passive:true}); rail();
+
+  /* reveal */
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}})},{threshold:.12});
+  $$('.rv').forEach(function(el){io.observe(el)});
+
+  /* 一 六签逐个点亮 */
+  var tagsLit=false;
+  var io1=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting && !tagsLit){
+        tagsLit=true; io1.disconnect();
+        var ts=$$('#tags .tag'), i=0;
+        var tm=setInterval(function(){
+          ts[i].classList.add('lit'); i++;
+          if(i>=ts.length){ clearInterval(tm); $('#tagslit').textContent='六卷各管一摊 · 合起来是一间水工坊'; }
+        },420);
+      }
+    });
+  },{threshold:.3});
+  io1.observe($('#tags'));
+
+  /* 二 双器入场开动 */
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('turned'); io2.unobserve(e.target); }
+    });
+  },{threshold:.35});
+  io2.observe($('#mach1')); io2.observe($('#mach2'));
+
+  /* 三 九砖 */
+  var bricked=0;
+  $$('#wall .brick').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(b.classList.contains('lit')) return;
+      b.classList.add('lit'); bricked++;
+      $('#wallcount').textContent='已点 '+bricked+' / 9 块'+(bricked===9?' · 九事齐，池成':'');
+    });
+  });
+
+  /* 四 雪花几何 */
+  function ring(n, col){
+    var NS='http://www.w3.org/2000/svg', cx=240, cy=180, R=104, r=30, g=document.getElementById(n===6?'g6':'g8');
+    g.innerHTML='';
+    for(var i=0;i<n;i++){
+      var a=-Math.PI/2+i*2*Math.PI/n, x=cx+R*Math.cos(a), y=cy+R*Math.sin(a);
+      var l=document.createElementNS(NS,'line');
+      l.setAttribute('x1',cx); l.setAttribute('y1',cy); l.setAttribute('x2',x); l.setAttribute('y2',y);
+      l.setAttribute('stroke-width','1.5'); l.setAttribute('opacity','.5'); g.appendChild(l);
+      var c=document.createElementNS(NS,'circle');
+      c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',r);
+      c.setAttribute('fill','rgba(95,146,112,0.10)'); g.appendChild(c);
+    }
+  }
+  ring(6); ring(8);
+  $('#btn6').addEventListener('click', function(){
+    $('#snowbox').classList.add('show6'); $('#snowbox').classList.remove('show8');
+    this.classList.add('on'); $('#btn8').classList.remove('on');
+    $('#snowlab').textContent='圆滴抱团 · 天然六只围一只';
+  });
+  $('#btn8').addEventListener('click', function(){
+    $('#snowbox').classList.add('show8'); $('#snowbox').classList.remove('show6');
+    this.classList.add('on'); $('#btn6').classList.remove('on');
+    $('#snowlab').textContent='方的世界才排得下八只';
+  });
+
+  /* 五 翻面 */
+  $$('.care').forEach(function(c){ c.addEventListener('click', function(){ c.classList.toggle('fl'); }); });
+
+  /* 六 举火 */
+  $('#btnStill').addEventListener('click', function(){
+    var s=$('#still');
+    if(s.classList.contains('burn')){ s.classList.remove('burn'); this.textContent='举火'; }
+    else{ s.classList.add('burn'); this.textContent='撤火'; }
+  });
+})();
+</script>
+</body>
+</html>
