@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>女科 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --bamboo:#5f9270;
+  --bamboo-dim:rgba(95,146,112,.4);
+  --cinnabar:#c0453c;
+  --stone:#232221;
+  --stone-2:#2b2a28;
+  --ghost:rgba(232,228,220,.07);
+  --dim:rgba(232,228,220,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif CJK SC","Noto Serif SC",SimSun,STSong,serif;
+  line-height:2;
+  overflow-x:hidden;
+}
+::selection{background:var(--bamboo);color:var(--ink)}
+.mono{font-family:"SF Mono",Menlo,Consolas,monospace}
+
+/* ---------- 左缘五色丝 ---------- */
+#silk{
+  position:fixed;left:12px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:14px;z-index:60;
+}
+#silk .cord{
+  width:8px;height:74px;border-radius:4px;
+  background:rgba(232,228,220,.08);
+  position:relative;transition:all .7s ease;
+}
+#silk .cord::after{
+  content:attr(data-z);position:absolute;bottom:-22px;left:50%;
+  transform:translateX(-50%);font-size:11px;color:rgba(232,228,220,.18);
+  transition:color .7s ease;
+}
+#silk .cord.lit{box-shadow:0 0 10px 1px currentColor;background:currentColor}
+#silk .cord.lit::after{color:currentColor}
+.cord.c-bai{color:#cfcabd}
+.cord.c-qing{color:#6fae87}
+.cord.c-huang{color:#c9a23f}
+.cord.c-hei{color:#8a8578}
+.cord.c-chi{color:#c0453c}
+
+/* ---------- 首屏戥秤 ---------- */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
+#hero .kicker{
+  font-size:13px;letter-spacing:6px;color:var(--bamboo);margin-bottom:8px;
+}
+#hero .subk{font-size:12px;letter-spacing:3px;color:var(--dim);margin-bottom:26px}
+#stage{position:relative;width:min(560px,92vw)}
+#stage svg{width:100%;display:block}
+#beam{transform-origin:200px 78px;transition:transform .7s cubic-bezier(.3,.8,.4,1)}
+.star{fill:rgba(232,228,220,.14);transition:fill .5s ease,filter .5s ease}
+.star.lit{fill:var(--bamboo);filter:drop-shadow(0 0 4px var(--bamboo))}
+.herb{opacity:0;transform:translateY(-26px);transition:all .45s ease}
+.herb.on{opacity:1;transform:translateY(0)}
+#presspad{cursor:pointer;fill:transparent}
+#vtitle{
+  pointer-events:none;
+  position:absolute;left:50%;top:-64px;transform:translate(-50%,26px);
+  writing-mode:vertical-rl;letter-spacing:14px;font-size:44px;font-weight:700;
+  color:var(--paper);opacity:0;transition:all 1.2s ease .15s;
+  text-shadow:0 0 22px rgba(95,146,112,.25);
+}
+#vtitle.up{opacity:1;transform:translate(-50%,0)}
+#hseal{
+  pointer-events:none;
+  width:64px;height:64px;border:2px solid var(--cinnabar);border-radius:6px;
+  display:grid;grid-template:1fr 1fr / 1fr 1fr;position:absolute;
+  right:12%;bottom:-34px;color:var(--cinnabar);background:rgba(192,69,60,.07);
+  transform:scale(1.7) rotate(-9deg);opacity:0;transition:all .5s cubic-bezier(.2,1.4,.4,1);
+}
+#hseal.show{opacity:.95;transform:scale(1) rotate(-3deg)}
+#hseal span{display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}
+#hseal .r1c2{grid-area:1/2}#hseal .r2c2{grid-area:2/2}
+#hseal .r1c1{grid-area:1/1}#hseal .r2c1{grid-area:2/1}
+#hint{margin-top:44px;font-size:13px;letter-spacing:3px;color:var(--dim)}
+#hint .h2{display:none;color:var(--bamboo)}
+#hint.done .h1{display:none}
+#hint.done .h2{display:inline}
+#hero .foot-k{
+  position:absolute;bottom:26px;font-size:11.5px;letter-spacing:2px;color:rgba(232,228,220,.28);
+  text-align:center;width:100%;
+}
+
+/* ---------- 正文通用 ---------- */
+main{width:min(860px,92vw);margin:0 auto;padding-bottom:40px}
+.sec{padding:84px 0 30px;border-top:1px dashed rgba(232,228,220,.12);opacity:0;transform:translateY(26px);transition:all 1s ease}
+.sec.seen{opacity:1;transform:none}
+.sec h3{
+  font-size:15px;letter-spacing:5px;color:var(--bamboo);font-weight:700;margin-bottom:6px;
+  display:flex;align-items:center;gap:12px;
+}
+.sec h3::before{content:"";width:9px;height:9px;border:1px solid var(--bamboo);transform:rotate(45deg)}
+.sec h4{font-size:13px;letter-spacing:3px;color:var(--dim);font-weight:400;margin-bottom:20px}
+.sec p{margin:14px 0;font-size:15.5px}
+q.qv{color:#d8d2c4}
+.q{
+  background:var(--stone);border-left:3px solid var(--bamboo);
+  padding:14px 18px;margin:16px 0;font-size:15.5px;color:#ddd7c9;
+  border-radius:0 6px 6px 0;line-height:2.1;
+}
+.q .src{display:block;font-size:12px;color:rgba(232,228,220,.4);margin-top:6px;letter-spacing:2px}
+.waiq{
+  border:1px dashed rgba(201,162,63,.5);padding:12px 16px;margin:16px 0;
+  font-size:14.5px;color:#d9c9a3;background:rgba(201,162,63,.05);border-radius:6px;
+}
+.waiq em{font-style:normal;font-size:12px;color:rgba(217,201,163,.55);display:block;margin-top:6px;letter-spacing:1px}
+.note{
+  font-size:13px;color:var(--dim);border:1px solid rgba(232,228,220,.14);
+  padding:10px 14px;border-radius:6px;margin:14px 0;background:var(--stone);
+}
+
+/* ---------- S1 五色带笺 ---------- */
+#slips{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}
+.slip{
+  width:118px;height:168px;perspective:700px;cursor:pointer;
+}
+.slip .inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.4,.9,.4,1)}
+.slip.flip .inner{transform:rotateY(180deg)}
+.slip .face{
+  position:absolute;inset:0;backface-visibility:hidden;border-radius:6px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  border:1px solid rgba(232,228,220,.16);background:var(--stone);padding:10px;
+}
+.slip .back{transform:rotateY(180deg);font-size:12.5px;line-height:1.9;text-align:left;justify-content:flex-start;align-items:stretch}
+.slip .chip{width:30px;height:30px;border-radius:50%;border:1px solid rgba(232,228,220,.3)}
+.slip .zn{writing-mode:vertical-rl;letter-spacing:5px;font-size:17px;font-weight:700}
+.slip .fx{font-size:11.5px;color:var(--dim);letter-spacing:1px;text-align:center}
+.slip .back q.qv{font-size:12.5px;color:#d3ccbc;display:block;margin-bottom:6px}
+.slip .back .ms{color:rgba(232,228,220,.45);font-size:11.5px}
+.slip.s-bai .chip{background:#cfcabd}.slip.s-bai .zn{color:#cfcabd}
+.slip.s-qing .chip{background:#5f9270}.slip.s-qing .zn{color:#8dbf9d}
+.slip.s-huang .chip{background:#c9a23f}.slip.s-huang .zn{color:#d9bc6d}
+.slip.s-hei .chip{background:#3a3833}.slip.s-hei .zn{color:#a49e8d}
+.slip.s-chi .chip{background:#c0453c}.slip.s-chi .zn{color:#d3766e}
+#ladder{margin:26px 0 8px}
+#ladder .lr{display:flex;align-items:center;gap:10px;margin:7px 0}
+#ladder .lr b{width:64px;text-align:right;font-size:13.5px;font-weight:400;color:#d8d2c4}
+#ladder .lr i{font-style:normal;font-size:11.5px;color:var(--dim);width:70px}
+#ladder .bar{height:12px;border-radius:3px;background:linear-gradient(90deg,var(--bamboo),rgba(95,146,112,.35))}
+#ladder .cap{font-size:12.5px;color:var(--dim);letter-spacing:1px;margin-top:10px}
+.duotag{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 4px}
+.duotag span{
+  font-size:12.5px;letter-spacing:1px;border:1px solid rgba(95,146,112,.5);
+  color:#a9cdb6;border-radius:20px;padding:4px 14px;background:rgba(95,146,112,.08);
+}
+
+/* ---------- S2 崩七签 ---------- */
+#bentags{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+#bentags button{
+  background:var(--stone);border:1px solid rgba(232,228,220,.2);color:#cfc9ba;
+  font-family:inherit;font-size:13.5px;letter-spacing:2px;padding:7px 16px;
+  border-radius:3px;cursor:pointer;transition:all .35s ease;
+}
+#bentags button.on{border-color:var(--bamboo);color:var(--bamboo);background:rgba(95,146,112,.1)}
+.bd{display:none;background:var(--stone);border-radius:8px;padding:18px 20px;margin-top:14px;border:1px solid rgba(232,228,220,.1)}
+.bd.on{display:block}
+.bd h5{font-size:14px;color:var(--bamboo);letter-spacing:2px;font-weight:700;margin-bottom:8px}
+.bd p{font-size:14px;margin:8px 0}
+.twopan{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}
+.twopan .pan{
+  flex:1;min-width:220px;border:1px solid rgba(201,162,63,.4);border-radius:6px;
+  padding:12px 14px;background:rgba(201,162,63,.05);font-size:13.5px;
+}
+.twopan .pan b{display:block;color:#d9bc6d;font-size:12px;letter-spacing:2px;margin-bottom:6px;font-weight:400}
+
+/* ---------- S3 鬼胎帷幕 ---------- */
+#guibox{position:relative;margin-top:20px;overflow:hidden;border-radius:10px}
+#curtain{
+  position:absolute;inset:0;z-index:5;background:repeating-linear-gradient(180deg,#26241f,#26241f 26px,#2b2921 27px);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;
+  cursor:pointer;transition:transform 1.4s cubic-bezier(.5,0,.2,1);
+  border:1px solid rgba(232,228,220,.14);
+}
+#curtain .em{font-size:30px;color:rgba(232,228,220,.3)}
+#curtain .tip{font-size:13.5px;letter-spacing:3px;color:var(--dim)}
+#curtain .tie{width:8px;height:52px;background:var(--cinnabar);border-radius:4px;opacity:.8}
+#guibox.open #curtain{transform:translateY(-101%)}
+#guibody{padding:22px 20px;background:var(--stone);border:1px solid rgba(232,228,220,.1);border-radius:10px}
+.zhupi{
+  border-left:3px solid var(--cinnabar);background:rgba(192,69,60,.06);
+  padding:10px 14px;border-radius:0 6px 6px 0;margin:14px 0;font-size:14px;color:#d8b8b3;
+}
+.zhupi b{font-size:11.5px;letter-spacing:2px;color:var(--cinnabar);display:block;margin-bottom:4px;font-weight:400}
+
+/* ---------- S4 种子十问 ---------- */
+#seedchips{display:flex;gap:9px;flex-wrap:wrap;margin:20px 0}
+#seedchips button{
+  background:var(--stone);border:1px solid rgba(232,228,220,.18);color:#cfc9ba;
+  font-family:inherit;font-size:13px;letter-spacing:1px;padding:6px 13px;
+  border-radius:18px;cursor:pointer;transition:all .3s ease;
+}
+#seedchips button.jidu{border-color:rgba(192,69,60,.6);color:#d3766e}
+#seedchips button.on{border-color:var(--bamboo);color:var(--bamboo);background:rgba(95,146,112,.1)}
+.sd{display:none;background:var(--stone);border-radius:8px;padding:16px 18px;margin-top:12px;border:1px solid rgba(232,228,220,.1);font-size:14px}
+.sd.on{display:block}
+.sd b.t{color:var(--bamboo);letter-spacing:2px;font-weight:700;font-size:13.5px;display:block;margin-bottom:4px}
+#grains{margin:14px 0 4px;font-size:13px;color:var(--dim)}
+#grains .g-row{display:flex;align-items:center;gap:10px;margin:8px 0}
+#grains .dots{display:flex;flex-wrap:wrap;gap:3px;flex:1;max-width:340px}
+#grains .dots i{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.85}
+#grains .g-label{width:120px;font-size:12.5px}
+
+/* ---------- S5 戥上 ---------- */
+#wgroup{margin:20px 0}
+#wgroup .wr{display:flex;align-items:center;gap:12px;margin:9px 0}
+#wgroup .wr b{width:52px;text-align:right;font-size:14px;font-weight:400;color:#d8d2c4}
+#wgroup .wr i{font-style:normal;font-size:11.5px;color:var(--dim);width:64px}
+#wgroup .bar{height:13px;border-radius:3px;background:linear-gradient(90deg,var(--bamboo),rgba(95,146,112,.3))}
+#wgroup .bar.min{background:var(--cinnabar)}
+#wgroup .cap{font-size:12.5px;color:var(--dim);margin-top:8px;letter-spacing:1px}
+#statchips{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 4px}
+#statchips .sc{
+  border:1px solid rgba(95,146,112,.45);border-radius:8px;padding:10px 18px;
+  background:rgba(95,146,112,.06);text-align:center;
+}
+#statchips .sc b{display:block;font-size:24px;color:var(--bamboo);font-family:"SF Mono",Menlo,Consolas,monospace}
+#statchips .sc span{font-size:11.5px;letter-spacing:2px;color:var(--dim)}
+
+/* ---------- S6 刊签 ---------- */
+#qian3{display:flex;gap:14px;flex-wrap:wrap;margin:20px 0}
+#qian3 .qian{
+  flex:1;min-width:230px;background:var(--stone);border:1px solid rgba(232,228,220,.14);
+  border-radius:8px;padding:16px 18px;font-size:13.5px;position:relative;
+}
+#qian3 .qian::before{
+  content:attr(data-n);position:absolute;top:-12px;left:14px;background:var(--bamboo);
+  color:var(--ink);font-size:11px;letter-spacing:2px;padding:2px 10px;border-radius:3px;
+}
+#verseline{display:flex;gap:0;margin:26px 0 6px;overflow-x:auto}
+#verseline .vn{
+  flex:1;min-width:120px;text-align:center;padding:0 8px;position:relative;
+}
+#verseline .vn::before{
+  content:"";display:block;width:11px;height:11px;border-radius:50%;
+  border:2px solid var(--bamboo);margin:0 auto 10px;background:var(--ink);
+}
+#verseline .vn:not(:last-child)::after{
+  content:"";position:absolute;top:5px;left:50%;width:100%;height:1px;background:rgba(95,146,112,.35);
+}
+#verseline .vn b{display:block;font-size:14px;color:#d8d2c4;font-weight:700}
+#verseline .vn span{font-size:11.5px;color:var(--dim);letter-spacing:1px;line-height:1.7;display:block}
+
+/* ---------- S7 对质台 ---------- */
+#duel{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0}
+#duel .side{
+  flex:1;min-width:250px;border:1px solid rgba(232,228,220,.16);border-radius:10px;
+  padding:18px 20px;background:var(--stone);position:relative;
+}
+#duel .side h5{font-size:14px;letter-spacing:3px;font-weight:700;margin-bottom:10px}
+#duel .side.left h5{color:var(--bamboo)}
+#duel .side.right h5{color:#d3766e}
+#duel .side p{font-size:13.5px;margin:8px 0}
+#bridge{
+  width:100%;text-align:center;padding:16px;border:1px dashed rgba(192,69,60,.5);
+  border-radius:10px;background:rgba(192,69,60,.05);margin-top:2px;
+}
+#bridge .bt{font-size:17px;letter-spacing:2px;color:#d3766e;margin-bottom:6px}
+#bridge p{font-size:13px;color:var(--dim)}
+#verdict{
+  display:inline-block;margin-top:18px;border:1px solid var(--bamboo);color:var(--bamboo);
+  font-size:13px;letter-spacing:4px;padding:6px 22px;border-radius:22px;
+}
+
+/* ---------- S8 年谱 ---------- */
+#eraline{display:flex;margin:30px 0 8px;overflow-x:auto;padding-bottom:6px}
+#eraline .en{flex:1;min-width:118px;text-align:center;cursor:pointer;padding:0 6px;position:relative}
+#eraline .en::before{
+  content:"";display:block;width:13px;height:13px;border-radius:50%;
+  border:2px solid var(--bamboo);margin:0 auto 12px;background:var(--ink);transition:all .4s ease;
+}
+#eraline .en.on::before{background:var(--bamboo);box-shadow:0 0 10px var(--bamboo-dim)}
+#eraline .en:not(:last-child)::after{
+  content:"";position:absolute;top:6px;left:50%;width:100%;height:1px;background:rgba(95,146,112,.3);
+}
+#eraline .en b{display:block;font-size:14.5px;color:#d8d2c4;font-weight:700;font-family:"SF Mono",Menlo,Consolas,monospace}
+#eraline .en span{font-size:11.5px;color:var(--dim);line-height:1.7;display:block;letter-spacing:.5px}
+#eranote{
+  min-height:52px;background:var(--stone);border-radius:6px;border:1px solid rgba(232,228,220,.1);
+  padding:12px 16px;font-size:13.5px;color:#d3ccbc;margin-top:10px;
+}
+
+/* ---------- 尾屏 ---------- */
+footer.coda{
+  margin-top:90px;padding:100px 0 60px;border-top:1px solid rgba(232,228,220,.1);
+  display:flex;flex-direction:column;align-items:center;position:relative;
+}
+#codaq{
+  writing-mode:vertical-rl;letter-spacing:12px;font-size:25px;color:#ddd7c9;
+  height:330px;display:flex;align-items:center;
+  background:var(--stone);padding:26px 20px;border-radius:4px;
+  border-left:3px solid var(--bamboo);
+}
+#coda .who{font-size:12px;color:var(--dim);letter-spacing:3px;margin-top:18px}
+#coda .endseal{
+  margin-top:34px;width:58px;height:62px;padding:3px;border:2px solid var(--cinnabar);border-radius:6px;
+  display:grid;grid-template-columns:1fr;grid-template-rows:1fr 1fr;
+  color:var(--cinnabar);opacity:0;transform:rotate(-6deg) scale(1.3);transition:all .8s ease;
+  background:rgba(192,69,60,.07);
+}
+#coda .endseal.show{opacity:.92;transform:rotate(-3deg) scale(1)}
+#coda .endseal span{display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;line-height:1.3}
+#coda .fin{font-size:13px;color:var(--dim);margin-top:34px;letter-spacing:2px;text-align:center;padding:0 4vw}
+#coda .fine{
+  margin-top:44px;font-size:12px;color:rgba(232,228,220,.38);line-height:2.1;
+  max-width:640px;text-align:center;letter-spacing:.5px;
+}
+#coda .fine a{color:rgba(95,146,112,.75);text-decoration:none}
+.pianhao{font-size:12px;letter-spacing:3px;color:rgba(201,162,63,.6);margin-bottom:26px}
+
+@media (max-width:640px){
+  #silk{display:none}
+  #vtitle{font-size:34px;top:-46px}
+  .slip{width:104px;height:150px}
+  #codaq{font-size:20px;height:300px;letter-spacing:9px}
+}
+</style>
+</head>
+<body>
+
+<nav id="silk" aria-hidden="true">
+  <span class="cord c-bai" data-z="白"></span>
+  <span class="cord c-qing" data-z="青"></span>
+  <span class="cord c-huang" data-z="黄"></span>
+  <span class="cord c-hei" data-z="黑"></span>
+  <span class="cord c-chi" data-z="赤"></span>
+</nav>
+
+<!-- 首屏：戥秤称药 -->
+<header id="hero">
+  <div class="kicker">卷二百五十 · 束带</div>
+  <div class="subk">医藏女科 · 清初遗民的妇科方书</div>
+  <div id="stage">
+    <div id="vtitle">傅青主女科</div>
+    <svg viewBox="0 0 520 300" id="scaleSVG">
+      <rect id="presspad" x="30" y="20" width="460" height="260"></rect>
+      <!-- 悬挂总绳 -->
+      <line x1="200" y1="10" x2="200" y2="62" stroke="rgba(232,228,220,.35)" stroke-width="1.5"/>
+      <circle cx="200" cy="70" r="9" fill="none" stroke="rgba(232,228,220,.45)" stroke-width="2"/>
+      <!-- 秤梁 -->
+      <g id="beam">
+        <rect x="58" y="74" width="410" height="8" rx="4" fill="#4a463c"/>
+        <rect x="58" y="74" width="410" height="3" rx="1.5" fill="#5a5546"/>
+        <circle class="star" cx="238" cy="72" r="3.2"/>
+        <circle class="star" cx="272" cy="72" r="3.2"/>
+        <circle class="star" cx="306" cy="72" r="3.2"/>
+        <circle class="star" cx="340" cy="72" r="3.2"/>
+        <circle class="star" cx="374" cy="72" r="3.2"/>
+        <circle class="star" cx="408" cy="72" r="3.2"/>
+        <circle class="star" cx="442" cy="72" r="3.2"/>
+        <!-- 左端吊盘 -->
+        <line x1="66" y1="82" x2="52" y2="150" stroke="rgba(232,228,220,.4)" stroke-width="1.3"/>
+        <line x1="66" y1="82" x2="80" y2="150" stroke="rgba(232,228,220,.4)" stroke-width="1.3"/>
+        <path d="M36 150 Q66 186 96 150" fill="none" stroke="#6a6455" stroke-width="5" stroke-linecap="round"/>
+        <path d="M40 152 Q66 182 92 152" fill="none" stroke="rgba(95,146,112,.55)" stroke-width="2"/>
+        <!-- 药丸六颗 -->
+        <g fill="#5f9270">
+          <circle class="herb" cx="52" cy="148" r="5.5"/>
+          <circle class="herb" cx="66" cy="145" r="5.5"/>
+          <circle class="herb" cx="80" cy="148" r="5.5"/>
+          <circle class="herb" cx="58" cy="139" r="5.5"/>
+          <circle class="herb" cx="72" cy="137" r="5.5"/>
+          <circle class="herb" cx="65" cy="131" r="5.5"/>
+        </g>
+        <!-- 秤砣 -->
+        <line x1="404" y1="82" x2="404" y2="108" stroke="rgba(232,228,220,.4)" stroke-width="1.3"/>
+        <circle cx="404" cy="122" r="15" fill="#4a463c" stroke="#6a6455" stroke-width="2"/>
+        <circle cx="404" cy="110" r="3.4" fill="none" stroke="rgba(232,228,220,.5)" stroke-width="1.6"/>
+      </g>
+    </svg>
+    <div id="hseal" aria-hidden="true">
+      <span class="r1c2">青</span><span class="r2c2">主</span>
+      <span class="r1c1">手</span><span class="r2c1">着</span>
+    </div>
+  </div>
+  <div id="hint">
+    <span class="h1">按住秤盘，匀一味药</span>
+    <span class="h2">戥平了，卷题也露出来了</span>
+  </div>
+  <div class="foot-k">题「<q class="qv">阳曲傅山青主手着</q>」，成书于清初，死后一个半世纪方才刻印</div>
+</header>
+
+<main>
+
+<!-- S1 五色带笺 -->
+<section class="sec" id="dai">
+  <h3>白 青 黄 黑 赤</h3>
+  <h4>带下一门，被他排成一张色谱</h4>
+  <p>开卷第一门是带下。别人的书按证候排，他按颜色排：五种颜色，五种病机，各配一方，上卷卷首自计条目：<q class="qv">三十八条三十九症四十一方</q>。像替妇女的病历定了一套色标。为什么叫带？<q class="qv">夫带下俱是湿症</q>，病根在那条束腰的带脉松了劲。他叮嘱得很具体：<q class="qv">带弱则胎易坠，带伤则胎不牢</q>。点开五张色笺，看他对每种颜色的判语。</p>
+  <div id="slips">
+    <div class="slip s-bai" tabindex="0"><div class="inner">
+      <div class="face"><span class="chip"></span><span class="zn">白带下</span><span class="fx">完带汤</span></div>
+      <div class="back"><q class="qv">治法宜大补脾胃之气，稍佐以舒肝之品</q><span class="ms">十味药，脾肝同治，是他最出名的一张方。</span></div>
+    </div></div>
+    <div class="slip s-qing" tabindex="0"><div class="inner">
+      <div class="face"><span class="chip"></span><span class="zn">青带下</span><span class="fx">加减逍遥散</span></div>
+      <div class="back"><q class="qv">甚则绿如菉豆汁，稠粘不断，其气腥臭</q><span class="ms">病在肝经湿热，他还补了一句分寸：<q class="qv">逆轻者，热必轻而色青，逆重者，热必重而色绿</q></span></div>
+    </div></div>
+    <div class="slip s-huang" tabindex="0"><div class="inner">
+      <div class="face"><span class="chip"></span><span class="zn">黄带下</span><span class="fx">易黄汤</span></div>
+      <div class="back"><q class="qv">宛如黄茶浓汁，其气腥秽</q><span class="ms">他把病位从脾挪到任脉，治法跟着换路。</span></div>
+    </div></div>
+    <div class="slip s-hei" tabindex="0"><div class="inner">
+      <div class="face"><span class="chip"></span><span class="zn">黑带下</span><span class="fx">利火汤</span></div>
+      <div class="back"><q class="qv">殊不知火极似水，乃假象也</q><span class="ms">下猛药他不犹豫：<q class="qv">譬如救火之焚，而少为迁缓，则火势延燃，不尽不止</q></span></div>
+    </div></div>
+    <div class="slip s-chi" tabindex="0"><div class="inner">
+      <div class="face"><span class="chip"></span><span class="zn">赤带下</span><span class="fx">清肝止淋汤</span></div>
+      <div class="back"><q class="qv">似血非血，淋沥不断</q><span class="ms">世人当它是心病，他改判肝火，只补血不利湿。</span></div>
+    </div></div>
+  </div>
+  <p>五张笺翻完，再看他给自己下的断语，一句自省，一句自负，都写在门尾：<q class="qv">妇科一门最属难治，不难于用方，难于辨症也</q>。紧接着是门末的总评，口气大得很：<q class="qv">五带症古方极多，然有应有不应者，总属未得病原，此书揭透病原，故用无不效</q>。</p>
+  <div id="ladder">
+    <p>完带汤这张方子，本身就是一杆戥：白术、山药压到一两顶格，陈皮、黑芥穗缩到五分收尾。同一张方里，最重的药是最轻药的二十倍。</p>
+    <div class="lr"><b>白术</b><span class="bar" style="width:100%"></span><i>1两 土炒</i></div>
+    <div class="lr"><b>山药</b><span class="bar" style="width:100%"></span><i>1两 炒</i></div>
+    <div class="lr"><b>白芍</b><span class="bar" style="width:71%"></span><i>5钱 酒炒</i></div>
+    <div class="lr"><b>车前子</b><span class="bar" style="width:55%"></span><i>3钱 酒炒</i></div>
+    <div class="lr"><b>苍术</b><span class="bar" style="width:55%"></span><i>3钱 制</i></div>
+    <div class="lr"><b>人参</b><span class="bar" style="width:45%"></span><i>2钱</i></div>
+    <div class="lr"><b>甘草</b><span class="bar" style="width:32%"></span><i>1钱</i></div>
+    <div class="lr"><b>柴胡</b><span class="bar" style="width:25%"></span><i>6分</i></div>
+    <div class="lr"><b>陈皮</b><span class="bar" style="width:22%"></span><i>5分</i></div>
+    <div class="lr"><b>黑芥穗</b><span class="bar" style="width:22%"></span><i>5分</i></div>
+    <div class="cap">条宽按剂量相对比例绘制，库本原方见下。</div>
+    <div class="q"><q class="qv">白术（一两土炒），山药（一两炒），人参（二钱），白芍（五钱酒炒），车前子（三钱酒炒），苍术（三钱制），甘草（一钱），陈皮（五分），黑芥穗（五分），柴胡（六分）</q><span class="src">完带汤原方 · 女科上卷带下门</span></div>
+    <p>效力也报得干脆，像验方广告：<q class="qv">二剂轻，四剂止，六剂则白带全愈</q>。而这张方子的心法，他只用了十二个字对仗：<q class="qv">寓补于散之中，寄消于升之内</q>。</p>
+  </div>
+</section>
+
+<!-- S2 血崩 -->
+<section class="sec" id="beng">
+  <h3>崩 之 七 名</h3>
+  <h4>同是一场大出血，他分成七种来历</h4>
+  <p>血崩一门，他不笼统说崩，而是按诱因一名一症：昏暗、年老、少妇、交感、郁结、闪跌、血海太热，七个名字七张方。其中治昏暗的固本止崩汤最见他的性子：<q class="qv">方妙在全不去止血，而惟补血，又不止补血，而更补气</q>。他连减半都不许：<q class="qv">倘畏药味之重而减半，则力薄而不能止</q>。点签看七种崩。</p>
+  <div id="bentags">
+    <button data-t="b1" class="on">昏暗</button>
+    <button data-t="b2">年老</button>
+    <button data-t="b3">少妇</button>
+    <button data-t="b4">交感</button>
+    <button data-t="b5">郁结</button>
+    <button data-t="b6">闪跌</button>
+    <button data-t="b7">血海太热</button>
+  </div>
+  <div class="bd on" id="b1">
+    <h5>昏暗欲绝 · <q class="qv">固本止崩汤</q></h5>
+    <p>崩到两眼发黑晕倒，他先判虚火而不是实火，救回来再谈止血。若已到险境，<q class="qv">血下数斗，六脉俱无，鼻中微微有息</q>，他连这张方都叫缓一步，先冲一味贯众炭吊气。</p>
+    <div class="q"><q class="qv">大熟地（一两九蒸），白术（一两土炒焦），黄耆（三钱生用），当归（五钱酒洗），黑姜（二钱），人参（三钱）</q><span class="src">固本止崩汤原方</span></div>
+    <div class="twopan">
+      <div class="pan"><b>有力者</b><q class="qv">用辽人参，去芦，三钱，煎成冲贯众炭末一钱服之</q></div>
+      <div class="pan"><b>无力者</b><q class="qv">用无灰黄酒冲贯众炭末三钱服之</q></div>
+    </div>
+    <p class="note">同一味救急药，他按家底开了两档。这册书里难得的一处人情账。</p>
+  </div>
+  <div class="bd" id="b2">
+    <h5>年老血亏 · <q class="qv">加减当归补血汤</q></h5>
+    <p>老年血崩，他在原方上追加两味炭药收功：<q class="qv">原方加杭芍炭三钱，贯众炭三钱，极效</q>。炭药止血，是他惯用的收梢手法。</p>
+  </div>
+  <div class="bd" id="b3">
+    <h5>少妇崩中 · <q class="qv">固气散</q></h5>
+    <p>年少之妇血崩，他归到气虚不摄，用固气散，思路与昏暗一脉：先把气扶住，血才有所依。</p>
+  </div>
+  <div class="bd" id="b4">
+    <h5>交感之伤 · <q class="qv">引精止血汤</q></h5>
+    <p>交感血出一症，他不作道德评判，只论胞胎脉络的伤损，方名直白，用药仍走补摄一路。</p>
+  </div>
+  <div class="bd" id="b5">
+    <h5>郁结伤肝 · <q class="qv">平肝开郁止血汤</q></h5>
+    <p>郁结之崩从肝治。方后他追了一句小巧的加法：<q class="qv">此方入贯仲炭三钱，更妙</q>。全书这样的「更妙」随处可见，像老师批作业顺手添的一笔。</p>
+  </div>
+  <div class="bd" id="b6">
+    <h5>闪跌损胎 · <q class="qv">逐瘀止血汤</q></h5>
+    <p>跌闪伤胎致崩，他先逐瘀后议补，次序讲得很死：瘀不去则新血不守。</p>
+  </div>
+  <div class="bd" id="b7">
+    <h5>血海伏火 · <q class="qv">清海丸</q></h5>
+    <p>血海太热之崩，方名起得最有画面感：把海清一清。用药以滋阴凉血为主，是七方里最缓的一张。</p>
+  </div>
+</section>
+
+<!-- S3 鬼胎 -->
+<section class="sec" id="gui">
+  <h3>鬼 胎 一 门</h3>
+  <h4>先别跳过这一章</h4>
+  <p>书里专门留了一门「鬼胎」，今天的读者多半会当志怪翻过去。拆开看，他写的多半是假孕、包块、经闭腹大这类当时没法解释的症候，套上了神庙山林的因果外壳。但他的治法一点不含糊：先逐秽，再补正，方药按斤两地开。掀帘看这一门。</p>
+  <div id="guibox">
+    <div id="curtain" role="button" tabindex="0">
+      <span class="tie"></span>
+      <span class="em">帘</span>
+      <span class="tip">点帘掀开这一门</span>
+    </div>
+    <div id="guibody">
+      <p>他给鬼胎下的观察清单：<q class="qv">腹似怀妊，终年不产，甚至二三年不生者，此鬼胎也</q>。成因他归给邪思：<q class="qv">或入神庙而兴云雨之思，或游山林而起交感之念，皆能召祟成胎</q>。这当然是时代的壳，但壳里那味主药雷丸，是正经的逐虫逐积药。</p>
+      <div class="q"><q class="qv">人参（一两），当归（一两），大黄（一两），雷丸（三钱），川牛膝（三钱），红花（三钱），丹皮（三钱），枳壳（一钱），厚朴（一钱），小桃仁（三十粒）</q><span class="src">荡鬼汤原方</span></div>
+      <p>效验他也照实写，场面并不温柔：<q class="qv">一剂腹必大鸣，可泻恶物半桶</q>。紧跟一句医嘱：断不可再服第三剂。</p>
+      <p>室女鬼胎一条写得更细：<q class="qv">面色乍赤乍白，六脉乍大乍小</q>，病状之外，他替那些不敢说出口的姑娘描了一笔心理：<q class="qv">其始则惊诧为奇遇，而不肯告人，其后则羞赧为淫亵，而不敢告人</q>。病情拖到腹大如斗，一半是病拖的，一半是羞拖的。</p>
+      <div class="zhupi"><b>刊本随文小批</b><q class="qv">鬼祟之事，儒者弗道，然城市乡曲，往往有是症，不可不察，甚勿以此言为荒唐也</q></div>
+      <p class="note">这条批语夹在正文之后，是刻书人替他挡话：别嫌荒唐，乡下城里真有这种病人。</p>
+    </div>
+  </div>
+</section>
+
+<!-- S4 种子十问 -->
+<section class="sec" id="seed">
+  <h3>种 子 十 问</h3>
+  <h4>十种不孕，一人一方</h4>
+  <p>种子门列了十种不受孕的身形与性情，从身瘦、肥胖到骨蒸夜热，一人一方。最有趣的一条是「嫉妒不孕」：他把长年郁郁的妇人判作肝气郁结，<q class="qv">人以为天心厌之也，谁知是肝气郁结乎</q>，郁到极处，<q class="qv">精即到门，亦不得其门而入矣</q>。十问点开看。</p>
+  <div id="seedchips">
+    <button data-t="s1">身瘦</button>
+    <button data-t="s2">胸满不思食</button>
+    <button data-t="s3">下部冰冷</button>
+    <button data-t="s4">胸满少食</button>
+    <button data-t="s5">少腹急迫</button>
+    <button data-t="s6" class="jidu">嫉妒</button>
+    <button data-t="s7">肥胖</button>
+    <button data-t="s8">骨蒸夜热</button>
+    <button data-t="s9">腰酸腹胀</button>
+    <button data-t="s10">便涩足肿</button>
+  </div>
+  <div class="sd on" id="s6">
+    <b class="t">嫉妒郁结 · <q class="qv">开郁种玉汤</q></b>
+    <p>这张方他自己都说不起眼，却替它打包票：<q class="qv">方似平平无奇，然却能解妒种子，不可忽视</q>。方后另附一张口粮单，说是配着煎可保无事，药是几样粮食，论粒计数。</p>
+    <div class="q"><q class="qv">黍，谷各九十粒麦，生用，小黑豆各四十九粒，豆炒熟，高粮五十五粒</q><span class="src">解妒饮 · 开郁种玉汤后附</span></div>
+    <div id="grains">
+      <div class="g-row"><span class="g-label">黍与谷（麦生用）</span><span class="dots" style="color:#c9a23f"></span>共 90 粒</div>
+      <div class="g-row"><span class="g-label">小黑豆（炒熟）</span><span class="dots" style="color:#8a8578"></span>共 49 粒</div>
+      <div class="g-row"><span class="g-label">高粱</span><span class="dots" style="color:#c0784a"></span>共 55 粒</div>
+    </div>
+    <p class="note">论粒配药，像哄孩子的偏方。治的是病，也是那一肚子不能出口的气。</p>
+  </div>
+  <div class="sd" id="s1"><b class="t">身瘦血亏 · <q class="qv">养精种玉汤</q></b><p>瘦人多火，他判作血虚精亏，四味药纯于填精。方后叮嘱得近乎恳切：<q class="qv">贪欲者多，节欲者少</q>，若不肯节欲三月，<q class="qv">否则不过身体壮健而已，勿咎方之不灵也</q>。药没灵，先别怪药。</p></div>
+  <div class="sd" id="s2"><b class="t">胸满不思食 · <q class="qv">并提汤</q></b><p>胸口胀满吃不下饭，他从心肾脾胃四经同调，把胃口与胞胎看作一条供应链。</p></div>
+  <div class="sd" id="s3"><b class="t">下部冰冷 · <q class="qv">温胞饮</q></b><p>下腹常年冰凉，他大剂温补胞宫，白术用到一两，是全书里火气最旺的方子之一。</p></div>
+  <div class="sd" id="s4"><b class="t">胸满少食 · <q class="qv">温土毓麟汤</q></b><p>与胸满不思食相近而更偏于胃寒，温补脾胃为主，方名里一个毓字把生子说成了养土。</p></div>
+  <div class="sd" id="s5"><b class="t">少腹急迫 · <q class="qv">宽带汤</q></b><p>少腹拘急，他归到带脉束得太紧，方名就叫宽带，把腰带松一松，胞胎才有处安顿。</p></div>
+  <div class="sd" id="s7"><b class="t">肥胖痰湿 · 补中益气之方再加味</b><p>肥胖之不孕，他判作痰湿裹住胞胎，在补中益气的基础上加味化痰，先减脂再谈孕。</p></div>
+  <div class="sd" id="s8"><b class="t">骨蒸夜热 · <q class="qv">清骨滋肾汤</q></b><p>夜里骨蒸烦热，他判作骨髓内热，用地骨皮一派清透，把胞宫从干烧里捞出来。</p></div>
+  <div class="sd" id="s9"><b class="t">腰酸腹胀 · <q class="qv">升带汤</q></b><p>带脉下垂腰酸腹胀，他用升带汤提气举带，与前一条宽带汤一升一宽，互为表里。</p></div>
+  <div class="sd" id="s10"><b class="t">便涩足肿 · <q class="qv">化水种子汤</q></b><p>水气不化，大小便不利而足肿，他先化水后种子，水道通了，胞胎之路才通。</p></div>
+  <p style="margin-top:22px">调经门里还藏着一页奇文：有的妇人经水两三月才一行，他判作天生异禀，不是病，<q class="qv">妇人之中，亦有天生仙骨者，经水必一季一行</q>。他还交代了师承来历：<q class="qv">山闻异人之教，特为阐扬</q>。全书最温柔的一句叮嘱就在这条里：别把它当病治，越治越坏。</p>
+</section>
+
+<!-- S5 戥上 -->
+<section class="sec" id="scale">
+  <h3>一 杆 戥 上</h3>
+  <h4>同一锅药里，最重与最轻差两百倍</h4>
+  <p>这册书的剂量有一条隐藏的戏骨：药味不多，单味却敢下重手；同时他又敢把一味药压到一分。正产肠下一节是极端样本，补气升肠饮里人参、黄耆都用一两，升麻只给一分，他自己批注得像口诀：<q class="qv">盖升麻之为用，少则气升，多则血升也，不可不知</q>。</p>
+  <div id="wgroup">
+    <div class="wr"><b>熟地</b><span class="bar" style="width:80%"></span><i>2两 九蒸</i></div>
+    <div class="wr"><b>白术</b><span class="bar" style="width:80%"></span><i>2两 土炒</i></div>
+    <div class="wr"><b>人参</b><span class="bar" style="width:70%"></span><i>1两</i></div>
+    <div class="wr"><b>黄耆</b><span class="bar" style="width:70%"></span><i>1两 生</i></div>
+    <div class="wr"><b>白术</b><span class="bar" style="width:63%"></span><i>5钱 土炒</i></div>
+    <div class="wr"><b>川芎</b><span class="bar" style="width:58%"></span><i>3钱 酒洗</i></div>
+    <div class="wr"><b>升麻</b><span class="bar min" style="width:18%"></span><i>1分</i></div>
+    <div class="cap">条长按对数比例绘制：同一方（补气升肠饮）内，一两的人参与一分的升麻同锅。极重的熟地两见，出自产后两收汤。</div>
+  </div>
+  <p>两收汤治的症候也骇人：产后<q class="qv">水道中出肉线一条，长二三尺，动之则疼痛欲绝</q>。他以两剂收之，重剂熟地白术就是给这种症候备的。同节还录了盘肠产的土法急救：<q class="qv">急取一净盆，用开水洗热，将肠置于盆内，静侍，勿惧</q>，再配一味外敷法：<q class="qv">用萆麻仁四十九粒，捣涂顶心以提之，肠升即刻洗去，时久则恐吐血</q>。内服外敷，冷热分寸，全写在前头。</p>
+  <div id="statchips">
+    <div class="sc"><b>77</b><span>症 · 上下卷合计</span></div>
+    <div class="sc"><b>7</b><span>处「不可加减」</span></div>
+    <div class="sc"><b>99</b><span>味 · 今人统计全书共用药物</span></div>
+  </div>
+  <p class="note">方后叮嘱「不可加减」的句子，全书数下来有七处。<q class="qv">原方极效，不可加减</q>，这一句是全书自信的顶点。</p>
+</section>
+
+<!-- S6 刊刻 -->
+<section class="sec" id="ban">
+  <h3>三 枚 刊 签</h3>
+  <h4>刻书人留下的手迹</h4>
+  <p>这部书不是一个人写完的。正文之外，夹着几处随文小批，是道光年间初刻时的校者与刻者留下的。三枚签，替我们还原那双手。</p>
+  <div id="qian3">
+    <div class="qian" data-n="签一 · 存疑">
+      卷首计条一节，黄带一条里，「丹邪元邪」这四个字费解，校者先老老实实记下：<q class="qv">丹邪元邪四字未晰</q>。他想改，笔又缩回来了：<q class="qv">然原书究不可轻改，姑仍之</q>。看不懂，不改，照刻，这是旧式刻书人的手筋。
+    </div>
+    <div class="qian" data-n="签二 · 自珍">
+      刻书人也在替作者护短。方后那些<q class="qv">方妙，不可加减</q>的叮咛，他原样保留；肠下一节两方之后，紧跟着一行<q class="qv">前后二方极效，不必加减</q>，连惊叹号式的口气都照搬。全书的「不可加减」一共七处，一处没删。
+    </div>
+    <div class="qian" data-n="签三 · 挡话">
+      鬼胎一门之后那条「儒者弗道」的小批，是替作者挡读书人的白眼的：乡野城市真有这种病人，别嫌荒唐。刻者知道自己刻的是一本什么书，也知道自己替一个什么样的人在刻。
+    </div>
+  </div>
+  <p>而在作者与刻者之间，隔着一段漫长的沉默。据今人考述，这册书约在康熙十二年前后写成，直到道光七年才有初刊本，张凤翔刻本后来成了通行底本，祁尔诚、陆懋修相继重刻，同治八年湖北崇文书局又刊四卷本，以女科二卷附产后编二卷行世。</p>
+  <div id="verseline">
+    <div class="vn"><b>约 1673</b><span>康熙十二年前后<br>写成</span></div>
+    <div class="vn"><b>1827</b><span>道光七年<br>方有初刊</span></div>
+    <div class="vn"><b>张凤翔</b><span>刻本<br>通行底本</span></div>
+    <div class="vn"><b>祁尔诚<br>陆懋修</b><span>相继<br>重刻</span></div>
+    <div class="vn"><b>1869</b><span>同治八年崇文书局<br>四卷本附产后编</span></div>
+  </div>
+  <p>写成到刻印，隔了一百五十四年。他活着的时候，这本书一个字也没有印过。</p>
+</section>
+
+<!-- S7 对质台 -->
+<section class="sec" id="case">
+  <h3>题 名 之 讼</h3>
+  <h4>这本书到底是谁写的</h4>
+  <p>卷首白纸黑字：<q class="qv">阳曲傅山青主手着</q>。但另有一路考据指出：这册书的条文与同时代医家陈士铎的《辨证录》大量两两相合，字句雷同到难称巧合。陈士铎的书，自称得自岐伯天师亲传。于是一场两百年的公案摆开：谁借了谁的名字。</p>
+  <div id="duel">
+    <div class="side left">
+      <h5>傅山手着</h5>
+      <p>卷题明署「<q class="qv">阳曲傅山青主手着</q>」，道光初刊据此刻版。傅山通医，时人称其医名在山西一地有求必应，处方药少剂重，与这册书的用药习惯吻合。遗民不入城、卖药自给，写一部妇科自用的底本，情理上通。</p>
+    </div>
+    <div class="side right">
+      <h5>陈士铎辨证录</h5>
+      <p>陈士铎，清初医家，康熙间刊《辨证录》诸书，自序称受之岐伯、吕岩诸仙。今人比对其条文，与此书大量重出，故有女科摘自陈书、托名傅山之说；亦有谓两家同出一源抄本者。孰先孰后，至今没有定论。</p>
+    </div>
+    <div id="bridge">
+      <div class="bt">书里的一处暗记</div>
+      <p>这册鬼胎门里恰好留了一行：<q class="qv">可用岐天师新传红花霹雳散</q>。岐天师正是陈士铎书里那位代天传话的老师。两家的稿子，至少有一家，借了另一家的路。</p>
+    </div>
+  </div>
+  <div id="verdict">公案未决</div>
+</section>
+
+<!-- S8 年谱 -->
+<section class="sec" id="era">
+  <h3>六 站 人 生</h3>
+  <h4>写字的人，比书更硬</h4>
+  <div class="waiq">「以诸生伏阙上书，讼袁临侯冤事，寻得白，当时义声动天下」<em>初刊本序追述其崇祯间义举（库外文本，维基文库〈傅青主女科〉卷首序）</em></div>
+  <p>他一辈子没考过清朝的试。点一站，看一站。</p>
+  <div id="eraline">
+    <div class="en" data-n="e1"><b>1607</b><span>生于太原府阳曲县<br>初名鼎臣</span></div>
+    <div class="en" data-n="e2"><b>1636</b><span>以诸生伏阙讼冤<br>义声动天下</span></div>
+    <div class="en" data-n="e3"><b>1644</b><span>国变<br>衣朱衣入道</span></div>
+    <div class="en" data-n="e4"><b>1654</b><span>朱衣道人案<br>狱中绝食九日</span></div>
+    <div class="en" data-n="e5"><b>1678</b><span>七十二岁<br>舁床赴京辞鸿博</span></div>
+    <div class="en" data-n="e6"><b>1684</b><span>卒<br>书稿沉睡一百余年</span></div>
+  </div>
+  <div id="eranote">点年谱上的圆星，展开这六年。</div>
+</section>
+
+</main>
+
+<!-- 尾屏 -->
+<footer class="coda" id="coda">
+  <div class="pianhao">第叁百七十二篇</div>
+  <div class="q" id="codaq">服一剂即通，不必再服也</div>
+  <div class="who">通肝生乳汤方后 · 全书末条之下</div>
+  <p class="fin">全书末条，写的是产后听了几句闲话就断了奶的妇人，他的方子叫通肝生乳汤。末句只有十个字的从容：效即止，不必贪。这也是这册书给所有读者的话。</p>
+  <div class="endseal" aria-hidden="true"><span>真</span><span>山</span></div>
+  <div class="fine">
+    文本来源：殆知阁简体库医藏〈傅青主女科〉，题阳曲傅山撰，上下卷七十七症，<a href="https://github.com/rongyiwei/daizhige">github.com/rongyiwei/daizhige</a><br>
+    页面引文已逐字比对库内文件核验（去标点、异体归一）；白话转述经反向扫描核对，未搬用库本成句。年谱与版本诸事系据通行史料与今人考述（库外），已随文标注。<br>
+    书中鬼胎、经候、种子诸说皆受时代局限，仅供阅读参考，不构成医疗建议。
+  </div>
+</footer>
+
+<script>
+(function(){
+  var B=document.getElementById('beam');
+  var herbs=document.querySelectorAll('.herb');
+  var stars=document.querySelectorAll('#hero .star');
+  var hint=document.getElementById('hint');
+  var vt=document.getElementById('vtitle');
+  var seal=document.getElementById('hseal');
+  var step=0,done=false,timer=null;
+  function tick(){
+    if(step>=6){clearInterval(timer);timer=null;return}
+    herbs[step].classList.add('on');
+    stars[step].classList.add('lit');
+    step++;
+    B.style.transform='rotate('+(step*1.5)+'deg)';
+    if(step>=6&&!done){
+      done=true;
+      setTimeout(function(){vt.classList.add('up')},250);
+      setTimeout(function(){seal.classList.add('show');hint.classList.add('done')},900);
+    }
+  }
+  var pad=document.getElementById('scaleSVG');
+  function down(e){e.preventDefault();if(!done&&!timer)timer=setInterval(tick,240)}
+  function up(){if(timer&&!done){clearInterval(timer);timer=null}}
+  pad.addEventListener('pointerdown',down);
+  window.addEventListener('pointerup',up);
+  window.addEventListener('pointercancel',up);
+
+  var slips=document.querySelectorAll('.slip');
+  slips.forEach(function(s){s.addEventListener('click',function(){s.classList.toggle('flip')})});
+
+  function tabs(tbn,cls){
+    var bs=document.querySelectorAll(tbn+' button');
+    var ds=document.querySelectorAll(cls);
+    bs.forEach(function(b){b.addEventListener('click',function(){
+      bs.forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      ds.forEach(function(d){d.classList.remove('on')});
+      var t=document.getElementById(b.getAttribute('data-t'));
+      if(t)t.classList.add('on');
+    })});
+  }
+  tabs('#bentags','.bd');
+  tabs('#seedchips','.sd');
+
+  var gb=document.getElementById('guibox');
+  var ct=document.getElementById('curtain');
+  function openCurtain(){gb.classList.add('open')}
+  ct.addEventListener('click',openCurtain);
+  ct.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openCurtain()}});
+
+  var dots=document.querySelectorAll('#grains .dots');
+  var counts=[90,49,55];
+  dots.forEach(function(d,i){for(var k=0;k<counts[i];k++){d.appendChild(document.createElement('i'))}});
+
+  var ens=document.querySelectorAll('#eraline .en');
+  var enote=document.getElementById('eranote');
+  var notes={
+    e1:'万历三十五年生，初名鼎臣，字青竹。后改名山，字青主，自言取意青山做主人；又著朱衣，自号朱衣道人。',
+    e2:'崇祯间，老师袁继咸遭巡按诬劾，他率诸生赴京讼冤，事得白。初刊本序追述此事，谓义声动天下。',
+    e3:'甲申国变，拜寿阳五峰山道士郭静中为师，道号真山，著朱色衣，居土穴中。朱衣之意，后人解作不忘朱明。',
+    e4:'顺治十一年，涉南明宋谦案下狱受拷，绝食九日以示必死，赖陈谧、戴廷栻诸友营救，又值宋谦已死无对证，得释。',
+    e5:'康熙十七年开博学鸿词科，地方官奉命把他连床抬进京城。他称病卧旅邸，以死力辞，终未入试，放归。',
+    e6:'康熙二十三年卒。晚年痛失其子傅眉，数月后随之而去。书稿沉睡一个半世纪，直到道光七年方才刻版。'
+  };
+  ens.forEach(function(en){en.addEventListener('click',function(){
+    ens.forEach(function(x){x.classList.remove('on')});
+    en.classList.add('on');
+    enote.textContent=notes[en.getAttribute('data-n')];
+  })});
+
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('seen')});
+  },{threshold:.12});
+  document.querySelectorAll('.sec').forEach(function(s){io.observe(s)});
+
+  var cords=document.querySelectorAll('#silk .cord');
+  window.addEventListener('scroll',function(){
+    var h=document.documentElement;
+    var p=h.scrollTop/(h.scrollHeight-h.clientHeight);
+    var n=Math.max(1,Math.min(5,Math.ceil(p*5.6)));
+    cords.forEach(function(c,i){c.classList.toggle('lit',i<n)});
+  },{passive:true});
+
+  var cs=document.getElementById('coda');
+  new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting)cs.querySelector('.endseal').classList.add('show')});
+  },{threshold:.4}).observe(cs);
+})();
+</script>
+</body>
+</html>
