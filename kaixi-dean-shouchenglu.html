@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>围城 108 日 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --gold:#c9963f; --gold-dim:#8a6a33;
+  --fire:#a8433a; --mist:#2a2a26; --line:#3a3a35;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:Georgia,"Times New Roman","Songti SC","STSong","SimSun",serif;
+  line-height:1.9; overflow-x:hidden;
+}
+::selection{background:var(--gold);color:var(--ink)}
+
+/* ============ 左缘围城进度 ============ */
+#siege-rail{
+  position:fixed; left:18px; top:50%; transform:translateY(-50%);
+  height:64vh; width:2px; background:var(--line); z-index:40;
+}
+#siege-fill{position:absolute;top:0;left:0;width:100%;height:0%;background:var(--gold)}
+.rail-node{
+  position:absolute; left:-4px; width:10px; height:10px; border-radius:50%;
+  background:var(--ink); border:1px solid var(--gold-dim);
+}
+.rail-node.on{background:var(--gold); border-color:var(--gold)}
+.rail-label{
+  position:absolute; left:16px; transform:translateY(-50%);
+  font-size:11px; letter-spacing:2px; color:#6b6b60; white-space:nowrap;
+}
+.rail-label.on{color:var(--gold)}
+@media (max-width:900px){ #siege-rail{display:none} }
+
+/* ============ Hero 围城图 ============ */
+#hero{
+  min-height:100vh; position:relative;
+  display:flex; align-items:center; justify-content:center;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 20%, #20201c 0%, var(--ink) 70%);
+  overflow:hidden;
+}
+#hero-inner{position:relative; width:min(880px,94vw)}
+#citymap{width:100%; height:auto; display:block}
+#citymap text{font-family:inherit}
+
+/* 城内灯火 */
+.lamp{fill:var(--gold); opacity:.16}
+body.opened .lamp{opacity:.85; transition:opacity 1.2s ease .9s}
+
+/* 敌营火点 */
+.camp{opacity:0}
+body.opened .camp{animation:campin 1s ease forwards}
+.camp .flame{fill:var(--fire)}
+.camp .halo{fill:none; stroke:var(--fire); stroke-width:1; opacity:.5}
+.c1{animation-delay:.7s!important}.c2{animation-delay:1.0s!important}
+.c3{animation-delay:1.3s!important}.c4{animation-delay:1.6s!important}
+.c5{animation-delay:1.9s!important}.c6{animation-delay:2.2s!important}
+.c7{animation-delay:2.5s!important}
+@keyframes campin{from{opacity:0}to{opacity:1}}
+body.opened .camp .halo{animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{r:5;opacity:.6}50%{r:9;opacity:.15}}
+
+/* 围合虚线圈 */
+#noose{
+  fill:none; stroke:var(--fire); stroke-width:1.4; stroke-dasharray:5 7;
+  opacity:0;
+}
+body.opened #noose{
+  animation:noose 2.2s ease 1.1s forwards;
+}
+@keyframes noose{
+  from{stroke-dashoffset:640; opacity:.9}
+  to{stroke-dashoffset:0; opacity:.55}
+}
+
+/* 门闩 */
+#bolt-g{cursor:pointer}
+#bolt{
+  fill:var(--gold-dim);
+  transition:transform .9s cubic-bezier(.6,0,.3,1.4);
+  transform-origin:400px 437px;
+}
+#bolt-g:hover #bolt{fill:var(--gold)}
+body.opened #bolt{transform:rotate(88deg) translateY(58px); opacity:.3}
+#bolt-hint{fill:#8f8a7c; font-size:13px; letter-spacing:4px; transition:opacity .6s}
+body.opened #bolt-hint{opacity:0}
+#citymap, #citymap *{pointer-events:none}
+#bolt-g, #bolt-g *{pointer-events:auto; cursor:pointer}
+
+/* 城门两扇 */
+.gate-leaf{transition:transform 1.1s ease .5s; transform-origin:center}
+.gn{fill:#232320; stroke:var(--gold-dim); stroke-width:1}
+body.opened .gl{transform:translateX(-11px)}
+body.opened .gr{transform:translateX(11px)}
+
+/* 竖排书名 */
+#title-veil{
+  position:absolute; right:4%; top:6%;
+  opacity:0; transform:translateY(26px);
+  transition:opacity 1.6s ease 1.8s, transform 1.6s ease 1.8s;
+  pointer-events:none; display:flex; gap:26px; align-items:flex-start;
+}
+body.opened #title-veil{opacity:1; transform:translateY(0)}
+#title-veil .tmain{
+  writing-mode:vertical-rl; text-orientation:upright;
+  font-size:44px; letter-spacing:12px; color:var(--paper);
+  height:460px; text-shadow:0 0 22px rgba(201,150,63,.35);
+}
+#title-veil .tsub{
+  writing-mode:vertical-rl; text-orientation:upright;
+  font-size:15px; letter-spacing:8px; color:#9a9483; height:300px; padding-top:8px;
+}
+#seal{
+  writing-mode:vertical-rl; text-orientation:upright;
+  border:2px solid var(--fire); color:var(--fire);
+  font-size:21px; letter-spacing:7px; padding:12px 5px;
+  height:172px; margin-top:120px;
+  background:rgba(168,67,58,.08);
+  opacity:0; transform:scale(1.35);
+  transition:opacity .5s ease 3.4s, transform .5s ease 3.4s;
+}
+body.opened #seal{opacity:1; transform:scale(1)}
+
+/* hero 底注 */
+#hero-foot{
+  position:absolute; bottom:26px; left:0; right:0; text-align:center;
+  font-size:12px; letter-spacing:3px; color:#6b6b60; pointer-events:none;
+}
+
+/* ============ 通用板块 ============ */
+section{max-width:860px; margin:0 auto; padding:110px 26px 40px}
+.kicker{
+  font-size:12px; letter-spacing:6px; color:var(--gold);
+  margin-bottom:14px;
+}
+h2{
+  font-size:30px; font-weight:normal; letter-spacing:6px; margin-bottom:30px;
+  color:var(--paper);
+}
+h2::after{
+  content:""; display:block; width:52px; height:2px;
+  background:var(--gold); margin-top:16px; opacity:.7;
+}
+p{margin-bottom:1.2em; color:#cfcabb; font-size:16.5px}
+.reveal{opacity:0; transform:translateY(22px); transition:opacity .9s ease, transform .9s ease; min-height:12px}
+.reveal.vis{opacity:1; transform:none}
+
+/* 引文块 */
+.q{
+  display:block; margin:26px 0; padding:20px 26px;
+  border-left:3px solid var(--gold-dim);
+  background:rgba(201,150,63,.05);
+  font-size:17px; color:#ded9cc; line-height:2.1;
+}
+.q .src{display:block; margin-top:10px; font-size:12px; color:#7d7869; letter-spacing:2px}
+.qv{color:#ded9cc; border-bottom:1px dotted var(--gold-dim)}
+.qnote{font-size:12.5px; color:#8a857a; letter-spacing:1px; display:block; margin-top:-0.6em; margin-bottom:1.2em}
+
+/* ============ 序笺板块 ============ */
+#letters{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:44px}
+.letter{
+  background:linear-gradient(175deg,#232219,#1d1c16);
+  border:1px solid var(--line); padding:34px 24px;
+  writing-mode:vertical-rl; text-orientation:mixed;
+  height:400px;
+}
+.letter .lt{
+  font-size:19px; letter-spacing:5px; color:var(--gold); margin-left:14px;
+}
+.letter .lb{font-size:14.5px; color:#b5b0a2; line-height:2.2; letter-spacing:2px}
+.letter .who{
+  font-size:12px; color:#7d7869; letter-spacing:3px; margin-left:12px; padding-top:6px;
+}
+@media (max-width:760px){
+  #letters{grid-template-columns:1fr}
+  .letter{writing-mode:horizontal-tb; height:auto}
+}
+
+/* ============ 兵临板块 ============ */
+#onset-grid{display:grid; grid-template-columns:1.25fr .9fr; gap:40px; align-items:start}
+@media (max-width:760px){#onset-grid{grid-template-columns:1fr}}
+.camp-list{border-top:1px solid var(--line)}
+.camp-item{
+  display:flex; gap:14px; padding:13px 4px; border-bottom:1px solid var(--line);
+  font-size:14.5px; align-items:baseline;
+}
+.camp-item .pos{
+  color:var(--fire); letter-spacing:2px; flex:0 0 72px; font-size:13px;
+}
+.camp-item .nm{color:#cfcabb}
+
+/* ============ 军报带 ============ */
+#warband{padding:110px 0 40px}
+#band-scroll{
+  display:flex; gap:18px; overflow-x:auto; padding:34px 6vw 26px;
+  scroll-snap-type:x proximity;
+}
+#band-scroll::-webkit-scrollbar{height:5px}
+#band-scroll::-webkit-scrollbar-thumb{background:var(--gold-dim)}
+#band-scroll::-webkit-scrollbar-track{background:var(--line)}
+.report{
+  flex:0 0 272px; scroll-snap-align:start;
+  background:linear-gradient(178deg,#22211b,#1c1b16);
+  border:1px solid var(--line); border-top:3px solid var(--gold-dim);
+  padding:22px 20px 18px; position:relative;
+  transition:border-color .4s;
+}
+.report:hover{border-top-color:var(--gold)}
+.report .day{
+  display:inline-block; font-size:13px; letter-spacing:3px;
+  border:1px solid var(--fire); color:#d08a80; padding:2px 10px; margin-bottom:14px;
+}
+.report .rt{font-size:17.5px; letter-spacing:2px; color:var(--gold); margin-bottom:12px}
+.report .rx{font-size:14px; color:#b5b0a2; line-height:1.95; margin-bottom:14px}
+.report .q{margin:0; padding:12px 14px; font-size:13.5px; line-height:1.95;
+  background:rgba(201,150,63,.04)}
+.report .q .src{margin-top:6px}
+
+/* ============ 攻守翻牌 ============ */
+#vs{display:grid; grid-template-columns:1fr 64px 1fr; gap:0; margin-top:44px; align-items:start}
+#vs .colhead{
+  text-align:center; font-size:15px; letter-spacing:5px; padding-bottom:14px;
+}
+#vs .head-jin{color:var(--fire)}
+#vs .head-song{color:var(--gold)}
+#vs-middle{display:flex; align-items:center; justify-content:center; padding-top:120px}
+#vs-middle .vs{
+  writing-mode:vertical-rl; text-orientation:upright;
+  font-size:19px; letter-spacing:6px; color:#6b6b60; border:1px solid var(--line);
+  padding:10px 4px;
+}
+.cardstack{display:flex; flex-direction:column; gap:14px}
+.fcard{perspective:900px; height:118px}
+.fcard .inner{
+  position:relative; width:100%; height:100%;
+  transform-style:preserve-3d; transition:transform .7s ease;
+  cursor:pointer;
+}
+.fcard.flip .inner{transform:rotateY(180deg)}
+.fface{
+  position:absolute; inset:0; backface-visibility:hidden;
+  border:1px solid var(--line); padding:16px 20px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.fface .fn{font-size:16.5px; letter-spacing:3px; margin-bottom:5px}
+.fface .fd{font-size:12.5px; color:#8f8a7c; line-height:1.7}
+.jin .fface.front{border-left:3px solid var(--fire); background:rgba(168,67,58,.05)}
+.song .fface.front{border-left:3px solid var(--gold); background:rgba(201,150,63,.05)}
+.jin .fn{color:#d08a80}.song .fn{color:var(--gold)}
+.fface.back{
+  transform:rotateY(180deg); background:#232219;
+  font-size:13.5px; color:#ded9cc; line-height:1.9;
+}
+.tap-hint{text-align:center; font-size:12px; color:#6b6b60; letter-spacing:3px; margin-top:18px}
+@media (max-width:760px){
+  #vs{grid-template-columns:1fr}
+  #vs-middle{display:none}
+  #vs .colhead{margin-top:26px}
+}
+
+/* ============ 人心纸笺 ============ */
+#hearts{display:grid; grid-template-columns:1fr 1fr; gap:26px; margin-top:40px}
+@media (max-width:760px){#hearts{grid-template-columns:1fr}}
+.paper-note{
+  background:linear-gradient(170deg,#262418,#1e1d15);
+  border:1px solid #34322a; padding:32px 28px; position:relative;
+}
+.paper-note::before{
+  content:""; position:absolute; top:10px; left:50%; transform:translateX(-50%);
+  width:44px; height:5px; background:#34322a; opacity:.7;
+}
+.paper-note .pt{font-size:16px; letter-spacing:3px; color:var(--gold); margin-bottom:14px; margin-top:8px}
+.paper-note p{font-size:14.5px}
+.mourning{
+  text-align:center; padding:18px 0 4px; font-size:13px; color:#8a6a5e; letter-spacing:2px;
+}
+
+/* ============ 尾屏 ============ */
+#ending{
+  margin-top:120px; padding:130px 26px 60px; text-align:center;
+  background:linear-gradient(180deg, var(--ink) 0%, #1d1c15 55%, #221d12 100%);
+  position:relative; overflow:hidden;
+}
+#ending .gate-open{
+  width:120px; height:92px; margin:0 auto 44px; position:relative;
+  border:2px solid var(--gold-dim); border-radius:3px 3px 0 0;
+}
+#ending .gate-open::before{
+  content:""; position:absolute; inset:8px;
+  background:linear-gradient(180deg, rgba(201,150,63,.4), rgba(201,150,63,.06));
+  box-shadow:0 0 40px rgba(201,150,63,.25);
+}
+#bignum{
+  font-size:66px; letter-spacing:10px; color:var(--gold); line-height:1.4;
+  margin:16px 0 8px; font-weight:normal;
+}
+#ending .sub{font-size:15px; color:#9a9483; letter-spacing:4px}
+#ending .q{max-width:620px; margin:38px auto; text-align:left; border-left:none; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+#epitaph{
+  margin:60px auto 0; max-width:560px; font-size:14px; color:#8a857a; line-height:2.2;
+}
+
+/* ============ 页脚 ============ */
+footer{
+  border-top:1px solid var(--line); margin-top:80px;
+  padding:44px 26px 60px; text-align:center;
+  font-size:12.5px; color:#7d7869; line-height:2.2; letter-spacing:1px;
+}
+footer a{color:#a08a5c; text-decoration:none}
+</style>
+</head>
+<body>
+
+<div id="siege-rail">
+  <div id="siege-fill"></div>
+  <div class="rail-node" style="top:0%" data-n="0"></div><div class="rail-label" style="top:0%">围合</div>
+  <div class="rail-node" style="top:50%" data-n="1"></div><div class="rail-label" style="top:50%">相持</div>
+  <div class="rail-node" style="top:100%" data-n="2"></div><div class="rail-label" style="top:100%">退师</div>
+</div>
+
+<!-- ============ 首屏：围城图 ============ -->
+<div id="hero">
+  <div id="hero-inner">
+    <svg id="citymap" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="德安城受围示意">
+      <!-- 涢水 -->
+      <path d="M60,40 C150,180 90,330 170,470 C210,540 290,570 380,585"
+            fill="none" stroke="#2e3a3c" stroke-width="26" opacity=".55" stroke-linecap="round"/>
+      <text x="86" y="300" fill="#4a5c5e" font-size="13" letter-spacing="6" writing-mode="tb">涢水</text>
+
+      <!-- 围合虚圈 -->
+      <ellipse id="noose" cx="400" cy="300" rx="285" ry="238"/>
+
+      <!-- 城外敌营 -->
+      <g class="camp c1"><circle class="halo" cx="400" cy="44" r="5"/><circle class="flame" cx="400" cy="44" r="3.2"/><text x="414" y="50" fill="#8a6a5e" font-size="12" letter-spacing="2">北教场中军</text></g>
+      <g class="camp c2"><circle class="halo" cx="648" cy="176" r="5"/><circle class="flame" cx="648" cy="176" r="3.2"/><text x="604" y="160" fill="#8a6a5e" font-size="12" letter-spacing="2">金泉寺大寨</text></g>
+      <g class="camp c3"><circle class="halo" cx="676" cy="420" r="5"/><circle class="flame" cx="676" cy="420" r="3.2"/><text x="640" y="446" fill="#8a6a5e" font-size="12" letter-spacing="2">东南七寨</text></g>
+      <g class="camp c4"><circle class="halo" cx="412" cy="556" r="5"/><circle class="flame" cx="412" cy="556" r="3.2"/><text x="430" y="562" fill="#8a6a5e" font-size="12" letter-spacing="2">南冈炮座</text></g>
+      <g class="camp c5"><circle class="halo" cx="172" cy="470" r="5"/><circle class="flame" cx="172" cy="470" r="3.2"/><text x="60" y="500" fill="#8a6a5e" font-size="12" letter-spacing="2">太山庙寨</text></g>
+      <g class="camp c6"><circle class="halo" cx="128" cy="120" r="5"/><circle class="flame" cx="128" cy="120" r="3.2"/><text x="52" y="106" fill="#8a6a5e" font-size="12" letter-spacing="2">西北硬寨</text></g>
+      <g class="camp c7"><circle class="halo" cx="560" cy="540" r="5"/><circle class="flame" cx="560" cy="540" r="3.2"/><text x="540" y="568" fill="#8a6a5e" font-size="12" letter-spacing="2">双桥粮道</text></g>
+
+      <!-- 城墙 -->
+      <rect x="222" y="122" width="356" height="336" fill="#1e1e1a" stroke="#4a453a" stroke-width="3"/>
+      <rect x="232" y="132" width="336" height="316" fill="none" stroke="#332f26" stroke-width="1.5"/>
+
+      <!-- 城内十字街 -->
+      <line x1="400" y1="132" x2="400" y2="448" stroke="#2a2a24" stroke-width="10"/>
+      <line x1="232" y1="290" x2="568" y2="290" stroke="#2a2a24" stroke-width="10"/>
+
+      <!-- 灯火 -->
+      <circle class="lamp" cx="330" cy="205" r="4"/><circle class="lamp" cx="470" cy="205" r="4"/>
+      <circle class="lamp" cx="330" cy="375" r="4"/><circle class="lamp" cx="470" cy="375" r="4"/>
+      <circle class="lamp" cx="400" cy="290" r="5"/>
+
+      <!-- 谯楼 -->
+      <rect x="384" y="274" width="32" height="32" fill="#26241c" stroke="#5a5140" stroke-width="1.5"/>
+      <text x="400" y="326" fill="#7d7460" font-size="12" letter-spacing="3" text-anchor="middle">谯楼</text>
+
+      <!-- 四门（两扇） -->
+      <g><!-- 北 寿山门 -->
+        <rect class="gn gl" x="386" y="116" width="13" height="12"/>
+        <rect class="gn gr" x="401" y="116" width="13" height="12"/>
+        <text x="400" y="104" fill="#9a9483" font-size="12.5" letter-spacing="3" text-anchor="middle">寿山门</text>
+      </g>
+      <g><!-- 南 梦泽门 -->
+        <rect class="gn gl" x="386" y="452" width="13" height="12"/>
+        <rect class="gn gr" x="401" y="452" width="13" height="12"/>
+        <text x="400" y="484" fill="#9a9483" font-size="12.5" letter-spacing="3" text-anchor="middle">梦泽门</text>
+      </g>
+      <g><!-- 西 大安门 -->
+        <rect class="gn gl" x="216" y="283" width="12" height="13"/>
+        <rect class="gn gr" x="216" y="298" width="12" height="13"/>
+        <text x="196" y="280" fill="#9a9483" font-size="12.5" letter-spacing="3" text-anchor="end">大安门</text>
+      </g>
+      <g><!-- 东 景陵门 -->
+        <rect class="gn gl" x="572" y="283" width="12" height="13"/>
+        <rect class="gn gr" x="572" y="298" width="12" height="13"/>
+        <text x="604" y="280" fill="#9a9483" font-size="12.5" letter-spacing="3">景陵门</text>
+      </g>
+
+      <!-- 门闩（点击） -->
+      <g id="bolt-g">
+        <rect x="330" y="430" width="140" height="14" rx="3" id="bolt"/>
+        <text id="bolt-hint" x="400" y="412" text-anchor="middle" letter-spacing="6">点此落闩</text>
+      </g>
+    </svg>
+
+    <div id="title-veil">
+      <div class="tmain" data-t="bk">开禧德安守城录</div>
+      <div class="tsub" data-t="bk2">宋 王致远 编</div>
+      <div id="seal">百有八日</div>
+    </div>
+  </div>
+  <div id="hero-foot">一座内陆小城，顶住了金人全部的攻城术</div>
+</div>
+
+<!-- ============ 一 缘起 ============ -->
+<section>
+  <div class="kicker">壹 · 缘起</div>
+  <h2>一场没人看好的围城</h2>
+  <p>开禧二年（1206），南宋权臣韩侂胃发动北伐，几路大军先后溃败，金人反而九路南下，两淮、京湖全线着火。德安府（今湖北安陆）深处内地，向来不设重兵，忽然就成了金军的猎物。守城的官员是将门之后，却从没打过仗。</p>
+  <div class="q">开禧兵衅既启，虏悉力闯诸郡。……独安陆以内地故，经理所不到，乃受敌最惨。<span class="src">曹彦约 序</span></div>
+  <p>城中真正的顶梁柱，是通判王允初，字元父，本书即其子王致远后来追编的战记。给全书作序的曹彦约说得毫不客气：</p>
+  <div class="q">守虽将家子，懦不解事，幸而得存，则余同年兄王元父之力也。<span class="src">曹彦约 序</span></div>
+  <p>围城最紧时，安陆疫病流行，粮食见底。曹彦约在江西听闻城中情形，落泪上书朝廷，留下那句把德安抬到全局高度的判断：</p>
+  <div class="q">路无安陆，是无鄂渚，自江以南将何所恃？<span class="src">曹彦约 序</span></div>
+
+  <div id="letters">
+    <div class="letter reveal">
+      <span class="lt">疫</span><span class="lb">围久疾起，粮尽至杀猫充饥。曹彦约闻之恻然，以为去人食人只差半步，驰书宣抚司与朝中，为孤城请命。</span><span class="who">据序文自述</span>
+    </div>
+    <div class="letter reveal">
+      <span class="lt">泪</span><span class="lb">序作者并非局外看客。他知道猫在寻常人家近乎子侄，杀猫而食，是绝境里最刺人的那根针。</span><span class="who">曹彦约，号东汇泽</span>
+    </div>
+    <div class="letter reveal">
+      <span class="lt">局</span><span class="lb">宣抚司空有虚名却无实兵，援军董世雄一路迁延不进。孤城望穿秋水，最后只能靠自己。</span><span class="who">序中痛陈时弊</span>
+    </div>
+  </div>
+
+  <p style="margin-top:36px">围合在冬月之十七，解围在次年三月初四，前后整整一百零八天。曹彦约事后总结：</p>
+  <div class="q">受围者百有八日，遮蔽天堑，困强虏以俟水潦，迄全其城，其用力良苦哉！<span class="src">曹彦约 序</span></div>
+</section>
+
+<!-- ============ 二 兵临 ============ -->
+<section>
+  <div class="kicker">贰 · 兵临</div>
+  <h2>十月十八，失魂之日</h2>
+  <div id="onset-grid">
+    <div>
+      <p>开禧二年冬，金军先破枣阳，枣阳溃卒流入德安，王允初力主招抚入城助守，太守则担心引狼入室，两人争到最后还是收下了这批人，他们后来成了守城战里最悍勇的一支。十月十八，金军主力赶到：</p>
+      <div class="q">虏众十余万自枣阳长驱而至，分布城之东西南三面高冈之上，旌旗蔽空，骑卒遍野，见者皆失魂魄。<span class="src">十月十八日乙未</span></div>
+      <p>此前两日，金军游骑已到城外<span class="qv">视地为营</span>，扎营的地形都替他们挑好了。城中做的第一件大事却带着仪式感：把观里供奉的圣祖画像请进城安放<span class="qv">恭迎圣祖御容入城</span>，分派宗室子弟扈侍。神像与军民同守一城，这在宋人心里，是一道定心的符。</p>
+      <p>十九日，突围驰出的信使在云梦县境几乎全灭，内外联络断绝。二十日起，金军开始正式攻城。守方随即定策：</p>
+      <div class="q">虏以重兵压孤城，人心惧惶，当奋我而慑彼。<span class="src">十月二十四日辛丑 议守之语</span></div>
+    </div>
+    <div>
+      <div class="camp-list">
+        <div class="camp-item"><span class="pos">北面</span><span class="nm">教场立中军，控扼陆路</span></div>
+        <div class="camp-item"><span class="pos">东面</span><span class="nm">景陵门外高冈列阵</span></div>
+        <div class="camp-item"><span class="pos">南面</span><span class="nm">梦泽门外山冈置炮</span></div>
+        <div class="camp-item"><span class="pos">西南</span><span class="nm">金泉寺设大寨屯重兵</span></div>
+        <div class="camp-item"><span class="pos">东南</span><span class="nm">连营七座，互为犄角</span></div>
+        <div class="camp-item"><span class="pos">水陆</span><span class="nm">涢水沿河置戍，断绝粮援</span></div>
+      </div>
+      <p style="font-size:13px; color:#8a857a; margin-top:14px">据日录文中营寨方位整理，城门名亦出日录。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 三 军报 ============ -->
+<section id="warband">
+  <div class="kicker" style="padding-left:6vw">叁 · 军报</div>
+  <h2 style="padding-left:6vw">一百零八天，挑九封</h2>
+  <p style="padding-left:6vw">正文是标准的逐日战记，一天一条，风雨不改。下面九签，按日子横排，向左拖动阅读。</p>
+</section>
+<div id="band-scroll">
+  <div class="report reveal">
+    <span class="day">十月廿三 · 庚子</span>
+    <div class="rt">一封射进来的恐吓信</div>
+    <div class="rx">金人把城中派往宣抚司的两名信使捉住处死，写成飞书射上城头，满城震恐。王允初一眼看穿这是空头恐吓：若真抓了正使，为何不把文书一并射来示众？谣言就此压住。</div>
+    <div class="q">尔城中遣二使持书往宣司乞援，至应城为我所获，今醢之矣。……乃以空言惑众邪！<span class="src">十月廿三日庚子</span></div>
+  </div>
+  <div class="report reveal">
+    <span class="day">十一月初五 · 辛亥</span>
+    <div class="rt">往河水里下毒</div>
+    <div class="rx">城中选了十名敢死之士，深夜带着药，分头投进城外几处水道。金军战马饮水中毒，机动力量被打掉一大截。隔几日又换一处水域接着下。</div>
+    <div class="q">赍药毒陈婆港、西水步、东水步双桥步及寿山门外水，以绝马饮。<span class="src">十一月初五日辛亥</span></div>
+  </div>
+  <div class="report reveal">
+    <span class="day">十一月十七 · 癸亥</span>
+    <div class="rt">驱民填壕，不忍射</div>
+    <div class="rx">金军驱赶掳来的百姓在城下作业，攻城的人盾竟是被掳的宋人。城头守军看清之后拉不开弓，只能改用火箭烧攻具的竹木，这一天的战报写得格外沉重。</div>
+    <div class="q">众知为虏驱吾民，不忍射，第以火箭焚其竹。<span class="src">十月十七日癸亥</span></div>
+  </div>
+  <div class="report reveal">
+    <span class="day">十一月末 · 丙午</span>
+    <div class="rt">两百人摸黑斫营</div>
+    <div class="rx">守方不止被动挨打。茶商武装与本地土豪组成的敢死队趁夜出城，一把火烧了金军屯在城北的攻城器械与填壕竹料，天亮前撤回。此后这类夜袭成了常态。</div>
+    <div class="q">遣宣效勇锐并茶商土豪等二百余人斫营，焚其攻具。<span class="src">十月廿九日丙午</span></div>
+  </div>
+  <div class="report reveal">
+    <span class="day">正月初七 · 癸未</span>
+    <div class="rt">金人在壕外破口大骂</div>
+    <div class="rx">毒水之外，守军又夜夜下城投毒纵火。金军战马接连倒毙七百余匹，气得隔着城壕朝城头叫骂，此后被迫把马群迁往山坡。同一夜，守军还往河里投了毒草与硫黄。</div>
+    <div class="q">虏军隔壕呼曰：“南家子太毒害，夜杀我马七百余匹。”<span class="src">正月初七日癸未</span></div>
+  </div>
+  <div class="report reveal">
+    <span class="day">正月十九 · 乙未</span>
+    <div class="rt">离间书又来了</div>
+    <div class="rx">金人探知城中知府与通判不合？不，是造谣说官吏早想投降，只因通判王某一人执迷不肯。这封离间书把火力对准了王允初本人，反证他才是守城的主心骨。</div>
+    <div class="q">乃虏间谍，云：“城中知府与官吏欲拜降，只缘通判王某执迷不肯。”<span class="src">正月十九日乙未</span></div>
+  </div>
+  <div class="report reveal">
+    <span class="day">正月廿三 · 己巳</span>
+    <div class="rt">炮手陈云的神射</div>
+    <div class="rx">金军五座大炮里，九稍炮的炮手最准。城头炮手陈云请命专打这一门：彼此隔着城墙，全凭耳朵和经验校准。连打几轮，果然砸碎了对方最精的炮手组。</div>
+    <div class="q">其九稍之匠手最高，石无虚发，城中之炮与彼隔城，乃能视不以目，而度以意，尚犹命中。<span class="src">正月廿三日己巳</span></div>
+  </div>
+  <div class="report reveal">
+    <span class="day">正月廿四 · 庚午</span>
+    <div class="rt">一座“宝塔”推过来</div>
+    <div class="rx">南门外忽然出现一座高得像佛塔的庞然大物，几十匹马拉，几百人推，进进退退，满城猜不透。王允初远望一眼就报出了答案：草塔，外束薪草，是要推到城下放火烧楼的。</div>
+    <div class="q">有攻具耸如浮屠，马数十挽于前，卒数百拥于后，或进或退，众莫能辨。……草塔也。其状高而锐，人不可登，束萏茭为烽，是将附城以焚吾楼橹。<span class="src">正月廿四日庚午</span></div>
+  </div>
+  <div class="report reveal">
+    <span class="day">三月初四 · 己卯</span>
+    <div class="rt">火光烛天，围解了</div>
+    <div class="rx">土山快要堆到城边，金军却已无心恋战：两个月造的攻具全被烧光，草塔、天桥、对楼化为灰烬。三月初四，金军自焚余寨，列队渡河西去。城门开了，德安还在。</div>
+    <div class="q">两月所造攻具，悉遭焚毁，不复振。<span class="src">三月初四日己卯</span></div>
+  </div>
+</div>
+
+<!-- ============ 四 攻守 ============ -->
+<section>
+  <div class="kicker">肆 · 攻守</div>
+  <h2>金人搬来的，都被拆了</h2>
+  <p>围城期间，金军几乎把当时攻城武备里叫得出名字的家伙什全用了一遍。守方没有奇招，只有更勤快的夜袭、更毒的水源、更准的炮。点牌翻面，看每件攻具的下场。</p>
+  <div id="vs">
+    <div>
+      <div class="colhead head-jin">金军攻具</div>
+      <div class="cardstack">
+        <div class="fcard jin"><div class="inner">
+          <div class="fface front"><div class="fn">鹅车 · 洞子</div><div class="fd">蒙皮掩体，推至城根作业</div></div>
+          <div class="fface back">守军以大炮集射，<span class="qv">城中益炮于景陵门应之，杀贼三十余，碎洞子十余</span>，金军被迫后撤。</div>
+        </div></div>
+        <div class="fcard jin"><div class="inner">
+          <div class="fface front"><div class="fn">对楼 · 天桥</div><div class="fd">高层木楼，欲接城墙以登</div></div>
+          <div class="fface back">夜袭队屡焚其半成品，将成之器终未搭上城头一步。</div>
+        </div></div>
+        <div class="fcard jin"><div class="inner">
+          <div class="fface front"><div class="fn">九稍炮</div><div class="fd">多人拽梢的重型抛石机</div></div>
+          <div class="fface back">炮组被陈云隔城点名拔除，<span class="qv">石无虚发</span>的优势一日而失。</div>
+        </div></div>
+        <div class="fcard jin"><div class="inner">
+          <div class="fface front"><div class="fn">草塔</div><div class="fd">束草为塔，推近纵火</div></div>
+          <div class="fface back">被识破后守军备好火箭专候，塔近城即万箭齐发，<span class="qv">束萏茭为烽，是将附城以焚吾楼橹</span>的算盘落空。</div>
+        </div></div>
+        <div class="fcard jin"><div class="inner">
+          <div class="fface front"><div class="fn">土山 · 填壕</div><div class="fd">垒土上山，填平城壕</div></div>
+          <div class="fface back">填到壕平山成，攻具却已烧光，人未登城，围先解了。</div>
+        </div></div>
+      </div>
+    </div>
+    <div id="vs-middle"><span class="vs">对垒</span></div>
+    <div>
+      <div class="colhead head-song">守城应手</div>
+      <div class="cardstack">
+        <div class="fcard song"><div class="inner">
+          <div class="fface front"><div class="fn">夜斫营</div><div class="fd">敢死队夜出烧寨夺粮</div></div>
+          <div class="fface back">士卒周达<span class="qv">免胄袒裼，持戟逞虏，潜入南寨，夺其魁牌以还</span>，因功受赏升职。</div>
+        </div></div>
+        <div class="fcard song"><div class="inner">
+          <div class="fface front"><div class="fn">毒水绝饮</div><div class="fd">毒染水道，杀敌马匹</div></div>
+          <div class="fface back">两度投毒，金军自认折马七百余匹，被迫移马山坡。</div>
+        </div></div>
+        <div class="fcard song"><div class="inner">
+          <div class="fface front"><div class="fn">火箭火攻</div><div class="fd">专烧竹木造的攻具</div></div>
+          <div class="fface back">识破草塔当夜，<span class="qv">火箭尽发</span>，一炬而尽，满城欢呼。</div>
+        </div></div>
+        <div class="fcard song"><div class="inner">
+          <div class="fface front"><div class="fn">备炮造箭</div><div class="fd">围城中扩产军械</div></div>
+          <div class="fface back">守军一面修女墙，一面<span class="qv">委支使造麻翎弩箭二万</span>，把军工作为日常。</div>
+        </div></div>
+        <div class="fcard song"><div class="inner">
+          <div class="fface front"><div class="fn">招抚溃卒</div><div class="fd">收枣阳败兵为敢死</div></div>
+          <div class="fface back">五百刀斧手自卫队即出于此，夜战主力多赖这批亡命之徒。</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tap-hint">点牌可翻面</div>
+</section>
+
+<!-- ============ 五 人心 ============ -->
+<section>
+  <div class="kicker">伍 · 人心</div>
+  <h2>城没破，人心差点先破</h2>
+  <p>一百零八天里，最危险的从来不是城下的炮石，而是城里的疫病、粮价与谣言。金人的攻势后期明显转向攻心：射恐吓信、射离间书、喊话劝降、派旧识递条陈，样样都来。</p>
+  <div id="hearts">
+    <div class="paper-note reveal">
+      <div class="pt">疫疠</div>
+      <p>围到次年春天，城中大疫，粮食断绝，病弱的人家把猫杀了下锅。曹彦约在序里记下这八个字时，显然被刺痛了：</p>
+      <div class="q">城中疫疠大作，老且病者醢猫以侑食。<span class="src">曹彦约 序</span></div>
+      <p>他接着算的是一笔人心的账：</p>
+      <div class="q">人之爱猫，近于爱子，杀猫而甘其味，去相食无几矣。<span class="src">曹彦约 序</span></div>
+    </div>
+    <div class="paper-note reveal">
+      <div class="pt">劝降</div>
+      <p>一封封射上城头的信，内容从“使者已被剁成肉酱”到“官吏早想投降，只怪通判执迷”，全冲着瓦解意志来。而江陵书生柳束民受金人指使射入的说降长文，被王允初旧识识破来历，更是成了守军的一个笑话。</p>
+      <p>守方的应对是反着来的：每有小胜，必大张旗鼓；每有赏赐，必当众兑现。城中甚至靠方士之法鼓舞士气<span class="qv">祭北斗于清风楼</span>，斩狗血咒射入敌营，今天看是迷信，当时看是强心针。</p>
+    </div>
+  </div>
+  <div class="mourning">围解之后二十余年，王允初去世。其子王致远将逐日战录辑成此编，又请出曹彦约一篇序。</div>
+</section>
+
+<!-- ============ 尾屏 ============ -->
+<section id="ending">
+  <div class="gate-open reveal"></div>
+  <div class="sub">城上日历，翻到了头</div>
+  <div id="bignum">凡百有八日</div>
+  <div class="q reveal">自十一月十七日围合，三月四日退师，凡百有八日。其始至，悉师附城者三，直谓下城如探囊。既而知备御整暇，守城有人，时出奇以应敌。<span class="src">卷末总叙</span></div>
+  <p id="epitaph">金人以为探囊可取的小城，硬是把鹅车、对楼、草塔与土山一样样熬成了灰。多年后叶适挽王允初，只用了十个字：</p>
+  <div class="q reveal" style="max-width:420px">共传君善守，能护国西陲。<span class="src">叶适 王运使挽词</span></div>
+</section>
+
+<footer>
+  文本来源：殆知阁简体库〈<span data-t="bk3">开禧德安守城录</span>〉史藏志存记录部 <a href="https://github.com/raptazure/daizhige-daodu">daizhige-daodu 仓库</a><br>
+  引文已与库内文件逐字核验 · 原文照录宋人用语，含「虏」「醢」等时代性表述<br>
+  本书为八百年前战时记录，叙述立场受时代局限，今日读之当有分辨。导读系列第三八一篇（卷二百六十一 · 堞影）
+</footer>
+
+<script>
+(function(){
+  var body = document.body;
+
+  /* 落闩 */
+  var bolt = document.getElementById('bolt-g');
+  bolt.addEventListener('click', function(){
+    if(body.classList.contains('opened')) return;
+    body.classList.add('opened');
+  }, {once:false});
+
+  /* 围城进度轨 */
+  var fill = document.getElementById('siege-fill');
+  var nodes = document.querySelectorAll('.rail-node');
+  var labels = document.querySelectorAll('.rail-label');
+  function rail(){
+    var h = document.documentElement;
+    var p = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    fill.style.height = (p*100).toFixed(1) + '%';
+    for(var i=0;i<nodes.length;i++){
+      var th = [0.02, 0.45, 0.9][i];
+      var on = p >= th;
+      nodes[i].classList.toggle('on', on);
+      if(labels[i]) labels[i].classList.toggle('on', on);
+    }
+  }
+  window.addEventListener('scroll', rail, {passive:true});
+  rail();
+
+  /* reveal */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('vis'); io.unobserve(e.target); }
+    });
+  }, {threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  /* 翻牌 */
+  document.querySelectorAll('.fcard').forEach(function(c){
+    c.addEventListener('click', function(){ c.classList.toggle('flip'); });
+  });
+})();
+</script>
+</body>
+</html>
