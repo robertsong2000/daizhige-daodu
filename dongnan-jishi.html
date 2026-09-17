@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>东南纪事 · 潮信簿 · 殆知阁导读</title>
+<style>
+:root{
+  --bg:#191917; --paper:#e8e4dc; --gold:#c9963f; --red:#c0453c;
+  --ink:#0f0f0e; --dim:rgba(232,228,220,.55); --faint:rgba(232,228,220,.28);
+  --line:rgba(201,150,63,.35); --sea:#10151a; --sea2:#0b0f13;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--paper);font-family:"Songti SC","STSong","SimSun","Noto Serif SC",serif;line-height:1.9;overflow-x:hidden}
+.mono{font-family:"SF Mono",Menlo,Consolas,monospace}
+a{color:inherit}
+
+/* ---------- hero ---------- */
+#hero{position:relative;height:100vh;min-height:620px;overflow:hidden;background:linear-gradient(180deg,#191917 0%,#14171a 55%,#10151a 100%)}
+#hero .moon{position:absolute;top:9%;right:14%;width:52px;height:52px;border-radius:50%;background:rgba(232,228,220,.85);box-shadow:0 0 60px 18px rgba(232,228,220,.12);opacity:.9;transition:opacity 2s}
+#hero .star{position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(232,228,220,.4)}
+#water{position:absolute;left:0;right:0;bottom:0;height:62%;background:linear-gradient(180deg,var(--sea) 0%,var(--sea2) 100%);transition:height 3.2s cubic-bezier(.6,.05,.4,1)}
+#water::before{content:"";position:absolute;top:-2px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold) 30%,rgba(201,150,63,.5) 70%,transparent);opacity:.55}
+#water .wline{position:absolute;left:0;right:0;height:1px;background:rgba(201,150,63,.10)}
+#staff{position:absolute;left:50%;top:14%;bottom:0;width:6px;margin-left:-3px;background:linear-gradient(180deg,rgba(232,228,220,.15),rgba(232,228,220,.05));z-index:3}
+#staff .tick{position:absolute;left:-10px;right:-10px;height:1px;background:rgba(232,228,220,.18)}
+#staff .glyph{position:absolute;left:16px;white-space:nowrap;font-size:13px;color:var(--faint);letter-spacing:.2em}
+#stele{position:absolute;left:50%;bottom:9%;transform:translateX(-50%) translateY(40px);opacity:0;z-index:4;transition:opacity 1.6s ease .9s,transform 1.6s ease .9s;text-align:center}
+#stele .slab{background:linear-gradient(180deg,#232220,#1b1b19);border:1px solid var(--line);border-radius:6px 6px 2px 2px;padding:34px 44px 26px;box-shadow:0 30px 60px rgba(0,0,0,.6),inset 0 0 40px rgba(0,0,0,.5)}
+#stele h1{writing-mode:vertical-rl;font-size:54px;font-weight:400;letter-spacing:.22em;color:var(--paper);height:360px;margin:0 auto}
+#stele .by{margin-top:14px;font-size:13px;color:var(--dim);letter-spacing:.3em}
+#stele .seal{position:absolute;right:-18px;top:-16px;width:52px;height:52px;background:var(--red);color:var(--paper);writing-mode:vertical-rl;display:flex;align-items:center;justify-content:center;font-size:19px;letter-spacing:4px;border-radius:4px;box-shadow:0 4px 14px rgba(192,69,60,.4)}
+#hero .eyebrow{position:absolute;top:6%;left:50%;transform:translateX(-50%);font-size:13px;letter-spacing:.5em;color:var(--dim);white-space:nowrap}
+#hero .hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-size:13px;color:var(--dim);letter-spacing:.2em;z-index:6;text-align:center}
+#ebbt{position:absolute;bottom:64px;left:50%;transform:translateX(-50%);z-index:6;background:none;border:1px solid var(--gold);color:var(--gold);font-family:inherit;font-size:15px;letter-spacing:.6em;text-indent:.6em;padding:10px 26px 10px 30px;cursor:pointer;border-radius:2px;transition:all .4s}
+#ebbt:hover{background:rgba(201,150,63,.12)}
+#ebbt.done{opacity:0;pointer-events:none}
+#hero.low #water{height:13%}
+#hero.low .moon{opacity:.35}
+
+/* ---------- rail ---------- */
+#rail{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:7px;align-items:center}
+#rail .cap{writing-mode:vertical-rl;font-size:11px;color:var(--faint);letter-spacing:.15em}
+#rail .tick{width:22px;height:3px;background:rgba(232,228,220,.13);border-radius:2px;position:relative;transition:background .5s}
+#rail .tick.on{background:var(--gold)}
+#rail .tick .yr{position:absolute;left:28px;top:-5px;font-size:10px;color:var(--faint);opacity:0;transition:opacity .4s;white-space:nowrap}
+#rail .tick.on .yr{opacity:1;color:var(--gold)}
+@media(max-width:920px){#rail{display:none}}
+
+/* ---------- sections ---------- */
+main{position:relative}
+.sec{max-width:880px;margin:0 auto;padding:110px 24px 60px;position:relative}
+.sec-head{display:flex;align-items:baseline;gap:18px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:34px;flex-wrap:wrap}
+.sec-head .gz{font-size:46px;color:var(--gold);letter-spacing:.1em}
+.sec-head h2{font-size:25px;font-weight:400;letter-spacing:.2em}
+.sec-head .tide-tag{margin-left:auto;font-size:12px;color:var(--dim);border:1px solid var(--line);padding:3px 12px;border-radius:20px;letter-spacing:.3em}
+.sec-head .tide-tag.fall{color:var(--red);border-color:rgba(192,69,60,.5)}
+.sec p.body{font-size:15.5px;color:rgba(232,228,220,.82);margin-bottom:18px;text-align:justify}
+em.hl{font-style:normal;color:var(--gold)}
+em.rd{font-style:normal;color:var(--red)}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.reveal.vis{opacity:1;transform:none}
+
+/* quotes */
+.q{position:relative;background:rgba(232,228,220,.045);border-left:3px solid var(--gold);padding:16px 20px;margin:20px 0;font-size:15.5px;color:var(--paper);text-align:justify}
+.q .qn{display:block;margin-top:8px;font-size:12px;color:var(--faint);letter-spacing:.1em}
+.q.qred{border-left-color:var(--red)}
+.qpair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:720px){.qpair{grid-template-columns:1fr}}
+.qnote{font-size:12.5px;color:var(--faint);margin:-8px 0 20px;padding-left:4px}
+
+/* S1 three plans */
+#plans{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0}
+@media(max-width:720px){#plans{grid-template-columns:repeat(2,1fr)}}
+.plan{border:1px solid var(--line);border-radius:4px;padding:14px 12px;cursor:pointer;transition:all .4s;background:rgba(0,0,0,.15)}
+.plan h4{font-size:14px;color:var(--gold);letter-spacing:.15em;margin-bottom:8px;font-weight:400}
+.plan p{font-size:12.5px;color:var(--dim);line-height:1.7}
+.plan.none{border-color:rgba(192,69,60,.55)}
+.plan.none h4{color:var(--red)}
+.plan.picked{background:rgba(201,150,63,.10);transform:translateY(-4px)}
+.plan.none.picked{background:rgba(192,69,60,.10)}
+#planVerdict{margin-top:14px;min-height:54px}
+#planVerdict .q{margin:0}
+
+/* S2 calendar flip */
+#calCard{max-width:520px;margin:26px auto;border:1px solid var(--line);border-radius:6px;overflow:hidden;cursor:pointer;user-select:none}
+#calCard .face{padding:30px 20px;text-align:center;transition:opacity .35s}
+#calCard .date{font-size:30px;letter-spacing:.18em;color:var(--gold)}
+#calCard .ev{font-size:14px;color:var(--dim);margin-top:10px}
+#calCard .hintbar{border-top:1px solid var(--line);font-size:12px;color:var(--faint);padding:9px;letter-spacing:.2em;text-align:center}
+#calNote{text-align:center;font-size:12.5px;color:var(--faint);margin-top:8px}
+
+/* S3 epitaph */
+#tombWrap{display:grid;grid-template-columns:120px 1fr;gap:22px;margin:28px 0;align-items:start}
+@media(max-width:720px){#tombWrap{grid-template-columns:1fr}}
+#tombBtn{writing-mode:vertical-rl;background:#222220;border:1px solid var(--line);color:var(--paper);font-family:inherit;font-size:19px;letter-spacing:.3em;padding:22px 14px;border-radius:4px;cursor:pointer;transition:all .4s}
+#tombBtn:hover{border-color:var(--gold)}
+#tomb{overflow:hidden;max-height:0;transition:max-height 1.4s ease}
+#tomb .inner{border:1px dashed var(--line);border-radius:4px;padding:20px 22px;background:rgba(0,0,0,.18)}
+#tomb .zhititle{font-size:14px;color:var(--gold);letter-spacing:.3em;margin-bottom:10px}
+#tomb .zhiline{font-size:15px;line-height:2}
+#tomb .zhinote{font-size:12.5px;color:var(--faint);margin-top:12px;line-height:1.8}
+#tomb .ext{color:var(--paper);background:rgba(201,150,63,.07);padding:2px 6px;border-radius:2px}
+
+/* S4 arrows */
+#arrowStage{display:grid;grid-template-columns:150px 1fr;gap:26px;margin:28px 0;align-items:center}
+@media(max-width:720px){#arrowStage{grid-template-columns:1fr}}
+#post{position:relative;height:230px;width:100%;max-width:150px;background:linear-gradient(180deg,#2a2723,#1c1a17);border-radius:5px;border:1px solid rgba(201,150,63,.25)}
+#post::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 26px,rgba(0,0,0,.35) 26px 27px)}
+.arrow{position:absolute;height:2px;width:120px;background:var(--faint);top:0;left:-140px;transition:left 1s cubic-bezier(.5,0,.8,.5)}
+.arrow::after{content:"";position:absolute;right:-2px;top:-4px;border-left:10px solid var(--dim);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.arrow.fired{left:18px}
+#post .hitmark{position:absolute;left:12px;width:8px;height:8px;border-radius:50%;background:var(--red);opacity:0;transition:opacity .3s 1s}
+#post .hitmark.show{opacity:1}
+#arrowSide .btnrow{display:flex;gap:12px;flex-wrap:wrap}
+button.ghost{background:none;border:1px solid var(--gold);color:var(--gold);font-family:inherit;font-size:14px;letter-spacing:.3em;text-indent:.3em;padding:8px 18px;border-radius:2px;cursor:pointer;transition:all .35s}
+button.ghost:hover{background:rgba(201,150,63,.12)}
+#headBox{margin-top:20px;border:1px solid var(--line);border-radius:4px;padding:14px 16px;font-size:13.5px;color:var(--dim);cursor:pointer;transition:all .4s;background:rgba(0,0,0,.15)}
+#headBox .hb-in{max-height:0;overflow:hidden;transition:max-height .8s ease}
+#headBox.open .hb-in{max-height:300px}
+#headBox .lbl{color:var(--gold);letter-spacing:.2em;font-size:13px}
+#headBox .hb-in p{margin-top:10px;line-height:1.9}
+
+/* S5 tattoo */
+#backWrap{display:grid;grid-template-columns:180px 1fr;gap:26px;margin:28px 0;align-items:center}
+@media(max-width:720px){#backWrap{grid-template-columns:1fr}}
+#backFigure{position:relative;width:180px;height:250px;cursor:pointer}
+#backFigure .torso{position:absolute;inset:0;background:linear-gradient(180deg,#2c2a26,#201e1b);border-radius:60px 60px 26px 26px;border:1px solid rgba(201,150,63,.25)}
+#backFigure .neck{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:46px;height:26px;background:#2c2a26;border-radius:8px 8px 0 0;border:1px solid rgba(201,150,63,.25);border-bottom:none}
+#tattoo{position:absolute;inset:0;display:grid;grid-template-columns:repeat(2,1fr);place-items:center;padding:30px 30px;opacity:0;transition:opacity 1.2s ease}
+#tattoo span{writing-mode:vertical-rl;font-size:30px;color:var(--red);text-shadow:0 0 14px rgba(192,69,60,.35)}
+#backFigure.stamped #tattoo{opacity:1}
+#backFigure .bhint{position:absolute;bottom:-34px;left:0;right:0;text-align:center;font-size:12px;color:var(--faint);letter-spacing:.2em}
+
+/* S6 river */
+#river{display:flex;align-items:center;gap:0;margin:30px 0 8px;overflow-x:auto;padding:10px 0}
+#river .node{flex:0 0 auto;text-align:center;position:relative;cursor:pointer;padding:0 18px}
+#river .dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--faint);margin:0 auto 8px;transition:all .5s}
+#river .nm{font-size:13px;color:var(--dim);letter-spacing:.15em;white-space:nowrap}
+#river .link{flex:0 0 34px;height:2px;background:rgba(232,228,220,.13);position:relative;top:-12px}
+#river .node.gold .dot{background:var(--gold);border-color:var(--gold);box-shadow:0 0 12px rgba(201,150,63,.6)}
+#river .node.gold .nm{color:var(--gold)}
+#river .node.broke .dot{background:var(--red);border-color:var(--red)}
+#river .node.broke .nm{color:var(--red)}
+#riverHint{text-align:center;font-size:12.5px;color:var(--faint)}
+#riverRes{min-height:44px;text-align:center;font-size:13.5px;color:var(--dim);margin-top:6px}
+
+/* S7 last words */
+#jueci{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0}
+@media(max-width:720px){#jueci{grid-template-columns:repeat(2,1fr)}}
+.jcard{border:1px solid var(--line);border-radius:4px;padding:18px 10px;text-align:center;cursor:pointer;transition:all .5s;background:rgba(0,0,0,.15)}
+.jcard .v{writing-mode:vertical-rl;margin:0 auto;height:130px;font-size:19px;color:var(--faint);letter-spacing:.3em;transition:color .5s}
+.jcard.lit{border-color:var(--gold);background:rgba(201,150,63,.08)}
+.jcard.lit .v{color:var(--paper)}
+.jcard .n{font-size:11px;color:var(--faint);margin-top:10px}
+#dimveil{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity 1.6s;z-index:80}
+#dimveil.on{opacity:.62}
+#rain{position:fixed;inset:-10%;pointer-events:none;z-index:81;opacity:0;transition:opacity 1s;background:repeating-linear-gradient(74deg,transparent 0 46px,rgba(232,228,220,.13) 46px 47px)}
+#rain.on{opacity:1;animation:rainmove 1.1s linear infinite}
+@keyframes rainmove{from{transform:translateY(-40px)}to{transform:translateY(40px)}}
+
+/* chuanque wall */
+#wall{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0}
+@media(max-width:720px){#wall{grid-template-columns:repeat(2,1fr)}}
+.mo{border:1px solid rgba(232,228,220,.16);border-radius:4px;padding:16px 12px;text-align:center;position:relative;background:rgba(0,0,0,.2)}
+.mo .nm{font-size:17px;letter-spacing:.25em;color:var(--dim)}
+.mo .mk{font-size:20px;color:#000;text-shadow:0 0 1px rgba(232,228,220,.25);margin-top:6px;letter-spacing:.2em}
+.mo .why{display:block;font-size:11px;color:var(--faint);margin-top:8px;letter-spacing:.15em}
+#wallNote{font-size:13px;color:var(--dim);text-align:center;margin-bottom:26px}
+
+/* author */
+#author{max-width:880px;margin:0 auto;padding:40px 24px 20px}
+#author .in{border:1px solid var(--line);border-radius:6px;padding:28px 30px;background:rgba(0,0,0,.16)}
+#author h3{font-size:19px;font-weight:400;letter-spacing:.3em;color:var(--gold);margin-bottom:14px}
+#author p{font-size:14.5px;color:rgba(232,228,220,.8);margin-bottom:12px;text-align:justify}
+
+/* coda */
+#coda{height:78vh;min-height:520px;position:relative;background:linear-gradient(180deg,var(--bg) 0%,#14171a 100%);display:flex;align-items:center;justify-content:center;overflow:hidden}
+#coda .flat{position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(180deg,rgba(232,228,220,.05),rgba(232,228,220,.015));border-top:1px solid rgba(201,150,63,.18)}
+#coda .cd{position:relative;text-align:center;z-index:2}
+#coda .sealbig{width:86px;height:86px;margin:0 auto 24px;background:var(--red);border-radius:6px;display:grid;grid-template-columns:1fr 1fr;place-items:center;padding:12px;box-shadow:0 10px 30px rgba(192,69,60,.35)}
+#coda .sealbig span{font-size:26px;color:var(--paper);line-height:1}
+#coda .line1{font-size:22px;letter-spacing:.4em;color:var(--paper)}
+#coda .line2{margin-top:16px;font-size:13px;color:var(--dim);letter-spacing:.2em}
+
+/* footer */
+footer{border-top:1px solid rgba(232,228,220,.12);padding:44px 24px 60px;max-width:880px;margin:0 auto;font-size:12.5px;color:var(--faint);line-height:2}
+footer p{margin-bottom:10px}
+footer b{color:var(--dim);font-weight:400}
+footer a{color:var(--gold);text-decoration:none;border-bottom:1px dotted rgba(201,150,63,.4)}
+</style>
+</head>
+<body>
+
+<section id="hero">
+  <div class="moon"></div>
+  <span class="star" style="top:12%;left:18%"></span>
+  <span class="star" style="top:22%;left:30%"></span>
+  <span class="star" style="top:8%;left:62%"></span>
+  <span class="star" style="top:26%;left:76%"></span>
+  <span class="star" style="top:16%;left:86%"></span>
+  <div id="water">
+    <div class="wline" style="top:22%"></div>
+    <div class="wline" style="top:46%"></div>
+    <div class="wline" style="top:71%"></div>
+  </div>
+  <div id="stele">
+    <div class="slab">
+      <div class="seal">潮信</div>
+      <h1>东南纪事</h1>
+      <div class="by">清 邵廷采 撰</div>
+    </div>
+  </div>
+  <div id="staff">
+    <span class="glyph" style="top:0">洪涛</span>
+    <span class="glyph" style="top:24%">平潮</span>
+    <span class="glyph" style="top:52%">低潮</span>
+    <span class="glyph" style="top:78%">枯见</span>
+    <div class="tick" style="top:12%"></div><div class="tick" style="top:24%"></div>
+    <div class="tick" style="top:36%"></div><div class="tick" style="top:48%"></div>
+    <div class="tick" style="top:60%"></div><div class="tick" style="top:72%"></div>
+    <div class="tick" style="top:84%"></div>
+  </div>
+  <div class="eyebrow">殆知阁导读 · 卷二百四十四 海朔</div>
+  <button id="ebbt">落潮</button>
+  <div class="hint">潮涨二十年，潮落一卷书。点「落潮」，碑自水底出。</div>
+</section>
+
+<nav id="rail" aria-hidden="true"><div class="cap">乙酉</div></nav>
+
+<main>
+
+  <!-- S1 -->
+  <section class="sec" id="s1" data-y="1645">
+    <div class="sec-head reveal"><span class="gz">乙酉</span><h2>帝出高墙</h2><span class="tide-tag">涨</span></div>
+    <p class="body reveal">隆武帝朱聿键，是明朝宗室里命最硬的一个。三岁那年，祖父端王宠妾灭妻，把他父亲囚死在承奉所，幼儿跟着一起坐监；崇祯九年他擅自起兵勤王，皇帝震怒，废为庶人，押进凤阳高墙，一关七年。守陵太监索贿不成，把他墩锁折磨到几乎病死，王妃曾氏割下自己腿上的肉给他做药引，才捡回一条命。这样的出身，养出一位罕见勤俭的皇帝：顺治二年闰六月，他在福州即位，改元隆武。</p>
+    <p class="body reveal">可惜兵马钱粮全在郑芝龙手里。皇帝要出关，芝龙只报「饷不足」，拜将出师，行数里就罢。1646年，清军将至，礼部主事金堡上书献了三策，隆武挑了最坏的第四条。</p>
+    <div id="plans" class="reveal">
+      <div class="plan" data-p="0"><h4>上策</h4><p>奔湖南，合何腾蛟兵锋，直指荆襄，檄传中原。</p></div>
+      <div class="plan" data-p="1"><h4>中策</h4><p>移驾虔州，扼江西一块土，进止由我。</p></div>
+      <div class="plan" data-p="2"><h4>下策</h4><p>并力出关，城下决战，纵败，也算死得其所。</p></div>
+      <div class="plan none" data-p="3"><h4>无策</h4><p>往来延平、建宁之间，观望经时。</p></div>
+    </div>
+    <div id="planVerdict" class="reveal"></div>
+    <div class="qpair">
+      <div class="q reveal">八月廿一日，王发延平，御营皆散，犹载书十车以从。<span class="qn">卷一　亡命天子还不忘十车书</span></div>
+      <div class="q reveal">卿稍迟，朕与卿同行。<span class="qn">卷一　皇帝手敕邀郑芝龙同走，芝龙不顾</span></div>
+    </div>
+    <p class="body reveal">末路仓皇：清军越过仙霞岭，郑芝龙尽撤守关兵，暗通款曲。皇帝奔到汀州地界，从此不知所终。</p>
+    <div class="q qred reveal">曾后被执，自投九龙滩。<span class="qn">卷一　那位割股疗夫的曾皇后</span></div>
+    <p class="body reveal">隆武之弟在广州被苏观生等仓促扶立，改元绍武，登基到殉难只有四十天。清将李成栋带十七名骑兵晨袭广州，绍武帝变服逾垣被抓，拒绝进食：</p>
+    <div class="q qred reveal">吾若饮汝一勺水，何以见先帝于地下。<span class="qn">卷一　绍武帝绝食语</span></div>
+    <div class="q reveal">自即位至是日，凡四十日。<span class="qn">卷一　一个王朝的寿命</span></div>
+    <p class="body reveal">更奇的在书尾。黄宗羲记，有人从五指山来，说隆武帝其实没死，在那边做了和尚，故旧不敢信，也不敢不信。邵廷采把这段悬案原样抄下，只批了一句：</p>
+    <div class="q reveal">当传疑以俟后之考古有识者。<span class="qn">卷一　史家把案卷留给后人</span></div>
+  </section>
+
+  <!-- S2 -->
+  <section class="sec" id="s2" data-y="1645,1646">
+    <div class="sec-head reveal"><span class="gz">丙戌</span><h2>一海二朔</h2><span class="tide-tag">涨</span></div>
+    <p class="body reveal">福州立了唐王，绍兴又立了鲁王。唐王姿态放得很低，亲手给鲁王写信：</p>
+    <div class="q reveal">朕无子，王为太侄，和衷协力，共拜孝陵，朕有天下，终致于王。<span class="qn">卷二　叔侄之间的一纸甜言</span></div>
+    <p class="body reveal">话虽好听，旗下不肯相让：绍兴的诏书改称「令」，制度文书改称「敕」，自成一套小朝廷的名目。同一片海上从此有两套年号，各发各的历书。</p>
+    <div id="calCard" class="reveal">
+      <div class="face">
+        <div class="date">鲁监国元年 · 五月</div>
+        <div class="ev">江上之师溃，清兵入绍兴</div>
+      </div>
+      <div class="hintbar">点一下，换一部历书</div>
+    </div>
+    <div id="calNote">同一件事，三种纪年。永历要等到这年十一月才在肇庆立起来。</div>
+    <div class="q reveal">海上遂有二朔。<span class="qn">卷二　历法上的精神分裂</span></div>
+    <p class="body reveal">这年五月廿七，钱塘江罕见枯涸，北方骑兵策马过江，一炮打碎南军营灶。统帅方国安只说了一句：</p>
+    <div class="q qred reveal">天夺吾食。<span class="qn">卷二　弃军劫驾之前</span></div>
+    <p class="body reveal">更荒唐的一幕在海上。芝龙献鲁王给清军前，监军郑彩找了个相貌相近的南方人，穿上王的冠服坐在船里，交代他：</p>
+    <div class="q reveal">事急则缢死以示之。<span class="qn">卷二　一个准备勒死自己的替身</span></div>
+    <p class="body reveal">幸而芝龙北上，这出戏没有开场。鲁王移驻长垣，海上政权延续下去，而他的年号，将比他的地盘活得久。</p>
+  </section>
+
+  <!-- S3 -->
+  <section class="sec" id="s3" data-y="1653,1659,1662">
+    <div class="sec-head reveal"><span class="gz">壬寅</span><h2>王薨金门</h2><span class="tide-tag fall">落</span></div>
+    <p class="body reveal">此后十六年，鲁王再没有登过大陆。舟山陷落，他辗转金门，寄住在郑成功的屋檐下。这位曾经「监国」的亲王穷到什么地步？出门没有仪仗车马，递名帖求见，像一位寻常食客。</p>
+    <div class="qpair">
+      <div class="q reveal">出无舆导，至以名刺投谒。<span class="qn">卷二　监国的穷途</span></div>
+      <div class="q reveal">寄食郑氏如家人而已。<span class="qn">卷二　张煌言、徐孚远避嫌疑不敢入朝</span></div>
+    </div>
+    <p class="body reveal">1662年，郑成功收复台湾，把宗室迁了过去。当年冬天，寓居金门的鲁王病故。邵廷采记下他的结局时，笔下一滑，滑出了一桩三百年的错案。</p>
+    <div class="q qred reveal">十一月廿三日，王殂于金门，东葬台湾。<span class="qn">卷二　前半句对了，后半句错了</span></div>
+    <p class="body reveal">病死在金门，却被记成葬去台湾。此后各书辗转相抄，连后来的《台湾通史》都把他的卒地写在台湾。直到 1959 年 8 月，金门构筑工事，一圹志石出土，案才翻过来。</p>
+    <div id="tombWrap" class="reveal">
+      <button id="tombBtn">启圹</button>
+      <div id="tomb"><div class="inner">
+        <div class="zhititle">皇明监国鲁王圹志</div>
+        <div class="zhiline">志文：<span class="ext">王素有哮疾，壬寅十一月十三日中痰而薨</span>，<span class="ext">才四十有五</span>。</div>
+        <div class="zhinote">圹志 1959 年 8 月出土于金门，横额篆书八字，志文楷书七百余字，2011 年被指定为国宝。志石明明白白：王死在金门，也葬在金门。志文作十一月十三日，本书作廿三日，连日子都差了一天。</div>
+      </div></div>
+    </div>
+    <p class="body reveal">讣音传到张煌言军中，他代群臣起草祭文，两句写得海天同悲：</p>
+    <div class="q reveal">穆王驾骏以来归，已孤此愿，望帝化鹃而犹在，莫慰余思。<span class="qn">卷二　海外闻而哀之</span></div>
+    <p class="body reveal">「东葬台湾」四字，是这部书留下的最大一块误记，也因此成了它最有名的一页：一部苦心孤诣的史书，把一位漂泊半生的王爷，又往海上多送了三百年。</p>
+  </section>
+
+  <!-- S4 -->
+  <section class="sec" id="s4" data-y="1648,1651">
+    <div class="sec-head reveal"><span class="gz">戊子</span><h2>四明山寨</h2><span class="tide-tag">涨</span></div>
+    <p class="body reveal">大陆丢了，山还没丢。四明山里聚着王翊、冯京第一伙书生带的山寨，最盛时清军要三省联动围剿。山寨办的第一件大事，是跨国乞师：冯京第随船到日本长崎求援，岛王闭门不纳，他跪在船中哭拜不停，又血书驰告萨摩藩，日本朝廷议定发兵。坏就坏在同行的官员：泊船期间流连妓馆，被日本人看轻，出兵一事就此作罢。</p>
+    <div class="qpair">
+      <div class="q reveal">京第即舟中哭拜不已，哀动唐夷。<span class="qn">卷七　血书写在明朝的国旗上</span></div>
+      <div class="q qred reveal">孝卿假商舶留，耽官妓，见轻其国，日本卒不发兵。<span class="qn">卷七　一场国际求援，败给一场风流</span></div>
+    </div>
+    <p class="body reveal">同一时期，清方还派来一位「招抚专员」严我公。此人自己铸造告身银印，自称愿作第一个归顺的样板，招走了一批山寨头领。王翊营中有人要拦他的使者进京，喝问：</p>
+    <div class="q reveal">严我公动摇山海，宁可使之达行在哉？<span class="qn">卷七　随后的处置，库本只有半个字</span></div>
+    <p class="body reveal">1651年秋，山寨次第陷落。七月廿四夜，一颗大星坠于山中，野鸡惊鸣，王翊在北溪被俘。押过奉化时，他一路赋绝命诗；在狱里每天束好发巾、理鬓修容，对狱卒说：</p>
+    <div class="q reveal">令汝曹见此威仪也。<span class="qn">卷七　囚徒的最后体面</span></div>
+    <p class="body reveal">八月十二，清军大帅齐集定海会审。王翊席地而坐，只留一句话。三帅先后开弓，箭中肩、中颊、中胁，他纹丝不动。</p>
+    <div id="arrowStage" class="reveal">
+      <div id="post">
+        <div class="arrow" style="top:26%" data-hit="34"></div>
+        <div class="arrow" style="top:47%" data-hit="42"></div>
+        <div class="arrow" style="top:68%" data-hit="36"></div>
+        <div class="hitmark" style="top:30%"></div>
+        <div class="hitmark" style="top:51%"></div>
+        <div class="hitmark" style="top:72%"></div>
+      </div>
+      <div id="arrowSide">
+        <div class="btnrow"><button class="ghost" id="fireBtn">三帅齐射</button></div>
+        <div id="headBox">
+          <span class="lbl">刑后奇闻，点开看</span>
+          <div class="hb-in">
+            <p>王翊殉难后，头颅悬在宁波城头。义士毛明山夜里把它盗走，藏进鄞县人陆周明的书架，一藏多年；周明死后，弟弟开箱理书才见到。邵廷采在传末感叹：以王翊之贤，起兵时乡里还骂他是贼。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="q qred reveal">刘帅注矢射之，中肩，田帅中颊，金帅中胁，不动，如贯植木。<span class="qn">卷七　牙将二人也不跪，见者泣下</span></div>
+  </section>
+
+  <!-- S5 -->
+  <section class="sec" id="s5" data-y="1652,1655">
+    <div class="sec-head reveal"><span class="gz">壬辰</span><h2>赤心报国</h2><span class="tide-tag">涨</span></div>
+    <p class="body reveal">张名振，石浦的老军头，护着鲁王从钱塘退到海上。舟山陷落家破人亡之后，他三次带兵打进长江，登金山望祭孝陵，题诗恸哭而还。第三次入江前，郑成功看不起这位败军之将，不肯以礼相待。名振一言不发，转过身去，解开了衣背。</p>
+    <div id="backWrap" class="reveal">
+      <div id="backFigure">
+        <div class="neck"></div>
+        <div class="torso"></div>
+        <div id="tattoo"><span>赤</span><span>心</span><span>报</span><span>国</span></div>
+        <div class="bhint">点背影，看四字</div>
+      </div>
+      <div>
+        <p class="body" style="margin-bottom:14px">背上刺着四个大字，深入肤寸。郑成功当场改容，口称老将军，下拜，拨兵二万，约定共取南京。浙海一群人物里，邵廷采最看重这笔账：</p>
+        <div class="q">浙海之事，以舟山为终始。<span class="qn">卷十论曰</span></div>
+        <div class="q">名振之三抵金焦，皆所以存舟山也。<span class="qn">卷十论曰　三入长江，全为一座岛</span></div>
+      </div>
+    </div>
+    <p class="body reveal">但他回不去舟山了。母亲的尸骨陷在乱军里，他缟素入城寻尸恸哭，此后旧疾缠身。死前把后事托给张煌言，遗言只有一句：</p>
+    <div class="q qred reveal">吾于君母恩俱未报，若母尸不获，毋收吾骇。<span class="qn">卷十　骇字疑当作骸，照录。母尸不找到，别来收我的尸</span></div>
+    <div class="qpair">
+      <div class="q reveal">起坐击床而卒。<span class="qn">卷十　捶着床榻，声尽而绝</span></div>
+      <div class="q reveal">至名振遇毒，王闻，垂泪，几废寝膳。<span class="qn">卷二　鲁王为他吃不下饭</span></div>
+    </div>
+    <p class="body reveal">顺治十二年年尾，名振死在军中。库本在他身后留了三个字加一个墨钉：「或云：成功■」，是谁下的手，史家终究没敢写全。</p>
+  </section>
+
+  <!-- S6 -->
+  <section class="sec" id="s6" data-y="1659">
+    <div class="sec-head reveal"><span class="gz">己亥</span><h2>长江一役</h2><span class="tide-tag fall">落</span></div>
+    <p class="body reveal">1659年夏，郑成功率十七万水陆之师溯江，张煌言为先驱。这一仗先赢到近乎复国：芜湖檄文一下，四府三州二十四县纳款归附，长江中下游的遗民父老，等这一天等了十四年。</p>
+    <div id="river" class="reveal">
+      <div class="node" data-s="g"><div class="dot"></div><div class="nm">金山</div></div><div class="link"></div>
+      <div class="node" data-s="g"><div class="dot"></div><div class="nm">镇江</div></div><div class="link"></div>
+      <div class="node" data-s="g"><div class="dot"></div><div class="nm">观孝陵</div></div><div class="link"></div>
+      <div class="node" data-s="g"><div class="dot"></div><div class="nm">芜湖</div></div><div class="link"></div>
+      <div class="node" data-s="g"><div class="dot"></div><div class="nm">徽宁诸府</div></div><div class="link"></div>
+      <div class="node" data-s="b"><div class="dot"></div><div class="nm">南京城下</div></div>
+    </div>
+    <div id="riverHint">自右向左点节点，看进军与崩盘</div>
+    <div id="riverRes"></div>
+    <div class="q reveal">凡得府四、州三、县二十四。<span class="qn">卷十一　纸上疆土一夜铺开</span></div>
+    <div class="q reveal">顿兵坚城，师老易生他变。<span class="qn">卷十一　煌言驰书劝速攻，成功不纳</span></div>
+    <p class="body reveal">南京城下，郑军中了缓兵之计，梁化凤骑兵突袭，全军崩盘。义士罗子木抱住成功的脚哭着求别撤军，没有用。顺流而下的败兵里，煌言在铜陵被冲散，烧了船，翻山越岭两千里，步行回到台州海边。海滨人传说张兵部居然活着回来了，悲喜交集。多年后，写书人自己出场：</p>
+    <div class="q reveal">余游吴淞，遇梁化凤部将管姓者，述已亥战事颇悉。<span class="qn">卷十一论曰　邵廷采在吴淞口听老兵讲当年</span></div>
+    <div class="qpair">
+      <div class="q reveal">声如崩山，然犹按步鼓收兵。<span class="qn">卷十一论曰　败军仍有纪律，延平师有纪律如此</span></div>
+      <div class="q reveal">当勍敌多矣，未有如郑家之难败者。<span class="qn">卷十一论曰　出自对手梁化凤之口</span></div>
+    </div>
+    <p class="body reveal">此败之后，东南再无会师金陵的力量。清廷随即下迁界令，把沿海三十里犁成无人区，断绝海上一切接济。</p>
+    <div class="q qred reveal">立边界，著令寸板毋人海，粒米毋越疆，犯者死连坐。<span class="qn">卷十一　毋人海的「人」疑当作「入」，照录</span></div>
+    <div class="q reveal">滨海数十里，无复人烟。<span class="qn">卷十二　界墙与界寨，一筑就是十几年</span></div>
+    <div class="q reveal">春燕来巢于海舟。岛上食尽，各鸟兽散。<span class="qn">卷十一　连燕子都找不到旧巢的春天</span></div>
+  </section>
+
+  <!-- S7 -->
+  <section class="sec" id="s7" data-y="1662,1664">
+    <div class="sec-head reveal"><span class="gz">甲辰</span><h2>潮落</h2><span class="tide-tag fall">落</span></div>
+    <p class="body reveal">1664年，张煌言解散部众，只留数人隐居海岛。有人劝他去台湾依托郑氏，他的回答只留下八个字。这年七月，旧部叛卖，清兵夜袭孤岛，把他押进宁波城。</p>
+    <div class="qpair">
+      <div class="q reveal">方巾葛衣，轿而入，观者如堵墙。<span class="qn">卷九　囚车过处，万人围观</span></div>
+      <div class="q qred reveal">父死不能葬，国亡不能救，死有余罪。<span class="qn">卷九　面对清将的劝酒，张煌言的回答</span></div>
+    </div>
+    <div class="q reveal">但识张司马，何知常进功？<span class="qn">卷九　义士罗子木在公堂上大笑作答</span></div>
+    <p class="body reveal">九月初七，杭州弼教坊。刑前，他留下二十个字：</p>
+    <div id="jueci" class="reveal">
+      <div class="jcard" data-i="0"><div class="v">我年四十五</div><div class="n">一</div></div>
+      <div class="jcard" data-i="1"><div class="v">恰逢九月七</div><div class="n">二</div></div>
+      <div class="jcard" data-i="2"><div class="v">大厦已不支</div><div class="n">三</div></div>
+      <div class="jcard" data-i="3"><div class="v">成仁万事毕</div><div class="n">四</div></div>
+    </div>
+    <div class="q qred reveal">是日，骤雨昼晦，杭人知不知，皆恸哭。<span class="qn">卷九　点完四句，天色也替他暗一次</span></div>
+    <p class="body reveal">这部书里的殉亡，各有各的死法。黄道周的夫人蔡玉卿能仿丈夫书法，曾聚兵万人，号称夫人军。郑成功死在台湾，年三十九，邵廷采只给了一场风寒和一张胡床，著名的临终抓面，本书一字未提。他父亲郑芝龙的结局，则冷得像账房结账。</p>
+    <div class="qpair">
+      <div class="q reveal">成功感风寒，月朔受谒，尚坐胡床，诸将不知其病。数日，卒，年三十九。<span class="qn">卷十一　三十九岁，一句收束</span></div>
+      <div class="q reveal">设有不幸，儿当缟素。<span class="qn">卷十一　清廷以芝龙为质逼降，成功的回答</span></div>
+    </div>
+    <p class="body reveal">一年后，斩芝龙于燕市。当年泉州库吏的十个儿子里，海上有他的旗号，北京有他的刑场。再往后二十一年，郑氏降，台湾入清版图。亡国的最后一幕，是王府里那位挂了四十多年「宁靖王」虚衔的宗室，把衣冠穿戴整齐，对宫眷说：</p>
+    <div class="q qred reveal">此地已破，更无他往，吾以身殉，若等可自为计。<span class="qn">卷十二　台湾府城，1683年</span></div>
+    <div class="qpair">
+      <div class="q qred reveal">愿从死，请予尺帛。<span class="qn">卷十二　袁氏、王氏与三侍姬，五人同辞</span></div>
+      <div class="q reveal">冠笄先缢。<span class="qn">卷十二　先梳好发髻，再赴死</span></div>
+    </div>
+    <div class="q reveal">乃登帛自绝，面无变容。<span class="qn">卷十二　郡人士无幼老皆入拜，王答拜</span></div>
+    <p class="body reveal">邵廷采评张煌言，借王阳明的旧话起头：</p>
+    <div class="q reveal">死天下事易，成天下事难。<span class="qn">卷九论曰　王文成公有言</span></div>
+    <div class="q reveal">煌言固死而不死，不成而真有成也。<span class="qn">卷九论曰　全书最重的一句判词</span></div>
+    <p class="body reveal">煌言生前经过故乡，留过一句诗，自比两位古人：</p>
+    <div class="q reveal">苏武管宁，求仁得仁。<span class="qn">卷九　经故里诗句</span></div>
+  </section>
+
+  <!-- wall -->
+  <section class="sec" id="swall" data-y="">
+    <div class="sec-head reveal"><span class="gz">■</span><h2>传阙</h2><span class="tide-tag fall">缺</span></div>
+    <p class="body reveal">这本书自己也是一片海图上的残卷。目录里八个人名后面，标着「传阙」二字：立了传的题目在，传文没了。点击墨钉，看看他们各自还剩什么。</p>
+    <div id="wall" class="reveal">
+      <div class="mo"><span class="nm">杨廷麟</span><div class="mk">■■■■</div><span class="why">卷四 传阙</span></div>
+      <div class="mo"><span class="nm">张肯堂</span><div class="mk">■■■■</div><span class="why">卷五 传阙</span></div>
+      <div class="mo"><span class="nm">吴钟峦</span><div class="mk">■■■■</div><span class="why">卷五 传阙</span></div>
+      <div class="mo"><span class="nm">吴易</span><div class="mk">■■■■</div><span class="why">卷六 传阙</span></div>
+      <div class="mo"><span class="nm">章钦邻</span><div class="mk">■■■■</div><span class="why">卷七 传阙</span></div>
+      <div class="mo"><span class="nm">冯京第</span><div class="mk">■■■■</div><span class="why">卷七 传阙</span></div>
+      <div class="mo"><span class="nm">赵天麒</span><div class="mk">■■■■</div><span class="why">卷八 传阙</span></div>
+      <div class="mo"><span class="nm">华夏</span><div class="mk">■■■■</div><span class="why">卷八 传阙</span></div>
+    </div>
+    <div id="wallNote">传虽阙了，事迹在别人的传里漏下几句。</div>
+    <div class="qpair">
+      <div class="q reveal">吾从亡之臣，当死行在。<span class="qn">卷二　吴钟峦渡海入舟山，文庙纵火自焚</span></div>
+      <div class="q reveal">吾发可剃，宁俟今日！<span class="qn">卷二　吏部侍郎朱永祐被斫肩而死</span></div>
+    </div>
+    <div class="q reveal">肯堂阖室自经。<span class="qn">卷二　大学士张肯堂全家殉国</span></div>
+  </section>
+
+  <!-- author -->
+  <section id="author">
+    <div class="in reveal">
+      <h3>写书的人</h3>
+      <p>邵廷采，字念鲁，浙江余姚人，生于顺治五年，没赶上明朝，只赶上听明朝。他是姚江书院一脉的学人，一生教书写书，晚年写成《东南纪事》与《西南纪事》两部，一记鲁监国、隆武系统的东南抗清，一记永历朝廷的西南挣扎，是清初私家修南明史的双璧。</p>
+      <p>他修史的路子很实：抄黄宗羲的行朝录，收遗民故老的口述，在吴淞口拦住梁化凤的老部下问战况，遇着隆武下落这样的悬案，不硬断，一句「传疑以俟后人」，把案卷交给后世。评张煌言那一节，他自陈连先生的面都没见过：</p>
+      <div class="q">余未得见先生，而曾读《冰槎集》、《奇零草》，悲其志。<span class="qn">卷九论曰</span></div>
+      <p>在清初写南明，本身就是把头别在裤腰上的事。书里那些朱红的名字，他一个一个记下，像把一场退掉的潮水，一笔一笔誊在纸上。</p>
+    </div>
+  </section>
+
+</main>
+
+<section id="coda">
+  <div class="flat"></div>
+  <div class="cd">
+    <div class="sealbig"><span>潮</span><span>信</span><span>期</span><span>满</span></div>
+    <div class="line1">潮落之后，碑还在</div>
+    <div class="line2">乙酉至甲辰，恰好二十年</div>
+  </div>
+</section>
+
+<footer>
+  <p><b>文本来源</b>　殆知阁简体库史藏志存记录类〈东南纪事〉，清人邵廷采撰，库本十二卷，去空白约8.2万字，起崇祯十七年讫康熙三年。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+  <p><b>引文核验</b>　页面引文均经脚本与库内文件去标点、归一后逐字比对通过；白话反扫六字窗零撞。圹志志文一节录自金门出土〈皇明监国鲁王圹志〉（1959年8月出土，今藏历史博物馆，2011年指定国宝），系库外文献，已在页面注明。库本俗讹字（毋人海、吾骇、已亥、太侄、化鹃等）悉照录并注。</p>
+  <p><b>时代局限</b>　本书为清初遗民笔下的战争与死亡，刑罚、自尽、族诛诸节皆一时记载之实录，忠义观念亦系彼时伦理，读者鉴其时代局限。</p>
+</footer>
+
+<div id="dimveil"></div>
+<div id="rain"></div>
+
+<script>
+(function(){
+  var hero=document.getElementById('hero'),ebbt=document.getElementById('ebbt');
+  ebbt.addEventListener('click',function(){
+    hero.classList.add('low');ebbt.classList.add('done');
+    setTimeout(function(){document.getElementById('stele').style.opacity=1;
+      document.getElementById('stele').style.transform='translateX(-50%) translateY(0)';},1400);
+  },{once:true});
+
+  var rail=document.getElementById('rail');
+  var gz='乙酉丙戌丁亥戊子己丑庚寅辛卯壬辰癸巳甲午乙未丙申丁酉戊戌己亥庚子辛丑壬寅癸卯甲辰';
+  for(var i=0;i<20;i++){
+    var t=document.createElement('div');t.className='tick';t.dataset.y=1645+i;
+    var y=document.createElement('span');y.className='yr';y.textContent=gz[i*2]+gz[i*2+1]+'　'+(1645+i);
+    t.appendChild(y);rail.appendChild(t);
+  }
+
+  var secs=[].slice.call(document.querySelectorAll('.sec'));
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('vis');
+        [].slice.call(e.target.querySelectorAll('.reveal')).forEach(function(el,j){
+          setTimeout(function(){el.classList.add('vis');},j*90);
+        });
+      }
+    });
+  },{threshold:.12});
+  secs.concat([document.getElementById('author')]).forEach(function(s){io.observe(s)});
+
+  var sio=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      var yr=(e.target.dataset.y||'').split(',').filter(Boolean).map(Number);
+      [].slice.call(rail.querySelectorAll('.tick')).forEach(function(t){
+        var on=yr.indexOf(+t.dataset.y)>-1;
+        t.classList.toggle('on', e.isIntersecting? on : false);
+      });
+    });
+  },{threshold:.35});
+  secs.forEach(function(s){sio.observe(s)});
+
+  var pv=document.getElementById('planVerdict');
+  var verdicts=[
+    '<div class="q">若往来延建，观望经时，轻骑叩城，避不暇出，为无策矣。<span class="qn">卷一　金堡原话</span></div>',
+    '<div class="q">若往来延建，观望经时，轻骑叩城，避不暇出，为无策矣。<span class="qn">卷一　金堡原话</span></div>',
+    '<div class="q">若往来延建，观望经时，轻骑叩城，避不暇出，为无策矣。<span class="qn">卷一　金堡原话</span></div>',
+    '<div class="q qred">王卒出无策。<span class="qn">卷一　四策之中，皇帝选了没有的那条</span></div>'
+  ];
+  [].slice.call(document.querySelectorAll('.plan')).forEach(function(p){
+    p.addEventListener('click',function(){
+      [].slice.call(document.querySelectorAll('.plan')).forEach(function(x){x.classList.remove('picked')});
+      p.classList.add('picked');
+      pv.innerHTML=verdicts[+p.dataset.p];
+    });
+  });
+
+  var cal=document.getElementById('calCard');
+  var calFaces=[
+    ['鲁监国元年 · 五月','江上之师溃，清兵入绍兴'],
+    ['隆武二年 · 五月','同一个五月，福州的历书'],
+    ['顺治三年 · 五月','北京的历书已经用上了']
+  ];
+  var ci=0;
+  cal.addEventListener('click',function(){
+    ci=(ci+1)%3;
+    var f=cal.querySelector('.face');
+    f.style.opacity=0;
+    setTimeout(function(){
+      f.querySelector('.date').textContent=calFaces[ci][0];
+      f.querySelector('.ev').textContent=calFaces[ci][1];
+      f.style.opacity=1;
+    },300);
+  });
+
+  var tombBtn=document.getElementById('tombBtn'),tomb=document.getElementById('tomb');
+  tombBtn.addEventListener('click',function(){
+    var open=tomb.style.maxHeight&&tomb.style.maxHeight!=='0px';
+    tomb.style.maxHeight=open?'0px':tomb.querySelector('.inner').offsetHeight+40+'px';
+    tombBtn.textContent=open?'启圹':'合圹';
+  });
+
+  var fireBtn=document.getElementById('fireBtn');
+  fireBtn.addEventListener('click',function(){
+    var arrows=[].slice.call(document.querySelectorAll('.arrow'));
+    var hits=[].slice.call(document.querySelectorAll('#post .hitmark'));
+    arrows.forEach(function(a,i){setTimeout(function(){a.classList.add('fired');hits[i].classList.add('show');},i*450);});
+  },{once:true});
+
+  document.getElementById('headBox').addEventListener('click',function(){this.classList.toggle('open')});
+  document.getElementById('backFigure').addEventListener('click',function(){this.classList.toggle('stamped')});
+
+  var nodes=[].slice.call(document.querySelectorAll('#river .node'));
+  var res=document.getElementById('riverRes');
+  var step=0;
+  nodes.forEach(function(n){
+    n.addEventListener('click',function(){
+      if(n.dataset.s==='g'){n.classList.toggle('gold');step++;}
+      else{
+        n.classList.add('broke');
+        res.innerHTML='南京城下，一夜间全盘逆转。芜湖以下诸府县，得而复失。';
+      }
+    });
+  });
+
+  var jc=[].slice.call(document.querySelectorAll('.jcard'));
+  var veils=document.getElementById('dimveil'),rain=document.getElementById('rain');
+  var jl=0;
+  jc.forEach(function(c){
+    c.addEventListener('click',function(){
+      if(c.classList.contains('lit'))return;
+      c.classList.add('lit');jl++;
+      if(jl===4){
+        setTimeout(function(){
+          veils.classList.add('on');rain.classList.add('on');
+          setTimeout(function(){veils.classList.remove('on');},2600);
+          setTimeout(function(){rain.classList.remove('on');},4200);
+        },600);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
