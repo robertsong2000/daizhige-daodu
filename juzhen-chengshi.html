@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字仓 · 聚珍版程式导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #1f1e1b; --ink-3: #26241f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --gd: #c9963f; --gd-dim: #8a6a34; --gd-deep: #4a3a1c;
+    --seal: #c0453c; --seal-deep: #6e2a24;
+    --hairline: rgba(232,228,220,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  a { color: var(--gd); }
+  b { font-weight: 700; }
+  ::selection { background: var(--gd-deep); }
+
+  /* ===== 右缘十四工序签牌 ===== */
+  .rail { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 50;
+    display: flex; flex-direction: column; gap: 7px; pointer-events: none; }
+  .rail .rk { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+  .rail .rk i { display: block; width: 0; height: 1px; background: var(--gd-dim); transition: width .4s ease; }
+  .rail .rk span { font-size: 11px; letter-spacing: .18em; color: var(--paper-faint);
+    border: 1px solid transparent; padding: 1px 6px 1px 9px; transition: all .4s ease; white-space: nowrap; }
+  .rail .rk.on span { color: var(--gd); border-color: var(--gd-dim); }
+  .rail .rk.on i { width: 18px; }
+  .rail .rk.done span { color: var(--paper-dim); }
+  .rail .rno { font-size: 10px; color: var(--paper-faint); }
+  @media (max-width: 1180px) { .rail { display: none; } }
+
+  /* ===== 首屏 ===== */
+  .hero { position: relative; min-height: 96dvh; display: grid; grid-template-columns: 1fr 1fr;
+    gap: 30px; align-items: center; padding: 70px 120px 60px 84px; overflow: hidden; }
+  .hero::before { content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(1000px 500px at 82% 18%, rgba(201,150,63,0.07), transparent 60%),
+      repeating-linear-gradient(90deg, transparent 0 118px, rgba(232,228,220,0.025) 118px 119px);
+    pointer-events: none; }
+  .kick { grid-column: 1 / -1; font-size: 13px; letter-spacing: .42em; color: var(--paper-faint); }
+  .kick b { color: var(--gd); font-weight: 400; }
+  .hero-l { position: relative; z-index: 2; }
+  .lead { font-size: 17px; color: var(--paper); margin: 18px 0 14px; }
+  .lead .qv { color: var(--gd); }
+  .sub { font-size: 14px; color: var(--paper-dim); margin-bottom: 26px; }
+  .opengo { display: inline-flex; align-items: center; gap: 14px; cursor: pointer;
+    border: 1px solid var(--gd-dim); background: transparent; color: var(--paper);
+    padding: 13px 30px; font-size: 16px; letter-spacing: .5em; font-family: inherit;
+    transition: all .3s ease; position: relative; }
+  .opengo:hover { background: rgba(201,150,63,0.12); border-color: var(--gd); }
+  .opengo .tile { display: inline-block; width: 26px; height: 26px; line-height: 26px;
+    background: var(--gd); color: var(--ink); font-weight: 700; font-size: 16px;
+    transform: scaleX(-1); letter-spacing: 0; transition: transform .5s ease; }
+  .hero.openseq .opengo .tile { transform: scaleX(0); }
+  .opengo.hint::after { content: ""; position: absolute; inset: -7px; border: 1px solid rgba(201,150,63,0.4);
+    animation: pulse 2.2s ease-out infinite; }
+  @keyframes pulse { 0% { opacity: .9; transform: scale(1); } 70% { opacity: 0; transform: scale(1.12); } 100% { opacity: 0; } }
+  .slipbar { margin-top: 22px; min-height: 88px; }
+  .slip { display: inline-block; border: 1px dashed var(--gd-dim); padding: 9px 18px;
+    font-size: 14px; color: var(--paper-dim); background: rgba(201,150,63,0.05); }
+  .slip .h { color: var(--paper-faint); font-size: 12px; letter-spacing: .3em; margin-right: 10px; }
+  .slip b { color: var(--gd); font-weight: 400; }
+  .slip .ok { color: var(--seal); margin-left: 10px; font-size: 12px; letter-spacing: .2em; }
+  .hero-r { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .caoban { position: relative; border: 3px solid #3a2f1a; background: linear-gradient(160deg, #2b2415, #221d11);
+    box-shadow: inset 0 0 0 1px rgba(201,150,63,0.25), 0 24px 60px rgba(0,0,0,0.5);
+    padding: 26px; width: min(430px, 100%); }
+  .caoban::before { content: ""; position: absolute; inset: 8px; border: 1px solid rgba(201,150,63,0.3); pointer-events: none; }
+  .cbrow { display: flex; justify-content: center; gap: 9px; margin: 8px 0; }
+  .cell { position: relative; width: min(58px, 16.4vw); height: min(62px, 17.6vw); border: 1px solid rgba(201,150,63,0.28);
+    background: repeating-linear-gradient(45deg, rgba(201,150,63,0.05) 0 6px, transparent 6px 12px);
+    display: flex; align-items: center; justify-content: center; }
+  .cell .zi { font-size: min(36px, 10.2vw); font-weight: 700; color: var(--ink); opacity: 0;
+    text-shadow: 0 1px 0 rgba(232,228,220,0.25); transform: translateY(16px) scale(1.25) scaleX(-1); }
+  .cell.in { background: linear-gradient(170deg, #8f6f36, #6b5326); }
+  .cell.set .zi { animation: dropin .45s ease forwards; }
+  @keyframes dropin { 0% { opacity: 0; transform: translateY(16px) scale(1.25) scaleX(-1); }
+    55% { opacity: 1; transform: translateY(0) scale(1) scaleX(-1); }
+    100% { opacity: 1; transform: translateY(0) scale(1) scaleX(1); } }
+  .cell.set { background: linear-gradient(170deg, #b08a45, #8a6a34); box-shadow: 0 0 16px rgba(201,150,63,0.3); }
+  .cbfoot { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; }
+  .cbfoot .gk { font-size: 11px; letter-spacing: .32em; color: var(--paper-faint);
+    writing-mode: vertical-rl; text-orientation: upright; height: 66px; }
+  .sealbox { position: relative; width: 86px; height: 86px; }
+  .jseal { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr;
+    border: 3px solid var(--seal); color: var(--seal); background: rgba(192,69,60,0.08);
+    font-size: 30px; font-weight: 700; opacity: 0; transform: scale(2.1) rotate(-14deg); }
+  .jseal span { display: flex; align-items: center; justify-content: center; }
+  .hero.stamped .jseal { animation: stamp .5s cubic-bezier(.2,1.6,.4,1) forwards; }
+  @keyframes stamp { to { opacity: 1; transform: scale(1) rotate(-3deg); } }
+  .hero-sub { text-align: center; font-size: 14px; color: var(--paper-faint);
+    letter-spacing: .12em; opacity: 0; transition: opacity 1s ease .2s; }
+  .hero-sub .qn { color: var(--paper-dim); }
+  .hero.stamped .hero-sub { opacity: 1; }
+  .flyzi { position: fixed; z-index: 90; font-size: 30px; font-weight: 700; color: var(--gd);
+    pointer-events: none; text-shadow: 0 0 18px rgba(201,150,63,0.6); transition: all .6s cubic-bezier(.3,.8,.3,1); }
+
+  /* ===== 通用节 ===== */
+  main { position: relative; }
+  section.ch { position: relative; padding: 84px 84px 70px; border-top: 1px solid var(--hairline);
+    display: grid; grid-template-columns: 200px 1fr; gap: 44px; }
+  .ch-side { position: relative; }
+  .ch-no { writing-mode: vertical-rl; text-orientation: upright; font-size: 13px;
+    letter-spacing: .5em; color: var(--gd-dim); display: block; margin-bottom: 16px; }
+  .ch-step { font-size: 12px; letter-spacing: .28em; color: var(--paper-faint); }
+  .ch-step b { color: var(--seal); font-weight: 400; }
+  .ch h2 { font-size: 27px; font-weight: 700; letter-spacing: .1em; margin-bottom: 20px; }
+  .ch h2 em { font-style: normal; color: var(--gd); }
+  .prose { font-size: 15.5px; color: var(--paper-dim); max-width: 760px; }
+  .prose + .prose { margin-top: 14px; }
+  .prose .qv { color: var(--paper); }
+  .q { display: block; margin: 16px 0; padding: 14px 20px; border-left: 3px solid var(--gd-dim);
+    background: rgba(201,150,63,0.05); color: var(--paper); font-size: 15px; max-width: 720px; }
+  .src { display: block; margin-top: 6px; font-size: 12px; color: var(--paper-faint); letter-spacing: .12em; }
+  .kmark { color: var(--seal); }
+
+  /* ===== 一 贴黄 ===== */
+  .tiehuang { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; max-width: 760px; }
+  .th { border: 1px solid var(--hairline); background: var(--ink-2); cursor: pointer; }
+  .th-h { display: flex; align-items: baseline; gap: 14px; padding: 13px 20px; }
+  .th-h .no { font-size: 12px; color: var(--seal); letter-spacing: .2em; }
+  .th-h .ti { font-size: 16px; color: var(--paper); letter-spacing: .08em; flex: 1; }
+  .th-h .tog { color: var(--gd); font-size: 18px; transition: transform .3s ease; }
+  .th.open .th-h .tog { transform: rotate(45deg); }
+  .th-b { max-height: 0; overflow: hidden; transition: max-height .45s ease; }
+  .th.open .th-b { max-height: 620px; }
+  .th-b .inner { padding: 2px 20px 18px; }
+  .zhufpi { display: inline-block; margin: 4px 0 14px; border: 2px solid var(--seal); color: var(--seal);
+    padding: 10px 22px; font-size: 19px; letter-spacing: .14em; transform: rotate(-1.2deg);
+    background: rgba(192,69,60,0.06); }
+
+  /* ===== 一 对账 ===== */
+  .ledger { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 26px 0; max-width: 780px; }
+  .lg { border: 1px solid var(--hairline); background: var(--ink-2); padding: 20px 22px 16px; position: relative; }
+  .lg .lg-h { font-size: 14px; letter-spacing: .2em; color: var(--paper-dim); margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: baseline; }
+  .lg .lg-h i { font-style: normal; font-size: 11px; letter-spacing: .1em; }
+  .lg.win { border-color: var(--gd-dim); }
+  .lg .row { display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0;
+    border-bottom: 1px dashed rgba(232,228,220,0.09); color: var(--paper-dim); }
+  .lg .row b { color: var(--paper); font-weight: 400; }
+  .lg .sum { margin-top: 12px; font-size: 16px; color: var(--gd); display: flex; justify-content: space-between; }
+  .lg .sum b { font-size: 20px; font-weight: 700; }
+  .lg .tag { position: absolute; top: -11px; right: 14px; background: var(--seal); color: var(--paper);
+    font-size: 11px; letter-spacing: .2em; padding: 2px 10px; }
+  .vsline { text-align: center; color: var(--paper-faint); font-size: 13px; letter-spacing: .3em; margin: 8px 0 2px; }
+
+  /* ===== 前史 chips ===== */
+  .qianshi { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0; max-width: 780px; }
+  .qs { border: 1px solid var(--hairline); padding: 10px 16px; background: var(--ink-2); flex: 1 1 340px; }
+  .qs .qs-t { font-size: 13px; color: var(--gd); letter-spacing: .18em; margin-bottom: 6px; }
+  .qs .qv { font-size: 13px; color: var(--paper-dim); }
+  .qs.cur { border-color: var(--gd-dim); background: rgba(201,150,63,0.06); }
+  .qs.cur .qv { color: var(--paper); }
+
+  /* ===== 二 木子尺寸 ===== */
+  .muzi { display: grid; grid-template-columns: 1.1fr .9fr; gap: 30px; align-items: center; margin: 24px 0; max-width: 820px; }
+  .muzi svg { width: 100%; height: auto; display: block; }
+  .muzi .lab { font-size: 13px; color: var(--paper-faint); line-height: 2; }
+  .muzi .lab b { color: var(--gd); font-weight: 400; }
+  .zhang { display: flex; gap: 8px; margin: 18px 0 6px; flex-wrap: wrap; }
+  .zh { border: 1px solid var(--hairline); padding: 8px 14px; font-size: 13px; color: var(--paper-dim);
+    background: var(--ink-2); transition: all .3s ease; cursor: default; }
+  .zh.lit { border-color: var(--gd); color: var(--gd); box-shadow: 0 0 14px rgba(201,150,63,0.18); }
+
+  /* ===== 账单 ===== */
+  .dan { max-width: 780px; margin: 26px 0; border: 1px solid var(--hairline); background: var(--ink-2); }
+  .dan-h { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 22px;
+    border-bottom: 1px solid var(--hairline); }
+  .dan-h .t { font-size: 15px; letter-spacing: .22em; color: var(--paper); }
+  .dan-h .s { font-size: 12px; color: var(--paper-faint); letter-spacing: .1em; }
+  .dan .di { display: flex; align-items: baseline; gap: 10px; padding: 8px 22px; font-size: 14px;
+    color: var(--paper-dim); opacity: 0; transform: translateX(-12px); transition: all .4s ease; }
+  .dan .di.on { opacity: 1; transform: none; }
+  .dan .di .n { flex: 1; }
+  .dan .di .v { color: var(--paper); }
+  .dan .di::before { content: "✓"; color: var(--seal); font-size: 12px; opacity: 0; transition: opacity .4s ease; }
+  .dan .di.on::before { opacity: 1; }
+  .dan .sum { display: flex; justify-content: space-between; padding: 13px 22px; border-top: 1px solid var(--hairline);
+    font-size: 16px; color: var(--gd); }
+  .dan .sum b { font-size: 21px; font-weight: 700; }
+
+  /* ===== 三 书影 ===== */
+  .shuying { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; align-items: center; margin: 26px 0; max-width: 840px; }
+  .shuying svg { width: 100%; height: auto; display: block; background: #211e16;
+    border: 1px solid var(--hairline); }
+  .sy-parts { display: flex; flex-direction: column; gap: 8px; }
+  .sy { display: flex; gap: 12px; align-items: baseline; padding: 9px 14px; border: 1px solid transparent;
+    cursor: pointer; transition: all .25s ease; }
+  .sy:hover, .sy.hot { border-color: var(--gd-dim); background: rgba(201,150,63,0.06); }
+  .sy i { width: 10px; height: 10px; border: 1px solid var(--gd); flex: none; align-self: center; font-style: normal; }
+  .sy i.f { background: var(--gd); }
+  .sy .t { font-size: 14px; color: var(--paper); letter-spacing: .06em; min-width: 74px; }
+  .sy .d { font-size: 12.5px; color: var(--paper-faint); }
+
+  /* ===== 四 字柜 ===== */
+  .zigui { max-width: 820px; margin: 26px 0; }
+  .guiwall { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  .gui { position: relative; border: 1px solid var(--hairline); background: var(--ink-2);
+    cursor: pointer; padding: 14px 8px 10px; text-align: center; transition: all .3s ease; overflow: hidden; }
+  .gui .zhi { font-size: 24px; color: var(--paper); display: block; }
+  .gui .xx { font-size: 10px; color: var(--paper-faint); letter-spacing: .14em; display: block; margin-top: 4px; }
+  .gui .drawer { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: var(--gd-deep);
+    transition: height .4s cubic-bezier(.3,.9,.3,1); border-top: 2px solid var(--gd-dim);
+    display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--paper-dim);
+    letter-spacing: .16em; }
+  .gui:hover .drawer, .gui.sel .drawer { height: 40%; }
+  .gui.sel { border-color: var(--gd); box-shadow: 0 0 18px rgba(201,150,63,0.2); }
+  .gui.sel .zhi { color: var(--gd); }
+  .gui-note { margin-top: 14px; border: 1px dashed var(--gd-dim); padding: 12px 18px; font-size: 13px;
+    color: var(--paper-dim); letter-spacing: .1em; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+  .gui-note b { color: var(--gd); font-weight: 400; }
+
+  /* ===== 五 喝取剧场 ===== */
+  .juchang { max-width: 860px; margin: 26px 0; border: 1px solid var(--hairline); background: var(--ink-2); padding: 26px 24px 20px; }
+  .jc-lanes { display: grid; grid-template-columns: .8fr 1fr 1fr 1fr .8fr; gap: 10px; align-items: stretch; }
+  .lane { border: 1px solid var(--hairline); padding: 12px 10px; text-align: center; position: relative; min-height: 148px; }
+  .lane .lt { font-size: 12px; letter-spacing: .24em; color: var(--paper-faint); display: block; margin-bottom: 10px; }
+  .lane .who { font-size: 15px; color: var(--paper); display: block; }
+  .lane .say { margin-top: 10px; font-size: 13px; color: var(--gd); min-height: 42px; display: block; }
+  .lane.hot { border-color: var(--gd-dim); box-shadow: inset 0 0 24px rgba(201,150,63,0.07); }
+  .tok { display: inline-block; width: 30px; height: 30px; line-height: 30px; background: var(--gd);
+    color: var(--ink); font-weight: 700; font-size: 17px; margin-top: 6px; opacity: 0; }
+  .tok.show { opacity: 1; }
+  .jc-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 10px; }
+  .jc-note { font-size: 12.5px; color: var(--paper-faint); letter-spacing: .1em; }
+  .btn { border: 1px solid var(--gd-dim); background: transparent; color: var(--paper); font-family: inherit;
+    padding: 9px 24px; font-size: 14px; letter-spacing: .34em; cursor: pointer; transition: all .3s ease; }
+  .btn:hover { background: rgba(201,150,63,0.12); border-color: var(--gd); }
+
+  /* ===== 六 三卡 ===== */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 26px 0; max-width: 860px; }
+  .cd { border: 1px solid var(--hairline); background: var(--ink-2); padding: 20px 18px; }
+  .cd .cd-t { font-size: 16px; color: var(--gd); letter-spacing: .2em; margin-bottom: 10px; }
+  .cd .cd-t b { font-weight: 400; }
+  .cd p { font-size: 13.5px; color: var(--paper-dim); }
+  .cd .qv { color: var(--paper); }
+  .cd .cd-k { margin-top: 12px; font-size: 12px; color: var(--seal); letter-spacing: .2em; }
+
+  /* ===== 七 轮转 ===== */
+  .lun { max-width: 860px; margin: 26px 0; }
+  .lun-hd { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .lun-hd .t { font-size: 15px; letter-spacing: .22em; color: var(--paper); }
+  .lun-hd .s { font-size: 12px; color: var(--paper-faint); letter-spacing: .1em; }
+  .lun table { border-collapse: collapse; width: 100%; }
+  .lun th, .lun td { border: 1px solid rgba(232,228,220,0.1); text-align: center; padding: 8px 4px;
+    font-size: 13px; color: var(--paper-dim); }
+  .lun th { color: var(--paper-faint); font-weight: 400; letter-spacing: .1em; font-size: 12px; }
+  .lun td.rowh { color: var(--gd); letter-spacing: .14em; font-size: 12.5px; white-space: nowrap; }
+  .lun td .bar { display: inline-block; height: 7px; background: var(--gd-dim); opacity: 0; transition: opacity .4s ease; vertical-align: middle; }
+  .lun.vis td .bar { opacity: .95; }
+  .lun td.hot { background: rgba(201,150,63,0.09); }
+  .lun .kiji { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .kj { border: 1px solid var(--hairline); padding: 8px 16px; font-size: 13px; color: var(--paper-dim); background: var(--ink-2); }
+  .kj b { color: var(--seal); font-size: 17px; font-weight: 700; margin-left: 8px; }
+  .kj.hi { border-color: var(--seal); }
+  .kj.hi b { color: var(--seal); }
+
+  /* ===== 尾屏 ===== */
+  .coda { position: relative; border-top: 1px solid var(--hairline); padding: 96px 84px 80px;
+    display: grid; grid-template-columns: 1fr auto; gap: 40px; overflow: hidden; }
+  .coda::before { content: ""; position: absolute; inset: 0;
+    background: radial-gradient(700px 400px at 24% 30%, rgba(201,150,63,0.06), transparent 60%); pointer-events: none; }
+  .coda-l { max-width: 640px; }
+  .coda h2 { font-size: 24px; margin-bottom: 18px; letter-spacing: .1em; }
+  .coda .prose { font-size: 15px; }
+  .spines { display: flex; gap: 12px; margin-top: 30px; align-items: flex-end; flex-wrap: wrap; }
+  .spine { writing-mode: vertical-rl; text-orientation: upright; background: linear-gradient(180deg, #2e2818, #241f12);
+    border: 1px solid var(--hairline); border-left: 3px solid var(--gd-dim); color: var(--paper-dim);
+    padding: 16px 8px; font-size: 15px; letter-spacing: .3em; box-shadow: 3px 3px 0 rgba(0,0,0,0.35); }
+  .spine.hi { color: var(--paper); border-left-color: var(--gd); }
+  .coda-r { display: flex; align-items: center; gap: 26px; }
+  .zishu { writing-mode: vertical-rl; text-orientation: mixed; height: 400px; font-size: 15px;
+    color: var(--paper-dim); letter-spacing: .16em; }
+  .zishu .qv { color: var(--paper); }
+  .zishu .who { display: block; margin-top: 18px; font-size: 12.5px; color: var(--paper-faint); letter-spacing: .2em; }
+  .dseal { display: flex; flex-direction: column; gap: 18px; }
+  .dseal .ds { writing-mode: vertical-rl; text-orientation: upright; border: 3px solid var(--seal);
+    color: var(--seal); font-size: 26px; font-weight: 700; padding: 14px 8px; letter-spacing: .3em;
+    background: rgba(192,69,60,0.07); transform: rotate(2deg); }
+  .dseal .ds:last-child { transform: rotate(-2deg); border-color: var(--gd-dim); color: var(--gd); background: rgba(201,150,63,0.06); }
+
+  /* ===== 页脚 ===== */
+  .foot { border-top: 1px solid var(--hairline); padding: 34px 84px 46px; font-size: 12.5px;
+    color: var(--paper-faint); line-height: 2.1; }
+  .foot p + p { margin-top: 8px; }
+  .foot .xiaoji { color: var(--paper-dim); }
+  .foot a { color: var(--gd-dim); }
+
+  @media (max-width: 980px) {
+    .hero { grid-template-columns: 1fr; padding: 56px 26px 46px; min-height: auto; }
+    .hero-r { order: -1; }
+    section.ch { grid-template-columns: 1fr; padding: 60px 26px 50px; gap: 18px; }
+    .ch-side { display: flex; gap: 18px; align-items: baseline; }
+    .ch-no { writing-mode: horizontal-tb; margin-bottom: 0; }
+    .ledger, .muzi, .shuying { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+    .guiwall { grid-template-columns: repeat(4, 1fr); }
+    .jc-lanes { grid-template-columns: 1fr 1fr; }
+    .coda { grid-template-columns: 1fr; padding: 70px 26px 60px; }
+    .coda-r { justify-content: flex-start; }
+    .zishu { height: 340px; }
+    .foot { padding: 30px 26px 40px; }
+  }
+  @media (max-width: 480px) {
+    .cbrow { gap: 6px; }
+    .cell { width: min(52px, 13.6vw); height: min(56px, 14.8vw); }
+    .cell .zi { font-size: min(32px, 8.4vw); }
+    .caoban { padding: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="rail" aria-hidden="true">
+  <div class="rk"><span class="rno">序</span><span>奏议</span><i></i></div>
+  <div class="rk"><span>成造木子</span><i></i></div>
+  <div class="rk"><span>刻字</span><i></i></div>
+  <div class="rk"><span>槽版 嘉名</span><i></i></div>
+  <div class="rk"><span>套格</span><i></i></div>
+  <div class="rk"><span>字柜</span><i></i></div>
+  <div class="rk"><span>类盘</span><i></i></div>
+  <div class="rk"><span>摆书</span><i></i></div>
+  <div class="rk"><span>垫版</span><i></i></div>
+  <div class="rk"><span>校对</span><i></i></div>
+  <div class="rk"><span>刷印</span><i></i></div>
+  <div class="rk"><span>归类</span><i></i></div>
+  <div class="rk"><span>逐日轮转</span><i></i></div>
+  <div class="rk"><span>印成之书</span><i></i></div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="kick">殆知阁导读 · <b>考工之属</b></div>
+  <div class="hero-l">
+    <p class="lead">1773 年，《四库全书》开馆第二年。要刻的书越堆越多，管刊刻的金简算了一笔账：雕一部书版的钱，够造一整副活字；版片只能印一部书，活字却能轮着印一切书。于是他上奏请造枣木活字二十五万余枚，乾隆朱批照办，另赐嘉名：<span class="qv">锡名曰武英殿聚珍版</span>。</p>
+    <p class="sub">三年后，金简把整条生产线写成一本图册：十六幅图，十九篇说，从选木头到把字放回抽屉，每一步都有尺寸、有银数、有责任人。这是一座字造出来的仓库，也是一部印书机器的说明书。</p>
+    <button class="opengo hint" id="openBtn"><span class="tile">珍</span>开 版</button>
+    <div class="slipbar"><div class="slip" id="slip"><span class="h">喝取签 · 拟</span>按下开版，听字房里一呼一应。</div></div>
+  </div>
+  <div class="hero-r">
+    <div class="caoban">
+      <div class="cbrow" id="row1"></div>
+      <div class="cbrow" id="row2"></div>
+      <div class="cbfoot">
+        <span class="gk">槽版候字</span>
+        <div class="sealbox"><div class="jseal"><span>聚</span><span>珍</span></div></div>
+      </div>
+    </div>
+    <p class="hero-sub"><span class="qn" data-t="1">钦定武英殿聚珍版程式</span><span> · 金简进呈于四十一年</span></p>
+  </div>
+</header>
+
+<main>
+
+<!-- 一 奏议 -->
+<section class="ch" id="s0">
+  <div class="ch-side">
+    <span class="ch-no">工序零</span>
+    <span class="ch-step">奏议八道 · 起于<b>算账</b></span>
+  </div>
+  <div>
+    <h2>枣梨太贵，<em>字要活</em></h2>
+    <p class="prose">1773 年 10 月，金简（户部侍郎）递上第一道奏折。他说各地搜来的遗书已近万种，都要镂版通行的话，<span class="qv">不惟所用版片浩繁且逐部刋刻亦需时日</span>。四库馆臣后来追记这笔心思，只有十六个字：<span class="qv">因枣梨繁重乃奏请以活字排印力省功多</span>。枣和梨是刻版的两种木料，用它们代称雕版这件事，像说「吃枣梨」就是在说花钱。</p>
+    <div class="tiehuang">
+      <div class="th" id="th1">
+        <div class="th-h"><span class="no">贴黄一</span><span class="ti">请造活字：刻字六千余，一字备十枚百枚</span><span class="tog">＋</span></div>
+        <div class="th-b"><div class="inner">
+          <p class="prose">方案开在韵书上：照<span class="qv">御定佩文诗韵详加选择除生僻字不常见于经传者不收</span>，可刻的字约六千几百个。常用字和虚字放开备数，<span class="qv">此内虚字以及常用之熟字每一字加至十字或百字不等约共需十万余字</span>；小注用的小字照大字翻倍，再备五万，大小合计 15 万余字。槽版备 20 块，摆完先刷一张样张送翰林官详校再开印；字不够用，另有 2000 个备用木子随时刊补。</p>
+        </div></div>
+      </div>
+      <div class="th" id="th2">
+        <div class="th-h"><span class="no">贴黄二</span><span class="ti">御批：三个字的可行性报告批复</span><span class="tog">＋</span></div>
+        <div class="th-b"><div class="inner">
+          <p class="prose">折子末尾照例请旨。乾隆的批复极短，库本照录六个字：</p>
+          <div class="zhufpi qv">甚好照此办理</div>
+          <p class="prose">外加「奏奉防钦此」的套语。「防」是库里的讹字，当作「旨」读，本篇引文一律照录不改。这是全书出现次数最多的一句官腔，也是这座字仓的出生证。</p>
+        </div></div>
+      </div>
+    </div>
+    <div class="vsline">一 部 史 记 对 一 副 活 字</div>
+    <div class="ledger">
+      <div class="lg">
+        <div class="lg-h">雕版 · 只成一部<i>《史记》</i></div>
+        <div class="row"><span>梨木版片</span><b>2675 块</b></div>
+        <div class="row"><span>版片价（每块一钱）</span><b>267.5 两</b></div>
+        <div class="row"><span>写刻字数</span><b>1189000</b></div>
+        <div class="row"><span>写刻工价（每百字一钱）</span><b>1180 余两</b></div>
+        <div class="sum"><span>合计</span><b>1450 余两</b></div>
+      </div>
+      <div class="lg win">
+        <div class="tag">提案</div>
+        <div class="lg-h">活字 · 一副通用<i>枣木</i></div>
+        <div class="row"><span>大字（常用，一字备十枚百枚）</span><b>约 100000</b></div>
+        <div class="row"><span>小字（小注用）</span><b>约 50000</b></div>
+        <div class="row"><span>工料（每百字八钱）</span><b>约 1200 两</b></div>
+        <div class="row"><span>槽版箱格添备</span><b>一二百两</b></div>
+        <div class="sum"><span>合计</span><b>1400 余两</b></div>
+      </div>
+    </div>
+    <p class="prose">两栏摆在一起，结论自己会说话：<span class="qv">即如史记一部计版二千六百七十五块按梨木小版例价银每块一钱共该银二百六十七两五钱</span>，写刻 1189000 字又是 1180 余两；而活字那一边，<span class="qv">遇有发刻一切书籍只须将槽版照底本一摆即可刷印成卷</span>。账目出自原奏，一字未动。至于四库馆臣把这笔账上升为政绩，说<span class="qv">圣朝制器利用事事皆超前代也</span>，听听就好。</p>
+    <div class="qianshi">
+      <div class="qs"><div class="qs-t">北宋 · 泥字</div><span class="qv">庆厯中有布衣毕升始为活板其法用胶泥刻字簿如钱唇</span></div>
+      <div class="qs"><div class="qs-t">元代 · 木字转轮</div><span class="qv">故王桢农书所载活字之法易以木板其贮字之盘则设以转轮</span></div>
+      <div class="qs"><div class="qs-t">提要的差评</div><span class="qv">然泥字既不精整又易破碎松脂诸物亦繁重周章</span></div>
+      <div class="qs cur"><div class="qs-t">乾隆 · 枣木字仓</div><span class="qv">是编叅酌旧制而变通以新意</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 二 成造木子 刻字 -->
+<section class="ch" id="s1">
+  <div class="ch-side">
+    <span class="ch-no">工序一二</span>
+    <span class="ch-step">成造木子 · <b>刻字</b></span>
+  </div>
+  <div>
+    <h2>先造一颗<em>字的胚胎</em></h2>
+    <p class="prose">活字的关键不在刻，在标准化。几十万个字要能互相替换，尺寸必须分毫不差。程式的第一篇讲的就是这件事：解枣木板，<span class="qv">厚四分许竖裁作方条寛一寸许</span>，两面刨平，卡在 2分8厘 的净厚上；再横截成粒，借两条深浅不同的木槽各刨一遍，宽、长就都出来了。</p>
+    <div class="muzi">
+      <svg viewBox="0 0 460 240" aria-hidden="true">
+        <rect x="30" y="40" width="400" height="34" fill="#2e2818" stroke="#8a6a34"/>
+        <line x1="80" y1="40" x2="80" y2="74" stroke="#4a3a1c"/>
+        <line x1="130" y1="40" x2="130" y2="74" stroke="#4a3a1c"/>
+        <line x1="180" y1="40" x2="180" y2="74" stroke="#4a3a1c"/>
+        <line x1="230" y1="40" x2="230" y2="74" stroke="#4a3a1c"/>
+        <line x1="280" y1="40" x2="280" y2="74" stroke="#4a3a1c"/>
+        <line x1="330" y1="40" x2="330" y2="74" stroke="#4a3a1c"/>
+        <line x1="380" y1="40" x2="380" y2="74" stroke="#4a3a1c"/>
+        <text x="34" y="30" fill="#6e6a61" font-size="13">枣木解板</text>
+        <rect x="60" y="120" width="86" height="58" fill="#3a3116" stroke="#c9963f"/>
+        <text x="64" y="200" fill="#a39e93" font-size="13">厚 2分8厘</text>
+        <text x="150" y="150" fill="#a39e93" font-size="13">宽 3分</text>
+        <rect x="250" y="120" width="60" height="58" fill="#332a17" stroke="#8a6a34"/>
+        <text x="254" y="200" fill="#6e6a61" font-size="13">小字宽 2分</text>
+        <text x="318" y="150" fill="#a39e93" font-size="13">直长 7分</text>
+        <text x="60" y="112" fill="#c9963f" font-size="13">大木子</text>
+      </svg>
+      <div class="lab">
+        <p>程式里的规矩：<span class="qv">凡大木子每个厚二分八厘寛三分直长七分</span>；小字只是窄一分，厚长同式。刨完还要过一遍铜漏子，漏得过的才算合格。</p>
+        <div class="zhang">
+          <span class="zh">解板</span><span class="zh">竖裁方条</span><span class="zh">两面刨平</span><span class="zh">横截成粒</span><span class="zh">铜漏验尺寸</span>
+        </div>
+        <p style="margin-top:10px">刻字则回到老手艺：<span class="qv">应刋之字照格写准宋字后逐字裁开覆贴于木子之上面</span>，十粒一槽，<span class="qv">与镌刻整版无异</span>。刻的是宋体字，一代木活字的标准书角。</p>
+      </div>
+    </div>
+    <div class="dan" id="dan">
+      <div class="dan-h"><span class="t">刻字报销清册</span><span class="s">三十九年核销奏折 · 银两为库本原数</span></div>
+      <div class="di" data-v="1749.15"><span class="n">大小木字 253500 个已刻（每百字六钱九分）</span><span class="v">1749.15 两</span></div>
+      <div class="di" data-v="22"><span class="n">备用木子 10000 个</span><span class="v">22 两</span></div>
+      <div class="di" data-v="96"><span class="n">楠木槽版 80 块（四角包铜）</span><span class="v">96 两</span></div>
+      <div class="di" data-v="12"><span class="n">槽版四角包铜</span><span class="v">12 两</span></div>
+      <div class="di" data-v="18"><span class="n">板箱 15 个</span><span class="v">18 两</span></div>
+      <div class="di" data-v="28"><span class="n">检字归类松木类盘 80 个</span><span class="v">28 两</span></div>
+      <div class="di" data-v="7.3"><span class="n">套板格子 24 块</span><span class="v">7.3 两</span></div>
+      <div class="di" data-v="360"><span class="n">木子大柜 12 座（每座抽屉 200 个）</span><span class="v">360 两</span></div>
+      <div class="di" data-v="36"><span class="n">抽屉铜件 2400 副</span><span class="v">36 两</span></div>
+      <div class="di" data-v="11.4"><span class="n">木板櫈 12 条</span><span class="v">11.4 两</span></div>
+      <div class="sum"><span>通共实用</span><b id="danSum">0</b></div>
+    </div>
+    <p class="prose">折子里的原话是：<span class="qv">计刻得大小木字二十五万三千五百个实用银一千七百四十九两一钱五分</span>，连槽版的尺寸都报了：<span class="qv">摆字楠木槽版八十块各长九寸五分寛七寸五分厚一寸五分</span>；收字的<span class="qv">成做收贮木子大柜十二座</span>，<span class="qv">柜座各安抽屉二百个</span>。原奏请领 2200 两，算完账还差 139.75 两，请广储司再补。这台机器连螺丝钉的价钱都有据可查。</p>
+  </div>
+</section>
+
+<!-- 三 嘉名 书影 -->
+<section class="ch" id="s2">
+  <div class="ch-side">
+    <span class="ch-no">工序三四</span>
+    <span class="ch-step">赐名 · <b>版心定制</b></span>
+  </div>
+  <div>
+    <h2>「活字」退场，<em>赐名聚珍</em></h2>
+    <p class="prose">字刻齐了，乾隆又添了十万枚的备量，跟着给这套系统起了官方名字。奏折原话：<span class="qv">仰防钦定嘉名为武英殿聚珍版实为艺林盛典拟于每页前幅版心下方列此六字</span>。「活字」二字从此不见于官文书，两个字把一套印书工艺装进了「聚珍」这个动词里：把散字聚拢，便是把珍本复活。至于为何弃用旧称，程式里没有解释，后世多说是皇帝嫌其不雅。</p>
+    <div class="shuying">
+      <svg viewBox="0 0 340 440" aria-hidden="true">
+        <rect x="26" y="24" width="288" height="392" fill="#262115" stroke="#8a6a34" stroke-width="2"/>
+        <rect x="40" y="38" width="260" height="364" fill="none" stroke="#c9963f" stroke-width="1" opacity="0.5"/>
+        <g id="sy-banxin" data-t="1">
+          <rect x="152" y="38" width="36" height="364" fill="rgba(201,150,63,0.06)" stroke="rgba(201,150,63,0.4)" stroke-dasharray="3 3"/>
+          <path d="M170 60 L182 76 L170 92 L158 76 Z" fill="none" stroke="#c9963f"/>
+          <text x="170" y="150" fill="#c9963f" font-size="17" text-anchor="middle" writing-mode="tb" letter-spacing="6">武英殿聚珍版</text>
+          <text x="170" y="330" fill="#6e6a61" font-size="10" text-anchor="middle">卷廿六之一</text>
+        </g>
+        <g id="sy-jiehang">
+          <line x1="56" y1="38" x2="56" y2="402" stroke="rgba(232,228,220,0.14)"/>
+          <line x1="76" y1="38" x2="76" y2="402" stroke="rgba(232,228,220,0.14)"/>
+          <line x1="96" y1="38" x2="96" y2="402" stroke="rgba(232,228,220,0.14)"/>
+          <line x1="116" y1="38" x2="116" y2="402" stroke="rgba(232,228,220,0.14)"/>
+          <line x1="136" y1="38" x2="136" y2="402" stroke="rgba(232,228,220,0.14)"/>
+          <line x1="204" y1="38" x2="204" y2="402" stroke="rgba(232,228,220,0.14)"/>
+          <line x1="224" y1="38" x2="224" y2="402" stroke="rgba(232,228,220,0.14)"/>
+          <line x1="244" y1="38" x2="244" y2="402" stroke="rgba(232,228,220,0.14)"/>
+          <line x1="264" y1="38" x2="264" y2="402" stroke="rgba(232,228,220,0.14)"/>
+          <line x1="284" y1="38" x2="284" y2="402" stroke="rgba(232,228,220,0.14)"/>
+        </g>
+        <g id="sy-jiao">
+          <rect x="44" y="42" width="14" height="4" fill="#8a6a34"/>
+          <rect x="282" y="42" width="14" height="4" fill="#8a6a34"/>
+          <rect x="44" y="394" width="14" height="4" fill="#8a6a34"/>
+          <rect x="282" y="394" width="14" height="4" fill="#8a6a34"/>
+        </g>
+      </svg>
+      <div class="sy-parts">
+        <div class="sy hot" data-p="sy-banxin"><i class="f"></i><span class="t">版心六字</span><span class="d">每页版心的位置印上六个字的名牌，是活字时代少有的品牌位</span></div>
+        <div class="sy" data-p="sy-jiehang"><i></i><span class="t">十八行格</span><span class="d">格线不是画上去的，是先印出来的</span></div>
+        <div class="sy" data-p="sy-jiao"><i></i><span class="t">包角铜片</span><span class="d">槽版四角包铜，八十块版都报销得清清楚楚</span></div>
+      </div>
+    </div>
+    <p class="prose">印刷方式也定得聪明：先拿刻好的梨木格版刷出带行格的纸，再把摆好字的槽版对齐页码套刷上去。所以印出来的每页都有整齐的边栏界行，字却是散字临时拼的。纸分两等，<span class="qv">每部拟用连四纸刷印二十部以备陈设仍各用竹纸刷印颁发定价通行</span>，精装本进宫，平装本卖钱回本。</p>
+    <p class="prose">还有一条制度设计，把责任印在了纸上：每页后幅的版心下沿要印校对人的名字，<span class="qv">应请即于每页后幅版心下方印某人校字様俾益専其责成校对自更不敢草率</span>。谁校的书，白纸黑字跟着书走三百年。</p>
+  </div>
+</section>
+
+<!-- 四 字柜 -->
+<section class="ch" id="s3">
+  <div class="ch-side">
+    <span class="ch-no">工序五六</span>
+    <span class="ch-step">字柜 · <b>类盘</b></span>
+  </div>
+  <div>
+    <h2>一座装<em>二十五万字</em>的仓库</h2>
+    <p class="prose">字柜的排法跟着字典走：<span class="qv">按照康熈字典分十二支名排列十二木柜</span>。柜身高五尺七寸，每柜 200 个抽屉，一屉八格、一格四枚，屉面上写着某部某字和画数。十二座柜，两千四百个抽屉，就是这座字仓的全部库容。</p>
+    <div class="zigui">
+      <div class="guiwall" id="guiwall"></div>
+      <div class="gui-note" id="guiNote"><span>点一座柜，看取字的路数。</span><b>12 柜 2400 屉 每屉 8 格</b></div>
+    </div>
+    <p class="prose">检索路径写在程式里，几乎是数据库查询的语言：<span class="qv">取字时先按偏傍应在何部则知贮于何柜再查画数则知在于何屉如法熟习举手不爽</span>。先按部首定位柜，再按画数定位屉，两跳命中。至于生僻字备数少，另立小柜放在十二柜顶上，「一目了然」四个字是原文。</p>
+  </div>
+</section>
+
+<!-- 五 摆书 喝取 -->
+<section class="ch" id="s4">
+  <div class="ch-side">
+    <span class="ch-no">工序七八</span>
+    <span class="ch-step">套格 · <b>摆书</b></span>
+  </div>
+  <div>
+    <h2>一呼一应，<em>人肉检索</em></h2>
+    <p class="prose">摆版的人手是精心挑过的：<span class="qv">俱用麤通文义明白字体之人</span>，粗通文义就够，不必学问大。分工才是精髓，金简在第一道奏折里设计了一条语音驱动的流水线：</p>
+    <div class="q"><span class="qv">摆版供事按书应需某字向管韵供事喝取管韵供事辨声应给如此检查便易安摆迅速</span></div>
+    <span class="src">金简首奏（1773）</span>
+    <p class="prose">摆字的供事缺什么字就喊出来，管字的供事听声应答、按格递字。人站着不动，字在屋里飞。这套「喝取」制度是全书最生动的一笔：数据库还没有的年代，先用嗓子和应答协议把检索跑通。</p>
+    <div class="juchang">
+      <div class="jc-lanes">
+        <div class="lane" id="ln0"><span class="lt">底稿</span><span class="who">誊清单</span><span class="say">按稿点字</span><span class="tok" id="tk0">字</span></div>
+        <div class="lane" id="ln1"><span class="lt">工位一</span><span class="who">摆版供事</span><span class="say" id="say1">喝：「珍」</span><span class="tok" id="tk1">呼</span></div>
+        <div class="lane" id="ln2"><span class="lt">工位二</span><span class="who">管韵供事</span><span class="say" id="say2">应：上平十一真</span><span class="tok" id="tk2">应</span></div>
+        <div class="lane" id="ln3"><span class="lt">出库</span><span class="who">类盘</span><span class="say" id="say3">辨声应给</span><span class="tok" id="tk3">取</span></div>
+        <div class="lane" id="ln4"><span class="lt">上版</span><span class="who">槽版</span><span class="say" id="say4">字入格中</span><span class="tok" id="tk4">入</span></div>
+      </div>
+      <div class="jc-foot">
+        <span class="jc-note">签条唱词为拟演，制度与分工皆出原奏。</span>
+        <button class="btn" id="playBtn">再 摆 一 版</button>
+      </div>
+    </div>
+    <p class="prose">产量有定额：<span class="qv">凡遇大字书每人一日可摆二版小字书只可得一版之数</span>。重复字也有一套去重规则：<span class="qv">间有某字即同某字今字柜中褫其重复酌存其一</span>，写法不同实为一字的，<span class="qv">俱不可不审其同异而辨其正俗之体也</span>。摆字的人得是半个校勘学家。</p>
+  </div>
+</section>
+
+<!-- 六 垫版 校对 刷印 -->
+<section class="ch" id="s5">
+  <div class="ch-side">
+    <span class="ch-no">工序九十</span>
+    <span class="ch-step">垫版与校对 <b>刷印</b></span>
+  </div>
+  <div>
+    <h2>木头是活的，<em>纸条是扳手</em></h2>
+    <div class="cards">
+      <div class="cd">
+        <div class="cd-t">垫版 <b>· 垫平</b></div>
+        <p>木头印久了会伸缩，<span class="qv">干湿不匀则木性究有伸缩</span>。版面不平，就把低下去的字抽出来，<span class="qv">视其不平之处将低字抽出用纸折条微垫即能平整</span>。一条折起的纸，是这套系统唯一的「垫片」。</p>
+        <div class="cd-k">维修工具：纸</div>
+      </div>
+      <div class="cd">
+        <div class="cd-t">校对 <b>· 抽换</b></div>
+        <p><span class="qv">每版垫平之后即印草様一张校阅或有移改以及错字即时抽换</span>，改错不用重刻，从柜里换一颗字就好。活字第一次让「改版」变成了动词本义。</p>
+        <div class="cd-k">纠错成本：一屉之遥</div>
+      </div>
+      <div class="cd">
+        <div class="cd-t">刷印 <b>· 看天</b></div>
+        <p><span class="qv">如遇溽暑天气刷书时木子渗墨微涨即略为停手</span>，把版盘晾一晾，风过片刻再接着印。三伏天木字吸墨会胀，这套规程连天气都算到了。套色原本只是画图偶一为之，如今逐部逐篇都用，格线墨气都不许草率。</p>
+        <div class="cd-k">工况：溽暑停机</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 七 归类 轮转 -->
+<section class="ch" id="s6">
+  <div class="ch-side">
+    <span class="ch-no">工序十一</span>
+    <span class="ch-step">归类与 <b>逐日轮转</b></span>
+  </div>
+  <div>
+    <h2>印完的字，<em>必须回家</em></h2>
+    <p class="prose">每一版印完，字不能留在版上：<span class="qv">每版印完之后即将槽版内字子尽数抽出各按部分检置于类盘之内然后就柜归于原屉</span>。散字不归位，仓库就死了。程式把话说得很重：<span class="qv">故虽千百万之多亦不觉其浩繁若稍有紊淆则茫无涯际</span>，全靠按类出入这一条纪律。年底还有一次大盘点：<span class="qv">仍于每年岁底逐柜检查一次不但字数有所稽攷亦且无鲁鱼之谬矣</span>，库存与账目对不上，印出来的书就要闹「鲁鱼」笑话。</p>
+    <div class="lun" id="lun">
+      <div class="lun-hd"><span class="t">十日轮转看板</span><span class="s">摆书与归类间日相继 · 数字为库本十日合计，柱长按日均摊算示意</span></div>
+      <table>
+        <tr><th></th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th><th>七</th><th>八</th><th>九</th><th>十</th></tr>
+        <tr><td class="rowh">摆书</td><td><span class="bar" data-w="100"></span></td><td><span class="bar" data-w="100"></span></td><td><span class="bar" data-w="100"></span></td><td><span class="bar" data-w="100"></span></td><td><span class="bar" data-w="100"></span></td><td><span class="bar" data-w="100"></span></td><td><span class="bar" data-w="100"></span></td><td><span class="bar" data-w="100"></span></td><td><span class="bar" data-w="100"></span></td><td><span class="bar" data-w="100"></span></td></tr>
+        <tr><td class="rowh">归类</td><td><span class="bar" data-w="60"></span></td><td><span class="bar" data-w="60"></span></td><td><span class="bar" data-w="60"></span></td><td><span class="bar" data-w="60"></span></td><td><span class="bar" data-w="60"></span></td><td><span class="bar" data-w="60"></span></td><td><span class="bar" data-w="60"></span></td><td><span class="bar" data-w="60"></span></td><td><span class="bar" data-w="60"></span></td><td><span class="bar" data-w="60"></span></td></tr>
+        <tr><td class="rowh">平垫</td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td></tr>
+        <tr><td class="rowh">校对</td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td></tr>
+        <tr><td class="rowh">刷印</td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td><td><span class="bar" data-w="10"></span></td></tr>
+      </table>
+      <div class="kiji">
+        <span class="kj">十日摆书<b>120 版</b></span>
+        <span class="kj">十日归类<b>72 版</b></span>
+        <span class="kj">在刷<b>12 版</b></span>
+        <span class="kj">在校<b>12 版</b></span>
+        <span class="kj hi">常积周转<b>48 版</b></span>
+      </div>
+    </div>
+    <p class="prose">这套排程出自「逐日轮转」一节，原文是一张十日工单：<span class="qv">共摆书一百二十版应归类七十二版现在刷印十二版现校对十二版现平垫十二版未平垫十二版共常积四十八版之数逐日周转</span>。各道工序永远压着四十八版在流水线上转，哪个环节都不许停：书的种类不一，有的书山海地舆字一语三见，若是某一种字被抽空，就去先摆别的书，<span class="qv">俟归类一二次再行续摆本书则字数自能活泼敷用</span>。缺字调度，写进了排班表。</p>
+  </div>
+</section>
+
+</main>
+
+<!-- 尾屏 -->
+<footer class="coda">
+  <div class="coda-l">
+    <h2>印成之书</h2>
+    <p class="prose">三十九年年底，字房交出了头几批样本：<span class="qv">今年十月间曽排印禹贡指南春秋繁露书录解题蛮书共四种</span>，接着又排完一部鹖冠子。三年下来排印三十余种，武英殿的字从此没有闲过。</p>
+    <div class="spines">
+      <div class="spine hi">禹贡指南</div>
+      <div class="spine hi">春秋繁露</div>
+      <div class="spine">书录解题</div>
+      <div class="spine">蛮书</div>
+      <div class="spine">鹖冠子</div>
+    </div>
+    <p class="prose" style="margin-top:26px">总管永瑢阅后给的考语是：<span class="qv">聚珍版刋行书籍施工简而致用博最为良法</span>。金简自己则把这套办法比作墨法集要的写法，<span class="qv">因事为图因图系说事惟其详辞惟其质虽工匠之微皆得通晓</span>，图纸和说明并陈，连工匠都能照着做。他最得意的是这句自评：<span class="qv">其间刻木有法藏庋有具排校有次第讲之精而后用之熟则程式不可不定也</span>。</p>
+  </div>
+  <div class="coda-r">
+    <div class="zishu">
+      <span class="qv">行之三年事省而功速</span>。一部文献抢救工程里顺手长出来的印刷厂，把「书是印出来的」变成了「书是装配出来的」。字散于柜，聚而成珍；印完散去，各归其屉。
+      <span class="who">四库馆副总裁 金简谨记</span>
+    </div>
+    <div class="dseal"><div class="ds">字仓</div><div class="ds">聚珍</div></div>
+  </div>
+</footer>
+
+<footer class="foot">
+  <p>文本来源：殆知阁简体库史藏〈<span data-t="1">钦定武英殿聚珍版程式</span>〉（清·金简进呈本，四十一年成书，一卷，考工之属（政书类），去空白约六千九百字）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+  <p>引文经脚本与库内文件去标点、异体归一逐字比对通过（四十五条，白话反扫六字窗零撞）。库本「防」（旨）「騐」「寛」「熈」「厯」「麤」「曽」「叅」等讹字异体均照录；首屏喝取签与摆版唱词为拟演，非库本原文。</p>
+  <p class="xiaoji">时代局限：本篇为古代文献导读。原文中的御批口吻、圣朝超前代等官书立场，以及账目银数所反映的内廷工程视角，皆属其时代，请以历史眼光阅读。</p>
+</footer>
+
+<script>
+(function(){
+  var $ = function(s){ return document.querySelector(s); };
+  var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
+
+  /* ===== 首屏 开版 ===== */
+  var ZI = [
+    {z:'钦', y:'下平十二侵', g:'辰柜', t:'三屉'},
+    {z:'定', y:'去声廿五径', g:'午柜', t:'一屉'},
+    {z:'武', y:'上声七麌',   g:'寅柜', t:'四屉'},
+    {z:'英', y:'下平八庚',   g:'巳柜', t:'二屉'},
+    {z:'殿', y:'去声十七霰', g:'巳柜', t:'五屉'},
+    {z:'聚', y:'上声七麌',   g:'未柜', t:'六屉'},
+    {z:'珍', y:'上平十一真', g:'申柜', t:'二屉'},
+    {z:'版', y:'上声十五潸', g:'酉柜', t:'三屉'},
+    {z:'程', y:'下平八庚',   g:'亥柜', t:'一屉'},
+    {z:'式', y:'入声十三职', g:'亥柜', t:'四屉'}
+  ];
+  var row1 = $('#row1'), row2 = $('#row2');
+  ZI.forEach(function(o, i){
+    var c = document.createElement('div');
+    c.className = 'cell';
+    c.innerHTML = '<span class="zi">' + o.z + '</span>';
+    (i < 5 ? row1 : row2).appendChild(c);
+  });
+  var cells = $$('.cell');
+  var hero = $('.hero'), slip = $('#slip'), busy = false;
+  function setSlip(o, done){
+    slip.innerHTML = '<span class="h">喝取签 · 拟</span>呼「' + o.z + '」　应：' +
+      o.y + '　' + o.g + o.t + (done ? '<span class="ok">已上版</span>' : '');
+  }
+  function openBan(){
+    if (busy || hero.classList.contains('stamped')) { return; }
+    busy = true;
+    hero.classList.add('openseq');
+    $('#openBtn').classList.remove('hint');
+    var i = 0;
+    (function next(){
+      if (i >= ZI.length){
+        hero.classList.add('stamped');
+        slip.innerHTML = '<span class="h">喝取签 · 拟</span>十字齐，钤印。<span class="ok">套版刷印</span>';
+        busy = false;
+        return;
+      }
+      var o = ZI[i], cell = cells[i];
+      setSlip(o, false);
+      var fz = document.createElement('span');
+      fz.className = 'flyzi'; fz.textContent = o.z;
+      var btn = $('#openBtn').getBoundingClientRect();
+      fz.style.left = (btn.left + 30) + 'px'; fz.style.top = (btn.top) + 'px';
+      document.body.appendChild(fz);
+      var r = cell.getBoundingClientRect();
+      requestAnimationFrame(function(){
+        fz.style.left = (r.left + r.width/2 - 16) + 'px';
+        fz.style.top = (r.top + r.height/2 - 20) + 'px';
+        fz.style.transform = 'scale(.72)';
+      });
+      setTimeout(function(){
+        fz.remove(); cell.classList.add('in','set');
+        setSlip(o, true);
+        i++; setTimeout(next, 380);
+      }, 620);
+    })();
+  }
+  $('#openBtn').addEventListener('click', openBan);
+
+  /* ===== 贴黄 ===== */
+  $$('.th .th-h').forEach(function(h){
+    h.addEventListener('click', function(){ h.parentNode.classList.toggle('open'); });
+  });
+
+  /* ===== 账单 点亮+合计 ===== */
+  var sumEl = $('#danSum'), total = 2339.75;
+  var danDone = false;
+  function playDan(){
+    if (danDone) return; danDone = true;
+    var items = $$('#dan .di'), cur = 0, v = 0;
+    items.forEach(function(it, i){
+      setTimeout(function(){
+        it.classList.add('on');
+        v += parseFloat(it.getAttribute('data-v'));
+        sumEl.textContent = (Math.round(v*100)/100) + ' 两';
+        if (i === items.length - 1){ sumEl.textContent = total + ' 两'; }
+      }, 350 * i);
+    });
+  }
+
+  /* ===== 书影 部件 ===== */
+  $$('.sy').forEach(function(p){
+    p.addEventListener('mouseenter', function(){
+      $$('.sy').forEach(function(x){ x.classList.remove('hot'); });
+      p.classList.add('hot');
+      var t = document.getElementById(p.getAttribute('data-p'));
+      if (t){ t.style.filter = 'drop-shadow(0 0 8px rgba(201,150,63,0.6))'; }
+      $$('.sy').forEach(function(x){
+        if (x !== p){
+          var o = document.getElementById(x.getAttribute('data-p'));
+          if (o){ o.style.filter = ''; }
+        }
+      });
+    });
+  });
+
+  /* ===== 字柜 ===== */
+  var ZHI = '子丑寅卯辰巳午未申酉戌亥';
+  var wall = $('#guiwall'), note = $('#guiNote');
+  for (var k = 0; k < 12; k++){
+    (function(k){
+      var d = document.createElement('div');
+      d.className = 'gui';
+      d.innerHTML = '<span class="zhi">' + ZHI[k] + '</span><span class="xx">抽屉 200</span><div class="drawer">' + ZHI[k] + '柜开屉</div>';
+      d.addEventListener('click', function(){
+        $$('.gui').forEach(function(g){ g.classList.remove('sel'); });
+        d.classList.add('sel');
+        note.innerHTML = '<span>' + ZHI[k] + '柜（抽屉 200，每屉八格，大小字各四）</span><b>先按部首定柜，再按画数定屉</b>';
+      });
+      wall.appendChild(d);
+    })(k);
+  }
+
+  /* ===== 喝取剧场 ===== */
+  var lanes = ['ln0','ln1','ln2','ln3','ln4'].map(function(id){ return document.getElementById(id); });
+  var says = { s1: ['喝：「禹」','喝：「贡」','喝：「指」','喝：「南」'],
+               s2: ['应：上声七麌','应：去声一送','应：上声四纸','应：下平十三覃'],
+               s4: ['字入格中','字入格中','字入格中','字入格中'] };
+  var playBtn = $('#playBtn'), jcBusy = false, jcIdx = 0;
+  function playJC(){
+    if (jcBusy) return; jcBusy = true;
+    playBtn.textContent = '摆 版 中';
+    lanes.forEach(function(l, i){
+      setTimeout(function(){
+        lanes.forEach(function(x){ x.classList.remove('hot'); });
+        l.classList.add('hot');
+        var tk = l.querySelector('.tok');
+        if (tk){ tk.classList.add('show'); setTimeout(function(){ tk.classList.remove('show'); }, 700); }
+        if (i === 1){ $('#say1').textContent = says.s1[jcIdx % 4]; }
+        if (i === 2){ $('#say2').textContent = says.s2[jcIdx % 4]; }
+        if (i === 3){ $('#say3').textContent = '取讫递出'; }
+        if (i === 4){
+          $('#say4').textContent = says.s4[jcIdx % 4];
+          jcIdx++;
+          jcBusy = false;
+          playBtn.textContent = '再 摆 一 版';
+        }
+      }, 700 * i);
+    });
+  }
+  playBtn.addEventListener('click', playJC);
+
+  /* ===== 滚动：rail 点亮 + 局部动画 ===== */
+  var rks = $$('.rail .rk');
+  var secRail = [[0],[1,2],[3,4],[5,6],[7],[8,9,10],[11,12,13]];
+  var secIds = ['s0','s1','s2','s3','s4','s5','s6'];
+  var danPlayed = false, lunPlayed = false;
+  function onScroll(){
+    var mid = window.innerHeight * 0.42, cur = -1;
+    secIds.forEach(function(id, i){
+      var el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= mid){ cur = i; }
+    });
+    rks.forEach(function(r, i){
+      r.classList.remove('on','done');
+      if (cur >= 0){
+        var grp = secRail[cur];
+        if (grp.indexOf(i) >= 0){ r.classList.add('on'); }
+        else if (i < grp[0]){ r.classList.add('done'); }
+      }
+    });
+    if (cur >= 1){
+      var s1el = document.getElementById('s1');
+      if (s1el && s1el.getBoundingClientRect().top < window.innerHeight && !danPlayed){
+        playDan();
+      }
+    }
+    if (!lunPlayed){
+      var lun = document.getElementById('lun');
+      if (lun && lun.getBoundingClientRect().top < window.innerHeight * 0.9){
+        lun.classList.add('vis'); lunPlayed = true;
+        $$('#lun .bar').forEach(function(b){ b.style.width = b.getAttribute('data-w') + 'px'; });
+      }
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
