@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>〈白虎通义〉导读 · 殆知阁</title>
+<style>
+  :root{
+    --ink:#191917; --panel:#201f1b; --panel2:#26241f;
+    --paper:#e8e4dc; --dim:#a89e8d; --faint:#6f685c;
+    --gold:#c9963f; --gold-dim:#8a6a33; --red:#c0453c;
+    --line:#3a362e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink); color:var(--paper);
+    font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    line-height:1.9; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  .mono{font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 26px}
+  a{color:var(--gold);text-decoration:none}
+  em{font-style:normal;color:var(--gold)}
+  q{quotes:none}
+
+  /* ============ 首屏：星观 ============ */
+  .hero{position:relative;min-height:100dvh;overflow:hidden;display:flex;align-items:center}
+  .sky{position:absolute;inset:0;pointer-events:none}
+  .sky svg{width:100%;height:100%;display:block}
+  .star{fill:#e8e4dc;opacity:.32;transition:opacity .9s ease,fill .9s ease}
+  .link{stroke:#6f685c;stroke-width:.7;opacity:.22;transition:opacity .9s ease,stroke .9s ease}
+  .hero.lit .star{opacity:1}
+  .hero.lit .star.big{fill:var(--gold)}
+  .hero.lit .link{opacity:.65;stroke:var(--gold-dim)}
+  .vtitle{position:absolute;right:min(7vw,74px);top:50%;transform:translateY(-50%);
+    writing-mode:vertical-rl;letter-spacing:.3em;font-weight:700;white-space:nowrap;
+    font-size:clamp(40px,7.2vw,82px);line-height:1.16;color:var(--paper);z-index:2}
+  .vtitle .yr{display:block;font-size:.26em;letter-spacing:.5em;color:var(--dim);font-weight:400;margin-top:18px}
+  .hseal{position:absolute;left:-16px;bottom:-8px;writing-mode:vertical-rl;background:var(--red);
+    color:#f2ece0;font-size:15px;letter-spacing:.2em;padding:9px 6px;border-radius:3px;
+    transform:rotate(6deg);box-shadow:0 2px 14px rgba(0,0,0,.5)}
+  .heroleft{position:relative;z-index:2;max-width:600px;padding:0 26px 0 min(7vw,74px)}
+  .kick{font-size:13px;letter-spacing:.42em;color:var(--faint)}
+  .heroleft h1{display:none}
+  .lede{max-width:30em;color:var(--dim);font-size:clamp(15px,1.55vw,18px);margin:14px 0 0}
+  .lede b{color:var(--paper)}
+  .firstq{margin-top:30px;max-width:32em;background:var(--panel);border-left:3px solid var(--gold);
+    padding:16px 22px;border-radius:0 3px 3px 0;color:var(--paper);font-size:16px;letter-spacing:.04em}
+  .firstq .who{display:block;margin-top:8px;font-size:12.5px;color:var(--faint);letter-spacing:.2em}
+  .openbtn{display:inline-block;margin-top:34px;background:none;border:1px solid var(--gold-dim);
+    color:var(--paper);font:inherit;font-size:15px;letter-spacing:.5em;padding:12px 26px 12px 32px;
+    cursor:pointer;border-radius:2px;transition:all .35s ease}
+  .openbtn:hover{border-color:var(--gold);background:rgba(201,150,63,.12)}
+  .hero.lit .openbtn{opacity:0;pointer-events:none}
+  .herohint{margin-top:16px;font-size:12.5px;letter-spacing:.28em;color:var(--faint);
+    opacity:0;transition:opacity 1s ease .5s}
+  .hero.lit .herohint{opacity:1}
+  @keyframes twinkle{0%,100%{opacity:.85}50%{opacity:.45}}
+  .hero.lit .star.big{animation:twinkle 3.2s infinite}
+
+  /* ============ 章节骨架 ============ */
+  section.sec{padding:96px 0 30px}
+  .sec-head{display:flex;align-items:baseline;gap:20px;margin-bottom:14px}
+  .sec-head .num{font-size:13px;letter-spacing:.3em;color:var(--gold);border:1px solid var(--gold-dim);
+    padding:3px 10px;border-radius:2px;white-space:nowrap}
+  .sec-head h2{font-size:clamp(26px,4vw,40px);letter-spacing:.16em;font-weight:700}
+  .sec-sub{color:var(--dim);max-width:44em;margin-bottom:34px}
+  .sec-sub b{color:var(--paper)}
+  .rv{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+  .rv.on{opacity:1;transform:none}
+
+  .qblock{background:var(--panel);border-left:3px solid var(--gold);padding:16px 22px;border-radius:0 3px 3px 0;
+    color:var(--paper);font-size:16px;letter-spacing:.04em;margin:10px 0}
+  .who{display:block;margin-top:8px;font-size:12.5px;color:var(--faint);letter-spacing:.2em}
+  .note{color:var(--dim);font-size:14.5px;margin:6px 0 18px;max-width:44em}
+  .note b{color:var(--paper)}
+
+  /* ============ 问对堂 ============ */
+  .an{border-top:1px solid var(--line)}
+  .an:last-child{border-bottom:1px solid var(--line)}
+  .an-q{display:flex;align-items:baseline;gap:22px;width:100%;background:none;border:none;color:var(--paper);
+    font:inherit;text-align:left;cursor:pointer;padding:22px 8px;transition:background .3s ease}
+  .an-q:hover{background:rgba(201,150,63,.06)}
+  .an-no{font-size:14px;color:var(--gold);letter-spacing:.14em;white-space:nowrap;min-width:64px}
+  .an-q h3{font-size:clamp(17px,2.4vw,23px);font-weight:700;letter-spacing:.08em;flex:1}
+  .an-x{color:var(--faint);font-size:20px;transition:transform .35s ease;line-height:1}
+  .an.open .an-x{transform:rotate(45deg);color:var(--gold)}
+  .an-a{max-height:0;overflow:hidden;transition:max-height .5s ease}
+  .an.open .an-a{max-height:640px}
+  .an-in{padding:2px 8px 30px 94px}
+  @media (max-width:640px){.an-in{padding-left:8px}.an-no{min-width:44px}}
+  @media (max-width:760px){
+    .hero{flex-direction:column;align-items:center;justify-content:flex-start;padding-top:70px}
+    .vtitle{position:relative;right:auto;top:auto;transform:none;writing-mode:horizontal-tb;
+      white-space:nowrap;font-size:46px;margin:0 auto;text-align:center;display:block}
+    .vtitle .yr{margin-top:6px;font-size:13px}
+    .hseal{position:relative;left:auto;right:auto;bottom:auto;writing-mode:horizontal-tb;
+      display:inline-block;margin:12px auto 0;transform:rotate(-3deg)}
+    .heroleft{padding-top:30px;width:100%}
+  }
+
+  /* ============ 残卷窟：纸白反色段 ============ */
+  .cave{background:var(--paper);color:#24221d;padding:90px 0 80px;margin-top:70px}
+  .cave .sec-head .num{color:#8a6a33;border-color:#8a6a33}
+  .cave .sec-head h2{color:#24221d}
+  .cave .sec-sub{color:#5c564b}
+  .cave .sec-sub b{color:#24221d}
+  .shelves{columns:3;column-gap:20px}
+  @media (max-width:960px){.shelves{columns:2}}
+  @media (max-width:620px){.shelves{columns:1}}
+  .frag{break-inside:avoid;background:#f4f0e7;border:1px solid #d8d2c2;border-radius:3px;
+    padding:20px 20px 16px;margin:0 0 20px;position:relative;
+    box-shadow:0 6px 18px rgba(25,25,23,.14)}
+  .frag::before{content:"";position:absolute;inset:0;border-radius:3px;pointer-events:none;
+    background:radial-gradient(120% 90% at 100% 0,rgba(25,25,23,.22),transparent 42%),
+               radial-gradient(90% 70% at 0 100%,rgba(25,25,23,.16),transparent 40%)}
+  .frag h3{font-size:19px;letter-spacing:.18em;color:#24221d;display:flex;align-items:baseline;gap:10px}
+  .frag h3 small{font-size:12px;color:#8a6a33;letter-spacing:.2em;font-weight:400}
+  .frag .fq{display:block;background:none;border:none;border-left:2px solid #b9904c;
+    color:#24221d;font-size:15px;padding:4px 0 4px 12px;margin:12px 0 8px}
+  .frag .fn{color:#5c564b;font-size:13.5px;line-height:1.8}
+
+  /* ============ 取象连珠 ============ */
+  .machine{display:grid;grid-template-columns:300px 1fr;gap:30px;align-items:start}
+  @media (max-width:860px){.machine{grid-template-columns:1fr}}
+  .chips{display:flex;flex-direction:column;gap:8px}
+  .chip{text-align:left;background:var(--panel);border:1px solid var(--line);color:var(--dim);
+    font:inherit;font-size:14.5px;padding:10px 16px;border-radius:2px;cursor:pointer;
+    transition:all .3s ease;letter-spacing:.03em}
+  .chip:hover{border-color:var(--gold-dim);color:var(--paper)}
+  .chip.show{border-color:var(--gold);color:var(--gold);background:rgba(201,150,63,.08)}
+  .panel{position:relative;min-height:230px;border:1px solid var(--line);border-radius:3px;
+    background:var(--panel);padding:30px 32px}
+  .qa{display:none}
+  .qa.show{display:block;animation:fadein .5s ease}
+  @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .qa .qq{font-size:clamp(18px,2.6vw,25px);letter-spacing:.08em;color:var(--paper);display:block}
+  .qa .qn{margin-top:14px;color:var(--dim);font-size:14.5px}
+  .machinenote{margin-top:22px}
+
+  /* ============ 圣人异表 ============ */
+  .row{display:flex;gap:16px;overflow-x:auto;padding:6px 2px 20px;scrollbar-width:thin}
+  .sage{flex:0 0 218px;background:var(--panel);border:1px solid var(--line);border-radius:3px;
+    padding:18px 16px;transition:border-color .3s ease,transform .3s ease}
+  .sage:hover{border-color:var(--gold-dim);transform:translateY(-4px)}
+  .sage svg{width:64px;height:64px;display:block;margin-bottom:10px}
+  .sage .sn{font-size:17px;letter-spacing:.2em;color:var(--gold);margin-bottom:6px}
+  .sage .sq{font-size:13.5px;color:var(--paper);line-height:1.8;display:block}
+  .sage .st{font-size:12px;color:var(--faint);display:block;margin-top:6px}
+  .coda{margin-top:26px}
+  .coda .note{margin-bottom:12px}
+
+  /* ============ 尾声 ============ */
+  .end{padding:100px 0 90px;text-align:center;position:relative}
+  .ringwrap{display:flex;justify-content:center;margin:26px 0 30px}
+  .ring{width:190px;height:190px;position:relative}
+  .ring svg{width:100%;height:100%;display:block}
+  .ringbtn{margin-top:6px;background:none;border:none;color:var(--faint);font:inherit;font-size:13px;
+    letter-spacing:.3em;cursor:pointer;transition:color .3s ease}
+  .ringbtn:hover{color:var(--gold)}
+  .wheel{transition:transform 1.1s cubic-bezier(.4,0,.2,1)}
+  .end .qblock{display:inline-block;text-align:left;max-width:36em}
+  .stamp{display:inline-block;margin-top:44px;border:2px solid var(--red);color:var(--red);
+    font-size:clamp(26px,4vw,38px);letter-spacing:.5em;padding:12px 20px 12px 26px;border-radius:4px;
+    transform:rotate(-4deg) scale(1.6);opacity:0;transition:all .7s cubic-bezier(.2,1.4,.4,1)}
+  .end.stamped .stamp{opacity:.92;transform:rotate(-4deg) scale(1)}
+  .endnote{margin-top:30px;color:var(--dim);font-size:14.5px;max-width:40em;margin-left:auto;margin-right:auto}
+
+  /* ============ 页脚 ============ */
+  footer{border-top:1px solid var(--line);padding:40px 26px 60px;color:var(--faint);font-size:13px;line-height:2}
+  footer p{margin-bottom:8px}
+  footer .xiaoji{color:#5c564b}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 ================= -->
+<header class="hero" id="hero">
+  <div class="sky" aria-hidden="true">
+    <svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice">
+      <g id="constellation">
+        <line class="link" x1="120" y1="150" x2="205" y2="118"/><line class="link" x1="205" y1="118" x2="262" y2="150"/>
+        <line class="link" x1="262" y1="150" x2="320" y2="126"/><line class="link" x1="320" y1="126" x2="420" y2="92"/>
+        <line class="link" x1="420" y1="92" x2="470" y2="130"/><line class="link" x1="470" y1="130" x2="580" y2="105"/>
+        <line class="link" x1="580" y1="105" x2="668" y2="138"/><line class="link" x1="668" y1="138" x2="760" y2="112"/>
+        <line class="link" x1="760" y1="112" x2="852" y2="140"/>
+        <line class="link" x1="790" y1="205" x2="830" y2="255"/><line class="link" x1="830" y1="255" x2="878" y2="240"/>
+        <line class="link" x1="878" y1="240" x2="880" y2="185"/><line class="link" x1="880" y1="185" x2="830" y2="176"/>
+        <line class="link" x1="830" y1="176" x2="790" y2="205"/><line class="link" x1="830" y1="176" x2="830" y2="255"/>
+        <circle class="star" cx="120" cy="150" r="2.4"/><circle class="star" cx="205" cy="118" r="1.8"/>
+        <circle class="star" cx="262" cy="150" r="2.2"/><circle class="star" cx="320" cy="126" r="1.9"/>
+        <circle class="star" cx="382" cy="112" r="1.6"/><circle class="star" cx="420" cy="92" r="2.6"/>
+        <circle class="star" cx="452" cy="120" r="1.5"/><circle class="star" cx="470" cy="130" r="2.1"/>
+        <circle class="star" cx="580" cy="105" r="2.3"/><circle class="star" cx="668" cy="138" r="2.0"/>
+        <circle class="star" cx="712" cy="120" r="1.5"/><circle class="star" cx="760" cy="112" r="2.2"/>
+        <circle class="star" cx="852" cy="140" r="2.0"/>
+        <circle class="star big" cx="830" cy="255" r="4.6"/>
+        <circle class="star" cx="790" cy="205" r="2.6"/><circle class="star" cx="878" cy="240" r="3.2"/>
+        <circle class="star" cx="880" cy="185" r="2.8"/><circle class="star" cx="830" cy="176" r="3.0"/>
+      </g>
+      <g id="dust"></g>
+    </svg>
+  </div>
+  <div class="vtitle">白虎通义<span class="yr">东汉 · 班固等撰</span>
+    <span class="hseal">虎观问对</span>
+  </div>
+  <div class="heroleft">
+    <div class="kick">导读卷二百九十七 · 虎观问对</div>
+    <h1>白虎通义</h1>
+    <p class="lede">公元七十九年，汉章帝把儒生们召进白虎观，讲论五经异同，吵不明白的地方<b>由皇帝亲自拍板</b>。班固把结论整理成书：一份给天下名物下定语的会议纪要，同时还是一座坟场，埋着几十部后来被禁毁的纬书。</p>
+    <div class="firstq">
+      <q class="q">天子者，爵称也。爵所以称天子者何？王者父天母地，为天之子也。</q>
+      <span class="who">卷一 · 爵</span>
+    </div>
+    <button class="openbtn" id="openbtn" type="button">开观</button>
+    <div class="herohint">西方七宿已列，虎观门开</div>
+  </div>
+</header>
+
+<main>
+<!-- ================= 楔子 ================= -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="num">楔子</span><h2>那场会</h2></div>
+    <p class="sec-sub rv">东汉经学门户林立，今文古文互相看不顺眼。建初四年，章帝下诏，让太常、博士、议郎、诸生会聚白虎观，逐条讲议五经同异；分歧定不下来，就<b>称制临决</b>，天子亲自裁决。会后由史臣班固整理成书，于是每一则结论都带着会议腔：先设问，再作答，答完了还要引经据典。</p>
+    <div class="qblock rv"><q class="q">德合天地者称帝，仁义合者称王</q><span class="who">卷一 · 号</span></div>
+    <p class="note rv">书里给每个名号都发了定义。说到「皇」，标准意外地朴素：</p>
+    <div class="qblock rv"><q class="q">烦一夫、扰一士以劳天下不为皇也，不扰匹夫匹妇故为皇。</q><span class="who">卷一 · 号</span></div>
+    <p class="note rv">折腾一个百姓、惊扰一个差役，就不配叫皇。这份纪要在后来两千年里被当作官方教科书，可它记得最牢的，反而是这句安民的话。</p>
+  </div>
+</section>
+
+<!-- ================= 问对堂 ================= -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="num">议案八道</span><h2>问对堂</h2></div>
+    <p class="sec-sub rv">全书四十一篇，几乎全是同一副骨架：<b>某者何也？某者，某也。</b>像一部用问答体写成的官方词典。挑八道议案，点开看堂上怎么对。</p>
+
+    <div class="an rv">
+      <button class="an-q" type="button"><span class="an-no">议案一</span><h3>三纲，到底是哪三纲？</h3><span class="an-x">+</span></button>
+      <div class="an-a"><div class="an-in">
+        <div class="qblock"><q class="q">三纲者何谓也？谓君臣、父子、夫妇也。六纪者，谓诸父、兄弟、族人、诸舅、师长、朋友也。</q><span class="who">卷七 · 三纲六纪</span></div>
+        <p class="note">后世挂在墙上的三纲五常，就是在这次会议上定稿的。它自己还补了一句解释：</p>
+        <div class="qblock"><q class="q">纲者，张也；纪者，理也。大者为纲，小者为纪，所以张理上下，整齐人道也。</q><span class="who">卷七 · 三纲六纪</span></div>
+        <p class="note">纲是渔网的大绳，纪是小绳；提起大绳，万目自张。</p>
+      </div></div>
+    </div>
+
+    <div class="an rv">
+      <button class="an-q" type="button"><span class="an-no">议案二</span><h3>爵位为什么偏偏分五等？</h3><span class="an-x">+</span></button>
+      <div class="an-a"><div class="an-in">
+        <div class="qblock"><q class="q">爵有五等，以法五行也；或三等者，法三光也。</q><span class="who">卷一 · 爵</span></div>
+        <p class="note">制度不在人事里找理由，去天上找：五行三光，各有出处。殷人三等、周人五等，也各有宜。</p>
+        <div class="qblock"><q class="q">殷爵三等，周爵五等，各有宜也。</q><span class="who">卷一 · 爵，引《含文嘉》</span></div>
+      </div></div>
+    </div>
+
+    <div class="an rv">
+      <button class="an-q" type="button"><span class="an-no">议案三</span><h3>谥号为什么等人死了才给？</h3><span class="an-x">+</span></button>
+      <div class="an-a"><div class="an-in">
+        <div class="qblock"><q class="q">死乃谥之何？言人行终始不能若一，故据其终始，后可知也。</q><span class="who">卷一 · 谥</span></div>
+        <p class="note">人前后不一，盖棺才能论定。谥法表也定得明明白白：</p>
+        <div class="qblock"><q class="q">翼善传圣谥曰尧，仁圣盛明谥曰舜，慈惠爱民谥曰文，强理直谥曰武。</q><span class="who">卷一 · 谥，引《礼记谥法》</span></div>
+      </div></div>
+    </div>
+
+    <div class="an rv">
+      <button class="an-q" type="button"><span class="an-no">议案四</span><h3>朝廷为什么非要有社稷？</h3><span class="an-x">+</span></button>
+      <div class="an-a"><div class="an-in">
+        <div class="qblock"><q class="q">人非土不立，非谷不食。土地广博，不可遍敬也；五谷众多，不可一一祭也。</q><span class="who">卷二 · 社稷</span></div>
+        <p class="note">土地太大敬不过来，就立社；谷太多祭不过来，就尊稷。江山两个字，在这里是字面意思。</p>
+      </div></div>
+    </div>
+
+    <div class="an rv">
+      <button class="an-q" type="button"><span class="an-no">议案五</span><h3>占卜为什么用龟壳和蓍草？</h3><span class="an-x">+</span></button>
+      <div class="an-a"><div class="an-in">
+        <div class="qblock"><q class="q">龟，阴之老也。蓍，阳之老也。龙非水不处，龟非火不兆。</q><span class="who">卷六 · 蓍龟，引《礼杂记》</span></div>
+        <p class="note">问长寿要问最老的东西，连占卜工具都按爵位配了尺寸：</p>
+        <div class="qblock"><q class="q">天子龟长一尺二寸，诸侯一尺，大夫八寸，士六寸。</q><span class="who">卷六 · 蓍龟，引《礼三正记》</span></div>
+        <div class="qblock"><q class="q">龟之为言久也，蓍之为言耆也。</q><span class="who">卷六 · 蓍龟</span></div>
+        <p class="note">龟就是久，蓍就是耆，问一块长寿的老骨头，替人向天探口气。</p>
+      </div></div>
+    </div>
+
+    <div class="an rv">
+      <button class="an-q" type="button"><span class="an-no">议案六</span><h3>为什么说刑不上大夫？</h3><span class="an-x">+</span></button>
+      <div class="an-a"><div class="an-in">
+        <div class="qblock"><q class="q">刑不上大夫何？尊大夫。礼不下庶人，欲勉民使至于士。</q><span class="who">卷八 · 五刑</span></div>
+        <p class="note">那句老话的官方注脚在这里，理由直白得让人一愣，然后它自己找补了一句：</p>
+        <div class="qblock"><q class="q">故礼为有知制，刑为无知设也。</q><span class="who">卷八 · 五刑</span></div>
+      </div></div>
+    </div>
+
+    <div class="an rv">
+      <button class="an-q" type="button"><span class="an-no">议案七</span><h3>婚礼为什么在黄昏举行？</h3><span class="an-x">+</span></button>
+      <div class="an-a"><div class="an-in">
+        <div class="qblock"><q class="q">婚姻者，何谓也？昏时行礼，故谓之婚也，妇人因夫而成；故曰姻。</q><span class="who">卷九 · 嫁娶</span></div>
+        <p class="note">婚字取自黄昏，阳往阴来的时辰。书里还记了丧气又体面的两件事：</p>
+        <div class="qblock"><q class="q">嫁女之家，不绝火三日，思相离也。娶妇之家，三日不举乐，思嗣亲也。</q><span class="who">卷九 · 嫁娶</span></div>
+        <p class="note">女儿出嫁，娘家三天不熄火；儿子娶亲，婆家三天不奏乐。都是舍不得。</p>
+      </div></div>
+    </div>
+
+    <div class="an rv">
+      <button class="an-q" type="button"><span class="an-no">议案八</span><h3>天子死叫崩，庶人死叫什么？</h3><span class="an-x">+</span></button>
+      <div class="an-a"><div class="an-in">
+        <div class="qblock"><q class="q">天子称崩何？别尊卑，异死生也。</q><span class="who">卷十 · 崩薨</span></div>
+        <p class="note">崩、薨、卒、不禄，一路排下来，到最底下是：</p>
+        <div class="qblock"><q class="q">庶人曰死，魂去亡。死之为言澌，精气穷也。</q><span class="who">卷十 · 崩薨</span></div>
+        <p class="note">死，就是冰化了的那一声。而停灵的地方也有讲究：</p>
+        <div class="qblock"><q class="q">在床曰尸，在棺曰柩。</q><span class="who">卷十 · 崩薨，引《曲礼》</span></div>
+      </div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 残卷窟 ================= -->
+<section class="cave">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="num">焚余</span><h2>残卷窟</h2></div>
+    <p class="sec-sub rv">这场会议的发言习惯是<b>引经据典</b>，而且引得极杂。其中一大类叫纬书：用星象、符命、灾异给经书作注的方术之书。隋代厉行禁毁，它们几乎全数失传，今天想读，多半要回到这份会议纪要里来。下面是九块烧剩的书脊，残句照录库本。</p>
+    <div class="shelves">
+      <div class="frag rv"><h3>尚书<small>亡篇</small></h3><q class="fq q">太社唯松，东社唯柏，南社唯梓，西社唯栗，北社唯槐。</q><p class="fn">一篇连篇名都没留下来的《尚书》，在这里存了五棵社树。五方社坛各栽一木，书里引完这句，别处再无一字。</p></div>
+      <div class="frag rv"><h3>援神契<small>孝经纬</small></h3><q class="fq q">天覆地载谓之天子，上法斗极。</q><p class="fn">本书开卷第一则引文就出自它。天子二字，是站在天地中间替天当差。</p></div>
+      <div class="frag rv"><h3>钩命决<small>孝经纬</small></h3><q class="fq q">三皇步，五帝趋，三王驰，五伯骛。</q><p class="fn">十二个字一部加速史：从散步到小跑，从奔驰到狂奔，越走越快，离上古越远。</p></div>
+      <div class="frag rv"><h3>含文嘉<small>礼纬</small></h3><q class="fq q">天子坟高三仞，树以松；诸侯半之，树以柏；大夫八尺，树以栾；士四尺，树以槐；庶人无坟，树以杨柳。</q><p class="fn">坟头多高、种什么树，按爵位登记造册。此后中国坟园的松柏规矩，源头之一就是这块残片。</p></div>
+      <div class="frag rv"><h3>元命苞<small>春秋纬</small></h3><q class="fq q">目者肝之使，肝者木之精，苍龙之位也。</q><p class="fn">五脏配五行，五官配五藏，眼睛是肝派出去的使臣，编制挂在东方苍龙帐下。</p></div>
+      <div class="frag rv"><h3>潜潭巴<small>春秋纬</small></h3><q class="fq q">灾之言伤也，随事而诛；异之言怪也，先发感动之也。</q><p class="fn">灾是追责，异是预警。天不会说话，靠这两种文书批评人间。</p></div>
+      <div class="frag rv"><h3>感精符<small>春秋纬</small></h3><q class="fq q">三纲之义，日为君，月为臣也。</q><p class="fn">把人间的纲常写到天上：太阳称君，月亮称臣，日月运行也成了朝仪。</p></div>
+      <div class="frag rv"><h3>刑德放<small>尚书纬</small></h3><q class="fq q">日月东行。</q><p class="fn">全文只剩四个字，是窟里最短的一块残片。它在原书里的上下文，已经无处可问。</p></div>
+      <div class="frag rv"><h3>稽命征<small>礼纬</small></h3><q class="fq q">天子舟车殡何？为避水火灾也。故棺在车上，车在舟中。</q><p class="fn">天子的棺材要套三层防护：棺上车、车上船，防的就是一把火一场水。</p></div>
+      <div class="frag rv"><h3>乐元语<small>乐纬佚说</small></h3><q class="fq q">东夷之乐持矛舞，助时生也；南夷之乐持羽舞，助时养也；西夷之乐持战舞，助时煞也。</q><p class="fn">四方的舞各拿各的道具，配四季的差事。书里接着记北夷持盾，助时藏。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 取象连珠 ================= -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="num">何法</span><h2>取象连珠</h2></div>
+    <p class="sec-sub rv">书里最上头的一段，是一串「何法」连珠炮：人间每一种制度，都得在天上找一个原型，配套到近乎任性。点左边的问题，看堂上给出的答案。</p>
+    <div class="machine rv">
+      <div class="chips" id="chips">
+        <button class="chip show" type="button" data-t="a1">父亲死了，儿子继位</button>
+        <button class="chip" type="button" data-t="a2">兄长死了，弟弟继位</button>
+        <button class="chip" type="button" data-t="a3">臣子劝谏，君主不听就走</button>
+        <button class="chip" type="button" data-t="a4">儿子劝父亲，只劝不伤</button>
+        <button class="chip" type="button" data-t="a5">国君一次娶九位夫人</button>
+        <button class="chip" type="button" data-t="a6">同姓不婚</button>
+        <button class="chip" type="button" data-t="a7">人过六十不再近女色</button>
+        <button class="chip" type="button" data-t="a8">眼睛为什么能看</button>
+        <button class="chip" type="button" data-t="a9">国君让臣，功劳记给谁</button>
+        <button class="chip" type="button" data-t="a10">赏赐先给亲近的人</button>
+        <button class="chip" type="button" data-t="a11">守丧为什么是三年</button>
+      </div>
+      <div class="panel" id="panel">
+        <div class="qa show" id="a1"><q class="qq q">父死子继何法？法木终火王也。</q><p class="qn">木头烧完火才旺：前一个季节退场，后一个登场。</p></div>
+        <div class="qa" id="a2"><q class="qq q">兄死弟及何法？夏之承春也。</q><p class="qn">夏天接春天的班，兄弟如四季挨着坐。</p></div>
+        <div class="qa" id="a3"><q class="qq q">臣谏君不从则去何法？法水润下、达于上也。</q><p class="qn">水往低处流，却总能找到出路；此路不通，换一条。</p></div>
+        <div class="qa" id="a4"><q class="qq q">子谏父何法？法火揉直木也。</q><p class="qn">火烤木头能揉弯，不能折断。劝父亲，弯一弯就好，不许伤。</p></div>
+        <div class="qa" id="a5"><q class="qq q">君一娶九女何法？法九州象天之施也。</q><p class="qn">九州一次受天所施，九女一次而娶，取个齐数。</p></div>
+        <div class="qa" id="a6"><q class="qq q">不娶同姓何法？法五行异类乃相生也。</q><p class="qn">五行异类才相生，同气不繁。这条倒像生物课。</p></div>
+        <div class="qa" id="a7"><q class="qq q">年六十闭房何法？法六月阳气衰也。</q><p class="qn">一年到六月阳开始退，人到六十也一样。</p></div>
+        <div class="qa" id="a8"><q class="qq q">人目何法？法日月明也。</q><p class="qn">眼是随身带的日月。书里补一句：白昼归日，黑夜归月，两眼也得轮班。</p></div>
+        <div class="qa" id="a9"><q class="qq q">君让臣何法？法月三十日，名其功也。</q><p class="qn">月亮把三十个夜晚的亮都记成太阳的功，君主让臣，学它。</p></div>
+        <div class="qa" id="a10"><q class="qq q">王者赐先亲近、后疏远何法？法天雨，高者先得之也。</q><p class="qn">雨先落在高处，赐先给近处。天下的雨原来也讲资历。</p></div>
+        <div class="qa" id="a11"><q class="qq q">丧三年何法？法三年一闰，天道终也。</q><p class="qn">人间的丧期对齐了天上的闰月：天道走完一轮，人才肯除服。</p></div>
+      </div>
+    </div>
+    <p class="note machinenote rv">这套取象推理今天看是强行找补，但它透露了会议的真实野心：<b>把人间秩序说成天道的一部分</b>，制度就不必再向人解释。</p>
+  </div>
+</section>
+
+<!-- ================= 圣人异表 ================= -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="num">相书</span><h2>圣人异表</h2></div>
+    <p class="sec-sub rv">会议还给圣人们做了一套相面式登记，每人一条异表，<b>天生异相，各应天象</b>。横排九张，向右滑动。</p>
+    <div class="row rv">
+      <div class="sage"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#c9963f" stroke-width="2.4" stroke-linecap="round"><path d="M10 26 Q16 18 22 26"/><path d="M24 24 Q30 16 36 24"/><path d="M38 26 Q44 18 50 26"/><path d="M12 34 Q18 27 24 34"/><path d="M26 32 Q32 25 38 32"/><path d="M40 34 Q46 27 52 34"/></g></svg><div class="sn">尧</div><q class="sq q">尧眉八彩，是谓通明，历象日月、璇玑玉衡。</q><span class="st">眉生八彩，所以懂天文</span></div>
+      <div class="sage"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="16" fill="none" stroke="#c9963f" stroke-width="2.4"/><circle cx="32" cy="32" r="8" fill="none" stroke="#c9963f" stroke-width="2.4"/><circle cx="32" cy="32" r="2.6" fill="#c9963f"/></svg><div class="sn">舜</div><q class="sq q">舜重瞳子，是谓玄景，上应摄提，以象三光。</q><span class="st">双瞳孔，一眼看三光</span></div>
+      <div class="sage"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 16 Q36 12 44 24 Q50 34 42 48" fill="none" stroke="#c9963f" stroke-width="2.4" stroke-linecap="round"/><line x1="30" y1="22" x2="30" y2="44" stroke="#c9963f" stroke-width="2.2" stroke-linecap="round"/><line x1="37" y1="26" x2="37" y2="40" stroke="#c9963f" stroke-width="2.2" stroke-linecap="round"/></svg><div class="sn">禹</div><q class="sq q">禹耳三漏，是谓大通，兴利除害，决河疏江。</q><span class="st">耳有三个孔，所以治得通水</span></div>
+      <div class="sage"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M22 20 L42 20 L34 34 L34 48" fill="none" stroke="#c9963f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="30" r="2.2" fill="#c9963f"/><circle cx="40" cy="30" r="2.2" fill="#c9963f"/></svg><div class="sn">皋陶</div><q class="sq q">皋陶马喙，是谓至诚，决狱明白，察于人情。</q><span class="st">长着马嘴，中国司法祖师爷</span></div>
+      <div class="sage"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M16 44 L24 28 L32 40 L40 24 L48 36" fill="none" stroke="#c9963f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="sn">汤</div><q class="sq q">汤臂三肘，是谓柳翼，攘去不义，万民咸息。</q><span class="st">一条胳膊三个肘</span></div>
+      <div class="sage"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="22" cy="24" r="3.4" fill="#c9963f"/><circle cx="42" cy="24" r="3.4" fill="#c9963f"/><circle cx="22" cy="42" r="3.4" fill="#c9963f"/><circle cx="42" cy="42" r="3.4" fill="#c9963f"/></svg><div class="sn">文王</div><q class="sq q">文王四乳，是谓至仁，天下所归，百姓所亲。</q><span class="st">四个乳，喂得下天下</span></div>
+      <div class="sage"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M18 40 Q32 18 46 40" fill="none" stroke="#c9963f" stroke-width="2.4" stroke-linecap="round"/><circle cx="32" cy="31" r="3" fill="#c9963f"/></svg><div class="sn">武王</div><q class="sq q">武王望羊，是谓摄扬，盱目陈兵，天下富昌。</q><span class="st">望羊，抬头看远处的眼神</span></div>
+      <div class="sage"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 14 Q44 22 40 50" fill="none" stroke="#c9963f" stroke-width="2.4" stroke-linecap="round"/></svg><div class="sn">周公</div><q class="sq q">周公背偻，是谓强俊，成就周道，辅于幼主。</q><span class="st">驼背，鞠躬如也的体证</span></div>
+      <div class="sage"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M16 38 Q32 52 48 38" fill="none" stroke="#c9963f" stroke-width="2.4" stroke-linecap="round"/><line x1="16" y1="38" x2="48" y2="38" stroke="#c9963f" stroke-width="1.6" stroke-dasharray="3 4"/></svg><div class="sn">孔子</div><q class="sq q">孔子反宇，是谓尼甫，立德泽所兴，藏元通流。</q><span class="st">头顶中间凹，如屋宇反扣</span></div>
+    </div>
+    <div class="coda rv">
+      <p class="note">而书里记下的孔子本人，恰好被路人用这套异相标准当面试过一次。郑国东门外，有人对子贡说：</p>
+      <div class="qblock"><q class="q">东门有一人，其头似尧，其颈似皋繇，其肩似子产，然自腰以下不及禹三寸，儡儡如丧家之狗</q><span class="who">卷八 · 寿命</span></div>
+      <p class="note">上半身集齐圣人配件，下半身差了禹三寸。孔子听了不恼，只认领了最后半句：</p>
+      <div class="qblock"><q class="q">形状未也，如丧家之狗。</q><span class="who">卷八 · 寿命</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 尾声 ================= -->
+<section class="end" id="end">
+  <div class="wrap">
+    <div class="sec-head rv" style="justify-content:center"><span class="num">散会</span><h2>议讫</h2></div>
+    <p class="sec-sub rv" style="margin-left:auto;margin-right:auto">书里连历史走向也定了一条环形跑道：夏尚忠，殷尚敬，周尚文，每一代的药都是下一代的病。</p>
+    <div class="ringwrap rv">
+      <div class="ring">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="34" fill="none" stroke="#3a362e" stroke-width="1"/>
+          <g class="wheel" id="wheel">
+            <circle cx="50" cy="16" r="11" fill="#201f1b" stroke="#c9963f" stroke-width="1.4"/>
+            <circle cx="78.4" cy="67" r="11" fill="#201f1b" stroke="#c9963f" stroke-width="1.4"/>
+            <circle cx="21.6" cy="67" r="11" fill="#201f1b" stroke="#c9963f" stroke-width="1.4"/>
+            <text x="50" y="20.4" text-anchor="middle" fill="#e8e4dc" font-size="11">忠</text>
+            <text x="78.4" y="71.4" text-anchor="middle" fill="#e8e4dc" font-size="11">敬</text>
+            <text x="21.6" y="71.4" text-anchor="middle" fill="#e8e4dc" font-size="11">文</text>
+          </g>
+          <path d="M50 4 A46 46 0 0 1 90 32" fill="none" stroke="#6f685c" stroke-width="1" stroke-dasharray="2 4"/>
+        </svg>
+      </div>
+      <button class="ringbtn" id="ringbtn" type="button">转一世</button>
+    </div>
+    <div class="qblock rv"><q class="q">夏人之王教以忠，其失野，救野之失莫如敬。殷人之王教以敬，其失鬼，救鬼之失莫如文。周人之王教以文，其失薄，救薄之失莫如忠。</q><span class="who">卷七 · 三教</span></div>
+    <p class="endnote rv">会议从天问到人，最后落在天地怎么开始：<b>气之始，形之始，质之始</b>。这份纪要流传了下来，而它请来作证的许多书，只有在这里还能出声。</p>
+    <div class="qblock rv"><q class="q">太初者，气之始也。太始者，形兆之始也；太素者，质之始也。</q><span class="who">卷八 · 天地，引《干凿度》</span></div>
+    <div class="stamp">虎观议讫</div>
+  </div>
+</section>
+</main>
+
+<footer class="wrap">
+  <p>文本来源：殆知阁简体库史藏志存记录〈白虎通义〉（东汉班固等撰，据库本，去空白约两万八千字，十卷四十一篇目；库内子藏笔记另收一本，篇目略同）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+  <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。</p>
+  <p class="xiaoji">时代局限：三纲五常、谶纬符命、尊卑等级等旧观念皆照录库本，是东汉官方意识形态的原样存档，请以史料眼光阅读；页面对旧说已尽量以今语转述并标注出处。</p>
+</footer>
+
+<script>
+(function(){
+  var hero=document.getElementById('hero');
+  document.getElementById('openbtn').addEventListener('click',function(){
+    if(hero.classList.contains('lit'))return;
+    hero.classList.add('lit');
+  });
+  document.querySelectorAll('.an-q').forEach(function(b){
+    b.addEventListener('click',function(){
+      var an=b.parentNode;
+      an.classList.toggle('open');
+    });
+  });
+  document.querySelectorAll('.chip').forEach(function(c){
+    c.addEventListener('click',function(){
+      document.querySelectorAll('.chip').forEach(function(x){x.classList.remove('show');});
+      document.querySelectorAll('.qa').forEach(function(x){x.classList.remove('show');});
+      c.classList.add('show');
+      document.getElementById(c.getAttribute('data-t')).classList.add('show');
+    });
+  });
+  var turns=0;
+  var nodes=document.querySelectorAll('#wheel circle');
+  document.getElementById('ringbtn').addEventListener('click',function(){
+    turns=(turns+1)%3;
+    var names=['忠','敬','文'];
+    nodes.forEach(function(c,i){
+      var active=(i===turns);
+      c.setAttribute('stroke',active?'#c9963f':'#3a362e');
+      c.setAttribute('stroke-width',active?'2.4':'1.2');
+      c.setAttribute('fill',active?'#26241f':'#201f1b');
+    });
+    var ws=document.querySelectorAll('#wheel text');
+    ws.forEach(function(t,i){
+      t.setAttribute('fill',(i===turns)?'#c9963f':'#6f685c');
+    });
+    this.textContent='转一世 · '+names[turns]+'当令';
+  });
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+  },{threshold:0.12});
+  document.querySelectorAll('.rv').forEach(function(n){io.observe(n);});
+  var end=document.getElementById('end');
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){end.classList.add('stamped');io2.disconnect();}});
+  },{threshold:0.4});
+  io2.observe(end);
+})();
+</script>
+</body>
+</html>
