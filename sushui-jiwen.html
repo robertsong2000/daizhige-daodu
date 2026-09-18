@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>涑水记闻 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --gold:#c9963f;
+  --dim:#8a8478;
+  --line:#35322b;
+  --card:#211f1c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","STSong","SimSun","Noto Serif CJK SC",serif;
+  line-height:2;
+  overflow-x:hidden;
+}
+.mono{font-family:ui-monospace,"SF Mono",Consolas,monospace}
+q::before{content:none}
+q::after{content:none}
+::selection{background:var(--gold);color:var(--ink)}
+
+.kicker{
+  position:fixed;top:16px;left:22px;z-index:9;
+  font-size:12px;letter-spacing:.34em;color:var(--dim);
+  padding-bottom:6px;border-bottom:1px solid rgba(201,150,63,.55);
+}
+
+/* ---------- hero: constellation ---------- */
+.hero{
+  min-height:96vh;
+  display:grid;grid-template-columns:1.15fr .85fr;
+  align-items:center;gap:2vw;
+  padding:92px 6vw 56px;
+  position:relative;
+}
+.sky{width:100%;max-width:640px}
+.sky svg{width:100%;height:auto;display:block}
+.node{cursor:pointer}
+.node circle{fill:var(--paper);opacity:.55;transition:.35s}
+.node text{fill:var(--dim);font-size:13px;letter-spacing:.14em;font-family:inherit;transition:.35s}
+.node.lit circle{fill:var(--gold);opacity:1;filter:drop-shadow(0 0 6px rgba(201,150,63,.9))}
+.node.lit text{fill:var(--gold)}
+.edge{stroke:rgba(232,228,220,.16);stroke-width:1;transition:.5s}
+.edge.lit{stroke:rgba(201,150,63,.85);stroke-width:1.4}
+.core rect{fill:none;stroke:var(--gold);stroke-width:1.4;opacity:.9}
+.core circle{fill:none;stroke:var(--gold);stroke-width:1;opacity:.5}
+@keyframes twk{0%,100%{opacity:.4}50%{opacity:.95}}
+.twk circle{animation:twk 3.4s infinite}
+.twk:nth-child(odd) circle{animation-duration:4.6s}
+
+.vblock{writing-mode:vertical-rl;height:max-content;justify-self:end;display:block}
+.vtitle{
+  font-size:clamp(46px,5.6vw,76px);font-weight:600;
+  letter-spacing:.16em;margin:0 26px 0 0;line-height:1.28;
+  white-space:nowrap;
+}
+.vauthor{font-size:19px;letter-spacing:.52em;color:var(--gold);margin:6px 20px 0 0;white-space:nowrap}
+.vsub{font-size:13.5px;letter-spacing:.3em;color:var(--dim);margin:10px 14px 0 0;white-space:nowrap}
+.hero-line{
+  position:absolute;left:6vw;bottom:40px;
+  font-size:15px;color:var(--dim);letter-spacing:.18em;
+}
+.hero-line b{color:var(--gold);font-weight:600}
+
+/* ---------- sections ---------- */
+main{max-width:860px;margin:0 auto;padding:0 6vw}
+.slabel{
+  display:flex;align-items:center;gap:16px;
+  margin:96px 0 34px;color:var(--gold);
+  font-size:13px;letter-spacing:.42em;
+}
+.slabel::after{content:"";flex:1;height:1px;background:var(--line)}
+.method p{font-size:16.5px;color:#cfcbc1;margin:0 0 22px;text-indent:2em}
+.method p b{color:var(--gold);font-weight:600}
+
+.card{
+  position:relative;border:1px solid var(--line);background:var(--card);
+  padding:44px 40px 30px;margin:46px 0;
+}
+.ctag{
+  position:absolute;top:-14px;left:28px;
+  background:var(--ink);border:1px solid var(--gold);color:var(--gold);
+  font-size:12px;letter-spacing:.32em;padding:4px 14px 4px 17px;
+}
+.nn{
+  font-size:36px;font-weight:600;letter-spacing:.3em;
+  margin:2px 0 20px;color:var(--paper);
+}
+.nn small{font-size:13px;color:var(--dim);letter-spacing:.2em;font-weight:400;margin-left:18px}
+.qpanel{
+  background:var(--paper);color:#26231d;
+  padding:28px 32px;font-size:16.5px;line-height:2.1;
+}
+.qpanel q{display:block;text-indent:0}
+.cardnote{font-size:15px;color:#a8a294;margin:20px 2px 16px;text-indent:2em}
+.cardnote b{color:var(--gold);font-weight:600}
+.src{
+  display:inline-block;border:1px solid var(--gold);color:var(--gold);
+  font-size:13px;letter-spacing:.22em;padding:4px 14px 4px 16px;cursor:pointer;
+  float:right;
+}
+.src.none{border-style:dashed;color:#7c766a;cursor:default}
+.src:active{transform:translateY(1px)}
+.card::after{content:"";display:block;clear:both}
+
+/* roster */
+.roster p.lead{font-size:16.5px;color:#cfcbc1;margin-bottom:26px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips span{
+  border:1px solid #3c382f;color:#b6b0a2;font-size:14px;
+  letter-spacing:.16em;padding:5px 14px;cursor:pointer;transition:.25s;
+}
+.chips span:hover,.chips span.lit{border-color:var(--gold);color:var(--gold)}
+.leg{font-size:13px;color:#6f6a5e;margin-top:24px;letter-spacing:.1em}
+
+.legacy p{font-size:16.5px;color:#cfcbc1;margin:0 0 22px;text-indent:2em}
+.legacy p b{color:var(--gold);font-weight:600}
+
+/* tail */
+.tail{text-align:center;padding:110px 6vw 44px;position:relative}
+.coda{display:flex;justify-content:center;align-items:flex-start;gap:34px;margin-bottom:70px}
+.vq{
+  writing-mode:vertical-rl;height:max-content;
+  font-size:clamp(30px,4vw,46px);letter-spacing:.24em;color:var(--paper);
+  white-space:nowrap;
+}
+.seal{
+  writing-mode:vertical-rl;white-space:nowrap;
+  border:2px solid var(--gold);color:var(--gold);
+  font-size:19px;letter-spacing:.3em;padding:12px 7px;
+  margin-top:6px;
+}
+.tail p{font-size:12.5px;color:#7d7768;letter-spacing:.12em;line-height:2.3}
+.tail a{color:var(--gold);text-decoration:none;border-bottom:1px dotted rgba(201,150,63,.6)}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;padding-top:80px;gap:12px}
+  .vblock{writing-mode:vertical-rl;justify-self:start}
+  .vtitle{font-size:40px;margin-right:18px}
+  .hero-line{position:static;margin-top:26px}
+  .sky{order:2;max-width:520px}
+  .card{padding:38px 22px 24px}
+  .qpanel{padding:20px 18px}
+  .nn{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<div class="kicker">殆知阁导读 第四百三十篇</div>
+
+<header class="hero">
+  <div class="sky">
+    <svg viewBox="0 0 640 520" aria-label="信源星图">
+      <g class="edges">
+        <line class="edge" data-n="junyi" x1="320" y1="255" x2="130" y2="112"/>
+        <line class="edge" data-n="yuanzhen" x1="320" y1="255" x2="458" y2="92"/>
+        <line class="edge" data-n="ledadao" x1="320" y1="255" x2="576" y2="228"/>
+        <line class="edge" data-n="yuanshu" x1="320" y1="255" x2="518" y2="388"/>
+        <line class="edge" data-n="buyi" x1="320" y1="255" x2="382" y2="468"/>
+        <line class="edge" data-n="wangyuyu" x1="320" y1="255" x2="228" y2="478"/>
+        <line class="edge" data-n="wanglesu" x1="320" y1="255" x2="92" y2="392"/>
+        <line class="edge" data-n="suzirong" x1="320" y1="255" x2="44" y2="262"/>
+        <line class="edge" data-n="dingzhengchen" x1="320" y1="255" x2="112" y2="180"/>
+        <line class="edge" data-n="zigao" x1="320" y1="255" x2="228" y2="62"/>
+        <line class="edge" data-n="ziyuan" x1="320" y1="255" x2="332" y2="46"/>
+        <line class="edge" data-n="zhimei" x1="320" y1="255" x2="556" y2="132"/>
+        <line class="edge" data-n="qizhi" x1="320" y1="255" x2="598" y2="322"/>
+        <line class="edge" data-n="shidao" x1="320" y1="255" x2="586" y2="440"/>
+      </g>
+      <g class="core">
+        <rect x="304" y="239" width="32" height="32" transform="rotate(45 320 255)"/>
+        <circle cx="320" cy="255" r="46"/>
+      </g>
+      <g class="nodes">
+        <g class="node twk" data-n="junyi"><circle cx="130" cy="112" r="4"/><text x="130" y="98">君倚</text></g>
+        <g class="node twk" data-n="yuanzhen"><circle cx="458" cy="92" r="4"/><text x="472" y="96">元震</text></g>
+        <g class="node twk" data-n="ledadao"><circle cx="576" cy="228" r="4"/><text x="588" y="232">乐道父</text></g>
+        <g class="node twk" data-n="yuanshu"><circle cx="518" cy="388" r="4"/><text x="530" y="392">原叔</text></g>
+        <g class="node twk" data-n="buyi"><circle cx="382" cy="468" r="4"/><text x="394" y="472">不疑</text></g>
+        <g class="node twk" data-n="wangyuyu"><circle cx="228" cy="478" r="4"/><text x="240" y="482">王禹玉</text></g>
+        <g class="node twk" data-n="wanglesu"><circle cx="92" cy="392" r="4"/><text x="104" y="396">王乐道</text></g>
+        <g class="node twk" data-n="suzirong"><circle cx="44" cy="262" r="4"/><text x="20" y="246">苏子容</text></g>
+        <g class="node twk" data-n="dingzhengchen"><circle cx="112" cy="180" r="4"/><text x="124" y="178">丁正臣</text></g>
+        <g class="node twk" data-n="zigao"><circle cx="228" cy="62" r="4"/><text x="240" y="60">子高</text></g>
+        <g class="node twk" data-n="ziyuan"><circle cx="332" cy="46" r="4"/><text x="344" y="50">子渊</text></g>
+        <g class="node twk" data-n="zhimei"><circle cx="556" cy="132" r="4"/><text x="520" y="126">之美</text></g>
+        <g class="node twk" data-n="qizhi"><circle cx="598" cy="322" r="4"/><text x="588" y="342">器之</text></g>
+        <g class="node twk" data-n="shidao"><circle cx="586" cy="440" r="4"/><text x="598" y="460">师道</text></g>
+      </g>
+    </svg>
+  </div>
+  <div class="vblock">
+    <h1 class="vtitle">涑水记闻</h1>
+    <p class="vauthor">司马光</p>
+    <p class="vsub">未定稿的朝野见闻录</p>
+  </div>
+  <p class="hero-line">一条传闻要走多少人的耳朵，才能睡进<b>史书</b>。</p>
+</header>
+
+<main>
+  <section class="method">
+    <div class="slabel">底稿的写法</div>
+    <p>这不是一部有总纲的书，而是一叠<b>记事便签</b>。一条一事，长短不拘：有的开头先写明这话是谁说的，再录其事；有的记完事，末尾补一句得之于何人；更多的时候什么都不注，只把事情本身留下。全库十六卷六百九十馀条，开条就报出传话人的只有三十馀条。</p>
+    <p>作者生前没有把它删定行世。他大概只想把听来的东西占住，免得忘掉；至于哪条可信哪条可疑，留给将来再算。这笔账一直没有结，稿子却先散出去了。</p>
+  </section>
+
+  <div class="slabel">七条传闻</div>
+
+  <article class="card" data-src="none">
+    <div class="ctag mono">卷一</div>
+    <h3 class="nn">弹雀<small>皇帝怕的不是言官</small></h3>
+    <blockquote class="qpanel"><q>上愈怒，举柱斧柄撞其口，堕两齿，其人徐俯拾齿置怀中。上骂曰：“汝怀齿欲讼我邪？”对曰：“臣不能讼陛下，自当有史官书之。”上悦，赐金帛慰劳之。</q></blockquote>
+    <p class="cardnote">太祖在后园打鸟，有臣子声称有急事求见，奏的其实是寻常公务。皇帝怒，用柱斧柄打落他两颗牙；那人弯腰把牙捡起来，收进怀里。你留着牙是要告我吗？告不了陛下，<b>自有史官记着</b>。一句话，皇帝转怒为喜，赏了金帛。这条连传话人也没有留下。</p>
+    <span class="src none">此条未注出处</span>
+  </article>
+
+  <article class="card" data-src="junyi">
+    <div class="ctag mono">卷一</div>
+    <h3 class="nn">雪夜<small>开国之君死去的那个晚上</small></h3>
+    <blockquote class="qpanel"><q>继隆使王且止其直庐，曰：“王且待于此，继隆当先入言之。”德玄曰：“便应直前，何待之有？”遂与俱进。至寝殿，宋后闻继隆至，问曰：“德芳来邪？”继隆曰：“晋王至矣。”后见王，愕然，遽呼“官家”，曰：“吾母子之命，皆托官家。”王泣曰：“共保富贵，无忧也。”</q></blockquote>
+    <p class="cardnote">太祖之死，正史里只有一行字。这份笔记里却有一整夜：皇后第一道命令召的是皇子德芳，传话的内侍自作主张去了晋王府；雪地里步行进宫，寝殿门开，皇后一句<b>德芳来邪</b>，答一句晋王至矣，此后谁也不敢再错半个字。笔记把这一夜记给了君倚。</p>
+    <span class="src" data-n="junyi">得于 君倚</span>
+  </article>
+
+  <article class="card" data-src="none">
+    <div class="ctag mono">卷一</div>
+    <h3 class="nn">金匮<small>一张决定皇位走向的字据</small></h3>
+    <blockquote class="qpanel"><q>太后笑曰：“不然，正由柴氏使幼儿主天下耳。”因敕戒太祖曰：“汝万岁后，当以次传之二弟，则并汝之子亦获安耳。”太祖顿首泣曰：“敢不如母教！”太后因召赵普于榻前，为约誓书，普于纸尾自署名云：“臣普书。”藏之金匮，命谨密宫人掌之。</q></blockquote>
+    <p class="cardnote">杜太后的逻辑像句家常话：你们能拿天下，是因为周家让孩子当了家。所以哥哥传弟弟，你的儿子才能安全。字据写好，赵普在纸尾署名，收进深宫。这张纸是太宗一系合法性的源头，它的真伪，宋人吵，后人也吵，至今没有终审。</p>
+    <span class="src none">此条未注出处</span>
+  </article>
+
+  <article class="card" data-src="none">
+    <div class="ctag mono">卷一</div>
+    <h3 class="nn">杯酒<small>一场没有酒令的宴席</small></h3>
+    <blockquote class="qpanel"><q>上曰：“不然。汝曹虽无心，其如汝麾下之人欲富贵者何！一旦以黄袍加汝之身，汝虽欲不为，不可得也。”皆顿首涕泣曰：“臣等愚不及此，唯陛下哀怜，指示以可生之涂。”上曰：“人生如白驹之过隙，所谓好富贵者，不过欲多积金银，厚自娱乐，使子孙无贫乏耳。汝曹何不释去兵权，择便好田宅市之，为子孙立永久之业；多置歌儿舞女，日饮酒相欢，以终其天年。君臣之间，两无猜嫌，上下相安，不亦善乎！”</q></blockquote>
+    <p class="cardnote">请客的是皇帝，赴宴的是石守信一班禁军宿将。酒过三巡，话挑明了：黄袍加身这种事，你们手下的人也能替你们办。次日众人齐齐称病，交出兵权，换来田宅、歌儿舞女和子孙富贵。这场饭局后来叫<b>杯酒释兵权</b>，源头就在这卷里。</p>
+    <span class="src none">此条未注出处</span>
+  </article>
+
+  <article class="card" data-src="ledadao">
+    <div class="ctag mono">卷六</div>
+    <h3 class="nn">改姓<small>垂帘听政者的出身底档</small></h3>
+    <blockquote class="qpanel"><q>宫美以锻银为业，纳邻倡妇刘氏为妻，善播鼗。既而家贫，复售之。张耆时为襄王宫指使，言于王，得召入宫，大有宠。王乳母秦国夫人性严整，恶之，固令王斥去。王不得已，置于张耆家，以银五挺与之，使筑馆居于外。徐使人请于秦国夫人，乃许复召入宫。美由是得为开封府通引官，给事王宫。及王即帝位，刘氏为美人，以其无宗族，更以美为第，改姓刘云。乐道父与张耆俱为襄王宫指使，故得详耳。</q></blockquote>
+    <p class="cardnote">蜀地银匠的妻子，会玩拨浪鼓，被丈夫卖过一次，再入襄王府，后被乳母逼走，藏在外宅，再设法接回。真宗即位她入宫时没有娘家可报，索性把前夫认作兄长，<b>改姓刘</b>。几十年后垂帘听政的章献明肃皇后，出身全靠这条记录立着。末尾那句是信源：记下此事的人与张耆同在襄王府当差。</p>
+    <span class="src" data-n="ledadao">得于 乐道父</span>
+  </article>
+
+  <article class="card" data-src="yuanzhen">
+    <div class="ctag mono">卷六</div>
+    <h3 class="nn">孤注<small>一个成语的出生记录</small></h3>
+    <blockquote class="qpanel"><q>澶渊之役，准以陛下为孤注，与虏博耳。苟非胜虏，则为虏所胜，非为陛下画万全计也。</q>
+    <q>直省吏今尚存，亲为元震言之。前数事皆元震闻其先人所言也。元震先人为内侍省都知。</q></blockquote>
+    <p class="cardnote">澶渊盟成，真宗厚待寇准；王钦若进言，说那不是胜利，是宰相把皇帝当筹码押上了赌桌：赢了功劳归宰相，输了皇帝就是输家。<b>孤注一掷</b>从此有了出处。第二条的落款更妙：王旦临终荐相那一串对话，是宫里一位老吏亲口讲给元震听的，元震的父亲做过内侍省的都知。传闻的链条，一环一环都在纸上。</p>
+    <span class="src" data-n="yuanzhen">得于 元震</span>
+  </article>
+
+  <section class="roster">
+    <div class="slabel">信源榜</div>
+    <p class="lead">全库把传话人写在条目开头的，<b>三十一条</b>。点一点，看他们在星图上的位置。</p>
+    <div class="chips">
+      <span data-n="junyi">君倚</span>
+      <span data-n="yuanzhen">元震</span>
+      <span data-n="ledadao">乐道父</span>
+      <span data-n="yuanshu">原叔</span>
+      <span data-n="buyi">不疑</span>
+      <span data-n="wangyuyu">王禹玉</span>
+      <span data-n="wanglesu">王乐道</span>
+      <span data-n="suzirong">苏子容</span>
+      <span data-n="dingzhengchen">丁正臣</span>
+      <span data-n="zigao">子高</span>
+      <span data-n="ziyuan">子渊</span>
+      <span data-n="zhimei">之美</span>
+      <span data-n="qizhi">器之</span>
+      <span data-n="shidao">师道</span>
+      <span>张侍郎</span>
+      <span>张景晦之</span>
+      <span>张安寿</span>
+      <span>渝州</span>
+      <span>王景</span>
+      <span>钱资元</span>
+      <span>庞公</span>
+      <span>鲁平</span>
+      <span>刘贡父</span>
+      <span>贡父</span>
+      <span>梁</span>
+      <span>李受</span>
+      <span>李公明</span>
+      <span>李端愿</span>
+      <span>景休</span>
+      <span>家静</span>
+      <span>傅求</span>
+      <span>道粹</span>
+      <span>伯京</span>
+    </div>
+    <p class="leg">星图上标了名的十四位，是分布各卷、可确认的开条信源；其馀有名可指而未入图，或仅一见。</p>
+  </section>
+
+  <section class="legacy">
+    <div class="slabel">底稿的身后</div>
+    <p>这份没有删定的稿子，在作者身后由别人编次行世，卷第曾经残阙，传本各异。它记的东西上自宫闱，下至州县，大到传位格局，小到一场饭局；因为全是<b>所闻</b>，真伪相杂，金匮之盟一类记载至今聚讼不休。</p>
+    <p>但也正因为每条必问出处，后世修宋史的人大量从这里取材。传闻被记下的时候只是传闻；记下的人一死，它就成了史料。这个笔记本最讽刺也最诚实的地方在于：它把「我知道得不够确切」这件事本身，原样留给了后人。</p>
+  </section>
+</main>
+
+<footer class="tail">
+  <div class="coda">
+    <q class="vq">自当有史官书之</q>
+    <span class="seal">风闻</span>
+  </div>
+  <p>文本来源：殆知阁简体库 史藏/志存记录/涑水记闻.txt</p>
+  <p>引文经脚本与库内文件去标点、归一逐字比对通过</p>
+  <p>本书所记为宋人所见所闻，时代局限在所难免</p>
+  <p><a href="https://github.com/robertsong2000/daizhige-daodu">整理本仓库 daizhige-daodu</a></p>
+</footer>
+
+<script>
+(function(){
+  var nodes=document.querySelectorAll('.node,.edge');
+  function glow(id,keep){
+    if(!keep){
+      nodes.forEach(function(el){
+        el.classList.toggle('lit',el.dataset.n===id);
+      });
+      document.querySelectorAll('.chips span').forEach(function(c){
+        c.classList.toggle('lit',c.dataset.n===id);
+      });
+    }else if(id&&id!=='none'){
+      document.querySelector('.node[data-n="'+id+'"]').classList.add('lit');
+      document.querySelector('.edge[data-n="'+id+'"]').classList.add('lit');
+    }
+  }
+  var cards=document.querySelectorAll('.card[data-src]');
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){glow(e.target.dataset.src,true);}
+    });
+  },{threshold:.45});
+  cards.forEach(function(c){io.observe(c);});
+
+  document.querySelectorAll('.src[data-n]').forEach(function(s){
+    s.addEventListener('click',function(){glow(s.dataset.n);});
+  });
+  document.querySelectorAll('.node').forEach(function(n){
+    n.addEventListener('click',function(){
+      glow(n.dataset.n);
+      var card=document.querySelector('.card[data-src="'+n.dataset.n+'"]');
+      if(card){card.scrollIntoView({behavior:'smooth',block:'center'});}
+    });
+  });
+  document.querySelectorAll('.chips span[data-n]').forEach(function(c){
+    c.addEventListener('click',function(){glow(c.dataset.n);});
+  });
+})();
+</script>
+</body>
+</html>
