@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>〈奉天录〉导读 · 殆知阁</title>
+<style>
+  :root{
+    --ink:#191917; --panel:#201f1b; --panel2:#26241f;
+    --paper:#e8e4dc; --paper2:#ddd7cb; --inktext:#262420;
+    --gold:#c9963f; --gold-dim:#8a7a5c; --gold-ghost:rgba(201,150,63,.16);
+    --red:#c0453c; --dim:#a89e8d; --faint:#6f685c; --line:#3a362e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--ink); color:var(--paper);
+    font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    line-height:1.95; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  ::selection{background:var(--gold);color:var(--ink)}
+  .mono{font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace}
+  a{color:var(--gold);text-decoration:none}
+  q{quotes:none}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px}
+  button{font-family:inherit}
+
+  /* ============ 首屏：夜城 ============ */
+  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;overflow:hidden;text-align:center;
+    background:
+      radial-gradient(1px 1.5px at 12% 22%, rgba(232,228,220,.55), transparent 100%),
+      radial-gradient(1px 1px at 28% 12%, rgba(232,228,220,.4), transparent 100%),
+      radial-gradient(1.5px 1.5px at 44% 28%, rgba(232,228,220,.5), transparent 100%),
+      radial-gradient(1px 1px at 63% 9%, rgba(232,228,220,.45), transparent 100%),
+      radial-gradient(1px 1.5px at 82% 24%, rgba(232,228,220,.5), transparent 100%),
+      radial-gradient(1px 1px at 91% 40%, rgba(232,228,220,.35), transparent 100%),
+      radial-gradient(1.5px 1px at 8% 48%, rgba(232,228,220,.3), transparent 100%),
+      radial-gradient(1px 1px at 70% 38%, rgba(232,228,220,.3), transparent 100%),
+      radial-gradient(130% 90% at 50% -10%, #232420, transparent 60%),
+      radial-gradient(140% 100% at 50% 118%, #0e0e0c, transparent 62%),
+      #171715;}
+  .moon{position:absolute;right:15%;top:13%;width:56px;height:56px;border-radius:50%;
+    background:radial-gradient(circle at 38% 32%, #efe9dc, #cfc6b2 58%, rgba(207,198,178,0) 74%);
+    box-shadow:0 0 46px rgba(232,228,220,.22);opacity:.85;pointer-events:none}
+  .wall{position:absolute;left:0;right:0;bottom:0;width:100%;height:170px;
+    pointer-events:none;user-select:none}
+  .lantern{position:absolute;left:17%;bottom:118px;width:11px;height:13px;border-radius:3px;
+    background:radial-gradient(circle at 45% 40%, #ffd98a, #c9963f 70%);
+    box-shadow:0 0 18px 5px rgba(201,150,63,.5);animation:flick 2.6s infinite;
+    pointer-events:none}
+  @keyframes flick{0%,100%{box-shadow:0 0 18px 5px rgba(201,150,63,.5)}
+    40%{box-shadow:0 0 26px 8px rgba(201,150,63,.68)}70%{box-shadow:0 0 14px 4px rgba(201,150,63,.42)}}
+  .htop{display:flex;align-items:center;gap:26px;margin-bottom:8px}
+  .vrule{width:1px;height:120px;background:linear-gradient(transparent,var(--gold),transparent)}
+  .vsub2{writing-mode:vertical-rl;height:max-content;letter-spacing:.52em;
+    font-size:14px;color:var(--dim)}
+  .vtitle{writing-mode:vertical-rl;height:max-content;font-weight:700;
+    font-size:clamp(58px,12vmin,112px);letter-spacing:.2em;color:var(--paper);
+    text-shadow:0 0 36px rgba(232,228,220,.16);margin-bottom:6px}
+  .hintro{font-size:13px;letter-spacing:.34em;color:var(--faint)}
+  .hintro b{color:var(--gold);font-weight:400}
+
+  .disp{width:min(460px,88vw);margin-top:40px;position:relative;z-index:4}
+  .wax{width:80px;height:80px;margin:0 auto -40px;position:relative;z-index:3;
+    border-radius:50%;cursor:pointer;user-select:none;
+    background:radial-gradient(circle at 35% 30%, #d8675c, #a03428 58%, #7c241b);
+    color:#f3e9e2;display:flex;align-items:center;justify-content:center;
+    font-size:20px;letter-spacing:.3em;text-indent:.3em;
+    box-shadow:0 10px 22px rgba(0,0,0,.55), inset 0 2px 6px rgba(255,255,255,.25), inset 0 -4px 8px rgba(0,0,0,.4);
+    transition:transform .3s}
+  .wax:hover{transform:scale(1.05)}
+  .wax::before{content:"";position:absolute;left:50%;top:12%;bottom:12%;width:1.5px;
+    background:rgba(20,8,6,.9);transform:scaleX(0) rotate(8deg);transition:transform .25s}
+  .disp.open .wax{animation:crack .75s ease forwards;cursor:default}
+  .disp.open .wax::before{transform:scaleX(1) rotate(8deg)}
+  @keyframes crack{0%{transform:none;opacity:1}
+    30%{transform:rotate(-5deg) scale(.97)}
+    100%{transform:translateY(74px) rotate(26deg);opacity:0}}
+  .env{background:linear-gradient(170deg,#e2ddd2,#d5cfc2);color:var(--inktext);
+    border-radius:2px;padding:52px 30px 24px;max-height:0;opacity:0;overflow:hidden;
+    box-shadow:0 18px 44px rgba(0,0,0,.5);text-align:left;
+    transition:max-height 1s ease .15s, opacity .8s ease .25s}
+  .disp.open .env{max-height:640px;opacity:1}
+  .env .et{font-size:12px;letter-spacing:.5em;color:var(--gold-dim);text-align:center;margin-bottom:12px}
+  .env q{display:block;border-left:2px solid var(--gold);padding-left:13px;
+    margin:11px 0;font-size:15.5px;color:#3a352c}
+  .hint{margin-top:16px;font-size:12px;letter-spacing:.4em;color:var(--faint);
+    transition:opacity .4s}
+  .disp.open .hint{opacity:0}
+  .scue{margin-top:44px;font-size:12px;letter-spacing:.5em;color:var(--faint);
+    animation:bob 2.4s infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+  /* ============ 通用小件 ============ */
+  .kick{font-size:12px;letter-spacing:.5em;color:var(--gold);margin-bottom:16px}
+  .kick::after{content:"";display:inline-block;width:56px;height:1px;
+    background:var(--gold-dim);vertical-align:middle;margin-left:14px;opacity:.5}
+  section.dark{background:var(--panel);border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);padding:84px 0}
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+  .rv.in{opacity:1;transform:none}
+  .qt{background:rgba(25,25,23,.05);border-left:3px solid var(--gold);
+    padding:13px 16px 11px;margin:15px 0;font-size:16.5px;color:#33302a;line-height:2}
+  .qt .src{display:block;text-align:right;font-size:12px;color:var(--gold-dim);
+    letter-spacing:.3em;margin-top:5px}
+  .ghostbtn{background:none;border:1px solid var(--gold-dim);color:var(--gold);
+    letter-spacing:.4em;text-indent:.4em;font-size:13px;padding:8px 24px;cursor:pointer;
+    border-radius:2px;transition:all .3s}
+  .ghostbtn:hover{background:var(--gold-ghost);border-color:var(--gold)}
+
+  /* ============ 楔子 ============ */
+  .xuzi{display:grid;grid-template-columns:96px 1fr;gap:34px;padding:88px 0 30px}
+  .xzlab{writing-mode:vertical-rl;height:max-content;letter-spacing:.5em;
+    font-size:17px;color:var(--gold);border-right:1px solid var(--line);padding-right:20px;
+    justify-self:end}
+  .xzbody p{margin:14px 0;color:var(--dim);font-size:16px}
+  .xzbody p b{color:var(--paper);font-weight:400}
+  .booktags{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 6px}
+  .btag{border:1px solid var(--line);color:var(--gold-dim);font-size:12.5px;
+    letter-spacing:.18em;padding:5px 14px;border-radius:2px}
+  .btag b{color:var(--gold);font-weight:400}
+
+  /* ============ 日录中轴 ============ */
+  .tl{position:relative;padding:44px 0 20px;margin-top:10px}
+  .axis{position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);
+    background:linear-gradient(transparent,#4a4436 4%,rgba(201,150,63,.35) 26%,rgba(201,150,63,.22) 74%,#4a4436 96%,transparent)}
+  .mrow{position:relative;display:flex;justify-content:center;margin:40px 0 26px}
+  .mnode{z-index:2;width:44px;height:44px;border-radius:50%;background:var(--panel);
+    border:1px solid #4a4436;color:var(--faint);display:flex;align-items:center;
+    justify-content:center;font-size:13.5px;letter-spacing:.08em;transition:all .5s}
+  .mnode.cur{color:var(--gold);border-color:var(--gold);
+    box-shadow:0 0 16px rgba(201,150,63,.4)}
+  .mnode.wide{width:auto;border-radius:22px;padding:0 18px}
+  .gyuan{z-index:2;background:var(--panel);border:1px dashed #5a5343;color:var(--gold-dim);
+    font-size:12px;letter-spacing:.4em;text-indent:.4em;padding:6px 16px;border-radius:2px}
+
+  .slip{position:relative;width:calc(50% - 54px);background:var(--paper);
+    color:var(--inktext);border-radius:3px;padding:34px 32px 28px;margin:0 0 54px;
+    box-shadow:0 16px 38px rgba(0,0,0,.48), 0 2px 0 rgba(255,255,255,.06) inset}
+  article.slip:nth-of-type(even){margin-left:auto}
+  .tagpl{position:absolute;top:-15px;left:24px;background:var(--gold);color:var(--ink);
+    font-size:12.5px;letter-spacing:.32em;text-indent:.32em;padding:4px 15px;
+    border-radius:2px;box-shadow:0 6px 14px rgba(0,0,0,.4)}
+  .slip h3{font-size:21px;color:#1d1c18;margin-bottom:4px;letter-spacing:.06em}
+  .slip .sub{font-size:12.5px;letter-spacing:.28em;color:var(--gold-dim);margin-bottom:12px}
+  .slip p{font-size:15.5px;color:#4a453b;margin:10px 0}
+  .slip p b{color:#1d1c18;font-weight:400}
+
+  /* 保票 */
+  .ticket{perspective:700px;margin:22px auto 6px;width:min(320px,100%);height:170px;cursor:pointer}
+  .tkin{position:relative;width:100%;height:100%;transform-style:preserve-3d;
+    transition:transform .8s ease}
+  .ticket.flip .tkin{transform:rotateY(180deg)}
+  .tface{position:absolute;inset:0;backface-visibility:hidden;border-radius:4px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+  .tfront{background:repeating-linear-gradient(45deg,#e3ddd0 0 14px,#dcd5c7 14px 28px);
+    border:1.5px dashed #a08a5e;color:#1d1c18}
+  .tfront .big{font-size:52px;color:var(--red);line-height:1;font-weight:700}
+  .tfront .sm{font-size:13px;letter-spacing:.3em;color:#7a6a4c}
+  .tback{background:#e8e2d5;border:1px solid #b3a37e;transform:rotateY(180deg);
+    padding:16px 20px;font-size:16.5px;color:#5a2c25;line-height:1.9;text-align:center}
+  .thint{font-size:12px;letter-spacing:.34em;color:var(--faint);text-align:center}
+
+  /* 夺笏 */
+  .hudemo{position:relative;height:168px;margin:20px 0 4px;cursor:pointer;
+    background:linear-gradient(#d9d3c6,#cfc8b9);border-radius:3px;overflow:hidden}
+  .hudemo .ground{position:absolute;left:0;right:0;bottom:26px;height:1px;background:#a89a78}
+  .hu{position:absolute;left:50%;bottom:27px;width:30px;height:104px;margin-left:-15px;
+    background:linear-gradient(100deg,#e6dfcf,#c9c0aa);border:1px solid #8a7f68;
+    border-radius:15px 15px 7px 7px;transform-origin:50% 100%;box-shadow:0 6px 12px rgba(0,0,0,.25)}
+  .hudemo.strike .hu{animation:huStrike 1.05s ease forwards}
+  @keyframes huStrike{0%{transform:rotate(0)}22%{transform:rotate(-74deg)}
+    48%{transform:rotate(10deg)}66%{transform:rotate(-64deg)}100%{transform:rotate(0)}}
+  .bd{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--red);
+    opacity:0;transform:scale(0);transition:all .45s ease}
+  .hudemo.strike .bd{opacity:.9;transform:scale(1)}
+  .bd1{left:56%;top:26px;transition-delay:.34s}.bd2{left:63%;top:44px;width:6px;height:6px;transition-delay:.42s}
+  .bd3{left:50%;top:20px;width:5px;height:5px;transition-delay:.5s}
+  .hdemo-cap{position:absolute;left:14px;top:12px;font-size:12px;letter-spacing:.3em;color:#8a7c5e}
+  .aft{max-height:0;overflow:hidden;transition:max-height .8s ease}
+  .aft.show{max-height:170px}
+
+  /* 云梯 */
+  .lad{position:relative;height:186px;margin:18px 0 6px;background:linear-gradient(#d9d3c6,#cfc8b9);
+    border-radius:3px;overflow:hidden}
+  .lad svg{display:block;width:100%;height:100%}
+  .ladG{transition:transform 1.3s ease;transform-origin:74px 158px}
+  .lad.lit .ladG{transform:rotate(30deg)}
+  .fireG{opacity:0;transform:scale(.2);transform-origin:74px 158px;
+    transition:opacity .6s ease .5s,transform .8s ease .5s}
+  .lad.lit .fireG{opacity:1;transform:scale(1)}
+  .smk{opacity:0;transition:opacity 1s ease .9s}
+  .lad.lit .smk{opacity:.5}
+  .lcap{max-height:0;overflow:hidden;transition:max-height .7s ease .4s}
+  .lcap.show{max-height:150px}
+
+  /* 石刻 */
+  .stone{margin:20px auto 8px;width:min(380px,100%);text-align:center;cursor:pointer;
+    background:linear-gradient(160deg,#2a2822,#1b1a16);border:1px solid #3a362e;
+    border-radius:6px;padding:30px 16px 24px;font-size:clamp(19px,4.6vw,26px);
+    letter-spacing:.1em;white-space:nowrap;
+    color:transparent;transition:color 1.1s ease,text-shadow 1.1s ease;
+    text-shadow:none;box-shadow:0 14px 30px rgba(0,0,0,.35)}
+  .stone q{font-style:normal}
+  .stone.carve{color:var(--paper);text-shadow:0 1px 1px #000}
+  .stonehint{font-size:12px;letter-spacing:.34em;color:var(--faint);text-align:center;margin-bottom:6px}
+
+  /* 紫荆树 */
+  .treebox{position:relative;margin:18px 0 6px;background:linear-gradient(#d9d3c6,#cfc8b9);
+    border-radius:3px;height:210px;overflow:hidden}
+  .treebox svg{display:block;width:100%;height:100%}
+  .leaf{opacity:0;transform:scale(0);transform-box:fill-box;transform-origin:center;
+    transition:opacity .5s ease,transform .5s ease}
+  .treebox.bloom .leaf{opacity:.95;transform:scale(1)}
+  .poem{margin-top:14px;text-align:center;font-size:17px;line-height:2.2;color:#33302a}
+  .pl{opacity:0;transform:translateY(7px);transition:all .55s ease;transition-delay:calc(var(--i)*.22s)}
+  .treebox.bloom ~ .poem .pl, .bloomed .pl{opacity:1;transform:none}
+
+  /* ============ 花边 ============ */
+  .edges{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:34px}
+  .edge{background:var(--paper);color:var(--inktext);border-radius:3px;padding:26px 26px 22px;
+    box-shadow:0 14px 34px rgba(0,0,0,.42)}
+  .edge h4{font-size:17px;color:#1d1c18;margin-bottom:8px;letter-spacing:.1em}
+  .edge h4 span{font-size:12px;color:var(--gold-dim);letter-spacing:.3em;margin-left:10px}
+  .edge p{font-size:14.5px;color:#4a453b;margin:8px 0}
+  .edge .qt{font-size:15px;padding:10px 13px 8px;margin:10px 0}
+
+  /* ============ 尾屏 ============ */
+  .tail{position:relative;min-height:72vh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;overflow:hidden;text-align:center;
+    background:
+      radial-gradient(1px 1px at 18% 20%, rgba(232,228,220,.4), transparent 100%),
+      radial-gradient(1.5px 1px at 74% 16%, rgba(232,228,220,.4), transparent 100%),
+      radial-gradient(1px 1.5px at 88% 52%, rgba(232,228,220,.3), transparent 100%),
+      radial-gradient(120% 80% at 50% 116%, #101010, transparent 60%),
+      #171715}
+  .tvers{display:flex;gap:34px;align-items:flex-start;justify-content:center;margin-bottom:38px}
+  .tq{writing-mode:vertical-rl;height:max-content;font-size:clamp(30px,5.4vmin,46px);
+    letter-spacing:.34em;color:var(--paper);font-weight:700;
+    text-shadow:0 0 26px rgba(232,228,220,.14)}
+  .tseal{width:64px;height:64px;border:2px solid var(--red);border-radius:4px;
+    color:var(--red);display:flex;align-items:center;justify-content:center;
+    font-size:21px;letter-spacing:.14em;text-indent:.14em;transform:rotate(-3deg);
+    box-shadow:0 0 0 1px rgba(192,69,60,.25) inset;opacity:.9}
+  .tline{font-size:13px;letter-spacing:.42em;color:var(--faint)}
+
+  /* ============ 页脚 ============ */
+  .foot{background:#141412;border-top:1px solid var(--line);padding:40px 0 46px}
+  .foot p{font-size:13px;color:var(--faint);line-height:2.1;margin:6px 0}
+  .foot a{color:var(--gold-dim)}
+  .foot .xiaoji{color:#5d564a}
+
+  @media (max-width:920px){
+    .xuzi{grid-template-columns:1fr;gap:14px;padding-top:64px}
+    .xzlab{writing-mode:horizontal-tb;border-right:none;border-bottom:1px solid var(--line);
+      padding:0 0 8px;justify-self:start}
+    .axis{left:17px}
+    .mrow{justify-content:flex-start;height:44px;margin:26px 0 18px}
+    .mnode{position:absolute;left:17px;transform:translateX(-50%)}
+    .gyuan{margin-left:44px}
+    .slip{width:auto;margin-left:44px !important}
+    .edges{grid-template-columns:1fr}
+    .wall{height:110px}
+    .lantern{bottom:74px}
+    .tvers{gap:22px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 首屏：夜城拆封 ============ -->
+<header class="hero" id="hero">
+  <div class="moon"></div>
+  <svg class="wall" viewBox="0 0 1200 170" preserveAspectRatio="none" aria-hidden="true">
+    <path fill="#101010" d="M0,170 L0,110 L28,110 L28,92 L56,92 L56,110 L96,110 L96,92 L124,92 L124,110 L170,110 L170,84 L200,84 L200,60 L232,60 L232,84 L262,84 L262,110 L320,110 L320,92 L348,92 L348,110 L400,110 L400,80 L430,80 L430,56 L462,56 L462,80 L492,80 L492,110 L560,110 L560,92 L588,92 L588,110 L650,110 L650,84 L680,84 L680,60 L712,60 L712,84 L742,84 L742,110 L810,110 L810,92 L838,92 L838,110 L900,110 L900,80 L930,80 L930,56 L962,56 L962,80 L992,80 L992,110 L1060,110 L1060,92 L1088,92 L1088,110 L1140,110 L1140,84 L1168,84 L1168,110 L1200,110 L1200,170 Z"/>
+    <rect x="0" y="148" width="1200" height="22" fill="#0c0c0a"/>
+  </svg>
+  <div class="lantern"></div>
+
+  <div class="htop">
+    <span class="vrule"></span>
+    <span class="vsub2">唐　赵元一撰</span>
+    <h1 class="vtitle">奉天录</h1>
+    <span class="vsub2">围城九月亲历记</span>
+    <span class="vrule"></span>
+  </div>
+  <p class="hintro">史藏志存记录 · <b>建中四年十月</b> 至 兴元元年七月</p>
+
+  <div class="disp" id="disp">
+    <div class="wax" id="wax" role="button" tabindex="0" aria-label="拆封">奉天</div>
+    <div class="env">
+      <p class="et">开 卷 识 语</p>
+      <q>起自建中四祀孟冬月上旬三日，泾原叛命，终兴元元年孟秋月中旬有八日，皇帝再复神都。于中可否，总纪其事也。</q>
+      <q>元一代居关右，世业三秦，亲睹欃枪，媸妍必记。</q>
+      <q>直笔直言，无矫无妄</q>
+      <q>是用书之简素，使好我者慕，恶我者惧。</q>
+    </div>
+    <p class="hint">点 击 封 泥　拆 读 识 语</p>
+  </div>
+
+  <p class="scue">向 下 展 卷</p>
+</header>
+
+<!-- ============ 楔子 ============ -->
+<section class="dark">
+  <div class="wrap xuzi">
+    <div class="xzlab rv">楔子 · 写书的人</div>
+    <div class="xzbody rv">
+      <p>奉天不是年号，也不是尊号，是奉天县城，在今天陕西乾县。皇帝在这座小城里被围了四十多天，而这只是整场大乱里最紧的一段。</p>
+      <div class="qt"><q>朱泚围我奉天四十余日</q><span class="src">卷二</span></div>
+      <p>建中四年十月初三，一支没吃饱饭的军队在长安脚下掉头，把皇帝赶出了京城；九个多月后，另一支军队把长安夺了回来。头尾九个月，皇帝两度请辞帝位，长安两次易主，一位宰相被打死在朝堂上，一位名将的笏板成了全书最响的一声。</p>
+      <p>把这些按日子钉在一起的，不是史官，是一个叫赵元一的关右人。他在序言里自报家门，说自己生在乱世现场，只求照实记，不怕得罪人。</p>
+      <div class="qt"><q>每览嵇绍、纪信之高义，感千载而仰慕；寻淖齿、王敦之遗迹，思奋剑而誓心。疾恶之志，不忘寤寐。</q><span class="src">序</span></div>
+      <p>全书一序四卷，起讫只有一句话的范围，里面却装着一场王朝的极限压力测试：哗变、出逃、围城、火攻、内应、还都，每一天都有日子可查。像一本被战火逼出来的日记。</p>
+      <div class="booktags">
+        <span class="btag">库本 <b>一序四卷</b></span>
+        <span class="btag">去空白约 <b>两万四千八百字</b></span>
+        <span class="btag">起 <b>十月初三</b> 传箭</span>
+        <span class="btag">讫 <b>七月十八</b> 还京</span>
+        <span class="btag">唐 · <b>赵元一</b></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 日录 ============ -->
+<div class="wrap">
+  <div class="tl" id="tl">
+    <div class="axis"></div>
+
+    <div class="mrow"><div class="mnode wide cur" data-m="10">建中四年 十月</div></div>
+
+    <!-- 1 传箭 -->
+    <article class="slip rv" data-m="10">
+      <span class="tagpl">十月初三</span>
+      <h3>传箭而回</h3>
+      <p class="sub">一顿糙饭，换一座京城</p>
+      <p>前线吃紧，皇帝把禁军一股股派往东边讨伐李希烈，长安几乎空了。十月初三，泾原守军五千人路过京城，本该领足赏赐开拔，负责接待的官吏只摆出一顿便饭。士兵扔下兵器就往回走，带队的节度使姚令言当时还在宫里领赏，飞马赶来劝阻，被自家士兵裹挟着掉头进城。哗变的队伍在长乐坂列阵，喊出的口号干净利落。</p>
+      <div class="qt"><q>诏泾原节度姚令言赴援，总师五千，东至浐水。时京兆尹王翃属吏置顿，牛酒俭薄，将士色厉，遂传箭而回。十月三日巳时也。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>天子已出，今日共取富贵！</q><span class="src">卷一</span></div>
+      <p>乱兵随即商量拥立一个新主子，人选现成：被朝廷软禁在长安的旧太尉朱泚。</p>
+      <div class="qt"><q>太尉朱泚久囚，必生异志，若迎而为主，事可捷矣。</q><span class="src">卷一</span></div>
+    </article>
+
+    <!-- 2 百口保票 -->
+    <article class="slip rv" data-m="10">
+      <span class="tagpl">入奉天后三日</span>
+      <h3>百口保票</h3>
+      <p class="sub">宰相以全家性命担保，墨迹未干</p>
+      <p>皇帝连夜从宫城北门出逃，扈从不过几十骑。奉天城里有人上书，说朱泚必定要反，请早做防备；宰相卢杞把它压下，拍胸脯作保。点击下面这张保票，看担保兑现了什么。</p>
+      <div class="qt"><q>上乃出白苑北门，六军羽卫才数十骑。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>太尉忠贞，朝野共知，奈何有此，伤大臣之心！安可令泚闻之，请以百口，保泚不反。</q><span class="src">卷一</span></div>
+      <div class="ticket" id="ticket" role="button" tabindex="0" aria-label="验保">
+        <div class="tkin">
+          <div class="tface tfront">
+            <span class="big">保</span>
+            <span class="sm">以百口为质</span>
+            <span class="sm">宰相 卢杞</span>
+          </div>
+          <div class="tface tback">
+            <q>后三日，泚变枭獍，至于城下。</q>
+          </div>
+        </div>
+      </div>
+      <p class="thint">点 击 验 保</p>
+      <p>好在同一场里也记了清醒的人。有个叫姜公辅的官员刚赶上行在、还没拜相就进言：禁军单薄，皇帝身边不能没有兵。皇帝当天把外头的军队召进城，叛军随后攻城时，奉天已经不是空壳。</p>
+      <div class="qt"><q>若泚忠孝奉国，固不以兵多为虑；若狼心已变，则有备无患。</q><span class="src">卷一</span></div>
+      <p>赵元一还顺手记下两个旧预言。其一：术士桑道茂早在建中初年便说那座县城有天子气，请把奉天修成堡垒；朝廷当真修了，满朝没人知道为什么。其二：太史奏过一句怪话，皇帝下诏把京城七里内的窑全废了。围城开始后回头看，两条谶语像提前埋好的伏笔。</p>
+      <div class="qt"><q>国家不出三年，暂有离宫之象。臣望奉天有天子气，宜制度为垒，以备非常。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>时上初即位，刑清俗泰，盛夏而士功大兴，远近不知其旨，及此都焉。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>窑门出天子。</q><span class="src">卷一</span></div>
+    </article>
+
+    <!-- 3 夺笏 -->
+    <article class="slip rv" data-m="10">
+      <span class="tagpl">围城之中 · 长安</span>
+      <h3>夺笏</h3>
+      <p class="sub">司农寺的印，三步溅的血</p>
+      <p>长安城里，官拜司农卿的段秀实先演了一手文的：伪造姚令言的军令、盖上司农寺的印，派人追上开往奉天的叛军，谎称城中有变，想把队伍骗回去。使者半路被截，验出印信有诈，计败。</p>
+      <div class="qt"><q>验符乃秀实诈为贼帅姚令言帖，用司农寺之印也。</q><span class="src">卷一</span></div>
+      <p>接着他穿上戎服去见朱泚，假意共商大事。谈到机密处，朱泚露了口风，段秀实一把夺过旁边源休手里的笏板，朝朱泚头上砸下去。点击笏板，看那一击。</p>
+      <div class="hudemo" id="hudemo" role="button" tabindex="0" aria-label="夺笏一击">
+        <span class="hdemo-cap">点 击 夺 笏</span>
+        <div class="ground"></div>
+        <div class="hu"></div>
+        <span class="bd bd1"></span><span class="bd bd2"></span><span class="bd bd3"></span>
+      </div>
+      <div class="qt"><q>朱泚是蓟门一卒，去逆效顺。先帝嘉之，位登台辅，不能见危授命，而乃宴安凶丑。吾位历司会，策名九寺，雪国之耻，虽死犹生。尔能従乎？</q><span class="src">卷一 · 段秀实语刘海宾</span></div>
+      <div class="qt"><q>泚情泄于言，段色厉夺休之笏，击泚之首，群凶骇愕，溅血数步，凶党持兵而至，段公被害。</q><span class="src">卷一</span></div>
+      <div class="aft" id="aft">
+        <p>凶手自己的反应，是全段最不可思议的一笔：一手捂着伤口，一手拦住部下。</p>
+        <div class="qt"><q>泚一手承血，一手指群凶曰："义士，勿杀之。"声手相及，段公已害。</q><span class="src">卷一</span></div>
+      </div>
+    </article>
+
+    <!-- 4 蒲人 -->
+    <article class="slip rv" data-m="10">
+      <span class="tagpl">两副眼泪</span>
+      <h3>为一个死者，各办一场葬礼</h3>
+      <p class="sub">敌我两营，都哭了</p>
+      <p>平虏使高重杰追击叛军中伏战死，头颅被送到朱泚案头。皇帝见了无头的遗体，抚尸痛哭；有人提醒这不合礼制，皇帝说，这不是你懂的。</p>
+      <div class="qt"><q>大礼，非卿所知也。艰虞之际，死于王事，敏恻岂拘常论！</q><span class="src">卷一</span></div>
+      <div class="qt"><q>命有司造蒲头安之颈而埋之</q><span class="src">卷一 · 唐营</span></div>
+      <p>另一边，朱泚集合伪百官，捧着同一个头颅也大哭，说他对那边是忠，对我这边是义，是我的无礼害了我的忠臣。也命人做了一个蒲草人安上首级，同样以三品之礼下葬。</p>
+      <div class="qt"><q>忠于彼者，亦义于此。为朕之无礼，杀我忠臣。</q><span class="src">卷一 · 泚营</span></div>
+      <div class="qt"><q>又命伪有司作蒲人身，而安其首，以三品葬之</q><span class="src">卷一 · 泚营</span></div>
+      <p>敌对两个阵营，为同一位战死者各造了一具蒲草身体。围城里最荒诞、也最体面的一幕。</p>
+    </article>
+
+    <!-- 5 母亲不哭 -->
+    <article class="slip rv" data-m="10">
+      <span class="tagpl">围城之中</span>
+      <h3>母亲不哭</h3>
+      <p class="sub">一箭，一个封王的家仆，一位骂子的母亲</p>
+      <p>叛将李日月烧陵庙，是皇帝最头疼的人。城头一场遭遇战里，浑瑊的家仆小金一箭把他射落，皇帝下诏给小金赐姓李、封异姓王。朱泚备礼把李日月的尸身送回长安私第，他母亲开口不是哭，是骂。</p>
+      <div class="qt"><q>立功立事，只在今日。与卿此捷，何不取之！</q><span class="src">卷一 · 浑瑊语小金</span></div>
+      <div class="qt"><q>有诏令公赐姓李氏，封异姓王，以赏飞矢之捷，用旌武功也。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>奚奴，国家负汝何事敢生悖逆，死犹晚矣！</q><span class="src">卷一 · 李日月母</span></div>
+      <div class="qt"><q>朱泚备礼而葬之，母氏始终不哭一声。</q><span class="src">卷一</span></div>
+      <p>史论把她比作赵括的母亲：一个早知道儿子不行所以免祸，一个儿子造了反、她凭不哭保住大义。第二年李晟收复长安，叛党几乎全诛，唯独这位母亲被留下来不问。</p>
+      <div class="qt"><q>马服君妇，有知子之鉴而免祸；李日月母，以子叛恩存大义而不哭。殊有古人之风。</q><span class="src">卷一 · 君子曰</span></div>
+      <div class="qt"><q>及李晟收长安，诸党并従夷戮，惟李日月母存而不问。</q><span class="src">卷一</span></div>
+    </article>
+
+    <!-- 6 僭位 -->
+    <article class="slip rv" data-m="10">
+      <span class="tagpl">十月初八</span>
+      <h3>僭位</h3>
+      <p class="sub">大秦皇帝，应天元年，以及两个诨号</p>
+      <p>初八，朱泚在宣政殿即皇帝位，国号大秦，年号应天。劝进的赦书写得可怜兮兮，说皇位是自己跑到幽囚之人手里的；起草册文的樊系官拜太常少卿，写完就服毒了。</p>
+      <div class="qt"><q>八日，泚于宣政殿僭即大位</q><span class="src">卷一</span></div>
+      <div class="qt"><q>自称"大秦皇帝"，年号"应天"</q><span class="src">卷一</span></div>
+      <div class="qt"><q>幽囚之中，神器自至。岂朕薄德，所能经营。</q><span class="src">卷一 · 伪赦书</span></div>
+      <div class="qt"><q>彭偃之词，册文太常少卿樊系之撰，文成，服药而卒。</q><span class="src">卷一</span></div>
+      <p>长安坊间给两个僭主起的诨号，一庄一谐：一个叫尧舜，一个叫桀纣。还有一位上诗讨好朱泚的女道士李季兰，收复后被皇帝当面比照一位正面典型，随即被扑杀。</p>
+      <div class="qt"><q>故京师号朱泚为"热热尧舜"，号希烈为"当年桀纣"。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>汝何不学严巨川？</q><span class="src">卷一</span></div>
+      <div class="qt"><q>手持礼器空垂泪，心忆明君不敢言。</q><span class="src">卷一 · 严巨川句</span></div>
+    </article>
+
+    <!-- 7 兵临 -->
+    <article class="slip rv" data-m="10">
+      <span class="tagpl">十月初十</span>
+      <h3>兵临城下</h3>
+      <p class="sub">皇帝面前三步落箭</p>
+      <p>初十，朱泚亲自统兵攻奉天。十三日辰时接战，打到申酉之间，叛军大败，伤亡以万计。但围城先熬的是粮食：城里的粮储见了底，太子亲自给伤兵裹伤，沿城慰问。最险的一刻，叛军的百张强弩射上城来，箭落在皇帝面前三步。</p>
+      <div class="qt"><q>初，十日，朱泚自统众攻奉天，率群不逞；蚁聚之众，军势渐雄。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>十三日辰时，贼军大合城下交战。自辰接战，至于申酉之间，贼徒大败，杀伤万计。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>皇太子亲为封裹，巡城尉劳。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>有顷，贼射百张驽，于上前三步而下。上大惊</q><span class="src">卷一</span></div>
+    </article>
+
+    <!-- 8 禅代 -->
+    <article class="slip rv" data-m="10">
+      <span class="tagpl">围城之中</span>
+      <h3>两次请辞帝位</h3>
+      <p class="sub">浑瑊两次扑倒在地</p>
+      <p>围城把皇帝的意志压垮了两次。第一次他说，按古来的规矩该让位给有德的人，愿意把帝位禅让出去，换百姓一条活路；浑瑊穿着铁甲扑倒在地大哭，说圣人不受困成不了王，烈士不历险显不出名节。第二次他说自己无德，失了上天的心；浑瑊干脆立了军令状：再给几天，拿不下朱泚首级，甘受鼎镬。皇帝最后那句叹息，像是替两百年后的读者问的。</p>
+      <div class="qt"><q>今天地鼎沸，淮楚摇荡，幽冀蜂起，万方震惧。请従禅代，以救苍生，卿等如何？</q><span class="src">卷一 · 德宗语浑瑊</span></div>
+      <div class="qt"><q>浑公泣涕如雨，身被铁甲，举身自扑。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>夫圣人不困不成王，烈士不困行不彰。</q><span class="src">卷一 · 浑瑊</span></div>
+      <div class="qt"><q>朕自无德，上失天心，请従禅代，则百姓免涂炭之苦，战士无伤夷之患。朕之愿足。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>今请更三五日间，若不枭泚首献捷，则臣等甘受鼎镬之罪。</q><span class="src">卷一 · 浑瑊军令状</span></div>
+      <div class="qt"><q>张陈尚在，吾其困哉！</q><span class="src">卷一</span></div>
+    </article>
+
+    <div class="mrow"><div class="mnode" data-m="11">十一月</div></div>
+
+    <!-- 9 云梯 -->
+    <article class="slip rv" data-m="11">
+      <span class="tagpl">十一月上旬</span>
+      <h3>云梯与火</h3>
+      <p class="sub">一架梯子的工程清单</p>
+      <p>攻城最后搬出了工程学。朱泚召巧匠造云梯，一架梯子载五百力士，全城莫不惶骇；守城的神武军使韩澄年轻时在剑南防过这类东西，开口请战。他的方案像一张物料清单：挖地道到梯子来的路上，铺上两百车干马粪；城墙内侧支起十口大镬煎膏油，松脂备上五十车，再从内库搬出五千口陌刀摆上城头。点击画面举火。</p>
+      <div class="qt"><q>召机巧之匠，设以云梯，刻日而就。其梯高百尺，阔十二丈，梯上可置五百力士。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>潜穿地道，向彼来路，布干马粪二百车，以为火备。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>以大镬十口，各煎膏油，散布城墙之上。细剉松脂五十车，内库陌刀五千口，白刃如雪，排次如鳞。</q><span class="src">卷一</span></div>
+      <div class="lad" id="lad">
+        <svg viewBox="0 0 420 186" aria-hidden="true">
+          <rect x="330" y="26" width="90" height="132" fill="none" stroke="#6f685c" stroke-width="2"/>
+          <line x1="0" y1="158" x2="420" y2="158" stroke="#a89a78" stroke-width="1.5"/>
+          <g class="ladG">
+            <line x1="74" y1="158" x2="332" y2="26" stroke="#5a5343" stroke-width="4"/>
+            <line x1="88" y1="158" x2="346" y2="26" stroke="#5a5343" stroke-width="4"/>
+            <line x1="97" y1="146" x2="111" y2="152" stroke="#8a7f68" stroke-width="3"/>
+            <line x1="128" y1="130" x2="142" y2="137" stroke="#8a7f68" stroke-width="3"/>
+            <line x1="159" y1="115" x2="173" y2="122" stroke="#8a7f68" stroke-width="3"/>
+            <line x1="190" y1="99" x2="204" y2="106" stroke="#8a7f68" stroke-width="3"/>
+            <line x1="221" y1="84" x2="235" y2="91" stroke="#8a7f68" stroke-width="3"/>
+            <line x1="252" y1="68" x2="266" y2="75" stroke="#8a7f68" stroke-width="3"/>
+            <line x1="283" y1="52" x2="297" y2="59" stroke="#8a7f68" stroke-width="3"/>
+          </g>
+          <g class="fireG">
+            <path d="M62,158 Q54,138 68,124 Q66,140 78,144 Q74,128 86,120 Q82,140 92,146 Q98,150 92,158 Z" fill="#c0453c"/>
+            <path d="M74,158 Q70,144 80,134 Q80,146 88,150 Q86,156 84,158 Z" fill="#c9963f"/>
+            <path d="M96,158 Q92,148 100,140 Q99,150 106,153 Q104,157 102,158 Z" fill="#e0a94e"/>
+          </g>
+          <g class="smk" fill="#8a857a">
+            <circle cx="92" cy="112" r="9"/><circle cx="104" cy="96" r="12"/><circle cx="118" cy="78" r="15"/>
+          </g>
+        </svg>
+      </div>
+      <p style="text-align:center;margin-top:10px"><button class="ghostbtn" id="firebtn">举 火</button></p>
+      <div class="lcap" id="lcap">
+        <p>火起，数百步内白日无光，鼎沸之声像打雷，叛军这才明白中了计。浑瑊临阵酹酒咒风，拜下去不久，风向真的转了。</p>
+        <div class="qt"><q>凡数百步，烘焰千尺，白日为之韬光；沸声若雷</q><span class="src">卷一</span></div>
+        <div class="qt"><q>天道助顺，志诚感神。贼泚凶悖，围逼君父，乾坤不昧，宜降大罚。</q><span class="src">卷一 · 浑瑊祝词</span></div>
+        <div class="qt"><q>拜讫，须臾，大风起，吹贼军</q><span class="src">卷一</span></div>
+      </div>
+      <p>围城前段还有一桩冷知识：朱泚先在城东南立起百尺高的木槛，人藏在里面窥探城内；皇帝下诏召善抛的人，来应召的是崇福寺的一位和尚，一石命中，连人带槛砸得粉碎。</p>
+      <div class="qt"><q>立表高百尺，造木槛，人藏其身，缒而上之，窥我城阙。</q><span class="src">卷一</span></div>
+      <div class="qt"><q>有崇福寺僧昭悟应召而中之，人槛俱碎。</q><span class="src">卷一</span></div>
+    </article>
+
+    <div class="mrow"><div class="mnode" data-m="12">十二月</div></div>
+    <div class="mrow"><span class="gyuan">改元 兴元元年</span></div>
+    <div class="mrow"><div class="mnode" data-m="1">正月</div></div>
+    <div class="mrow"><div class="mnode" data-m="2">二月</div></div>
+    <div class="mrow"><div class="mnode" data-m="3">三月</div></div>
+    <div class="mrow"><div class="mnode" data-m="4">四月</div></div>
+
+    <!-- 10 宁陵 -->
+    <article class="slip rv" data-m="4">
+      <span class="tagpl">转年孟夏</span>
+      <h3>宁陵 · 改出来的捷报</h3>
+      <p class="sub">主将亲手把求救信改成了报捷文书</p>
+      <p>主战场之外，南线宁陵也在打。叛军借风纵火烧了战棚女墙，守将高彦昭仰天祝告，风竟然回头。城快撑不住时，幕僚起草的求援状写得绝望透顶。高彦昭看罢大怒：这岂不是长贼人志气、灭自己威风。他把纸要过来，亲手重写，把败象写成胜势，把求救写成报捷。</p>
+      <div class="qt"><q>游魂之年，返骸之日。谨录状上，伏听处分。</q><span class="src">卷三 · 幕僚原稿</span></div>
+      <div class="qt"><q>焉得壮贼凶威，易我王师乎！</q><span class="src">卷三 · 高彦昭</span></div>
+      <div class="qt"><q>看此贼势，朝夕西遁，以今月十八、十九日，频日出师，乘其不意，生擒大将等三十五人。</q><span class="src">卷三 · 高公状</span></div>
+      <div class="qt"><q>伏惟高枕，不用远忧。谨录状上。</q><span class="src">卷三 · 高公状</span></div>
+      <p>汴州的刘洽读后安了心，说良将在西，我没有忧虑了；选八百骁勇当夜补充进城，叛军竟毫无察觉。守军看了新文书，人心反而更齐。</p>
+      <div class="qt"><q>良将在西，吾无患矣！</q><span class="src">卷三 · 刘洽</span></div>
+      <div class="qt"><q>我公若在，儿郎等死日生年于是！</q><span class="src">卷三 · 守军</span></div>
+      <p>一份被主将改写的文书，大概是战争史上最体面的报喜不报忧。</p>
+    </article>
+
+    <div class="mrow"><div class="mnode" data-m="5">五月</div></div>
+
+    <!-- 11 收京 -->
+    <article class="slip rv" data-m="5">
+      <span class="tagpl">五月二十八</span>
+      <h3>收京</h3>
+      <p class="sub">从苑墙的坍口进城，换一座都城无人知觉</p>
+      <p>兴元元年五月二十八，李晟的军队摆开一条百多里的阵线，从东渭桥一直排到终南山，南北布防；随后从苑墙东北角一个坍口进城，朱泚竟然没有察觉。先前被朱泚委以心腹的张光晟临阵做了内应；朱泚策马出逃，后来在宁州被随从砍了头送往下榻处。李晟的军令严到什么程度：搜宫清剿全部完成之后才传令安民，长安人几乎不知道已经换了天。</p>
+      <div class="qt"><q>李公従苑东北角坏垣而入，泚不之觉。</q><span class="src">卷四</span></div>
+      <div class="qt"><q>光晟势穷，因为内应。</q><span class="src">卷四</span></div>
+      <div class="qt"><q>泚方知官军大入，不敢枝梧，策马而遁。</q><span class="src">卷四</span></div>
+      <div class="qt"><q>李公搜索宫苑，殄扫群凶，然后使之号令，都人不知，军令肃如也。</q><span class="src">卷四</span></div>
+      <p>李晟治军，家里没有私蓄，夏天不摇扇，雨天不打伞，寒天不穿裘。收京前后另有一段被记下来的克制：浑瑊部下鼓动他跟李晟抢功，他说公等的父母妻子都在长安，白刃之下谁辨贤良；在产玉的山上放火，玉和石头会一起烧掉。随后他引兵西上，不去争。</p>
+      <div class="qt"><q>公身与士卒同甘苦，家无私蓄，夏不操扇，雨不张盖，寒不备裘</q><span class="src">卷二</span></div>
+      <div class="qt"><q>今若戮力同心，共成王事，诛斩凶党，献捷王朝；子孙荣庆于前，恩光更流于后。岂不休哉！</q><span class="src">卷四 · 浑瑊</span></div>
+      <div class="qt"><q>吾是用勤王，志存社稷。</q><span class="src">卷四 · 浑瑊</span></div>
+      <p>至于朱泚的结局，全书只给了一行。倒是张光晟：李晟容不下这个首鼠两端的人。临刑他留下一句话，后来成了成语的源头。点击石碑。</p>
+      <div class="qt"><q>朱泚奔西戎，至宁州官屯。従者枭首，送于汉中。</q><span class="src">卷四</span></div>
+      <p class="stonehint">点 击 刻 石</p>
+      <div class="stone" id="stone" role="button" tabindex="0" aria-label="刻石"><q>第一莫作，第二莫休。</q></div>
+      <p>出师之前还有一段仪式：皇帝斋戒设坛，亲手把斧钺交给浑瑊，授权辞令说得极重。</p>
+      <div class="qt"><q>上至于天，下至于泉，将军制之。</q><span class="src">卷四 · 授钺辞</span></div>
+      <div class="qt"><q>是日，军中不闻天子诏，但听将军令。</q><span class="src">卷四</span></div>
+    </article>
+
+    <div class="mrow"><div class="mnode" data-m="6">六月</div></div>
+    <div class="mrow"><div class="mnode" data-m="7">七月</div></div>
+
+    <!-- 12 还京 -->
+    <article class="slip rv" data-m="7">
+      <span class="tagpl">七月十八</span>
+      <h3>还京 · 一棵树的枯与荣</h3>
+      <p class="sub">点击枯树，看皇帝回来那天</p>
+      <p>七月十八，皇帝回到长安。史书写百姓迎接的场面连用两组比喻：像暗夜里遇见灯，像婴儿扑进母亲怀里。李晟见到皇帝，扑倒在地号哭，半天缓不过气。</p>
+      <div class="qt"><q>孟秋月十有八日，皇帝再复神京。</q><span class="src">卷四</span></div>
+      <div class="qt"><q>百姓衣冠，或号或泣，或喜或跃，手之舞之，足之蹈之。如暗夜之遇明灯，状婴儿之逢慈母。</q><span class="src">卷四</span></div>
+      <div class="qt"><q>李公见上，自扑于地号哭，良久气绝。</q><span class="src">卷四</span></div>
+      <p>压轴的是一棵树：太极殿前的紫荆树，叛军窃据期间莫名枯死，皇帝回来，又茂盛如初。点击画面，看它复荣。</p>
+      <div class="qt"><q>群凶窃据，磨牙喷毒。物由人感，其树劲死。皇帝归复，荣茂如初。</q><span class="src">卷四</span></div>
+      <div class="treebox" id="treebox">
+        <svg viewBox="0 0 420 210" aria-hidden="true">
+          <line x1="0" y1="184" x2="420" y2="184" stroke="#a89a78" stroke-width="1.5"/>
+          <path d="M210,184 C208,150 206,120 210,96 C213,74 222,60 238,48 M210,96 C204,80 192,70 178,62 M210,120 C220,110 232,104 248,100 M210,140 C198,132 186,128 172,126 M210,150 C222,146 234,146 246,148"
+                fill="none" stroke="#4a453b" stroke-width="6" stroke-linecap="round"/>
+          <path d="M238,48 C244,42 252,38 262,36 M178,62 C170,58 164,52 160,44 M248,100 C258,96 266,90 272,82 M172,126 C162,124 154,120 148,114 M246,148 C256,148 264,152 270,158"
+                fill="none" stroke="#4a453b" stroke-width="3.5" stroke-linecap="round"/>
+          <g fill="#c9963f">
+            <circle class="leaf" cx="160" cy="44" r="5" style="transition-delay:.1s"/>
+            <circle class="leaf" cx="262" cy="36" r="5" style="transition-delay:.2s"/>
+            <circle class="leaf" cx="148" cy="114" r="5" style="transition-delay:.3s"/>
+            <circle class="leaf" cx="272" cy="82" r="5" style="transition-delay:.4s"/>
+          </g>
+          <g fill="#c0453c">
+            <circle class="leaf" cx="270" cy="158" r="4.5" style="transition-delay:.5s"/>
+            <circle class="leaf" cx="152" cy="60" r="4.5" style="transition-delay:.6s"/>
+            <circle class="leaf" cx="250" cy="26" r="4.5" style="transition-delay:.7s"/>
+            <circle class="leaf" cx="182" cy="34" r="4.5" style="transition-delay:.8s"/>
+            <circle class="leaf" cx="286" cy="104" r="4" style="transition-delay:.9s"/>
+            <circle class="leaf" cx="132" cy="132" r="4" style="transition-delay:1s"/>
+            <circle class="leaf" cx="284" cy="140" r="4" style="transition-delay:1.1s"/>
+            <circle class="leaf" cx="210" cy="86" r="4" style="transition-delay:1.2s"/>
+          </g>
+        </svg>
+      </div>
+      <p style="text-align:center;margin-top:10px"><button class="ghostbtn" id="bloombtn">归 复</button></p>
+      <div class="poem" id="poem">
+        <div class="pl" style="--i:0"><q>豺狼暴宫阙，叛徒凌丹墀。</q></div>
+        <div class="pl" style="--i:1"><q>花木久不芳，群凶亦自疑。</q></div>
+        <div class="pl" style="--i:2"><q>既为皇帝枯，亦为皇帝滋。</q></div>
+        <div class="pl" style="--i:3"><q>草木尚多感，报恩须及时。</q></div>
+        <div class="pl" style="--i:4;font-size:12.5px;letter-spacing:.3em;color:#8a7c5e;margin-top:8px">论惟明献诗 · 皇帝读了很久</div>
+      </div>
+    </article>
+
+  </div>
+</div>
+
+<!-- ============ 坊间两签 ============ -->
+<section class="dark">
+  <div class="wrap">
+    <div class="kick rv">坊 间 两 签</div>
+    <div class="edges">
+      <div class="edge rv">
+        <h4>猫乳鼠<span>祥瑞鉴定</span></h4>
+        <p>朱泚在凤翔做官时，境内报祥瑞：猫给老鼠喂奶，请求写进国史。中书省讨论时有人把话反过来解：猫本该捕鼠，如今反过来喂鼠，是肚子被掏空的兆头。十月三日之后回头看这条奏报，像预言。</p>
+        <div class="qt"><q>先是，朱泚典郡凤翔，有猫乳鼠，表奏称境有祥。诏下中书详议可否，欲编青史。</q><span class="src">卷二</span></div>
+        <div class="qt"><q>鼠者，坎精，主为窃盗，猫者之食，是吾君利器服下之义也。今返食其乳，是空我腹，贼之征也。</q><span class="src">卷二</span></div>
+        <div class="qt"><q>果有十月三日之难矣。</q><span class="src">卷二</span></div>
+      </div>
+      <div class="edge rv">
+        <h4>驸马与公主<span>逃难路上的和解</span></h4>
+        <p>出逃的队伍里有一桩私事：驸马郭暧和公主闹翻，公主被接进宫隔离了一年多；兵变路上郭暧追上公主，两口子并马奔赴行在，三更追上大驾。后来守奉天东北角，他在城头开弓，连杀数十人，箭无虚发。这对夫妻，就是杂剧里醉打金枝的那一对。</p>
+        <div class="qt"><q>驸马郭暧先与公主失意，上收公主在内，隔绝经年。及此，暧驰往觅得公主，策骑俱赴行在。</q><span class="src">卷一</span></div>
+        <div class="qt"><q>时驸马都尉郭暧守东北角，手射杀数十人，无不应弦而毙，贼众披靡而退。</q><span class="src">卷二</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 尾屏 ============ -->
+<footer class="tail" id="tail">
+  <div class="tvers">
+    <span class="tq"><q>使好我者慕</q></span>
+    <span class="tq"><q>恶我者惧</q></span>
+  </div>
+  <div class="tseal">奉天</div>
+  <p class="tline" style="margin-top:26px">一个关右人把九个月钉进纸里</p>
+</footer>
+
+<!-- ============ 页脚 ============ -->
+<div class="foot">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库史藏志存记录〈奉天录〉（唐赵元一撰，一序四卷，去空白约两万四千八百字，起建中四年十月初三泾原哗变，终兴元元年七月十八车驾还京）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。</p>
+    <p class="xiaoji">时代局限：书中忠奸叙事与天人感应色彩浓重，祥瑞、谣谶、祝风、枯树复荣等皆库本原貌照录；战乱杀伐与处决记述直书不讳，请以史料眼光阅读。本书记事与两唐书、资治通鉴时有出入，人物评价与细节异同一概以库本照录为准。</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var disp=document.getElementById('disp');
+  function open(){disp.classList.add('open');}
+  document.getElementById('wax').addEventListener('click',open);
+
+  var tk=document.getElementById('ticket');
+  tk.addEventListener('click',function(){tk.classList.toggle('flip');});
+
+  var hu=document.getElementById('hudemo');
+  hu.addEventListener('click',function(){
+    if(hu.classList.contains('strike'))return;
+    hu.classList.add('strike');
+    setTimeout(function(){document.getElementById('aft').classList.add('show');},900);
+  });
+
+  var lad=document.getElementById('lad');
+  document.getElementById('firebtn').addEventListener('click',function(){
+    if(lad.classList.contains('lit'))return;
+    lad.classList.add('lit');
+    document.getElementById('lcap').classList.add('show');
+    this.style.visibility='hidden';
+  });
+
+  var stone=document.getElementById('stone');
+  stone.addEventListener('click',function(){stone.classList.add('carve');});
+
+  var tb=document.getElementById('treebox');
+  document.getElementById('bloombtn').addEventListener('click',function(){
+    tb.classList.add('bloom');
+    document.getElementById('poem').classList.add('bloomed');
+    this.style.visibility='hidden';
+  });
+
+  var nodes={};
+  [].slice.call(document.querySelectorAll('.mnode')).forEach(function(n){
+    nodes[n.getAttribute('data-m')]=n;
+  });
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.12});
+  [].slice.call(document.querySelectorAll('.rv')).forEach(function(el){io.observe(el);});
+
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        var m=e.target.getAttribute('data-m');
+        for(var k in nodes){nodes[k].classList.remove('cur');}
+        if(nodes[m]){nodes[m].classList.add('cur');}
+      }
+    });
+  },{rootMargin:'-38% 0px -38% 0px'});
+  [].slice.call(document.querySelectorAll('article.slip')).forEach(function(el){io2.observe(el);});
+})();
+</script>
+</body>
+</html>
