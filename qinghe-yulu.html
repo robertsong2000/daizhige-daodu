@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>夜坐 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #131312; --ink-3: #1f1e1b;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --acc: #5e8fbb; --acc-dim: rgba(94,143,187,0.35);
+    --gold: #c9963f; --seal: #c0453c;
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--acc-dim); }
+  a { color: inherit; }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+
+  /* ---------- hero: 夜坐扣钟 ---------- */
+  #hero {
+    min-height: 100dvh; position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 70% 55% at 30% 62%, rgba(201,150,63,0.10), transparent 62%),
+      radial-gradient(ellipse 90% 70% at 50% 30%, rgba(94,143,187,0.06), transparent 70%),
+      var(--ink-2);
+    display: flex; align-items: center; cursor: pointer;
+  }
+  #hero .beam {
+    position: absolute; top: 0; left: 12%; right: 12%; height: 5px;
+    background: linear-gradient(90deg, transparent, rgba(232,228,220,0.22), transparent);
+  }
+  #hero .kicker {
+    position: absolute; top: 30px; left: 34px; font-size: 13px;
+    letter-spacing: 0.42em; color: var(--paper-faint);
+  }
+  #hero .stage {
+    width: 100%; max-width: 1060px; margin: 0 auto; padding: 90px 30px 60px;
+    display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center;
+  }
+  .bellwrap { position: relative; display: grid; place-items: center; min-height: 420px; }
+  .bellwrap svg { width: min(300px, 58vw); overflow: visible; }
+  .bellwrap .rope { stroke: rgba(232,228,220,0.3); stroke-width: 2; }
+  #bellg { transform-origin: 100px 6px; }
+  .struck #bellg { animation: swing 2.6s cubic-bezier(.36,.07,.19,.97); }
+  @keyframes swing {
+    0% { transform: rotate(0deg); } 12% { transform: rotate(9deg); }
+    32% { transform: rotate(-6.5deg); } 52% { transform: rotate(4deg); }
+    72% { transform: rotate(-2deg); } 88% { transform: rotate(0.8deg); }
+    100% { transform: rotate(0deg); }
+  }
+  .ripple {
+    position: absolute; left: 50%; top: 68%; width: 220px; height: 220px;
+    margin: -110px 0 0 -110px; border-radius: 50%;
+    border: 1px solid var(--gold); opacity: 0; pointer-events: none;
+  }
+  .struck .ripple { animation: rip 2.2s ease-out forwards; }
+  .struck .ripple.r2 { animation-delay: 0.28s; }
+  .struck .ripple.r3 { animation-delay: 0.56s; }
+  @keyframes rip {
+    0% { transform: scale(0.15); opacity: 0.75; }
+    100% { transform: scale(2.7); opacity: 0; }
+  }
+  .hint {
+    position: absolute; bottom: 6%; left: 50%; transform: translateX(-50%);
+    font-size: 14px; letter-spacing: 0.5em; color: var(--paper-dim);
+    animation: pulse 2.4s ease-in-out infinite; white-space: nowrap;
+  }
+  .struck .hint { opacity: 0; transition: opacity 1s; animation: none; }
+  @keyframes pulse { 0%,100% { opacity: 0.35; } 50% { opacity: 0.95; } }
+
+  .titlebox { display: flex; gap: 26px; align-items: flex-start; }
+  h1.vtitle {
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: clamp(34px, 4.6vw, 58px); font-weight: 700; letter-spacing: 0.18em;
+    height: calc(8 * 1.5em); line-height: 1.5; white-space: nowrap;
+    opacity: 0; transform: translateY(34px); transition: opacity 1.4s ease, transform 1.4s ease;
+  }
+  .struck h1.vtitle { opacity: 1; transform: translateY(0); }
+  .sidecol { display: flex; flex-direction: column; gap: 22px; align-items: center;
+    opacity: 0; transform: translateY(20px); transition: opacity 1.4s ease 0.5s, transform 1.4s ease 0.5s; }
+  .struck .sidecol { opacity: 1; transform: none; }
+  .seal {
+    writing-mode: vertical-rl; text-orientation: upright;
+    background: var(--seal); color: #f5efe6; padding: 14px 8px;
+    font-size: 17px; letter-spacing: 0.22em; border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(245,239,230,0.18) inset;
+  }
+  .invite {
+    writing-mode: vertical-rl; font-size: 15px; color: var(--paper-dim);
+    height: calc(10 * 1.9em); line-height: 1.9; letter-spacing: 0.08em;
+  }
+  .invite .q { color: var(--paper); }
+  .ledebox {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(transparent, rgba(19,19,18,0.92) 38%);
+    opacity: 0; transition: opacity 1.2s ease 0.9s; pointer-events: none;
+  }
+  .struck .ledebox { opacity: 1; pointer-events: auto; }
+  .lede { max-width: 760px; margin: 0 auto; padding: 40px 30px 30px; font-size: 15px; color: var(--paper-dim); }
+  .lede b { color: var(--paper); font-weight: 600; }
+
+  /* ---------- 左缘章节签 ---------- */
+  .rail {
+    position: fixed; left: 22px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 20px; z-index: 50;
+  }
+  .rail a {
+    writing-mode: vertical-rl; text-orientation: upright; text-decoration: none;
+    font-size: 13px; letter-spacing: 0.3em; color: var(--paper-faint);
+    padding: 4px 2px; border-left: 1px solid var(--hairline); transition: color .3s, border-color .3s;
+  }
+  .rail a.on { color: var(--acc); border-left-color: var(--acc); }
+  .rail a:hover { color: var(--paper-dim); }
+  @media (max-width: 1180px) { .rail { display: none; } }
+
+  /* ---------- 通用 section ---------- */
+  main { max-width: 980px; margin: 0 auto; padding: 0 30px; }
+  section.blk { padding: 96px 0 30px; }
+  .shead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 12px; }
+  .shead .sno { font-size: 13px; color: var(--acc); letter-spacing: 0.3em; }
+  .shead h2 { font-size: clamp(24px, 3vw, 32px); font-weight: 600; letter-spacing: 0.14em; }
+  .shead .stag { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.2em; margin-left: auto; }
+  .sintro { color: var(--paper-dim); font-size: 15px; max-width: 62ch; margin-bottom: 40px; }
+  .q {
+    display: block; border-left: 2px solid var(--acc); padding: 6px 0 6px 18px; margin: 14px 0;
+    color: var(--paper); font-size: 15.5px;
+  }
+  .qv { color: var(--paper); }
+  .src { display: block; font-size: 12px; color: var(--paper-faint); margin-top: 4px; letter-spacing: 0.08em; }
+  .rv { opacity: 0; transform: translateY(26px); transition: opacity .9s ease, transform .9s ease; }
+  .rv.on { opacity: 1; transform: none; }
+
+  /* ---------- S1 自述三幕 ---------- */
+  .tl { display: flex; flex-wrap: wrap; gap: 0; margin: 10px 0 44px; border-top: 1px solid var(--hairline); padding-top: 18px; }
+  .tl span { font-size: 13px; color: var(--paper-faint); padding-right: 26px; position: relative; }
+  .tl span::before { content: ""; position: absolute; left: 0; top: -23px; width: 7px; height: 7px; border-radius: 50%; background: var(--acc); opacity: .75; }
+  .tl b { color: var(--acc); font-weight: 600; margin-right: 6px; }
+  .acts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .act {
+    background: var(--ink-3); border: 1px solid var(--hairline); border-radius: 4px;
+    padding: 26px 24px 22px; position: relative;
+  }
+  .act::before {
+    content: attr(data-m); position: absolute; top: -13px; left: 20px;
+    background: var(--ink); padding: 2px 12px; font-size: 13px; color: var(--acc); letter-spacing: 0.28em;
+    border: 1px solid var(--acc-dim); border-radius: 2px;
+  }
+  .act h3 { font-size: 21px; letter-spacing: 0.2em; margin: 6px 0 10px; }
+  .act .gloss { font-size: 13.8px; color: var(--paper-dim); margin-top: 12px; }
+  .act .q { font-size: 14.5px; }
+  /* 三刀 stepper */
+  .knives { display: flex; gap: 8px; margin: 14px 0 4px; }
+  .knives button {
+    flex: 1; background: none; border: 1px solid var(--hairline); color: var(--paper-dim);
+    font-family: inherit; font-size: 13.5px; letter-spacing: 0.14em; padding: 8px 0;
+    cursor: pointer; border-radius: 2px; transition: all .3s;
+  }
+  .knives button.on { border-color: var(--seal); color: var(--paper); background: rgba(192,69,60,0.12); }
+  .knifepane { display: none; }
+  .knifepane.on { display: block; animation: fadein .5s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; } }
+  .lastline {
+    margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--hairline);
+    font-size: 15px; color: var(--gold); text-align: center;
+  }
+
+  /* ---------- S2 师承 ---------- */
+  .duo { display: grid; grid-template-columns: 1.15fr 1fr; gap: 26px; margin-bottom: 50px; }
+  .ledger { background: var(--ink-3); border: 1px solid var(--hairline); border-radius: 4px; padding: 26px 26px 20px; }
+  .ledger h3, .wuxi h3 { font-size: 17px; letter-spacing: 0.22em; margin-bottom: 20px; color: var(--paper); }
+  .bar { margin-bottom: 20px; }
+  .bar .bl { display: flex; justify-content: space-between; font-size: 13.5px; color: var(--paper-dim); margin-bottom: 6px; }
+  .bar .bl b { color: var(--paper); font-weight: 600; }
+  .bar .track { height: 8px; background: rgba(232,228,220,0.07); border-radius: 4px; overflow: hidden; }
+  .bar .fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--acc-dim), var(--acc)); border-radius: 4px; transition: width 1.4s cubic-bezier(.2,.7,.2,1); }
+  .bar .note { font-size: 12px; color: var(--paper-faint); margin-top: 5px; }
+  .wuxi { display: grid; grid-template-rows: 1fr 1fr; gap: 14px; }
+  .wucard { background: var(--ink-3); border: 1px solid var(--hairline); border-radius: 4px; padding: 22px 24px; }
+  .wucard h4 { font-size: 15px; letter-spacing: 0.2em; color: var(--acc); margin-bottom: 8px; }
+  .wucard p { font-size: 13.5px; color: var(--paper-dim); }
+  .wucard .q { font-size: 14px; margin: 8px 0 4px; }
+  .shistage {
+    border: 1px solid var(--acc-dim); border-radius: 4px; padding: 44px 30px 36px;
+    display: grid; grid-template-columns: auto 1fr; gap: 36px; align-items: center;
+    background: radial-gradient(ellipse 60% 80% at 18% 50%, rgba(94,143,187,0.10), transparent 70%), var(--ink-3);
+  }
+  .shichar {
+    font-size: clamp(110px, 16vw, 190px); line-height: 1; font-weight: 700;
+    color: transparent; -webkit-text-stroke: 1.5px var(--acc);
+  }
+  .shistage .say { font-size: 15px; color: var(--paper-dim); }
+  .shistage .say .q { font-size: 16.5px; }
+  .jade2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 50px; }
+  .jadecard { background: var(--ink-3); border: 1px solid var(--hairline); border-radius: 4px; padding: 24px 26px 20px; }
+  .jadecard h4 { font-size: 17px; letter-spacing: 0.18em; margin-bottom: 8px; }
+  .jadecard h4 em { font-style: normal; color: var(--gold); font-size: 13px; margin-left: 10px; letter-spacing: 0.14em; }
+  .jadecard p { font-size: 13.8px; color: var(--paper-dim); }
+
+  /* ---------- S3 夜话签墙 ---------- */
+  .wall { border-top: 1px solid var(--hairline); padding-top: 34px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .slip {
+    background: linear-gradient(180deg, rgba(232,228,220,0.045), rgba(232,228,220,0.015));
+    border: 1px solid var(--hairline); border-top: 3px solid var(--acc);
+    border-radius: 3px; padding: 20px 22px 18px; cursor: pointer; position: relative;
+  }
+  .slip::before {
+    content: ""; position: absolute; top: -34px; left: 50%; width: 1px; height: 32px;
+    background: var(--hairline);
+  }
+  .slip h3 { font-size: 19px; letter-spacing: 0.24em; display: flex; align-items: baseline; gap: 10px; }
+  .slip h3 small { font-size: 12px; color: var(--paper-faint); letter-spacing: 0.14em; font-weight: 400; }
+  .slip .body { max-height: 0; overflow: hidden; transition: max-height .6s ease; }
+  .slip.open .body { max-height: 480px; }
+  .slip .body .q { font-size: 14px; margin: 14px 0 6px; }
+  .slip .body p { font-size: 13.2px; color: var(--paper-dim); }
+  .slip .tag { font-size: 13px; color: var(--paper-dim); margin-top: 6px; }
+  .slip.open .tag { display: none; }
+
+  /* ---------- S4 北游路线 ---------- */
+  .route { display: flex; gap: 0; overflow-x: auto; padding: 30px 4px 26px; scroll-snap-type: x proximity; }
+  .stop { min-width: 250px; flex: 1; scroll-snap-align: start; position: relative; padding: 26px 18px 0 0; }
+  .stop::before { content: ""; position: absolute; top: 0; left: 0; right: 18px; border-top: 1px dashed rgba(94,143,187,0.4); }
+  .stop::after {
+    content: ""; position: absolute; top: -5px; left: 0; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--ink); border: 2px solid var(--acc);
+  }
+  .stop .when { font-size: 12px; color: var(--gold); letter-spacing: 0.16em; }
+  .stop h3 { font-size: 19px; letter-spacing: 0.16em; margin: 4px 0 8px; }
+  .stop .q { font-size: 13.6px; border-left-color: var(--acc-dim); }
+  .stop p { font-size: 13px; color: var(--paper-dim); }
+  .routenote { font-size: 13.5px; color: var(--paper-faint); margin-top: 8px; }
+
+  /* ---------- S5 讲章账 ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .chip {
+    border: 1px solid var(--acc-dim); color: var(--paper); font-size: 14.5px;
+    padding: 7px 16px; border-radius: 999px; letter-spacing: 0.1em;
+  }
+  .chip i { font-style: normal; color: var(--paper-faint); font-size: 11px; margin-right: 8px; }
+
+  /* ---------- S6 尾屏 ---------- */
+  #coda {
+    margin-top: 90px; border-top: 1px solid var(--hairline);
+    background: radial-gradient(ellipse 55% 70% at 50% 100%, rgba(94,143,187,0.08), transparent 70%), var(--ink-2);
+  }
+  .codain { max-width: 980px; margin: 0 auto; padding: 90px 30px 80px; display: flex; gap: 40px; justify-content: center; align-items: flex-start; }
+  .codatext {
+    writing-mode: vertical-rl; text-orientation: upright; font-size: clamp(19px, 2.4vw, 26px);
+    height: calc(10 * 2.2em); line-height: 2.2; letter-spacing: 0.14em; color: var(--paper); white-space: nowrap;
+  }
+  .codaseal { writing-mode: vertical-rl; text-orientation: upright; background: var(--seal); color: #f5efe6;
+    padding: 12px 7px; font-size: 15px; letter-spacing: 0.2em; border-radius: 3px; margin-top: 8px; }
+  .codaend { align-self: flex-end; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.3em; }
+
+  /* ---------- 页脚 ---------- */
+  footer.page { border-top: 1px solid var(--hairline); margin-top: 80px; padding: 40px 30px 60px; max-width: 980px; margin-left: auto; margin-right: auto; }
+  footer.page p { font-size: 13px; color: var(--paper-faint); margin-bottom: 8px; }
+  footer.page a { color: var(--paper-dim); }
+  footer.page b { color: var(--paper-dim); }
+  .jiaozji { font-size: 12.8px; color: var(--paper-faint); line-height: 1.9; }
+  .jiaozji h4 { font-size: 13px; color: var(--paper-dim); letter-spacing: 0.2em; margin: 22px 0 8px; }
+
+  /* ---------- 移动端 ---------- */
+  @media (max-width: 860px) {
+    #hero .stage { grid-template-columns: 1fr; padding-top: 110px; gap: 26px; justify-items: center; }
+    .bellwrap { min-height: 320px; }
+    .titlebox { flex-direction: column; align-items: center; gap: 16px; }
+    h1.vtitle {
+      writing-mode: horizontal-tb; height: auto; text-align: center;
+      font-size: clamp(30px, 8vw, 44px); letter-spacing: 0.1em;
+    }
+    .sidecol { flex-direction: row; justify-content: center; }
+    .seal, .invite { writing-mode: horizontal-tb; height: auto; }
+    .invite { line-height: 1.9; }
+    .lede { font-size: 13.5px; padding: 30px 22px 24px; }
+    .acts, .duo, .jade2 { grid-template-columns: 1fr; }
+    .wall { grid-template-columns: 1fr; }
+    .slip::before { display: none; }
+    .shistage { grid-template-columns: 1fr; text-align: left; }
+    .codain { flex-direction: row; gap: 18px; padding: 60px 22px 50px; }
+    .codatext { height: calc(10 * 2.2em); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏：扣钟夜坐 ================= -->
+<div id="hero">
+  <div class="beam"></div>
+  <div class="kicker">殆知阁导读 · 道藏正一部</div>
+  <div class="stage">
+    <div class="bellwrap">
+      <svg viewBox="0 0 200 250" aria-hidden="true">
+        <line class="rope" x1="100" y1="0" x2="100" y2="40"></line>
+        <g id="bellg">
+          <circle cx="100" cy="47" r="7" fill="none" stroke="#e8e4dc" stroke-opacity="0.55" stroke-width="2.4"></circle>
+          <path d="M64 168 C64 116 72 84 100 78 C128 84 136 116 136 168 L145 179 L55 179 Z"
+                fill="none" stroke="#e8e4dc" stroke-opacity="0.8" stroke-width="2.6"></path>
+          <line x1="66" y1="106" x2="134" y2="106" stroke="#5e8fbb" stroke-opacity="0.85" stroke-width="2"></line>
+          <line x1="62" y1="146" x2="138" y2="146" stroke="#5e8fbb" stroke-opacity="0.6" stroke-width="2"></line>
+          <line x1="55" y1="179" x2="145" y2="179" stroke="#c9963f" stroke-opacity="0.9" stroke-width="3"></line>
+          <circle cx="100" cy="192" r="6" fill="none" stroke="#c9963f" stroke-opacity="0.55" stroke-width="2"></circle>
+        </g>
+      </svg>
+      <div class="ripple r1"></div><div class="ripple r2"></div><div class="ripple r3"></div>
+      <div class="hint">叩 钟 开 卷</div>
+    </div>
+    <div class="titlebox">
+      <h1 class="vtitle">清和真人北游语录</h1>
+      <div class="sidecol">
+        <div class="seal">随扣随应</div>
+        <div class="invite">
+          <span class="q">自今秋凉，夜渐长，不可早寝，莫待招呼，即来会话</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ledebox">
+    <p class="lede">《神雕侠侣》里那位全真道士，历史上真有其人，而且是丘处机的衣钵传人、全真教第六代掌教。金庸后来在新修版里把角色改名甄志丙，算是给这位山东莱州人卸了小说里的污名。真人自己的话，收在正统道藏的正一部里：癸巳年（1233）秋天起，尹志平北上辽西，在各处宫观夜里与众弟子围坐问答，弟子段志坚辑成<b>四卷六十九条</b>。书里没有小龙女；只有一个五岁在桑树下想到天黑的孩子，一个被父亲锁回家三次的少年，和一场梦里挨了三刀的成年礼。</p>
+  </div>
+</div>
+
+<!-- ================= 左缘签 ================= -->
+<nav class="rail" id="rail">
+  <a href="#s1" class="on">其人</a>
+  <a href="#s2">师承</a>
+  <a href="#s3">夜话</a>
+  <a href="#s4">北游</a>
+  <a href="#s5">讲席</a>
+</nav>
+
+<main>
+  <!-- ================= S1 其人 ================= -->
+  <section class="blk" id="s1">
+    <div class="shead rv"><span class="sno">壹</span><h2>被写坏的人，自己作证</h2><span class="stag">卷二栖真观夜话</span></div>
+    <p class="sintro rv">这段自述藏在卷二末尾：栖真观做完醮事，众人围上来求教，掌教默坐许久，开口却从自己五岁那年讲起。四卷语录里最像自传的一整段，一次讲完，末了还补一句，这些事他从没对人说过。</p>
+    <div class="tl rv">
+      <span><b>3岁</b>见闻不忘</span>
+      <span><b>5岁</b>桑下竟日</span>
+      <span><b>7岁</b>一语相契</span>
+      <span><b>14岁</b>初求出家</span>
+      <span><b>19岁</b>三逃得出</span>
+      <span><b>梦中</b>三刀换身</span>
+    </div>
+    <div class="acts">
+      <div class="act rv" data-m="幕一 · 桑下">
+        <h3>五岁，想到天黑</h3>
+        <div class="q">吾方五岁，是岁寒食<span class="src">卷二</span></div>
+        <div class="q">私念祖先悠悠，不知所往，人之有死，亦自不知所归<span class="src">卷二</span></div>
+        <div class="q">但见水气茫茫，通连上下，如卵壳之状，冥然漠然，不觉心形俱丧<span class="src">卷二</span></div>
+        <div class="q">家人访见之，始呼起，则日已暮矣<span class="src">卷二</span></div>
+        <p class="gloss">寒食祭扫散场，百来个族人各自游玩，只有这个五岁的孩子独自坐到大桑树下想生死。想着想着忘了自己，家人找到他时天已经黑了。多年入道之后他才知道，那天下午摸到的是忘心之趣。</p>
+      </div>
+      <div class="act rv" data-m="幕二 · 三逃">
+        <h3>父亲抓了三次</h3>
+        <div class="q">十四遇丹阳师父出家，父严不许，至十九复驱入俗中，锁于家<span class="src">卷二</span></div>
+        <div class="q">尝默祷于北辰之下，每至千拜<span class="src">卷二</span></div>
+        <div class="q">与客谈道于中门之外，吾潜心跪听，沙石隐入膝中不自觉<span class="src">卷二</span></div>
+        <div class="q">后竟逃出，复驱入，反复者三，始得出离于俗<span class="src">卷二</span></div>
+        <p class="gloss">十四岁要出家，父亲不许；再逃，被锁进家里。他在北辰星下祷告，一拜就是千拜；隔着中门跪听客人谈道，膝盖压进沙石都不觉得。逃出去，被抓回来，前后三次，终于脱身。更早的七岁那年，他已见过一位关西来的王大师，一句话就投了缘。</p>
+      </div>
+      <div class="act rv" data-m="幕三 · 三刀">
+        <h3>梦里的成年礼</h3>
+        <div class="knives">
+          <button class="on" data-k="1">断首</button>
+          <button data-k="2">剖心</button>
+          <button data-k="3">剖腹</button>
+        </div>
+        <div class="knifepane on" data-p="1">
+          <div class="q">忽一人来，道骨仙风，非尘世人，金光玉泽，莹然相照<span class="src">卷二</span></div>
+          <div class="q">既至，挥刀以断吾首，吾心亦不动。师喜，复安之<span class="src">卷二</span></div>
+          <div class="q">觉则心有悟，知师易吾之俗头面也<span class="src">卷二</span></div>
+        </div>
+        <div class="knifepane" data-p="2">
+          <div class="q">后十日复至，剖出吾心，又知去吾之俗心也<span class="src">卷二</span></div>
+          <p class="gloss">桃树下的夜访者是长生真人刘处玄。第一刀换头面，第二刀换心。</p>
+        </div>
+        <div class="knifepane" data-p="3">
+          <div class="q">又十日复至，持油饿一盘饷予。尽食之，过饱欲死，师即剖吾腹尽去之<span class="src">卷二</span></div>
+          <p class="gloss">第三刀最幽默：喂你吃撑，再把肚子掏空。他自解是因为自性太高容易折损，索性连那份多余的一起拿走。</p>
+        </div>
+        <div class="lastline"><span class="qv">此事未尝语人，今乃大白于众</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= S2 师承 ================= -->
+  <section class="blk" id="s2">
+    <div class="shead rv"><span class="sno">贰</span><h2>师承与得道账</h2><span class="stag">卷二对牌</span></div>
+    <p class="sintro rv">全真七子在书里都是活人：谁悟道快，谁悟道慢，掌教有一本账。数字出自他的原话，师兄弟之间摆得上台面的公开账。</p>
+    <div class="duo">
+      <div class="ledger rv" id="ledger">
+        <h3>得道年限 · 四人账</h3>
+        <div class="bar"><div class="bl"><b>丹阳 马钰</b><span>2.5 年</span></div><div class="track"><div class="fill" data-w="16%"></div></div><div class="note"><span class="qv">便悟死，故得道速</span></div></div>
+        <div class="bar"><div class="bl"><b>长真 谭处端</b><span>5 年</span></div><div class="track"><div class="fill" data-w="32%"></div></div></div>
+        <div class="bar"><div class="bl"><b>长生 刘处玄</b><span>7 年</span></div><div class="track"><div class="fill" data-w="45%"></div></div></div>
+        <div class="bar"><div class="bl"><b>长春 丘处机</b><span>近 20 年</span></div><div class="track"><div class="fill" data-w="100%"></div></div><div class="note">磻溪、龙门，<span class="qv">志气通彻天地</span></div></div>
+        <div class="q">丹阳师父才二年半得道，长真五年，长生七年<span class="src">卷二</span></div>
+        <div class="q">长春师父在磻溪、龙门近二十年<span class="src">卷二</span></div>
+        <div class="q">才得之，未久复夺去，只缘功行未全也<span class="src">卷二</span></div>
+        <p class="gloss" style="font-size:13.5px;color:var(--paper-dim)">丘处机自己排第一慢：得而复失，失而再得，账面最难看，功行却最全。</p>
+      </div>
+      <div class="wuxi">
+        <div class="wucard rv">
+          <h4>悟死 · 马钰</h4>
+          <div class="q">我与丹阳悟道有浅深，是以得道有迟速。丹阳便悟死，故得道速，我悟万有皆虚幻，所以得道迟<span class="src">卷一，丘处机自道</span></div>
+          <p>把自己先当死人，天下事就都轻了。</p>
+        </div>
+        <div class="wucard rv">
+          <h4>入门一问 · 马钰见王重阳</h4>
+          <div class="q">丹阳师父未出家时，性豪纵好饮<span class="src">卷二</span></div>
+          <div class="q">如何是道？祖师曰：五行不到处，父母未生时<span class="src">卷二</span></div>
+          <p>豪饮的富户进门就问一句要害，得一句十字的答。至哉此言，讲的是还没被阴阳五行盖章之前的那个你。</p>
+        </div>
+      </div>
+    </div>
+    <div class="shistage rv">
+      <div class="shichar">实</div>
+      <div class="say">
+        <div class="q">有人劝师父，少施手段，必得当世信重<span class="src">卷一</span></div>
+        <div class="q">师父大笑曰：俺五十年学得一个实字，未肯一旦弃去<span class="src">卷一</span></div>
+        <p>有人劝丘处机露一手神通，好让世人敬信，他大笑回绝。这句话尹志平亲耳听过，记了一辈子；后来陈秀玉替全教总结：<span class="qv">吾所以心服丘长春者，以其实而已</span>。这也是给小说那位反派最彻底的反驳：这一脉真传里的高人，连露一手都嫌浪费。</p>
+      </div>
+    </div>
+    <div class="jade2">
+      <div class="jadecard rv">
+        <h4>铁脚仙<em>玉阳 王处一</em></h4>
+        <div class="q">曾于沙石中跪而不起，其膝磨烂至骨<span class="src">卷三</span></div>
+        <div class="q">赤脚往来于其中，故世号铁脚<span class="src">卷三</span></div>
+        <p>铁楂山上砺石荆棘里跪行、赤脚走，膝盖磨到见骨。这样磨了三年，宿业才磨干净。</p>
+      </div>
+      <div class="jadecard rv">
+        <h4>第二十七劫<em>同上</em></h4>
+        <div class="q">马曾做人，人亦曾作马。俺第二十七劫曾为牛<span class="src">卷三</span></div>
+        <div class="q">牛母尝来求拔荐于我<span class="src">卷三</span></div>
+        <p>王处一看马感慨马曾做人，又自报家门：自己第二十七劫做过牛，所以今生昏聩不识字，连牛母亲都找上门求超度。掌教记下这段，语气不像笑话。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= S3 夜话签墙 ================= -->
+  <section class="blk" id="s3">
+    <div class="shead rv"><span class="sno">叁</span><h2>夜话六签</h2><span class="stag">点签展开</span></div>
+    <p class="sintro rv">语录的大部分篇幅其实是业务指导，具体到能当作息表用。六签抽自四卷，签签有原话。</p>
+    <div class="wall">
+      <div class="slip rv">
+        <h3>三欲<small>卷一</small></h3>
+        <p class="tag">睡是第一害</p>
+        <div class="body">
+          <div class="q">况修行之害，三欲食、睡、色为重。不节食即多睡，睡为尤重，情欲之所自出<span class="src">卷一，北京华阳观</span></div>
+          <div class="q">稍觉昏倦，即觅动作，日复一日，至二十四五日，遂如自然<span class="src">卷一</span></div>
+          <p>食睡色列三大害，睡排第一，因为是情欲的出口。他自报戒睡经验：觉得昏倦就起来干活，练到二十几天，成了自然。</p>
+        </div>
+      </div>
+      <div class="slip rv">
+        <h3>馒头<small>卷一</small></h3>
+        <p class="tag">神仙要下地种</p>
+        <div class="body">
+          <div class="q">人人共知神仙可慕，终不肯力行<span class="src">卷一</span></div>
+          <div class="q">正如人言馒头可食，果欲得食，则必耕田布种，然后得食<span class="src">卷一</span></div>
+          <p>比喻一整套：想直接从土里抠出馒头的人，无不笑耕田的迂谬，可馒头从来都是种出来的。</p>
+        </div>
+      </div>
+      <div class="slip rv">
+        <h3>真清静<small>卷二</small></h3>
+        <p class="tag">县令十五年没过关</p>
+        <div class="body">
+          <div class="q">一男一女，世事之常，如公之行亦未易得，然则非真清静也<span class="src">卷二</span></div>
+          <div class="q">无为自得，是谓真清静<span class="src">卷二</span></div>
+          <p>一位独居多年、人称清静的县令跟队求印可，丘处机笑而不答，半晌才给判词：你那是外面的、有为的功夫，不是真清静。</p>
+        </div>
+      </div>
+      <div class="slip rv">
+        <h3>覆阴花<small>卷二</small></h3>
+        <p class="tag">暖房催的不算</p>
+        <div class="body">
+          <div class="q">正如入于冬时，能开诸花卉于覆阴中，非不奇也，然终不能成其实<span class="src">卷二</span></div>
+          <p>存想吐纳练得再奇，也只是冬天暖房里催开的花：开是开了，结不了果。</p>
+        </div>
+      </div>
+      <div class="slip rv">
+        <h3>平常<small>卷二</small></h3>
+        <p class="tag">分工清单</p>
+        <div class="body">
+          <div class="q">平常是道<span class="src">卷二</span></div>
+          <div class="q">当尽其在我者，而任其在天者<span class="src">卷二</span></div>
+          <p>功行归自己管，验证归天管；两本账一混，有心去求，就已经是妄。</p>
+        </div>
+      </div>
+      <div class="slip rv">
+        <h3>梦<small>卷三</small></h3>
+        <p class="tag">白天的念也是梦</p>
+        <div class="body">
+          <div class="q">梦中识破梦中身<span class="src">卷三，引祖师语</span></div>
+          <div class="q">人梦有根，念为之根<span class="src">卷三</span></div>
+          <p>不止夜里做梦，念头就是白天的梦；无碍于道德神气的才归真，其余都是假与妄。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= S4 北游路线 ================= -->
+  <section class="blk" id="s4">
+    <div class="shead rv"><span class="sno">肆</span><h2>北游八站</h2><span class="stag">卷一至卷三</span></div>
+    <p class="sintro rv">路线跟着斋醮与讲席走。癸巳年秋从北京路的华阳观起，沿辽西诸观一路坐下去，十月落定义州通仙观，此后两卷不出讲席。</p>
+    <div class="route rv">
+      <div class="stop">
+        <span class="when">癸巳秋七月</span>
+        <h3>北京 · 华阳观</h3>
+        <div class="q">癸巳秋七月，北京华阳观，众集夜坐<span class="src">卷一开篇</span></div>
+        <p>全书的起点：秋凉夜长，众人聚坐。首夜立了规矩，谈成败善恶也算存道，不必句句都绕着玄谈。</p>
+      </div>
+      <div class="stop">
+        <span class="when">七月九日</span>
+        <h3>白鹤观 · 致祭</h3>
+        <div class="q">长春师父升遐日七月九日，于白鹤观芳桂堂，设祖师七真位致祭<span class="src">卷一</span></div>
+        <p>丘处机忌辰，致祭毕众坐话师父旧事，卷一最好的几个故事都在这一晚。</p>
+      </div>
+      <div class="stop">
+        <span class="when">同月</span>
+        <h3>游仙观</h3>
+        <div class="q">师谒游仙观，观主李志韶拜问《悟真篇》所疑。师不答<span class="src">卷一</span></div>
+        <div class="q">至夜坐，谓众曰<span class="src">卷一</span></div>
+        <p>白天拜问疑难，不答；夜里坐定，才对众人讲张平叔。白天不答，是这一家的教法。</p>
+      </div>
+      <div class="stop">
+        <span class="when">中秋十七夜</span>
+        <h3>栖真观</h3>
+        <div class="q">中秋十七夜，栖真观合众露坐，塑师王才作礼，求为道像法<span class="src">卷二</span></div>
+        <div class="q">凡百像中，独道像难为<span class="src">卷二</span></div>
+        <div class="q">道家之像，要见视听于外，而存内观之意<span class="src">卷二</span></div>
+        <p>月下露坐，塑匠求教造像。他给的标准至今能进美院教材：眼睛在看外面，意思要收在里面。</p>
+      </div>
+      <div class="stop">
+        <span class="when">入冬前</span>
+        <h3>建州 · 开元观</h3>
+        <div class="q">建州开元观夜话，众论及人事兴废<span class="src">卷二</span></div>
+        <div class="q">观天之道，执天之行，尽矣<span class="src">卷二</span></div>
+        <p>话题是人事兴废，他的答话只借了八个字的经文，然后从百刻成日讲到万化随时。</p>
+      </div>
+      <div class="stop">
+        <span class="when">冬夜</span>
+        <h3>川州 · 玉虚观</h3>
+        <div class="q">川州玉虚观，道众檀信奉师，终日勤勤，夜久未忍去<span class="src">卷二</span></div>
+        <div class="q">白发苍颜未了仙，游山饭水且留连，不嫌天上多官府，只恐人间有俗缘<span class="src">卷二，引长春诗</span></div>
+        <p>道众檀信热情缠了一整天，夜里还不散。他不扫兴，只引师父的诗：怕的不是天上官府多，是人间俗缘重。</p>
+      </div>
+      <div class="stop">
+        <span class="when">冬</span>
+        <h3>义州 · 朝元观</h3>
+        <div class="q">义州朝元观会众夜话，话及教门法度更变不一事<span class="src">卷二</span></div>
+        <div class="q">随时之义大矣哉<span class="src">卷二，引易</span></div>
+        <p>教门法度变来变去怎么看待？他抬出易经四个字：随时。丹阳与长春教法不同，在他这里都是不得不然。</p>
+      </div>
+      <div class="stop">
+        <span class="when">癸巳冬十月</span>
+        <h3>义州 · 通仙观</h3>
+        <div class="q">癸巳冬十月，义州通仙观，命郭志全讲《道德经》<span class="src">卷三开篇</span></div>
+        <p>北游终点站，开《道德经》讲席。此后两卷八百余行，不出这座讲席。</p>
+      </div>
+    </div>
+    <p class="routenote rv">站名地理：书中北京指辽金以来北京路的大定府，在今内蒙古宁城一带；建州、川州、义州均在今辽宁西部。一行人从山东渡海北上，在辽西转了大半个冬天。</p>
+  </section>
+
+  <!-- ================= S5 讲章账 ================= -->
+  <section class="blk" id="s5">
+    <div class="shead rv"><span class="sno">伍</span><h2>讲席二十四章</h2><span class="stag">卷三卷四</span></div>
+    <p class="sintro rv">最后两卷是《道德经》讲席：弟子郭志全逐章开讲，讲毕请师指证，师断才是正菜。点名讲过的章目如下。</p>
+    <div class="chips rv">
+      <span class="vq"><i>一章</i>玄之又玄</span>
+      <span class="vq"><i>二章</i>天下皆知</span>
+      <span class="vq"><i>三章</i>不尚贤</span>
+      <span class="vq"><i>四章</i>视之不见</span>
+      <span class="vq"><i>五章</i>载营魄</span>
+      <span class="vq"><i>六章</i>谷神不死</span>
+      <span class="vq"><i>七章</i>出生入死</span>
+      <span class="vq"><i>八章</i>宠辱若惊</span>
+      <span class="vq"><i>九章</i>致虚极</span>
+      <span class="vq"><i>十章</i>太上</span>
+      <span class="vq"><i>十一章</i>大道废</span>
+      <span class="vq"><i>十二章</i>绝圣弃智</span>
+      <span class="vq"><i>十三章</i>绝学无忧</span>
+      <span class="vq"><i>十四章</i>古之善为士</span>
+      <span class="vq"><i>十五章</i>孔德之容</span>
+      <span class="vq"><i>十六章</i>跂者不立</span>
+      <span class="vq"><i>十七章</i>有物混成</span>
+      <span class="vq"><i>十八章</i>知人者知</span>
+      <span class="vq"><i>十九章</i>执大象</span>
+      <span class="vq"><i>二十章</i>上德不德</span>
+      <span class="vq"><i>二十一章</i>道生一</span>
+      <span class="vq"><i>二十二章</i>治人事天</span>
+      <span class="vq"><i>二十三章</i>为无为</span>
+      <span class="vq"><i>二十四章</i>勇于敢则杀</span>
+    </div>
+    <p class="sintro rv" style="margin-top:26px">章章有师断。讲谷神不死，接河上公；讲出生入死，接死地与宿债；讲治人事天，只有一个啬字，爱其道也。禅家的话头、儒家的章句、政和注的易庄，全被随手收进这间讲席。</p>
+  </section>
+</main>
+
+<!-- ================= 尾屏 ================= -->
+<div id="coda">
+  <div class="codain rv">
+    <div class="codatext qv">凡吾言皆本于实，人多好异，故听之者不入</div>
+    <div class="codaseal">清和</div>
+    <div class="codaend">卷 终</div>
+  </div>
+</div>
+
+<!-- ================= 页脚 ================= -->
+<footer class="page">
+  <p>文本来源：殆知阁简体库道藏〈<span class="qv">清和真人北游语录</span>〉，尹志平口述、门人段志坚辑录成编，见正统道藏的正一部，去空白约两万九千字，四卷六十九条。仓库：<a href="https://github.com/raptazure/daizhige-daodu" target="_blank" rel="noopener">github.com/raptazure/daizhige-daodu</a>。</p>
+  <p>引文核验：页面全部引文经脚本与库内文件去标点、归一后逐字比对通过（共八十一处）；白话行文经六字窗反向扫描零撞。</p>
+  <p><b>时代局限提醒</b>：本书是七百多年前的宗教语录，宿命、劫数、因果、感应等观念为旧时代世界观，页面照录旧文原貌，仅为文献呈现，不代表今日立场。</p>
+  <div class="jiaozji">
+    <h4>校字记（库本讹字照录）</h4>
+    <p>四道卷尾卷题的游字均讹作进；开篇「师日」当作师曰；「世问」三见当作世间，「十数年问」「未至十日问」之间讹作问；「油饿」疑当作油馃；「肺腹」当作肺腑；「通相卫」疑当作相术；「人察五行」疑当作禀；「武官者」下的称谓疑有衍讹；「闷人」疑有讹。以上均照录，引文遇讹处照录不改。全卷无私用区字符。</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var hero = document.getElementById('hero');
+  function ring() {
+    hero.classList.remove('struck');
+    void hero.offsetWidth;
+    hero.classList.add('struck');
+  }
+  hero.addEventListener('click', ring);
+
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('on'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+
+  var bars = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.querySelectorAll('.fill').forEach(function (f) { f.style.width = f.dataset.w; });
+      bars.unobserve(e.target);
+    });
+  }, { threshold: 0.3 });
+  bars.observe(document.getElementById('ledger'));
+
+  document.querySelectorAll('.knives button').forEach(function (b) {
+    b.addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      var box = b.closest('.act');
+      box.querySelectorAll('.knives button').forEach(function (x) { x.classList.remove('on'); });
+      box.querySelectorAll('.knifepane').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      box.querySelector('.knifepane[data-p="' + b.dataset.k + '"]').classList.add('on');
+    });
+  });
+
+  document.querySelectorAll('.slip').forEach(function (s) {
+    s.addEventListener('click', function () { s.classList.toggle('open'); });
+  });
+
+  var secs = ['s1', 's2', 's3', 's4', 's5'];
+  var links = {};
+  document.querySelectorAll('#rail a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  var rio = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) {
+        Object.values(links).forEach(function (a) { a.classList.remove('on'); });
+        links[e.target.id].classList.add('on');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+  secs.forEach(function (id) { rio.observe(document.getElementById(id)); });
+})();
+</script>
+</body>
+</html>
