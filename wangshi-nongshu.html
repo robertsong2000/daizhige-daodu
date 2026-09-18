@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>王氏农书 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --ink-3: #131311;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --bam: #5f9270;
+    --bam-dim: rgba(95,146,112,0.4);
+    --bam-faint: rgba(95,146,112,0.12);
+    --hairline: rgba(232,228,220,0.12);
+    --serif: "Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+    --mono: "JetBrains Mono","SFMono-Regular",Consolas,"Courier New",monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--serif);
+    line-height: 1.9;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--bam-dim); color: var(--paper); }
+  main { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  .q { color: var(--paper); border-bottom: 1px solid var(--bam-dim); padding: 0 2px; }
+  .qv { color: var(--bam); }
+
+  /* ---------- hero ---------- */
+  #hero {
+    min-height: 100vh;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: minmax(300px, 1fr) minmax(300px, 1.1fr);
+    align-items: center;
+    gap: 30px;
+    position: relative;
+  }
+  .hero-copy { position: relative; z-index: 3; }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--bam);
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: clamp(52px, 7.5vw, 92px);
+    line-height: 1.12;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .hero-sub {
+    color: var(--paper-dim);
+    letter-spacing: 0.2em;
+    font-size: 14px;
+    margin-bottom: 26px;
+  }
+  .hero-lead { max-width: 30em; color: var(--paper-dim); font-size: 15px; }
+  .hero-lead b { color: var(--paper); font-weight: 600; }
+  .hero-hint {
+    margin-top: 30px;
+    font-size: 13px;
+    color: var(--paper-faint);
+    letter-spacing: 0.12em;
+  }
+  .hero-name-chips {
+    margin-top: 22px;
+    display: flex;
+    gap: 10px;
+    min-height: 54px;
+    align-items: center;
+  }
+  .nchip {
+    width: 54px; height: 54px;
+    border: 1px solid var(--hairline);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity .6s ease, transform .6s ease, border-color .6s;
+    background: var(--ink-2);
+  }
+  .nchip.show { opacity: 1; transform: none; border-color: var(--bam-dim); }
+  .hero-seal {
+    width: 58px; height: 58px;
+    background: #c0453c;
+    color: #f2ede2;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    line-height: 1.15;
+    text-align: center;
+    letter-spacing: 2px;
+    opacity: 0;
+    transform: scale(1.35) rotate(-8deg);
+    transition: opacity .5s ease, transform .45s cubic-bezier(.2,1.6,.4,1);
+    box-shadow: 0 4px 24px rgba(192,69,60,0.35);
+  }
+  .hero-seal.show { opacity: .92; transform: none; }
+  .wheel-wrap { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+  #shouwheel { width: 100%; max-width: 520px; display: block; user-select: none; }
+  .wheel-read {
+    margin-top: 14px;
+    min-height: 54px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--paper-dim);
+  }
+  .wheel-read .jq-name { color: var(--bam); letter-spacing: 0.3em; font-size: 15px; }
+  .wheel-read .jq-phrase { display: block; margin-top: 6px; }
+  .wheel-btn {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%,-50%);
+    width: 74px; height: 74px;
+    border-radius: 50%;
+    border: 1px solid var(--bam-dim);
+    background: rgba(25,25,23,0.72);
+    color: var(--paper);
+    font-family: var(--serif);
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    z-index: 4;
+    transition: border-color .3s, color .3s;
+  }
+  .wheel-btn:hover { border-color: var(--bam); color: var(--bam); }
+  #ring { transition: transform .85s cubic-bezier(.35,.9,.3,1); transform-origin: 260px 260px; }
+
+  /* ---------- sections ---------- */
+  section { padding: 110px 0 30px; position: relative; }
+  .sec-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.34em;
+    color: var(--bam);
+    margin-bottom: 12px;
+  }
+  .sec-head {
+    font-size: clamp(26px, 3.4vw, 36px);
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-bottom: 26px;
+  }
+  .sec-head small { display: block; font-size: 13px; color: var(--paper-faint); letter-spacing: 0.22em; margin-top: 8px; font-weight: 400; }
+  .prose { max-width: 44em; color: var(--paper-dim); font-size: 15.5px; }
+  .prose + .prose { margin-top: 14px; }
+  .prose b { color: var(--paper); font-weight: 600; }
+
+  .bigq {
+    margin: 44px 0;
+    padding-left: 22px;
+    border-left: 2px solid var(--bam-dim);
+    font-size: clamp(21px, 2.8vw, 29px);
+    line-height: 2.05;
+    letter-spacing: 0.04em;
+  }
+  .bigq .q { border-bottom: none; }
+
+  .rv { opacity: 0; transform: translateY(22px); transition: opacity .8s ease, transform .8s ease; }
+  .rv.on { opacity: 1; transform: none; }
+
+  /* 县尹档案 timeline */
+  .yg-list { margin-top: 40px; border-top: 1px solid var(--hairline); }
+  .yg-row {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 22px;
+    padding: 20px 4px;
+    border-bottom: 1px solid var(--hairline);
+    align-items: baseline;
+  }
+  .yg-when { font-family: var(--mono); font-size: 13px; color: var(--bam); letter-spacing: 0.08em; }
+  .yg-what { color: var(--paper-dim); font-size: 15px; }
+  .yg-what b { color: var(--paper); font-weight: 600; }
+
+  /* 图版架 */
+  .shelf {
+    margin-top: 44px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .tool {
+    border: 1px solid var(--hairline);
+    background: var(--ink-2);
+    padding: 18px 16px 15px;
+    cursor: pointer;
+    position: relative;
+    transition: border-color .35s, background .35s, transform .35s;
+  }
+  .tool:hover { transform: translateY(-3px); }
+  .tool .t-name { font-size: 24px; letter-spacing: 0.12em; }
+  .tool .t-men {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    color: var(--paper-faint);
+    margin: 8px 0 10px;
+  }
+  .tool .t-note { font-size: 13px; color: var(--paper-dim); line-height: 1.8; }
+  .tool .t-tick {
+    position: absolute; right: 12px; top: 12px;
+    width: 16px; height: 16px;
+    border: 1px solid var(--hairline);
+    font-size: 11px; line-height: 15px; text-align: center;
+    color: transparent;
+  }
+  .tool.lit { border-color: var(--bam-dim); background: rgba(95,146,112,0.07); }
+  .tool.lit .t-name { color: var(--bam); }
+  .tool.lit .t-tick { border-color: var(--bam); color: var(--bam); }
+  .shelf-status {
+    margin-top: 18px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    color: var(--paper-faint);
+  }
+  .shelf-status b { color: var(--bam); font-weight: 400; }
+  .shelf-done { color: var(--paper); }
+
+  /* 水力二器 */
+  .water-grid {
+    margin-top: 46px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .device {
+    border: 1px solid var(--hairline);
+    background: var(--ink-2);
+    padding: 26px 24px;
+  }
+  .device h3 { font-size: 21px; letter-spacing: 0.14em; margin-bottom: 6px; }
+  .device .d-sub { font-family: var(--mono); font-size: 10px; letter-spacing: 0.26em; color: var(--paper-faint); margin-bottom: 18px; }
+  .device .d-art { display: block; width: 100%; height: 150px; margin-bottom: 16px; }
+  .device p { font-size: 14px; color: var(--paper-dim); }
+  .spin-slow { transform-origin: 110px 75px; animation: spin 14s linear infinite; pointer-events: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .chain-run { stroke-dasharray: 10 8; animation: flow 2.6s linear infinite; pointer-events: none; }
+  @keyframes flow { to { stroke-dashoffset: -36; } }
+  .poem-duo { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .poem-card {
+    border: 1px solid var(--hairline);
+    padding: 20px 20px 16px;
+    background: var(--ink-2);
+    font-size: 17px;
+    line-height: 2.15;
+    letter-spacing: 0.06em;
+  }
+  .poem-card .p-who { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.26em; color: var(--paper-faint); margin-top: 12px; }
+
+  /* 活字 */
+  .hist-strip { margin-top: 44px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .hist {
+    border: 1px solid var(--hairline);
+    background: var(--ink-2);
+    padding: 20px 20px 18px;
+  }
+  .hist .h-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.28em; color: var(--bam); margin-bottom: 10px; }
+  .hist p { font-size: 13.5px; color: var(--paper-dim); }
+  .steps { margin-top: 46px; display: grid; grid-template-columns: 216px 1fr; gap: 0; border: 1px solid var(--hairline); background: var(--ink-2); }
+  .step-rail { border-right: 1px solid var(--hairline); display: flex; flex-direction: column; }
+  .step-btn {
+    padding: 19px 20px;
+    background: none; border: none; border-bottom: 1px solid var(--hairline);
+    color: var(--paper-faint);
+    font-family: var(--serif);
+    font-size: 15px;
+    letter-spacing: 0.14em;
+    text-align: left;
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: color .3s, background .3s;
+  }
+  .step-btn:last-child { border-bottom: none; }
+  .step-btn .s-idx { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; }
+  .step-btn.cur { color: var(--paper); background: var(--bam-faint); }
+  .step-btn.cur .s-idx { color: var(--bam); }
+  .step-body { padding: 30px 32px; }
+  .step-body h4 { font-size: 20px; letter-spacing: 0.1em; margin-bottom: 14px; }
+  .step-body p { font-size: 14.5px; color: var(--paper-dim); max-width: 36em; }
+  .step-body .s-num { font-family: var(--mono); color: var(--bam); letter-spacing: 0.1em; }
+  .wheel2 { margin-top: 44px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; align-items: center; }
+  .wheel2-art { border: 1px solid var(--hairline); background: var(--ink-2); padding: 14px; }
+  .wheel2-art svg { display: block; width: 100%; height: auto; }
+  .wheel2-txt p { font-size: 14.5px; color: var(--paper-dim); }
+  .wheel2-txt p + p { margin-top: 12px; }
+  .fate { margin-top: 46px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .fate-card { border: 1px solid var(--hairline); background: var(--ink-2); perspective: 900px; min-height: 220px; }
+  .fate-inner { position: relative; width: 100%; height: 100%; min-height: 220px; transition: transform .8s cubic-bezier(.4,.9,.3,1); transform-style: preserve-3d; }
+  .fate-card.shown .fate-inner { transform: rotateY(180deg); }
+  .fate-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    padding: 24px 24px 20px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .fate-face h4 { font-size: 18px; letter-spacing: 0.16em; margin-bottom: 10px; }
+  .fate-face p { font-size: 14px; color: var(--paper-dim); }
+  .fate-face .f-hint { font-family: var(--mono); font-size: 10px; letter-spacing: 0.26em; color: var(--paper-faint); margin-top: 14px; }
+  .fate-back { transform: rotateY(180deg); background: rgba(95,146,112,0.08); }
+  .fate-front { cursor: pointer; }
+
+  /* 木棉 */
+  .cotton { margin-top: 46px; border: 1px solid var(--hairline); background: var(--ink-2); padding: 34px 32px; }
+  .cotton svg { display: block; width: 100%; height: 90px; margin-bottom: 22px; }
+  .cotton p { font-size: 14.5px; color: var(--paper-dim); max-width: 40em; }
+
+  /* 校字记 */
+  .jiaoji {
+    margin-top: 70px;
+    border-left: 2px solid var(--hairline);
+    padding: 6px 0 6px 22px;
+    font-size: 13px;
+    color: var(--paper-faint);
+    max-width: 46em;
+    line-height: 2;
+  }
+  .jiaoji b { color: var(--paper-dim); font-weight: 600; letter-spacing: 0.1em; }
+
+  /* 尾屏 */
+  #wei { text-align: center; padding: 130px 0 60px; }
+  .wei-big {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    display: inline-block;
+    height: max-content;
+    font-size: clamp(46px, 8vw, 76px);
+    letter-spacing: 0.34em;
+    color: var(--paper);
+  }
+  .wei-seals { margin-top: 34px; display: flex; justify-content: center; gap: 14px; }
+  .wei-seal {
+    width: 62px; height: 62px;
+    background: #c0453c;
+    color: #f2ede2;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px;
+    letter-spacing: 2px;
+    line-height: 1.15;
+    text-align: center;
+    opacity: .9;
+    box-shadow: 0 4px 22px rgba(192,69,60,0.3);
+  }
+  .wei-seal.alt { background: transparent; border: 1px solid var(--bam-dim); color: var(--bam); box-shadow: none; }
+  .wei-note { margin: 36px auto 0; max-width: 34em; font-size: 14px; color: var(--paper-dim); }
+
+  /* footer */
+  footer { padding: 110px 0 60px; max-width: 1120px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
+  .colophon-q { font-size: 14.5px; line-height: 2.3; color: var(--paper-dim); margin-bottom: 34px; }
+  .fin { border-top: 1px solid var(--hairline); padding-top: 26px; font-size: 12.5px; color: var(--paper-faint); line-height: 2.1; }
+  .fin b { color: var(--paper-dim); font-weight: 600; letter-spacing: 0.1em; }
+  .end-seal {
+    margin-top: 40px;
+    display: inline-block;
+    border: 1px solid var(--bam-dim);
+    color: var(--bam);
+    padding: 10px 22px;
+    font-size: 15px;
+    letter-spacing: 0.5em;
+  }
+
+  @media (max-width: 900px) {
+    #hero { grid-template-columns: 1fr; padding-top: 70px; gap: 10px; }
+    .wheel-wrap { order: 2; }
+    .shelf { grid-template-columns: repeat(2, 1fr); }
+    .water-grid, .fate, .wheel2 { grid-template-columns: 1fr; }
+    .hist-strip { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .step-rail { flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid var(--hairline); }
+    .step-btn { flex: 1 1 30%; border-bottom: none; border-right: 1px solid var(--hairline); padding: 12px 10px; font-size: 13px; }
+    .poem-duo { grid-template-columns: 1fr; }
+    .yg-row { grid-template-columns: 110px 1fr; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+
+<header id="hero">
+  <div class="hero-copy">
+    <div class="kicker">殆知阁导读 第肆百零玖篇</div>
+    <h1 class="hero-title">王氏农书</h1>
+    <div class="hero-sub">元 · 王祯伯善撰　子藏农家</div>
+    <p class="hero-lead">一位县尹把<b>劝农</b>做成了一整套产品说明书：农时编成一张<b>可以转动的图</b>，农器画成<b>二十门图谱</b>，连印书这件事，也因为字太多刻不动，被他顺手发明了<b>三万个木活字</b>。</p>
+    <div class="hero-name-chips" id="nchips">
+      <div class="nchip">王</div><div class="nchip">氏</div><div class="nchip">农</div><div class="nchip">书</div>
+      <div class="hero-seal" id="hseal">劝农</div>
+    </div>
+    <div class="hero-hint">点击轮心，拨一年节气，斗柄回天，书名自现</div>
+  </div>
+  <div class="wheel-wrap">
+    <svg id="shouwheel" viewBox="0 0 520 520" aria-label="授时轮"></svg>
+    <button class="wheel-btn" id="wb" type="button">运转</button>
+    <div class="wheel-read" id="wread">
+      <span class="jq-name" id="jqname">立春</span>
+      <span class="jq-phrase" id="jqphrase">斗柄回寅，一年农事自此起</span>
+    </div>
+  </div>
+</header>
+
+<section id="xu">
+  <div class="sec-tag rv">卷首 · 原序</div>
+  <h2 class="sec-head rv">县尹的第一页<small>皇庆癸丑，一三一三年三月望日</small></h2>
+  <p class="prose rv">王祯，字伯善，山东东平人。史书没给他立传，我们只知道他先后在皖南与赣东北做过两任县尹，是个把心思花在田埂上的基层官员。序言第一句，他先把农业的分量压到顶格。</p>
+  <div class="bigq rv"><span class="q">农天下之大命也一夫不耕或授之饥一女不织或授之寒</span></div>
+  <p class="prose rv">接着报家底：全书<span class="q">搜辑旧闻为集三十有七为目二百有七十</span>，从耕垦、灌溉到蚕缫、棉纺，把一个县该会的事写穷了，收束只有四个字<span class="q">呜呼备矣</span>。落款一行，是这部书的出生证。</p>
+  <p class="prose rv"><span class="q">皇庆癸丑三月望日东鲁王祯书</span></p>
+  <div class="yg-list rv">
+    <div class="yg-row"><div class="yg-when">元贞前后</div><div class="yg-what">在<b>宣州旌德县</b>任县尹，开始撰写农书；字数太多，雕版刻不起，<b>自出机杼造木活字</b>，两年工毕。</div></div>
+    <div class="yg-row"><div class="yg-when">皇庆癸丑</div><div class="yg-what">自序成书。<b>为集三十七，为目二百七十</b>，农桑通诀、百谷谱、农器图谱三大件立起来。</div></div>
+    <div class="yg-row"><div class="yg-when">其后二年</div><div class="yg-what">迁任，去了<b>信州永丰县</b>当县尹，带着三万活字上任，想把农书用活字印出来。</div></div>
+    <div class="yg-row"><div class="yg-when">结局</div><div class="yg-what">江西方面已经命工刻板，三万活字装箱入库，等着不知何时来的别用。他发明了印刷术的升级版，却没能用它印自己的书。</div></div>
+  </div>
+  <p class="prose rv" style="margin-top:26px">四库馆臣对这部书的评语不高不低，但有一句说到了骨头上。</p>
+  <p class="prose rv"><span class="q">其书典赡而有法葢贾思勰齐民要术之流图谱中所载水器尤于实用有裨</span>；又说<span class="q">又每图之末必系以铭赞诗赋亦风雅可诵</span>。今天能读到的本子，是四库馆臣从永乐大典里抢救回来的。</p>
+  <p class="prose rv"><span class="q">永乐大典所载犹元时旧本今据以缮写校勘以还其旧观焉</span></p>
+</section>
+
+<section id="shoushi">
+  <div class="sec-tag rv">农桑通诀 · 授时篇</div>
+  <h2 class="sec-head rv">一张让人转的历书<small><span class="qv">授时指掌活法之图</span></small></h2>
+  <p class="prose rv">通诀六卷从天文讲到祈报，是全书的总纲。开篇谈农时，先把种错时候的两头都堵死。</p>
+  <div class="bigq rv"><span class="q">先时而种则失之太早而不生后时而蓺则失之太晚而不成</span>，<span class="q">故曰虽有智者不能冬种而春收</span></div>
+  <p class="prose rv">然后把天上的秩序搬下来：星宿的度数、节气的推移，在他眼里全是转动的东西。</p>
+  <p class="prose rv"><span class="q">如环之循如轮之转农桑之节以此占之四时各有其务十二月各有其宜</span></p>
+  <p class="prose rv">于是他画的那张授时图，从一开始就是一张<b>要转的图</b>。</p>
+  <p class="prose rv"><span class="q">圆图使可运转北斗旋于中以为准则</span>。历法每年换新，图却常年可用，他自己的说法是<span class="q">夫授时历每岁一新授时图常行不易非历无以起图非图无以行历</span>。</p>
+  <p class="prose rv">推广方案也写明白了，不是藏之名山，是<span class="q">务农之家当家置一本考历推图以定种蓻如指诸掌</span>。一户一本，挂在堂前。</p>
+</section>
+
+<section id="tupu">
+  <div class="sec-tag rv">农器图谱 · 图版架</div>
+  <h2 class="sec-head rv">把农具画给你看<small>二十门，从田制到麻苎</small></h2>
+  <p class="prose rv">全书最亮的部分是图谱的二十门：每件器物一张图、一段图说，末尾再附铭、赞或诗。这是中国农书里第一次把<b>工具当成主角</b>来写。下面认十二件，点亮它们。</p>
+  <div class="shelf rv" id="shelf">
+    <div class="tool" data-n="1"><span class="t-tick">✓</span><div class="t-name">耒耜</div><div class="t-men">耒耜门</div><div class="t-note">犁的前身，开篇第一器。从神农的木耒到曲辕犁，一条五千年的演进线。</div></div>
+    <div class="tool" data-n="2"><span class="t-tick">✓</span><div class="t-name">耧车</div><div class="t-men">耒耜门</div><div class="t-note">畜力播种机，牲口拉着走，种子顺着空槽均匀落土。</div></div>
+    <div class="tool" data-n="3"><span class="t-tick">✓</span><div class="t-name">砘车</div><div class="t-men">耒耜门</div><div class="t-note">耧车后面跟的石磙小车，压实种行的覆土，两件器物流水作业。</div></div>
+    <div class="tool" data-n="4"><span class="t-tick">✓</span><div class="t-name">秧马</div><div class="t-men">耒耜门</div><div class="t-note">插秧时骑的木马，腹部滑泥省弯腰，苏轼曾写诗给它带货。</div></div>
+    <div class="tool" data-n="5"><span class="t-tick">✓</span><div class="t-name">耘爪</div><div class="t-men">钱镈门</div><div class="t-note">套在指尖的薄铁片，跪在田里耘田，指甲即是工具。</div></div>
+    <div class="tool" data-n="6"><span class="t-tick">✓</span><div class="t-name">薅马</div><div class="t-men">钱镈门</div><div class="t-note">耘田时跨在身下的小竹筏，人浮在稻间挪移，腿脚不泡水。</div></div>
+    <div class="tool" data-n="7"><span class="t-tick">✓</span><div class="t-name">麦钐</div><div class="t-men">铚艾门</div><div class="t-note">配麦绰、麦笼用的长柄大镰，割、收、运分工流水，一套收割流水线。</div></div>
+    <div class="tool" data-n="8"><span class="t-tick">✓</span><div class="t-name">翻车</div><div class="t-men">灌溉门</div><div class="t-note">龙骨车。脚踏链板把河水逐级送到岸上，排水灌田的主力。</div></div>
+    <div class="tool" data-n="9"><span class="t-tick">✓</span><div class="t-name">筒车</div><div class="t-men">灌溉门</div><div class="t-note">立在急流里的大水轮，轮缘一圈竹筒兜水，转到高处自动倾入木槽。</div></div>
+    <div class="tool" data-n="10"><span class="t-tick">✓</span><div class="t-name">水轮三事</div><div class="t-men">利用门</div><div class="t-note">一根水轮轴带磨、砻、碾三件套，换个附件就换个工种。</div></div>
+    <div class="tool" data-n="11"><span class="t-tick">✓</span><div class="t-name">木棉搅车</div><div class="t-men">麻苎门</div><div class="t-note">轧棉去籽的铁轴对辊，脚踏手摇，籽棉从此分离。</div></div>
+    <div class="tool" data-n="12"><span class="t-tick">✓</span><div class="t-name">水转大纺车</div><div class="t-men">麻苎门</div><div class="t-note">几十枚锭子一车，流水驱动昼夜纺麻，纺织业的机械时代先声。</div></div>
+  </div>
+  <div class="shelf-status rv" id="shelfStatus">已认 0 / 12 器</div>
+  <p class="prose rv" id="shelfDone" style="display:none; margin-top:18px">十二件认全。二十门图谱各有各的脾气，而最有戏的一件是<b>水轮三事</b>，库本图说开门见山：<span class="q">水轮三事谓水转轮轴可兼三事磨砻碾也</span>。一根轴，磨面、脱壳、碾米，农家的三者合一。</p>
+</section>
+
+<section id="shuili">
+  <div class="sec-tag rv">农器图谱 · 利用水力</div>
+  <h2 class="sec-head rv">让河去干活<small>灌溉与纺织的两种轮</small></h2>
+  <p class="prose rv">灌溉门与利用门里，王祯把水流当成免费的劳力来记账。翻车的来头，他先给读者上了两个人名。</p>
+  <p class="prose rv"><span class="q">马钧居京都城内有地可为园无水以灌之乃作翻车令儿童转之而灌水自覆</span>；再往前追，<span class="q">汉灵帝使毕岚作翻车设机引水洒南北郊路则翻车之制又起于毕岚矣</span>。到了元朝，这件器物已经下放到每一片田边。</p>
+  <div class="water-grid rv">
+    <div class="device">
+      <h3>脚踏翻车</h3>
+      <div class="d-sub">灌溉门 · 龙骨车</div>
+      <svg class="d-art" viewBox="0 0 220 150">
+        <g pointer-events="none">
+          <rect x="30" y="96" width="160" height="14" rx="2" fill="none" stroke="rgba(232,228,220,0.3)"/>
+          <path class="chain-run" d="M36 103 H204" stroke="#5f9270" stroke-width="3" fill="none"/>
+          <circle cx="204" cy="90" r="14" fill="none" stroke="rgba(232,228,220,0.35)"/>
+          <circle cx="36" cy="103" r="8" fill="none" stroke="rgba(232,228,220,0.35)"/>
+          <path d="M60 96 L60 70 M84 96 L84 70 M108 96 L108 70" stroke="rgba(232,228,220,0.18)" stroke-width="2"/>
+          <path d="M60 70 L74 60 M84 70 L98 60 M108 70 L122 60" stroke="rgba(232,228,220,0.28)" stroke-width="2"/>
+          <path d="M14 40 q6 -14 16 0 q6 -14 16 0" stroke="rgba(95,146,112,0.5)" stroke-width="2" fill="none"/>
+        </g>
+      </svg>
+      <p><span class="q">人凭架上踏动拐木则龙骨板随转循环行道板刮水上岸</span>。岸上水高不足，可以三车接力，中间开小池倒水。</p>
+    </div>
+    <div class="device">
+      <h3>筒车</h3>
+      <div class="d-sub">灌溉门 · 流水筒轮</div>
+      <svg class="d-art" viewBox="0 0 220 150">
+        <g pointer-events="none">
+          <g class="spin-slow">
+            <circle cx="110" cy="75" r="52" fill="none" stroke="rgba(232,228,220,0.35)" stroke-width="2"/>
+            <circle cx="110" cy="75" r="8" fill="none" stroke="rgba(232,228,220,0.35)"/>
+            <g stroke="rgba(232,228,220,0.3)" stroke-width="1.6">
+              <line x1="110" y1="23" x2="110" y2="127"/><line x1="58" y1="75" x2="162" y2="75"/>
+              <line x1="73" y1="38" x2="147" y2="112"/><line x1="147" y1="38" x2="73" y2="112"/>
+            </g>
+            <g fill="#5f9270" opacity="0.85">
+              <rect x="106" y="18" width="8" height="12" rx="2"/><rect x="106" y="120" width="8" height="12" rx="2"/>
+              <rect x="53" y="70" width="12" height="8" rx="2"/><rect x="155" y="70" width="12" height="8" rx="2"/>
+              <rect x="68" y="33" width="10" height="10" rx="2" transform="rotate(-45 73 38)"/>
+              <rect x="142" y="107" width="10" height="10" rx="2" transform="rotate(-45 147 112)"/>
+              <rect x="142" y="33" width="10" height="10" rx="2" transform="rotate(45 147 38)"/>
+              <rect x="68" y="107" width="10" height="10" rx="2" transform="rotate(45 73 112)"/>
+            </g>
+          </g>
+          <path d="M10 34 q40 -10 70 6 M180 40 q20 10 28 30" stroke="rgba(95,146,112,0.5)" stroke-width="2" fill="none"/>
+        </g>
+      </svg>
+      <p><span class="q">水激轮转众筒兠水次第下倾于岸上所横木槽谓之天池以灌田稻日夜不息绝胜人力</span>。</p>
+    </div>
+  </div>
+  <p class="prose rv" style="margin-top:24px">翻车筒车之外还有牛转、驴转、高转诸式，高转筒车能把水送上十丈高坡。张孝祥路过看见筒车，留下了一段最有画面的诗。</p>
+  <p class="prose rv"><span class="q">神机日夜运甘泽高下普老农用不知瞬息了千亩</span></p>
+  <div class="poem-duo rv">
+    <div class="poem-card"><span class="q">日日车头踏万回重劳人力亦堪哀从今垅首浇田浪都自乌犍领上来</span><span class="p-who">牛转翻车 · 诗云</span></div>
+    <div class="poem-card"><span class="q">谁识人机盗天巧因凭水力贷疲民</span><span class="p-who">水转翻车 · 诗云</span></div>
+  </div>
+  <p class="prose rv" style="margin-top:26px">同一套思路推到纺织上，就是<b>水转大纺车</b>：麻苎之乡临流置车，水轮带着三十多枚锭子转，一车一天纺麻纱上百斤。他把它画进图谱的动机很直接。</p>
+  <p class="prose rv"><span class="q">今特图写庶他方绩纺之家效此机械比用陆车愈便且省</span></p>
+</section>
+
+<section id="huozi">
+  <div class="sec-tag rv">杂录附 · <span class="qv">造活字印书法</span></div>
+  <h2 class="sec-head rv">字太多，刻不起<small>活字印书法的来路与归宿</small></h2>
+  <p class="prose rv">农书写到十几万字，雕版的工费压垮了这位县尹。他在卷尾附了一篇讲造活字印书的长文，把印刷史和自己那条生产线一口气写完。在他看来，活字不是天降的灵感，是一条演化的链条。</p>
+  <div class="hist-strip rv">
+    <div class="hist"><div class="h-tag">雕版 ·五代</div><p>冯道、李愚奏请校刻九经印卖，<span class="q">锓梓之法其本于此</span>。此后印本书渐多，但一部书一套版，费工费木。</p></div>
+    <div class="hist"><div class="h-tag">泥字 ·俗传巧技</div><p>有人以泥为盔，<span class="q">将烧熟瓦字排之再入窑内烧为一叚</span>。这便是毕昇一脉的泥活字，王祯记下了工艺，没有记名字。</p></div>
+    <div class="hist"><div class="h-tag">锡字 ·近世</div><p>铸锡作字、铁条贯行，可惜<span class="q">上项字样难于使墨率多印坏</span>。金属不吃水墨，印一百坏一百，没能久行。</p></div>
+  </div>
+  <div class="steps rv" id="steps">
+    <div class="step-rail">
+      <button class="step-btn cur" data-i="0" type="button">写韵刻字<span class="s-idx">01</span></button>
+      <button class="step-btn" data-i="1" type="button">锼字修字<span class="s-idx">02</span></button>
+      <button class="step-btn" data-i="2" type="button">作盔嵌字<span class="s-idx">03</span></button>
+      <button class="step-btn" data-i="3" type="button">造轮取字<span class="s-idx">04</span></button>
+      <button class="step-btn" data-i="4" type="button">安字刷印<span class="s-idx">05</span></button>
+      <button class="step-btn" data-i="5" type="button">工成印志<span class="s-idx">06</span></button>
+    </div>
+    <div class="step-body" id="stepBody"></div>
+  </div>
+  <div class="wheel2 rv">
+    <div class="wheel2-art">
+      <svg viewBox="0 0 260 190" aria-label="转轮排字示意">
+        <g pointer-events="none">
+          <circle cx="86" cy="96" r="62" fill="none" stroke="rgba(232,228,220,0.3)" stroke-width="2"/>
+          <circle cx="86" cy="96" r="6" fill="none" stroke="rgba(232,228,220,0.4)"/>
+          <g fill="rgba(95,146,112,0.75)" font-size="13" font-family="serif" text-anchor="middle">
+            <text x="86" y="40">东</text><text x="134" y="66">冬</text><text x="134" y="126">钟</text>
+            <text x="86" y="158">江</text><text x="38" y="126">支</text><text x="38" y="66">微</text>
+          </g>
+          <circle cx="196" cy="96" r="40" fill="none" stroke="rgba(232,228,220,0.22)" stroke-width="2"/>
+          <g fill="rgba(232,228,220,0.5)" font-size="11" font-family="serif" text-anchor="middle">
+            <text x="196" y="62">数</text><text x="222" y="96">目</text><text x="196" y="134">杂</text><text x="170" y="96">字</text>
+          </g>
+          <path d="M126 96 h28" stroke="rgba(95,146,112,0.6)" stroke-width="2" stroke-dasharray="4 4"/>
+          <rect x="128" y="86" width="24" height="20" fill="none" stroke="#5f9270" stroke-width="1.4"/>
+          <text x="140" y="101" fill="#5f9270" font-size="13" font-family="serif" text-anchor="middle">之</text>
+        </g>
+      </svg>
+    </div>
+    <div class="wheel2-txt">
+      <p>两条轮盘的布局，等于一台<b>按韵检索的机器</b>：一轮摆杂字板面、一轮摆监韵板面。</p>
+      <p><span class="q">一轮置监韵板面一轮置杂字板面一人中坐左右俱可推转摘字</span>。设计的核心逻辑他讲得毫无文人气：<span class="q">以字就人则易此转轮之法不劳力而坐致字数</span>。人不动，字来。</p>
+      <p>取字还有一套双人协作：一人执韵本报号，一人转轮摘字嵌进印盔，报出的号与轮上各个门类一一对应，口令即检索。</p>
+    </div>
+  </div>
+  <div class="fate rv">
+    <div class="fate-card" id="fate1">
+      <div class="fate-inner">
+        <div class="fate-face fate-front">
+          <h4>工成</h4>
+          <p>旌德任上，两年刻完三万余字。拿本县志书试印：约六万余字的一部书，不到一个月，百部齐成。</p>
+          <div class="f-hint">点击翻面看库本原话</div>
+        </div>
+        <div class="fate-face fate-back">
+          <p style="font-size:15.5px; line-height:2.2"><span class="q">命匠创活字二年而工毕试印本县志书约计六万余字不一月而百部齐成一如刊板</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="fate-card" id="fate2">
+      <div class="fate-inner">
+        <div class="fate-face fate-front">
+          <h4>収贮</h4>
+          <p>永丰任上，他想用活字印自己的农书。江西方面已经开工刻板，三万个木活字装箱入库，等待不知何时来的别用。</p>
+          <div class="f-hint">点击翻面看库本原话</div>
+        </div>
+        <div class="fate-face fate-back">
+          <p style="font-size:15.5px; line-height:2.2"><span class="q">后二年予迁任信州永丰县絜而之官是农书方成欲以活字嵌印今知江西见行命工刊板故且収贮以待别用</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="prose rv" style="margin-top:26px">一篇附在农书末尾的工艺说明，成了活字印刷史上<b>最完整的第一手记录</b>。他自称编录于此的目的，是<span class="qv">以待世之好事者为印书省便之法传于永久</span>。后来的聚珍版、武英殿木字，走的都是这条路。</p>
+</section>
+
+<section id="mumian">
+  <div class="sec-tag rv">纩絮门 · 木棉附</div>
+  <h2 class="sec-head rv">一种作物的北上<small>海南来的纤维</small></h2>
+  <div class="cotton rv">
+    <svg viewBox="0 0 560 90" aria-label="木棉北传路线">
+      <g pointer-events="none">
+        <path d="M30 62 C160 20 400 20 530 46" stroke="rgba(95,146,112,0.55)" stroke-width="2" fill="none" stroke-dasharray="6 6"/>
+        <path d="M522 38 L536 47 L522 54" fill="none" stroke="rgba(95,146,112,0.8)" stroke-width="2"/>
+        <g fill="#5f9270">
+          <circle cx="30" cy="62" r="5"/><circle cx="150" cy="38" r="4"/><circle cx="290" cy="26" r="4"/><circle cx="430" cy="36" r="4"/>
+        </g>
+        <g fill="rgba(232,228,220,0.55)" font-size="12" font-family="serif">
+          <text x="20" y="84">海南</text><text x="140" y="60">江淮</text><text x="280" y="48">川蜀</text><text x="470" y="70">北方</text>
+        </g>
+      </g>
+    </svg>
+    <p>图谱以蚕桑为正统，木棉在卷尾只是个「附」。但这个附字下面藏着一场衣被革命：棉自海南北上，制法跟着走，江淮川蜀先尝到甜头。</p>
+    <p style="margin-top:12px"><span class="q">夫木棉产自海南诸种蓺制作之法骎骎北来江淮川蜀既获其利</span>；到南北归于一统，商贩运转，<span class="q">服被渐广名曰吉布又曰棉布</span>。王祯把它郑重写进图谱，是官书中较早为棉花立传的一笔。</p>
+  </div>
+  <div class="jiaoji rv">
+    <b>校字记</b>　库本「防」字为扫描缺字代号，遇之引文一律避让；旌德之德作徳、刊作刋、収贮之収、骎骎、兠、叚、扵、蓻、蓺、厯、凖、葢、赞作賛等俗字异体照录，比对时归一。四库提要署「官丰城县尹」，与本书自述旌德、永丰两任不合，照录存疑。
+  </div>
+</section>
+
+<section id="wei">
+  <div class="wei-big rv"><span class="qv">呜呼备矣</span></div>
+  <div class="wei-seals rv"><div class="wei-seal">劝农</div><div class="wei-seal alt">皇庆癸丑</div></div>
+  <p class="wei-note rv">一位县尹的生产生活手册：把一块地、一条河、一季天时和三万个字，都用到尽。</p>
+</section>
+
+</main>
+
+<footer>
+  <p class="colophon-q">
+    <span class="q">农天下之大命也一夫不耕或授之饥一女不织或授之寒</span>，<span class="q">搜辑旧闻为集三十有七为目二百有七十呜呼备矣</span>，<span class="q">皇庆癸丑三月望日东鲁王祯书</span>。
+  </p>
+  <div class="fin">
+    <p><b>文本来源</b>　殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）子藏农家〈王氏农书〉，元王祯撰，去空白约十二万字，二十二卷。</p>
+    <p><b>引文核验</b>　本页所有引文经脚本与库内文件去标点、归一逐字比对通过，白话部分反扫六字窗零撞。</p>
+    <p><b>时代局限</b>　授时占候、祈报赛神诸说是元代认识与信仰的产物；农器功效、纺织数字系库本自述，未经实物验证，阅读时请以今日农学与科技史常识分辨。</p>
+  </div>
+  <div class="end-seal">转图授时</div>
+</footer>
+
+<div id="qbank" hidden>
+  <span class="q">厥民析而东作之事起矣</span>
+  <span class="q">厥民因而南讹之事兴矣</span>
+  <span class="q">厥民夷而西成之事举矣</span>
+  <span class="q">厥民隩而朔易之事定矣</span>
+</div>
+<script>
+(function(){
+  var JQ=['立春','雨水','惊蛰','春分','清明','谷雨','立夏','小满','芒种','夏至','小暑','大暑','立秋','处暑','白露','秋分','寒露','霜降','立冬','小雪','大雪','冬至','小寒','大寒'];
+  var qb=document.getElementById('qbank');
+  var PH=Array.prototype.map.call(qb.querySelectorAll('.q'),function(n){return n.textContent;});
+  var NS='http://www.w3.org/2000/svg';
+  var svg=document.getElementById('shouwheel');
+  function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+  function build(){
+    var C=260;
+    var el0=el('circle',{cx:C,cy:C,r:252,fill:'none',stroke:'rgba(232,228,220,0.1)','stroke-width':1});
+    svg.appendChild(el0);
+    svg.appendChild(el('circle',{cx:C,cy:C,r:196,fill:'none',stroke:'rgba(232,228,220,0.08)','stroke-width':1}));
+    var ring=el('g',{id:'ring'});
+    for(var i=0;i<24;i++){
+      var ang=(i*15-90)*Math.PI/180;
+      var x1=C+Math.cos(ang)*200,y1=C+Math.sin(ang)*200;
+      var x2=C+Math.cos(ang)*246,y2=C+Math.sin(ang)*246;
+      ring.appendChild(el('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:'rgba(95,146,112,0.35)','stroke-width':i%6==0?2:1}));
+      var tx=C+Math.cos(ang)*172,ty=C+Math.sin(ang)*172;
+      var t=el('text',{x:tx,y:ty,fill:'rgba(232,228,220,0.62)','font-size':'15','font-family':'serif','text-anchor':'middle','dominant-baseline':'middle',transform:'rotate('+(i*15)+' '+tx+' '+ty+')'});
+      t.textContent=JQ[i];
+      ring.appendChild(t);
+    }
+    var bx=[-6,-22,-38,-52,-64,-80,-96],by=[-10,-6,-2,2,8,12,16];
+    var dots=[[0,-30],[18,-34],[36,-30],[52,-18],[66,-2],[84,2],[100,10]];
+    for(var d=0;d<dots.length;d++){
+      ring.appendChild(el('circle',{cx:C+dots[d][0],cy:C+dots[d][1],r:d==4?5:3.4,fill:'rgba(232,228,220,0.85)'}));
+      if(d>0){
+        var p=dots[d-1],q=dots[d];
+        ring.appendChild(el('line',{x1:C+p[0],y1:C+p[1],x2:C+q[0],y2:C+q[1],stroke:'rgba(232,228,220,0.4)','stroke-width':1.4}));
+      }
+    }
+    svg.appendChild(ring);
+    svg.appendChild(el('path',{d:'M260 2 L252 20 L268 20 Z',fill:'#5f9270'}));
+    svg.appendChild(el('circle',{cx:C,cy:C,r:44,fill:'rgba(25,25,23,0.72)',stroke:'rgba(95,146,112,0.4)','stroke-width':1}));
+  }
+  build();
+  var step=0,done=false;
+  var ring=document.getElementById('ring');
+  var jqn=document.getElementById('jqname'),jqp=document.getElementById('jqphrase');
+  var wb=document.getElementById('wb');
+  function season(i){return Math.floor((i%24)/6);}
+  wb.addEventListener('click',function(){
+    if(done)return;
+    step++;
+    ring.style.transform='rotate('+(-step*15)+'deg)';
+    var idx=(step)%24;
+    var s=season(idx);
+    jqn.textContent=JQ[idx];
+    jqp.textContent=PH[s];
+    if(step>=24){
+      done=true;
+      wb.textContent='岁成';
+      setTimeout(showName,700);
+    }else{
+      wb.textContent=JQ[(step)%24];
+    }
+  });
+  function showName(){
+    var chips=document.querySelectorAll('.nchip');
+    chips.forEach(function(c,i){setTimeout(function(){c.classList.add('show');},i*180);});
+    setTimeout(function(){document.getElementById('hseal').classList.add('show');},900);
+  }
+  /* 图版架 */
+  var lit=0,shelfDone=document.getElementById('shelfDone'),shelfStatus=document.getElementById('shelfStatus');
+  document.querySelectorAll('#shelf .tool').forEach(function(t){
+    t.addEventListener('click',function(){
+      if(t.classList.contains('lit'))return;
+      t.classList.add('lit');lit++;
+      shelfStatus.innerHTML='已认 <b>'+lit+'</b> / 12 器'+(lit>=12?' <span class="shelf-done">，二十门图谱到手</span>':'');
+      if(lit>=12){shelfDone.style.display='block';shelfDone.classList.add('on');}
+    });
+  });
+  /* 活字工序 */
+  var STEPS=[
+    ['写韵刻字','先照官定韵书，把可用的字按五个声调分门，再分韵头，请写字好的人写满板面，工匠照样子刊刻。之乎者也这类虚词、数目字和常用字，另立门户专架存放。<br><br>总量：<span class="s-num">约三万余字</span>。这一步等于建库：先把字段和索引分好类。'],
+    ['锼字修字','用细齿小锯把刻好的字一个个四方形锼下来，倒进筐里；再用小裁刀逐个修理齐整，立一个标准件，逐字试过，尺寸高低完全一致，才准入库另贮。这一步是品控：不合格的字进不了印版。'],
+    ['作盔嵌字','照韵书的门类把字嵌进木盔，竹片一行行把字夹紧，拿木楔轻轻楔住，各门按五声贴上大字标签，排上轮盘。每个字从此有了自己的货位号，取字时按号提取。'],
+    ['造轮取字','轻木造大轮，<span class="s-num">轮盘径七尺</span>，轮轴高约三尺，圆竹笆铺面。一轮摆韵字一轮摆杂字，一人坐在中间，左右推转摘字；取字时一人执韵报号，一人按号摘字嵌进印盔，缺字随手请刻匠补刻。'],
+    ['安字刷印','平直干板四边立栏，右侧留出摆字的地界；低斜的字随字形用小竹片衬垫平稳，然后上墨刷印。讲究在手法：<b>顺着界行竖着刷，不能横着刷</b>；印纸也顺着界行刷。这是活字印书的定法。'],
+    ['工成印志','旌德任上，<span class="s-num">两年工毕</span>；试印县志，<span class="s-num">六万余字，一月出书百部</span>。永丰任上想印农书，江西已命工刻板，活字装箱待用。发明家与自己的发明擦肩而过。']
+  ];
+  var sb=document.getElementById('stepBody'),btns=document.querySelectorAll('.step-btn');
+  function showStep(i){
+    btns.forEach(function(b){b.classList.toggle('cur',b.dataset.i==String(i));});
+    sb.innerHTML='<h4>'+STEPS[i][0]+'</h4><p>'+STEPS[i][1]+'</p>';
+  }
+  btns.forEach(function(b){b.addEventListener('click',function(){showStep(+b.dataset.i);});});
+  showStep(0);
+  /* 结局翻卡 */
+  [['fate1'],['fate2']].forEach(function(a){
+    var c=document.getElementById(a[0]);
+    c.querySelector('.fate-front').addEventListener('click',function(){c.classList.add('shown');});
+  });
+  /* 入场 */
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+  },{threshold:0.12});
+  document.querySelectorAll('.rv').forEach(function(n){io.observe(n);});
+})();
+</script>
+</body>
+</html>
