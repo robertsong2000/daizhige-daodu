@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>〈五国故事〉导读 · 殆知阁</title>
+<style>
+  :root{
+    --ink:#191917; --panel:#201f1b; --panel2:#26241f;
+    --paper:#e8e4dc; --dim:#a89e8d; --faint:#6f685c;
+    --gold:#c9963f; --gold-dim:#8a6a33; --red:#c0453c;
+    --line:#3a362e; --lacquer:#131311;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink); color:var(--paper);
+    font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    line-height:1.95; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  .mono{font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 26px}
+  a{color:var(--gold);text-decoration:none}
+  em{font-style:normal;color:var(--gold)}
+
+  /* 引文：纸白块 */
+  .qv{background:var(--paper);color:#232019;padding:0 5px;border-radius:2px}
+  .q{
+    background:var(--paper); color:#232019;
+    padding:14px 20px; margin:14px 0; font-size:15.5px; line-height:2;
+    border-left:3px solid var(--gold); position:relative;
+  }
+  .q .who{display:block;font-size:12px;color:#7a7263;letter-spacing:.18em;margin-bottom:4px}
+
+  /* 入场 */
+  .rv{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+  .rv.on{opacity:1;transform:none}
+
+  /* ============ 首屏：太庙 ============ */
+  .hero{position:relative;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+  .smoke{position:absolute;left:50%;top:6%;transform:translateX(-50%);width:520px;height:150px;pointer-events:none}
+  .smoke i{position:absolute;bottom:0;width:2px;height:120px;border-radius:2px;
+    background:linear-gradient(to top,rgba(200,190,170,.22),rgba(200,190,170,0));
+    animation:rise 5.2s ease-in-out infinite}
+  .smoke i:nth-child(1){left:34%}
+  .smoke i:nth-child(2){left:50%;animation-delay:1.6s;height:150px}
+  .smoke i:nth-child(3){left:66%;animation-delay:3.1s;height:96px}
+  @keyframes rise{0%{transform:translateY(26px) scaleY(.7);opacity:0}30%{opacity:1}
+    100%{transform:translateY(-34px) scaleY(1.15);opacity:0}}
+  .htext{position:relative;z-index:3;text-align:center}
+  .kick{font-size:13px;letter-spacing:.4em;color:var(--faint)}
+  .vtitle{writing-mode:vertical-rl;font-size:clamp(40px,6vw,64px);font-weight:700;letter-spacing:.22em;
+    color:var(--paper);height:max-content;margin:26px auto 10px;line-height:1.2}
+  .tagline{color:var(--dim);font-size:15.5px;max-width:560px;margin:0 auto}
+  .tagline b{color:var(--paper);font-weight:400}
+  .hall{display:flex;justify-content:center;gap:clamp(10px,2.4vw,26px);margin:7vh 0 3vh;flex-wrap:wrap;padding:0 14px}
+  .pai{
+    width:88px;height:298px;background:linear-gradient(175deg,#22211d,#141412 70%);
+    border:1px solid var(--gold-dim);outline:1px solid #000;outline-offset:-6px;
+    box-shadow:0 14px 30px rgba(0,0,0,.55), inset 0 0 22px rgba(0,0,0,.6);
+    cursor:pointer;position:relative;transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease;
+    display:flex;flex-direction:column;align-items:center;padding:12px 0 14px;
+  }
+  .pai:hover{transform:translateY(-10px);border-color:var(--gold);box-shadow:0 22px 40px rgba(0,0,0,.65), 0 0 18px rgba(201,150,63,.22)}
+  .pai .wei{
+    width:30px;height:30px;border:1px solid var(--red);color:var(--red);
+    display:flex;align-items:center;justify-content:center;font-size:16px;border-radius:3px;
+  }
+  .pai .ming{writing-mode:vertical-rl;font-size:27px;letter-spacing:.34em;font-weight:700;color:var(--paper);margin-top:14px;flex:1}
+  .pai .puming{writing-mode:vertical-rl;font-size:13.5px;letter-spacing:.3em;color:var(--dim);height:max-content}
+  .pai::after{content:"";position:absolute;left:10px;right:10px;bottom:44px;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim),transparent)}
+  .hint{text-align:center;color:var(--faint);font-size:13px;letter-spacing:.3em}
+
+  /* 名实卡 */
+  .ming-wrap{margin:9vh auto 0;max-width:820px}
+  .ming-card{background:var(--panel);border:1px solid var(--line);padding:26px 30px;display:flex;gap:26px;align-items:stretch}
+  .ming-card .seal{
+    flex:0 0 74px;border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;
+    writing-mode:vertical-rl;font-size:20px;color:var(--gold);letter-spacing:.24em;padding:10px 0;
+  }
+  .ming-card h3{font-size:17px;letter-spacing:.14em;margin-bottom:10px;color:var(--gold)}
+  .ming-card p{font-size:14.5px;color:var(--dim)}
+
+  /* ============ 神龛（各家） ============ */
+  .guo{position:relative;margin-top:11vh;padding:44px 0 30px;border-top:1px solid var(--line)}
+  .guo::before,.guo::after{
+    content:"";position:absolute;top:0;bottom:0;width:5px;
+    background:repeating-linear-gradient(to bottom,var(--gold-dim) 0 30px,transparent 30px 46px);opacity:.5;
+  }
+  .guo::before{left:0}
+  .guo::after{right:0}
+  @media (max-width:720px){.guo::before,.guo::after{display:none}}
+  .guo-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+  .guo-head .hui{font-size:12px;color:var(--faint);letter-spacing:.3em}
+  .guo-head h2{font-size:clamp(24px,3.6vw,34px);letter-spacing:.12em;font-weight:700}
+  .guo-head h2 .wei-seal{
+    display:inline-block;font-size:14px;color:var(--red);border:1px solid var(--red);
+    border-radius:3px;padding:1px 6px;margin-right:10px;vertical-align:4px;
+  }
+  .duan{color:var(--dim);font-size:15px;margin-top:8px;max-width:760px}
+  .duan b{color:var(--paper);font-weight:400}
+
+  /* 家谱条 */
+  .pu{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 6px}
+  .pu .q{
+    display:flex;gap:8px;flex-wrap:wrap;background:none;border:none;padding:0;margin:0;
+  }
+  .pu span{
+    background:var(--paper);color:#232019;font-size:14.5px;letter-spacing:.06em;
+    padding:3px 12px;border-radius:2px;
+  }
+  .pu span.zhu{color:#7a2e20}
+  .pu-note{font-size:12.5px;color:var(--faint);letter-spacing:.12em;margin-bottom:6px}
+
+  /* 场景 */
+  .sc{margin-top:34px;max-width:820px}
+  .sc h4{font-size:16.5px;letter-spacing:.2em;color:var(--gold);margin-bottom:8px;font-weight:400}
+  .sc h4::before{content:"";display:inline-block;width:9px;height:9px;background:var(--gold);transform:rotate(45deg);margin-right:12px;vertical-align:1px}
+  .sc p{font-size:15.5px;color:#cfc8ba}
+  .sc p b{color:var(--paper);font-weight:400}
+
+  /* 兆应签 */
+  .qianqiang{display:flex;gap:18px;flex-wrap:wrap;margin:40px 0 8px}
+  .zy{width:200px;cursor:pointer}
+  .zy .mian{
+    height:210px;position:relative;overflow:hidden;
+    border:1px solid var(--gold-dim);background:var(--panel);
+  }
+  .zy .z,.zy .y{
+    position:absolute;inset:0;writing-mode:vertical-rl;
+    padding:18px 16px;font-size:15px;letter-spacing:.22em;line-height:1.7;
+    transition:transform .5s ease,opacity .5s ease;
+  }
+  .zy .z{background:var(--panel);color:var(--paper)}
+  .zy .y{font-size:13.5px;letter-spacing:.14em;line-height:1.9}
+  .zy .y .qv{background:none;color:#7a2e20;font-weight:700;padding:0}
+  .zy .z .biao{position:absolute;top:10px;right:10px;writing-mode:horizontal-tb;font-size:11px;color:var(--gold);letter-spacing:.3em}
+  .zy .y{background:var(--paper);color:#232019;transform:translateY(100%)}
+  .zy .y .biao{position:absolute;top:10px;right:10px;writing-mode:horizontal-tb;font-size:11px;color:var(--red);letter-spacing:.3em}
+  .zy.open .y{transform:none}
+  .zy.open .z{transform:translateY(-100%)}
+  .zy .tip{font-size:12px;color:var(--faint);letter-spacing:.26em;margin-top:8px;text-align:center}
+
+  /* ============ 缺页 ============ */
+  .queye{margin:12vh auto 0;max-width:640px;background:#0d0d0b;border:1px solid #2c2a24;
+    padding:52px 40px;text-align:center;position:relative}
+  .queye .que{writing-mode:vertical-rl;font-size:54px;color:#39362e;letter-spacing:.4em;margin:0 auto;height:max-content}
+  .queye p{color:var(--dim);font-size:14.5px;text-align:left;margin-top:22px}
+
+  /* ============ 下场账 ============ */
+  .ledger{margin:10vh auto 0;max-width:820px;background:var(--paper);color:#232019;padding:38px 34px 30px}
+  .ledger h3{font-size:19px;letter-spacing:.3em;text-align:center;color:#232019;margin-bottom:6px}
+  .ledger .lede{text-align:center;font-size:13px;color:#7a7263;letter-spacing:.14em;margin-bottom:22px}
+  .row{border-top:1px dashed #b7ad9c;padding:16px 4px;cursor:pointer;position:relative}
+  .row .nm{font-size:19px;letter-spacing:.14em;display:inline-block;position:relative}
+  .row .nm::after{content:"";position:absolute;left:-2%;top:56%;height:3px;width:0;background:var(--red);
+    transform:rotate(-1.2deg);transition:width .6s ease}
+  .row.done .nm::after{width:104%}
+  .row .fa{float:right;color:#7a7263;font-size:13.5px;letter-spacing:.1em}
+  .row .note{max-height:0;overflow:hidden;transition:max-height .5s ease;font-size:14.5px;color:#57503f;line-height:2}
+  .row.done .note{max-height:300px}
+  .row .note .q{border-left-color:#8a6a33;background:#f2eee5;margin:10px 0 2px}
+  .ledger .yin{margin-top:26px;text-align:center}
+  .ledger .yin span{
+    display:inline-block;border:2px solid var(--red);color:var(--red);border-radius:4px;
+    padding:8px 18px;font-size:17px;letter-spacing:.34em;transform:rotate(-2deg);opacity:.85;
+  }
+
+  /* 收梢 */
+  .coda{margin-top:11vh;padding:12vh 26px 10vh;text-align:center;background:linear-gradient(to bottom,var(--ink),#101010)}
+  .coda .big{writing-mode:vertical-rl;font-size:clamp(34px,5vw,52px);letter-spacing:.5em;color:var(--paper);
+    height:max-content;margin:0 auto 26px}
+  .coda p{color:var(--dim);font-size:15px;max-width:640px;margin:0 auto}
+  .coda .seal{display:inline-block;border:1px solid var(--gold-dim);color:var(--gold);
+    padding:5px 14px;font-size:13px;letter-spacing:.3em;margin-top:26px}
+
+  /* 右缘导览 */
+  .rail{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:10px}
+  .rail a{
+    writing-mode:vertical-rl;font-size:11.5px;letter-spacing:.18em;color:var(--faint);
+    border:1px solid var(--line);padding:7px 3px;background:rgba(25,25,23,.8);border-radius:2px;
+  }
+  .rail a:hover{color:var(--gold);border-color:var(--gold-dim)}
+  @media (max-width:900px){.rail{display:none}}
+
+  /* ============ 页脚 ============ */
+  footer{border-top:1px solid var(--line);padding:40px 26px 60px;color:var(--faint);font-size:13px;line-height:2}
+  footer p{margin-bottom:8px}
+  footer .xiaoji{color:#5c564b}
+
+  @media (max-width:720px){
+    .pai{width:74px;height:250px}
+    .pai .ming{font-size:22px}
+    .ming-card{flex-direction:column}
+    .zy{width:calc(50% - 9px)}
+    .ledger{padding:28px 20px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="rail">
+  <a href="#wu">吴</a><a href="#tang">唐</a><a href="#qianshu">前蜀</a><a href="#houshu">后蜀</a><a href="#han">汉</a><a href="#min">闽</a><a href="#zhang">账</a>
+</nav>
+
+<header class="hero">
+  <div class="smoke"><i></i><i></i><i></i></div>
+  <div class="htext wrap">
+    <p class="kick">殆知阁导读 · 第四百一十一篇</p>
+    <h1 class="vtitle">五国故事</h1>
+    <p class="tagline">宋人佚名，给十个割据政权里的<b>六家皇室各立了一座太庙</b>：牌位按家谱次序摆好，正文只做一件事，看他们<b>怎样把国败光</b>。</p>
+    <div class="hall">
+      <div class="pai" data-t="wu"><span class="wei">伪</span><span class="ming">杨氏</span><span class="puming">行密</span></div>
+      <div class="pai" data-t="tang"><span class="wei">伪</span><span class="ming">李氏</span><span class="puming">升</span></div>
+      <div class="pai" data-t="qianshu"><span class="wei">前</span><span class="ming">王氏</span><span class="puming">建</span></div>
+      <div class="pai" data-t="houshu"><span class="wei">后</span><span class="ming">孟氏</span><span class="puming">知祥</span></div>
+      <div class="pai" data-t="han"><span class="wei">伪</span><span class="ming">彭城氏</span><span class="puming">岩</span></div>
+      <div class="pai" data-t="min"><span class="wei">伪</span><span class="ming">王氏</span><span class="puming">审知</span></div>
+    </div>
+    <p class="hint">点一座牌位，开一家的卷宗</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="ming-wrap rv">
+    <div class="ming-card">
+      <div class="seal">载记</div>
+      <div>
+        <h3>书名五国，卷目六家</h3>
+        <p>书里前后出现六个皇室，却只叫五国：照四库提要的算法，王建的前蜀与孟知祥的后蜀同在蜀地，并作一蜀数，于是吴、唐、蜀、汉、闽恰好五家。目录更是全书最冷的发明，每家开头只有一份极简名册，谁先谁后一目了然；正文从头到尾管他们叫伪，这一个字出现了三十二次。谁写的，不知道。清人厉鹗猜是吴越遗民入宋后所作，因为书里把留从效写成娄从效，像是避钱镠的讳；四库馆臣反驳说书中另有一处直呼崔姓，避讳说不通，结论只有四个字，盖不可考。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 吴 杨氏 ============ -->
+  <section class="guo" id="wu">
+    <div class="guo-head rv">
+      <span class="hui">卷上 · 其一</span>
+      <h2><span class="wei-seal">伪</span>吴 · 杨氏</h2>
+    </div>
+    <p class="duan rv">淮南杨家，是被<b>下一家太庙的主人</b>亲手送走的：李氏受禅，杨氏全族圈禁泰州，数十年后为绝人望，遭到继起者的清算。这一卷有全书最好的一个开局，和最冷的一个结尾。</p>
+
+    <div class="pu rv">
+      <p class="pu-note" style="flex-basis:100%">家谱名册（照录库本目录）</p>
+      <div class="q"><span>先主行密。</span><span>渥。</span><span>渭。</span><span>溥。</span></div>
+    </div>
+
+    <div class="sc rv">
+      <h4>装瞎三年</h4>
+      <p>杨行密的妻兄朱延寿手握重兵，暗中与中原的朱温来往。要除他，又怕召不来，行密便自称害了眼疾，一装<b>三年</b>。妻子旦夕探视，信了；家仆私下有动静，她避开所有人，唯独不避开这位瞎了眼的丈夫。</p>
+      <div class="q"><span class="who qsrc">库本</span>至于私于隶仆，悉避余人，唯不避行密。</div>
+      <p>三年后他说自己不行了，儿子幼弱，军府该交给舅舅，让她写信去召。延寿一到，行密坐在正厅，伏兵四起，俄而开目。</p>
+      <div class="q"><span class="who qsrc">库本</span>数年不见舅，今旦果相睹。</div>
+      <p>一句话收网，随即休妻。野史记人，专记这种<b>戏台感</b>的瞬间。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>黑衣人与沙罗</h4>
+      <p>作者给杨行密的两处注脚都是<b>实物证据</b>：微时独处，总见一个黑衣人立在身边，后来他让部下全用黑帛裹头，号称黑云都；另一处更妙，说有人撞见他晨起洗头，右手举着一只沙罗，满满一钵水，倒扣在后颈上。</p>
+      <div class="q"><span class="who qsrc">库本</span>微时，居常独处，必见黑衣人侍其侧。</div>
+      <div class="q"><span class="who qsrc">库本</span>右手擎一沙罗，可百余两水，满其中而洗项</div>
+      <p>举三百斤的传闻怎么证明？拿一只洗头的钵。<b>小说家证史，用的都是这种笨办法</b>，也往往是办法里最可信的一种。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>一块手板</h4>
+      <p>权臣徐温的儿子徐知训凌辱宿将朱瑾，还调戏朱瑾的家伎。朱瑾不动声色，宴席上献出名马，让爱妾出来劝酒，等对方拜下去，一把手板当场击杀，提着人头进宫复命。乱军里他翻城坠地摔断腿，索性自刎。</p>
+      <div class="q"><span class="who qsrc">库本</span>瑾以手板击杀之，截其首，提入以见。</div>
+      <div class="q"><span class="who qsrc">库本</span>吴人暴其尸于市，虫蛆不犯。</div>
+      <p>连尸身上的虫蚁都不忍近前，<b>史笔到这里，其实已经站了队</b>。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>让皇帝的渡江诗</h4>
+      <p>李氏逼禅，给杨溥上的尊号是<b><span class="qv">高尚思元崇古让皇帝</span></b>，让字被钉进谥号里。杨溥渡江前留了四句诗，是把全家的命一起念出来的。</p>
+      <div class="q"><span class="who qsrc">库本</span>烟凝楚岫愁千点，雨滴吴江泪万行。兄弟四人三百口，不堪端坐细思量。</div>
+      <p>他后来在楼上诵佛，使者闯进来时，他把香炉掷了过去。</p>
+      <div class="q"><span class="who qsrc">库本</span>及将遇弑，方诵佛书于楼上。使者前趋，溥以香炉掷之，俄而见害。</div>
+    </div>
+
+    <div class="sc rv">
+      <h4>永宁宫</h4>
+      <p>杨氏族人被迁往泰州，安置在州衙门右边的永宁宫里，派心腹做刺史，名为防护，实为看管。几十年后中原打进来，南唐怕这批人趁乱翻盘。</p>
+      <div class="q"><span class="who qsrc">库本</span>后周世宗渡淮，李氏急使人赴海陵，尽害之。</div>
+      <p>一个急字，<b>两代继起者完成接力</b>：禅让是给天下看的，收尾是关起门做的。</p>
+    </div>
+
+    <div class="qianqiang rv">
+      <div class="zy">
+        <div class="mian">
+          <div class="z"><span class="biao">兆</span><span class="qv">杨老抽嫩鬓，堪作打钟槌。</span></div>
+          <div class="y"><span class="biao">应</span>长子杨渥袭位，声名未立，便被权臣同谋所害。<span class="qv">槌折之言盖冥符也。</span></div>
+        </div>
+        <p class="tip">点签验应</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 唐 李氏 ============ -->
+  <section class="guo" id="tang">
+    <div class="guo-head rv">
+      <span class="hui">卷上 · 其二</span>
+      <h2><span class="wei-seal">伪</span>唐 · 李氏</h2>
+    </div>
+    <p class="duan rv">从养子知诰到后主李煜，这一卷的题目是<b>演技</b>：夺国靠演忠厚，亡国前夜还在演风雅。库本给知诰的一句考语，比任何史论都狠。</p>
+
+    <div class="pu rv">
+      <p class="pu-note" style="flex-basis:100%">家谱名册（照录库本目录）</p>
+      <div class="q"><span>先主升。</span><span>嗣主景。</span><span>后主煜。</span></div>
+      <p class="pu-note" style="flex-basis:100%">先主之名库本写作升，通行刻本作昪；正文通篇称知诰。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>白袍与黄袍</h4>
+      <p>权臣徐温过生日，知诰每年献白袍，座上有人凑趣，说白袍哪里比得上黄袍。</p>
+      <div class="q"><span class="who qsrc">库本</span>白袍不如黄袍好。</div>
+      <p>这话是要命的，知诰当座把人叱退，转头又劝徐温别被奸人糟蹋了忠孝之名。作者冷冷补了一句他为何这么做。</p>
+      <div class="q"><span class="who qsrc">库本</span>然内谋其家，外谋其国，劳心役虑，数倍于曹马矣。</div>
+      <p>拿曹操司马懿来作参照系还要<b>翻倍</b>，这句评语放在整部书里，是最重的一笔。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>一场梦的复利</h4>
+      <p>夺国前夜，知诰对夫人说夜里做了噩梦。夫人劝他找个人圆一圆，他踱到厅前，亲信周宗恰好在阶下。</p>
+      <div class="q"><span class="who qsrc">库本</span>我昨梦过顺天门，俄而仆地，非凶邪</div>
+      <p>周宗纳头便拜，说这梦明明白白，该让人把您扶上去了。库本记账式地补了周宗的下场：此后管盐铁，家成巨富，官到侍中。<b>一句马屁的复利，作者算到了最后一位小数</b>。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>李煜的房间</h4>
+      <p>写后主，作者不谈词，只带你看房间：销金红罗贴墙，白银钉着玳瑁压边，隔眼看不清的地方用绿钿刷过，糊上红罗，外面种梅，花间再摆一只只容两人对坐的彩画小木亭。</p>
+      <div class="q"><span class="who qsrc">库本</span>尝于宫中以销金红罗幂其壁，以白银钉玳瑁而押之</div>
+      <div class="q"><span class="who qsrc">库本</span>造《念家山》及《振金铃曲》。</div>
+      <p>曲名里带破字，江南染坊的招牌偏偏流行一种雨过天青的颜色。</p>
+      <div class="q"><span class="who qsrc">库本</span>建康染肆之榜多题曰“天水碧”。</div>
+      <div class="q"><span class="who qsrc">库本</span>寻而皇家荡平之，悉前兆也。</div>
+      <p>天水是赵氏郡望。<b>染坊无意间把新王朝的姓氏刷满了金陵</b>，作者抓兆的嗅觉，在这一段灵得可怕。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>金鸡与怪鸟</h4>
+      <p>李煜袭位，登楼立金鸡肆赦，这是天子仪式。汴京的太祖闻讯大怒，眼看一场问罪要来，金陵派去答话的使臣陆昭符是位老辩才，回答得举重若轻。</p>
+      <div class="q"><span class="who qsrc">库本</span>此非金鸡，乃怪鸟耳。</div>
+      <p>太祖大笑，此事作罢。作者评它虽属滑稽，却替君主卸了僭越之责，也是忠。亡国之君的命，有时就吊在使者的<b>急智</b>上。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>真节俭与假谦让</h4>
+      <p>书里也留了一处反常的干净：知诰自认得国艰难，金陵升了都城，宫室只在旧衙署上加几个鸱尾栏杆，女乐园苑一概不添。宋齐丘的挽辞三句，作者认定句句属实。</p>
+      <div class="q"><span class="who qsrc">库本</span>宫砌无新树，宫衣无组绣，宫乐尽尘埃。</div>
+      <p>与李煜的房间对照着读，<b>一家的开头与结尾</b>便都在了。</p>
+    </div>
+
+    <div class="qianqiang rv">
+      <div class="zy">
+        <div class="mian">
+          <div class="z"><span class="biao">兆</span><span class="qv">大家何在。“在龟头里。”</span></div>
+          <div class="y"><span class="biao">应</span>嗣主李景给小殿起名龟头，每日在里头办公，宫人找他必如此问答；国势将尽、纳土称臣之后，人们才咂摸出名号的谶意。</div>
+        </div>
+        <p class="tip">点签验应</p>
+      </div>
+      <div class="zy">
+        <div class="mian">
+          <div class="z"><span class="biao">兆</span><span class="qv">待显德三年总杀之。</span></div>
+          <div class="y"><span class="biao">应</span>广顺年间扬州有狂人满街叫骂，无人懂显德是何年号；周太祖改元显德；到那个年号的第三年，王师便入了淮南。</div>
+        </div>
+        <p class="tip">点签验应</p>
+      </div>
+      <div class="zy">
+        <div class="mian">
+          <div class="z"><span class="biao">兆</span><span class="qv">檀来也。</span></div>
+          <div class="y"><span class="biao">应</span>南征之前，淮南地界的孩童齐唱檀来也，众人以为怪；王师前锋骑兵进城，唱的蕃歌第一句正是这三个字。</div>
+        </div>
+        <p class="tip">点签验应</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 前蜀 王氏 ============ -->
+  <section class="guo" id="qianshu">
+    <div class="guo-head rv">
+      <span class="hui">卷上 · 其三</span>
+      <h2><span class="wei-seal">前</span>蜀 · 王氏</h2>
+    </div>
+    <p class="duan rv">饼师出身的王建，是全书唯一<b>被天意拒绝过又硬葬进去</b>的开国之主；到儿子王衍，彩山夜宴把这份家业演成了一场末世嘉年华。蜀中富庶，败得也最有画面感。</p>
+
+    <div class="pu rv">
+      <p class="pu-note" style="flex-basis:100%">家谱名册（照录库本目录）</p>
+      <div class="q"><span>先主建。</span><span>后主衍。</span></div>
+    </div>
+
+    <div class="sc rv">
+      <h4>棺材跳了三次</h4>
+      <p>王建葬父，挖地数尺把棺放下去，棺材自己跳出来，有神人说这是天子之地，小民不配占。他不听，接着葬，棺再跳，如是者三，才终于葬成。</p>
+      <div class="q"><span class="who qsrc">库本</span>此天子之地。女小民何容卜葬</div>
+      <p>发迹后他又从死马腹里剖出一条蛇，从此自信通天。作者记这些，不为猎奇：他要你看见这位开国之主<b>怎样给自己造命</b>。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>一句话毁掉一城桑树</h4>
+      <p>蜀中每年三月蚕市，四方货易云集。王建登楼看热闹，见卖桑苗的摊子多，随口跟左右说了句话。</p>
+      <div class="q"><span class="who qsrc">库本</span>桑栽甚多，傥税之，必获厚利。</div>
+      <p>话传出去，民怕真要开税，把满城桑树砍了个干净。<b>权力的一个念头，抵得上一场天灾</b>。这一段是古代税政史里最好的寓言，四十个字。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>床前的百姓</h4>
+      <p>王建晚年痢疾缠身，坐在锦囊里办公，死前向左右描述他看见的东西。</p>
+      <div class="q"><span class="who qsrc">库本</span>重赋厚敛，以至我伤害而死。今已得诉于帝矣。</div>
+      <p>他答了一句，我实在不知道外间已经这样，现在怎么办。<b>开国者的账，是在病床上被讨的</b>。不久他死了。这段对话多半是编的，但编它的人选对了罪名。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>彩山与当面厨</h4>
+      <p>王衍用几万段缯彩扎成彩楼山，山上扎出亭台殿阁，一如真屋的规制，宴乐起来十天半月不下山；山前另起一亭，摆满金银炊具，取御厨食料当着他的面现做，叫当面厨；山前穿渠通到宫里，他乘着醉意夜里下彩山，宫人举着上千支火炬倒照水面，迎他的小龙舟。</p>
+      <div class="q"><span class="who qsrc">库本</span>尝以缯彩数万段，结为彩楼。</div>
+      <p>彩楼被风雨损坏，随坏随换，毫不心疼。奢到这个地步，作者已经懒得骂，只<b>记账</b>。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>甘州曲，唱给风尘</h4>
+      <p>王衍自谱了一支甘州曲，亲自领着宫人唱。词是好词，只是末句不吉利。</p>
+      <div class="q"><span class="who qsrc">库本</span>画罗裙，能结束，称腰身，柳眉桃脸不胜春，薄媚足精神。可惜许沦落在风尘。</div>
+      <div class="q"><span class="who qsrc">库本</span>后衍降中原，宫妓多沦落人间，始验其语。</div>
+      <p>本意是叹神仙落凡尘，唱的人不知道，<b>自己就是那支曲子的注脚</b>。</p>
+    </div>
+
+    <div class="qianqiang rv">
+      <div class="zy">
+        <div class="mian">
+          <div class="z"><span class="biao">兆</span><span class="qv">膺者，胸也；胸者，凶也，皆非吉兆。</span></div>
+          <div class="y"><span class="biao">应</span>汉州人耕田掘出一面古铜牌，起头是王建王元字样，接着一个膺字；他给长子改名元膺去应这个兆，识者拆字断为不吉，不久太子果然作乱伏诛。</div>
+        </div>
+        <p class="tip">点签验应</p>
+      </div>
+      <div class="zy">
+        <div class="mian">
+          <div class="z"><span class="biao">兆</span><span class="qv">吾立此钟，为立太子故也。今声洪远，是必东宫将来之庆。</span></div>
+          <div class="y"><span class="biao">应</span>为立太子铸的铜钟，八天后坠地，龙首摧折。王衍袭位，恰好在位八年而亡国。</div>
+        </div>
+        <p class="tip">点签验应</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 后蜀 孟氏 ============ -->
+  <section class="guo" id="houshu">
+    <div class="guo-head rv">
+      <span class="hui">卷上 · 其四</span>
+      <h2><span class="wei-seal">后</span>蜀 · 孟氏</h2>
+    </div>
+    <p class="duan rv">两蜀交接只用一句话带过：前蜀宫殿的梁上，早就写着工匠孟德的名字，<b>天意换好了房东</b>。孟氏这一卷最短，却贡献了全书最社会学的一个词，和一个被作者另眼相待的结局。</p>
+
+    <div class="pu rv">
+      <p class="pu-note" style="flex-basis:100%">家谱名册（照录库本目录）</p>
+      <div class="q"><span>先主知详。</span><span>后主昶。</span></div>
+      <p class="pu-note" style="flex-basis:100%">知详即通行刻本之知祥，库本字形如此。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>惊婚</h4>
+      <p>孟昶年幼继位，迁入新宫后嫌宫宇空旷，选民间有色女子填充，选剩的赏赐诸王。消息传开，成都人家连夜嫁女。</p>
+      <div class="q"><span class="who qsrc">库本</span>皆立求媒伐而嫁之，谓之“惊婚”焉。</div>
+      <p>惊婚两个字，是全书最像社会学名词的一笔：<b>宫墙的一次选美，改写全城的婚期</b>。库本媒伐二字疑为媒妁之讹，照录不改。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>紫罗帐</h4>
+      <p>孟昶的母亲是后唐公主的陪嫁出身，随军吃过苦，一生省俭，常告诫儿子把福寿守住。孟昶也真听话：寝处只用紫罗帐与紫碧绫褥，不加锦绣，盥漱用具不过银器与黑漆木器，判死刑也常减省。</p>
+      <div class="q"><span class="who qsrc">库本</span>寝处惟紫罗帐、紫碧绫帷褥而已，无加锦绣之饰。</div>
+      <div class="q"><span class="who qsrc">库本</span>俭止一身，仁唯容恶，乃匹夫之小节耳。</div>
+      <p>后一句是作者的判词：<b>一个人的节俭救不了一国的颓势</b>，私德在乱世是最轻的筹码。这在整部书里几乎是唯一的持平之论。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>万里朝天</h4>
+      <p>蜀中晚年的风气：臣下比着把马鞭拖到地上，妇人比着戴高冠，都管那叫朝天；宫里还谱了新曲助兴。</p>
+      <div class="q"><span class="who qsrc">库本</span>百官竞执长鞭，自马至地。妇人竞戴高冠</div>
+      <p>等孟昶亡国入朝，崎岖川陆一路走到汴京。</p>
+      <div class="q"><span class="who qsrc">库本</span>崎岖川陆；至于京师，乃“万里朝天”之验矣。</div>
+      <p>曲名成了行程，<b>谶应这件事，在孟氏这一卷做到了风俗层面</b>：满城人一起把结局唱了出来。</p>
+    </div>
+
+    <div class="qianqiang rv">
+      <div class="zy">
+        <div class="mian">
+          <div class="z"><span class="biao">兆</span><span class="qv">此四十年偏霸之主，非等闲也。</span></div>
+          <div class="y"><span class="biao">应</span>相士周元豹两番相看幼年孟昶，都说他命里只做四十年地方霸主；孟知祥这才转宠此子。后来的年数，恰如所算。</div>
+        </div>
+        <p class="tip">点签验应</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 汉 彭城氏 ============ -->
+  <section class="guo" id="han">
+    <div class="guo-head rv">
+      <span class="hui">卷下 · 其一</span>
+      <h2><span class="wei-seal">伪</span>汉 · 彭城氏</h2>
+    </div>
+    <p class="duan rv">岭南刘家，全书笔力最黑的一卷。作者写到第二代刘晟时几乎收住叙事，直接下断语；写到第四代刘鋹的珍珠账，让汴京的太祖亲口补刀。<b>太庙的漆，到这里黑得发亮</b>。</p>
+
+    <div class="pu rv">
+      <p class="pu-note" style="flex-basis:100%">家谱名册（照录库本目录，末主之名库本用扩展区异体字，白话以通行鋹字代写）</p>
+      <div class="q"><span>先主岩。</span><span>第二主玢。</span><span>第三主晟。</span></div><span class="pu-note">后主鋹。</span>
+    </div>
+
+    <div class="sc rv">
+      <h4>汤镬与铁床</h4>
+      <p>刘岩临朝垂帘，有司把罪人引到殿下，摆出法外的刑具当场屠戮，书中数得出名字的有汤镬与铁床。下汤镬的还要拖出来暴晒，浇上盐醋。</p>
+      <div class="q"><span class="who qsrc">库本</span>有汤镬、铁床之狱。</div>
+      <div class="q"><span class="who qsrc">库本</span>锤锯互作，血肉交飞，腥秽之气、冤痛之声，充沸庭庑。</div>
+      <p>最骇人的是作者的一句生理观察：刘岩看行刑时唇吻垂涎，久久才恢复常态，有司要等他看完才敢把罪人带走。于是有了那句判词。</p>
+      <div class="q"><span class="who qsrc">库本</span>盖妖蜃毒龙之类，非可待以人伦也。</div>
+      <p><b>不是暴君，是异物</b>：作者把这一家直接逐出了人的范畴，这在全书是绝无仅有的。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>一部《汉纪》</h4>
+      <p>刘晟靠角抵戏刺杀兄长夺位，事后忌惮功臣陈道庠，想让他自己识趣，便赐了一部《汉纪》。道庠受赐，完全看不懂，去问内侍邓申。</p>
+      <div class="q"><span class="who qsrc">库本</span>杀韩信、醢彭越之谓也。</div>
+      <p>道庠从此称病。刘晟听说消息走漏，索性把两人一起杀了。<b>赐书即判决书</b>，这个桥段后世反复搬演，源头就在这里。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>四十六瓮珍珠</h4>
+      <p>南汉亡国，部下纵火焚府库，清点剩下的宝贝时，作者只报了一项：上等珍珠，整整四十六瓮。到了汴京，刘鋹亲手用珍珠结成龙凤马鞍献给太祖，想靠手艺求活。</p>
+      <div class="q"><span class="who qsrc">库本</span>自结真珠龙凤鞍靶以献</div>
+      <div class="q"><span class="who qsrc">库本</span>其所善止如此。不亡何待邪</div>
+      <p>太祖这句问话是全卷的句读：<b>亡国的账，主角自己签了字</b>。</p>
+    </div>
+
+    <div class="qianqiang rv">
+      <div class="zy">
+        <div class="mian">
+          <div class="z"><span class="biao">兆</span><span class="qv">白虹入其伪三清殿中</span></div>
+          <div class="y"><span class="biao">应</span>白虹贯殿，举国震惧；词臣王宏硬把灾异解成白龙现世，献赋称贺，刘岩大悦，改元白龙，还给自己造了一个飞龙在天的名字。</div>
+        </div>
+        <p class="tip">点签验应</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 闽 王氏 ============ -->
+  <section class="guo" id="min">
+    <div class="guo-head rv">
+      <span class="hui">卷下 · 其二</span>
+      <h2><span class="wei-seal">伪</span>闽 · 王氏</h2>
+    </div>
+    <p class="duan rv">光州王家三兄弟，军中号称三龙，从黄巢军中一路打进福州。这一卷兄弟相杀的密度全书第一，却也有玻璃瓶、白雀与蛮舶，<b>黑色的家史里嵌着一部海上创业史</b>。</p>
+
+    <div class="pu rv">
+      <p class="pu-note" style="flex-basis:100%">家谱名册（照录库本目录）</p>
+      <div class="q"><span>忠懿王审知。</span><span>延翰。</span><span>延钧。</span><span>延羲。</span><span>延政。</span></div>
+    </div>
+
+    <div class="sc rv">
+      <h4>第三个沾了汗</h4>
+      <p>王潮让相士给兄弟三人看相，得到的评语只有五个字。</p>
+      <div class="q"><span class="who qsrc">库本</span>一个胜一个。</div>
+      <p>轮到排行最末的审知时，他吓得汗透衣背。<b>前面两位的赫赫凶名，全在这个汗字里</b>。后来果然是最小的审知坐稳了闽地。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>掷出去的玻璃瓶</h4>
+      <p>审知终身俭省，裤子破了，拿酒库的旧官袋缝上接着穿。有人从南方带回一只玻璃瓶献他，他把玩了很久，然后掷在地上。</p>
+      <div class="q"><span class="who qsrc">库本</span>好奇尚异，乃奢侈之本。</div>
+      <p>他说要趁现在掐断这个苗头，免得后代学样。<b>一只瓶子在他手里是文物还是祸根，取决于摔不摔</b>。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>饭僧三百万</h4>
+      <p>次子延钧称帝那天，穿上衮冕竟恍惚不省人事，许久才醒。醒来许下大愿，还把愿文写进疏里散发诸寺。</p>
+      <div class="q"><span class="who qsrc">库本</span>乃心许饭僧三百万、缮经三百藏</div>
+      <p>书里记下了旁观的哄笑。</p>
+      <div class="q"><span class="who qsrc">库本</span>大闽之应天顺人有如此者。</div>
+      <p>一个哂字收束整场典礼。<b>闽国的佛事之盛与宫廷之乱，就在同一座城里互相看笑话</b>。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>老兄再至</h4>
+      <p>养子王延禀独眼，军中叫他独眼龙。他扶延钧上位，回泉州前撂下句话。</p>
+      <div class="q"><span class="who qsrc">库本</span>善守之，无烦老兄再至。</div>
+      <p>延钧记恨这句倚老卖老，后来诈称病死，发丧诱他奔丧。延禀果然再至，兵败被擒，人头送到面前时，延钧只回了一句。</p>
+      <div class="q"><span class="who qsrc">库本</span>果烦老兄再至矣。</div>
+      <p><b>预言被主人亲手执行</b>，这是全书最工整的一次因果回环。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>酒有别肠</h4>
+      <p>延羲在位长夜设宴，把银叶捶成酒杯赐群臣，银叶软，杯一满就必须喝干才能放下，号称醉如泥。醉后曾下旨把李相弃市，李准烂醉卧在刑场，只叫婢女春莺的名字，行刑的不敢下手；次日延羲上朝问怎么还不来，才知道自己昨夜杀过他，赶紧召回复位。学士周维岳陪宴，君臣有段对话。</p>
+      <div class="q"><span class="who qsrc">库本</span>臣闻酒有别肠，非可以肌体而论之。</div>
+      <p>延羲大喜，说果然有别的肠子，当场命人把周维岳拖下殿，<b>剖开看看</b>。左右赶紧接话：如今宴饮全靠他陪，取了别肠，没人陪您了。周维岳捡回一条命。稍后他下狱，狱吏拂着床榻迎接。</p>
+      <div class="q"><span class="who qsrc">库本</span>尚书无苦忧。昨夕相公方宿此。今亦无恙。</div>
+      <p>荒诞写到这个浓度，已近于<b>黑色喜剧的剧本</b>，而它是司空见惯的日常。</p>
+    </div>
+
+    <div class="sc rv">
+      <h4>侧记：招宝侍郎</h4>
+      <p>血雨腥风之外，泉州的族子王延彬是另一路人：每天换一件汗衫，醉后拿龙脑香数器盖在身上，能诗，好谈佛理，求歌妓先画自己的像、把诗题在画像旁边，说才气如此，相貌如此。但他在泉州三十年，岁岁丰收，发往海外的蛮舶从无失坠。</p>
+      <div class="q"><span class="who qsrc">库本</span>每发蛮舶，无失坠者，人因谓之招宝</div>
+      <div class="q"><span class="who qsrc">库本</span>两衙前后讼堂清，软锦披袍拥鼻行。雨后绿苔侵履迹，春深红杏锁莺声。因携久酝松醪酒，自煮新抽竹笋羹。也解为诗也为政，侬家何似谢宣城。</div>
+      <p>闽国往事里难得的一段<b>人间烟火</b>，也是十国海上贸易的一条侧证。诗人徐寅的名句，正是写给这位招宝侍郎看的。</p>
+    </div>
+
+    <div class="qianqiang rv">
+      <div class="zy">
+        <div class="mian">
+          <div class="z"><span class="biao">兆</span><span class="qv">大王骑马来，骑马去。</span></div>
+          <div class="y"><span class="biao">应</span>忠懿王问国祚长短，僧人只此一答；他得闽在丙午年，国亡又逢丙午，僧谶一字不虚。<span class="qv">忠懿以丙午得闽，至开运丙午岁而国亡。其言验矣。</span></div>
+        </div>
+        <p class="tip">点签验应</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 缺页 ============ -->
+  <section class="queye rv">
+    <div class="que">缺</div>
+    <p>六家里唯一没有下场的末主是李煜。书写到江南染坊的招牌与前兆，戛然而止，没有交代他后来怎样。若依厉鹗的猜测，此书成于宋初，那么落笔之时，这位最著名的亡国之君可能还在世：一部亡国故事写成时，主角尚未亡国，历史与书之间这段时差，替他留了这一页空白。</p>
+  </section>
+
+  <!-- ============ 下场账 ============ -->
+  <section class="ledger rv" id="zhang">
+    <h3>下场账</h3>
+    <p class="lede">只依库本所记结算 · 点一行，朱笔勾销</p>
+
+    <div class="row">
+      <span class="nm">杨溥</span><span class="fa">让皇帝 · 掷香炉</span>
+      <div class="note">禅位得号，渡江绝笔四句；楼上诵佛时以香炉掷使者，遇害。族人圈禁泰州永宁宫，数十年后被南唐尽数处死。全族无一漏网。
+        <div class="q">置永宁宫于州之门右，迁其族以处</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="nm">王衍</span><span class="fa">彩山 · 甘州曲</span>
+      <div class="note">王氏宗室亡国后多所沦丧，独嘉王宗寿保全。他赶到洛阳，上表请求按公家礼制安葬故主；朝廷追封了一个公爵，出殡那天，宗寿步行跟在灵后。
+        <div class="q">朝廷因追封衍为顺正公。出葬之日，宗寿步从之。</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="nm">孟昶</span><span class="fa">紫罗帐 · 万里朝天</span>
+      <div class="note">库本给他的是全书唯一的温柔结局：<span class="qv">及归皇朝，终吉天命。</span>通行史籍所记却是他入宋未久即卒。同一人的两份结局，此书独厚他一家，作者的理由写在评语里：远看李家，近看王家，祸福的道理大抵相当。肯省一身、肯减死刑的人，账面上值得宽一笔。
+        <div class="q">远视李氏，近观王衍，祸福之道，盖相方焉。</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="nm">刘鋹</span><span class="fa">珍珠鞍 · 不亡何待</span>
+      <div class="note">亲手结珍珠龙凤马鞍献汴京，封恩赦侯，一路进爵，死后追封南越王。作者感叹：以淫刑立国的彭城氏，灭亡之后竟得善终，不也是侥幸么。
+        <div class="q">犹获其令终者，不亦幸乎</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="nm">王氏子弟</span><span class="fa">金枪 · 骑马去</span>
+      <div class="note">闽俗出行的仪仗用木刃，独以四支金枪环卫马前；延羲遇弑那日，杀他的正是这四支金枪。末帝延政辗转归于江南，客死鄱阳。库本结语干净利落。
+        <div class="q">王氏遂灭。</div>
+      </div>
+    </div>
+
+    <div class="yin"><span>五国并讫</span></div>
+  </section>
+
+  <section class="coda rv">
+    <div class="big">五国故事</div>
+    <p>它被讥为小说家言，是史部的弃馀；可六个王朝的尸首，正史各归各的列传，只有这里被停在同一间屋里。牌位是一起供的，倒掉也几乎是在同一页纸上。</p>
+    <div class="seal">载记 · 卷下终</div>
+  </section>
+
+</main>
+
+<footer>
+  <p>文本来源：殆知阁简体库史藏载记〈五国故事〉（库本首行题宋佚名著；去空白约一万零二百字，分上下两卷，伪吴杨氏、伪唐李氏、前蜀王氏、后蜀孟氏、伪汉彭城氏、伪闽王氏六家；南汉条下称晟字避宣祖讳，是宋人口吻）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+  <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。</p>
+  <p class="xiaoji">校字记：库本以异体字记录南汉先主名（通行作龑）、后主名（通行作鋹）及闽主延钧改名诸字，页面白话以通行字形代写，引文一律避让；李氏先主名库本作升，通行作昪，名册照录库本；后蜀先主库本作知详，照录。库本娄从效，通行作留从效，照录，厉鹗以为避吴越武肃王讳，四库馆臣以延翰妻称博陵氏驳之，谓盖不可考，本篇两说并存。库本合淝（合肥）、避署（暑）、媒伐（疑媒妁之讹）等字样照录不代改；审知所衣一字库本为不可识之异码，引文避入。刘晟赐书诸事、杨氏永宁宫结局等，皆库本独家记载，与正史互有出入，页面均以库本为准并随文说明。</p>
+  <p class="xiaoji">时代局限：本书作者以宋初中原视角落笔，于诸国一律冠伪字，对南汉、闽国屡有蛮夷非人伦之讥，对宫廷女性的记载多猎奇与罪己之辞，皆彼时正统观与华夷之见的产物；页面叙述对库本用词已尽量以今语转述，请以历史眼光阅读。</p>
+</footer>
+
+<script>
+(function(){
+  document.querySelectorAll('.pai').forEach(function(p){
+    p.addEventListener('click',function(){
+      var t=document.getElementById(p.getAttribute('data-t'));
+      if(t){t.scrollIntoView({behavior:'smooth',block:'start'});}
+    });
+  });
+  document.querySelectorAll('.zy').forEach(function(z){
+    z.addEventListener('click',function(){z.classList.toggle('open');});
+  });
+  document.querySelectorAll('.ledger .row').forEach(function(r){
+    r.addEventListener('click',function(){r.classList.toggle('done');});
+  });
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
