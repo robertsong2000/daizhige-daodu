@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>雷峰塔 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --cyan:#5e8fbb;
+  --dusk:#c9963f;
+  --dim:#8a867c;
+  --card:#22211e;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.9;
+  overflow-x:hidden;
+}
+.mono{font-family:"JetBrains Mono","SF Mono",Consolas,monospace;}
+
+/* ---------- hero ---------- */
+#hero{position:relative;height:100vh;min-height:620px;overflow:hidden;}
+#sky{position:absolute;inset:0;}
+#heroui{position:absolute;inset:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:34px;z-index:5;}
+.vtitle{
+  position:absolute;top:9vh;right:max(6vw,24px);
+  writing-mode:vertical-rl;
+  font-size:clamp(44px,7vw,84px);
+  letter-spacing:.28em;
+  height:max-content;
+  z-index:6;
+  text-shadow:0 2px 18px rgba(0,0,0,.6);
+  pointer-events:none;
+}
+.vsub{
+  position:absolute;top:9vh;right:calc(max(6vw,24px) + clamp(70px,10vw,140px));
+  writing-mode:vertical-rl;
+  font-size:14px;letter-spacing:.5em;color:var(--dim);
+  height:max-content;pointer-events:none;z-index:6;
+}
+.seal{
+  position:absolute;top:calc(9vh + clamp(300px,36vw,430px));
+  right:max(6vw,24px);
+  width:74px;height:74px;
+  display:grid;grid-template-columns:1fr 1fr;
+  background:rgba(192,69,60,.14);
+  border:2px solid rgba(201,90,74,.55);
+  color:#cf6a58;
+  font-size:22px;line-height:1;
+  z-index:6;pointer-events:none;
+}
+.seal span{display:flex;align-items:center;justify-content:center;}
+.scrollcue{pointer-events:auto;color:#a49f93;font-size:13px;letter-spacing:.4em;text-align:center;cursor:pointer;position:absolute;right:clamp(20px,4vw,56px);bottom:28px;text-shadow:0 1px 8px rgba(0,0,0,.8);}
+.scrollcue:hover{color:var(--paper);}
+
+/* ---------- shell ---------- */
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px;}
+section{position:relative;}
+.kick{font-size:13px;letter-spacing:.42em;color:var(--cyan);margin-bottom:10px;}
+h2.st{font-size:clamp(24px,3.4vw,34px);letter-spacing:.14em;font-weight:600;margin-bottom:8px;}
+.rule{width:52px;height:2px;background:var(--cyan);opacity:.7;margin:14px 0 22px;}
+.prose{color:#cfcabf;max-width:760px;}
+q{
+  quotes:none;
+  display:block;
+  background:var(--card);
+  border-left:3px solid var(--cyan);
+  padding:16px 20px;
+  margin:16px 0;
+  color:var(--paper);
+  font-size:16.5px;
+  line-height:2.05;
+}
+.qv{
+  display:block;background:transparent;border:none;padding:0;margin:0;
+  color:inherit;font-size:inherit;line-height:inherit;display:inline;
+}
+.qsrc{display:block;font-size:12.5px;color:var(--dim);margin-top:8px;letter-spacing:.1em;}
+
+/* ---------- archive strip ---------- */
+#file{padding:64px 0 8px;}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:22px;}
+.fcell{border:1px solid #35342f;background:#1e1d1a;padding:14px 16px;}
+.fcell b{display:block;font-size:12px;letter-spacing:.3em;color:var(--dim);font-weight:400;margin-bottom:6px;}
+.fcell span{font-size:17px;letter-spacing:.06em;}
+
+/* ---------- pagoda nav ---------- */
+#tower-sec{padding:80px 0 40px;}
+.tzone{display:grid;grid-template-columns:210px 1fr;gap:34px;align-items:start;margin-top:26px;}
+@media (max-width:760px){.tzone{grid-template-columns:1fr;}}
+.tpanel svg{display:block;max-width:100%;margin:0 auto;}
+.tbtn{cursor:pointer;transition:opacity .25s;}
+.tbtn rect{transition:fill .25s;}
+.tbtn:hover rect{fill:#3a4d63;}
+.tbtn.lit rect{fill:var(--cyan);}
+.tbtn.lit text{fill:#10141a;}
+.tview{min-height:340px;}
+.tcard{display:none;animation:fade .5s ease;}
+.tcard.show{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.tcard h3{font-size:21px;letter-spacing:.2em;color:var(--paper);margin-bottom:4px;}
+.tcard .trange{font-size:12.5px;color:var(--dim);letter-spacing:.24em;margin-bottom:12px;}
+.tcard p{color:#cfcabf;margin-bottom:10px;max-width:720px;}
+
+/* ---------- cast ---------- */
+#cast{padding:70px 0;}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px;}
+.ccard{border:1px solid #35342f;background:#1e1d1a;padding:20px;cursor:pointer;transition:border-color .25s;}
+.ccard:hover,.ccard.open{border-color:var(--cyan);}
+.ccard h4{font-size:19px;letter-spacing:.16em;color:var(--cyan);}
+.ccard em{display:block;font-style:normal;font-size:12.5px;color:var(--dim);margin:6px 0 10px;letter-spacing:.12em;}
+.ccard .cbody{display:none;font-size:15px;color:#cfcabf;line-height:1.95;}
+.ccard.open .cbody{display:block;}
+
+/* ---------- scenes ---------- */
+#scenes{padding:70px 0;}
+.scene{margin-top:46px;border:1px solid #30302b;background:#1d1c19;padding:34px clamp(18px,4vw,44px);}
+.scene h3{font-size:22px;letter-spacing:.22em;margin-bottom:2px;}
+.scene .stag{font-size:12.5px;color:var(--dusk);letter-spacing:.3em;margin-bottom:16px;}
+.sceneflex{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;}
+@media (max-width:760px){.sceneflex{grid-template-columns:1fr;}}
+.sceneflex svg{display:block;max-width:100%;width:100%;}
+.umb{cursor:pointer;}
+.umb:hover .ucanopy{fill:#4b7ba6;}
+#rain line{animation:drizzle 1s linear infinite;}
+@keyframes drizzle{from{transform:translateY(-18px);}to{transform:translateY(26px);}}
+.flip{perspective:900px;width:170px;height:170px;cursor:pointer;margin:0 auto;}
+.flipinner{position:relative;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d;}
+.flip.on .flipinner{transform:rotateY(180deg);}
+.fface{position:absolute;inset:0;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:14px;border:1px solid #3c3b34;}
+.ffront{background:#26251f;}
+.fback{background:#3d2a26;transform:rotateY(180deg);}
+.fface b{font-size:15px;letter-spacing:.2em;font-weight:400;}
+.fface small{font-size:11px;color:var(--dim);margin-top:8px;letter-spacing:.1em;}
+#wavebox{position:relative;height:190px;overflow:hidden;border-bottom:1px solid #30302b;}
+.wave{position:absolute;left:-10%;width:120%;height:200px;bottom:100%;transition:bottom 1.6s ease;}
+.wave.on{bottom:-40px;}
+.wctl{margin-top:14px;}
+button.act{
+  background:transparent;color:var(--cyan);border:1px solid var(--cyan);
+  padding:8px 22px;font-size:14px;letter-spacing:.3em;cursor:pointer;
+  font-family:inherit;transition:background .2s,color .2s;
+}
+button.act:hover{background:var(--cyan);color:var(--ink);}
+
+/* ---------- prophecy ---------- */
+#omen{padding:80px 0 60px;position:relative;}
+.omline{display:flex;gap:0;margin-top:34px;position:relative;}
+.omnode{flex:1;text-align:center;position:relative;}
+.omdot{width:15px;height:15px;border-radius:50%;border:2px solid #45443d;margin:0 auto 12px;transition:all .5s;background:var(--ink);position:relative;z-index:2;}
+.omnode.lit .omdot{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 14px rgba(94,143,187,.55);}
+.omnode small{display:block;font-size:12px;color:var(--dim);letter-spacing:.2em;margin-bottom:6px;}
+.omnode b{font-size:clamp(16px,2.4vw,21px);letter-spacing:.18em;font-weight:400;color:#7d796f;transition:color .5s;}
+.omnode.lit b{color:var(--paper);}
+.ombar{position:absolute;top:24px;left:8%;right:8%;height:2px;background:#33322c;z-index:1;}
+.ombarfill{height:100%;width:0;background:var(--cyan);transition:width 1.2s ease;}
+
+/* ---------- thirty four ---------- */
+#allmu{padding:60px 0;}
+.mugrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin-top:24px;}
+.mucell{border:1px solid #30302b;padding:9px 4px;text-align:center;font-size:13.5px;color:#b9b4a8;cursor:default;letter-spacing:.08em;transition:all .2s;background:#1d1c19;}
+.mucell:hover{border-color:var(--cyan);color:var(--paper);}
+.mucell b{display:block;font-size:10.5px;color:#67645b;font-weight:400;letter-spacing:.15em;}
+
+/* ---------- colophon ---------- */
+footer{padding:70px 0 60px;border-top:1px solid #2b2a25;margin-top:50px;}
+footer p{font-size:13.5px;color:var(--dim);max-width:760px;margin-bottom:10px;line-height:2;}
+footer b{color:#a49f93;font-weight:400;}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<div id="hero">
+  <svg id="sky" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#191917"/>
+        <stop offset=".55" stop-color="#232830"/>
+        <stop offset=".78" stop-color="#4a3f33"/>
+        <stop offset=".92" stop-color="#6b4c2e"/>
+      </linearGradient>
+      <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3d3126"/>
+        <stop offset="1" stop-color="#15161a"/>
+      </linearGradient>
+      <linearGradient id="pag" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0e0f11"/>
+        <stop offset="1" stop-color="#1c1e23"/>
+      </linearGradient>
+    </defs>
+    <rect width="1200" height="800" fill="url(#dusk)"/>
+    <circle cx="600" cy="590" r="88" fill="#c9963f" opacity=".85"/>
+    <circle cx="600" cy="590" r="118" fill="#c9963f" opacity=".16"/>
+    <!-- pagoda silhouette -->
+    <g fill="url(#pag)">
+      <rect x="576" y="200" width="48" height="16"/>
+      <path d="M570 216 L630 216 L640 232 L560 232 Z"/>
+      <rect x="568" y="232" width="64" height="52"/>
+      <path d="M560 284 L640 284 L652 302 L548 302 Z"/>
+      <rect x="558" y="302" width="84" height="56"/>
+      <path d="M548 358 L652 358 L664 378 L536 378 Z"/>
+      <rect x="546" y="378" width="108" height="60"/>
+      <path d="M534 438 L666 438 L678 460 L522 460 Z"/>
+      <rect x="534" y="460" width="132" height="64"/>
+      <path d="M520 524 L680 524 L694 548 L506 548 Z"/>
+      <rect x="520" y="548" width="160" height="70"/>
+      <path d="M504 618 L696 618 L712 646 L488 646 Z"/>
+      <rect x="504" y="646" width="192" height="60"/>
+    </g>
+    <!-- spire -->
+    <g stroke="#0e0f11" stroke-width="7">
+      <line x1="600" y1="200" x2="600" y2="120"/>
+    </g>
+    <circle cx="600" cy="114" r="9" fill="#0e0f11"/>
+    <!-- window glow rows -->
+    <g fill="#c9963f" opacity=".5">
+      <rect x="588" y="246" width="7" height="18"/><rect x="605" y="246" width="7" height="18"/>
+      <rect x="580" y="318" width="7" height="19"/><rect x="597" y="318" width="7" height="19"/><rect x="614" y="318" width="7" height="19"/>
+      <rect x="572" y="394" width="7" height="20"/><rect x="590" y="394" width="7" height="20"/><rect x="608" y="394" width="7" height="20"/><rect x="626" y="394" width="7" height="20"/>
+      <rect x="566" y="476" width="7" height="20"/><rect x="584" y="476" width="7" height="20"/><rect x="602" y="476" width="7" height="20"/><rect x="620" y="476" width="7" height="20"/><rect x="638" y="476" width="7" height="20"/>
+      <rect x="560" y="566" width="7" height="22"/><rect x="580" y="566" width="7" height="22"/><rect x="600" y="566" width="7" height="22"/><rect x="620" y="566" width="7" height="22"/><rect x="640" y="566" width="7" height="22"/><rect x="660" y="566" width="7" height="22"/>
+    </g>
+    <!-- water -->
+    <rect x="0" y="706" width="1200" height="94" fill="url(#water)"/>
+    <g opacity=".35">
+      <path d="M470 730 H730" stroke="#c9963f" stroke-width="2"/>
+      <path d="M500 752 H700" stroke="#c9963f" stroke-width="1.5" opacity=".7"/>
+      <path d="M530 772 H670" stroke="#c9963f" stroke-width="1" opacity=".5"/>
+    </g>
+    <g stroke="#26282e" stroke-width="2">
+      <path d="M120 726 q30 -8 60 0" fill="none"/>
+      <path d="M880 744 q30 -8 60 0" fill="none"/>
+      <path d="M220 766 q24 -6 48 0" fill="none"/>
+      <path d="M960 780 q24 -6 48 0" fill="none"/>
+    </g>
+    <!-- birds -->
+    <g stroke="#101114" stroke-width="2.5" fill="none">
+      <path d="M300 250 q8 -8 16 0 q8 -8 16 0"/>
+      <path d="M350 285 q7 -7 14 0 q7 -7 14 0"/>
+      <path d="M270 300 q6 -6 12 0 q6 -6 12 0"/>
+    </g>
+  </svg>
+  <div class="vsub">清方成培 · 传奇三十四出</div>
+  <div class="vtitle">雷峰塔</div>
+  <div class="seal"><span>塔影</span><span>夕阳</span></div>
+  <div id="heroui">
+    <div class="scrollcue" onclick="document.getElementById('file').scrollIntoView()">卷<br>开<br>▽</div>
+  </div>
+</div>
+
+<!-- ============ FILE ============ -->
+<section id="file">
+  <div class="wrap">
+    <div class="kick">殆知阁导读 · 卷二百七十五</div>
+    <h2 class="st">一部替白娘子翻案的戏</h2>
+    <div class="rule"></div>
+    <p class="prose">游湖借伞、端阳惊变、盗草、水漫金山、断桥、合钵、祭塔，这些今天人人耳熟的桥段，是在清乾隆年间的这个本子里定下形状的。写戏的人叫方成培，他在前人旧本上大改了一道，改的关键只有一处：把那条吃人的蛇，改成了一个受委屈的人。戏开场时她自己点题，收场时佛祖替她盖棺，两头都是好话，中间的三十几出，全是这好话被一件件撕碎又一点点还回来的过程。</p>
+    <div class="fgrid">
+      <div class="fcell"><b>书名</b><span>雷峰塔</span></div>
+      <div class="fcell"><b>撰者</b><span>清 · 方成培</span></div>
+      <div class="fcell"><b>体例</b><span>传奇 · 三十四出</span></div>
+      <div class="fcell"><b>库本</b><span>诗藏 · 剧曲</span></div>
+      <div class="fcell"><b>篇幅</b><span>约五万一千字</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOWER ============ -->
+<section id="tower-sec">
+  <div class="wrap">
+    <div class="kick">全书地图</div>
+    <h2 class="st">一座塔，八段戏</h2>
+    <div class="rule"></div>
+    <p class="prose">方成培把白娘子的因果从佛前写起，到佛前收束，中间一层压一层。下面这座塔按剧情从地基到塔刹分层，点哪层读哪段。</p>
+    <div class="tzone">
+      <div class="tpanel">
+        <svg viewBox="0 0 210 560" id="towersvg">
+          <!-- base -->
+          <g class="tbtn" data-t="t0"><rect x="20" y="492" width="170" height="46" fill="#2b2f36"/><text x="105" y="522" text-anchor="middle" fill="#b9b4a8" font-size="15">塔基 · 缘起</text></g>
+          <!-- floors -->
+          <g class="tbtn" data-t="t1"><rect x="34" y="420" width="142" height="62" fill="#2b2f36"/><text x="105" y="458" text-anchor="middle" fill="#b9b4a8" font-size="15">一层 · 借伞</text></g>
+          <g class="tbtn" data-t="t2"><rect x="46" y="348" width="118" height="62" fill="#2b2f36"/><text x="105" y="386" text-anchor="middle" fill="#b9b4a8" font-size="15">二层 · 立业</text></g>
+          <g class="tbtn" data-t="t3"><rect x="56" y="276" width="98" height="62" fill="#2b2f36"/><text x="105" y="314" text-anchor="middle" fill="#b9b4a8" font-size="15">三层 · 惊变</text></g>
+          <g class="tbtn" data-t="t4"><rect x="64" y="204" width="82" height="62" fill="#2b2f36"/><text x="105" y="242" text-anchor="middle" fill="#b9b4a8" font-size="14">四层 · 心疑</text></g>
+          <g class="tbtn" data-t="t5"><rect x="72" y="132" width="66" height="62" fill="#2b2f36"/><text x="105" y="170" text-anchor="middle" fill="#b9b4a8" font-size="14">五层 · 水斗</text></g>
+          <!-- spire -->
+          <g class="tbtn" data-t="t6"><path d="M84 132 L126 132 L118 96 L92 96 Z" fill="#2b2f36"/><rect x="102" y="60" width="6" height="36" fill="#2b2f36"/><circle cx="105" cy="52" r="8" fill="#2b2f36"/><text x="105" y="124" text-anchor="middle" fill="#b9b4a8" font-size="13"></text></g>
+          <!-- moon -->
+          <g class="tbtn" data-t="t7"><circle cx="105" cy="26" r="17" fill="#2b2f36"/><circle cx="105" cy="26" r="17" fill="none" stroke="#45443d"/><text x="130" y="31" text-anchor="start" fill="#b9b4a8" font-size="12">塔月 · 团圆</text></g>
+        </svg>
+      </div>
+      <div class="tview">
+        <div class="tcard" id="t0">
+          <h3>塔基 · 缘起</h3>
+          <div class="trange">开宗 付钵 出山 上冢（第一出至第四出）</div>
+          <p>开场一阕《沁园春》把三十四出的账全报了：谁是蛇，谁是负心人，谁炼塔，谁度妖。峨眉山白蛇奉佛法旨下山了缘，西湖青蛇先来投奔；另一头，佛祖把金钵交给法海，让他往东土走一遭。人间这边，许宣清明上坟，命运的三方在人海里各自动身。</p>
+          <q>觅配偶的白云姑多情吃苦，了宿缘的许晋贤薄幸抛家，施法力的海禅师风雷炼塔，感孝行的慈悲佛忏度妖蛇。<span class="qsrc">第一出开宗 · 剧情总纲</span></q>
+        </div>
+        <div class="tcard" id="t1">
+          <h3>一层 · 借伞</h3>
+          <div class="trange">收青 舟遇 订盟 避吴（第五出至第八出）</div>
+          <p>西湖断桥，一场雨是白娘子亲手起的：她看见祭扫归来的许宣，便唤风唤雨逼他停舟，再借避雨凑近搭话。借伞、还伞、提亲，三天里把婚事办成。这段戏的可看处在于主角亲口承认设计，编剧也毫不替她遮掩：缘是孽缘，可雨里的心跳是真的。</p>
+          <q>不妨，待我顿摄骤雨，那生必定停舟。那时和你上前，只说附舟，你须要随机应变。<span class="qsrc">第六出舟遇 · 白氏语青儿</span></q>
+        </div>
+        <div class="tcard" id="t2">
+          <h3>二层 · 立业</h3>
+          <div class="trange">设邸 获赃 远访 开行 夜话 赠符（第九出至第十四出）</div>
+          <p>白娘子盗来银两财帛给丈夫做本钱，小两口在苏州开起生药铺。谁知银子恰是官府失赃，许宣吃了官司，刺配苏州。她一路追去，另置家业再开铺面，把塌掉的日子重新盖起来。好日子过到第六出，庙里道士看出许宣印堂有妖气，塞给他两道灵符。</p>
+        </div>
+        <div class="tcard" id="t3">
+          <h3>三层 · 惊变</h3>
+          <div class="trange">逐道 端阳 求草 疗惊（第十五出至第十八出）</div>
+          <p>符被白娘子烧来服下，毫发无损，道士反倒被青儿逐走。真正的关口是端午：雄黄酒推不掉了。她当时已有身孕，勉强饮下一杯，现出原形，许宣当场吓死。她冒死上嵩山盗仙草，跪求不成便动手，鹤童败了，南极仙翁出来收场，赐草救夫。她赢回丈夫的命，也埋下了第一道裂痕。</p>
+          <q>方才被他再三相劝，勉强饮了雄黄酒，这会儿我身子好不安宁也！<span class="qsrc">第十六出端阳 · 白氏唱白</span></q>
+        </div>
+        <div class="tcard" id="t4">
+          <h3>四层 · 心疑</h3>
+          <div class="trange">虎阜 审配 再访 楼诱 化香 谒禅（第十九出至第二十四出）</div>
+          <p>许宣起死回生，心却留了缝。虎丘游冶，撞进王员外家绣楼，被设计招赘；白娘子寻到苏州对簿公堂又再续前缘。这条支线里蛇精反倒始终是讲理的一方，人会贪会疑，她只会长情。许宣往金山寺进香，法海一眼点破，从此这和尚站在了这段姻缘的正对面。</p>
+        </div>
+        <div class="tcard" id="t5">
+          <h3>五层 · 水斗</h3>
+          <div class="trange">水斗 断桥 腹婚（第二十五出至第二十七出）</div>
+          <p>白娘子携青儿到金山寺索夫，法海不放。她先礼后兵，哀求、质问、开战，唤来虾兵蟹将水漫金山，法海袈裟罩山，水势难进。收不了她，因为胎儿是文曲星下凡，金钵不敢合。她败走杭州，在断桥亭腹痛将产，偏又撞见随法海而来的许宣，恨到极处，还是和好了。归途船上，她与李家指腹为婚，为腹中孩子定下未来。</p>
+          <q>您是个出家人，为什么铁心肠生擦擦拆散了俺凤友鸾交？把活泼泼好男儿坚牢闭着。<span class="qsrc">第二十五出水斗 · 白氏唱</span></q>
+        </div>
+        <div class="tcard" id="t6">
+          <h3>塔刹 · 塔劫</h3>
+          <div class="trange">重谒 炼塔 归真 塔叙（第二十八出至第三十一出）</div>
+          <p>满月之后，法海亲至。白娘子正在对镜梳妆，金钵从头顶合下，千年道行收进一钵之内。青儿骂许宣三声辜负，夺路而走；许宣自己也承认负心，索性随法海出家。钵被镇进雷峰塔底，三昧真火炼塔封顶。法海在塔前留下四句判词，一句一个条件，看似绝情，其实给这场冤狱留了期限。</p>
+          <q>雷峰塔倒，西湖水干，江潮不起，许汝再世。<span class="qsrc">第二十九出炼塔 · 法海塔前判词</span></q>
+        </div>
+        <div class="tcard" id="t7">
+          <h3>塔月 · 团圆</h3>
+          <div class="trange">祭塔 捷婚 佛圆（第三十二出至第三十四出）</div>
+          <p>二十多年后，白氏之子许士麟中状元，上疏请拆塔救母，皇帝不准，只准祭塔。塔中之母探头出来，母子隔着塔砖见了一面。又过些年，灾限已满，孝心感天，法海奉佛旨开塔放人：佛旨里给她下的断语，句句是体面话。许宣也还了俗，一家在西湖边重新团圆，当年指腹为婚的两家儿女同日完婚。</p>
+          <q>咨尔白氏，虽现蛇身，久修仙道。坚持雅操，既勿惑于狂且；教子忠贞，复不忘乎大义。<span class="qsrc">第三十四出佛圆 · 佛旨赦文</span></q>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAST ============ -->
+<section id="cast">
+  <div class="wrap">
+    <div class="kick">开宗点名</div>
+    <h2 class="st">戏单上的四个人</h2>
+    <div class="rule"></div>
+    <p class="prose">开场那四句总纲各点一人，句式工整得像一副判词。点开看他们在这本戏里各自欠了什么、还了什么。</p>
+    <div class="cgrid">
+      <div class="ccard" onclick="castToggle(this)">
+        <h4>白云姑</h4>
+        <em>峨眉修炼千年的白蛇</em>
+        <div class="cbody">为了一个凡人放弃千年道行，护他、救他、替他置家产、给他生儿子，换来的却是三次听信、一次惊吓、一座塔。全剧她的战绩是常胜的：起雨、盗草、水斗她都赢过，输的只有一样，丈夫的心是能被三言两语劝走的。</div>
+      </div>
+      <div class="ccard" onclick="castToggle(this)">
+        <h4>许晋贤</h4>
+        <em>药铺伙计许宣</em>
+        <div class="cbody">他不算恶人，只算常人：白得一门好亲就安心受用，听到妖怪之说就害怕，吓死过一次，疑心过多次，最后亲手把金钵合上妻子头顶。戏里他自己的判语最重：他承认这事办得太负心，于是随和尚走了，把罪留给二十年后还俗的自己。</div>
+      </div>
+      <div class="ccard" onclick="castToggle(this)">
+        <h4>法海禅师</h4>
+        <em>奉佛旨收妖的金钵持有者</em>
+        <div class="cbody">全剧最讲程序的人：收妖有法旨，炼塔有真火，放人有佛旨。他不可恨，因为他从不公报私仇；他也不可爱，因为他把一切人伦都折算成劫数。可这本戏的妙处是让他亲口说出塔倒水干的期限，把永罚改成了有期徒刑。</div>
+      </div>
+      <div class="ccard" onclick="castToggle(this)">
+        <h4>许士麟</h4>
+        <em>白氏腹中带出的文曲星</em>
+        <div class="cbody">指腹为婚定下的孩子，未见过母亲一面。中状元后第一件事是上疏请拆雷峰塔，皇帝不允，他就跪在塔前哭祭。金钵当年因他而不敢合拢，塔门最终因他的孝心而开。全剧的因果闭环，落在这个婴儿身上。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCENES ============ -->
+<section id="scenes">
+  <div class="wrap">
+    <div class="kick">折子戏三折</div>
+    <h2 class="st">雨、酒、水</h2>
+    <div class="rule"></div>
+    <p class="prose">全剧最有舞台生命力的三折，道具只有三样：一把伞，一杯酒，一江水。</p>
+
+    <div class="scene">
+      <h3>舟遇 · 起雨借伞</h3>
+      <div class="stag">第六出西湖 · 清明</div>
+      <div class="sceneflex">
+        <svg viewBox="0 0 340 240" id="boatsvg" aria-hidden="true">
+          <!-- rain -->
+          <g id="rain" stroke="#5e8fbb" stroke-width="1.4" opacity=".55">
+            <line x1="30" y1="10" x2="24" y2="30"/><line x1="70" y1="4" x2="64" y2="24"/>
+            <line x1="110" y1="14" x2="104" y2="34"/><line x1="150" y1="2" x2="144" y2="22"/>
+            <line x1="190" y1="12" x2="184" y2="32"/><line x1="230" y1="6" x2="224" y2="26"/>
+            <line x1="270" y1="16" x2="264" y2="36"/><line x1="310" y1="4" x2="304" y2="24"/>
+            <line x1="50" y1="40" x2="44" y2="60"/><line x1="130" y1="44" x2="124" y2="64"/>
+            <line x1="210" y1="40" x2="204" y2="60"/><line x1="290" y1="46" x2="284" y2="66"/>
+          </g>
+          <!-- boat -->
+          <path d="M60 190 Q170 214 280 190 L262 206 Q170 222 78 206 Z" fill="#241f19" stroke="#3a352c"/>
+          <path d="M96 190 L110 156 L150 156 L164 190 Z" fill="#1c1913" stroke="#3a352c"/>
+          <!-- umbrella -->
+          <g class="umb" id="umb">
+            <path class="ucanopy" d="M204 148 Q236 112 268 148 Q252 142 236 148 Q220 142 204 148 Z" fill="#5e8fbb"/>
+            <line x1="236" y1="148" x2="236" y2="188" stroke="#8a867c" stroke-width="3"/>
+            <path d="M236 188 q0 7 -7 7" fill="none" stroke="#8a867c" stroke-width="3"/>
+          </g>
+          <path d="M40 226 H300" stroke="#26282e" stroke-width="3"/>
+          <text x="170" y="42" text-anchor="middle" fill="#6f6b61" font-size="13" letter-spacing="4">顿摄骤雨 · 两舟相并</text>
+        </svg>
+        <div>
+          <p>清明湖上，雨是白娘子唤来的，船是青儿拦下的，伞是许宣自己跑回朋友家取的。三天之内借伞还伞，婚事议定。后世所有版本里那把油纸伞，都在这一出里第一次撑开。</p>
+          <p style="color:var(--dim);font-size:14.5px;">点一点伞，看看这桩姻缘的开价与利息。</p>
+          <div class="wctl" id="umbcard" style="display:none;">
+            <q>青儿，我看那些游人，尽是凡夫俗子，只有方才祭扫坟墓的那生，风流俊雅，道骨非凡，若得相遂奇缘，不枉奴家来此。<span class="qsrc">第六出舟遇 · 白氏语青儿</span></q>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <h3>端阳 · 一杯雄黄</h3>
+      <div class="stag">第十六出苏州 · 天中节</div>
+      <div class="sceneflex">
+        <div style="text-align:center;">
+          <div class="flip" id="cup" onclick="document.getElementById('cup').classList.toggle('on')">
+            <div class="flipinner">
+              <div class="fface ffront"><b>庆赏佳节</b><small>雄黄酒 · 点杯翻面</small></div>
+              <div class="fface fback"><b>原形立现</b><small>帐中惊变</small></div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--dim);margin-top:12px;letter-spacing:.15em;">许宣不知，杯中是蛇的克星</p>
+        </div>
+        <div>
+          <p>这一杯酒是全剧最狠的道具。她推说身子不快，他偏要诊脉，诊出喜脉，愈发非喝不可，当它做喜酒。推不过人情，她饮了。帐中现形，许宣登时吓死。端午之前她千般照顾，端午之后许宣千般疑心：戏往后所有风波，都从这杯酒里漾出来。</p>
+          <q>娘子，我平日见你从无不乐之容，为何今日忽有愁烦之貌，敢是卑人有甚得罪处么？<span class="qsrc">第十六出端阳 · 许宣语</span></q>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <h3>水斗 · 江潮为兵</h3>
+      <div class="stag">第二十五出金山寺 · 大水</div>
+      <div class="sceneflex">
+        <div>
+          <div id="wavebox">
+            <svg class="wave" id="wave1" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0 60 Q50 30 100 60 T200 60 T300 60 T400 60 V200 H0 Z" fill="#2e4358" opacity=".75"/>
+            </svg>
+            <svg class="wave" id="wave2" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0 90 Q50 60 100 90 T200 90 T300 90 T400 90 V200 H0 Z" fill="#3c5b76" opacity=".7"/>
+            </svg>
+            <svg class="wave" id="wave3" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0 120 Q50 92 100 120 T200 120 T300 120 T400 120 V200 H0 Z" fill="#5e8fbb" opacity=".55"/>
+            </svg>
+            <svg viewBox="0 0 400 190" style="position:absolute;inset:0;pointer-events:none;" aria-hidden="true">
+              <rect x="248" y="70" width="112" height="120" fill="#1c1e23" stroke="#33322c"/>
+              <path d="M242 70 L366 70 L360 58 L248 58 Z" fill="#24262b"/>
+              <rect x="296" y="52" width="10" height="10" fill="#24262b"/>
+              <text x="304" y="140" text-anchor="middle" fill="#6f6b61" font-size="13">寺</text>
+            </svg>
+          </div>
+          <div class="wctl"><button class="act" onclick="flood()">放水漫寺</button></div>
+        </div>
+        <div>
+          <p>她先拜，求还丈夫；和尚不动。她再问天理何在；和尚还是那句妖孽。于是虾蟹龟蚌一齐上来，江水直灌山门，法海展开袈裟护住山头，水涨多高便退多高。这场大战在戏曲史上打了两百多年，至今仍是武旦的试金石，而它的全部正当性，只用一句话就立住了。</p>
+          <q>呵唷，我这般哀求，只是不肯放还。你拆散人家夫妻，天理何在？<span class="qsrc">第二十五出水斗 · 白氏语</span></q>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OMEN ============ -->
+<section id="omen">
+  <div class="wrap">
+    <div class="kick">塔前判词</div>
+    <h2 class="st">四个条件，一个期限</h2>
+    <div class="rule"></div>
+    <p class="prose">法海炼塔封顶之后，对着塔底说出十六个字。听着像永罚，细看是减刑：塔会倒，湖会干，潮有不起的日子。这本戏最大的慈悲，藏在这句判词里。随滚动，四句依次点亮。</p>
+    <div class="omline" id="omline">
+      <div class="ombar"><div class="ombarfill" id="omfill"></div></div>
+      <div class="omnode" data-i="0"><small>其一</small><b>雷峰塔倒</b></div>
+      <div class="omnode" data-i="1"><small>其二</small><b>西湖水干</b></div>
+      <div class="omnode" data-i="2"><small>其三</small><b>江潮不起</b></div>
+      <div class="omnode" data-i="3"><small>其四</small><b>许汝再世</b></div>
+    </div>
+    <q style="max-width:640px;margin:34px auto 0;">白蛇听者：雷峰塔倒，西湖水干，江潮不起，许汝再世。<span class="qsrc">第二十九出炼塔 · 法海语</span></q>
+  </div>
+</section>
+
+<!-- ============ SACRIFICE ============ -->
+<section id="sacrifice" style="padding:30px 0 60px;">
+  <div class="wrap">
+    <div class="kick">廿年之后 · 孝的重量</div>
+    <h2 class="st">状元跪在塔前</h2>
+    <div class="rule"></div>
+    <div class="sceneflex">
+      <svg viewBox="0 0 340 250" aria-hidden="true" style="max-width:100%;">
+        <rect x="130" y="36" width="80" height="200" fill="#202226" stroke="#33322c"/>
+        <g fill="#2b2f36">
+          <rect x="130" y="60" width="80" height="8"/><rect x="130" y="100" width="80" height="8"/>
+          <rect x="130" y="140" width="80" height="8"/><rect x="130" y="180" width="80" height="8"/>
+        </g>
+        <path d="M120 36 L220 36 L210 22 L130 22 Z" fill="#24262b"/>
+        <rect x="166" y="8" width="4" height="14" fill="#24262b"/>
+        <!-- archway opening -->
+        <rect x="152" y="196" width="36" height="40" fill="#0e0f11"/>
+        <!-- mother face in arch -->
+        <circle cx="170" cy="212" r="9" fill="#c9963f" opacity=".8"/>
+        <!-- kneeling son -->
+        <g fill="#16171a">
+          <circle cx="86" cy="206" r="10"/>
+          <path d="M74 250 L74 222 Q86 212 98 222 L98 250 Z"/>
+        </g>
+        <path d="M70 250 H108" stroke="#33322c" stroke-width="2"/>
+        <!-- incense -->
+        <line x1="122" y1="246" x2="122" y2="228" stroke="#8a867c" stroke-width="2"/>
+        <circle cx="122" cy="224" r="2.4" fill="#c9963f" opacity=".7"/>
+        <text x="170" y="86" text-anchor="middle" fill="#6f6b61" font-size="12" letter-spacing="3">塔窗一见</text>
+      </svg>
+      <div>
+        <p>旧本多在合钵就收煞，这本戏偏偏多写了二十多年：让儿子长大，让孝心长成，让朝廷出场。许士麟金榜题名后第一道疏文是请拆此塔，圣旨不允，只赐还乡祭奠。于是有了全剧最静的一场：没有妖法，没有水族，只有一个母亲从塔窗里探出头来，看一眼她从未见过的儿子。</p>
+        <q>下官已经具疏奏闻，请拆毁雷峰塔。其奈圣主未允，命下官荣归祭奠。<span class="qsrc">第三十二出祭塔 · 许士麟白</span></q>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ALL MU ============ -->
+<section id="allmu">
+  <div class="wrap">
+    <div class="kick">出目全表</div>
+    <h2 class="st">三十四出</h2>
+    <div class="rule"></div>
+    <p class="prose">库本自开宗至佛圆凡三十四出，起于佛前，收于佛前。每出两字目，连读便是整部白蛇传。</p>
+    <div class="mugrid" id="mugrid"></div>
+  </div>
+</section>
+
+<!-- ============ COLOPHON ============ -->
+<footer>
+  <div class="wrap">
+    <p><b>文本来源</b> · 殆知阁简体库（github.com/garychowcmu/daizhigev18）诗藏剧曲部，清人方成培所撰〈雷峰塔〉一剧之库本。库内无序跋，正文三十四出。</p>
+    <p><b>引文核验</b> · 页面所引原文十一处，经脚本与库内文件去标点、空白归一后逐字比对全部通过；讹字照录未改。</p>
+    <p><b>校字记</b> · 库本存在拆字与形近讹例：如水斗出「乱讠尧」、炼塔出「弹粉ネ」与「忄么忄罗」、金山寺出「做亻奢」等，皆旧时排版拆字之迹，页面引文避而未录或照原样存真。</p>
+    <p><b>时代局限</b> · 本篇为清代戏曲文献导读，文中妖异、果报、女德等观念均系原书时代产物，仅作史料呈现，不代表今日立场。</p>
+    <p><b>殆知阁导读 · 卷二百七十五</b></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var mus=["开宗","付钵","出山","上冢","收青","舟遇","订盟","避吴","设邸","获赃","远访","开行","夜话","赠符","逐道","端阳","求草","疗惊","虎阜","审配","再访","楼诱","化香","谒禅","水斗","断桥","腹婚","重谒","炼塔","归真","塔叙","祭塔","捷婚","佛圆"];
+  var cn=["一","二","三","四","五","六","七","八","九","十","十一","十二","十三","十四","十五","十六","十七","十八","十九","二十","二十一","二十二","二十三","二十四","二十五","二十六","二十七","二十八","二十九","三十","三十一","三十二","三十三","三十四"];
+  var g=document.getElementById('mugrid');
+  var html="";
+  for(var i=0;i<34;i++){html+='<div class="mucell"><b>'+cn[i]+'</b>'+mus[i]+'</div>';}
+  g.innerHTML=html;
+
+  var btns=document.querySelectorAll('.tbtn');
+  var cards=document.querySelectorAll('.tcard');
+  function show(id){
+    for(var j=0;j<cards.length;j++){cards[j].classList.toggle('show',cards[j].id===id);}
+    for(var k=0;k<btns.length;k++){btns[k].classList.toggle('lit',btns[k].getAttribute('data-t')===id);}
+  }
+  for(var m=0;m<btns.length;m++){
+    btns[m].addEventListener('click',function(){show(this.getAttribute('data-t'));});
+  }
+  show('t0');
+  setTimeout(function(){show('t1');},900);
+
+  window.castToggle=function(el){
+    var open=el.classList.contains('open');
+    var all=document.querySelectorAll('.ccard');
+    for(var i=0;i<all.length;i++){all[i].classList.remove('open');}
+    if(!open){el.classList.add('open');}
+  };
+
+  var umb=document.getElementById('umb');
+  if(umb){umb.addEventListener('click',function(){
+    var c=document.getElementById('umbcard');
+    c.style.display=(c.style.display==='none'||!c.style.display)?'block':'none';
+  });}
+
+  window.flood=function(){
+    var ws=[document.getElementById('wave1'),document.getElementById('wave2'),document.getElementById('wave3')];
+    for(var i=0;i<ws.length;i++){
+      ws[i].classList.remove('on');
+      void ws[i].offsetWidth;
+    }
+    setTimeout(function(){ws[0].classList.add('on');},60);
+    setTimeout(function(){ws[1].classList.add('on');},420);
+    setTimeout(function(){ws[2].classList.add('on');},840);
+  };
+
+  var nodes=document.querySelectorAll('.omnode');
+  var fill=document.getElementById('omfill');
+  function omenCheck(){
+    var sec=document.getElementById('omen');
+    var r=sec.getBoundingClientRect();
+    var vh=window.innerHeight||document.documentElement.clientHeight;
+    if(r.top<vh*0.72&&r.bottom>0){
+      var seen=0;
+      for(var i=0;i<nodes.length;i++){
+        var nr=nodes[i].getBoundingClientRect();
+        if(nr.top<vh*0.85){nodes[i].classList.add('lit');seen++;}
+      }
+      fill.style.width=(seen/nodes.length*100)+'%';
+    }else{
+      for(var j=0;j<nodes.length;j++){nodes[j].classList.remove('lit');}
+      fill.style.width='0';
+    }
+  }
+  window.addEventListener('scroll',omenCheck,{passive:true});
+  window.addEventListener('resize',omenCheck);
+  omenCheck();
+})();
+</script>
+</body>
+</html>
