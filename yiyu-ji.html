@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>疑狱集 · 第肆佰叁拾伍篇</title>
+<style>
+:root{
+  --bg:#191917;
+  --bg2:#1f1f1d;
+  --paper:#e8e4dc;
+  --ink:#1c1b19;
+  --fg:#d8d3c8;
+  --dim:#8b8578;
+  --gold:#c9963f;
+  --gold-dim:#7a5f33;
+  --zhu:#c0453c;
+  --line:#33322e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",SimSun,serif;
+  line-height:1.75;
+  overflow-x:hidden;
+}
+q{quotes:none}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.wrap{max-width:1060px;margin:0 auto;padding:0 26px}
+
+/* ============ rv scroll reveal ============ */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.rv.in{opacity:1;transform:none}
+
+/* ============ hero : 公堂 ============ */
+.hero{
+  min-height:92vh;display:flex;flex-direction:column;position:relative;
+  background:
+    radial-gradient(1200px 500px at 50% -8%,#26241f 0%,transparent 62%),
+    linear-gradient(90deg,#141412 0%,transparent 16%,transparent 84%,#141412 100%),
+    var(--bg);
+}
+.hero::before,.hero::after{
+  content:"";position:absolute;top:0;bottom:0;width:90px;pointer-events:none;
+  background:repeating-linear-gradient(180deg,#1e1d1a 0 74px,#232019 74px 78px);
+  opacity:.55;
+}
+.hero::before{left:0;border-right:1px solid var(--line)}
+.hero::after{right:0;border-left:1px solid var(--line)}
+.kicker{display:flex;gap:18px;padding:16px 0;font-size:13px;color:var(--dim);letter-spacing:.14em}
+.kicker b{color:var(--gold);font-weight:normal}
+.kicker .right{margin-left:auto}
+.hero-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;padding-bottom:52px}
+.hero-eyebrow{font-size:13px;letter-spacing:.34em;color:var(--dim);margin-bottom:26px}
+.hero-eyebrow .sep{display:inline-block;width:34px;height:1px;background:var(--gold-dim);vertical-align:middle;margin:0 14px}
+
+/* 匾 */
+.bian{
+  position:relative;width:min(360px,74vw);height:118px;margin:0 auto;
+  background:linear-gradient(180deg,#22201b,#191813);
+  border:1px solid var(--gold-dim);
+  box-shadow:0 14px 34px rgba(0,0,0,.5),inset 0 0 0 4px #131210,inset 0 0 0 5px #3a3527;
+  transform-style:preserve-3d;transition:transform 1s cubic-bezier(.3,.7,.2,1);
+}
+.bian .face{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  backface-visibility:hidden;
+}
+.bian .zi{font-size:64px;color:var(--gold);line-height:1;text-shadow:0 0 24px rgba(201,150,63,.24)}
+.bian .face.back{transform:rotateX(180deg)}
+.bian .face.back .zi{color:var(--zhu);text-shadow:0 0 26px rgba(192,69,60,.3)}
+.hero.go .bian{transform:rotateX(180deg)}
+
+/* 惊堂木 */
+.gavel{
+  margin-top:52px;background:none;border:none;cursor:pointer;color:var(--dim);
+  font-family:inherit;font-size:13px;letter-spacing:.22em;display:flex;flex-direction:column;align-items:center;gap:24px;
+}
+.gavel .wood{
+  width:96px;height:34px;border-radius:5px;position:relative;
+  background:linear-gradient(180deg,#6d4a26,#4c3016);
+  box-shadow:0 5px 0 #2c1c0c,inset 0 1px 0 #8a6437;
+  transform-origin:78% 100%;transition:transform .12s ease;
+}
+.gavel .wood::after{
+  content:"";position:absolute;left:-22px;top:10px;width:30px;height:12px;border-radius:3px;
+  background:linear-gradient(180deg,#5a3a1d,#3d250f);
+}
+.gavel:hover .wood{transform:rotate(-9deg)}
+.hero.go .gavel .wood{transform:rotate(-14deg) translateY(-12px)}
+.hero.go .gavel{color:var(--gold)}
+.gavel em{font-style:normal}
+.hero-tag{margin-top:38px;font-size:16.5px;color:var(--fg);letter-spacing:.1em}
+.hero-tag b{color:var(--gold);font-weight:normal}
+.hero-sub{margin-top:12px;font-size:13.5px;color:var(--dim)}
+@media(max-width:640px){
+  .bian{height:96px}
+  .bian .zi{font-size:52px}
+  .hero-tag{font-size:15px;padding:0 22px}
+}
+
+/* ============ section frame ============ */
+section{padding:88px 0 12px}
+.sec-head{display:flex;align-items:baseline;gap:20px;margin-bottom:12px}
+.sec-no{
+  font-size:15px;color:var(--gold);border:1px solid var(--gold-dim);
+  padding:3px 12px;letter-spacing:.3em;white-space:nowrap;
+}
+.sec-head h2{font-size:27px;color:var(--paper);font-weight:normal;letter-spacing:.12em}
+.sec-lead{color:var(--dim);font-size:15px;max-width:760px;margin-bottom:38px}
+.sec-lead b{color:var(--gold);font-weight:normal}
+blockquote.lib{
+  border-left:3px solid var(--gold-dim);padding:6px 0 6px 20px;margin:26px 0;
+  color:#c9c2b2;font-size:15.5px;line-height:2;
+}
+blockquote.lib .who{display:block;margin-top:8px;font-size:12.5px;color:var(--dim);letter-spacing:.18em}
+
+/* ============ 壹 五朝轨 ============ */
+.dyntrack{display:flex;gap:0;border:1px solid var(--line);margin-bottom:0}
+.dyn{
+  flex:1;background:var(--bg2);border:none;border-right:1px solid var(--line);
+  color:var(--dim);padding:16px 8px 14px;cursor:pointer;font-family:inherit;text-align:center;
+}
+.dyn:last-child{border-right:none}
+.dyn i{display:block;font-style:normal;font-size:21px;color:var(--fg);letter-spacing:.2em}
+.dyn em{display:block;font-style:normal;font-size:12px;margin-top:6px;letter-spacing:.1em}
+.dyn.act{background:linear-gradient(180deg,#26221a,#1f1c15)}
+.dyn.act i{color:var(--gold)}
+.dyn-cards{border:1px solid var(--line);border-top:none;background:var(--bg2);padding:26px 28px;min-height:96px}
+.dyn-card{display:none}
+.dyn-card.show{display:block}
+.dyn-card p{font-size:15.5px}
+.dyn-card .off{color:var(--gold);margin-right:10px;font-size:13px;letter-spacing:.16em}
+.dyn-note{
+  display:flex;flex-wrap:wrap;gap:18px;margin-top:22px;
+}
+.note-card{
+  flex:1 1 300px;background:var(--paper);color:var(--ink);padding:22px 24px;position:relative;
+  box-shadow:0 8px 22px rgba(0,0,0,.42);
+}
+.note-card::before{content:"";position:absolute;inset:6px;border:1px solid #c8c0ad;pointer-events:none}
+.note-card h4{font-size:15px;letter-spacing:.22em;color:#6b5a33;margin-bottom:10px;font-weight:normal}
+.note-card p{font-size:14.5px;line-height:1.9}
+.note-card .stamp{
+  position:absolute;right:14px;bottom:12px;width:44px;height:44px;border-radius:50%;
+  border:2px solid var(--zhu);color:var(--zhu);display:flex;align-items:center;justify-content:center;
+  font-size:19px;transform:rotate(-12deg);opacity:.85;
+}
+@media(max-width:640px){
+  .dyntrack{flex-wrap:wrap}
+  .dyn{flex:1 1 33%}
+  .dyn:nth-child(3n){border-right:none}
+  .dyn{border-bottom:1px solid var(--line)}
+}
+
+/* ============ 贰 案牍架 ============ */
+.shelf{display:flex;align-items:flex-end;gap:6px;border-bottom:10px solid #242118;padding:0 6px;margin-bottom:26px;overflow-x:auto}
+.spine{
+  flex:1 0 64px;min-width:64px;height:168px;cursor:pointer;border:none;font-family:inherit;
+  background:linear-gradient(180deg,#26241e,#1d1b16);
+  border-top:3px solid var(--gold-dim);color:var(--fg);position:relative;
+  transition:transform .3s ease,background .3s ease;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:12px;gap:8px;
+}
+.spine i{font-style:normal;font-size:15px;letter-spacing:.14em;writing-mode:vertical-rl;color:var(--paper)}
+.spine em{font-style:normal;font-size:11px;color:var(--dim)}
+.spine.bu{border-top-color:#4a4438}
+.spine.bu i{color:#b4ab97}
+.spine:hover{transform:translateY(-9px)}
+.spine.act{transform:translateY(-13px);background:linear-gradient(180deg,#332c1d,#241f14);border-top-color:var(--gold)}
+.spine.act i{color:var(--gold)}
+.rolls{border:1px solid var(--line);background:var(--bg2);padding:24px 24px;min-height:150px}
+.roll{display:none}
+.roll.show{display:block}
+.rhead{display:flex;align-items:baseline;gap:14px;margin-bottom:14px}
+.rhead h3{font-size:17px;color:var(--gold);font-weight:normal;letter-spacing:.14em}
+.rhead span{font-size:12.5px;color:var(--dim)}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chips q{
+  font-style:normal;font-size:13.5px;color:#c9c2b2;border:1px solid var(--line);
+  padding:4px 11px;background:#211f1a;letter-spacing:.06em;
+}
+.rhead .cvn{color:var(--gold)}
+
+/* ============ 叁 谳堂四案 ============ */
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.case{
+  border:1px solid var(--line);background:var(--bg2);padding:24px 24px 22px;position:relative;cursor:pointer;
+  transition:border-color .3s ease;
+}
+.case:hover{border-color:var(--gold-dim)}
+.case .chead{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+.case .chead h3{font-size:19px;color:var(--paper);font-weight:normal;letter-spacing:.1em}
+.case .chead .era{font-size:12px;color:var(--gold);border:1px solid var(--gold-dim);padding:1px 8px;letter-spacing:.1em;white-space:nowrap}
+.case .mid{color:#b7b0a0;font-size:14.5px;line-height:2;border-left:2px solid var(--gold-dim);padding-left:14px;margin-bottom:16px}
+.case .mid q{display:block;margin-bottom:8px}
+.case .btn{
+  display:inline-block;font-size:13px;color:var(--gold);border:1px solid var(--gold-dim);
+  padding:5px 16px;letter-spacing:.26em;background:none;cursor:pointer;font-family:inherit;
+}
+.case .verdict{
+  display:none;margin-top:16px;font-size:14.5px;color:var(--fg);line-height:1.95;
+  border-top:1px dashed var(--line);padding-top:14px;
+}
+.case .seal{
+  position:absolute;right:14px;top:12px;width:56px;height:56px;border-radius:50%;
+  border:3px solid var(--zhu);color:var(--zhu);display:flex;align-items:center;justify-content:center;
+  font-size:26px;opacity:0;transform:rotate(-18deg) scale(2.1);pointer-events:none;
+}
+.case.st .seal{opacity:.92;transform:rotate(-12deg) scale(1);transition:all .34s cubic-bezier(.2,1.4,.4,1)}
+.case.st .verdict{display:block}
+.case.st .btn{opacity:.35;pointer-events:none}
+@media(max-width:760px){.cases{grid-template-columns:1fr}}
+
+/* ============ 肆 烧猪 ============ */
+.pigwrap{border:1px solid var(--line);background:var(--bg2)}
+.pigstage{position:relative;height:400px;overflow:hidden}
+.plabel{position:absolute;left:22px;top:18px;font-size:13px;color:var(--dim);letter-spacing:.2em}
+.layer{position:absolute;inset:0;display:none}
+.pigstage[data-step="0"] .l0{display:block}
+.pigstage[data-step="1"] .l1{display:block}
+.pigstage[data-step="2"] .l2{display:block}
+.pigstage[data-step="3"] .l3{display:block}
+.pigstage[data-step="4"] .l4{display:block}
+.lay-q{margin:70px auto 0;max-width:640px;padding:0 30px;color:#c9c2b2;font-size:16px;line-height:2.1;text-align:center}
+.l1 .pigs,.l2 .pigs,.l3 .mouths,.l4 .mouths{display:flex;justify-content:center;gap:70px;margin-top:74px}
+.pig{text-align:center}
+.pig .body{width:130px;height:86px;border-radius:44px;position:relative;background:#3a3630;border:1px solid #4a4438;margin:0 auto}
+.pig .body::before{content:"";position:absolute;right:-14px;top:22px;width:44px;height:44px;border-radius:50%;background:#3a3630;border:1px solid #4a4438}
+.pig .body::after{content:"";position:absolute;right:-26px;top:36px;width:18px;height:10px;border-radius:4px;background:#57503f}
+.pig .nostril{position:absolute;right:-22px;top:40px;width:3px;height:3px;background:#221f19;border-radius:50%;box-shadow:0 5px 0 #221f19}
+.pig .tag{margin-top:14px;font-size:13px;color:var(--dim);letter-spacing:.16em}
+.pig .ash{position:absolute;left:50%;top:44px;transform:translateX(-50%);display:flex;gap:3px}
+.pig .ash i{width:5px;height:5px;border-radius:50%;background:#8b8578}
+.l2 .wood{display:flex;justify-content:center;gap:3px;margin-top:24px}
+.l2 .wood i{width:12px;height:26px;border-radius:2px;background:linear-gradient(180deg,#5a3a1d,#3d250f)}
+.l2 .fire{display:flex;justify-content:center;gap:16px;margin-top:8px}
+.l2 .flame{
+  width:22px;height:44px;background:linear-gradient(180deg,#e8b04a,#c0453c 70%,transparent);
+  border-radius:50% 50% 42% 42%;filter:blur(1px);opacity:.9;
+  animation:burn .5s ease-in-out infinite alternate;transform-origin:50% 100%;
+}
+.l2 .flame:nth-child(2){animation-delay:.16s;height:56px}
+.l2 .flame:nth-child(3){animation-delay:.3s}
+@keyframes burn{from{transform:scaleY(.86) translateY(3px)}to{transform:scaleY(1.1)}}
+.mouth{
+  width:170px;border:1px solid var(--line);background:#211f1a;padding:18px 16px 14px;text-align:center;
+}
+.mouth h5{font-size:14px;color:var(--paper);font-weight:normal;letter-spacing:.14em;margin-bottom:12px}
+.mouth .cavity{height:52px;border-radius:8px;background:#14120f;position:relative;display:flex;align-items:center;justify-content:center;gap:5px}
+.mouth .cavity i{width:7px;height:7px;border-radius:50%;background:#9a9282}
+.mouth .cavity.none::after{content:"无灰";color:#5c5648;font-size:12.5px;letter-spacing:.2em}
+.mouth p{margin-top:10px;font-size:12.5px;color:var(--dim)}
+.pigctl{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding:16px 22px}
+.pigctl button{
+  white-space:nowrap;background:none;border:1px solid var(--gold-dim);color:var(--gold);font-family:inherit;
+  padding:6px 20px;font-size:13.5px;letter-spacing:.2em;cursor:pointer;
+}
+.pigctl button:disabled{opacity:.3;cursor:default}
+.dots{display:flex;gap:9px;margin-left:auto}
+.dots i{width:9px;height:9px;border-radius:50%;background:#33322e;cursor:pointer}
+.dots i.cur{background:var(--gold)}
+.steplabel{font-size:13px;color:var(--dim);letter-spacing:.14em}
+.pigverdict{display:none;align-items:center;gap:16px;padding:14px 22px;border-top:1px dashed var(--line)}
+.pigstage[data-step="4"] + .pigverdict{display:flex}
+.pigverdict .zhu{
+  flex:none;width:46px;height:46px;border-radius:50%;border:2.5px solid var(--zhu);color:var(--zhu);
+  display:flex;align-items:center;justify-content:center;font-size:21px;transform:rotate(-11deg);
+}
+.pigverdict p{font-size:14.5px;color:#c9c2b2}
+
+/* ============ 伍 验法八则 ============ */
+.fashu{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fa{
+  border:1px solid var(--line);background:var(--bg2);padding:20px 18px 16px;cursor:pointer;position:relative;
+  min-height:150px;transition:border-color .3s ease;
+}
+.fa:hover{border-color:var(--gold-dim)}
+.fa .big{font-size:30px;color:var(--gold);letter-spacing:.3em;margin-bottom:8px}
+.fa .cn{font-size:14.5px;color:var(--paper);margin-bottom:10px}
+.fa .front{font-size:13px;color:var(--dim);line-height:1.8}
+.fa .back{
+  position:absolute;inset:0;background:linear-gradient(180deg,#26221a,#1f1c15);
+  padding:16px 18px;display:none;flex-direction:column;gap:8px;border:1px solid var(--gold-dim);
+}
+.fa .back q{font-style:normal;font-size:13px;color:#c9c2b2;line-height:1.9}
+.fa.flip .back{display:flex}
+.fa.flip .front,.fa.flip .big,.fa.flip .cn{visibility:hidden}
+@media(max-width:900px){.fashu{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.fashu{grid-template-columns:1fr}}
+
+/* ============ coda ============ */
+.coda{padding:92px 0 40px;text-align:center}
+.chain{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:56px}
+.chain .node{
+  border:1px solid var(--line);padding:10px 20px;font-size:15px;color:var(--paper);letter-spacing:.1em;
+  background:var(--bg2);
+}
+.chain .node.now{border-color:var(--gold);color:var(--gold)}
+.chain .arr{color:var(--dim);font-size:13px}
+.chain .node small{display:block;font-size:11px;color:var(--dim);letter-spacing:.06em;margin-top:3px}
+.coda .lib{max-width:660px;margin:0 auto;border-left:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:26px 10px}
+.coda .lib q{font-size:20px;letter-spacing:.12em;line-height:2.2;color:var(--paper)}
+.coda .echo{margin-top:26px;font-size:14.5px;color:var(--dim);max-width:640px;margin-left:auto;margin-right:auto}
+.coda .echo b{color:var(--gold);font-weight:normal}
+.coda .yinzhang{
+  margin:44px auto 0;width:64px;height:64px;border-radius:50%;border:3px solid var(--zhu);color:var(--zhu);
+  display:flex;align-items:center;justify-content:center;font-size:30px;transform:rotate(-10deg);opacity:.9;
+}
+
+/* ============ footer ============ */
+footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--dim);font-size:13.5px}
+footer p{margin-bottom:10px;font-size:13.5px}
+footer a{color:var(--gold);text-decoration:none}
+</style>
+</head>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="hero">
+  <div class="kicker wrap">
+    <span>第肆佰叁拾伍篇</span>
+    <span><b>卷三百一十五 · 雪冤</b></span>
+    <span class="right mono">yiyu-ji</span>
+  </div>
+  <div class="hero-main">
+    <div class="hero-eyebrow"><span>子藏</span><span class="sep"></span><span>法家类</span></div>
+    <div class="bian"><div class="face"><span class="zi">疑</span></div><div class="face back"><span class="zi">谳</span></div></div>
+    <button class="gavel" id="gavel" type="button">
+      <span class="wood"></span>
+      <em>拍惊堂木 · 开堂</em>
+    </button>
+    <p class="hero-tag"><b>疑狱集</b>：五代宰相开局的一部悬案库，<b>一百八十余条</b>旧案，桩桩让证据自己开口</p>
+    <p class="hero-sub">烧猪口里的灰　羊皮上打出的盐　苍蝇指认的铁钉</p>
+  </div>
+</header>
+
+<!-- ================= 壹 纂辑者 ================= -->
+<section id="s1">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">壹</span><h2>历仕五朝的编纂人</h2></div>
+    <p class="sec-lead rv">写这本书的人不是小吏，是宰相。和凝，字成绩，山东须昌人，梁唐晋汉周五朝都做官，封到<b>鲁国公</b>；乱世里换过四家王朝的官场，他却把心思放在一件事上：判案不能冤。</p>
+    <div class="rv">
+      <div class="dyntrack" id="dyntrack">
+        <button class="dyn act" data-d="0" type="button"><i>梁</i><em>起家幕职</em></button>
+        <button class="dyn" data-d="1" type="button"><i>唐</i><em>翰林学士</em></button>
+        <button class="dyn" data-d="2" type="button"><i>晋</i><em>左仆射</em></button>
+        <button class="dyn" data-d="3" type="button"><i>汉</i><em>太子太傅</em></button>
+        <button class="dyn" data-d="4" type="button"><i>周</i><em>显德终老</em></button>
+      </div>
+      <div class="dyn-cards">
+        <div class="dyn-card show"><p><span class="off">后梁</span>初入仕途，在节度使幕府里做从事，记室文书之间见惯州郡狱讼。</p></div>
+        <div class="dyn-card"><p><span class="off">后唐</span><q>唐天成中，官翰林学士。</q>，掌禁中文翰。</p></div>
+        <div class="dyn-card"><p><span class="off">后晋</span><q>官至左仆射。</q>，位次辅政。</p></div>
+        <div class="dyn-card"><p><span class="off">后汉</span><q>晋亡入汉，拜太子太傅，封鲁国公。</q>，以宰相之尊编书不辍。</p></div>
+        <div class="dyn-card"><p><span class="off">后周</span><q>至显徳二年乃卒。</q>（九五五年），五朝履历走完，书留了下来。</p></div>
+      </div>
+    </div>
+    <blockquote class="lib rv"><q>平章事和凝于五代乱离之际，乃能以疑狱存心，集为之编。</q><span class="who">杜震序</span></blockquote>
+    <div class="dyn-note rv">
+      <div class="note-card">
+        <h4>父 作 子 述</h4>
+        <p>和凝先编疑案二卷，收在自家书箧；儿子和防接着续写，凑满百条、装成四轴，自己交底：<q>期满百条，勒成四轴；上二卷先相国编纂，下二卷小子防附续，父作子述。</q>。一套书，两代人。</p>
+      </div>
+      <div class="note-card">
+        <h4>四 库 馆 臣 的 吐 槽</h4>
+        <p>前四卷是和家父子原书；后面六卷是明代张景补的，共一百八十余条。馆臣夸这书<q>所记皆平反寃滥、抉摘奸慝之事，俾司宪者触类旁通，以资启发。</q>，转头就拆穿张景<q>景乃剽剟其文，不着所出，又复刋削不尽，是亦不去葛龚之类矣。</q>。抄书不注出处，连古人都看不下去。<span class="stamp">谳</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 贰 案牍架 ================= -->
+<section id="s2">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">贰</span><h2>十卷案牍架</h2></div>
+    <p class="sec-lead rv">库本合为十卷：前四卷是和家父子的原集，后六卷是张景的补集。书架上抽出任何一卷，都是一叠悬案，这是库本目录<b>实点的二百零五案</b>，点开看看古人都为什么事对簿公堂。</p>
+    <div class="rv">
+      <div class="shelf" id="shelf"><button class="spine act-first" data-v="1" type="button"><i>卷一</i><em>23案</em></button><button class="spine act-first" data-v="2" type="button"><i>卷二</i><em>24案</em></button><button class="spine act-first" data-v="3" type="button"><i>卷三</i><em>19案</em></button><button class="spine act-first" data-v="4" type="button"><i>卷四</i><em>13案</em></button><button class="spine bu act-first" data-v="5" type="button"><i>卷五</i><em>27案</em></button><button class="spine bu act-first" data-v="6" type="button"><i>卷六</i><em>19案</em></button><button class="spine bu act-first" data-v="7" type="button"><i>卷七</i><em>14案</em></button><button class="spine bu act-first" data-v="8" type="button"><i>卷八</i><em>28案</em></button><button class="spine bu act-first" data-v="9" type="button"><i>卷九</i><em>20案</em></button><button class="spine bu act-first" data-v="10" type="button"><i>卷十</i><em>18案</em></button></div>
+      <div class="rolls" id="rolls"><div class="roll show" id="roll1"><div class="rhead"><h3>卷一</h3><span>原集 · 和凝父子</span><span>23案</span></div><div class="chips"><q class="cv">御史佯失状</q><q class="cv">李崇察悲嗟</q><q class="cv">王璥案伏听</q><q class="cv">蒋常觇妪语</q><q class="cv">符融察善走</q><q class="cv">张举辨烧猪</q><q class="cv">季珪智鞭丝</q><q class="cv">破嗉辨鸡食</q><q class="cv">薛宣追听缣</q><q class="cv">孙亮辨防粪</q><q class="cv">王浟市鹿脯</q><q class="cv">认皮获贼</q><q class="cv">书菜认贼</q><q class="cv">黄霸察姒情</q><q class="cv">惠仕拷羊皮</q><q class="cv">庄遵闻哭奸</q><q class="cv">谦之诈获贼</q><q class="cv">行岌逼访妾</q><q class="cv">楚金辨补字</q><q class="cv">子云断防牛</q><q class="cv">松寿潜伺盗</q><q class="cv">李杰觇妇奸</q><q class="cv">孙登比弹</q></div></div><div class="roll" id="roll2"><div class="rhead"><h3>卷二</h3><span>原集 · 和凝父子</span><span>24案</span></div><div class="chips"><q class="cv">邴吉辨子影</q><q class="cv">黄霸戮三男</q><q class="cv">髙柔察动色</q><q class="cv">魏渊比书谤</q><q class="cv">胡质察色</q><q class="cv">承天情断</q><q class="cv">子华不后讯</q><q class="cv">仲堪止大妄</q><q class="cv">陈表求情</q><q class="cv">魏昶留书</q><q class="cv">从事对尸</q><q class="cv">袁相探情伪</q><q class="cv">周纾尸语</q><q class="cv">阎济沉钩</q><q class="cv">何武断遗劒</q><q class="cv">孔公察枉盗</q><q class="cv">陆云宻随奸</q><q class="cv">子产闻哭惧</q><q class="cv">杜亚察诬毒</q><q class="cv">裴均察盗犬</q><q class="cv">元膺知丧诈</q><q class="cv">韦臯劾司店</q><q class="cv">韦丹察威权</q><q class="cv">王湝召认靴</q></div></div><div class="roll" id="roll3"><div class="rhead"><h3>卷三</h3><span>原集 · 和凝父子</span><span>19案</span></div><div class="chips"><q class="cv">庄遵壁听奸</q><q class="cv">赵和籍舍产</q><q class="cv">行成叱盗驴</q><q class="cv">张𬸦括诈书</q><q class="cv">放驴求匿鞍</q><q class="cv">曹摅诘行马</q><q class="cv">崇集屠刀</q><q class="cv">无名识盗葬</q><q class="cv">慕容执假银</q><q class="cv">彦超立吐樱</q><q class="cv">徳裕泥模金</q><q class="cv">张辂察佛语</q><q class="cv">宗裔验核</q><q class="cv">仲荣射继母</q><q class="cv">孙寳称镮饼</q><q class="cv">韩滉听哀惧</q><q class="cv">希崇断义嫡</q><q class="cv">苏秦料刺客</q><q class="cv">宪之知牛主</q></div></div><div class="roll" id="roll4"><div class="rhead"><h3>卷四</h3><span>原集 · 和凝父子</span><span>13案</span></div><div class="chips"><q class="cv">若水疑留狱</q><q class="cv">敏中疑无赃</q><q class="cv">张咏勘贼僧</q><q class="cv">遗书妇翁智</q><q class="cv">韩亿出乳医</q><q class="cv">包拯察牛舌</q><q class="cv">司马议谋杀</q><q class="cv">范公疑奸毒</q><q class="cv">杖骨知子孝</q><q class="cv">唐公问筐篚</q><q class="cv">伯通防锄刃</q><q class="cv">公谨限擒贼</q><q class="cv">显之勘诈契</q></div></div><div class="roll" id="roll5"><div class="rhead"><h3>卷五</h3><span>补集 · 明张景</span><span>27案</span></div><div class="chips"><q class="cv">汉武明经</q><q class="cv">牧笞巫</q><q class="cv">曹摅明妇</q><q class="cv">戴争异罚</q><q class="cv">至远忆姓</q><q class="cv">窦阻免防</q><q class="cv">崔黯捜帑</q><q class="cv">栁寃瘖奴</q><q class="cv">崔公仁恕</q><q class="cv">李峤列枉</q><q class="cv">唐临不寃</q><q class="cv">真卿感雨</q><q class="cv">次武各驱</q><q class="cv">栁设榜牒</q><q class="cv">杨津获绢</q><q class="cv">齐贤易财</q><q class="cv">苏涣折取衣</q><q class="cv">钱冶床足</q><q class="cv">薛向正尉</q><q class="cv">王和甫校书</q><q class="cv">王文正酒吏</q><q class="cv">仲孙疑里胥</q><q class="cv">薛奎疑践血</q><q class="cv">清献原情</q><q class="cv">程颢辩翁年</q><q class="cv">纯仁戒情杀</q><q class="cv">谢麟鞠亲杀</q></div></div><div class="roll" id="roll6"><div class="rhead"><h3>卷六</h3><span>补集 · 明张景</span><span>19案</span></div><div class="chips"><q class="cv">唐肃白汚衣</q><q class="cv">安礼神明</q><q class="cv">赵知录祷天梦猿</q><q class="cv">易衣匿妇箬笼</q><q class="cv">献卿揣杀僧</q><q class="cv">文恭梦吴奸</q><q class="cv">承议持平</q><q class="cv">府尹捕奸僧</q><q class="cv">寿隆疑火死</q><q class="cv">王端识犊母</q><q class="cv">孙沔脱会饮</q><q class="cv">西山梦神讯杀僧</q><q class="cv">李兊按榜防</q><q class="cv">张洽伏盗</q><q class="cv">雨岩诘冦倅</q><q class="cv">恊尉缚伪丞盗</q><q class="cv">行徳捕桑门</q><q class="cv">蔡高验浮尸</q><q class="cv">尹洙诘冒产</q></div></div><div class="roll" id="roll7"><div class="rhead"><h3>卷七</h3><span>补集 · 明张景</span><span>14案</span></div><div class="chips"><q class="cv">宪司准首义卜</q><q class="cv">缉谋获伪帅</q><q class="cv">损斋缉淫奔</q><q class="cv">恕斋神政</q><q class="cv">捕冦得妓首</q><q class="cv">樊舎首误杀</q><q class="cv">濓溪悟酷</q><q class="cv">邻妇证伪奸</q><q class="cv">舆妓屈盗</q><q class="cv">节斋集观音认奸僧</q><q class="cv">陈青释湿履</q><q class="cv">日隆诘孩语</q><q class="cv">縁琴理僧寃</q><q class="cv">司理报应</q></div></div><div class="roll" id="roll8"><div class="rhead"><h3>卷八</h3><span>补集 · 明张景</span><span>28案</span></div><div class="chips"><q class="cv">彭节斋额刺二形</q><q class="cv">髙防辨幅尺</q><q class="cv">惟济辨左手</q><q class="cv">侯临还寄</q><q class="cv">文规理诬盗</q><q class="cv">曹驳坐妻</q><q class="cv">宗元诉守辜</q><q class="cv">张騐窥井</q><q class="cv">欧辨左手</q><q class="cv">程辨烓灶</q><q class="cv">火起油幕</q><q class="cv">置母仇门</q><q class="cv">营妇断腕</q><q class="cv">魏明坠死</q><q class="cv">贼囊故纸</q><q class="cv">李公验榉</q><q class="cv">王臻辨葛</q><q class="cv">颖知子盗</q><q class="cv">孙料兄杀</q><q class="cv">朱诘赇民</q><q class="cv">江辨纸里</q><q class="cv">章辩朱墨</q><q class="cv">南公塞鼻</q><q class="cv">郎简校劵</q><q class="cv">王珣辨印</q><q class="cv">命疏主名</q><q class="cv">苏请祔柩</q><q class="cv">贾废追服</q></div></div><div class="roll" id="roll9"><div class="rhead"><h3>卷九</h3><span>补集 · 明张景</span><span>20案</span></div><div class="chips"><q class="cv">程簿旧钱</q><q class="cv">孙甫舂粟</q><q class="cv">刘相邻证</q><q class="cv">王罕叩狂妪</q><q class="cv">孝肃杖吏</q><q class="cv">崔碣霁潦</q><q class="cv">陈襄扪钟</q><q class="cv">刘敞察寃</q><q class="cv">吕陶服罪</q><q class="cv">李兄诬妇奸</q><q class="cv">铁工姓名</q><q class="cv">提举辩明</q><q class="cv">陈睦酷报</q><q class="cv">刃伤释福儿</q><q class="cv">焚庐杀夫</q><q class="cv">谢兰诬杀</q><q class="cv">渔杀盗网鱼</q><q class="cv">徐裕夺赀杀商</q><q class="cv">姚甲伪钞</q><q class="cv">边其揭捕文</q></div></div><div class="roll" id="roll10"><div class="rhead"><h3>卷十</h3><span>补集 · 明张景</span><span>18案</span></div><div class="chips"><q class="cv">徳甫声寃</q><q class="cv">王旻解卜</q><q class="cv">光祖诘蛙</q><q class="cv">赵廉访檄城隍</q><q class="cv">刘令假鬼</q><q class="cv">胡向免被胁</q><q class="cv">良肱验刃伤</q><q class="cv">哈雅释孝</q><q class="cv">徳辉察寃</q><q class="cv">田滋得藁</q><q class="cv">捕急滥寃丐</q><q class="cv">防显杖蒲</q><q class="cv">嘷犬起尸</q><q class="cv">姚守别食鸡</q><q class="cv">易贵杖石买纸</q><q class="cv">彭祥还赀</q><q class="cv">梅妻疮死</q><q class="cv">疑狱牵聨</q></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 叁 谳堂四案 ================= -->
+<section id="s3">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">叁</span><h2>谳堂四案</h2></div>
+    <p class="sec-lead rv">选四桩有代表性的案子：谜面照录库本，你先读案情，再拍板。点每张案牍，盖下<b>「谳」</b>印，看和家父子怎么收局。</p>
+    <div class="cases">
+      <div class="case rv">
+        <div class="chead"><h3><q>李崇察悲嗟</q></h3><span class="era">后汉</span></div>
+        <div class="mid"><q>崇乃令二父与儿各别禁数日，忽遣狱吏谓曰：「儿已卒，可出奔丧。」泰闻之悲不自胜，奉伯嗟叹而已，殊无痛意，遂以儿还泰，奉伯伏罪。</q></div>
+        <span class="btn">拍 板</span>
+        <div class="verdict">三岁的孩子丢了，两家都咬定是自己的。李崇不发一问，只发一道假讣告：真父亲闻讯崩溃，冒领的只叹了两声。悲声做不了伪证，这案卷翻在人性上。</div>
+        <div class="seal">谳</div>
+      </div>
+      <div class="case rv">
+        <div class="chead"><h3><q>惠仕拷羊皮</q></h3><span class="era">后汉</span></div>
+        <div class="mid"><q>有负薪、负盐者，争一羊皮，各言其籍背之物。</q><q>惠仕令置羊皮席上，以杖击之，见少许盐屑，使争者视之，负薪者乃伏其罪。</q></div>
+        <span class="btn">拍 板</span>
+        <div class="verdict">一张羊皮垫在背盐人肩上几年，盐早渗进了毛里。州官说这张皮可以拷问，满堂先是沉默，杖落盐现，负薪人当场认罪。物证不通人话，但也不会说谎。</div>
+        <div class="seal">谳</div>
+      </div>
+      <div class="case rv">
+        <div class="chead"><h3><q>庄遵闻哭奸</q></h3><span class="era">巡部遇案</span></div>
+        <div class="mid"><q>庄遵为扬州刺史，巡行部内，忽闻哭声，惧而不哀，驻车问之。</q><q>有蝇集于尸首，吏乃披髻视之，得铁钉焉，即按之，乃伏其罪。</q></div>
+        <span class="btn">拍 板</span>
+        <div class="verdict">两个破绽叠在一起：哭丈夫却怕而不哀，是情绪穿帮；苍蝇围着尸首打转，是嗅觉穿帮。拨开发髻，一枚铁钉把整个案子钉死。</div>
+        <div class="seal">谳</div>
+      </div>
+      <div class="case rv">
+        <div class="chead"><h3><q>楚金辨补字</q></h3><span class="era">唐垂拱</span></div>
+        <div class="mid"><q>楚金忧闷，仰卧向牕，透日影见之，其字皆补葺作之：平平看则不觉，向日则见之。</q><q>索一杯水，令琛取书投于水中，字一一解散，琛叩头伏罪。</q></div>
+        <span class="btn">拍 板</span>
+        <div class="verdict">武周罗织之风正盛，有人剪来刺史的字拼成反书告密。三拨使者都断不了，张楚金躺着把信对准日光，接缝全亮了出来；再取一杯水当最终鉴定，拼贴的字一散到底。</div>
+        <div class="seal">谳</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 肆 烧猪 ================= -->
+<section id="s4">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">肆</span><h2>名验一槌 · 烧猪</h2></div>
+    <p class="sec-lead rv">全书最有名的一案，后来被《洗冤集录》一路沿用成验尸正法：妻子杀了丈夫，放火烧屋，谎称丈夫死于火灾。句章令张举不审人，先烧猪。五步看完这场九世纪的对照实验。</p>
+    <div class="pigwrap rv">
+      <div class="pigstage" id="pigstage" data-step="0">
+        <span class="plabel">张举辨烧猪 · 句章</span>
+        <div class="layer l0"><p class="lay-q"><q>有妻杀夫，因放火烧舍，乃诈称火烧夫死。</q><br>夫家觉得可疑，告到官府，妻子一口咬定是烧死的。</p></div>
+        <div class="layer l1">
+          <div class="pigs">
+            <div class="pig"><div class="body"><span class="nostril"></span></div><div class="tag"><q>一杀之</q></div></div>
+            <div class="pig"><div class="body"><span class="nostril"></span></div><div class="tag"><q>一活之</q></div></div>
+          </div>
+        </div>
+        <div class="layer l2">
+          <div class="pigs">
+            <div class="pig"><div class="body"><span class="nostril"></span></div></div>
+            <div class="pig"><div class="body"><span class="nostril"></span></div></div>
+          </div>
+          <div class="wood"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="fire"><span class="flame"></span><span class="flame"></span><span class="flame"></span></div>
+          <p class="lay-q" style="margin-top:18px"><q>乃积薪烧之。</q></p>
+        </div>
+        <div class="layer l3">
+          <div class="mouths">
+            <div class="mouth"><h5>先杀后烧</h5><div class="cavity none"></div><p>死不呼吸，灰进不去</p></div>
+            <div class="mouth"><h5>活时烧死</h5><div class="cavity"><i></i><i></i><i></i><i></i><i></i><i></i></div><p>临死吸气，灰随烟入</p></div>
+          </div>
+        </div>
+        <div class="layer l4">
+          <div class="mouths">
+            <div class="mouth"><h5>死者丈夫</h5><div class="cavity none"></div><p>口中同样没有灰</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="pigverdict">
+        <span class="zhu">谳</span>
+        <p>火烧不是死因：<q>因验夫口中果无灰，以此鞫之，妻乃伏罪。</q>。两口猪，一场火，一张嘴里的灰烬，就是九世纪的对照组。</p>
+      </div>
+      <div class="pigctl">
+        <button id="prev" type="button">上一步</button>
+        <button id="next" type="button">下一步</button>
+        <span class="steplabel" id="steplabel"></span>
+        <div class="dots" id="dots"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 伍 验法八则 ================= -->
+<section id="s5">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">伍</span><h2>验法八则</h2></div>
+    <p class="sec-lead rv">把二百多个案子拆开看，翻案的钥匙来来回回就几类。每张牌背面，是库本里的原句。</p>
+    <div class="fashu">
+      <div class="fa rv"><div class="big">火验</div><div class="cn"><q>张举辨烧猪</q></div><div class="front">死猪活猪同烧，口中灰烬分生死</div><div class="back"><q>察杀者口中无灰，活者口中有灰。</q><span class="steplabel">点牌收回</span></div></div>
+      <div class="fa rv"><div class="big">盐验</div><div class="cn"><q>惠仕拷羊皮</q></div><div class="front">羊皮打一顿，盐屑替失主作证</div><div class="back"><q>以杖击之，见少许盐屑。</q><span class="steplabel">点牌收回</span></div></div>
+      <div class="fa rv"><div class="big">蝇验</div><div class="cn"><q>庄遵闻哭奸</q></div><div class="front">哭声不悲起疑，苍蝇指出铁钉</div><div class="back"><q>有蝇集于尸首</q><span class="steplabel">点牌收回</span></div></div>
+      <div class="fa rv"><div class="big">水验</div><div class="cn"><q>楚金辨补字</q></div><div class="front">伪书下水，拼贴的字一散到底</div><div class="back"><q>投于水中，字一一解散。</q><span class="steplabel">点牌收回</span></div></div>
+      <div class="fa rv"><div class="big">墨验</div><div class="cn"><q>陈襄扪钟</q></div><div class="front">摸钟怕响不敢碰，干净那只手就是赃证</div><div class="back"><q>乃遣吏先引以行，自率同列诣钟所，祭祷，隂涂以墨，而以帷蔽之。</q><span class="steplabel">点牌收回</span></div></div>
+      <div class="fa rv"><div class="big">情验</div><div class="cn"><q>李崇察悲嗟</q></div><div class="front">一道假讣告，试出真父亲</div><div class="back"><q>悲不自胜</q>对<q>嗟叹而已</q><span class="steplabel">点牌收回</span></div></div>
+      <div class="fa rv"><div class="big">局验</div><div class="cn"><q>包拯察牛舌</q></div><div class="front">准你宰牛卖肉，告状的人自己撞上来</div><div class="back"><q>公使归屠其牛鬻之，既而有告杀牛者。</q><span class="steplabel">点牌收回</span></div></div>
+      <div class="fa rv"><div class="big">赏验</div><div class="cn"><q>慕容执假银</q></div><div class="front">假称库银被窃悬赏，赎银的人自投罗网</div><div class="back"><q>果有人来赎银者，执之伏罪。</q><span class="steplabel">点牌收回</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CODA ================= -->
+<div class="coda">
+  <div class="wrap">
+    <div class="chain rv">
+      <span class="node now">疑狱集<small>和凝父子</small></span><span class="arr">扩→</span>
+      <span class="node">折狱龟鉴<small>南宋 · 郑克</small></span><span class="arr">编→</span>
+      <span class="node">棠阴比事<small>宋端平 · 桂万荣</small></span><span class="arr">承→</span>
+      <span class="node">洗冤集录<small>南宋 · 宋慈</small></span><span class="arr">流→</span>
+      <span class="node">今日卷宗<small>证据链 · 疑罪从无</small></span>
+    </div>
+    <blockquote class="lib rv"><q>狱者天下之大命，死者不可复生，断者不可复续。</q><span class="who">疑狱集卷首杜震序</span></blockquote>
+    <p class="echo rv">头一句是汉代人留下的老话，五代宰相把它抄进书前，后世每一个翻案的人都接着抄。所谓<b>疑罪从无</b>，一千多年前就写在这部悬案库的扉页上了。</p>
+    <div class="yinzhang rv">谳</div>
+  </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <p>本篇为殆知阁导读系列第435篇。文本来源：殆知阁简体库子藏法家〈疑狱集〉（卷首提要、嘉靖李崧祥序、和防自序、至元杜震序、正文十卷，去空白约三万三千字）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p class="xiaoji">时代局限：书成于五代至明，案例多含拷讯定案的成分，系古代司法常态，照录库本，不作美化；不少故事属笔记转辗相承，未必尽是信史；库本讹字与异体（防、寃、増、徳、牕、汚等）照录不作改动；和防之名通行本或作㠓，从库本。</p>
+    <p>引文经脚本与库内文件去标点、归一逐字比对通过（二百四十七处，白话反扫六字窗零撞）。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // 惊堂木
+  var hero=document.getElementById('hero');
+  function slap(){hero.classList.remove('go');void hero.offsetWidth;hero.classList.add('go');}
+  document.getElementById('gavel').addEventListener('click',slap);
+  setTimeout(slap,500);
+
+  // 五朝轨
+  var track=document.getElementById('dyntrack');
+  var cards=document.querySelectorAll('.dyn-card');
+  track.addEventListener('click',function(e){
+    var b=e.target.closest('.dyn');if(!b)return;
+    track.querySelectorAll('.dyn').forEach(function(x){x.classList.remove('act')});
+    b.classList.add('act');
+    cards.forEach(function(c,i){c.classList.toggle('show',i==b.dataset.d)});
+  });
+
+  // 案牍架
+  var shelf=document.getElementById('shelf');
+  var firstSpine=shelf.querySelector('.spine');if(firstSpine)firstSpine.classList.add('act');
+  shelf.addEventListener('click',function(e){
+    var s=e.target.closest('.spine');if(!s)return;
+    shelf.querySelectorAll('.spine').forEach(function(x){x.classList.remove('act')});
+    s.classList.add('act');
+    document.querySelectorAll('.roll').forEach(function(r,i){
+      r.classList.toggle('show',r.id=='roll'+s.dataset.v);
+    });
+  });
+
+  // 谳堂四案
+  document.querySelectorAll('.case').forEach(function(c){
+    c.addEventListener('click',function(){c.classList.add('st')});
+  });
+
+  // 烧猪五步
+  var stage=document.getElementById('pigstage');
+  var names=['谜面','取猪','积薪烧之','察其口中','验夫口中'];
+  var step=0,max=4;
+  var dots=document.getElementById('dots');
+  for(var i=0;i<=max;i++){
+    var d=document.createElement('i');
+    (function(n){d.addEventListener('click',function(){go(n)})})(i);
+    dots.appendChild(d);
+  }
+  function go(n){
+    step=Math.max(0,Math.min(max,n));
+    stage.dataset.step=step;
+    document.getElementById('steplabel').textContent=(step+1)+'／5 '+names[step];
+    document.getElementById('prev').disabled=step==0;
+    document.getElementById('next').disabled=step==max;
+    dots.querySelectorAll('i').forEach(function(x,i){x.classList.toggle('cur',i==step)});
+  }
+  document.getElementById('prev').addEventListener('click',function(){go(step-1)});
+  document.getElementById('next').addEventListener('click',function(){go(step+1)});
+  go(0);
+
+  // 验法牌
+  document.querySelectorAll('.fa').forEach(function(f){
+    f.addEventListener('click',function(){f.classList.toggle('flip')});
+  });
+
+  // rv
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}});
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+})();
+</script>
+</body>
+</html>
