@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>己亥杂诗 · 殆知阁导读</title>
+<style>
+  :root{
+    --ink:#191917;
+    --paper:#e8e4dc;
+    --dim:#93917f;
+    --hair:rgba(232,228,220,.14);
+    --c:#5e8fbb;
+    --c-dim:rgba(94,143,187,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"Songti SC","STSong","SimSun","Noto Serif CJK SC","Source Han Serif SC",serif;
+    line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:"SFMono-Regular",Menlo,Consolas,monospace}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;padding:64px 0 20px;overflow:hidden}
+  .hero-bg{
+    position:absolute;top:-40px;right:-30px;
+    font-size:clamp(240px,34vw,430px);
+    line-height:1;color:transparent;
+    -webkit-text-stroke:1.5px rgba(94,143,187,.13);
+    letter-spacing:-.05em;pointer-events:none;user-select:none;
+  }
+  .kick{font-size:13px;letter-spacing:.5em;color:var(--dim)}
+  .kick b{color:var(--c);font-weight:normal}
+  h1{font-size:clamp(44px,7vw,74px);font-weight:600;letter-spacing:.12em;margin:14px 0 6px}
+  .subt{color:var(--dim);font-size:15px;letter-spacing:.2em}
+  .intro{max-width:640px;margin:26px 0 8px;font-size:16px;color:#cfcabf;text-align:justify}
+  .intro em{font-style:normal;color:var(--c)}
+
+  /* ---------- year band ---------- */
+  .bandcap{margin:44px 0 8px;font-size:13px;color:var(--dim);letter-spacing:.12em}
+  .bandslot{overflow-x:auto;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:6px 0 2px}
+  .bandslot svg{display:block;min-width:1276px}
+  .bandslot .lab{font-size:10.5px;fill:var(--c)}
+  .bandslot .tick{stroke:rgba(94,143,187,.4);stroke-width:1}
+  #tip{
+    position:fixed;display:none;pointer-events:none;z-index:9;
+    background:#22221f;border:1px solid var(--hair);color:var(--paper);
+    font-size:12px;padding:3px 10px;letter-spacing:.1em;
+  }
+  .bandhint{font-size:12px;color:var(--dim);margin-top:8px;letter-spacing:.06em}
+
+  /* ---------- main grid ---------- */
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:64px;margin-top:70px}
+  .mapcol{position:sticky;top:20px;align-self:start}
+  .mapcap{font-size:13px;color:var(--dim);letter-spacing:.12em;margin-bottom:10px}
+  .mapnote{font-size:12px;color:var(--dim);margin-top:10px;letter-spacing:.06em}
+
+  /* ---------- route map ---------- */
+  .route{width:100%;height:auto;display:block}
+  .route .spine{stroke:rgba(94,143,187,.45);stroke-width:1.4}
+  .route .spine2{stroke:rgba(94,143,187,.18);stroke-width:7;fill:none}
+  .route .dot{fill:var(--ink);stroke:var(--c);stroke-width:1.6;cursor:pointer}
+  .route .dot:hover{fill:var(--c)}
+  .route .stn{font-size:14px;fill:var(--paper);letter-spacing:2px;cursor:pointer}
+  .route .dt{font-size:11.5px;fill:var(--dim);letter-spacing:1px;cursor:pointer}
+  .route .dash{stroke:rgba(94,143,187,.55);stroke-width:1.4;stroke-dasharray:5 5;fill:none}
+  .route .dlabel{font-size:11.5px;fill:var(--c);letter-spacing:2px}
+  .route .nl{fill:var(--dim);font-size:12px;letter-spacing:3px}
+
+  /* ---------- sections ---------- */
+  .sec{margin-bottom:86px;scroll-margin-top:24px}
+  .sechead{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--hair);padding-bottom:10px;margin-bottom:26px}
+  .sechead .roman{font-size:13px;color:var(--c);letter-spacing:.3em}
+  .sechead h2{font-size:26px;font-weight:600;letter-spacing:.14em}
+  .sechead .d8{margin-left:auto;font-size:12.5px;color:var(--dim);letter-spacing:.1em;text-align:right}
+  .sec p{font-size:15.5px;color:#cfcabf;text-align:justify;margin-bottom:16px;max-width:640px}
+  .sec p .qv{color:var(--paper);border-bottom:1px dotted rgba(94,143,187,.5)}
+
+  .pq{border-left:2px solid var(--c-dim);padding:6px 0 6px 22px;margin:26px 0;transition:opacity .9s,transform .9s}
+  .pq .pno{font-size:11.5px;color:var(--c);letter-spacing:.24em;margin-bottom:8px}
+  .pq blockquote.q span{display:block;font-size:20px;letter-spacing:.05em;line-height:2.05;color:var(--paper)}
+  .pq figcaption{margin-top:10px;font-size:13px;color:var(--dim);letter-spacing:.03em}
+  .pq figcaption::before{content:"注 ";color:rgba(94,143,187,.75);letter-spacing:.2em}
+  .rv{opacity:0;transform:translateY(14px)}
+  .rv.lit{opacity:1;transform:none}
+
+  /* ---------- finale ---------- */
+  .finale{text-align:center;padding:30px 0 10px;border-top:1px solid var(--hair);margin-top:80px}
+  .finale .fp{letter-spacing:.12em}
+  .finale .fp blockquote.q span{display:block;font-size:clamp(22px,3.4vw,30px);line-height:2.3;color:var(--paper)}
+  .finale .fnote{font-size:12.5px;color:var(--dim);margin-top:18px;letter-spacing:.1em}
+  .coda{max-width:620px;margin:34px auto 0;font-size:15.5px;color:#cfcabf;text-align:justify}
+  .coda .qv{color:var(--paper);border-bottom:1px dotted rgba(94,143,187,.5)}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--hair);margin-top:70px;padding:34px 0 46px;font-size:12.5px;color:var(--dim);letter-spacing:.05em}
+  footer a{color:var(--c);text-decoration:none}
+  footer .f2{margin-top:6px}
+
+  @media (max-width:980px){
+    .grid{grid-template-columns:1fr;gap:30px}
+    .mapcol{position:static;max-width:430px;margin:0 auto}
+    .hero-bg{font-size:56vw;opacity:.7}
+    h1{letter-spacing:.06em}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-bg">己亥</div>
+    <div class="kick">殆知阁古籍导读 <b>·</b> 集藏四库别集</div>
+    <h1>己亥杂诗</h1>
+    <div class="subt">清 龚自珍 · 三百一十五首七绝，按行程编年</div>
+    <p class="intro">道光十九年己亥，公元1839年。四月二十三这天，龚自珍辞官出京：不携家眷仆从，雇两辆车，一辆自己坐，一辆装自编文集百卷。此后八个多月，他沿运河南下，又折回北上接家眷，岁末才安顿停当，一路写成三百一十五首七绝，平均每天不止一首，是他亲手编定的一部编年诗集。诗集编成的第二年，<em>鸦片战争打响</em>。</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="bandcap">一年三百一十五道刻线</div>
+  <div class="bandslot" id="band"></div>
+  <div class="bandhint">每道刻线是一首诗；发亮的刻线是名篇，点击跳到对应行程。悬停任意刻线可看第几首。</div>
+</div>
+
+<main class="wrap grid">
+  <aside class="mapcol">
+    <div class="mapcap">水程年谱 · 十二站</div>
+    <svg class="route" viewBox="0 0 360 880" id="routemap" aria-label="己亥年行程图"></svg>
+    <div class="mapnote">各站按行程先后排；虚线一段是北上迎眷的往返。点站名跳读。</div>
+  </aside>
+
+  <div>
+    <!-- 程 1 -->
+    <section class="sec" id="s1">
+      <div class="sechead">
+        <span class="roman">程一</span><h2>出都</h2>
+        <span class="d8">四月二十三<br>京师广渠门外</span>
+      </div>
+      <p>出京这天，他把日子记到了日：祖父、父亲、他自己，三代人做了整整一百年京官。行李极简，两辆车，一辆自坐，一辆装书。开卷第一首先交代身后事般的打算：书先编成，人再南渡。</p>
+      <figure class="pq rv">
+        <div class="pno">第1首</div>
+        <blockquote class="q"><span>著书何似观心贤？不奈巵言夜涌泉。</span><span>百卷书成南渡后，先生续集再编年。</span></blockquote>
+      </figure>
+      <figure class="pq rv">
+        <div class="pno">第5首</div>
+        <blockquote class="q"><span>浩荡离愁白日斜，吟鞭东指即天涯。</span><span>落红不是无情物，化作春泥更护花。</span></blockquote>
+        <figcaption class="qv">余不携眷属仆从，雇两车，以一车自载，一车载文集百卷出都。</figcaption>
+      </figure>
+      <p>暮春，白日西斜，马鞭往东一指。这四句写的是离京实景，后来传诵最广的却是末一联：他把离场写成了另一种在场。</p>
+      <figure class="pq rv">
+        <div class="pno">第8首</div>
+        <blockquote class="q"><span>太行一脉走蝹蜿，莽莽畿西虎气蹲。</span><span>送我摇鞭竟东去，此山不语看中原。</span></blockquote>
+        <figcaption class="qv">别西山</figcaption>
+      </figure>
+      <figure class="pq rv">
+        <div class="pno">第10首自注</div>
+        <blockquote class="q"><span>先大父宦京师，家大人宦京师，至小子，三世百年矣！</span><span>以己亥岁四月二十三日出都。</span></blockquote>
+      </figure>
+      <p>出城一路是连环的告别。别西山那首说：山不说话，看着中原。这一年中原将要发生什么，山没有说。</p>
+    </section>
+
+    <!-- 程 2 -->
+    <section class="sec" id="s2">
+      <div class="sechead">
+        <span class="roman">程二</span><h2>运河</h2>
+        <span class="d8">五月十二 · 淮埔<br>六月十五 · 甘泉</span>
+      </div>
+      <p>五月十二船到淮埔，即淮安一带的运河咽喉。他看见十个人拉一条缆，上千艘漕船过河，想起自己也领过太仓的官粮，夜里听着纤夫的号子掉泪。</p>
+      <figure class="pq rv">
+        <div class="pno">第83首</div>
+        <blockquote class="q"><span>只筹一缆十夫多，细算千艘渡此河。</span><span>我亦曾穈太仓粟，夜闻邪许泪滂沱！</span></blockquote>
+        <figcaption class="qv">五月十二日抵淮埔作</figcaption>
+      </figure>
+      <p>路上梦见亡友顾千里。十年前两人相约五年后见，对方回信说<span class="qv">敢不忍死以待</span>。他失约了，友人也早已下世。梦醒写成一首：湖山旷劫，<span class="qv">何日重生此霸才</span>。</p>
+      <figure class="pq rv">
+        <div class="pno">第85首</div>
+        <blockquote class="q"><span>津梁条约遍南东，谁遣藏春深坞逢？</span><span>不枉人呼莲幕客，碧纱幮护阿芙蓉。</span></blockquote>
+        <figcaption class="qv">阿，读如人疴之疴，出续本草。</figcaption>
+      </figure>
+      <figure class="pq rv">
+        <div class="pno">第87首</div>
+        <blockquote class="q"><span>故人横海拜将军，侧立南天未蒇勋。</span><span>我有阴符三百字，蜡丸难寄惜雄文。</span></blockquote>
+      </figure>
+      <p>同一个夏天，广东的虎门正在销烟。他写烟馆，纱帐里一盏灯护着鸦片；写南天的故人（通说指林则徐），说自己藏着一篇三百字的方略，可惜蜡丸封好也寄不过去。第二年，炮声从海上来了。</p>
+      <figure class="pq rv">
+        <div class="pno">第96首</div>
+        <blockquote class="q"><span>少年击剑更吹箫，剑气箫心一例消。</span><span>谁分苍凉归棹后，万千哀乐聚今朝。</span></blockquote>
+      </figure>
+      <p>少年时击剑也吹箫，如今两样都消磨在归途里。剑与箫，是他给自己定下的两副面目。</p>
+      <figure class="pq rv">
+        <div class="pno">第108首</div>
+        <blockquote class="q"><span>六月十五别甘泉，是夕丹徒风打船。</span><span>风定月出半江白，江上女郎眠未眠？</span></blockquote>
+      </figure>
+      <p>别甘泉那晚是六月十五，风打船头，月出半江，他问江上的女郎睡了没有。沉重的行程里，难得有这样轻的一笔。</p>
+      <figure class="pq rv">
+        <div class="pno">第125首</div>
+        <blockquote class="q"><span>九州生气恃风雷，万马齐喑究可哀。</span><span>我劝天公重抖擞，不拘一格降人才。</span></blockquote>
+        <figcaption class="qv">过镇江，见赛玉皇及风神雷神者，祷词万数。道士乞撰青词。</figcaption>
+      </figure>
+      <p>过镇江，正遇上赛会迎神，道士请这位辞官的进士替神仙写篇青词。他把祷文写成了那个时代最响的呐喊：万马齐喑，是该有一场风雷了。</p>
+    </section>
+
+    <!-- 程 3 -->
+    <section class="sec" id="s3">
+      <div class="sechead">
+        <span class="roman">程三</span><h2>钱塘</h2>
+        <span class="d8">七月初九到家<br>八月十八观潮</span>
+      </div>
+      <figure class="pq rv">
+        <div class="pno">第136首</div>
+        <blockquote class="q"><span>万卷书生飒爽来，梦中喜极故人回。</span><span>湖山旷劫三吴地，何日重生此霸才？</span></blockquote>
+        <figcaption class="qv">梦顾千里有作。忆己丑岁与君书，定五年相见，君报书云：“敢不忍死以待。”予竟爽约。君以甲午春死矣。</figcaption>
+      </figure>
+      <p>七月初九到家。老父倚门望了许久，等来辞官的儿子。八月十八，他陪父亲看钱塘潮。</p>
+      <figure class="pq rv">
+        <div class="pno">第156首</div>
+        <blockquote class="q"><span>家住钱塘四百春，匪将门阀傲江滨。</span><span>一州典故闲征遍，撰杖观涛得几人？</span></blockquote>
+        <figcaption class="qv">八月十八日侍家大人观潮</figcaption>
+      </figure>
+      <figure class="pq rv">
+        <div class="pno">第182首</div>
+        <blockquote class="q"><span>秋风张翰计蹉跎，红豆年年掷逝波。</span><span>误我归期知几许？蟾圆十一度无多。</span></blockquote>
+        <figcaption class="qv">以下十有六首，杭州有所追悼而作。</figcaption>
+      </figure>
+      <p>家居的日子还有一段伤逝。自注说，接下来十六首是杭州的追悼之作；悼的是谁，诗里不说破，只留下钟声与花期，让后人猜了一百多年。</p>
+    </section>
+
+    <!-- 程 4 -->
+    <section class="sec" id="s4">
+      <div class="sechead">
+        <span class="roman">程四</span><h2>袁浦</h2>
+        <span class="d8">九月廿五重到<br>十月初六渡河北去</span>
+      </div>
+      <p>九月廿五他重到袁浦，即清江浦，运河北上的枢纽。自注交了底：留浦十日，多半在醉梦之中，醒的时候少；这一组诗统名寱词，就是梦话。</p>
+      <figure class="pq rv">
+        <div class="pno">第245首</div>
+        <blockquote class="q"><span>豆蔻芳温启瓠犀，伤心前度语重提。</span><span>牡丹绝色三春暖，岂是梅花处士妻？</span></blockquote>
+        <figcaption class="qv">己亥九月二十五日，重到袁浦，十月六日渡河去，留浦十日，大抵醉梦时多醒时少也，统名之曰《寱词》。</figcaption>
+      </figure>
+      <figure class="pq rv">
+        <div class="pno">第272首</div>
+        <blockquote class="q"><span>未济终焉心缥缈，百事翻从缺陷好。</span><span>吟道夕阳山外山，古今谁免余情绕？</span></blockquote>
+        <figcaption class="qv">渔沟道中题壁一首</figcaption>
+      </figure>
+      <figure class="pq rv">
+        <div class="pno">第274首</div>
+        <blockquote class="q"><span>明知此浦定重过，其奈尊前百感何？</span><span>亦是今生未曾有，满襟清泪渡黄河。</span></blockquote>
+        <figcaption class="qv">众兴道中再奉寄一首</figcaption>
+      </figure>
+      <p>十月初六渡河北去。渔沟道上，他在驿壁题下百事有缺陷才好的句子；第二天过黄河，眼泪满襟。</p>
+    </section>
+
+    <!-- 程 5 -->
+    <section class="sec" id="s5">
+      <div class="sechead">
+        <span class="roman">程五</span><h2>北上迎眷</h2>
+        <span class="d8">十月渡河<br>冬，雨雪载途</span>
+      </div>
+      <p>家眷还在北京，他孤身北上接。一路翻了四回车、陷了两回泥淖，全靠路人搭救；自注记得像事故台账，还自嘲是天意叫他别往北。</p>
+      <figure class="pq rv">
+        <div class="pno">第295首</div>
+        <blockquote class="q"><span>天意若曰汝毋北，覆车南沙书卷湿。</span><span>汶阳风雨六幕黑，申以东平三尺雪。</span></blockquote>
+      </figure>
+      <figure class="pq rv">
+        <div class="pno">第296首自注</div>
+        <blockquote class="q"><span>北行覆车者四，车陷泥淖中者二，皆赖途人以免。</span></blockquote>
+      </figure>
+      <figure class="pq rv">
+        <div class="pno">第298首</div>
+        <blockquote class="q"><span>九边烂熟等雕虫，远志真看小草同。</span><span>枉说健儿身手在，青灯夜雪阻山东。</span></blockquote>
+      </figure>
+      <p>雪困山东道上，他给自己算账：半辈子研究西北边防、写过西域建省之议，如今九边烂熟，也不过等同雕虫小技。远志成了小草，是药名，也是自嘲。</p>
+      <figure class="pq rv">
+        <div class="pno">第299首</div>
+        <blockquote class="q"><span>任丘马首有筝琶，偶落吟鞭便驻车。</span><span>北望觚棱南望雁，七行狂草达京师。</span></blockquote>
+        <figcaption class="qv">遣一仆入都迎眷属，自驻任丘县待之。</figcaption>
+      </figure>
+      <figure class="pq rv">
+        <div class="pno">第300首自注</div>
+        <blockquote class="q"><span>儿子书来，乞稍稍北，乃进次于雄县；又请，乃又进次于固安县。</span></blockquote>
+      </figure>
+      <p>到任丘停住，派仆人进京接眷。儿子来信求他再往北挪一点，他便再进雄县，又进固安。北望宫阙，南望雁，一封七行狂草先送回了京师。</p>
+    </section>
+
+    <!-- 程 6 -->
+    <section class="sec" id="s6">
+      <div class="sechead">
+        <span class="roman">程六</span><h2>岁暮</h2>
+        <span class="d8">十二月十日焦山<br>岁不尽五日羽琌</span>
+      </div>
+      <p>带着小女儿游焦山，归舟遇上大雪；十二月廿二又游惠山。岁末倒数第五天，把家小安顿进羽琌山馆，一年水程到此走完。</p>
+      <figure class="pq rv">
+        <div class="pno">第312首</div>
+        <blockquote class="q"><span>古愁莽莽不可说，化作飞仙忽奇阔。</span><span>江天如墨我飞还，折梅不畏蛟龙夺。</span></blockquote>
+        <figcaption class="qv">十二月十日，携女辛游焦山，归舟大雪。</figcaption>
+      </figure>
+      <figure class="pq rv">
+        <div class="pno">第313首</div>
+        <blockquote class="q"><span>惠山秀气迎客舟，七十里外心先投。</span><span>惠山妆成要妆镜，惠泉那许东北流？</span></blockquote>
+        <figcaption class="qv">廿二日携女辛游惠山</figcaption>
+      </figure>
+      <figure class="pq rv">
+        <div class="pno">第314首自注</div>
+        <blockquote class="q"><span>岁不尽五日，安顿眷属于海西羽琌之山，戏示阿辛。</span></blockquote>
+      </figure>
+    </section>
+
+    <!-- finale -->
+    <div class="finale rv" id="fin">
+      <div class="fp"><blockquote class="q"><span>吟罢江山气不灵，万千种话一灯青。</span><span>忽然搁笔无言说，重礼天台七卷经。</span></blockquote></div>
+      <div class="fnote">第315首 · 全卷终</div>
+      <p class="coda">最后四句不是总结。万千种话在青灯下说尽，他忽然搁笔，什么都不再说，只是重新礼了一部经。三百一十五首，就此收梢。第二年，鸦片战争开打；又两年，《南京条约》签订；再过一年，他暴卒于丹阳，年五十。那声万马齐喑的叹息，成了王朝最后岁月里最早被记住的话之一。</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>文本来源：殆知阁古代文献简体库（集藏四库别集，己亥杂诗），库本去空白约一万六千字</div>
+    <div class="f2">仓库：<a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">daizhige-daodu</a> · 殆知阁导读 第三百九十七篇</div>
+    <div class="f2">引文经脚本与库内文件去标点、归一逐字比对通过（三十二处，白话反扫六字窗零撞）</div>
+    <div class="f2">文中人物与观念均属其时代，请留意历史局限</div>
+  </div>
+</footer>
+
+<div id="tip"></div>
+
+<script>
+(function(){
+  var SRC = 'jihai-zashi.html';
+  var N = 315;
+  var famous = {
+    5:['落红','s1'],83:['淮埔','s2'],85:['阿芙蓉','s2'],125:['风雷','s2'],
+    136:['霸才','s2'],156:['观潮','s3'],245:['寱词','s4'],298:['雪阻','s5'],
+    312:['折梅','s6'],315:['搁笔','fin']
+  };
+  var rows = {5:1,83:1,85:2,125:1,136:1,156:1,245:1,298:1,312:1,315:2};
+
+  /* ---- year band ---- */
+  var bw = 4, W = N*bw + 20, H = 132, base = 118;
+  var s = '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+  for(var i=1;i<=N;i++){
+    var x = 10 + (i-1)*bw;
+    var h, fill, op;
+    if(famous[i]){ h = 86; fill = '#5e8fbb'; op = .95; }
+    else { h = 18 + ((i*53)%3)*8; fill = '#4a4943'; op = 1; }
+    s += '<rect data-i="'+i+'" data-t="'+(famous[i]?famous[i][1]:'')+'" x="'+x+'" y="'+(base-h)+
+         '" width="2.6" height="'+h+'" fill="'+fill+'" opacity="'+op+'" rx="1"/>';
+  }
+  Object.keys(famous).forEach(function(k){
+    var i = +k, x = 10 + (i-1)*bw + 1.3, r = rows[i];
+    var ly = r===1?18:36;
+    s += '<line class="tick" x1="'+x+'" y1="'+(ly+4)+'" x2="'+x+'" y2="'+(base-88)+'"/>';
+    s += '<text class="lab" x="'+x+'" y="'+ly+'" text-anchor="middle">'+famous[i][0]+'</text>';
+  });
+  s += '<line x1="10" y1="'+(base+10)+'" x2="'+(W-10)+'" y2="'+(base+10)+'" stroke="rgba(232,228,220,.18)"/>';
+  s += '<text x="10" y="'+(base+28)+'" font-size="11" fill="#93917f">第1首 · 四月出都</text>';
+  s += '<text x="'+(W-10)+'" y="'+(base+28)+'" font-size="11" fill="#93917f" text-anchor="end">第315首 · 岁末搁笔</text>';
+  s += '</svg>';
+  var band = document.getElementById('band');
+  band.innerHTML = s;
+
+  var tip = document.getElementById('tip');
+  band.addEventListener('mousemove', function(e){
+    var t = e.target;
+    if(t.tagName === 'rect'){
+      tip.style.display = 'block';
+      tip.textContent = '第' + t.getAttribute('data-i') + '首';
+      tip.style.left = (e.clientX + 14) + 'px';
+      tip.style.top = (e.clientY - 30) + 'px';
+    } else tip.style.display = 'none';
+  });
+  band.addEventListener('mouseleave', function(){ tip.style.display = 'none'; });
+  band.addEventListener('click', function(e){
+    var t = e.target;
+    if(t.tagName === 'rect'){
+      var id = t.getAttribute('data-t');
+      if(id) document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+
+  /* ---- route map ---- */
+  var stns = [
+    ['京师','四月廿三','s1',34,'r'],
+    ['淮埔','五月十二','s2',116,'l'],
+    ['扬州','六月十五','s2',196,'r'],
+    ['镇江','仲夏','s2',276,'l'],
+    ['钱塘','七月初九','s3',356,'r'],
+    ['观潮','八月十八','s3',436,'l'],
+    ['袁浦','九月廿五','s4',516,'r'],
+    ['渡河','十月','s5',596,'l'],
+    ['任丘固安','冬','s5',676,'r'],
+    ['焦山','十二月十日','s6',756,'l'],
+    ['惠山','十二月廿二','s6',812,'r'],
+    ['羽琌','岁不尽五日','s6',862,'l']
+  ];
+  var m = '<path class="spine2" d="M180,26 C 205,200 155,420 180,620 C 195,730 172,800 180,868" fill="none"/>';
+  m += '<path class="spine" d="M180,26 C 205,200 155,420 180,620 C 195,730 172,800 180,868" fill="none"/>';
+  m += '<path class="dash" d="M180,516 C 268,546 268,640 180,676"/>';
+  m += '<text class="dlabel" x="252" y="600" text-anchor="middle">北上迎眷</text>';
+  stns.forEach(function(st){
+    var name = st[0], date = st[1], tgt = st[2], y = st[3], side = st[4];
+    m += '<circle class="dot" data-t="'+tgt+'" cx="180" cy="'+y+'" r="4.5"/>';
+    if(side === 'r'){
+      m += '<text class="stn" data-t="'+tgt+'" x="196" y="'+(y-2)+'">'+name+'</text>';
+      m += '<text class="dt" data-t="'+tgt+'" x="196" y="'+(y+15)+'">'+date+'</text>';
+    } else {
+      m += '<text class="stn" data-t="'+tgt+'" x="164" y="'+(y-2)+'" text-anchor="end">'+name+'</text>';
+      m += '<text class="dt" data-t="'+tgt+'" x="164" y="'+(y+15)+'" text-anchor="end">'+date+'</text>';
+    }
+  });
+  m += '<text class="nl" x="180" y="14" text-anchor="middle">北 · 京师</text>';
+  m += '<text class="nl" x="180" y="876" text-anchor="middle">南 · 山馆</text>';
+  document.getElementById('routemap').innerHTML = m;
+  document.getElementById('routemap').addEventListener('click', function(e){
+    var t = e.target;
+    var id = t.getAttribute && t.getAttribute('data-t');
+    if(id) document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  /* ---- reveal ---- */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add('lit'); io.unobserve(en.target); }
+    });
+  }, {threshold:.15});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>
