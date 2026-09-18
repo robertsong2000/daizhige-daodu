@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>武当福地总真集 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#201f1d; --ink3:#26251f;
+  --paper:#e8e4dc; --dim:#a39e93; --faint:#6e6a61;
+  --bamboo:#5f9270; --bamboo-dim:#3c5f49; --hairline:rgba(232,228,220,0.13);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.85; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+q{quotes:none}
+.mono{font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace}
+.wrap{max-width:1020px;margin:0 auto;padding:0 26px}
+
+/* ===== 首屏：雾锁武当 ===== */
+.hero{position:relative;min-height:100dvh;overflow:hidden;display:flex;align-items:flex-end}
+.hero .scene{position:absolute;inset:0}
+.hero svg{position:absolute;inset:0;width:100%;height:100%}
+.cloudband{transition:opacity 2.2s ease, transform 2.2s ease}
+.hero.clear .cloudband{opacity:0;transform:translateY(-40px)}
+.hero.clear .mtfade{opacity:1}
+.mtfade{opacity:.28;transition:opacity 2.4s ease}
+.hero-inner{position:relative;z-index:5;width:100%;padding:0 0 9dvh}
+.kicker{font-size:13.5px;letter-spacing:.4em;color:var(--faint)}
+.hero h1{
+  writing-mode:vertical-rl;font-size:clamp(44px,7.2vw,84px);font-weight:700;
+  letter-spacing:.34em;height:min(62dvh,560px);margin:26px 0 6px;color:var(--paper);
+  text-shadow:0 2px 22px rgba(0,0,0,.55);opacity:0;transform:translateY(14px);
+  transition:opacity 1.6s ease .3s, transform 1.6s ease .3s;
+}
+.hero.clear h1{opacity:1;transform:none}
+.hero .hsub{max-width:34em;color:var(--dim);font-size:clamp(14.5px,1.5vw,17px);opacity:0;transition:opacity 1.6s ease .9s}
+.hero.clear .hsub{opacity:1}
+.seal{
+  display:inline-grid;place-items:center;width:64px;height:64px;margin-top:22px;
+  border:2px solid var(--bamboo);color:var(--bamboo);font-size:22px;font-weight:700;
+  letter-spacing:.1em;transform:rotate(-6deg) scale(.6);opacity:0;line-height:1.15;
+  transition:all .5s cubic-bezier(.2,1.6,.4,1) 1.4s;text-align:center;
+}
+.hero.clear .seal{opacity:.92;transform:rotate(-6deg) scale(1)}
+.mist-btn{
+  margin-top:26px;background:none;border:1px solid var(--faint);color:var(--dim);
+  font:inherit;font-size:14.5px;letter-spacing:.3em;padding:11px 26px 11px 30px;
+  cursor:pointer;transition:all .35s ease;
+}
+.mist-btn:hover{border-color:var(--bamboo);color:var(--paper)}
+.hero.clear .mist-btn{opacity:0;pointer-events:none}
+.hero.clear .hint{opacity:0;transition:opacity 1s ease}
+.hint{font-size:12.5px;color:var(--faint);letter-spacing:.22em;margin-top:12px}
+
+/* ===== 山径进度 ===== */
+.rail{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:40;width:86px}
+.rail svg{width:86px;height:380px;display:block;overflow:visible}
+.rail .rdot{cursor:pointer}
+.rail .rdot text{font-size:10.5px;fill:var(--faint);letter-spacing:2px;transition:fill .3s}
+.rail .rdot circle{fill:var(--ink);stroke:var(--faint);stroke-width:1.4;transition:all .3s}
+.rail .rdot.on circle{fill:var(--bamboo);stroke:var(--bamboo)}
+.rail .rdot.on text{fill:var(--paper)}
+.rail path.trail{stroke:var(--hairline);stroke-width:1.6;fill:none}
+@media(max-width:1100px){.rail{display:none}}
+
+/* ===== 站程与骨架 ===== */
+main{position:relative}
+.station{padding:78px 0 30px;position:relative}
+.stone{
+  display:flex;align-items:baseline;gap:20px;border-left:4px solid var(--bamboo);
+  padding:6px 0 6px 20px;margin-bottom:8px;
+}
+.stone .no{font-size:13px;color:var(--bamboo);letter-spacing:.3em;white-space:nowrap}
+.stone h2{font-size:clamp(24px,3vw,33px);font-weight:700;letter-spacing:.14em}
+.stone .alt{font-size:12.5px;color:var(--faint);letter-spacing:.24em;margin-left:auto;white-space:nowrap}
+.stand{color:var(--dim);font-size:15.5px;max-width:58em;margin:0 0 30px}
+.stand b{color:var(--paper);font-weight:700}
+
+.pcard{
+  background:linear-gradient(160deg,#22211e,#1c1b19);border:1px solid var(--hairline);
+  border-top:2px solid var(--bamboo-dim);padding:30px 32px;position:relative;
+}
+.pcard h3{font-size:19px;letter-spacing:.12em;margin-bottom:14px;color:var(--paper)}
+.pcard h3 small{font-size:12.5px;color:var(--faint);letter-spacing:.2em;margin-left:12px;font-weight:400}
+.pcard p{color:var(--dim);font-size:15px;margin-bottom:10px}
+.pcard p:last-child{margin-bottom:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:34px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:34px}
+.q, .qv{display:block;color:var(--paper);background:var(--ink3);border-left:3px solid var(--bamboo);
+  padding:14px 18px;margin:14px 0;font-size:15.5px;line-height:2}
+.who{display:block;font-size:12px;color:var(--faint);letter-spacing:.18em;margin-top:8px}
+
+/* 玄帝履历 */
+.life{margin-top:36px;border-top:1px solid var(--hairline)}
+.life .row{display:grid;grid-template-columns:150px 1fr;gap:22px;padding:20px 4px;border-bottom:1px solid var(--hairline)}
+.life .row .tag{color:var(--bamboo);font-size:14.5px;letter-spacing:.2em;padding-top:2px}
+.life .row .tag small{display:block;color:var(--faint);font-size:11.5px;letter-spacing:.12em}
+.life .row .bd p{color:var(--dim);font-size:15px;margin-bottom:8px}
+.life .row .bd p:last-child{margin-bottom:0}
+
+/* 峰墙 */
+.peakwall{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.pk{
+  border:1px solid var(--hairline);background:var(--ink2);color:var(--dim);
+  font-size:14px;letter-spacing:.08em;padding:7px 15px;cursor:pointer;transition:all .25s ease;
+}
+.pk:hover{border-color:var(--bamboo-dim);color:var(--paper)}
+.pk.on{background:var(--bamboo-dim);border-color:var(--bamboo);color:#f2efe8}
+.pk.big{border-color:var(--bamboo-dim);color:var(--paper)}
+.pkpanel{margin-top:26px;border:1px solid var(--hairline);border-left:3px solid var(--bamboo);
+  background:var(--ink2);padding:26px 30px;min-height:120px}
+.pkpanel h4{font-size:18.5px;letter-spacing:.1em;margin-bottom:10px}
+.pkpanel h4 small{color:var(--faint);font-size:12.5px;margin-left:12px;letter-spacing:.14em}
+.pkpanel p{color:var(--dim);font-size:15px}
+#pkbank{display:none}
+
+/* 六灵 */
+.roster{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:32px}
+.ling{position:relative;border:1px solid var(--hairline);background:var(--ink2);padding:24px 22px;cursor:pointer;transition:border-color .3s}
+.ling:hover{border-color:var(--bamboo-dim)}
+.ling h4{font-size:18px;letter-spacing:.14em;color:var(--paper);display:flex;align-items:baseline;gap:10px}
+.ling h4 small{font-size:12px;color:var(--bamboo);letter-spacing:.16em;font-weight:400}
+.ling .glyph{position:absolute;right:16px;top:14px;font-size:34px;color:var(--bamboo);opacity:.2;font-weight:700}
+.ling .front p{color:var(--dim);font-size:14px;margin-top:12px}
+.ling .back{display:none;border-top:1px solid var(--hairline);margin-top:14px;padding-top:6px}
+.ling.flip .back{display:block}
+.ling .back p{color:var(--dim);font-size:14px;margin-top:10px}
+.ling .hintmore{font-size:11.5px;color:var(--faint);letter-spacing:.2em;margin-top:12px}
+
+/* 铭文 */
+.ming{background:var(--ink3);border:1px solid var(--hairline);padding:30px;margin-top:20px;text-align:center}
+.ming .q{display:block;background:none;border:none;padding:0;margin:0;
+  font-size:clamp(19px,2.4vw,26px);letter-spacing:.32em;line-height:2.2;color:var(--paper)}
+.ming .who{text-align:center}
+
+/* 双榜 */
+.twin{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:30px}
+.tab{border:1px solid var(--hairline);background:var(--ink2);padding:26px 28px}
+.tab h4{font-size:17px;letter-spacing:.22em;margin-bottom:14px}
+.tab.yi h4{color:var(--bamboo)}
+.tab.ji h4{color:#c0453c}
+.tab p{color:var(--dim);font-size:15px}
+.stampline{display:flex;gap:14px;margin-top:18px;flex-wrap:wrap}
+.stamp{
+  width:52px;height:52px;display:grid;place-items:center;border:1.6px solid #c0453c;color:#c0453c;
+  font-size:22px;font-weight:700;transform:rotate(-4deg);cursor:pointer;transition:all .3s;opacity:.85;
+}
+.stamp:hover{transform:rotate(0deg) scale(1.06)}
+.stamp .tip{display:none}
+
+/* 兴废时间线 */
+.tl{margin-top:34px;position:relative;padding-left:30px}
+.tl::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--bamboo-dim),var(--hairline) 60%,#c0453c)}
+.tnode{position:relative;margin-bottom:8px}
+.tnode::before{content:"";position:absolute;left:-28px;top:12px;width:12px;height:12px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--bamboo)}
+.tnode.bad::before{border-color:#c0453c}
+.tbtn{background:none;border:none;color:var(--paper);font:inherit;font-size:16.5px;letter-spacing:.06em;
+  cursor:pointer;padding:8px 0;text-align:left;width:100%}
+.tbtn .yr{color:var(--bamboo);font-size:13.5px;letter-spacing:.14em;margin-right:14px}
+.tnode.bad .yr{color:#c0453c}
+.tbtn:hover{color:var(--bamboo)}
+.nd{overflow:hidden;max-height:0;transition:max-height .6s ease}
+.tnode.open .nd{max-height:800px}
+.nd .inner{padding:2px 4px 20px}
+.nd p{color:var(--dim);font-size:15px;margin-bottom:8px;max-width:56em}
+
+/* 山中人册 */
+.sages{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:32px}
+.sage{border:1px solid var(--hairline);background:var(--ink2);padding:24px 26px}
+.sage h4{font-size:18px;letter-spacing:.1em;color:var(--paper)}
+.sage h4 small{color:var(--faint);font-size:12px;letter-spacing:.16em;margin-left:10px}
+.sage p{color:var(--dim);font-size:14.5px;margin-top:10px}
+
+/* 圣号链 */
+.chain{margin-top:44px;border-top:1px solid var(--hairline);padding-top:40px;text-align:center}
+.chain .lead{color:var(--faint);font-size:13.5px;letter-spacing:.34em;margin-bottom:24px}
+.chain .q{
+  display:block;background:none;border:none;padding:0;font-size:clamp(17px,2.1vw,23px);
+  line-height:2.3;letter-spacing:.14em;color:var(--paper);
+}
+.chain .final{font-size:clamp(30px,4.6vw,52px);letter-spacing:.3em;font-weight:700;color:var(--bamboo);margin-top:20px}
+.coda{margin-top:60px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+
+/* 滚动入场 */
+.rv{opacity:0;transform:translateY(26px);transition:all .9s ease}
+.rv.on{opacity:1;transform:none}
+
+/* 页脚 */
+footer.page{border-top:1px solid var(--hairline);margin-top:70px;padding:44px 0 70px;color:var(--faint);font-size:13.5px}
+footer.page p{margin-bottom:12px;max-width:70em}
+footer.page a{color:var(--bamboo);text-decoration:none}
+footer.page .xiaoji{color:#8d8778;font-size:13px;line-height:1.9}
+
+@media(max-width:760px){
+  .grid2,.grid3,.twin,.sages{grid-template-columns:1fr}
+  .roster{grid-template-columns:1fr 1fr}
+  .life .row{grid-template-columns:1fr;gap:6px}
+  .hero h1{height:min(48dvh,420px);font-size:40px}
+  .stone .alt{display:none}
+  .wrap{padding:0 18px}
+  .station{padding:56px 0 20px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero" id="hero">
+  <div class="scene">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <rect width="1440" height="900" fill="#191917"/>
+      <circle cx="1150" cy="150" r="46" fill="#e8e4dc" opacity=".1"/>
+      <circle cx="1150" cy="150" r="30" fill="#e8e4dc" opacity=".12"/>
+      <g class="mtfade">
+        <path d="M-40,760 L120,600 L240,690 L400,520 L560,660 L700,430 L760,470 L840,560 L980,380 L1120,540 L1260,470 L1380,600 L1480,540 L1480,900 L-40,900 Z" fill="#24231f"/>
+        <path d="M-40,800 L180,660 L330,750 L520,600 L660,700 L820,540 L960,660 L1140,560 L1300,680 L1480,620 L1480,900 L-40,900 Z" fill="#1e1d1a"/>
+        <path d="M700,430 L760,470 L730,445 Z" fill="#3c5f49" opacity=".55"/>
+        <path d="M980,380 L1012,420 L950,420 Z" fill="#3c5f49" opacity=".45"/>
+      </g>
+      <path d="M-40,850 L200,760 L430,820 L700,720 L950,800 L1200,730 L1480,800 L1480,900 L-40,900 Z" fill="#151513"/>
+      <g class="cloudband">
+        <ellipse cx="360" cy="500" rx="460" ry="90" fill="#e8e4dc" opacity=".05"/>
+        <ellipse cx="900" cy="620" rx="560" ry="100" fill="#e8e4dc" opacity=".06"/>
+        <ellipse cx="1250" cy="430" rx="380" ry="80" fill="#e8e4dc" opacity=".045"/>
+        <ellipse cx="200" cy="680" rx="420" ry="86" fill="#e8e4dc" opacity=".055"/>
+        <ellipse cx="720" cy="380" rx="500" ry="70" fill="#e8e4dc" opacity=".04"/>
+      </g>
+    </svg>
+  </div>
+  <div class="hero-inner">
+    <div class="wrap">
+      <div class="kicker">殆知阁导读 · 其四百一十五</div>
+      <h1>武当福地总真集</h1>
+      <p class="hsub">元刘道明编 · 三卷，至元辛卯成书。劫火之后重开山门，本山都提点亲手为这座山立的传：山从哪里来，玄帝是谁，峰岩涧溪各归何人，仙禽灵兽如何当差，登顶要守什么规矩，供桌上忌讳什么果子。一部圣山的开山总账。</p>
+      <button class="mist-btn" id="mistBtn" type="button">持心精恪 · 拨雾见山</button>
+      <div class="hint">山中雾锁云横，拨之则四气朗清</div>
+      <div class="seal">朝顶</div>
+    </div>
+  </div>
+</header>
+
+<nav class="rail" aria-hidden="true">
+  <svg viewBox="0 0 86 380">
+    <path class="trail" d="M43,20 C10,60 80,90 43,130 C10,170 80,200 43,240 C10,280 80,310 43,350"/>
+    <g id="raildots"></g>
+  </svg>
+</nav>
+
+<main>
+<div class="wrap">
+
+  <!-- 序 · 均州 -->
+  <section class="station" id="st0">
+    <div class="stone rv"><span class="no">序亭</span><h2>均州启程</h2><span class="alt">山脚 · 乐都故村</span></div>
+    <p class="stand rv">先说这是一本什么书。至元辛卯，也就是元世祖至元二十八年，武当山有一位道号洞阳的道人刘道明，在山中写下自序，交出这部三卷的山志。他的身份很特殊：五年之前，他刚和另外两位法师一起被朝廷任命为本山都提点，等于这座山的官方住持。书写得极其务实，卷上是峰岩溪涧的台账，卷中是灵迹物产的清单，卷下是封号文书与历代名人档案。它是玄帝信仰的正式说明书，也是一座刚从战火里爬起来的山，递给天下游客的名片。</p>
+    <div class="grid2">
+      <div class="pcard rv">
+        <h3>编书人自述<small>卷首自序</small></h3>
+        <p>自序里交代了编书的缘起：山中游客不断，见峰峦就问来历，他倦于应酬，干脆把答案一次写全。</p>
+        <q class="q">然游人达士登陆者匪一，往往探迹索隐，令指谕峰峦。</q>
+        <q class="q">敬搜摘群书，询诸耆旧，加以耳濡目染，究其的论确辞，笔之曰《武当总真集》。</q>
+        <q class="q">会万古之精华，敛一山之风月，开卷了然，又何待区区之饶舌也。</q>
+      </div>
+      <div class="pcard rv">
+        <h3>山的年代<small>劫火与中兴</small></h3>
+        <p>书成之前的一百年，这座山在金与宋的拉锯里反复被烧。刘道明把这段惨史写得极省俭，一句定案。</p>
+        <q class="q">谓介乎金宋之问，百年之中三罹劫火。</q>
+        <p>他在序里接着说，如今天下一统，讹言散尽，正好把旧规兴复起来。所谓总真集，是一本在废墟上重新记账的册子。山下的均州，古称有麋之国，书里特意替它考出一个更吉祥的名字。</p>
+        <q class="q">谓人民朴野，安静乐善，虽曰麋鹿，犹可安居。</q>
+        <q class="q">泉甘土肥，风物美秀。地灵人杰，神仙攸居。</q>
+      </div>
+    </div>
+    <div class="pcard rv" style="margin-top:22px">
+      <h3>落款<small>卷首自序</small></h3>
+      <q class="q">至元辛卯中元日，前林下洞阳道人刘道明拜手谨书。</q>
+      <p>中元日是七月十五。落款自称洞阳道人，前面冠一个前字，暗示写作时他已交卸山职，退居林下。</p>
+    </div>
+  </section>
+
+  <!-- 第一程 · 玄帝本末 -->
+  <section class="station" id="st1">
+    <div class="stone rv"><span class="no">第一程</span><h2>玄帝本末</h2><span class="alt">山腹 · 名号与来历</span></div>
+    <p class="stand rv">山志的第一件大事是考证山名。武当二字，本身就是一句判词。</p>
+    <q class="q">非玄武不足以当之，因名焉。</q>
+    <p class="stand rv">玄武是北方之神，龟蛇合体；到宋代，因为要避圣祖赵玄朗的讳，玄武改名真武，庙里那尊披发跣足的大帝从此换了名字。书里把这位大帝的家谱、履历、封号一路铺陈，像一份极其郑重的到任文书。</p>
+    <div class="grid2">
+      <div class="pcard rv">
+        <h3>三名与得名<small>卷上 · 武当事实</small></h3>
+        <q class="q">武当山，一名太和，一名大岳，一名仙室。中岳佐命之山。</q>
+        <p>太和、大岳、仙室，一名比一名亲近。而最后的定名，是把整座山的地理人格都押在一位神身上。</p>
+        <q class="q">地势雄伟，非玄武不足以当，因名之日武当。</q>
+        <p>书中类书式的沿革小注一路从唐虞写到均州，山脚下还替玄帝的出身国考出了实址：均州之南有村名乐都，相传即静乐国，村东山下有几座古陵，耆老相传是静乐国王的坟茔。神的故乡被落实到了具体村落的几座坟头上。</p>
+      </div>
+      <div class="pcard rv">
+        <h3>改名<small>卷下 · 宋封圣号</small></h3>
+        <p>玄武变真武，一句话的事，却牵动此后七百年所有香火。</p>
+        <q class="q">本名玄武，宋避庙讳，改名真武。</q>
+        <p>而这座山真正成为帝国级圣地，靠的是一桩发生在京城的天象。至元七年冬天，大都西郊的高梁河里，先现蛇，后现龟，龟蛇正是玄武的形貌。朝廷因此立宫建碑，安奉圣容，赐额昭应宫。本书的编纂，正是这场国家崇拜全面铺开的前夜。</p>
+        <q class="q">至元七年十二月十九日，西郊高梁河金水中有蛇，长尺余，金彩青章。明日，复有神龟，金碧交错，回旋泛泳。</q>
+      </div>
+    </div>
+    <div class="life rv">
+      <div class="row"><div class="tag">出身<small>静乐国</small></div><div class="bd">
+        <p>卷下玄帝传记说，玄帝托胎于静乐国王家的善胜夫人，怀了十四个月，从左胁下生下来。生而神灵，七岁便通天文，潜心至道。</p>
+      </div></div>
+      <div class="row"><div class="tag">入山<small>辞亲</small></div><div class="bd">
+        <q class="q">十五，辞父母，父王不能抑志，遂入是山，潜虚玄一，默会万真。</q>
+        <p>十五岁辞父母入山。在山的修身被写成一份仪表与耐力的双料档案。</p>
+        <q class="q">身长九尺，面如满月，龙眉凤目，钳发美髯，颜如冰清，披松萝之服，散发铣足，凝真养性四十二年，成无上道。</q>
+        <p>散发跣足、松萝为服的形象从此定型，库本跣字讹作铣，照录。</p>
+      </div></div>
+      <div class="row"><div class="tag">上升<small>岁在庚寅</small></div><div class="bd">
+        <q class="q">岁在庚寅，九月九日凌晨，四气朗清，鸾鹤天花，相问飞舞，林峦震响，自作步虚仙乐之音，地皆变金玉之色，</q>
+        <p>九月初九凌晨，五龙相送，白日飞升。这是武当一切节庆与地名的总源头。</p>
+        <q class="q">五黑龙君掖之上升，至紫霄峰之上，解松萝之服，衣所赐冠被，飞空步虚于大顶之上，</q>
+        <q class="q">后改太和之名曰武当山。</q>
+      </div></div>
+      <div class="row"><div class="tag">收魔<small>锁于北邓</small></div><div class="bd">
+        <p>书里另一场大战在商纣之世：六天魔鬼王伤害黎庶，玄帝奉命领龟蛇、丁甲与三十万神将下界收魔，七日功成。</p>
+        <q class="q">七日之中，天下妖魔一时收断，计奏定录，锁于北邓。</q>
+        <p>金锁峰条目把这场战争的收尾落在山里的风景上：锁魔之门就是一面石壁，放魔的条件是涧水枯竭。</p>
+      </div></div>
+    </div>
+    <div class="pcard rv" style="margin-top:26px">
+      <h3>来龙<small>山从哪里来</small></h3>
+      <p>天马峰条目记了武当山的来脉，一句风水口吻的话，把山写成一条从西北游来的巨龙。</p>
+      <q class="q">山自干兑发原，历关陇金房之地，盘亘万里而至于斯。</q>
+      <p>紫元君初见童年的玄帝，指山授地，说的也是同一套山川语言。</p>
+      <q class="q">此山自干兑起脉，盘旋五万里，水出震官，土应翼斡二宿，显定极风、太安皇崖二天，汝可居之，当契太和。</q>
+    </div>
+  </section>
+
+  <!-- 第二程 · 七十二峰 -->
+  <section class="station" id="st2">
+    <div class="stone rv"><span class="no">第二程</span><h2>七十二峰</h2><span class="alt">峰脊 · 峰岩溪涧</span></div>
+    <p class="stand rv">卷上是一座峰的台账。七十二座峰、三十六处岩、二十四条涧，三个数字是全书的总广告，但实际登记的峰名并没有凑足七十二之数，读台账的人不妨自己数一数。主峰天柱峰号称高万丈，是大顶；北斗七星被整组搬上山，七座峰直接拿了斗柄的名字。下面这一墙峰名，点开有故事。</p>
+    <q class="q">贪狼峰、巨门峰、禄存峰、文曲峰、廉贞峰、武曲峰、破军峰</q>
+    <div class="peakwall rv" id="peakwall"></div>
+    <div class="pkpanel rv" id="pkpanel">
+      <h4 id="pkname">天柱峰<small>点峰名，读条目</small></h4>
+      <div id="pkbody"><p>主峰大顶，七十二峰之中心。朝顶的人爬到这里，书里只有六个字的体感记录。</p></div>
+    </div>
+    <div id="pkbank">
+      <div data-pk="dz"><p>书里给大顶的体感批注只有六个字，冷得具体。传云玄帝当年就在此冲举，乘辇上天庭朝阙，所以大顶是全山的终点。</p><q><q class="q">朝顶到此，骨凛毛寒。</q></q><q><q class="q">皆插空万仞，虽猿鹤莫能跻攀。</q></q></div>
+      <div data-pk="bd"><p>北斗七星变成七座峰，拱卫在大顶之北。传云这里是上天校录善恶的地方，夏秋雷电极盛，夜深能听见乌猿啸月。</p><q><q class="q">七峰在大顶之北，若北斗拱极之象。</q></q></div>
+      <div data-pk="lm"><p>神仙戴孟本是汉将军，弃官学道，白日飞升时帽子落在了峰顶，峰名从此叫落帽。</p><q><q class="q">昔神仙戴孟于此飞升，落帽于上。</q></q></div>
+      <div data-pk="by"><p>陈抟字图南，号希夷先生，在武当隐居时三换住处躲避名声，先住白云峰，再迁诵经台，最后五龙干脆送他去华山。</p><q><q class="q">陈希夷避名三迁于此，次后五龙徙之华岳。</q></q></div>
+      <div data-pk="zg"><p>紫盖峰下发生过一桩雷法公案：隐者刘道人夜里被幻象召唤，徒弟王先生断定是魔灵见试，篆了一道雷符焚掉，霹雳一声后，山里找到一头被雷击毙的巨兽。</p><q><q class="q">潜归法靖，密篆雷符焚之，霹雳一声，悉无所见。 </q></q><q><q class="q">平旦视之，但有血迹，逐步行约二三里，石穴之中有一巨兽，为雷所击。</q></q></div>
+      <div data-pk="js"><p>金锁峰下锁着收魔战争里的俘虏。玄帝立誓，放他们的条件是山涧枯水，而石壁就是门。</p><q><q class="q">俟此山下涧水枯竭，方才放尔。今石壁即其门也。</q></q></div>
+      <div data-pk="wl"><p>玄帝飞升那天，五老受命开路，车驾停在五老峰头，连地神都踊现观礼。</p><q><q class="q">昔玄帝上升，五老奉诏启途，驻辇于此，地神踊现。</q></q></div>
+      <div data-pk="ys"><p>隐士峰下的神仙出没不定，批注里最写实的一笔是他们的指甲。</p><q><q class="q">或懈衣披发，或奇形异相，手足爪甲各长五七寸。</q></q><q><q class="q">恍惚之问，俱失所在。</q></q></div>
+      <div data-pk="jq"><p>九卿峰下有深潭，人莫能至。有道流夜宿岩畔，听见头顶有音乐会。</p><q><q class="q">昔有道流，游宿岩畔，夜闻金锺玉磬之声。</q></q></div>
+      <div data-pk="tm"><p>天马峰即马嘶山，是均房官道所经，山下龙井的泉水清美，商旅都要来饮爨。涧水夏秋暴涨，过河要看运气，当地谚语把这条水路的狼狈说尽了。</p><q><q class="q">上得马嘶山，四十九渡不曾干。</q></q></div>
+      <div data-pk="bz"><p>把针峰记着磨针故事的后半截：顿悟之后，教他磨针的元君把铁杵收回了此峰。</p><q><q class="q">传云：玄帝顿悟之后，元君飞铁杵于此。＇</q></q></div>
+    </div>
+  </section>
+
+  <!-- 第三程 · 灵物榜 -->
+  <section class="station" id="st3">
+    <div class="stone rv"><span class="no">第三程</span><h2>灵物榜</h2><span class="alt">山腰 · 仙禽神兽</span></div>
+    <p class="stand rv">卷中后半是一份在编人员名录：这座山的日常运营，靠一批神兽与灵禽当值。黑虎是保安，夜里沿廊巡查，专斥不善之人；灵乌是司晨，报晓兼报吉凶；白蛇是巡察，专在半路截恶人。也有不入编的散仙，比如那只宁可自尽也不肯被笼养的白鹇。六位在编者名录如下，点卡片读事迹。</p>
+    <div class="roster rv">
+      <div class="ling"><span class="glyph">虎</span><h4>黑虎<small>巡山元帅</small></h4><div class="front"><p>北方天一所化生的护山灵神。有时化作金甲将军托相为人，有时现出狮子般的真相。</p><div class="hintmore">点击读差事</div></div><div class="back"><q class="q">变化不一，或托相为人，金甲早袍，若将军之状，</q><p>见面不祥，梦里反而获庆，是全书对它最直白的使用说明。</p><q class="q">见之者不祥，梦之者获庆。</q><p>岗哨记录就八个字：不善之人，当场屏斥。库本庑字讹作麻，照录。</p><q class="q">夜巡廊麻，灵迹昭垂，不善之人，立为屏斥。</q></div></div>
+      <div class="ling"><span class="glyph">蛇</span><h4>白蛇<small>福地灵神</small></h4><div class="front"><p>鼻子四个，牙有八颗，变脸没有定数。有时盘在石上，有时游在涧边，梦里也神异无穷。</p><div class="hintmore">点击读差事</div></div><div class="back"><q class="q">四鼻八牙，变现莫测。</q><p>体型没有定数，大时如栋梁，小时如指筋，专在道途上逐恶人。</p></div></div>
+      <div class="ling"><span class="glyph">乌</span><h4>灵乌<small>报晓</small></h4><div class="front"><p>一身北方正色，是武当的报晓鸟。常几十只聚在殿角，清晨黄昏噪跃而鸣。</p><div class="hintmore">点击读差事</div></div><div class="back"><q class="q">预报吉凶，验其慈厉，靡不应者。</q><p>乌鸦报晓是山门一景，游人晨起闻鸦，即知吉凶。群乌中另有一只红喙的，是彩头。</p><q class="q">内一红喙者，见之获吉。</q></div></div>
+      <div class="ling"><span class="glyph">鹇</span><h4>白鹇<small>不入职</small></h4><div class="front"><p>红冠铁距，黑裳白衣，在松竹之间呼朋引类，是真正的仙禽。</p><div class="hintmore">点击读结局</div></div><div class="back"><q class="q">似雉而尾长四五尺，朱冠铁距，玄裳缟衣，呼类唤朋于苍松翠竹之上，真仙禽也。然不受樊畜，自奋而死。</q><p>名录里最烈的一笔：宁死不入笼。</p></div></div>
+      <div class="ling"><span class="glyph">禽</span><h4>我师禽<small>追慕</small></h4><div class="front"><p>褐羽金嘴，青头红脚。清秋夜里在高峰林木间叫个不停，叫声像两个字。</p><div class="hintmore">点击读叫声</div></div><div class="back"><q class="q">呼呜：我师，终夜不止。传云：玄帝上升，蕙怅既空，山禽追慕不已。</q><p>相传玄帝升天之后蕙帐已空，这只鸟是全山最痴的追念。库本帐讹作怅，照录。</p></div></div>
+      <div class="ling"><span class="glyph">乐</span><h4>半部乐<small>呈瑞</small></h4><div class="front"><p>样子像黄雀，几十只一群，飞起来是一支乐队。</p><div class="hintmore">点击读名目</div></div><div class="back"><q class="q">形如黄雀，数十为群，音中宫商，有鼓瑟吟唱之韵。</q><p>半部乐之名由此而来，传云是玄帝栖真时地神呈瑞的遗响。</p></div></div>
+    </div>
+    <div class="grid2">
+      <div class="pcard rv">
+        <h3>磨针涧<small>一句谚语的山中源头</small></h3>
+        <p>五龙宫以北一里，涧滨有石带磨痕。铁杵磨成针的故事，在武当有自己的版本：玄帝修炼多年未见成效，心生怠意，走到涧边，看见一位神女在石头上磨铁杵。她正是紫元君的化身。</p>
+        <q class="q">玄帝炼真之时，久未契玄，似有怠意，因步涧下，见一神女以铁杵磨之，即紫元君神化也。</q>
+        <p>玄帝问磨它做什么，答说家中失了针。又问铁杵成针岂非容易，神女的回答只有四个字。</p>
+        <q class="q">铁杵成针，巨非容易。答日：工夫未至耳。玄帝大悟，厥后愈勤修进，克证天真。</q>
+        <p>玄帝大悟，愈勤修进，终成天真。天下人都会说只要功夫深，铁杵磨成针，这本书把它登记成了本山典故。</p>
+      </div>
+      <div class="pcard rv">
+        <h3>榔梅<small>以验丰歉的仙果</small></h3>
+        <p>五龙宫北有榔梅仙翁祠，枯木旁一株参天，榔木结梅实，果核像杏。这树有脾气，一枯则另发一株，万古如初。果子熟在四五月，树高看不见果子，祈祷之后会自己落下来。</p>
+        <q class="q">棚木梅实，桃核杳形。</q>
+        <q class="q">叩梼仙翁，移时自落，取而食之，味酸而甘。</q>
+        <p>它是山里的丰歉指示剂。</p>
+        <q class="q">以验丰歉，丰年实多，荒年则无。</q>
+        <p>来历也记在誓愿上：玄帝磨针悟道之后，摘梅花插在榔木上，与树立约。</p>
+        <q class="q">玄帝磨针之悟，因摘梅花插于木上，誓之日：我若道成，汝当结实。</q>
+        <p>库本榔字多讹作棚，照录。</p>
+      </div>
+    </div>
+    <div class="ming rv">
+      <p class="stand" style="margin:0 0 6px;text-align:center;color:var(--dim)">南岩曾安奉一尊玄帝铜像，由庐陵众信捐铸，并请来宋末一位顶流文人作铭。十八句三字铭，是全书最亮的一段铭文。</p>
+      <q class="q">天地先，水中铅。范合坚，灵风烟。生青莲；剑蜿坛。按大千，龟蛇缠。劫运迁，飞干干。玄玄夭，万万年。</q>
+      <span class="who">刘辰翁铭 · 库本铭文照录</span>
+    </div>
+    <div class="grid3">
+      <div class="pcard rv">
+        <h3>试心石<small>南岩</small></h3>
+        <p>南岩即紫霄岩，列为三十六岩之首，玄帝在此炼真。岩西有一块悬空突出的石头，专门负责检验胆量。</p>
+        <q class="q">一石突出于虚壁万仞之上，名日试心石，到此无不股栗。</q>
+      </div>
+      <div class="pcard rv">
+        <h3>钦火岩<small>雷洞</small></h3>
+        <p>岩里有一眼灵池，池水能治病，叩拜之后取水服用，说灵就灵。但规矩写得清楚：这不是谁都能占便宜的泉。</p>
+        <q class="q">有私饮此水者，则神火烧身，雷风大作。</q>
+      </div>
+      <div class="pcard rv">
+        <h3>隐仙岩<small>尹轨棋局</small></h3>
+        <p>尹喜、尹轨两位古仙都居于此。岩右大木下横铺一副石棋盘，左右两列石座，是尹轨下棋的旧座位。</p>
+        <q class="q">岩右大木下，石棋盘局横铺于上，左右列石为坐。</q>
+        <q class="q">夜籁澄寂，常闻步虚玉磬之声，频见神仙往来，熊虎宿卫。</q>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第四程 · 宫观兴废 -->
+  <section class="station" id="st4">
+    <div class="stone rv"><span class="no">第四程</span><h2>宫观兴废</h2><span class="alt">南岩 · 宫观本末</span></div>
+    <p class="stand rv">卷中宫观本末是一部微缩的兴亡史：每一次王朝更替，都先在这座山的殿宇上记账。时间线从唐贞观的一场大旱开始，到本书成书前夜的至元年间结束。点年份，读条目。</p>
+    <div class="tl rv">
+      <div class="tnode"><button class="tbtn" type="button"><span class="yr">唐 · 贞观</span>姚太守祷雨</button>
+        <div class="nd"><div class="inner">
+          <p>贞观年间天下大旱，蝗虫遍地，朝廷命祷名山都没有感应。武当节度姚简奉命肃醮，来了一位风貌殊异的儒士，自我介绍毫不客气。</p>
+          <q class="q">贞观中，天下大旱，飞蝗褊起，劫祷名山，俱未感应。</q> <q class="q">予等俱非凡士，五龙君也。</q>
+          <p>说罢云气地涌，人已不见。随后大雨下遍天下，田里草木全都活泛起来。姚简交出官印，全家搬进武当，身后被玄帝任命为本地镇山之神，宋朝廷封他忠智威烈王，祠在紫霄宫之东。</p>
+          <q class="q">顷之，云气地涌，失君所在，雷电霖雨，褊布天下，草木禾稼，俱各荣茂。</q>
+        </div></div></div>
+      <div class="tnode"><button class="tbtn" type="button"><span class="yr">宋 · 宣和</span>紫霄宫创建</button>
+        <div class="nd"><div class="inner">
+          <p>紫霄，是玄天的别名。宫成之后不久就是靖康，宫里的度牒文书档案在劫火中被住持带着渡江南逃，一座宫观的户口从此寄在江南。</p>
+          <q class="q">宋宣和中创建，其劝额文据，甲午劫火，主者挈之南游。</q>
+        </div></div></div>
+      <div class="tnode bad"><button class="tbtn" type="button"><span class="yr">金宋之间</span>三罹劫火</button>
+        <div class="nd"><div class="inner">
+          <p>序里那句百年三罹劫火，落到宫观上是这样的：</p>
+          <q class="q">时汴湖龙去，江汉罹金兵之厄，武当殿宇为之一空。绍兴辛酉，首登武当，兴复五龙，</q>
+          <p>茅山道士孙寂然上山收拾残局，以符水禳祲为民除疾，数年之间殿宇重建齐备。高宗闻其名，诏赴阙庭，符水称旨，度道士十人；晚年归山，安然而逝。</p>
+        </div></div></div>
+      <div class="tnode"><button class="tbtn" type="button"><span class="yr">元 · 至元乙亥</span>黑虎引路开五龙</button>
+        <div class="nd"><div class="inner">
+          <p>至元十二年，全真道士汪思真领徒众六人上山，荆榛塞途，给这支六人小队开路的是黑虎。同年鲁大宥偕行开复紫霄岩。十三年后，戊寅岁，紫霄宫后殿的重建人是一个特殊的身份。</p>
+          <q class="q">至元乙亥，领徒众六人开复五龙，荆榛塞途，黑虎为之引导。</q> <q class="q">戊寅岁中，契丹女官萧守通建殿于后，行绿受供，一如五龙。</q>
+          <p>这位重建人叫萧守通，是位契丹女官。辽亡已近百年，一位契丹女官出现在武当的工地上，是全书最意外的一个名字。</p>
+        </div></div></div>
+      <div class="tnode"><button class="tbtn" type="button"><span class="yr">元 · 至元丙戌</span>都提点上任</button>
+        <div class="nd"><div class="inner">
+          <p>至元廿三年，三位法师同承御前之命，领全山提点之职。五年后本书成。一门三提点，是山门与朝廷最蜜月的日子。</p>
+          <q class="q">法师叶希真、刘道明、华洞真承应御前，充武当山都提点。奏奉护持圣旨，累降御香，</q>
+          <q class="q">黑虎巡廊，乌鸦唱晓，实尘外之境也。</q>
+        </div></div></div>
+    </div>
+    <div class="grid2">
+      <div class="pcard rv">
+        <h3>日月池<small>五色池与一块木牌</small></h3>
+        <p>五龙宫天宝坛南有二池相并。日池周回二十多丈，旱不干，涝不溢，池水显五色，说变就变。池上曾要建藏殿，工匠头夜梦见神仙来谈判：</p>
+        <q class="q">此处上应三天，下即洞府，群仙神龙居焉。</q>
+        <p>梦里的意思很明白：法轮一转，神灵不安。库本轮字讹作输。于是殿照建，轮不运，池滨挂了一块牌子。</p>
+        <q class="q">其水五色，时时变更。</q> <q class="q">洞天在近，过往低声。</q>
+        <p>牌子不是虚设。中统元年七月，宣慰使孙嗣带全城归附，兵士到池边洗剑，池里当场有了反应。</p>
+        <q class="q">神龙拥脊而现鳞鬣，天地昏暗，雷雨大震。</q>
+        <p>近年又有朝山客牵犬马误饮池水，立毙。一块过往低声的牌子，是全书最具体的危险警示标志。</p>
+        <q class="q">近年朝山之士引至犬马误饮之者，立毙。</q>
+      </div>
+      <div class="pcard rv">
+        <h3>盐池<small>伏魔之下的咸泉</small></h3>
+        <p>大顶东南五十里有观名佑圣，观前有池，水是咸的。来历写在名字里：玄帝收伏的魔精就镇在石头下面，咸泉从魔身上浸出来。官府一度禁止取用，泉源渐竭，于是建观以镇之。</p>
+        <q class="q">古今相传玄帝摄伏魔精置于石下。有咸泉一脉浸于池中，</q> <q class="q">有司禁止，泉源渐竭，因建观以镇之。</q>
+        <p>至元戊寅年间，有个道号碧云的赵守节道长，凭道法术数出名，带徒众几年间把殿宇造像置办齐整。一片被镇压的咸水，就这样重新入了宫观的编制。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第五程 · 山中人 -->
+  <section class="station" id="st5">
+    <div class="stone rv"><span class="no">第五程</span><h2>山中人</h2><span class="alt">林下 · 古今明达</span></div>
+    <p class="stand rv">卷下古今明达是一份历代名人档案。引言先立了一条冷峻的收录原则：真修行人怕闲名落进耳朵，大多隐姓埋名，所以能留下名字的寥寥数人。他们里有辞官的将军、不肯当宰相的读书人、长出胡子的种杉人，和一位只会说三个字的隐士。</p>
+    <q class="q">夫养生之人，多隐其名字，藏其时日，恨山不深、林不密，惟恐闲名落人耳中。</q>
+    <q class="q">学道者常有百数，心有懈替，则为百兽所逐。</q>
+    <div class="sages rv">
+      <div class="sage"><h4>尹喜<small>周 · 函谷关令</small></h4>
+        <p>大道将隐之时预占紫气西行，果然等到过关的太上，执弟子礼，得了道德两篇经，还约好日后在蜀地青羊肆再见。此后托疾不仕，回栖三天门下的石壁居室。山中的尹喜岩、牛漕涧与青羊涧，都是太上访喜的旧迹。</p>
+        <q class="q">当周之末，大道将隐，预占紫气西迈，有道者过之，出为函谷关令。</q>
+      </div>
+      <div class="sage"><h4>陈抟<small>五代宋初 · 睡仙</small></h4>
+        <p>五季之世在汴梁遇见宋太祖，断了一句这是真命天子，随后笑坠白驴，从此动了高飞的念头。入武当隐居，在五龙观侧诵易，感五龙君授睡法，悟出画前之妙。他给落帽峰留过一首诗，也是全书里最像旅游广告的一首。</p>
+        <q class="q">五季之世，汴梁见宋太祖而异之日：此真命也。笑坠白驴，遂有高举云烟之兴。</q> <q class="q">我爱武当好，将军曾得道。升举入云霄，高岑名落帽。</q>
+      </div>
+      <div class="sage"><h4>张士逊<small>宋 · 拒绝学仙的宰相</small></h4>
+        <p>均州人，少孤贫，在武当山读书。有道士看他有道气，劝他随我学仙。他拒绝了，下山应举，雍熙年间登甲科，后位至宰相。山志收录他，是仙人名单里最世俗的一笔成功学反例。</p>
+        <q class="q">有道士见而异之日，子有道气，可随我学仙。公不欲。</q>
+      </div>
+      <div class="sage"><h4>房长须<small>宋南渡 · 种杉人</small></h4>
+        <p>隐居武当，每天只做一件事：栽杉。五龙宫后的杉树都是他手植，培土浇水从不停手。一日玄帝化形来探，夸他神清则清，只惜未长胡须，伸手在他下巴一托。过了一夜，他觉得胸前有丝物萦绕，一看，须已长尺余。</p>
+        <q class="q">经宿，但觉有物如丝萦于胸臆，视之，须已长尺余矣。</q>
+      </div>
+      <div class="sage"><h4>谢天地<small>宋 · 三个字的人</small></h4>
+        <p>不食五谷，走路像飞，住在南岩更衣台旁的石室，石壁高万仞，下望深涧，猿鹤也难过去，他飞行自若。有人请问，他只答三个字：谢天地。此外没有第二句话，人就用这三个字替他起了名，住的岩也叫谢天地岩。</p>
+        <q class="q">人有启问，但应之日谢天地，余无他语，人以是名之。</q>
+      </div>
+      <div class="sage"><h4>曹观妙<small>宋末 · 住山</small></h4>
+        <p>领住山之职。一夕梦见山神预告三茅真君次日降此，他领众人迎到会仙峰等到日暮，真君化作荷蓑田夫而至，满山无一人识得，还让他帮着拎东西回观，到堂下才异香满庭，悔之无及。他自此立下规矩，道友从此不受俗拜，自武当始。端平三年死于兵难，死后白膏凝肤、不见腥血，行刑的人收剑下拜而去。</p>
+        <q class="q">真君化为田夫，荷蓑而至。众莫之识，令挈物以归，抵观，拜于堂下。</q> <q class="q">果罹兵难，白膏凝肤，略无腥血，刃者致拜，释剑而去。</q> <q class="q">此闻仙凡混居之地，自今已往，世世不受道俗礼拜。令武当道友不受俗拜，始此。</q>
+      </div>
+      <div class="sage"><h4>邓真官<small>宋 · 雷法开山</small></h4>
+        <p>孙寂然弟子，尽得五雷诸法，驾风鞭霆，应有如响。兴建五龙正殿时顽石壁立，开凿极苦，他默施神用，一夜雷雨替他把石头劈开。</p>
+        <q class="q">默施神用，一夕，雷雨为破其石。</q>
+      </div>
+      <div class="sage"><h4>五龙君<small>跨朝代员工</small></h4>
+        <p>五黑龙君是本山最资深的在编者，卷下给它的履历只有一句对仗工整的考语：唐代帮姚太守降雨，宋代教陈抟睡觉。</p>
+        <q class="q">访姚太守降雨于唐，授陈希夷睡法于宋，雨旸祈叩，其感应不可枚举。</q> <q class="q">一感五黑龙君，授以睡法，得画前之妙。</q>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第六程 · 朝顶须知 -->
+  <section class="station" id="st6">
+    <div class="stone rv"><span class="no">第六程</span><h2>朝顶须知</h2><span class="alt">天门 · 礼仪与禁忌</span></div>
+    <p class="stand rv">登顶规程写在卷上大顶条目里：从南岩取路，先在紫霄宫焚香祝圣，得许方可上大顶。三天门插空万仞，猿鹤难攀；山顶设铜亭供着玄帝圣容，礼成即须下撤，山门对滞留有明确的态度。</p>
+    <q class="q">至顶有铜亭一座，亭内香炉一座、玄帝一尊，焚香书名诵经。不宜久停，速下山，风雨洗荡秽气。</q>
+    <div class="grid2">
+      <div class="pcard rv">
+        <h3>关门<small>圣意不容</small></h3>
+        <p>若圣意不容而强登，山会自己关上门。这不是灾害预警，是接待条款。</p>
+        <q class="q">若圣意不容，强欲上山，则雾锁云横，莫辨高下，巨蛇猛兽，蹲踞道傍。‘</q>
+        <p>书里另有一句更狠的资格论。</p>
+        <q class="q">记日：刻刻不离大顶、无一时不在南岩。三世为人，方上吾山。七世为人，方住吾地。</q>
+        <p>库本记字讹作日，照录。</p>
+      </div>
+      <div class="pcard rv">
+        <h3>路上的关卡<small>山也有执法队</small></h3>
+        <p>茅阜峰是福地初门，上头有一座守山灵官的祠，灵验出众。对登山者的着装与言行有明确处罚条款。</p>
+        <q class="q">人有茹荤亵侮登山者，微则蛇虎斥逐，否则摄于树下，如束缚之状。</q>
+        <p>七里峰下设五龙接待庵，一条小路七里长，百步一拐九折上山。接待处的服务标准写得很具体。</p>
+        <q class="q">土花盈砌，山桂飘香，驻鹤迎宾，烹茶炊粟，一如仙家故事。</q>
+        <p>九度峰另名仙关，是上紫霄的正路，一路石径弯弯白云来去，走到这里人心头一松。</p>
+        <q class="q">游人到此，万虑豁然。</q>
+      </div>
+    </div>
+    <p class="stand rv" style="margin-top:36px">卷下末尾附了一份接待玄帝的实用手册：哪些日子祂会下降，供桌上摆什么、忌什么。下降日历一年十三格，逢三元日与甲子、庚申两天加更。</p>
+    <div class="pcard rv">
+      <h3>录善降日<small>卷下</small></h3>
+      <q class="q">正月初七日、二月初八日、三月初九日、四月初四日、五月初五日、六月初七日、七月初七日、八月十三日、九月初九日、十月二十一日、十一月初七日</q>
+      <q class="q">三元日、甲子日、庚申日。</q>
+    </div>
+    <div class="twin rv">
+      <div class="tab yi">
+        <h4>所宜</h4>
+        <q class="q">玄帝天之大圣，世之福神，不药华饰，惟务清争。</q>
+        <q class="q">清油、冷水、灯烛、时果冷茶、枣汤、黄白花。</q>
+        <p>清茶冷水，时果枣汤，一句话：这位大帝不喜欢排场。</p>
+      </div>
+      <div class="tab ji">
+        <h4>所忌</h4>
+        <q class="q">石榴、李子、荷花、红艳花、莲藕、辛秽、鹞、犬、孕妇，不洁之物，</q>
+        <p>石榴与李子在列，鹞与犬在列，孕妇在列。清单末尾是一句不容商量的警告。</p>
+        <q class="q">虽福神洪慈，则侍卫神灵立彰显报，慎之。</q>
+        <p>另有一组不可称呼的字，谓之名讳，点开可见。库本名录照录：</p>
+        <q class="q">玄帝隐讳：乞、仲芳、诘、贼。</q>
+        <div class="stampline" id="stamps">
+          <span class="stamp" data-tip="乞">乞</span>
+          <span class="stamp" data-tip="仲芳">仲</span>
+          <span class="stamp" data-tip="诘">诘</span>
+          <span class="stamp" data-tip="贼">贼</span>
+        </div>
+        <p id="stampout" style="min-height:1.5em;color:#c0453c;font-size:13.5px;letter-spacing:.1em"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 尾亭 · 圣号 -->
+  <section class="station" id="st7">
+    <div class="stone rv"><span class="no">尾亭</span><h2>圣号</h2><span class="alt">绝顶 · 玄天上帝</span></div>
+    <p class="stand rv">卷下开头先给玄帝递上一份完整的职务全称，从元帅一路叠到上帝，共九层。这份绕口令般的头衔链，是玄帝信仰的官方全名，也是整座山的终点站。</p>
+    <div class="chain rv">
+      <div class="lead">天封玄帝的圣号</div>
+      <q class="q">元帅镇天玄武大将军、三元都总管、九天游奕使、左天呈北极右垣三界大都督、神仙鬼神公事判玄都右胜府事、领元和迁校府事、紫皇天一天君、玉虚师相、玄天上帝。</q>
+      <div class="final">玄天上帝</div>
+    </div>
+    <div class="grid2">
+      <div class="pcard rv">
+        <h3>五百灵官<small>山的编制</small></h3>
+        <q class="q">洞天福地，上帝游年之所，各设灵官五百员，主持守卫。</q>
+        <p>巡山的黑虎元帅条目下，另附有一条给修行者的入学须知：</p>
+        <q class="q">凡骨相未应学仙之人，或现真相，或警梦寐，悉皆逐去。</q>
+      </div>
+      <div class="pcard rv">
+        <h3>卷中收梢<small>山田粟米饭</small></h3>
+        <p>卷中在物产清单末尾附了一首五言小诗，是山上养士之禄的注脚，也是全书写得最像隐士的一句话。</p>
+        <q class="q">山田粟米饭，野菜淡黄兹。个中滋味别，只许自家知。玄帝养士之禄如此，傥非识破浮华，焉能笑傲物外？敬录此语，示诸同志。</q>
+        <p>编书人在数百年山史与三场劫火之后，把最后一句留给了清苦的滋味。</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库道藏〈武当福地总真集〉（洞神部里记传类底本；卷首题元代刘道明编的，三卷，至元辛卯即至元二十八年自序成书；去空白约两万一千字）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。</p>
+    <p class="xiaoji">校字记：库本日字多讹作曰（名之日、誓之日、谚日、异之日、记日等），引文照录不代改；敕字讹作劫（劫祷、劫建宫、劫颁），照录；棚梅即榔梅，棚字照录；跣讹作铣、皂讹作早、庑讹作麻、帐讹作怅、缘讹作绿、辏讹作奏、遍讹作褊、箧讹作策、岂讹作巨、攀讹作探、间讹作问，皆照录；桃核杳形之杳疑当作杏，照录；淡黄兹之兹疑当作韲，照录；翼翰当作翼轸，照录；必一十四涧、祝玫、皇友等讹损处引文避入；十二月降日库本作二＋七日，讹码不入引；全书实收峰名不足七十二之数，页面如实呈现。刘辰翁号须溪，宋末太学博士，铭文为本书所录。</p>
+    <p class="xiaoji">时代局限：本篇为古代文献导读，书中神仙传记、灵异感应与封号文书皆出自宋元道教内部立场，非性质上的史实陈述；对魔、妖、恶人等称谓均为原书观念，请以历史与宗教史眼光阅读。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* 拨雾 */
+  var hero=document.getElementById('hero');
+  function clearMist(){hero.classList.add('clear');}
+  document.getElementById('mistBtn').addEventListener('click',clearMist);
+  setTimeout(clearMist,3600);
+
+  /* 山径导航 */
+  var stops=[['均州','st0'],['玄帝','st1'],['峰峦','st2'],['灵物','st3'],['宫观','st4'],['山中人','st5'],['朝顶','st6'],['圣号','st7']];
+  var ys=[26,58,90,122,154,186,218,250];
+  var g=document.getElementById('raildots'),ns='http://www.w3.org/2000/svg';
+  var dots=stops.map(function(s,i){
+    var grp=document.createElementNS(ns,'g');grp.setAttribute('class','rdot');
+    var c=document.createElementNS(ns,'circle');c.setAttribute('cx',43);c.setAttribute('cy',ys[i]);c.setAttribute('r',5.2);
+    var t=document.createElementNS(ns,'text');t.setAttribute('x',56);t.setAttribute('y',ys[i]+4);t.textContent=s[0];
+    grp.appendChild(c);grp.appendChild(t);
+    grp.addEventListener('click',function(){document.getElementById(s[1]).scrollIntoView({behavior:'smooth'});});
+    g.appendChild(grp);return grp;
+  });
+  var secs=stops.map(function(s){return document.getElementById(s[1]);});
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        var i=secs.indexOf(e.target);
+        dots.forEach(function(d,j){d.classList.toggle('on',j<=i);});
+      }
+    });
+  },{rootMargin:'-40% 0px -50% 0px'});
+  secs.forEach(function(s){io.observe(s);});
+
+  /* 峰墙 */
+  var wall=document.getElementById('peakwall'),panel=document.getElementById('pkpanel');
+  var nm=document.getElementById('pkname'),bd=document.getElementById('pkbody'),bank=document.getElementById('pkbank');
+  var PK=[
+    ['dz','天柱峰',true,'大顶 · 居七十二峰之中'],
+    ['bd','北斗七峰',true,'贪狼至破军 · 若北斗拱极'],
+    ['lm','落帽峰',true,'戴孟飞升处'],
+    ['by','白云峰',true,'陈希夷三迁首站'],
+    ['zg','紫盖峰',true,'雷符试魔公案'],
+    ['js','金锁峰',true,'锁魔之门'],
+    ['wl','五老峰',true,'奉诏启途'],
+    ['ys','隐士峰',true,'神仙出没'],
+    ['jq','九卿峰',true,'夜有清乐，下有深潭'],
+    ['tm','天马峰',true,'马嘶山 · 官道所经'],
+    ['bz','把针峰',true,'元君飞杵处'],
+    ['xz','紫霄峰',false,'竹木交翠，灵物所居'],
+    ['wan','万丈峰',false,'万仞耸云，鹤唳猿啼'],
+    ['sz','师子峰',false,'踞镇云端，尹喜旧栖'],
+    ['hy','皇崖峰',false,'下有皇后岩，圣母憩息处'],
+    ['xb','小笔峰',false,'一峰如笔，卓立云表'],
+    ['ls','雷石峰',false,'土地踞虎，山蛭为害'],
+    ['zz','中质峰',false,'石如圭瓒，类乎进趋'],
+    ['qz','千丈峰',false,'仙李园旧址，缥李无存'],
+    ['lf','莲峰',false,'大莲小莲相望并秀'],
+    ['bf','笔峰',false,'大笔中笔，毛颖中书'],
+    ['sl','松萝峰',false,'玄帝旧服所在'],
+    ['ty','桃源峰',false,'蜕形藏剑的总茔'],
+    ['dzf','迭字峰',false,'雷岩，邓天君炼真处'],
+    ['jd','金鼎峰',false,'形类鼎彝，云烟时起'],
+    ['fl','伏龙峰',false,'龙湫密迩，人迹少到'],
+    ['wd','五龙峰',false,'五龙君的寓所'],
+    ['ly','灵应峰',false,'房长须手植杉木处'],
+    ['yx','隐仙峰',false,'下即隐仙岩，竹关第二门'],
+    ['yh','阳鹤峰',false,'瑞鹤巢宿，药圃莲池'],
+    ['jr','健人峰',false,'如天丁拱立'],
+    ['sg','三公山',false,'太师太傅太保，如玉筝分班'],
+    ['dm','大明峰',false,'王母宫，大松罗列'],
+    ['zx','五小峰',false,'中鼻聚云手扒竹筱搓牙，山蛭莫能着足'],
+    ['am','鳌门峰',false,'鳌门云岭，瘴雾如炊'],
+    ['fm','伏魔峰',false,'玄帝收魔候命之地'],
+    ['yx2','玉笑峰',false,'人呼石人山'],
+    ['cz','拄笏大夷',false,'一峰如笏，一峰如掌托天'],
+    ['dn','丹鳌峰',false,'凝烟之峰，足不可及'],
+    ['pw','眉棱峰',false,'房陵来的登山路，三十余里'],
+    ['fc','复朝峰',false,'七十峰俱拱天柱，独此飘然外居'],
+    ['xl','香炉峰',false,'下即紫霄涧'],
+    ['jd2','九度峰',false,'一名仙关，紫霄正路'],
+    ['zq','展旗峰',false,'一柱擎天，如帜飞空'],
+    ['qy','青羊峰',false,'太上青羊旧游处'],
+    ['ql','七里峰',false,'百步九折，下即接待庵'],
+    ['jm','系马峰',false,'玄帝乘白天马立处'],
+    ['hx','会仙峰',false,'昔迎茅君于此'],
+    ['mf','茅阜峰',false,'福地之初门']
+  ];
+  PK.forEach(function(p){
+    var b=document.createElement('span');b.className='pk'+(p[2]?' big':'');b.textContent=p[1];
+    b.addEventListener('click',function(){
+      wall.querySelectorAll('.pk').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      nm.innerHTML=p[1]+'<small>'+p[3]+'</small>';
+      var src=bank.querySelector('[data-pk="'+p[0]+'"]');
+      bd.innerHTML=src?src.innerHTML:'<p>台账一行：'+p[3]+'。条目止于一行，山志里多数峰就是这样静静列名的。</p>';
+    });
+    wall.appendChild(b);
+  });
+  wall.firstChild.click&&wall.firstChild.click();
+
+  /* 六灵翻面 */
+  document.querySelectorAll('.ling').forEach(function(l){
+    l.addEventListener('click',function(){l.classList.toggle('flip');});
+  });
+
+  /* 时间线 */
+  document.querySelectorAll('.tbtn').forEach(function(b){
+    b.addEventListener('click',function(){b.parentNode.classList.toggle('open');});
+  });
+  var tn=document.querySelectorAll('.tnode');
+  if(tn[0])tn[0].classList.add('open');
+
+  /* 隐讳印 */
+  var out=document.getElementById('stampout');
+  document.querySelectorAll('.stamp').forEach(function(s){
+    s.addEventListener('click',function(){
+      out.textContent='此字不可称，讳曰：'+s.getAttribute('data-tip');
+    });
+  });
+
+  /* 滚动入场 */
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io2.unobserve(e.target);}});
+  },{threshold:.1});
+  document.querySelectorAll('.rv').forEach(function(el){io2.observe(el);});
+})();
+</script>
+</body>
+</html>
