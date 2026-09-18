@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>〈西湖梦寻〉导读 · 殆知阁</title>
+<style>
+  :root{
+    --ink:#191917; --panel:#1d2126; --panel2:#22272e; --night:#141820;
+    --paper:#e8e4dc; --dim:#98a1ab; --faint:#626b74;
+    --q:#5e8fbb; --q-dim:#3f5f7c; --q-ghost:rgba(94,143,187,.13);
+    --seal:#a34a41; --line:#31363c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--ink); color:var(--paper);
+    font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    line-height:1.9; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  body.awake{--q:#8b96a1; --q-dim:#565f68; --q-ghost:rgba(139,150,161,.10);}
+  .mono{font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 26px}
+  a{color:var(--q);text-decoration:none}
+  q{quotes:none}
+  .q,.qv{color:var(--paper)}
+  em{font-style:normal;color:var(--q)}
+
+  /* ============ 入梦门 ============ */
+  .gate{position:fixed;inset:0;z-index:60;background:var(--night);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;
+    transition:opacity 1s ease, visibility 1s;}
+  .gate.open{opacity:0;visibility:hidden;pointer-events:none}
+  .gate::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(58% 42% at 50% 38%, var(--q-ghost), transparent 70%)}
+  .gt{position:relative;writing-mode:vertical-rl;font-size:56px;font-weight:700;
+    letter-spacing:18px;line-height:1;color:var(--paper);text-shadow:0 0 34px rgba(94,143,187,.35)}
+  .gt small{display:block;font-size:15px;letter-spacing:8px;color:var(--dim);font-weight:400;margin-top:26px}
+  .rin{position:relative;width:158px;height:158px;border-radius:50%;cursor:pointer;
+    border:2px solid var(--q-dim);background:transparent;color:var(--q);
+    font-family:inherit;font-size:19px;letter-spacing:10px;padding-left:10px;
+    transition:.35s}
+  .rin:hover{background:var(--q);color:var(--night);border-color:var(--q);
+    box-shadow:0 0 44px rgba(94,143,187,.4)}
+  .gh{color:var(--faint);letter-spacing:6px;font-size:13px}
+
+  /* ============ 首屏夜湖 ============ */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;overflow:hidden}
+  #lake{position:absolute;inset:0;width:100%;height:100%;transition:filter 1.4s ease}
+  body.awake #lake{filter:grayscale(.6) brightness(.82)}
+  .moonhalo{transition:opacity 1.4s ease}
+  body.awake .moonhalo{opacity:0}
+  #lake .moon{transition:opacity 1.4s ease}
+  body.awake #lake .moon{opacity:.22}
+  .lamps circle{animation:flick 3.2s ease-in-out infinite}
+  .lamps circle:nth-child(2n){animation-delay:1.1s}
+  .lamps circle:nth-child(3n){animation-delay:2.2s}
+  body.awake .lamps circle{animation:none;opacity:.06}
+  @keyframes flick{0%,100%{opacity:.9}45%{opacity:.35}70%{opacity:.75}}
+  .wv{animation:drift 9s linear infinite}
+  .wv.b{animation-duration:13s;animation-direction:reverse}
+  @keyframes drift{from{transform:translateX(-36px)}to{transform:translateX(36px)}}
+  .hero .hspace{position:relative;flex:1}
+  .hpanel{position:relative;width:100%;background:linear-gradient(180deg,transparent,rgba(20,24,32,.88) 46%);
+    padding:150px 0 56px}
+  .hpanel .wrap{display:flex;justify-content:space-between;align-items:flex-end;gap:30px}
+  .hmeta{max-width:560px}
+  .kick{color:var(--q);font-size:14px;letter-spacing:7px;margin-bottom:14px}
+  .hsub{color:var(--dim);font-size:15px;letter-spacing:1px}
+  .hq{margin-top:22px;border-left:3px solid var(--q-dim);padding-left:18px}
+  .hq .q{display:none;font-size:16px;line-height:2.1;max-width:30em}
+  .hq .q.seen{display:block;animation:fadein .8s ease}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .vt{writing-mode:vertical-rl;text-align:start;flex:none;height:max-content}
+  .vt h1{font-size:64px;font-weight:700;letter-spacing:20px;line-height:1;white-space:nowrap;
+    text-shadow:0 0 40px rgba(94,143,187,.28)}
+  body.awake .vt h1{text-shadow:none}
+  .vt .who{writing-mode:vertical-rl;font-size:15px;letter-spacing:9px;color:var(--dim);
+    white-space:nowrap;height:max-content;margin-block-start:22px;
+    border-block-start:1px solid var(--line);padding-block-start:18px}
+  .meng{position:absolute;right:26px;top:34px;display:flex;align-items:center;gap:12px;z-index:5}
+  .meng .lb{font-size:14px;letter-spacing:0;color:var(--faint);width:1em;text-align:center;
+    transition:color .3s}
+  body:not(.awake) .meng .lb:first-child{color:var(--q)}
+  body.awake .meng .lb:last-child{color:#a89e90}
+  .meng button{width:74px;height:34px;border-radius:17px;border:1px solid var(--q-dim);
+    background:var(--panel);cursor:pointer;position:relative;font-family:inherit}
+  .meng button i{position:absolute;top:3px;left:4px;width:26px;height:26px;border-radius:50%;
+    background:var(--q);transition:.3s;font-style:normal}
+  body.awake .meng button i{left:44px;background:#7c7468}
+
+  /* ============ 自序纸堂（反白） ============ */
+  .paper{background:var(--paper);color:var(--ink);padding:86px 0 70px}
+  .paper h2{font-size:27px;letter-spacing:8px;margin-bottom:8px}
+  .paper .lead{color:#5c564a;font-size:15px;letter-spacing:2px;margin-bottom:34px}
+  .paper .cols{display:grid;grid-template-columns:1.15fr .85fr;gap:40px}
+  .paper p{font-size:15.5px;color:#33302a;margin-bottom:14px;text-align:justify}
+  .paper .q{display:block;background:rgba(94,143,187,.10);border-left:3px solid var(--q);
+    color:#22303e;padding:10px 16px;margin:14px 0;font-size:15.5px}
+  .paper .sign{margin-top:8px;font-size:14px;color:#5c564a;letter-spacing:2px}
+  .paper .sign .q{display:inline;background:none;border:none;color:#3a4a5c;padding:0;font-size:14.5px}
+  .pdream{background:#20242a;color:var(--paper);border-radius:10px;padding:28px 30px;
+    display:flex;flex-direction:column;gap:16px;height:fit-content}
+  .pdream h3{color:var(--q);font-size:16px;letter-spacing:4px}
+  .pdream .q{font-size:15px;line-height:2;border-left:2px solid var(--q-dim);padding-left:14px;color:var(--paper)}
+  .pdream p{color:var(--dim);font-size:14px}
+
+  /* ============ 三湖品格 ============ */
+  .sanhu{padding:88px 0 40px}
+  .sh-head{display:flex;align-items:baseline;gap:18px;margin-bottom:10px}
+  .sh-head h2{font-size:26px;letter-spacing:7px}
+  .sh-head .sub{color:var(--faint);font-size:13px;letter-spacing:2px}
+  .sh-intro{color:var(--dim);font-size:15px;max-width:44em;margin-bottom:30px}
+  .sh-intro .q{color:var(--paper);border-bottom:1px dashed var(--q-dim)}
+  .lakes{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .lk{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:26px 24px 22px;position:relative}
+  .lk .yin{position:absolute;right:18px;top:18px;width:44px;height:44px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;
+    color:rgba(232,228,220,.92);transform:rotate(3deg)}
+  .lk h3{font-size:20px;letter-spacing:4px;margin-bottom:4px}
+  .lk .tag{color:var(--q);font-size:13px;letter-spacing:3px;margin-bottom:12px}
+  .lk p{color:var(--dim);font-size:14.5px}
+  .lk .q{display:block;margin-top:12px;font-size:14px;line-height:2;color:var(--paper);
+    border-left:2px solid var(--q-dim);padding-left:12px}
+
+  /* ============ 舟程五卷 ============ */
+  .zhou{padding:70px 0 30px}
+  .zhou .sec-lead{color:var(--dim);font-size:15px;max-width:46em;margin:10px 0 40px}
+  .strip{margin-bottom:56px}
+  .strip-head{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+  .strip-head .num{width:44px;height:44px;flex:none;border-radius:8px;background:var(--q-ghost);
+    border:1px solid var(--q-dim);color:var(--q);display:flex;align-items:center;justify-content:center;
+    font-size:22px;font-weight:700}
+  .strip-head h3{font-size:21px;letter-spacing:5px}
+  .strip-head .ct2{color:var(--faint);font-size:13px;letter-spacing:2px;margin-inline-start:auto}
+  .dock{display:flex;gap:9px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x proximity}
+  .dock::-webkit-scrollbar{height:6px}
+  .dock::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+  .chip{flex:none;scroll-snap-align:start;background:var(--panel);border:1px solid var(--line);
+    color:var(--dim);font-family:inherit;font-size:14.5px;letter-spacing:2px;
+    padding:9px 15px;border-radius:6px;cursor:pointer;transition:.22s}
+  .chip:hover{color:var(--paper);border-color:var(--q-dim)}
+  .chip.sel{background:var(--q);border-color:var(--q);color:var(--night);font-weight:700}
+  .chip.feat{border-color:var(--q-dim);color:var(--paper)}
+  .chip.feat::after{content:"·";color:var(--q);margin-left:7px}
+  body.awake .chip.feat::after{color:#8b8378}
+  .jdhost{margin-top:8px}
+  .jd{display:none;background:var(--panel2);border:1px solid var(--line);border-radius:10px;
+    padding:26px 30px;animation:fadein .4s ease}
+  .jd.show{display:block}
+  .jd h4{font-size:19px;letter-spacing:4px;margin-bottom:2px}
+  .jd .src{color:var(--faint);font-size:13px;letter-spacing:2px;margin-bottom:12px}
+  .jd .q{display:block;border-left:2px solid var(--q-dim);padding-left:14px;margin:10px 0;
+    font-size:15.5px;line-height:2}
+  .jd .q.qs{font-size:14.5px;color:var(--dim);border-left-style:dashed}
+  .jd p.note{color:var(--dim);font-size:14.5px;margin-top:10px;max-width:46em}
+
+  /* ============ 书眼：湖心亭看雪 ============ */
+  .snow{background:var(--night);padding:96px 0 80px;position:relative;overflow:hidden;
+    border-block:1px solid #23282f}
+  .fl{position:absolute;top:-4%;border-radius:50%;background:rgba(232,240,248,.75);
+    animation:fall linear infinite}
+  body.awake .fl{background:rgba(160,168,176,.4)}
+  @keyframes fall{to{transform:translateY(108vh) translateX(6vw)}}
+  .snow .wrap{position:relative;z-index:2;display:grid;grid-template-columns:.9fr 1.1fr;gap:44px;align-items:center}
+  .marks{width:100%;max-width:380px;margin:0 auto;display:block}
+  .mk{opacity:.07;transition:opacity .8s ease}
+  .mk.lit{opacity:1}
+  .ctwrap{display:flex;flex-direction:column;gap:8px}
+  .snow h2{font-size:24px;letter-spacing:7px;margin-bottom:6px;color:var(--paper)}
+  .snow .lead{color:var(--dim);font-size:14.5px;margin-bottom:18px}
+  .cts{display:flex;gap:12px;margin:6px 0 20px;flex-wrap:wrap}
+  .cts button{background:var(--panel);border:1px solid var(--q-dim);color:var(--paper);
+    font-family:inherit;font-size:17px;letter-spacing:3px;padding:12px 18px;border-radius:8px;
+    cursor:pointer;transition:.25s}
+  .cts button:hover{border-color:var(--q)}
+  .cts button.lit{background:var(--q);color:var(--night);font-weight:700}
+  .snow .q{display:block;border-left:2px solid var(--q-dim);padding-left:14px;margin:10px 0;
+    font-size:15.5px;line-height:2.05}
+  .snow .q.qw{font-size:14.5px;color:var(--dim);border-left-style:dashed}
+
+  /* ============ 湖上两座坟 ============ */
+  .graves{padding:92px 0 40px}
+  .graves h2{font-size:26px;letter-spacing:7px;margin-bottom:8px}
+  .graves .lead{color:var(--dim);font-size:15px;max-width:46em;margin-bottom:30px}
+  .twm{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grave{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:26px 28px}
+  .grave .gh2{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+  .grave .dyn{width:40px;height:40px;flex:none;border-radius:50%;background:rgba(163,74,65,.16);
+    border:1px solid rgba(163,74,65,.55);color:#c98277;display:flex;align-items:center;
+    justify-content:center;font-size:17px;font-weight:700}
+  .grave h3{font-size:20px;letter-spacing:4px}
+  .grave .who{color:var(--faint);font-size:13px;letter-spacing:2px;margin-left:auto}
+  .grave .q{display:block;border-left:2px solid var(--q-dim);padding-left:14px;margin:12px 0;
+    font-size:15px;line-height:2.05}
+  .grave p{color:var(--dim);font-size:14.5px}
+
+  /* ============ 尾屏与页脚 ============ */
+  .coda{padding:110px 0 90px;display:flex;flex-direction:column;align-items:center;gap:34px;
+    background:radial-gradient(50% 60% at 50% 45%, var(--q-ghost), transparent 75%)}
+  .coda .vq{writing-mode:vertical-rl;font-size:34px;letter-spacing:14px;
+    height:max-content;white-space:nowrap;color:var(--paper);line-height:1}
+  .sealp{width:84px;height:84px;border-radius:10px;background:rgba(163,74,65,.18);
+    border:2px solid rgba(163,74,65,.6);display:flex;align-items:center;justify-content:center;
+    transform:rotate(-3deg)}
+  .sealp span{writing-mode:vertical-rl;color:#c98277;font-size:22px;font-weight:700;letter-spacing:6px}
+  .foot{border-top:1px solid var(--line);padding:34px 0 46px;background:#151713}
+  .foot p{color:var(--faint);font-size:13.5px;margin-bottom:8px;line-height:1.9}
+  .foot a{color:var(--q-dim)}
+  .foot .xiaoji{color:#7d7568}
+
+  @media (max-width:860px){
+    .paper .cols,.lakes,.twm,.snow .wrap{grid-template-columns:1fr}
+    .vt h1{font-size:44px;letter-spacing:12px}
+    .hpanel .wrap{flex-direction:column;align-items:flex-start}
+    .meng{top:20px}
+  }
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gt">西湖梦寻<small>山阴张岱 撰</small></div>
+  <button class="rin" id="gbtn" type="button">入梦</button>
+  <div class="gh">点一下，湖就亮了</div>
+</div>
+
+<header class="hero">
+  <svg id="lake" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#10141c"/><stop offset="1" stop-color="#181c22"/>
+      </linearGradient>
+      <linearGradient id="wat" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#141a24"/><stop offset="1" stop-color="#0f1216"/>
+      </linearGradient>
+      <radialGradient id="halo" cx="5" cy="5" r="5">
+        <stop offset="0" stop-color="rgba(220,230,240,.34)"/>
+        <stop offset="1" stop-color="rgba(220,230,240,0)"/>
+      </radialGradient>
+    </defs>
+    <rect width="1200" height="620" fill="url(#sky)"/>
+    <circle class="moonhalo" cx="890" cy="140" r="170" fill="url(#halo)"/>
+    <circle class="moon" cx="890" cy="140" r="52" fill="#dce4ec"/>
+    <circle class="moon" cx="874" cy="128" r="7" fill="#c9d3dd" opacity=".7"/>
+    <circle class="moon" cx="905" cy="152" r="4" fill="#c9d3dd" opacity=".6"/>
+    <path d="M0,332 Q210,296 430,318 T1200,306 L1200,380 L0,380 Z" fill="#262e38" opacity=".9"/>
+    <path d="M0,352 Q300,326 620,344 T1200,340 L1200,420 L0,420 Z" fill="#20262e"/>
+    <rect y="400" width="1200" height="220" fill="url(#wat)"/>
+    <ellipse cx="890" cy="470" rx="86" ry="7" fill="rgba(220,230,240,.14)"/>
+    <ellipse cx="890" cy="500" rx="46" ry="4" fill="rgba(220,230,240,.09)"/>
+    <g class="wv">
+      <path d="M-40,436 q40,7 80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0" stroke="rgba(94,143,187,.26)" stroke-width="1.6" fill="none"/>
+      <path d="M-40,506 q46,8 92,0 t92,0 t92,0 t92,0 t92,0 t92,0 t92,0 t92,0 t92,0 t92,0 t92,0 t92,0 t92,0" stroke="rgba(94,143,187,.15)" stroke-width="1.4" fill="none"/>
+    </g>
+    <g class="wv b">
+      <path d="M-40,470 q40,6 80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0 t80,0" stroke="rgba(94,143,187,.2)" stroke-width="1.5" fill="none"/>
+      <path d="M-40,552 q50,8 100,0 t100,0 t100,0 t100,0 t100,0 t100,0 t100,0 t100,0 t100,0 t100,0 t100,0 t100,0" stroke="rgba(94,143,187,.12)" stroke-width="1.4" fill="none"/>
+    </g>
+    <g class="causeway">
+      <path d="M-20,392 Q300,368 640,388" stroke="#39424e" stroke-width="16" fill="none"/>
+      <path d="M-20,389 Q300,365 640,385" stroke="#4d5866" stroke-width="3" fill="none"/>
+    </g>
+    <g class="bridge">
+      <path d="M700,392 Q810,362 930,390" stroke="#5a6570" stroke-width="7" fill="none"/>
+      <path d="M700,396 L930,394" stroke="#49525c" stroke-width="5" fill="none"/>
+      <rect x="742" y="368" width="4" height="12" fill="#5a6570"/>
+      <rect x="888" y="368" width="4" height="12" fill="#5a6570"/>
+    </g>
+    <g class="boat">
+      <path d="M330,466 Q392,488 456,464 L444,478 Q392,496 342,478 Z" fill="#151b23" stroke="#33404d" stroke-width="1"/>
+      <path d="M368,464 Q392,444 418,464" stroke="#2b343f" stroke-width="4" fill="none"/>
+      <circle cx="432" cy="448" r="5" fill="#151b23"/>
+      <path d="M432,453 L432,464 M432,456 L422,462" stroke="#151b23" stroke-width="3.4" fill="none"/>
+      <circle cx="392" cy="452" r="2" fill="#ffd9a0" opacity=".8"/>
+    </g>
+    <g class="lamps">
+      <circle cx="120" cy="398" r="3" fill="#ffd9a0"/>
+      <circle cx="205" cy="392" r="2.6" fill="#ffd9a0"/>
+      <circle cx="298" cy="398" r="3" fill="#ffd9a0"/>
+      <circle cx="392" cy="390" r="2.6" fill="#ffd9a0"/>
+      <circle cx="505" cy="396" r="3" fill="#ffd9a0"/>
+      <circle cx="610" cy="392" r="2.6" fill="#ffd9a0"/>
+      <circle cx="726" cy="400" r="2.8" fill="#ffd9a0"/>
+      <circle cx="954" cy="398" r="2.8" fill="#ffd9a0"/>
+      <circle cx="1064" cy="392" r="2.8" fill="#ffd9a0"/>
+      <circle cx="1140" cy="400" r="2.6" fill="#ffd9a0"/>
+    </g>
+  </svg>
+
+  <div class="meng">
+    <span class="lb">梦</span>
+    <button id="mbtn" type="button" aria-label="梦醒切换"><i></i></button>
+    <span class="lb">醒</span>
+  </div>
+
+  <div class="hspace"></div>
+  <div class="hpanel">
+    <div class="wrap">
+      <div class="hmeta">
+        <div class="kick">第426篇 · 集藏别集</div>
+        <p class="hsub">据殆知阁简体库集藏四库别集库本，自序加总记与五卷，去空白约五万一千字。右上角开关拨到醒，湖就还原成作者重游那年的样子。</p>
+        <div class="hq">
+          <q class="q seen" id="qm">余生不辰，阔别西湖二十八载，然西湖无日不入吾梦中，而梦中之西湖，未尝一日别余也。</q>
+          <q class="q" id="qx">余乃急急走避，谓余为西湖而来，今所见若此，反不若保我梦中之西湖，尚得完全无恙也。</q>
+        </div>
+      </div>
+      <div class="vt">
+        <h1>西湖梦寻</h1>
+        <div class="who">山阴张岱 晚年自题蝶庵</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="paper">
+  <div class="wrap">
+    <h2>自序 · 梦之所自</h2>
+    <p class="lead">书写于国亡之后：前半生在湖上花钱，后半生在纸上还债。</p>
+    <div class="cols">
+      <div>
+        <p>张岱，字宗子，号陶庵，晚年又号蝶庵居士，绍兴山阴人，长年侨居杭州。他的前半生是晚明最典型的富贵闲人：好精舍，好美婢，好娈童，好鲜衣，好美食，好骏马，好华灯，好烟火，好梨园，好鼓吹，自己开列过一张清单，数到第几十项还意犹未尽。五十岁那年，王朝倾覆，这一切随之一夜清零，他避迹山中，落到亲自舂米挑粪的地步。</p>
+        <p>他没有写忏悔录，写成了导游图。这部书把西湖拆成七十一处旧迹，一处一则，附前人诗文，连总记恰七十二则。他在自序里把话说得很坦白：重游故地，眼前只剩瓦砾，与其认下这片废墟，不如守住梦里那座完好的湖。</p>
+        <q class="q">余之梦西湖也，如家园眷属，梦所故有，其梦也真。</q>
+        <q class="q">及至断桥一望，凡昔日之弱柳夭桃、歌楼舞榭，如洪水淹没，百不存一矣。</q>
+        <p>所以这本书的读法是倒着的：它不是给游客指路，是给亡国者存档。他自比舐眼的馋人，明明知道：</p>
+        <q class="q">金齑瑶柱，过舌即空，则舐眼亦何救其馋哉！</q>
+        <q class="q">总是梦中说梦，非魇即呓也。</q>
+        <p class="sign">落款一具老翁口气：<q class="q">岁辛亥七月既望，古剑蝶庵老人张岱题。</q>那年他七十有六。</p>
+      </div>
+      <aside class="pdream">
+        <h3>自数家底</h3>
+        <q class="q">因作《梦寻》七十二则，留之后世，以作西湖之影。</q>
+        <p>七十一处湖山旧迹，加一篇总记，恰好凑成自序自数的七十二则。数目对上，是他连梦都要做得有板有眼。</p>
+        <h3>一念之差</h3>
+        <q class="q">惟吾旧梦是保</q>
+        <p>全书的总纲就这六个字：湖山回不去，纸上的替身不许再丢。后人把它当成晚明生活的标本册来读，作者会同意一半；另一半他留给自己的失眠。</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="sanhu">
+  <div class="wrap">
+    <div class="sh-head"><h2>总记 · 三湖品格</h2><span class="sub">开卷先给湖分品级</span></div>
+    <p class="sh-intro">浙江三大名湖，张岱兄弟给它们排座次。弟弟毅孺的版本客气：<q class="q">余弟毅孺常比西湖为美人，湘湖为隐士，鉴湖为神仙。</q>张岱不客气，他嫌西湖太好客，谁都能来狎玩。排完座次他还补刀：游人只挑热闹时辰扎堆，冬天夜里下雨天的湖，才轮得到懂的人。</p>
+    <div class="lakes">
+      <div class="lk">
+        <div class="yin" style="background:#3f5f7c">处</div>
+        <h3>湘湖</h3>
+        <div class="tag">处子 · 隐士</div>
+        <p>僻处萧山，舟车罕至，韵士高人不屑一提。张岱偏把它放在第一位：还来得及看见她未嫁的样子，是游览这件事里最奢侈的一种。</p>
+      </div>
+      <div class="lk">
+        <div class="yin" style="background:#5e8fbb">仙</div>
+        <h3>鉴湖</h3>
+        <div class="tag">名门闺淑 · 神仙</div>
+        <p>东汉马臻开镜湖，得名最早，北宋以后被西湖抢了风头。淡远，可钦，不可狎，是那种适合远远敬着的水。</p>
+      </div>
+      <div class="lk">
+        <div class="yin" style="background:#a34a41">妓</div>
+        <h3>西湖</h3>
+        <div class="tag">曲中名妓 · 冶艳</div>
+        <p>声色俱丽，人人可近，于是人人轻慢。张岱那句刻薄话，其实是在替西湖喊冤：</p>
+        <q class="q">若西湖则为曲中名妓，声色俱丽，然倚门献笑，人人得而媟亵之矣。</q>
+        <q class="q">人人得而媟亵，故人人得而艳羡；人人得而艳羡，故人人得而轻慢。</q>
+      </div>
+    </div>
+    <p class="sh-intro" style="margin-top:26px">至于他自己怎么游，总记里有一份时刻表的反面：<q class="q">在春夏则热闹之至，秋冬则冷落矣；在花朝则喧哄之至，月夕则星散矣；在晴明则萍聚之至，雨雪则寂寥矣。</q>把每句反过来读，就是他的私人季节。</p>
+  </div>
+</section>
+
+<section class="zhou">
+  <div class="wrap">
+    <div class="sh-head"><h2>舟程 · 五卷泊位</h2><span class="sub">71处湖山旧迹，其中13处可展开全文</span></div>
+    <p class="sec-lead">全书按湖的方位编成五卷，自北路绕外景一圈。下面是五段码头，灰牌是没展开的泊位，亮点的牌子点开有引文。</p>
+
+    <div class="strip">
+      <div class="strip-head"><div class="num">壹</div><h3>西湖北路</h3><span class="ct2">十一处</span></div>
+      <div class="dock" data-vol="1">
+        <button class="chip feat" data-j="jd1" type="button">玉莲亭</button>
+        <button class="chip feat" data-j="jd2" type="button">昭庆寺</button>
+        <button class="chip" type="button">哇哇宕</button>
+        <button class="chip" type="button">大佛头</button>
+        <button class="chip feat" data-j="jd3" type="button">保俶塔</button>
+        <button class="chip" type="button">玛瑙寺</button>
+        <button class="chip" type="button">智果寺</button>
+        <button class="chip" type="button">六贤祠</button>
+        <button class="chip feat" data-j="jd4" type="button">西泠桥</button>
+        <button class="chip feat" data-j="jd5" type="button">岳王坟</button>
+        <button class="chip" type="button">紫云洞</button>
+      </div>
+    </div>
+
+    <div class="strip">
+      <div class="strip-head"><div class="num">贰</div><h3>西湖西路</h3><span class="ct2">十二处</span></div>
+      <div class="dock" data-vol="2">
+        <button class="chip" type="button">玉泉寺</button>
+        <button class="chip" type="button">集庆寺</button>
+        <button class="chip" type="button">飞来峰</button>
+        <button class="chip feat" data-j="jd6" type="button">冷泉亭</button>
+        <button class="chip" type="button">灵隐寺</button>
+        <button class="chip" type="button">北高峰</button>
+        <button class="chip" type="button">韬光庵</button>
+        <button class="chip" type="button">岣嵝山房</button>
+        <button class="chip" type="button">青莲山房</button>
+        <button class="chip" type="button">呼猿洞</button>
+        <button class="chip feat" data-j="jd7" type="button">三生石</button>
+        <button class="chip" type="button">上天竺</button>
+      </div>
+    </div>
+
+    <div class="strip">
+      <div class="strip-head"><div class="num">叁</div><h3>西湖中路</h3><span class="ct2">十四处</span></div>
+      <div class="dock" data-vol="3">
+        <button class="chip" type="button">秦楼</button>
+        <button class="chip" type="button">片石居</button>
+        <button class="chip" type="button">十锦塘</button>
+        <button class="chip" type="button">孤山</button>
+        <button class="chip" type="button">关王庙</button>
+        <button class="chip" type="button">苏小小墓</button>
+        <button class="chip" type="button">陆宣公祠</button>
+        <button class="chip" type="button">六一泉</button>
+        <button class="chip" type="button">葛岭</button>
+        <button class="chip feat" data-j="jd8" type="button">苏公堤</button>
+        <button class="chip feat" data-j="jd9" type="button">湖心亭</button>
+        <button class="chip feat" data-j="jd10" type="button">放生池</button>
+        <button class="chip" type="button">醉白楼</button>
+        <button class="chip" type="button">小青佛舍</button>
+      </div>
+    </div>
+
+    <div class="strip">
+      <div class="strip-head"><div class="num">肆</div><h3>西湖南路</h3><span class="ct2">十六处</span></div>
+      <div class="dock" data-vol="4">
+        <button class="chip" type="button">柳洲亭</button>
+        <button class="chip" type="button">灵芝寺</button>
+        <button class="chip" type="button">钱王祠</button>
+        <button class="chip" type="button">净慈寺</button>
+        <button class="chip" type="button">小蓬莱</button>
+        <button class="chip feat" data-j="jd11" type="button">雷峰塔</button>
+        <button class="chip feat" data-j="jd12" type="button">包衙庄</button>
+        <button class="chip" type="button">南高峰</button>
+        <button class="chip" type="button">烟霞石屋</button>
+        <button class="chip" type="button">高丽寺</button>
+        <button class="chip" type="button">法相寺</button>
+        <button class="chip" type="button">于坟</button>
+        <button class="chip" type="button">风篁岭</button>
+        <button class="chip" type="button">龙井</button>
+        <button class="chip" type="button">一片云</button>
+        <button class="chip" type="button">九溪十八涧</button>
+      </div>
+    </div>
+
+    <div class="strip">
+      <div class="strip-head"><div class="num">伍</div><h3>西湖外景</h3><span class="ct2">十八处</span></div>
+      <div class="dock" data-vol="5">
+        <button class="chip" type="button">西溪</button>
+        <button class="chip" type="button">虎跑泉</button>
+        <button class="chip" type="button">凤凰山</button>
+        <button class="chip" type="button">宋大内</button>
+        <button class="chip" type="button">梵天寺</button>
+        <button class="chip" type="button">胜果寺</button>
+        <button class="chip" type="button">五云山</button>
+        <button class="chip" type="button">云栖</button>
+        <button class="chip" type="button">六和塔</button>
+        <button class="chip" type="button">镇海楼</button>
+        <button class="chip" type="button">伍公祠</button>
+        <button class="chip" type="button">城隍庙</button>
+        <button class="chip" type="button">火德庙</button>
+        <button class="chip" type="button">芙蓉石</button>
+        <button class="chip feat" data-j="jd13" type="button">云居庵</button>
+        <button class="chip" type="button">施公庙</button>
+        <button class="chip" type="button">三茅观</button>
+        <button class="chip" type="button">紫阳庵</button>
+      </div>
+    </div>
+
+    <div class="jdhost" id="jdhost">
+      <div class="jd" id="jd1">
+        <h4>玉莲亭</h4>
+        <div class="src">玉莲亭则录乐天诗</div>
+        <q class="q">湖上春来似画图，乱峰围绕水平铺。</q>
+        <q class="q">未能抛得杭州去，一半勾留是此湖。</q>
+        <p class="note">白居易做杭州刺史，断案宽厚，穷人犯法罚去湖边种几株树，富家赎罪则出钱开几亩葑田。后人临湖立亭种青莲纪念他，离任的官肯把半数心事留在任上，在张岱看来已算稀罕。</p>
+      </div>
+      <div class="jd" id="jd2">
+        <h4>昭庆寺</h4>
+        <div class="src">香市记，见保俶塔则</div>
+        <q class="q">昭庆寺两廊故无日不市者，三代八朝之古董，蛮夷闽貊之珍异，皆集焉。</q>
+        <p class="note">两廊平日就是市场，香客一来更是摊棚节节寸寸。这座寺撑着湖上最大的市面，也是后面那场大火的失火点。</p>
+      </div>
+      <div class="jd" id="jd3">
+        <h4>保俶塔</h4>
+        <div class="src">保俶塔则录袁中郎语与香市记</div>
+        <q class="q">山色如娥，花光如颊，温风如酒，波纹如绫</q>
+        <q class="q qs">西湖香市，起于花朝，尽于端午。</q>
+        <q class="q qs">崇祯庚辰三月，昭庆寺火。</q>
+        <q class="q qs">是岁及辛已、壬午洊饥，民强半饿死。</q>
+        <p class="note">袁宏道头一回见西湖，一口气用了四个比兴，被后世导游词抄了几百年。张岱把这段抄在香市记里，接着记下香市怎么散场：寺火烧在崇祯庚辰，跟着连年饥荒，虏警又断绝了山东香客，热闹戛然而止，明朝也只剩最后几年。</p>
+      </div>
+      <div class="jd" id="jd4">
+        <h4>西泠桥</h4>
+        <div class="src">西泠桥则录袁宏道歌</div>
+        <q class="q">昨日树头花，今日陌上土。恨血与啼魂，一半逐风雨。</q>
+        <q class="q qs">管不得，只西陵便好。</q>
+        <p class="note">桥名到底该写作泠还是陵，考据者争个不停，都说这里与那位钱塘名姬的定情旧事有关。袁宏道只管唱花开花落，张岱更干脆：叫什么都行，桥在这里就好。一副梦游者不认字的态度。</p>
+      </div>
+      <div class="jd" id="jd5">
+        <h4>岳王坟</h4>
+        <div class="src">卷一岳王坟则</div>
+        <q class="q">岳鄂王死，狱卒隗顺负其尸，逾城至北山以葬。</q>
+        <q class="q qs">王被害，其女抱银瓶坠井中死。</q>
+        <p class="note">风波亭行刑之后，肯把尸背出城的只有一个小狱卒，史册连他的生卒都没留下；坟边井里，还沉着一个抱银瓶殉父的女儿。湖山纪念忠臣，靠的全是这类无名者的一念。</p>
+      </div>
+      <div class="jd" id="jd6">
+        <h4>冷泉亭</h4>
+        <div class="src">冷泉亭则引袁宏道记</div>
+        <q class="q">灵隐寺在北高峰下，寺最奇胜，门景尤好。</q>
+        <q class="q">涧水溜玉，画壁流青，是山之极胜处。</q>
+        <q class="q qs">深山清寂，皓月空明，枕石漱流，卧醒花影</q>
+        <p class="note">亭子压在飞来峰溪涧上，白居易有记，袁宏道有考，说涧阔不足一丈，亭当在水中而今依涧，景比旧时少了七成。张岱数完明季大火，再补一句：肯在这深山里睡一夜的人，全杭州数不出几个。</p>
+      </div>
+      <div class="jd" id="jd7">
+        <h4>三生石</h4>
+        <div class="src">录东坡圆泽传</div>
+        <q class="q">后十三年中秋月夜，杭州天竺寺外，当与公相见。</q>
+        <q class="q">三生石上旧精魂，赏月吟风不要论。惭愧情人远相访，此身虽异性长存。</q>
+        <q class="q qs">身前身后事茫茫，欲话因缘恐断肠。吴越山川寻已遍，却回烟棹上瞿唐。</q>
+        <p class="note">僧圆泽自知来世托生王氏家，与友人李源约定浴儿三日与十三年后中秋。届时有牧童骑牛唱歌而来，唱完两偈掉头而去。轮回故事本在洛阳，被安到下天竺后一块石头上，从此成了湖山的注脚：这块石头替所有人保管着前世。</p>
+      </div>
+      <div class="jd" id="jd8">
+        <h4>苏公堤</h4>
+        <div class="src">苏公堤则引袁宏道语</div>
+        <q class="q">杭人游湖，止午、未、申三时，其实湖光染翠之工，山岚设色之妙，全在朝日始出、夕舂未下，始极其浓媚。</q>
+        <q class="q qs">此乐留与山僧游客受用，安可为俗士道哉！</q>
+        <p class="note">杭州人只挑午后三刻倾巢而出，最好的一段晨昏只许给起得来的人。这段话今天照旧成立，景区最贵的从来不是门票，是时辰。</p>
+      </div>
+      <div class="jd" id="jd9">
+        <h4>湖心亭</h4>
+        <div class="src">湖心亭则记清喜阁</div>
+        <q class="q">金碧辉煌，规模壮丽，游人望之如海市蜃楼。</q>
+        <q class="q qs">湖中焉得更有此人！</q>
+        <p class="note">湖心亭几废几建，万历间改称清喜阁，望之如蜃楼，夜月登临又冷得像鲛宫。它真正名垂作文选，要等崇祯五年那场大雪，本页末有一整版留给它。</p>
+      </div>
+      <div class="jd" id="jd10">
+        <h4>放生池</h4>
+        <div class="src">卷三放生池则录望海潮词</div>
+        <q class="q">东南形胜，三吴都会，钱塘自古繁华。</q>
+        <q class="q">有三秋桂子，十里荷花。</q>
+        <q class="q qs">金主阅此词，慕西湖胜景，遂起投鞭渡江之思。</q>
+        <p class="note">柳永一首词把杭州写得金翠照人，库本顺手添了一笔惊人的注：北方的皇帝读完，动了投鞭渡江的念头。一首词引一场战争，湖山从来不只是风景。</p>
+      </div>
+      <div class="jd" id="jd11">
+        <h4>雷峰塔</h4>
+        <div class="src">雷峰塔则录题塔诗</div>
+        <q class="q">日日看西湖，一生看不足。</q>
+        <p class="note">老僧住在塔边，看湖看到一生不够，这句被张岱录进雷峰塔则。塔毁于民国，夕照从此只剩照片；在张岱的书里，它还好好站着。</p>
+      </div>
+      <div class="jd" id="jd12">
+        <h4>包衙庄</h4>
+        <div class="src">卷四包衙庄则</div>
+        <q class="q">穷奢极欲，老于西湖者二十年。</q>
+        <q class="q qs">左右是左右</q>
+        <p class="note">包副使把歌筵书画美人都搬上楼船，南北两园一在雷峰塔下一在飞来峰下，穷奢二十年。张岱的评语出奇地宽厚：索性把繁华过到底，也算一种诚实，比装一半的体面人痛快。</p>
+      </div>
+      <div class="jd" id="jd13">
+        <h4>云居庵</h4>
+        <div class="src">云居庵则附李流芳题画</div>
+        <q class="q">向言六桥有千树桃柳，其红绿为春事浅深，云居有千树枫桕，其红黄为秋事浅深，今且以薪以槱，不可复问矣。</q>
+        <p class="note">吴山千树枫桕与六桥千树桃柳，一秋一春平分湖上颜色；被寺僧砍作柴薪之后，两种颜色一起散场。全书最安静的一处伤逝，不用一个愁字。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="snow">
+  <div class="wrap">
+    <div>
+      <svg class="marks" viewBox="0 0 360 260" aria-hidden="true">
+        <rect width="360" height="260" fill="#12161c" rx="10"/>
+        <g class="mk" id="mk1"><path d="M40,200 L320,196" stroke="#5e8fbb" stroke-width="2.5" opacity=".85"/><text x="52" y="192" fill="#98a1ab" font-size="13">堤</text></g>
+        <g class="mk" id="mk2"><circle cx="176" cy="160" r="5" fill="#5e8fbb"/><path d="M168,146 h16 M170,152 h12" stroke="#5e8fbb" stroke-width="1.6"/><text x="188" y="164" fill="#98a1ab" font-size="13">亭</text></g>
+        <g class="mk" id="mk3"><path d="M226,206 Q252,222 280,204 L272,212 Q252,224 234,212 Z" fill="#5e8fbb"/><text x="248" y="238" fill="#98a1ab" font-size="13">舟</text></g>
+        <g class="mk" id="mk4"><circle cx="250" cy="188" r="2.4" fill="#e8e4dc"/><circle cx="258" cy="192" r="2.4" fill="#e8e4dc"/><circle cx="255" cy="183" r="2.4" fill="#e8e4dc"/><text x="268" y="196" fill="#98a1ab" font-size="13">人两三粒</text></g>
+      </svg>
+    </div>
+    <div class="ctwrap">
+      <h2>书眼 · 大雪三日</h2>
+      <p class="lead">全中国作文课本都收过这一夜。张岱用的四个量词，把天地缩到针尖大小，点一个量词，右图亮一样东西。</p>
+      <q class="q">崇祯五年十二月，余住西湖。大雪三日，湖中人鸟声俱绝。</q>
+      <q class="q">雾淞沆砀，天与云、与山、与水，上下一白。</q>
+      <div class="cts">
+        <button type="button" data-mk="mk1">一痕</button>
+        <button type="button" data-mk="mk2">一点</button>
+        <button type="button" data-mk="mk3">一芥</button>
+        <button type="button" data-mk="mk4">两三粒</button>
+      </div>
+      <q class="q">湖上影子，惟长堤一痕，湖心亭一点，与余舟一芥，舟中人两三粒而已。</q>
+      <q class="q qw">莫说相公痴，更有痴似相公者。</q>
+      <p class="lead" style="margin-top:10px">亭上陌生人一句惊喜，舟子一句嘀咕，收走全篇。痴人不孤单这件事，他大约记了四十年。</p>
+    </div>
+  </div>
+</section>
+
+<section class="graves">
+  <div class="wrap">
+    <h2>湖上两座坟</h2>
+    <p class="lead">杭州这座城安葬过两位被自家朝廷处死的救时之臣，一个南宋，一个明代，坟都在书里。</p>
+    <div class="twm">
+      <div class="grave">
+        <div class="gh2"><span class="dyn">宋</span><h3>岳王坟</h3><span class="who">卷一</span></div>
+        <q class="q">四人反接，跪于丹墀。</q>
+        <q class="q">岳王祠，泥范忠武，铁铸桧、卨，人之欲不朽桧、卨也，甚于忠武。</q>
+        <p>铜像铸于正德八年，很快被游人捶碎；万历间换成铁的，捶得更狠，四颗头都被砸落。倪元璐看出了这里面的心理学：人们想让它不朽的方式，是让它永远跪着。</p>
+      </div>
+      <div class="grave">
+        <div class="gh2"><span class="dyn">明</span><h3>于坟</h3><span class="who">卷四</span></div>
+        <q class="q">当国家之多难，保社稷以无虞；惟公道以自持，为权奸之所害。先帝已知其枉，而朕心实怜其忠。</q>
+        <p>夺门之变后，于谦弃市，家眷戌边，库本记他受刑那天阴云蔽天，路人无不叹惋。成化二年案白，这道谕祭词由皇帝亲口认错，等于朝廷给自家冤案签收。岳飞与于谦，一书而收，是张岱排给杭州的两位证人。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="coda">
+  <span class="vq qv">以作西湖之影</span>
+  <div class="sealp"><span>蝶庵</span></div>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>本篇为殆知阁导读系列第426篇。文本来源：殆知阁简体库集藏四库别集〈西湖梦寻〉（自序、总记与五卷，去空白约五万一千字）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。</p>
+    <p class="xiaoji">时代局限：书中轮回宿缘、神异感应诸说与对女子的品第口吻皆出明清之际语境，照录库本，不宜作史实采信；白居易、柳永、袁宏道等诗文均系张岱转录，文字以库本所录为准；张岱生平与成书年代从通行说法。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var gate=document.getElementById('gate');
+  document.getElementById('gbtn').addEventListener('click',function(){
+    gate.classList.add('open');
+  });
+  var body=document.body;
+  document.getElementById('mbtn').addEventListener('click',function(){
+    var awake=body.classList.toggle('awake');
+    document.getElementById('qm').classList.toggle('seen',!awake);
+    document.getElementById('qx').classList.toggle('seen',awake);
+  });
+  var host=document.getElementById('jdhost');
+  var chips=document.querySelectorAll('.chip');
+  function show(id){
+    host.querySelectorAll('.jd').forEach(function(p){p.classList.remove('show');});
+    if(id){document.getElementById(id).classList.add('show');}
+  }
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      chips.forEach(function(x){x.classList.remove('sel');});
+      c.classList.add('sel');
+      var t=c.getAttribute('data-j');
+      if(t){show(t);}
+      else{
+        show(null);
+        var dock=c.closest('.dock');
+        var vol=parseInt(dock.getAttribute('data-vol'),10);
+        var idx=Array.prototype.indexOf.call(dock.querySelectorAll('.chip'),c)+1;
+        var p=document.createElement('div');
+        p.className='jd show';
+        p.innerHTML='<h4>湖程第'+idx+'站</h4><div class="src"></div><p class="note"></p>';
+        p.querySelector('.src').textContent='卷'+vol+' 泊位 · 本页未展';
+        p.querySelector('.note').textContent='七十二则之一，此处不展开，留与梦中。';
+        var old=p;
+        host.innerHTML='';
+        host.appendChild(old);
+      }
+    });
+  });
+  var cts=document.querySelectorAll('.cts button');
+  cts.forEach(function(b){
+    b.addEventListener('click',function(){
+      var id=b.getAttribute('data-mk');
+      var m=document.getElementById(id);
+      var lit=m.classList.contains('lit');
+      cts.forEach(function(x){
+        x.classList.remove('lit');
+        document.getElementById(x.getAttribute('data-mk')).classList.remove('lit');
+      });
+      if(!lit){b.classList.add('lit');m.classList.add('lit');}
+    });
+  });
+  var sn=document.querySelector('.snow');
+  for(var i=0;i<26;i++){
+    var f=document.createElement('span');
+    f.className='fl';
+    var s=1.5+Math.random()*3;
+    f.style.width=s+'px';f.style.height=s+'px';
+    f.style.left=(Math.random()*100)+'%';
+    f.style.animationDuration=(7+Math.random()*9)+'s';
+    f.style.animationDelay=(-Math.random()*12)+'s';
+    f.style.opacity=String(.3+Math.random()*.6);
+    sn.appendChild(f);
+  }
+})();
+</script>
+</body>
+</html>
