@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>〈张苍水集〉导读 · 殆知阁</title>
+<style>
+  :root{
+    --ink:#191917; --panel:#1d1f21; --panel2:#22252a;
+    --paper:#e8e4dc; --paper2:#ddd7cb; --inktext:#23262b;
+    --blue:#5e8fbb; --blue-dim:#3f5a74; --blue-ghost:rgba(94,143,187,.14);
+    --dim:#a49d90; --faint:#6e685e; --line:#34322c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--ink); color:var(--paper);
+    font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    line-height:1.95; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  ::selection{background:var(--blue);color:var(--ink)}
+  .mono{font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace}
+  a{color:var(--blue);text-decoration:none}
+  q{quotes:none}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px}
+  button{font-family:inherit}
+
+  /* ============ 首屏：残叶 ============ */
+  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;
+    overflow:hidden;
+    background:
+      radial-gradient(1px 1px at 14% 18%, rgba(232,228,220,.35), transparent 100%),
+      radial-gradient(1.5px 1px at 78% 12%, rgba(232,228,220,.3), transparent 100%),
+      radial-gradient(1px 1.5px at 90% 52%, rgba(232,228,220,.28), transparent 100%),
+      radial-gradient(140% 100% at 50% -10%, #202329, transparent 60%),
+      radial-gradient(150% 110% at 50% 118%, #0d0e10, transparent 62%),
+      var(--ink);
+  }
+  .eyebrow{display:flex;justify-content:space-between;align-items:baseline;
+    width:100%;padding:22px 0 0;font-size:13px;letter-spacing:.34em;color:var(--faint)}
+  .eyebrow b{color:var(--blue);font-weight:normal}
+  .hero-grid{flex:1;display:grid;grid-template-columns:300px 1fr;gap:30px;
+    align-items:center;width:100%;padding:10px 0 30px}
+  .htitle{writing-mode:vertical-rl;display:flex;flex-direction:column;
+    align-items:center;gap:18px;height:min(560px,74vh);justify-content:center}
+  .hname{font-size:clamp(44px,6vw,64px);letter-spacing:.5em;color:var(--paper);
+    text-shadow:0 0 26px rgba(94,143,187,.28)}
+  .hsub{font-size:13.5px;letter-spacing:.3em;color:var(--dim)}
+  .hseal{width:44px;height:44px;border:1px solid var(--blue);color:var(--blue);
+    display:flex;align-items:center;justify-content:center;font-size:15px;
+    letter-spacing:0;transform:rotate(-4deg);border-radius:4px;margin-top:8px}
+  .shelf{position:relative;height:min(560px,74vh)}
+  .slots{position:absolute;top:6px;left:0;right:0;display:flex;
+    justify-content:center;gap:14px}
+  .slot{width:96px;height:130px;border:1px dashed rgba(94,143,187,.45);
+    border-radius:2px;display:flex;align-items:center;justify-content:center;
+    font-size:56px;color:var(--blue);background:rgba(94,143,187,.05)}
+  .slot.filled{border-style:solid;background:var(--blue-ghost);
+    animation:pop .5s ease}
+  @keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .torn{position:absolute;width:104px;height:138px;background:
+      linear-gradient(180deg,#ece8e0,#d9d3c6);
+    box-shadow:0 10px 26px rgba(0,0,0,.5);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-size:50px;color:#2c2f35;user-select:none;
+    transition:transform .75s cubic-bezier(.6,.05,.25,1),opacity .75s ease}
+  .torn::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(180deg,transparent 0 26px,rgba(60,60,60,.16) 26px 27px)}
+  .torn.blank{color:transparent}
+  .torn.l1{left:6%;top:150px;transform:rotate(-9deg);
+    clip-path:polygon(0 6%,88% 0,100% 90%,12% 100%,0 74%)}
+  .torn.l2{left:26%;top:60px;transform:rotate(7deg);
+    clip-path:polygon(8% 0,100% 8%,94% 96%,0 100%)}
+  .torn.l3{left:46%;top:170px;transform:rotate(-4deg);
+    clip-path:polygon(0 0,92% 6%,100% 100%,10% 92%)}
+  .torn.l4{left:66%;top:80px;transform:rotate(10deg);
+    clip-path:polygon(6% 4%,100% 0,96% 100%,0 88%)}
+  .torn.l5{left:14%;top:330px;transform:rotate(6deg);
+    clip-path:polygon(0 8%,94% 0,100% 94%,8% 100%)}
+  .torn.l6{left:38%;top:300px;transform:rotate(-8deg);
+    clip-path:polygon(10% 0,100% 10%,90% 100%,0 92%)}
+  .torn.l7{left:62%;top:250px;transform:rotate(3deg);
+    clip-path:polygon(0 0,90% 10%,100% 92%,6% 100%)}
+  .torn:hover{filter:brightness(1.06)}
+  .torn.fly{z-index:5;pointer-events:none}
+  .torn.gone{opacity:0;pointer-events:none}
+  .stack{position:absolute;right:2%;bottom:8px;width:130px;height:56px;
+    border:1px dashed var(--line);display:flex;align-items:center;
+    justify-content:center;font-size:12.5px;letter-spacing:.2em;color:var(--faint)}
+  .hero-foot{display:flex;flex-direction:column;align-items:center;gap:10px;
+    padding:0 0 40px;text-align:center}
+  .count{font-size:13.5px;letter-spacing:.3em;color:var(--blue)}
+  .hint{font-size:14.5px;color:var(--dim);transition:opacity .6s}
+  .cap{opacity:0;transition:opacity .8s .3s;color:var(--paper);font-size:16.5px}
+  .cap small{display:block;font-size:12.5px;color:var(--faint);letter-spacing:.2em;margin-top:6px}
+  .hero.full .hint{opacity:0}
+  .hero.full .cap{opacity:1}
+
+  /* ============ 章节骨架 ============ */
+  section{padding:88px 0}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:34px}
+  .sec-no{font-size:15px;color:var(--blue);letter-spacing:.2em;white-space:nowrap}
+  .sec-title{font-size:clamp(24px,3.4vw,32px);letter-spacing:.18em}
+  .sec-rule{flex:1;height:1px;background:linear-gradient(90deg,var(--blue-dim),transparent)}
+
+  /* 少年：三发 */
+  .boy{display:grid;grid-template-columns:1fr 280px;gap:44px;align-items:center}
+  .prose{font-size:16.5px;color:var(--paper)}
+  .prose .muted{color:var(--dim)}
+  .prose q{color:#f0ece3}
+  .prose q.poem{letter-spacing:.06em}
+  .attr{display:block;font-size:12.5px;color:var(--faint);letter-spacing:.18em;margin-top:2px}
+  .bows{position:relative}
+  .bows svg{width:100%;height:auto;display:block}
+  .ring{cursor:pointer}
+  .arrow{opacity:0}
+  .arrow.hit{opacity:1;transition:opacity .25s}
+  .bow-cap{margin-top:10px;font-size:13px;color:var(--faint);text-align:center;letter-spacing:.14em}
+  .bow-stamp{margin-top:8px;text-align:center;font-size:15px;letter-spacing:.3em;
+    color:var(--blue);opacity:0;transition:opacity .5s}
+  .bow-stamp.on{opacity:1}
+
+  /* 军报 */
+  .dispatch-intro{max-width:760px;font-size:16px;color:var(--paper);margin-bottom:14px}
+  .flow-btn{margin:16px 0 8px;background:none;border:1px solid var(--blue-dim);
+    color:var(--blue);padding:8px 22px;font-size:14px;letter-spacing:.3em;
+    cursor:pointer;border-radius:2px}
+  .flow-btn:hover{background:var(--blue-ghost)}
+  .river{margin-top:22px;position:relative;padding-left:0}
+  .river-rail{position:absolute;left:29px;top:8px;bottom:8px;width:3px;
+    background:linear-gradient(180deg,var(--blue) 0%,var(--blue) 46%,transparent 46%,transparent 54%,var(--blue-dim) 54%);
+    opacity:.55}
+  .river-rail::after{content:"";position:absolute;left:-3px;top:47%;width:9px;height:9px;
+    border-radius:50%;background:var(--ink);border:1.5px solid var(--faint)}
+  .st{position:relative;display:grid;grid-template-columns:60px 1fr;gap:0 8px;
+    padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+  .st:last-child{border-bottom:none}
+  .dot{position:relative}
+  .dot i{position:absolute;left:24px;top:14px;width:11px;height:11px;border-radius:50%;
+    background:var(--ink);border:2px solid var(--blue-dim);transition:all .35s}
+  .st.lit .dot i{background:var(--blue);border-color:var(--blue);
+    box-shadow:0 0 12px rgba(94,143,187,.7)}
+  .st.fall .dot i{border-color:var(--faint)}
+  .st.fall.lit .dot i{background:var(--faint);border-color:var(--faint);
+    box-shadow:0 0 12px rgba(160,154,144,.5)}
+  .st-tt{font-size:16.5px;color:#efebe2;letter-spacing:.04em;transition:color .3s}
+  .st.lit .st-tt{color:var(--paper)}
+  .st-note{font-size:13.5px;color:var(--dim);margin-top:2px}
+  .st .exp{max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .5s;opacity:0}
+  .st.open .exp{max-height:140px;opacity:1}
+  .exp-in{margin:8px 0 4px;padding:10px 16px;border-left:2px solid var(--blue-dim);
+    background:var(--panel);font-size:15.5px;color:#ece7dd;letter-spacing:.05em}
+  .st .tip{position:absolute;right:0;top:14px;font-size:11.5px;letter-spacing:.24em;
+    color:var(--faint)}
+  .tagline{margin-top:26px;font-size:15.5px;color:var(--dim)}
+
+  /* 百日诗程 */
+  .days{position:relative;margin-top:10px}
+  .rope{position:absolute;left:96px;top:0;bottom:0;width:1px;
+    background:linear-gradient(180deg,var(--blue-dim),rgba(94,143,187,.08))}
+  .day{position:relative;display:grid;grid-template-columns:76px 1fr;gap:26px;
+    padding:26px 0}
+  .dseal{align-self:start;text-align:center;border:1px solid var(--blue-dim);
+    color:var(--blue);font-size:14px;letter-spacing:.14em;padding:7px 4px;
+    border-radius:2px;background:var(--ink);position:relative;z-index:2}
+  .dseal small{display:block;font-size:11px;color:var(--faint);letter-spacing:.1em;margin-top:2px}
+  .dbody{background:var(--panel);border:1px solid var(--line);padding:20px 24px}
+  .dbody h4{font-size:17.5px;letter-spacing:.12em;color:var(--paper);margin-bottom:8px;font-weight:normal}
+  .dbody p{font-size:15.5px;color:var(--paper);margin:6px 0}
+  .dbody .muted{color:var(--dim)}
+  .verse{margin:12px 0;padding:14px 18px;border-left:2px solid var(--blue);
+    background:rgba(94,143,187,.06);font-size:16px;letter-spacing:.08em;color:#f0ece3}
+  .verse.hi{font-size:clamp(19px,2.6vw,24px);letter-spacing:.12em;color:var(--paper);
+    border-left-width:3px;background:rgba(94,143,187,.1)}
+  .window{margin-top:14px;border:1px solid var(--line);background:var(--panel2);
+    padding:14px 18px;position:relative}
+  .lattice{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:10px}
+  .lattice i{display:block;height:20px;border:1px solid var(--line)}
+  .window p{font-size:14.5px;color:var(--dim)}
+  .window p b{color:var(--paper);font-weight:normal}
+
+  /* 湖上三席 */
+  .lake-wrap{display:grid;grid-template-columns:1.5fr 1fr;gap:36px;align-items:start}
+  .lake svg{width:100%;height:auto;display:block}
+  .tomb{cursor:pointer}
+  .tomb text{fill:var(--dim);font-size:14px;letter-spacing:3px;transition:fill .3s}
+  .tomb circle{fill:var(--ink);stroke:var(--blue-dim);stroke-width:1.5;transition:all .3s}
+  .tomb:hover circle{stroke:var(--blue)}
+  .tomb.lit circle{fill:var(--blue);stroke:var(--blue)}
+  .tomb.lit text{fill:var(--paper)}
+  .tk{display:none;background:var(--panel);border:1px solid var(--line);padding:22px 24px}
+  .tk.cur{display:block;animation:fadein .5s ease}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .tk h4{font-weight:normal;font-size:18px;letter-spacing:.14em;margin-bottom:8px;color:var(--blue)}
+  .tk p{font-size:15px;color:var(--paper)}
+  .tk .verse{margin-top:12px}
+
+  /* 集不可泯 */
+  .bigq{font-size:clamp(26px,4.4vw,42px);letter-spacing:.14em;color:var(--paper);
+    text-align:center;line-height:1.7;margin:6px 0 8px}
+  .bigq-attr{text-align:center;font-size:13px;color:var(--faint);letter-spacing:.26em;margin-bottom:36px}
+  .chain{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:34px}
+  .chain-card{position:relative;padding:20px 18px 24px;border-top:2px solid var(--line);
+    cursor:pointer;transition:border-color .3s,background .3s}
+  .chain-card:hover{background:rgba(94,143,187,.05)}
+  .chain-card.lit{border-top-color:var(--blue);background:rgba(94,143,187,.08)}
+  .chain-card .k{font-size:13px;letter-spacing:.3em;color:var(--blue)}
+  .chain-card .y{font-size:12px;color:var(--faint);letter-spacing:.14em;margin-top:2px}
+  .chain-card h4{font-weight:normal;font-size:17px;margin:10px 0 6px;letter-spacing:.1em}
+  .chain-card p{font-size:13.8px;color:var(--dim);line-height:1.85}
+  .chain-card p q{color:#ddd7ca}
+  .chain-note{margin-top:26px;font-size:15.5px;color:var(--paper);max-width:820px}
+
+  /* 尾屏 */
+  .fin{min-height:92vh;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;text-align:center;position:relative;padding:80px 0;
+    background:radial-gradient(120% 90% at 50% 115%, rgba(94,143,187,.1), transparent 60%)}
+  .fin-tag{font-size:13px;letter-spacing:.4em;color:var(--faint);margin-bottom:34px}
+  .jue{display:flex;flex-direction:column;gap:14px}
+  .jl{font-size:clamp(24px,4.2vw,40px);letter-spacing:.3em;color:var(--paper);
+    opacity:0;transform:translateY(14px);transition:opacity .9s ease,transform .9s ease}
+  .jl:nth-child(2){transition-delay:.18s}
+  .jl:nth-child(3){transition-delay:.36s}
+  .jl:nth-child(4){transition-delay:.54s}
+  .fin.vis .jl{opacity:1;transform:none}
+  .fin-meta{margin-top:38px;font-size:15px;color:var(--dim)}
+  .fin-seal{margin-top:22px;width:52px;height:52px;border:1.5px solid var(--blue);
+    color:var(--blue);display:flex;align-items:center;justify-content:center;
+    font-size:17px;letter-spacing:.2em;border-radius:4px;transform:rotate(-5deg)}
+
+  /* 页脚 */
+  .foot{border-top:1px solid var(--line);padding:40px 0 60px;font-size:13.5px;
+    color:var(--faint);line-height:2}
+  .foot p{margin:6px 0}
+  .foot a{color:var(--blue)}
+  .xiaoji{color:#57534a}
+
+  /* 滚动显现 */
+  .rv{opacity:0;transform:translateY(18px);transition:opacity .8s ease,transform .8s ease}
+  .rv.vis{opacity:1;transform:none}
+
+  @media (max-width:820px){
+    .st .tip{display:none}
+    .hero-grid{grid-template-columns:1fr;gap:8px;padding-top:0}
+    .htitle{height:auto;writing-mode:horizontal-tb;justify-content:flex-start;gap:10px}
+    .hname{font-size:clamp(38px,10vw,52px)}
+    .hseal{margin:0}
+    .shelf{height:430px}
+    .torn{width:84px;height:112px;font-size:40px}
+    .slot{width:78px;height:106px;font-size:44px}
+    .boy{grid-template-columns:1fr;gap:20px}
+    .lake-wrap{grid-template-columns:1fr}
+    .chain{grid-template-columns:1fr 1fr}
+    .day{grid-template-columns:1fr;gap:10px}
+    .rope{left:38px}
+    .dseal{justify-self:start;min-width:76px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 首屏：残叶拼卷 ============ -->
+<header class="hero" id="hero">
+  <div class="wrap eyebrow">
+    <span>殆知阁导读</span>
+    <span><b>卷三百零八</b> · 集藏别集</span>
+  </div>
+  <div class="wrap hero-grid">
+    <div class="htitle">
+      <div class="hname">奇零草</div>
+      <div class="hsub">明张煌言玄箸撰 · 附传状年谱</div>
+      <div class="hseal">苍水</div>
+    </div>
+    <div class="shelf" id="shelf">
+      <div class="slots">
+        <div class="slot" data-ch="奇"></div>
+        <div class="slot" data-ch="零"></div>
+        <div class="slot" data-ch="草"></div>
+      </div>
+      <div class="torn l1" data-ch="奇">奇</div>
+      <div class="torn l2" data-ch="零">零</div>
+      <div class="torn l3" data-ch="草">草</div>
+      <div class="torn blank l4" data-ox="-26" data-oy="0"></div>
+      <div class="torn blank l5" data-ox="0" data-oy="-8"></div>
+      <div class="torn blank l6" data-ox="26" data-oy="0"></div>
+      <div class="torn blank l7" data-ox="0" data-oy="10"></div>
+      <div class="stack">断阙不可读</div>
+    </div>
+  </div>
+  <div class="hero-foot">
+    <div class="count mono" id="leafcount">拾残叶 0 / 7</div>
+    <p class="hint">七页残纸散在书摊上，点一点，把书名拼回来</p>
+    <p class="cap"><q>思借声诗，以代年谱</q>
+      <small>张煌言自序奇零草语，见库本年谱所引</small></p>
+  </div>
+</header>
+
+<!-- ============ 一 · 少年 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-no">一</span>
+      <h2 class="sec-title">少年三发</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="boy">
+      <div class="prose rv">
+        <p>万历末年，他生在宁波。小名来得离奇，库本传记里记着一句原话：<q>父生时梦五色云见；故小字云</q>。家里人于是唤他阿云。</p>
+        <p>年少时的他是全家最头疼的人。好赌，赌输了就偷偷变卖家产抵债，<q>喜呼卢，无以偿博进，则私斥卖其生产</q>。父兄师友一齐躲他，最后是同乡长者全美樟替他把债还清，<q>全美樟售己田为清其逋，劝以折节读书</q>。一个卖掉自己田产替赌徒收心的人，值得记在这部集子的附传里。</p>
+        <p>等天下真的塌下来，朝廷让秀才们考完文章再考武艺，旁人拉不开弓，库本碑铭写作<q>莫能中，公执弓抽矢三发三中</q>。文场的末一名举人，武场给了他另一个开场。</p>
+      </div>
+      <div class="bows rv">
+        <svg viewBox="0 0 280 240" id="bowsvg" aria-label="三发三中">
+          <circle cx="140" cy="128" r="88" fill="none" stroke="#34322c" stroke-width="1"/>
+          <circle cx="140" cy="128" r="58" fill="none" stroke="#3f5a74" stroke-width="1.2"/>
+          <circle class="ring" data-r="24" cx="140" cy="128" r="24" fill="rgba(94,143,187,.10)" stroke="#5e8fbb" stroke-width="1.6"/>
+          <circle class="ring" data-r="58" cx="140" cy="128" r="58" fill="rgba(94,143,187,.05)" stroke="#5e8fbb" stroke-width="1.2"/>
+          <circle class="ring" data-r="88" cx="140" cy="128" r="88" fill="rgba(94,143,187,.03)" stroke="#5e8fbb" stroke-width="1"/>
+          <g class="arrow" data-a="1"><line x1="24" y1="128" x2="118" y2="128" stroke="#5e8fbb" stroke-width="2"/><polygon points="118,128 106,123 106,133" fill="#5e8fbb"/></g>
+          <g class="arrow" data-a="2"><line x1="256" y1="98" x2="170" y2="120" stroke="#5e8fbb" stroke-width="2"/><polygon points="168,121 181,117 175,128" fill="#5e8fbb"/></g>
+          <g class="arrow" data-a="3"><line x1="210" y1="222" x2="150" y2="154" stroke="#5e8fbb" stroke-width="2"/><polygon points="148,152 158,163 146,163" fill="#5e8fbb"/></g>
+        </svg>
+        <div class="bow-cap">点靶三环，重现库本碑铭所记那一手骑射</div>
+        <div class="bow-stamp" id="bowstamp">三发三中</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 二 · 以诗代谱 ============ -->
+<section style="padding-top:30px">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-no">二</span>
+      <h2 class="sec-title">以诗代谱</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="dispatch-intro rv">他给诗集派了一个史官的差事，自序里说破：<q>思借声诗，以代年谱</q>。于是奇零草的每一道诗题都是一条战报，地点、军情、结果，一条不落。顺治己亥年，他与郑成功的舰队入长江，直抵南京城下；那一年从受降到弃甲的全过程，全在诗题里。集子也自己交代过残缺的来历：<q>缀缉新旧篇章，稍稍成帙。丙申昌国再陷，而亡什之三</q>，舟山城破，三分之一的稿子没了下落。</p>
+    <button class="flow-btn rv" id="flowbtn">顺流而下</button>
+    <div class="river">
+      <div class="river-rail"></div>
+
+      <div class="st" data-i="0">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>师次观音门</q><span class="attr">己亥</span></div>
+          <div class="st-note">兵锋抵南京城下，主力迟滞不进，胜负悬而未决。</div>
+        </div>
+        <span class="tip">诗题照录</span>
+      </div>
+
+      <div class="st" data-i="1">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>师次芜湖，时余所遣前军已受降</q></div>
+          <div class="st-note">先锋一到，城门自开，未动一刀。</div>
+          <div class="exp"><div class="exp-in"><q>东来玉帛空胡虏，北望铜符尽汉官</q><span class="attr">姑孰既下句</span></div></div>
+        </div>
+        <span class="tip">可展开</span>
+      </div>
+
+      <div class="st" data-i="2">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>师入太平府</q></div>
+          <div class="st-note">皖南门户打开，府城易手。</div>
+          <div class="exp"><div class="exp-in"><q>此去神京原咫尺，龙蟠虎踞待重光！</q><span class="attr">师入太平府句</span></div></div>
+        </div>
+        <span class="tip">可展开</span>
+      </div>
+
+      <div class="st" data-i="3">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>姑孰既下，和州、无为州及高淳、溧水、溧阳、建平、庐江、舒城、含山、巢县诸邑相继来归</q></div>
+          <div class="st-note">一道诗题点名九座州县，排成一串归附的清单。</div>
+        </div>
+        <span class="tip">诗题照录</span>
+      </div>
+
+      <div class="st" data-i="4">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>驿书至，偏师已复池州府</q></div>
+          <div class="st-note">捷报还在路上飞，战果已经跑过了送信人的速度。</div>
+          <div class="exp"><div class="exp-in"><q>前驱要识王师意，剑跃弓鸣亦漫夸！</q><span class="attr">驿书至句</span></div></div>
+        </div>
+        <span class="tip">可展开</span>
+      </div>
+
+      <div class="st" data-i="5">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>师入宁国，时徽郡来降，留都尚未克复</q></div>
+          <div class="st-note">皖南已定，南京城下仍无进展。隐患就埋在这半句诗题里。</div>
+          <div class="exp"><div class="exp-in"><q>旧阙烽烟须早靖，新都版籍已全收</q><span class="attr">师入宁国句</span></div></div>
+        </div>
+        <span class="tip">可展开</span>
+      </div>
+
+      <div class="st fall" data-i="6">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>间行杂感二首</q></div>
+          <div class="st-note">南京兵溃。他烧舟弃马，改名换姓，从山间小路走了两千里。这是全集里最狼狈也最诚实的一组诗。</div>
+          <div class="exp"><div class="exp-in"><q>铁幢才解又芒鞋，姓氏逢人且自埋</q><span class="attr">间行杂感句</span></div><div class="exp-in"><q>总是姓名随地变，任呼牛马亦何如！</q><span class="attr">间行杂感句</span></div></div>
+        </div>
+        <span class="tip">溃</span>
+      </div>
+
+      <div class="st fall" data-i="7">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>经乌江二首</q></div>
+          <div class="st-note">败退路上经过项羽自刎处，他把这笔账算给了江东子弟。</div>
+          <div class="exp"><div class="exp-in"><q>纵向江东收烬去，应无子弟到中原。</q><span class="attr">经乌江句</span></div></div>
+        </div>
+        <span class="tip">可展开</span>
+      </div>
+
+      <div class="st fall" data-i="8">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>生还四首</q></div>
+          <div class="st-note">退回海上。四首诗没有一个字喊冤，全是清点损失。</div>
+          <div class="exp"><div class="exp-in"><q>本以扬旌去，胡为弃甲旋！</q><span class="attr">生还四首句</span></div><div class="exp-in"><q>百折终何补，千秋倘复怜！</q><span class="attr">生还四首句</span></div></div>
+        </div>
+        <span class="tip">可展开</span>
+      </div>
+
+      <div class="st fall" data-i="9">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>苦饥</q></div>
+          <div class="st-note">军中断粮。诗里已经提前向伯夷叔齐借了那把野菜，六年后他的绝笔集子就叫采薇吟。</div>
+          <div class="exp"><div class="exp-in"><q>安得有蕨薇，疗饥待明主！</q><span class="attr">苦饥句</span></div></div>
+        </div>
+        <span class="tip">可展开</span>
+      </div>
+
+      <div class="st fall" data-i="10">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>庖焚</q></div>
+          <div class="st-note">火烧到厨房，他连败仗都当成余烬来自嘲。</div>
+          <div class="exp"><div class="exp-in"><q>已自伤余烬，何劳厨传灾！</q><span class="attr">庖焚句</span></div></div>
+        </div>
+        <span class="tip">可展开</span>
+      </div>
+
+      <div class="st fall" data-i="11">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>北回示将吏</q><span class="attr">壬寅</span></div>
+          <div class="st-note">三年后又一次北上，孤军再入长江。</div>
+          <div class="exp"><div class="exp-in"><q>利钝宁能料，孤军又北回</q><span class="attr">北回示将吏句</span></div></div>
+        </div>
+        <span class="tip">可展开</span>
+      </div>
+
+      <div class="st fall" data-i="12">
+        <div class="dot"><i></i></div>
+        <div>
+          <div class="st-tt"><q>闻家难有恸四首</q><span class="attr">壬寅</span></div>
+          <div class="st-note">清廷逮其族属，告密之门一路开到他家里。</div>
+        </div>
+        <span class="tip">诗题照录</span>
+      </div>
+    </div>
+    <p class="tagline rv">从受降到弃甲，只隔着几张诗题的距离。这就是他自己选的写法：<q>思借声诗，以代年谱</q>。</p>
+  </div>
+</section>
+
+<!-- ============ 三 · 百日诗程 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-no">三</span>
+      <h2 class="sec-title">百日诗程</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="dispatch-intro rv">康熙甲辰，监国讣音传到海上。他哭完那句<q>已矣！吾其谁与事者</q>，把军队散了。库本按语把这层关系说得很直：<q>监国以是年亡，阁部之命随之</q>，又谓<q>使监国一日不亡，则阁部一日不能罢</q>。从六月入山，到绝命的九月初七，采薇吟把最后一百来天一天一天留了下来。</p>
+
+    <div class="days">
+      <div class="rope"></div>
+
+      <div class="day rv">
+        <div class="dseal">六月<small>甲辰</small></div>
+        <div class="dbody">
+          <h4>入山</h4>
+          <p class="muted">孤军散尽，只身躲进悬嶴。集名取自不食周粟的山歌，他大概已经想好了结局的调子。</p>
+          <div class="verse"><q>大隐从兹始，悠然见古心。</q></div>
+          <div class="verse hi"><q>此中有佳趣，好作「采薇吟」。</q></div>
+        </div>
+      </div>
+
+      <div class="day rv">
+        <div class="dseal">七月十七<small>凌晨</small></div>
+        <div class="dbody">
+          <h4>悬嶴被执</h4>
+          <p>旧部把他卖给了提督标下。库本年谱一句写尽：</p>
+          <p><q>降校欲致公以为功，从逻者暗中执公，并及罗子木、杨冠玉、舟子三人</q>。</p>
+          <p class="muted">被执那一刻他留下一首入定关，题注是库本原文：<q>在悬嶴。七月十七丑时被执作也</q>。三字关名，像一道自己给自己落的闩。</p>
+          <div class="verse"><q>何事孤臣竟息机，鲁戈不复挽斜晖！</q></div>
+          <div class="verse hi"><q>到来晚节惭松柏，此去清风笑蕨薇。</q></div>
+          <div class="verse"><q>叠山迟死、文山早，青史他年任是非！</q></div>
+        </div>
+      </div>
+
+      <div class="day rv">
+        <div class="dseal">八月<small>解省</small></div>
+        <div class="dbody">
+          <h4>过故乡</h4>
+          <p>进宁波那天，<q>公至宁波，方巾葛衣，轿而入；观者如堵墙</q>。轿子抬过旧日文会的大宅，他认出那是前朝宰相的旧第，叹了一句：<q>此沈相公第也！二十年前，曾会文于此</q>。</p>
+          <p>押解的将领开中门相迎，请他上座，他只回一句：<q>国亡不能存、父死不得葬，今日之事，但期速死</q>。</p>
+          <div class="window">
+            <div class="lattice"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <p>看守营里有个<b>有心人</b>，半夜隔着窗子唱苏武骂李陵的曲子。他击节叫好，招那人同坐，倚声相和，唱罢泪下。库本连那位无名千总的唱词出处都记了：<q>有一千夫长者，有心人也；夜半，隔窗唱「牧羊记」传奇苏武骂李陵词，音调凄凉。阁部击节赏之，呼与共坐，倚歌而和；和巳，泪数行下</q>。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="day rv">
+        <div class="dseal">八月<small>官亭</small></div>
+        <div class="dbody">
+          <h4>宿官亭</h4>
+          <p class="muted">解往省城路上，宿头一首绝句。枷锁上了身，梦还是香的。</p>
+          <div class="verse"><q>漫道诗书债未偿，满身枷锁梦魂香；可怜今夜官亭月，无数清光委路傍！</q></div>
+        </div>
+      </div>
+
+      <div class="day rv">
+        <div class="dseal">八月七日<small>狱壁</small></div>
+        <div class="dbody">
+          <h4>放歌</h4>
+          <p>到省城，官府反而以礼相待：<q>至省，供帐如上宾。每日求书堆积，亦称情落笔</q>。求字的士民贿赂看守，络绎不绝，他来者不拒。这一天，他在狱壁上写下一支长歌，题注<q>时甲辰八月七日，书于杭之狱壁</q>。头两句像天塌下来：</p>
+          <div class="verse"><q>沧海扬尘兮日月盲，神州陆沈兮陵谷崩</q></div>
+          <p>中间一联，是全集最短的自传：</p>
+          <div class="verse hi"><q>予生则中华兮，死则大明；寸丹为重兮，七尺为轻</q></div>
+          <p class="muted">歌的结尾把身后事交代给了风霆与日星：<q>尚足留纲常于万祀兮，垂节义于千龄</q>。</p>
+        </div>
+      </div>
+
+      <div class="day rv">
+        <div class="dseal">九月<small>狱中</small></div>
+        <div class="dbody">
+          <h4>红梅与家书</h4>
+          <p>狱舍墙角一株红梅，九月里开出一朵，他一连写了四首绝句，题为<q>墙角红梅，九月发花一朵</q>：</p>
+          <div class="verse"><q>秋严霜气薄于盐，谁道官梅早放尖</q></div>
+          <p>同一批狱中诗里有句沉痛的宽心话：<q>莫道故人多玉碎，盖棺论定未嫌迟！</q></p>
+          <p class="muted">家事只剩两条残笔。妻子那条：<q>夫人董氏，先时被系狱中，削发为尼</q>。独子那条更短：<q>子万祺，先公三日戮于镇江</q>。</p>
+        </div>
+      </div>
+
+      <div class="day rv">
+        <div class="dseal">九月初七<small>就义</small></div>
+        <div class="dbody">
+          <h4>绝命诗</h4>
+          <p>刑期到了。库本年谱：<q>九月七日，公赋绝命词云</q>：</p>
+          <div class="verse hi"><q>我年适五九，复逢九月七；大厦已不支，成仁万事毕。</q></div>
+          <p class="muted">同一天赴死的还有随行三人，碑铭只记五个字：<q>子木、冠玉、舟子皆从死</q>。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 四 · 湖上三席 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-no">四</span>
+      <h2 class="sec-title">湖上三席</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="dispatch-intro rv">进杭州之前，他把身后事写成了一首诗，向西湖讨一个座位。原题二首，这里录其二：</p>
+    <div class="verse rv" style="max-width:860px"><q>国亡家破欲何之？西子湖头有我师：日月双悬于氏墓，乾坤半壁岳家祠。惭将赤手分三席，敢为丹心借一枝！他日素车东浙路，怒涛岂必属鸱夷！</q></div>
+    <p class="dispatch-intro rv" style="margin-top:14px">点墓，各看一句。</p>
+
+    <div class="lake-wrap rv">
+      <div class="lake">
+        <svg viewBox="0 0 620 400" aria-label="西湖三墓示意图">
+          <path d="M40,190 C90,90 220,50 320,62 C440,76 560,130 585,215 C600,270 520,330 400,345 C270,362 90,330 55,265 C38,235 30,215 40,190 Z"
+                fill="rgba(94,143,187,.07)" stroke="#3f5a74" stroke-width="1.4"/>
+          <path d="M120,300 C220,270 420,270 545,300" fill="none" stroke="#34322c" stroke-width="10" opacity=".8"/>
+          <path d="M120,300 C220,270 420,270 545,300" fill="none" stroke="#a49d90" stroke-width="1" stroke-dasharray="2 7"/>
+          <text x="80" y="345" fill="#6e685e" font-size="12" letter-spacing="4">西湖</text>
+          <g class="tomb" data-t="yue" transform="translate(150,120)">
+            <circle r="9"/>
+            <text x="0" y="36" text-anchor="middle">岳王祠</text>
+            <text x="0" y="-20" text-anchor="middle" font-size="10" opacity=".7">栖霞岭</text>
+          </g>
+          <g class="tomb" data-t="yu" transform="translate(230,285)">
+            <circle r="9"/>
+            <text x="0" y="36" text-anchor="middle">于氏墓</text>
+            <text x="0" y="-20" text-anchor="middle" font-size="10" opacity=".7">三台山</text>
+          </g>
+          <g class="tomb" data-t="zhang" transform="translate(470,300)">
+            <circle r="11"/>
+            <circle r="16" fill="none" stroke="rgba(94,143,187,.4)" stroke-width="1"/>
+            <text x="0" y="42" text-anchor="middle">南屏山</text>
+            <text x="0" y="-24" text-anchor="middle" font-size="10" opacity=".7">荔枝峰</text>
+          </g>
+          <path d="M470,300 C420,310 330,305 250,290" fill="none" stroke="rgba(94,143,187,.35)" stroke-width="1" stroke-dasharray="3 6"/>
+          <path d="M470,300 C430,230 280,180 165,128" fill="none" stroke="rgba(94,143,187,.35)" stroke-width="1" stroke-dasharray="3 6"/>
+        </svg>
+      </div>
+      <div>
+        <div class="tk cur" data-tk="yu">
+          <h4>于氏墓</h4>
+          <p>三台山下，是北京城破而复保的那位兵部尚书。</p>
+          <div class="verse"><q>日月双悬于氏墓</q></div>
+          <p class="muted" style="font-size:13.5px">日月并悬，他眼里于谦撑住的是半个天的另一半。</p>
+        </div>
+        <div class="tk" data-tk="yue">
+          <h4>岳家祠</h4>
+          <p>栖霞岭下，风波亭的旧案。</p>
+          <div class="verse"><q>乾坤半壁岳家祠</q></div>
+          <p class="muted" style="font-size:13.5px">半壁乾坤，岳飞的名字从来和南渡连在一起。</p>
+        </div>
+        <div class="tk" data-tk="zhang">
+          <h4>第三席</h4>
+          <p>就义当年，三位同乡与一位僧人把他安葬在西湖南屏山脚下，库本年谱记得清楚：<q>武林张文嘉、甬东万斯大与僧超直，葬公于杭州西湖南屏之阴</q>。碑铭说这正<q>符公「三席」、「一枝」志也</q>，又记下时人一句评语：<q>一时发言，皆同谶语</q>。</p>
+          <p>他生前还有过一首忆西湖，尾句像在催：</p>
+          <div class="verse"><q>梦里相逢西子湖，谁知梦醒却馍糊；高坟武穆连忠肃，添得新坟一座无？</q></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 五 · 集不可泯 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-no">五</span>
+      <h2 class="sec-title">集不可泯</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="rv">
+      <div class="bigq"><q>尚书之身可死，集不可泯</q></div>
+      <div class="bigq-attr">全祖望语 · 见库本张跋转引</div>
+    </div>
+    <p class="chain-note rv">人死之后，轮到书走那条长得多的路。禁网之下的处境，库本张跋有一段总账：<q>当文网严密之时，士大夫明知收藏其集为不祥，而展转传钞，犹往往流布人间</q>。赵之谦追述得更狠：<q>自乾隆中东南收缴禁书，遗黎私记，穷里复壁罔敢伏匿。抽毁既定，残賸百一，今亦半归灭没</q>。这张流转的时间表，每一站都是死里逃生。</p>
+
+    <div class="chain">
+      <div class="chain-card rv lit" data-c="1">
+        <div class="k">复壁</div>
+        <div class="y">清初至乾隆中</div>
+        <h4>躲在夹墙里</h4>
+        <p>遗民的私记不敢露面，藏进穷巷复壁。<q>穷里复壁罔敢伏匿</q>，写的是无处可藏，也写出了偏偏要藏。</p>
+      </div>
+      <div class="chain-card rv" data-c="2">
+        <div class="k">七叶</div>
+        <div class="y">咸丰前</div>
+        <h4>书摊上七页纸</h4>
+        <p>少年赵之谦听长辈讲悬嶴旧事，六年后在书摊挑到七页残稿：<q>于沈氏书摊得「奇零草」残写本七叶，虽断阙不可读，绎之略存颠末。辛酉寇难，复失之</q>。兵火再来，连七叶也没了。</p>
+      </div>
+      <div class="chain-card rv" data-c="3">
+        <div class="k">铅印</div>
+        <div class="y">光绪辛丑</div>
+        <h4>一部旧钞进新都</h4>
+        <p>张跋记得这部书的新生：<q>余尝得永历辛丑钞本于郡城黄东井先生后人凡二钜册</q>，后来<q>嗣展转为余杭章太炎借去，因于光绪辛丑铅印</q>。永历年的钞本，在一九〇一年变成铅字。</p>
+      </div>
+      <div class="chain-card rv" data-c="4">
+        <div class="k">追谥</div>
+        <div class="y">一七七六</div>
+        <h4>朝廷改口</h4>
+        <p>身后一百一十二年，库本年谱一句带过：<q>忠烈赐谥在乾隆四十一年</q>。禁过他的书，又谥了他的骨。</p>
+      </div>
+      <div class="chain-card rv" data-c="5">
+        <div class="k">此页</div>
+        <div class="y">今天</div>
+        <h4>简体库里</h4>
+        <p>库本收奇零草己亥至壬寅段、采薇吟全卷、外编遗诗，并附传状、年谱与序跋。你去读它，就是时间表上最新的一站。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 尾屏：绝命诗 ============ -->
+<section class="fin" id="fin">
+  <div class="fin-tag">绝命诗 · 库本采薇吟</div>
+  <div class="jue">
+    <div class="jl"><q>我年适五九，</q></div>
+    <div class="jl"><q>复逢九月七；</q></div>
+    <div class="jl"><q>大厦已不支，</q></div>
+    <div class="jl"><q>成仁万事毕。</q></div>
+  </div>
+  <p class="fin-meta">五九之数，四十五。库本碑铭：<q>遂死；年四十五</q></p>
+  <div class="fin-seal">忠烈</div>
+</section>
+
+<!-- ============ 页脚 ============ -->
+<div class="foot">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库集藏四库别集，明人张煌言撰〈张苍水集〉，库本去空白约九万五千字，收奇零草己亥至壬寅段、采薇吟、外编遗诗，并附传记、年谱与原序跋。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。</p>
+    <p>校字记：库本「和巳」「馍糊」「賸」「陆沈」「悬嶴」等原貌照录；临刑二诗在采薇吟与神道碑铭中的文字小异（在于阗与属于阗、千秋青史与他年青史）互见；谱传记监国卒年互有出入，本页取甲辰散军入山一节行文。</p>
+    <p class="xiaoji">时代局限：诗文与传记中胡虏、夷狄等称谓及纲常忠义话语皆库本原貌照录，请以历史语境阅读。作品涉及明清易代战争、族属株连与处决记述，直书不讳；页面对人物的评价性表述从库本与后世乡邦文献，不代表当下结论。</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var hero=document.getElementById('hero');
+  var countEl=document.getElementById('leafcount');
+  var leaves=[].slice.call(document.querySelectorAll('.torn'));
+  var slots={};[].slice.call(document.querySelectorAll('.slot')).forEach(function(s){slots[s.getAttribute('data-ch')]=s});
+  var stack=document.querySelector('.stack');
+  var got=0,total=leaves.length;
+
+  leaves.forEach(function(leaf){
+    leaf.addEventListener('click',function(){
+      if(leaf.classList.contains('fly')||hero.classList.contains('full'))return;
+      leaf.classList.add('fly');
+      var r=leaf.getBoundingClientRect(),target;
+      var ch=leaf.getAttribute('data-ch');
+      if(ch){target=slots[ch].getBoundingClientRect();}
+      else{target=stack.getBoundingClientRect();
+        target={left:target.left+target.width/2+(parseFloat(leaf.getAttribute('data-ox'))||0),
+                top:target.top+target.height/2+(parseFloat(leaf.getAttribute('data-oy'))||0)};}
+      var dx=(target.left-r.left-r.width/2),dy=(target.top-r.top-r.height/2);
+      leaf.style.transform='translate('+dx+'px,'+dy+'px) rotate(0deg) scale(.9)';
+      setTimeout(function(){
+        leaf.classList.add('gone');
+        if(ch){var s=slots[ch];s.textContent=ch;s.classList.add('filled');}
+      },740);
+      got++;countEl.textContent='拾残叶 '+got+' / '+total;
+      if(got===total){setTimeout(function(){hero.classList.add('full');},820);}
+    });
+  });
+
+  var arrows=[].slice.call(document.querySelectorAll('.arrow'));
+  var rings=[].slice.call(document.querySelectorAll('.ring'));
+  var hi=0;
+  rings.forEach(function(rg){
+    rg.addEventListener('click',function(){
+      if(hi>=arrows.length)return;
+      arrows[hi].classList.add('hit');hi++;
+      if(hi===arrows.length){document.getElementById('bowstamp').classList.add('on');}
+    });
+  });
+
+  var sts=[].slice.call(document.querySelectorAll('.st'));
+  sts.forEach(function(st){
+    st.addEventListener('click',function(){st.classList.toggle('open');st.classList.add('lit');});
+  });
+  var playing=false,pi=0,timer=null;
+  var btn=document.getElementById('flowbtn');
+  btn.addEventListener('click',function(){
+    if(playing){clearInterval(timer);playing=false;btn.textContent='顺流而下';return;}
+    playing=true;pi=0;btn.textContent='停';
+    sts.forEach(function(s){s.classList.remove('lit','open');});
+    timer=setInterval(function(){
+      if(pi>=sts.length){clearInterval(timer);playing=false;btn.textContent='顺流而下';return;}
+      var s=sts[pi];s.classList.add('lit');if(s.querySelector('.exp'))s.classList.add('open');
+      pi++;
+    },950);
+  });
+
+  var tombs=[].slice.call(document.querySelectorAll('.tomb'));
+  var tks={};[].slice.call(document.querySelectorAll('.tk')).forEach(function(t){tks[t.getAttribute('data-tk')]=t});
+  var tmap={yue:'yue',yu:'yu',zhang:'zhang'};
+  tombs.forEach(function(tb){
+    tb.addEventListener('click',function(){
+      tombs.forEach(function(x){x.classList.remove('lit');});
+      tb.classList.add('lit');
+      var k=tmap[tb.getAttribute('data-t')];
+      Object.keys(tks).forEach(function(kk){tks[kk].classList.toggle('cur',kk===k);});
+    });
+  });
+
+  var cards=[].slice.call(document.querySelectorAll('.chain-card'));
+  cards.forEach(function(c){
+    c.addEventListener('click',function(){
+      cards.forEach(function(x){x.classList.remove('lit');});
+      c.classList.add('lit');
+    });
+  });
+
+  var fin=document.getElementById('fin');
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target);}
+    });
+  },{threshold:.25});
+  io.observe(fin);
+  [].slice.call(document.querySelectorAll('.rv')).forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
