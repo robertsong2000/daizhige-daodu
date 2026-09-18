@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>〈岁时广记〉导读 · 殆知阁</title>
+<style>
+  :root{
+    --ink:#191917; --panel:#201f1b; --panel2:#26241f;
+    --paper:#e8e4dc; --dim:#a89e8d; --faint:#6f685c;
+    --och:#c9963f; --och-dim:#8a6a33; --och-ghost:rgba(201,150,63,.13);
+    --red:#c0453c; --line:#3a362e;
+    --spr:#5f9270; --sum:#5e8fbb; --win:#9a8f7c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink); color:var(--paper);
+    font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    line-height:1.9; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  .mono{font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 26px}
+  a{color:var(--och);text-decoration:none}
+  em{font-style:normal;color:var(--och)}
+  q{quotes:none}
+
+  /* ===== 十二月水名侧轨 ===== */
+  #rail{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:30;display:flex;
+    flex-direction:column;gap:2px;pointer-events:none}
+  #rail .ri{display:flex;align-items:center;gap:7px;font-size:10.5px;color:#4f493f;letter-spacing:.08em;
+    transition:color .35s;line-height:1.5}
+  #rail .ri .m{width:34px;text-align:right}
+  #rail .ri .dot{width:5px;height:5px;border-radius:50%;background:#3a362e;transition:.35s;flex:none}
+  #rail .ri .w{opacity:.7}
+  #rail .ri.act{color:var(--och)}
+  #rail .ri.act .dot{background:var(--och);box-shadow:0 0 8px var(--och)}
+  #rail .ri.act .w{opacity:1}
+  #rail::before{content:"";position:absolute;left:44px;top:-26px;bottom:-26px;width:1px;
+    background:linear-gradient(180deg,transparent,var(--och-dim) 15%,var(--och-dim) 85%,transparent);z-index:-1}
+  @media (max-width:1180px){#rail{display:none}}
+
+  /* ===== hero ===== */
+  .hero{position:relative;min-height:92vh;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid var(--line)}
+  .sun{position:absolute;right:8%;top:12%;width:340px;height:340px;border-radius:50%;
+    background:radial-gradient(circle,var(--och-ghost),transparent 68%);pointer-events:none}
+  .sun::after{content:"";position:absolute;inset:44px;border:1px solid rgba(201,150,63,.18);border-radius:50%}
+  .hero .wrap{position:relative;z-index:2;width:100%}
+  .eyebrow{font-size:13px;letter-spacing:.35em;color:var(--dim);margin-bottom:26px}
+  .eyebrow b{color:var(--och);font-weight:normal}
+  h1.big{font-size:clamp(58px,10.5vw,112px);line-height:1.1;letter-spacing:.1em;font-weight:600}
+  h1.big .x{color:var(--och)}
+  .herohead{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap}
+  .seal{width:52px;height:76px;border:2px solid var(--och);color:var(--och);display:flex;align-items:center;
+    justify-content:center;font-size:15px;letter-spacing:2px;writing-mode:vertical-rl;border-radius:4px;
+    background:var(--och-ghost);flex:none}
+  .herosub{margin-top:20px;font-size:17px;color:var(--dim)}
+  .herosub .who{color:var(--paper)}
+  .introq{margin-top:34px;border-left:2px solid var(--och);padding:6px 0 6px 20px;max-width:700px}
+  .introq q{display:block;font-size:15.5px;color:#cfc8bb}
+  .introq .src{display:block;margin-top:8px;font-size:12.5px;color:var(--faint);letter-spacing:.15em}
+  .fourchip{display:flex;gap:12px;margin-top:40px;flex-wrap:wrap}
+  .fchip{border:1px solid var(--line);border-radius:6px;padding:8px 16px;font-size:14px;letter-spacing:.15em;color:var(--dim)}
+  .fchip b{font-weight:normal;font-size:19px;margin-right:8px}
+  .fchip.s b{color:var(--spr)}.fchip.x b{color:var(--sum)}
+  .fchip.q b{color:var(--och)}.fchip.d b{color:var(--win)}
+
+  /* ===== 通用 ===== */
+  section{padding:76px 0 30px}
+  .shead{display:flex;align-items:baseline;gap:16px;margin-bottom:34px}
+  .shead .no{font-size:12px;letter-spacing:.25em;color:var(--och);border:1px solid var(--och-dim);
+    padding:3px 10px;border-radius:3px;flex:none}
+  .shead h2{font-size:27px;letter-spacing:.12em;font-weight:600}
+  .shead .en{font-size:12.5px;color:var(--faint);letter-spacing:.2em;margin-left:auto}
+  .lead{max-width:780px;color:#cfc8bb;font-size:15.5px;margin-bottom:26px}
+  .qline{display:block;margin:10px 0 2px;padding-left:14px;border-left:2px solid var(--och-dim);color:#cfc8bb;font-size:14.5px}
+  .qline .who{display:block;font-size:12px;color:var(--faint);margin-top:4px;letter-spacing:.1em}
+  .rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .rv.vis{opacity:1;transform:none}
+
+  /* ===== 壹 书人案 ===== */
+  .bio2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media (max-width:860px){.bio2{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:26px}
+  .card h3{font-size:18px;letter-spacing:.1em;margin-bottom:12px}
+  .card h3 .tag{font-size:11.5px;color:var(--faint);letter-spacing:.2em;margin-left:10px}
+  .card p{font-size:14.5px;color:#cfc8bb;margin-bottom:8px}
+  .stamp{display:inline-block;border:2px solid var(--red);color:var(--red);border-radius:4px;
+    padding:4px 12px;font-size:15px;letter-spacing:3px;transform:rotate(-4deg);margin:4px 0 10px}
+
+  /* ===== 贰 四时判词 ===== */
+  .seasons{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  @media (max-width:1000px){.seasons{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.seasons{grid-template-columns:1fr}}
+  .sea{border:1px solid var(--line);border-radius:10px;padding:22px 20px;background:var(--panel);position:relative;overflow:hidden}
+  .sea::before{content:attr(data-ch);position:absolute;right:-10px;bottom:-30px;font-size:96px;line-height:1;
+    color:transparent;-webkit-text-stroke:1.2px var(--och-ghost);pointer-events:none}
+  .sea h4{font-size:20px;letter-spacing:.2em;margin-bottom:2px}
+  .sea .sub{font-size:12px;color:var(--faint);letter-spacing:.15em;margin-bottom:14px}
+  .sea .def{font-size:26px;letter-spacing:.1em;line-height:1.5;margin-bottom:12px}
+  .sea.s .def{color:var(--spr)}.sea.x .def{color:var(--sum)}
+  .sea.q .def{color:var(--och)}.sea.d .def{color:var(--win)}
+  .sea q{display:block;font-size:13.5px;color:#cfc8bb}
+
+  /* ===== 叁 风雨水簿 ===== */
+  .yearboard{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .yb{display:grid;grid-template-columns:120px 150px 1fr;border-bottom:1px solid var(--line)}
+  .yb:last-child{border-bottom:none}
+  .yb:hover{background:var(--och-ghost)}
+  .yb .mo{padding:16px 0 16px 18px;font-size:13px;color:var(--dim);letter-spacing:.1em;align-self:center}
+  .yb .nm{padding:16px 0;font-size:17px;letter-spacing:.12em;color:var(--och);align-self:center}
+  .yb .tx{padding:14px 22px 14px 0;font-size:13.8px;color:#cfc8bb;align-self:center}
+  .yb .tx q{color:#cfc8bb}
+  .yb .tx .who{display:block;font-size:11.5px;color:var(--faint);margin-top:3px;letter-spacing:.1em}
+  @media (max-width:720px){
+    .yb{grid-template-columns:76px 104px 1fr}
+    .yb .mo{padding-left:10px}
+    .yb .tx{padding-right:12px}
+  }
+
+  /* ===== 肆 雅事笺 ===== */
+  .grid12{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media (max-width:860px){.grid12{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.grid12{grid-template-columns:1fr}}
+  .cell{perspective:900px;height:216px;cursor:pointer}
+  .cellin{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+  .cell.flip .cellin{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:18px 20px;display:flex;flex-direction:column}
+  .face .fn{font-size:19px;letter-spacing:.12em}
+  .face .fs{font-size:12px;color:var(--faint);letter-spacing:.15em;margin-top:4px}
+  .face .hint{margin-top:auto;font-size:11.5px;color:var(--faint);letter-spacing:.2em}
+  .face.bk{background:var(--panel2);border-color:var(--och-dim);transform:rotateY(180deg)}
+  .face.bk q{font-size:13.5px;color:#cfc8bb;display:block;line-height:1.8}
+  .face.bk p{font-size:12.8px;color:var(--dim);margin-top:8px;line-height:1.7}
+  .face.bk .src2{margin-top:auto;font-size:11px;color:var(--faint);letter-spacing:.15em}
+
+  /* ===== 伍 巫与占 ===== */
+  .magi{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:860px){.magi{grid-template-columns:1fr}}
+  .mg{background:var(--panel);border:1px dashed var(--och-dim);border-radius:10px;padding:22px 24px}
+  .mg h4{font-size:16.5px;letter-spacing:.15em;color:var(--och);margin-bottom:6px}
+  .mg p{font-size:14px;color:#cfc8bb;margin-bottom:4px}
+
+  /* ===== 陆 收梢 ===== */
+  .finale{margin-top:40px;text-align:center;padding:30px 0 10px}
+  .finale .big8{font-size:clamp(38px,7vw,72px);letter-spacing:.28em;color:var(--och);line-height:1.4}
+  .finale .seal2{margin:26px auto 0;width:78px;height:78px;border:2.5px solid var(--red);border-radius:50%;
+    color:var(--red);display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;
+    font-size:14px;letter-spacing:2px;transform:rotate(-6deg)}
+  .finale .tiny{margin-top:20px;font-size:12.5px;color:var(--faint);letter-spacing:.25em}
+
+  footer{border-top:1px solid var(--line);padding:40px 26px 90px;color:var(--faint);font-size:13px;line-height:2}
+  footer p{margin-bottom:8px}
+  footer .xiaoji{color:#5c564b}
+</style>
+</head>
+<body>
+
+<!-- 十二月水名侧轨 -->
+<nav id="rail" aria-hidden="true">
+  <div class="ri"><span class="m">正月</span><span class="dot"></span><span class="w">凌解水</span></div>
+  <div class="ri"><span class="m">二月</span><span class="dot"></span><span class="w">桃花水</span></div>
+  <div class="ri"><span class="m">三月</span><span class="dot"></span><span class="w">桃花水</span></div>
+  <div class="ri"><span class="m">四月</span><span class="dot"></span><span class="w">麦黄水</span></div>
+  <div class="ri"><span class="m">五月</span><span class="dot"></span><span class="w">瓜蔓水</span></div>
+  <div class="ri"><span class="m">六月</span><span class="dot"></span><span class="w">山矾水</span></div>
+  <div class="ri"><span class="m">七月</span><span class="dot"></span><span class="w">荻苗水</span></div>
+  <div class="ri"><span class="m">八月</span><span class="dot"></span><span class="w">荻苗水</span></div>
+  <div class="ri"><span class="m">九月</span><span class="dot"></span><span class="w">登髙水</span></div>
+  <div class="ri"><span class="m">十月</span><span class="dot"></span><span class="w">复槽水</span></div>
+  <div class="ri"><span class="m">冬月</span><span class="dot"></span><span class="w">蹙凌水</span></div>
+  <div class="ri"><span class="m">腊月</span><span class="dot"></span><span class="w">蹙凌水</span></div>
+</nav>
+
+<!-- hero -->
+<header class="hero">
+  <div class="sun" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="eyebrow">殆知阁导读 <b>第四百二十一篇</b> · 史藏时令</p>
+    <div class="herohead">
+      <h1 class="big">岁时<em class="x">广记</em></h1>
+      <div class="seal">广寒仙裔</div>
+    </div>
+    <p class="herosub"><span class="who">南宋 陈元靓 撰</span> · 一部给全年的典故速查簿：春四十六条、夏五十条、秋三十二条、冬三十八条，写信应酬要哪个节气的雅事，翻就是了</p>
+    <div class="introq">
+      <q class="q">有天之时有人之时</q>
+      <span class="src">朱鉴序 · 天时的背后，全是人替它安排的戏</span>
+    </div>
+    <div class="fourchip">
+      <span class="fchip s"><b>蠢</b>春，万物出</span>
+      <span class="fchip x"><b>假</b>夏，物修长</span>
+      <span class="fchip q"><b>愁</b>秋，气收敛</span>
+      <span class="fchip d"><b>终</b>冬，藏之终</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- 壹 -->
+<section>
+  <div class="shead rv"><span class="no mono">壹</span><h2>书人案：广寒仙裔是谁</h2><span class="en mono">THE AUTHOR</span></div>
+  <p class="lead rv">陈元靓，里贯生平都没留下，只在书上署了个仙气飘飘的号。给他写序的来头不小：朱熹的孙子朱鉴；写后序的刘纯只肯叫他隐君子。四库馆臣对这书评价很苛刻，却也承认它把每条典故的出处都全文照录，没乱删。</p>
+  <div class="bio2">
+    <div class="card rv">
+      <h3>谜样作者<span class="tag">理宗时人</span></h3>
+      <div class="stamp">广寒仙裔</div>
+      <p>月宫的后人？当然只是笔名。刘纯在后序里说他是山边梅溪的隐君子，功名于他如涕唾。他与朱鉴有交往，据此可断是理宗朝人；官私书志都没登记此书，全靠清初钱曾的藏书目录留下名字。</p>
+      <q class="qline">元靓不知其里贯自署曰广寒仙裔<span class="who">四库提要</span></q>
+      <q class="qline">鉴乃朱子之孙<span class="who">四库提要</span></q>
+      <p>原书卷首本有图说，一年十二个月的物候都配了图，学海编收进来时已经丢了，如今只剩文字骨架。</p>
+      <q class="qline">前列图说，分四时为四卷<span class="who">四库提要</span></q>
+      <q class="qline">卷首并无图说<span class="who">四库提要</span></q>
+    </div>
+    <div class="card rv">
+      <h3>它是干什么用的<span class="tag">书眼</span></h3>
+      <p>四库馆臣一句话点破用途：写信用的。宋人书信讲究应节，重阳要引登高，端午要引竞渡，这部书就是文人案头的节日文案库，今天转发的节气祝福模板，南宋早有一整本。</p>
+      <q class="qline">大抵为启札应用而设<span class="who">四库提要</span></q>
+      <p>朱鉴序里替它抱屈也替它张目：天时靠历书，人事的千头万绪不记下来就断了源头；竞渡为什么属于端午，登高为什么属于重九，都是人替天安排的戏。</p>
+      <q class="qline">有天之时有人之时<span class="who">朱鉴序</span></q>
+      <p>他给的四字考语是：内容多而不乱，雅而不俗。</p>
+      <q class="qline">该而不冗，雅而不俚<span class="who">朱鉴序</span></q>
+      <p>至于馆臣的差评，也照录在此：雅训之书收得太少，够不上善本。好在出处全文照录，前人的路数没丢。刘纯后序里那句话最公道，书不辜负人，是人辜负了书。</p>
+      <q class="qline">反多遗缺，未可以称善本<span class="who">四库提要</span></q>
+      <q class="qline">书不负人而人负书<span class="who">刘纯后序</span></q>
+    </div>
+  </div>
+</section>
+
+<!-- 贰 -->
+<section>
+  <div class="shead rv"><span class="no mono">贰</span><h2>四时判词：四个字过一年</h2><span class="en mono">FOUR SEASONS</span></div>
+  <p class="lead rv">每卷开篇先给季节定性，四个定义字合成一部极简的年轮：春是万物往外冒的头，夏是放任生长的假，秋是把愁字借来说事，冬的底色是收藏与终结。</p>
+  <div class="seasons rv">
+    <div class="sea s" data-ch="春">
+      <h4>春</h4><div class="sub">孟仲季三月</div>
+      <div class="def">蠢</div>
+      <q class="q">春之为言蠢也</q>
+      <q class="q">万物之所出也</q>
+      <q class="q">东风解冻，蛰虫始振</q>
+    </div>
+    <div class="sea x" data-ch="夏">
+      <h4>夏</h4><div class="sub">孟仲季三月</div>
+      <div class="def">假</div>
+      <q class="q">夏之为言假也</q>
+      <q class="q">夏者物之修长也</q>
+      <q class="q">小满者言物长于此小得盈满</q>
+    </div>
+    <div class="sea q" data-ch="秋">
+      <h4>秋</h4><div class="sub">孟仲季三月</div>
+      <div class="def">愁</div>
+      <q class="q">秋之为言愁也</q>
+      <q class="q">一叶落而天下知秋</q>
+      <q class="q">凉风至，白露降</q>
+    </div>
+    <div class="sea d" data-ch="冬">
+      <h4>冬</h4><div class="sub">孟仲季三月</div>
+      <div class="def">终</div>
+      <q class="q">冬之为言中也</q>
+      <q class="q">中者藏也</q>
+      <q class="q">凡草木花多五出雪花独六出</q>
+    </div>
+  </div>
+</section>
+
+<!-- 叁 -->
+<section>
+  <div class="shead rv"><span class="no mono">叁</span><h2>一年风雨簿：给每场雨起名字</h2><span class="en mono">WINDS AND RAINS</span></div>
+  <p class="lead rv">书里最迷人的是一套民间的天气命名法：什么时节刮什么风、下什么雨、涨什么水，全有专名。右侧那列黄河一年的水名，就是古人给河流排的班表。</p>
+  <div class="yearboard rv">
+    <div class="yb"><span class="mo">初春至初夏</span><span class="nm">花信风</span><div class="tx">五天一阵风，从梅花吹到楝花，二十四阵吹尽春寒。<q class="qline">凡二十四畨以为寒绝也<span class="who">东臯杂录</span></q><q class="qline">一百五日寒食雨二十四畨花信风<span class="who">徐师川诗</span></q></div></div>
+    <div class="yb"><span class="mo">清明前后</span><span class="nm">杏花雨</span><div class="tx">杏花开时必有雨，花开雨至，像一份写给花期的天气预告。<q class="qline">沾衣欲湿杏花雨吹面不寒杨桺风<span class="who">古诗</span></q></div></div>
+    <div class="yb"><span class="mo">二三月</span><span class="nm">桃花水</span><div class="tx">桃花开时川谷涨水，春汛因此姓了桃。<q class="qline">桃方华时既有雨水川谷涨泮众流盛长故谓之桃花水<span class="who">颜师古汉书音义</span></q></div></div>
+    <div class="yb"><span class="mo">四五月</span><span class="nm">黄梅雨</span><div class="tx">梅子黄熟时下的雨，名字就叫黄梅雨；江南农谚说得更狠：梅雨不来，锅里无米。<q class="qline">梅熟而雨曰梅雨<span class="who">四时纂要</span></q><q class="qline">雨不梅无米炊<span class="who">农谚</span></q></div></div>
+    <div class="yb"><span class="mo">仲夏</span><span class="nm">濯枝雨</span><div class="tx">端午前后必有豪雨，专给枝叶洗尘。<q class="qline">此节常有大雨名曰濯枝雨<span class="who">风土记</span></q></div></div>
+    <div class="yb"><span class="mo">五月</span><span class="nm">畱客雨</span><div class="tx">神人相会，一天连下三场雨硬留客，五月三雨由此得名。<q class="qline">一日之中三雨今呼五月三雨亦为畱客雨<span class="who">陆机要览</span></q></div></div>
+    <div class="yb"><span class="mo">五六月</span><span class="nm">海飓风</span><div class="tx">飓字的训诂干脆利落：四面来风，一字拆尽；它来之前，鸡狗先噤声。<q class="qline">飓风者具四方之风也<span class="who">南越志</span></q><q class="qline">未至时鸡犬为之不鸣<span class="who">南越志</span></q></div></div>
+    <div class="yb"><span class="mo">八月</span><span class="nm">豆花雨</span><div class="tx">八月雨名豆花雨，秋意从菜园里先到。<q class="qline">豆花雨乃八月雨也<span class="who">荆楚岁时记</span></q></div></div>
+    <div class="yb"><span class="mo">九月</span><span class="nm">鲤鱼风</span><div class="tx">九月的风连名字都是水产的，李贺用它吹老过芙蓉。<q class="qline">鲤鱼风乃九月风也<span class="who">提要录</span></q><q class="qline">鲤鱼风起芙蓉老<span class="who">李贺诗</span></q></div></div>
+    <div class="yb"><span class="mo">立冬后</span><span class="nm">入液雨</span><div class="tx">闽俗入液日出液，这场雨又叫药雨，百虫喝了它才肯冬眠。<q class="qline">百虫饮此水而蛰<span class="who">琐碎录</span></q></div></div>
+    <div class="yb"><span class="mo">冬季</span><span class="nm">蹙凌水</span><div class="tx">黄河冰断复结，蹙起成层，一年的水名以此收尾。<q class="qline">黄河水十一月十二月名蹙凌水氷断后结蹙起成层也<span class="who">水衡记</span></q></div></div>
+  </div>
+  <p class="lead rv" style="margin-top:22px">而水衡记里的黄河，十二个月月月有新名。正月解冻叫凌解，九月涨水正逢重九登高，就叫登高，一条大河被过日子的心思议了一年。</p>
+  <div class="magi rv" style="grid-template-columns:1fr">
+    <div class="mg">
+      <h4>黄河全年水名</h4>
+      <p>正月之水名凌解，二三月桃花，四月麦黄，五月瓜蔓，六月山矾，七八月荻苗，九月登高，十月复槽，冬腊两月蹙凌。</p>
+      <q class="qline">黄河水正月名凌解水<span class="who">水衡记</span></q>
+      <q class="qline">黄河水九月名登髙水<span class="who">水衡记</span></q>
+      <q class="qline">黄河水十月名复槽水落复故道也<span class="who">水衡记</span></q>
+    </div>
+  </div>
+</section>
+
+<!-- 肆 -->
+<section>
+  <div class="shead rv"><span class="no mono">肆</span><h2>雅事笺：唐人的四季节目单</h2><span class="en mono">TWELVE DELIGHTS</span></div>
+  <p class="lead rv">正文条目多抄唐宋杂史，攒出一台奢华到离谱的四季节目：春天用羯鼓催花，夏天用龙皮制冷，秋天替蟋蟀配金笼，冬天连呵笔的暖气的分配都写了规矩。点牌看戏。</p>
+  <div class="grid12 rv">
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">击春曲</div><div class="fs">酉阳杂俎</div><div class="hint">点牌翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">此一事不唤我作天公可乎</q>
+          <p>二月雨后柳杏将吐，唐明皇嫌天地手慢，亲自击羯鼓一曲春光好，回头一看柳杏全开了。催花的鼓点，是帝王版的春天加速器。</p>
+          <div class="src2">击春曲</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">随蝶幸</div><div class="fs">开元遗事</div><div class="hint">翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">帝亲捉粉蝶放之随蝶所止幸之</q>
+          <p>春天宫宴，嫔妃人人头上插满艳花，玄宗放飞一只粉蝶，蝶落谁头谁侍寝。杨贵妃专宠后，这游戏作废。</p>
+          <div class="src2">随蝶幸</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">移春槛</div><div class="fs">开元遗事</div><div class="hint">翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">移名花植木槛中下设轮脚</q>
+          <p>杨国忠家的子弟给花坛装上轮子，走到哪儿拖到哪儿，花随人走，名移春槛。移动花园的专利权属于唐朝首富家。</p>
+          <div class="src2">移春槛</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">防花铃</div><div class="fs">天寳遗事</div><div class="hint">翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">纽红丝为绳缀金铃繋花梢之上</q>
+          <p>宁王在花枝间拉红绳挂金铃，鸟雀一来就拉绳惊飞，守护每一朵花。这是花园版的防盗警报，防的贼是鸟。</p>
+          <div class="src2">防花铃</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">括香</div><div class="fs">唐玉麈录</div><div class="hint">翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">置惜春御史掌之号曰括香</q>
+          <p>穆宗在宫里花香最盛处设帐封栏，专门任命一位惜春御史看管香气。官职表里查无此人，春天里他权力最大。</p>
+          <div class="src2">括香</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">寒筵氷</div><div class="fs">醉乡日月</div><div class="hint">翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">以油帛密封口勿令泄气</q>
+          <p>盛夏把煮沸的水灌进小口瓶，蜡封后沉入井底过夜，清晨捞出，瓶中已结冰，宴席上现凿现用，号称寒筵冰。</p>
+          <div class="src2">寒筵氷</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">澄水帛</div><div class="fs">杜阳编</div><div class="hint">翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">似布细明薄可鉴</q>
+          <p>同昌公主的降温神器：一条八九尺长的薄帛蘸水挂在窗前，满座凉得想裹棉衣，据说帛里织有龙涎。</p>
+          <div class="src2">澄水帛</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">白龙皮</div><div class="fs">剧谈录</div><div class="hint">翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">以金盆贮水渍白龙皮</q>
+          <p>李相宴客，座末金盆里泡一张新罗僧人从海里得的龙皮，室内立刻凉如高秋，出门又是烈日灼人。</p>
+          <div class="src2">白龙皮</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">激凉风</div><div class="fs">唐书</div><div class="hint">翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">四檐飞澑悬波如瀑布激气成凉风</q>
+          <p>拂菻国的机关房：暗渠引水上屋顶，观者只闻水声，四檐垂帘如瀑布，凉风由水汽激成。中世纪的水力空调。</p>
+          <div class="src2">激凉风</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">呵牙笔</div><div class="fs">天寳遗事</div><div class="hint">翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">帝勅宫嫔十人侍于李白左右令各执牙笔呵之</q>
+          <p>十月大寒，李白当场草诏而笔冻，皇帝派十名宫嫔各执一支牙笔，轮流呵气，笔暖即递。盛唐的暖气，按人数分配。</p>
+          <div class="src2">呵牙笔</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">辟寒金</div><div class="fs">古今诗话</div><div class="hint">翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">不服辟寒金那得帝王心</q>
+          <p>昆明国进的嗽金鸟畏冷，吐的金屑被宫人做成首饰叫辟寒金。宫人互相打趣的歌谣，把争宠写成了防寒指南。</p>
+          <div class="src2">辟寒金</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell" onclick="this.classList.toggle('flip')">
+      <div class="cellin">
+        <div class="face"><div class="fn">暖寒会</div><div class="fs">开元遗事</div><div class="hint">翻面 →</div></div>
+        <div class="face bk">
+          <q class="q">令仆夫扫雪为径躬立坊前迎揖賔客</q>
+          <p>大雪天巨豪王元宝让仆人扫出一条路，自己站在坊口迎客，酒肉备齐，名曰暖寒会。有钱人的冬天，是请出来的。</p>
+          <div class="src2">暖寒会</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 伍 -->
+<section>
+  <div class="shead rv"><span class="no mono">伍</span><h2>巫与占：节日的另一张脸</h2><span class="en mono">FOLK MAGIC</span></div>
+  <p class="lead rv">雅事之外，这部书同样照录了古人跟看不见的世界打交道的办法：用草占年成，用火照井厕，用蜥蜴求雨，用一杯雨水求子。节日的另一张脸，是巫术。</p>
+  <div class="magi">
+    <div class="mg rv">
+      <h4>騐岁草</h4>
+      <p>开春看哪样草先发芽，师旷给黄帝报了一整张对照表：荠菜先出是丰年，葶苈先出是苦年，蒺藜先出要旱，水藻先出怕涝，艾草先出怕病。</p>
+      <q class="qline">岁欲甘甘草先生荠是也<span class="who">騐岁草</span></q>
+      <q class="qline">岁欲苦苦草先生葶苈是也<span class="who">騐岁草</span></q>
+      <q class="qline">岁欲旱旱草先生蒺藜是也<span class="who">騐岁草</span></q>
+    </div>
+    <div class="mg rv">
+      <h4>禳鸟</h4>
+      <p>正月夜里家家敲床拍门、拽狗耳朵、吹灯熄烛，防的是姑获鸟，传说它专抢别人家的女儿来养，还会用血滴在小儿衣服上做记号。</p>
+      <q class="qline">此乌名姑获一名天帝女<span class="who">禳鸟</span></q>
+      <q class="qline">好取人女子养之<span class="who">禳鸟</span></q>
+    </div>
+    <div class="mg rv">
+      <h4>照百鬼</h4>
+      <p>正月末日夜里，点一把芦茝火往井口和厕所里照一照，百鬼就走。卫生检查与驱邪，在古人那里是同一件事。</p>
+      <q class="qline">芦茝火照井厕<span class="who">照百鬼</span></q>
+    </div>
+    <div class="mg rv">
+      <h4>求蛇医</h4>
+      <p>大旱之年，汴州长官醉后开方：捉四条蜥蜴、两口石瓮，瓮里浮上蜥蜴盖紧，找十来个小孩轮班敲瓮，昼夜不停。旧说的理论依据是：龙与蜥蜴是亲家。</p>
+      <q class="qline">欲雨甚易可求蛇医四头石瓮二枚<span class="who">求蛇医</span></q>
+      <q class="qline">蜴蜥蜴蜥兴云吐雾降雨滂沱放汝归去<span class="who">倦游录</span></q>
+    </div>
+    <div class="mg rv">
+      <h4>饮雨水</h4>
+      <p>本草书里最直白的祝愿：正月头一场雨水，夫妻各喝一杯，回房即有孕。雨水的药性，全凭想象记账。</p>
+      <q class="qline">正月雨水夫妻各饮一杯还房获时有子<span class="who">饮雨水</span></q>
+    </div>
+    <div class="mg rv">
+      <h4>繋煎饼</h4>
+      <p>正月二十是江东的天穿日：女娲补天的纪念日，家家拿红丝线拴一张煎饼扔上屋顶，替天补漏。李白有一句现成的广告词。</p>
+      <q class="qline">以红缕繋煎饼饵置屋上谓之补天穿<span class="who">繋煎饼</span></q>
+      <q class="qline">一枚煎饼补天穿<span class="who">李白诗</span></q>
+    </div>
+  </div>
+</section>
+
+<!-- 陆 -->
+<section>
+  <div class="shead rv"><span class="no mono">陆</span><h2>收梢：岁有余</h2><span class="en mono">CODA</span></div>
+  <p class="lead rv">董遇教人读书，说要善用三余。这册写给节日的书，本身也是三余的产物：一个隐君子在岁月的空当里，把散落全年的日子一枚枚收拢成册。</p>
+  <div class="finale rv">
+    <div class="big8">冬者岁之余</div>
+    <div class="seal2">广寒仙裔</div>
+    <p class="tiny"><q class="q">夜者日之余，雨者晴之余</q></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <p>文本来源：殆知阁简体库史藏志存记录〈岁时广记〉（南宋陈元靓撰，据库本，去空白约一万六千字，春四十六、夏五十、秋三十二、冬三十八，共一百六十六条）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+  <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。</p>
+  <p class="xiaoji">时代局限：草占年成、姑获鸟禳灾、蜥蜴祈雨、雨水求子等巫术占验旧说皆照录库本，属宋代岁时观念与天人感应思维的原始存档，请以史料眼光阅读。</p>
+</footer>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+
+  var ris=document.querySelectorAll('#rail .ri');
+  function rail(){
+    var h=document.documentElement.scrollHeight-innerHeight;
+    var p=h>0?Math.min(.999,Math.max(0,scrollY/h)):0;
+    var i=Math.floor(p*12);
+    ris.forEach(function(r,k){r.classList.toggle('act',k===i);});
+  }
+  addEventListener('scroll',rail,{passive:true});
+  addEventListener('resize',rail);rail();
+})();
+</script>
+</body>
+</html>
