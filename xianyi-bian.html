@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>贤弈编 · 导读四百一十六</title>
+<style>
+:root{
+  --bg:#191917;
+  --panel:#201f1c;
+  --panel2:#232220;
+  --paper:#e8e4dc;
+  --paper-dim:#b9b3a6;
+  --ink:#1b1a18;
+  --c:#5f9270;
+  --c-dim:rgba(95,146,112,.42);
+  --c-faint:rgba(95,146,112,.16);
+  --line:rgba(232,228,220,.12);
+  --serif:"Songti SC","Noto Serif CJK SC","SimSun","STSong",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--paper);
+  font-family:var(--serif);
+  line-height:1.9;
+  letter-spacing:.02em;
+  overflow-x:hidden;
+}
+::selection{background:var(--c);color:var(--ink);}
+.mono{font-family:"SF Mono","Menlo","Noto Sans Mono CJK SC",monospace;}
+q{quotes:none;}
+.qv{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+
+/* ============ 布局基座 ============ */
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+section{padding:96px 0 60px;position:relative;}
+.sect-head{display:flex;align-items:baseline;gap:18px;margin-bottom:14px;}
+.sect-no{font-size:12px;color:var(--c);letter-spacing:.35em;}
+.sect-head h2{font-size:30px;font-weight:700;letter-spacing:.14em;}
+.sect-sub{color:var(--paper-dim);font-size:14px;margin-bottom:42px;max-width:640px;}
+.rule{height:1px;background:var(--line);margin:26px 0;}
+.gline{border:none;border-top:1px solid var(--line);position:relative;margin:0 0 56px;}
+.gline:after{content:"";position:absolute;top:-3px;left:0;width:64px;border-top:3px double var(--c-dim);}
+
+/* ============ 入场 ============ */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.on{opacity:1;transform:none;}
+
+/* ============ 首屏：代弈壳 ============ */
+#hero{min-height:100vh;padding:0;display:flex;align-items:center;position:relative;}
+#hero .wrap{display:grid;grid-template-columns:1fr 1.05fr;gap:56px;align-items:center;width:100%;padding-top:70px;padding-bottom:70px;}
+.h-left{display:flex;gap:30px;}
+.h-col{display:flex;flex-direction:column;justify-content:space-between;height:min(66vh,560px);}
+.kicker{font-size:13px;letter-spacing:.3em;color:var(--c);white-space:nowrap;}
+.vtitle{
+  writing-mode:vertical-rl;
+  font-size:min(15vh,118px);
+  font-weight:800;
+  letter-spacing:.18em;
+  height:max-content;
+  text-shadow:0 0 42px rgba(95,146,112,.22);
+  position:relative;
+}
+.h-meta{font-size:12.5px;color:var(--paper-dim);letter-spacing:.14em;line-height:2.3;white-space:nowrap;}
+.h-meta b{color:var(--paper);font-weight:400;}
+.h-right{display:flex;flex-direction:column;align-items:center;gap:20px;}
+/* 棋枰 */
+#board{
+  width:min(100%,520px);aspect-ratio:1/1;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(95,146,112,.07), transparent 72%),
+    linear-gradient(var(--panel),var(--panel));
+  border:1px solid var(--line);
+  outline:1px solid var(--c-faint);
+  outline-offset:9px;
+  background-image:
+    linear-gradient(rgba(232,228,220,.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,228,220,.09) 1px, transparent 1px);
+  background-size:calc(100%/12) calc(100%/12);
+  background-position:-1px -1px;
+  cursor:crosshair;
+  position:relative;
+  touch-action:manipulation;
+}
+.stone{
+  position:absolute;width:calc(100%/12 - 2px);height:calc(100%/12 - 2px);
+  border-radius:50%;transform:scale(0);transition:transform .28s cubic-bezier(.3,1.6,.5,1);
+  pointer-events:none;
+  box-shadow:0 3px 9px rgba(0,0,0,.5);
+}
+.stone.b{background:radial-gradient(circle at 34% 30%, #3d3d3a, #121210 68%);border:1px solid rgba(95,146,112,.4);}
+.stone.w{background:radial-gradient(circle at 34% 30%, #fbf8f1, #d6d0c2 70%);border:1px solid rgba(0,0,0,.28);}
+.stone.pop{transform:scale(1);}
+#boardHint{
+  font-size:13px;color:var(--paper-dim);letter-spacing:.2em;
+  transition:opacity .5s;
+}
+#boardMoves{color:var(--c);}
+.h-tag{
+  max-width:520px;font-size:16px;color:var(--paper);
+  padding:20px 26px;border-left:2px solid var(--c);
+  background:linear-gradient(90deg, var(--c-faint), transparent 72%);
+  opacity:0;transform:translateY(10px);transition:all .8s ease;
+}
+.h-tag.lit{opacity:1;transform:none;}
+.h-tag .who{display:block;font-size:12px;color:var(--c);letter-spacing:.3em;margin-top:10px;}
+.h-tag .src{display:block;font-size:11.5px;color:var(--paper-dim);margin-top:4px;}
+.scrolldown{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  font-size:11px;letter-spacing:.4em;color:var(--paper-dim);
+  animation:bob 2.4s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,9px);}}
+
+/* ============ 楔子 ============ */
+#xuzi .lead{
+  font-size:21px;line-height:2.2;max-width:860px;
+  border-left:2px solid var(--c);padding-left:30px;margin-bottom:46px;
+}
+.xcards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.xcard{
+  background:var(--panel);border:1px solid var(--line);padding:26px 24px;
+  transition:border-color .3s, transform .3s;
+}
+.xcard:hover{border-color:var(--c-dim);transform:translateY(-4px);}
+.xcard h3{font-size:14px;color:var(--c);letter-spacing:.28em;margin-bottom:14px;font-weight:400;}
+.xcard p{font-size:14.5px;color:var(--paper-dim);line-height:2;}
+.xcard b{color:var(--paper);font-weight:400;}
+
+/* ============ 十六品棋盒 ============ */
+#pins{background:linear-gradient(180deg, transparent, rgba(95,146,112,.035) 30%, rgba(95,146,112,.035) 70%, transparent);}
+.pinbag{
+  display:flex;flex-wrap:wrap;gap:16px 16px;justify-content:center;
+  padding:34px 8px 10px;
+}
+.pin{
+  width:118px;height:118px;border-radius:50%;
+  position:relative;cursor:pointer;perspective:600px;flex:none;
+}
+.pin .face{
+  position:absolute;inset:0;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  backface-visibility:hidden;transition:transform .55s cubic-bezier(.4,1.4,.5,1);
+  font-size:19px;letter-spacing:.14em;
+}
+.pin .front{
+  border:1px solid var(--line);
+  background:radial-gradient(circle at 34% 30%, #3b3b38, #131311 70%);
+  color:var(--paper);
+  box-shadow:0 4px 12px rgba(0,0,0,.45);
+}
+.pin.wstone .front{
+  background:radial-gradient(circle at 34% 30%, #f4efe4, #cfc9ba 72%);
+  color:var(--ink);
+  border:1px solid rgba(0,0,0,.3);
+}
+.pin .num{font-size:10.5px;letter-spacing:.22em;color:var(--c);font-family:"SF Mono","Menlo",monospace;}
+.pin.wstone .num{color:#4d7a5c;}
+.pin .back{
+  transform:rotateY(180deg);
+  background:var(--panel2);
+  border:1px solid var(--c-dim);
+  color:var(--paper-dim);
+  font-size:12px;line-height:1.75;padding:14px 13px;text-align:center;letter-spacing:.02em;
+}
+.pin.flip .front{transform:rotateY(180deg);}
+.pin.flip .back{transform:rotateY(0);}
+.pin.hot .front{border-color:var(--c);box-shadow:0 0 22px rgba(95,146,112,.28);}
+.pin-legend{margin-top:34px;text-align:center;font-size:12.5px;color:var(--paper-dim);letter-spacing:.18em;}
+.pin-legend i{font-style:normal;color:var(--c);}
+.pins-note{max-width:760px;margin:0 auto 30px;text-align:center;font-size:15px;color:var(--paper-dim);}
+.pins-note q{color:var(--paper);}
+
+/* ============ 应谐：哄堂折 ============ */
+.foldstrip{
+  display:grid;grid-auto-flow:column;grid-auto-columns:308px;
+  gap:16px;overflow-x:auto;padding:6px 4px 22px;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:thin;scrollbar-color:var(--c-dim) transparent;
+}
+.fold{
+  scroll-snap-align:start;
+  background:var(--panel);border:1px solid var(--line);
+  display:flex;flex-direction:column;min-height:430px;
+  transition:border-color .3s;
+}
+.fold:hover{border-color:var(--c-dim);}
+.fold-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:15px 18px;cursor:pointer;user-select:none;
+  background:linear-gradient(180deg, rgba(95,146,112,.1), transparent);
+  border-bottom:1px dashed var(--line);
+}
+.fold-bar h3{font-size:17px;letter-spacing:.2em;font-weight:700;}
+.fold-bar .tagno{font-size:10.5px;color:var(--c);letter-spacing:.25em;}
+.fold-body{padding:18px 20px 22px;font-size:13.8px;color:var(--paper-dim);line-height:2.05;flex:1;}
+.fold-body p{margin-bottom:12px;}
+.fold-body q{
+  display:block;color:var(--paper);font-size:13.5px;
+  padding:12px 14px;margin:10px 0;background:rgba(0,0,0,.24);
+  border-left:2px solid var(--c-dim);line-height:2.1;
+}
+.fold-body .msrc{display:block;text-align:right;font-size:11px;color:var(--c);letter-spacing:.2em;}
+/* 补刀 */
+.quickrow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px;}
+.quick{
+  background:var(--panel2);border:1px solid var(--line);padding:18px 17px;
+  font-size:13px;color:var(--paper-dim);
+}
+.quick h4{font-size:14.5px;color:var(--c);letter-spacing:.2em;margin-bottom:10px;font-weight:400;}
+.quick q{display:block;color:var(--paper);background:rgba(0,0,0,.22);padding:9px 11px;margin-top:8px;border-left:2px solid var(--c-dim);line-height:2;}
+
+/* ============ 猫号改名会 ============ */
+.catroom{
+  margin-top:44px;background:var(--panel);border:1px solid var(--line);padding:34px 32px 30px;
+}
+.cathead{display:flex;flex-wrap:wrap;align-items:center;gap:22px;margin-bottom:22px;}
+.catplate{
+  width:96px;height:64px;flex:none;position:relative;
+  background:linear-gradient(160deg,#2b2a27,#1d1c1a);
+  border:1px solid var(--c-dim);outline:1px solid var(--line);outline-offset:4px;
+  display:flex;align-items:center;justify-content:center;
+}
+.catplate span{font-size:26px;letter-spacing:.14em;font-weight:700;transition:opacity .3s;}
+.guestrow{display:flex;flex-wrap:wrap;gap:10px;}
+.guest{
+  border:1px solid var(--line);background:transparent;color:var(--paper-dim);
+  font-family:var(--serif);font-size:13px;letter-spacing:.18em;
+  padding:9px 16px;cursor:pointer;transition:all .25s;
+}
+.guest:hover{border-color:var(--c-dim);color:var(--paper);}
+.guest.done{border-color:var(--c);color:var(--c);}
+.guest:disabled{cursor:default;opacity:.55;}
+.guest.saying{border-color:var(--c);color:var(--paper);background:var(--c-faint);}
+#catSay{min-height:86px;margin:20px 0 6px;}
+#catSay q{
+  display:none;color:var(--paper);font-size:14.5px;line-height:2.1;
+  padding:14px 18px;background:rgba(0,0,0,.24);border-left:2px solid var(--c);
+}
+#catSay q.show{display:block;}
+#catPunch{margin-top:16px;opacity:0;transform:translateY(8px);transition:all .7s;}
+#catPunch.show{opacity:1;transform:none;}
+#catPunch q{
+  display:block;font-size:16px;color:var(--ink);background:var(--c);
+  padding:15px 20px;line-height:2;letter-spacing:.03em;
+}
+#catBtn{margin-top:18px;display:none;}
+#catBtn.show{display:inline-block;}
+.plainbtn{
+  border:1px solid var(--c-dim);background:transparent;color:var(--c);
+  font-family:var(--serif);font-size:13px;letter-spacing:.24em;padding:10px 22px;cursor:pointer;
+  transition:all .25s;
+}
+.plainbtn:hover{background:var(--c-faint);}
+
+/* ============ 警喻三面镜 ============ */
+.mirrorrow{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.mirror{
+  border-radius:50%;aspect-ratio:1/1;position:relative;overflow:hidden;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(circle at 32% 26%, rgba(232,228,220,.09), transparent 46%),
+    radial-gradient(circle at 50% 50%, #242320, #1a1918 76%);
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .4s, box-shadow .4s;
+}
+.mirror:hover{border-color:var(--c-dim);box-shadow:0 0 34px rgba(95,146,112,.14);}
+.mirror .inner{
+  width:78%;max-height:82%;overflow:auto;text-align:center;
+  font-size:12.8px;color:var(--paper-dim);line-height:2;
+  scrollbar-width:none;
+}
+.mirror .inner::-webkit-scrollbar{display:none;}
+.mirror h3{font-size:17px;color:var(--c);letter-spacing:.3em;margin-bottom:10px;font-weight:400;}
+.mirror q{display:block;color:var(--paper);font-size:12.6px;margin:7px 0;}
+.mirror .mnote{margin-top:24px;text-align:center;font-size:12.5px;color:var(--paper-dim);letter-spacing:.06em;}
+.mirror-col{display:flex;flex-direction:column;align-items:center;gap:0;}
+
+/* ============ 观物众生簿 ============ */
+.ledger{border-top:2px solid var(--c-dim);}
+.lrow{
+  display:grid;grid-template-columns:150px 1fr;gap:26px;
+  border-bottom:1px solid var(--line);padding:30px 6px;
+  transition:background .3s;
+}
+.lrow:hover{background:rgba(95,146,112,.05);}
+.lrow .lname{display:flex;flex-direction:column;gap:8px;align-items:flex-start;}
+.lname .seal{
+  width:52px;height:52px;background:var(--c);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  font-size:21px;font-weight:700;letter-spacing:.05em;
+}
+.lname h3{font-size:16px;letter-spacing:.18em;font-weight:700;}
+.lname span{font-size:11px;color:var(--paper-dim);letter-spacing:.22em;}
+.lrow .lbody{font-size:14px;color:var(--paper-dim);line-height:2.1;}
+.lrow .lbody q{
+  display:block;color:var(--paper);font-size:13.6px;margin:10px 0;
+  padding:11px 15px;background:rgba(0,0,0,.24);border-left:2px solid var(--c-dim);
+}
+.lrow .lbody .poem{border-left-color:var(--c);background:rgba(95,146,112,.09);letter-spacing:.1em;}
+
+/* ============ 志怪 ============ */
+.riddlezone{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;}
+.riddleboard{
+  background:var(--panel);border:1px solid var(--line);padding:30px 28px;
+}
+.riddleboard .rsub{font-size:13px;color:var(--c);letter-spacing:.26em;margin-bottom:20px;}
+.signrow{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:22px;}
+.rsign{
+  writing-mode:vertical-rl;height:118px;padding:14px 11px;
+  background:linear-gradient(180deg,#efe9dc,#d8d2c3);
+  color:var(--ink);font-size:17px;letter-spacing:.34em;font-weight:700;
+  border:none;cursor:pointer;font-family:var(--serif);
+  transition:transform .25s, box-shadow .25s;
+}
+.rsign:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,0,0,.4);}
+.rsign.solved{background:linear-gradient(180deg,var(--c),#43694f);color:var(--ink);}
+#decodeBox{min-height:120px;}
+#decodeBox .dq{display:none;font-size:14px;color:var(--paper);line-height:2.15;padding:14px 16px;background:rgba(0,0,0,.26);border-left:2px solid var(--c);}
+#decodeBox .dq.show{display:block;}
+.sidecases{display:flex;flex-direction:column;gap:20px;}
+.case{
+  background:var(--panel2);border:1px solid var(--line);padding:24px 24px 20px;
+}
+.case h3{font-size:15.5px;color:var(--c);letter-spacing:.24em;margin-bottom:12px;font-weight:400;}
+.case p{font-size:13.5px;color:var(--paper-dim);line-height:2.05;margin-bottom:10px;}
+.case q{display:block;color:var(--paper);font-size:13.4px;padding:11px 14px;background:rgba(0,0,0,.24);border-left:2px solid var(--c-dim);margin-top:8px;line-height:2.05;}
+
+/* ============ 试场 ============ */
+#shi{background:linear-gradient(180deg, transparent, rgba(95,146,112,.05) 46%, transparent);}
+.paper{
+  background:#ded9cd;color:var(--ink);max-width:780px;margin:0 auto;
+  padding:44px 46px 38px;position:relative;
+  box-shadow:0 18px 50px rgba(0,0,0,.5);
+}
+.paper:before{
+  content:"收官四问";position:absolute;top:-17px;left:50%;transform:translateX(-50%);
+  background:var(--c);color:var(--ink);font-size:13px;letter-spacing:.4em;
+  padding:7px 26px 7px 30px;white-space:nowrap;
+}
+.q-item{margin-bottom:34px;}
+.opt q{quotes:none;}
+.qblock{display:block;color:var(--paper);font-size:13.8px;padding:13px 16px;background:rgba(0,0,0,.26);border-left:2px solid var(--c);margin-bottom:20px;}
+.qblock.dim{border-left-color:var(--c-dim);}
+#decodeBox .dq q{quotes:none;color:var(--c);background:rgba(0,0,0,.22);padding:2px 7px;display:inline;}
+.q-item:last-child{margin-bottom:0;}
+.q-stem{font-size:15.5px;font-weight:700;line-height:2;margin-bottom:14px;}
+.q-stem i{font-style:normal;color:#4d7a5c;font-family:"SF Mono","Menlo",monospace;font-size:12px;margin-right:10px;}
+.opts{display:grid;gap:9px;}
+.opt{
+  border:1px solid rgba(27,26,24,.28);background:rgba(255,255,255,.4);
+  font-family:var(--serif);font-size:14px;text-align:left;
+  padding:11px 16px;cursor:pointer;color:var(--ink);letter-spacing:.04em;
+  transition:all .22s;line-height:1.9;
+}
+.opt:hover{border-color:#4d7a5c;background:rgba(95,146,112,.12);}
+.opt.good{background:#4d7a5c;color:#f3efe6;border-color:#4d7a5c;}
+.opt.bad{opacity:.5;text-decoration:line-through;}
+.opt:disabled{cursor:default;}
+.q-verdict{font-size:13px;margin-top:9px;min-height:20px;color:#4d7a5c;letter-spacing:.12em;opacity:0;transition:opacity .4s;}
+.q-verdict.show{opacity:1;}
+
+/* ============ 尾屏 ============ */
+#coda{min-height:64vh;display:flex;align-items:center;position:relative;overflow:hidden;}
+#coda .wrap{display:flex;align-items:center;justify-content:center;gap:60px;width:100%;}
+.cvtitle{
+  writing-mode:vertical-rl;font-size:min(11vh,84px);font-weight:800;
+  letter-spacing:.3em;height:max-content;
+  color:var(--paper);
+}
+.cseal{
+  writing-mode:vertical-rl;background:var(--c);color:var(--ink);
+  font-size:21px;font-weight:700;letter-spacing:.2em;
+  padding:22px 13px;height:max-content;
+  transform:rotate(1.5deg);
+  box-shadow:0 8px 26px rgba(95,146,112,.25);
+}
+.cquote{max-width:400px;font-size:14.5px;color:var(--paper-dim);line-height:2.3;}
+.cquote q{color:var(--paper);}
+footer{border-top:1px solid var(--line);padding:34px 0 44px;font-size:12px;color:var(--paper-dim);line-height:2.2;}
+footer .wrap{display:flex;flex-direction:column;gap:6px;}
+footer a{color:var(--c);text-decoration:none;}
+footer a:hover{text-decoration:underline;}
+
+/* ============ 移动端 ============ */
+@media (max-width:860px){
+  section{padding:66px 0 44px;}
+  #hero{min-height:auto;padding-top:66px;}
+  #hero .wrap{grid-template-columns:1fr;gap:38px;padding-top:30px;padding-bottom:50px;}
+  .h-left{flex-direction:column-reverse;gap:18px;}
+  .h-col{height:auto;gap:18px;}
+  .vtitle{writing-mode:horizontal-tb;font-size:64px;letter-spacing:.1em;line-height:1.25;}
+  .h-meta{white-space:normal;}
+  .h-tag{max-width:none;}
+  .xcards{grid-template-columns:1fr;}
+  .pin{width:96px;height:96px;}
+  .pin .back{font-size:10.6px;padding:10px 9px;line-height:1.65;}
+  .foldstrip{grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;}
+  .fold{min-height:0;}
+  .quickrow{grid-template-columns:repeat(2,1fr);}
+  .mirrorrow{grid-template-columns:1fr;}
+  .lrow{grid-template-columns:1fr;gap:14px;}
+  .riddlezone{grid-template-columns:1fr;}
+  .paper{padding:34px 22px 28px;}
+  #coda .wrap{flex-direction:column;gap:34px;text-align:center;}
+  .cquote{text-align:center;}
+  .cvtitle{font-size:52px;}
+}
+@media (max-width:520px){
+  .quickrow{grid-template-columns:1fr;}
+  .sect-head h2{font-size:24px;}
+  .cathead{gap:14px;}
+  .signrow{gap:9px;}
+  .rsign{height:100px;font-size:15px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 首屏 · 代弈壳 ============ -->
+<section id="hero">
+  <div class="wrap">
+    <div class="h-left">
+      <div class="h-col">
+        <div class="kicker">导读四百一十六 · 子藏笔记</div>
+        <h1 class="vtitle">贤弈编</h1>
+        <div class="h-meta">
+          <b>明人刘元卿 撰</b><br>
+          万历二十一年癸巳端阳 成书于章南馆<br>
+          十六品 怀古至志怪 · 附录闲钞<br>
+          作者自陈：不晓博弈，以书代棋
+        </div>
+      </div>
+    </div>
+    <div class="h-right">
+      <div id="board" aria-label="棋枰，点按落子"></div>
+      <div id="boardHint">棋枰在此，请落子 · 已着 <b id="boardMoves" class="mono">0</b> 手</div>
+      <blockquote class="h-tag" id="heroTag">
+        <q>余性拙，不晓博弈。客至第相与对坐，又不善劝酒，客或欠伸苦之。</q>
+        <span class="who">刘元卿 · 自序第一句</span>
+        <span class="src">客人来了不会下棋又不会劝酒，怎么办？他翻开这本书。落满三手，楔子自启。</span>
+      </blockquote>
+    </div>
+  </div>
+  <div class="scrolldown">向下展卷</div>
+</section>
+
+<!-- ============ 楔子 ============ -->
+<section id="xuzi">
+  <div class="wrap">
+    <div class="sect-head rv"><span class="sect-no">楔子</span><h2>不会下棋的人，摆了一盘什么</h2></div>
+    <hr class="gline rv">
+    <p class="lead rv">
+      刘元卿，江西安福人，理学名家，因不愿阿附权贵而退出官场。他把书名里那个"弈"字说得很老实：
+      <q>因饱食之暇，辑古今人言行可为法戒者，粗作区目。客至焚香拭几，取书读一二品，以代奕棋云尔。</q>
+      棋盘换成了书页，对弈换成了共读。书名出自那句话的老底子：下下棋也比什么都不干强，那么读读书呢，
+      <q>读者因有所触动，岂独曰犹贤乎已。类凡十有六。</q>
+    </p>
+    <div class="xcards">
+      <div class="xcard rv">
+        <h3>书名的来历</h3>
+        <p>孔子说过：不会玩的人最无可救药，实在没事干，<b>下棋也比闲着强</b>（犹贤乎已）。刘元卿把这个台阶又抬了一级：读一本教人向善的书，总比下棋强。这就是"贤弈"二字的全部算计。</p>
+      </div>
+      <div class="xcard rv">
+        <h3>十六品不是等第</h3>
+        <p>全书分十六门，从<b>怀古</b>起、<b>志怪</b>终，像一局按次序摆开的棋。前三品怀人，中间几品讲学、齐家、居官，后四品忽然转向：草木鸟兽、寓言、笑话、鬼神，越往后越好看。</p>
+      </div>
+      <div class="xcard rv">
+        <h3>落款即年谱</h3>
+        <p>
+        <q>癸巳端阳，安福刘元卿书于章南馆之处仁堂。</q>
+        癸巳是万历二十一年（一五九三）。写序的这天是端午节，一位罢官居乡的理学家，把满肚子的世道人心包进了十六枚粽子里。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 十六品棋盒 ============ -->
+<section id="pins">
+  <div class="wrap">
+    <div class="sect-head rv"><span class="sect-no">第一局</span><h2>十六品棋盒</h2></div>
+    <hr class="gline rv">
+    <p class="pins-note rv">
+      序言里交代了摆子次序：<q>逑怀古第一，次廉淡，次德器，次方正，继之以证学。</q>
+      中段讲齐家与居官，末段笔锋一转，<q>故复逑观物、逑警喻，逑应谐，而以志怪终焉。</q>
+      点一枚棋子，看它背面写着什么。带青圈的子，本页开卷细读。
+    </p>
+    <div class="pinbag rv" id="pinbag"></div>
+    <div class="pin-legend rv">黑子白子相间，共 <i>十六</i> 品 · 另附闲钞上下两卷收散页</div>
+  </div>
+</section>
+
+<!-- ============ 应谐 · 哄堂折 ============ -->
+<section id="yingxie">
+  <div class="wrap">
+    <div class="sect-head rv"><span class="sect-no">开卷之一</span><h2>应谐 · 哄堂六折</h2></div>
+    <hr class="gline rv">
+    <p class="sect-sub rv">全书最好笑的一品。六张纸折，横向展开，点折子的签头读全文。笑完记得回来找那根刺。</p>
+    <div class="foldstrip rv">
+
+      <article class="fold">
+        <div class="fold-bar"><h3>五百画</h3><span class="tagno">应谐</span></div>
+        <div class="fold-body">
+          <p>富翁家请了个楚地先生教儿子认字。先生教一笔是"一"，两笔是"二"，三笔是"三"。孩子把笔一扔，跑回家报喜：全会了，把先生辞了吧。</p>
+          <q>汝有田舍翁，家赀殷盛，而累世不识之无。一岁聘楚士训其子，楚士始训之搦管临朱。书一画训曰一字，书二画训曰二字，书三画训曰三字。其子辄欣欣然投笔归告其父曰：儿得矣，儿得矣！</q>
+          <p>没过多久，父亲要请一位姓万的亲家喝酒，让儿子写请帖。孩子从清早写到晌午还没写完，气得直跺脚：</p>
+          <q>逾时其父拟征召姻友万氏姓者饮，令子晨起治状久之不成。父趣之，其子恚曰：天下姓字伙矣，奈何姓万？自晨起至今才完五百画也。<span class="msrc">应谐</span></q>
+        </div>
+      </article>
+
+      <article class="fold">
+        <div class="fold-bar"><h3>雁的吃法</h3><span class="tagno">应谐</span></div>
+        <div class="fold-body">
+          <p>兄弟俩看见大雁飞过，一个说射下来炖，一个说射下来烤。吵到社长那里，社长判：一半炖一半烤。再去找雁，雁早飞了。</p>
+          <q>昔人有睹雁翔者，将援弓射之，曰获则烹。其弟争曰：舒雁烹宜，翔雁燔宜。竞斗而讼于地社伯，社伯请剖雁烹燔半焉，已而索雁，则凌空远矣。今世儒争异同，何以异是。<span class="msrc">应谐</span></q>
+          <p>刘元卿的补刀更狠：如今读书人争论学派异同，跟这兄弟俩有什么区别。雁在天上，谁也没吃着。</p>
+        </div>
+      </article>
+
+      <article class="fold">
+        <div class="fold-bar"><h3>我今何在</h3><span class="tagno">应谐</span></div>
+        <div class="fold-body">
+          <p>差役押解犯罪的和尚去戍边，半路被和尚灌醉。和尚给他剃了光头，把绳子套在他脖子上，自己跑了。差役醒来一摸：头是光的，绳在脖子上，于是他喊出了那句千古之谜。</p>
+          <q>一里尹管解罪僧赴戌，僧故黠，中道夜酒里，尹致沉醉鼾睡，已取刀髡其首，改绁已索反绁尹项而逸。凌晨里尹寤，求僧不得，自摩其首髡，又索在项，则大诧惊曰：僧故在是，我今何在耶？</q>
+          <p>刘元卿不把它当笑话讲，他写了一句按语，笑意一下子冷了：</p>
+          <q>夫人具形宇内，罔罔然不识真我者，岂独里尹乎？<span class="msrc">应谐</span></q>
+        </div>
+      </article>
+
+      <article class="fold">
+        <div class="fold-bar"><h3>街头讲学</h3><span class="tagno">应谐</span></div>
+        <div class="fold-body">
+          <p>两个人在街上对骂，翻来覆去两句词。王阳明听见，对学生说了四个字的鉴定。</p>
+          <q>两人相诟于衢，甲曰你欺心，乙曰你欺心，甲曰你没天理，乙曰你没天理。阳明先生闻之谓门弟子曰：小子听之，两人谆谆然讲学也。</q>
+          <p>骂人的词是"心"与"天理"，恰是阳明学的关键词。理学家的幽默感用来解剖自己的圈子，最是锋利。</p>
+        </div>
+      </article>
+
+      <article class="fold">
+        <div class="fold-bar"><h3>两道禁令</h3><span class="tagno">应谐</span></div>
+        <div class="fold-body">
+          <p>第一道：五代军阀李茂贞地盘小、赋税薄，连点灯的松明都要专营，禁止城门放进松柴。有艺人笑道：</p>
+          <q>李茂贞居岐，以地狭赋薄，尝下令榷油，因禁城门无内松薪，以其可为炬也。有优者笑曰：臣请并禁月明。</q>
+          <p>第二道：南宋大旱求雨，谏官赵霈上奏，说祈祷期间禁止杀生，猪羊都禁了，建议再加一样：</p>
+          <q>谏议大夫赵霈上言自来祈祷断屠，止禁猪羊，今后请并禁鹅鸭。时胡致堂在西掖，见之笑曰：可谓鹅鸭谏说矣。闻虏中有龙虎大王，当以鹅鸭谏议当之。<span class="msrc">应谐</span></q>
+        </div>
+      </article>
+
+      <article class="fold">
+        <div class="fold-bar"><h3>求道的爬上桅杆</h3><span class="tagno">应谐</span></div>
+        <div class="fold-body">
+          <p>商人季子痴迷修道，见道士就拜。一个骗子盯上了他的钱袋，带他到了江边，指着桅杆顶：道就在那上面，自己爬上去求。</p>
+          <q>曰在舟樯抄，若自升求之。其人置赀囊樯下，遽援樯而升。猾自下抵掌连呼趣之曰升曰升，至杪尤趣曰升。季子升无可升，忽大悟，此理只在实处。</q>
+          <p>钱被拎走了，围观的人喊他醒醒。他不恼，反而拜谢：</p>
+          <q>季子曰：否否，吾师乎，吾师乎。此亦以教我也。<span class="msrc">应谐</span></q>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="quickrow rv">
+      <div class="quick">
+        <h4>盲子过桥</h4>
+        <p>瞎子失足悬在枯溪桥上，死攥栏杆不肯撒手。过路人喊：别怕，下面就是实地。</p>
+        <q>有盲子道涸溪桥上失坠，两手攀樯，兢兢握固，自分失手必坠深渊已。过者告曰：毋怖，第放下即实地也。</q>
+        <p>力竭坠地，毫发无伤，他自己先笑了：</p>
+        <q>嘻，早知即实地，何久自苦耶！夫大道甚夷，沉空守寂，执一隅以自矜严者，视此省哉。</q>
+      </div>
+      <div class="quick">
+        <h4>贼父传艺</h4>
+        <p>老贼一生行窃从未失手，儿子求他传艺。他只说四个字：到时候就懂了。</p>
+        <q>父曰：吾何传？为之即是。</q>
+        <p>儿子藏在柜里险些丧命，靠学老鼠磨牙声骗主人开柜，跳窗逃回，抱怨父亲藏私。父亲说刚才那课已经上完了：</p>
+        <q>故弹指作鼠齿声。</q>
+        <q>父曰：即此是矣，吾又何传！故善教者道而弗牵，开而弗达，使人继其志可尔。</q>
+      </div>
+      <div class="quick">
+        <h4>兰亭在此</h4>
+        <p>赵子固得了姜白石旧藏的定武兰亭拓本，乘船夜归，途中风浪把船掀翻，行李全泡了汤。人立在浅水里，先举起的是那一卷帖。</p>
+        <q>子固方披湿衣立浅水中，手持禊帖，语人曰：兰亭在此，余不足问也。</q>
+        <p>这一则列在应谐品。是笑他痴，还是敬他痴，刘元卿不表态。</p>
+      </div>
+      <div class="quick">
+        <h4>状元与判卷</h4>
+        <p>唐僖宗球技过人，对艺人石野猪说：朕若去考击球科进士，状元不在话下。</p>
+        <q>尝谓优人石野猪曰：朕若应击球进士举，须为状元。野猪对曰：若遇尧舜作礼部侍郎，恐陛下不免驳放。</q>
+        <p>碰到尧舜当考官，陛下您这份卷子，怕是要被刷下来。优伶的嘴，是古代唯一不受罚的新闻业。</p>
+      </div>
+    </div>
+
+    <div class="catroom rv" id="catroom">
+      <div class="cathead">
+        <div class="catplate"><span id="plateNow">虎猫</span></div>
+        <div>
+          <q class="qblock" style="margin-bottom:6px;">齐奄家畜一猫，自奇之，号于人曰虎猫。</q>
+          <p style="font-size:13px;color:var(--paper-dim);margin-top:8px;">齐奄家养了只猫，逢人就夸是虎猫。五位客人轮番上门，给它改名。按顺序请他们进来。</p>
+        </div>
+      </div>
+      <div class="guestrow" id="guestrow">
+        <button class="guest" data-i="0">客一 · 说龙</button>
+        <button class="guest" data-i="1">客二 · 说云</button>
+        <button class="guest" data-i="2">客三 · 说风</button>
+        <button class="guest" data-i="3">客四 · 说墙</button>
+        <button class="guest" data-i="4">客五 · 说鼠</button>
+      </div>
+      <div id="catSay">
+        <q data-i="0">客说之曰：虎诚猛，不如龙之神也，请更名曰龙猫。</q>
+        <q data-i="1">又客说之曰：龙固神于虎也，龙升天须浮云，云其尚于龙乎，不如名曰云。</q>
+        <q data-i="2">又客说之曰：云霭蔽天，风倏散之，云固不敌风也，请更名曰风。</q>
+        <q data-i="3">又客说之曰：大风飚起，维屏以墙，斯足蔽矣，风其如墙何？名之曰墙猫可。</q>
+        <q data-i="4">又客说之曰：维墙虽固，维鼠穴之，墙斯圯矣。墙又如鼠何？即名曰鼠猫可也。</q>
+      </div>
+      <button class="plainbtn" id="catBtn">让东里文人说话</button>
+      <div id="catPunch">
+        <q>东里文人嗤之曰：噫嘻，捕鼠者故猫也，猫即猫耳，故为自失本真哉。</q>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 警喻 · 三面镜 ============ -->
+<section id="jingyu">
+  <div class="wrap">
+    <div class="sect-head rv"><span class="sect-no">开卷之二</span><h2>警喻 · 三面镜</h2></div>
+    <hr class="gline rv">
+    <p class="sect-sub rv">这一品全是打比方的高手：兽是镜子，笑是手术刀。三面圆镜各照一种人。</p>
+    <div class="mirrorrow rv">
+      <div class="mirror-col">
+        <div class="mirror">
+          <div class="inner">
+            <h3>猩猩</h3>
+            <p>山里人摆好甜酒和草鞋，专等猩猩上钩。猩猩全知道：设套的是谁，他爹他爷爷叫什么，一路点名骂过去。骂完，还是想尝一口。</p>
+            <q>猩猩兽之好酒者也，大麓之人，设以醴尊，陈之饮器，大小具列焉。织草为履，勾连相属也，而置之道旁。</q>
+            <q>猩猩见则知其诱之也，又知设者之姓名，与其父母祖先，一一数而骂之。</q>
+            <q>夫猩猩智矣，恶其为诱也，而卒不免于死，贪为之也。</q>
+          </div>
+        </div>
+        <p class="mnote">镜子照见的：全都明白，照样伸手。</p>
+      </div>
+      <div class="mirror-col">
+        <div class="mirror">
+          <div class="inner">
+            <h3>南岐人</h3>
+            <p>秦蜀山谷里的村子，水好喝但让人生大脖子病，全村人脖子都是粗的。外乡人路过，全村人围着笑他：瞧那人脖子，细得真丑。</p>
+            <q>南岐在秦蜀山谷中，其水甘而不良，凡饮之者辄病瘿，故其地之民无一人无瘿者。</q>
+            <q>笑者曰：吾乡之人皆然，焉用去乎哉？终莫知其为丑。</q>
+          </div>
+        </div>
+        <p class="mnote">镜子照见的：病当成常态，健康反倒可笑。</p>
+      </div>
+      <div class="mirror-col">
+        <div class="mirror">
+          <div class="inner">
+            <h3>猱</h3>
+            <p>猴类的一种，爪子利。老虎头皮痒，让猱挠。挠着挠着挠出了洞，猱把虎脑髓掏出来吃，分一点渣给老虎：我偶尔猎到荤腥，不敢独享。</p>
+            <q>虎首痒，辄使猱爬搔之不休成穴。虎殊快不觉也，猱徐取其脑啖之，而汰其余以奉虎曰：余偶有所获腥，不敢私，以献左右。虎曰：忠哉猱也，爱我而忘其口腹。</q>
+            <p>等虎脑掏空、痛觉发作，猱早已上了高树。老虎跳踉大吼，</p>
+            <q>虎跳踉大吼乃死。</q>
+          </div>
+        </div>
+        <p class="mnote">镜子照见的：甜言蜜语，是取脑的勺子。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 观物 · 众生簿 ============ -->
+<section id="guanwu">
+  <div class="wrap">
+    <div class="sect-head rv"><span class="sect-no">开卷之三</span><h2>观物 · 众生簿</h2></div>
+    <hr class="gline rv">
+    <p class="sect-sub rv">十六品里的动物志。每一行都像在写人，每一行都没提人字。</p>
+    <div class="ledger rv">
+
+      <div class="lrow">
+        <div class="lname"><div class="seal">象猴</div><h3>不拜的舞象</h3><span>观物 · 唐纪两则</span></div>
+        <div class="lbody">
+          <p>安禄山宴请胡人酋长，把唐明皇训出来的舞象牵出来：这象从南海奔我而来，知道我有天命，异类尚且拜舞。大象偏不上套。</p>
+          <q>唐明皇所教舞象。禄山乱，大宴胡酋，出舞象给曰：此自南海奔至，以吾有天命，虽异类必拜舞。令之舞，象皆努目不动，禄山尽杀之。</q>
+          <p>昭宗也有一个猴子伶人，穿绯袍随朝班起居。朱温篡位后牵它上殿，猴子扑上去撕扯，被杀。一头象、一只猴，把两个僭主钉在了耻辱柱上。</p>
+          <q>昭宗有猴，能随班起居，赐绯袍，号孙供奉。后朱全忠篡位，取猴令殿下起居，猴径趋上跳跃奋击，遂杀之。</q>
+        </div>
+      </div>
+
+      <div class="lrow">
+        <div class="lname"><div class="seal">鹦鹉</div><h3>枝头说上皇</h3><span>观物 · 宋宫旧闻</span></div>
+        <div class="lbody">
+          <p>宋高宗宫里养着几百只鹦鹉，皇帝问它们想不想家，答：想。于是全部放归陇山。几年后使臣路过，鹦鹉都在问：太上皇还好吗。</p>
+          <q>宋高宗宫中养鹦鹉数百，一日问之曰：思乡否？对曰：思乡。遂遣中贵送还中山。</q>
+          <q>鹦鹉问曰：上皇安否？使臣曰：上皇崩矣。鹦鹉闻之，皆悲鸣不已。使臣赋诗曰：陇口山深草树荒，行人到此断肝肠。耳边不忍听鹦鹉，犹在枝头说上皇。</q>
+        </div>
+      </div>
+
+      <div class="lrow">
+        <div class="lname"><div class="seal">双燕</div><h3>红缕系足</h3><span>观物 · 姚玉京事</span></div>
+        <div class="lbody">
+          <p>宋末女子姚玉京，丈夫溺死后守寡。梁上一对燕子被猛禽打掉一只，剩下那只孤飞了一整年，秋天来向她告别。她用红缕系住燕脚：明年回来，还给我作伴。</p>
+          <q>宋末姚玉京嫁襄州小吏卫敬瑜，溺水死，玉京孀居。有双燕巢梁间，一为鸷鸟击死，一孤飞徘徊。</q>
+          <q>玉京以红缕系足曰：新春复来为吾侣也。明年果至，因赠诗曰：昔时无偶去，今年还独归。故人思义重，不忍更双飞。</q>
+          <p>如此六年。玉京死，次年燕来，绕着屋子哀鸣。家人说：她坟在东郭。燕子飞到坟上，就死在了那里。</p>
+          <q>玉京死明年燕来，周章哀鸣。家人语曰，玉京坟在东郭。燕遂飞至坟所亦死。</q>
+        </div>
+      </div>
+
+      <div class="lrow">
+        <div class="lname"><div class="seal">海镜</div><h3>借来的眼</h3><span>观物 · 海物两则</span></div>
+        <div class="lbody">
+          <p>海镜是一种贝壳，肚里空空，养着一只有螯的小蟹。蟹出去觅食，海镜跟着吃饱；火一逼，蟹逃走，海镜立刻就死。</p>
+          <q>海之渚有海镜焉，其腹空洞无脏，唯中藏蟹子，小如黄豆而螯其足。海镜饥刚潜出拾食，蟹饱海镜亦饱，或迫之火，则蟹出离脏腹，而海镜立毙矣。</q>
+          <p>水母正相反：自己没长眼，腹下蹲着几只虾替它看路，虾走它走，虾停它停。哪天浪把虾晃走了，水母就搁浅在泥沙里。刘元卿给这两则各写了一句判词：</p>
+          <q>常有数虾寄蹲腹下，代为之眼。虾行而行，虾止而止。一日波荡，虾离而水母竟踬死泥沙。</q>
+          <q>彼其所为毙者，以所假在外不在内故也。</q>
+          <q>彼其所为踬者，以所假在物不在已故也。</q>
+        </div>
+      </div>
+
+      <div class="lrow">
+        <div class="lname"><div class="seal">孔雀</div><h3>爱尾者被擒</h3><span>观物 · 一羽之累</span></div>
+        <div class="lbody">
+          <p>雄孔雀尾羽金翠，看谁穿锦缎都要啄。山里栖息时先挑好放尾巴的地方，再安置身子。下雨淋湿了尾羽，捕鸟人已经到场，它还在顾惜尾巴不肯起飞。</p>
+          <q>山栖时先择处贮尾，然后置身。天雨尾湿，罗者且至，犹珍顾不复蹇举，卒为所擒。</q>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 志怪 ============ -->
+<section id="zhiguai">
+  <div class="wrap">
+    <div class="sect-head rv"><span class="sect-no">开卷之四</span><h2>志怪 · 谜签与判词</h2></div>
+    <hr class="gline rv">
+    <p class="sect-sub rv">全书最后一品收鬼神故事。先拆一道唐代字谜，再看阴间两个衙门。</p>
+    <div class="riddlezone">
+      <div class="riddleboard rv">
+        <div class="rsub">妙寂的梦 · 点签解码</div>
+        <p style="font-size:13.5px;color:var(--paper-dim);margin-bottom:20px;">尼姑妙寂的父亲与丈夫在湖中遇害，她梦见父亲留下四句谶语，十二年无人能解。点谜签，看李公佐怎么拆。</p>
+        <q class="qblock">尼妙寂姓叶氏，江州寻阳女，嫁大贾任华，父与华之潭州不复，妙寂忽梦父泣谓曰：吾与汝夫湖中遇盗，杀我者车中猴，门东草，杀尔夫者禾中走，一日夫。</q>
+        <div class="signrow">
+          <button class="rsign" data-d="0">车中猴</button>
+          <button class="rsign" data-d="1">门东草</button>
+          <button class="rsign" data-d="2">禾中走</button>
+          <button class="rsign" data-d="3">一日夫</button>
+        </div>
+        <div id="decodeBox">
+          <div class="dq" data-d="0"><q>有李公佐者能辨隐语，谓妙寂曰：杀汝父者申兰，杀汝夫者申春耳。猴申生也，车去两头，故是申字。</q>猴在地支里配"申"；繁体"車"去掉上下两头，剩下的也是"申"。凶手姓申。</div>
+          <div class="dq" data-d="1"><q>门东草。非兰字耶？</q>"门"里加"東"上加"艸"，拼出一个繁体的"蘭"。第二个字有了。</div>
+          <div class="dq" data-d="2"><q>禾中走者，穿田过也，此亦申字，</q>"禾"里穿"田"而过，禾苗的禾拆开正是一个"申"字穿过"田"。</div>
+          <div class="dq" data-d="3"><q>一日夫，盖春字耳。</q>"一""日""夫"三件套摞起来，是"春"。杀她丈夫的，叫申春。</div>
+        </div>
+        <p style="font-size:13px;color:var(--paper-dim);margin-top:20px;">谜底凑齐，妙寂女扮男装去做佣工，寻到申家村，两年后报官，两个凶手伏法：</p>
+        <q class="qblock dim" style="margin-bottom:0;">妙寂乃易服泛佣江湖之间，闻有申村。村中有申兰兄弟，默往求佣。年余无知其非丈夫者，二盗饮醉，妙寂奔告有司获之，词伏就法。</q>
+      </div>
+      <div class="sidecases">
+        <div class="case rv">
+          <h3>阴间有编制 · 掠剩使</h3>
+          <p>唐人韦元方落第西行，在郊外店铺遇见去世的姐夫裴璞，对方已做阴官，带着一队武吏。</p>
+          <q>裴曰：吾为阴官，职辖武士，故武饰耳。</q>
+          <p>官职名目听死人一讲，比活人的衙门还具体，职责只有一条：收走人间多出来的钱。</p>
+          <q>曰陇右三川掠剩使，职司人剩财而掠之。韦曰：何谓剩财？裴曰：数外之财，即谓之剩，故掠之。</q>
+          <p>命中注定的份额之外，多捞的每一文都要被没收，或用破财、横事的形式收回。这几乎是明代人对"暴富"的全部警惕，写成了一个官名。</p>
+        </div>
+        <div class="case rv">
+          <h3>乌将军的真身</h3>
+          <p>唐传奇名篇的重述：落第的郭元振夜投灯火人家，正逢村里把女儿嫁给索婚的乌将军。他假意做傧相陪宴，讨来鹿腊磨刀，握住将军伸过来的手，一刀斩断。</p>
+          <q>公乃取鹿腊削之。将军引手取，公捉其腕断之。失声走视之，乃猪蹄也。</q>
+          <p>顺血迹找到大穴，围而烧之，赶出一头大猪。怪谈讲完，村里少女嫁他做妾，生的儿子都做了大官。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 试场 ============ -->
+<section id="shi">
+  <div class="wrap">
+    <div class="sect-head rv"><span class="sect-no">终局</span><h2>收官四问</h2></div>
+    <hr class="gline rv">
+    <p class="sect-sub rv">棋局下完要收官。四道题全出自从前读过的段落，点选作答。</p>
+    <div class="paper rv">
+      <div class="q-item">
+        <p class="q-stem"><i>问一</i>猫被改了一路名字，最后东里文人嗤笑，说这猫的本分到底是什么？</p>
+        <div class="opts" data-good="0">
+          <button class="opt"><q>捕鼠者故猫也</q></button>
+          <button class="opt"><q>僧故在是，我今何在耶？</q></button>
+          <button class="opt"><q>两人谆谆然讲学也</q></button>
+        </div>
+        <p class="q-verdict">对。名字堆得再高，本分只有两个字。</p>
+      </div>
+      <div class="q-item">
+        <p class="q-stem"><i>问二</i>李茂贞下令禁松柴，艺人的讽刺是请朝廷改禁什么？</p>
+        <div class="opts" data-good="1">
+          <button class="opt"><q>今后请并禁鹅鸭</q></button>
+          <button class="opt"><q>臣请并禁月明</q></button>
+          <button class="opt"><q>而置之道旁</q></button>
+        </div>
+        <p class="q-verdict">对。月光下人人都是放火犯。</p>
+      </div>
+      <div class="q-item">
+        <p class="q-stem"><i>问三</i>瞎子悬在桥栏上死不撒手，过路人喊的那句话是？</p>
+        <div class="opts" data-good="1">
+          <button class="opt"><q>何久自苦耶！</q></button>
+          <button class="opt"><q>毋怖，第放下即实地也。</q></button>
+          <button class="opt"><q>兰亭在此，余不足问也。</q></button>
+        </div>
+        <p class="q-verdict">对。撒手才知道脚下一直有地。</p>
+      </div>
+      <div class="q-item">
+        <p class="q-stem"><i>问四</i>王阳明听见两人对骂，对学生说了句什么？</p>
+        <div class="opts" data-good="2">
+          <button class="opt"><q>岂独里尹乎？</q></button>
+          <button class="opt"><q>恐陛下不免驳放。</q></button>
+          <button class="opt"><q>两人谆谆然讲学也。</q></button>
+        </div>
+        <p class="q-verdict">对。满口心与天理，骂得越凶，越像讲学。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 尾屏 ============ -->
+<section id="coda">
+  <div class="wrap">
+    <h2 class="cvtitle">贤弈编</h2>
+    <div class="cseal">猫即猫耳</div>
+    <p class="cquote">
+      一盘没下完的棋：刘元卿不会弈，就用十六品古今言行代棋；
+      读者也不会弈，就一枚一枚把他的棋子翻过来看背面。
+      <q>岂独曰犹贤乎已。</q>
+      比闲着强，是这本书的起点，也是它全部的谦虚。
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>文本来源：殆知阁简体库 子藏笔记 〈贤弈编〉· 明人刘元卿 撰</span>
+    <span>页面属殆知阁导读系列 · 仓库 <a href="https://github.com/robertsong/daizhige-daodu" target="_blank" rel="noopener">daizhige-daodu</a></span>
+    <span>引文核验：全部引文经脚本与库内文件去标点、异体归一后逐字比对通过；白话叙述避开库本成串原文。</span>
+    <span>时代局限：本书含明代理学说教、因果报应与轮回记载，动物故事亦多传闻成分，请以历史眼光阅读，勿以今律古。</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ============ 棋枰 ============ */
+  var board=document.getElementById('board');
+  var movesEl=document.getElementById('boardMoves');
+  var heroTag=document.getElementById('heroTag');
+  var moves=0;
+  board.addEventListener('click',function(e){
+    if(moves>=24)return;
+    var r=board.getBoundingClientRect();
+    var cell=r.width/12;
+    var cx=Math.min(11,Math.max(0,Math.round((e.clientX-r.left-cell/2)/cell)));
+    var cy=Math.min(11,Math.max(0,Math.round((e.clientY-r.top-cell/2)/cell)));
+    if(board.querySelector('[data-p="'+cx+'-'+cy+'"]'))return;
+    var s=document.createElement('div');
+    s.className='stone '+(moves%2===0?'b':'w');
+    s.dataset.p=cx+'-'+cy;
+    s.style.left=(cx*cell+cell/2-s.offsetWidth/2)+'px';
+    s.style.top=(cy*cell+cell/2-s.offsetHeight/2)+'px';
+    board.appendChild(s);
+    requestAnimationFrame(function(){s.classList.add('pop');});
+    moves++;
+    movesEl.textContent=moves;
+    if(moves===3){heroTag.classList.add('lit');document.getElementById('boardHint').textContent='客至焚香拭几 · 往下读，即是取书';}
+  });
+
+  /* ============ 十六品棋盒 ============ */
+  var PINS=[
+    ['怀古','念宣德成化的太平，把世道归功于士大夫的器局'],
+    ['廉淡','清官的苦账：不宰鸡、不携眷、见华服闭眼'],
+    ['德器','真状元绕小路进城，怕惊动太守的排场'],
+    ['方正','宁可得罪权贵，不肯顺着说话'],
+    ['证学','学问在自家心地上验证，不靠背语录'],
+    ['叙伦','父子兄弟怎样相处，从名臣家的饭桌说起'],
+    ['家闲','管住妻儿下人的手，比管百姓还难'],
+    ['官政','把被小吏攥住的尺子，收回宰相手里'],
+    ['广仁','劝人莫溺婴，能救一个是一个'],
+    ['干局','办事的手腕：快、准、不留尾巴'],
+    ['达命','算不出来的那部分，交还给命'],
+    ['仙释','道士和尚的故事，借来当一面镜子'],
+    ['观物','虫鱼鸟兽个个像人，读完脊背发凉'],
+    ['警喻','打比方的手术台，专割人心的赘瘤'],
+    ['应谐','笑到第三层开始扎人的一品'],
+    ['志怪','鬼神办案，比人间衙门还认真']
+  ];
+  var HOT={12:1,13:1,14:1,15:1};
+  var bag=document.getElementById('pinbag');
+  var CN=['第一','第二','第三','第四','第五','第六','第七','第八','第九','第十','十一','十二','十三','十四','十五','十六'];
+  PINS.forEach(function(p,i){
+    var d=document.createElement('div');
+    d.className='pin'+(i%2?' wstone':'')+(HOT[i]?' hot':'');
+    d.innerHTML='<div class="face front"><span class="num">'+CN[i]+'</span><span>'+p[0]+'</span></div><div class="face back">'+p[1]+'</div>';
+    d.addEventListener('click',function(){d.classList.toggle('flip');});
+    bag.appendChild(d);
+  });
+
+  /* ============ 猫号改名会 ============ */
+  var guests=document.querySelectorAll('#guestrow .guest');
+  var says=document.querySelectorAll('#catSay q');
+  var plate=document.getElementById('plateNow');
+  var NAMES=['龙猫','云猫','风猫','墙猫','鼠猫'];
+  guests.forEach(function(g){
+    g.addEventListener('click',function(){
+      var i=+g.dataset.i;
+      guests.forEach(function(x){x.classList.remove('saying');});
+      g.classList.add('saying','done');
+      says.forEach(function(q,j){q.classList.toggle('show',j===i);});
+      plate.textContent=NAMES[i];
+      if(i===4){
+        document.getElementById('catBtn').classList.add('show');
+        setTimeout(function(){guests.forEach(function(x){x.classList.remove('saying');});},700);
+      }
+    });
+  });
+  document.getElementById('catBtn').addEventListener('click',function(){
+    document.getElementById('catPunch').classList.add('show');
+    this.classList.add('show');
+    this.textContent='话音落下';
+  });
+
+  /* ============ 志怪谜签 ============ */
+  var signs=document.querySelectorAll('.rsign');
+  var dqs=document.querySelectorAll('#decodeBox .dq');
+  signs.forEach(function(sg){
+    sg.addEventListener('click',function(){
+      signs.forEach(function(x){x.classList.remove('solved');});
+      dqs.forEach(function(x){x.classList.remove('show');});
+      sg.classList.add('solved');
+      document.querySelector('#decodeBox .dq[data-d="'+sg.dataset.d+'"]').classList.add('show');
+    });
+  });
+
+  /* ============ 收官四问 ============ */
+  document.querySelectorAll('.q-item').forEach(function(item){
+    var opts=item.querySelectorAll('.opt');
+    var good=+item.querySelector('.opts').dataset.good;
+    var vd=item.querySelector('.q-verdict');
+    opts.forEach(function(o,i){
+      o.addEventListener('click',function(){
+        opts.forEach(function(x){x.disabled=true;});
+        opts[good].classList.add('good');
+        if(i!==good)o.classList.add('bad');
+        vd.classList.add('show');
+      });
+    });
+  });
+
+  /* ============ 入场 ============ */
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
