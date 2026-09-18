@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>东西洋考 · 殆知阁古代文献导读</title>
+<style>
+:root{
+  --bg:#191917;
+  --bg2:#1e201f;
+  --paper:#e8e4dc;
+  --ink:#2a2722;
+  --dim:#9a948a;
+  --gold:#c9963f;
+  --gold-soft:rgba(201,150,63,.45);
+  --gold-faint:rgba(201,150,63,.14);
+  --seal:#a83a30;
+  --sea:#131a1f;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-padding-top:70px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--paper);
+  font-family:"Noto Serif CJK SC","Source Han Serif SC","Songti SC",SimSun,serif;
+  line-height:1.9;
+  overflow-x:hidden;
+}
+.mono{font-family:var(--mono)}
+a{color:var(--gold);text-decoration:none}
+.wrap{max-width:920px;margin:0 auto;padding:0 22px}
+q{quotes:none}
+q.qblock,q.q{
+  display:block;
+  background:rgba(232,228,220,.05);
+  border-left:2px solid var(--gold);
+  padding:13px 19px;
+  margin:15px 0;
+  color:#ddd7c9;
+  font-size:15.5px;
+  line-height:2.05;
+}
+q.qinline{color:#e3ddcf;border-bottom:1px dotted var(--gold-soft)}
+.src{display:block;text-align:right;color:var(--dim);font-size:12.5px;letter-spacing:.22em;margin-top:7px}
+.note{color:var(--dim);font-size:13.5px;line-height:1.95;margin:6px 0}
+b.seal{
+  display:inline-block;color:var(--seal);border:1.5px solid var(--seal);
+  padding:0 6px;font-size:12px;letter-spacing:.2em;vertical-align:.18em;margin-left:6px;
+}
+
+/* ---------- hero : 起针罗盘 ---------- */
+.hero{
+  position:relative;min-height:100dvh;overflow:hidden;
+  background:linear-gradient(180deg,#11171c 0%,var(--sea) 52%,#101519 100%);
+  display:flex;align-items:center;justify-content:center;
+}
+.waveline{position:absolute;left:0;right:0;pointer-events:none;opacity:.5}
+.hero .compass{
+  position:absolute;top:50%;left:50%;width:min(78vmin,560px);height:min(78vmin,560px);
+  transform:translate(-50%,-50%);opacity:.9;
+}
+.rosespin{animation:rosespin 240s linear infinite;transform-origin:50% 50%}
+@keyframes rosespin{to{transform:rotate(360deg)}}
+.needle{transform-origin:50% 50%;animation:tack 7s ease-in-out infinite}
+@keyframes tack{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+.hero.spin .needle{animation:castoff 1.6s cubic-bezier(.2,.8,.2,1) 1,tack 7s ease-in-out 1.6s infinite}
+@keyframes castoff{0%{transform:rotate(0)}55%{transform:rotate(1080deg)}100%{transform:rotate(1260deg)}}
+.hero-inner{position:relative;text-align:center;z-index:2;padding:0 20px}
+.kicker{
+  font-size:13px;letter-spacing:.42em;color:var(--gold);
+  margin-bottom:20px;text-indent:.42em;
+}
+h1.vtitle{
+  font-size:clamp(52px,11vw,96px);font-weight:700;letter-spacing:.12em;
+  color:var(--paper);text-shadow:0 2px 30px rgba(0,0,0,.6);line-height:1.25;
+}
+.oneliner{color:#cfc9bc;margin:18px auto 0;max-width:34em;font-size:16px}
+.herohint{color:var(--dim);font-size:12.5px;letter-spacing:.3em;margin-top:44px;text-indent:.3em}
+.routehero{width:min(680px,86vw);margin:26px auto 0;display:block}
+.routehero path{stroke-dasharray:6 7;animation:flow 26s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-520}}
+
+/* ---------- 针路轨 ---------- */
+.rail{
+  position:fixed;left:18px;top:50%;transform:translateY(-50%);z-index:40;
+  display:flex;flex-direction:column;gap:0;align-items:flex-start;
+}
+.rail::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:var(--gold-soft)}
+.rail a{
+  position:relative;display:flex;align-items:center;gap:10px;
+  color:var(--dim);font-size:12px;letter-spacing:.2em;padding:7px 0;
+}
+.rail a i{
+  width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gold-soft);
+  background:var(--bg);flex:none;transition:all .3s;
+}
+.rail a span{opacity:0;transition:opacity .3s}
+.rail a:hover span,.rail a.on span{opacity:1}
+.rail a.on{color:var(--gold)}
+.rail a.on i{background:var(--gold);border-color:var(--gold);box-shadow:0 0 10px var(--gold-soft)}
+.geng{
+  position:fixed;right:20px;bottom:22px;z-index:40;
+  width:74px;height:74px;border-radius:50%;border:1.5px solid var(--gold-soft);
+  background:rgba(25,25,23,.88);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;color:var(--gold);
+  font-size:11px;letter-spacing:.14em;backdrop-filter:blur(2px);
+}
+.geng b{font-family:var(--mono);font-size:19px;line-height:1.2;color:var(--paper);font-weight:600}
+@media(max-width:1150px){.rail{display:none}}
+
+/* ---------- 航站通用 ---------- */
+.station{position:relative;padding:88px 0 40px}
+.stahead{display:flex;align-items:baseline;gap:16px;margin-bottom:8px}
+.wpt{
+  font-family:var(--mono);color:var(--gold);font-size:13px;letter-spacing:.3em;
+  border:1px solid var(--gold-soft);padding:2px 10px;border-radius:2px;flex:none;
+  white-space:nowrap;
+}
+.station h2{font-size:30px;letter-spacing:.14em;font-weight:700;color:var(--paper)}
+.stasub{color:var(--dim);font-size:13px;letter-spacing:.28em;margin:4px 0 22px}
+.prose{color:#d8d2c4;max-width:46em;margin:14px 0}
+.prose b,.lead b{color:var(--gold);font-weight:600}
+
+/* ---------- 起针 ---------- */
+.stops{display:flex;flex-wrap:wrap;gap:0;margin:26px 0 8px;align-items:center}
+.stop{
+  position:relative;border:1px solid var(--gold-soft);background:rgba(232,228,220,.04);
+  color:#d5cfc2;padding:9px 16px;font-size:14.5px;letter-spacing:.12em;cursor:pointer;
+  transition:all .25s;
+}
+.stop:hover{border-color:var(--gold);color:var(--paper)}
+.stop.on{background:var(--gold);color:#241d10;border-color:var(--gold);font-weight:600}
+.stop-arrow{color:var(--gold-soft);padding:0 8px;font-size:14px;flex:none}
+.stopnote{border:1px dashed var(--gold-soft);padding:18px 22px;margin-top:14px;min-height:120px}
+.stopnote h4{color:var(--gold);letter-spacing:.2em;font-size:14px;margin-bottom:8px}
+.hidden{display:none}
+q.qv{display:inline;background:none;border:none;padding:0;margin:0;color:inherit;font-size:inherit;line-height:inherit}
+
+/* ---------- 银船 ---------- */
+.hideclip{position:relative;margin:30px 0 6px}
+.hidefig{display:block;width:min(480px,92%);margin:0 auto}
+.hidefig .strip{stroke:var(--gold);stroke-width:0;transition:stroke-width .9s ease .3s}
+.hideclip.cut .hidefig .strip{stroke-width:2.2}
+.hidebtn{
+  display:block;margin:16px auto 0;background:none;border:1px solid var(--gold-soft);
+  color:var(--gold);padding:9px 26px;font-family:inherit;font-size:14px;
+  letter-spacing:.3em;cursor:pointer;text-indent:.3em;transition:all .3s;
+}
+.hidebtn:hover{border-color:var(--gold);background:var(--gold-faint)}
+.ledger{border:1px solid var(--gold-soft);margin:26px 0}
+.ledger .lrow{
+  display:flex;align-items:baseline;gap:14px;padding:13px 18px;
+  border-bottom:1px dashed rgba(201,150,63,.22);cursor:pointer;transition:background .25s;
+}
+.ledger .lrow:last-child{border-bottom:none}
+.ledger .lrow:hover,.ledger .lrow.on{background:var(--gold-faint)}
+.ledger .lname{flex:1;letter-spacing:.1em}
+.ledger .lnum{font-family:var(--mono);color:var(--gold);font-size:15px;flex:none}
+.ledger .lq{grid-column:1 / -1;padding:0 18px}
+.nightpanel{
+  position:relative;margin:30px 0;border:1px solid rgba(201,150,63,.3);
+  background:linear-gradient(180deg,#0d0e10,#141413);padding:26px 26px 22px;overflow:hidden;
+}
+.nightpanel h4{color:#cfc9bc;letter-spacing:.24em;font-size:14.5px;margin-bottom:12px}
+.flash{position:absolute;inset:0;background:#efe9d8;opacity:0;pointer-events:none;transition:opacity .5s}
+.nightpanel.glow .flash{opacity:.85;transition:none}
+.claim{
+  display:block;margin:18px auto 0;background:none;border:1.5px solid var(--seal);
+  color:#d8887e;padding:9px 24px;font-family:inherit;font-size:14px;
+  letter-spacing:.26em;cursor:pointer;text-indent:.26em;transition:all .3s;
+}
+.claim:hover{background:rgba(168,58,48,.14)}
+.toll{
+  margin:26px 0;border:1px solid rgba(168,58,48,.5);background:rgba(168,58,48,.06);
+  padding:22px 24px;
+}
+.toll .nums{display:flex;gap:34px;flex-wrap:wrap;margin:14px 0 6px}
+.toll .nums div{text-align:center}
+.toll .nums b{display:block;font-family:var(--mono);font-size:34px;color:#d8887e;line-height:1.2}
+.toll .nums span{color:var(--dim);font-size:12px;letter-spacing:.2em}
+
+/* ---------- 香山 ---------- */
+.spicerow{display:flex;gap:30px;align-items:center;flex-wrap:wrap;margin:24px 0}
+.clovebox{flex:none;text-align:center;cursor:pointer}
+.clovebox svg{display:block;margin:0 auto;transition:transform .4s}
+.clovebox:hover svg{transform:scale(1.08)}
+.clovebox figcaption{color:var(--dim);font-size:12.5px;letter-spacing:.24em;margin-top:6px}
+.mountain{flex:1;min-width:280px;cursor:pointer}
+.mountain svg{display:block;width:100%}
+.mtn-h{fill:rgba(232,228,220,.05);stroke:var(--gold-soft);stroke-width:1.2;transition:transform .8s ease}
+.mountain.split .mtn-n{transform:translate(-6px,-14px)}
+.mountain.split .mtn-s{transform:translate(6px,14px)}
+.mtnlab{fill:var(--dim);font-size:12px;letter-spacing:2px;opacity:0;transition:opacity .6s .5s}
+.mountain.split .mtnlab{opacity:1}
+.mtnlab.north{fill:#7ba3c4}
+.mtnlab.south{fill:#c47b6a}
+.mtnline{stroke:var(--gold);stroke-width:1.4;stroke-dasharray:5 5}
+
+/* ---------- 针路图 ---------- */
+.crew{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.crew button{
+  background:none;border:1px solid var(--gold-soft);color:#d5cfc2;
+  font-family:inherit;font-size:14px;padding:7px 15px;letter-spacing:.16em;
+  cursor:pointer;transition:all .25s;
+}
+.crew button:hover{border-color:var(--gold)}
+.crew button.on{background:var(--gold);color:#241d10;border-color:var(--gold);font-weight:600}
+.duty{border:1px dashed var(--gold-soft);padding:16px 20px;margin:14px 0;min-height:96px}
+.duty h4{color:var(--gold);font-size:14px;letter-spacing:.24em;margin-bottom:6px}
+.chartspace{margin:30px 0}
+.chartsvg{display:block;width:100%;height:auto}
+.chartsvg .sea-path{fill:none;stroke:var(--gold-soft);stroke-width:1.6;stroke-dasharray:5 6}
+.chartsvg .sea-coast{fill:rgba(232,228,220,.045);stroke:rgba(232,228,220,.22);stroke-width:1}
+.chartsvg .node{fill:var(--bg);stroke:var(--gold);stroke-width:1.6;cursor:pointer}
+.chartsvg .node:hover{fill:var(--gold-faint)}
+.chartsvg .node.act{fill:var(--gold)}
+.chartsvg text{fill:#cfc9bc;font-size:12.5px;pointer-events:none}
+.chartsvg .nlabel.act{fill:var(--gold)}
+.chartpop{border:1px solid var(--gold-soft);padding:16px 20px;margin-top:14px;min-height:92px}
+.chartpop h4{color:var(--gold);letter-spacing:.2em;font-size:14.5px;margin-bottom:6px}
+
+/* ---------- 风信 ---------- */
+.omen{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:14px;margin:24px 0}
+.ocell{
+  position:relative;min-height:158px;cursor:pointer;perspective:700px;
+}
+.ocell .in{
+  position:absolute;inset:0;transition:transform .7s;transform-style:preserve-3d;
+}
+.ocell.flip .in{transform:rotateY(180deg)}
+.oface{
+  position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--gold-soft);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:14px;text-align:center;
+}
+.oface.front{background:rgba(232,228,220,.04)}
+.oface.front b{font-size:21px;letter-spacing:.4em;text-indent:.4em;color:var(--gold)}
+.oface.front span{color:var(--dim);font-size:11.5px;letter-spacing:.2em;margin-top:8px}
+.oface.back{background:#242220;transform:rotateY(180deg);border-color:var(--gold-soft)}
+.oface.back p{color:#ddd7c9;font-size:13.5px;line-height:2}
+.months{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 8px}
+.months button{
+  background:none;border:1px solid var(--gold-soft);color:#d5cfc2;font-family:inherit;
+  font-size:13.5px;padding:6px 14px;letter-spacing:.18em;cursor:pointer;transition:all .25s;
+}
+.months button:hover{border-color:var(--gold)}
+.months button.on{background:var(--gold);color:#241d10;border-color:var(--gold);font-weight:600}
+.firewall{
+  margin:30px 0;border:1px solid var(--gold-soft);text-align:center;
+  background:linear-gradient(180deg,#101418,#171a1c);padding:30px 20px 26px;position:relative;
+}
+.mastline{height:86px;position:relative;width:2px;background:rgba(232,228,220,.35);margin:0 auto}
+.fire{
+  position:absolute;top:-9px;left:50%;width:10px;height:10px;border-radius:50%;
+  background:#f2e6bd;box-shadow:0 0 16px 7px rgba(240,220,150,.5);
+  transform:translate(-50%,0);opacity:0;transition:all 1.4s ease;
+}
+.firewall.lit .fire{opacity:1}
+.firewall.in .fire{transform:translate(-50%,46px) scale(.55);box-shadow:0 0 10px 3px rgba(240,220,150,.4)}
+.firewall.out .fire{transform:translate(-50%,-58px) scale(1.5);opacity:0}
+.verdict{min-height:64px;margin-top:14px;color:#d8d2c4;font-size:14.5px}
+
+/* ---------- 潮信 ---------- */
+.tidebox{margin:26px 0;border:1px solid var(--gold-soft);background:#131a1e;padding:8px 8px 0;overflow:hidden}
+.tidebox svg{display:block;width:100%}
+.tidewords{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 8px}
+.tidewords button{
+  width:52px;height:52px;border-radius:50%;background:none;border:1px solid var(--gold-soft);
+  color:#ddd7c9;font-family:inherit;font-size:21px;cursor:pointer;transition:all .25s;
+}
+.tidewords button::before{content:attr(data-ch)}
+.tidewords button:hover{border-color:var(--gold)}
+.tidewords button.on{background:var(--gold);color:#241d10;border-color:var(--gold);font-weight:700}
+.tidenote{border:1px dashed var(--gold-soft);padding:14px 20px;margin:12px 0;min-height:70px;color:#d8d2c4;font-size:14.5px}
+
+/* ---------- 税珰 ---------- */
+.gaoled{
+  margin:28px 0;border:1px solid rgba(168,58,48,.5);background:rgba(168,58,48,.05);padding:22px 24px;
+}
+.gaoled h4{color:#d8887e;letter-spacing:.24em;font-size:14.5px;margin-bottom:10px}
+.rx{
+  margin:28px auto;max-width:430px;border:1.5px solid var(--gold);background:#e8e4dc;
+  color:var(--ink);padding:22px 26px;cursor:pointer;position:relative;transition:box-shadow .3s;
+}
+.rx:hover{box-shadow:0 6px 30px rgba(201,150,63,.25)}
+.rx h4{letter-spacing:.4em;text-indent:.4em;text-align:center;font-size:17px;color:var(--seal);margin-bottom:12px}
+.rx .rxline{border-bottom:1px dashed rgba(42,39,34,.35);padding:7px 2px;font-size:14.5px;display:flex;justify-content:space-between;gap:14px}
+.rx .rxline span:last-child{color:#6b6559}
+.rx .rxfoot{margin-top:14px;text-align:right;font-size:13px;color:#6b6559;letter-spacing:.2em}
+.rxface{display:none}
+.rx.open .rxfront{display:none}
+.rx.open .rxface{display:block}
+
+/* ---------- 收帆 ---------- */
+.coda{padding:90px 0 60px;text-align:center;position:relative}
+.sealbig{
+  display:inline-block;font-size:clamp(40px,9vw,72px);letter-spacing:.3em;text-indent:.3em;
+  color:var(--paper);border:3px solid var(--seal);padding:18px 30px;line-height:1.5;
+  transform:rotate(-2deg);box-shadow:0 0 0 1.5px var(--bg),0 0 0 2.5px var(--seal);
+  margin-bottom:30px;opacity:.94;
+}
+.zhao{color:var(--gold);font-size:17px;letter-spacing:.16em;margin:6px 0 26px}
+.jiaozi{
+  max-width:760px;margin:0 auto 26px;border:1px dashed var(--gold-soft);
+  padding:20px 26px;text-align:left;
+}
+.jiaozi h3{color:var(--gold);font-size:14.5px;letter-spacing:.3em;margin-bottom:10px}
+.jiaozi li{color:var(--dim);font-size:13.5px;line-height:2;list-style:none;margin:4px 0}
+.jiaozi li::before{content:"◦ ";color:var(--gold)}
+.pagefoot{color:#7c766c;font-size:12.8px;line-height:2.1;max-width:760px;margin:0 auto}
+.pagefoot a{color:#a8905c;border-bottom:1px dotted #a8905c}
+@media(max-width:640px){
+  .station{padding:66px 0 26px}
+  .station h2{font-size:24px}
+  .geng{width:60px;height:60px;right:12px;bottom:14px;font-size:10px}
+  .geng b{font-size:15px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 起针罗盘 hero ============ -->
+<header class="hero" id="top">
+  <svg class="compass" viewBox="0 0 400 400" aria-hidden="true">
+    <g class="rosespin">
+      <circle cx="200" cy="200" r="192" fill="none" stroke="rgba(201,150,63,.34)" stroke-width="1"/>
+      <circle cx="200" cy="200" r="164" fill="none" stroke="rgba(201,150,63,.2)" stroke-width="1" stroke-dasharray="3 6"/>
+      <circle cx="200" cy="200" r="120" fill="none" stroke="rgba(232,228,220,.14)" stroke-width="1"/>
+      <g id="ring24" font-size="13" fill="rgba(232,228,220,.6)"></g>
+    </g>
+    <g class="needle">
+      <path d="M200 52 L210 200 L200 348 L190 200 Z" fill="rgba(201,150,63,.28)" stroke="rgba(201,150,63,.75)" stroke-width="1.2"/>
+      <path d="M200 52 L210 200 L190 200 Z" fill="rgba(201,150,63,.8)"/>
+      <path d="M200 348 L190 200 L210 200 Z" fill="rgba(232,228,220,.32)"/>
+      <circle cx="200" cy="200" r="7" fill="#191917" stroke="var(--gold)" stroke-width="1.6"/>
+    </g>
+  </svg>
+  <div class="hero-inner">
+    <div class="kicker">万厯丁巳成书 · 海滨逸史张燮</div>
+    <h1 class="vtitle">东西洋考</h1>
+    <p class="oneliner">月港开市五十年后，一介布衣替漳州官商写成的一册海上贸易手册：哪国可通，何货可贩，针路几更，税银几何。</p>
+    <svg class="routehero" viewBox="0 0 680 60" aria-hidden="true">
+      <path d="M8 44 C 120 10, 200 56, 320 30 S 560 8, 672 34" fill="none" stroke="rgba(201,150,63,.55)" stroke-width="1.6"/>
+      <circle cx="8" cy="44" r="3.4" fill="var(--gold)"/>
+      <circle cx="320" cy="30" r="3.4" fill="var(--gold)"/>
+      <circle cx="672" cy="34" r="3.4" fill="var(--gold)"/>
+      <text x="14" y="26" fill="rgba(232,228,220,.55)" font-size="11">海澄</text>
+      <text x="600" y="22" fill="rgba(232,228,220,.55)" font-size="11">收帆</text>
+    </svg>
+    <p class="herohint">点罗盘 · 起针</p>
+  </div>
+</header>
+
+<!-- ============ 针路轨 ============ -->
+<nav class="rail" aria-label="针路">
+  <a href="#s1"><i></i><span>起针</span></a>
+  <a href="#s2"><i></i><span>银船</span></a>
+  <a href="#s3"><i></i><span>香山</span></a>
+  <a href="#s4"><i></i><span>针路</span></a>
+  <a href="#s5"><i></i><span>风信</span></a>
+  <a href="#s6"><i></i><span>潮信</span></a>
+  <a href="#s7"><i></i><span>税珰</span></a>
+  <a href="#coda"><i></i><span>收帆</span></a>
+</nav>
+<div class="geng" aria-hidden="true"><span>行</span><b id="gengN">0</b><span>更</span></div>
+
+<!-- ============ 站一 · 起针 ============ -->
+<section class="station" id="s1">
+  <div class="wrap">
+    <div class="stahead"><span class="wpt">站一</span><h2>起针：月港</h2></div>
+    <div class="stasub">海禁开而贾舶出</div>
+    <p class="prose">明初海禁，至嘉靖年间闽人以海为田、禁无可禁。隆庆改元，朝廷终于松手，指定漳州海澄一处口岸放商人下东西二洋，月港由此成了大明唯一合法的出洋码头。五十年后，海澄的士绅觉得这门生意的知识散在船师和商人的口里，容易断，于是请布衣张燮把它写成书。</p>
+    <q class="q">其明年隆庆改元，福建巡抚都御史涂泽民请开海禁，准贩东西二洋，盖东洋若吕宋、苏禄诸国，西洋若交址、占城、暹罗诸国，皆我羁縻外臣，无侵叛，而特严禁贩倭奴者，比于通番接济之例。</q>
+    <q class="q">澄水国也，农贾杂半，走洋如适市。</q>
+    <p class="prose">作者张燮是漳州龙溪人，自号海滨逸史，终身布衣。全书十二卷：西洋列国考十五国、东洋列国考七国、外纪考收日本与红毛番，随后是税饷、舟师、税珰、艺文、逸事。为舶政而写，所以每国先讲沿革，再记山川物产，收在交易之法。</p>
+    <q class="q">燮，字绍和，龙溪人，自署海滨逸史。盖布衣也。是书成于万厯丁巳，仿宋赵汝适《诸蕃志》例，惟载海国之通互市者。</q>
+    <q class="q">首西洋考凡十五国，又附录者四；次东洋考凡七国，又附录者十二次。</q>
+    <q class="q">列国各立一传，如史体；其后附载山川、方物，如《一统志》体。以其为舶政而设，故交易终焉。</q>
+    <p class="prose">凡例里有一句极诚实的取舍：琉球朝鲜虽是天朝属国，商人不去，就不收；日本与红毛番单独立考，不为贡使，为的是他们挡了贾舶的道。</p>
+    <q class="q">或曰：日本、红夷何以特书，书其梗贾舶者也。</q>
+    <p class="prose">一艘船从海澄出洋的次序，库本记得像一份流程单。点站名，看每一步。</p>
+    <div class="stops" id="stops">
+      <button class="stop on" data-n="0">海澄港口</button><span class="stop-arrow">➤</span>
+      <button class="stop" data-n="1">圭屿</button><span class="stop-arrow">➤</span>
+      <button class="stop" data-n="2">中左所</button><span class="stop-arrow">➤</span>
+      <button class="stop" data-n="3">曾家澚</button><span class="stop-arrow">➤</span>
+      <button class="stop" data-n="4">担门分路</button>
+    </div>
+    <div class="stopnote" id="stopnote">
+      <h4 id="snT"></h4>
+      <div id="snB"></div>
+    </div>
+    <div class="hidden" id="stopbank">
+      <div data-n="0"><h4>海澄港口</h4><p class="note">水浅，大船自己开不动，要小舟拖曳。</p><q class="q">旧名月港，隆庆六年，奏设县治，此间水浅，商人发舶，必用数小舟曳之舶，乃得行计，一潮至圭屿。</q></div>
+      <div data-n="1"><h4>圭屿</h4><p class="note">海中孤屿，漳镇之望，后来周起元奏请在上头建了塔与天妃宫。</p><q class="q">屹立海中，为漳之镇</q></div>
+      <div data-n="2"><h4>中左所</h4><p class="note">就是厦门，船在此过第一道关。</p><q class="q">一名厦门南路，叅戎防汛处，从前贾舶盘验于此</q></div>
+      <div data-n="3"><h4>曾家澚</h4><p class="note">验毕移驻，只等风。</p><q class="q">验毕移驻曾家澚，候风开驾</q></div>
+      <div data-n="4"><h4>担门分路</h4><p class="note">出此一门，东西洋自此分手：西洋去交址暹罗，东洋去吕宋苏禄。</p><q class="q">二更船至担门，东西洋出担门分路矣。</q></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 站二 · 银船 ============ -->
+<section class="station" id="s2">
+  <div class="wrap">
+    <div class="stahead"><span class="wpt">站二</span><h2>银船：吕宋</h2></div>
+    <div class="stasub">美洲白银的第一张中文账单</div>
+    <p class="prose">东洋诸国里，吕宋最特别：本地不产什么货，西班牙人（书中叫它佛郎机，自号干系蜡国，即卡斯蒂利亚）拿着墨西哥、秘鲁挖出的白银来买中国生丝与瓷器。归船舱里没有货，只有银钱，海关只好为它单设一种税。</p>
+    <q class="q">东洋吕宋，地无他产，夷人悉用银钱易货，故归船自银钱外，无他携来，即有货亦无几，故商人回澚，征水陆二饷外，属吕宋船者，每船更追银百五十两，谓之加征。</q>
+    <p class="prose">万厯十八年，商人们叫苦，加征从每船一百五十两减到一百二十两。这册书里记下的，正是全球白银灌入中国的那个闸口。</p>
+    <div class="ledger" id="ledger">
+      <div class="lrow" data-n="0"><span class="lname">引税：请一张下洋的许可</span><span class="lnum">三两 · 后增六两</span></div>
+      <div class="lq hidden"><q class="q">东西洋每引，税银三两；鸡笼、淡水，税银一两；</q></div>
+      <div class="lrow" data-n="1"><span class="lname">水饷：按船面宽度征船商</span><span class="lnum">阔一丈六尺起五两</span></div>
+      <div class="lq hidden"><q class="q">西洋船面阔一丈六尺以上者征饷五两，每多一尺加银五钱</q></div>
+      <div class="lrow" data-n="2"><span class="lname">陆饷：按货值征铺商</span><span class="lnum">值一两征二分</span></div>
+      <div class="lq hidden"><q class="q">胡椒、苏木等货，计值一两者，征饷二分；</q></div>
+      <div class="lrow" data-n="3"><span class="lname">加征：专对吕宋空船</span><span class="lnum">百五十两 · 减为百二十两</span></div>
+      <div class="lq hidden"><q class="q">万歴十八年。量减至百二十两。</q></div>
+    </div>
+    <p class="prose">吕宋这卷里还藏着西班牙人拿下马尼拉的传说，像极了地中海的老故事被搬到了东海：一张牛皮，剪成细条，圈走一座城。</p>
+    <div class="hideclip" id="hideclip">
+      <svg class="hidefig" viewBox="0 0 480 220" aria-hidden="true">
+        <path d="M70 130 C 40 60, 130 18, 240 26 C 360 34, 450 70, 436 130 C 424 186, 320 208, 220 200 C 130 194, 90 178, 70 130 Z" fill="rgba(232,228,220,.07)" stroke="rgba(201,150,63,.6)" stroke-width="1.6"/>
+        <path class="strip" d="M96 128 C 150 60, 330 52, 414 118" fill="none"/>
+        <path class="strip" d="M88 142 C 160 92, 330 84, 424 136" fill="none"/>
+        <path class="strip" d="M96 160 C 170 122, 320 114, 414 156" fill="none"/>
+        <path class="strip" d="M116 176 C 190 150, 300 144, 386 174" fill="none"/>
+        <text x="240" y="118" text-anchor="middle" fill="rgba(232,228,220,.4)" font-size="12" letter-spacing="4">牛皮一幅</text>
+      </svg>
+      <button class="hidebtn" id="hideBtn">剪而相续之</button>
+    </div>
+    <q class="q">有佛郎机者自称干系蜡国，从大西来，亦与吕宋互市。酋私相语曰：彼可取而代也。因上黄金为吕宋王寿，乞地如牛皮大盖屋。王信而许之。佛郎机乃取牛皮，剪而相续之，以为四围。乞地称是王难之，然重失信逺夷，竟予地，月征税如所部法。佛郎机既得地筑城、营室、列铳、刀盾甚具，久之围吕宋，杀其王，逐其民入山，而吕宋遂为佛郎机有矣。</q>
+    <p class="prose">华人跟着货船涌进马尼拉，久住不归，名叫压冬，聚居的涧内渐渐住了几万人。西人的账，最后记到了华人头上。</p>
+    <q class="q">华人既多诣吕宋，往往久住不归，名为压冬，聚居涧内为生活，渐至数万，间有削发，长子孙者。</q>
+    <div class="nightpanel" id="nightpanel">
+      <div class="flash"></div>
+      <h4>万厯癸巳，交逸海面，夜半</h4>
+      <p class="note">西班牙船长征美洛居，拉了二百五十名流寓华人充兵；夷人躺在船上，华人在甲板昼夜操桨，稍歇便遭鞭笞刀刺。船到交逸，潘和五们商量出一个只剩死路的算术。</p>
+      <q class="q">潘和五等谋曰：叛死、棰死、刺死、等死耳。不然亦且战死，不若杀酋以泄吾忿，胜则扬帆故乡，即不胜，死未晩也。议既定，夜半入卧内，刺酋，持酋头大呼，夷人惊起，不知所为，悉被刄，或落水死，和五等悉获金宝兵器，驾其船以归</q>
+    </div>
+    <p class="prose">真正的大祸起于一个荒唐的奏疏。有妄男子张嶷上疏说吕宋机易山金豆自生，朝廷竟遣官往勘。西班牙人疑心这是侦察，先动了手。</p>
+    <button class="claim" id="claimBtn"><q class="qv">吕宋有机易山，其上金豆自生</q></button>
+    <div class="toll hidden" id="toll">
+      <p class="note">万厯三十一年秋，马尼拉大仑山。西人先以高价收尽华人手中的铁器，再借点名造册，三百人一批，进门即杀；幸存者退聚大仑山，断粮之后仍强攻城垣。</p>
+      <q class="q">华人在大仑山饥甚，不得食，冒死攻城，夷人伏发，燃铜锐击杀华人万余，华人大溃，或逃散饿死山谷间，横尸相枕，计指二万五千人，存者三百口而已。</q>
+      <div class="nums">
+        <div><b id="deadN">0</b><span>罹难华人</span></div>
+        <div><b>300</b><span>存者之数</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 站三 · 香山 ============ -->
+<section class="station" id="s3">
+  <div class="wrap">
+    <div class="stahead"><span class="wpt">站三</span><h2>香山：美洛居</h2></div>
+    <div class="stasub">一场为一棵树打的战争</div>
+    <p class="prose">美洛居俗名讹作米六合，就是马鲁古群岛，丁香在东洋只此一地出产。库本在物产条里留了一句惊人的注：夷人拿丁香辟邪，说多摆几粒，国中便有王气。两个欧洲国家为它打了多年拉锯战：新来的和兰人，就是卷六单独立考的红毛番。</p>
+    <div class="spicerow">
+      <figure class="clovebox" id="clovebox" title="点丁香">
+        <svg width="120" height="150" viewBox="0 0 120 150" aria-hidden="true">
+          <path d="M60 78 C 42 92, 40 116, 60 132 C 80 116, 78 92, 60 78 Z" fill="rgba(168,58,48,.3)" stroke="rgba(168,58,48,.85)" stroke-width="1.4"/>
+          <path d="M60 78 L60 30" stroke="rgba(201,150,63,.8)" stroke-width="2" fill="none"/>
+          <circle cx="60" cy="26" r="7" fill="none" stroke="rgba(201,150,63,.8)" stroke-width="1.4"/>
+          <path d="M60 52 C 50 44, 44 44, 38 48 M60 52 C 70 44, 76 44, 82 48" stroke="rgba(201,150,63,.55)" stroke-width="1.2" fill="none"/>
+        </svg>
+        <figcaption>丁香一粒</figcaption>
+      </figure>
+      <div style="flex:1;min-width:260px">
+        <q class="q hidden" id="cloveq">东洋仅产于美洛居。夷人用以辟邪曰：多置此，则国有王气，故二夷之所必争</q>
+        <p class="note" id="clovenote">点一粒丁香，闻其王气。</p>
+      </div>
+    </div>
+    <p class="prose">战事胶着处，出来收场的竟是一个无名华人。库本只给了他七个字的评语，说他精明、有口才。点山，看这条分界线。</p>
+    <div class="mountain" id="mountain" title="点山分界">
+      <svg viewBox="0 0 560 220" aria-hidden="true">
+        <path class="mtn-h mtn-n" d="M40 180 L200 46 L262 108 L280 92 L330 140 L360 180 Z"/>
+        <path class="mtn-h mtn-s" d="M40 180 L200 46 L262 108 L280 92 L330 140 L360 180 Z"/>
+        <line class="mtnline" x1="30" y1="112" x2="370" y2="112"/>
+        <text class="mtnlab north" x="120" y="60">山北 · 和兰</text>
+        <text class="mtnlab south" x="240" y="204">山南 · 佛郎机</text>
+      </svg>
+    </div>
+    <q class="q">华人某者流寓彼中，慧而黠，有口辨，游说两国间分万老髙山，山半为界，山北属和兰，而山南属佛郎机，各罢兵，并雄兹土。</q>
+  </div>
+</section>
+
+<!-- ============ 站四 · 针路 ============ -->
+<section class="station" id="s4">
+  <div class="wrap">
+    <div class="stahead"><span class="wpt">站四</span><h2>针路：舟师考</h2></div>
+    <div class="stasub">一船人的名分与一条路的刻度</div>
+    <p class="prose">出海没有里程碑。张燮在卷九开篇写尽这种导航的孤独：离了海门，崖岸、村落、驿程一概无迹可循，全船性命系在一根磁针上。管针的人叫火长，一昼夜风顺为十更，水深用两臂张开为一托，一托一托探出来的，就是这张海图。</p>
+    <q class="q">海门以出，洄沫粘天，奔涛接汉，无复崖埃可寻、村落可志、驿程可计也。长年三老，鼔枻扬帆，截流横波，独恃指南针为导引，或单用或指两间，慿其所向。</q>
+    <p class="prose">一艘贾舶就是一家公司。舶主出资当家，商人附搭如蚁，下面各有人管账、管兵器、管爬桅杆、管锚、管帆索、管舵，而最尊的座位留给火长。</p>
+    <q class="q">每舶舶主为政，诸商人附之如蚁。</q>
+    <div class="crew" id="crew">
+      <button data-n="0">舶主</button>
+      <button data-n="1">财副</button>
+      <button data-n="2">总管</button>
+      <button data-n="3">直库</button>
+      <button data-n="4">阿班</button>
+      <button data-n="5">椗工</button>
+      <button data-n="6">缭工</button>
+      <button data-n="7">舵工</button>
+      <button data-n="8">火长</button>
+    </div>
+    <div class="duty" id="duty"><div id="dutyB"></div></div>
+    <div class="hidden" id="dutybank">
+      <div data-n="0"><h4>舶主</h4><p class="note">船东兼船长，舟中为政，众商附之。</p></div>
+      <div data-n="1"><h4>财副</h4><p class="note">司掌记，一笔一笔替全船记账的人。</p></div>
+      <div data-n="2"><h4>总管</h4><p class="note">全船事务的总调度，替舶主喊话发令，是船上的嗓门。</p></div>
+      <div data-n="3"><h4>直库</h4><p class="note">司战具。贾舶亦武备，弓矢刀楯都备，遇贼人自为卫。</p></div>
+      <div data-n="4"><h4>阿班</h4><p class="note">上樯桅者，全船飞得最高的人。</p></div>
+      <div data-n="5"><h4>椗工</h4><p class="note">司椗，分头椗二椗，抛锚起锚都听他们的。</p></div>
+      <div data-n="6"><h4>缭工</h4><p class="note">司缭，分大缭二缭，管帆索的松紧。</p></div>
+      <div data-n="7"><h4>舵工</h4><p class="note">二人更代掌舵。</p></div>
+      <div data-n="8"><h4>火长</h4><p class="note">司针者。海路茫茫，一针定行止，是全船的性命之官。</p></div>
+    </div>
+    <q class="q">上樯桅者，为阿班；司椗者，有头椗、二椗；司缭者，有大缭、二缭；司舵者，为舵工亦二人更代；其司针者名火长。</q>
+    <p class="prose">舟师考抄录了两条完整的针路。下图为西洋针路的头一段：从漳州太武山开洋，一路南下，取交址东京，就是安南的云屯海门。十二站，站站有针位与更数，点站名，听火长报路。</p>
+    <q class="q">舟大者，广可三丈五六尺，长十余丈；小者，广二丈，长约七八丈。</q>
+    <q class="q">造舶费可千余金，每还往岁一修辑，亦不下五六百金。</q>
+    <div class="chartspace">
+      <svg class="chartsvg" viewBox="0 0 860 300" aria-label="西洋针路示意">
+        <path class="sea-coast" d="M8 96 C 90 60, 150 40, 210 66 C 250 84, 260 120, 236 150 L 150 170 C 90 176, 30 150, 8 96 Z"/>
+        <path class="sea-path" d="M64 118 C 130 96, 170 116, 218 128 S 320 150, 392 142 S 540 118, 622 136 S 760 168, 826 150"/>
+        <g id="nodes"></g>
+      </svg>
+      <div class="chartpop"><h4 id="cpT">太武山</h4><div id="cpB"><p class="note">点航图上的站名，火长报针位。</p></div></div>
+    </div>
+    <div class="hidden" id="chartbank">
+      <div data-n="0"><h4>太武山</h4><q class="q">出大担门，半更船过此，用丁未针四更，取大小柑。</q></div>
+      <div data-n="1"><h4>大小柑</h4><q class="q">内打水十五托、外二十五托、用坤未针三更，取南澚坪。</q></div>
+      <div data-n="2"><h4>南澚坪</h4><q class="q">坪山者，逺望只一山，近有三门，西南边，一派沉礁与澚相连。内打水十八托，外打水二十五托。舶从外过，用坤申十五更，取大星尖。</q></div>
+      <div data-n="3"><h4>大星尖</h4><q class="q">内打水三十五托、外四十五托、用坤申针七更，过东姜山</q></div>
+      <div data-n="4"><h4>东姜山</h4><q class="q">对开打水四十五托，其前为弓鞋山。</q></div>
+      <div data-n="5"><h4>弓鞋山</h4><q class="q">山如弓鞋様，对开打水四十九托，内外俱可，过船其前为南亭门。</q></div>
+      <div data-n="6"><h4>南亭门</h4><q class="q">对开，打水四十七托，用单坤五更，取乌猪山。</q></div>
+      <div data-n="7"><h4>乌猪山</h4><q class="q">上有都公庙，舶过海中，具仪遥拜，请其神祀之，回用彩船送神。</q></div>
+      <div data-n="8"><h4>七州洋</h4><q class="q">俗传古是七州沉而成，海舶过，用牲粥祭海厉，不则为祟，舟过此极险，稍贪东，便是万里石塘</q><q class="q">七州洋打水一百三十托，若往交址东京，用单申针五更，取黎母山</q></div>
+      <div data-n="9"><h4>黎母山</h4><q class="q">五峰如指翠相连，撑起炎荒半壁天，夜盥银河摘星斗，朝探碧落弄云烟。</q><p class="note">丘浚咏黎母山诗，库本摘于针路条下。</p></div>
+      <div data-n="10"><h4>海宝山</h4><q class="q">用单亥针及干亥，由涂山海口五更，取鸡唱门，即安南云屯海门也。</q></div>
+      <div data-n="11"><h4>交址东京</h4><q class="q">东至海，西至老挝，南至占城，北至思明府。</q></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 站五 · 风信 ============ -->
+<section class="station" id="s5">
+  <div class="wrap">
+    <div class="stahead"><span class="wpt">站五</span><h2>风信：占验</h2></div>
+    <div class="stasub">一部没有仪器的天气预报</div>
+    <p class="prose">占验一卷是舵工的口诀集：占天、占云、占风、占日、占雾、占电、占海、占潮，八个门类，全是几百年海上人拿命换来的经验。库本自评这卷似解非解，似韵非韵。翻牌读之。</p>
+    <div class="omen" id="omen">
+      <div class="ocell"><div class="in">
+        <div class="oface front"><b>占天</b><span>看云色定时辰</span></div>
+        <div class="oface back"><p><q class="qv">朝看东南黒，势急午前雨，暮看西北黑，半夜看风雨。</q></p></div>
+      </div></div>
+      <div class="ocell"><div class="in">
+        <div class="oface front"><b>占云</b><span>鱼鳞天，风不轻</span></div>
+        <div class="oface back"><p><q class="qv">西北黑云生，雷雨必声訇，云势若鱼鳞，来朝风不轻。</q></p></div>
+      </div></div>
+      <div class="ocell"><div class="in">
+        <div class="oface front"><b>占风</b><span>朔望前后须记</span></div>
+        <div class="oface back"><p><q class="qv">望日二十三，飓风君可畏，七八必有风，讯头有风至。</q></p></div>
+      </div></div>
+      <div class="ocell"><div class="in">
+        <div class="oface front"><b>占日</b><span>日珥观风</span></div>
+        <div class="oface back"><p><q class="qv">早间日珥，狂风即起，申后日珥，明日有雨，一珥单日，两珥双起。</q></p></div>
+      </div></div>
+      <div class="ocell"><div class="in">
+        <div class="oface front"><b>占雾</b><span>三日雾蒙</span></div>
+        <div class="oface back"><p><q class="qv">雾收不起，细雨不止，三日雾蒙，必起狂风。</q></p></div>
+      </div></div>
+      <div class="ocell"><div class="in">
+        <div class="oface front"><b>占电</b><span>电光辨雨</span></div>
+        <div class="oface back"><p><q class="qv">电光西南，明日炎炎；电光西北，雨下连宿。</q></p></div>
+      </div></div>
+      <div class="ocell"><div class="in">
+        <div class="oface front"><b>占海</b><span>观水族动静</span></div>
+        <div class="oface back"><p><q class="qv">蝼蛅放洋，大雨难当，两日不至，三日无妨。</q></p></div>
+      </div></div>
+      <div class="ocell"><div class="in">
+        <div class="oface front"><b>占潮</b><span>月与潮汐</span></div>
+        <div class="oface back"><p><q class="qv">月上潮长，月没潮涨，大讯潮光，小讯月上。</q></p></div>
+      </div></div>
+    </div>
+    <p class="prose">逐月还有一张恶风时刻表，某日某时有大风雨，皆历历在册。库本在卷首自注，这一卷是望气观澜的实用之学。点几个月看看。</p>
+    <div class="months" id="months">
+      <button data-n="0" class="on">正月</button>
+      <button data-n="1">五月</button>
+      <button data-n="2">七月</button>
+      <button data-n="3">十月</button>
+    </div>
+    <div class="hidden" id="monthbank">
+      <div data-n="0"><q class="q">正月初十廿一日，乃大将军降日，逢大杀，午后有风，无风则雨。</q></div>
+      <div data-n="1"><q class="q">五月初十、十一、十九日，申酉时有大风雨。</q></div>
+      <div data-n="2"><q class="q">七月初七、初九、十五、廿七日，有大风。</q></div>
+      <div data-n="3"><q class="q">十月十五、十八、十九、廿七日，府君朝上帝，卯时有大风雨。</q></div>
+    </div>
+    <div id="monthshow"></div>
+    <p class="prose">船中奉三神：协天大帝、天妃、舟神，香火日夜不歇，还专设一人司香，不派别的事。天妃即湄洲林氏女，宣和五年路允迪奉使高丽，中途遇风暴，同行八船俱没，独其船得神佑保全，自此庙号顺济，累封至天妃。</p>
+    <q class="q">以上三神凡舶中来往，俱昼夜香火不绝。特命一人为司香，不他事事。</q>
+    <q class="q">宣和癸卯给事中、路允迪使髙丽，中流震风，八舟俱溺，独路所乘，神降于樯，竟无恙。使还奏闻，特赐庙号曰：顺济。</q>
+    <div class="firewall" id="firewall">
+      <div class="mastline"><span class="fire"></span></div>
+      <p class="note" style="text-align:center">海上惊险，桅顶或现火光，舟人谓之神警。点一下，焚香请火。</p>
+      <button class="hidebtn" id="fireBtn">请火</button>
+      <div class="verdict" id="verdict"></div>
+    </div>
+    <div class="hidden" id="firebank">
+      <q class="q" id="fireq">每舶中有惊险，则神必现灵，以警众，火光一点飞出舶上，众悉叩头，至火光更飞入幕乃止，是日善防之。</q>
+      <q class="q" id="fireq2">然毕竟有一事为验，或舟将不免，则火光必扬去，不肯归。</q>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 站六 · 潮信 ============ -->
+<section class="station" id="s6">
+  <div class="wrap">
+    <div class="stahead"><span class="wpt">站六</span><h2>潮信：地之喘息</h2></div>
+    <div class="stasub">一点原始而漂亮的海洋学</div>
+    <p class="prose">潮汐卷先驳旧说：海鳅出入、神龙变化、天河激涌，都是没见过海的人的胡猜。然后给出一句极清爽的答案。</p>
+    <q class="q">夫天地间，一气耳。海潮者，地之喘息耳。</q>
+    <p class="prose">漳人候潮，只用六个字在指掌上顺数，无毫发爽。点一个字，看潮到哪一步。</p>
+    <q class="q">夜则以月，昼则以时，于指掌中，从日起时顺数三位长，半满、退、半尽，以六字操之，无毫发爽。</q>
+    <div class="tidebox">
+      <svg viewBox="0 0 860 130" aria-hidden="true">
+        <path id="tidepath" d="M0 92 C 80 92, 120 40, 215 40 S 350 92, 430 92 S 565 40, 650 40 S 790 92, 860 92" fill="none" stroke="rgba(201,150,63,.75)" stroke-width="2"/>
+        <circle id="tidedot" cx="215" cy="40" r="5" fill="var(--gold)"/>
+      </svg>
+    </div>
+    <div class="tidewords" id="tidewords">
+      <button data-ch="长" data-x="8" data-y="112" class="on" aria-label="潮长"></button>
+      <button data-ch="半" data-x="120" data-y="76" aria-label="潮半"></button>
+      <button data-ch="满" data-x="215" data-y="40" aria-label="潮满"></button>
+      <button data-ch="退" data-x="320" data-y="76" aria-label="潮退"></button>
+      <button data-ch="半" data-x="430" data-y="112" aria-label="潮半"></button>
+      <button data-ch="尽" data-x="540" data-y="112" aria-label="潮尽"></button>
+    </div>
+    <div class="tidenote" id="tidenote">潮长：水渐涨，船缆渐紧。</div>
+    <p class="prose">还有渔者的方言版潮汐表，念起来像歌谣。</p>
+    <q class="q">初一、十五潮满正午、初八、廿三、满在早晩</q>
+    <q class="q">月上水翻流，月斜水半，月落水汐</q>
+  </div>
+</section>
+
+<!-- ============ 站七 · 税珰 ============ -->
+<section class="station" id="s7">
+  <div class="wrap">
+    <div class="stahead"><span class="wpt">站七</span><h2>税珰：高宷</h2></div>
+    <div class="stasub">这册手册最疼的一卷</div>
+    <p class="prose">万厯二十七年，皇帝把天下关税大权抓进内府，太监高宷衔命入闽督税，此后十六年，福建的海洋生意被这张嘴啃噬。凡例说，史书本有宦者的传，给税珰立考，是为了照方抓药。</p>
+    <q class="q">二十七年，上大榷天下关税，中贵人髙采衔命入闽，山海之输，半搜罗以进内府</q>
+    <div class="gaoled">
+      <h4>高宷在闽十六年</h4>
+      <q class="q">在闽一十六年，总得数十余万金，每进税银，杠数动逾百计</q>
+      <q class="q">所献皇上，曾不满百中之一耳</q>
+      <p class="note">弹章里算账：金珠宝玉派取无价，解京的杠银到德州就以半数冒充商货分路盗运，到雄县又把六七成搬进私宅。余下的都摊在八郡百姓头上。</p>
+      <q class="q">闽八郡多不食之土，民以贩鬻为生，人人而夺之、岁岁而刦之，非寃殒于刑逼，即自经于沟，渎比屋而是，呼号震天，君门万里，虽隔绝不闻。</q>
+    </div>
+    <p class="prose">至四十一年，朝廷终于撤高宷还，诏减洋税三成。但这册书对减税的诚意也不买账：当事者说，出海本是他自寻的险，不必议蠲；作者回答，害马既去，纵然少减也是实惠。随后他写下一句近乎文学的怜悯。</p>
+    <q class="q">四十一年，上采诸臣议，撤采铛还诏，减关税三分之一</q>
+    <q class="q">夫贾人占风犯涛，博十一于鳞介之国，幸而取赢，逺望故里关山，欣同隔世</q>
+    <div class="rx" id="rx" title="点方笺翻开">
+      <div class="rxfront">
+        <h4>良剂一帖</h4>
+        <div class="rxline"><span>病</span><span>税珰蠹国，劫官扰民</span></div>
+        <div class="rxline"><span>药引</span><span>史有宦者传</span></div>
+        <div class="rxline"><span>服法</span><span>点此方笺</span></div>
+      </div>
+      <div class="rxface">
+        <h4>逐珰疏</h4>
+        <div class="rxline"><span>君臣论税珰奏疏</span><span>数道</span></div>
+        <div class="rxline"><span>附</span><span>病者自阅，如谱良剂</span></div>
+        <div class="rxline"><span>忌</span><span>遗毒尚沿，赋减犹未减</span></div>
+        <div class="rxfoot">凡例 · 纪税珰者何</div>
+      </div>
+    </div>
+    <q class="q">间一展卷，如久病暂苏，追念呻吟；尝药之候，悲喜交集，乃国医之功，不可诬也。即附逐珰疏于后，如谱良剂焉。</q>
+  </div>
+</section>
+
+<!-- ============ 收帆 ============ -->
+<footer class="coda" id="coda">
+  <div class="wrap">
+    <div class="sealbig">东西洋考</div>
+    <p class="zhao">海波终有平处，人心之险无平。</p>
+    <p class="prose" style="max-width:40em;margin:0 auto 30px">卷九收梢，张燮以造车作比论善舟者，末了把满卷的风涛针路收进一句人心。四百年后读，仍旧是这本手册的总纲。</p>
+    <q class="q" style="max-width:36em;margin-left:auto;margin-right:auto">所可虑者，莫平于海波，而争利之心，为险耳。</q>
+    <div class="jiaozi">
+      <h3>校字记</h3>
+      <ul>
+        <li>库本以■〈牦，牙代未〉、■〈风贝〉等偏旁拆字式记难字，本页引文一律避开此类合成字。</li>
+        <li>万厯、万歴、厯歴混用，逺、逰、澚、寃、刄、寳、鼔、慿、椗、髙、黒等俗字异体，凡入引文皆照录不归一。</li>
+        <li>大仑山条「燃铜锐」之锐当为铳之讹，「死未晩」之晩为晚之异体，均照录。</li>
+        <li>占电条库本连书无标点，引文标点为导读所加；占风条库本以■〈风贝〉合成字记飓，引文据文义作飓风。</li>
+        <li>交址之址、叅戎之叅、様样之混、晩晚之别、黒黑并见，库本用字如旧照录。</li>
+      </ul>
+    </div>
+    <div class="pagefoot">
+      <p>文本来源：殆知阁简体库史藏地理〈东西洋考〉 · <a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a></p>
+      <p>本页引文经脚本与库内文件去标点、归一逐字比对通过；导读系列总目见 <a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">daizhige-daodu</a> 仓库 mulu.html</p>
+      <p>本书为明代海外贸易与航海记录，涉及各国风土的描述皆十六七世纪中式世界观的产物，华夷之辨、神异占验诸说均属时代局限，仅作史料与文本呈现，不代表今日之立场。</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* compass spin */
+  var hero=document.querySelector('.hero');
+  hero.addEventListener('click',function(){hero.classList.add('spin')});
+
+  /* 24 ring chars */
+  var ring=document.getElementById('ring24');
+  var chars='子癸丑艮寅甲卯乙辰巽巳丙午丁未坤申庚酉辛戌乾亥壬'.split('');
+  for(var i=0;i<24;i++){
+    var a=i*15*Math.PI/180,x=200+178*Math.sin(a),y=200-178*Math.cos(a);
+    var t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');
+    t.setAttribute('dominant-baseline','middle');t.textContent=chars[i];
+    ring.appendChild(t);
+  }
+
+  /* rail active */
+  var links=[].slice.call(document.querySelectorAll('.rail a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  function railUpd(){
+    var y=window.scrollY+innerHeight*0.4,cur=0;
+    secs.forEach(function(s,i){if(s.offsetTop<=y)cur=i});
+    links.forEach(function(a,i){a.classList.toggle('on',i===cur)});
+  }
+  addEventListener('scroll',railUpd,{passive:true});railUpd();
+
+  /* geng counter */
+  var gn=document.getElementById('gengN');
+  addEventListener('scroll',function(){
+    var max=document.documentElement.scrollHeight-innerHeight;
+    gn.textContent=Math.min(100,Math.round(scrollY/max*100));
+  },{passive:true});
+
+  /* stops */
+  var bank=document.getElementById('stopbank').children;
+  var snT=document.getElementById('snT'),snB=document.getElementById('snB');
+  function showStop(n){
+    snT.textContent='';snB.textContent='';
+    var src=bank[n].cloneNode(true);snB.appendChild(src);
+    snT.insertBefore(document.createTextNode(src.querySelector('h4').textContent),snT.firstChild);
+    src.removeChild(src.querySelector('h4'));
+  }
+  document.querySelectorAll('#stops .stop').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#stops .stop').forEach(function(x){x.classList.toggle('on',x===b)});
+      showStop(+b.dataset.n);
+    });
+  });
+  showStop(0);
+
+  /* ledger rows */
+  document.querySelectorAll('#ledger .lrow').forEach(function(r){
+    r.addEventListener('click',function(){
+      var q=r.nextElementSibling;
+      document.querySelectorAll('#ledger .lq').forEach(function(x){if(x!==q)x.classList.add('hidden')});
+      q.classList.toggle('hidden');
+      document.querySelectorAll('#ledger .lrow').forEach(function(x){x.classList.toggle('on',x===r&&q.classList.contains('hidden')===false)});
+    });
+  });
+
+  /* oxhide */
+  document.getElementById('hideBtn').addEventListener('click',function(){
+    document.getElementById('hideclip').classList.add('cut');
+    this.textContent='乞地称是';
+  });
+
+  /* night flash */
+  var np=document.getElementById('nightpanel');
+  np.addEventListener('click',function(){
+    np.classList.add('glow');
+    setTimeout(function(){np.classList.remove('glow')},90);
+  });
+
+  /* massacre */
+  document.getElementById('claimBtn').addEventListener('click',function(){
+    var t=document.getElementById('toll');
+    t.classList.remove('hidden');
+    this.setAttribute('disabled','');
+    this.style.opacity='.4';
+    var n=0,step=Math.ceil(25000/60);
+    var iv=setInterval(function(){
+      n+=step;if(n>=25000){n=25000;clearInterval(iv)}
+      document.getElementById('deadN').textContent=n.toLocaleString();
+    },26);
+    t.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+
+  /* clove */
+  var cq=document.getElementById('cloveq');
+  document.getElementById('clovebox').addEventListener('click',function(){
+    cq.classList.toggle('hidden');
+    document.getElementById('clovenote').style.display='none';
+  });
+
+  /* mountain */
+  document.getElementById('mountain').addEventListener('click',function(){
+    this.classList.toggle('split');
+  });
+
+  /* crew */
+  var db=document.getElementById('dutybank').children;
+  var dutyB=document.getElementById('dutyB');
+  function showDuty(n){
+    dutyB.textContent='';
+    dutyB.appendChild(db[n].cloneNode(true));
+  }
+  document.querySelectorAll('#crew button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#crew button').forEach(function(x){x.classList.toggle('on',x===b)});
+      showDuty(+b.dataset.n);
+    });
+  });
+  showDuty(8);
+  document.querySelector('#crew button[data-n="8"]').classList.add('on');
+
+  /* route chart */
+  var nodes=[
+    {n:'太武山',x:64,y:118},{n:'大小柑',x:150,y:104},{n:'南澚坪',x:218,y:128},
+    {n:'大星尖',x:300,y:146},{n:'东姜山',x:392,y:142},{n:'弓鞋山',x:478,y:128},
+    {n:'南亭门',x:548,y:122},{n:'乌猪山',x:622,y:136},{n:'七州洋',x:700,y:150},
+    {n:'黎母山',x:636,y:196},{n:'海宝山',x:756,y:180},{n:'交址东京',x:826,y:150}
+  ];
+  var cb=document.getElementById('chartbank').children;
+  var g=document.getElementById('nodes'),NS='http://www.w3.org/2000/svg';
+  var cpT=document.getElementById('cpT'),cpB=document.getElementById('cpB');
+  nodes.forEach(function(nd,i){
+    var c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',nd.x);c.setAttribute('cy',nd.y);c.setAttribute('r',7);
+    c.setAttribute('class','node');c.dataset.i=i;
+    var t=document.createElementNS(NS,'text');
+    t.setAttribute('x',nd.x);t.setAttribute('y',nd.y-13);t.setAttribute('text-anchor','middle');
+    t.setAttribute('class','nlabel');t.dataset.i=i;t.textContent=nd.n;
+    g.appendChild(c);g.appendChild(t);
+    function act(){
+      g.querySelectorAll('.node').forEach(function(x){x.classList.toggle('act',x===c)});
+      g.querySelectorAll('.nlabel').forEach(function(x){x.classList.toggle('act',x===t)});
+      cpT.textContent='';cpB.textContent='';
+      var src=cb[i].cloneNode(true);
+      cpT.textContent=nodes[i].n;
+      Array.prototype.slice.call(src.children).forEach(function(ch){
+        if(ch.tagName.toLowerCase()!=='h4')cpB.appendChild(ch);
+      });
+    }
+    c.addEventListener('click',act);t.addEventListener('click',act);
+    if(i===0){c.classList.add('act');t.classList.add('act');
+      var src=cb[0].cloneNode(true);
+      Array.prototype.slice.call(src.children).forEach(function(ch){
+        if(ch.tagName.toLowerCase()!=='h4')cpB.appendChild(ch);
+      });
+    }
+  });
+
+  /* omen flip */
+  document.querySelectorAll('.ocell').forEach(function(c){
+    c.addEventListener('click',function(){c.classList.toggle('flip')});
+  });
+
+  /* months */
+  var mb=document.getElementById('monthbank').children,ms=document.getElementById('monthshow');
+  function showMonth(n){
+    ms.textContent='';ms.appendChild(mb[n].cloneNode(true));
+  }
+  document.querySelectorAll('#months button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#months button').forEach(function(x){x.classList.toggle('on',x===b)});
+      showMonth(+b.dataset.n);
+    });
+  });
+  showMonth(0);
+
+  /* fire oracle */
+  var fw=document.getElementById('firewall'),vd=document.getElementById('verdict');
+  document.getElementById('fireBtn').addEventListener('click',function(){
+    fw.className='firewall';
+    void fw.offsetWidth;
+    var inw=Math.random()<0.68;
+    fw.classList.add('lit');
+    setTimeout(function(){fw.classList.add(inw?'in':'out')},900);
+    setTimeout(function(){
+      var fq=document.getElementById(inw?'fireq':'fireq2');
+      vd.textContent='';
+      var p=document.createElement('p');
+      p.textContent=inw?'火光飞入幕。':'火光扬去，不肯归。';
+      vd.appendChild(p);
+      var q=document.createElement('q');q.className='q';q.textContent=fq.textContent;
+      vd.appendChild(q);
+    },1700);
+  });
+
+  /* tide words */
+  var tn=document.getElementById('tidenote'),td=document.getElementById('tidedot');
+  var tideNotes=['潮长：水渐涨，船缆渐紧。','半：涨到一半，流势始紧。','满：潮平如镜，正可行船起椗。','退：水渐落，须防浅滩。','半：落到一半，港道见底。','尽：水尽汐止，泊船待长。'];
+  document.querySelectorAll('#tidewords button').forEach(function(b,i){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#tidewords button').forEach(function(x){x.classList.toggle('on',x===b)});
+      td.setAttribute('cx',b.dataset.x);td.setAttribute('cy',b.dataset.y);
+      tn.textContent=tideNotes[i];
+    });
+  });
+
+  /* rx flip */
+  document.getElementById('rx').addEventListener('click',function(){this.classList.toggle('open')});
+})();
+</script>
+</body>
+</html>
