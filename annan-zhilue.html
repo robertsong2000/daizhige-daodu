@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安南志略 · 汉阳北望 | 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --gold:#c9963f; --gold-dim:#8a6b32;
+  --dim:#a89f8d; --dim2:#6f695c; --line:#3a382f; --card:#22211d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;line-height:1.9;overflow-x:hidden}
+a{color:var(--gold)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+
+/* hero */
+.hero{min-height:94vh;display:flex;flex-wrap:wrap;align-items:stretch;position:relative;border-bottom:1px solid var(--line)}
+.vtitle{writing-mode:vertical-rl;height:max-content;max-height:88vh;padding:5vh 4vw 0 0;margin-left:auto;text-align:start}
+.vtitle h1{font-size:clamp(44px,7vw,84px);letter-spacing:.28em;font-weight:600}
+.vtitle .vsub{font-size:clamp(15px,1.6vw,20px);letter-spacing:.4em;color:var(--dim);margin-top:1.6em}
+.vtitle .vline{display:inline-block;margin-top:1.4em;writing-mode:vertical-rl;font-size:14px;letter-spacing:.3em;color:var(--gold-dim)}
+.vtitle.lit h1,.vtitle.lit .vsub{color:var(--paper)}
+.hero-art{flex:1 1 520px;min-width:320px;position:relative}
+.hero-art svg{position:absolute;inset:0;width:100%;height:100%}
+.hero-copy{position:absolute;left:5vw;bottom:7vh;max-width:520px;z-index:3}
+.kicker{font-size:13px;letter-spacing:.42em;color:var(--dim2);margin-bottom:1em}
+.hero-copy .lead{font-size:17px;color:var(--dim)}
+.hero-copy .lead q{color:var(--paper)}
+#gobtn{margin-top:1.4em;background:none;border:1px solid var(--gold);color:var(--gold);font:inherit;letter-spacing:.3em;padding:.55em 1.5em;cursor:pointer;transition:.3s}
+#gobtn:hover{background:var(--gold);color:var(--ink)}
+.seal{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border:2px solid var(--gold);color:var(--gold);font-size:20px;letter-spacing:2px;writing-mode:vertical-rl;transform:rotate(4deg);opacity:0;transition:.6s}
+.seal.on{opacity:.95}
+.hero-seal{position:absolute;right:8vw;bottom:9vh;z-index:3}
+
+/* layout */
+.wrap{max-width:1060px;margin:0 auto;padding:0 5vw}
+section{padding:11vh 0;border-bottom:1px solid var(--line)}
+h2.st{font-size:clamp(22px,2.6vw,30px);letter-spacing:.18em;margin-bottom:.5em}
+h2.st em{font-style:normal;color:var(--gold)}
+.st-note{color:var(--dim);font-size:15px;margin-bottom:2.6em;max-width:820px}
+
+/* S1 档案 */
+.dossier{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:start}
+.tags{display:flex;flex-direction:column}
+.tags button{background:none;border:none;border-bottom:1px solid var(--line);color:var(--dim);font:inherit;text-align:left;padding:1.05em .4em;cursor:pointer;letter-spacing:.08em;display:flex;gap:1em;transition:.25s}
+.tags button .n{color:var(--gold-dim);font-family:ui-monospace,monospace}
+.tags button:hover,.tags button.on{color:var(--paper)}
+.tags button.on{border-bottom-color:var(--gold)}
+.tagbody{margin-top:1.6em;min-height:6.5em}
+.tagbody p{font-size:17px}
+.tagbody p q{color:var(--paper);quotes:"「" "」"}
+.tagbody .src{display:block;margin-top:.6em;font-size:13px;color:var(--dim2);letter-spacing:.2em}
+.paper{background:var(--paper);color:#26241f;padding:2.2em 2em;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.paper .pt{font-size:13px;letter-spacing:.4em;color:var(--gold-dim);margin-bottom:1em}
+.paper p{font-size:16px;margin-bottom:1em}
+.paper p q{quotes:"《" "》"}
+.paper .foot{font-size:13px;color:#6d675c;margin-top:1.2em;letter-spacing:.1em}
+
+/* S2 潮汐 */
+.tides{position:relative}
+.tides svg{width:100%;height:230px;display:block}
+.gates{display:flex;flex-wrap:wrap;gap:12px;margin:1.6em 0 1.2em}
+.gates button{background:var(--card);border:1px solid var(--line);color:var(--dim);font:inherit;padding:.6em 1.3em;cursor:pointer;letter-spacing:.15em;transition:.25s}
+.gates button.on{border-color:var(--gold);color:var(--gold)}
+.tideread{min-height:9em}
+.tideread h3{font-size:17px;letter-spacing:.2em;color:var(--gold);margin-bottom:.7em}
+.tideread p{margin-bottom:.9em;font-size:16.5px}
+.tideread p q{color:var(--paper);quotes:"「" "」"}
+
+/* S3 官道 */
+.road{position:relative;margin:2.4em 0 1.4em;padding:2.2em 0}
+.track{height:2px;background:var(--line);position:relative}
+.track .done{position:absolute;left:0;top:0;height:2px;background:var(--gold);width:0;transition:width .6s}
+.posts{display:flex;justify-content:space-between;margin-top:-1.15em;flex-wrap:wrap;gap:8px 0}
+.post{background:none;border:none;color:var(--dim);font:inherit;cursor:pointer;width:19%;min-width:110px;text-align:center}
+.post .dot{display:block;width:13px;height:13px;border:2px solid var(--dim2);border-radius:50%;margin:0 auto .7em;background:var(--ink);transition:.3s}
+.post .nm{letter-spacing:.14em;font-size:15px}
+.post.on .dot{border-color:var(--gold);background:var(--gold)}
+.post.on{color:var(--paper)}
+.postread{min-height:8em;margin-top:1.8em}
+.postread p{font-size:16.5px;margin-bottom:.9em}
+.postread p q{color:var(--paper);quotes:"「" "」"}
+.postread .fx{color:var(--dim);font-size:14.5px}
+.roadseal{margin-top:1.6em}
+
+/* S4 对勘 */
+.duel .row{border:1px solid var(--line);margin-bottom:14px;background:var(--card)}
+.duel .head{display:flex;align-items:center;gap:14px;padding:.9em 1.2em;cursor:pointer}
+.duel .head .tagm{font-size:12.5px;letter-spacing:.25em;border:1px solid var(--gold-dim);color:var(--gold);padding:.15em .7em;flex:none}
+.duel .head .tagy{font-size:12.5px;letter-spacing:.25em;border:1px solid var(--dim2);color:var(--dim);padding:.15em .7em;flex:none}
+.duel .head p{color:var(--dim);transition:.3s}
+.duel .row.on .head p{color:var(--paper);text-decoration:line-through;text-decoration-color:var(--gold)}
+.duel .body{max-height:0;overflow:hidden;transition:max-height .5s}
+.duel .row.on .body{max-height:420px}
+.duel .body .in{padding:.4em 1.4em 1.4em;border-top:1px dashed var(--line)}
+.duel .body p{font-size:16px;color:var(--paper)}
+.duel .body p q{quotes:"「" "」";color:var(--gold)}
+
+/* S5 名籍 */
+.ledger{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+.reg h3{font-size:16px;letter-spacing:.3em;color:var(--gold);margin-bottom:1.1em}
+.reg h3 span{color:var(--dim2);font-size:13px}
+.reg .chips{display:flex;flex-wrap:wrap;gap:9px}
+.reg .chips button{background:none;border:1px solid var(--line);color:var(--dim);font:inherit;font-size:15px;padding:.35em 1em;cursor:pointer;transition:.25s;letter-spacing:.1em}
+.reg .chips button.on{border-color:var(--gold);color:var(--gold)}
+.regread{margin-top:1.3em;min-height:7.5em}
+.regread p{font-size:16px;margin-bottom:.8em}
+.regread p q{quotes:"「" "」";color:var(--paper)}
+.regread .src{font-size:13px;color:var(--dim2);letter-spacing:.18em}
+
+/* S6 雁信 */
+.letters{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;perspective:900px}
+.ltr{background:var(--card);border:1px solid var(--line);min-height:250px;cursor:pointer;position:relative;transition:transform .5s;transform-style:preserve-3d}
+.ltr.flip{transform:rotateY(180deg)}
+.ltr .face{position:absolute;inset:0;padding:1.2em;backface-visibility:hidden;display:flex;flex-direction:column}
+.ltr .front{align-items:flex-start;justify-content:space-between}
+.ltr .front .who{color:var(--gold);font-size:15px;letter-spacing:.15em}
+.ltr .front .ttl{color:var(--dim);font-size:13.5px;line-height:1.7}
+.ltr .front .bird{font-size:26px;color:var(--gold-dim)}
+.ltr .back{transform:rotateY(180deg);justify-content:center}
+.ltr .back p{font-size:14.5px;color:var(--paper)}
+.ltr .back p q{quotes:"「" "」";color:var(--paper)}
+.kexu{margin-top:2.6em}
+.kexu h4{font-size:15px;letter-spacing:.3em;color:var(--dim);margin-bottom:1em}
+.kexu .krow{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:1em}
+.kexu .krow button{background:var(--paper);color:#26241f;border:none;font:inherit;font-size:14.5px;padding:.4em 1em;cursor:pointer;letter-spacing:.08em}
+.kexu .krow button.on{background:var(--gold);color:var(--ink)}
+.kexu .kread{min-height:4.5em;font-size:16px}
+.kexu .kread p q{quotes:"「" "」"}
+
+/* 尾屏 */
+.coda{padding:12vh 0 8vh;position:relative}
+.coda .cols{display:flex;justify-content:center;gap:7vw;flex-wrap:wrap}
+.coda .vq{writing-mode:vertical-rl;height:max-content;font-size:clamp(16px,2vw,21px);letter-spacing:.32em;line-height:2.4;color:var(--paper)}
+.coda .vq small{color:var(--dim);font-size:.7em;letter-spacing:.28em;margin-top:1.5em}
+.coda .seal{margin:4vh auto 0}
+
+footer{padding:7vh 0 9vh;color:var(--dim2);font-size:13.5px;line-height:2}
+footer p{margin-bottom:.8em;max-width:900px}
+footer .xiaoji{color:#57523f}
+
+@media (max-width:760px){
+  .hero{min-height:auto;padding-bottom:6vh}
+  .vtitle{max-height:none;padding:4vh 5vw 0;margin:0 auto}
+  .vtitle h1{font-size:46px}
+  .hero-copy{position:static;padding:4vh 6vw 0;max-width:none}
+  .dossier,.ledger{grid-template-columns:1fr}
+  .letters{grid-template-columns:repeat(2,1fr)}
+  .posts{flex-direction:column;gap:14px;margin-top:1em}
+  .post{width:100%;text-align:left;display:flex;align-items:center;gap:12px}
+  .post .dot{margin:0}
+  .track{display:none}
+  .coda .cols{gap:9vw}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-art" aria-hidden="true">
+    <svg viewBox="0 0 960 560" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1d1c18"/><stop offset="1" stop-color="#191917"/>
+        </linearGradient>
+        <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2a281f"/><stop offset="1" stop-color="#20201a"/>
+        </linearGradient>
+      </defs>
+      <rect width="960" height="560" fill="url(#sky)"/>
+      <circle cx="700" cy="120" r="46" fill="none" stroke="#c9963f" stroke-opacity=".35" stroke-width="1.5"/>
+      <path d="M0,300 Q240,270 480,300 T960,300 V560 H0 Z" fill="url(#water)"/>
+      <g stroke="#c9963f" stroke-opacity=".18" stroke-width="1.2" fill="none" id="ripples">
+        <path d="M60,360 q40,-8 80,0 t80,0 t80,0"/>
+        <path d="M420,410 q40,-8 80,0 t80,0 t80,0"/>
+        <path d="M700,340 q36,-7 72,0 t72,0"/>
+      </g>
+      <g transform="translate(70,240)" opacity=".9"><g id="rider">
+        <g transform="scale(1.05)">
+          <path d="M0,44 q10,-26 34,-30 l58,-2 q26,2 40,20 l10,12 -8,4 -12,-8 q-16,16 -40,14 l-4,14 -10,0 -2,-14 -34,0 -4,14 -10,0 -2,-16 q-16,-2 -16,-8 Z" fill="#0f0f0d" stroke="#c9963f" stroke-opacity=".7" stroke-width="1.4"/>
+          <path d="M36,14 l-6,-22 6,-2 10,18" fill="none" stroke="#c9963f" stroke-opacity=".8" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="33" cy="-16" r="5" fill="#c9963f" fill-opacity=".85"/>
+          <path d="M0,44 l-14,10" stroke="#c9963f" stroke-opacity=".5" stroke-width="1.6" fill="none"/>
+        </g>
+        <rect x="-6" y="-40" width="10" height="42" fill="#2c2a22" stroke="#8a6b32" stroke-width="1"/>
+        <path d="M-1,-40 l14,6 -14,6 Z" fill="#c9963f"/>
+      </g></g>
+      <text x="80" y="470" fill="#6f695c" font-size="15" letter-spacing="6" font-family="serif">泸江</text>
+    </svg>
+  </div>
+  <div class="vtitle" id="vtitle">
+    <h1>安南志略</h1>
+    <div class="vsub">元 黎崱 撰</div>
+    <div class="vline">居于汉阳 以致其意</div>
+  </div>
+  <div class="hero-copy">
+    <div class="kicker">殆知阁简体库 · 史藏载记</div>
+    <p class="lead">交州人在汉阳，为回不去的故国写的二十卷档案。四库提要说他<q>以键志不伸而名冺乃撰此志以致其意</q>：故主的名字快被磨掉了，他索性把一整国写下来垫在底下。</p>
+    <button id="gobtn">解缆北上</button>
+  </div>
+  <div class="hero-seal"><span class="seal" id="hseal">东山</span></div>
+</header>
+
+<main class="wrap">
+
+<section id="s1">
+  <h2 class="st">一 · 立档人 <em>谁是黎崱</em></h2>
+  <p class="st-note">二十卷书前没有一篇自序，他的生平散在提要里、在书末的自叙里，也在他自己写给别人的诗题里。点签读档。</p>
+  <div class="dossier">
+    <div>
+      <div class="tags" id="tags">
+        <button class="on" data-k="0"><span class="n">壹</span>家世与字号</button>
+        <button data-k="1"><span class="n">贰</span>入仕之始</button>
+        <button data-k="2"><span class="n">叁</span>官至何处</button>
+        <button data-k="3"><span class="n">肆</span>北来之后</button>
+        <button data-k="4"><span class="n">伍</span>落籍之地</button>
+      </div>
+      <div class="tagbody" id="tagbody">
+        <p><q>崱字景髙号东山安南国人东晋交州刺史阮敷之后世居爱州</q><span class="src">卷首提要</span></p>
+      </div>
+    </div>
+    <div class="paper">
+      <div class="pt">四库全书总目提要 · 载记类</div>
+      <p><q>至元中世祖伐安南键率崱等出降其国邀击之键殁于军崱入朝授奉议大夫居于汉阳以键志不伸而名冺乃撰此志以致其意</q></p>
+      <p><q>盖安南文字通于中国其开科取士制亦略同故所叙述彬彬然具有条理不在髙丽史下</q></p>
+      <p class="foot">馆臣把这部书当成元史的对账本读，顺手夸了一句文风。真正写书的人，只在提要里出现了一个字：崱。</p>
+    </div>
+  </div>
+</section>
+
+<section id="s2">
+  <h2 class="st">二 · 三度南征 <em>潮汐簿</em></h2>
+  <p class="st-note">卷四征讨运饷，是一份从蒙古马蹄算到白藤江潮水的战报。点潮标读役。</p>
+  <div class="tides">
+    <svg viewBox="0 0 900 210" preserveAspectRatio="none" aria-hidden="true">
+      <rect width="900" height="210" fill="#1d1c17"/>
+      <path id="wline" d="M0,140 Q150,128 300,140 T600,140 T900,140 V210 H0 Z" fill="#232218"/>
+      <path d="M0,150 Q150,138 300,150 T600,150 T900,150" fill="none" stroke="#c9963f" stroke-opacity=".25" stroke-width="1.2"/>
+      <g id="marks">
+        <g data-m="0"><circle cx="110" cy="140" r="6" fill="#191917" stroke="#c9963f" stroke-width="2"/><text x="110" y="118" text-anchor="middle" fill="#c9963f" font-size="14" letter-spacing="3">癸丑</text></g>
+        <g data-m="1"><circle cx="340" cy="140" r="6" fill="#191917" stroke="#c9963f" stroke-width="2"/><text x="340" y="118" text-anchor="middle" fill="#c9963f" font-size="14" letter-spacing="3">甲申</text></g>
+        <g data-m="2"><circle cx="570" cy="140" r="6" fill="#191917" stroke="#c9963f" stroke-width="2"/><text x="570" y="118" text-anchor="middle" fill="#c9963f" font-size="14" letter-spacing="3">丁亥</text></g>
+        <g data-m="3"><circle cx="800" cy="140" r="6" fill="#191917" stroke="#c9963f" stroke-width="2"/><text x="800" y="118" text-anchor="middle" fill="#c9963f" font-size="14" letter-spacing="3">罢兵</text></g>
+      </g>
+    </svg>
+    <div class="gates" id="gates">
+      <button class="on" data-m="0">癸丑 · 1258 首征</button>
+      <button data-m="1">甲申 · 1284 再征</button>
+      <button data-m="2">丁亥 · 1287 三征</button>
+      <button data-m="3">戊子 · 罢兵</button>
+    </div>
+    <div class="tideread" id="tideread">
+      <h3>癸丑岁 · 乌兰哈达自云南来</h3>
+      <p>战象阵列前，十八岁的阿珠一箭定了调：<q>时太师子阿珠年十八率善射者射其象象惊奔反蹂其众大溃</q></p>
+      <p>大军临江不知深浅，元军拿箭当探针：<q>乃沿江仰空射之验箭堕水而不浮者知为浅处即以骑兵济马跃登岸</q>。次年陈王纳款，安南第一次入朝称臣。</p>
+    </div>
+  </div>
+</section>
+
+<section id="s3">
+  <h2 class="st">三 · 抱尸归北 <em>官道五亭</em></h2>
+  <p class="st-note">卷二十的叙事卷里，黎崱把自己写成了第三人称：一支败军，一条北去的官道，和一具他抱了几十里路的尸身。点亭读事，五亭走满，落印。</p>
+  <div class="road">
+    <div class="track"><span class="done" id="trackdone"></span></div>
+    <div class="posts" id="posts">
+      <button class="post on" data-p="0"><span class="dot"></span><span class="nm">清化诀别</span></button>
+      <button class="post" data-p="1"><span class="dot"></span><span class="nm">支凌遇伏</span></button>
+      <button class="post" data-p="2"><span class="dot"></span><span class="nm">北上演礼</span></button>
+      <button class="post" data-p="3"><span class="dot"></span><span class="nm">乱军救孤</span></button>
+      <button class="post" data-p="4"><span class="dot"></span><span class="nm">汉阳寓馆</span></button>
+    </div>
+    <div class="postread" id="postread">
+      <p>元军压到境上，主帅彰宪侯陈键力弱无援，把袍泽召到跟前说：<q>小不敌大弱不敌强防子归周良有以也余乃国孙其忍国覆身亡乎</q><span class="fx">（防，微字之讹，微子归周，库本如此）</span>。带着崱等几万人，一起降附。</p>
+    </div>
+    <div class="roadseal"><span class="seal" id="rseal">以致其意</span></div>
+  </div>
+</section>
+
+<section id="s4">
+  <h2 class="st">四 · 史官对勘 <em>提要的三处朱圈</em></h2>
+  <p class="st-note">馆臣拿〈元史〉与这部志对读，点出三处异同。点行，看朱圈划过谁的记载。</p>
+  <div class="duel" id="duel">
+    <div class="row"><div class="head"><span class="tagm">元史</span><span class="tagy">志曰</span><p>李公蕴夺国，从谁家起</p></div>
+      <div class="body"><div class="in"><p>志分丁、黎、李三世各立〈世家〉，末尾按得明白：<q>如李公蕴所夺是黎非丁</q>，黎氏三世三十年，天下是李公蕴从黎家手里拿走的。</p></div></div></div>
+    <div class="row"><div class="head"><span class="tagm">元史</span><span class="tagy">志曰</span><p>张怀侯、张宪侯皆世子之婿</p></div>
+      <div class="body"><div class="in"><p>志替两位宗室正名分：<q>张懐侯为国叔张宪侯为日烜兄子俱非壻</q>，一个是国叔，一个是侄子，都不是女婿。</p></div></div></div>
+    <div class="row"><div class="head"><span class="tagm">元史</span><span class="tagy">志曰</span><p>遗爱就国，安南戕害天使</p></div>
+      <div class="body"><div class="in"><p>至元十九年遣兵护送陈遗爱南还，志里记的是另一番狼狈：<q>至永平界安南勿纳遗爱惧夜先逃归世子废遗爱为庶人更足明史有脱漏</q>。</p></div></div></div>
+  </div>
+  <p class="st-note" style="margin-top:1.6em">三处朱圈，全部来自卷首提要：<q style="color:var(--gold)">所纪安南事实与元史列传多有异同</q>。一部降人的书，成了馆臣手里的勘误粉笔。</p>
+</section>
+
+<section id="s5">
+  <h2 class="st">五 · 两厢名籍 <em>客籍双册</em></h2>
+  <p class="st-note">卷十〈历代羁臣〉收北人客交州，卷十三〈内附侯王〉收南人寓汉阳：一部书里躺着两本侨民册。点名字读人。</p>
+  <div class="ledger">
+    <div class="reg">
+      <h3>北客南居 <span>卷十历代羁臣</span></h3>
+      <div class="chips" data-reg="0">
+        <button class="on" data-c="0">陈仲微</button>
+        <button data-c="1">曾渊子</button>
+        <button data-c="2">庾道愍</button>
+        <button data-c="3">张融</button>
+        <button data-c="4">许靖</button>
+      </div>
+      <div class="regread" id="regread0">
+        <p><q>生作南朝拒谏臣</q>，宋亡后他流寓安南，陈圣王以礼相待，<q>数年卒葬于安南</q>。<span class="src">卷十 · 陈仲微</span></p>
+      </div>
+    </div>
+    <div class="reg">
+      <h3>南人北居 <span>卷十三·内附</span></h3>
+      <div class="chips" data-reg="1">
+        <button class="on" data-c="0">陈益稷</button>
+        <button data-c="1">彰宪侯陈键</button>
+        <button data-c="2">陈文弄</button>
+        <button data-c="3">黎崱</button>
+      </div>
+      <div class="regread" id="regread1">
+        <p>太王第五子，随镇南王北来。<q>明年四月薨寿七十六葬于汉阳贺家山</q>，<q>帝悯其忠追谥忠懿王</q>。<span class="src">卷十三 · 陈益稷</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s6">
+  <h2 class="st">六 · 雁信与科第 <em>两个方向的书</em></h2>
+  <p class="st-note">卷十七至二十收元使与安南君臣的唱和，卷十四记安南的学制与贡举：一条驿路上跑的，从来不止是诏书。点笺翻读。</p>
+  <div class="letters" id="letters">
+    <div class="ltr"><div class="face front"><span class="who">安南世子</span><span class="bird">雁</span><span class="ttl">请大藏经表<br>卷六</span></div>
+      <div class="face back"><p><q>如入暗室而无慧炬如济苦海而失慈航</q>，请经既得：<q>自天而下赐万五千余卷之经遵海而南救百姓亿兆民之苦</q>。</p></div></div>
+    <div class="ltr"><div class="face front"><span class="who">安南世子</span><span class="bird">雁</span><span class="ttl">和李思衍韵<br>卷十七</span></div>
+      <div class="face back"><p>不来朝的病，被使臣的诗逼成一句自嘲：<q>自顾不才慙锡土只缘多病欠朝天</q>。</p></div></div>
+    <div class="ltr"><div class="face front"><span class="who">张显卿 梁曾</span><span class="bird">雁</span><span class="ttl">使安南诗<br>卷十七十八</span></div>
+      <div class="face back"><p>两位尚书留下一句一样的话：<q>安南虽小文章在未可轻谈井底蛙</q>；梁曾又夸同僚：<q>已全苏武天边节又得张骞海外槎</q>。</p></div></div>
+    <div class="ltr"><div class="face front"><span class="who">陈刚中</span><span class="bird">雁</span><span class="ttl">郎中诗<br>卷十七</span></div>
+      <div class="face back"><p>使路上最疼的一封家书：<q>老母越南垂白髪病妻燕北待黄昏蛮烟瘴雨交州客三处相思一梦魂</q>。</p></div></div>
+    <div class="ltr"><div class="face front"><span class="who">董文用</span><span class="bird">雁</span><span class="ttl">送李两山绝句<br>卷十八</span></div>
+      <div class="face back"><p>翰林送行的诗里，藏着这部书最早的读者预言：<q>好将一卷交州稿刻在天台鴈荡中</q>。</p></div></div>
+  </div>
+  <div class="kexu">
+    <h4>科第牌 · 卷十四学校</h4>
+    <div class="krow" id="krow">
+      <button class="on" data-k="0">会昌名额</button>
+      <button data-k="1">三岁一选</button>
+      <button data-k="2">李琴告状</button>
+      <button data-k="3">日南张重</button>
+    </div>
+    <div class="kread" id="kread">
+      <p>唐朝给安南的科举名额写在举格里：<q>唐防昌五年举格节文安南所送进士不得过八人明经不得过十人</q>。</p>
+    </div>
+  </div>
+</section>
+
+<section class="coda">
+  <div class="cols">
+    <div class="col"><div class="vq">乗闲缀缉旧所闻<br>写作安南风土志</div><small>卷二十图志歌</small></div>
+    <div class="col"><div class="vq">太平日乆重儒风礼乐衣冠畧初似<br>皇元一统自古无徳服万邦恩泽被</div><small>卷二十图志歌</small></div>
+    <div class="col"><div class="vq">是知著述之功其力大矣</div><small>卷十六杂记</small></div>
+  </div>
+  <div style="text-align:center"><span class="seal on" style="opacity:.9">东山</span></div>
+</section>
+
+</main>
+
+<footer>
+  <p>本篇为殆知阁导读系列第454篇，<a href="mulu.html">返回总目</a>。文本来源：殆知阁简体库〈安南志略〉史藏载记库本（元黎崱撰，二十卷，去空白约六万七千字）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+  <p class="xiaoji">校字记：库本用字照录，畧（略）、歳（岁）、乗（乘）、乆（久）、濵（滨）、鴈（雁）、髙（高）、壻（婿）、闗（关）、防（多处为微、会、虑之讹，均不归一）；□为库本私用区残字，引文避让；防子归周之防，即微子之微，卷十三侯王传与卷二十自叙两见。黎崱卒年、葬地等行实系于外缘文献，不入引文。时代局限：本书以元朝为正统立言，称安南君臣为僣、为逆，所记战事全出王师一面之词；四库馆臣的考据同样站在清廷立场。这些叙事位置本身是史料，本篇照录立此存照，不代今人立论。引文经脚本与库内文件去标点、归一逐字比对通过（五十四处申报，白话反扫六字窗零撞）。</p>
+</footer>
+
+<div id="qb" hidden aria-hidden="true">
+  <div class="qbi" data-g="tag" data-k="0"><p><q>崱字景髙号东山安南国人东晋交州刺史阮敷之后世居爱州</q><span class="src">卷首提要</span></p></div>
+  <div class="qbi" data-g="tag" data-k="1"><p>爱州人家把他过继给外祖舅黎琫，<q>幼与黎琫为子因从其姓九岁试童科</q>，从此姓黎。<span class="src">卷首提要</span></p></div>
+  <div class="qbi" data-g="tag" data-k="2"><p>在陈太王身边诵诗长大，仕途一路做到：<q>仕至侍郎迁佐静海军节使彰宪上侯幕</q>。<span class="src">卷二十叙事</span></p></div>
+  <div class="qbi" data-g="tag" data-k="3"><p>北来十年后才成家：<q>崱来中州十歳始娶前国宗女李氏</q>，娶的仍是流亡朝廷的宗室之女。<span class="src">卷二十叙事</span></p></div>
+  <div class="qbi" data-g="tag" data-k="4"><p>全家落在哪里，一笔就写完：<q>崱众还居汉阳</q>。这四个字，是他此后三十年的人间。<span class="src">卷二十叙事</span></p></div>
+
+  <div class="qbi" data-g="tide" data-k="0"><h3>癸丑岁 · 乌兰哈达自云南来</h3><p>战象阵列前，十八岁的阿珠一箭定了调：<q>时太师子阿珠年十八率善射者射其象象惊奔反蹂其众大溃</q></p><p>大军临江不知深浅，元军拿箭当探针：<q>乃沿江仰空射之验箭堕水而不浮者知为浅处即以骑兵济马跃登岸</q>。次年陈王纳款，安南第一次入朝称臣。</p></div>
+  <div class="qbi" data-g="tide" data-k="1"><h3>甲申岁 · 镇南王南下</h3><p>世子拒命，朝廷把六事旧账翻出来摊牌：<q>尔诚思与其岭海偷生无虑兵祸曷若来庭归命宠被荣还二策之间孰得孰失</q></p><p>这一役元军名将索多殁于阵：<q>索多跃马堕水死军遂陷</q>；被俘的军官小李自刎，世子反倒救了他：<q>独小李战拒单舸于后战不胜自刎世子义令人救治而厚遇之</q>。彰宪侯陈键就在这场仗里率众降元，黎崱随行。</p></div>
+  <div class="qbi" data-g="tide" data-k="2"><h3>丁亥岁 · 再兴师，白藤江</h3><p>粮道先断：<q>乌玛喇自领精兵逆战樊防政获峰为应潮退军陷</q>。安南人在路上掘阱，再守女儿关，把元军拖进雨季。</p><p>神弩总管只说了五个字：<q>神弩总管贾若愚献言曰师可还不可守</q>。三征至此，再无第四征。</p></div>
+  <div class="qbi" data-g="tide" data-k="3"><h3>戊子岁 · 诏罢兵</h3><p>成宗即位，一纸诏书收场，条件只剩一条：<q>汝能亲赴阙庭其王爵符印朕所不惜土地人民庶永保之</q></p><p>仗打完了，人还在路上。正是这三年三征，把黎崱从爱州卷到了汉阳。</p></div>
+
+  <div class="qbi" data-g="post" data-k="0"><p>元军压到境上，主帅彰宪侯陈键力弱无援，把袍泽召到跟前说：<q>小不敌大弱不敌强防子归周良有以也余乃国孙其忍国覆身亡乎</q><span class="fx">（防，微字之讹，微子归周，库本如此）</span>。带着崱等几万人，一起降附。</p></div>
+  <div class="qbi" data-g="post" data-k="1"><p>入朝的驿马行至支凌寨，故国的追兵夜里杀到：<q>伴使遇彰宪鏖战势逼戕马上崱抱尸驰数十里出丘温瘗之</q>。陈键死于其国人之手，替他背尸身突围的，是黎崱。</p></div>
+  <div class="qbi" data-g="post" data-k="2"><p>北上的降臣入见，授爵有差：黎崱<q>祗受勅牒奉事郎遥授同知安暹州事</q>。同降的陈益稷封安南国王，身后<q>帝悯其忠追谥忠懿王</q>，葬在汉阳。</p></div>
+  <div class="qbi" data-g="post" data-k="3"><p>三征再起，溃军里救下一位九岁的宗室：<q>黎晏马上抱安南王九歳男大叔侯共六十余骑杀其守闗卒而北</q>，崱把自己的马换给他：<q>崱以自乗壮马换与晏等骑</q>。脱险之后，长他七岁的黎晏执子侄礼：<q>晏长崱七歳拜崱为父</q>。</p></div>
+  <div class="qbi" data-g="post" data-k="4"><p>战事平息，这支人马留在了长江边：<q>崱众还居汉阳</q>。客死的闽中旧友朱凯无人收葬，<q>崱哀无所归买凤栖山地殡之</q>。他自己则在这里住到老。</p></div>
+
+  <div class="qbi" data-g="reg0" data-k="0"><p><q>生作南朝拒谏臣</q>，宋亡后他流寓安南，陈圣王以礼相待，<q>数年卒葬于安南</q>。<span class="src">卷十 · 陈仲微</span></p></div>
+  <div class="qbi" data-g="reg0" data-k="1"><p>贬到雷州的宋臣，崖山之后又漂去安南。客中见进奉使北还，口占一首：<q>安南莫道是天涯歳歳人从蓟北回江北江南亲故满三年不寄一书来</q><span class="src">卷十六 · 曾渊子诗</span></p></div>
+  <div class="qbi" data-g="reg0" data-k="2"><p>襁褓中与生母失散，长大后一路寻到交州。某夜借宿，一位负薪老妪进门，心头一动：<q>尝入一村日暮骤雨即寄止其家俄有一妪负薪还道愍心动因访之乃其母也遂相持号泣见者莫不挥泪</q><span class="src">卷十 · 庾道愍</span></p></div>
+  <div class="qbi" data-g="reg0" data-k="3"><p>海船遇风，他不慌不忙咏了一句：<q>干鱼可自还乡肉脯何为者哉</q>。鱼干都能自己回乡，人倒回不去了。<span class="src">卷十 · 张融</span></p></div>
+  <div class="qbi" data-g="reg0" data-k="4"><p>避乱南奔的汝南名士，给曹操的信里写道：<q>浮涉沧海南至交州歴东瓯经行万里不见汉地</q>。一封信里全是路，就是没有一段汉地。<span class="src">卷十 · 许靖</span></p></div>
+
+  <div class="qbi" data-g="reg1" data-k="0"><p>太王第五子，随镇南王北来。<q>明年四月薨寿七十六葬于汉阳贺家山</q>，<q>帝悯其忠追谥忠懿王</q>。<span class="src">卷十三 · 陈益稷</span></p></div>
+  <div class="qbi" data-g="reg1" data-k="1"><p>黎崱的主帅。诀别、降附、死于追兵；抱尸数十里、把他安葬在丘温的，是黎崱。这部书替他留了两篇传。<span class="src">卷十三 · 陈键</span></p></div>
+  <div class="qbi" data-g="reg1" data-k="2"><p>国叔统兵，挈家内附，官至中大夫。客死北方，葬地离陈益稷不远：<q>明年二月卒葬于汉阳马家湖子孙时祀不绝</q>。<span class="src">卷十三 · 陈文弄</span></p></div>
+  <div class="qbi" data-g="reg1" data-k="3"><p>撰者本人。他在书末给自己留了一首〈内附〉：<q>中朝一统有今日南国小臣如此江</q>。又在重九日写诗悼陈键：<q>纷纷蜂蝶知春事明日秋风好付谁</q>；挽歌里说：<q>西门旧路花应白南国新阡草易青无限越吟招不得</q><span class="src">卷十九 · 崱诗</span></p></div>
+
+  <div class="qbi" data-g="kexu" data-k="0"><p>唐朝给安南的科举名额写在举格里：<q>唐防昌五年举格节文安南所送进士不得过八人明经不得过十人</q>。</p></div>
+  <div class="qbi" data-g="kexu" data-k="1"><p>安南立国后自设贡举：<q>李氏设科举法三歳一选状元榜眼探花即为典故给章服驺从以荣其归</q>。</p></div>
+  <div class="qbi" data-g="kexu" data-k="2"><p>汉末交州人李琴到洛阳宿卫，在正旦大典上告状：<q>琴曰南越偏不为皇天所覆厚地所载</q>，南越出一人才，都是朝廷白捡的。</p></div>
+  <div class="qbi" data-g="kexu" data-k="3"><p>日南人张重入洛，明帝问他日南的太阳是不是北向而视。他答日在哪里，影子就在人脚下：<q>日亦在东井耳至于风气暄暖日影仰于民之上</q>。学校卷记这一路人物：<q>汉唐时尝贡进士明经者李琴张重姜公辅是也</q>。</p></div>
+</div>
+
+<script>
+(function(){
+  var $=function(s,c){return (c||document).querySelector(s)};
+  var $$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+  var qb=function(g,k){var el=document.querySelector('#qb .qbi[data-g="'+g+'"][data-k="'+k+'"]');return el?el.innerHTML:''};
+
+  /* hero */
+  $('#gobtn').addEventListener('click',function(){
+    this.disabled=true;this.style.opacity=.25;
+    var r=$('#rider');
+    r.style.transition='transform 3.6s ease-in-out';
+    requestAnimationFrame(function(){ r.style.transform='translateX(560px)'; });
+    setTimeout(function(){$('#vtitle').classList.add('lit')},1400);
+    setTimeout(function(){$('#hseal').classList.add('on')},3200);
+  });
+
+  /* S1 tags */
+  $$('#tags button').forEach(function(b){
+    b.addEventListener('click',function(){
+      $$('#tags button').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      $('#tagbody').innerHTML=qb('tag',b.dataset.k);
+    });
+  });
+
+  /* S2 tides */
+  $$('#gates button').forEach(function(b){
+    b.addEventListener('click',function(){
+      $$('#gates button').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      $('#tideread').innerHTML=qb('tide',b.dataset.m);
+    });
+  });
+
+  /* S3 road */
+  var visited={0:true},stamp=$('#rseal');
+  function paint(){$('#trackdone').style.width=(Object.keys(visited).length/5*100)+'%';}
+  paint();
+  $$('#posts .post').forEach(function(b){
+    b.addEventListener('click',function(){
+      $$('#posts .post').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      $('#postread').innerHTML=qb('post',b.dataset.p);
+      visited[b.dataset.p]=true;paint();
+      if(Object.keys(visited).length===5)stamp.classList.add('on');
+    });
+  });
+
+  /* S4 duel */
+  $$('#duel .row .head').forEach(function(h){
+    h.addEventListener('click',function(){h.parentNode.classList.toggle('on')});
+  });
+
+  /* S5 ledger */
+  $$('.reg .chips').forEach(function(box){
+    var g=box.dataset.reg;
+    $$('button',box).forEach(function(b){
+      b.addEventListener('click',function(){
+        $$('button',box).forEach(function(x){x.classList.remove('on')});
+        b.classList.add('on');
+        $('#regread'+g).innerHTML=qb('reg'+g,b.dataset.c);
+      });
+    });
+  });
+
+  /* S6 letters */
+  $$('#letters .ltr').forEach(function(l){
+    l.addEventListener('click',function(){l.classList.toggle('flip')});
+  });
+  $$('#krow button').forEach(function(b){
+    b.addEventListener('click',function(){
+      $$('#krow button').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      $('#kread').innerHTML=qb('kexu',b.dataset.k);
+    });
+  });
+})();
+</script>
+</body>
+</html>
