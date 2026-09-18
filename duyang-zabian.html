@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>〈杜阳杂编〉导读 · 殆知阁</title>
+<style>
+  :root{
+    --ink:#191917; --panel:#201f1b; --panel2:#26241f;
+    --paper:#e8e4dc; --dim:#a89e8d; --faint:#6f685c;
+    --gold:#c9963f; --gold-dim:#8a6a2e; --gold-ghost:rgba(201,150,63,.13);
+    --seal:#c0453c; --line:#3a362e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--ink); color:var(--paper);
+    font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    line-height:1.9; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  .mono{font-family:"SF Mono",Menlo,Consolas,"PingFang SC",monospace}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 26px}
+  a{color:var(--gold);text-decoration:none}
+  em{font-style:normal;color:var(--gold)}
+  q{quotes:none}
+  .q, .qv{color:var(--paper)}
+
+  /* ============ 首屏：火漆封缄 ============ */
+  .gate{position:fixed;inset:0;z-index:60;background:var(--ink);display:flex;
+    flex-direction:column;align-items:center;justify-content:center;gap:30px;
+    transition:opacity .9s ease, visibility .9s;}
+  .gate.open{opacity:0;visibility:hidden;pointer-events:none}
+  .gate::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(60% 45% at 50% 42%, var(--gold-ghost), transparent 70%)}
+  .ghost{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    font-size:min(70vmin,560px);font-weight:700;color:transparent;line-height:1;
+    -webkit-text-stroke:1.5px rgba(201,150,63,.14);user-select:none;pointer-events:none}
+  .seal{position:relative;width:210px;height:210px;border-radius:50%;cursor:pointer;
+    background:radial-gradient(circle at 38% 32%, #d15a4f, var(--seal) 55%, #8e2f28);
+    box-shadow:0 0 0 10px rgba(201,150,63,.16), 0 0 0 11px rgba(201,150,63,.5),
+      0 18px 50px rgba(0,0,0,.7), inset 0 -8px 22px rgba(0,0,0,.35);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .4s ease}
+  .seal:hover{transform:scale(1.04)}
+  .seal span{writing-mode:vertical-rl;font-size:34px;letter-spacing:7px;line-height:1;
+    color:rgba(20,16,12,.82);font-weight:700;text-shadow:0 1px 0 rgba(255,235,200,.18)}
+  .seal::after{content:"";position:absolute;inset:16px;border-radius:50%;
+    border:2px solid rgba(20,16,12,.28)}
+  .hint{color:var(--dim);letter-spacing:6px;font-size:14px}
+  .gtitle{text-align:center;position:relative}
+  .gtitle .kick{color:var(--gold);font-size:14px;letter-spacing:8px}
+  .gtitle h1{font-size:52px;letter-spacing:16px;margin:10px 0 6px;font-weight:700}
+  .gtitle p{color:var(--dim);font-size:15px;letter-spacing:3px}
+
+  /* ============ 卷首 ============ */
+  .juan{padding:86px 0 30px;position:relative}
+  .juan .row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:24px 26px}
+  .card h3{color:var(--gold);font-size:17px;letter-spacing:3px;margin-bottom:10px}
+  .card p{color:var(--dim);font-size:15px}
+  .card .big{font-size:30px;color:var(--paper);font-weight:700;letter-spacing:2px}
+
+  /* ============ 进奉簿：朝代签轨 ============ */
+  .ledger{padding:40px 0 10px}
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin:26px 0 18px}
+  .sec-head h2{font-size:26px;letter-spacing:6px;font-weight:700}
+  .sec-head .sub{color:var(--faint);font-size:13px;letter-spacing:2px}
+  .rail{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 26px}
+  .rail button{
+    background:var(--panel);border:1px solid var(--line);color:var(--dim);
+    font-family:inherit;font-size:15px;letter-spacing:3px;padding:9px 16px 9px 19px;
+    border-radius:6px;cursor:pointer;position:relative;transition:.25s}
+  .rail button:hover{color:var(--paper);border-color:var(--gold-dim)}
+  .rail button.cur{color:var(--ink);background:var(--gold);border-color:var(--gold);
+    font-weight:700}
+  .reign{display:none;animation:fadein .45s ease}
+  .reign.cur{display:block}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .tags{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .tag{background:linear-gradient(180deg,var(--panel) 0%,#1d1c18 100%);
+    border:1px solid var(--line);border-radius:8px;padding:20px 18px 16px;
+    position:relative}
+  .tag::before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);
+    width:9px;height:9px;border-radius:50%;background:var(--ink);
+    border:2px solid var(--gold-dim)}
+  .tag .nm{display:block;text-align:center;font-size:19px;letter-spacing:2px;
+    color:var(--paper);font-weight:700;margin-top:6px}
+  .tag .nm .gv{font-size:12px;color:var(--gold);letter-spacing:2px;display:block;
+    font-weight:400;margin-bottom:2px}
+  .tag p{color:var(--dim);font-size:13.5px;line-height:1.85;margin-top:10px;
+    text-align:center}
+  .tag .src{display:block;text-align:center;color:var(--faint);font-size:12px;
+    margin-top:8px;letter-spacing:2px}
+  .tag p q, .pair p q{display:block;text-align:left;margin-top:8px;padding-top:6px;
+    border-top:1px dashed var(--line);color:#cfc6b6;font-size:13.5px;line-height:1.8}
+
+  /* ============ 宝异四卡 ============ */
+  .rarer{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:30px 0}
+  .rare{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:26px 28px}
+  .rare h3{font-size:20px;letter-spacing:4px;color:var(--paper);margin-bottom:4px}
+  .rare .from{color:var(--gold);font-size:13px;letter-spacing:2px}
+  .rare p{color:var(--dim);font-size:14.5px;margin-top:12px}
+  .rare blockquote{margin-top:14px;border-left:3px solid var(--gold-dim);
+    padding:6px 0 6px 16px;color:var(--paper);font-size:15px}
+  .clothbox{margin-top:14px;border:1px solid var(--line);border-radius:8px;
+    padding:14px;background:#1b1a16}
+  .cloth{height:64px;border-radius:6px;margin-bottom:12px;
+    background:linear-gradient(90deg,#7c4a93,#b4433a,#c9963f,#3f7d55);
+    background-size:300% 100%;transition:all .8s ease;width:100%}
+  .cloth.fire{background:linear-gradient(90deg,#4a4740,#5a564d,#4a4740);
+    width:22%;margin-left:0}
+  .cbtns{display:flex;gap:10px}
+  .cbtns button{flex:1;background:var(--panel2);border:1px solid var(--line);
+    color:var(--dim);font-family:inherit;font-size:14px;letter-spacing:3px;
+    padding:8px 0;border-radius:6px;cursor:pointer}
+  .cbtns button.cur{color:var(--ink);background:var(--gold);border-color:var(--gold);
+    font-weight:700}
+  .board{margin-top:14px;position:relative;height:170px;border-radius:6px;
+    background:#c9a86a;
+    background-image:radial-gradient(#00000022 1.1px, transparent 1.3px);
+    background-size:15.5px 15.5px;background-position:12px 12px;
+    border:1px solid var(--gold-dim)}
+  .st{position:absolute;width:15px;height:15px;border-radius:50%;transform:translate(-50%,-50%)}
+  .st.b{background:#171512;box-shadow:0 1px 2px #00000066}
+  .st.w{background:#efe9dc;box-shadow:0 1px 2px #00000044}
+
+  /* ============ 同昌公主金册 ============ */
+  .golden{margin:44px 0 10px;border-radius:14px;padding:46px 0 40px;
+    background:
+      radial-gradient(80% 50% at 50% 0%, rgba(201,150,63,.16), transparent 70%),
+      linear-gradient(180deg,#221f18,#1b1915);
+    border-top:1px solid var(--gold-dim);border-bottom:1px solid var(--gold-dim)}
+  .golden .sec-head h2{color:var(--gold)}
+  .glead{color:var(--dim);font-size:15px;max-width:760px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 8px}
+  .chips .qv{background:#1d1b15;border:1px solid var(--gold-dim);color:var(--paper);
+    border-radius:20px;padding:5px 16px;font-size:14px;letter-spacing:2px;cursor:pointer;
+    transition:.25s}
+  .chips .qv:hover{background:var(--gold);color:var(--ink)}
+  .chips .qv.sel{background:var(--gold);color:var(--ink);font-weight:700}
+  .dream{margin-top:16px;border:1px dashed var(--gold-dim);border-radius:8px;
+    padding:18px 22px;display:none}
+  .dream.show{display:block;animation:fadein .5s ease}
+  .dream p{color:var(--dim);font-size:14.5px}
+  .pairs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+  .pair{background:#1d1b15;border:1px solid var(--line);border-radius:8px;padding:18px 20px}
+  .pair .h{color:var(--gold);font-size:15px;letter-spacing:3px;margin-bottom:6px}
+  .pair p{color:var(--dim);font-size:14px}
+  .bigquote{margin:26px 0 0;text-align:center}
+  .bigquote .q{font-size:19px;letter-spacing:2px;line-height:2.1;display:block}
+
+  /* ============ 佛骨 ============ */
+  .bones{padding:46px 0 20px}
+  .bones .duo{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+  .bone{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+    padding:20px 22px}
+  .bone .h{color:var(--seal);font-size:16px;letter-spacing:4px;font-weight:700}
+  .bone p{color:var(--dim);font-size:14.5px;margin-top:8px}
+  .finale{margin-top:34px;text-align:center}
+  .finale .q{display:block;font-size:22px;letter-spacing:3px;line-height:2.2;
+    color:var(--paper)}
+  .finale .src{display:block;color:var(--faint);font-size:12.5px;margin-top:10px;
+    letter-spacing:3px}
+
+  /* ============ 尾屏 ============ */
+  .vsign{padding:80px 0 90px;display:flex;justify-content:center;align-items:flex-start;
+    gap:34px}
+  .vcol{writing-mode:vertical-rl;height:max-content;display:flex;gap:22px}
+  .vbig{font-size:54px;letter-spacing:18px;font-weight:700;color:var(--paper);
+    line-height:1.4}
+  .vsmall{color:var(--dim);font-size:14px;letter-spacing:6px;line-height:2}
+  .vseal{writing-mode:horizontal-tb;align-self:flex-start;width:58px;height:58px;
+    background:var(--seal);border-radius:6px;color:#140f0c;display:flex;
+    align-items:center;justify-content:center;font-size:20px;font-weight:700;
+    letter-spacing:2px;line-height:1.3;text-align:center;flex-direction:column}
+
+  /* ============ 页脚 ============ */
+  .foot{border-top:1px solid var(--line);padding:34px 0 46px}
+  .foot p{color:var(--faint);font-size:13px;line-height:2}
+  .foot a{color:var(--dim)}
+
+  @media (max-width:760px){
+    .gtitle h1{font-size:38px;letter-spacing:10px}
+    .juan .row,.rarer,.pairs,.bones .duo{grid-template-columns:1fr}
+    .tags{grid-template-columns:1fr 1fr}
+    .seal{width:170px;height:170px}
+    .seal span{font-size:28px;letter-spacing:5px;}
+    .vbig{font-size:38px;letter-spacing:10px}
+  }
+  @media (max-width:520px){
+    .tags{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 封缄 ================= -->
+<div class="gate" id="gate">
+  <div class="ghost" aria-hidden="true">宝</div>
+  <div class="gtitle">
+    <p class="kick">唐 · 苏鹗 撰</p>
+    <h1>杜阳杂编</h1>
+    <p>代宗广德至僖宗即位，十一朝异宝进奉簿</p>
+  </div>
+  <button class="seal" id="seal" aria-label="启封">
+    <span>内府珍奇</span>
+  </button>
+  <p class="hint">启 封 开 卷</p>
+</div>
+
+<!-- ================= 卷首 ================= -->
+<header class="juan wrap">
+  <div class="sec-head">
+    <h2>卷首</h2>
+    <span class="sub">这册账本记的全是奇货</span>
+  </div>
+  <p class="glead">唐末苏鹗，字德祥，京兆武功人，家居杜阳川，书名由此而来；僖宗光启二年进士。他癖好征奇猎异，把代宗朝广德以下十一朝的贡品、幻术、奢侈与谶兆，编成三卷账目。账面上是香玉、锦衾、蜡炬烧不坏的雀，账底下的行书只有一句：物极则妖。</p>
+  <div class="row">
+    <div class="card">
+      <h3>底本</h3>
+      <p class="big">三卷 · 约一万八千七百字</p>
+      <p>殆知阁简体库子藏笔记本。卷上起广德初年吐番犯边，讫德宗贞元；卷中起顺宗即位，讫文宗开成；卷下起武宗会昌，讫僖宗诏归佛骨。</p>
+    </div>
+    <div class="card">
+      <h3>书眼</h3>
+      <p class="big">最贵的葬礼在后头</p>
+      <p>全书一路记外国进贡的神物，到懿宗咸通年间同昌公主下嫁，宝物不再来自海外，改从内库搬出；两年后公主死，天子亲制挽歌，次年迎佛骨，秋天晏驾。奇物越近，国祚越短。</p>
+    </div>
+  </div>
+</header>
+
+<!-- ================= 进奉簿 ================= -->
+<section class="ledger wrap">
+  <div class="sec-head">
+    <h2>进奉簿</h2>
+    <span class="sub">点朝代签，翻该朝的吊牌</span>
+  </div>
+  <div class="rail" id="rail">
+    <button data-r="dai" class="cur">代宗</button>
+    <button data-r="de">德宗</button>
+    <button data-r="shun">顺宗</button>
+    <button data-r="xian">宪宗</button>
+    <button data-r="mu">穆宗</button>
+    <button data-r="jing">敬宗</button>
+    <button data-r="wen">文宗</button>
+    <button data-r="wu">武宗</button>
+    <button data-r="xuan">宣宗</button>
+    <button data-r="yi">懿宗</button>
+    <button data-r="xi">僖宗</button>
+  </div>
+
+  <div class="reign cur" id="r-dai">
+    <div class="tags">
+      <div class="tag"><span class="nm">九花虬</span>
+        <p>额高九寸的骏马，嘶一声群马耸耳；皇帝赏给再造社稷的郭子仪，加鞭也只缓缓如行五里。<q class="q">额高九寸，毛拳如麟，头颈鬃鬛，真虬龙也。</q></p>
+        <span class="src">卷上 · 广德初</span></div>
+      <div class="tag"><span class="nm">软玉鞭</span>
+        <p>复壁里翻出来的天宝旧贡，弯起来头尾相就，斧头劈不缺。朱泚之乱后不知去向。<q class="q">屈之则头尾相就，舒之则劲直如绳，虽以斧锧锻斫，终不伤缺。</q></p>
+        <span class="src">卷上 · 兴庆宫</span></div>
+      <div class="tag"><span class="nm">碧玉蚕丝</span>
+        <p>东海弥罗国的金蚕吐碧丝，做弩弦箭出一千步；后来捻成软玉鞭的鞘。<q class="q">为琴瑟弦则鬼神悲愁忭舞，为弩弦则箭出一千步，为弓弦则箭出五百步。</q></p>
+        <span class="src">卷上 · 永泰元年</span></div>
+      <div class="tag"><span class="nm">上清珠</span>
+        <p>玄宗系在幼年代宗颈上的珠，照一室生光，珠里有仙人玉女摇动；水旱兵灾，祝之辄应。<q class="q">此我为儿时明皇所赐也。</q></p>
+        <span class="src">卷上 · 开元初贡</span></div>
+      <div class="tag"><span class="nm">灵光豆与龙角钗</span>
+        <p>日林国献。豆用菖蒲水一煮大如鹅卵，吃一丸数日不饿；钗喷水化双龙腾空而去。<q class="q">以水喷之，遂化为二龙，腾空东去。</q></p>
+        <span class="src">卷上 · 大历中</span></div>
+      <div class="tag"><span class="nm">万佛山</span>
+        <p>新罗贡。沉檀珠玉雕成，佛首小如黍米而眉目悉具；敲紫金钟，上千行道僧齐齐叩首，机关在钟里。<q class="q">每撃其钟，则行道之僧礼首至地</q></p>
+        <span class="src">卷上 · 代宗奉释</span></div>
+      <div class="tag"><span class="nm">香玉辟邪</span>
+        <p>肃宗赐权宦李辅国的一对香玉，香气数百步外可闻。某日一尊大笑、一尊悲号，辅国惊而碎之投厕，周岁而死。</p>
+        <span class="src">卷上 · 李辅国事</span></div>
+      <div class="tag"><span class="nm">芸辉堂</span>
+        <p>宰相元载用于阗香草屑涂壁，沉檀为梁、紫绡为帐。池中碧芙蓉夜唱玉树后庭花，剖开一无所见。<q class="q">俯而视之，闻喘息之音，载恶之既甚，遂剖其花，一无所见</q></p>
+        <span class="src">卷上 · 元载末年</span></div>
+    </div>
+  </div>
+
+  <div class="reign" id="r-de">
+    <div class="tags">
+      <div class="tag"><span class="nm">火精剑</span>
+        <p>大林国神铁所炼，奉天避乱时亲手斫碎槛上铁狮子，夜行时仗上数尺光明。<q class="q">千万年社稷，岂为狗鼠所窃耶？</q><q class="q">若碎小寇如斩狻猊，不足忧也。</q></p>
+        <span class="src">卷上 · 建中二年</span></div>
+      <div class="tag"><span class="nm">瑞鞭</span>
+        <p>蜀中进。鞭身生出麟凤龟龙四种纹，暗中一挥如电光；德宗配二骏，自称三绝。<q class="q">于暗中挥之则如电光</q></p>
+        <span class="src">卷上 · 贞元三年</span></div>
+      <div class="tag"><span class="nm">朱来鸟</span>
+        <p>南方所贡红嘴绀尾鸟，能解人语；巨雕搏杀它那年，朱泚恰好犯禁闱，宫人才悟鸟名是谶。</p>
+        <span class="src">卷上 · 建中二年</span></div>
+      <div class="tag"><span class="nm">田父骂贼</span>
+        <p>朱泚兵败迷路，田父一句老话骂得他坠马；他自称撞见两位冤臣持戟相敌。</p>
+        <blockquote><q class="q">见段司农、刘海宾杖戈执戟，与朕相敌</q></blockquote>
+        <span class="src">卷上 · 兴元初</span></div>
+      <div class="tag"><span class="nm">花间三绝</span>
+        <p>神智骢、如意骝耳中生毛长一尺，日行千里；配上瑞鞭，花间落碧蹄，韩翃为赋诗。<q class="q">鸳鸯赭白齿新齐，晚日花间落碧蹄。玉勒乍回初喷沫，金鞭欲下不成嘶。</q></p>
+        <span class="src">卷上 · 建中末</span></div>
+    </div>
+  </div>
+
+  <div class="reign" id="r-shun">
+    <div class="tags">
+      <div class="tag"><span class="nm">却火雀</span>
+        <p>拘弭国贡，纯黑似燕；宫人夜里拿蜡炬烧它，毛羽无损，火自己散开。<q class="q">置于火中，火自散去</q></p>
+        <span class="src">卷中 · 即位岁</span></div>
+      <div class="tag"><span class="nm">履水珠</span>
+        <p>色黑如铁而上有鳞。五色丝系在臂上入龙池，踏波如平地，出水浑身不湿；长庆间化为黑龙遁去。<q class="q">其人则步骤于波上，若在平地</q></p>
+        <span class="src">卷中 · 即位岁</span></div>
+      <div class="tag"><span class="nm">常坚冰</span>
+        <p>大凝山千年不化之冰，盛暑赭日运到长安依旧洁冷，嚼起来与中土的冰无异。</p>
+        <span class="src">卷中 · 即位岁</span></div>
+      <div class="tag"><span class="nm">变昼草</span>
+        <p>芭蕉状一茎千叶，立起来百步之内黑如深夜。皇帝怒斥背明向暗，当使面烧掉，使者反而叹服。<q class="q">背明向暗之物，是何贵也？</q><q class="q">本国以变昼为异，今皇帝以向暗为非，可谓明德也。</q></p>
+        <span class="src">卷中 · 即位岁</span></div>
+    </div>
+  </div>
+
+  <div class="reign" id="r-xian">
+    <div class="tags">
+      <div class="tag"><span class="nm">卢眉娘</span>
+        <p>南海十四岁奇女，生而眉如线；在一尺绢上把法华经整整七卷绣完，字只米粒大小。后度黄冠，号逍遥，棺中只余一双藕鞋。</p>
+        <span class="src">卷中 · 永贞元年</span></div>
+      <div class="tag"><span class="nm">金龟印</span>
+        <p>使者海上夜泊遇仙岛，公子托他带印给皇帝，印文五色光数尺；恰逢连理树生龙凤灵芝。<q class="q">凤芝龙木，受命无疆。</q></p>
+        <span class="src">卷中 · 元和五年</span></div>
+      <div class="tag"><span class="nm">伊祁玄解</span>
+        <p>骑三尺黄马的东海处士，宫中种出双麟芝、六合葵、万根藤；元日跃入御制的金银阙模型，青州后来奏报他骑马过海了。<q class="q">左右连声呼之，竟不复有所见。</q></p>
+        <span class="src">卷中 · 元和中</span></div>
+      <div class="tag"><span class="nm">神锦衾</span>
+        <p>大轸国水蚕丝织成，得水则舒、遇火则缩，泼一盆水展开方二丈。详见下节宝异录。</p>
+        <span class="src">卷中 · 元和八年</span></div>
+    </div>
+  </div>
+
+  <div class="reign" id="r-mu">
+    <div class="tags">
+      <div class="tag"><span class="nm">金玉蝶</span>
+        <p>殿前千叶牡丹夜引蛱蝶万数，罗巾扑不着；张网捉来看，全是金玉。后来开库房，金屑正化作蝶。<q class="q">迟明视之，则皆金玉也。</q></p>
+        <span class="src">卷中 · 穆宗朝</span></div>
+    </div>
+  </div>
+
+  <div class="reign" id="r-jing">
+    <div class="tags">
+      <div class="tag"><span class="nm">浮光裘</span>
+        <p>南昌国贡，以五彩绣出龙凤纹各一千三百，日光下晃眼；暴雨里骑猎，衣上不沾一星水。<q class="q">忽值暴雨，而浮光裘略无沾润</q></p>
+        <span class="src">卷中 · 宝历元年</span></div>
+      <div class="tag"><span class="nm">夜明犀</span>
+        <p>夜里照百步，盖千重布也掩不住；解成腰带，游猎不用点蜡。<q class="q">覆缯千重，终不能掩其辉焕</q></p>
+        <span class="src">卷中 · 宝历元年</span></div>
+      <div class="tag"><span class="nm">飞鸾轻凤</span>
+        <p>淛东贡舞女二人，衣无缝罗、冠轻金，歌喉一起百鸟翔集；歌罢就藏进金屋宝帐怕风吹日晒。<q class="q">宝帐香重重，一双红芙蓉。</q></p>
+        <span class="src">卷中 · 宝历二年</span></div>
+      <div class="tag"><span class="nm">竿上破阵乐</span>
+        <p>幽州石火胡带五个八九岁养女，百尺竿张五条弓弦，各踏一条执戟而舞；文宗即位嫌其险，此戏遂绝。<q class="q">于百尺竿上张弓弦五条，令五女各居一条之上</q></p>
+        <span class="src">卷中 · 宝历间</span></div>
+    </div>
+  </div>
+
+  <div class="reign" id="r-wen">
+    <div class="tags">
+      <div class="tag"><span class="nm">白玉方响</span>
+        <p>叛镇吴元济的歌妓沈阿翘没入宫，进这架照得出十数步的白玉方响，犀槌一响万物应声；奏凉州曲，满殿凄然。<q class="q">妾本吴元济之妓女，济败，因以声得为宫人。</q></p>
+        <span class="src">卷中 · 文宗朝</span></div>
+      <div class="tag"><span class="nm">牡丹赋</span>
+        <p>内殿看花，忽念起屈死的舒元舆一句牡丹赋，省悟词中人，泣下沾襟。</p>
+        <span class="src">卷中 · 大和后</span></div>
+      <div class="tag"><span class="nm">蛤蜊菩萨</span>
+        <p>食蛤蜊擘不开的一枚，焚香自开，壳内二人眉目端秀足踏莲花；会昌毁佛后不知所在。<q class="q">俄顷自开，中有二人，形眉端秀，体质悉备，螺髻璎珞，足履菡萏，谓之菩萨。</q></p>
+        <span class="src">卷中 · 开成初</span></div>
+      <div class="tag"><span class="nm">题诗幽独</span>
+        <p>甘露之变后宦官仇士良当权，天子百戏当前不乐，独自题诗于壁。</p>
+        <blockquote><q class="q">辇路生春草，上林花满枝。凭高何限意？无复侍臣知。</q></blockquote>
+        <span class="src">卷中 · 大和九年</span></div>
+    </div>
+  </div>
+
+  <div class="reign" id="r-wu">
+    <div class="tags">
+      <div class="tag"><span class="nm">火玉与松风石</span>
+        <p>夫余国贡。红玉积起来能烧鼎，室中置之冬天不用裹棉衣；石里一株古松，盛夏飒飒生风。</p>
+        <span class="src">卷下 · 会昌元年</span></div>
+      <div class="tag"><span class="nm">玛瑙柜与紫瓷盆</span>
+        <p>渤海贡。紫瓷盆厚一寸余，举之若鸿毛，用来和药；武宗的才人失手碰缺一角，皇帝叹息很久。</p>
+        <span class="src">卷下 · 会昌间</span></div>
+      <div class="tag"><span class="nm">望仙台</span>
+        <p>武宗好神仙，筑台舂百宝屑涂地，燃香荐酒，与道士赵归真讲究玄理。</p>
+        <span class="src">卷下 · 会昌间</span></div>
+      <div class="tag"><span class="nm">元藏几</span>
+        <p>隋大业年间漂到沧浪洲的奉信郎，在仙洲住到贞元末才归，隔了将近两百年；朝廷征他，半路忽然不见。</p>
+        <span class="src">卷下 · 会昌间</span></div>
+    </div>
+  </div>
+
+  <div class="reign" id="r-xuan">
+    <div class="tags">
+      <div class="tag"><span class="nm">菩萨蛮</span>
+        <p>女蛮国使者梳高髻戴金冠，璎珞挂满一身，相貌如佛画里的菩萨；教坊因此谱出新曲，文人依声填词，词牌的来历在此。<q class="q">其国人危髻金冠，璎珞被体，故谓之菩萨蛮。</q></p>
+        <span class="src">卷下 · 大中初</span></div>
+      <div class="tag"><span class="nm">镇神头</span>
+        <p>日本王子携冷暖玉棋来朝，第一国手顾师言汗手凝思第三十三着解双征；王子问对手是第几手，鸿胪答第三。</p>
+        <span class="src">卷下 · 大中中</span></div>
+      <div class="tag"><span class="nm">轩辕集</span>
+        <p>罗浮数百岁道人。金盆覆鹊隔院先知，笔书四十年而十字挑脚；宣宗笑说哪敢指望，在位恰十四年。<q class="q">朕安敢望四十年乎！</q></p>
+        <span class="src">卷下 · 大中中</span></div>
+      <div class="tag"><span class="nm">龙油绫</span>
+        <p>女王国进龙油绫与鱼油锦，落水不湿；优人又谱成女王国的新曲，乐部相传。</p>
+        <span class="src">卷下 · 大中初</span></div>
+    </div>
+  </div>
+
+  <div class="reign" id="r-yi">
+    <div class="tags">
+      <div class="tag"><span class="nm">出降</span>
+        <p>同昌公主在咸通九年出降，御赐现钱五百万贯，内库宝货搬空来填宅；金银做井栏药臼，镂金做笊篱箕筐。特册见下节。</p>
+        <span class="src">卷下 · 咸通九年</span></div>
+      <div class="tag"><span class="nm">挽歌</span>
+        <p>公主病重，红蜜白猿膏都无效；死后皇帝自撰挽歌令百官继和，延兴门上，帝与妃恸哭。</p>
+        <span class="src">卷下 · 咸通间</span></div>
+      <div class="tag"><span class="nm">叹百年</span>
+        <p>教坊李可及作叹百年曲，八百疋官絁画鱼龙波浪做地衣，一舞珠翠满地；西门季玄骂他迟早灭族，后来果然坐罪流放。</p>
+        <span class="src">卷下 · 咸通间</span></div>
+    </div>
+  </div>
+
+  <div class="reign" id="r-xi">
+    <div class="tags">
+      <div class="tag"><span class="nm">归佛骨</span>
+        <p>僖宗即位，诏还佛骨于法门寺，仪仗十去其九；京城父老执手相送，伏地呜咽。<q class="q">六十年一度迎真身，不知再见复在何时。</q></p>
+        <span class="src">卷下 · 僖宗初</span></div>
+      <div class="tag"><span class="nm">香刹尽铲</span>
+        <p>上年路旁万数香刹，诏令铲除，近郊十不存一。迎真身的狂热只隔一纸诏书。</p>
+        <span class="src">卷下 · 僖宗初</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 宝异录 ================= -->
+<section class="wrap">
+  <div class="sec-head">
+    <h2>宝异录</h2>
+    <span class="sub">四件重宝，各有下场</span>
+  </div>
+  <div class="rarer">
+    <div class="rare">
+      <h3>香玉辟邪</h3>
+      <span class="from">肃宗赐李辅国 · 卷上</span>
+      <p>玉香数百步可闻，锁进金函石匮也掩不住。权宦把它放在座侧，某天早晨梳头时，一尊大笑一尊悲号；他厌恶而捣碎投厕，此后厕中常闻冤痛声，粉末被鱼朝恩买去，化白蝶冲天。同年冬天，李辅国死。</p>
+      <blockquote><q class="q">一日方巾栉，而辟邪忽一大笑，一悲号。</q></blockquote>
+      <blockquote><q class="q">纵澣濯数四，亦不消歇。</q></blockquote>
+    </div>
+    <div class="rare">
+      <h3>神锦衾</h3>
+      <span class="from">大轸国贡 · 卷中</span>
+      <p>水蚕丝织成，起初皇帝与嫔妃笑它不够给婴儿做襁褓；使者当面泼水，锦上龙文凤彩五色焕烂，反而超过了先前。火与水相克，这床被子的开关是温度。</p>
+      <blockquote><q class="q">此锦之丝，水蚕也；得水则舒，水火相反，遇火则缩。</q></blockquote>
+      <div class="clothbox">
+        <div class="cloth" id="cloth"></div>
+        <div class="cbtns">
+          <button id="bwet" class="cur">泼水</button>
+          <button id="bfire">近火</button>
+        </div>
+      </div>
+    </div>
+    <div class="rare">
+      <h3>一尺绢的七卷经</h3>
+      <span class="from">南海卢眉娘 · 卷中</span>
+      <p>皇帝赞为神助，留在宫里每天只吃二三合胡麻饭；宪宗赐金凤环束腕，知道她不愿住禁中，放归南海。死后棺轻，打开只有一双藕鞋，海人时见她乘紫云。</p>
+      <blockquote><q class="q">能于一尺绢上绣《法华经》七卷，字之大小不逾粟粒，而点画分明，细于毛发。</q></blockquote>
+    </div>
+    <div class="rare">
+      <h3>第三十三着</h3>
+      <span class="from">顾师言镇神头 · 卷下</span>
+      <p>日本王子携来楸玉棋枰与冷暖玉子，三十三着胜负未决。待诏惧辱君命，汗手凝思落子解双征，王子看得瞪目缩臂。他问这位是第几手，鸿胪谎称第三，还补了一句：胜了第三，才见得着第二。</p>
+      <blockquote><q class="q">小国之一不如大国之三，信矣！</q></blockquote>
+      <div class="board" aria-hidden="true">
+        <span class="st b" style="left:47%;top:47%"></span>
+        <span class="st w" style="left:31%;top:31%"></span>
+        <span class="st w" style="left:31%;top:63%"></span>
+        <span class="st b" style="left:63%;top:31%"></span>
+        <span class="st b" style="left:63%;top:63%"></span>
+        <span class="st w" style="left:15%;top:47%"></span>
+        <span class="st b" style="left:79%;top:47%"></span>
+        <span class="st b" style="left:47%;top:15%"></span>
+        <span class="st w" style="left:47%;top:79%"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 同昌公主特册 ================= -->
+<section class="golden">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>同昌公主特册</h2>
+      <span class="sub">宝物不再来自海外，改从内库搬出</span>
+    </div>
+    <p class="glead">懿宗最疼的女儿，咸通九年出降，赏钱五百万贯，宅于广化里；金银做井栏药臼，镂金做笊篱箕筐。婚房里的陈设一件比一件不似人间物，点一点下面的签。</p>
+    <div class="chips" id="chips">
+      <span class="qv">连珠帐</span>
+      <span class="qv">却寒帘</span>
+      <span class="qv">鹧鸪枕</span>
+      <span class="qv">翡翠匣</span>
+      <span class="qv">神丝绣被</span>
+      <span class="qv">蠲忿犀</span>
+      <span class="qv">如意玉</span>
+      <span class="qv">瑟瑟幕</span>
+      <span class="qv">纹布巾</span>
+      <span class="qv">火蚕绵</span>
+      <span class="qv" id="chai">九玉钗</span>
+    </div>
+    <div class="dream" id="dream">
+      <p>钗身刻着九只鸾凤，都是九色，还刻着一个名字：玉儿。公主昼梦见绛衣奴来传话，醒来告知左右；到公主薨，钗也不知去向。韦家人这才把梦说实话：玉儿，是南齐潘妃的小字。东西先来讨过，走时一并带走。<q class="q">梦绛衣奴授语云：南齐潘淑妃取九鸾钗。</q><q class="q">玉儿即潘妃小字也。</q></p>
+    </div>
+    <div class="pairs">
+      <div class="pair">
+        <div class="h">一羊四两</div>
+        <p>灵消炙取一只羊身上四两肉，过暑天不坏；红虬脯立盘中高一尺，筷子压下多少松开多少。公主家吃腻了，视同糠粃。<q class="q">一羊之肉取之四两，虽经暑毒终不见败。</q></p>
+      </div>
+      <div class="pair">
+        <div class="h">澄水帛</div>
+        <p>长八九尺的薄布蘸水挂在南轩，满座便思添衣；据说里头含龙涎。夜里玩叶子戏，用一颗夜光珠照明，僧人捧着珠立在堂中，亮得像白昼。<q class="q">云其中有龙涎，故能消暑毒也。</q></p>
+      </div>
+    </div>
+    <div class="pairs">
+      <div class="pair">
+        <div class="h">葬礼</div>
+        <p>丧服玩物与生人无异，各一百二十舁；木刻的楼阁人畜不可胜计，旌旗伞盖遮街蔽日，繁华二十余里；皇帝赐酒百斛、二尺大饼三十驼喂役夫。全城罢市，跑着去看热闹。</p>
+      </div>
+      <div class="pair">
+        <div class="h">预言</div>
+        <p>李可及恃宠而骄，宦官西门季玄当面警告他迟早灭族，又讥他今日用官车拉赏赐，他日抄家还得用车拉回内府。后来李可及果然流放岭南，赐物悉数归还，应了这句。<q class="q">尔恣巧媚以惑天子，灭族无日矣！</q></p>
+      </div>
+    </div>
+    <div class="bigquote">
+      <q class="q">京城士庶，罢市奔看，汗流相属，惟恐居后。</q>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 佛骨 ================= -->
+<section class="bones wrap">
+  <div class="sec-head">
+    <h2>迎佛骨</h2>
+    <span class="sub">咸通十四年春，狂热到顶</span>
+  </div>
+  <p class="glead">懿宗迎法门寺佛骨，百官拿宪宗朝旧事劝谏，他答只要活着见一面，死了也不恨。金银宝刹珠玉宝帐，一刹用几百人抬，珊瑚玛瑙真珠瑟瑟缀成幡幢，珍宝用掉百斛不止。四月初八那天，佛骨迎进长安，夹道念佛之声动地。</p>
+  <div class="duo">
+    <div class="bone">
+      <div class="h">断臂</div>
+      <p>有军卒在佛前断左臂，一手执着它，一步一拜，血淌满地；还有用肘膝爬行、咬指断发的，数不过来。</p>
+    </div>
+    <div class="bone">
+      <div class="h">炼顶</div>
+      <p>有僧把艾绒堆在头顶点燃，痛得摇头大叫，坊市少年按住他不许动，他号哭躺倒在路上，头顶焦烂，围观的人全在大笑。</p>
+    </div>
+  </div>
+  <p class="glead" style="margin-top:22px">僖宗一登基，就诏还佛骨。送行的老人说，六十年才迎一回真身，不知此生还见得着吗。那年秋天七月，皇帝晏驾。苏鹗的账，在这里合上。</p>
+  <div class="finale">
+    <q class="q">是岁秋七月，天子晏驾，识者以为物极为妖。公主薨而上崩，同昌之号明矣。</q>
+    <span class="src">卷下 · 咸通十四年</span>
+  </div>
+</section>
+
+<!-- ================= 尾屏 ================= -->
+<section class="vsign" aria-label="尾屏">
+  <div class="vcol">
+    <div class="vbig">物极为妖</div>
+    <div class="vsmall">宝气冲处即国祚尽头<br>读杜阳杂编偶记</div>
+    <div class="vseal">杜阳</div>
+  </div>
+</section>
+
+<!-- ================= 页脚 ================= -->
+<footer class="foot">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库子藏笔记〈杜阳杂编〉（三卷，去空白约一万八千七百字）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。</p>
+    <p class="xiaoji">时代局限：书中谶纬应验、神仙方术之说与对外族的称谓皆出唐人语境，幻异情节照录库本，不宜作史实采信；苏鹗生平与成书年代通说与库本略有出入，本页从通行说法。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var opened = false;
+  var gate = document.getElementById('gate');
+  document.getElementById('seal').addEventListener('click', function(){
+    if(opened){return;}
+    opened = true;
+    gate.classList.add('open');
+  });
+  var rail = document.getElementById('rail');
+  var btns = rail.querySelectorAll('button');
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      btns.forEach(function(x){x.classList.remove('cur');});
+      b.classList.add('cur');
+      document.querySelectorAll('.reign').forEach(function(p){p.classList.remove('cur');});
+      document.getElementById('r-' + b.getAttribute('data-r')).classList.add('cur');
+    });
+  });
+  var cloth = document.getElementById('cloth');
+  var bw = document.getElementById('bwet');
+  var bf = document.getElementById('bfire');
+  bw.addEventListener('click', function(){
+    cloth.classList.remove('fire');
+    bw.classList.add('cur'); bf.classList.remove('cur');
+  });
+  bf.addEventListener('click', function(){
+    cloth.classList.add('fire');
+    bf.classList.add('cur'); bw.classList.remove('cur');
+  });
+  var chai = document.getElementById('chai');
+  chai.addEventListener('click', function(){
+    chai.classList.toggle('sel');
+    document.getElementById('dream').classList.toggle('show');
+  });
+  document.querySelectorAll('#chips .qv').forEach(function(c){
+    if(c.id !== 'chai'){
+      c.addEventListener('click', function(){
+        document.querySelectorAll('#chips .qv').forEach(function(x){
+          if(x.id !== 'chai'){x.classList.remove('sel');}
+        });
+        document.getElementById('dream').classList.remove('show');
+        chai.classList.remove('sel');
+        c.classList.add('sel');
+      });
+    }
+  });
+})();
+</script>
+</body>
+</html>
