@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>照世杯导读</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --dim:#8f897c; --line:#35332e;
+  --blue:#5e8fbb; --blue-dim:#3f5f7d; --wine:#a5552f; --seal:#c0453c;
+  --paper2:#f2eee5;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);
+  font-family:Georgia,"Songti SC","STSong","SimSun","Noto Serif CJK SC",serif;
+  line-height:1.9;font-size:16px}
+b{color:var(--blue)}
+.mono{font-family:"SFMono-Regular",Consolas,Menlo,monospace}
+::selection{background:var(--blue);color:var(--ink)}
+q{quotes:none}
+q::before,q::after{content:none}
+
+/* 右缘四盏杯签 */
+#rail{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:50;
+  display:flex;flex-direction:column;gap:18px}
+#rail a{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--dim)}
+#rail .cup{width:20px;height:16px;border:1.5px solid var(--dim);border-radius:0 0 10px 10px;
+  border-top:none;position:relative;overflow:hidden}
+#rail .cup i{position:absolute;left:0;bottom:0;width:100%;height:0;background:var(--wine);transition:height .6s}
+#rail a.lit .cup{border-color:var(--blue)}
+#rail a.lit .cup i{height:78%}
+#rail .lb{font-size:11px;letter-spacing:2px;writing-mode:vertical-rl}
+@media(max-width:900px){#rail{display:none}}
+
+/* ===== 首屏 ===== */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;padding:40px 18px 30px;
+  background:radial-gradient(ellipse 90% 60% at 50% 72%, #23211d 0%, var(--ink) 70%)}
+#hero .kick{position:absolute;top:26px;left:0;right:0;text-align:center;
+  font-size:12.5px;letter-spacing:6px;color:var(--dim)}
+#hero .kick b{color:var(--blue);letter-spacing:3px}
+#stagewrap{position:relative;width:min(640px,92vw)}
+#stage{width:100%;display:block}
+#vt{position:absolute;left:calc(50% - 210px);top:-10px;writing-mode:vertical-rl;
+  font-size:56px;letter-spacing:14px;color:var(--paper);font-weight:700;white-space:nowrap;
+  opacity:0;transform:translateY(26px);transition:opacity 1.4s ease .9s,transform 1.4s ease .9s;
+  text-shadow:0 0 24px rgba(94,143,187,.25)}
+#vt span{display:inline-block}
+#seal{position:absolute;left:calc(50% - 158px);top:232px;width:58px;height:58px;white-space:nowrap;
+  border:2.5px solid var(--seal);color:var(--seal);display:flex;align-items:center;justify-content:center;
+  writing-mode:vertical-rl;font-size:24px;letter-spacing:6px;font-weight:700;
+  transform:rotate(-6deg) scale(2.4);opacity:0;border-radius:4px}
+.js #hero.poured #vt{opacity:1;transform:translateY(0)}
+.js #hero.poured #seal{opacity:.92;transform:rotate(-6deg) scale(1);transition:all .5s cubic-bezier(.2,1.6,.4,1) 2.1s}
+#pourbtn{margin-top:6px;background:none;border:1px solid var(--blue-dim);color:var(--blue);
+  font-family:inherit;font-size:14px;letter-spacing:8px;padding:10px 26px 10px 34px;cursor:pointer;border-radius:2px}
+#pourbtn:hover{background:rgba(94,143,187,.12)}
+#hero.poured #pourbtn{opacity:0;pointer-events:none;transition:opacity .5s}
+#hero-note{max-width:660px;margin:26px auto 0;font-size:14px;color:var(--dim);line-height:2.05;text-align:center}
+#hero-note .eq{color:var(--paper)}
+.eq{font-style:normal;border-bottom:1px dotted var(--blue-dim)}
+#four{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;justify-content:center}
+#four a{text-decoration:none;color:var(--dim);border:1px solid var(--line);padding:8px 18px;
+  font-size:13.5px;letter-spacing:3px;border-radius:2px;transition:all .3s}
+#four a:hover{color:var(--blue);border-color:var(--blue-dim)}
+#four a i{font-style:normal;color:var(--blue);margin-right:8px;font-size:15px}
+
+/* ===== 通用版心 ===== */
+main{max-width:880px;margin:0 auto;padding:0 20px}
+section.zh{padding:86px 0 30px;position:relative}
+.zhead{display:flex;align-items:flex-end;gap:18px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:34px}
+.zhead .no{font-size:13px;color:var(--dim);letter-spacing:3px;white-space:nowrap}
+.zhead h2{font-size:30px;letter-spacing:6px;font-weight:700;line-height:1.3}
+.zhead h2 small{display:block;font-size:13px;color:var(--dim);letter-spacing:2px;font-weight:400;margin-top:4px}
+.zhead .rim{margin-left:auto;flex:none}
+.lede{font-size:15px;color:#c9c4b8;line-height:2.15;margin-bottom:30px}
+.lede .qi{color:var(--blue)}
+
+/* 引文 */
+.q{margin:22px 0;padding:18px 22px;background:var(--paper2);color:#2a2822;
+  border-left:3px solid var(--blue);font-size:15.5px;line-height:2.05;border-radius:0 3px 3px 0;
+  box-shadow:2px 3px 0 rgba(0,0,0,.35)}
+.q .src{display:block;margin-top:8px;font-size:12px;color:#7a7466;letter-spacing:1px}
+.qn{display:block;margin:6px 0 0;padding:8px 14px;background:rgba(232,228,220,.06);color:var(--dim);
+  font-size:13px;border-left:2px solid var(--line);font-style:normal}
+.qi{color:var(--blue);font-style:normal}
+h3.st{font-size:17px;letter-spacing:4px;color:var(--blue);margin:44px 0 16px;font-weight:700}
+h3.st::before{content:"◈ ";color:var(--blue-dim)}
+p.prose{margin:14px 0;font-size:15px;color:#c9c4b8;line-height:2.1}
+
+/* 卡与牌 */
+.grid{display:grid;gap:14px;margin:20px 0}
+.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{border:1px solid var(--line);background:rgba(232,228,220,.03);padding:18px 20px;border-radius:3px}
+.card h4{font-size:15px;letter-spacing:2px;color:var(--paper);margin-bottom:8px}
+.card h4 b{color:var(--blue)}
+.card p{font-size:13.5px;color:var(--dim);line-height:2}
+
+/* 翻牌 */
+.fcrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:20px 0}
+.fcard{perspective:900px;height:170px;cursor:pointer}
+.fcard .in{position:relative;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d}
+.fcard.flip .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);border-radius:3px;padding:12px;text-align:center;
+  transition:opacity .35s}
+.face.back{opacity:0}
+.fcard.flip .face.front{opacity:0}
+.fcard.flip .face.back{opacity:1}
+.face .tag{font-size:11.5px;letter-spacing:3px;color:var(--dim)}
+.face .txt{font-size:17px;letter-spacing:2px;line-height:1.7}
+.face .txt.qi{color:#f2eee5}
+.face.back .txt{font-size:13.5px;line-height:1.95;letter-spacing:1px}
+.face.back .qi,.face.back .txt.qi{color:#2a2822}
+.face.front{background:rgba(232,228,220,.04)}
+.face.back{background:var(--paper2);transform:rotateY(180deg);border-color:var(--blue)}
+.face.back .tag{color:#7a7466}
+.face .hint{position:absolute;bottom:8px;font-size:11px;color:var(--dim);letter-spacing:2px}
+
+/* 站线 */
+.chain{display:flex;gap:0;margin:26px 0;flex-wrap:wrap}
+.stop{flex:1;min-width:120px;position:relative;padding:14px 12px 12px;border-top:1px solid var(--line);cursor:default}
+.stop::before{content:"";position:absolute;top:-5px;left:12px;width:8px;height:8px;border-radius:50%;
+  background:var(--ink);border:1.5px solid var(--dim);transition:all .3s}
+.stop:hover::before,.stop.on::before{background:var(--blue);border-color:var(--blue);box-shadow:0 0 10px rgba(94,143,187,.6)}
+.stop .sn{font-size:11px;color:var(--dim);letter-spacing:2px}
+.stop h5{font-size:14.5px;letter-spacing:1px;margin:4px 0;color:var(--paper);font-weight:700}
+.stop p{font-size:12.5px;color:var(--dim);line-height:1.9}
+
+/* 信笺 */
+.letters{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin:24px 0}
+.letter{background:var(--paper2);color:#2a2822;border-radius:2px;overflow:hidden;
+  box-shadow:3px 4px 0 rgba(0,0,0,.4);cursor:pointer}
+.letter .lh{padding:12px 18px;border-bottom:1px dashed #b7b1a2;display:flex;align-items:center;gap:10px}
+.letter .lh .sx{width:30px;height:30px;border:2px solid var(--seal);color:var(--seal);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;font-size:15px;transform:rotate(-4deg);flex:none}
+.letter.fake .lh .sx{border-color:#7a7466;color:#7a7466}
+.letter .lh h5{font-size:14.5px;letter-spacing:2px}
+.letter .lh small{margin-left:auto;font-size:11px;color:#7a7466;letter-spacing:2px}
+.letter .lb2{max-height:0;overflow:hidden;transition:max-height .7s ease}
+.letter.open .lb2{max-height:420px}
+.letter .lb2 p{padding:16px 20px 20px;font-size:14.5px;line-height:2.1;color:#2a2822}
+.letter .verdict{padding:0 20px 16px;font-size:12.5px;color:#7a7466}
+.letter .verdict .qi{color:var(--blue)}
+
+/* 票据 flip */
+.ticket-wrap{display:flex;justify-content:center;margin:30px 0}
+.ticket{width:min(430px,92%);height:250px;perspective:1100px;cursor:pointer}
+.ticket .tin{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .8s}
+.ticket.flip .tin{transform:rotateY(180deg)}
+.tface{position:absolute;inset:0;backface-visibility:hidden;border:1px solid #b7b1a2;background:var(--paper2);
+  color:#2a2822;border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;padding:20px;box-shadow:3px 4px 0 rgba(0,0,0,.4);transition:opacity .35s}
+.tface.back{opacity:0}
+.ticket.flip .tface:not(.back){opacity:0}
+.ticket.flip .tface.back{opacity:1}
+.tface .tt{font-size:13px;letter-spacing:6px;color:#7a7466}
+.tface .big{font-size:24px;letter-spacing:8px;color:#2a2822;font-weight:700}
+.tface .sm{font-size:12px;color:#7a7466;letter-spacing:2px}
+.tface.back{transform:rotateY(180deg)}
+.tface .ioi{font-size:16px;line-height:2.15;text-align:center;padding:0 6px;color:#2a2822}
+.tface .ioi .rd{color:var(--seal)}
+
+/* 幕 */
+.acts{counter-reset:act;margin:24px 0}
+.act{display:flex;gap:18px;padding:18px 0;border-top:1px dashed var(--line)}
+.act::before{counter-increment:act;content:"第" counter(act,cjk-ideographic) "幕";
+  flex:none;width:52px;font-size:13px;color:var(--blue);letter-spacing:2px;writing-mode:vertical-rl;
+  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;border-radius:2px}
+.act .ab h5{font-size:15.5px;letter-spacing:1px;margin-bottom:6px;color:var(--paper)}
+.act .ab p{font-size:13.5px;color:var(--dim);line-height:2.05}
+.act .ab .qi{color:var(--blue)}
+
+/* 账牌 */
+.ledger{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:22px 0}
+.ltile{border:1px solid var(--line);padding:16px;border-radius:3px;background:rgba(232,228,220,.03)}
+.ltile .k{font-size:12px;color:var(--dim);letter-spacing:3px}
+.ltile .v{font-size:20px;color:var(--blue);margin:6px 0 4px;letter-spacing:1px}
+.ltile .n{font-size:12.5px;color:var(--dim);line-height:1.9}
+.ltile .n .qi{color:var(--blue)}
+
+/* 校记 */
+.jiaji{border:1px dashed var(--blue-dim);border-radius:3px;padding:18px 22px;margin:36px 0;background:rgba(94,143,187,.05)}
+.jiaji h4{font-size:14px;letter-spacing:4px;color:var(--blue);margin-bottom:10px}
+.jiaji p{font-size:13px;color:var(--dim);line-height:2.15}
+.jiaji p b{color:#c9c4b8;font-weight:400}
+
+/* 尾屏 */
+#coda{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:70px 20px 50px;position:relative}
+#coda .empty{font-size:15px;color:var(--dim);letter-spacing:3px;margin-bottom:26px}
+#coda .vpoem{writing-mode:vertical-rl;height:300px;font-size:22px;line-height:2.4;letter-spacing:8px;
+  color:var(--paper);margin:10px 0 26px;
+  background:none;border:none;padding:0;box-shadow:none;border-radius:0;font-weight:700}
+#coda .vpoem span{display:inline-block}
+#coda .seal2{width:52px;height:52px;border:2.5px solid var(--seal);color:var(--seal);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;font-size:20px;
+  letter-spacing:4px;transform:rotate(-5deg);margin:8px 0 30px;white-space:nowrap}
+#coda p{max-width:620px;font-size:13.5px;color:var(--dim);line-height:2.15}
+
+footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 22px 46px;text-align:center;
+  font-size:12.5px;color:var(--dim);line-height:2.2}
+footer a{color:var(--blue-dim)}
+
+/* reveal */
+.js .rv{opacity:0;transform:translateY(18px);transition:opacity .8s ease,transform .8s ease}
+.js .rv.on{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.js .rv{opacity:1;transform:none;transition:none}}
+
+@media(max-width:640px){
+  .zhead h2{font-size:24px;letter-spacing:3px}
+  #vt{left:8px;font-size:40px;letter-spacing:8px}
+  #seal{left:14px;top:196px}
+  body{font-size:15px}
+}
+</style>
+</head>
+<body>
+
+<aside id="rail" aria-hidden="true">
+  <a href="#z1" data-t="z1"><span class="cup"><i></i></span><span class="lb">情照</span></a>
+  <a href="#z2" data-t="z2"><span class="cup"><i></i></span><span class="lb">骗照</span></a>
+  <a href="#z3" data-t="z3"><span class="cup"><i></i></span><span class="lb">贸照</span></a>
+  <a href="#z4" data-t="z4"><span class="cup"><i></i></span><span class="lb">坑照</span></a>
+</aside>
+
+<header id="hero">
+  <div class="kick">殆知阁简体库 · 集藏小说 <b>四卷四篇</b></div>
+  <div id="stagewrap">
+    <svg id="stage" viewBox="0 0 640 430" aria-label="照世杯斟酒图">
+      <defs>
+        <linearGradient id="wineg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c2703f"/><stop offset="100%" stop-color="#7e3a1d"/>
+        </linearGradient>
+        <radialGradient id="glow" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stop-color="rgba(194,112,63,.55)"/><stop offset="100%" stop-color="rgba(194,112,63,0)"/>
+        </radialGradient>
+        <clipPath id="bowlclip">
+          <path d="M175,196 Q320,330 465,196 Q320,268 175,196 Z"/>
+        </clipPath>
+      </defs>
+      <ellipse cx="320" cy="386" rx="180" ry="16" fill="rgba(0,0,0,.5)"/>
+      <path d="M172,192 Q320,270 468,192 Q448,306 320,318 Q192,306 172,192 Z" fill="#26241f" stroke="#4a463c" stroke-width="2"/>
+      <g clip-path="url(#bowlclip)">
+        <ellipse id="glowc" cx="320" cy="238" rx="190" ry="90" fill="url(#glow)" opacity="0"/>
+        <rect id="wine" x="150" y="330" width="340" height="140" fill="url(#wineg)" opacity="0"/>
+        <ellipse id="wtop" cx="320" cy="330" rx="170" ry="14" fill="#d98d55" opacity="0"/>
+        <g id="floats" opacity="0">
+          <text x="266" y="248" font-size="30" fill="#f6e7d4" font-family="Georgia,'Songti SC','SimSun',serif" opacity=".92">情</text>
+          <text x="310" y="258" font-size="30" fill="#f6e7d4" font-family="Georgia,'Songti SC','SimSun',serif" opacity=".92">骗</text>
+          <text x="354" y="246" font-size="30" fill="#f6e7d4" font-family="Georgia,'Songti SC','SimSun',serif" opacity=".92">贸</text>
+          <text x="398" y="256" font-size="30" fill="#f6e7d4" font-family="Georgia,'Songti SC','SimSun',serif" opacity=".92">坑</text>
+        </g>
+      </g>
+      <ellipse cx="320" cy="196" rx="148" ry="26" fill="none" stroke="#6a6455" stroke-width="2.5"/>
+      <g id="pot" transform="rotate(0 520 60)">
+        <ellipse cx="520" cy="86" rx="52" ry="40" fill="#26241f" stroke="#4a463c" stroke-width="2"/>
+        <path d="M566,84 q30,10 34,44 q1,10 -8,10 q-8,0 -10,-9 q-5,-26 -22,-33 Z" fill="#26241f" stroke="#4a463c" stroke-width="2"/>
+        <path d="M472,74 q-26,2 -34,22" fill="none" stroke="#4a463c" stroke-width="5" stroke-linecap="round"/>
+        <rect x="500" y="40" width="40" height="12" rx="5" fill="#26241f" stroke="#4a463c" stroke-width="2"/>
+      </g>
+      <path id="stream" d="M590,140 Q560,170 470,196" fill="none" stroke="#c2703f" stroke-width="7" stroke-linecap="round" opacity="0"/>
+      <path id="stream2" d="M590,140 Q560,170 470,196" fill="none" stroke="#e8a06b" stroke-width="2.5" stroke-linecap="round" opacity="0"/>
+    </svg>
+    <div id="vt" data-t="书名令牌"><span>照世杯</span></div>
+    <div id="seal" data-t="印令牌">酌元</div>
+  </div>
+  <button id="pourbtn" type="button">斟 酒 照 世</button>
+  <div id="hero-note">
+    书名取自明人笔记：<span class="eq">撒马尔罕在西边，其国有照世杯，光明洞达，照之可知世事</span>（朱国祯《涌幢小品》卷一，本书书名所本，据上海古籍出版社版出版说明）。作者署<b>酌元亭主人</b>，真实姓名无考；又名《谐道人批评第二种快书》，约成于清初，刊行在康熙九年之前。
+  </div>
+  <nav id="four">
+    <a href="#z1" data-t="卷目一"><i>壹</i>七松园弄假成真</a>
+    <a href="#z2" data-t="卷目二"><i>贰</i>百和坊将无作有</a>
+    <a href="#z3" data-t="卷目三"><i>叁</i>走安南玉马换猩绒</a>
+    <a href="#z4" data-t="卷目四"><i>肆</i>掘新坑悭鬼成财主</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ 卷一 ============ -->
+<section class="zh" id="z1">
+  <div class="zhead rv">
+    <span class="no">第一照 · 卷一</span>
+    <h2>情照<small data-t="vm1">七松园弄假成真 · 一封假信牵出的真姻缘</small></h2>
+    <svg class="rim" width="86" height="30" viewBox="0 0 86 30"><ellipse cx="43" cy="15" rx="40" ry="12" fill="none" stroke="#3f5f7d" stroke-width="2"/><ellipse cx="43" cy="15" rx="40" ry="12" fill="rgba(165,85,47,.25)"/></svg>
+  </div>
+  <p class="lede rv">开卷先翻案。世人眼里妓女无情，作者偏说<q class="qi">众人都知道妓女的情假，我道是妓女的情最直；众人都知道妓女的情滥，我道是妓女的情最专；众人都知道妓女的情薄，我道是妓女的情最厚。</q>苏州秀才阮江兰带着这套痴论下场，先在山阴被妇女诗社灌了三叵罗的入社酒、涂了满脸墨朱抬上大街，再在扬州七松园平白收到一封约他跳墙的花笺。</p>
+
+  <h3 class="st rv">三问三答</h3>
+  <div class="fcrow">
+    <div class="fcard rv" role="button" tabindex="0"><div class="in">
+      <div class="face front"><span class="tag">世人道</span><span class="txt qi">妓女的情假</span><span class="hint">点牌翻面</span></div>
+      <div class="face back"><span class="tag">作者道</span><span class="txt qi">我道是妓女的情最直</span></div>
+    </div></div>
+    <div class="fcard rv" role="button" tabindex="0"><div class="in">
+      <div class="face front"><span class="tag">世人道</span><span class="txt qi">妓女的情滥</span><span class="hint">点牌翻面</span></div>
+      <div class="face back"><span class="tag">作者道</span><span class="txt qi">我道是妓女的情最专</span></div>
+    </div></div>
+    <div class="fcard rv" role="button" tabindex="0"><div class="in">
+      <div class="face front"><span class="tag">世人道</span><span class="txt qi">妓女的情薄</span><span class="hint">点牌翻面</span></div>
+      <div class="face back"><span class="tag">作者道</span><span class="txt qi">我道是妓女的情最厚</span></div>
+    </div></div>
+  </div>
+  <div class="q rv">倘若看中了一个情种，便由你穷无立锥，少不得死心塌地，甘做荆钗裙布<span class="src">卷一开篇的情论，全书站队的宣言</span></div>
+
+  <h3 class="st rv">两封花笺，一真一假</h3>
+  <p class="prose rv">应公子看阮江兰偷望府中的丽人，起了促狭的念头，叫小厮送了一封杜撰的情书去。阮江兰信以为真，夜里翻墙赴约，被当贼捆了；名妓畹娘认出笔迹替他解缚，反倒惹祸上身。点笺拆读，两封信对照着看。</p>
+  <div class="letters">
+    <div class="letter fake rv" role="button" tabindex="0">
+      <div class="lh"><span class="sx">假</span><h5>墙头花笺</h5><small>应公子杜撰</small></div>
+      <div class="lb2"><p class="qi">妾幽如剑衽拜，具书阮郎台下：素知足下钟情妾身，奈无缘相见。今夜乘拙夫他出，足下可于月明人静之后，跳墙而来。妾在花阴深处，专候张生也。</p></div>
+      <div class="verdict">落款学的是西厢记口吻，专候张生四字露了戏台气</div>
+    </div>
+    <div class="letter rv" role="button" tabindex="0">
+      <div class="lh"><span class="sx">真</span><h5>病中寄阮郎</h5><small>畹娘亲笔</small></div>
+      <div class="lb2"><p class="qi">足下月夜虚惊，皆奸谋预布之地，虽小受折挫，妾已心感深情。倘能出我水火，生死以之，即白我怨也。</p></div>
+      <div class="verdict">这封真信送到，指望医心病，<span class="qi">那知反做了误杀人的庸医</span>，真姻缘反倒要绕一大圈才团圆</div>
+    </div>
+  </div>
+
+  <h3 class="st rv">弄假成真六站</h3>
+  <div class="chain rv">
+    <div class="stop"><span class="sn">站一</span><h5>举社抬杠</h5><p>席上唱起浣纱记这一本，阮江兰赞西施，被乐多闻一句没廉耻顶了回去，拂袖而去</p></div>
+    <div class="stop"><span class="sn">站二</span><h5>山阴涂脸</h5><p>闯妇女诗社，硬饮三叵罗，醉倒桌下，被涂了花脸抬上街头，孩童喊疯子</p></div>
+    <div class="stop"><span class="sn">站三</span><h5>假书跳墙</h5><p>七松园里一封假信骗他夜入应家，当贼被缚，畹娘认笔迹放人</p></div>
+    <div class="stop"><span class="sn">站四</span><h5>侍疾囊空</h5><p>畹娘被卖遭虐病倒，阮江兰搬铺盖贴身侍候，钱尽后被老鸨赶出门</p></div>
+    <div class="stop"><span class="sn">站五</span><h5>激将闭关</h5><p>张少伯暗花四百金赎人明夺爱，当面笑骂他自恃才高不中举，阮江兰愤而闭关三年</p></div>
+    <div class="stop"><span class="sn">站六</span><h5>解元还妾</h5><p>高中解元归家，见畹娘已在堂前，原是少伯代聘、以弟妇之礼相待，方才大梦初醒</p></div>
+  </div>
+  <div class="q rv">无礼狂生，不如此惩戒，他也不知桃花洞口原非渔郎可以问信。<span class="src">山阴众美人涂脸之后的说辞，渔郎典故反用在罚场上</span></div>
+  <div class="q rv">我这笔尖戳得死你这等白丁哩。<span class="src">阮江兰回敬张少伯，激将的火种</span></div>
+  <p class="prose rv">事后畹娘代少伯拆穿全局：骂是激将，聘是代聘，盘缠借学里门斗之手送到，处处留了破绽等他自己醒。<q class="qi">乘兴而来，败兴而归。前有子猷，后有小阮。</q>是山阴碰壁的自嘲；到结尾，作者只把账算在一处，<q class="qi">姻缘担子，此番才得卸肩。</q>假信、假骂、假夺妻，层层是假，件件成真，卷名四字就是全卷的机关。</p>
+</section>
+
+<!-- ============ 卷二 ============ -->
+<section class="zh" id="z2">
+  <div class="zhead rv">
+    <span class="no">第二照 · 卷二</span>
+    <h2>骗照<small data-t="vm2">百和坊将无作有 · 一伙拐子拆一间假货铺</small></h2>
+    <svg class="rim" width="86" height="30" viewBox="0 0 86 30"><ellipse cx="43" cy="15" rx="40" ry="12" fill="none" stroke="#3f5f7d" stroke-width="2"/><ellipse cx="43" cy="15" rx="40" ry="12" fill="rgba(165,85,47,.25)"/></svg>
+  </div>
+  <p class="lede rv">卷二写的是猎手遇上猎手。老童生欧滁山考了半辈子不中，靠一场场骂功在童生堆里混出名头，出门打抽丰冒充斯文，一路骗酒骗银子；到了真定，撞上一户搬来的官眷，从此被更大的局一口口吃干。</p>
+
+  <h3 class="st rv">游客四毒</h3>
+  <p class="prose rv">作者给打抽丰的游客群体画过一张脸谱，四句十六字，字字是刀。</p>
+  <div class="q rv">不识差的厚脸，惯撒泼的鸟嘴。会做作的乔样，弄虚头的辣手。<span class="src">卷二论游客四毒</span></div>
+  <div class="grid g2">
+    <div class="card rv"><h4>假货清单</h4><p><span class="qi">假秀才、假名士、假乡绅、假公子、假书贴，光棍作为，无所不至。</span>名色一列，等于给晚明清初的游食圈开了张验尸单</p></div>
+    <div class="card rv"><h4>立身三件</h4><p>开卷设账：<span class="qi">该在骨头上磨练出人品，心肝上呕吐出文章，胼胝上挣扎出财帛。</span>欧滁山三件全无，只剩一副嘴皮</p></div>
+  </div>
+
+  <h3 class="st rv">拐局七步</h3>
+  <div class="chain rv">
+    <div class="stop"><span class="sn">步一</span><h5>扮聋</h5><p>对门搬来屠乡宦遗眷，三太爷装聋作哑，一封八两笔资的拜匣钓他写墓志</p></div>
+    <div class="stop"><span class="sn">步二</span><h5>喂饵</h5><p>墓志是拿祭十二郎的文章改头换尾，缪奶奶亲身答谢，酒席山珍，请君入瓮</p></div>
+    <div class="stop"><span class="sn">步三</span><h5>递话</h5><p>徐管家透风：奶奶要坐产招夫。欧滁山自荐入赘，倒赔千金妆奁的口都许了</p></div>
+    <div class="stop"><span class="sn">步四</span><h5>做局</h5><p>酒肆里三太爷亲口许亲，小厮点破也被哄开，杯酒为订做实了名分</p></div>
+    <div class="stop"><span class="sn">步五</span><h5>抛账</h5><p>成亲后他抛砖引玉先亮家底，对面顺口还他一座九千银的宅子</p></div>
+    <div class="stop"><span class="sn">步六</span><h5>支开</h5><p>同去河间兑房价，半路徐管家追来补送房契，人一到城里就没了踪影</p></div>
+    <div class="stop"><span class="sn">步七</span><h5>换票</h5><p>百和坊真屠家一顿好打，拆开封筒，房契变成一纸借票，六百金换了六百两的笑谈</p></div>
+  </div>
+
+  <div class="ticket-wrap rv">
+    <div class="ticket" id="iou" role="button" tabindex="0" aria-label="点票据翻面">
+      <div class="tin">
+        <div class="tface">
+          <span class="tt">随手押着的文书</span>
+          <span class="big">房 契</span>
+          <span class="sm">九千两的大宅 · 只等兑价</span>
+          <span class="sm">点票据翻面</span>
+        </div>
+        <div class="tface back">
+          <span class="tt">拆开封筒 · 真身</span>
+          <div class="ioi qi">立借票人<span class="rd">屠三醉</span>，今因乏用，借到老欧处白银六百两。俟起家立业后，加倍奉偿。恐后无凭，立此借票存照。</div>
+          <span class="sm">拐子的临别赠品</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="q rv">分明是说三醉岳阳人不识，活活是个雄拐子，连你奶奶也是雌拐儿。<span class="src">欧滁山悟出拐子署名的典：吕洞宾三醉岳阳，人间不识，原是神仙局里骂人痴</span></div>
+  <div class="q rv">把一个假名士，又假起乞丐来了。<span class="src">盘缠被扣、被褥抵饭钱之后的收场批语</span></div>
+  <p class="prose rv">末尾回乡，老仆已死、爱妾卷物远走，欧滁山得了臌胀病呜呼。归船上倒遇见一位被同一伙人骗去千金的徽州客商，同病相怜；镇江码头他又把一个玩蛇乞儿认成三太爷，扑上去喊捉拐子，反赔了几钱银子。假货铺关张，作者只补一句卷首诗作结：<q class="qi">早知苟得原非得，须信机深祸亦深。</q></p>
+</section>
+
+<!-- ============ 卷三 ============ -->
+<section class="zh" id="z3">
+  <div class="zhead rv">
+    <span class="no">第三照 · 卷三</span>
+    <h2>贸照<small data-t="vm3">走安南玉马换猩绒 · 一桩禁物公案跑出的万里生意</small></h2>
+    <svg class="rim" width="86" height="30" viewBox="0 0 86 30"><ellipse cx="43" cy="15" rx="40" ry="12" fill="none" stroke="#3f5f7d" stroke-width="2"/><ellipse cx="43" cy="15" rx="40" ry="12" fill="rgba(165,85,47,.25)"/></svg>
+  </div>
+  <p class="lede rv">镜头推到广西与安南交界的边市。牙行杜景山是个本分行户，只因衙内在市楼上抛了一只裹着玉马的汗巾调戏他楼上的妻子，两家结怨，胡安抚借差报私仇：一张朱笔票子，限三个月办三十丈的猩猩绒，办不齐拿家属比较。禁物、限期、官价，三样凑齐，一场跨国生意被官府逼了出来。</p>
+
+  <h3 class="st rv">边市规制</h3>
+  <div class="grid g3">
+    <div class="card rv"><h4>开市有期</h4><p><span class="qi">但逢着三七，才是交易的日子。</span>每月逢三逢七开市，开市那日两头列兵，放炮开市，天亮之后才许交易</p></div>
+    <div class="card rv"><h4>评价官</h4><p><span class="qi">名色虽是评价，实在却是抽税。</span>安抚衙门差的官，权要全在这张评价票上</p></div>
+    <div class="card rv"><h4>禁物行情</h4><p>猩猩绒久在禁例，番客不敢私贩；三十丈的题，等于把人往死路上逼</p></div>
+  </div>
+
+  <h3 class="st rv">猩猩血绒三幕</h3>
+  <p class="prose rv">安南经纪黎师长把猩猩绒的来历讲成一个偏偏有信用的悲剧，是全书最有名的一段。</p>
+  <div class="acts rv">
+    <div class="act"><div class="ab"><h5>设酒张屐</h5><p>捕傩摸清猩猩来路，在山峪路口设下浓酒，旁边张起高木屐，专等猩猩自投。猩猩初见就骂：<span class="qi">奴辈设计张我，要害我性命。我辈偏不吃这酒，看他甚法儿奈何我？</span>骂完走开，过一会又回来骂。</p></div></div>
+    <div class="act"><div class="ab"><h5>馋而尽醉</h5><p>骂上几遍，酒香直钻鼻头，唾吐直流，商量着只尝一尝。酒一落肚，喉头越发痒，凭你怎样拿捏也把不住，酩酊大醉还要自辩留量，再穿上高木屐，几步跌倒，尽被擒住。</p></div></div>
+    <div class="act"><div class="ab"><h5>点瓢为信</h5><p>捕奴不敢擅自动手取血，跪在猩猩跟前告求见惠几瓢，还许它染成货物流通四方。猩猩偏偏好名，开口便许；取血时毫厘不差，许几瓢便几瓢，遇着悭鬼猩猩便一滴取不出。黎师长收梢一句：<span class="qi">这猩猩倒是言语相符，最有信行的。</span></p></div></div>
+  </div>
+
+  <h3 class="st rv">泥驼山的搬运局</h3>
+  <p class="prose rv">杜景山在朵落馆过夜，门窗不动，千金搭包夜里凭空消失，急得痛哭。同乡朱春辉却打包票，说天亮贼自来还：安南没有贼盗，丢货是泥驼山上的法术，<q class="qi">他们这边有一座泥驼山，山上有个神通师长。许多弟子学他的法术，他要试验与众弟子看。又要令中国人替他传名。</q>新客持香求告，原物奉还。次日杜景山换得猩猩绒归来，搭包果然原封不动挂回床棱，他笑叹<q class="qi">我倒不知银子是有脚的，果然回来了。</q>朱春辉答得更妙：<q class="qi">银子若没有脚，为何人若身边没得他，一步也行不动么？</q>名为法术，其实是给新到客商的下马威，朱春辉初来时载着三千金绸缎，照样丢过一回。</p>
+
+  <h3 class="st rv">玉马成对</h3>
+  <p class="prose rv">换绒的转机在浴兰溪边。杜景山误闯术术丞相家，垂环小儿抢走他系在衣带上的玉马，老妇人从左右两只衣袖里各提出一只玉马问他认不认得，孩子哭着要成双做对。原来国主赐过一对库中活宝，<q class="qi">将一个答了广西安抚的回礼</q>，单剩一只；老妇人说这马<q class="qi">每到清晨，他身上就透湿的，像是一条龙驹，夜间有神人骑他。</q>四十几丈猩猩绒换走一只玉马，杜景山只嫌换得太快。</p>
+  <p class="prose rv">交绒那日，安抚见了货只冷笑一声：<q class="qi">是便宜了那个狗头。</q>差官随后揭了底：衙内夜里摸去偷香，被当贼拿住一顿好打，两个丫环又被夫人吊死出气，如今闭上眼便见索命，<q class="qi">想是这一员小将，不久要阵亡了。</q>公报私仇的差事，办着办着办成了一桩赔本生意与一场报应账。卷首诗里那句<q class="qi">日暮子规啼更切，闲修野史续残编。</q>正照着这一卷边市里的人情与荒唐。</p>
+</section>
+
+<!-- ============ 卷四 ============ -->
+<section class="zh" id="z4">
+  <div class="zhead rv">
+    <span class="no">第四照 · 卷四</span>
+    <h2>坑照<small data-t="vm4">掘新坑悭鬼成财主 · 一座粪屋如何供出两代功名</small></h2>
+    <svg class="rim" width="86" height="30" viewBox="0 0 86 30"><ellipse cx="43" cy="15" rx="40" ry="12" fill="none" stroke="#3f5f7d" stroke-width="2"/><ellipse cx="43" cy="15" rx="40" ry="12" fill="rgba(165,85,47,.25)"/></svg>
+  </div>
+  <p class="lede rv">压轴一卷最放得开。湖州乌程县有个义乡村，穆太公见山田全靠粪栽培而村里没有粪坑，就此掘出一门产业；后来村中仍称他家为新坑穆家。故事从一间粪屋讲到马吊学馆，再讲到县衙大堂，是清初话本里少见的市井经济学样本。</p>
+
+  <h3 class="st rv">掘坑三件</h3>
+  <div class="grid g3">
+    <div class="card rv"><h4>一掘三坑</h4><p>门前三间屋起了三个大坑，坑与坑隔起矮墙，四壁粉白，贴满诗画斗方，<span class="qi">粉得像雪洞一般，比乡间人卧室还有不同些。</span></p></div>
+    <div class="card rv"><h4>二题斋匾</h4><p>题匾请来训蒙先生。他憋了半天，抄了城中徐家牌坊的齿爵二字交差，说不出的故事容日来解说。一颗雷就此埋下</p></div>
+    <div class="card rv"><h4>三贴报条</h4><p>百十张红纸广告四方，正文只有二十字，是中国广告史上罕见的坦诚文案</p></div>
+  </div>
+  <div class="q rv">穆家喷香新坑，奉求远近君子下顾，本宅愿贴草纸<span class="src">报条全文，二十字：喷香二字为号召，贴草纸是免费引流</span></div>
+
+  <h3 class="st rv">生意经</h3>
+  <div class="ledger">
+    <div class="ltile rv"><div class="k">引流</div><div class="v">草纸白给</div><div class="n"><span class="qi">他从来揩不净的所在，用惯了稻草瓦片，见有现成草纸，怎么不动火？还有出了恭，揩也不揩，落那一张草纸回家去的。</span></div></div>
+    <div class="ltile rv"><div class="k">客群</div><div class="v">女坑加间</div><div class="n">有婆娘上门问<span class="qi">可有女粪坑？</span>太公索性又盖一间，下顾的女客反倒多过男客</div></div>
+    <div class="ltile rv"><div class="k">出货</div><div class="v">粪担生银</div><div class="n">庄户都来他家趸买，<span class="qi">每担是价银一钱，更有挑柴、运米、担油来兑换的</span>；夜里上锁，防自家仆人盗卖</div></div>
+    <div class="ltile rv"><div class="k">底层逻辑</div><div class="v">粪贵于金</div><div class="n">离城远不通粪船，田埂拾粪度日的村庄，<span class="qi">这粪倒比金子还值钱。</span></div></div>
+  </div>
+  <div class="q rv">登一次新坑，就如看一次景致。<span class="src">壁上诗画斗方的功用，如厕被写成了游观</span></div>
+  <div class="q rv">你们分明是我的施主，若断绝门徒，活活要饿杀我这有胡子的和尚了。<span class="src">庄户争草纸动起手来，太公赔笑认错，把出恭说成布施</span></div>
+
+  <h3 class="st rv">悭吝三签</h3>
+  <div class="fcrow">
+    <div class="fcard rv" role="button" tabindex="0"><div class="in">
+      <div class="face front"><span class="tag">签一</span><span class="txt">爱惜灯油</span><span class="hint">点签翻面</span></div>
+      <div class="face back"><span class="tag">自题诗</span><span class="txt qi">爱惜灯油坐黑夜，家中从不置灯笼。</span></div>
+    </div></div>
+    <div class="fcard rv" role="button" tabindex="0"><div class="in">
+      <div class="face front"><span class="tag">签二</span><span class="txt">荷叶包盐</span><span class="hint">点签翻面</span></div>
+      <div class="face back"><span class="tag">赔本</span><span class="txt">路旁荷叶兜回的战利品，到家打开，媳妇只回一句<span class="qi">怎倒买了稀酱来？</span></span></div>
+    </div></div>
+    <div class="fcard rv" role="button" tabindex="0"><div class="in">
+      <div class="face front"><span class="tag">签三</span><span class="txt">伴睡省被</span><span class="hint">点签翻面</span></div>
+      <div class="face back"><span class="tag">家训</span><span class="txt">太公自述<span class="qi">睡到半夜，脚后冰凉，再不敢伸直两腿</span>，捉儿子来伴睡，儿子却溜回媳妇房里</span></div>
+    </div></div>
+  </div>
+
+  <h3 class="st rv">马吊学馆</h3>
+  <p class="prose rv">穆文光逃学进城，一头撞见舅舅金有方吊牌的所在挂着招牌：马吊学馆。厅上高台坐着吊师，四十张骨牌摊在供桌，讲经一般开讲，先从冯梦龙讲起：<q class="qi">我方才将那龙子犹十三篇，条分缕析，句解明白</q>（龙子犹即冯梦龙，曾著马吊格谱），再讲牌理：<q class="qi">惟有马吊，必用四人。所以按四方之象，四人手执八张，所以配八卦之数，以三字而攻一家，意主合从；以一家而赢三家，意主并吞。</q>最妙是把儒家五常配到打法上，赌桌礼仪升格成了修身课。</p>
+  <div class="grid g2">
+    <div class="card rv"><h4>五常打法</h4><p><span class="qi">若夫不打过桩，不打连张，则谓之仁。逢桩必捉，有千必挂，则谓之义。发牌有序，殿版不乱，则谓之礼。留张防贺，现趣图冲，则谓之智。不可急捉，必发还张，则谓之信。</span></p></div>
+    <div class="card rv"><h4>在座绰号</h4><p>徐公子得号吊太监，逢百户得号吊判官，刘小四得号吊鬼，苗舜格得号吊花子；助教兄弟拈头一把好手，人称飞手夜叉，吊师本人则叫赛桑门</p></div>
+  </div>
+  <p class="prose rv">学馆里也有歧视链：同门一听说是新坑穆家的，又听说他家粪屋上挂着齿爵堂的匾，齐口讥讽这是粪门生，辱了门墙。穆文光不理会，把一部吊经读得滚瓜烂熟，后来揣着一封百两银子下场，把设局讹他家的徐公子赢回一百五十两，赢完便收手。</p>
+
+  <h3 class="st rv">两案并发</h3>
+  <div class="acts rv">
+    <div class="act"><div class="ab"><h5>粪坑案</h5><p>村霸谷树皮自上徽号谷大官人，掘起丈余深坑抢穆家生意，还放话要媳妇陪夜才罢。穆文光斋祭土地，祭品被谷树皮半路劫吃；夜里尾随，见他跌进自家掘的官坑爬不起来，一块石头送了性命。坑里那句讨饶是<span class="qi">神道爷爷，饶我残生罢。</span>穆文光回家只说恶人触犯了神道，自己失足跌进粪坑，被他补了一石头；太公听了，病登时好了大半。</p></div></div>
+    <div class="act"><div class="ab"><h5>僭匾案</h5><p>徐公子联合苗舜格、金有方做局，进状告穆太公<span class="qi">道是欺悖圣旨，污秽先考</span>，齿爵二字出自圣旨赐造的牌坊，如今供在粪屋门首；讹得五百两方肯销状。穆文光在赌场持刀刺伤徐公子，自认不为误伤、是为父报仇，被收了监。</p></div></div>
+    <div class="act"><div class="ab"><h5>八股救命题</h5><p>新任孔知县是甲科出身的八股迷，给穆文光出题当面作文，题目是<span class="qi">虽在缧绁之中，非其罪也</span>。文光霎时完篇，中间一联<q class="qi">子产刑书，岂为无辜而设。汤王法网，还因减罪而开。</q>知县拍案连呼<span class="qi">奇才！奇才！</span>当场开释，只把苗舜格枷号四门；后来还亲自送这个再生童生去应试，发案竟高居榜首，进了学。</p></div></div>
+  </div>
+
+  <h3 class="st rv">白屋发迹</h3>
+  <div class="q rv">可见穆太公亏着新坑致富，穆文光亏着报仇成名，父子倒算得两个白屋发迹的豪杰。<span class="src">卷四收梢的定案语，村中至今仍称新坑穆家</span></div>
+  <p class="prose rv">同一卷里被革去秀才的金有方，正是当年抢光穆家、又设局讹穆家的舅舅；宣革那天，穆太公当街拉住他，一句<span class="qi">你衣冠也没有，成甚体统？</span>把三十年恩怨算清。作者收尾不评善恶，只录一首打油偈：<q class="qi">有心求不至，无意反能来。造物自前定，何用苦安排。</q></p>
+
+  <div class="jiaji rv">
+    <h4>校字记（讹字照录）</h4>
+    <p>库本有讹字与异写，本篇引文一律照录不归一：<b>屠三醉</b>与<b>屠三碎</b>两写；冯百户一处作<b>逢百户</b>；阮江兰有<b>际江兰、阢江兰、阮江手</b>诸讹；卷二<b>馄钝</b>当为馄饨；卷三<b data-t="y1">杜景候到将夜</b>脱一字；卷二七风情句<b data-t="y2">脚尖儿是芈的</b>芈字存疑；另有私用区码位一处（约在卷二锄水火句前），引文均已避开或按原样截停。</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ 尾屏 ============ -->
+<section id="coda">
+  <div class="empty">杯空 · 照在</div>
+  <div class="vpoem q"><span>我也谈禅，我也说法，</span><br><span>不挂僧衣，飘飘儒袷；</span><br><span>我也谈神，我也说鬼，</span><br><span>纵涉离奇，井井头尾。</span><br><span>罪我者人，知我者天。</span><br><span>掩卷狂啸，醉后灯前。</span></div>
+  <div class="seal2" data-t="印令牌二">快书</div>
+  <p>四杯饮尽：一杯情，假信成真；一杯骗，将无作有；一杯贸，玉马成双；一杯坑，粪土里长出功名。酌元亭主人在卷四门口留下这六句自状，算是给整只照世杯落的款：照出来的都是世相，捏着杯子的，始终是看戏的自己。</p>
+</section>
+
+<footer>
+  <p>文本来源：殆知阁简体库〈集藏/小说/照世杯〉（去空白约五万八千字），仓库 <a href="https://github.com/robertsong/daizhige" target="_blank" rel="noopener">github.com/robertsong/daizhige</a></p>
+  <p>本篇引文经脚本与库内文件去标点、归一后逐字比对通过；讹字异写照录，未作径改。书名出典与成书年代为库外考订，已在文中注明出处。</p>
+  <p>书中青楼情真之论、妇女不出闺门之诫，皆三百年前话本说教的旧腔，读者当以史料视之，鉴其世相，勿从其训诫。</p>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+(function(){
+  var poured=false;
+  function pour(){
+    if(poured)return; poured=true;
+    var h=document.getElementById('hero');
+    h.classList.add('poured');
+    var w=document.getElementById('wine'), t=document.getElementById('wtop'),
+        s=document.getElementById('stream'), s2=document.getElementById('stream2'),
+        f=document.getElementById('floats'), g=document.getElementById('glowc'),
+        pot=document.getElementById('pot');
+    pot.style.transition='transform .7s ease'; pot.style.transform='rotate(-26deg 520 60)';
+    setTimeout(function(){s.style.opacity='.9';s2.style.opacity='.8';},300);
+    setTimeout(function(){
+      w.style.transition='y 1.8s ease, opacity .4s'; w.style.opacity='1'; w.setAttribute('y','252');
+      t.style.transition='cy 1.8s ease, opacity .4s'; t.style.opacity='.85'; t.setAttribute('cy','252');
+      g.style.transition='opacity 1.6s'; g.style.opacity='1';
+    },900);
+    setTimeout(function(){s.style.opacity='0';s2.style.opacity='0';pot.style.transform='rotate(0 520 60)';},2700);
+    setTimeout(function(){f.style.transition='opacity 1.4s';f.style.opacity='1';},2900);
+  }
+  document.getElementById('pourbtn').addEventListener('click',pour);
+  setTimeout(pour, 6000);
+
+  function tg(sel,cls){document.querySelectorAll(sel).forEach(function(el){
+    el.addEventListener('click',function(){el.classList.toggle(cls||'on');});
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();el.classList.toggle(cls||'on');}});
+  });}
+  tg('.fcard','flip'); tg('.ticket','flip'); tg('.letter','open');
+
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('on'); io.unobserve(e.target);} });
+    },{threshold:.12});
+    document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+    var secs=['z1','z2','z3','z4'];
+    var io2=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        var a=document.querySelector('#rail a[href="#'+e.target.id+'"]');
+        if(a && e.isIntersecting){document.querySelectorAll('#rail a').forEach(function(x){x.classList.remove('lit')}); a.classList.add('lit');}
+      });
+    },{threshold:.18});
+    secs.forEach(function(id){var s=document.getElementById(id); if(s)io2.observe(s);});
+  } else {
+    document.querySelectorAll('.rv').forEach(function(el){el.classList.add('on');});
+  }
+})();
+</script>
+</body>
+</html>
