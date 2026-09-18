@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>北里志 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#1f1e1b; --ink3:#262420;
+  --paper:#e8e4dc; --paper2:#ddd6c9; --dim:#8a857c; --dim2:#6b665e;
+  --gold:#c9963f; --gold2:#a97f33; --yan:#b56a6a; --yan2:#8e4f4f;
+  --seal:#c0453c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:"Songti SC","STSong","NSimSun","SimSun",serif;
+  line-height:1.9; overflow-x:hidden;
+}
+::selection{background:var(--gold);color:var(--ink)}
+a{color:var(--gold);text-decoration:none}
+.q{display:block;margin:14px auto 4px;padding:14px 20px;max-width:640px;
+  background:var(--ink3);border-left:3px solid var(--gold);color:var(--paper2);
+  font-size:15.5px;line-height:2.0}
+p .qi,span.qi{color:var(--gold)}
+.who{display:block;font-size:12.5px;color:var(--dim);letter-spacing:.2em;margin-bottom:2px}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform .9s ease}
+.rv.on{opacity:1;transform:none}
+
+/* ---------- hero ---------- */
+#hero{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#hero .kick{position:absolute;top:26px;left:34px;font-size:12px;letter-spacing:.35em;color:var(--dim)}
+#hero .kick b{color:var(--gold);font-weight:normal}
+.hero-in{position:relative;z-index:3;text-align:center}
+#hint{font-size:13px;color:var(--dim);letter-spacing:.3em;margin-bottom:34px;min-height:1.6em}
+#vt{writing-mode:vertical-rl;height:max-content;margin:0 auto;
+  font-size:58px;letter-spacing:.32em;color:var(--paper);
+  opacity:0;transform:translateY(26px);transition:opacity 1.6s ease,transform 1.6s ease}
+#vt.show{opacity:1;transform:none;text-shadow:0 0 26px rgba(201,150,63,.35)}
+#seal{display:grid;grid-template-columns:repeat(2,44px);gap:5px;margin:34px auto 0;width:max-content;
+  opacity:0;transform:scale(.7) rotate(-8deg);transition:all 1s ease .5s}
+#seal.show{opacity:1;transform:none}
+#seal span{width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  background:var(--seal);color:var(--paper);font-size:21px;border-radius:6px}
+#floor{position:absolute;bottom:0;left:0;right:0;height:120px;z-index:2}
+.landed{position:absolute;bottom:6px;background:var(--yan);opacity:.5;border-radius:60% 40% 60% 40%/60% 40% 60% 40%}
+.petal{position:fixed;top:-5vh;z-index:1;pointer-events:none;
+  border-radius:62% 38% 58% 42%/60% 44% 56% 40%;
+  animation:fall linear forwards}
+@keyframes fall{
+  0%{transform:translate(0,0) rotate(0)}
+  30%{transform:translate(3vw,32vh) rotate(160deg)}
+  60%{transform:translate(-2.5vw,66vh) rotate(300deg)}
+  100%{transform:translate(1.5vw,106vh) rotate(430deg)}
+}
+@media (prefers-reduced-motion:reduce){.petal{display:none}}
+#heronote{position:absolute;bottom:26px;right:34px;font-size:11.5px;color:var(--dim2);letter-spacing:.2em;z-index:3}
+
+/* ---------- walker ---------- */
+#walk{position:fixed;bottom:0;left:0;right:0;height:44px;z-index:50;
+  background:linear-gradient(to top,rgba(25,25,23,.96),rgba(25,25,23,0));
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px}
+#walk .lane{position:relative;width:min(760px,86vw);height:16px}
+#walk .road{position:absolute;left:0;right:0;top:12px;height:1.5px;background:var(--dim2)}
+#walk .dot{position:absolute;top:9px;width:7px;height:7px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 10px rgba(201,150,63,.8);transition:left .15s linear}
+#walk .ep{position:absolute;top:2px;font-size:10.5px;color:var(--dim);letter-spacing:.1em}
+#walk .ep.l{left:-8px}#walk .ep.r{right:-8px}
+#walk .tk{position:absolute;top:10px;width:14px;height:10px;background:none;border:none;cursor:pointer;padding:0}
+#walk .tk::before{content:"";position:absolute;left:50%;top:0;width:1px;height:5px;background:var(--dim2)}
+#walk .tk i{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-style:normal;
+  font-size:10.5px;color:var(--dim2);transition:color .4s}
+#walk .tk.lit i{color:var(--gold)}
+@media (max-width:760px){#walk .ep{display:none}}
+
+/* ---------- common section ---------- */
+section{position:relative;padding:110px 20px 90px;max-width:1060px;margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.4em;color:var(--gold2);margin-bottom:14px}
+h2{font-size:30px;font-weight:normal;letter-spacing:.14em;margin-bottom:30px}
+h3{font-size:18px;font-weight:normal;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
+p{max-width:680px;margin:0 0 14px;color:var(--paper)}
+.note{font-size:13px;color:var(--dim);max-width:680px}
+.cols{display:flex;gap:44px;flex-wrap:wrap}
+.cols>div{flex:1;min-width:290px}
+
+/* ---------- s1 序 ---------- */
+.shuzhen{background:linear-gradient(160deg,#2a2823,#23211c);border:1px solid #3a362d;
+  padding:30px 28px;border-radius:3px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.shuzhen .qn{display:block;font-size:14.5px;color:var(--paper2);line-height:2.2}
+.shuzhen .sign{display:block;text-align:right;color:var(--dim);font-size:13px;margin-top:10px}
+.timeline{margin-top:26px;border-top:1px solid #35322a;padding-top:18px}
+.tl{display:flex;gap:16px;margin-bottom:10px;align-items:baseline}
+.tl b{font-weight:normal;color:var(--gold);flex:none;width:104px;font-size:14px;letter-spacing:.05em}
+.tl span{color:var(--paper2);font-size:14.5px}
+
+/* ---------- s2 三曲图 ---------- */
+#mapwrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
+#qu svg{max-width:100%;height:auto}
+.qu-wall{fill:none;stroke:var(--dim2);stroke-width:2}
+.qu-lane{fill:#2a271f;stroke:#4a4436;stroke-width:1.2;cursor:pointer;transition:all .35s}
+.qu-lane:hover{stroke:var(--gold)}
+.qu-lane.sel{fill:#3a3220;stroke:var(--gold);stroke-width:1.8}
+.qu-lb{fill:var(--paper2);font-size:15px;letter-spacing:3px;pointer-events:none}
+.qu-lb2{fill:var(--dim);font-size:11px;letter-spacing:2px}
+.qu-road{stroke:#4a4436;stroke-width:1.2;stroke-dasharray:5 5}
+.qu-gate{fill:var(--gold);font-size:13px;letter-spacing:2px}
+.qu-arrow{stroke:var(--gold2);stroke-width:1.4;fill:none}
+#lanedets{flex:1;min-width:280px}
+.ldet{display:none;border-left:2px solid var(--gold2);padding:6px 0 6px 18px}
+.ldet.show{display:block;animation:fadein .6s ease}
+@keyframes fadein{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+.mapcap{font-size:12px;color:var(--dim2);margin-top:10px;letter-spacing:.06em}
+
+/* ---------- s3 坊规 ---------- */
+.ledger{border-top:2px solid var(--gold2);max-width:820px}
+.reg-row{border-bottom:1px solid #35322a;padding:16px 6px 14px;cursor:pointer;transition:background .3s}
+.reg-row:hover{background:#201e19}
+.reg-row .rt{display:flex;align-items:baseline;gap:14px}
+.reg-row .zi{color:var(--seal);font-size:13px;flex:none}
+.reg-row .nm{font-size:18px;letter-spacing:.2em;color:var(--paper);flex:none;width:74px}
+.reg-row .br{font-size:13.5px;color:var(--dim)}
+.reg-row .more{max-height:0;overflow:hidden;transition:max-height .5s ease}
+.reg-row.open .more{max-height:480px}
+.reg-row .more p{margin:10px 0 0;font-size:14.5px;color:var(--paper2)}
+
+/* ---------- s4 门牌墙 ---------- */
+#doors{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;max-width:980px}
+.door{background:linear-gradient(175deg,#262420,#1d1c18);border:1px solid #3c382d;
+  padding:18px 10px 14px;text-align:center;cursor:pointer;position:relative;transition:all .3s;font-family:inherit;color:inherit}
+.door:hover{border-color:var(--gold2);transform:translateY(-3px)}
+.door.act{border-color:var(--gold);background:linear-gradient(175deg,#33291c,#221d15)}
+.door .dnm{display:block;writing-mode:vertical-rl;height:max-content;margin:0 auto 10px;font-size:20px;letter-spacing:.22em;color:var(--paper)}
+.door .qtag{font-size:10.5px;color:var(--dim);letter-spacing:.25em}
+.door .qtag em{font-style:normal;color:var(--gold2)}
+.door .go{display:block;margin-top:10px;font-size:11px;color:var(--gold2);letter-spacing:.15em}
+#readstage{margin-top:34px;border-top:1px solid #35322a;padding-top:8px;min-height:120px}
+.read{display:none}
+.read.show{display:block;animation:fadein .5s ease}
+.read p{font-size:14.8px;color:var(--paper2)}
+
+/* ---------- s5 唱和 ---------- */
+.pair{max-width:900px;margin:0 0 44px}
+.pair .pfr{font-size:13px;color:var(--dim);margin-bottom:14px;max-width:640px}
+.jian{display:flex;gap:26px;justify-content:flex-start;flex-wrap:wrap}
+.paper{width:216px;padding:24px 18px;border-radius:2px;position:relative;min-height:250px}
+.paper.v{writing-mode:vertical-rl;font-size:16.5px;letter-spacing:.16em;line-height:2.3;height:250px}
+.paper .tag{position:absolute;top:-11px;left:14px;font-size:10.5px;letter-spacing:.3em;padding:1px 9px;border-radius:2px;font-style:normal}
+.paper .qt{display:block;margin:0;padding:0;background:none;border:none;max-width:none;font-size:inherit;line-height:inherit;color:inherit}
+.paper.fw{background:linear-gradient(170deg,#2b2822,#242119);border:1px solid #454032}
+.paper.fw .tag{background:var(--gold);color:var(--ink)}
+.paper.an{background:linear-gradient(170deg,#2e2424,#251d1c);border:1px solid #4b3a37;
+  opacity:.14;filter:blur(1.5px);transition:opacity 1.1s ease,filter 1.1s ease}
+.paper.an .tag{background:var(--yan2);color:var(--paper)}
+.pair.done .paper.an{opacity:1;filter:none}
+.pbtn{margin-top:18px;background:none;border:1px solid var(--gold2);color:var(--gold);
+  padding:7px 22px;font-size:13px;letter-spacing:.3em;cursor:pointer;font-family:inherit;border-radius:2px}
+.pbtn:hover{background:var(--gold);color:var(--ink)}
+
+/* ---------- s6 挽歌 ---------- */
+#s6{max-width:none;padding-left:0;padding-right:0;background:linear-gradient(180deg,var(--ink) 0%,#211a19 18%,#241b1b 55%,#1d1918 88%,var(--ink) 100%)}
+#s6 .wrap6{max-width:1020px;margin:0 auto;padding:0 20px}
+#s6 .petalbg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+#s6 .petalbg i{position:absolute;width:9px;height:11px;background:var(--yan);opacity:.35;
+  border-radius:60% 40% 60% 40%/60% 40% 60% 40%;animation:drift linear infinite}
+@keyframes drift{0%{transform:translateY(-6vh) rotate(0)}100%{transform:translateY(112vh) rotate(400deg)}}
+.juebi{writing-mode:vertical-rl;height:max-content;font-size:25px;letter-spacing:.24em;line-height:2.5;
+  color:var(--paper);background:#2b2320;border:1px solid #4b3b33;padding:26px 18px;margin:0 auto}
+.wsteps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-top:44px;border-top:1px solid #4b3b33}
+.ws{padding:18px 16px 8px;border-right:1px dashed #3f332e}
+.ws:last-child{border-right:none}
+.ws b{display:block;font-weight:normal;color:var(--yan);font-size:13px;letter-spacing:.2em;margin-bottom:8px}
+.ws p{font-size:13.8px;color:var(--paper2);max-width:none}
+.wbig{font-size:26px;letter-spacing:.2em;text-align:center;margin:40px auto 6px;max-width:640px}
+
+/* ---------- s7 泥莲 ---------- */
+.lotus-step{display:flex;gap:26px;align-items:flex-start;margin-bottom:38px;flex-wrap:wrap}
+.lotus-step .no{flex:none;width:44px;height:44px;border:1px solid var(--yan2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;color:var(--yan);font-size:17px}
+.lotus-step .bd{flex:1;min-width:270px}
+.lotus-step p{font-size:14.8px;color:var(--paper2)}
+
+/* ---------- s8 谶月 ---------- */
+#s8 .room{max-width:820px;margin:0 auto;background:linear-gradient(180deg,#0d0d10,#151318);
+  border:1px solid #2e2c33;padding:34px 26px 30px;position:relative;overflow:hidden}
+#sky{position:relative;height:220px;margin-bottom:22px}
+#moon{position:absolute;left:50%;bottom:-40px;width:58px;height:58px;border-radius:50%;
+  background:#e9e2cf;box-shadow:0 0 40px rgba(233,226,207,.5);transform:translateX(-50%);transition:bottom .2s linear,opacity .4s}
+#mei{position:absolute;bottom:0;left:12%;right:12%;height:70px;border-top:2px solid #3a3540}
+#mtext{min-height:170px;text-align:center}
+#mtext .ph{display:none}
+#mtext .ph.show{display:block;animation:fadein .8s ease}
+#mtext .big{font-size:30px;letter-spacing:.3em;color:var(--seal);margin:18px 0}
+#s8 input[type=range]{width:min(460px,80%);display:block;margin:26px auto 4px;accent-color:var(--gold)}
+#s8 .mlb{text-align:center;font-size:12px;color:var(--dim);letter-spacing:.25em}
+
+/* ---------- s9 街唱 ---------- */
+.banban{max-width:720px;margin:30px auto;background:#231f18;border:1px solid #46402e;padding:30px 24px 26px;text-align:center;position:relative}
+.banban::before{content:"";position:absolute;left:14px;top:12px;bottom:12px;width:5px;background:var(--seal);opacity:.55;border-radius:3px}
+.banban .bd{display:none;font-size:19px;letter-spacing:.12em;line-height:2.4;color:var(--paper)}
+.banban .bd.show{display:block;animation:fadein .5s ease}
+.banban .q{margin:0;padding:0;background:none;border:none;max-width:none;font-size:inherit;line-height:inherit}
+#flipbtn{display:block;margin:6px auto 0;background:none;border:1px solid var(--gold2);color:var(--gold);
+  padding:8px 30px;font-size:13px;letter-spacing:.3em;cursor:pointer;font-family:inherit;border-radius:2px}
+#flipbtn:hover{background:var(--gold);color:var(--ink)}
+
+/* ---------- s10 尾屏 ---------- */
+#s10{text-align:center;padding-bottom:40px}
+#taiping{writing-mode:vertical-rl;height:max-content;margin:10px auto 30px;
+  font-size:44px;letter-spacing:.5em;color:var(--paper);text-shadow:0 0 30px rgba(181,106,106,.3)}
+#s10 .qm{max-width:660px;margin:0 auto;color:var(--paper2);font-size:15.5px}
+.gate-note{font-size:13px;color:var(--dim);margin-top:34px}
+.pagefoot{max-width:860px;margin:70px auto 0;padding:26px 0 64px;border-top:1px solid #35322a;
+  font-size:12.5px;color:var(--dim);line-height:2.2;text-align:center}
+.pagefoot a{color:var(--gold2)}
+</style>
+</head>
+<body>
+
+<!-- ================= hero ================= -->
+<div id="hero">
+  <div class="kick">殆知阁导读 <b>史藏志存记录</b></div>
+  <div class="hero-in">
+    <div id="hint">中和四年的长安，落一阵花</div>
+    <div id="vt"><span data-t="t1">北</span><span data-t="t2">里</span><span data-t="t3">志</span></div>
+    <div id="seal">
+      <span style="order:2">太</span><span style="order:1">平</span>
+      <span style="order:4">遗</span><span style="order:3">事</span>
+    </div>
+  </div>
+  <div id="floor"></div>
+  <div id="heronote">花瓣落尽，书名自现</div>
+</div>
+
+<!-- ================= walker ================= -->
+<div id="walk" aria-hidden="true">
+  <div class="lane">
+    <span class="ep l">北门</span><span class="ep r">青门</span>
+    <div class="road"></div>
+    <div class="dot" id="wdot" style="left:0"></div>
+    <button class="tk" data-go="s1" style="left:6%"><i>序</i></button>
+    <button class="tk" data-go="s2" style="left:22%"><i>坊</i></button>
+    <button class="tk" data-go="s4" style="left:40%"><i>人</i></button>
+    <button class="tk" data-go="s6" style="left:58%"><i>花</i></button>
+    <button class="tk" data-go="s8" style="left:76%"><i>谶</i></button>
+    <button class="tk" data-go="s10" style="left:94%"><i>门</i></button>
+  </div>
+</div>
+
+<!-- ================= s1 序 ================= -->
+<section id="s1">
+  <div class="eyebrow">卷首 · 一部倒着写的书</div>
+  <h2 class="rv">太平遗事：给消失的世界收殓</h2>
+  <div class="cols">
+    <div class="rv">
+      <p>唐僖宗中和四年，公元八八四年。黄巢已经退出长安，天子还京，坊墙倒塌，旧人星散。一个自号无为子的翰林学士坐在废墟边上，把从前平康里的旧闻一条条写下来。他给自己的理由只有一句：当作一份太平年代的谈资。</p>
+      <p>但这本书记的不是太平。它记的是大中、咸通年间长安最繁华的一角：进士放榜后的宴游，平康里北门内的三曲，十几位以诗才、歌令、急智立身的女子。写它的时机，偏偏是这一切被踏碎之后。</p>
+      <p>于是体例成了祭文。每一条小传都像一方牌位，每一首唱和都像一炷香。书里的人不知道结局，写书的人知道；读书的人比写书的人知道得更多。</p>
+      <p class="note">作者孙棨，字文威，唐僖宗时人，官至翰林学士、中书舍人。书中自署无为子。</p>
+    </div>
+    <div class="rv">
+      <div class="shuzhen">
+        <span class="qn">不谓泥蟠未伸，俄逢丧乱，銮舆巡省崤函，鲸鲵逋窜山林，前志扫地尽矣。静思陈事，追念无因，而久罹惊危，心力减耗，向来闻见，不复尽记。聊以编次，为太平遗事云。时中和甲辰岁，无为子序。</span>
+        <span class="sign">库本卷首自序</span>
+      </div>
+      <div class="timeline">
+        <div class="tl"><b>大中年间</b><span>宣宗朝重科举，进士科盛况空前</span></div>
+        <div class="tl"><b>咸通前后</b><span>新科进士作两街探花，风气趋于轻浮</span></div>
+        <div class="tl"><b>广明元年</b><span>潼关破，天子西幸，长安陷落</span></div>
+        <div class="tl"><b>中和四年</b><span>孙棨追记旧闻，编次成书</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= s2 三曲图 ================= -->
+<section id="s2">
+  <div class="eyebrow">卷一 · 坊内地理</div>
+  <h2 class="rv">北门东回，是为三曲</h2>
+  <div class="rv">
+    <p>全书第一篇<span class="qi">海论三曲中事</span>，是一份完整的街区档案：坊墙、门户、街巷、行情、规矩，一一在册。孙棨先给地图定针：</p>
+    <div class="q">平康里入北门，东回三曲，即诸妓所居之聚也。妓中有铮铮者，多在南曲、中曲。其循墙一曲，卑屑妓所居，颇为二曲轻斥之。</div>
+  </div>
+  <div id="mapwrap" class="rv">
+    <div id="qu">
+      <svg width="420" height="360" viewBox="0 0 420 360" role="img" aria-label="平康里三曲示意图">
+        <rect x="40" y="52" width="340" height="250" class="qu-wall"></rect>
+        <rect x="188" y="46" width="44" height="12" fill="#191917"></rect>
+        <text x="196" y="40" class="qu-gate">北门</text>
+        <path d="M210 52 L210 92 L268 92" class="qu-arrow" stroke-dasharray="4 4"></path>
+        <text x="222" y="82" class="qu-lb2">入北门东回</text>
+        <line x1="40" y1="150" x2="380" y2="150" class="qu-road"></line>
+        <text x="52" y="144" class="qu-lb2">十字街</text>
+        <g class="qu-lane" data-lane="0"><rect x="252" y="66" width="112" height="34" rx="3"></rect>
+          <text x="288" y="89" class="qu-lb">南曲</text></g>
+        <g class="qu-lane" data-lane="1"><rect x="252" y="176" width="112" height="34" rx="3"></rect>
+          <text x="288" y="199" class="qu-lb">中曲</text></g>
+        <g class="qu-lane" data-lane="2"><rect x="252" y="236" width="112" height="30" rx="3"></rect>
+          <text x="262" y="257" class="qu-lb" style="font-size:12px">循墙一曲</text></g>
+        <rect x="60" y="180" width="120" height="60" fill="none" stroke="#4a4436" stroke-width="1" stroke-dasharray="3 4"></rect>
+        <text x="86" y="216" class="qu-lb2">诸邸将 · 乐工杂处</text>
+        <rect x="300" y="318" width="90" height="34" fill="none" stroke="#4a4436" stroke-width="1"></rect>
+        <text x="312" y="340" class="qu-lb2">保唐寺 · 南街</text>
+        <text x="60" y="330" class="qu-lb2">东南行：慈恩寺 · 曲江</text>
+      </svg>
+      <div class="mapcap">方位据本书〈序〉与〈海论〉篇大意撮画，非实测里图</div>
+    </div>
+    <div id="lanedets">
+      <div class="ldet show" data-lane="0">
+        <h3>南曲</h3>
+        <p>铮铮者所居。后来传里最有名字的几个人，天水仙哥、颜令宾、王苏苏、张住住，都在南曲。</p>
+        <div class="q">颜令宾居南曲中，举止风流，好尚甚雅。</div>
+        <p class="note">南曲门前正对十字街，新贵们爱在这儿偷偷游逛，是三曲里最亮的一段。</p>
+      </div>
+      <div class="ldet" data-lane="1">
+        <h3>中曲</h3>
+        <p>与南曲并称的二曲，屋宇宽静，门前种花，摆着怪石盆池，宴席多在这里摆开。</p>
+        <div class="q">郑举举者居曲中，亦善令章。</div>
+        <p class="note">她与天水仙哥轮着做席纠，是宴席上的执规人。</p>
+      </div>
+      <div class="ldet" data-lane="2">
+        <h3>循墙一曲</h3>
+        <p>贴着坊墙的一条，住的是被二曲轻斥的卑屑妓。三曲内部也分层级，墙根是最底层。</p>
+        <div class="q">其循墙一曲，卑屑妓所居，颇为二曲轻斥之。</div>
+        <p class="note">北曲又在坊内别处，刘泰娘那样的北曲小家女，平日根本无人知晓。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= s3 坊规 ================= -->
+<section id="s3">
+  <div class="eyebrow">卷二 · 街区条例</div>
+  <h2 class="rv">坊规六则：一座欢场的行政档案</h2>
+  <p class="rv">海论一篇把制度写得像部衙门则例。点开六条：</p>
+  <div class="ledger rv">
+    <div class="reg-row"><div class="rt"><span class="zi">一</span><span class="nm">行牒</span><span class="br">朝士召妓，要公文</span></div>
+      <div class="more"><p>长安官妓隶教坊籍，官员宴聚须借诸曹署行牒才能把人调到别处。唯一豁免是同年：</p>
+      <div class="q">凡朝士宴聚，须假诸曹署行牒，然后能致于他处。惟新进士设筵顾吏，故便可行牒。</div>
+      <p>新进士一纸便笺就行；只是这一纸便笺送出去的谢资，比平日行情翻倍。科举特权渗透到欢场的每一个角落。</p></div></div>
+    <div class="reg-row"><div class="rt"><span class="zi">二</span><span class="nm">假母</span><span class="br">名义上的母亲，真正的东家</span></div>
+      <div class="more"><p>诸妓名义上的母亲多是假母，由这一行熬到年老的妇人充当。诸女从幼年起被买来、租来、骗来：</p>
+      <div class="q">诸女自幼丐，有或佣其下里贫家。常有不调之徒，潜为渔猎，亦有良家子为其家聘之，以转求厚赂。误陷其中，则无以自脱。</div>
+      <p>二十四个字，是一部人口买卖的流程图。初学歌令稍一懈怠，等待她们的就是鞭笞。</p></div></div>
+    <div class="reg-row"><div class="rt"><span class="zi">三</span><span class="nm">席纠</span><span class="br">宴席上的执法官</span></div>
+      <div class="more"><p>行令、记筹、罚酒，皆由席纠执掌，须宽猛得所。这是三曲女子少数靠才干而非姿色确立的职位，天水仙哥与郑举举都以善令章闻名。</p></div></div>
+    <div class="reg-row"><div class="rt"><span class="zi">四</span><span class="nm">讲席</span><span class="br">每月八日，唯一的出门</span></div>
+      <div class="more"><div class="q">诸妓以出里艰难，每南街保唐寺有讲席，多以月之八日，相牵率听焉。皆纳其假母一缗，然后能出于里。</div>
+      <p>听讲是名义，出里是实质。向假母交一缗买路钱，才能出坊门。三八之日保唐寺士子极多，一场讲席，两头心照不宣。</p></div></div>
+    <div class="reg-row"><div class="rt"><span class="zi">五</span><span class="nm">三锾</span><span class="br">明码标价的席面</span></div>
+      <div class="more"><div class="q">每饮率以三锾，继烛即倍之。</div>
+      <p>酒一巡三锾，点蜡烛加倍。行情、汇率、加价规则，海论里全部写清，像一张价目表。</p></div></div>
+    <div class="reg-row"><div class="rt"><span class="zi">六</span><span class="nm">行第</span><span class="br">连姓氏都是配发的</span></div>
+      <div class="more"><div class="q">皆冒假母姓，呼以女弟女兄为之行第，率不在三旬之内。</div>
+      <p>从假母之姓，按姐妹排行称呼，报出的年纪一律不许过三十。名字、姓氏、年纪全数造假，一个人从入行起就没有了自己的身份。</p></div></div>
+  </div>
+</section>
+
+<!-- ================= s4 门牌墙 ================= -->
+<section id="s4">
+  <div class="eyebrow">卷三 · 十二门牌</div>
+  <h2 class="rv">正传十二人：一面门牌墙</h2>
+  <p class="rv">正文按人立传，每人一段，各有各的活法。点一块门牌，展读一段。</p>
+  <div id="doors" class="rv">
+    <button class="door act" data-door="0"><span class="dnm">天水仙哥</span><span class="qtag">南曲 · <em>席纠</em></span></button>
+    <button class="door" data-door="1"><span class="dnm">楚儿</span><span class="qtag">前曲 · <em>润娘</em></span></button>
+    <button class="door" data-door="2"><span class="dnm">郑举举</span><span class="qtag">曲中 · <em>令章</em></span></button>
+    <button class="door" data-door="3"><span class="dnm">牙娘</span><span class="qtag">曲中 · <em>批颊</em></span></button>
+    <button class="door" data-door="4"><span class="dnm">颜令宾</span><span class="qtag">南曲 · <em>挽歌</em></span><span class="go">另设一节</span></button>
+    <button class="door" data-door="5"><span class="dnm">杨妙儿</span><span class="qtag">前曲 · <em>假母</em></span></button>
+    <button class="door" data-door="6"><span class="dnm">王团儿</span><span class="qtag">前曲 · <em>泥莲</em></span><span class="go">另设一节</span></button>
+    <button class="door" data-door="7"><span class="dnm">俞洛真</span><span class="qtag">曲中 · <em>谶诗</em></span><span class="go">另设一节</span></button>
+    <button class="door" data-door="8"><span class="dnm">王苏苏</span><span class="qtag">南曲 · <em>热赶</em></span></button>
+    <button class="door" data-door="9"><span class="dnm">王莲莲</span><span class="qtag">曲中 · <em>攫金</em></span></button>
+    <button class="door" data-door="10"><span class="dnm">刘泰娘</span><span class="qtag">北曲 · <em>樗树</em></span></button>
+    <button class="door" data-door="11"><span class="dnm">张住住</span><span class="qtag">南曲 · <em>街唱</em></span><span class="go">另设一节</span></button>
+  </div>
+  <div id="readstage">
+    <div class="read show" data-read="0">
+      <p><span class="qi">天水仙哥字绛真，住于南曲中。</span>姿容平平，靠谈谑与歌令立住招牌，时贤雅尚之。十六岁的新科进士刘覃辎重数十车进京，指名要见她。所由辈看出机会，一面替她推托抬价，一面收钱。她真病了去不成，府吏李全收了二斤重的金花银榼，径自把她塞进轿子抬到宴所：</p>
+      <div class="q">至则蓬头垢面，涕泗交下，褰帘一睹，亟使舁回，而所费已百余金矣。</div>
+      <p class="note">病人在轿子里哭，钱已经花出去了。这场闹剧是全书行情逻辑的缩影：她越不来，越值钱。</p>
+    </div>
+    <div class="read" data-read="1">
+      <p>楚儿，字润娘，三曲旧日的头牌，辩慧有诗句。迟暮之年被万年县捕贼官郭锻买去，锁在别处。郭锻为人凶忍且毒，每有旧识与她说句话，被知道便是一顿鞭笞。她疼过之后照旧不改。挨打次日，她已经坐在临街的窗下弄起琵琶，马棰之痛化作一首七律递了出去：</p>
+      <div class="q">应是前生有宿冤，不期今世恶因缘。蛾眉欲碎巨灵掌，鸡肋难胜子路拳。</div>
+      <p class="note">郑光业那天正好路过，骇然之余，明日特取路探望，见的就是这幅窗下弄琵琶的场面。</p>
+    </div>
+    <div class="read" data-read="2">
+      <div class="q">郑举举者居曲中，亦善令章。</div>
+      <p>和天水仙哥轮着做席纠，凭流品与巧谈谐立足，不靠脸面。一次名贤醵宴，新入翰林的郑礼臣矜夸不已，满座倦怠，她下筹直说：</p>
+      <div class="q">学士语太多，翰林学士虽甚贵甚美，亦在人耳。</div>
+      <p>同席诸公跃起拜之，礼臣引满自罚，再没说一个字。</p>
+    </div>
+    <div class="read" data-read="3">
+      <p>牙娘下手快，专爱抓人打人。相国少子夏侯表中喝醉了同她戏耍，被她一记耳光打伤了脸。第二天同门在师门期集，同年们纷纷偷瞄他的伤，他只好自己先声夺人。另一位小天赵为山偏爱她，连家里都不敢提，被妻子一句今天气色这么好，定是见过郡君了吧问得他愣了半天，一个字都答不上：</p>
+      <div class="q">每因宴席，偏眷牙娘，谓之郡君。</div>
+    </div>
+    <div class="read" data-read="4">
+      <p>南曲里举止潇洒的一位，会写字，能作句子。她的故事是全书最凉的一段，单开一节。</p>
+      <button class="pbtn" data-jump="s6">往下看挽歌一节</button>
+    </div>
+    <div class="read" data-read="5">
+      <p>杨妙儿住前曲，年老退居幕后当假母，宅子最宽敞洁净，宾客云集。长妓莱儿字蓬仙，相貌平平，年纪也偏长，但口齿便利，诙谐入妙，屋里陈设得像清贵士人的家，见过的人多半被瞒过。进士天水一见就溺了进去，冬天当众封光远作一鸣先辈；等到放榜，光远落第，京师的小子弟们马上念诗来嘲，她应声嘲答，分毫不让。母女两代的口才，都是招牌。</p>
+    </div>
+    <div class="read" data-read="6">
+      <p>王团儿住前曲西头第一家，自己当了假母。次女福娘，字宜之，谈吐丰雅有体裁，是全书笔墨最重的人。她给作者的诗、作者的答诗、和上巳日那一场隔着丝竹的重逢，也单开一节。</p>
+      <button class="pbtn" data-jump="s7">往下看泥莲一节</button>
+    </div>
+    <div class="read" data-read="7">
+      <p>俞洛真生得好，口齿又伶俐。她被于琮家纳过又逐出，改名应举，投迹宦官门下中第，一生浮沉。作者与李文远醉中在她楣上题诗，题完先走，两天后李文远说要回去擦掉那行字，路上有人追出来喊了一句话。这条传也单开一节。</p>
+      <button class="pbtn" data-jump="s8">往下看谶月一节</button>
+    </div>
+    <div class="read" data-read="8">
+      <div class="q">王苏苏在南曲中，屋室宽博，卮馔有序。</div>
+      <p>进士李标在她窗上题诗，说人家是洞中的仙子，把他这阮郎留住不放。她不认识这人，也不接这顶高帽，取笔就在下面续了四句反唇相讥。此后她见了李家的郎君，只问一句：</p>
+      <div class="q">热赶郎在否？</div>
+    </div>
+    <div class="read" data-read="9">
+      <p>王家这位莲莲，字沼容，模样还算过得去。这一家的生财之道最直白：上她家门的人，应酬答对稍不周到，车服多半被扣下，只好租头驴回去。满坊只有这一家的假父算个人物。欢场里连抢劫都做得眉目清楚。</p>
+    </div>
+    <div class="read" data-read="10">
+      <div class="q">刘泰娘，北曲内小家女也。</div>
+      <p>北曲素来没有拔尖的人物，无人知晓她。乱离之春，曲中诸妓那日同去曲江宴会，她在慈恩寺前下车，游者争往围观；因为住处不在此地，被人盘问久了，才低眉说出家门。傍晚孙棨恰过其门，题诗一首，把门前那棵樗树写了进去：</p>
+      <div class="q">寻常凡木最轻樗，今日寻樗桂不如。</div>
+      <p>第二天早上，门槛都快被车马踏平：</p>
+      <div class="q">诘朝诣之者，结驷于门矣。</div>
+      <p class="note">一首诗的行情，比假母的全部算计都快。</p>
+    </div>
+    <div class="read" data-read="11">
+      <div class="q">住住，其母之腹女也，少而敏慧，能辨音律。</div>
+      <p>与邻家庞佛奴同岁，两人私下订了结发的约定。快到将笄的年纪，富室陈小凤纳了薄币求聘，佛奴无力置办。她替两个人都作了打算，最后靠一条街的传唱翻案定局。这一条是全书最长、也最亮的一传，单开一节。</p>
+      <button class="pbtn" data-jump="s9">往下看街唱一节</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= s5 唱和 ================= -->
+<section id="s5">
+  <div class="eyebrow">卷四 · 唱和四局</div>
+  <h2 class="rv">出句与还招：纸上的过招</h2>
+  <p class="rv">北里真正的竞技场在纸上。四局唱和，都是即席、即时、不许认输的往来。点局看答笺。</p>
+
+  <div class="pair rv" data-pair>
+    <p class="pfr">第一局 · 楚儿挨了郭锻的马棰，路过的郑光业惊悔交加。次日他特意绕路探望，她隔窗递出彩笺。</p>
+    <div class="jian">
+      <div class="paper fw v q"><span class="tag">往 · 楚儿</span><span class="qt">应是前生有宿冤，不期今世恶因缘。蛾眉欲碎巨灵掌，鸡肋难胜子路拳。</span></div>
+      <div class="paper an v q"><span class="tag">答 · 郑光业</span><span class="qt">大开眼界莫言冤，毕世甘他也是缘。</span></div>
+    </div>
+    <button class="pbtn" data-showpair>展答笺</button>
+  </div>
+
+  <div class="pair rv" data-pair>
+    <p class="pfr">第二局 · 光远落第，京师的小子弟们觉得替天行道的机会来了，马上念诗，嘲杨家莱儿一个冬天白吹了一头女婿。</p>
+    <div class="jian">
+      <div class="paper fw v q"><span class="tag">往 · 小子弟</span><span class="qt">尽道莱儿口可凭，一冬夸婿好声名。</span></div>
+      <div class="paper an v q"><span class="tag">答 · 莱儿</span><span class="qt">黄口小儿口没凭，逡巡看取第三名。</span></div>
+    </div>
+    <button class="pbtn" data-showpair>展答笺</button>
+  </div>
+
+  <div class="pair rv" data-pair>
+    <p class="pfr">第三局 · 光远以长句题莱儿室，写尽了室中陈设与情态。莱儿酬之，尾联自己给自己下了谶。</p>
+    <div class="jian">
+      <div class="paper fw v q"><span class="tag">往 · 光远</span><span class="qt">醉凭青琐窥韩寿，困掷金梭恼谢鲲。</span></div>
+      <div class="paper an v q"><span class="tag">答 · 莱儿</span><span class="qt">多情多病年应促，早办名香为返魂。</span></div>
+    </div>
+    <button class="pbtn" data-showpair>展答笺</button>
+  </div>
+
+  <div class="pair rv" data-pair>
+    <p class="pfr">第四局 · 进士李标在王苏苏家饮酒题窗，自比阮郎。苏苏不认得他，也不肯吃这顶高帽，喊一句<span class="qi">阿谁留郎君，莫乱道！</span>取笔继之。</p>
+    <div class="jian">
+      <div class="paper fw v q"><span class="tag">往 · 李标</span><span class="qt">春暮花株绕户飞。王孙寻胜引尘衣。洞中仙子多情态，留住阮郎不放归。</span></div>
+      <div class="paper an v q"><span class="tag">答 · 王苏苏</span><span class="qt">怪得犬惊鸡乱飞，羸童瘦马老麻衣。阿谁乱引闲人到，留住青蚨热赶归。</span></div>
+    </div>
+    <button class="pbtn" data-showpair>展答笺</button>
+  </div>
+</section>
+
+<!-- ================= s6 挽歌 ================= -->
+<section id="s6">
+  <div class="petalbg" aria-hidden="true">
+    <i style="left:6%;animation-duration:13s"></i><i style="left:18%;animation-duration:17s;animation-delay:3s"></i>
+    <i style="left:31%;animation-duration:11s;animation-delay:6s"></i><i style="left:44%;animation-duration:19s;animation-delay:1s"></i>
+    <i style="left:57%;animation-duration:14s;animation-delay:8s"></i><i style="left:69%;animation-duration:16s;animation-delay:4s"></i>
+    <i style="left:82%;animation-duration:12s;animation-delay:10s"></i><i style="left:93%;animation-duration:18s;animation-delay:2s"></i>
+  </div>
+  <div class="wrap6">
+    <div class="eyebrow">卷五 · 挽歌</div>
+    <h2 class="rv">颜令宾：花剩两三枝</h2>
+    <div class="cols rv">
+      <div>
+        <p>南曲颜令宾，好尚甚雅，对举人从来以礼相待，讨诗的人多，<span class="qi">五彩笺常满箱箧</span>。病重的那年春末，天气晴和，她让侍女扶坐台阶前，看着落花长叹好几回，索笔题诗：</p>
+        <div class="juebi q">气余三五喘，花剩两三枝。话别一樽酒，相邀无后期。</div>
+        <p class="note" style="text-align:center">库本绝笔诗。写完教小童持笺出坊，沿宣阳、亲仁一带，逢新科郎君与举人便呈上</p>
+      </div>
+      <div>
+        <p>家里依言设了酒果。客人们奏乐畅饮到天色向晚，她说：</p>
+        <div class="q"><span class="who">颜令宾</span>我不久矣，幸各制哀挽以送我。</div>
+        <p>满座先以为她是在要丧葬的赙礼，还替她高兴，听清这话才惭愧起来。她死后将下葬那天，母亲拆开收到的几封信，都是哀挽词。母亲气得把它们全扔到街上：</p>
+        <div class="q"><span class="who">其母</span>此岂救我朝夕也？</div>
+        <p>纸钱不如饭钱。哀挽救不了活人的朝夕，这是欢场账目的最后一行。</p>
+      </div>
+    </div>
+    <div class="rv">
+      <p>邻居刘驼驼会编曲词，捡起那些被丢掉的挽词，教抬棺的人一路同唱，唱声悲怆，那天她葬在青门外。四章挽词从此传遍长安，出殡的人都爱唱。其中一联：</p>
+      <div class="wbig q">花坠有开日，月沉无出期。</div>
+      <p style="text-align:center">有人问驼驼：<span class="qi">宋玉在西，莫是你否？</span>驼驼哂曰：<span class="qi">大有宋玉在。</span>曲中诸子皆知她私于乐工，递相掩覆，引以为耻；只有挽歌是公开的。</p>
+    </div>
+    <div class="wsteps rv">
+      <div class="ws"><b>五彩笺</b><p>生前乞诗，满箱满箧，是她的体面</p></div>
+      <div class="ws"><b>一曲挽饮</b><p>扶病设宴，自求哀挽，是她自己操持的葬礼</p></div>
+      <div class="ws"><b>掷于街</b><p>母亲掷掉挽词，纸上的体面抵不过朝夕</p></div>
+      <div class="ws"><b>青门外</b><p>挽柩者同唱，长安传之，纸终于比人活得久</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= s7 泥莲 ================= -->
+<section id="s7">
+  <div class="eyebrow">卷六 · 泥莲</div>
+  <h2 class="rv">宜之：泥中莲子</h2>
+  <p class="rv">王团儿的次女福娘，字宜之。宴席正欢的时候，她却常常惨然悲郁，满座都为她改容。问她，只说这样的踪迹，怎能迷而不返。作者和两姐妹围坐着清谈雅饮的那几年，他给她题过诗，她把诗请人题在窗左红墙上，还嫌一面墙没题满。然后有一天，她递过来一张红笺。</p>
+  <div class="lotus-step rv"><div class="no">一</div><div class="bd">
+    <p>红笺上的诗，把话挑明：</p>
+    <div class="q">日日悲伤未有图，懒将心事话凡夫。非同覆水应收得，只问仙郎有意无？</div>
+  </div></div>
+  <div class="lotus-step rv"><div class="no">二</div><div class="bd">
+    <p>作者题其后四句作答，答得体面，也答得决绝：</p>
+    <div class="q">韶妙如何有远图，未能相为信非夫。泥中莲子虽无染，移入家园未得无。</div>
+    <p>她看完，哭着再没说话。两人的情意，从此淡了。</p>
+  </div></div>
+  <div class="lotus-step rv"><div class="no">三</div><div class="bd">
+    <p>那年夏天作者东去洛阳。饯别的酒席上，她只反复嘱托一句话：</p>
+    <div class="q">此欢不知可继否？</div>
+  </div></div>
+  <div class="lotus-step rv"><div class="no">四</div><div class="bd">
+    <p>冬初回京，她已经归了豪家做主，再不能相见。次年上巳，曲水禊宴，邻棚丝竹，隔着棚望见南座两位，正是宜之和她的母亲。他从棚后候着女佣传话，等到能之下马，她团起一方红巾掷过来：是宜之的诗。</p>
+    <div class="q">久赋恩情欲托身，已将心事再三陈。泥莲既没移栽分，今日分离莫恨人。</div>
+    <p>作者心里空落落地打马回家，从此不再进那扇门。<span class="qi">每念是人之慧性，可喜也。</span></p>
+  </div></div>
+  <div class="lotus-step rv"><div class="no">五</div><div class="bd">
+    <p>传末补了她自己的来历。她本是解梁人，家与一乐工为邻，从小跟着这户人家学做针线，念歌词诗，却在总角之年被骗婚：</p>
+    <div class="q">总角为人所误，聘一过客，云入京赴调选。及挈至京，置之于是，客绐而去。</div>
+    <p>后来有兄弟寻到长安论夺，她估量兄长力轻势弱争不过，自己作主换了几百金给兄长，然后：</p>
+    <div class="q">恸哭永诀而去。</div>
+    <p>红笺上的那句问话，问的从来不是有没有人要她，是还能不能出去。书里没人答她。每回和宾客说起这些，她都呜咽好久。</p>
+  </div></div>
+</section>
+
+<!-- ================= s8 谶月 ================= -->
+<section id="s8">
+  <div class="eyebrow">卷七 · 谶月</div>
+  <h2 class="rv">俞洛真：题诗两日后，潼关失守</h2>
+  <p class="rv">离乱前两日，作者与李文远乘醉夜访俞洛真。新月如眉，文远一见倾倒，作者戏题一诗于楣间，先走了。把月亮升上去，看这场玩笑怎么收场。</p>
+  <div class="room rv">
+    <div id="sky">
+      <div id="moon"></div>
+      <div id="mei"></div>
+    </div>
+    <div id="mtext">
+      <div class="ph show" data-ph="0">
+        <div class="q" style="border-left-color:var(--yan2)">引君来访洞中仙，新月如眉挂户前。领取嫦娥攀得桂，便从陵谷一时迁。</div>
+        <p class="note" style="text-align:center">末句拿陵谷变迁开玩笑，题完，作者自回</p>
+      </div>
+      <div class="ph" data-ph="1">
+        <p>两天后李文远说，那晚醉后在人家楣上留了名姓不妥，要回去擦掉。路过安上门没回头，径直去了南院。</p>
+      </div>
+      <div class="ph" data-ph="2">
+        <div class="big"><span class="qi">潼关失守矣。</span></div>
+        <p>追出来的人只报了这一句。文远还是没回头，径直去了南院；回程路上已夺马纷纭，只得仓皇奔窜。</p>
+      </div>
+      <div class="ph" data-ph="3">
+        <p>后来他们想起楣上那行字：</p>
+        <div class="q" style="border-left-color:var(--yan2)">因与文远思所题诗，真谶词也。</div>
+        <p class="note" style="text-align:center">陵谷一时迁，两日后应验。玩笑话成了长安的讣告</p>
+      </div>
+    </div>
+    <input type="range" id="mrise" min="0" max="100" value="0" aria-label="月升滑杆">
+    <div class="mlb">牵住月光往上走</div>
+  </div>
+</section>
+
+<!-- ================= s9 街唱 ================= -->
+<section id="s9">
+  <div class="eyebrow">卷八 · 街唱</div>
+  <h2 class="rv">张住住：一条街唱翻的案</h2>
+  <div class="cols">
+    <div class="rv">
+      <p>南曲张住住与邻家庞佛奴同岁，两人私下订了结发的约定。快到将笄的年纪，富室陈小凤纳了薄币求聘，约在三月初五。佛奴穷，聘不起。住住托宋家的邻媪传话：上巳那天全家去踏青，她称病留下，自有安排。当日她闩上门，守在东墙内侧，墙外一有佛奴的声音，翻墙而过。事后她对佛奴说：跟你私奔，眼下两头都不妥当；天长地久的誓约，可以慢慢图。小凤那头，她自会应付。</p>
+      <p>小凤自以为得计，佛奴去找曲中畜斗鸡的人，五日那天：</p>
+      <div class="q">至五日因髡其冠，取丹物，托宋妪致于住住。</div>
+      <p>小凤以为验了元，大喜，从此往来不绝。</p>
+    </div>
+    <div class="rv">
+      <p>好事不出门。北曲王团儿家出了丑事，平康里的小儿们编了四句满街唱，最后一句正唱到住住头上：</p>
+      <div class="banban">
+        <div class="bd show" data-ban="0"><span class="q">张公吃酒李公颠，盛六生儿郑九怜。舍下雄鸡伤一德，南头小凤纳三千。</span></div>
+        <div class="bd" data-ban="1"><span class="q">舍下雄鸡失一足，街头小福拉三拳。</span></div>
+      </div>
+      <button id="flipbtn">听街坊改唱</button>
+      <p class="note" style="text-align:center">小凤街头听见前一首，疑心发作。住住抚掌，当场把斗鸡失德翻成斗鸡失足，把满街谣言翻成一桩打人纠纷，还叫群小儿齐声改唱。小凤见鸡果然跛了，才懊悔错听了谣言，反而添了酒肉上门。末句改唱一出，他才真的不敢再来</p>
+    </div>
+  </div>
+  <div class="rv" style="margin-top:30px">
+    <p>她当年指着一口井说过：<span class="qi">若逼我不已，骨董一声即了矣。</span>这口气她一直没松。佛奴后来庸于徐邸，邸将怜之，替他谋了职名，做到副手：</p>
+    <div class="q">终以礼聘住住，将连大第。</div>
+    <p>全书十二传，只这一传底是亮的。</p>
+  </div>
+</section>
+
+<!-- ================= s10 尾屏 ================= -->
+<section id="s10">
+  <div class="eyebrow">卷终 · 青门外</div>
+  <div id="taiping">太平遗事</div>
+  <p class="rv qm">孙棨自评此书，拿蜀妓薛涛作衬：</p>
+  <div class="q rv">比常闻蜀妓薛涛之才辩，必谓人过言，及睹北里二三子之徒，则薛涛远有惭德矣。</div>
+  <p class="rv" style="max-width:660px;margin:26px auto 0">三曲里这些女子无一人有墓志，姓名还多半是配发的。她们剩下的全部行状，是一个败军之后追记欢场的人随手写下的十几段小传，与几首恰好被抄进来的诗。挽歌这东西，有时候是唯一来得及写的传记。</p>
+  <p class="gate-note">出了青门，长安再无此坊。坊中故事，止于纸上。</p>
+  <footer class="pagefoot">
+    文本来源：殆知阁简体库〈<span data-t="bk1">北里志</span>〉史藏志存记录 <a href="https://github.com/raptazure/daizhige-daodu">daizhige-daodu 仓库</a><br>
+    引文已与库内文件逐字核验（去标点、异体归一比对）<br>
+    书中所记妓籍、人口买卖与轻浮习气皆唐人语，属时代产物，诸女被买被系之处境书中如实存录，今日读之当存哀矜，亦当有分辨。导读系列第三九一篇（卷二百七十一 · 三曲）
+  </footer>
+</section>
+
+<script>
+(function(){
+  /* ---- petals hero ---- */
+  var hero=document.getElementById('hero'),floor=document.getElementById('floor'),
+      vt=document.getElementById('vt'),seal=document.getElementById('seal'),hint=document.getElementById('hint');
+  var landed=0,NEED=9,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function land(){
+    landed++;
+    var p=document.createElement('i');p.className='landed';
+    p.style.left=(3+Math.random()*94)+'%';p.style.width=(7+Math.random()*7)+'px';p.style.height=(9+Math.random()*7)+'px';
+    p.style.transform='rotate('+(Math.random()*360)+'deg)';
+    floor.appendChild(p);
+    if(landed>=NEED){vt.classList.add('show');seal.classList.add('show');hint.textContent='花落九瓣，坊门开了';}
+  }
+  function drop(n,fast){
+    for(var i=0;i<n;i++){
+      var p=document.createElement('i');p.className='petal';
+      var s=8+Math.random()*8;
+      p.style.left=(Math.random()*98)+'vw';p.style.width=s+'px';p.style.height=(s+3)+'px';
+      p.style.background=Math.random()<.75?'#b56a6a':'#c9963f';
+      p.style.opacity=.5+Math.random()*.4;
+      p.style.animationDuration=(fast?(2+Math.random()*1.5):(4+Math.random()*3))+'s';
+      p.addEventListener('animationend',function(){this.remove();land();});
+      document.body.appendChild(p);
+    }
+  }
+  function reveal(){vt.classList.add('show');seal.classList.add('show');hint.textContent='花落九瓣，坊门开了';}
+  if(reduced){reveal();}
+  else{
+    var t=0,iv=setInterval(function(){t++;if(landed>=NEED){clearInterval(iv);return;}drop(2,false);if(t>20)clearInterval(iv);},700);
+    hero.addEventListener('click',function(e){
+      if(landed<NEED){drop(3,true);}
+      else{for(var i=0;i<4;i++)setTimeout(function(){drop(1,false);},i*160);}
+    });
+    setTimeout(function(){if(landed<NEED){landed=NEED;reveal();}},12000);
+  }
+
+  /* ---- walker ---- */
+  var wdot=document.getElementById('wdot'),lane=document.querySelector('#walk .lane'),
+      tks=document.querySelectorAll('#walk .tk'),
+      secs=['s1','s2','s4','s6','s8','s10'].map(function(id){return document.getElementById(id);});
+  function walk(){
+    var doc=document.documentElement,sc=scrollY||doc.scrollTop,
+        max=doc.scrollHeight-innerHeight,
+        r=lane.getBoundingClientRect();
+    wdot.style.left=Math.min(100,Math.max(0,max?sc/max*100:0))+'%';
+    var c=-1,mid=innerHeight*.42;
+    secs.forEach(function(s,i){if(s.getBoundingClientRect().top<mid)c=i;});
+    tks.forEach(function(n,i){n.classList.toggle('lit',i<=c);});
+  }
+  addEventListener('scroll',walk,{passive:true});addEventListener('resize',walk);walk();
+  tks.forEach(function(n){n.addEventListener('click',function(){
+    var t=document.getElementById(n.getAttribute('data-go'));if(t)t.scrollIntoView({behavior:'smooth'});
+  });});
+
+  /* ---- reveal ---- */
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('on');io.unobserve(en.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+
+  /* ---- lanes ---- */
+  document.querySelectorAll('.qu-lane').forEach(function(g){
+    g.addEventListener('click',function(){
+      var k=g.getAttribute('data-lane');
+      document.querySelectorAll('.qu-lane').forEach(function(x){x.classList.remove('sel');});
+      g.classList.add('sel');
+      document.querySelectorAll('.ldet').forEach(function(d){
+        d.classList.toggle('show',d.getAttribute('data-lane')===k);
+      });
+    });
+  });
+
+  /* ---- ledger ---- */
+  document.querySelectorAll('.reg-row').forEach(function(row){
+    row.addEventListener('click',function(){row.classList.toggle('open');});
+  });
+
+  /* ---- doors ---- */
+  document.querySelectorAll('.door').forEach(function(d){
+    d.addEventListener('click',function(){
+      var k=d.getAttribute('data-door');
+      document.querySelectorAll('.door').forEach(function(x){x.classList.remove('act');});
+      d.classList.add('act');
+      document.querySelectorAll('.read').forEach(function(r){
+        r.classList.toggle('show',r.getAttribute('data-read')===k);
+      });
+    });
+  });
+  document.querySelectorAll('[data-jump]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=document.getElementById(b.getAttribute('data-jump'));if(t)t.scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  /* ---- pairs ---- */
+  document.querySelectorAll('[data-pair]').forEach(function(p){
+    var b=p.querySelector('[data-showpair]');
+    if(b)b.addEventListener('click',function(){p.classList.add('done');b.style.display='none';});
+  });
+
+  /* ---- moon ---- */
+  var mr=document.getElementById('mrise'),moon=document.getElementById('moon'),
+      room=document.querySelector('#s8 .room'),
+      phs=document.querySelectorAll('#mtext .ph'),cur=-1;
+  mr.addEventListener('input',function(){
+    var v=+mr.value;
+    moon.style.bottom=(-40+v*2.4)+'px';
+    moon.style.opacity=v>92?0:1;
+    var k=v<38?0:(v<72?1:(v<97?2:3));
+    if(k!==cur){cur=k;phs.forEach(function(p){p.classList.toggle('show',+p.getAttribute('data-ph')===k);});}
+  });
+
+  /* ---- banban ---- */
+  var fb=document.getElementById('flipbtn'),bans=document.querySelectorAll('.banban .bd'),cur2=0;
+  fb.addEventListener('click',function(){
+    cur2=1-cur2;
+    bans.forEach(function(b){b.classList.toggle('show',+b.getAttribute('data-ban')===cur2);});
+    fb.textContent=cur2?'还原原来的街唱':'听街坊改唱';
+  });
+})();
+</script>
+</body>
+</html>
