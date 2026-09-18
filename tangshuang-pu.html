@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>糖霜谱 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #201f1d;
+    --ink-3: #131311;
+    --paper: #e8e4dc;
+    --paper-dim: #a39e93;
+    --paper-faint: #6e6a61;
+    --bam: #5f9270;
+    --bam-dim: rgba(95,146,112,0.35);
+    --bam-faint: rgba(95,146,112,0.12);
+    --amber: #b5722a;
+    --purple: #8a5a7a;
+    --gold: #d8b45f;
+    --hairline: rgba(232,228,220,0.12);
+    --serif: "Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+    --mono: "JetBrains Mono","SFMono-Regular",Consolas,"Courier New",monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--serif);
+    line-height: 1.9;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--bam-dim); color: var(--paper); }
+  main { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  .q {
+    color: var(--paper);
+    border-bottom: 1px solid var(--bam-dim);
+    padding: 0 2px;
+  }
+  .qv { color: var(--bam); }
+
+  /* ---------- hero ---------- */
+  #hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px;
+    gap: 20px;
+  }
+  .hero-left {
+    flex: 0 0 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 3;
+  }
+  .kicker {
+    font-size: 12px;
+    letter-spacing: 0.5em;
+    color: var(--paper-faint);
+    margin-bottom: 26px;
+  }
+  .vtitle-wrap {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+  .vtitle {
+    writing-mode: vertical-rl;
+    font-size: 84px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    line-height: 1.15;
+    color: var(--paper);
+    height: max-content;
+  }
+  .vtitle em {
+    font-style: normal;
+    color: var(--bam);
+  }
+  .vmeta {
+    writing-mode: vertical-rl;
+    font-size: 14px;
+    letter-spacing: 0.35em;
+    color: var(--paper-dim);
+    padding-top: 10px;
+    height: max-content;
+  }
+  .seal-slip {
+    display: inline-block;
+    margin-top: 30px;
+    border: 1px solid var(--bam-dim);
+    padding: 10px 16px 12px;
+    font-size: 13px;
+    color: var(--paper-dim);
+    line-height: 2;
+    background: var(--ink-2);
+    position: relative;
+  }
+  .seal-slip b {
+    color: var(--bam);
+    font-weight: normal;
+  }
+  .seal-mini {
+    position: absolute;
+    right: -12px;
+    bottom: -12px;
+    width: 44px;
+    height: 44px;
+    background: var(--bam);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.25;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4px;
+    transform: rotate(-4deg);
+    letter-spacing: 0;
+  }
+  .hero-right {
+    flex: 1;
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-right svg { width: min(520px, 90%); height: auto; overflow: visible; }
+  .hero-lede {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 34px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--paper-dim);
+    letter-spacing: 0.12em;
+  }
+  .hero-lede .qv { color: var(--bam); }
+  .scroll-cue {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--paper-faint);
+    letter-spacing: 0.4em;
+    animation: cue 2.4s ease-in-out infinite;
+  }
+  @keyframes cue { 0%,100% { opacity: 0.25; } 50% { opacity: 1; } }
+  /* frost grow */
+  .crystal { transform-origin: center; transform-box: fill-box; animation: grow 3.2s cubic-bezier(.2,.7,.3,1.2) both; }
+  .crystal.c2 { animation-delay: 0.8s; }
+  .crystal.c3 { animation-delay: 1.6s; }
+  .crystal.c4 { animation-delay: 2.2s; }
+  .crystal.c5 { animation-delay: 2.8s; }
+  @keyframes grow {
+    0% { transform: scale(0); opacity: 0; }
+    60% { opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .sparkle { animation: twinkle 3s ease-in-out infinite; }
+  .sparkle.s2 { animation-delay: 1s; }
+  .sparkle.s3 { animation-delay: 2s; }
+  @keyframes twinkle { 0%,100% { opacity: 0.15; } 50% { opacity: 0.9; } }
+
+  /* ---------- stations nav ---------- */
+  #stns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding: 26px 0 8px;
+    position: sticky;
+    top: 0;
+    background: linear-gradient(var(--ink) 82%, transparent);
+    z-index: 9;
+  }
+  #stns a {
+    color: var(--paper-faint);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    border: 1px solid transparent;
+    padding: 4px 12px;
+    transition: color .3s;
+  }
+  #stns a:hover { color: var(--bam); border-color: var(--bam-dim); }
+
+  /* ---------- generic section ---------- */
+  section { padding: 90px 0 40px; position: relative; }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 14px; }
+  .sec-no {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--bam);
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+  }
+  .sec-title { font-size: 30px; font-weight: 700; letter-spacing: 0.14em; }
+  .sec-sub { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.25em; }
+  .sec-rule { height: 1px; background: var(--hairline); margin: 18px 0 34px; position: relative; }
+  .sec-rule::after {
+    content: "";
+    position: absolute;
+    left: 0; top: -1px;
+    width: 64px; height: 3px;
+    background: var(--bam);
+  }
+  .prose { max-width: 720px; color: var(--paper-dim); }
+  .prose b { color: var(--paper); font-weight: normal; }
+  .rv { opacity: 0; transform: translateY(22px); transition: opacity .8s ease, transform .8s ease; }
+  .rv.in { opacity: 1; transform: none; }
+
+  /* ---------- S1 邹和尚 ---------- */
+  .acts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 40px; }
+  .act {
+    background: var(--ink-2);
+    border: 1px solid var(--hairline);
+    padding: 26px 22px 22px;
+    position: relative;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+  }
+  .act-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--bam);
+    letter-spacing: 0.25em;
+    margin-bottom: 8px;
+  }
+  .act h3 { font-size: 19px; letter-spacing: 0.1em; margin-bottom: 12px; font-weight: 700; }
+  .act p { font-size: 14px; color: var(--paper-dim); flex: 1; }
+  .act .stage { height: 120px; margin-bottom: 14px; position: relative; }
+  .act .stage svg { width: 100%; height: 100%; }
+  .act-btn {
+    align-self: flex-start;
+    margin-top: 14px;
+    background: none;
+    border: 1px solid var(--bam-dim);
+    color: var(--bam);
+    font-family: var(--serif);
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    padding: 7px 18px;
+    cursor: pointer;
+    transition: background .3s, color .3s;
+  }
+  .act-btn:hover { background: var(--bam); color: var(--ink); }
+  .act-btn:disabled { opacity: 0.35; cursor: default; background: none; color: var(--bam); }
+  .act-note {
+    font-size: 13px;
+    color: var(--bam);
+    margin-top: 12px;
+    min-height: 2.4em;
+    opacity: 0;
+    transition: opacity .5s;
+  }
+  .act-note.show { opacity: 1; }
+  /* donkey */
+  #donkeyG { transition: transform 1.6s ease; }
+  .donkey-run { transform: translateX(180px); }
+  .market-note { opacity: 0; transition: opacity .6s .8s; }
+  .donkey-run ~ .market-note, .donkey-run + .market-note { opacity: 1; }
+  .run-wrap.done #donkeyG { transform: translateX(150px); }
+  .run-wrap.done .market-note { opacity: 1; }
+  /* statue */
+  #statueG { transition: opacity .9s; }
+  #monkG { transition: opacity .9s; }
+  .statue-wrap.reveal #monkG { opacity: 0; }
+  .statue-wrap.reveal #statueG { opacity: 1; }
+  #statueG { opacity: 0; }
+  /* dialog */
+  .dialog {
+    border-left: 3px solid var(--bam);
+    background: var(--ink-3);
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--paper);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .6s, transform .6s;
+    margin-top: 12px;
+  }
+  .dialog.show { opacity: 1; transform: none; }
+  .dialog small { display: block; color: var(--paper-faint); margin-top: 6px; font-size: 12px; }
+
+  /* 五郡 bars */
+  .pref { margin-top: 56px; }
+  .pref-head { font-size: 15px; color: var(--paper-dim); margin-bottom: 22px; letter-spacing: 0.06em; }
+  .bar-row { display: grid; grid-template-columns: 90px 1fr 150px; gap: 14px; align-items: center; padding: 9px 0; border-bottom: 1px dashed var(--hairline); }
+  .bar-name { font-size: 16px; letter-spacing: 0.15em; }
+  .bar-name.crown { color: var(--bam); }
+  .bar-track { height: 12px; background: var(--ink-3); position: relative; overflow: hidden; }
+  .bar-fill {
+    position: absolute; inset: 0 auto 0 0;
+    width: 0;
+    background: linear-gradient(90deg, var(--bam-dim), var(--bam));
+    transition: width 1.4s cubic-bezier(.2,.7,.2,1);
+  }
+  .bar-row.lesser .bar-fill { background: var(--paper-faint); }
+  .bar-note { font-size: 12px; color: var(--paper-faint); }
+  .pref-q { margin-top: 20px; font-size: 15px; color: var(--paper-dim); }
+
+  /* ---------- S2 蔗程 ---------- */
+  #rail {
+    margin: 46px 0 8px;
+    overflow-x: auto;
+    padding-bottom: 14px;
+  }
+  .rail-line { display: flex; min-width: 900px; position: relative; padding-top: 34px; padding-bottom: 8px; }
+  .rail-line::before {
+    content: "";
+    position: absolute;
+    left: 30px; right: 30px; top: 47px;
+    height: 1px;
+    background: var(--bam-dim);
+  }
+  .rail-node { flex: 1; position: relative; text-align: center; padding: 0 6px; }
+  .rail-node::before {
+    content: "";
+    position: absolute;
+    top: 9px; left: 50%;
+    transform: translateX(-50%);
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 2px solid var(--bam);
+  }
+  .rail-node.hot::before { background: var(--bam); box-shadow: 0 0 12px var(--bam-dim); }
+  .rail-m {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--bam);
+    white-space: nowrap;
+  }
+  .rail-t { font-size: 14px; letter-spacing: 0.08em; color: var(--paper); }
+  .rail-d { font-size: 12px; color: var(--paper-faint); }
+  .rail-cap { font-size: 13px; color: var(--paper-faint); margin-top: 6px; }
+
+  .cane4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 48px; }
+  .cane {
+    background: var(--ink-2);
+    border: 1px solid var(--hairline);
+    padding: 20px 18px;
+    cursor: pointer;
+    transition: border-color .3s, transform .3s;
+    position: relative;
+  }
+  .cane:hover, .cane.act5 { border-color: var(--bam); transform: translateY(-4px); }
+  .cane svg { width: 34px; height: 120px; display: block; margin-bottom: 14px; }
+  .cane h4 { font-size: 19px; letter-spacing: 0.2em; margin-bottom: 4px; }
+  .cane .aka { font-size: 12px; color: var(--paper-faint); margin-bottom: 8px; }
+  .cane .use { font-size: 13.5px; color: var(--paper-dim); min-height: 3.8em; }
+  .cane .grade {
+    position: absolute; top: 14px; right: 14px;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--bam);
+    border: 1px solid var(--bam-dim);
+    padding: 2px 7px;
+  }
+  .rest-note {
+    margin-top: 30px;
+    background: var(--bam-faint);
+    border: 1px solid var(--bam-dim);
+    padding: 18px 22px;
+    font-size: 14.5px;
+    color: var(--paper-dim);
+    max-width: 720px;
+  }
+  .rest-note b { color: var(--bam); font-weight: normal; }
+
+  /* ---------- S3 器用 ---------- */
+  .rack {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 20px 4px 26px;
+    margin-top: 40px;
+  }
+  .tool {
+    flex: 0 0 150px;
+    background: var(--ink-2);
+    border: 1px solid var(--hairline);
+    padding: 18px 14px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .3s, background .3s;
+  }
+  .tool:hover { border-color: var(--bam-dim); }
+  .tool.pick { border-color: var(--bam); background: var(--bam-faint); }
+  .tool svg { width: 74px; height: 64px; display: block; margin: 0 auto 12px; }
+  .tool h5 { font-size: 17px; letter-spacing: 0.25em; font-weight: 700; }
+  .tool .td { font-size: 11.5px; color: var(--paper-faint); margin-top: 6px; line-height: 1.7; }
+  #toolNote {
+    min-height: 88px;
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    padding: 18px 4px;
+    font-size: 15px;
+    color: var(--paper-dim);
+  }
+  #toolNote .mono { color: var(--bam); font-family: var(--mono); font-size: 12px; letter-spacing: .2em; display: block; margin-bottom: 6px; }
+  .mill-stat { display: flex; gap: 44px; margin-top: 30px; flex-wrap: wrap; }
+  .mill-stat .stat b { display: block; font-size: 34px; color: var(--bam); font-weight: 700; line-height: 1.3; }
+  .mill-stat .stat span { font-size: 12.5px; color: var(--paper-faint); letter-spacing: 0.15em; }
+
+  /* ---------- S4 结霜 vat ---------- */
+  .vat-wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; margin-top: 44px; }
+  .vat-stage { position: relative; }
+  .vat-stage svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .stick { cursor: pointer; }
+  .stick .fr { transition: opacity .5s, transform .5s; transform-origin: center bottom; transform-box: fill-box; }
+  .stick .fr1, .stick .fr2, .stick .fr3 { opacity: 0; transform: scale(0.2); }
+  .stick.s1 .fr1 { opacity: 1; transform: scale(1); }
+  .stick.s2 .fr2 { opacity: 1; transform: scale(1); }
+  .stick.s3 .fr3 { opacity: 1; transform: scale(1); }
+  .stick .hit { fill: transparent; }
+  #liquid { transition: y 1.4s ease, height 1.4s ease; }
+  .vat-side .cap-mono { font-family: var(--mono); font-size: 12px; color: var(--bam); letter-spacing: 0.2em; }
+  #stageTxt { font-size: 17px; color: var(--paper); margin: 12px 0 18px; min-height: 2.6em; }
+  #stageTxt .q { border-bottom-color: var(--bam); }
+  .vat-btns { display: flex; gap: 12px; }
+  .btn {
+    background: none;
+    border: 1px solid var(--bam-dim);
+    color: var(--bam);
+    font-family: var(--serif);
+    font-size: 14px;
+    letter-spacing: 0.25em;
+    padding: 10px 26px;
+    cursor: pointer;
+    transition: background .3s, color .3s;
+  }
+  .btn:hover:not(:disabled) { background: var(--bam); color: var(--ink); }
+  .btn:disabled { opacity: 0.3; cursor: default; }
+  .btn.ghost { border-color: var(--hairline); color: var(--paper-dim); }
+  .vat-hint { font-size: 12.5px; color: var(--paper-faint); margin-top: 14px; }
+  .drained #liquid { y: 330; height: 0; }
+
+  /* ---------- S5 等第 ---------- */
+  .grades { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 44px; }
+  .grade-col h4 { font-size: 15px; letter-spacing: 0.3em; color: var(--paper-dim); margin-bottom: 18px; }
+  .g-row { display: flex; align-items: center; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--hairline); }
+  .g-rank { font-family: var(--mono); font-size: 12px; color: var(--bam); width: 2.2em; }
+  .g-name { font-size: 17px; letter-spacing: 0.12em; width: 5.2em; }
+  .g-glyph { flex: 1; height: 16px; position: relative; }
+  .g-glyph i {
+    position: absolute; top: 0;
+    width: 14px; height: 14px;
+    background: var(--bam);
+    opacity: .75;
+    transform: rotate(45deg);
+  }
+  .g-row.top .g-name { color: var(--bam); }
+  .g-sw { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--hairline); }
+  .g-txt { font-size: 13px; color: var(--paper-dim); }
+  .flip {
+    margin-top: 56px;
+    max-width: 680px;
+    perspective: 1200px;
+  }
+  .flip-inner { position: relative; transition: transform .8s cubic-bezier(.3,.7,.3,1); transform-style: preserve-3d; }
+  .flip.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-face {
+    backface-visibility: hidden;
+    border: 1px solid var(--bam-dim);
+    background: var(--ink-2);
+    padding: 26px 30px;
+    min-height: 170px;
+  }
+  .flip-face.back { position: absolute; inset: 0; transform: rotateY(180deg); }
+  .flip-tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.25em; color: var(--bam); margin-bottom: 12px; }
+  .flip-face p { font-size: 15px; color: var(--paper-dim); }
+  .flip-face p b { color: var(--paper); font-weight: normal; }
+  .flip-btn {
+    margin-top: 16px;
+    background: none; border: none;
+    color: var(--bam);
+    font-family: var(--serif);
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    border-bottom: 1px solid var(--bam-dim);
+    padding: 0 0 2px;
+  }
+  .sw-demo { display: flex; gap: 14px; margin: 14px 0; }
+  .sw-demo i { width: 40px; height: 40px; border-radius: 4px; display: block; border: 1px solid var(--hairline); }
+
+  /* ---------- S6 运命 ---------- */
+  #fortune {
+    background: var(--ink-3);
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    margin: 30px -24px 0;
+    padding: 80px 24px;
+  }
+  .fort-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .fort-urn { text-align: center; position: relative; }
+  .fort-urn svg { width: min(300px, 80%); }
+  #openBtn {
+    margin-top: 20px;
+    font-size: 17px;
+    padding: 14px 46px;
+    letter-spacing: 0.5em;
+    text-indent: 0.5em;
+  }
+  #fortCard {
+    margin-top: 26px;
+    border: 1px solid var(--hairline);
+    background: var(--ink-2);
+    padding: 26px 26px 22px;
+    min-height: 190px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .6s, transform .6s;
+    text-align: left;
+  }
+  #fortCard.show { opacity: 1; transform: none; }
+  #fortGrade {
+    position: absolute;
+    top: 18px; right: 18px;
+    width: 58px; height: 58px;
+    border: 2px solid var(--bam);
+    color: var(--bam);
+    font-size: 26px;
+    display: flex; align-items: center; justify-content: center;
+    transform: rotate(6deg) scale(1);
+    font-weight: 700;
+  }
+  #fortCard.pop #fortGrade { animation: stamp .45s cubic-bezier(.2,1.4,.4,1) both; }
+  @keyframes stamp {
+    0% { transform: rotate(-14deg) scale(2.2); opacity: 0; }
+    100% { transform: rotate(6deg) scale(1); opacity: 1; }
+  }
+  #fortName { font-size: 22px; letter-spacing: 0.12em; margin-bottom: 10px; color: var(--paper); }
+  #fortDetail { font-size: 14px; color: var(--paper-dim); }
+  #fortAgain { margin-top: 16px; }
+  .fort-q { margin-top: 30px; font-size: 15px; color: var(--paper-dim); text-align: center; }
+
+  /* xuanhe */
+  .xh { margin-top: 70px; }
+  .xh-panel {
+    background: linear-gradient(160deg, #22201d, #1a1917);
+    border: 1px solid var(--hairline);
+    padding: 40px 42px;
+    position: relative;
+    overflow: hidden;
+  }
+  .xh-panel::before {
+    content: "奉";
+    position: absolute;
+    right: -30px; bottom: -50px;
+    font-size: 220px;
+    color: rgba(95,146,112,0.06);
+    line-height: 1;
+  }
+  .xh-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em; color: var(--bam); margin-bottom: 14px; }
+  .xh-panel h3 { font-size: 24px; letter-spacing: 0.12em; margin-bottom: 16px; }
+  .xh-panel p { font-size: 14.5px; color: var(--paper-dim); max-width: 640px; }
+  .xh-panel p + p { margin-top: 12px; }
+  .xh-panel .q { border-bottom-color: var(--bam-dim); }
+  .xh-stamp {
+    position: absolute;
+    top: 30px; right: 34px;
+    writing-mode: vertical-rl;
+    border: 1.5px solid rgba(192,69,60,0.55);
+    color: rgba(192,69,60,0.75);
+    font-size: 15px;
+    letter-spacing: 0.35em;
+    padding: 10px 5px;
+    transform: rotate(3deg);
+  }
+
+  /* ---------- S7 食法 ---------- */
+  .recs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 44px; }
+  .rec {
+    background: var(--paper);
+    color: var(--ink-3);
+    padding: 22px 18px 18px;
+    position: relative;
+    transition: transform .3s;
+  }
+  .rec:hover { transform: translateY(-5px); }
+  .rec::before {
+    content: "";
+    position: absolute; inset: 6px;
+    border: 1px solid rgba(25,25,23,0.18);
+    pointer-events: none;
+  }
+  .rec h4 { font-size: 20px; letter-spacing: 0.15em; margin-bottom: 4px; color: var(--ink); }
+  .rec .r-kind { font-size: 11px; color: rgba(25,25,23,0.5); letter-spacing: 0.2em; margin-bottom: 12px; }
+  .rec p { font-size: 13px; color: rgba(25,25,23,0.78); line-height: 1.9; position: relative; }
+  .rec p .q { border-bottom: none; color: inherit; background: rgba(95,146,112,0.16); }
+  .rec .r-no { position: absolute; top: 10px; right: 14px; font-family: var(--mono); font-size: 11px; color: rgba(25,25,23,0.4); }
+  .rec-note { margin-top: 22px; font-size: 13.5px; color: var(--paper-faint); }
+
+  /* ---------- footer ---------- */
+  footer { padding: 100px 0 60px; position: relative; }
+  .colophon-q {
+    max-width: 760px;
+    margin: 0 auto 50px;
+    text-align: center;
+    font-size: 15.5px;
+    color: var(--paper-dim);
+    line-height: 2.3;
+  }
+  .fin {
+    max-width: 760px;
+    margin: 0 auto;
+    border-top: 1px solid var(--hairline);
+    padding-top: 26px;
+    font-size: 13px;
+    color: var(--paper-faint);
+    line-height: 2.1;
+  }
+  .fin b { color: var(--paper-dim); font-weight: normal; margin-right: 10px; }
+  .fin a { color: var(--paper-faint); }
+  .end-seal {
+    width: 84px; height: 84px;
+    margin: 46px auto 0;
+    border: 2px solid var(--bam);
+    color: var(--bam);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    letter-spacing: 0.1em;
+    writing-mode: vertical-rl;
+    transform: rotate(-3deg);
+    line-height: 1.3;
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 900px) {
+    #hero { flex-direction: column; padding-top: 60px; }
+    .hero-left { flex: none; }
+    .vtitle { font-size: 60px; }
+    .hero-right { min-height: 54vh; flex-direction: column; gap: 14px; }
+    .hero-lede { position: static; margin-top: 18px; }
+    .acts { grid-template-columns: 1fr; }
+    .cane4 { grid-template-columns: repeat(2, 1fr); }
+    .vat-wrap, .grades, .fort-grid { grid-template-columns: 1fr; }
+    .recs { grid-template-columns: repeat(2, 1fr); }
+    .bar-row { grid-template-columns: 70px 1fr; }
+    .bar-note { display: none; }
+    .xh-panel { padding: 28px 22px; }
+    .xh-stamp { display: none; }
+    #stns { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header id="hero">
+  <div class="hero-left">
+    <div class="kicker">殆知阁导读 第肆百零六篇</div>
+    <div class="vtitle-wrap">
+      <div class="vtitle">糖<em>霜</em>谱</div>
+      <div class="vmeta">宋遂宁王灼晦叔撰</div>
+    </div>
+    <div class="seal-slip">
+      谱录类 · 饮馔之属<br>
+      一卷七篇，成于绍兴间<br>
+      <b>世界第一部制糖专书</b>
+      <span class="seal-mini">遂宁</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <svg viewBox="0 0 420 500" aria-label="糖瓮剖面">
+      <defs>
+        <linearGradient id="liq" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#6b5a33"/>
+          <stop offset="1" stop-color="#3a3220"/>
+        </linearGradient>
+        <linearGradient id="jarG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2b2a27"/>
+          <stop offset="1" stop-color="#1d1c1a"/>
+        </linearGradient>
+      </defs>
+      <path d="M160,30 L160,52 Q160,74 128,92 Q76,122 66,225 Q58,340 132,420 Q176,462 210,462 Q244,462 288,420 Q362,340 354,225 Q344,122 292,92 Q260,74 260,52 L260,30 Z"
+            fill="url(#jarG)" stroke="rgba(232,228,220,0.25)" stroke-width="2"/>
+      <ellipse cx="210" cy="30" rx="52" ry="9" fill="none" stroke="rgba(232,228,220,0.35)" stroke-width="2"/>
+      <clipPath id="jarClip">
+        <path d="M160,30 L160,52 Q160,74 128,92 Q76,122 66,225 Q58,340 132,420 Q176,462 210,462 Q244,462 288,420 Q362,340 354,225 Q344,122 292,92 Q260,74 260,52 L260,30 Z"/>
+      </clipPath>
+      <rect x="50" y="180" width="330" height="290" fill="url(#liq)" clip-path="url(#jarClip)" opacity="0.9"/>
+      <g clip-path="url(#jarClip)" stroke="rgba(232,228,220,0.16)" stroke-width="2">
+        <line x1="120" y1="60" x2="150" y2="440"/>
+        <line x1="170" y1="55" x2="185" y2="450"/>
+        <line x1="250" y1="55" x2="235" y2="450"/>
+        <line x1="300" y1="60" x2="270" y2="440"/>
+      </g>
+      <g clip-path="url(#jarClip)">
+        <g stroke="#5f9270" stroke-width="3" opacity="0.85">
+          <line x1="150" y1="120" x2="162" y2="300"/>
+          <line x1="190" y1="100" x2="200" y2="310"/>
+          <line x1="240" y1="104" x2="228" y2="305"/>
+          <line x1="278" y1="126" x2="266" y2="300"/>
+          <line x1="214" y1="88" x2="216" y2="300"/>
+        </g>
+        <g fill="#e8e4dc">
+          <g class="crystal c1">
+            <path d="M162,190 l5,12 12,4 -12,4 -5,12 -5,-12 -12,-4 12,-4 Z"/>
+            <path d="M158,232 l3,8 8,2 -8,3 -3,8 -3,-8 -8,-3 8,-2 Z" opacity="0.85"/>
+          </g>
+          <g class="crystal c2">
+            <path d="M200,150 l4,10 10,3 -10,3 -4,10 -4,-10 -10,-3 10,-3 Z"/>
+            <path d="M206,196 l3,7 7,2 -7,2 -3,7 -3,-7 -7,-2 7,-2 Z" opacity="0.8"/>
+            <path d="M194,238 l2,6 6,1 -6,2 -2,6 -2,-6 -6,-2 6,-1 Z" opacity="0.6"/>
+          </g>
+          <g class="crystal c3">
+            <path d="M228,160 l4,10 10,3 -10,3 -4,10 -4,-10 -10,-3 10,-3 Z"/>
+            <path d="M232,210 l3,8 8,2 -8,3 -3,8 -3,-8 -8,-3 8,-2 Z" opacity="0.85"/>
+          </g>
+          <g class="crystal c4">
+            <path d="M266,185 l5,12 12,4 -12,4 -5,12 -5,-12 -12,-4 12,-4 Z"/>
+          </g>
+          <g class="crystal c5">
+            <path d="M216,118 l4,10 10,3 -10,3 -4,10 -4,-10 -10,-3 10,-3 Z"/>
+          </g>
+        </g>
+        <g fill="#d8b45f">
+          <circle class="sparkle" cx="140" cy="250" r="1.8"/>
+          <circle class="sparkle s2" cx="256" cy="270" r="1.6"/>
+          <circle class="sparkle s3" cx="200" cy="286" r="1.8"/>
+          <circle class="sparkle s2" cx="290" cy="240" r="1.4"/>
+        </g>
+      </g>
+      <text x="210" y="498" text-anchor="middle" font-size="12" fill="#6e6a61" letter-spacing="6">窨 蔗 成 霜 · 其 利 十 倍</text>
+    </svg>
+    <div class="hero-lede">
+      甜味人人识得，把甜炼成一块拿得住的固体，中国走到的这一步，记在这本书里
+    </div>
+    <div class="scroll-cue">向下</div>
+  </div>
+</header>
+
+<nav id="stns">
+  <a href="#s1">原委</a>
+  <a href="#s2">蔗程</a>
+  <a href="#s3">器用</a>
+  <a href="#s4">结霜</a>
+  <a href="#s5">等第</a>
+  <a href="#s6">运命</a>
+  <a href="#s7">食法</a>
+</nav>
+
+<main>
+
+<!-- ============ S1 原委 ============ -->
+<section id="s1">
+  <div class="sec-head rv">
+    <span class="sec-no">原委 · 第一</span>
+    <h2 class="sec-title">一个和尚的传艺</h2>
+    <span class="sec-sub">糖霜从哪里来</span>
+  </div>
+  <div class="sec-rule"></div>
+  <p class="prose rv">
+    这部书七篇，只有第一篇有题目。王灼开篇先立坐标：<span class="q">糖霜一名糖冰</span>，天下只有五地出产，而<b>五地之中遂宁独冠</b>。这门手艺从哪来，他记下当地人人说得出的一个传说。
+  </p>
+
+  <div class="acts">
+    <div class="act rv">
+      <div class="act-tag">其一</div>
+      <h3>白驴市买</h3>
+      <div class="stage run-wrap" id="runWrap">
+        <svg viewBox="0 0 240 120">
+          <g id="donkeyG">
+            <g fill="#a39e93">
+              <ellipse cx="70" cy="72" rx="34" ry="17"/>
+              <path d="M96,66 Q104,44 96,34 L104,32 Q116,46 108,70 Z"/>
+              <ellipse cx="103" cy="32" rx="11" ry="8" transform="rotate(-18 103 32)"/>
+              <path d="M94,26 L90,12 L98,24 Z"/>
+              <path d="M104,25 L106,11 L111,24 Z"/>
+              <rect x="46" y="84" width="6" height="24"/>
+              <rect x="62" y="86" width="6" height="22"/>
+              <rect x="80" y="86" width="6" height="22"/>
+              <rect x="94" y="84" width="6" height="24"/>
+              <path d="M36,68 Q28,66 26,74 Q32,78 38,76 Z"/>
+            </g>
+            <g class="market-note">
+              <rect x="88" y="52" width="16" height="12" fill="#e8e4dc" transform="rotate(-8 96 58)"/>
+              <circle cx="106" cy="60" r="3.5" fill="#5f9270"/>
+            </g>
+          </g>
+          <g font-size="10" fill="#6e6a61">
+            <text x="160" y="40">市区</text>
+          </g>
+          <path d="M150,44 L226,44" stroke="#3a3936" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <path d="M222,40 L230,44 L222,48" fill="none" stroke="#3a3936" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <p>
+        唐大历年间，伞山上来了位邹和尚，没人知道他的来历。他不相往来，只使唤一头白驴跑腿：要的盐、薪、菜写成纸条，把钱系在纸上，挂上鞍就放驴进城。市人认得这头驴，<b>照平价拿了钱，把货挂上鞍背，驴自己回家</b>。
+      </p>
+      <button class="act-btn" id="donkeyBtn">放驴进城</button>
+      <div class="act-note" id="donkeyNote"></div>
+    </div>
+
+    <div class="act rv">
+      <div class="act-tag">其二</div>
+      <h3>一句抵债</h3>
+      <div class="stage">
+        <svg viewBox="0 0 240 120">
+          <g fill="#5f9270" opacity="0.9">
+            <path d="M120,86 L120,50" stroke="#5f9270" stroke-width="3"/>
+            <path d="M120,56 Q100,52 94,34 Q114,36 120,50 Z"/>
+            <path d="M120,48 Q140,44 148,26 Q126,28 120,44 Z"/>
+            <path d="M120,66 Q104,64 98,52 Q114,52 120,60 Z"/>
+          </g>
+          <g stroke="#a3473f" stroke-width="2" opacity="0.8">
+            <path d="M60,90 L84,72"/>
+            <path d="M66,94 L88,78"/>
+          </g>
+          <text x="128" y="104" font-size="11" fill="#6e6a61">蔗苗被踩</text>
+        </svg>
+      </div>
+      <p>
+        一天驴闯了祸，踩坏山下黄家的蔗苗。黄家拉住和尚讨偿。和尚不慌：<b>你不知道窖蔗能结出糖霜，利润十倍，我教你，抵这笔账，行不行</b>。黄家照做，果然。
+      </p>
+      <button class="act-btn" id="dealBtn">听和尚说</button>
+      <div class="dialog" id="dealBox">
+        <span class="q">汝未知窨蔗糖为霜利当十倍吾语女塞责可乎</span>
+        <small>试之，果信。糖霜户从此近山而居，望见伞山的都成了。</small>
+      </div>
+    </div>
+
+    <div class="act rv">
+      <div class="act-tag">其三</div>
+      <h3>石像现身</h3>
+      <div class="stage statue-wrap" id="statueWrap">
+        <svg viewBox="0 0 240 120">
+          <g id="monkG">
+            <g fill="#a39e93">
+              <circle cx="120" cy="34" r="13"/>
+              <path d="M100,96 Q100,52 120,50 Q140,52 140,96 Z"/>
+              <path d="M104,96 L136,96 L132,106 L108,106 Z"/>
+            </g>
+            <path d="M100,96 L140,96" stroke="#191917" stroke-width="2"/>
+          </g>
+          <g id="statueG">
+            <g fill="#5f9270">
+              <circle cx="120" cy="30" r="11"/>
+              <path d="M120,14 L124,20 L116,20 Z"/>
+              <path d="M94,96 Q94,48 120,46 Q146,48 146,96 Z"/>
+              <path d="M100,66 Q120,60 140,66 L136,74 Q120,69 104,74 Z" fill="#191917" opacity="0.35"/>
+              <path d="M88,96 L152,96 L146,110 L94,110 Z"/>
+              <path d="M84,96 Q120,86 156,96 L152,102 Q120,93 88,102 Z" opacity="0.7"/>
+            </g>
+            <g fill="#e8e4dc" opacity="0.8">
+              <path d="M138,20 l2,5 5,2 -5,2 -2,5 -2,-5 -5,-2 5,-2 Z"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <p>
+        和尚晚年弃山北走，弟子追到通泉灵鹫山的石窟里，只见一尊文殊石像。<b>众人才明白他是大士化身，那头白驴是狮子</b>。他结茅的地方后来成了楞严院，遂宁的糖霜户至今还画他的像，当文殊供养。
+      </p>
+      <button class="act-btn" id="statueBtn">追到龛前</button>
+      <div class="act-note" id="statueNote"></div>
+    </div>
+  </div>
+
+  <div class="pref rv">
+    <div class="pref-head">五郡产霜，高下立判。其余四郡的货，碎、色浅、味薄，比不上遂宁最下等的一等。</div>
+    <div class="bar-row"><span class="bar-name crown">遂宁</span><div class="bar-track"><div class="bar-fill" data-w="100%"></div></div><span class="bar-note">独冠 · 近三百余家</span></div>
+    <div class="bar-row lesser"><span class="bar-name">福唐</span><div class="bar-track"><div class="bar-fill" data-w="14%"></div></div><span class="bar-note">甚微而碎</span></div>
+    <div class="bar-row lesser"><span class="bar-name">四明</span><div class="bar-track"><div class="bar-fill" data-w="12%"></div></div><span class="bar-note">色浅味薄</span></div>
+    <div class="bar-row lesser"><span class="bar-name">番禺</span><div class="bar-track"><div class="bar-fill" data-w="11%"></div></div><span class="bar-note"><span class="q">才比遂之最下者</span></span></div>
+    <div class="bar-row lesser"><span class="bar-name">广汉</span><div class="bar-track"><div class="bar-fill" data-w="10%"></div></div><span class="bar-note">四方不尽出</span></div>
+    <p class="pref-q">
+      <span class="q">糖霜一名糖冰福唐四明番禺广汉遂宁有之独遂宁为冠</span>，<span class="q">四郡所产甚微而碎色浅味薄才比遂之最下者</span>。王灼自己也说不清为什么：<b>边地明明有好的甘蔗，却结不出霜</b>，<span class="q">此物理之不可诘</span>。
+    </p>
+  </div>
+</section>
+
+<!-- ============ S2 蔗程 ============ -->
+<section id="s2">
+  <div class="sec-head rv">
+    <span class="sec-no">第三篇</span>
+    <h2 class="sec-title">十八个月蔗程</h2>
+    <span class="sec-sub">一年半蔗事</span>
+  </div>
+  <div class="sec-rule"></div>
+  <p class="prose rv">
+    从翻地到出霜，前前后后要熬过将近一年半。时间表写在第三篇里，一节一节排得像农书。
+  </p>
+
+  <div id="rail" class="rv">
+    <div class="rail-line">
+      <div class="rail-node hot"><span class="rail-m">十一月</span><div class="rail-t">深耕杷搂</div><div class="rail-d">令熟如开渠</div></div>
+      <div class="rail-node"><span class="rail-m">二月初</span><div class="rail-t">区种</div><div class="rail-d">覆土两寸为限</div></div>
+      <div class="rail-node"><span class="rail-m">清明 端午</span><div class="rail-t">粪两次</div><div class="rail-d">猪牛粪和灰细盖</div></div>
+      <div class="rail-node"><span class="rail-m">六月半</span><div class="rail-t">再粪添土</div><div class="rail-d">草不压数耘</div></div>
+      <div class="rail-node"><span class="rail-m">十月</span><div class="rail-t">収刈</div><div class="rail-d">翻垅土尽盖</div></div>
+      <div class="rail-node"><span class="rail-m">十月 十一月</span><div class="rail-t">削剉碾榨</div><div class="rail-d">入釜煎</div></div>
+      <div class="rail-node"><span class="rail-m">入瓮两日</span><div class="rail-t">瓮西起纹</div><div class="rail-d">如粥文如细沙</div></div>
+      <div class="rail-node hot"><span class="rail-m">次年上元</span><div class="rail-t">结小块</div><div class="rail-d">缀竹梢渐大</div></div>
+      <div class="rail-node hot"><span class="rail-m">五月</span><div class="rail-t">沥瓮</div><div class="rail-d">过初伏化为水</div></div>
+    </div>
+    <p class="rail-cap">种下到开瓮，<span class="q">自耕田至沥瓮殆一年半</span>。糖霜等不起人，人也等不起糖霜。</p>
+  </div>
+
+  <div class="cane4">
+    <div class="cane rv" data-use="紫嫩，味极厚，全遂宁专门拿来作霜的就是它。种法也讲究：取短的埋，倒着插进二尺深的坑里，怕雨水灌进夹叶沤坏。">
+      <span class="grade">1</span>
+      <svg viewBox="0 0 34 120"><g stroke="#8a5a7a" stroke-width="2" fill="none"><rect x="10" y="6" width="14" height="108" rx="7" fill="rgba(138,90,122,0.25)"/><line x1="10" y1="32" x2="24" y2="32"/><line x1="10" y1="60" x2="24" y2="60"/><line x1="10" y1="88" x2="24" y2="88"/></g></svg>
+      <h4>杜蔗</h4>
+      <div class="aka">皮紫，味极厚</div>
+      <div class="use">专用来作霜</div>
+    </div>
+    <div class="cane rv" data-use="也能结霜，但颜色浅，土人不甚贵，种得少。">
+      <span class="grade">2</span>
+      <svg viewBox="0 0 34 120"><g stroke="#5f9270" stroke-width="2" fill="none"><rect x="10" y="6" width="14" height="108" rx="7" fill="rgba(95,146,112,0.25)"/><line x1="10" y1="32" x2="24" y2="32"/><line x1="10" y1="60" x2="24" y2="60"/><line x1="10" y1="88" x2="24" y2="88"/></g></svg>
+      <h4>西蔗</h4>
+      <div class="aka">亦能成霜</div>
+      <div class="use">色浅欠贵</div>
+    </div>
+    <div class="cane rv" data-use="就是本草里的荻蔗，熬沙糖的原料，够不着霜的门槛。">
+      <span class="grade">2</span>
+      <svg viewBox="0 0 34 120"><g stroke="#d8b45f" stroke-width="2" fill="none"><rect x="10" y="6" width="14" height="108" rx="7" fill="rgba(216,180,95,0.2)"/><line x1="10" y1="32" x2="24" y2="32"/><line x1="10" y1="60" x2="24" y2="60"/><line x1="10" y1="88" x2="24" y2="88"/></g></svg>
+      <h4>艻蔗</h4>
+      <div class="aka"><span class="q">本草所谓荻蔗</span></div>
+      <div class="use">只供熬沙糖</div>
+    </div>
+    <div class="cane rv" data-use="就是昆仑蔗，只配生啃，甜归甜，与糖霜无缘。">
+      <span class="grade">3</span>
+      <svg viewBox="0 0 34 120"><g stroke="#a39e93" stroke-width="2" fill="none"><rect x="10" y="6" width="14" height="108" rx="7" fill="rgba(163,158,147,0.2)"/><line x1="10" y1="32" x2="24" y2="32"/><line x1="10" y1="60" x2="24" y2="60"/><line x1="10" y1="88" x2="24" y2="88"/></g></svg>
+      <h4>红蔗</h4>
+      <div class="aka"><span class="q">本草所谓昆仑蔗</span></div>
+      <div class="use">只能生啃</div>
+    </div>
+  </div>
+  <p class="prose rv" style="margin-top:20px" id="caneUse">点一根蔗，看它的去处。</p>
+
+  <div class="rest-note rv">
+    <b>地也要歇。</b>蔗最吃地力，种过一年蔗的田，<span class="q">今年为蔗田者明年改种五谷以休地力</span>；家底厚的人家，索性歇上三年。蔗田还不许混种别的东西。
+  </div>
+</section>
+
+<!-- ============ S3 器用 ============ -->
+<section id="s3">
+  <div class="sec-head rv">
+    <span class="sec-no">第四篇</span>
+    <h2 class="sec-title">糖霜户的家当</h2>
+    <span class="sec-sub">器用九事</span>
+  </div>
+  <div class="sec-rule"></div>
+  <p class="prose rv">
+    第四篇像一张作坊盘点清单，从削蔗的刀到收糖水的瓮，一件件开列。点一件，看它的模样和差事。
+  </p>
+
+  <div class="rack rv">
+    <div class="tool" data-name="蔗削" data-note="破竹刀的样子，稍轻，削皮用的。">
+      <svg viewBox="0 0 74 64"><path d="M14,50 L54,14 L60,20 L20,56 Q14,58 14,50 Z" fill="none" stroke="#a39e93" stroke-width="2"/><path d="M54,14 L60,20" stroke="#5f9270" stroke-width="3"/></svg>
+      <h5>蔗削</h5><div class="td"><span class="q">如破竹刀而稍轻</span></div>
+    </div>
+    <div class="tool" data-name="蔗防" data-note="阔四寸长一尺许、微微带弯的削蔗刀。">
+      <svg viewBox="0 0 74 64"><path d="M10,50 Q34,44 62,16" fill="none" stroke="#a39e93" stroke-width="4"/><path d="M10,54 Q20,60 30,56" fill="none" stroke="#a39e93" stroke-width="2"/></svg>
+      <h5>蔗防</h5><div class="td"><span class="q">阔四寸长尺许势微弯</span></div>
+    </div>
+    <div class="tool" data-name="蔗凳" data-note="小杌子一样，一角凿孔立根木叉，蔗捆在叉上，人斜跨着剉。">
+      <svg viewBox="0 0 74 64"><path d="M16,36 L52,36" stroke="#a39e93" stroke-width="4"/><path d="M22,36 L18,56 M46,36 L50,56" stroke="#a39e93" stroke-width="2"/><path d="M52,36 L52,16" stroke="#5f9270" stroke-width="3"/><path d="M44,14 L60,20" stroke="#a39e93" stroke-width="2"/></svg>
+      <h5>蔗凳</h5><div class="td"><span class="q">如小杌子一角凿孔</span></div>
+    </div>
+    <div class="tool" data-name="蔗碾" data-note="全场最重的家伙：硬石碾轮，牛驾着转，底下石槽循环一丈多。">
+      <svg viewBox="0 0 74 64"><circle cx="34" cy="34" r="20" fill="none" stroke="#a39e93" stroke-width="4"/><circle cx="34" cy="34" r="4" fill="#5f9270"/><path d="M54,26 L70,20" stroke="#a39e93" stroke-width="2"/><path d="M12,54 L60,54" stroke="#a39e93" stroke-width="3"/></svg>
+      <h5>蔗碾</h5><div class="td"><span class="q">驾牛以碾所剉之蔗大硬石为之</span></div>
+    </div>
+    <div class="tool" data-name="榨斗" data-note="又叫竹袋，当年生的慈竹编的，四尺高，装蔗粕受压。">
+      <svg viewBox="0 0 74 64"><path d="M22,16 L52,16 L48,52 L26,52 Z" fill="none" stroke="#a39e93" stroke-width="2"/><path d="M24,24 L50,24 M25,32 L49,32 M26,40 L48,40" stroke="#3a3936" stroke-width="1.5"/><path d="M37,16 L37,8" stroke="#5f9270" stroke-width="3"/></svg>
+      <h5>榨斗</h5><div class="td"><span class="q">又名竹袋</span>，当年慈竹编的</div>
+    </div>
+    <div class="tool" data-name="杵" data-note="把蔗往榨斗里筑实的木杵。">
+      <svg viewBox="0 0 74 64"><line x1="37" y1="10" x2="37" y2="48" stroke="#a39e93" stroke-width="4"/><ellipse cx="37" cy="52" rx="7" ry="8" fill="#5f9270"/></svg>
+      <h5>杵</h5><div class="td"><span class="q">以筑蔗入榨斗</span></div>
+    </div>
+    <div class="tool" data-name="榨盘" data-note="接在斗底下的盘子，样子像酒槽底。">
+      <svg viewBox="0 0 74 64"><ellipse cx="37" cy="40" rx="24" ry="10" fill="none" stroke="#a39e93" stroke-width="3"/><ellipse cx="37" cy="36" rx="24" ry="10" fill="none" stroke="#a39e93" stroke-width="2"/><path d="M37,26 L37,10" stroke="#5f9270" stroke-width="3"/></svg>
+      <h5>榨盘</h5><div class="td"><span class="q">以安斗</span>，类酒槽底</div>
+    </div>
+    <div class="tool" data-name="榨床" data-note="安盘的床，上架巨木，下转轴引索，一压到底的杠杆机构。">
+      <svg viewBox="0 0 74 64"><path d="M12,52 L62,52 M16,52 L16,16 M58,52 L58,16" stroke="#a39e93" stroke-width="3" fill="none"/><path d="M16,20 L58,30" stroke="#5f9270" stroke-width="4"/><circle cx="58" cy="38" r="5" fill="none" stroke="#a39e93" stroke-width="2"/></svg>
+      <h5>榨床</h5><div class="td"><span class="q">上架巨木下转轴引索压之</span></div>
+    </div>
+    <div class="tool" data-name="漆瓮" data-note="里外上漆的大瓮，收糖水专用的，防渗漏。">
+      <svg viewBox="0 0 74 64"><path d="M26,10 L48,10 L48,18 Q60,28 58,44 Q56,56 37,56 Q18,56 16,44 Q14,28 26,18 Z" fill="none" stroke="#5f9270" stroke-width="2.5"/><ellipse cx="37" cy="10" rx="11" ry="4" fill="none" stroke="#a39e93" stroke-width="2"/></svg>
+      <h5>漆瓮</h5><div class="td"><span class="q">表里漆以収糖水防津漏</span></div>
+    </div>
+  </div>
+  <div id="toolNote" class="rv"><span class="mono">器用九事</span>那盘石碾，六七尺高，上千斤重，牛拉着走。一间作坊的家底，先从这一轮碾开始。</div>
+
+  <div class="mill-stat rv">
+    <div class="stat"><b>六七尺</b><span>碾轮高</span></div>
+    <div class="stat"><b>千余斤</b><span>碾轮重</span></div>
+    <div class="stat"><b>一丈余</b><span>槽底循环</span></div>
+    <div class="stat" style="max-width:300px"><b style="font-size:16px;color:var(--paper)">十月起，到十一月</b><span>治蔗的时节，削皮、剉碎、入碾、烝泊、上榨，煎烝相接</span></div>
+  </div>
+</section>
+
+<!-- ============ S4 结霜 ============ -->
+<section id="s4">
+  <div class="sec-head rv">
+    <span class="sec-no">第五篇</span>
+    <h2 class="sec-title">看霜长出来</h2>
+    <span class="sec-sub">结霜之法</span>
+  </div>
+  <div class="sec-rule"></div>
+  <p class="prose rv">
+    煎到九分熟的糖水入瓮，插竹、覆箕，然后只剩等待。<b>霜是从竹梢上长出来的</b>：上元前后起小块，像粟穗，渐渐大过豆，大过指节，最妙的成座如假山。点瓮里的竹梢，看它长。
+  </p>
+
+  <div class="vat-wrap">
+    <div class="vat-stage rv" id="vatStage">
+      <svg viewBox="0 0 420 400" aria-label="结霜瓮">
+        <defs>
+          <clipPath id="vatClip">
+            <path d="M96,40 L324,40 L316,86 Q356,120 362,220 Q368,318 296,368 Q258,392 210,392 Q162,392 124,368 Q52,318 58,220 Q64,120 104,86 Z"/>
+          </clipPath>
+        </defs>
+        <path d="M96,40 L324,40 L316,86 Q356,120 362,220 Q368,318 296,368 Q258,392 210,392 Q162,392 124,368 Q52,318 58,220 Q64,120 104,86 Z"
+              fill="#22211e" stroke="rgba(232,228,220,0.25)" stroke-width="2"/>
+        <g clip-path="url(#vatClip)">
+          <rect id="liquid" x="40" y="130" width="340" height="280" fill="#4a3d22" opacity="0.9"/>
+          <rect x="40" y="130" width="340" height="6" fill="#6b5a33"/>
+          <g stroke="rgba(232,228,220,0.08)" stroke-width="2">
+            <line x1="130" y1="60" x2="150" y2="380"/>
+            <line x1="210" y1="55" x2="212" y2="390"/>
+            <line x1="290" y1="60" x2="272" y2="380"/>
+          </g>
+          <!-- 竹梢 x4 -->
+          <g class="stick" id="st1" data-stage="0">
+            <line x1="140" y1="70" x2="150" y2="330" stroke="#5f9270" stroke-width="4"/>
+            <g class="fr fr1" fill="#e8e4dc"><path d="M149,240 l3,8 8,2 -8,3 -3,8 -3,-8 -8,-3 8,-2 Z"/></g>
+            <g class="fr fr2" fill="#e8e4dc"><path d="M150,214 l4,9 9,3 -9,3 -4,9 -4,-9 -9,-3 9,-3 Z"/><circle cx="152" cy="266" r="6"/></g>
+            <g class="fr fr3" fill="#e8e4dc">
+              <path d="M150,180 l5,11 11,3 -11,4 -5,11 -5,-11 -11,-4 11,-3 Z"/>
+              <circle cx="152" cy="240" r="8"/><circle cx="146" cy="262" r="6"/><circle cx="158" cy="256" r="5"/>
+            </g>
+            <rect class="hit" x="122" y="60" width="56" height="290"/>
+          </g>
+          <g class="stick" id="st2" data-stage="0">
+            <line x1="196" y1="62" x2="204" y2="340" stroke="#5f9270" stroke-width="4"/>
+            <g class="fr fr1" fill="#e8e4dc"><path d="M203,230 l3,8 8,2 -8,3 -3,8 -3,-8 -8,-3 8,-2 Z"/></g>
+            <g class="fr fr2" fill="#e8e4dc"><path d="M204,196 l4,9 9,3 -9,3 -4,9 -4,-9 -9,-3 9,-3 Z"/><circle cx="206" cy="258" r="6"/></g>
+            <g class="fr fr3" fill="#e8e4dc">
+              <path d="M204,166 l5,11 11,3 -11,4 -5,11 -5,-11 -11,-4 11,-3 Z"/>
+              <circle cx="206" cy="228" r="8"/><circle cx="212" cy="252" r="6"/><circle cx="198" cy="248" r="5"/>
+            </g>
+            <rect class="hit" x="178" y="55" width="56" height="300"/>
+          </g>
+          <g class="stick" id="st3" data-stage="0">
+            <line x1="252" y1="64" x2="242" y2="336" stroke="#5f9270" stroke-width="4"/>
+            <g class="fr fr1" fill="#e8e4dc"><path d="M243,236 l3,8 8,2 -8,3 -3,8 -3,-8 -8,-3 8,-2 Z"/></g>
+            <g class="fr fr2" fill="#e8e4dc"><path d="M242,200 l4,9 9,3 -9,3 -4,9 -4,-9 -9,-3 9,-3 Z"/><circle cx="240" cy="260" r="6"/></g>
+            <g class="fr fr3" fill="#e8e4dc">
+              <path d="M242,172 l5,11 11,3 -11,4 -5,11 -5,-11 -11,-4 11,-3 Z"/>
+              <circle cx="240" cy="234" r="8"/><circle cx="246" cy="258" r="6"/><circle cx="234" cy="254" r="5"/>
+            </g>
+            <rect class="hit" x="226" y="58" width="56" height="296"/>
+          </g>
+          <g class="stick" id="st4" data-stage="0">
+            <line x1="300" y1="76" x2="286" y2="326" stroke="#5f9270" stroke-width="4"/>
+            <g class="fr fr1" fill="#e8e4dc"><path d="M287,244 l3,8 8,2 -8,3 -3,8 -3,-8 -8,-3 8,-2 Z"/></g>
+            <g class="fr fr2" fill="#e8e4dc"><path d="M286,210 l4,9 9,3 -9,3 -4,9 -4,-9 -9,-3 9,-3 Z"/><circle cx="284" cy="268" r="6"/></g>
+            <g class="fr fr3" fill="#e8e4dc">
+              <path d="M286,184 l5,11 11,3 -11,4 -5,11 -5,-11 -11,-4 11,-3 Z"/>
+              <circle cx="284" cy="244" r="8"/><circle cx="290" cy="264" r="6"/>
+            </g>
+            <rect class="hit" x="274" y="66" width="52" height="278"/>
+          </g>
+        </g>
+        <ellipse cx="210" cy="40" rx="114" ry="10" fill="none" stroke="rgba(232,228,220,0.35)" stroke-width="2"/>
+        <text x="210" y="26" text-anchor="middle" font-size="11" fill="#6e6a61" letter-spacing="4">糖水入瓮 · 插竹徧瓮</text>
+      </svg>
+    </div>
+    <div class="vat-side rv">
+      <span class="cap-mono">结霜五阶</span>
+      <div id="stageTxt">竹梢还干净。两天后，瓮西先起一层粥样的纹，染指一摸，是细沙。</div>
+      <div class="vat-btns">
+        <button class="btn" id="drainBtn" disabled>沥　瓮</button>
+        <button class="btn ghost" id="resetBtn">重开一瓮</button>
+      </div>
+      <p class="vat-hint" id="vatHint">四根竹梢，一根一根点。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S5 等第 ============ -->
+<section id="s5">
+  <div class="sec-head rv">
+    <span class="sec-no">第五篇之余</span>
+    <h2 class="sec-title">论形色</h2>
+    <span class="sec-sub">一瓮之内的高下</span>
+  </div>
+  <div class="sec-rule"></div>
+  <p class="prose rv">
+    同一瓮里，霜也分三六九等。先论形：<b>堆得像假山的最好</b>，团枝、瓮鉴（贴着瓮壁连成环的一圈）随其后，小颗块再次，散沙垫底。再论色，宋人的口味和今天正相反。
+  </p>
+
+  <div class="grades">
+    <div class="grade-col rv">
+      <h4>以形论</h4>
+      <div class="g-row top"><span class="g-rank">甲</span><span class="g-name">假山</span><div class="g-glyph"><i style="left:12%"></i><i style="left:34%;width:18px;height:18px;top:-2px"></i><i style="left:62%"></i><i style="left:80%;width:11px;height:11px;top:2px"></i></div></div>
+      <div class="g-row"><span class="g-rank">乙</span><span class="g-name">团枝</span><div class="g-glyph"><i style="left:22%;width:18px;height:18px"></i><i style="left:44%"></i><i style="left:58%"></i></div></div>
+      <div class="g-row"><span class="g-rank">丙</span><span class="g-name">瓮鉴</span><div class="g-glyph"><i style="left:8%"></i><i style="left:20%"></i><i style="left:32%"></i><i style="left:44%"></i><i style="left:56%"></i><i style="left:68%"></i><i style="left:80%"></i></div></div>
+      <div class="g-row"><span class="g-rank">丁</span><span class="g-name">小颗块</span><div class="g-glyph"><i style="left:28%;width:10px;height:10px;top:3px"></i><i style="left:52%;width:10px;height:10px;top:3px"></i><i style="left:70%;width:10px;height:10px;top:3px"></i></div></div>
+      <div class="g-row"><span class="g-rank">戊</span><span class="g-name">沙脚</span><div class="g-glyph"><i style="left:30%;width:7px;height:7px;top:5px"></i><i style="left:44%;width:7px;height:7px;top:5px"></i><i style="left:58%;width:7px;height:7px;top:5px"></i><i style="left:70%;width:7px;height:7px;top:5px"></i></div></div>
+      <p class="pref-q" style="margin-top:18px;font-size:14px">
+        <span class="q">堆叠如假山者为上团枝次之瓮鉴次之小颗块次之沙脚为下</span>
+      </p>
+    </div>
+    <div class="grade-col rv">
+      <h4>以色论（宋人标准）</h4>
+      <div class="g-row top"><span class="g-rank">甲</span><span class="g-name">紫</span><span class="g-sw" style="background:#7a5570"></span></div>
+      <div class="g-row"><span class="g-rank">乙</span><span class="g-name">深琥珀</span><span class="g-sw" style="background:#a06428"></span></div>
+      <div class="g-row"><span class="g-rank">丙</span><span class="g-name">浅黄</span><span class="g-sw" style="background:#cfa84e"></span></div>
+      <div class="g-row"><span class="g-rank">丁</span><span class="g-name">浅白</span><span class="g-sw" style="background:#ddd8ce"></span></div>
+      <p class="pref-q" style="margin-top:18px;font-size:14px">
+        <span class="q">紫为上深琥珀次之浅黄色又次之浅白为下</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="flip rv" id="flipCard">
+    <div class="flip-inner">
+      <div class="flip-face">
+        <div class="flip-tag">宋人货架</div>
+        <div class="sw-demo">
+          <i style="background:#7a5570"></i>
+          <i style="background:#a06428"></i>
+          <i style="background:#cfa84e"></i>
+          <i style="background:#ddd8ce"></i>
+        </div>
+        <p>紫色最贵，白色垫底。这套等第，四库馆臣校书时发现<b>已经掉了个个儿</b>。</p>
+        <button class="flip-btn" id="flipBtn">看今天 ›</button>
+      </div>
+      <div class="flip-face back">
+        <div class="flip-tag">今天的货架</div>
+        <div class="sw-demo">
+          <i style="background:#f4f1ea"></i>
+          <i style="background:#ddd8ce"></i>
+          <i style="background:#cfa84e"></i>
+          <i style="background:#7a5570"></i>
+        </div>
+        <p>馆臣记：<span class="q">今日所尚乃贵白而贱紫</span>。今天超市里的冰糖以洁白透亮为上，若按王灼的标准，<b>全是下品</b>。</p>
+        <button class="flip-btn" id="flipBack">‹ 回宋朝</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rest-note rv" style="margin-top:40px">
+    <b>霜娇气。</b><span class="q">凡霜性易销化畏阴湿及风</span>，晒的时候吹风不怕，怕的是阴湿。收进瓮要拿干麦铺底、笋皮衬着、绵絮盖好；寄远路则瓶底搁几块石灰，<span class="q">隔纸盛贮厚封瓶口</span>。两宋之交的一套食品保存工艺，写得比种蔗还细。
+  </div>
+</section>
+
+<!-- ============ S6 运命 ============ -->
+<section id="s6">
+  <div class="sec-head rv">
+    <span class="sec-no">第六篇</span>
+    <h2 class="sec-title">开瓮，卜家道</h2>
+    <span class="sec-sub">似有运命</span>
+  </div>
+  <div class="sec-rule"></div>
+  <p class="prose rv">
+    同一块坝，同一种蔗，同一套器，收功可以差出天远。第六篇记下的这个风俗，是全书最诚实的一笔：<b>村俗拿开瓮那天的收成，占一家的兴衰</b>。点开这只瓮试试。
+  </p>
+
+  <div id="fortune">
+    <div class="fort-grid">
+      <div class="fort-urn rv">
+        <svg viewBox="0 0 300 260" aria-label="待开的糖瓮">
+          <path d="M96,30 L204,30 L202,44 L98,44 Z" fill="#2b2a27" stroke="rgba(232,228,220,0.3)" stroke-width="2"/>
+          <g id="urnLid">
+            <rect x="90" y="10" width="120" height="18" rx="4" fill="#33322e" stroke="rgba(232,228,220,0.35)" stroke-width="2"/>
+            <text x="150" y="24" text-anchor="middle" font-size="11" fill="#a39e93" letter-spacing="4">封</text>
+          </g>
+          <path d="M92,44 L208,44 Q242,92 240,160 Q238,224 150,232 Q62,224 60,160 Q58,92 92,44 Z"
+                fill="#26251f" stroke="rgba(232,228,220,0.25)" stroke-width="2"/>
+          <g id="urnFrost" opacity="0">
+            <g fill="#e8e4dc">
+              <path d="M150,90 l6,14 14,5 -14,5 -6,14 -6,-14 -14,-5 14,-5 Z"/>
+              <path d="M118,140 l4,9 9,3 -9,3 -4,9 -4,-9 -9,-3 9,-3 Z" opacity="0.85"/>
+              <path d="M186,146 l4,9 9,3 -9,3 -4,9 -4,-9 -9,-3 9,-3 Z" opacity="0.85"/>
+              <circle cx="150" cy="180" r="9" opacity="0.9"/>
+              <circle cx="128" cy="196" r="6" opacity="0.7"/>
+              <circle cx="172" cy="198" r="6" opacity="0.7"/>
+            </g>
+          </g>
+          <text x="150" y="256" text-anchor="middle" font-size="11" fill="#6e6a61" letter-spacing="6">开 瓮 之 日</text>
+        </svg>
+        <button class="btn" id="openBtn">开　瓮</button>
+      </div>
+      <div class="rv">
+        <div id="fortCard">
+          <div id="fortGrade">吉</div>
+          <div id="fortName">等待开瓮</div>
+          <div id="fortDetail">结霜这件事，似有运命。同一村的人家，开瓮那天的收成，就是一年的年成。</div>
+          <button class="btn ghost" id="fortAgain" disabled>再开一瓮</button>
+        </div>
+        <p class="fort-q">
+          <span class="q">开瓮之日或无铢两之获或数十斤或近百斤有富者村俗以卜家道盛衰</span>
+        </p>
+        <p class="fort-q" style="font-size:13.5px;color:var(--paper-faint)">
+          四库提要亦云：<span class="q">糖霜或结或不结似有运命</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="xh">
+      <div class="xh-panel rv">
+        <div class="xh-stamp">州县大扰</div>
+        <div class="xh-kicker">宣和初 · 应奉司</div>
+        <h3>糖霜最好的几年，也是最坏的几年</h3>
+        <p>
+          徽宗朝，宰相王黼设应奉司，遂宁在常贡之外，<span class="q">岁进糖霜数千斤</span>。那几年出的霜也真奇，方寸大小的整面墙霜都有；应奉司一罢，这样的霜再没出现。王灼说，<span class="q">岂天出珍异不为凡庶设乎</span>。
+        </p>
+        <p>
+          代价记在下一句里：<span class="q">然当时州县因之大扰败本业者居半至今未复</span>。贡糖压下来，一半人家把本业都赔了进去，到绍兴年间写书时还没缓过来。
+        </p>
+        <p>
+          也有人动巧心思：破荻竹<span class="q">编狻猊灯毬状投糖水瓮中</span>，霜有时就着骨架结，比平常的霜贵好几倍。只是不能保证结得成，又怕州县强来索要，无以应对。<b>近岁，没人再做了。</b>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S7 食法 ============ -->
+<section id="s7">
+  <div class="sec-head rv">
+    <span class="sec-no">第七篇</span>
+    <h2 class="sec-title">糖霜怎么吃</h2>
+    <span class="sec-sub">性味与食单</span>
+  </div>
+  <div class="sec-rule"></div>
+  <p class="prose rv">
+    末篇讲性味。<span class="q">本草称甘蔗消痰止渇除心烦热</span>，糖霜也一样；奇怪的是沙糖反倒招痰饮，王灼说<b>殊不可晓</b>。随书附了四张食方，抄在笺纸上。
+  </p>
+
+  <div class="recs">
+    <div class="rec rv">
+      <span class="r-no">方一</span>
+      <h4>对金汤</h4>
+      <div class="r-kind">汤饮</div>
+      <p><span class="q">糖霜干山药等分细研</span></p>
+    </div>
+    <div class="rec rv">
+      <span class="r-no">方二</span>
+      <h4>鳯髓汤</h4>
+      <div class="r-kind">汤饮</div>
+      <p><span class="q">糖霜干莲子干山药等分细研内莲子去赤皮</span></p>
+    </div>
+    <div class="rec rv">
+      <span class="r-no">方三</span>
+      <h4>妙香汤</h4>
+      <div class="r-kind">汤饮</div>
+      <p><span class="q">糖霜一斤细研别研呉氏龙涎香七分饼和之</span></p>
+    </div>
+    <div class="rec rv">
+      <span class="r-no">方四</span>
+      <h4>糖霜饼</h4>
+      <div class="r-kind">点心</div>
+      <p><span class="q">不以斤两细研劈松子或胡桃肉研和匀如酥蜜食模脱成模方圆雕花各随意长不过寸</span></p>
+    </div>
+  </div>
+  <p class="rec-note rv">
+    研糖霜必选颗块，沙脚胶粘，不堪用。糖饼入模，方圆雕花随意，一寸为限：宋人最后留下的是一个模具上的审美问题。
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <p class="colophon-q">
+    <span class="q">范蔚宗作香谱蔡君谟作茘支茶两谱皆极尽物理举世皆以为当</span>，<span class="q">晦叔作糖霜谱佘闻之且久偶获七篇尽读于大慈之方丈院</span>，<span class="q">将见与范蔡之文并驰而争先矣</span>。<br>
+    <span class="q">绍兴二十四年甲戌季春初六卧云庵守元书</span>
+  </p>
+  <div class="fin">
+    <p><b>文本来源</b>　殆知阁古代文献简体库（github.com/robertsong2000/daizhigev20）艺藏饮馔类〈<span class="qv">糖霜谱</span>〉，宋王灼撰，去空白约八千字。</p>
+    <p><b>引文核验</b>　本页所有引文经脚本与库内文件去标点、归一逐字比对通过，白话部分反扫六字窗零撞。</p>
+    <p><b>时代局限</b>　糖霜即早期冰糖。书中药性、运命、大士化身诸说系古人认识与信仰之产物，阅读时请留意分辨。</p>
+  </div>
+  <div class="end-seal">结霜似命</div>
+</footer>
+
+<div id="qbank" hidden>
+  <span class="q" id="qb1">上元后结小块或缀竹梢如粟穂</span>
+  <span class="q" id="qb2">渐次増大如豆</span>
+  <span class="q" id="qb3">至如指节</span>
+  <span class="q" id="qb4">甚者成座如假山俗谓随果子结实</span>
+  <span class="q" id="qbDrain">至五月春生夏长之气已备不复増大乃沥瓮</span>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* reveal on scroll */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".rv").forEach(function(el){ io.observe(el); });
+
+  /* bars */
+  var bio = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting) {
+        e.target.querySelectorAll(".bar-fill").forEach(function(b){
+          b.style.width = b.getAttribute("data-w");
+        });
+        bio.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  var prefEl = document.querySelector(".pref");
+  if (prefEl) bio.observe(prefEl);
+
+  /* S1 donkey */
+  var dBtn = $("donkeyBtn");
+  dBtn.addEventListener("click", function(){
+    $("runWrap").classList.add("done");
+    $("donkeyNote").textContent = "纸条写要货，钱系在纸上。市人照价收钱，把货挂上鞍，放它自己回山。";
+    $("donkeyNote").classList.add("show");
+    dBtn.disabled = true;
+  });
+
+  /* S1 deal */
+  $("dealBtn").addEventListener("click", function(){
+    $("dealBox").classList.add("show");
+    this.disabled = true;
+  });
+
+  /* S1 statue */
+  var sBtn = $("statueBtn");
+  sBtn.addEventListener("click", function(){
+    $("statueWrap").classList.add("reveal");
+    $("statueNote").textContent = "龛中只有一尊文殊石像，白驴原来是狮子。";
+    $("statueNote").classList.add("show");
+    sBtn.disabled = true;
+  });
+
+  /* S2 cane */
+  var caneUse = $("caneUse");
+  document.querySelectorAll(".cane").forEach(function(c){
+    c.addEventListener("click", function(){
+      document.querySelectorAll(".cane").forEach(function(o){ o.classList.remove("act5"); });
+      c.classList.add("act5");
+      caneUse.textContent = c.getAttribute("data-use");
+    });
+  });
+
+  /* S3 tools */
+  var toolNote = $("toolNote");
+  var toolBase = toolNote.innerHTML;
+  document.querySelectorAll(".tool").forEach(function(t){
+    t.addEventListener("click", function(){
+      document.querySelectorAll(".tool").forEach(function(o){ o.classList.remove("pick"); });
+      t.classList.add("pick");
+      var n = t.getAttribute("data-name"), d = t.getAttribute("data-note");
+      toolNote.innerHTML = "<span class=\"mono\">" + n + "</span>" + d;
+    });
+  });
+  toolNote.addEventListener("dblclick", function(){ toolNote.innerHTML = toolBase; });
+
+  /* S4 vat */
+  var STAGE0 = "竹梢还干净。两天后，瓮西先起一层粥样的纹，染指一摸，是细沙。";
+  var stageTxt = $("stageTxt");
+  var drainBtn = $("drainBtn");
+  var vatHint = $("vatHint");
+  var sticks = ["st1","st2","st3","st4"];
+  var doneCount = 0;
+  sticks.forEach(function(id){
+    $(id).addEventListener("click", function(){
+      var st = this;
+      var n = parseInt(st.getAttribute("data-stage"), 10);
+      if (n >= 3) return;
+      n += 1;
+      st.setAttribute("data-stage", n);
+      st.classList.add("s" + n);
+      var qid = n === 3 ? "qb4" : ("qb" + n);
+      stageTxt.innerHTML = "<span class=\"q\">" + $(qid).textContent + "</span>";
+      if (n === 3) doneCount += 1;
+      if (doneCount === 4) {
+        drainBtn.disabled = false;
+        vatHint.textContent = "四月即沥是下户急着要钱；五月霜气足，才是正时。";
+      }
+    });
+  });
+  drainBtn.addEventListener("click", function(){
+    $("vatStage").classList.add("drained");
+    stageTxt.innerHTML = "<span class=\"q\">" + $("qbDrain").textContent + "</span>。糖水戽出来，霜就着竹梢沥干，剪下，晒到极干。";
+    drainBtn.disabled = true;
+  });
+  $("resetBtn").addEventListener("click", function(){
+    $("vatStage").classList.remove("drained");
+    sticks.forEach(function(id){
+      var st = $(id);
+      st.setAttribute("data-stage", 0);
+      st.classList.remove("s1","s2","s3");
+    });
+    doneCount = 0;
+    drainBtn.disabled = true;
+    stageTxt.textContent = STAGE0;
+    vatHint.textContent = "四根竹梢，一根一根点。";
+  });
+
+  /* S5 flip */
+  $("flipBtn").addEventListener("click", function(){ $("flipCard").classList.add("flipped"); });
+  $("flipBack").addEventListener("click", function(){ $("flipCard").classList.remove("flipped"); });
+
+  /* S6 fortune */
+  var FORT = [
+    { g:"空", w:20, name:"全瓮不结", detail:"霜全无。卖糖水或自熬沙糖，本钱不算大伤，但一年白忙。" },
+    { g:"耗", w:18, name:"满瓮沙脚", detail:"只结了垫底的散沙，水耗十之九，是为下命。" },
+    { g:"中", w:38, name:"收数十斤", detail:"中平之命。够本钱，够人情，撑不起富字。" },
+    { g:"富", w:24, name:"收近百斤", detail:"村中富户之命。村俗看这只瓮定一年的眉眼高低。" }
+  ];
+  var openBtn = $("openBtn");
+  openBtn.addEventListener("click", function(){
+    var r = Math.random() * 100, acc = 0, pick = FORT[0];
+    for (var i = 0; i < FORT.length; i++) {
+      acc += FORT[i].w;
+      if (r < acc) { pick = FORT[i]; break; }
+    }
+    var card = $("fortCard");
+    card.classList.remove("show", "pop");
+    void card.offsetWidth;
+    $("fortGrade").textContent = pick.g;
+    $("fortName").textContent = pick.name;
+    $("fortDetail").textContent = pick.detail;
+    $("urnFrost").setAttribute("opacity", pick.g === "富" || pick.g === "中" ? "1" : "0.25");
+    card.classList.add("show", "pop");
+    $("urnLid").style.transform = "translateY(-10px)";
+    $("fortAgain").disabled = false;
+    this.textContent = "再　开";
+  });
+  $("fortAgain").addEventListener("click", function(){ openBtn.click(); });
+})();
+</script>
+</body>
+</html>
