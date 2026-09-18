@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DD399</title>
+<style>
+:root{
+  --ink-bg:#191917;
+  --paper:#e8e4dc;
+  --gold:#c9963f;
+  --gold-soft:rgba(201,150,63,.32);
+  --gold-faint:rgba(201,150,63,.12);
+  --ink:#26231e;
+  --ink-soft:#4a453c;
+  --ruled:rgba(201,150,63,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink-bg);
+  color:var(--paper);
+  font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  line-height:1.9;
+  font-size:16px;
+}
+.mono{font-family:"Courier New",Courier,monospace;}
+q,qv{quotes:none;}
+.q{color:var(--gold);font-style:normal;}
+.wrap{max-width:1020px;margin:0 auto;padding:0 22px;}
+
+/* ============ 案匣封面 ============ */
+.cover-outer{padding:64px 0 40px;}
+.cover{
+  background:var(--paper);
+  color:var(--ink);
+  border:1px solid #b7ad9b;
+  box-shadow:0 0 0 6px var(--paper), 0 0 0 7px #a99e88, 0 24px 60px rgba(0,0,0,.55);
+  padding:46px 48px 56px;
+  position:relative;
+}
+.cover::before{
+  content:"";
+  position:absolute;inset:10px;
+  border:1px solid var(--ruled);
+  pointer-events:none;
+}
+.idtag{
+  position:absolute;top:26px;right:28px;
+  font-size:12px;letter-spacing:.18em;
+  color:var(--ink-soft);
+  border:1px solid #b7ad9b;
+  padding:4px 10px;
+  transform:rotate(2deg);
+  background:rgba(255,255,255,.25);
+}
+.case-kind{
+  font-size:13px;letter-spacing:.55em;color:var(--ink-soft);
+  margin-bottom:18px;
+}
+.headline{
+  font-size:clamp(30px,5.6vw,46px);
+  font-weight:700;letter-spacing:.12em;line-height:1.4;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.head-sub{
+  font-size:15px;color:var(--gold);letter-spacing:.22em;
+  margin-bottom:34px;
+}
+.qiantou{
+  font-size:12.5px;line-height:2;color:var(--ink-soft);
+  border-left:3px solid var(--gold-soft);
+  padding-left:14px;margin-bottom:30px;
+  text-align:justify;
+}
+.shield-quote{
+  border:1px solid var(--ruled);
+  background:linear-gradient(180deg,rgba(201,150,63,.10),rgba(201,150,63,.03));
+  padding:26px 26px 22px;
+  position:relative;
+}
+.shield-quote .who{
+  font-size:12px;letter-spacing:.3em;color:var(--ink-soft);
+  display:block;margin-bottom:10px;
+}
+.shield-quote .qt{
+  font-size:19px;line-height:2.1;letter-spacing:.06em;
+  color:var(--ink);
+}
+.shield-quote .qt .gap{
+  display:block;text-align:center;color:var(--gold);
+  letter-spacing:.8em;margin:2px 0;
+}
+.seal{
+  position:absolute;right:34px;bottom:32px;
+  width:64px;height:64px;
+  border:2px solid var(--gold);
+  color:var(--gold);
+  display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  font-size:22px;font-weight:700;
+  transform:rotate(6deg);
+  background:rgba(201,150,63,.06);
+  box-shadow:inset 0 0 0 1px rgba(201,150,63,.35);
+}
+.seal span{display:flex;align-items:center;justify-content:center;}
+.seal .p1{grid-area:1/2;}
+.seal .p2{grid-area:2/2;}
+.seal .p3{grid-area:1/1;}
+.seal .p4{grid-area:2/1;}
+.cover-foot{
+  margin-top:30px;margin-right:80px;font-size:12.5px;color:var(--ink-soft);
+  letter-spacing:.1em;line-height:2;
+}
+
+/* ============ 章节骨架 ============ */
+.sec{padding:58px 0 8px;}
+.kicker{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;}
+.kicker .num{
+  font-size:12px;letter-spacing:.3em;color:var(--gold);
+  border:1px solid var(--gold-soft);padding:2px 10px;
+  white-space:nowrap;
+}
+.kicker h2{font-size:24px;letter-spacing:.18em;font-weight:700;color:var(--paper);}
+.sec-lede{
+  color:rgba(232,228,220,.78);font-size:15px;line-height:2.1;
+  margin-bottom:26px;text-align:justify;
+}
+.sec-lede b{color:var(--gold);font-weight:600;}
+
+/* ============ 流水册 ============ */
+.ledger{
+  border:1px solid var(--gold-soft);
+  background:repeating-linear-gradient(180deg,transparent 0 55px,var(--ruled) 55px 56px);
+  padding:6px 0;
+}
+.lrow{border-bottom:1px dashed rgba(201,150,63,.14);}
+.lrow:last-child{border-bottom:none;}
+.lrow summary,.lrow .lstatic{
+  list-style:none;cursor:pointer;
+  display:grid;
+  grid-template-columns:150px 56px 1fr 30px;
+  align-items:center;gap:14px;
+  padding:10px 20px;min-height:56px;
+  transition:background .2s;
+}
+.lrow summary::-webkit-details-marker{display:none;}
+.lrow summary:hover{background:var(--gold-faint);}
+.lrow[open]{background:var(--gold-faint);}
+.lrow .ld{font-size:14px;letter-spacing:.12em;color:var(--paper);}
+.lrow .lc{font-size:15px;color:var(--gold);text-align:right;}
+.lbar{height:9px;background:linear-gradient(90deg,var(--gold),rgba(201,150,63,.25));min-width:3px;}
+.lbar.zero{background:none;}
+.lrow .lt{font-size:12px;color:var(--gold);text-align:right;visibility:hidden;}
+.lrow summary .lt{visibility:visible;}
+.lexp{
+  padding:4px 20px 18px 184px;
+  font-size:14px;color:rgba(232,228,220,.85);line-height:2.1;
+}
+.lexp .q{font-size:14.5px;}
+.ledger-note{
+  margin-top:14px;font-size:13px;color:rgba(232,228,220,.55);letter-spacing:.06em;
+}
+
+/* ============ 赦 ============ */
+.pardon{display:grid;grid-template-columns:1.35fr 1fr;gap:26px;align-items:stretch;}
+.pardon-main{
+  border:1px solid var(--gold-soft);
+  padding:28px 30px;
+  background:linear-gradient(160deg,rgba(201,150,63,.07),transparent 60%);
+}
+.pardon-main .q{font-size:17.5px;line-height:2.2;letter-spacing:.04em;display:block;}
+.pardon-main .gap{color:var(--gold);letter-spacing:.7em;display:block;text-align:left;padding-left:.4em;}
+.pardon-main .src{margin-top:14px;display:block;font-size:12px;letter-spacing:.25em;color:rgba(232,228,220,.55);}
+.pardon-side{display:flex;flex-direction:column;gap:14px;}
+.stamp{
+  border:1.5px solid var(--gold);
+  color:var(--paper);
+  padding:12px 18px;
+  display:flex;align-items:baseline;gap:12px;
+  background:rgba(201,150,63,.05);
+}
+.stamp .sv{font-size:26px;color:var(--gold);letter-spacing:.05em;}
+.stamp .sk{font-size:13px;color:rgba(232,228,220,.75);letter-spacing:.2em;}
+.pardon-note{
+  grid-column:1 / -1;
+  font-size:14px;color:rgba(232,228,220,.7);line-height:2.1;text-align:justify;
+}
+
+/* ============ 判例对照 ============ */
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+.pcard{
+  border:1px solid var(--gold-soft);
+  background:rgba(232,228,220,.03);
+  padding:26px 26px 22px;
+  position:relative;
+}
+.pcard .ptag{
+  position:absolute;top:-13px;left:20px;
+  background:var(--ink-bg);
+  border:1px solid var(--gold-soft);
+  color:var(--gold);
+  font-size:12px;letter-spacing:.3em;
+  padding:2px 12px;
+}
+.pcard h3{
+  font-size:19px;letter-spacing:.1em;color:var(--paper);
+  margin-bottom:12px;font-weight:700;
+}
+.pcard p{font-size:14px;color:rgba(232,228,220,.75);line-height:2.1;text-align:justify;margin-bottom:12px;}
+.pcard .verdict{
+  border-top:1px dashed var(--gold-soft);
+  padding-top:12px;
+  font-size:15.5px;line-height:2;
+}
+.pair-mid{
+  text-align:center;color:var(--gold);
+  font-size:13px;letter-spacing:.5em;margin:22px 0 20px;
+}
+
+/* ============ 听其去留 ============ */
+.qwatch{
+  border:1px solid var(--gold-soft);
+  padding:30px 32px;
+  background:
+    linear-gradient(90deg,var(--ruled) 1px,transparent 1px) 0 0/220px 100%,
+    rgba(232,228,220,.02);
+}
+.qwatch .story{font-size:14.5px;color:rgba(232,228,220,.8);line-height:2.15;text-align:justify;margin-bottom:16px;}
+.qwatch > .q{display:block;font-size:15.5px;line-height:2.1;}
+.reveal-box{display:none;}
+.reveal-label{
+  display:inline-block;margin-top:18px;
+  border:1px solid var(--gold);color:var(--gold);
+  font-size:13px;letter-spacing:.35em;
+  padding:6px 18px 6px 22px;cursor:pointer;user-select:none;
+  transition:all .2s;
+}
+.reveal-label:hover{background:var(--gold);color:var(--ink-bg);}
+.reveal-verdict{
+  margin-top:16px;
+  border-left:3px solid var(--gold);
+  padding:10px 0 10px 16px;
+  font-size:15.5px;line-height:2.1;
+  filter:blur(7px);opacity:.55;
+  transition:filter .45s,opacity .45s;
+}
+.reveal-box:checked ~ .reveal-verdict{filter:none;opacity:1;}
+.reveal-box:checked ~ .reveal-label{
+  background:var(--gold);color:var(--ink-bg);
+  pointer-events:none;
+}
+
+/* ============ 牌价 ============ */
+.prices{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:24px;}
+.price{
+  border:1px solid var(--gold-soft);
+  padding:22px 20px 18px;
+  text-align:center;
+  background:rgba(232,228,220,.03);
+  display:flex;flex-direction:column;gap:8px;
+}
+.price .amount{font-size:32px;color:var(--gold);letter-spacing:.06em;line-height:1.3;}
+.price .pname{font-size:14px;letter-spacing:.25em;color:var(--paper);}
+.price .pdesc{font-size:12.5px;color:rgba(232,228,220,.6);line-height:1.9;}
+.price .pquote{
+  margin-top:auto;border-top:1px dashed var(--gold-soft);
+  padding-top:10px;font-size:13px;line-height:2;color:rgba(232,228,220,.82);
+}
+.price .pquote .q{font-size:12.5px;}
+.sell-note{
+  border:1px solid var(--gold-soft);
+  border-left:4px solid var(--gold);
+  padding:18px 22px;
+  font-size:14px;color:rgba(232,228,220,.8);line-height:2.15;text-align:justify;
+}
+
+/* ============ 算学 ============ */
+.mathq{
+  border:1px solid var(--gold-soft);
+  background:linear-gradient(160deg,rgba(201,150,63,.08),transparent 70%);
+  padding:28px 30px;
+  margin-bottom:20px;
+}
+.mathq .q{font-size:16.5px;line-height:2.2;display:block;}
+.mathq .src{display:block;margin-top:12px;font-size:12px;letter-spacing:.25em;color:rgba(232,228,220,.55);}
+.mathbody{font-size:14.5px;color:rgba(232,228,220,.78);line-height:2.15;text-align:justify;}
+
+/* ============ 虫蛀 ============ */
+.worm{display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+.worm-card{
+  border:1px dashed rgba(201,150,63,.35);
+  padding:24px 26px;
+  font-size:14px;color:rgba(232,228,220,.78);line-height:2.15;
+}
+.worm-card h3{font-size:16px;letter-spacing:.2em;color:var(--paper);margin-bottom:10px;font-weight:700;}
+.scar{
+  display:inline-block;
+  border:1px solid rgba(201,150,63,.4);
+  background:rgba(201,150,63,.07);
+  color:var(--gold);
+  font-size:13px;
+  padding:1px 10px;margin:3px 4px 3px 0;
+  letter-spacing:.05em;
+}
+
+/* ============ 页脚 ============ */
+footer{
+  margin-top:70px;
+  border-top:1px solid var(--gold-soft);
+  padding:34px 0 46px;
+  font-size:12.5px;color:rgba(232,228,220,.55);
+  line-height:2.2;letter-spacing:.05em;
+}
+footer b{color:var(--gold);font-weight:600;}
+footer .fin{margin-top:14px;color:rgba(232,228,220,.4);letter-spacing:.3em;}
+
+@media (max-width:760px){
+  body{font-size:15px;}
+  .cover{padding:34px 22px 76px;}
+  .idtag{position:static;display:inline-block;margin-bottom:16px;transform:none;}
+  .seal{right:18px;bottom:16px;width:54px;height:54px;font-size:18px;}
+  .cover-foot{margin-right:0;}
+  .pardon,.pair,.worm{grid-template-columns:1fr;}
+  .lrow summary,.lrow .lstatic{grid-template-columns:112px 44px 1fr 22px;padding:8px 12px;gap:8px;}
+  .lexp{padding:4px 14px 16px 14px;}
+  .prices{grid-template-columns:1fr;}
+  .qwatch{background:none;padding:22px 18px;}
+  .shield-quote .qt{font-size:16px;}
+  .kicker h2{font-size:20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 封面：案匣 ================= -->
+<div class="cover-outer">
+  <div class="wrap">
+    <div class="cover">
+      <span class="idtag mono"><qv>2全宗6卷13号</qv></span>
+      <div class="case-kind"><qv>内阁汉文题本</qv>（刑科婚姻类）</div>
+      <h1 class="headline"><qv>刑科婚姻类提要</qv></h1>
+      <div class="head-sub">四百二十九份判决 · 十五个月流水</div>
+      <p class="qiantou">
+        <q class="q">刑部等衙门总理事务兼总理刑部事务和硕果亲王臣允礼等谨题为报明事</q><br>
+        这是全档第一行的抬头。签名的果亲王允礼是雍正的十七弟，他在卷面上一共签了五十八次名；
+        后面接手的，是大学士徐本领衔的刑部堂官们。抬头的格式千篇一律，格式下面的内容，
+        是从各省递上来的婚姻命案：通奸、拐逃、卖妻、悔婚、杀妻、杀夫，一件一件，逐日汇齐。
+      </p>
+      <div class="shield-quote">
+        <span class="who">青年皇帝的赦谕 · 附于全档首案判决之末</span>
+        <div class="qt">
+          <q class="q">赦非善政古人论之详矣但朕即位之初聿遵旧制诞布新恩凡此罪人皆因自取亟宜改悔永为良民</q>
+          <span class="gap">⋯</span>
+          <q class="q">如既赦之人再干法纪朕必将伊等加倍治罪不宽贷也</q>
+        </div>
+      </div>
+      <div class="cover-foot">
+        读档札记：雍正十三年秋新君登基颁恩赦，随即在首案的题本末尾亲手加了一段警告，
+        赦免不是善政，再犯者加倍治罪。这道谕旨随后被誊抄进其后上百份判决里，
+        成了整册档案反复回响的底噪。
+      </div>
+      <div class="seal" aria-hidden="true">
+        <span class="p1">刑</span><span class="p2">科</span><span class="p3">婚</span><span class="p4">姻</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 其一 · 卷面 ================= -->
+<div class="sec">
+  <div class="wrap">
+    <div class="kicker"><span class="num mono">其一</span><h2>一本流水账</h2></div>
+    <p class="sec-lede">
+      这册档案收在史藏别史类，是清代内阁刑科题本里专挑婚姻类案件摘出的提要汇编。
+      全册四百三十四个编号，四百二十九份带有完整日期：除了一件落在雍正末年腊月的旧案，
+      其余全部集中在<b>乾隆元年四月到二年六月</b>这十五个月里。新皇帝登基，旧案清仓，
+      刑部像一台上了发条的机器逐日输出判决：月均二十八份，腊月单月五十四份，几乎日日有判。
+      它不是什么奇书，恰恰因为它毫不奇特，它就是官府日常处理婚姻纠纷的原样流水，
+      会计式的冷静里，藏着那个时代对婚姻的全部算法。
+    </p>
+  </div>
+</div>
+
+<!-- ================= 其二 · 流水 ================= -->
+<div class="sec">
+  <div class="wrap">
+    <div class="kicker"><span class="num mono">其二</span><h2>十五个月流水</h2></div>
+    <p class="sec-lede">
+      每份题本的开头都是一串编号加日期，像账本的一行行墨迹。点开标着圆点的月份，
+      可以看到当月抽出的一份原件摘句。
+    </p>
+    <div class="ledger">
+      <details class="lrow">
+        <summary>
+          <span class="ld"><qv>雍正十三年十二月</qv></span>
+          <span class="lc mono">1</span>
+          <span class="lbar" style="width:6%"></span>
+          <span class="lt">●</span>
+        </summary>
+        <div class="lexp">全册唯一的雍正纪年旧案，四川巡抚题报：周大夜里拴牛，遇见邻家女儿张氏，两人私定终身一同出走。
+          <q class="q">周大至屋侧拴牛适遇张氏调戏成奸诱约偕逃</q>。父亲回家发现女儿不见了，第一反应是喊盗报官，说家里遭了贼。</div>
+      </details>
+      <details class="lrow">
+        <summary>
+          <span class="ld"><qv>干隆元年四月</qv></span>
+          <span class="lc mono">16</span>
+          <span class="lbar" style="width:22%"></span>
+          <span class="lt">●</span>
+        </summary>
+        <div class="lexp">开卷第一案：烧炭人傅教化拦路强暴邻家妻子谢氏，谢氏负伤四日后身亡，夫家收了烧炭人一千文钱、一石稻谷当作药钱。
+          <q class="q">傅教化当出小制钱一千文稻谷一石给为服药之资</q>。案子赶上恩赦，凶手免死，二十两埋葬银照追。</div>
+      </details>
+      <div class="lrow"><div class="lstatic">
+        <span class="ld"><qv>干隆元年五月</qv></span><span class="lc mono">31</span><span class="lbar" style="width:46%"></span><span class="lt"></span>
+      </div></div>
+      <details class="lrow">
+        <summary>
+          <span class="ld"><qv>干隆元年六月</qv></span>
+          <span class="lc mono">37</span>
+          <span class="lbar" style="width:58%"></span>
+          <span class="lt">●</span>
+        </summary>
+        <div class="lexp">本月最重的一份：颖上县李氏拒奸被殴致死，朝廷按例旌表。
+          <q class="q">今颖上县李氏强奸不从以致身死与例相符应令该抚转行该地方官照例给银三十两听本家自行建坊</q>，
+          一条命，换一座三十两银子规格的牌坊。</div>
+      </details>
+      <details class="lrow">
+        <summary>
+          <span class="ld"><qv>干隆元年七月</qv></span>
+          <span class="lc mono">39</span>
+          <span class="lbar" style="width:63%"></span>
+          <span class="lt">●</span>
+        </summary>
+        <div class="lexp">河南题报唐二酉案：王氏与王寅在麦地行奸，被扛锄的丈夫唐二酉撞见，王寅拾锄追打，
+          王氏奉命按住丈夫两腿，丈夫被牛绳勒毙。判决一句顶一句：
+          <q class="q">王氏依因奸同谋杀死亲夫律凌迟处死</q>，<q class="q">王寅应拟斩罪</q>。</div>
+      </details>
+      <div class="lrow"><div class="lstatic">
+        <span class="ld"><qv>干隆元年八月</qv></span><span class="lc mono">22</span><span class="lbar" style="width:31%"></span><span class="lt"></span>
+      </div></div>
+      <div class="lrow"><div class="lstatic">
+        <span class="ld"><qv>干隆元年九月</qv></span><span class="lc mono">29</span><span class="lbar" style="width:44%"></span><span class="lt"></span>
+      </div></div>
+      <div class="lrow"><div class="lstatic">
+        <span class="ld"><qv>干隆元年十月</qv></span><span class="lc mono">24</span><span class="lbar" style="width:36%"></span><span class="lt"></span>
+      </div></div>
+      <div class="lrow"><div class="lstatic">
+        <span class="ld"><qv>干隆元年十一月</qv></span><span class="lc mono">26</span><span class="lbar" style="width:40%"></span><span class="lt"></span>
+      </div></div>
+      <details class="lrow">
+        <summary>
+          <span class="ld"><qv>干隆元年十二月</qv></span>
+          <span class="lc mono">54</span>
+          <span class="lbar" style="width:100%"></span>
+          <span class="lt">●</span>
+        </summary>
+        <div class="lexp">全册最高峰，年关是官府结案的季节。江南赵弘恩题报的拐妻案也在本月：
+          医生之子翁维周借住病人家中行医，与主人之妻潘氏私通，两家起口角后，两人抱着孩子连夜出逃。
+          <q class="q">潘氏收拾银钱布疋及随身衣饰抱子阿大跟随维周逃至南邑亲戚盛明家诡称夫妇暂为借住</q>。</div>
+      </details>
+      <div class="lrow"><div class="lstatic">
+        <span class="ld">干隆二年正月</span><span class="lc mono">0</span><span class="lbar zero" style="width:3%"></span><span class="lt"></span>
+      </div></div>
+      <div class="lrow"><div class="lstatic">
+        <span class="ld"><qv>干隆二年二月</qv></span><span class="lc mono">14</span><span class="lbar" style="width:19%"></span><span class="lt"></span>
+      </div></div>
+      <div class="lrow"><div class="lstatic">
+        <span class="ld"><qv>干隆二年三月</qv></span><span class="lc mono">31</span><span class="lbar" style="width:46%"></span><span class="lt"></span>
+      </div></div>
+      <div class="lrow"><div class="lstatic">
+        <span class="ld"><qv>干隆二年四月</qv></span><span class="lc mono">35</span><span class="lbar" style="width:56%"></span><span class="lt"></span>
+      </div></div>
+      <div class="lrow"><div class="lstatic">
+        <span class="ld"><qv>干隆二年五月</qv></span><span class="lc mono">42</span><span class="lbar" style="width:70%"></span><span class="lt"></span>
+      </div></div>
+      <details class="lrow">
+        <summary>
+          <span class="ld"><qv>干隆二年六月</qv></span>
+          <span class="lc mono">28</span>
+          <span class="lbar" style="width:44%"></span>
+          <span class="lt">●</span>
+        </summary>
+        <div class="lexp">账本到此戛然而止。六月还有二十八份，卷宗编到四十号之后没有下文，库本收的就是这半册。
+          十五个月的四百二十九份判决，最后停在六月初的一份拐逃案上。</div>
+      </details>
+    </div>
+    <p class="ledger-note">条数按全档逐条日期实测清点；二年正月无一份题本，是新年停判的空档。</p>
+  </div>
+</div>
+
+<!-- ================= 其三 · 赦 ================= -->
+<div class="sec">
+  <div class="wrap">
+    <div class="kicker"><span class="num mono">其三</span><h2>赦字当头</h2></div>
+    <div class="pardon">
+      <div class="pardon-main">
+        <q class="q">赦非善政古人论之详矣但朕即位之初聿遵旧制诞布新恩凡此罪人皆因自取亟宜改悔永为良民</q>
+        <span class="gap">⋯</span>
+        <q class="q">如既赦之人再干法纪朕必将伊等加倍治罪不宽贷也</q>
+        <span class="src">青年乾隆的赦谕 · 誊入其后众多判词</span>
+      </div>
+      <div class="pardon-side">
+        <div class="stamp"><span class="sv mono">196</span><span class="sk">恩赦二字出现</span></div>
+        <div class="stamp"><span class="sv mono">218</span><span class="sk">援赦照免条款</span></div>
+        <div class="stamp"><span class="sv mono">203</span><span class="sk">免罪发落结案</span></div>
+      </div>
+      <div class="pardon-note">
+        四百二十九份判决里，两百多份的结尾是免罪：新君登基的恩赦，把积压的轻案一笔勾销，
+        连签题的堂官都换成了当国的总理王大臣。赦免的规模大到什么程度：刑部在这两年里最日常的工作
+        不是杀人，是放人。剩下没赦掉的，几乎全是出了人命的那一批。
+        而皇帝本人对这场大赦的定位，就写在上面的谕旨里：他知道赦免算不上德政，只是登基的旧例。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 其四 · 同罪不同刑 ================= -->
+<div class="sec">
+  <div class="wrap">
+    <div class="kicker"><span class="num mono">其四</span><h2>同一桩命案的两种算法</h2></div>
+    <p class="sec-lede">
+      律法在这册账本里最冷的一道算式：丈夫杀妻子，和妻子杀丈夫，罪名都叫杀，
+      量刑却是两个世界。
+    </p>
+    <div class="pair">
+      <div class="pcard">
+        <span class="ptag">妻 杀 夫</span>
+        <h3>麦地里的牛绳 · 乾隆元年七月案发</h3>
+        <p>
+          王氏与王寅在麦地行奸，被扛锄寻妻的唐二酉撞见。王寅追上去用锄柄打倒他，
+          王氏奉命按住丈夫两腿，丈夫被拴牛绳勒毙。主犯王寅后来病故在监，免于追问；
+          算到王氏头上的，是「同谋」两个字。
+        </p>
+        <div class="verdict"><q class="q">王氏依因奸同谋杀死亲夫律凌迟处死</q></div>
+      </div>
+      <div class="pcard">
+        <span class="ptag">夫 杀 妻</span>
+        <h3>瓜棚下的斧头 · 乾隆二年五月题结</h3>
+        <p>
+          吕六摘了一篮瓜回家奉母，妻子董氏嫌瓜没先交到她手里，骂不绝口，还用头去撞丈夫。
+          吕六拾斧砍中她头顶，她倒地仍拽住丈夫衣襟骂不停口，吕六于是连砍数斧。
+        </p>
+        <div class="verdict">
+          <q class="q">吕六入门果见董氏在室怒詈吕六气忿拾斧欲殴董氏益肆辱骂又用头撞吕六举斧砍董氏顶心偏左</q><br>
+          <q class="q">吕六合依夫故杀妻律应拟绞监候</q>
+        </div>
+      </div>
+    </div>
+    <div class="pair-mid">差的不只是刀法，是名分</div>
+    <p class="sec-lede">
+      妻子杀丈夫，入十恶，凌迟；丈夫杀妻子，故杀，绞监候，而绞监候还有秋审一道关，
+      情有可原的可以减等。全册四十四处凌迟，翻检所见多为妻子对丈夫下手；
+      而三百五十一处绞监候里，坐着不少杀了妻子的丈夫。律条没有写在纸上的那半句是：
+      在刑部的账上，一条命换一条命之外，还要先换算两个人的名分谁高谁低。
+    </p>
+  </div>
+</div>
+
+<!-- ================= 其五 · 听其去留 ================= -->
+<div class="sec">
+  <div class="wrap">
+    <div class="kicker"><span class="num mono">其五</span><h2>听其去留</h2></div>
+    <div class="qwatch">
+      <p class="story">
+        乾隆元年腊月那桩拐妻案里的潘氏，是被拐的一方，也是与奸夫同逃的一方。
+        官府把她从对岸县城的亲戚家里缉回来，审了一遍又一遍。她的奸夫发配烟瘴地方，
+        而她自己的判决，是下面这串字。先看清她受的刑罚，再看最后一句怎么处置她这个人。
+      </p>
+      <q class="q">翁维周潘氏应照例发云贵等省烟瘴少轻地方交地方官严加管束</q>
+      <input type="checkbox" id="rv1" class="reveal-box">
+      <label for="rv1" class="reveal-label">宣 判</label>
+      <div class="reveal-verdict"><q class="q">潘氏系妇人应照例枷号两个月责肆拾板给夫朱天收领听其去留</q></div>
+      <p class="story" style="margin-top:16px;">
+        枷号两月，责打四十板，然后交还原夫，去留听他。这四个字在全册出现了五十四次：
+        被拐的、被卖的、与人私逃被缉回的妇人，刑罚执行完毕，最后的归宿都是同一句公文。
+        婚姻在这册账本里不是两个人的契约，更像丈夫对妻子的一纸执据，官府代为保管，到期归还。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 其六 · 牌价 ================= -->
+<div class="sec">
+  <div class="wrap">
+    <div class="kicker"><span class="num mono">其六</span><h2>朝廷的牌价</h2></div>
+    <div class="sell-note">
+      账本里甚至有把妻子当货出手的进货单。丰县陈文进把妻子张氏卖奸，张氏不肯，
+      自缢死了，陈文进跑掉，来客韩振被当成凶手关了好几年：
+      <q class="q">丰县韩振因陈文进将妻张氏卖奸致氏缢死</q>。刑部批回来的复核意见点破了要害：
+      <q class="q">张氏之死衅起本夫</q>。买卖不成，人命两空，官府在这桩案子里追的仍然是钱、罪、名分三本账。
+    </div>
+    <div class="prices">
+      <div class="price">
+        <div class="amount mono">30 两</div>
+        <div class="pname">贞节牌坊</div>
+        <div class="pdesc">妇女拒奸被杀，例给建坊之资，交由本家自建，县里节孝祠另设牌位。全册照此给银二十六次。</div>
+        <div class="pquote"><q class="q">照例给银三十两听本家自行建坊</q></div>
+      </div>
+      <div class="price">
+        <div class="amount mono">20 两</div>
+        <div class="pname">埋葬银</div>
+        <div class="pdesc">命案中死者家属的抚恤，多从凶手名下追出给付。首案谢氏之死，这笔银两在恩赦免死后照追不误。</div>
+        <div class="pquote"><q class="q">追埋葬银二十两给付尸夫收领</q></div>
+      </div>
+      <div class="price">
+        <div class="amount" style="font-size:26px;">一千文 + 一石</div>
+        <div class="pname">药钱</div>
+        <div class="pdesc">首案傅教化施暴后当场给出的「服药之资」：施暴者自己开价，官府照单记录在案。</div>
+        <div class="pquote"><q class="q">傅教化当出小制钱一千文稻谷一石给为服药之资</q></div>
+      </div>
+    </div>
+    <p class="sec-lede" style="margin-top:22px;">
+      一座牌坊三十两，一条人命二十两，一桩暴行的遮羞钱一千文加一石谷。
+      律法给婚姻里的每一样东西都定了价：贞节有价，尸身有价，连遮丑都有行情。
+      这不是哪一位官吏冷酷，这是制度本来的记账方式；只是从这册流水里读出来，
+      比从任何律学专著里读出来，都要硌手。
+    </p>
+  </div>
+</div>
+
+<!-- ================= 其七 · 刑部的算学 ================= -->
+<div class="sec">
+  <div class="wrap">
+    <div class="kicker"><span class="num mono">其七</span><h2>刑部的算学</h2></div>
+    <div class="mathq">
+      <q class="q">详绎例意全重在奸所获奸登时杀死</q>
+      <span class="gap">⋯</span>
+      <q class="q">义气所激其心直欲杀此奸夫奸妇而后已也</q>
+      <span class="src">刑部驳回巡抚原拟 · <qv>干隆元年十二月</qv>题</span>
+    </div>
+    <p class="mathbody">
+      江西万载刘兆干的妻子袁氏与吴亚二通奸。案发时刘兆干在外做工，三天后回家听说，
+      一怒把妻子殴戳致死。巡抚按通行做法拟奸夫绞监候、拟本夫杖八十。刑部不批：
+      律例写的是本夫在奸所当场捉奸、登时杀死，才算「义气所激」，可以只杖八十；
+      你这案子丈夫三天后才动手，死的又不是奸夫，凭什么套这个例？
+      <q class="q">因奸夫徼幸脱逃是以止将奸妇杀死</q>的情形，条文里另有算式。
+      刑部把案子整个驳回，令该抚重审再报。这份驳回书是全册少见的纯说理文字：
+      一个县里的怒杀案，一路吵到皇帝的刑部，为的是把「登时」两个字抠准。
+      流水账里偶尔露出这一截，你会看见那台机器不只在盖章，它真的在算。
+    </p>
+  </div>
+</div>
+
+<!-- ================= 其八 · 虫蛀 ================= -->
+<div class="sec">
+  <div class="wrap">
+    <div class="kicker"><span class="num mono">其八</span><h2>虫蛀与讹字</h2></div>
+    <div class="worm">
+      <div class="worm-card">
+        <h3>扫描件上的洞</h3>
+        这批档案从扫描件转录而来，字库里没有的字一律开了天窗，全册缺字记号两千七百余处，
+        连官衔都不能幸免。下面几处都是库本原样：
+        <div style="margin-top:8px;">
+          <span class="scar"><qv>领侍%内大臣</qv></span>
+          <span class="scar"><qv>比j而居</qv></span>
+          <span class="scar"><qv>发边%永远充军</qv></span>
+        </div>
+        本页引文一律避开缺字号，避不开的整句不采。
+      </div>
+      <div class="worm-card">
+        <h3>防伪的大写数字</h3>
+        官文书里的年月日常写大写数字，防人涂改，库本原样：
+        <div style="margin-top:8px;"><qv>雍正拾贰年捌月间</qv></div>
+        另一处系统性讹字：档案纪年几乎全部把乾隆年号的头一个字刻成形近的干字，
+        是转录留下的痕迹，本页照录不归一，流水册的日期条均从此。
+        上文瓜棚案的案发缘起，库本原样一句，也带着这个干字：
+        <div style="margin-top:8px;"><qv>干隆元年七月间吕六种瓜成熟</qv></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 页脚 ================= -->
+<footer>
+  <div class="wrap">
+    文本来源：殆知阁古代文献简体库（史藏别史，<qv>内阁汉文题本专题档案刑科婚姻类提要</qv>），库本去空白约二十一万四千字。仓库：<a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener"><b>daizhige-daodu</b></a><br>
+    本篇引文经脚本与库内文件去标点、归一后逐字比对通过；库本缺字记号与讹字照录不归一，引文一律避让缺字号。<br>
+    时代局限提醒：本档案反映的是十八世纪刑律对婚姻、贞节与人命的裁量方式，其中对女性的处置、对通奸的刑罚均为历史记录，不代表本库与导读的立场。旧律条文惨刻，读时请自备三百年后的眼睛。
+    <div class="fin">殆知阁导读 · 第四百零一篇</div>
+  </div>
+</footer>
+
+<script>
+document.title = '刑科婚姻类提要' + ' · 殆知阁导读第四百零一篇';
+</script>
+</body>
+</html>
