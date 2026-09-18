@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数书九章 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#202020; --paper:#e8e4dc; --paper-dim:#b8b4a8;
+  --jade:#5f9270; --jade-soft:rgba(95,146,112,.16); --jade-line:rgba(95,146,112,.42);
+  --cinnabar:#c0453c; --dim:#93938a; --hairline:#2c2c28;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","SimSun",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--serif);line-height:1.9;overflow-x:hidden}
+::selection{background:var(--jade);color:var(--ink)}
+h1,h2,h3{font-weight:600}
+q{quotes:none}
+.sec{max-width:1080px;margin:0 auto;padding:96px 28px}
+.kick{font-size:12px;letter-spacing:.5em;color:var(--jade);text-transform:uppercase}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.rv.vis{opacity:1;transform:none}
+
+/* ============ HERO 算台 ============ */
+.hero{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;padding:56px 20px;text-align:center;
+  background:
+   radial-gradient(1100px 620px at 50% 30%,rgba(95,146,112,.10),transparent 62%),
+   repeating-linear-gradient(0deg,transparent 0 47px,rgba(95,146,112,.07) 47px 48px),
+   repeating-linear-gradient(90deg,transparent 0 47px,rgba(95,146,112,.07) 47px 48px),
+   var(--ink);}
+.hero .kick{margin-bottom:42px}
+.board{border:1px solid var(--jade-line);padding:44px 58px 34px;position:relative;background:rgba(25,25,23,.55);box-shadow:0 0 0 6px rgba(95,146,112,.05),0 30px 80px rgba(0,0,0,.5)}
+.board::before,.board::after{content:"";position:absolute;width:10px;height:10px;border:1px solid var(--jade-line)}
+.board::before{top:-6px;left:-6px;border-right:0;border-bottom:0}
+.board::after{bottom:-6px;right:-6px;border-left:0;border-top:0}
+.rodrow{display:flex;align-items:flex-end;justify-content:center;gap:64px;min-height:118px}
+.rodgrp{display:flex;flex-direction:column;align-items:center;gap:7px;position:relative}
+.rodgrp .five{margin-bottom:4px}
+.rod{background:var(--jade);border-radius:2px;opacity:0;transform:translateY(-26px);box-shadow:0 3px 10px rgba(0,0,0,.5)}
+.rv-rod{width:5px;height:44px}
+.rh-rod{width:44px;height:5px}
+.board.lit .rod{animation:drop .55s cubic-bezier(.2,.8,.3,1) forwards}
+.board.lit .rod:nth-child(1){animation-delay:.15s}
+.rodgrp .rod:nth-of-type(1){animation-delay:.12s}
+.rodgrp .rod:nth-of-type(2){animation-delay:.30s}
+.rodgrp .rod:nth-of-type(3){animation-delay:.48s}
+.rodgrp .rod:nth-of-type(4){animation-delay:.66s}
+@keyframes drop{to{opacity:1;transform:none}}
+.place{font-size:12px;color:var(--dim);letter-spacing:.4em;margin-top:12px}
+.hero h1{font-size:clamp(46px,8.5vw,88px);letter-spacing:.22em;margin-top:44px;opacity:0;transform:translateY(14px);transition:opacity 1.1s ease .5s,transform 1.1s ease .5s}
+.hero.lit h1{opacity:1;transform:none}
+.hero .who{margin-top:10px;color:var(--paper-dim);letter-spacing:.35em;font-size:15px;opacity:0;transition:opacity 1.1s ease 1s}
+.hero.lit .who{opacity:1}
+.hero .alias{margin-top:6px;font-size:13px;color:var(--dim);opacity:0;transition:opacity 1.1s ease 1.2s}
+.hero.lit .alias{opacity:1}
+.heroquote{margin-top:34px;max-width:620px;color:var(--paper-dim);font-size:15px}
+.heroquote q{border-top:1px solid var(--jade-line);border-bottom:1px solid var(--jade-line);padding:8px 18px;display:inline-block}
+.seal{position:absolute;right:8%;bottom:12%;width:74px;height:74px;border:2px solid var(--cinnabar);color:var(--cinnabar);
+  display:flex;align-items:center;justify-content:center;font-size:22px;letter-spacing:0;writing-mode:vertical-rl;
+  border-radius:6px;transform:rotate(6deg);opacity:.85;box-shadow:inset 0 0 0 2px rgba(192,69,60,.25)}
+#bu-chou{margin-top:44px;background:none;border:1px solid var(--jade-line);color:var(--jade);font-family:inherit;
+  font-size:15px;letter-spacing:.5em;padding:12px 34px 12px 40px;cursor:pointer;transition:.3s}
+#bu-chou:hover{background:var(--jade-soft)}
+.scrollhint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);color:var(--dim);font-size:11px;letter-spacing:.5em}
+
+/* ============ 序卷 (右起横卷) ============ */
+.strap-head{display:flex;align-items:baseline;gap:22px;flex-wrap:wrap;margin-bottom:44px}
+.strap-head h2{font-size:30px;letter-spacing:.2em}
+.strap-head .lead{color:var(--paper-dim);font-size:15px}
+.strip{display:flex;flex-direction:row-reverse;gap:0;overflow-x:auto;padding-bottom:18px;scrollbar-width:thin}
+.stop{min-width:198px;border-left:1px solid var(--hairline);padding:0 22px 8px;position:relative}
+.stop::before{content:"";position:absolute;left:-5px;top:0;width:9px;height:9px;background:var(--jade);border-radius:50%}
+.stop:first-child{border-left:0}
+.stop .tag{color:var(--jade);font-size:13px;letter-spacing:.3em;margin:10px 0 12px;display:block}
+.stop q{display:block;color:var(--paper-dim);font-size:14.5px;padding-top:12px;border-top:1px dashed var(--jade-line)}
+
+/* ============ 九宫 ============ */
+.gridwrap{position:relative}
+.g9{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:44px}
+.cell{border:1px solid var(--hairline);min-height:158px;position:relative;cursor:pointer;transition:.35s;background:var(--ink2)}
+.cell:hover{border-color:var(--jade-line)}
+.cell .front,.cell .back{position:absolute;inset:0;padding:20px 22px;display:flex;flex-direction:column;transition:opacity .5s,transform .5s;backface-visibility:hidden}
+.cell .front{opacity:1}
+.cell .back{opacity:0;transform:rotateY(180deg);pointer-events:none;overflow-y:auto;scrollbar-width:thin}
+.cell.open .front{opacity:0;transform:rotateY(180deg)}
+.cell.open .back{opacity:1;transform:none;pointer-events:auto}
+.cell .no{font-size:11px;color:var(--dim);letter-spacing:.3em}
+.cell h3{font-size:24px;letter-spacing:.3em;margin:8px 0 2px;color:var(--paper)}
+.cell .cnt{color:var(--dim);font-size:12px;letter-spacing:.2em}
+.cell.center{background:var(--jade-soft);border-color:var(--jade-line)}
+.cell.center h3{color:var(--jade)}
+.cell .back q{display:block;font-size:13.5px;color:var(--paper-dim)}
+.cell .back q + q{margin-top:10px}
+.cell .back .w{color:var(--jade);font-size:11.5px;letter-spacing:.2em;margin-bottom:6px}
+.g9note{margin-top:26px;color:var(--dim);font-size:13.5px}
+
+/* ============ 三案门 ============ */
+.doors{display:flex;gap:16px;margin-top:48px;align-items:stretch}
+.doorwrap{flex:1;position:relative;min-height:460px;border:1px solid var(--hairline);overflow:hidden;background:var(--ink2)}
+.door{position:absolute;inset:0;background:linear-gradient(160deg,#232320,#1c1c1a);border-right:1px solid var(--jade-line);
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:30px 14px;cursor:pointer;
+  transition:transform .8s cubic-bezier(.65,0,.35,1);z-index:2}
+.doorwrap.open .door{transform:translateX(101%)}
+.door .dtitle{writing-mode:vertical-rl;font-size:25px;letter-spacing:.4em;color:var(--jade)}
+.door .dsub{color:var(--dim);font-size:12px;letter-spacing:.3em;writing-mode:vertical-rl}
+.door .knob{width:9px;height:9px;border:1px solid var(--jade);border-radius:50%;margin-top:14px}
+.inner{position:absolute;inset:0;padding:26px 24px;overflow-y:auto;scrollbar-width:thin}
+.inner h4{color:var(--jade);letter-spacing:.25em;font-size:17px;margin-bottom:12px}
+.inner q{display:block;color:var(--paper-dim);font-size:14px;border-left:2px solid var(--jade-line);padding:6px 0 6px 12px;margin-bottom:12px}
+.inner .plain{font-size:13.5px;color:var(--paper-dim);margin:10px 0}
+.inner .ans{color:var(--paper);font-size:15px;margin-bottom:12px}
+.case-fig{margin:6px auto 12px;display:block}
+.jump{display:inline-block;margin-top:6px;border:1px solid var(--jade-line);color:var(--jade);background:none;font-family:inherit;font-size:13px;letter-spacing:.3em;padding:8px 16px 8px 20px;cursor:pointer}
+.jump:hover{background:var(--jade-soft)}
+
+/* ============ 推数台 ============ */
+.console{border:1px solid var(--jade-line);background:var(--ink2);padding:34px clamp(16px,4vw,44px);position:relative}
+.console::before{content:"推 数 台";position:absolute;top:-14px;left:36px;background:var(--ink);padding:0 14px;color:var(--jade);letter-spacing:.5em;font-size:14px}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:26px 0 18px}
+.pane{border:1px solid var(--hairline);padding:16px 14px;text-align:center}
+.pane .nm{color:var(--jade);letter-spacing:.4em;font-size:14px}
+.pane .tool{color:var(--dim);font-size:12px;margin-top:2px;letter-spacing:.15em}
+.pane .val{font-size:34px;margin-top:10px;letter-spacing:.04em;font-variant-numeric:tabular-nums;color:var(--paper)}
+.pane .cnv{color:var(--paper-dim);font-size:13px;margin-top:2px}
+.rail{display:flex;gap:6px;margin:22px 0 14px;flex-wrap:wrap}
+.rail button{flex:1;min-width:60px;background:none;border:1px solid var(--hairline);color:var(--dim);font-family:inherit;font-size:12px;padding:8px 2px;cursor:pointer;letter-spacing:.1em;transition:.25s}
+.rail button.cur{border-color:var(--jade);color:var(--jade);background:var(--jade-soft)}
+.rail button.done{color:var(--paper)}
+.steptext{min-height:74px;color:var(--paper-dim);font-size:14.5px}
+.steptext b{color:var(--jade);font-weight:600}
+.ledger{margin-top:20px;border-top:1px dashed var(--jade-line);padding-top:16px;display:none}
+.ledger.show{display:block}
+.ledger table{width:100%;border-collapse:collapse;font-size:14px}
+.ledger td,.ledger th{padding:7px 6px;border-bottom:1px solid var(--hairline);text-align:left;color:var(--paper-dim)}
+.ledger th{color:var(--jade);font-weight:600;letter-spacing:.2em}
+.ledger td:last-child{text-align:right;color:var(--paper)}
+.dyside{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dyside .note{border:1px solid var(--hairline);padding:18px 20px}
+.dyside .note .w{color:var(--jade);font-size:12px;letter-spacing:.3em;margin-bottom:10px;display:block}
+.dyside .note q{display:block;color:var(--paper-dim);font-size:13.5px}
+
+/* ============ 玲珑塔 ============ */
+.pag{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:52px;align-items:center}
+.tower{display:flex;flex-direction:column;gap:7px;align-items:stretch;padding:0 6%}
+.floor{height:34px;border:1px solid var(--jade-line);background:linear-gradient(90deg,var(--jade-soft),transparent);position:relative;transition:.5s}
+.floor span{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--dim);letter-spacing:.2em}
+.floor.gone{opacity:0;height:0;border-width:0;margin:0}
+.tower .base{height:10px;border-top:2px solid var(--jade);margin-top:4px}
+.tres{margin-top:18px;text-align:center;color:var(--jade);letter-spacing:.3em;font-size:15px;min-height:26px}
+#kai-ling{margin-top:16px;width:100%}
+.pag .txt h2{font-size:30px;letter-spacing:.2em;margin-bottom:8px}
+.pag .txt .lead{color:var(--paper-dim);font-size:15px;margin-bottom:22px}
+.pag .txt q{display:block;color:var(--paper-dim);font-size:14.5px;border-left:2px solid var(--jade-line);padding:8px 0 8px 14px;margin-bottom:16px}
+
+/* ============ 瑕瑜天平 ============ */
+.bal{position:relative;padding-top:70px}
+.beam{position:relative;height:4px;background:linear-gradient(90deg,transparent,var(--jade),transparent);transform:rotate(-3.2deg);transition:transform 1.6s cubic-bezier(.3,1.4,.4,1);transform-origin:50% 50%;margin:0 auto;width:min(860px,92%)}
+.bal.tilt .beam{transform:rotate(2.4deg)}
+.pillar{position:absolute;left:50%;top:34px;transform:translateX(-50%);width:2px;height:74px;background:var(--jade);opacity:.6}
+.pillar::after{content:"";position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);width:44px;height:9px;background:var(--jade);opacity:.55;border-radius:3px 3px 0 0}
+.pan{position:absolute;top:2px;width:min(360px,44%)}
+.pan.l{left:0;transform:translateY(30px)}
+.pan.r{right:0;transform:translateY(-30px)}
+.beam .pan.l{transform:translateY(34px)}
+.beam .pan.r{transform:translateY(-34px)}
+.pan .panhead{text-align:center;letter-spacing:.4em;font-size:14px;margin-bottom:14px}
+.pan.xia .panhead{color:var(--cinnabar)}
+.pan.yu .panhead{color:var(--jade)}
+.pan q{display:block;font-size:13.5px;color:var(--paper-dim);border:1px solid var(--hairline);padding:12px 16px;margin-bottom:10px;background:var(--ink2)}
+.balbase{margin:360px auto 0;max-width:860px;color:var(--dim);font-size:13.5px;display:grid;gap:10px}
+.balbase q{display:block}
+
+/* ============ 尾屏 ============ */
+.coda{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:70px 0;
+ background:radial-gradient(800px 480px at 50% 55%,rgba(95,146,112,.09),transparent 70%)}
+.codarow{display:flex;flex-direction:row-reverse;gap:clamp(26px,6vw,72px);align-items:flex-start;justify-content:center;padding:0 24px}
+.vmain{writing-mode:vertical-rl;font-size:clamp(28px,4.6vw,44px);letter-spacing:.3em;color:var(--paper);line-height:1.7;white-space:nowrap}
+.vside{writing-mode:vertical-rl;font-size:14.5px;color:var(--paper-dim);letter-spacing:.22em;line-height:2.3;max-height:66vh}
+.vside.small{font-size:12.5px;color:var(--dim)}
+.coda .seal{position:static;margin-top:24vh;writing-mode:vertical-rl}
+
+/* ============ footer ============ */
+footer{border-top:1px solid var(--hairline);padding:44px 28px 60px;max-width:1080px;margin:0 auto;color:var(--dim);font-size:13px}
+footer p+p{margin-top:12px}
+footer a{color:var(--jade)}
+
+@media (max-width:860px){
+  .g9{grid-template-columns:repeat(2,1fr)}
+  .cell.center{grid-column:span 2}
+  .doors{flex-direction:column}
+  .doorwrap{min-height:380px}
+  .cols{grid-template-columns:1fr}
+  .dyside{grid-template-columns:1fr}
+  .pag{grid-template-columns:1fr}
+  .beam{display:none}
+  .pan{position:static;width:100%;transform:none!important;margin-bottom:34px}
+  .pillar{display:none}
+  .bal{padding-top:0}
+  .balbase{margin-top:26px}
+  .rodrow{gap:34px}
+  .board{padding:34px 26px 26px}
+  .codarow{gap:20px}
+  .vmain{letter-spacing:.2em}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <p class="kick">殆知阁古籍导读 · 子藏算法</p>
+  <div class="board" id="board">
+    <div class="rodrow">
+      <div class="rodgrp">
+        <span class="rod rv-rod five"></span>
+        <span class="rod rh-rod"></span>
+        <span class="rod rh-rod"></span>
+        <span class="rod rh-rod"></span>
+        <span class="place">十位 · 八</span>
+      </div>
+      <div class="rodgrp">
+        <span class="rod rv-rod"></span>
+        <span class="place">个位 · 一</span>
+      </div>
+    </div>
+  </div>
+  <button id="bu-chou">布 筹</button>
+  <h1>数书九章</h1>
+  <p class="who">宋秦九韶 · 淳祐七年（1247）</p>
+  <p class="alias">库本题《数学九章》，凡十八卷，题凡八十一，分作九类</p>
+  <p class="heroquote"><q data-who="">大可以通神明顺性命小足以经世务类万物</q></p>
+  <div class="seal">数与道</div>
+  <p class="scrollhint">▽ 筹已布 · 向下演算</p>
+</header>
+
+<!-- ================= 序卷 ================= -->
+<section class="sec">
+  <div class="strap-head rv">
+    <h2>序卷 · 矢石之间</h2>
+    <span class="lead">自序自述其学所从来，与书之所由作</span>
+  </div>
+  <p class="lead rv" style="max-width:720px;color:var(--paper-dim);font-size:15px"><q data-who="">周教六艺数实成之学士大夫所从事尚矣</q></p>
+  <div class="strip rv" style="margin-top:40px">
+    <div class="stop">
+      <span class="tag">一 · 中都</span>
+      <p style="font-size:14px">早岁侍亲临安，因访太史之学</p>
+      <q data-who="">九韶愚陋不闲于艺然早岁侍亲中都因得访习于太史又尝从隐君子受数学</q>
+    </div>
+    <div class="stop">
+      <span class="tag">二 · 兵难</span>
+      <p style="font-size:14px">时际兵乱，流离塞上十年</p>
+      <q data-who="">时际兵难歴岁遥塞不自意全于矢石之间更险离忧荏苒十禩心槁气落信知失物莫不有数也</q>
+    </div>
+    <div class="stop">
+      <span class="tag">三 · 成书</span>
+      <p style="font-size:14px">设问拟用，积久成编</p>
+      <q data-who="">窃尝设为问荅以拟于用积多而惜其弃因取八十一题厘为九类立术具草间以图发之</q>
+    </div>
+    <div class="stop">
+      <span class="tag">四 · 落款</span>
+      <p style="font-size:14px">自署祖贯鲁郡，落款于淳祐七年</p>
+      <q data-who="">时淳祐七年九月鲁郡秦九韶叙</q>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 九宫 ================= -->
+<section class="sec" style="padding-top:30px">
+  <div class="strap-head rv">
+    <h2>九类 · 八十一问</h2>
+    <span class="lead">大衍居中为纲，八类环列各领九题</span>
+  </div>
+  <p class="rv" style="max-width:760px;color:var(--paper-dim);font-size:15px"><q data-who="">大衍术以各分数之竒零求各分数之总数大而天行小而物数皆可御之</q></p>
+  <div class="g9 rv">
+    <div class="cell" data-c>
+      <div class="front"><span class="no">其二</span><h3>天时</h3><span class="cnt">九题 · 历谱</span></div>
+      <div class="back"><span class="w">系曰</span><q data-who="">七精回穹人事之纪追缀而求宵星画晷厯乆则踈惟智能革不寻天道模袭何益</q><span class="w" style="margin-top:12px">馆臣目</span><q data-who="">二曰天时以步气朔晷影及五星伏见</q></div>
+    </div>
+    <div class="cell" data-c>
+      <div class="front"><span class="no">其三</span><h3>田域</h3><span class="cnt">九题 · 量地</span></div>
+      <div class="back"><span class="w">系曰</span><q data-who="">魁隗粒民甄度四海苍姫井之仁政攸在代逺庶蕃恳菑日广步度庀赋版图是掌方圆异状袤窳殊形</q><q data-who="">差之毫厘谬乃千里</q><span class="w" style="margin-top:12px">馆臣目</span><q data-who="">三曰田域以推方圆羃积</q></div>
+    </div>
+    <div class="cell" data-c>
+      <div class="front"><span class="no">其四</span><h3>测望</h3><span class="cnt">九题 · 勾股</span></div>
+      <div class="back"><span class="w">系曰</span><q data-who="">莫高匪山莫濬匪川神禹奠之积矩攸传</q><span class="w" style="margin-top:12px">馆臣目</span><q data-who="">四曰测望以推髙深广逺</q></div>
+    </div>
+    <div class="cell" data-c>
+      <div class="front"><span class="no">其五</span><h3>赋役</h3><span class="cnt">九题 · 均输</span></div>
+      <div class="back"><span class="w">系曰</span><q data-who="">邦国之赋以待百事</q><span class="w" style="margin-top:12px">馆臣目</span><q data-who="">五曰赋役以均租税力役</q></div>
+    </div>
+    <div class="cell center" data-c>
+      <div class="front"><span class="no">其一 · 纲</span><h3>大衍</h3><span class="cnt">九题 · 总术</span></div>
+      <div class="back"><span class="w">馆臣目</span><q data-who="">一曰大衍以奇零求总数为九类之纲</q><span class="w" style="margin-top:12px">系曰</span><q data-who="">昆仑旁薄道本虚一圣有大衍防寓于易竒余取防郡数皆捐衍而防之探隐之原</q><q data-who="">数术之传以实为体其书九章惟兹弗纪厯家虽用用而不知小试经世姑推所为述大衍第一　</q></div>
+    </div>
+    <div class="cell" data-c>
+      <div class="front"><span class="no">其六</span><h3>钱谷</h3><span class="cnt">九题 · 出入</span></div>
+      <div class="back"><span class="w">系曰</span><q data-who="">我闻理财如智治水澄原濬流</q><span class="w" style="margin-top:12px">馆臣目</span><q data-who="">六曰钱谷以权轻重出入</q></div>
+    </div>
+    <div class="cell" data-c>
+      <div class="front"><span class="no">其七</span><h3>营建</h3><span class="cnt">九题 · 土功</span></div>
+      <div class="back"><span class="w">系曰</span><q data-who="">斯城斯池乃栋乃宇</q><span class="w" style="margin-top:12px">馆臣目</span><q data-who="">七曰营建以度土功</q></div>
+    </div>
+    <div class="cell" data-c>
+      <div class="front"><span class="no">其八</span><h3>军旅</h3><span class="cnt">九题 · 行阵</span></div>
+      <div class="back"><span class="w">系曰</span><q data-who="">天生五材兵去未可不教而战维上之过</q><q data-who="">夜算军书先计攸重</q><span class="w" style="margin-top:12px">馆臣目</span><q data-who="">八曰军旅以定行阵</q></div>
+    </div>
+    <div class="cell" data-c>
+      <div class="front"><span class="no">其九</span><h3>市易</h3><span class="cnt">九题 · 贸迁</span></div>
+      <div class="back"><span class="w">系曰</span><q data-who="">日中而市万民所资贾贸墆鬻利析铢锱</q><span class="w" style="margin-top:12px">馆臣目</span><q data-who="">九曰市易以治交易</q></div>
+    </div>
+  </div>
+  <p class="g9note rv">点击签面翻背：背为自序系曰与四库馆臣各类目一句。馆臣评九类总目：</p>
+  <p class="rv" style="margin-top:10px;color:var(--paper-dim);font-size:14.5px"><q data-who="">虽条目纷纭曲折往复不免瑕瑜互见而其精确者居多</q></p>
+</section>
+
+<!-- ================= 三案 ================= -->
+<section class="sec" style="padding-top:30px">
+  <div class="strap-head rv">
+    <h2>名题三案</h2>
+    <span class="lead">推门读题：三桩案子，三种算法</span>
+  </div>
+  <div class="doors rv">
+    <div class="doorwrap">
+      <div class="door" data-d><span class="dsub">大衍类</span><span class="dtitle">余米推数</span><span class="knob"></span></div>
+      <div class="inner">
+        <h4>米铺失窃 · 破案题</h4>
+        <q data-who="">问有米铺诉被盗去米一般三箩皆适满不记细数今左壁箩剰一合中间箩剰一升四合右壁箩剰一合后获贼系甲乙丙三名甲称当夜摸得马杓在左壁箩舀入布袋乙称踢着木履在中箩舀入袋丙称摸得漆椀在左邉箩舀入袋</q>
+        <q data-who="">甲称当夜摸得马杓在左壁箩舀入布袋乙称踢着木履在中箩舀入袋丙称摸得漆椀在左邉箩舀入袋将归食用</q>
+        <q data-who="">索到三器马杓满容一升九合木履容一升七合漆椀容一升二合</q>
+        <p class="plain">三贼舀米用马杓、木履、漆椀三器，器容量即三个除数；三箩所剩的一合、十四合、一合即三个余数。按大衍术一推，赃数立见。</p>
+        <p class="ans">答：<q data-who="">答曰共失米九石五斗六升三合</q></p>
+        <button class="jump" data-go="suantai">上台推数 ▾</button>
+      </div>
+    </div>
+    <div class="doorwrap">
+      <div class="door" data-d><span class="dsub">田域类</span><span class="dtitle">三斜求积</span><span class="knob"></span></div>
+      <div class="inner">
+        <h4>沙田三斜 · 量地题</h4>
+        <q data-who="">问沙田一叚有三斜其小斜一十三里中斜一十四里大斜一十五里里法三百歩欲知为田几何</q>
+        <svg class="case-fig" width="240" height="134" viewBox="0 0 240 134" aria-hidden="true">
+          <polygon points="14,118 226,118 168,14" fill="rgba(95,146,112,.14)" stroke="#5f9270" stroke-width="1.4"/>
+          <text x="104" y="131" fill="#93938a" font-size="11">大斜 15 里</text>
+          <text x="192" y="66" fill="#93938a" font-size="11">小斜 13</text>
+          <text x="24" y="50" fill="#93938a" font-size="11">中斜 14</text>
+        </svg>
+        <p class="ans">答：<q data-who="">荅曰田积三百一十五顷
+　　</q></p>
+        <q data-who="">术曰以少广求之以小斜幂并大斜幂减中斜幂余半之自乘于上以小斜幂乘大斜幂减上余四约之为实一为从隅开平方得积</q>
+        <p class="plain">三边求三角形面积，与西方海伦公式全然同构而各自独立成术，是全书最有名的一条术文。</p>
+      </div>
+    </div>
+    <div class="doorwrap">
+      <div class="door" data-d><span class="dsub">军旅类</span><span class="dtitle">计立方营</span><span class="knob"></span></div>
+      <div class="inner">
+        <h4>暮立方营 · 布阵题</h4>
+        <q data-who="">问一军三将将三十三队队一百二十五人遇暮立营人占立地方八尺须令队间容队师居中央欲知营方几何</q>
+        <svg class="case-fig" width="240" height="120" viewBox="0 0 240 120" aria-hidden="true">
+          <rect x="98" y="46" width="44" height="28" fill="rgba(192,69,60,.28)" stroke="#c0453c" stroke-width="1"/>
+          <text x="106" y="64" fill="#c0453c" font-size="10">将居中</text>
+          <g fill="#5f9270" opacity=".85">
+            <rect x="18" y="14" width="26" height="20"/><rect x="52" y="14" width="26" height="20"/><rect x="86" y="14" width="26" height="20"/><rect x="120" y="14" width="26" height="20"/><rect x="154" y="14" width="26" height="20"/><rect x="188" y="14" width="26" height="20"/>
+            <rect x="18" y="46" width="26" height="20"/><rect x="52" y="46" width="26" height="20"/><rect x="160" y="46" width="26" height="20"/><rect x="194" y="46" width="26" height="20"/>
+            <rect x="18" y="78" width="26" height="20"/><rect x="52" y="78" width="26" height="20"/><rect x="86" y="78" width="26" height="20"/><rect x="120" y="78" width="26" height="20"/><rect x="154" y="78" width="26" height="20"/><rect x="188" y="78" width="26" height="20"/>
+          </g>
+        </svg>
+        <p class="ans">答：<q data-who="">答曰方营一百七十一丈　队方九丈
+　　</q></p>
+        <p class="plain">一军三将，每将 33 队，每队 125 人，暮色里就地立营：先开平方得队方边长，再开一次得全营边长。正是序里说的夜间先算军书之意。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 推数台 ================= -->
+<section class="sec" id="suantai" style="padding-top:30px">
+  <div class="strap-head rv">
+    <h2>推数台 · 大衍求一</h2>
+    <span class="lead">依库本原术，把余米推数一案从头演一遍</span>
+  </div>
+  <p class="rv" style="max-width:820px;color:var(--paper-dim);font-size:15px"><q data-who="">术曰以大衍求之列三器所容为元数连环求等约为定母以相乘为衍母以定各约衍母得衍数各满定母去之得竒以竒定用大衍求得乘率以乘衍数得用数次以各剰米乗用并之为总满衍母去之不满为毎箩米各以剰米减之余为甲乙丙盗米</q></p>
+  <div class="console rv" style="margin-top:38px">
+    <div class="rail" id="rail"></div>
+    <div class="cols">
+      <div class="pane"><p class="nm">甲</p><p class="tool" id="t0">马杓</p><p class="val" id="v0">1900</p><p class="cnv" id="c0">合</p></div>
+      <div class="pane"><p class="nm">乙</p><p class="tool" id="t1">木履</p><p class="val" id="v1">1700</p><p class="cnv" id="c1">合</p></div>
+      <div class="pane"><p class="nm">丙</p><p class="tool" id="t2">漆椀</p><p class="val" id="v2">1200</p><p class="cnv" id="c2">合</p></div>
+    </div>
+    <p class="steptext" id="steptext"></p>
+    <div class="ledger" id="ledger">
+      <table>
+        <tr><th>人</th><th>器</th><th>每箩适满之数</th><th>舀剩</th><th>盗米</th></tr>
+        <tr><td>甲</td><td>马杓</td><td>3193 合</td><td>1 合</td><td>3192 合</td></tr>
+        <tr><td>乙</td><td>木履</td><td>3193 合</td><td>14 合</td><td>3179 合</td></tr>
+        <tr><td>丙</td><td>漆椀</td><td>3193 合</td><td>1 合</td><td>3192 合</td></tr>
+        <tr><td colspan="3">三箩共失</td><td></td><td>9563 合</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="dyside rv">
+    <div class="note">
+      <span class="w">求一之术</span>
+      <q data-who="">大衍求一术云以竒于右上定母于右下立天元一于左上先以右行上下两位以少除多所得商数乃递互乘归左行使右上得一而止左上为乘率</q>
+    </div>
+    <div class="note">
+      <span class="w">演变与按语</span>
+      <p style="font-size:13.5px;color:var(--paper-dim);margin-bottom:10px">此术治历家演积之用，馆臣考其源流：</p>
+      <q data-who="">惟此书大衍术中所载立天元一法能举立法之意而言之其用虽仅一端而以零数推总数足以尽奇偶和较之变至为精妙</q>
+      <q data-who="">后元郭守敬用之于弧矢李冶用之于勾股方圆欧逻巴新法易其名曰借根方用之于九章八线其源实开自九韶亦可云有功于算术者矣</q>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 玲珑九乘方 ================= -->
+<section class="sec">
+  <div class="pag rv">
+    <div class="tower" id="tower">
+      <div class="floor"><span>隅</span></div>
+      <div class="floor"><span>下亷</span></div>
+      <div class="floor"><span>三亷</span></div>
+      <div class="floor"><span>四亷</span></div>
+      <div class="floor"><span>五亷</span></div>
+      <div class="floor"><span>六亷</span></div>
+      <div class="floor"><span>七亷</span></div>
+      <div class="floor"><span>从</span></div>
+      <div class="floor"><span>实</span></div>
+      <div class="base"></div>
+    </div>
+    <div class="txt">
+      <h2>玲珑九乘方</h2>
+      <p class="lead">遥度圆城一题，城不知径，于北门外乔木与东行九里之间立术，竟开出九乘方，为全书开方次数之最：</p>
+      <q data-who="">答曰径九里　周二十七里
+　　</q>
+      <q data-who="">一为从隅五因北外里为从七亷置北里幂八因为从五亷以北里幂为正率以东行幂为负率二率差四乗北里为益从从三亷倍负率成五亷为益上亷以北里乗上亷为实开玲珑九乗方得数自乗为径以三因径得周</q>
+      <p class="lead" style="margin:18px 0 8px">馆臣替李冶抱不平，顺手也给了这一题一句冷评：</p>
+      <q data-who="">此题非甚难者乃取至九乗方盖未得其要也</q>
+      <button class="jump" id="kai-ling">开玲珑 · 逐层消亷</button>
+      <p class="tres" id="tres"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 瑕瑜天平 ================= -->
+<section class="sec">
+  <div class="strap-head rv">
+    <h2>馆臣评章 · 瑕瑜两悬</h2>
+    <span class="lead">四库馆臣一边讥其乖古义，一边把门类的源头记在他名下</span>
+  </div>
+  <div class="bal rv" id="bal">
+    <div class="pillar"></div>
+    <div class="beam">
+      <div class="pan xia l">
+        <p class="panhead">瑕 · 朱签</p>
+        <q data-who="">欲以新术改周易揲蓍之法殊乖古义</q>
+        <q data-who="">按此即前大衍法末以三归取爻象亦属附会</q>
+        <q data-who="">此题非甚难者乃取至九乗方盖未得其要也</q>
+      </div>
+      <div class="pan yu r">
+        <p class="panhead">瑜 · 青签</p>
+        <q data-who="">九韶当宋末造独崛起而明绝学</q>
+        <q data-who="">惟此书大衍术中所载立天元一法能举立法之意而言之其用虽仅一端而以零数推总数足以尽奇偶和较之变至为精妙</q>
+        <q data-who="">后元郭守敬用之于弧矢李冶用之于勾股方圆欧逻巴新法易其名曰借根方用之于九章八线其源实开自九韶亦可云有功于算术者矣</q>
+      </div>
+    </div>
+    <div class="balbase">
+      <p><q data-who="">数学九章十八卷宋秦九韶撰九韶始末未详惟据原序自称其籍曰鲁郡然序题淳祐七年鲁郡已久入于元九韶葢述其祖贯未详实为何许人也</q></p>
+      <p><q data-who="">数百年中惟沈括究心是事而自梦溪笔谈以外未有成书</q></p>
+      <p><q data-who="">今即永乐大典所载于其误者正之疎者辨之颠倒者次序之各加案语于下庶得失不掩俾算家有所稽考焉</q></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 尾屏 ================= -->
+<section class="coda">
+  <div class="codarow">
+    <p class="vmain"><q data-who="">要其归则数与道非二本也</q></p>
+    <p class="vside"><q data-who="">昆仑旁薄道本虚一圣有大衍防寓于易竒余取防郡数皆捐衍而防之探隐之原</q><q data-who="">数术之传以实为体其书九章惟兹弗纪厯家虽用用而不知小试经世姑推所为述大衍第一　</q></p>
+    <p class="vside small"><q data-who="">时淳祐七年九月鲁郡秦九韶叙</q></p>
+    <div class="seal">玲珑</div>
+  </div>
+</section>
+
+<footer>
+  <p>本篇为殆知阁导读系列第四百六十五篇。文本来源：殆知阁简体库〈数学九章〉子藏算法库本（四库本，乾隆年间校上，十八卷九类八十一题，约十一万字）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>；导读页在 <a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">github.com/robertsong2000/daizhige-daodu</a>。</p>
+  <p>引文经脚本与库内文件去标点、归一逐字比对通过；白话反扫六字窗零撞。库本异体照录：竒噐乗亷剰邉荅歴髙逺之类一仍其旧；自序系曰内「防」字为库本残字代号（当为微、总之类），照录不臆改；推数台数字以今用数码书写，答数与库本逐位相合。</p>
+  <p>时代局限：蓍卦发微一题以算术拟周易揲蓍，属术数附会，四库馆臣已讥其乖古义；秦九韶生平行状后世记载多贬词，本页仅据其书立论。照录立此存照，不代今人立论。</p>
+</footer>
+
+<script>
+(function(){
+  var $=function(s,c){return (c||document).querySelector(s)},$$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+
+  /* hero 布筹 */
+  var hero=$('.hero'),board=$('#board'),bchou=$('#bu-chou'),played=false;
+  bchou.addEventListener('click',function(){
+    if(played)return; played=true;
+    board.classList.add('lit');hero.classList.add('lit');
+    bchou.textContent='筹已成 · 题已开';
+  });
+
+  /* 九宫翻面 */
+  $$('[data-c]').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('open')})});
+  /* 三案滑门 */
+  $$('[data-d]').forEach(function(d){d.addEventListener('click',function(){d.parentNode.classList.toggle('open')})});
+  /* 跳转 */
+  $$('[data-go]').forEach(function(b){b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-go'));if(t)t.scrollIntoView({behavior:'smooth'})})});
+
+  /* 推数台 */
+  var S=[
+    {c:'开局 · 三箩适满',t:'米铺被窃，三箩各<b>适满</b>一箩而不记细数，盗米者留下三件舀米之器。先列三器所容：',v:['1900','1700','1200'],u:['合','合','合']},
+    {c:'元数约等 · 定母',t:'三器所容连环相求、约去公度，得三个<b>定母</b>，它们两两互素，是一切后续演算的根:',v:['19','17','12'],u:['定母','定母','定母']},
+    {c:'定母相乘 · 衍母',t:'三定母相乘：<b>19 × 17 × 12 = 3876</b>，此为<b>衍母</b>，即三箩适满之数必是它的倍数。',v:['3876','·','·'],u:['衍母','','']},
+    {c:'衍母约定 · 衍数',t:'以各定母除衍母：3876÷19=204，3876÷17=228，3876÷12=323，得三行<b>衍数</b>:',v:['204','228','323'],u:['衍数','衍数','衍数']},
+    {c:'满定去之 · 奇数',t:'衍数各以本定母去除，取其余：204÷19余14，228÷17余7，323÷12余11，得三行<b>奇数</b>:',v:['14','7','11'],u:['奇数','奇数','奇数']},
+    {c:'大衍求一 · 乘率',t:'求一数与奇数相乘、除以定母恰余一：14×15÷19余1，7×5÷17余1，11×11÷12余1。三数15、5、11即<b>乘率</b>:',v:['15','5','11'],u:['乘率','乘率','乘率']},
+    {c:'乘率乘衍 · 用数',t:'乘率各乘本行衍数：15×204=3060，5×228=1140，11×323=3553，得三行<b>用数</b>:',v:['3060','1140','3553'],u:['用数','用数','用数']},
+    {c:'剩米乘用 · 总数',t:'以三箩所剩之数（甲1、乙14、丙1）各乘本行用数再并之：3060+15960+3553=<b>22573</b>，此为<b>总数</b>。',v:['3060','15960','3553'],u:['×1','×14','×1']},
+    {c:'满衍母去 · 得箩数',t:'总数以衍母3876累减，不尽<b>3193</b>，即每箩适满之细数，单位皆合。',v:['3193','3193','3193'],u:['每箩米','每箩米','每箩米']},
+    {c:'减剩为赃 · 结案',t:'各箩之数减去所剩：甲3192、乙3179、丙3192，并之共<b>9563</b>合，赃数分明，三贼无从遁。',v:['3192','3179','3192'],u:['甲盗米','乙盗米','丙盗米'],led:true}
+  ];
+  var rail=$('#rail'),cur=0;
+  S.forEach(function(s,i){var b=document.createElement('button');b.textContent=(i===0?'开局':'次')+String(i===0?'':i);b.addEventListener('click',function(){go(i)});rail.appendChild(b)});
+  var btns=$$('button',rail);
+  function go(i){
+    cur=i;var s=S[i];
+    btns.forEach(function(b,j){b.className=j===i?'cur':(j<i?'done':'')});
+    for(var k=0;k<3;k++){
+      $('#v'+k).textContent=s.v[k];
+      $('#c'+k).textContent=s.u[k];
+    }
+    $('#steptext').innerHTML=s.t;
+    $('#ledger').className=s.led?'ledger show':'ledger';
+  }
+  go(0);
+
+  /* 玲珑塔 */
+  var floors=$$('#tower .floor'),tres=$('#tres'),kl=$('#kai-ling');
+  kl.addEventListener('click',function(){
+    var left=floors.filter(function(f){return !f.classList.contains('gone')});
+    if(left.length){left[0].classList.add('gone');}
+    if(!left.length){} else if(left.length===1){
+      tres.textContent='塔尽 · 开方已毕，径与周见上答';
+      kl.textContent='复塔重开';
+      setTimeout(function(){floors.forEach(function(f){f.classList.remove('gone')});tres.textContent='';kl.textContent='开玲珑 · 逐层消亷'},2600);
+    }
+  });
+
+  /* 入场 */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},{threshold:.12});
+    $$('.rv').forEach(function(el){io.observe(el)});
+    var bio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){$('#bal').classList.add('tilt');bio.disconnect()}})},{threshold:.3});
+    bio.observe($('#bal'));
+  }else{$$('.rv').forEach(function(el){el.classList.add('vis')});$('#bal').classList.add('tilt')}
+})();
+</script>
+</body>
+</html>
