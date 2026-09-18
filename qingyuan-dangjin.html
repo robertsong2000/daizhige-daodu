@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>封条之下 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#201f1b; --paper:#e8e4dc; --dim:#a49e91;
+  --zhe:#c9963f; --zhe-dim:#8f6f34; --zhu:#c0453c; --line:#34322a; --line2:#2a2925;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth; overflow-x:hidden}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+  line-height:2; overflow-x:hidden;
+}
+a{color:inherit}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+
+/* 顶栏 */
+.topbar{
+  position:fixed; top:0; left:0; right:0; z-index:60;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 22px; font-size:13px; letter-spacing:.12em;
+  background:rgba(25,25,23,.93); border-bottom:1px solid var(--line2);
+}
+.topbar .brand{color:var(--dim)}
+.topbar .brand b{color:var(--zhu); font-weight:normal}
+.topbar nav{display:flex; gap:20px}
+.topbar nav a{color:var(--dim); text-decoration:none; transition:color .3s}
+.topbar nav a:hover{color:var(--paper)}
+
+/* 首屏：封条案卷 */
+.hero{
+  min-height:100vh; position:relative;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:90px 20px 40px;
+  background:
+    radial-gradient(ellipse 65% 50% at 50% 40%, rgba(201,150,63,.06), transparent 70%),
+    var(--ink);
+  overflow:hidden;
+}
+.docstage{position:relative; margin-top:1vh}
+.doc{
+  position:relative; width:min(320px,78vw); height:460px;
+  background:linear-gradient(160deg, #ece8e0, #ddd8cd);
+  color:var(--ink); border:1px solid #4a463c;
+  box-shadow:0 0 0 1px #14130f, 0 24px 60px rgba(0,0,0,.55);
+}
+.doc:before{
+  content:""; position:absolute; inset:9px; border:1px solid rgba(25,25,23,.28);
+  pointer-events:none;
+}
+.doccols{
+  position:absolute; inset:26px 30px; height:auto;
+  writing-mode:vertical-rl; color:#232019;
+}
+.doccols .tcol{font-size:56px; letter-spacing:.16em; line-height:1.28; font-weight:600}
+.doccols .bcol{font-size:15px; letter-spacing:.3em; line-height:2; margin-right:18px; color:#4c463a}
+.doccols .tcol2{font-size:17px; letter-spacing:.34em; line-height:1.9; margin-right:14px; color:#33302a}
+.sealstrip{
+  position:absolute; left:-9%; right:-9%; top:44%; height:66px;
+  transform:rotate(-4deg); z-index:5; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+.sealstrip .half{
+  position:absolute; top:0; bottom:0; width:50.4%;
+  background:linear-gradient(180deg,#efe9dd,#e0d9c9);
+  border-top:2px solid var(--zhu); border-bottom:2px solid var(--zhu);
+  box-shadow:0 8px 22px rgba(0,0,0,.45); overflow:hidden;
+}
+.sealstrip .hl{left:0; clip-path:polygon(0 0,100% 0,100% 100%,0 100%,4% 88%,1% 74%,5% 62%,1% 50%,5% 38%,1% 26%,5% 12%,0 0); border-left:2px solid var(--zhu)}
+.sealstrip .hr{right:0; clip-path:polygon(0 0,100% 0,95% 12%,99% 26%,95% 38%,99% 50%,95% 62%,99% 74%,95% 88%,100% 100%,0 100%); border-right:2px solid var(--zhu)}
+.sealstrip .slabel{
+  position:relative; z-index:2; font-size:24px; letter-spacing:.9em; text-indent:.9em;
+  color:var(--zhu); font-weight:600; white-space:nowrap;
+}
+.sealstrip .fseal{
+  position:absolute; right:14%; top:50%; z-index:3;
+  width:52px; height:52px; transform:translateY(-50%) rotate(6deg);
+  background:rgba(192,69,60,.92); color:#f2ece0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:30px; font-weight:600;
+  box-shadow:0 0 0 2px rgba(192,69,60,.35), 0 6px 14px rgba(0,0,0,.4);
+}
+.sealstrip.open .half{transition:transform .9s cubic-bezier(.3,.6,.2,1), opacity .9s}
+.sealstrip.open .hl{transform:translate(-56px,110px) rotate(-14deg); opacity:0}
+.sealstrip.open .hr{transform:translate(56px,110px) rotate(12deg); opacity:0}
+.sealstrip.open .slabel,.sealstrip.open .fseal{transition:opacity .4s; opacity:0}
+.sealstrip.open{cursor:default}
+.afterseal{
+  position:absolute; left:0; right:0; top:80%; transform:translateY(-50%);
+  text-align:center; font-size:14px; letter-spacing:.4em; color:#6b6559;
+  opacity:0; transition:opacity 1.2s .5s; z-index:1; white-space:nowrap;
+}
+.afterseal.in{opacity:1}
+.herohint{margin-top:26px; font-size:13px; letter-spacing:.3em; color:#7a7466}
+.herolead{
+  margin-top:34px; max-width:640px; text-align:center;
+  font-size:14.5px; color:var(--dim); line-height:2.3;
+}
+.herolead em{font-style:normal; color:var(--zhe)}
+.scue{
+  position:absolute; bottom:18px; left:50%; transform:translateX(-50%);
+  font-size:11px; letter-spacing:.4em; color:#5c574c;
+  animation:bob 2.4s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+/* 通用节 */
+.sec{max-width:1060px; margin:0 auto; padding:100px 26px 0}
+.shead{display:flex; align-items:baseline; gap:16px; margin-bottom:34px}
+.snum{
+  flex:none; width:44px; height:44px; border:1px solid var(--zhe-dim);
+  color:var(--zhe); display:flex; align-items:center; justify-content:center;
+  font-size:20px; transform:translateY(8px);
+}
+.shead h2{font-size:25px; font-weight:600; letter-spacing:.24em}
+.shead small{font-size:13px; color:#7a7466; letter-spacing:.2em}
+.rvw{opacity:0; transform:translateY(16px); transition:opacity .9s ease, transform .9s ease}
+.rvw.show{opacity:1; transform:none}
+
+/* 案由 */
+.anlead{font-size:15px; color:#cfc9bc; line-height:2.4; max-width:760px}
+.anlead em{font-style:normal; color:var(--zhe)}
+.ancards{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:36px}
+.ancard{border:1px solid var(--line); padding:20px 22px; background:var(--ink2)}
+.ancard h3{font-size:14px; letter-spacing:.3em; color:var(--zhe); font-weight:normal; margin-bottom:10px}
+.ancard p{font-size:13.5px; color:var(--dim); line-height:2.1}
+.ytishi{
+  margin-top:44px; border:1px solid var(--line); background:var(--ink2);
+  display:flex; flex-wrap:wrap;
+}
+.ytishi .yleft{
+  flex:1 1 300px; padding:26px 30px; border-bottom:1px solid var(--line);
+}
+.ytishi .yright{flex:1 1 340px; padding:26px 30px}
+.yq{font-size:17px; color:var(--paper); line-height:2.5; letter-spacing:.06em}
+.yq2{font-size:15px; color:#cfc9bc; line-height:2.4; margin-top:14px}
+.q, .qi{color:#e6e1d6}
+.ytishi .ycap{font-size:12.5px; color:#8a8478; line-height:2.1; margin-top:12px}
+.ypoem{display:flex; gap:26px; justify-content:center; padding:6px 0 2px}
+.ypoem span{
+  writing-mode:vertical-rl; font-size:21px; letter-spacing:.34em;
+  color:var(--paper); line-height:1.6; max-height:220px; white-space:nowrap;
+}
+
+/* 编年 */
+.tl{display:grid; grid-template-columns:250px 1fr; gap:40px; margin-top:8px}
+.tnodes{display:flex; flex-direction:column; gap:4px; border-left:1px solid var(--line); padding-left:0}
+.tnode{
+  position:relative; text-align:left; background:none; border:none; cursor:pointer;
+  color:var(--dim); font-family:inherit; font-size:13.5px; letter-spacing:.1em;
+  padding:8px 0 8px 24px; transition:color .3s; line-height:1.7;
+}
+.tnode:before{
+  content:""; position:absolute; left:-5px; top:50%; transform:translateY(-50%);
+  width:9px; height:9px; background:var(--ink); border:1px solid #57523f; transition:.3s;
+}
+.tnode b{font-weight:normal; color:#8f887a; font-size:12px; margin-right:10px}
+.tnode:hover{color:var(--paper)}
+.tnode.on{color:var(--paper)}
+.tnode.on:before{background:var(--zhe); border-color:var(--zhe); box-shadow:0 0 10px rgba(201,150,63,.5)}
+.tpan{display:none}
+.tpan.on{display:block; animation:fadein .5s}
+@keyframes fadein{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+.tpan h3{font-size:19px; letter-spacing:.2em; font-weight:600; color:var(--zhe); margin-bottom:14px}
+.tpan h3 small{font-size:13px; color:#7a7466; margin-left:14px; letter-spacing:.14em}
+.tpan p{font-size:14.5px; color:#cfc9bc; line-height:2.4; margin-bottom:12px; max-width:640px}
+.tpan .q{
+  display:block; border-left:2px solid var(--zhe-dim); padding:10px 18px; margin:14px 0;
+  font-size:15px; line-height:2.3; color:#e6e1d6; background:rgba(201,150,63,.04);
+}
+
+/* 四十六日 */
+.strip{margin-top:10px}
+.daygrid{display:grid; grid-template-columns:repeat(23,1fr); gap:5px; max-width:640px}
+.day{
+  aspect-ratio:1; border:1px solid var(--line); position:relative;
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:#6b6559; transition:.25s; cursor:default;
+}
+.day.j{border-color:var(--zhe-dim); background:rgba(201,150,63,.13); color:var(--zhe)}
+.day.l{border-color:var(--zhu); color:#d8908a; box-shadow:inset 0 0 0 1px rgba(192,69,60,.3)}
+.day.m{border-style:dashed; border-color:var(--zhe-dim); color:#b39b6d}
+.day.out{background:rgba(192,69,60,.14); color:#d8908a; border-color:var(--zhu); font-weight:600}
+.day.hi{transform:scale(1.18); z-index:2; box-shadow:0 0 12px rgba(201,150,63,.35)}
+.day.dim{opacity:.18}
+.legend{display:flex; gap:10px; flex-wrap:wrap; margin-top:20px}
+.legend button{
+  background:none; border:1px solid var(--line); color:var(--dim); font-family:inherit;
+  font-size:12.5px; letter-spacing:.12em; padding:7px 14px; cursor:pointer; transition:.3s;
+}
+.legend button:hover{color:var(--paper)}
+.legend button.on{border-color:var(--zhe); color:var(--zhe)}
+.stripnote{font-size:13px; color:#8a8478; margin-top:18px; max-width:640px; line-height:2.2}
+.stripnote .q{font-size:14px}
+
+/* 焚藁 */
+.fengaostage{display:flex; gap:60px; flex-wrap:wrap; align-items:flex-start; margin-top:6px}
+.hxwrap{display:flex; gap:44px}
+.hx{text-align:center}
+.hx h4{font-size:13px; letter-spacing:.3em; color:#8a8478; font-weight:normal; margin-bottom:16px}
+.hx .bars{display:flex; flex-direction:column; gap:9px; align-items:center}
+.hx .ln{width:84px; height:11px; background:#b7b1a2; display:flex; gap:7px}
+.hx .ln i{flex:1; background:#b7b1a2; display:block}
+.hx .ln.brk{background:none}
+.hx .ln.move i{background:var(--zhu)}
+.hx .ln.move{outline:1px dashed rgba(192,69,60,.5); outline-offset:4px}
+.hx .arrow{font-size:22px; color:var(--zhe); align-self:center; margin-top:52px}
+.hxname{margin-top:14px; font-size:15px; color:var(--paper); letter-spacing:.2em}
+.hxname small{display:block; font-size:12px; color:#7a7466; letter-spacing:.1em}
+.fgaocol{flex:1 1 320px; max-width:560px}
+.fgaocol p{font-size:14.5px; color:#cfc9bc; line-height:2.4; margin-bottom:12px}
+.paper{
+  width:150px; height:190px; margin:22px 0 10px; position:relative;
+  background:linear-gradient(155deg,#e9e4d8,#d6d0c2); color:#3a362c;
+  box-shadow:0 10px 26px rgba(0,0,0,.5);
+}
+.paper span{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  writing-mode:vertical-rl; font-size:22px; letter-spacing:.3em; white-space:nowrap;
+}
+.paper.burnt{animation:burn 1.6s forwards}
+@keyframes burn{
+  0%{filter:none; opacity:1}
+  35%{filter:sepia(.8) saturate(2) hue-rotate(-25deg) brightness(1.05)}
+  70%{filter:sepia(1) brightness(.6) blur(1px)}
+  100%{filter:brightness(.25) blur(3px); opacity:0; transform:translateY(26px) rotate(4deg)}
+}
+.dunseal{
+  display:inline-flex; width:64px; height:64px; align-items:center; justify-content:center;
+  border:2px solid var(--zhu); color:var(--zhu); font-size:22px; letter-spacing:.14em;
+  transform:rotate(-6deg) scale(1.6); opacity:0; transition:.5s;
+  writing-mode:vertical-rl; white-space:nowrap;
+}
+.dunseal.stamped{opacity:1; transform:rotate(-6deg) scale(1)}
+.fbtns{display:flex; gap:12px; margin-top:8px}
+.fbtns button{
+  background:none; border:1px solid var(--zhe-dim); color:var(--zhe); font-family:inherit;
+  font-size:13px; letter-spacing:.2em; padding:8px 18px; cursor:pointer; transition:.3s;
+}
+.fbtns button:hover{background:rgba(201,150,63,.1)}
+
+/* 禁网 */
+.jwchips{display:flex; gap:12px; flex-wrap:wrap}
+.jwchips button{
+  background:none; border:1px solid var(--line); color:var(--dim); font-family:inherit;
+  font-size:14.5px; letter-spacing:.3em; padding:10px 20px 10px 24px; cursor:pointer; transition:.3s;
+}
+.jwchips button:hover{color:var(--paper)}
+.jwchips button.on{border-color:var(--zhu); color:var(--paper); background:rgba(192,69,60,.1)}
+.jwpan{display:none; margin-top:26px; border:1px solid var(--line); background:var(--ink2); padding:26px 30px}
+.jwpan.on{display:block; animation:fadein .5s}
+.jwpan p{font-size:14.5px; color:#cfc9bc; line-height:2.4; max-width:680px; margin-bottom:10px}
+.jwpan .q{display:block; border-left:2px solid var(--zhe-dim); padding:8px 18px; margin:12px 0; font-size:15px; line-height:2.3; background:rgba(201,150,63,.04)}
+
+/* 党籍 */
+.regbar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:26px}
+.regbar button{
+  background:none; border:1px solid var(--line); color:var(--dim); font-family:inherit;
+  font-size:13px; letter-spacing:.16em; padding:7px 15px; cursor:pointer; transition:.3s;
+}
+.regbar button:hover{color:var(--paper)}
+.regbar button.on{border-color:var(--zhe); color:var(--zhe)}
+.regintro{font-size:14.5px; color:#cfc9bc; line-height:2.4; max-width:720px; margin-bottom:24px}
+.regroup{margin-bottom:8px}
+.regroup.q{display:block; border:1px solid var(--line); background:var(--ink2); padding:18px 22px 12px; margin-bottom:16px}
+.ghead{
+  font-size:15px; letter-spacing:.3em; color:var(--zhe); margin-bottom:12px;
+  padding-bottom:10px; border-bottom:1px dashed var(--line);
+}
+.pgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px 18px}
+.prow{
+  display:flex; align-items:baseline; gap:10px; font-size:14px; line-height:2;
+  border-bottom:1px dotted #2e2c25; padding:4px 2px;
+}
+.prow b{font-weight:600; color:var(--paper); letter-spacing:.1em; white-space:nowrap}
+.prow i{font-style:normal; color:var(--dim); font-size:12.5px; flex:1}
+.prow u{text-decoration:none; color:#8f887a; font-size:12.5px; white-space:nowrap}
+.prow.famed b{color:var(--zhe)}
+.gtail{font-size:12.5px; color:#7a7466; margin-top:12px; letter-spacing:.08em}
+.stamp59{
+  float:right; width:74px; height:74px; border:2px solid var(--zhu); color:var(--zhu);
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  font-size:15px; letter-spacing:.1em; line-height:1.6; transform:rotate(7deg);
+  margin:0 4px 8px 18px; opacity:.9;
+}
+
+/* 对面 */
+.ofbar{display:flex; align-items:center; gap:18px; margin:18px 0 20px}
+.ofbar button{
+  background:none; border:1px solid var(--zhu); color:#d8908a; font-family:inherit;
+  font-size:13px; letter-spacing:.2em; padding:8px 20px; cursor:pointer; transition:.3s;
+}
+.ofbar button:hover{background:rgba(192,69,60,.12)}
+.oflist{max-height:0; overflow:hidden; transition:max-height 1s ease}
+.oflist.open{max-height:1400px}
+.oflist.q{border:1px solid var(--line); background:#1c1a16; padding:0}
+.oflist.open{padding:18px 22px 12px}
+.oflead{font-size:14.5px; color:#cfc9bc; line-height:2.4; max-width:720px}
+.oflead .q{border-left:2px solid var(--zhu); padding:8px 18px; display:block; margin:12px 0; font-size:15px; line-height:2.3; background:rgba(192,69,60,.05)}
+
+/* 丛谈 */
+.ctgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px; perspective:1200px}
+.ctcard{height:300px; cursor:pointer; position:relative}
+.ctinner{position:absolute; inset:0; transition:transform .8s cubic-bezier(.3,.7,.2,1); transform-style:preserve-3d}
+.ctcard.flip .ctinner{transform:rotateY(180deg)}
+.ctface{
+  position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  border:1px solid var(--line); background:var(--ink2); padding:26px 28px;
+  display:flex; flex-direction:column;
+}
+.ctback{transform:rotateY(180deg); overflow:auto}
+.ctface h3{font-size:20px; letter-spacing:.24em; font-weight:600; color:var(--paper)}
+.ctface .hook{font-size:14px; color:var(--zhe); margin-top:14px; letter-spacing:.06em; line-height:2.1}
+.ctface .flipme{margin-top:auto; font-size:11px; letter-spacing:.3em; color:#5c574c}
+.ctback p{font-size:13.5px; color:#cfc9bc; line-height:2.2; margin-bottom:8px}
+.ctback .q{display:block; border-left:2px solid var(--zhe-dim); padding:6px 14px; margin:8px 0; font-size:13.5px; line-height:2.2; background:rgba(201,150,63,.04)}
+
+/* 落幕 */
+.bigq{
+  font-size:clamp(24px,4.4vw,38px); letter-spacing:.14em; line-height:1.9;
+  color:var(--paper); text-align:center; margin:30px auto 8px; max-width:760px;
+}
+.bigqcap{text-align:center; font-size:13px; color:#7a7466; letter-spacing:.24em; margin-bottom:44px}
+.lmrow{display:flex; gap:16px; flex-wrap:wrap; margin-top:26px}
+.lmcard{flex:1 1 220px; border:1px solid var(--line); background:var(--ink2); padding:20px 22px}
+.lmcard h4{font-size:13px; letter-spacing:.26em; color:var(--zhe); font-weight:normal; margin-bottom:10px}
+.lmcard h4 b{color:var(--zhu); font-weight:normal}
+.lmcard p{font-size:13.5px; color:var(--dim); line-height:2.15}
+.lmcard .q{display:block; margin-top:8px; font-size:13.5px; color:#e6e1d6; line-height:2.2}
+.lmlead{font-size:15px; color:#cfc9bc; line-height:2.4; max-width:760px}
+.closeq{
+  margin:56px auto 0; max-width:560px; text-align:center; border-top:1px solid var(--line2);
+  border-bottom:1px solid var(--line2); padding:30px 10px;
+}
+.closeq .q{font-size:19px; letter-spacing:.1em; line-height:2.4; color:var(--paper)}
+.closeq small{display:block; margin-top:12px; font-size:12.5px; color:#7a7466; letter-spacing:.2em}
+
+/* 判词 */
+.pancilead{font-size:15px; color:#cfc9bc; line-height:2.4; max-width:760px}
+.pancilead em{font-style:normal; color:var(--zhe)}
+.pq{
+  border-left:3px solid var(--zhe); margin:34px 0; padding:20px 28px;
+  background:rgba(201,150,63,.045); font-size:17.5px; line-height:2.5; color:#eee9de;
+  letter-spacing:.04em; max-width:820px;
+}
+.pqsrc{font-size:12.5px; color:#7a7466; margin-top:14px; letter-spacing:.2em}
+
+/* 尾注 */
+.whosec{max-width:860px; margin:110px auto 0; padding:0 26px}
+.tailnote{
+  border:1px solid var(--line); max-width:820px; margin:0 auto; text-align:left;
+  padding:24px 30px; font-size:13.5px; color:var(--dim); line-height:2.2;
+}
+.tailnote b{color:var(--paper); font-weight:normal; letter-spacing:.2em}
+.tseals{display:flex; justify-content:center; gap:22px; margin:46px 0 8px}
+.tseals .seal{
+  border:2px solid var(--zhu); color:var(--zhu); opacity:.85;
+  writing-mode:vertical-rl; white-space:nowrap;
+  padding:12px 6px; font-size:17px; letter-spacing:.3em;
+}
+.tseals .seal.sq2{border-color:var(--zhe); color:var(--zhe)}
+
+/* 页脚 */
+.foot{border-top:1px solid var(--line2); margin-top:90px; padding:34px 26px 46px; font-size:13px; color:#8a8478; line-height:2.1}
+.foot .wrap{max-width:1060px; margin:0 auto}
+.foot a{color:#a89a7a}
+.foot p+p{margin-top:8px}
+
+@media (max-width:880px){
+  .topbar nav{display:none}
+  .ancards{grid-template-columns:1fr}
+  .tl{grid-template-columns:1fr}
+  .tnodes{flex-direction:row; flex-wrap:wrap; border-left:none; gap:2px 6px}
+  .tnode{padding:4px 8px 4px 16px; border:1px solid var(--line)}
+  .tnode:before{left:4px}
+  .daygrid{grid-template-columns:repeat(12,1fr)}
+  .ctgrid{grid-template-columns:1fr}
+  .pgrid{grid-template-columns:1fr 1fr}
+  .fengaostage{gap:30px}
+  .hxwrap{gap:22px}
+  .doccols .tcol{font-size:44px}
+  .sealstrip .slabel{font-size:19px; letter-spacing:.6em}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="brand">殆知阁导读 <b>·</b> <span class="pno">第三九三篇</span></span>
+  <nav>
+    <a href="#anyuan">案由</a>
+    <a href="#bianyan">编年</a>
+    <a href="#dangji">党籍</a>
+    <a href="#congtan">丛谈</a>
+    <a href="#luomu">落幕</a>
+  </nav>
+</div>
+
+<header class="hero" id="top">
+  <div class="docstage">
+    <div class="doc">
+      <div class="doccols">
+        <div class="tcol">庆元党禁</div>
+        <div class="tcol2">一卷黑名单</div>
+        <div class="bcol">宋 樵叟追记于弛禁四十四年后</div>
+      </div>
+      <div class="afterseal" id="afterSeal">绍熙五年至嘉泰二年　六年始末俱在纸上</div>
+      <div class="sealstrip" id="sealStrip" title="点击揭封">
+        <div class="half hl"></div>
+        <div class="half hr"></div>
+        <div class="slabel">伪学之禁</div>
+        <div class="fseal">禁</div>
+      </div>
+    </div>
+  </div>
+  <div class="herohint" id="heroHint">点击封条 · 启卷</div>
+  <p class="herolead">一场持续六年的清算：道学改称伪学，六经列进禁条，考卷稍带义理便落第；五十九位士大夫被抄成一份籍簿。事后四十四年，才有人把它追记成书。书眼恰在这里：<em>这五十九人里，正史有传的不到十之三四，其余人的名姓官爵，全靠这册薄纸留存。</em></p>
+  <div class="scue">往下看</div>
+</header>
+
+<section class="sec" id="anyuan">
+  <div class="shead rvw"><span class="snum">一</span><h2>案由</h2><small>一册追记</small></div>
+  <p class="anlead rvw">绍熙五年夏天，宁宗即位。替新君向太皇太后传话的一趟差事，让外戚韩侂胄自认为头功；当国的赵汝愚却只把他当一枚用完即弃的棋子。两年之内，被冷落的人反手织成一张网，网名就叫伪学。六年后网收了，又过四十四年，一位自称樵叟的老人把始末连人名抄成一卷。</p>
+  <div class="ancards rvw">
+    <div class="ancard"><h3>其书</h3><p>一卷。撰人不详，四库馆臣从《永乐大典》里替他找回了名字：沧洲樵叟。卷首冠一道御题诗，是清人给这本宋人小册加的门面。</p></div>
+    <div class="ancard"><h3>其事</h3><p>起于丙辰之秋，弛于壬戌春，前后六年。禁的不是人：是一套学问、一柜书、一榜举子，外加五十九个挂了籍的名字。</p></div>
+    <div class="ancard"><h3>其用</h3><p>四库馆臣点破它的价值：名单里的人，《宋史》有传的不到十之三四，史册漏载的行迹，多亏此卷考见大略。</p></div>
+  </div>
+  <div class="ytishi rvw">
+    <div class="yleft">
+      <div class="ypoem"><span class="qi">庆元党祸延邦国</span><span class="qi">揖盗开门自有由</span></div>
+    </div>
+    <div class="yright">
+      <div class="q yq">宋代忠邪杂进，党祸相仍</div>
+      <div class="q yq2">兰艾同焚，国势驯至于不振</div>
+      <p class="ycap">御题诗与提要都拒绝把账全记在侂胄一人头上：定策之日的开门揖盗，汝愚自己也有一份。这两句判词，是全书立场的两头。</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="bianyan">
+  <div class="shead rvw"><span class="snum">二</span><h2>编年</h2><small>六年大事</small></div>
+  <div class="tl rvw">
+    <div class="tnodes" id="tnodes"></div>
+    <div class="tpans" id="tpans">
+
+      <div class="tpan" data-i="0">
+        <h3>定策<small>绍熙五年七月 · 1194</small></h3>
+        <p>宁宗践阼。求通慈福宫意的差事落在侂胄头上，他借内侍泣涕固请，把新君送进皇位，从此以元勋自居，出入禁中。汝愚广召名士，海内引领观望；朱熹在长沙接诏，即日上路。</p>
+        <span class="q">侂胄繇此自谓有定策功，且依托肺腑，出入宫掖，居中用事。</span>
+      </div>
+
+      <div class="tpan" data-i="1">
+        <h3>四十六日<small>绍熙五年闰十月 · 1194</small></h3>
+        <p>朱熹入朝，进讲、留身、面对，把话都说尽，也把人说尽。一道隆冬罢讲的内批下来，汝愚袖还内批，且谏且拜，终究没留住。</p>
+        <span class="q">朕悯卿耆艾，当此隆冬，恐难立讲，已除卿宫观，可知悉。</span>
+      </div>
+
+      <div class="tpan" data-i="2">
+        <h3>罢相<small>庆元元年二月 · 1195</small></h3>
+        <p>正月，李沐上殿发难；二月，汝愚罢相，出知福州，随后一路降成提举宫观。草制词的郑湜因写不出贬词，反坐免职。台谏至此尽是侂胄的人。</p>
+        <span class="q">乞罢汝愚政柄，以奠安天位，塞绝奸原。</span>
+      </div>
+
+      <div class="tpan" data-i="3">
+        <h3>六士<small>庆元元年六月 · 1195</small></h3>
+        <p>太府丞吕祖俭先因疏救汝愚，贬去韶州。接着太学生六人联名上书替他讼冤，六人各编管五百里外。不肯书行的邓驿舍人，落得罢知泉州。</p>
+        <span class="q">党锢敝汉，朋党乱唐，大率由此。</span>
+      </div>
+
+      <div class="tpan" data-i="4">
+        <h3>焚藁<small>庆元元年冬十一月 · 1195</small></h3>
+        <p>胡纮一疏，汝愚贬永州，徐谊连坐。朱熹在家草成数万言的封事，要替死者讼冤，子弟门生轮番劝阻。门人蔡元定请以蓍决之，卦成，他把奏藁投进火里，自号遯翁。</p>
+        <span class="q">熹黙然取奏藁焚之。因更号遯翁，遂以疾丐休致。</span>
+      </div>
+
+      <div class="tpan" data-i="5">
+        <h3>伪名既立<small>庆元二年正月至二月 · 1196</small></h3>
+        <p>刘德秀弹留正，列四大罪，伪学两个字从此进了公文名目。二十日，汝愚死在衡州，被守臣所窘，服药身亡，天下都替他叫屈。省闱取士，带义理的卷子一概黜落，语录除毁，经书成了禁物。</p>
+        <span class="q">首论其招引伪学、以危社稷。</span>
+        <span class="q">六经语、孟、中庸、大学之书，为世大禁。</span>
+      </div>
+
+      <div class="tpan" data-i="6">
+        <h3>十罪<small>庆元二年十二月 · 1197</small></h3>
+        <p>胡纮把写好的弹章交给沈继祖，数朱熹剽窃余论、寓以妖术，凑成十款大罪。省札到建阳时，朱熹正与诸生讲论，起身看了眼小报，坐下接着讲。蔡元定即日上道，百余门生送别萧寺。</p>
+        <span class="q">潜形匿迹，如鬼如魅</span>
+        <span class="q">朋友相爱之情，季通不挫之志，可谓两得之矣。</span>
+      </div>
+
+      <div class="tpan" data-i="7">
+        <h3>置籍<small>庆元三年 · 1197</small></h3>
+        <p>荐举须先声明非伪学，家状末尾要自认五个字。年底绵州知州王沇索性奏请把伪学之徒的名字立籍存记；黄由侍郎说不必置籍，反被张岩劾罢。名单，就这样成了公文。</p>
+        <span class="q">与不必置籍，以示不广。</span>
+      </div>
+
+      <div class="tpan" data-i="8">
+        <h3>孤鸣<small>庆元五年九月 · 1199</small></h3>
+        <p>九月，吕祖泰诣匦上书，请诛侂胄，请起用周必大。京尹用好语诱他供出同谋，他笑对方问得蠢。杖一百，配钦州牢城。太学生敖陶孙题诗吊汝愚，掠治无完肤，编管岭南。</p>
+        <span class="q">道与学自古所恃以为国也。</span>
+        <span class="q">以吾观之，若今之附韩氏得美官者，乃病风丧心耳。</span>
+      </div>
+
+      <div class="tpan" data-i="9">
+        <h3>星陨<small>庆元六年三月 · 1200</small></h3>
+        <p>朱熹病重，诸生九人在侧，改定《大学》诚意章一节，为绝笔。当夜风雨大作，山川变色。官府还在查会葬的人数，几千人仍旧到了唐石山下；范念德顺路一拜，回程即遭镌官罢任。</p>
+        <span class="q">甲子，卒于正寝。</span>
+      </div>
+
+      <div class="tpan" data-i="10">
+        <h3>弛禁<small>1202 二月朔 · 嘉泰壬戌</small></h3>
+        <p>开年二月，诏复汝愚殿学士，挂籍诸人先后都恢复了官身，荐牍里那一节申明从此削去。这时朱熹下世已过一年，留、周两家也已贬秩还政。</p>
+        <span class="q">曩因众论，尝挂深文</span>
+      </div>
+
+      <div class="tpan" data-i="11">
+        <h3>反噬<small>开禧二年至三年 · 1206-1207</small></h3>
+        <p>侂胄转向开边，把兵权交还蓄志归蜀的吴曦，换来蜀口溃败与曦的称王。十一月，禁中定计，侂胄在玉津园侧被殛杀，寻又斵棺取首函送江淮。当年捧他上去的路数，原样收回。</p>
+        <span class="q">乞枭其首领，置之淮甸积尸丛冢之间，以谢天下。</span>
+      </div>
+
+      <div class="tpan" data-i="12">
+        <h3>赐谥<small>嘉定元年 · 1208</small></h3>
+        <p>汝愚官爵尽还，谥忠定；朱熹也得了谥，叫作文。上书六士各受褒录，元定也得了一纸迟来的赠官，制词说得直白：生前摈斥，死后获伸，是非到底定了。</p>
+        <span class="q">其或摈斥于生前，而获伸于死后，天理昭昭，未有久而不定者。</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="sishi">
+  <div class="shead rvw"><span class="snum">三</span><h2>四十六日</h2><small>帝师生涯</small></div>
+  <div class="strip rvw">
+    <div class="daygrid" id="dayGrid"></div>
+    <div class="legend" id="dayLegend">
+      <button data-m="j">进讲七次</button>
+      <button data-m="l">留身奏事两次</button>
+      <button data-m="m">面对与赐食各一</button>
+      <button data-m="out">终去</button>
+    </div>
+    <p class="stripnote">绍熙五年十月辛卯，朱熹奉召入见。四十六天里，他把该讲的都讲完，换来一道内批。点一点上面的格子，看这位帝师的日子是怎么分布的。</p>
+    <span class="q" style="display:block; max-width:640px; margin-top:8px; border-left:2px solid var(--zhe-dim); padding:8px 18px; font-size:14px; line-height:2.3; background:rgba(201,150,63,.04)">熹以十月辛卯入见，中间进讲者七，内引留身奏事者再，面对赐食各一，在朝甫四十有六日云。</span>
+  </div>
+</section>
+
+<section class="sec" id="fengao">
+  <div class="shead rvw"><span class="snum">四</span><h2>焚藁</h2><small>遯之同人</small></div>
+  <div class="fengaostage rvw">
+    <div class="hxwrap">
+      <div class="hx">
+        <h4>本卦</h4>
+        <div class="bars">
+          <div class="ln"></div>
+          <div class="ln"></div>
+          <div class="ln"></div>
+          <div class="ln"></div>
+          <div class="ln brk"><i></i><i></i></div>
+          <div class="ln brk move"><i></i><i></i></div>
+        </div>
+        <div class="hxname">遯<small>天山遯 · 初爻动</small></div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="hx">
+        <h4>之卦</h4>
+        <div class="bars">
+          <div class="ln"></div>
+          <div class="ln"></div>
+          <div class="ln"></div>
+          <div class="ln"></div>
+          <div class="ln brk"><i></i><i></i></div>
+          <div class="ln"></div>
+        </div>
+        <div class="hxname">同人<small>天火同人</small></div>
+      </div>
+    </div>
+    <div class="fgaocol">
+      <p>胡纮的弹章还在酝酿，汝愚已贬永州。朱熹自己写好了数万言的封事，要替死者讼冤。门生们轮番苦劝，蔡元定请他起一卦。遯卦初爻发动，天山上退，变出天火同人：退避之中，守住同人。他看了很久，没有说话。</p>
+      <div class="paper" id="paperDraft"><span>封事数万言</span></div>
+      <div class="dunseal" id="dunSeal">遯翁</div>
+      <div class="fbtns">
+        <button id="burnBtn">焚藁</button>
+        <button id="resetBtn">复原</button>
+      </div>
+      <span class="q" style="display:block; margin-top:14px; border-left:2px solid var(--zhe-dim); padding:8px 18px; font-size:14px; line-height:2.3; background:rgba(201,150,63,.04)">蔡元定入諌，请以蓍决之遇，遯之同人。</span>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="jinwang">
+  <div class="shead rvw"><span class="snum">五</span><h2>禁网</h2><small>五道枷锁</small></div>
+  <div class="jwchips rvw" id="jwChips">
+    <button data-i="0" class="on">名之曰伪</button>
+    <button data-i="1">榜之朝堂</button>
+    <button data-i="2">焚其书</button>
+    <button data-i="3">洁其身</button>
+    <button data-i="4">籍其人</button>
+  </div>
+  <div class="jwpan on" data-i="0">
+    <p>给一门学问定罪，不需要罪名，只需要一个字。当清议不容的人替当路想出了这个字，事情就齐了：清白变成可疑，廉洁变成口实。</p>
+    <span class="q">名道学则何罪？当名曰伪学。</span>
+    <span class="q">盖谓贪黩放肆，乃人真情，其亷洁好修者，皆伪人也。</span>
+  </div>
+  <div class="jwpan" data-i="1">
+    <p>何澹急着升执政，一道弹章递上去，诏语直接挂上朝堂示众。此后凡与道学沾亲的名字，按这张榜次第斥逐。</p>
+    <span class="q">专门之学，流而为伪，空虚短拙，文诈沽名</span>
+  </div>
+  <div class="jwpan" data-i="2">
+    <p>第二刀砍向书。语录取缔，考卷凡带义理气味一概黜落。六经与四书进了禁条，读书人的案头自此要自查。</p>
+    <span class="q">是科取士，稍渉义理，悉见黜落</span>
+    <span class="q">乞将语录之类，并行除毁。</span>
+  </div>
+  <div class="jwpan" data-i="3">
+    <p>第三刀砍向人。漕司预先收家状，末尾必须自认五个字，等于逼全体举子按手印划清界限。抚州推官柴中行偏偏不肯，移文反问，士论壮之。</p>
+    <span class="q">委不是伪学</span>
+    <span class="q">称自幼习《易》，读程氏《易传》，未委是与不是伪学，如以为伪，不愿考校。</span>
+  </div>
+  <div class="jwpan" data-i="4">
+    <p>最后一刀，把名字本身变成公文。台谏章疏里点过的名汇成籍簿，挂籍者停住升迁，荐举关升一律记档。四库馆臣后来算过账：这份籍簿救下了大半人的行迹。</p>
+    <span class="q">其它姓名、官籍，史所失载者，多借此以考见大畧</span>
+  </div>
+</section>
+
+<section class="sec" id="dangji">
+  <div class="shead rvw"><span class="snum">六</span><h2>党籍</h2><small>五十九人</small></div>
+  <p class="regintro rvw"><span class="stamp59">伪党<br>五十九人</span>这是全书的骨架：六类人，五十九个名字，每个名字后缀着当日的官衔与乡贯。名字底下没有事迹，事迹都被禁掉了；只有这一列列官衔提醒后来人，网眼织得有多高。</p>
+  <div class="regbar rvw" id="regBar">
+    <button data-g="all" class="on">全部</button>
+    <button data-g="z">宰执</button>
+    <button data-g="d">待制已上</button>
+    <button data-g="y">余官</button>
+    <button data-g="w">武臣</button>
+    <button data-g="t">太学生</button>
+    <button data-g="s">士人</button>
+  </div>
+
+  <div class="regroup q" data-g="z">
+    <div class="ghead">宰执四人</div>
+    <div class="pgrid">
+      <span class="prow famed"><b>赵汝愚</b><i>右丞相</i><u>饶州</u></span>
+      <span class="prow"><b>留正</b><i>少保观文殿大学士</i><u>泉州</u></span>
+      <span class="prow"><b>王蔺</b><i>观文殿学士知潭州</i><u>庐江</u></span>
+      <span class="prow"><b>周必大</b><i>少传观文殿大学士</i><u>吉州</u></span>
+    </div>
+  </div>
+
+  <div class="regroup q" data-g="d">
+    <div class="ghead">待制已上十三人</div>
+    <div class="pgrid">
+      <span class="prow famed"><b>朱熹</b><i>焕章阁待制兼侍讲</i><u>建宁</u></span>
+      <span class="prow"><b>徐谊</b><i>权工部侍郎</i><u>温州</u></span>
+      <span class="prow"><b>彭龟年</b><i>吏部侍郎</i><u>台州</u></span>
+      <span class="prow"><b>陈傅良</b><i>中书舍人兼侍读兼直学士院</i><u>温州</u></span>
+      <span class="prow"><b>薛叔似</b><i>权户部侍郎兼枢密都承旨</i><u>永嘉</u></span>
+      <span class="prow"><b>章颕</b><i>权兵部侍郎兼侍讲</i><u>婺州</u></span>
+      <span class="prow"><b>郑湜</b><i>权刑部侍郎</i><u>福州</u></span>
+      <span class="prow"><b>楼钥</b><i>权吏部尚书</i><u>眀州</u></span>
+      <span class="prow"><b>林大中</b><i>吏部侍郎</i><u>婺州</u></span>
+      <span class="prow"><b>黄由</b><i>权礼部尚书</i><u>平江</u></span>
+      <span class="prow"><b>黄黼</b><i>权兵部侍郎</i><u>临安</u></span>
+      <span class="prow"><b>何异</b><i>权礼部侍郎</i><u>抚州</u></span>
+      <span class="prow"><b>孙逢吉</b><i>权吏部侍郎</i><u>吉州</u></span>
+    </div>
+  </div>
+
+  <div class="regroup q" data-g="y">
+    <div class="ghead">余官三十一人</div>
+    <div class="pgrid">
+      <span class="prow"><b>刘光祖</b><i>起居郎兼侍读</i><u>蜀</u></span>
+      <span class="prow"><b>吕祖俭</b><i>太府寺丞</i><u>婺州</u></span>
+      <span class="prow famed"><b>叶适</b><i>太府少卿总领淮东财赋</i><u>温州</u></span>
+      <span class="prow"><b>杨芳</b><i>秘书郎</i><u>汀州</u></span>
+      <span class="prow"><b>项安世</b><i>校书郎</i><u>荆南</u></span>
+      <span class="prow"><b>沈有开</b><i>起居郎</i><u>常州</u></span>
+      <span class="prow"><b>曽三聘</b><i>知郢州临江军</i></span>
+      <span class="prow"><b>游仲鸿</b><i>军器监簿</i><u>果州</u></span>
+      <span class="prow"><b>呉猎</b><i>监察御史</i><u>潭州</u></span>
+      <span class="prow"><b>李祥</b><i>国子祭酒</i><u>常州</u></span>
+      <span class="prow"><b>杨简</b><i>国子博士</i><u>明州</u></span>
+      <span class="prow"><b>赵汝谠</b><i>添差监左蔵西库</i></span>
+      <span class="prow"><b>赵汝谈</b><i>前淮西安抚司干官</i></span>
+      <span class="prow"><b>陈岘</b><i>校书郎</i><u>温州</u></span>
+      <span class="prow"><b>范仲黼</b><i>著作郎兼权礼部郎官</i><u>成都</u></span>
+      <span class="prow"><b>汪逵</b><i>国子司业</i><u>信州</u></span>
+      <span class="prow"><b>孙元卿</b><i>国子博士</i></span>
+      <span class="prow"><b>袁燮</b><i>太学博士</i><u>眀州</u></span>
+      <span class="prow"><b>陈武</b><i>国子正</i><u>温州</u></span>
+      <span class="prow"><b>田澹</b><i>宗正丞兼权工部郎官</i><u>南劎</u></span>
+      <span class="prow"><b>黄度</b><i>右正言</i><u>绍兴</u></span>
+      <span class="prow"><b>詹体仁</b><i>太府卿</i></span>
+      <span class="prow"><b>蔡幼学</b><i>福建提举</i><u>温州</u></span>
+      <span class="prow"><b>黄灏</b><i>浙西提举常平茶盐公事</i></span>
+      <span class="prow"><b>周南</b><i>池州教授</i><u>平江</u></span>
+      <span class="prow"><b>呉柔胜</b><i>新嘉兴府教授</i><u>宣州</u></span>
+      <span class="prow"><b>李埴</b><i>校书郎</i><u>蜀</u></span>
+      <span class="prow"><b>王厚之</b><i>直显谟阁江东提刑</i><u>绍兴</u></span>
+      <span class="prow"><b>孟浩</b><i>知湖州</i><u>袁州</u></span>
+      <span class="prow"><b>赵巩</b><i>秘阁修撰知扬州</i></span>
+      <span class="prow"><b>白炎震</b><i>新通判成都府</i><u>普州</u></span>
+    </div>
+  </div>
+
+  <div class="regroup q" data-g="w">
+    <div class="ghead">武臣三人</div>
+    <div class="pgrid">
+      <span class="prow"><b>皇甫斌</b><i>池州都统制</i></span>
+      <span class="prow"><b>范仲壬</b><i>知金州</i></span>
+      <span class="prow"><b>张致逺</b><i>江西兵马钤辖</i><u>南剑</u></span>
+    </div>
+  </div>
+
+  <div class="regroup q" data-g="t">
+    <div class="ghead">太学生六人</div>
+    <div class="pgrid" style="grid-template-columns:repeat(6,1fr)">
+      <span class="prow famed"><b>杨宏中</b></span>
+      <span class="prow"><b>周端朝</b></span>
+      <span class="prow"><b>张衟</b></span>
+      <span class="prow"><b>林仲鳞</b></span>
+      <span class="prow"><b>蒋传</b></span>
+      <span class="prow"><b>徐范</b></span>
+    </div>
+  </div>
+
+  <div class="regroup q" data-g="s">
+    <div class="ghead">士人二人</div>
+    <div class="pgrid">
+      <span class="prow famed"><b>蔡元定</b><i>编管道州，嘉定三年奉圣旨特赐廸功郎</i></span>
+      <span class="prow famed"><b>吕祖泰</b><i>决杖配钦州，嘉定元年奉圣旨特补廸功郎，监潭州南岳庙</i></span>
+    </div>
+    <div class="gtail">已上并见于当时台谏章疏。</div>
+  </div>
+</section>
+
+<section class="sec" id="gongfa">
+  <div class="shead rvw"><span class="snum">七</span><h2>对面</h2><small>三十七人</small></div>
+  <p class="oflead rvw">楼钥的外孙李心传在《朝野杂记》里把另一面也抄了下来：一份攻伪学人的谱系，从右丞相到迪功郎。制造名单的人，也留下了一份名单。</p>
+  <div class="ofbar rvw"><button id="ofBtn">展开攻伪学人名录</button></div>
+  <div class="oflist q" id="ofList">
+    <div class="ghead" style="color:#d8908a; border-color:#3a3129">秀岩李心传《朝野杂记》所编攻伪学人</div>
+    <div class="pgrid">
+      <span class="prow"><b>京镗</b><i>右丞相</i><u>洪州</u></span>
+      <span class="prow"><b>何澹</b><i>枢密</i><u>虔州</u></span>
+      <span class="prow"><b>刘徳秀</b><i>諌议大夫</i><u>洪州</u></span>
+      <span class="prow"><b>胡纮</b><i>御史</i><u>处州</u></span>
+      <span class="prow"><b>倪思</b><i>尚书</i><u>湖州</u></span>
+      <span class="prow"><b>李沐</b><i>正言</i><u>湖州</u></span>
+      <span class="prow"><b>刘三杰</b><i>正言</i><u>婺州</u></span>
+      <span class="prow"><b>施康年</b><i>正言</i><u>通州</u></span>
+      <span class="prow"><b>姚愈</b><i>大谏</i><u>平江</u></span>
+      <span class="prow"><b>陈贾</b><i>兵部侍郎</i><u>舒州</u></span>
+      <span class="prow"><b>杨大法</b><i>侍御</i><u>婺州</u></span>
+      <span class="prow"><b>张釡</b><i>大諌</i><u>镇江</u></span>
+      <span class="prow"><b>钱象祖</b><i>参政</i><u>台州</u></span>
+      <span class="prow"><b>叶翥</b><i>尚书</i><u>处州</u></span>
+      <span class="prow"><b>许及之</b><i>枢宻</i><u>温州</u></span>
+      <span class="prow"><b>张𪨷</b><i>侍御</i><u>扬州</u></span>
+      <span class="prow"><b>陈谠</b><i>侍郎</i><u>兴化军</u></span>
+      <span class="prow"><b>傅伯寿</b><i>侍郎</i><u>泉州</u></span>
+      <span class="prow"><b>汪义端</b><i>中书舍人</i><u>徽州</u></span>
+      <span class="prow"><b>高文虎</b><i>直院</i><u>明州</u></span>
+      <span class="prow"><b>张伯垓</b><i>察院</i><u>秀州</u></span>
+      <span class="prow"><b>邓友龙</b><i>察院</i><u>衡州</u></span>
+      <span class="prow"><b>麋师旦</b><i>吏部侍郎</i><u>平江</u></span>
+      <span class="prow"><b>赵善坚</b></span>
+      <span class="prow"><b>林采</b><i>监察御史</i></span>
+      <span class="prow famed" style="--f:#d8908a"><b>沈继祖</b><i>监察御史</i><u>兴国</u></span>
+      <span class="prow"><b>丁逢</b><i>川秦都大</i><u>常州</u></span>
+      <span class="prow"><b>邵襃</b><i>司直</i><u>秀州</u></span>
+      <span class="prow"><b>王沇</b><i>转运使</i></span>
+      <span class="prow"><b>钱鍪</b><i>衡州守</i></span>
+      <span class="prow"><b>余嚞</b><i>新州教授</i><u>漳州</u></span>
+      <span class="prow"><b>赵师召</b><i>廸功郎</i></span>
+      <span class="prow"><b>张贵谟</b><u>处州</u></span>
+      <span class="prow"><b>黄抡</b></span>
+      <span class="prow"><b>郑丙</b><i>淳熈间吏部尚书</i><u>福州</u></span>
+      <span class="prow"><b>林栗</b><i>淳熈间兵部尚书</i><u>福州</u></span>
+      <span class="prow"><b>王淮</b><i>淳熈问丞相</i><u>婺州</u></span>
+    </div>
+  </div>
+  <p class="oflead rvw" style="margin-top:20px">名单的头几名便是那四只鹰犬，从丞相到御史，撑起整张网。弛禁之后，他们也一样散了：何澹一罢，魁首尽去；再往后，贬谪与追改，一样不少地落回这张名单上。</p>
+</section>
+
+<section class="sec" id="congtan">
+  <div class="shead rvw"><span class="snum">八</span><h2>丛谈</h2><small>卷外四则</small></div>
+  <p class="oflead rvw" style="margin-bottom:26px">党禁的正面是公文，背面是笑话。书末几则杂记，记下了那个朝廷的体面是如何一寸寸当掉的。点卡片翻面。</p>
+  <div class="ctgrid rvw">
+    <div class="ctcard"><div class="ctinner">
+      <div class="ctface">
+        <h3>由窦尚书</h3>
+        <div class="hook">一位执政的官衔，是从门缝里爬进去的。两年不得升迁的吏部尚书，用一次下跪换来枢府之位，再用一次弯腰换来一个传世的绰号。</div>
+        <div class="flipme">翻面 · 看结局</div>
+      </div>
+      <div class="ctface ctback">
+        <p>许及之与侂胄叙知遇、诉衰迟，说着说着就跪了下去，几天后升任枢府。次年侂胄生辰他去贺寿，迟到，阍人掩关，恰逢门闸未合，弯着腰钻了进去。</p>
+        <span class="q">当时有由窦尚书屈膝执政之语，传以为笑。</span>
+      </div>
+    </div></div>
+    <div class="ctcard"><div class="ctinner">
+      <div class="ctface">
+        <h3>妾名松寿</h3>
+        <div class="hook">送一位美人不够，还要搭上一个名字。三年之间，从候选人到枢府，这位池州人的仕途全靠两次进献。</div>
+        <div class="flipme">翻面 · 看对答</div>
+      </div>
+      <div class="ctface ctback">
+        <p>程松先花八百千赎回侂胄所出的爱姬，供帐中堂，夫妇亲自上食；官至谏议仍不升，再献一妾，取名松寿。侂胄问他怎么敢同名，他的回答被原样记进了史册。</p>
+        <span class="q">荅曰：欲使疵贱姓名常达钧听耳。</span>
+      </div>
+    </div></div>
+    <div class="ctcard"><div class="ctinner">
+      <div class="ctface">
+        <h3>犬吠村庄</h3>
+        <div class="hook">南园山庄欠一声鸡鸣犬吠，话音未落，草丛里立刻就有了。掌京兆的赵侍郎，用一声犬叫换来工部侍郎。</div>
+        <div class="flipme">翻面 · 看报应</div>
+      </div>
+      <div class="ctface ctback">
+        <p>侂胄游山庄叹田野气象，只欠鸡鸣犬吠。少顷犬声起于丛薄，遣人一看，是京尹赵侍郎。后来他坐事罢官，太学生作诗消遣，用的正是这一晚。</p>
+        <span class="q">少焉有犬嘷于丛薄之下，亟遣视之，京尹赵侍郎也。</span>
+        <span class="q">也曾学犬吠村庄</span>
+      </div>
+    </div></div>
+    <div class="ctcard"><div class="ctinner">
+      <div class="ctface">
+        <h3>书题无并</h3>
+        <div class="hook">丞相看信，先看封皮。没有那个字的信，拆都不拆。一场大火烧光相府，他反倒净赚了一倍。</div>
+        <div class="flipme">翻面 · 看账目</div>
+      </div>
+      <div class="ctface ctback">
+        <p>陈自强鬻官，信封上不写并字的一律不拆。嘉泰临安大火延及相府，库钥系在衣带间不敢解，赀囊一空；事后侂胄带头致赆，四方跟进，不数月所得六十万缗，倍于所失。</p>
+        <span class="q">书题无并字者，辄不开。</span>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="sec" id="luomu">
+  <div class="shead rvw"><span class="snum">九</span><h2>落幕</h2><small>风拔木</small></div>
+  <div class="rvw">
+    <div class="q bigq">是日，大风拔木，洪水崩山</div>
+    <div class="bigqcap">庆元六年三月甲子 · 建阳</div>
+    <p class="lmlead">正寝之外，风雨大作。近处门生奔来吊丧，远处设位而哭，<span class="qi">蔡沉主丧役，黄干主丧礼</span>。葬期定在冬十一月，建阳唐石山下，会葬者几千人：官方还在查禁，人已经到了。有个主管铸钱的官员顺路一拜，回程就被劾了个离次会葬。</p>
+  </div>
+  <div class="lmrow rvw">
+    <div class="lmcard">
+      <h4>炉鞴之喻<b> · 与黄干书</b></h4>
+      <p>党禁最凶时，有人劝他遣散门生、低调避祸，他笑而不答。给学生的回信里，把这场迫害看成了炉火。</p>
+      <span class="q">前此常患来学之徒真伪难辨，今却得朝廷如此，大开炉鞴，煅炼一畨</span>
+    </div>
+    <div class="lmcard">
+      <h4>壬戌弛禁<b> · 1202</b></h4>
+      <p>诏书只说挂籍者不过尝被深文牵连，复官自便。宗师已亡，义礼日丧，网松了，朝局却烂得更快：贿赂公行，厮役封侯。</p>
+    </div>
+    <div class="lmcard">
+      <h4>丁卯伏诛<b> · 1207</b></h4>
+      <p>开边失败的侂胄死在玉津园侧，棺被斵，首级函送江淮。身后追改，与当年追改汝愚、朱熹的格式一模一样。</p>
+    </div>
+    <div class="lmcard">
+      <h4>谥号迟来<b> · 1208 起</b></h4>
+      <p>忠定与文，先后赐下；六士袭录，元定赠官。此后二十年，赠太师、封信国公、改徽国公，五子从祀，一纸一纸，全是给这场清算的退款。</p>
+    </div>
+  </div>
+  <div class="closeq rvw">
+    <span class="q">道理只是恁地，但须做些坚苦工夫。</span>
+    <small>文公梦奠语 · 弟子蔡沉记</small>
+  </div>
+</section>
+
+<section class="sec" id="panci">
+  <div class="shead rvw"><span class="snum">十</span><h2>判词</h2><small>五百年后</small></div>
+  <p class="pancilead rvw">樵叟成书在理宗朝，党禁已弛四十余年。再往后五百年，四库馆臣在这卷书前写下一段极冷的账，把南宋连同另外三个朝代一起算了进去。</p>
+  <div class="pq q rvw">东汉不鉴战国之横议，南北部分而东汉亡；北宋不鉴东汉之党锢，洛蜀党分而北宋亡；南宋不鉴元佑之败，伪学禁起而南宋亡；明不鉴庆元之失，东林势盛而明又亡，皆务彼虚名受其实祸</div>
+  <div class="pqsrc">四库全书总目 · 庆元党禁提要</div>
+  <div class="pq q rvw" style="border-color:var(--zhu); background:rgba(192,69,60,.045)">朝廷大患，最怕攻党，伊川见道之明，不能免焉。淳熈则曰道学，庆元则曰伪党，深思由来，皆非国家之福。</div>
+  <div class="pqsrc">张端义语 · 见贵耳集，卷首转引</div>
+  <p class="pancilead rvw">馆臣的判词未必全对：四个朝代的账，未必都算在门户头上。但把罪只记在韩侂胄一人名下，同样不是公论。樵叟抄下的那五十九个名字，价值不在评判，在于他们曾经都在场。</p>
+</section>
+
+<div class="whosec">
+  <div class="tailnote">
+    <p><b>库本情况</b>　史藏传记之属，去空白一万九千余字。全书仅一卷，作者自隐其名，官修史志也未著录；四库馆臣从《永乐大典》里替他找回名字：沧洲樵叟。原序署年乙巳，落款自道成书已在弛禁之后四十余年。卷首冠清高宗御题诗并长注，正文编年纪事，中列两份名单，卷尾附侯贯卿论与蔡沉所记梦奠语。</p>
+    <p><b>校字记</b>　库本多异体：呉曽眀廸徳渉亷熈葢畧壊黙頼歩聨嘷劎等照录；攻伪学名录中淳熈问丞相之问系间之形讹，照录；扩展区生僻字两见（张𪨷之𪨷、群𪫺之𪫺），名录照录或避引；■〈垂夬〉、■〈罒幸廾〉等四库合文残形避引。</p>
+    <p><b>提要</b>　四库馆臣点破此书最硬的用处：<span class="qi">其它姓名、官籍，史所失载者，多借此以考见大畧</span>；又记杨万里曾坐党禁罢官却不在籍，去取之故难解，留作疑案。</p>
+  </div>
+  <div class="tseals">
+    <span class="seal">伪学之禁</span>
+    <span class="seal sq2">五十九人</span>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库〈庆元党禁〉（宋·沧洲樵叟撰，一卷，据史藏传记本）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p>引文经脚本与库内文件去标点、异体归一后逐字比对通过；白话部分经六字窗反扫核验，与库本原文零重合。</p>
+    <p class="xiaoji">时代局限：本篇为古代文献导读。原文中的党争评判、谥法褒贬与馆臣立场，皆带着各自时代的烙印，人物功过亦非名单所能尽载，请以历史眼光阅读。</p>
+  </div>
+</footer>
+
+<script>
+/* 封条 */
+var strip=document.getElementById('sealStrip');
+strip.addEventListener('click',function(){
+  if(strip.classList.contains('open'))return;
+  strip.classList.add('open');
+  document.getElementById('afterSeal').classList.add('in');
+  document.getElementById('heroHint').textContent='封已揭 · 卷在下方';
+});
+
+/* 编年 */
+var NODES=[['甲寅','定策','1194'],['闰十月','四十六日','1194'],['乙卯','罢相','1195'],['乙卯','六士','1195'],['冬十一月','焚藁','1195'],['丙辰','伪名既立','1196'],['丙辰','十罪','1197'],['丁巳','置籍','1197'],['己未','孤鸣','1199'],['庚申','星陨','1200'],['壬戌','弛禁','1202'],['丁卯','反噬','1207'],['戊辰','赐谥','1208']];
+var tnBox=document.getElementById('tnodes'),tpBox=document.getElementById('tpans');
+var tps=tpBox.querySelectorAll('.tpan');
+NODES.forEach(function(n,i){
+  var b=document.createElement('button');
+  b.className='tnode'+(i===0?' on':'');
+  b.innerHTML='<b>'+n[0]+' '+n[2]+'</b>'+n[1];
+  b.addEventListener('click',function(){
+    tnBox.querySelectorAll('.tnode').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    tps.forEach(function(p){p.classList.toggle('on',+p.dataset.i===i)});
+  });
+  tnBox.appendChild(b);
+});
+tps[0].classList.add('on');
+
+/* 四十六日 */
+var grid=document.getElementById('dayGrid');
+var MARK={j:[4,8,12,16,20,24,28],l:[10,22],m:[14,30]};
+var cells=[];
+for(var d=1;d<=46;d++){
+  var c=document.createElement('div');
+  c.className='day'; c.textContent=d;
+  if(d===46)c.classList.add('out');
+  MARK.j.forEach(function(n){if(n===d)c.classList.add('j')});
+  MARK.l.forEach(function(n){if(n===d)c.classList.add('l')});
+  MARK.m.forEach(function(n){if(n===d)c.classList.add('m')});
+  grid.appendChild(c); cells.push(c);
+}
+document.getElementById('dayLegend').querySelectorAll('button').forEach(function(b){
+  b.addEventListener('click',function(){
+    var m=b.dataset.m, on=b.classList.toggle('on');
+    if(m==='all'||document.querySelectorAll('#dayLegend button.on').length===0){
+      cells.forEach(function(c){c.classList.remove('dim','hi')});
+      document.querySelectorAll('#dayLegend button').forEach(function(x){if(x.dataset.m!=='all')x.classList.remove('on')});
+      return;
+    }
+    cells.forEach(function(c){
+      var has=c.classList.contains(m);
+      c.classList.toggle('hi',on&&has);
+      c.classList.toggle('dim',on&&!has);
+    });
+  });
+});
+
+/* 焚藁 */
+document.getElementById('burnBtn').addEventListener('click',function(){
+  document.getElementById('paperDraft').classList.add('burnt');
+  document.getElementById('dunSeal').classList.add('stamped');
+});
+document.getElementById('resetBtn').addEventListener('click',function(){
+  var p=document.getElementById('paperDraft');
+  p.classList.remove('burnt'); void p.offsetWidth;
+  document.getElementById('dunSeal').classList.remove('stamped');
+});
+
+/* 禁网 */
+var jwChips=document.getElementById('jwChips');
+jwChips.querySelectorAll('button').forEach(function(b){
+  b.addEventListener('click',function(){
+    jwChips.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    var i=b.dataset.i;
+    document.querySelectorAll('.jwpan').forEach(function(p){p.classList.toggle('on',p.dataset.i===i)});
+  });
+});
+
+/* 党籍筛选 */
+document.getElementById('regBar').querySelectorAll('button').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('#regBar button').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    var g=b.dataset.g;
+    document.querySelectorAll('.regroup').forEach(function(gr){
+      gr.style.display=(g==='all'||gr.dataset.g===g)?'':'none';
+    });
+  });
+});
+
+/* 对面名单 */
+document.getElementById('ofBtn').addEventListener('click',function(){
+  var l=document.getElementById('ofList');
+  var open=l.classList.toggle('open');
+  this.textContent=open?'收起名录':'展开攻伪学人名录';
+});
+
+/* 丛谈翻面 */
+document.querySelectorAll('.ctcard').forEach(function(c){
+  c.addEventListener('click',function(){c.classList.toggle('flip')});
+});
+
+/* 入场 */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('show');io.unobserve(e.target)}});
+},{threshold:.12});
+document.querySelectorAll('.rvw').forEach(function(el){io.observe(el)});
+</script>
+</body>
+</html>
