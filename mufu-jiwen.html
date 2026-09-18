@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>张文襄幕府纪闻 · 殆知阁导读</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#202019; --paper:#e8e4dc; --paper2:#ddd7cb;
+  --gold:#c9963f; --gold2:#a97f33; --red:#c0453c; --dim:#8a857c; --dim2:#6b665e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:"Songti SC","STSong","NSimSun","SimSun",serif;
+  line-height:1.85; overflow-x:hidden;
+}
+::selection{background:var(--gold);color:var(--ink)}
+.mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+
+/* ---------- hero ---------- */
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;padding:48px 20px}
+.hero-in{display:flex;align-items:center;gap:56px;flex-wrap:wrap;justify-content:center}
+.kick{position:absolute;top:26px;left:34px;font-size:12px;letter-spacing:.35em;color:var(--dim)}
+.kick b{color:var(--gold);font-weight:normal}
+#bwrap{position:relative;width:340px;height:470px;flex:none}
+#bwrap svg{width:100%;height:100%;display:block}
+#loose line{stroke:var(--dim2);stroke-width:1.5;stroke-dasharray:3 6;transition:opacity 1.2s}
+#braid path{fill:none;stroke-width:2.6;stroke-linecap:round;transition:none}
+#braid .s0{stroke:var(--gold)}
+#braid .s1{stroke:#9b9383}
+#braid .s2{stroke:var(--gold2)}
+#braid path{stroke-dasharray:660;stroke-dashoffset:660}
+#bwrap.bound #braid path{transition:stroke-dashoffset 2.4s ease}
+#bwrap.bound #braid .s0{stroke-dashoffset:0;transition-delay:.1s}
+#bwrap.bound #braid .s1{stroke-dashoffset:0;transition-delay:.5s}
+#bwrap.bound #braid .s2{stroke-dashoffset:0;transition-delay:.9s}
+#bwrap.bound #loose line{opacity:0}
+.knot{fill:var(--ink);stroke:var(--gold);stroke-width:1.6;opacity:0;transition:opacity .5s}
+#bwrap.bound .knot{opacity:1}
+#bwrap.bound .k1{transition-delay:.9s}#bwrap.bound .k2{transition-delay:1.2s}
+#bwrap.bound .k3{transition-delay:1.5s}#bwrap.bound .k4{transition-delay:1.8s}
+#bwrap.bound .k5{transition-delay:2.1s}#bwrap.bound .k6{transition-delay:2.4s}
+#vt{
+  position:absolute;top:34px;right:16px;writing-mode:vertical-rl;
+  font-size:42px;letter-spacing:.18em;color:var(--paper);
+  height:max-content;line-height:1.35;opacity:0;transform:translateY(26px);
+  transition:opacity 1.4s ease 2.2s,transform 1.4s ease 2.2s;
+}
+#bwrap.bound #vt{opacity:1;transform:translateY(0)}
+#vt small{font-size:14px;color:var(--dim);letter-spacing:.4em;margin-top:14px}
+#seal1{
+  position:absolute;left:6px;bottom:44px;writing-mode:vertical-rl;
+  font-size:21px;letter-spacing:.22em;color:var(--paper);
+  background:var(--red);padding:16px 7px;border-radius:3px;line-height:1.3;
+  box-shadow:0 0 0 2px var(--ink),0 0 0 3.5px var(--red);
+  opacity:0;transform:rotate(-6deg) scale(1.5);transition:all .35s cubic-bezier(.2,2,.4,1) 3.4s;
+}
+#bwrap.bound #seal1{opacity:.92;transform:rotate(-6deg) scale(1)}
+#hero-r{max-width:430px}
+#hero-r h1{font-size:15px;font-weight:normal;letter-spacing:.3em;color:var(--dim);margin-bottom:18px}
+#hero-r h1 b{color:var(--gold);font-weight:normal}
+#hero-r p.big{font-size:21px;line-height:2.1;margin-bottom:14px}
+#hero-r p.big em{font-style:normal;color:var(--gold)}
+#hero-r p.sm{font-size:14px;color:var(--dim);margin-bottom:30px}
+#bind-btn{
+  background:none;border:1.5px solid var(--gold);color:var(--gold);
+  font-family:inherit;font-size:17px;letter-spacing:.5em;padding:13px 30px 13px 36px;
+  cursor:pointer;border-radius:2px;transition:all .3s;
+}
+#bind-btn:hover{background:var(--gold);color:var(--ink)}
+#bind-btn.off{opacity:.25;pointer-events:none}
+#hero-hint{font-size:12px;color:var(--dim2);margin-top:14px;letter-spacing:.15em}
+@media(max-width:900px){
+  #bwrap{width:270px;height:400px}
+  #vt{font-size:32px;right:4px}
+  #seal1{font-size:16px}
+}
+
+/* ---------- rail ---------- */
+#rail{position:fixed;left:22px;top:50%;transform:translateY(-50%);z-index:40;display:none}
+@media(min-width:1180px){#rail{display:block}}
+#rail .line{position:absolute;left:9px;top:12px;bottom:12px;width:1px;background:var(--dim2)}
+#rail .nd{position:relative;width:20px;height:20px;margin:26px 0;border-radius:50%;
+  border:1.5px solid var(--dim2);background:var(--ink);cursor:pointer;transition:all .4s}
+#rail .nd.on{border-color:var(--gold);background:var(--gold);box-shadow:0 0 10px rgba(201,150,63,.45)}
+#rail .nd span{position:absolute;left:30px;top:-4px;font-size:12px;color:var(--dim2);letter-spacing:.2em;white-space:nowrap;opacity:0;transition:opacity .3s}
+#rail .nd.on span{color:var(--gold);opacity:1}
+
+/* ---------- common ---------- */
+main{max-width:980px;margin:0 auto;padding:0 22px}
+section{padding:110px 0 30px}
+.chap{display:flex;align-items:baseline;gap:18px;margin-bottom:8px}
+.chap .no{font-size:15px;color:var(--gold);letter-spacing:.3em;writing-mode:vertical-rl;line-height:1}
+.chap h2{font-size:31px;font-weight:normal;letter-spacing:.12em}
+.chap .en{font-size:12px;color:var(--dim2);letter-spacing:.3em}
+.rule{width:64px;height:2px;background:var(--gold);margin:16px 0 26px}
+.lead{font-size:16.5px;color:#cfc9bd;max-width:720px;margin-bottom:34px}
+.lead b{color:var(--gold);font-weight:normal}
+q.q, .q{display:block;quotes:"「" "」"}
+q.q:before, .q:before{content:"「";color:var(--gold)}
+q.q:after, .q:after{content:"」";color:var(--gold)}
+.qin{background:var(--ink2);border-left:3px solid var(--gold);padding:18px 22px;margin:16px 0;font-size:16px;line-height:2.05;color:#ddd7ca}
+.qin .who{display:inline-block;font-size:12.5px;color:var(--ink);background:var(--gold);padding:1px 10px;border-radius:2px;margin-bottom:10px;letter-spacing:.1em}
+.qin .who.rd{background:var(--red);color:var(--paper)}
+.src{display:inline-block;font-size:12px;color:var(--dim);border:1px solid var(--dim2);padding:1px 9px;border-radius:2px;margin-top:12px;letter-spacing:.12em}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.rv.on{opacity:1;transform:translateY(0)}
+
+/* ---------- s1 twin ---------- */
+.twin{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:26px 0}
+@media(max-width:760px){.twin{grid-template-columns:1fr}}
+.tcard{background:var(--ink2);border:1px solid #33322b;padding:26px 26px 20px;position:relative}
+.tcard h3{font-size:21px;font-weight:normal;color:var(--gold);margin-bottom:4px;letter-spacing:.1em}
+.tcard.right h3{color:#b3ab9a}
+.tcard .tag{font-size:12px;color:var(--dim);letter-spacing:.25em;margin-bottom:14px}
+.tcard p{font-size:14.5px;color:#c6c0b3}
+.tcard p em{font-style:normal;color:var(--paper);border-bottom:1px dashed var(--dim2)}
+.bio{display:flex;gap:0;margin:34px 0 8px;border:1px solid #33322b;flex-wrap:wrap}
+.bio div{flex:1;min-width:130px;padding:16px 14px;border-right:1px solid #33322b;background:var(--ink2)}
+.bio div:last-child{border-right:none}
+.bio .y{font-size:19px;color:var(--gold);font-family:Consolas,monospace}
+.bio .t{font-size:13px;color:#bdb7aa;line-height:1.7;margin-top:4px}
+.bio-note{font-size:12px;color:var(--dim2);margin-top:8px;letter-spacing:.05em}
+
+/* ---------- s2 register ---------- */
+.reg{border:1px solid #3a382f;background:var(--ink2)}
+.reg-head,.reg-row .rh{display:grid;grid-template-columns:110px 1fr 90px;gap:12px;align-items:center;padding:13px 20px}
+.reg-head{font-size:12px;color:var(--dim2);letter-spacing:.3em;border-bottom:1px solid #3a382f}
+.reg-row{border-bottom:1px dashed #33322b;cursor:pointer;transition:background .3s}
+.reg-row:last-child{border-bottom:none}
+.reg-row:hover{background:#24231d}
+.reg-row .who2{font-size:18px;color:var(--paper);letter-spacing:.08em}
+.reg-row .crime{font-size:14px;color:var(--red);letter-spacing:.15em}
+.reg-row .plus{justify-self:end;font-size:20px;color:var(--dim2);transition:transform .35s;font-family:Consolas,monospace}
+.reg-row.open .plus{transform:rotate(45deg);color:var(--gold)}
+.reg-row .rev{max-height:0;overflow:hidden;transition:max-height .5s ease}
+.reg-row.open .rev{max-height:340px}
+.rev-in{padding:4px 20px 18px 20px;border-top:1px dotted #3a382f}
+.rev-in .q{font-size:15.5px;color:#ddd7ca;line-height:2.05;padding-top:12px}
+.rev-in .zhu{display:inline-block;margin-top:10px;font-size:12px;color:var(--paper);background:var(--red);padding:2px 10px;border-radius:2px;transform:rotate(-3deg);letter-spacing:.2em}
+.reg-note{font-size:12.5px;color:var(--dim);margin-top:14px;letter-spacing:.08em}
+
+/* ---------- s3 theater ---------- */
+.stage{position:relative;padding:10px 0}
+.dlg{display:grid;grid-template-columns:64px 1fr;gap:14px;margin-bottom:18px}
+.dlg.rt{grid-template-columns:1fr 64px}
+.dlg.rt .face{order:2}
+.dlg.rt .bubble{border-left:none;border-right:3px solid var(--red);background:var(--ink2)}
+.face{width:52px;height:52px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--gold);background:var(--ink2)}
+.bubble{background:var(--ink2);border-left:3px solid var(--gold);padding:16px 20px;font-size:15.5px;line-height:2.05;color:#ddd7ca}
+.bubble .q{font-size:15.5px;padding:2px 0}
+.bubble .who{display:block;font-size:12.5px;color:var(--gold);letter-spacing:.2em;margin-bottom:6px}
+.dlg.rt .bubble .who{color:#c9827c}
+.dlg.note{grid-template-columns:1fr;max-width:720px}
+.dlg.note .stg{font-size:13.5px;color:var(--dim);letter-spacing:.12em;padding:2px 0 2px 6px;border-left:2px solid var(--dim2)}
+.tea{display:flex;align-items:center;gap:18px;margin:26px 0;padding:22px;border:1px solid #3a382f;background:var(--ink2);overflow:hidden}
+.tea .cup{width:58px;height:34px;flex:none;position:relative;transition:transform 1.6s ease}
+.tea.pour .cup{transform:translateX(1100px)}
+.tea .cup .body{position:absolute;bottom:0;left:0;width:44px;height:30px;border:2px solid var(--gold);border-radius:0 0 22px 22px;border-top:none}
+.tea .cup .handle{position:absolute;bottom:9px;right:0;width:14px;height:16px;border:2px solid var(--gold);border-left:none;border-radius:0 10px 10px 0}
+.tea .cup .steam{position:absolute;top:-20px;left:12px;font-size:11px;color:var(--dim2);letter-spacing:5px}
+.tea p{font-size:15.5px;color:#ddd7ca}
+.tea p b{color:var(--red);font-weight:normal}
+.paper-bot{background:var(--paper);color:#2c2a24;padding:30px 32px;margin:30px 0;position:relative;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.paper-bot:before{content:"尾声";position:absolute;top:-12px;left:26px;background:var(--red);color:var(--paper);font-size:12px;padding:2px 12px;letter-spacing:.3em}
+.paper-bot .q{color:#4a453a;font-size:16px;line-height:2.1}
+.paper-bot .q:before,.paper-bot .q:after{color:var(--red)}
+.paper-bot p{font-size:14px;color:#6b6559;margin-top:12px}
+.twocol{display:grid;grid-template-columns:1.5fr 1fr;gap:22px}
+@media(max-width:800px){.twocol{grid-template-columns:1fr}}
+.mini{background:var(--ink2);border:1px solid #33322b;padding:22px 24px}
+.mini h4{font-size:16px;font-weight:normal;color:var(--gold);letter-spacing:.15em;margin-bottom:12px}
+.mini p{font-size:14px;color:#c6c0b3;line-height:2}
+.mini .q{font-size:14.5px;color:#ddd7ca;padding:8px 0 2px}
+
+/* ---------- s4 jars ---------- */
+.jars{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:30px 0}
+@media(max-width:760px){.jars{grid-template-columns:1fr}}
+.jarcol{display:flex;flex-direction:column}
+.slip{max-height:0;overflow:hidden;transition:max-height .6s ease}
+.slip-in{background:var(--paper);color:#3a362c;padding:20px 20px 16px;margin-bottom:14px;box-shadow:0 6px 22px rgba(0,0,0,.45);transform-origin:top}
+.slip-in .lname{font-size:17px;letter-spacing:.15em;color:var(--red);border-bottom:1px solid #c9c2b2;padding-bottom:8px;margin-bottom:10px}
+.slip-in .q{font-size:14.5px;line-height:2;color:#4a453a}
+.slip-in .fx{font-size:12.5px;color:#7d766a;margin-top:8px;border-top:1px dotted #b8b1a1;padding-top:8px}
+.jar{cursor:pointer;text-align:center;padding:10px 0 0;transition:transform .3s}
+.jar:hover{transform:translateY(-4px)}
+.jar .lid{width:74px;height:14px;background:#3c3a30;border-radius:4px 4px 0 0;margin:0 auto;transition:background .3s}
+.jar.open .lid{background:var(--gold)}
+.jar .pot{width:110px;height:96px;margin:-2px auto 0;background:linear-gradient(#2c2a22,#232119);border:1.5px solid #4a4739;border-radius:14px 14px 26px 26px;position:relative}
+.jar.open .pot{border-color:var(--gold)}
+.jar .pot .lbl{position:absolute;inset:26px 8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--paper);letter-spacing:.08em;line-height:1.5;border:1px dashed #55503f;border-radius:4px;padding:4px}
+.jar.open .pot .lbl{color:var(--gold);border-color:var(--gold2)}
+.jar .hintb{font-size:11.5px;color:var(--dim2);margin-top:8px;letter-spacing:.2em}
+.pulse-note{font-size:14.5px;color:#cfc9bd;margin:8px 0 26px}
+.pulse-note b{color:var(--red);font-weight:normal}
+
+/* ---------- s5 math ---------- */
+.mathbox{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;margin:26px 0}
+@media(max-width:800px){.mathbox{grid-template-columns:1fr}}
+.abacus{background:var(--ink2);border:1px solid #3a382f;padding:34px 20px;text-align:center}
+#nine{font-size:52px;letter-spacing:.06em;color:var(--gold);transition:opacity .25s;line-height:1.4}
+#nine.bad{color:var(--red)}
+#nine.worse{color:#e0655c}
+#nine small{display:block;font-size:13px;color:var(--dim);letter-spacing:.25em;margin-top:10px}
+.modes{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+.modes button{background:none;border:1px solid var(--dim2);color:var(--dim);font-family:inherit;font-size:14px;padding:7px 18px;cursor:pointer;letter-spacing:.15em;border-radius:2px;transition:all .25s}
+.modes button.on{border-color:var(--gold);color:var(--ink);background:var(--gold)}
+.lay{display:flex;flex-direction:column;gap:14px}
+.lay .lv{background:var(--ink2);border:1px solid #33322b;padding:16px 18px}
+.lay .lv .lw{font-size:12px;color:var(--gold);letter-spacing:.2em;margin-bottom:8px;display:block}
+.lay .lv .q{font-size:14.5px;line-height:2;color:#ddd7ca}
+.lay .lv.l3{border-color:var(--red)}
+.lay .lv.l3 .lw{color:#c9827c}
+
+/* ---------- s6 finale ---------- */
+#fin{position:relative}
+.fin-wrap{display:grid;grid-template-columns:300px 1fr;gap:40px;align-items:center;margin:30px 0}
+@media(max-width:860px){.fin-wrap{grid-template-columns:1fr}}
+#braid2{width:100%;height:430px}
+#braid2 path{fill:none;stroke-width:2.4;transition:transform 1.8s cubic-bezier(.6,0,.3,1),opacity 1.8s}
+#braid2 .s0{stroke:var(--gold)}#braid2 .s1{stroke:#9b9383}#braid2 .s2{stroke:var(--gold2)}
+#braid2 .guide{stroke:var(--dim2);stroke-width:1;stroke-dasharray:2 7;opacity:0;transition:opacity 1.5s .8s}
+#bwrap2.free #braid2 .p0{transform:translateX(-72px)}
+#bwrap2.free #braid2 .p1{transform:translateX(0)}
+#bwrap2.free #braid2 .p2{transform:translateX(72px)}
+#bwrap2.free #braid2 .guide{opacity:1}
+body.free #ded{opacity:.94;transform:translateX(-50%) scale(1) rotate(-4deg)}
+body.free #fin-q{opacity:1;transform:translateY(0)}
+.reveal-col{position:relative;min-height:430px}
+#ded{position:absolute;top:84px;left:50%;transform:translateX(-50%) scale(1.6) rotate(8deg);opacity:0;
+  width:120px;height:120px;background:var(--red);color:var(--paper);font-size:74px;
+  display:flex;align-items:center;justify-content:center;border-radius:4px;
+  box-shadow:0 0 0 3px var(--ink),0 0 0 5px var(--red);transition:all .4s cubic-bezier(.2,2,.4,1)}
+#fin-q{opacity:0;transform:translateY(20px);transition:all 1s ease .7s;padding-top:250px}
+#fin-q .q{font-size:22px;line-height:2.3;color:var(--paper)}
+#fin-q p{font-size:14px;color:var(--dim);margin-top:16px}
+.vdebate{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:34px 0}
+@media(max-width:800px){.vdebate{grid-template-columns:1fr}}
+.vcard{background:var(--ink2);border:1px solid #33322b;border-top:3px solid var(--dim2);padding:22px 24px}
+.vcard.ans{border-top-color:var(--red)}
+.vcard h4{font-size:16px;font-weight:normal;letter-spacing:.15em;margin-bottom:12px;color:#b3ab9a}
+.vcard.ans h4{color:var(--gold)}
+.vcard p,.vcard .q{font-size:14.5px;line-height:2.05;color:#d5cfc2}
+.vcard .q{padding:6px 0 2px}
+#unbind-btn{margin-top:6px}
+
+/* ---------- coda & footer ---------- */
+.coda{background:var(--paper);color:#2c2a24;margin-top:110px;padding:64px 30px 58px;text-align:center}
+.coda .q{display:inline;font-size:25px;line-height:2.2;color:#3a362c;letter-spacing:.1em}
+.coda .q:before,.coda .q:after{color:var(--red)}
+.coda p{font-size:13.5px;color:#7d766a;margin-top:22px;letter-spacing:.15em}
+.pagefoot{border-top:1px solid #33322b;padding:30px 22px 44px;text-align:center;font-size:12.5px;color:var(--dim2);line-height:2.1;letter-spacing:.06em}
+.pagefoot a{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold)}
+#luoqian{text-align:center;font-size:13px;color:var(--dim);letter-spacing:.3em;padding:0 0 26px}
+</style>
+</head>
+<body>
+
+<header id="hero">
+  <p class="kick">殆知阁古代文献导读 <b>史藏 · 志存记录</b></p>
+  <div class="hero-in">
+    <div id="bwrap">
+      <svg viewBox="0 0 260 420" aria-hidden="true">
+        <g id="loose">
+          <line x1="106" y1="24" x2="106" y2="380"/>
+          <line x1="130" y1="24" x2="130" y2="380"/>
+          <line x1="154" y1="24" x2="154" y2="380"/>
+        </g>
+        <g id="braid">
+          <path class="s0" d="M 144.7 24 L 142.6 28.0 L 140.0 31.9 L 136.9 35.9 L 133.5 39.8 L 130.0 43.8 L 126.5 47.7 L 123.1 51.7 L 120.0 55.6 L 117.4 59.6 L 115.3 63.6 L 113.8 67.5 L 113.1 71.5 L 113.1 75.4 L 113.8 79.4 L 115.3 83.3 L 117.4 87.3 L 120.0 91.2 L 123.1 95.2 L 126.5 99.2 L 130.0 103.1 L 133.5 107.1 L 136.9 111.0 L 140.0 115.0 L 142.6 118.9 L 144.7 122.9 L 146.2 126.8 L 146.9 130.8 L 146.9 134.8 L 146.2 138.7 L 144.7 142.7 L 142.6 146.6 L 140.0 150.6 L 136.9 154.5 L 133.5 158.5 L 130.0 162.4 L 126.5 166.4 L 123.1 170.4 L 120.0 174.3 L 117.4 178.3 L 115.3 182.2 L 113.8 186.2 L 113.1 190.1 L 113.1 194.1 L 113.8 198.0 L 115.3 202.0 L 117.4 206.0 L 120.0 209.9 L 123.1 213.9 L 126.5 217.8 L 130.0 221.8 L 133.5 225.7 L 136.9 229.7 L 140.0 233.6 L 142.6 237.6 L 144.7 241.6 L 146.2 245.5 L 146.9 249.5 L 146.9 253.4 L 146.2 257.4 L 144.7 261.3 L 142.6 265.3 L 140.0 269.2 L 136.9 273.2 L 133.5 277.2 L 130.0 281.1 L 126.5 285.1 L 123.1 289.0 L 120.0 293.0 L 117.4 296.9 L 115.3 300.9 L 113.8 304.8 L 113.1 308.8 L 113.1 312.8 L 113.8 316.7 L 115.3 320.7 L 117.4 324.6 L 120.0 328.6 L 123.1 332.5 L 126.5 336.5 L 130.0 340.4 L 133.5 344.4 L 136.9 348.4 L 140.0 352.3 L 142.6 356.3 L 144.7 360.2 L 146.2 364.2 L 146.9 368.1 L 146.9 372.1 L 146.2 376.0 L 144.7 380.0"/>
+          <path class="s1" d="M 115.3 24 L 113.8 28.0 L 113.1 31.9 L 113.1 35.9 L 113.8 39.8 L 115.3 43.8 L 117.4 47.7 L 120.0 51.7 L 123.1 55.6 L 126.5 59.6 L 130.0 63.6 L 133.5 67.5 L 136.9 71.5 L 140.0 75.4 L 142.6 79.4 L 144.7 83.3 L 146.2 87.3 L 146.9 91.2 L 146.9 95.2 L 146.2 99.2 L 144.7 103.1 L 142.6 107.1 L 140.0 111.0 L 136.9 115.0 L 133.5 118.9 L 130.0 122.9 L 126.5 126.8 L 123.1 130.8 L 120.0 134.8 L 117.4 138.7 L 115.3 142.7 L 113.8 146.6 L 113.1 150.6 L 113.1 154.5 L 113.8 158.5 L 115.3 162.4 L 117.4 166.4 L 120.0 170.4 L 123.1 174.3 L 126.5 178.3 L 130.0 182.2 L 133.5 186.2 L 136.9 190.1 L 140.0 194.1 L 142.6 198.0 L 144.7 202.0 L 146.2 206.0 L 146.9 209.9 L 146.9 213.9 L 146.2 217.8 L 144.7 221.8 L 142.6 225.7 L 140.0 229.7 L 136.9 233.6 L 133.5 237.6 L 130.0 241.6 L 126.5 245.5 L 123.1 249.5 L 120.0 253.4 L 117.4 257.4 L 115.3 261.3 L 113.8 265.3 L 113.1 269.2 L 113.1 273.2 L 113.8 277.2 L 115.3 281.1 L 117.4 285.1 L 120.0 289.0 L 123.1 293.0 L 126.5 296.9 L 130.0 300.9 L 133.5 304.8 L 136.9 308.8 L 140.0 312.8 L 142.6 316.7 L 144.7 320.7 L 146.2 324.6 L 146.9 328.6 L 146.9 332.5 L 146.2 336.5 L 144.7 340.4 L 142.6 344.4 L 140.0 348.4 L 136.9 352.3 L 133.5 356.3 L 130.0 360.2 L 126.5 364.2 L 123.1 368.1 L 120.0 372.1 L 117.4 376.0 L 115.3 380.0"/>
+          <path class="s2" d="M 130.0 24 L 133.5 28.0 L 136.9 31.9 L 140.0 35.9 L 142.6 39.8 L 144.7 43.8 L 146.2 47.7 L 146.9 51.7 L 146.9 55.6 L 146.2 59.6 L 144.7 63.6 L 142.6 67.5 L 140.0 71.5 L 136.9 75.4 L 133.5 79.4 L 130.0 83.3 L 126.5 87.3 L 123.1 91.2 L 120.0 95.2 L 117.4 99.2 L 115.3 103.1 L 113.8 107.1 L 113.1 111.0 L 113.1 115.0 L 113.8 118.9 L 115.3 122.9 L 117.4 126.8 L 120.0 130.8 L 123.1 134.8 L 126.5 138.7 L 130.0 142.7 L 133.5 146.6 L 136.9 150.6 L 140.0 154.5 L 142.6 158.5 L 144.7 162.4 L 146.2 166.4 L 146.9 170.4 L 146.9 174.3 L 146.2 178.3 L 144.7 182.2 L 142.6 186.2 L 140.0 190.1 L 136.9 194.1 L 133.5 198.0 L 130.0 202.0 L 126.5 206.0 L 123.1 209.9 L 120.0 213.9 L 117.4 217.8 L 115.3 221.8 L 113.8 225.7 L 113.1 229.7 L 113.1 233.6 L 113.8 237.6 L 115.3 241.6 L 117.4 245.5 L 120.0 249.5 L 123.1 253.4 L 126.5 257.4 L 130.0 261.3 L 133.5 265.3 L 136.9 269.2 L 140.0 273.2 L 142.6 277.2 L 144.7 281.1 L 146.2 285.1 L 146.9 289.0 L 146.9 293.0 L 146.2 296.9 L 144.7 300.9 L 142.6 304.8 L 140.0 308.8 L 136.9 312.8 L 133.5 316.7 L 130.0 320.7 L 126.5 324.6 L 123.1 328.6 L 120.0 332.5 L 117.4 336.5 L 115.3 340.4 L 113.8 344.4 L 113.1 348.4 L 113.1 352.3 L 113.8 356.3 L 115.3 360.2 L 117.4 364.2 L 120.0 368.1 L 123.1 372.1 L 126.5 376.0 L 130.0 380.0"/>
+          <circle class="knot k1" cx="130" cy="83" r="5"/>
+          <circle class="knot k2" cx="130" cy="143" r="5"/>
+          <circle class="knot k3" cx="130" cy="202" r="5"/>
+          <circle class="knot k4" cx="130" cy="261" r="5"/>
+          <circle class="knot k5" cx="130" cy="321" r="5"/>
+          <circle class="knot k6" cx="130" cy="372" r="5"/>
+        </g>
+      </svg>
+      <div id="vt" data-t="bk">张文襄幕府纪闻<small>民国 辜鸿铭</small></div>
+      <div id="seal1">东西南北人</div>
+    </div>
+    <div id="hero-r">
+      <h1>暮年幕僚的<b>段子合集</b>，写给一个正在散架的朝廷</h1>
+      <p class="big">他在张之洞幕府里坐了二十多年冷板凳，把满朝大人物挨个编成段子，又在每段笑料底下，压着一句没说出口的<em>亡国诊断</em>。</p>
+      <p class="sm">宣统二年铅印行世，上下两卷七十二题。骂遍曾李袁盛，末了只剩一条辫子和一句真话。</p>
+      <button id="bind-btn">编 辫</button>
+      <p id="hero-hint">三股散丝，编一条辫子给你看</p>
+    </div>
+  </div>
+</header>
+
+<nav id="rail" aria-hidden="true">
+  <div class="line"></div>
+  <div class="nd" data-go="s1"><span>壹 两个辜鸿铭</span></div>
+  <div class="nd" data-go="s2"><span>贰 挨骂名单</span></div>
+  <div class="nd" data-go="s3"><span>叁 让茶</span></div>
+  <div class="nd" data-go="s4"><span>肆 医国三笺</span></div>
+  <div class="nd" data-go="s5"><span>伍 三三如几</span></div>
+  <div class="nd" data-go="s6"><span>陆 解辫</span></div>
+</nav>
+
+<main>
+
+<!-- ============ 壹 ============ -->
+<section id="s1">
+  <div class="chap rv"><span class="no">壹</span><h2>书里有两个辜鸿铭</h2><span class="en">TWO GU HONGMINGS</span></div>
+  <div class="rule rv"></div>
+  <p class="lead rv">这本书记事用第一人称，讲故事的自称<b>余</b>；可翻着翻着，一个第三人称的怪人频频出场：<b>辜鸿铭部郎</b>。全书七十二题，他把自己当外人写了七回，或云、或传、或郑重记下自己又说了什么漂亮话。</p>
+  <div class="twin">
+    <div class="tcard rv">
+      <h3>余</h3>
+      <p class="tag">讲述者 在场者 下毒手者</p>
+      <p>占多数的那个声音。坐在签押房里看什么都点评，评完还要引一句经书垫底。骂完天下人，深夜自己怆然。</p>
+    </div>
+    <div class="tcard right rv">
+      <h3>辜鸿铭部郎</h3>
+      <p class="tag">被记录者 名汤生 被怼者</p>
+      <p>被当成史料转述的那个声音。他的语录先由「部郎云」郑重其事地记下来，末了再由余补一刀。自己给自己立传，还自己给自己差评。</p>
+    </div>
+  </div>
+  <div class="qin rv">
+    <span class="who">第三人称出场</span>
+    <q class="q">庚子年，辜鸿铭部郎名汤生，撰西文《尊王篇》</q>
+    <span class="src vq">虎门轶事</span>
+  </div>
+  <div class="qin rv">
+    <span class="who rd">部郎语录 · 第三人称入账</span>
+    <q class="q">凡贵人欲观人者也，故衣朴素；贱者欲取观于人者也，故衣华丽</q>
+    <span class="src vq">照像</span>
+  </div>
+  <div class="bio rv">
+    <div><div class="y">1857</div><div class="t">生于英属槟榔屿，自幼受西式教育</div></div>
+    <div><div class="y">1877</div><div class="t">爱丁堡大学文学硕士，游学德法</div></div>
+    <div><div class="y">1885</div><div class="t">入张之洞幕府，任洋文案，译述二十余年</div></div>
+    <div><div class="y">1910</div><div class="t">本书铅印行世，自号东西南北人</div></div>
+    <div><div class="y">1928</div><div class="t">卒于北京，辫子到死没剪</div></div>
+  </div>
+  <p class="bio-note">生平年份据通行传记资料；书中自称与记事均以库本为准。</p>
+</section>
+
+<!-- ============ 贰 ============ -->
+<section id="s2">
+  <div class="chap rv"><span class="no">贰</span><h2>挨骂名单</h2><span class="en">THE HIT LIST</span></div>
+  <div class="rule rv"></div>
+  <p class="lead rv">七十二题里，一半以上在骂人。中兴名臣、当朝权贵、洋人报馆，无一幸免。这份名册按罪名列了八条，<b>点开一条，看一句原话</b>。</p>
+  <div class="reg rv">
+    <div class="reg-head"><span>人</span><span>罪名</span><span>验</span></div>
+    <div class="reg-row">
+      <div class="rh"><span class="who2">曾国藩</span><span class="crime">陋</span><span class="plus">+</span></div>
+      <div class="rev"><div class="rev-in">
+        <q class="q">看南京制台衙门规模之笨拙，工料之粗率，大而无当，即可知曾文正公之陋处也</q>
+        <span class="zhu">骂讫</span> <span class="src vq">南京衙门</span>
+      </div></div>
+    </div>
+    <div class="reg-row">
+      <div class="rh"><span class="who2">李鸿章</span><span class="crime">老奸巨滑</span><span class="plus">+</span></div>
+      <div class="rev"><div class="rev-in">
+        <p style="font-size:13.5px;color:var(--dim);margin-bottom:6px">这话是张之洞听说李鸿章电奏里说自己书生见解之后，当场回敬的：</p>
+        <q class="q">我是书生，他是老奸巨滑</q>
+        <span class="zhu">骂讫</span> <span class="src vq">五霸罪人</span>
+      </div></div>
+    </div>
+    <div class="reg-row">
+      <div class="rh"><span class="who2">袁世凯</span><span class="crime">贱种</span><span class="plus">+</span></div>
+      <div class="rev"><div class="rev-in">
+        <p style="font-size:13.5px;color:var(--dim);margin-bottom:6px">袁项城说张中堂讲学问、自己只讲办事，他如此回敬：</p>
+        <q class="q">如老妈子倒马桶，固用不着学问。除倒马桶外，我不知天下有何事是无学问的人可以办得好</q>
+        <span class="zhu">骂讫</span> <span class="src vq">倒马桶</span>
+      </div></div>
+    </div>
+    <div class="reg-row">
+      <div class="rh"><span class="who2">端方</span><span class="crime">真小人</span><span class="plus">+</span></div>
+      <div class="rev"><div class="rev-in">
+        <q class="q">文襄傲，故其门下幕僚多伪君子；午桥浮，故其门下幕僚多真小人</q>
+        <span class="zhu">骂讫</span> <span class="src vq">翩翩佳公子</span>
+      </div></div>
+    </div>
+    <div class="reg-row">
+      <div class="rh"><span class="who2">盛宣怀</span><span class="crime">顾左右</span><span class="plus">+</span></div>
+      <div class="rev"><div class="rev-in">
+        <p style="font-size:13.5px;color:var(--dim);margin-bottom:6px">盛宫保讨他的英文译本，问《中庸》要旨在哪句，他答了四个字：贱货贵德。于是：</p>
+        <q class="q">宫保乃顾左右而言他</q>
+        <span class="zhu">骂讫</span> <span class="src vq">王顾左右而言他</span>
+      </div></div>
+    </div>
+    <div class="reg-row">
+      <div class="rh"><span class="who2">各省督抚</span><span class="crime">吹牛</span><span class="plus">+</span></div>
+      <div class="rev"><div class="rev-in">
+        <q class="q">中国之亡，不亡于实业，不亡于外交，而实亡于中国督抚之好吹牛（毛非）也</q>
+        <span class="zhu">骂讫</span> <span class="src vq">不吹牛（毛非）</span>
+      </div></div>
+    </div>
+    <div class="reg-row">
+      <div class="rh"><span class="who2">报馆主笔</span><span class="crime">该坑</span><span class="plus">+</span></div>
+      <div class="rev"><div class="rev-in">
+        <q class="q">秦始皇所焚之书，即今日之烂报纸；始皇所坑之儒，即今日出烂报纸之主笔也</q>
+        <span class="zhu">骂讫</span> <span class="src vq">烂报纸</span>
+      </div></div>
+    </div>
+    <div class="reg-row">
+      <div class="rh"><span class="who2">张之洞</span><span class="crime vq">知利害不知是非</span><span class="plus">+</span></div>
+      <div class="rev"><div class="rev-in">
+        <p style="font-size:13.5px;color:var(--dim);margin-bottom:6px">幕僚汪某的研判，他全文抄录，转见第三章：</p>
+        <q class="q">香帅为人，是知利害不知是非</q>
+        <span class="zhu">留待</span> <span class="src vq">公利私利</span>
+      </div></div>
+    </div>
+  </div>
+  <p class="reg-note">罪名栏与原话均为库本用字照录；吹牛后括注毛非，库本如此。</p>
+</section>
+
+<!-- ============ 叁 ============ -->
+<section id="s3">
+  <div class="chap rv"><span class="no">叁</span><h2>让茶</h2><span class="en">THE THIRD CUP</span></div>
+  <div class="rule rv"></div>
+  <p class="lead rv">幕僚的正业是提意见。他提了二十多年，多数石沉大海。最难听的一条意见，连人带话被他自己记成了三幕剧，剧名可以就叫<b>公利私利</b>。</p>
+  <div class="stage">
+    <div class="dlg rv">
+      <div class="face">汪</div>
+      <div class="bubble"><span class="who">幕僚汪某 献策</span>
+        <q class="q">君言皆从是非上着论，故不能耸听。香帅为人，是知利害不知是非。君欲其动听，必从利害上讲，始能入</q>
+      </div>
+    </div>
+    <div class="dlg note rv"><p class="stg">这话被人传到了帅耳。大帅大怒，立召入见。</p></div>
+    <div class="dlg rt rv">
+      <div class="face">帅</div>
+      <div class="bubble"><span class="who">张文襄 对质</span>
+        <q class="q">是何人言余知利害不知是非？如谓余知利害，试问余今日有偌大家事否？所谓利者安在？我所讲究者乃公利，并非私利。私利不可讲，而公利不可不讲</q>
+      </div>
+    </div>
+    <div class="dlg rv">
+      <div class="face">余</div>
+      <div class="bubble"><span class="who">辜鸿铭 应对</span>
+        <q class="q">当日孔子罕言利，然则孔子亦讲私利乎</q>
+      </div>
+    </div>
+    <div class="dlg rt rv">
+      <div class="face">帅</div>
+      <div class="bubble"><span class="who">张文襄 辩难不休</span>
+        <p>咬定公利私利的界线，反复申说。他等大帅说完，只补了最后一刀，抬出《大学》：</p>
+        <q class="q">长国家而务财用者，必自小人矣</q>
+        <p style="font-size:13.5px;color:var(--dim);margin-top:8px">再问一句：替国家搜刮钱财的，算不算也在讲公利？</p>
+      </div>
+    </div>
+    <div class="tea rv" id="tea">
+      <div class="cup"><span class="steam">〜 〜</span><div class="body"></div><div class="handle"></div></div>
+      <p><span class="vq" style="color:var(--red)">于是文襄默然让茶，即退出。</span>端茶送客，谈话到此为止。这句舞台调度，是全书最安静的一句。</p>
+    </div>
+  </div>
+  <div class="twocol">
+    <div class="paper-bot rv">
+      <q class="q">今日余闻文襄作古后，竟至囊橐萧然，无以为子孙后辈计，回忆昔年公利私利之言，为之怆然者累日</q>
+      <p>骂大帅最狠的一页，翻过来是全书最软的一页。宣统元年八月，张之洞去世，家里竟凑不出养活子孙的钱。他想起当年那场公利私利的抬杠，难过了好几天。</p>
+    </div>
+    <div class="mini rv">
+      <h4>对页：他也记恩账</h4>
+      <p>督署电报房一个姓梁的学生，行礼时被文案委员们白眼。张之洞出堂看见，亲手把他拉出班外，塞进委员的班里，只说了一句：</p>
+      <q class="q">汝在此班内行礼</q>
+      <p>满院愕然。当年那个学生，后来做到外务部尚书：</p>
+      <q class="q">昔日之梁学生，即今日之外务部梁崧生尚书也</q>
+      <p>黑帐记了一整册，恩帐只有这一页，两本他都留着。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 肆 ============ -->
+<section id="s4">
+  <div class="chap rv"><span class="no">肆</span><h2>医国三笺</h2><span class="en">THREE PRESCRIPTIONS</span></div>
+  <div class="rule rv"></div>
+  <p class="lead rv">书的末尾，他干脆给整个王朝开起药方，把五十年的国运写成一张病历：咸同年间初诊，服过一剂汤药；甲午后病势转急，换儒医重拟新方；庚子以后，又在新方上删减。三只药罐，<b>点开看方子</b>。</p>
+  <div class="pulse-note rv">病历首页先抄一行万寿大典的见闻：满街唱爱国歌，没人唱爱民歌，他当场编了四句，唱罢<b>座客哗然</b>。</div>
+  <div class="qin rv">
+    <span class="who rd">脉案 · 即席编的爱民歌</span>
+    <q class="q">天子万年，百姓花钱；万寿无疆，百姓遭殃</q>
+    <span class="src vq">爱国歌</span>
+  </div>
+  <div class="jars">
+    <div class="jarcol rv">
+      <div class="slip"><div class="slip-in">
+        <div class="lname">初诊 · 咸同年间</div>
+        <q class="q">当时得一时髦郎中湘乡曾姓者，拟方名曰</q>
+        <p class="fx">吃了好几剂，没见效。病根没找着，只当是缺船坚炮利。</p>
+      </div></div>
+      <div class="jar"><div class="lid"></div><div class="pot"><div class="lbl">洋务<br>清火汤</div></div><p class="hintb">点罐盖开方</p></div>
+    </div>
+    <div class="jarcol rv">
+      <div class="slip"><div class="slip-in">
+        <div class="lname">复诊 · 甲午后</div>
+        <q class="q">有儒医南皮张姓者另拟方曰</q>
+        <p class="fx">药性躁烈，怕中途生变，只好在原方上略作删减，另起了一个新名字。</p>
+      </div></div>
+      <div class="jar"><div class="lid"></div><div class="pot"><div class="lbl">新政<br>补元汤</div></div><p class="hintb">点罐盖开方</p></div>
+    </div>
+    <div class="jarcol rv">
+      <div class="slip"><div class="slip-in">
+        <div class="lname">三诊 · 庚子后</div>
+        <p class="fx">在原方上略作删减，改了一个听上去平和的名字。</p>
+        <q class="q">自服此剂后，非特未见转机，而病乃益将加剧焉</q>
+      </div></div>
+      <div class="jar"><div class="lid"></div><div class="pot"><div class="lbl"><span class="vq">宪政和平<br>调胃汤</span></div></div><p class="hintb">点罐盖开方</p></div>
+    </div>
+  </div>
+  <div class="qin rv">
+    <span class="who">诊断结论</span>
+    <q class="q">势至今日，恐非别拟良方不可</q>
+    <span class="src vq">政体</span>
+  </div>
+  <p class="reg-note">三个方名均照录库本；删减一节原文连写，此处按三诊拆开陈列。</p>
+</section>
+
+<!-- ============ 伍 ============ -->
+<section id="s5">
+  <div class="chap rv"><span class="no">伍</span><h2>三三如几</h2><span class="en">ARITHMETIC, 1905 EDITION</span></div>
+  <div class="rule rv"></div>
+  <p class="lead rv">伊藤博文下野后来游中国，问他：孔子的教诲还能管二十世纪吗？他答了个乘法口诀。这个段子妙在三层：部郎云记下问答，末了余跳出来，<b>把书里的自己怼了一遍</b>。</p>
+  <div class="mathbox">
+    <div class="abacus rv">
+      <div id="nine">三三如九<small>乘法口诀 · 平常年</small></div>
+      <div class="modes">
+        <button class="on" data-m="0">平常年</button>
+        <button data-m="1">借洋款</button>
+        <button data-m="2">还洋款</button>
+      </div>
+    </div>
+    <div class="lay">
+      <div class="lv rv"><span class="lw">第一层 · 部郎记伊藤问</span>
+        <q class="q">闻君素精西学，尚不知孔子之教，能行于数千年前，不能行于今日之二十世纪乎</q>
+      </div>
+      <div class="lv rv"><span class="lw">第二层 · 部郎记自己答</span>
+        <q class="q">孔子教人之法，譬如数学家之加减乘除。前数千年其法为三三如九，至如今二十世纪，其法亦仍是三三如九，固不能改如九为如八也</q>
+      </div>
+      <div class="lv l3 rv"><span class="lw">第三层 · 余怼部郎，也是自己怼自己</span>
+        <q class="q">我借洋款，三三如九则变作三三如七；俟我还洋款，三三如九则变作三三如十一</q>
+        <p style="font-size:13px;color:var(--dim);margin-top:8px">后头还缀了一句，说他不识时务。一句口诀，骂穿了整个债台高筑的末路王朝。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 陆 ============ -->
+<section id="s6">
+  <div class="chap rv"><span class="no">陆</span><h2>在德不在辫</h2><span class="en">NOT IN THE QUEUE</span></div>
+  <div class="rule rv"></div>
+  <p class="lead rv">书里唯一认真讨论的发型，成了全书的题眼。英人濮兰德撰文嘲讽：中国官员才智品行都不堪一击，凭什么让洋人一见就怕？他研究多年，得出奥妙全在那身官服，于是建议列强跟中国订一条新约。</p>
+  <div class="vdebate">
+    <div class="vcard rv">
+      <h4>濮兰德的算盘</h4>
+      <q class="q">不准挂朝珠穿黼黻，逼令改用窄袖短衣、耸领高帽，如我欧制</q>
+      <p style="font-size:13px;color:var(--dim);margin-top:8px">服装一换，胆气自消，谈判就好办了；还许诺照此办就退还庚款。</p>
+    </div>
+    <div class="vcard ans rv">
+      <h4>他的回答</h4>
+      <q class="q">中国之存亡在德不在辫，辫之除与不除原无大出入焉</q>
+      <p style="font-size:13px;color:var(--dim);margin-top:8px">把辫子当命根子的保皇派，说出了全书最清醒的一句话。</p>
+    </div>
+  </div>
+  <div class="fin-wrap">
+    <div id="bwrap2">
+      <svg id="braid2" viewBox="0 0 260 430" aria-hidden="true">
+        <line class="guide" x1="58" y1="30" x2="58" y2="400"/>
+        <line class="guide" x1="130" y1="30" x2="130" y2="400"/>
+        <line class="guide" x1="202" y1="30" x2="202" y2="400"/>
+        <path class="s0 p0" d="M 144.7 24 L 142.6 28.0 L 140.0 31.9 L 136.9 35.9 L 133.5 39.8 L 130.0 43.8 L 126.5 47.7 L 123.1 51.7 L 120.0 55.6 L 117.4 59.6 L 115.3 63.6 L 113.8 67.5 L 113.1 71.5 L 113.1 75.4 L 113.8 79.4 L 115.3 83.3 L 117.4 87.3 L 120.0 91.2 L 123.1 95.2 L 126.5 99.2 L 130.0 103.1 L 133.5 107.1 L 136.9 111.0 L 140.0 115.0 L 142.6 118.9 L 144.7 122.9 L 146.2 126.8 L 146.9 130.8 L 146.9 134.8 L 146.2 138.7 L 144.7 142.7 L 142.6 146.6 L 140.0 150.6 L 136.9 154.5 L 133.5 158.5 L 130.0 162.4 L 126.5 166.4 L 123.1 170.4 L 120.0 174.3 L 117.4 178.3 L 115.3 182.2 L 113.8 186.2 L 113.1 190.1 L 113.1 194.1 L 113.8 198.0 L 115.3 202.0 L 117.4 206.0 L 120.0 209.9 L 123.1 213.9 L 126.5 217.8 L 130.0 221.8 L 133.5 225.7 L 136.9 229.7 L 140.0 233.6 L 142.6 237.6 L 144.7 241.6 L 146.2 245.5 L 146.9 249.5 L 146.9 253.4 L 146.2 257.4 L 144.7 261.3 L 142.6 265.3 L 140.0 269.2 L 136.9 273.2 L 133.5 277.2 L 130.0 281.1 L 126.5 285.1 L 123.1 289.0 L 120.0 293.0 L 117.4 296.9 L 115.3 300.9 L 113.8 304.8 L 113.1 308.8 L 113.1 312.8 L 113.8 316.7 L 115.3 320.7 L 117.4 324.6 L 120.0 328.6 L 123.1 332.5 L 126.5 336.5 L 130.0 340.4 L 133.5 344.4 L 136.9 348.4 L 140.0 352.3 L 142.6 356.3 L 144.7 360.2 L 146.2 364.2 L 146.9 368.1 L 146.9 372.1 L 146.2 376.0 L 144.7 380.0"/>
+        <path class="s1 p1" d="M 115.3 24 L 113.8 28.0 L 113.1 31.9 L 113.1 35.9 L 113.8 39.8 L 115.3 43.8 L 117.4 47.7 L 120.0 51.7 L 123.1 55.6 L 126.5 59.6 L 130.0 63.6 L 133.5 67.5 L 136.9 71.5 L 140.0 75.4 L 142.6 79.4 L 144.7 83.3 L 146.2 87.3 L 146.9 91.2 L 146.9 95.2 L 146.2 99.2 L 144.7 103.1 L 142.6 107.1 L 140.0 111.0 L 136.9 115.0 L 133.5 118.9 L 130.0 122.9 L 126.5 126.8 L 123.1 130.8 L 120.0 134.8 L 117.4 138.7 L 115.3 142.7 L 113.8 146.6 L 113.1 150.6 L 113.1 154.5 L 113.8 158.5 L 115.3 162.4 L 117.4 166.4 L 120.0 170.4 L 123.1 174.3 L 126.5 178.3 L 130.0 182.2 L 133.5 186.2 L 136.9 190.1 L 140.0 194.1 L 142.6 198.0 L 144.7 202.0 L 146.2 206.0 L 146.9 209.9 L 146.9 213.9 L 146.2 217.8 L 144.7 221.8 L 142.6 225.7 L 140.0 229.7 L 136.9 233.6 L 133.5 237.6 L 130.0 241.6 L 126.5 245.5 L 123.1 249.5 L 120.0 253.4 L 117.4 257.4 L 115.3 261.3 L 113.8 265.3 L 113.1 269.2 L 113.1 273.2 L 113.8 277.2 L 115.3 281.1 L 117.4 285.1 L 120.0 289.0 L 123.1 293.0 L 126.5 296.9 L 130.0 300.9 L 133.5 304.8 L 136.9 308.8 L 140.0 312.8 L 142.6 316.7 L 144.7 320.7 L 146.2 324.6 L 146.9 328.6 L 146.9 332.5 L 146.2 336.5 L 144.7 340.4 L 142.6 344.4 L 140.0 348.4 L 136.9 352.3 L 133.5 356.3 L 130.0 360.2 L 126.5 364.2 L 123.1 368.1 L 120.0 372.1 L 117.4 376.0 L 115.3 380.0"/>
+        <path class="s2 p2" d="M 130.0 24 L 133.5 28.0 L 136.9 31.9 L 140.0 35.9 L 142.6 39.8 L 144.7 43.8 L 146.2 47.7 L 146.9 51.7 L 146.9 55.6 L 146.2 59.6 L 144.7 63.6 L 142.6 67.5 L 140.0 71.5 L 136.9 75.4 L 133.5 79.4 L 130.0 83.3 L 126.5 87.3 L 123.1 91.2 L 120.0 95.2 L 117.4 99.2 L 115.3 103.1 L 113.8 107.1 L 113.1 111.0 L 113.1 115.0 L 113.8 118.9 L 115.3 122.9 L 117.4 126.8 L 120.0 130.8 L 123.1 134.8 L 126.5 138.7 L 130.0 142.7 L 133.5 146.6 L 136.9 150.6 L 140.0 154.5 L 142.6 158.5 L 144.7 162.4 L 146.2 166.4 L 146.9 170.4 L 146.9 174.3 L 146.2 178.3 L 144.7 182.2 L 142.6 186.2 L 140.0 190.1 L 136.9 194.1 L 133.5 198.0 L 130.0 202.0 L 126.5 206.0 L 123.1 209.9 L 120.0 213.9 L 117.4 217.8 L 115.3 221.8 L 113.8 225.7 L 113.1 229.7 L 113.1 233.6 L 113.8 237.6 L 115.3 241.6 L 117.4 245.5 L 120.0 249.5 L 123.1 253.4 L 126.5 257.4 L 130.0 261.3 L 133.5 265.3 L 136.9 269.2 L 140.0 273.2 L 142.6 277.2 L 144.7 281.1 L 146.2 285.1 L 146.9 289.0 L 146.9 293.0 L 146.2 296.9 L 144.7 300.9 L 142.6 304.8 L 140.0 308.8 L 136.9 312.8 L 133.5 316.7 L 130.0 320.7 L 126.5 324.6 L 123.1 328.6 L 120.0 332.5 L 117.4 336.5 L 115.3 340.4 L 113.8 344.4 L 113.1 348.4 L 113.1 352.3 L 113.8 356.3 L 115.3 360.2 L 117.4 364.2 L 120.0 368.1 L 123.1 372.1 L 126.5 376.0 L 130.0 380.0"/>
+      </svg>
+    </div>
+    <div class="reveal-col">
+      <div id="ded">德</div>
+      <div id="fin-q">
+        <p style="letter-spacing:.3em;color:var(--gold);font-size:13px;margin-bottom:14px">辫子解开，剩下这个字</p>
+        <p>一个留着辫子的世界主义者，用七十二则段子给一个王朝守灵。笑话讲完，他把辫子解开给你看：里头没有头发，只有这个字。</p>
+      </div>
+    </div>
+  </div>
+  <button id="unbind-btn" class="off" style="background:none;border:1.5px solid var(--red);color:var(--red);font-family:inherit;font-size:16px;letter-spacing:.5em;padding:12px 28px 12px 34px;cursor:pointer;border-radius:2px;transition:all .3s">解 辫</button>
+</section>
+</main>
+
+<div class="coda">
+  <q class="q">不趋不停，譬如星辰；进德修业，力行近仁</q>
+  <p>他译德国哲人俄特（歌德）的箴言，四句收梢，卷名犹龙。<br>宣统二年铅印本，上下两卷七十二题，殆知阁简体库全帙照录。</p>
+</div>
+
+<div id="luoqian">殆知阁导读 · 第 <span data-t="pno">三八六</span> 篇</div>
+
+<footer class="pagefoot">
+  文本来源：殆知阁简体库〈<span data-t="bk1">张文襄幕府纪闻</span>〉史藏志存记录 <a href="https://github.com/raptazure/daizhige-daodu">daizhige-daodu 仓库</a><br>
+  引文已与库内文件逐字核验 · 原文照录「老奸巨滑」「毛非」等库本用字<br>
+  书中所记殖民、种族与人物褒贬皆清末民初人语，属时代产物，今日读之当有分辨。导读系列第三八六篇（卷二百六十六 · 让茶）
+</footer>
+
+<script>
+(function(){
+  /* hero bind */
+  var bw=document.getElementById('bwrap'),bb=document.getElementById('bind-btn');
+  function bind(){bw.classList.add('bound');bb.classList.add('off');
+    document.getElementById('hero-hint').textContent='辫子编好了，书名现形';}
+  bb.addEventListener('click',bind);
+  bb.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();bind();}});
+
+  /* rail */
+  document.querySelectorAll('#rail .nd').forEach(function(n){
+    n.addEventListener('click',function(){
+      var t=document.getElementById(n.getAttribute('data-go'));
+      if(t)t.scrollIntoView({behavior:'smooth'});
+    });
+  });
+  var secs=['s1','s2','s3','s4','s5','s6'].map(function(id){return document.getElementById(id);});
+  var nds=document.querySelectorAll('#rail .nd');
+  function rail(){
+    var c=-1,mid=innerHeight*.42;
+    secs.forEach(function(s,i){if(s.getBoundingClientRect().top<mid)c=i;});
+    nds.forEach(function(n,i){n.classList.toggle('on',i<=c);});
+  }
+  addEventListener('scroll',rail,{passive:true});rail();
+
+  /* reveal */
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('on');io.unobserve(en.target);}});
+  },{threshold:.15});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+
+  /* register rows */
+  document.querySelectorAll('.reg-row').forEach(function(row){
+    row.addEventListener('click',function(){row.classList.toggle('open');});
+  });
+
+  /* tea */
+  var tea=document.getElementById('tea');
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){setTimeout(function(){tea.classList.add('pour');},900);io2.unobserve(tea);}});
+  },{threshold:.6});
+  io2.observe(tea);
+
+  /* jars */
+  document.querySelectorAll('.jar').forEach(function(j){
+    j.addEventListener('click',function(){
+      var col=j.parentElement,slip=col.querySelector('.slip'),open=col.classList.contains('open');
+      document.querySelectorAll('.jarcol.open').forEach(function(c){c.classList.remove('open');c.querySelector('.slip').style.maxHeight='0';c.querySelector('.jar').classList.remove('open');});
+      if(!open){col.classList.add('open');j.classList.add('open');slip.style.maxHeight=slip.scrollHeight+'px';}
+    });
+  });
+
+  /* math */
+  var nine=document.getElementById('nine');
+  var modes=document.querySelectorAll('.modes button');
+  var vals=[['三三如九','乘法口诀 · 平常年',''],['三三如七','借洋款的时候','bad'],['三三如十一','还洋款的时候','worse']];
+  modes.forEach(function(b){
+    b.addEventListener('click',function(){
+      modes.forEach(function(x){x.classList.remove('on');});b.classList.add('on');
+      var v=vals[+b.getAttribute('data-m')];
+      nine.style.opacity=0;
+      setTimeout(function(){nine.childNodes[0].nodeValue=v[0];nine.querySelector('small').textContent=v[1];nine.className=v[2];nine.style.opacity=1;},250);
+    });
+  });
+
+  /* unbind */
+  var bw2=document.getElementById('bwrap2'),ub=document.getElementById('unbind-btn');
+  function free(){bw2.classList.add('free');document.body.classList.add('free');ub.classList.add('off');}
+  ub.addEventListener('click',free);
+  ub.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();free();}});
+  var io3=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){ub.classList.remove('off');io3.unobserve(ub);}});
+  },{threshold:.4});
+  io3.observe(ub);
+})();
+</script>
+</body>
+</html>
