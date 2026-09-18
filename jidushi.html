@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>裁句 · 集杜诗导读</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --paper2:#f1eee6; --dim:#7d786d; --dim2:#55524a;
+  --blue:#5e8fbb; --blue-d:#3c608a; --blue-glow:rgba(94,143,187,.5);
+  --seal:#a8433a; --line:#33322e; --mist:#1f1f1c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:Georgia,"Times New Roman","Songti SC","STSong","SimSun",serif;
+  line-height:1.9; overflow-x:hidden;
+}
+::selection{background:var(--blue);color:var(--ink)}
+a{color:var(--blue)}
+.mono{font-family:"Courier New",Courier,monospace}
+
+/* ============ 入场 ============ */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.rv.in{opacity:1;transform:none}
+
+/* ============ 右缘装订绳 ============ */
+#strap{position:fixed;right:18px;top:50%;transform:translateY(-50%);height:62vh;width:2px;
+  background:repeating-linear-gradient(to bottom,var(--line) 0 8px,#2a2a26 8px 12px);z-index:50}
+#strap .knot{position:absolute;right:-7px;width:16px;height:16px;border-radius:50%;
+  background:var(--ink);border:1.5px solid var(--dim2);cursor:pointer;transition:.35s}
+#strap .knot:hover{border-color:var(--blue)}
+#strap .knot.lit{background:var(--blue);border-color:var(--blue);box-shadow:0 0 12px var(--blue-glow)}
+#strap .knot span{position:absolute;right:24px;top:50%;transform:translateY(-50%);
+  writing-mode:vertical-rl;font-size:12px;letter-spacing:4px;color:var(--dim);white-space:nowrap;transition:.35s}
+#strap .knot.lit span{color:var(--blue)}
+@media(max-width:900px){#strap{display:none}}
+
+/* ============ 首屏 ============ */
+#hero{position:relative;min-height:100vh;overflow:hidden;display:flex;align-items:stretch}
+#hero .kick{position:absolute;left:34px;top:30px;font-size:13px;letter-spacing:3px;color:var(--dim);z-index:5}
+#hero .kick b{color:var(--blue);font-weight:normal}
+/* 狱窗 */
+#barwin{position:absolute;right:6vw;top:50%;transform:translateY(-52%);width:min(46vw,560px);aspect-ratio:4/3.4;
+  border:12px solid #262622;border-radius:6px;background:linear-gradient(160deg,#10131a 0%,#151a26 55%,#10131a 100%);
+  box-shadow:0 30px 80px rgba(0,0,0,.65),inset 0 0 60px rgba(0,0,0,.7)}
+#barwin::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 74% 26%,rgba(148,180,215,.30),transparent 42%),
+             radial-gradient(circle at 74% 26%,rgba(210,225,245,.5) 0,rgba(210,225,245,.5) 4.5%,transparent 5.5%)}
+#barwin .bars{position:absolute;inset:0;display:flex}
+#barwin .bars i{flex:1;background:linear-gradient(90deg,#211f1c,#33302a 45%,#1c1a17);box-shadow:0 0 14px rgba(0,0,0,.8)}
+#barwin .sill{position:absolute;left:-24px;right:-24px;bottom:-26px;height:18px;background:#262622;border-radius:4px}
+#barwin .fall{position:absolute;left:8%;right:8%;bottom:-14vh;height:14vh;
+  background:linear-gradient(to bottom,rgba(190,210,235,.07),transparent);pointer-events:none}
+/* 案 */
+#desk{position:absolute;left:5vw;bottom:7vh;width:min(44vw,520px);height:270px;z-index:4}
+#dujuan{position:absolute;left:0;bottom:26px;width:150px;height:190px;border-radius:8px 20px 20px 8px;
+  background:linear-gradient(105deg,#d8d2c4 0%,#c9c2b1 60%,#b4ad9c 100%);
+  box-shadow:0 14px 30px rgba(0,0,0,.55),inset -14px 0 22px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center}
+#dujuan::before{content:"";position:absolute;left:-10px;top:0;bottom:0;width:22px;border-radius:10px 0 0 10px;
+  background:linear-gradient(90deg,#8f8878,#cfc8b8)}
+#dujuan em{writing-mode:vertical-rl;font-style:normal;color:#4a453a;font-size:17px;letter-spacing:7px}
+#knife{position:absolute;left:170px;bottom:36px;width:170px;height:14px;transform:rotate(-9deg);
+  background:linear-gradient(90deg,#4a4a44 0%,#6a6a60 55%,#262622 56%,#33322c 100%);border-radius:3px 8px 8px 3px}
+#knife::after{content:"";position:absolute;left:52%;top:3px;width:44%;height:8px;background:#1c1b19;border-radius:4px}
+#jian{position:absolute;right:0;bottom:12px;width:270px;height:252px;background:var(--paper2);border-radius:4px;
+  box-shadow:0 16px 34px rgba(0,0,0,.5);padding:14px 14px 10px}
+#jian h5{font-weight:normal;text-align:center;color:#6d675a;font-size:12px;letter-spacing:5px;border-bottom:1px solid #cfc8b8;padding-bottom:6px}
+#jian .slots{margin-top:10px;display:grid;grid-template-columns:1fr;gap:7px}
+#jian .slot{height:40px;border:1.5px dashed #b7b09d;border-radius:3px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+#jian .slot .strip{font-size:14px;letter-spacing:1px;padding:3px 8px;gap:6px;box-shadow:none}
+#jian .slot .strip s{font-size:9px}
+#jian .slot i{position:absolute;top:-18px;left:2px;font-style:normal;font-size:10px;color:#9a9385}
+/* 裁好的纸条 */
+.strip{display:inline-flex;align-items:center;gap:7px;background:var(--paper);color:#33302a;border-radius:2px;
+  padding:6px 9px;font-size:17px;letter-spacing:2px;box-shadow:0 4px 10px rgba(0,0,0,.4);white-space:nowrap}
+.strip b{font-weight:normal}
+.strip s{text-decoration:none;font-size:10px;color:#8b7f66;border:1px solid #b7ab8e;border-radius:2px;padding:0 4px;line-height:1.5}
+#hero .strip{position:absolute;z-index:6;cursor:default;transition:transform 1.1s cubic-bezier(.22,.9,.3,1),opacity .5s}
+/* 裁句钮 */
+#caibtn{position:absolute;left:calc(5vw + 190px);bottom:120px;z-index:7;background:var(--blue);color:#10141a;border:none;
+  font:inherit;font-size:16px;letter-spacing:6px;padding:12px 26px 12px 32px;border-radius:2px;cursor:pointer;
+  box-shadow:0 8px 22px rgba(94,143,187,.35);transition:.3s}
+#caibtn:hover{filter:brightness(1.12)}
+#caibtn.done{background:#3c608a;letter-spacing:4px}
+/* 竖排书名 */
+#wt{position:absolute;right:calc(6vw + min(46vw,560px) + 44px);top:44%;transform:translateY(-50%);
+  writing-mode:vertical-rl;height:max-content;font-size:clamp(36px,4.6vw,56px);letter-spacing:.24em;
+  color:var(--paper);text-shadow:0 4px 24px rgba(0,0,0,.8);z-index:5;
+  opacity:0;translate:0 46px;transition:opacity 1.4s ease,translate 1.4s ease}
+#wt.on{opacity:1;translate:0 0}
+#seal1{position:absolute;right:calc(6vw + min(46vw,560px) + 58px);top:calc(44% + 250px);z-index:5;
+  width:76px;height:76px;background:var(--seal);color:#f2e6df;display:flex;align-items:center;justify-content:center;
+  border-radius:6px;font-size:21px;letter-spacing:2px;line-height:1.3;text-align:center;
+  box-shadow:0 10px 24px rgba(168,67,58,.35);opacity:0;transform:scale(1.8) rotate(-14deg)}
+#seal1.on{opacity:.92;transform:scale(1) rotate(-7deg);transition:transform .28s cubic-bezier(.2,1.6,.4,1),opacity .2s}
+#hero .hmeta{position:absolute;left:34px;top:78px;font-size:13px;letter-spacing:2px;color:var(--dim)}
+#hero .hint{position:absolute;left:50%;bottom:4vh;transform:translateX(-50%);font-size:12px;letter-spacing:4px;color:var(--dim2)}
+@media(max-width:900px){
+  #barwin{right:50%;transform:translate(50%,-58%);width:78vw;top:56%}
+  #wt{right:auto;left:50%;transform:translateX(-50%);top:92px;writing-mode:horizontal-tb;height:auto;font-size:30px;letter-spacing:.24em;white-space:nowrap}
+  #wt.on{translate:0 0}
+  #seal1{right:16px;top:calc(92px + 54px);bottom:auto;width:54px;height:54px;font-size:14px}
+  #desk{left:50%;transform:translateX(-50%);width:92vw;height:250px;bottom:9vh}
+  #dujuan{left:0;bottom:20px;width:120px;height:160px}
+  #knife{left:132px;bottom:28px;width:130px}
+  #jian{right:0;bottom:6px;width:min(58vw,250px)}
+  #caibtn{left:50%;transform:translateX(-50%);bottom:calc(9vh + 260px);padding:10px 20px 10px 26px}
+  #hero .hmeta{top:56px;left:20px}
+}
+
+/* ============ 破题 ============ */
+.wrap{max-width:1080px;margin:0 auto;padding:0 26px}
+#potile{padding:12vh 0 9vh;display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+#potile .lead{font-size:15.5px;color:#c9c4b8}
+#potile .lead p+p{margin-top:1em}
+#potile .lead .big{font-size:26px;line-height:1.7;color:var(--paper)}
+#potile .lead .big em{font-style:normal;color:var(--blue)}
+#sxcard{background:var(--paper);color:#33302a;border-radius:4px;padding:26px 26px 20px;box-shadow:0 20px 50px rgba(0,0,0,.5);position:relative}
+#sxcard::before{content:"";position:absolute;inset:8px;border:1px solid #d5cebc;pointer-events:none}
+#sxcard .who{font-size:12px;letter-spacing:3px;color:#8b8371;margin-bottom:10px}
+#sxcard .qv{display:block;font-size:16.5px;line-height:2.1;text-indent:2em}
+#sxcard .qv+.qv{margin-top:.8em}
+#sxcard .sig{text-align:right;font-size:12px;letter-spacing:2px;color:#8b8371;margin-top:10px}
+@media(max-width:900px){#potile{grid-template-columns:1fr;gap:30px;padding-top:9vh}}
+
+/* ============ 全谱 ============ */
+#quanpu{padding:10vh 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--mist)}
+#quanpu .head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 22px;margin-bottom:8px}
+#quanpu h3{font-size:26px;letter-spacing:6px;font-weight:normal}
+#quanpu .head p{font-size:13px;color:var(--dim)}
+#mapq{margin:6px 0 26px;font-size:14.5px;color:#a9a396}
+#mapq .qv{border-bottom:1px dotted var(--dim2)}
+#mapq .src{font-size:12px;color:var(--dim2);margin-left:10px}
+#legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-bottom:22px;font-size:12px;color:var(--dim)}
+#legend i{font-style:normal;display:inline-flex;align-items:center;gap:6px}
+#legend i b{width:10px;height:10px;border-radius:2px;display:inline-block;font-weight:normal}
+.lg-guo{background:#5e8fbb}.lg-shen{background:#4a7a5f}.lg-you{background:#a8763f}
+.lg-jia{background:#a8433a}.lg-xin{background:#8a7fae}.lg-shi{background:#6b6b60}
+#cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:7px}
+.cell{aspect-ratio:1/1.06;border:none;border-radius:3px;background:var(--dim2);color:#e8e4dc;font:inherit;font-size:12.5px;
+  cursor:pointer;position:relative;transition:.22s;font-family:Courier New,monospace}
+.cell:hover{transform:translateY(-3px);filter:brightness(1.25)}
+.cell.g-guo{background:#3d5a76}.cell.g-shen{background:#39584a}.cell.g-you{background:#6d4c2d}
+.cell.g-jia{background:#6d302c}.cell.g-xin{background:#544c6e}.cell.g-shi{background:#43423d}
+.cell.que{background:transparent;border:1px dashed #5a564d;color:#8a8477}
+.cell.que::after{content:"阙";position:absolute;font-family:inherit;font-size:9px;bottom:3px;right:4px}
+.cell.cur{outline:2px solid var(--blue)}
+
+/* ============ 诗卡弹窗 ============ */
+#pmask{position:fixed;inset:0;background:rgba(12,12,10,.78);backdrop-filter:blur(3px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+#pmask.open{display:flex}
+#pcard{width:min(620px,94vw);max-height:86vh;overflow:auto;background:var(--paper);color:#33302a;border-radius:4px;
+  padding:30px 34px 24px;position:relative;box-shadow:0 30px 90px rgba(0,0,0,.7)}
+#pcard::before{content:"";position:absolute;inset:9px;border:1px solid #d5cebc;pointer-events:none}
+#pcard .pno{font-size:12px;letter-spacing:3px;color:#8b8371}
+#pcard h4{font-size:24px;letter-spacing:4px;margin:4px 0 4px;font-weight:normal}
+#pcard .que-tag{display:inline-block;font-size:11px;color:var(--seal);border:1px solid var(--seal);border-radius:2px;padding:0 6px;margin-left:8px;letter-spacing:2px;vertical-align:3px}
+#pcard .gx{font-size:14.5px;line-height:2;color:#5a5445;margin:12px 0 6px;text-indent:2em;border-left:3px solid #c9c2b0;padding-left:12px}
+#pcard .verses{margin-top:14px}
+#pcard .verses .vrow{display:flex;align-items:center;gap:12px;padding:7px 2px;border-bottom:1px dashed #d8d2c2}
+#pcard .verses .vrow:last-child{border-bottom:none}
+#pcard .verses .vrow b{font-weight:normal;font-size:19px;letter-spacing:3px;color:#33302a}
+#pcard .verses .vrow i{font-style:normal;font-size:11.5px;color:#8b7f66;border:1px solid #bcb092;border-radius:2px;padding:1px 7px;white-space:nowrap}
+#pcard .nav{display:flex;justify-content:space-between;margin-top:20px}
+#pcard .nav button{background:none;border:1px solid #b7b09d;color:#5a5445;font:inherit;font-size:13px;letter-spacing:2px;padding:5px 16px;border-radius:2px;cursor:pointer}
+#pcard .nav button:hover{background:#e0dacb}
+#pclose{position:absolute;top:12px;right:14px;background:none;border:none;font-size:20px;color:#8b8371;cursor:pointer;z-index:2}
+
+/* ============ 章节 ============ */
+.station{padding:11vh 0 8vh;border-bottom:1px solid var(--line)}
+.st-head{display:flex;align-items:flex-end;gap:26px;margin-bottom:44px}
+.st-head .zi{font-size:clamp(72px,9vw,120px);line-height:1;color:var(--blue);opacity:.9;text-shadow:0 0 34px var(--blue-glow)}
+.st-head .rt h3{font-size:24px;letter-spacing:8px;font-weight:normal}
+.st-head .rt p{font-size:13px;color:var(--dim);letter-spacing:2px;margin-top:6px}
+.st-note{font-size:15px;color:#c9c4b8;max-width:760px;margin-bottom:34px}
+.st-note .q{display:block;margin-top:14px;background:#22221f;border-left:3px solid var(--blue-d);padding:12px 16px;font-size:14.5px;color:#b9b3a5;line-height:2;border-radius:0 3px 3px 0}
+.st-note .srcx{font-size:12px;color:var(--dim);letter-spacing:1px;margin-top:6px}
+
+/* 国 亡国账板 */
+#ledger{border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.lrow{display:grid;grid-template-columns:120px 1fr;gap:0;border-bottom:1px solid var(--line)}
+.lrow:last-child{border-bottom:none}
+.lrow .lt{background:#22221f;padding:26px 18px;border-right:1px solid var(--line)}
+.lrow .lt b{display:block;font-size:19px;letter-spacing:4px;color:var(--paper);font-weight:normal}
+.lrow .lt span{display:block;font-size:11.5px;color:var(--dim);margin-top:8px;letter-spacing:1px;line-height:1.7}
+.lrow .lc{padding:24px 26px}
+.lrow .lc .gx{font-size:14px;color:#a9a396;line-height:2;margin-bottom:14px}
+.verses{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 26px}
+.verses .vrow{display:flex;align-items:baseline;gap:10px;padding:4px 0}
+.verses .vrow b{font-weight:normal;font-size:17.5px;letter-spacing:2.5px;color:var(--paper)}
+.verses .vrow i{font-style:normal;font-size:11px;color:#8b8477;border:1px solid #4a473f;border-radius:2px;padding:0 6px;white-space:nowrap}
+#ledger .verdict{display:inline-block;margin-top:14px;font-size:12px;letter-spacing:2px;color:var(--seal);border:1px solid #5a3230;border-radius:2px;padding:2px 10px}
+#sielie{margin-top:40px}
+#sielie h4{font-size:16px;letter-spacing:4px;font-weight:normal;color:#c9c4b8;margin-bottom:16px}
+#sielie .mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+#sielie .mcard{background:#22221f;border:1px solid var(--line);border-radius:3px;padding:16px 18px}
+#sielie .mcard b{font-weight:normal;font-size:16px;letter-spacing:2px;color:var(--paper)}
+#sielie .mcard span{display:block;font-size:12px;color:var(--dim);margin:2px 0 8px}
+#sielie .mcard .q{display:block;font-size:13px;line-height:1.95;color:#a9a396}
+#luxiu{margin-top:26px;background:#22221f;border:1px solid var(--line);border-left:4px solid #a8433a;border-radius:3px;padding:22px 26px}
+#luxiu b{font-weight:normal;font-size:17px;letter-spacing:2px}
+#luxiu p{font-size:14px;color:var(--dim);margin:4px 0 10px}
+#luxiu .q{display:block;font-size:14.5px;line-height:2.05;color:#b9b3a5}
+
+/* 身 北行戳线 */
+#route{margin:8px 0 10px;position:relative;padding:6px 0 0}
+#route .cord{position:absolute;left:0;right:0;top:33px;height:2px;
+  background:repeating-linear-gradient(90deg,#3a382f 0 6px,transparent 6px 10px)}
+#route .stops{display:flex;justify-content:space-between;position:relative;flex-wrap:wrap;gap:18px 6px}
+#route .stop{width:64px;text-align:center;position:relative;cursor:pointer}
+#route .stop .dot{width:15px;height:15px;border-radius:50%;background:var(--ink);border:2px solid var(--dim2);margin:26px auto 10px;transition:.3s}
+#route .stop:hover .dot,#route .stop.lit .dot{border-color:var(--blue);background:var(--blue);box-shadow:0 0 10px var(--blue-glow)}
+#route .stop b{font-weight:normal;font-size:13.5px;letter-spacing:2px;color:#c9c4b8;display:block}
+#route .stop span{font-size:10.5px;color:var(--dim2);display:block;margin-top:2px;line-height:1.5}
+@media(max-width:760px){#route .stops{justify-content:flex-start;gap:10px}#route .stop{width:56px}}
+#shen-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:36px}
+@media(max-width:900px){#shen-cards{grid-template-columns:1fr}}
+.scard{background:#22221f;border:1px solid var(--line);border-radius:4px;padding:24px 26px;position:relative}
+.scard .tagx{position:absolute;top:-11px;left:20px;background:var(--ink);border:1px solid var(--blue-d);color:var(--blue);
+  font-size:11.5px;letter-spacing:3px;padding:1px 12px;border-radius:2px}
+.scard p{font-size:14.5px;color:#b9b3a5;line-height:2.05}
+.scard .q{display:block;margin-top:12px;font-size:14px;line-height:2.05;color:#cbc5b7;background:#1d1d1a;border-left:3px solid var(--blue-d);padding:10px 14px;border-radius:0 3px 3px 0}
+#mingju{margin-top:26px;background:var(--paper);border-radius:4px;padding:30px 26px 24px;color:#33302a;text-align:center;position:relative;box-shadow:0 18px 44px rgba(0,0,0,.5)}
+#mingju::before{content:"";position:absolute;inset:8px;border:1px solid #d5cebc;pointer-events:none}
+#mingju .mj{display:block;font-size:clamp(24px,3.4vw,34px);letter-spacing:10px;line-height:2}
+#mingju .mj2{color:#7a2f28}
+#mingju .mnote{font-size:12px;color:#8b8371;letter-spacing:2px;margin-top:12px}
+
+/* 友 传签墙 */
+#friends{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-start}
+.fstrip{width:68px;min-height:250px;background:var(--paper2);color:#33302a;border-radius:3px;cursor:pointer;position:relative;
+  display:flex;flex-direction:column;align-items:center;padding:18px 0 12px;transition:.25s;border:none;font:inherit;
+  box-shadow:0 8px 20px rgba(0,0,0,.45)}
+.fstrip:hover{transform:translateY(-5px)}
+.fstrip.sel{outline:2px solid var(--blue);transform:translateY(-5px)}
+.fstrip .nm{writing-mode:vertical-rl;font-size:19px;letter-spacing:6px}
+.fstrip .ti2{margin-top:auto;writing-mode:vertical-rl;font-size:10px;color:#8b8371;letter-spacing:2px;max-height:86px;overflow:hidden}
+.fstrip .pin{width:9px;height:9px;border-radius:50%;background:#a8433a;position:absolute;top:7px;left:50%;transform:translateX(-50%)}
+#friend-detail{margin-top:26px;background:#22221f;border:1px solid var(--line);border-radius:4px;padding:24px 28px;min-height:120px}
+#friend-detail .fd-name{font-size:19px;letter-spacing:3px;color:var(--paper)}
+#friend-detail .fd-ti{font-size:12px;color:var(--dim);letter-spacing:1px;margin:2px 0 12px}
+#friend-detail .q{display:block;font-size:14.5px;line-height:2.1;color:#b9b3a5;background:#1d1d1a;border-left:3px solid #6d4c2d;padding:10px 14px;border-radius:0 3px 3px 0;margin-top:10px}
+#friend-detail .fd-tip{font-size:12.5px;color:var(--dim);margin-top:12px}
+
+/* 家 家册 */
+#jiace{background:var(--paper);color:#33302a;border-radius:4px;box-shadow:0 22px 55px rgba(0,0,0,.55);overflow:hidden}
+#jiace .jc-head{padding:22px 30px 14px;border-bottom:2px solid #c9c2b0;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+#jiace .jc-head h4{font-size:20px;letter-spacing:6px;font-weight:normal}
+#jiace .jc-head span{font-size:12px;color:#8b8371;letter-spacing:2px}
+.jrow{border-bottom:1px solid #ddd6c5}
+.jrow:last-child{border-bottom:none}
+.jrow .jh{display:grid;grid-template-columns:110px 1fr auto;gap:14px;align-items:center;padding:15px 30px;cursor:pointer}
+.jrow .jh:hover{background:#e5dfd0}
+.jrow .jh b{font-weight:normal;font-size:18px;letter-spacing:4px}
+.jrow .jh p{font-size:13.5px;color:#6d675a;line-height:1.8}
+.jrow .jh .stx{font-size:11.5px;letter-spacing:2px;color:#f2e6df;background:#a8433a;border-radius:2px;padding:2px 10px;white-space:nowrap}
+.jrow .jh .stx.blue{background:#4a6a8a}
+.jrow .body{display:none;padding:2px 30px 20px;font-size:14px;line-height:2.05;color:#5a5445}
+.jrow.open .body{display:block}
+.jrow .body .q{display:block;background:#efe9da;border-left:3px solid #b7ab8e;padding:10px 14px;margin-top:8px;color:#4a453a;border-radius:0 3px 3px 0}
+.jrow .body .srcx{display:block;font-size:12px;color:#8b8371;margin-top:4px}
+#liunv{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+#liunv .nv{border:1px solid #b7ab8e;border-radius:2px;padding:4px 12px;font-size:13px;letter-spacing:2px;background:#efe9da}
+#liunv .nv em{font-style:normal;color:#a8433a;font-size:11px;margin-left:6px}
+
+/* 心 */
+#chou{display:flex;flex-wrap:wrap;gap:26px;align-items:center;margin-bottom:44px}
+#chou .btn2{background:none;border:1px solid var(--blue);color:var(--blue);font:inherit;font-size:15px;letter-spacing:4px;padding:12px 30px;border-radius:2px;cursor:pointer;transition:.3s}
+#chou .btn2:hover{background:rgba(94,143,187,.14)}
+#chou .well{flex:1;min-width:280px;min-height:96px;border:1px dashed var(--dim2);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px}
+#chou .well .strip{position:static;font-size:20px;letter-spacing:4px;animation:chouin .5s ease}
+#chou .well .frm{font-size:12px;color:var(--dim);letter-spacing:2px}
+@keyframes chouin{from{opacity:0;transform:translateY(14px) rotate(-2deg)}to{opacity:1;transform:none}}
+#jianzhi{background:#22221f;border:1px solid var(--line);border-radius:4px;padding:28px 30px;margin-bottom:44px}
+#jianzhi .jz-note{font-size:14px;color:#a9a396;margin-bottom:16px}
+#jianzhi .verses .vrow b{font-size:18px}
+#jianzhi .hi b{color:var(--blue)}
+#muye{position:relative;background:linear-gradient(155deg,#23231f,#1c1c19);border:1px solid var(--line);border-radius:4px;
+  padding:52px 30px 40px;display:flex;flex-direction:column;align-items:center;gap:26px;overflow:hidden}
+#muye::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0,rgba(94,143,187,.10),transparent 55%);pointer-events:none}
+#ba{writing-mode:vertical-rl;height:max-content;font-size:19px;line-height:2.6;letter-spacing:.28em;color:#cbc5b7;max-height:60vh}
+#muye .bq{font-size:13px;color:var(--dim);max-width:640px;text-align:center;line-height:2}
+#seal2{width:66px;height:66px;background:var(--seal);color:#f2e6df;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-size:19px;letter-spacing:1px;transform:rotate(-6deg);box-shadow:0 10px 24px rgba(168,67,58,.3)}
+#lasttwo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}
+@media(max-width:820px){#lasttwo{grid-template-columns:1fr}}
+#lasttwo .lt-card{background:#22221f;border:1px solid var(--line);border-radius:3px;padding:20px 22px}
+#lasttwo .lt-card .no2{font-size:12px;color:var(--dim);letter-spacing:2px}
+#lasttwo .verses{grid-template-columns:1fr}
+
+/* ============ 版本账 ============ */
+#banben{padding:11vh 0 6vh}
+#banben h3{font-size:22px;letter-spacing:6px;font-weight:normal;margin-bottom:30px}
+#banben .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+#banben .bcard{background:#22221f;border:1px solid var(--line);border-radius:3px;padding:20px 22px}
+#banben .bcard b{font-weight:normal;font-size:15.5px;letter-spacing:3px;color:var(--blue);display:block;margin-bottom:10px}
+#banben .bcard p{font-size:13.5px;color:#a9a396;line-height:2}
+#banben .bcard .q{display:block;margin-top:10px;font-size:13px;line-height:2;color:#8f897c;background:#1d1d1a;border-left:3px solid #4a473f;padding:8px 12px;border-radius:0 3px 3px 0}
+
+/* ============ 校字记 + 页脚 ============ */
+#xiaozi{padding:8vh 0 6vh}
+#xiaozi .xcard{background:var(--paper);color:#4a453a;border-radius:4px;padding:28px 32px;box-shadow:0 18px 44px rgba(0,0,0,.5)}
+#xiaozi h4{font-size:17px;letter-spacing:5px;font-weight:normal;color:#33302a;margin-bottom:14px}
+#xiaozi li{list-style:none;font-size:13.5px;line-height:2.1;padding-left:1.4em;position:relative}
+#xiaozi li::before{content:"·";position:absolute;left:.2em;color:#a8433a}
+footer{padding:9vh 0 7vh;border-top:1px solid var(--line)}
+footer p{font-size:13px;color:var(--dim);max-width:860px;line-height:2.1}
+footer p+p{margin-top:1em}
+footer .xiaoji{color:var(--dim2)}
+</style>
+</head>
+<body>
+
+<div id="strap">
+  <div class="knot" style="top:0"><span>首</span></div>
+  <div class="knot" style="top:18%"><span>国</span></div>
+  <div class="knot" style="top:36%"><span>身</span></div>
+  <div class="knot" style="top:54%"><span>友</span></div>
+  <div class="knot" style="top:72%"><span>家</span></div>
+  <div class="knot" style="top:90%"><span>心</span></div>
+</div>
+
+<!-- ================= 首屏 ================= -->
+<section id="hero">
+  <div class="kick">殆知阁古代文献导读 · <b>第390篇</b></div>
+  <div class="hmeta">宋 文天祥 撰 · 据集藏四库别集本</div>
+
+  <div id="barwin">
+    <div class="bars"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="sill"></div>
+    <div class="fall"></div>
+  </div>
+
+  <div id="wt" data-t="wt">文信国集杜诗</div>
+  <div id="seal1">文山诗史</div>
+
+  <div id="desk">
+    <div id="dujuan"><em>杜工部集</em></div>
+    <div id="knife"></div>
+    <div id="jian">
+      <h5>诗 笺</h5>
+      <div class="slots">
+        <div class="slot" data-s="0"></div>
+        <div class="slot" data-s="1"></div>
+        <div class="slot" data-s="2"></div>
+        <div class="slot" data-s="3"></div>
+      </div>
+    </div>
+  </div>
+  <button id="caibtn">裁 句</button>
+  <div class="hint">点裁句，看一首集杜诗怎么拼出来</div>
+</section>
+
+<!-- ================= 破题 ================= -->
+<section id="potile" class="wrap">
+  <div class="lead rv">
+    <p class="big">他把<span>杜甫</span>裁开，<br>拼成了<span>自己</span>。</p>
+    <p>德祐元年毁家勤王，兵败被俘，押到大都，关进兵马司牢房。牢里没有军报，没有同僚，只有一卷杜诗。他每天做的事只剩一件：把五言裁成纸条，攒成绝句。</p>
+    <p>攒了二百首。每一枚纸条都带着出处小签，每一首后面都按着一段小序，记的是国亡身系的每一天。这一页把二百首全部摊开。</p>
+  </div>
+  <div id="sxcard" class="rv">
+    <div class="who">自序 · 燕狱中</div>
+    <span class="q">予坐幽燕狱中无所为诵杜诗稍习诸所感兴因其五言集为绝句乆之得二百首</span>
+    <span class="q">凡吾意所欲言者子美先为代言之日玩之不置但觉为吾诗忘其为子美诗也</span>
+    <div class="sig">文天祥 · 自序于燕狱</div>
+  </div>
+</section>
+
+<!-- ================= 全谱 ================= -->
+<section id="quanpu">
+  <div class="wrap">
+    <div class="head rv">
+      <h3>二百首全谱</h3>
+      <p>点任意一格，读那一首。全部照录库本。</p>
+    </div>
+    <p id="mapq" class="rv"><span class="q">首述其国次述其身次述其友次述其家而终以写本心</span><span class="src">明 刘定之序，四库卷目即按此自分</span></p>
+    <div id="legend" class="rv">
+      <i><b class="lg-guo"></b>述国 1至52</i>
+      <i><b class="lg-shen"></b>述身 53至104</i>
+      <i><b class="lg-you"></b>述友 105至138</i>
+      <i><b class="lg-jia"></b>述家 139至155</i>
+      <i><b class="lg-xin"></b>本心 156至191</i>
+      <i><b class="lg-shi"></b>叹世 192至200</i>
+    </div>
+    <div id="cells" class="rv"><!--CELLS--></div>
+  </div>
+</section>
+
+<!-- ================= 弹窗 ================= -->
+<div id="pmask">
+  <div id="pcard">
+    <button id="pclose" aria-label="关闭">×</button>
+    <div class="pno mono" id="p-no"></div>
+    <h4 id="p-name"></h4>
+    <div class="gx" id="p-gx"></div>
+    <div class="verses" id="p-verses"></div>
+    <div class="nav">
+      <button id="p-prev">上一首</button>
+      <button id="p-rand">随意一首</button>
+      <button id="p-next">下一首</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 述国 ================= -->
+<section class="station" id="st-guo">
+  <div class="wrap">
+    <div class="st-head rv"><div class="zi">国</div><div class="rt"><h3>述国</h3><p>第1至52首 · 从庙堂写到海上</p></div></div>
+    <div class="st-note rv">第一题就是判词，判给谁，他没绕弯子。此后五十一题，是这场倾覆的逐年账：襄阳、鲁港、临安、厓山，一站一站点验过去。
+      <span class="q">三百年宗庙社稷为贾似道一人所破壊哀哉</span>
+      <span class="srcx">第1首小序 · 全书开卷第一句</span>
+    </div>
+
+    <div id="ledger" class="rv">
+      <div class="lrow">
+        <div class="lt"><b>误国</b><span>第3首 · 误国权臣<br>开庆元年鄂州之役起家的宰相</span></div>
+        <div class="lc">
+          <div class="gx">小序点其秉政之罪，诗四句如四条罪状：</div>
+          <div class="verses">
+            <div class="vrow"><span class="q">苍生倚大臣</span><i class="qv">送韦中丞</i></div>
+            <div class="vrow"><span class="q">北风破南极</span><i class="qv">北风</i></div>
+            <div class="vrow"><span class="q">开边一何多</span><i class="qv">前出塞</i></div>
+            <div class="vrow"><span class="q">至死难塞责</span><i class="qv">吴侍御江上宅</i></div>
+          </div>
+        </div>
+      </div>
+      <div class="lrow">
+        <div class="lt"><b>弃国</b><span>第19首 · 将相弃国<br>德祐二年正月，一夜两逃</span></div>
+        <div class="lc">
+          <span class="q">丙子正月十八日敌至髙亭山是夜四鼓宜中逃翼日世杰逃</span>
+          <div class="verdict">两个逃字，中间只隔一夜</div>
+        </div>
+      </div>
+      <div class="lrow">
+        <div class="lt"><b>亡国</b><span>第34首 · 祥兴<br>厓山海战</span></div>
+        <div class="lc">
+          <span class="q">己夘正月十三日敌舟直造厓山世杰不守山门作一字阵以待之敌入山门作长蛇阵对之二月六日敌乘潮进攻半日而破死溺者数万人哀哉</span>
+          <div class="verses" style="margin-top:12px">
+            <div class="vrow"><span class="q">弧矢暗江海</span><i class="qv">草堂</i></div>
+            <div class="vrow"><span class="q">百万化为鱼</span><i class="qv">潼关吏</i></div>
+            <div class="vrow"><span class="q">帝子留遗恨</span><i class="qv">过南岳</i></div>
+            <div class="vrow"><span class="q">故园莽丘墟</span><i class="qv">逃难</i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="luxiu" class="rv">
+      <b>第52首 · 陆枢密秀夫</b>
+      <p>负帝投海的那个人，小序只给了几行。厓山流亡朝廷的文书，都出自他手。</p>
+      <span class="q">字君实文笔英妙自维扬幕入朝京师陷永嘉推戴有力及驻厓山兼宰相凡朝廷事皆秀夫润色纲纪之厓山陷与全家赴水死哀哉</span>
+    </div>
+
+    <div id="sielie" class="rv">
+      <h4>同卷死国者，各占一题</h4>
+      <div class="mini">
+        <div class="mcard"><b>赵倅昴发</b><span>第46首 · 池州通判</span><span class="q">敌至池州倅昴发蜀人夫妇自经死</span></div>
+        <div class="mcard"><b>王安节</b><span>第47首 · 常州守将</span><span class="q">常州败敌生获王安节不屈而死敌谓过江以来武人忠义者惟王安节一人安节乃节度使王坚子也</span></div>
+        <div class="mcard"><b>李安抚芾</b><span>第48首 · 潭州守臣</span><span class="q">及城陷先生杀其家人乃自焚死哀哉</span></div>
+        <div class="mcard"><b>姜都统才</b><span>第50首 · 淮东猛将</span><span class="q">临刑含血以喷骂敌不绝口其英风义烈淮人言之无不伤感惜哉</span></div>
+        <div class="mcard"><b>张制置珏</b><span>第51首 · 蜀中老将</span><span class="q">蜀虽糜碎珏竟不降为左右所卖珏觉而逃遁被囚鎻入北不肯屈后不知如何</span></div>
+        <div class="mcard"><b>江丞相万里</b><span>饶州 · 第45首</span><span class="q">先生居饶州敌入城先生投府第中池水死</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 述身 ================= -->
+<section class="station" id="st-shen">
+  <div class="wrap">
+    <div class="st-head rv"><div class="zi">身</div><div class="rt"><h3>述身</h3><p>第53至104首 · 勤王 被俘 押北 入狱</p></div></div>
+    <div class="st-note rv">中间这五十二题是编年体自传：起兵、守平江、拜相、出使、镇江走脱、再败、被执北上。押解一段，他本来打算用绝食走完。</div>
+
+    <div id="route" class="rv">
+      <div class="cord"></div>
+      <div class="stops">
+        <div class="stop" data-go="78"><b>五羊</b><div class="dot"></div><span>4月22日离</span></div>
+        <div class="stop" data-go="78"><b>梅岭</b><div class="dot"></div><span>5月4日出</span></div>
+        <div class="stop lit" data-go="78"><b>南安军</b><div class="dot"></div><span>舟中不食</span></div>
+        <div class="stop" data-go="83"><b>临江</b><div class="dot"></div><span>囚舟北上</span></div>
+        <div class="stop" data-go="89"><b>金陵</b><div class="dot"></div><span>囚邸两月</span></div>
+        <div class="stop" data-go="90"><b>邳州</b><div class="dot"></div><span>哭母小祥</span></div>
+        <div class="stop" data-go="90"><b>徐州</b><div class="dot"></div><span>9月9日过</span></div>
+        <div class="stop" data-go="90"><b>河间</b><div class="dot"></div><span>九月杪过</span></div>
+        <div class="stop" data-go="96"><b>燕城</b><div class="dot"></div><span>10月1日至</span></div>
+        <div class="stop" data-go="99"><b>狱</b><div class="dot"></div><span>千戸所枷禁</span></div>
+      </div>
+    </div>
+    <p class="rv" style="font-size:12.5px;color:var(--dim);letter-spacing:1px">沿线各站即库本小序原文，点站牌读该首。不食一节的原文：</p>
+    <div class="st-note rv" style="margin-top:14px">
+      <span class="q">予四月二十二日离五羊五月四日出梅岭至南安军钥置舟中予不食拟至庐陵得瞑目庶防首丘之义云</span>
+      <span class="srcx">第78首小序 · 防字疑当作几，照录</span>
+    </div>
+
+    <div id="shen-cards">
+      <div class="scard rv">
+        <div class="tagx">第75首 · 南海</div>
+        <p>厓山兵败，他被俘的当天吞了约二两脑子。脑子即龙脑冰片，服之昏沉，未必致命。押到元帅军前，让他跪，不跪；让他写信招降张世杰，他写了，写的是拒降。</p>
+        <span class="q">予被执后即服脑子约二两昏眩乆之竟不能死及至张元帅所众脇之跪拜誓死不屈张遂以客礼见寻置海船中</span>
+        <span class="q">至厓山令作书招张世杰手写诗一首复命末句云人生自古谁无死留取丹心照汗青张不强而止厓山之败亲所目击</span>
+      </div>
+      <div class="scard rv">
+        <div class="tagx">第58首 · 镇江走脱</div>
+        <p>京口羁所里他先想的是死，同行的杜浒拦了一句：逃出去，再死不迟。当夜凑钱雇下一条登记在敌籍之外的空船，十一人带刃出屋。</p>
+        <span class="q">予至京口北行有日矣予欲引决同行士杜浒曰且遁逃不获死未晩也</span>
+        <span class="q">偶物色一空船在敌籍外捐重资约之二月晦日夕一更后予约同行十一人潜出邸挟刃自随不济则自杀</span>
+      </div>
+    </div>
+
+    <div id="mingju" class="rv">
+      <span class="mj q">人生自古谁无死</span>
+      <span class="mj mj2 q">留取丹心照汗青</span>
+      <div class="mnote">这两句照录在库本第75首小序里。答书手迹不传，而一联不朽</div>
+    </div>
+
+    <div class="st-note rv" style="margin-top:26px">入狱后的第一题，四句全借杜甫的眼睛看他自己的牢房：
+      <span class="q">阴房鬼火青</span><span class="q">白日亦寂寞</span><span class="q">自非旷士懐</span><span class="q">居人莽牢落</span>
+      <span class="srcx">第99首 · 出玉华宫、昔游、登慈恩塔、送樊侍御四诗</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 述友 ================= -->
+<section class="station" id="st-you">
+  <div class="wrap">
+    <div class="st-head rv"><div class="zi">友</div><div class="rt"><h3>述友</h3><p>第105至138首 · 死难名录</p></div></div>
+    <div class="st-note rv">第三卷是一份名册。他在小序里给每个人立传，最长的百余字，最短的十几个字。点一枚签，读他给这个人写的话。
+      <span class="q">自百五至百九皆懐念故人为王事而没者固多不能尽纪呜呼哀哉</span>
+    </div>
+    <div id="friends" class="rv"><!--FSTRIPS--></div>
+    <div id="friend-detail" class="rv">
+      <div class="fd-name" id="fd-name">金应</div>
+      <div class="fd-ti" id="fd-ti">承信郎路分 · 随身笔吏 第110首</div>
+      <div id="fd-body"></div>
+      <div class="fd-tip">点击上方名字签切换</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 述家 ================= -->
+<section class="station" id="st-jia">
+  <div class="wrap">
+    <div class="st-head rv"><div class="zi">家</div><div class="rt"><h3>述家</h3><p>第139至155首 · 骨肉册</p></div></div>
+    <div class="st-note rv">第四卷只有十七首，几乎每首都在点名。点到一个名字，就是一次失去。这一页照他的小序立册，点行读原文。</div>
+
+    <div id="jiace" class="rv">
+      <div class="jc-head"><h4>家 册</h4><span>据各首小序 · 照录</span></div>
+      <div class="jrow"><div class="jh"><b>母</b><p>齐国太夫人曾氏。随两弟辗转惠州，病殁于他被俘那年九月七日。</p><span class="stx">薨</span></div>
+        <div class="body">扶病随两弟走惠州，八月间已得疾，九月初七寅时去世。他在北去的囚车上，只能南望。<span class="q">身陷万里缧絏中岁时南望呜咽云</span><span class="srcx">第141首小序节录</span></div></div>
+      <div class="jrow"><div class="jh"><b>妻</b><p>欧阳氏。空坑兵败与儿女一同被执，押往隆兴北行。</p><span class="stx">陷</span></div>
+        <div class="body">同陷的有两个女儿、两个儿子的生母。<span class="q">丁丑八月十七日空坑之败夫人欧阳氏女桞娘环娘子佛生环之生母颜佛之生母黄并陷失寻闻自隆兴北行惟佛生已死人世祸难有如此者</span><span class="srcx">第143首小序全录</span></div></div>
+      <div class="jrow"><div class="jh"><b>长子</b><p>道生。病殁于惠阳郡治，年十三，紧跟着祖母。</p><span class="stx">殁</span></div>
+        <div class="body"><span class="q">以疾后太夫人六十日死于惠阳郡治中生十三年矣哀哉</span><span class="srcx">第149首小序节录</span></div></div>
+      <div class="jrow"><div class="jh"><b>六女</b><p>六个女儿，小序里排着队交代下落。</p><span class="stx">殇</span></div>
+        <div class="body">定娘、寿娘病死于河源；柳娘、环娘被执；监娘、奉娘先得存，次年又死在乱兵里。<span class="q">予六女长定娘次桞娘次环娘次监娘次奉娘次寿娘丙子定娘寿娘以病死于河源之三角丁丑桞娘环娘陷惟监娘奉娘得存戊寅潮阳之败复死乱兵中哀哉</span><span class="srcx">第150首小序全录</span></div></div>
+      <div class="jrow"><div class="jh"><b>二弟</b><p>璧、璋。一在惠州侍母，一奉母柩趋惠阳，此后骨肉各在天一方。</p><span class="stx">散</span></div>
+        <div class="body"><span class="q">予二弟长璧次璋璋自船澳奉母防趍惠州别璧来五羊别自是骨肉因缘堕寥廓矣</span><span class="srcx">第151首小序全录 · 防字疑当作柩，照录</span></div></div>
+      <div class="jrow"><div class="jh"><b>长妹</b><p>适孙氏。夫家倾覆没入燕，携姑与子客食万里。</p><span class="stx">离</span></div>
+        <div class="body"><span class="q">妹虽患难中侍养抚教各尽其所可谓贤矣哀哉</span><span class="srcx">第148首小序节录</span></div></div>
+      <div class="jrow"><div class="jh"><b>次妹</b><p>自永新归宁，躲过彭氏之难，随母护柩赴惠阳。</p><span class="stx">离</span></div>
+        <div class="body"><span class="q">予次妹自永新归宁不与彭氏之难乱离中随母两国夫人上下自船澳奉防趍惠阳兄妹不复见矣哀哉</span><span class="srcx">第155首小序全录</span></div></div>
+      <div class="jrow"><div class="jh"><b>舅氏</b><p>西昌闻变，从此南望孤云。</p><span class="stx">乱</span></div>
+        <div class="body"><span class="q">予以楚囚过西昌闻舅家杌隉自是南望孤云每念我母不胜渭阳之情</span><span class="srcx">第142首小序全录 · 隉字库本为私用区码位，按上下文归一</span></div></div>
+      <div class="jrow"><div class="jh"><b>祖坟</b><p>起兵前一年，他回赣州拜过坟墓，奔了祖母之丧。</p><span class="stx">诀</span></div>
+        <div class="body"><span class="q">予甲戌春自衡阳宪节归赴赣州省拜坟墓及乙亥五月奔祖母防至门以起复六月望日出从戎事与宗族郷党永诀云</span><span class="srcx">第139首小序全录 · 防字疑当作丧，照录</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 本心 ================= -->
+<section class="station" id="st-xin" style="border-bottom:none">
+  <div class="wrap">
+    <div class="st-head rv"><div class="zi">心</div><div class="rt"><h3>本心</h3><p>第156至200首 · 故乡 本心 叹世</p></div></div>
+    <div class="st-note rv">此后不再叙事。故乡、陶潜、忠义、生死，一句杜诗接一句杜诗，像一个人在纸上自言自语。
+      <span class="q">自一百六十三至一百九十一共二十九首杂然写其本心</span>
+    </div>
+
+    <div id="chou" class="rv">
+      <button class="btn2" id="choubtn">抽 一 句</button>
+      <div class="well" id="chouwell"><div class="frm">他读久了，分不清哪句是谁的</div></div>
+    </div>
+
+    <div id="jianzhi" class="rv">
+      <div class="jz-note">第159首写思乡，第三句恰是一个剪纸的动作。整本集杜，何尝不是一次招魂。</div>
+      <div class="verses">
+        <div class="vrow"><span class="q">人生无家别</span><i class="qv">无家别</i></div>
+        <div class="vrow"><span class="q">亲故伤老丑</span><i class="qv">述懐</i></div>
+        <div class="vrow hi"><span class="q">剪纸招我魂</span><i class="qv">彭衙行</i></div>
+        <div class="vrow"><span class="q">何时一樽酒</span><i class="qv">忆李白</i></div>
+      </div>
+    </div>
+
+    <div id="muye" class="rv">
+      <div id="ba" class="q">是编作于前年不自意流落余生至今不得死也斯文固存天将谁属呜呼非千载心不足以语此壬午正月元日文天祥书</div>
+      <div class="bq"><span class="q">又序后有跋称壬午元日则天祥授命之岁也</span><br>四库提要：跋写于他赴刑那一年的元旦。这段竖行，等于绝笔。</div>
+      <div id="seal2">千载心</div>
+    </div>
+
+    <div id="lasttwo" class="rv">
+      <div class="lt-card"><div class="no2">第199首</div>
+        <div class="verses">
+          <div class="vrow"><span class="q">南北逃世难</span><i class="qv">逃难</i></div>
+          <div class="vrow"><span class="q">始闻蕃汉殊</span><i class="qv">草堂</i></div>
+          <div class="vrow"><span class="q">天下今一家</span><i class="qv">鹿头山</i></div>
+          <div class="vrow"><span class="q">中原有驱除</span><i class="qv">留花门</i></div>
+        </div>
+      </div>
+      <div class="lt-card"><div class="no2">第200首 · 末一首</div>
+        <div class="verses">
+          <div class="vrow"><span class="q">茫茫大造间</span><i class="qv">宿花石戍</i></div>
+          <div class="vrow"><span class="q">髙岸尚为谷</span><i class="qv">水槛</i></div>
+          <div class="vrow"><span class="q">百川日东流</span><i class="qv">别賛上人</i></div>
+          <div class="vrow"><span class="q">势阅人代速</span><i class="qv">三川观水涨</i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 版本账 ================= -->
+<section id="banben">
+  <div class="wrap">
+    <h3 class="rv">卷尾五签</h3>
+    <div class="cards">
+      <div class="bcard rv"><b>书名</b><p>四库著录正名与别名，诗史二字是馆臣给的定评。</p>
+        <span class="q">文信公集杜诗四巻一名文山诗史宋文天祥撰</span></div>
+      <div class="bcard rv"><b>诗史之目</b><p>每题下的小序记时事，馆臣说它当得起这两个字。</p>
+        <span class="q">题下叙次时事于国家沦丧之由生平阅歴之境及忠臣义士之周旋患难者一一详志其实颠末粲然不愧诗史之目</span></div>
+      <div class="bcard rv"><b>一桩贬评</b><p>宋诗选家嫌它只是裁剪的巧艺，馆臣回了一句重话。</p>
+        <span class="q">吴之振宋诗选徒以裁割巧言评之其所见抑亦末矣</span></div>
+      <div class="bcard rv"><b>白字</b><p>原稿里元朝君臣的名字，他故意空着不写。后人补的字印成白色，为的是不没他的本意。</p>
+        <span class="q">原书序跋中有缺文指元之君臣宋之叛逆缺而不书今皆补之为白字</span></div>
+      <div class="bcard rv"><b>落款的谜</b><p>署名不用文天祥而题姓某，纪日不用常法而用岁阳，馆臣各给了一条注。</p>
+        <span class="q">姓某履善甫者指南集中所谓范睢变张禄越蠡改陶朱之意也</span>
+        <span class="q">前有自序题岁上章执徐月祝犁单阏日上章协洽</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 校字记 ================= -->
+<section id="xiaozi">
+  <div class="wrap">
+    <div class="xcard rv">
+      <h4>校字记</h4>
+      <ul>
+        <li>库本防字七十余见，实为多个正字之讹：奔祖母防当为丧，庶防当为几，誓开防北当为冥北，邹防通行作邹㵯，守防甚谨疑当作卫。本页引文一律照录不改。</li>
+        <li>库本存十八个生僻码位（私用区十六、扩展区二），全篇四十见，按上下文归一：赣、碙、瓜、弘、徊、玄、殓、眇、冥、隉、眩、铉、禩、过；不可考者以□存之，如执□（疑袂）、孙□（名缺）、李雷□、今如□中兎（疑罝）。</li>
+        <li>夘、欵、桞、乆、巻、歴、逺、髙、懐、覊、靣、冦 等通行异体与讹字，悉照库本录写。</li>
+        <li>第134首徐榛条，库本自注诗阙，存目存序而无诗，全谱中以空格标出。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 页脚 ================= -->
+<footer>
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库集藏〈<span data-t="1">文信国集杜诗</span>〉（宋 文天祥撰，四库本别名文山诗史，去空白约一万九千字，二百首，内诗阙一首）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>。</p>
+    <p>引文经脚本与库内文件去标点、异体归一逐字比对通过（一千八百零一处，白话反扫六字窗零撞）。</p>
+    <p class="xiaoji">时代局限：本篇为古代文献导读。原文称元军为敌为冦、以夷夏立论、以死节责人等，皆属其时代立场，请以历史眼光阅读。</p>
+  </div>
+</footer>
+
+<!-- ================= 引文数据（hidden qbank，核验通道） ================= -->
+<div id="qb" style="display:none"><div class="qb-e" data-n="1" data-name="社稷" data-g="guo" data-que="0"><span class="qb-gx qv">三百年宗庙社稷为贾似道一人所破壊哀哉</span><span class="qb-l"><b class="qv">南极连铜柱</b><i class="qv">送李晋肃</i></span><span class="qb-l"><b class="qv">煌煌太宗业</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">始谋谁其问</b><i class="qv">舟中苦热</i></span><span class="qb-l"><b class="qv">风雨秋一叶</b><i class="qv">李光弼</i></span></div>
+<div class="qb-e" data-n="2" data-name="理宗度宗" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">先皇弓剑逺</b><i class="qv">送覃二判官</i></span><span class="qb-l"><b class="qv">永懐侍芳茵</b><i class="qv">送汝阳郡王</i></span><span class="qb-l"><b class="qv">今朝汉社稷</b><i class="qv">喜达行在所</i></span><span class="qb-l"><b class="qv">为话涕沾巾</b><i class="qv">送司马入京</i></span></div>
+<div class="qb-e" data-n="3" data-name="误国权臣" data-g="guo" data-que="0"><span class="qb-gx qv">似道防邦之政不一而足其覊敌使开边衅则兵连祸结之始也哀哉</span><span class="qb-l"><b class="qv">苍生倚大臣</b><i class="qv">送韦中丞</i></span><span class="qb-l"><b class="qv">北风破南极</b><i class="qv">北风</i></span><span class="qb-l"><b class="qv">开边一何多</b><i class="qv">前出塞</i></span><span class="qb-l"><b class="qv">至死难塞责</b><i class="qv">吴侍御江上宅</i></span></div>
+<div class="qb-e" data-n="4" data-name="泸州大将" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">西南失大将</b><i class="qv">客居</i></span><span class="qb-l"><b class="qv">带甲满天地</b><i class="qv">送逺</i></span><span class="qb-l"><b class="qv">髙人忧祸胎</b><i class="qv">山寺</i></span><span class="qb-l"><b class="qv">感叹亦歔欷</b><i class="qv">羗村</i></span></div>
+<div class="qb-e" data-n="5" data-name="襄阳" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">十年杀气盛</b><i class="qv">北风</i></span><span class="qb-l"><b class="qv">百万攻一城</b><i class="qv">遣懐</i></span><span class="qb-l"><b class="qv">贼臣表逆节</b><i class="qv">往在</i></span><span class="qb-l"><b class="qv">胡骑忽纵横</b><i class="qv">严公武</i></span></div>
+<div class="qb-e" data-n="6" data-name="荆湖诸戍" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">长啸下荆门</b><i class="qv">春日梓州登楼</i></span><span class="qb-l"><b class="qv">胡行速如鬼</b><i class="qv">塞芦子</i></span><span class="qb-l"><b class="qv">门戸无人持</b><i class="qv">水槛</i></span><span class="qb-l"><b class="qv">社稷堪流涕</b><i class="qv">西阁</i></span></div>
+<div class="qb-e" data-n="7" data-name="黄州" data-g="guo" data-que="0"><span class="qb-gx qv">始谓敌以襄阳船自汉入江后乃知敌之未渡蕲黄已先降故其渡也襄汉蕲黄之船皆在焉</span><span class="qb-l"><b class="qv">桓桓陈将军</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">东屯大江北</b><i class="qv">行官张望</i></span><span class="qb-l"><b class="qv">化作虎与豺</b><i class="qv">夏日叹</i></span><span class="qb-l"><b class="qv">楚星南天黑</b><i class="qv">晚登瀼上堂</i></span></div>
+<div class="qb-e" data-n="8" data-name="阳罗堡" data-g="guo" data-que="0"><span class="qb-gx qv">夏贵自阳罗堡之败顺流而下沿江南岸纵兵放火归庐州觧甲当是时其心已无国矣似道建督至江上夏贵不得已出见斩以衅鼓东南再造之机也失此不图社稷为墟哀哉</span><span class="qb-l"><b class="qv">日色隐孤戍</b><i class="qv">发秦州</i></span><span class="qb-l"><b class="qv">大江声怒号</b><i class="qv">大雨</i></span><span class="qb-l"><b class="qv">朝廷任猛将</b><i class="qv">又上后园山脚</i></span><span class="qb-l"><b class="qv">宿昔恨滔滔</b><i class="qv">送王砅使南海</i></span></div>
+<div class="qb-e" data-n="9" data-name="京湖宣阃" data-g="guo" data-que="0"><span class="qb-gx qv">开庆已未江陵阃帅自上而下奔救鄂渚令朱禩孙任宣阃乃自鄂渚走还岳阳朱与夏通任长江之责一上而一下使中流荡然敌行无人之境国安得不亡呜呼痛哉</span><span class="qb-l"><b class="qv">正当艰难时</b><i class="qv">送樊侍御</i></span><span class="qb-l"><b class="qv">岂无济时策</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">连樯荆州船</b><i class="qv">雨</i></span><span class="qb-l"><b class="qv">悠悠囬赤壁</b><i class="qv">过南岳</i></span></div>
+<div class="qb-e" data-n="10" data-name="渡江" data-g="guo" data-que="0"><span class="qb-gx qv">常时江水风波不可狎视敌渡江时水乃镜平岂非天哉</span><span class="qb-l"><b class="qv">济江元自濶</b><i class="qv">行次古城</i></span><span class="qb-l"><b class="qv">轻船下吴会</b><i class="qv">逢刘主簿弟</i></span><span class="qb-l"><b class="qv">南纪收波澜</b><i class="qv">衡山县学</i></span><span class="qb-l"><b class="qv">吾将罪真宰</b><i class="qv">剑门</i></span></div>
+<div class="qb-e" data-n="11" data-name="鄂州" data-g="guo" data-que="0"><span class="qb-gx qv">先时李雷□为郡守十月以台论罢至是无正官张宴然以城降金汤重镇正风寒中而去正守当国者独何心哉</span><span class="qb-l"><b class="qv">鄂渚分云树</b><i class="qv">过南岳</i></span><span class="qb-l"><b class="qv">春城带雨长</b><i class="qv">入行军六弟宅</i></span><span class="qb-l"><b class="qv">惜哉形胜地</b><i class="qv">懐锦水居止</i></span><span class="qb-l"><b class="qv">河岳空金汤</b><i class="qv">入衡州</i></span></div>
+<div class="qb-e" data-n="12" data-name="江州" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">戎马暗天宇</b><i class="qv">送魏六丈</i></span><span class="qb-l"><b class="qv">落日九江流</b><i class="qv">送李功曹</i></span><span class="qb-l"><b class="qv">元恶迷是似</b><i class="qv">入衡州</i></span><span class="qb-l"><b class="qv">化作长黄虬</b><i class="qv">奉同郭给事</i></span></div>
+<div class="qb-e" data-n="13" data-name="安庆府" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">岸转异江湖</b><i class="qv">过南岳</i></span><span class="qb-l"><b class="qv">江水流城郭</b><i class="qv">春日梓州登楼</i></span><span class="qb-l"><b class="qv">鸱鸮志意满</b><i class="qv">病柏</i></span><span class="qb-l"><b class="qv">山鬼独一脚</b><i class="qv">懐郑司戸</i></span></div>
+<div class="qb-e" data-n="14" data-name="鲁港之遁" data-g="guo" data-que="0"><span class="qb-gx qv">己未鄂渚之战何勇也鲁港之遁何衰也人心已去国事瓦觧当是时须豪杰防起首祸之权奸无救祸之理哀哉</span><span class="qb-l"><b class="qv">出师亦多门</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">水陆迷畏途</b><i class="qv">赠郑十八贲</i></span><span class="qb-l"><b class="qv">蹭蹬麒麟老</b><i class="qv">赠射洪李四丈</i></span><span class="qb-l"><b class="qv">危樯逐夜乌</b><i class="qv">过南岳</i></span></div>
+<div class="qb-e" data-n="15" data-name="建康府" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">亭亭鳯凰台</b><i class="qv">鳯凰台</i></span><span class="qb-l"><b class="qv">江城孤照日</b><i class="qv">登牛头山亭</i></span><span class="qb-l"><b class="qv">胡来满彤宫</b><i class="qv">往在</i></span><span class="qb-l"><b class="qv">驱马一万疋</b><i class="qv">北征</i></span></div>
+<div class="qb-e" data-n="16" data-name="相陈宜中" data-g="guo" data-que="0"><span class="qb-gx qv">鲁港败后陈宜中当国首斩殿帅韩震脇迁之议差强人意宜中实无经纶至秋托故遁归及不得已十月再来则国事去矣哀哉</span><span class="qb-l"><b class="qv">苍生起谢安</b><i class="qv">宴王使君宅</i></span><span class="qb-l"><b class="qv">翠华拥吴岳</b><i class="qv">壮游</i></span><span class="qb-l"><b class="qv">可以一木支</b><i class="qv">水槛</i></span><span class="qb-l"><b class="qv">俯恐坤轴弱</b><i class="qv">青阳峡</i></span></div>
+<div class="qb-e" data-n="17" data-name="召张世杰" data-g="guo" data-que="0"><span class="qb-gx qv">京师内空赖张世杰一军自荆湖至</span><span class="qb-l"><b class="qv">诏发西山将</b><i class="qv">送郭中丞</i></span><span class="qb-l"><b class="qv">熊虎亘阡陌</b><i class="qv">王思礼</i></span><span class="qb-l"><b class="qv">笳鼓凝皇情</b><i class="qv">严公武</i></span><span class="qb-l"><b class="qv">佳气向金阙</b><i class="qv">北征</i></span></div>
+<div class="qb-e" data-n="18" data-name="镇江之战" data-g="guo" data-que="0"><span class="qb-gx qv">张世杰率舟师趍金山约殿帅张彦自常州陆出京口扬州兵出瓜洲三路交进同日用事既而扬州失期先出取败常州竟不出世杰多海舟无风不能动江水平敌以水哨马往来如飞遂以溃败呜呼岂非天哉</span><span class="qb-l"><b class="qv">海胡舶千艘</b><i class="qv">送王砯</i></span><span class="qb-l"><b class="qv">肉食三十万</b><i class="qv">昔游</i></span><span class="qb-l"><b class="qv">江平不肯流</b><i class="qv">陪王使君泛江</i></span><span class="qb-l"><b class="qv">到今有遗恨</b><i class="qv">壮游</i></span></div>
+<div class="qb-e" data-n="19" data-name="将相弃国" data-g="guo" data-que="0"><span class="qb-gx qv">丙子正月十八日敌至髙亭山是夜四鼓宜中逃翼日世杰逃</span><span class="qb-l"><b class="qv">扈圣登黄阁</b><i class="qv">赠严八阁老</i></span><span class="qb-l"><b class="qv">大将赴朝廷</b><i class="qv">草堂</i></span><span class="qb-l"><b class="qv">胡为入云雾</b><i class="qv">送髙司直</i></span><span class="qb-l"><b class="qv">浩荡乘沧溟</b><i class="qv">桥陵</i></span></div>
+<div class="qb-e" data-n="20" data-name="京城" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">当宁防玉座</b><i class="qv">往在</i></span><span class="qb-l"><b class="qv">两宫弃紫防</b><i class="qv">咏懐</i></span><span class="qb-l"><b class="qv">北城悲笳发</b><i class="qv">夏夜叹</i></span><span class="qb-l"><b class="qv">失涕万人挥</b><i class="qv">送卢十四弟</i></span></div>
+<div class="qb-e" data-n="21" data-name="京城" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">黄屋朔风卷</b><i class="qv">苏源明</i></span><span class="qb-l"><b class="qv">园林杀气平</b><i class="qv">送郭中丞</i></span><span class="qb-l"><b class="qv">宫殿青门隔</b><i class="qv">送贾阁老</i></span><span class="qb-l"><b class="qv">永懐丹鳯城</b><i class="qv">送覃二判官</i></span></div>
+<div class="qb-e" data-n="22" data-name="陵寝" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">五陵花满眼</b><i class="qv">别何邕</i></span><span class="qb-l"><b class="qv">霜露在草根</b><i class="qv">阆州东楼</i></span><span class="qb-l"><b class="qv">防防子规呌</b><i class="qv">法镜寺</i></span><span class="qb-l"><b class="qv">重是古帝魂</b><i class="qv">杜鹃</i></span></div>
+<div class="qb-e" data-n="23" data-name="陵寝" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">旄头彗紫防</b><i class="qv">衡山县学</i></span><span class="qb-l"><b class="qv">蚩尤塞寒空</b><i class="qv">奉先县</i></span><span class="qb-l"><b class="qv">愚智心尽死</b><i class="qv">听杨氏歌</i></span><span class="qb-l"><b class="qv">漂荡随髙风</b><i class="qv">遣兴</i></span></div>
+<div class="qb-e" data-n="24" data-name="江陵" data-g="guo" data-que="0"><span class="qb-gx qv">髙达荆湖名将已未觧围鄂州贾似道许以建节竟不与而移以与吕文德达怨望久矣至是为京湖制置以城降宣阃不能制城初防朱禩孙仰药不得死既而亦降焉</span><span class="qb-l"><b class="qv">闻说江陵府</b><i class="qv">峡隘</i></span><span class="qb-l"><b class="qv">今又降元戎</b><i class="qv">客居</i></span><span class="qb-l"><b class="qv">甲外控鸣镝</b><i class="qv">王思礼</i></span><span class="qb-l"><b class="qv">肩舆强老翁</b><i class="qv">王十五前阁会</i></span></div>
+<div class="qb-e" data-n="25" data-name="淮西帅" data-g="guo" data-que="0"><span class="qb-gx qv">夏贵既失长江惟恐督府有成无所逃罪又恐孙虎臣以后进为将有功总统出已上日夜幸其败覆督府既溃归庐州不出朝廷屡诏勤王若罔闻知国亡乃以淮西全境献北为己功焉于是贵年八十余矣老而不死是为贼其贵之谓与</span><span class="qb-l"><b class="qv">借问大将谁</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">战骨当速朽</b><i class="qv">前出塞</i></span><span class="qb-l"><b class="qv">逆节同所归</b><i class="qv">咏懐</i></span><span class="qb-l"><b class="qv">水花笑白首</b><i class="qv">送王砅</i></span></div>
+<div class="qb-e" data-n="26" data-name="扬州" data-g="guo" data-que="0"><span class="qb-gx qv">李庭芝在扬州十余年畏怯无逺谋惟闭门自守无救于国及景炎登极以为首相乃引兵轻出渡海南归朱焕寻以城献敌哀哉</span><span class="qb-l"><b class="qv">城峻随天壁</b><i class="qv">白帝城</i></span><span class="qb-l"><b class="qv">胡来但自守</b><i class="qv">潼关吏</i></span><span class="qb-l"><b class="qv">士卒终倒防</b><i class="qv">王司礼</i></span><span class="qb-l"><b class="qv">仰望嗟叹乆</b><i class="qv">九成宫</i></span></div>
+<div class="qb-e" data-n="27" data-name="京湖两淮" data-g="guo" data-que="0"><span class="qb-gx qv">东南兵力尽在江北金城汤池国之根本髙以荆州降夏以淮西降李死淮东尽失无复中原之望矣哀哉</span><span class="qb-l"><b class="qv">荆扬风土暖</b><i class="qv">秋行官张望</i></span><span class="qb-l"><b class="qv">大城铁不如</b><i class="qv">潼关吏</i></span><span class="qb-l"><b class="qv">秦山忽破碎</b><i class="qv">登慈恩寺塔</i></span><span class="qb-l"><b class="qv">流落随丘墟</b><i class="qv">五盘</i></span></div>
+<div class="qb-e" data-n="28" data-name="景炎拥立" data-g="guo" data-que="0"><span class="qb-gx qv">予自苏州归阙建议出二王于闽广及敌至二王方出宫苏刘义陆秀夫遇二王于温时陈宜中海船泊清屿门诸人往邀之共图兴复益王始建元帅府及张世杰自定海至同趍三山以五月一日益王登极改元景炎</span><span class="qb-l"><b class="qv">汉运初中兴</b><i class="qv">述懐</i></span><span class="qb-l"><b class="qv">扶顚待柱石</b><i class="qv">入衡州</i></span><span class="qb-l"><b class="qv">畴能补天漏</b><i class="qv">寄岑参</i></span><span class="qb-l"><b class="qv">登阶捧玉册</b><i class="qv">行在</i></span></div>
+<div class="qb-e" data-n="29" data-name="福安府" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">崔嵬扶桑日</b><i class="qv">幽人</i></span><span class="qb-l"><b class="qv">濶会沧海潮</b><i class="qv">桔柏渡</i></span><span class="qb-l"><b class="qv">倾都防黄屋</b><i class="qv">送班司马入京</i></span><span class="qb-l"><b class="qv">此意竟萧条</b><i class="qv">赠韦左丞</i></span></div>
+<div class="qb-e" data-n="30" data-name="幸海道" data-g="guo" data-que="0"><span class="qb-gx qv">自三山登极世杰遣兵战邵武大防人心翕然世杰不为守国计即治海船识者于是知其陋矣至冬闻警即浮海南去天下事是以不可复为哀哉</span><span class="qb-l"><b class="qv">天王守太白</b><i class="qv">九成宫</i></span><span class="qb-l"><b class="qv">立国自有疆</b><i class="qv">前出塞</i></span><span class="qb-l"><b class="qv">舍此复何之</b><i class="qv">后游修觉寺</i></span><span class="qb-l"><b class="qv">已具浮海航</b><i class="qv">壮游</i></span></div>
+<div class="qb-e" data-n="31" data-name="景炎賔天" data-g="guo" data-que="0"><span class="qb-gx qv">御舟离三山至惠州之甲子门驻焉已而迁宫富塲丁丑冬敌舟来移次仙澳与战得利寻望南去止碙川景炎賔天盖戊寅四月望日也呜呼痛哉</span><span class="qb-l"><b class="qv">阴风西北来</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">青海天轩轾</b><i class="qv">送从弟亚</i></span><span class="qb-l"><b class="qv">白水暮东流</b><i class="qv">新安吏</i></span><span class="qb-l"><b class="qv">魂断苍梧帝</b><i class="qv">李公邕</i></span></div>
+<div class="qb-e" data-n="32" data-name="祥兴登极" data-g="guo" data-que="0"><span class="qb-gx qv">戊寅四月十七日卫王登极于碙川</span><span class="qb-l"><b class="qv">浮龙倚长津</b><i class="qv">别蔡著作</i></span><span class="qb-l"><b class="qv">叅错走洲渚</b><i class="qv">入衡州</i></span><span class="qb-l"><b class="qv">苍梧云正愁</b><i class="qv">登慈恩寺塔</i></span><span class="qb-l"><b class="qv">初日翳复吐</b><i class="qv">法镜寺</i></span></div>
+<div class="qb-e" data-n="33" data-name="祥兴" data-g="guo" data-que="0"><span class="qb-gx qv">六月世杰自碙川北还至厓山止焉厓山乃海中之山两山相对延袤中一衣带水山口如门世杰以为形胜安之</span><span class="qb-l"><b class="qv">南游炎海甸</b><i class="qv">送魏六丈</i></span><span class="qb-l"><b class="qv">沃野开天庭</b><i class="qv">桥陵</i></span><span class="qb-l"><b class="qv">真龙竟寂寞</b><i class="qv">雷</i></span><span class="qb-l"><b class="qv">乾坤水上萍</b><i class="qv">衡州送李大夫</i></span></div>
+<div class="qb-e" data-n="34" data-name="祥兴" data-g="guo" data-que="0"><span class="qb-gx qv">己夘正月十三日敌舟直造厓山世杰不守山门作一字阵以待之敌入山门作长蛇阵对之二月六日敌乘潮进攻半日而破死溺者数万人哀哉</span><span class="qb-l"><b class="qv">弧矢暗江海</b><i class="qv">草堂</i></span><span class="qb-l"><b class="qv">百万化为鱼</b><i class="qv">潼关吏</i></span><span class="qb-l"><b class="qv">帝子留遗恨</b><i class="qv">过南岳</i></span><span class="qb-l"><b class="qv">故园莽丘墟</b><i class="qv">逃难</i></span></div>
+<div class="qb-e" data-n="35" data-name="祥兴" data-g="guo" data-que="0"><span class="qb-gx qv">世杰于战败后乘雾雨晦防以数舟遁去</span><span class="qb-l"><b class="qv">朱厓云日髙</b><i class="qv">遣遇</i></span><span class="qb-l"><b class="qv">风浪无晨暮</b><i class="qv">懐郑司戸</i></span><span class="qb-l"><b class="qv">防防翠龙驾</b><i class="qv">雨</i></span><span class="qb-l"><b class="qv">今复在何许</b><i class="qv">宿清溪驲</i></span></div>
+<div class="qb-e" data-n="36" data-name="祥兴" data-g="guo" data-que="0"><span class="qb-gx qv">初行朝有船千余艘内大船极多张元帅大小船五百而二百舟失道乆而不至北人乍登舟呕晕执弓矢不支持又水道生踈舟工进退失据使敌初至行朝乘其未集击之蔑不胜矣行朝依山作一字阵幇防不可复动于是不可以攻人而专受攻矣先是行朝以游舟数出得小防北船皆闽浙水手其心莫不欲南向若南船摧锋直前闽浙水手在北舟中必为变则有尽殱之理惜世杰不知合变专守常法呜呼岂非天哉</span><span class="qb-l"><b class="qv">六龙忽蹉跎</b><i class="qv">别唐诫</i></span><span class="qb-l"><b class="qv">川广不可溯</b><i class="qv">送汝阳王</i></span><span class="qb-l"><b class="qv">东风吹春水</b><i class="qv">送程录事</i></span><span class="qb-l"><b class="qv">乾坤莽回互</b><i class="qv">懐郑司戸</i></span></div>
+<div class="qb-e" data-n="37" data-name="祥兴" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">幽燕盛用武</b><i class="qv">昔游</i></span><span class="qb-l"><b class="qv">六合已一家</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">眼穿当落日</b><i class="qv">喜逹行在</i></span><span class="qb-l"><b class="qv">沧海有灵查</b><i class="qv">喜晴</i></span></div>
+<div class="qb-e" data-n="38" data-name="祥兴" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">客从南溟来</b><i class="qv">客从</i></span><span class="qb-l"><b class="qv">黄屋今在否</b><i class="qv">留别章使君</i></span><span class="qb-l"><b class="qv">天髙无消息</b><i class="qv">幽人</i></span><span class="qb-l"><b class="qv">未忍即开口</b><i class="qv">述懐</i></span></div>
+<div class="qb-e" data-n="39" data-name="祥兴" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">南岳配朱鸟</b><i class="qv">望岳</i></span><span class="qb-l"><b class="qv">地轴为之翻</b><i class="qv">晦日寻崔戢</i></span><span class="qb-l"><b class="qv">皇纲未宜绝</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">云台谁再论</b><i class="qv">覧柏中丞官制</i></span></div>
+<div class="qb-e" data-n="40" data-name="陈宜中" data-g="guo" data-que="0"><span class="qb-gx qv">丁丑冬御舟自谢女峡归碙川陈宜中船相失莫知所之</span><span class="qb-l"><b class="qv">管葛本时须</b><i class="qv">别张建封</i></span><span class="qb-l"><b class="qv">经纶中兴业</b><i class="qv">□古</i></span><span class="qb-l"><b class="qv">有志乘鲸鳌</b><i class="qv">送王砅</i></span><span class="qb-l"><b class="qv">南纪阻归檝</b><i class="qv">李光弼</i></span></div>
+<div class="qb-e" data-n="41" data-name="张世杰" data-g="guo" data-que="0"><span class="qb-gx qv">世杰得士卒心每言北方不可信故无降志闽之再造实頼其力然其人无逺志拥重兵厚赀惟务逺遁卒以防败哀哉</span><span class="qb-l"><b class="qv">南国卷云水</b><i class="qv">舟中苦热</i></span><span class="qb-l"><b class="qv">黄金倾有无</b><i class="qv">遣懐</i></span><span class="qb-l"><b class="qv">蛟龙亦狼狈</b><i class="qv">溪涨</i></span><span class="qb-l"><b class="qv">反复乃须防</b><i class="qv">草堂</i></span></div>
+<div class="qb-e" data-n="42" data-name="张世杰" data-g="guo" data-que="0"><span class="qb-l"><b class="qv">长风驾髙浪</b><i class="qv">龙门</i></span><span class="qb-l"><b class="qv">偃蹇龙虎姿</b><i class="qv">病柏</i></span><span class="qb-l"><b class="qv">萧条犹在否</b><i class="qv">上水遣懐</i></span><span class="qb-l"><b class="qv">寒日出雾迟</b><i class="qv">早发射洪</i></span></div>
+<div class="qb-e" data-n="43" data-name="苏刘义" data-g="guo" data-que="0"><span class="qb-gx qv">苏京湖老将虽出吕氏乃心专在王室永嘉推戴实建大功后世杰用事志欝欝不得展其人刚躁不可近然能服义终始不失大节厓山与其子俱得脱亦不知所终</span><span class="qb-l"><b class="qv">骅骝事天子</b><i class="qv">送髙司直</i></span><span class="qb-l"><b class="qv">龙怒防老湫</b><i class="qv">送韦评事</i></span><span class="qb-l"><b class="qv">鼔枻视青旻</b><i class="qv">寄薛三郎中</i></span><span class="qb-l"><b class="qv">烈风无时休</b><i class="qv">登慈恩寺塔</i></span></div>
+<div class="qb-e" data-n="44" data-name="曾渊子" data-g="guo" data-que="0"><span class="qb-gx qv">曾渊子元贬雷州御舟南巡复与政事厓山之败曽欲赴水为苏父子所留同得脱其家竟没敌后还五羊有人见其子雷郎者焉哀哉</span><span class="qb-l"><b class="qv">子负经济才</b><i class="qv">别唐诫</i></span><span class="qb-l"><b class="qv">欝陶抱长策</b><i class="qv">贻华阳桞少府</i></span><span class="qb-l"><b class="qv">安得万里风</b><i class="qv">夏夜叹</i></span><span class="qb-l"><b class="qv">南图囬羽翮</b><i class="qv">送严公入朝</i></span></div>
+<div class="qb-e" data-n="45" data-name="江丞相万里" data-g="guo" data-que="0"><span class="qb-gx qv">先生居饶州敌入城先生投府第中池水死其弟万顷于防事上被执杀死哀哉</span><span class="qb-l"><b class="qv">星拆台衡地</b><i class="qv">送苏州李长史</i></span><span class="qb-l"><b class="qv">斯文去矣休</b><i class="qv">送王信州</i></span><span class="qb-l"><b class="qv">湖光与天逺</b><i class="qv">过洞庭</i></span><span class="qb-l"><b class="qv">屈注沧江流</b><i class="qv">奉同郭给事</i></span></div>
+<div class="qb-e" data-n="46" data-name="赵倅昴发" data-g="guo" data-que="0"><span class="qb-gx qv">敌至池州倅昴发蜀人夫妇自经死</span><span class="qb-l"><b class="qv">风雷飒万里</b><i class="qv">大雨</i></span><span class="qb-l"><b class="qv">大江动我前</b><i class="qv">水会渡</i></span><span class="qb-l"><b class="qv">青衿一憔悴</b><i class="qv">衡山县学</i></span><span class="qb-l"><b class="qv">名与日月悬</b><i class="qv">陈拾遗故宅</i></span></div>
+<div class="qb-e" data-n="47" data-name="将军王安节" data-g="guo" data-que="0"><span class="qb-gx qv">常州败敌生获王安节不屈而死敌谓过江以来武人忠义者惟王安节一人安节乃节度使王坚子也</span><span class="qb-l"><b class="qv">激烈伤雄才</b><i class="qv">金华山观</i></span><span class="qb-l"><b class="qv">直气横乾坤</b><i class="qv">别李义</i></span><span class="qb-l"><b class="qv">倜傥汗血驹</b><i class="qv">别张建封</i></span><span class="qb-l"><b class="qv">见此忠义门</b><i class="qv">柏中丞除官制</i></span></div>
+<div class="qb-e" data-n="48" data-name="李安抚芾" data-g="guo" data-que="0"><span class="qb-gx qv">肯斋先生蜀人寓居衡阳乙亥留梦炎为潭帅梦炎归相始起先生为代先生仓卒运掉城守甚备及城陷先生杀其家人乃自焚死哀哉</span><span class="qb-l"><b class="qv">杀气吹沅湘</b><i class="qv">入衡州</i></span><span class="qb-l"><b class="qv">髙兴激荆衡</b><i class="qv">李八判官</i></span><span class="qb-l"><b class="qv">城中贤府主</b><i class="qv">课伐木</i></span><span class="qb-l"><b class="qv">千秋万岁名</b><i class="qv">梦李白</i></span></div>
+<div class="qb-e" data-n="49" data-name="李制置庭芝" data-g="guo" data-que="0"><span class="qb-gx qv">庭芝得爰立之命引兵至泰州为敌所困泰州孙九卖城庭芝被执诛于扬州市虽无功于国一死为不负国矣</span><span class="qb-l"><b class="qv">空留玉帐术</b><i class="qv">送严公</i></span><span class="qb-l"><b class="qv">那免白头翁</b><i class="qv">陪章留后</i></span><span class="qb-l"><b class="qv">死者长已矣</b><i class="qv">石壕吏</i></span><span class="qb-l"><b class="qv">淮海生清风</b><i class="qv">送髙司直</i></span></div>
+<div class="qb-e" data-n="50" data-name="姜都统才" data-g="guo" data-que="0"><span class="qb-gx qv">淮东猛将扬州前后主战皆其人也及泰州破被执敌爱其才勇啖以官爵不肯降骂诸负国者临刑含血以喷骂敌不绝口其英风义烈淮人言之无不伤感惜哉</span><span class="qb-l"><b class="qv">屹然强寇敌</b><i class="qv">王思礼</i></span><span class="qb-l"><b class="qv">古人重守边</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">惜哉功名忤</b><i class="qv">薛少保</i></span><span class="qb-l"><b class="qv">死亦埀千年</b><i class="qv">义鹘</i></span></div>
+<div class="qb-e" data-n="51" data-name="张制置珏" data-g="guo" data-que="0"><span class="qb-gx qv">蜀之健将元与昝万寿齐名昝降张独不降行朝擢授制阃未知得拜命否蜀虽糜碎珏竟不降为左右所卖珏觉而逃遁被囚鎻入北不肯屈后不知如何</span><span class="qb-l"><b class="qv">气敌万人将</b><i class="qv">杨监画鹰</i></span><span class="qb-l"><b class="qv">独在天一隅</b><i class="qv">遣懐</i></span><span class="qb-l"><b class="qv">向使国不亡</b><i class="qv">九成宫</i></span><span class="qb-l"><b class="qv">功业竟何如</b><i class="qv">别张建封</i></span></div>
+<div class="qb-e" data-n="52" data-name="陆枢密秀夫" data-g="guo" data-que="0"><span class="qb-gx qv">字君实文笔英妙自维扬幕入朝京师陷永嘉推戴有力及驻厓山兼宰相凡朝廷事皆秀夫润色纲纪之厓山陷与全家赴水死哀哉</span><span class="qb-l"><b class="qv">文彩珊瑚钩</b><i class="qv">奉同郭给事</i></span><span class="qb-l"><b class="qv">淑气含公鼎</b><i class="qv">张九龄</i></span><span class="qb-l"><b class="qv">烱烱一心在</b><i class="qv">严武</i></span><span class="qb-l"><b class="qv">天水相与永</b><i class="qv">渼陂西南台</i></span></div>
+<div class="qb-e" data-n="53" data-name="勤王" data-g="shen" data-que="0"><span class="qb-gx qv">甲戌冬诏天下勤王予守章贡首应诏意同志者当接踵而奋已而竟无应者予遂以孤军赴阙世事不济殆由于此哀哉</span><span class="qb-l"><b class="qv">出师亘长云</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">尽驱诣阙下</b><i class="qv">往在</i></span><span class="qb-l"><b class="qv">首唱恢大义</b><i class="qv">衡山县学</i></span><span class="qb-l"><b class="qv">埀之俟来者</b><i class="qv">苏源明</i></span></div>
+<div class="qb-e" data-n="54" data-name="苏州" data-g="shen" data-que="0"><span class="qb-gx qv">予领兵赴阙时陈宜中归永嘉留丞相梦炎当国梦炎意不相乐出予以制阃守吴门寻以独松事急陈丞相留丞相陈枢密文龙连书趣还宿卫予不得已行未几姑苏陷哀哉</span><span class="qb-l"><b class="qv">嵯峨阊门北</b><i class="qv">壮游</i></span><span class="qb-l"><b class="qv">朱旗散广川</b><i class="qv">饯裴二</i></span><span class="qb-l"><b class="qv">控带莽悠悠</b><i class="qv">送韦评事</i></span><span class="qb-l"><b class="qv">惨淡陵风烟</b><i class="qv">草堂</i></span></div>
+<div class="qb-e" data-n="55" data-name="拜相" data-g="shen" data-que="0"><span class="qb-gx qv">予自吴门还遣守独松戍余杭丙子正月初二日除知临安府辞不拜引轻兵至阙陈大义不得见十八夜宜中逃次日早予除枢密使午拜丞相枢密使都督诸路军马然事已无及无可奈何矣予不敢当亡国之名惟有危难捐躯而已</span><span class="qb-l"><b class="qv">我来属时危</b><i class="qv">九成宫</i></span><span class="qb-l"><b class="qv">朝野色枯槁</b><i class="qv">送长孙侍御</i></span><span class="qb-l"><b class="qv">倚君金华省</b><i class="qv">张九龄</i></span><span class="qb-l"><b class="qv">不在相逢早</b><i class="qv">赠射洪李四丈</i></span></div>
+<div class="qb-e" data-n="56" data-name="出使" data-g="shen" data-que="0"><span class="qb-gx qv">初宜中防蔽外庭乃遣使北军求议和约见巴延于长安堰已而不如约故敌径至髙亭山要以相见宜中遂逃上下皆莫知其详予既辞相印不拜遂奉成命以议为名在敌营敌强以降予见巴延开陈大义词气慷慨敌颇倾动寻留不遣而丞相吴坚右丞贾余庆同知枢密院谢堂以下竟自纳欵予责巴延留使失信及数敌罪恶以死自誓而一无所及矣痛哉</span><span class="qb-l"><b class="qv">隔河见胡骑</b><i class="qv">前出塞</i></span><span class="qb-l"><b class="qv">朝进东门营</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">皇皇使臣体</b><i class="qv">寄崔评事</i></span><span class="qb-l"><b class="qv">词气浩纵横</b><i class="qv">舂陵行</i></span></div>
+<div class="qb-e" data-n="57" data-name="发京师" data-g="shen" data-que="0"><span class="qb-gx qv">自国都失守应降表及行下省札播告归附皆不敢使予闻知予居敌中欲求速死敌卫守甚严务为涂塞耳目二月八日大臣吴坚贾余庆家铉翁刘岊皆以祈请使为名下船诣北庭敌忽驱予并行予不肯往被其捽迫不得已行至谢村几逃去</span><span class="qb-l"><b class="qv">东下姑苏台</b><i class="qv">壮游</i></span><span class="qb-l"><b class="qv">挥涕恋行在</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">苍茫云雾浮</b><i class="qv">发秦州</i></span><span class="qb-l"><b class="qv">风忛倚翠盖</b><i class="qv">幽人</i></span></div>
+<div class="qb-e" data-n="58" data-name="去镇江" data-g="shen" data-que="0"><span class="qb-gx qv">予至京口北行有日矣予欲引决同行士杜浒曰且遁逃不获死未晩也遂谋走真州时江中皆北船偶物色一空船在敌籍外捐重资约之二月晦日夕一更后予约同行十一人潜出邸挟刃自随不济则自杀幸而安行无虞遂溯而上敌船绵亘江上几不得出三月朔抵真州今而后喜可知也</span><span class="qb-l"><b class="qv">京口渡江航</b><i class="qv">送许八拾遗</i></span><span class="qb-l"><b class="qv">穷途仗神道</b><i class="qv">送魏六丈</i></span><span class="qb-l"><b class="qv">萧条向水陆</b><i class="qv">入衡州</i></span><span class="qb-l"><b class="qv">云雨白浩浩</b><i class="qv">送长孙侍御</i></span></div>
+<div class="qb-e" data-n="59" data-name="至真州" data-g="shen" data-que="0"><span class="qb-gx qv">予至真州登城四望徘徊感叹守苖再成慷慨有志略闻予言踊跃思奋予即作书报制阃李庭芝及约淮西夏贵又作诸州太守书约以兴复苖守遣人四出导意两日乆与予讲进取方畧使天命在宋是行也中兴之机也一人狐疑事乃大谬惜哉</span><span class="qb-l"><b class="qv">万里长江边</b><i class="qv">送髙司直</i></span><span class="qb-l"><b class="qv">去国同王粲</b><i class="qv">通泉驲</i></span><span class="qb-l"><b class="qv">青山意不尽</b><i class="qv">上牛头寺</i></span><span class="qb-l"><b class="qv">皇天照嗟叹</b><i class="qv">舟中苦热</i></span></div>
+<div class="qb-e" data-n="60" data-name="行淮东" data-g="shen" data-que="0"><span class="qb-gx qv">李庭芝闻予至真州以为来说城遣使数十軰来涖杀予苖再成不肯然不得不出予以自白以上巳日绐予出城门闭城不荅予欲赴濠死未防苖遣五十人送行行五十里布刃于野诘问甚乆使一语可疑即为草间血矣其人信予言为之叹惋送至州境夜至扬州西门欲扣城入前却数四四人遁去予与七人走荒野空屋中是日敌万骑自屋后过幸而茍免自是变姓名趍髙邮初五夜行屡迷失道旦敌哨各鸟兽窜伏续去一人杀伤一人又幸喜脱予时日夜在死亡中惊惴危惧饥饿无聊人生逆境有如此者哀哉</span><span class="qb-l"><b class="qv">客子中夜发</b><i class="qv">赴奉先县</i></span><span class="qb-l"><b class="qv">月照白水山</b><i class="qv">彭衙行</i></span><span class="qb-l"><b class="qv">悲辛但狂顾</b><i class="qv">懐郑司戸</i></span><span class="qb-l"><b class="qv">浩荡前后间</b><i class="qv">宿清溪驲</i></span></div>
+<div class="qb-e" data-n="61" data-name="自淮归浙东" data-g="shen" data-que="0"><span class="qb-gx qv">予髙邮道中遇哨得脱行数十里匍匐不能行幸遇村夫雇倩箩擡入郡又有被伤者扶持强行血衣淋漓见者伤惜初七日至郡地分官盘诘甚至称制置司有报文丞相来说城合一路觉察不纳南来人予等既变姓名地分官见有伤者不疑聼下船去沿途歴尽艰险得至泰州城下伏十余日趍通州自下船后哨骑或隔五里或隔十里惊惶连日达通州城反复诘问数日不纳不得已从地分官吐实语太守杨思复遂得覆防主圃子内大舟中然后以海舟送归浙东船中遇风波屡覆又遇贼追逼数四是行寄一生于万死不复望见天日至永嘉惟存六人</span><span class="qb-l"><b class="qv">北走惊险艰</b><i class="qv">彭衙行</i></span><span class="qb-l"><b class="qv">十步一囬首</b><i class="qv">相从行</i></span><span class="qb-l"><b class="qv">碧海吹衣裳</b><i class="qv">又丄后园山脚</i></span><span class="qb-l"><b class="qv">挂席上南斗</b><i class="qv">别章使君</i></span></div>
+<div class="qb-e" data-n="62" data-name="至福安" data-g="shen" data-que="0"><span class="qb-gx qv">益王以天下兵马都元帅卫王以副元帅建号于永嘉随趍三山开府予四月八日到永嘉则元帅舟去已一日矣亟使副守李珏驿报行府陈丞相即遣人来议拥立事予深賛大议五月一日登极予以观文殿学士侍读召赴行在二十六日至行都即再相然国方草创陈宜中尸其事专制于张世杰予名宰相徒取充位遂不敢拜议出督</span><span class="qb-l"><b class="qv">握节汉臣囬</b><i class="qv">郑驸马池台</i></span><span class="qb-l"><b class="qv">麻鞋见天子</b><i class="qv">述懐</i></span><span class="qb-l"><b class="qv">感激动四极</b><i class="qv">严武</i></span><span class="qb-l"><b class="qv">壮士泪如雨</b><i class="qv">听杨氏歌</i></span></div>
+<div class="qb-e" data-n="63" data-name="福安宰相" data-g="shen" data-que="0"><span class="qb-gx qv">予至通州地分官以制置司文移为说甚作艰阻予不得已吐实以通杨帅守思复乃云谍报许浦有马根寻文丞相甚信予言不直制司予然后得杨守存恤遂导南归及过明州东门有列岸数百艘初不知为敌把隘船也后问之东门道士云是日敌头目见船过问左右曰此何船皆以渔舟对遂得善去呜呼危哉杨守谓予言欲得海船数百艘当约许帅文德拥兵勤王慨然有誓清之志予至永嘉即详报陈丞相不以为信乃遣毛浚之通州而不以告予浚至通州守问予何以无书遂发怒浚几不免浚出而通遂降敌矣惜哉</span><span class="qb-l"><b class="qv">纷纷防乱际</b><i class="qv">柏中丞除官制</i></span><span class="qb-l"><b class="qv">反复归圣朝</b><i class="qv">郑公防</i></span><span class="qb-l"><b class="qv">秉钧孰为偶</b><i class="qv">赠李八判官</i></span><span class="qb-l"><b class="qv">扶顚永萧条</b><i class="qv">李光弼</i></span></div>
+<div class="qb-e" data-n="64" data-name="南剑州督" data-g="shen" data-que="0"><span class="qb-gx qv">始予至永嘉留一月候命永嘉及台处豪杰皆来自献愿从海道作战守规模予至福安欲还永嘉谋进取庙谟不以为然遂议开督于广广陷乃出南剑开府聚兵财为收复江西计于时幕府选辟皆一时名士宜中既弃临安及三山登极欲倚世杰复浙东西以自洗濯所以阻予永嘉之行后取定海兵败李珏为制阃众方思用予悔已不及惜哉</span><span class="qb-l"><b class="qv">剑外春天逺</b><i class="qv">送司马入京</i></span><span class="qb-l"><b class="qv">江阁临石面</b><i class="qv">简严云安</i></span><span class="qb-l"><b class="qv">幕府盛才贤</b><i class="qv">次古城店</i></span><span class="qb-l"><b class="qv">意气今谁见</b><i class="qv">白马</i></span></div>
+<div class="qb-e" data-n="65" data-name="汀州" data-g="shen" data-que="0"><span class="qb-gx qv">予在剑朝廷严趣之汀十月行十一月至汀州而福安随陷车驾幸海道矣事会之不齐如此哀哉</span><span class="qb-l"><b class="qv">雷霆走精锐</b><i class="qv">送樊侍御</i></span><span class="qb-l"><b class="qv">斧钺下青防</b><i class="qv">送李大夫</i></span><span class="qb-l"><b class="qv">江城今夜客</b><i class="qv">出郭</i></span><span class="qb-l"><b class="qv">惨淡飞云汀</b><i class="qv">薛判官</i></span></div>
+<div class="qb-e" data-n="66" data-name="梅州" data-g="shen" data-que="0"><span class="qb-gx qv">予至汀汀守可疑汀兵非素所拊循寇兵自赣自剑交至丁丑正月行府遂引兵趍漳州龙岩谋入卫漳潮道阻三月入梅州时麾下颇不循法斩二都统军政一新焉</span><span class="qb-l"><b class="qv">楼角凌风迥</b><i class="qv">东楼</i></span><span class="qb-l"><b class="qv">孤城隐雾深</b><i class="qv">野望</i></span><span class="qb-l"><b class="qv">万事随转烛</b><i class="qv">佳人</i></span><span class="qb-l"><b class="qv">秋光近青岑</b><i class="qv">伐木</i></span></div>
+<div class="qb-e" data-n="67" data-name="赣州" data-g="shen" data-que="0"><span class="qb-gx qv">五月引兵自梅岭出时赣吉兵皆来会六月大防于雩都进攻兴国县返正于是驻屯遣大兵攻赣州又以偏师出吉州赣诸县皆复虏号令惟行于城中吉水永丰万安永新龙泉以次皆复临洪袁瑞莫不响应诣军门请约束者相继兴国黄州新复皆来诣命汀州有伪天子黄从斩首至府上下翕合气势甚盛天若祚宋则是举也幸而一防国事埀成之候也</span><span class="qb-l"><b class="qv">崆峒杀气黑</b><i class="qv">壮游</i></span><span class="qb-l"><b class="qv">洒血暗郊坰</b><i class="qv">薛判官</i></span><span class="qb-l"><b class="qv">哀笳晓幽咽</b><i class="qv">留花门</i></span><span class="qb-l"><b class="qv">石壁断空青</b><i class="qv">西阁</i></span></div>
+<div class="qb-e" data-n="68" data-name="江西" data-g="shen" data-que="0"><span class="qb-gx qv">行府偏师出吉州者战于钟步不利攻赣兵不幸相继而败行府孤立时处置安抚邹防聚兵数万在永丰境行府引兵就之会其军亦溃而敌自后追及不可支虽人谋之不臧殆天意之未顺每一念此气噎欲绝哀哉</span><span class="qb-l"><b class="qv">东望西江永</b><i class="qv">弟观</i></span><span class="qb-l"><b class="qv">髙义在云台</b><i class="qv">别张建封</i></span><span class="qb-l"><b class="qv">到今用钺地</b><i class="qv">草堂</i></span><span class="qb-l"><b class="qv">霜鸿有余哀</b><i class="qv">金华山</i></span></div>
+<div class="qb-e" data-n="69" data-name="江西" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">旄头初俶扰</b><i class="qv">将适江陵</i></span><span class="qb-l"><b class="qv">义士皆痛愤</b><i class="qv">草堂</i></span><span class="qb-l"><b class="qv">乾坤空峥嵘</b><i class="qv">画鹘</i></span><span class="qb-l"><b class="qv">向者留遗恨</b><i class="qv">空灵岸</i></span></div>
+<div class="qb-e" data-n="70" data-name="复入广" data-g="shen" data-que="0"><span class="qb-gx qv">行府败于江西收散兵复入汀寻出会昌入安逺趍循州是冬屯南岭戊寅二月出惠州海丰县驻于丽江浦徧遣使沿海访问车驾六月翠华至厓山行府移船入澳八月进少保信国公职任依旧行府欲赴阙张世杰阻隔于中不果行</span><span class="qb-l"><b class="qv">东浮沧海漘</b><i class="qv">薛郎中</i></span><span class="qb-l"><b class="qv">南为祝融客</b><i class="qv">咏懐</i></span><span class="qb-l"><b class="qv">漂转混泥沙</b><i class="qv">柴门</i></span><span class="qb-l"><b class="qv">迫此短景急</b><i class="qv">龙门</i></span></div>
+<div class="qb-e" data-n="71" data-name="驻惠境" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">朱鳯日威埀</b><i class="qv">北风</i></span><span class="qb-l"><b class="qv">罗浮展衰步</b><i class="qv">咏懐</i></span><span class="qb-l"><b class="qv">北风吹蒹葭</b><i class="qv">秋行官张望</i></span><span class="qb-l"><b class="qv">送此齿髪暮</b><i class="qv">雨</i></span></div>
+<div class="qb-e" data-n="72" data-name="驻潮" data-g="shen" data-que="0"><span class="qb-gx qv">十月引兵趍潮阳稍平群盗人心翕然</span><span class="qb-l"><b class="qv">寒城朝烟淡</b><i class="qv">吴侍御宅</i></span><span class="qb-l"><b class="qv">江沬拥春沙</b><i class="qv">逺游</i></span><span class="qb-l"><b class="qv">群盗乱豺虎</b><i class="qv">雷</i></span><span class="qb-l"><b class="qv">囬首白日斜</b><i class="qv">喜晴</i></span></div>
+<div class="qb-e" data-n="73" data-name="行府之败" data-g="shen" data-que="0"><span class="qb-gx qv">十一月谍报冦大众至漳泉度势不敌移屯将趍海丰为冦骑追及于中道时行已数日不为备仓卒溃散遂被执</span><span class="qb-l"><b class="qv">送兵五千人</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">散足尽西靡</b><i class="qv">种莴苣</i></span><span class="qb-l"><b class="qv">留滞一老翁</b><i class="qv">雨</i></span><span class="qb-l"><b class="qv">盖棺事则已</b><i class="qv">奉先县</i></span></div>
+<div class="qb-e" data-n="74" data-name="行府之败" data-g="shen" data-que="0"><span class="qb-gx qv">自国难后行府白手起兵展转患难东南防涉万余里事不幸不济然臣子尽心焉尔矣成败天也独奈何哉</span><span class="qb-l"><b class="qv">翠盖防尘飞</b><i class="qv">咏懐</i></span><span class="qb-l"><b class="qv">仗钺奋忠烈</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">千秋沧海南</b><i class="qv">张九龄</i></span><span class="qb-l"><b class="qv">事与云水白</b><i class="qv">王思礼</i></span></div>
+<div class="qb-e" data-n="75" data-name="南海" data-g="shen" data-que="0"><span class="qb-gx qv">予被执后即服脑子约二两昏眩乆之竟不能死及至张元帅所众脇之跪拜誓死不屈张遂以客礼见寻置海船中守防甚谨至厓山令作书招张世杰手写诗一首复命末句云人生自古谁无死留取丹心照汗青张不强而止厓山之败亲所目击痛苦酷罸无以胜堪时日夕谋蹈海而防闲不可出矣失此一死困苦至于今日可胜恨哉</span><span class="qb-l"><b class="qv">开帆驾洪涛</b><i class="qv">遣遇</i></span><span class="qb-l"><b class="qv">血战乾坤赤</b><i class="qv">送李判官</i></span><span class="qb-l"><b class="qv">风雨闻号呼</b><i class="qv">草堂</i></span><span class="qb-l"><b class="qv">流涕洒丹极</b><i class="qv">别蔡著作</i></span></div>
+<div class="qb-e" data-n="76" data-name="南海" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">南海春天外</b><i class="qv">送叚功曹</i></span><span class="qb-l"><b class="qv">秪应学水仙</b><i class="qv">舟中</i></span><span class="qb-l"><b class="qv">自伤迟暮眼</b><i class="qv">寓目</i></span><span class="qb-l"><b class="qv">为我一澘然</b><i class="qv">李使君</i></span></div>
+<div class="qb-e" data-n="77" data-name="至广州" data-g="shen" data-que="0"><span class="qb-gx qv">自厓山至五羊壮哉郡真形胜之国也往年冦平其城收复后不能完整为守国计哀哉吾国之无人乎</span><span class="qb-l"><b class="qv">南方瘴厉地</b><i class="qv">雷</i></span><span class="qb-l"><b class="qv">白马东北来</b><i class="qv">白马</i></span><span class="qb-l"><b class="qv">长城扫遗堞</b><i class="qv">李光弼</i></span><span class="qb-l"><b class="qv">泪落强徘徊</b><i class="qv">郑驸马池台</i></span></div>
+<div class="qb-e" data-n="78" data-name="至南安军" data-g="shen" data-que="0"><span class="qb-gx qv">予四月二十二日离五羊五月四日出梅岭至南安军钥置舟中予不食拟至庐陵得瞑目庶防首丘之义云</span><span class="qb-l"><b class="qv">短日行梅岭</b><i class="qv">哭李常侍</i></span><span class="qb-l"><b class="qv">天门欝嵯峨</b><i class="qv">别唐诫</i></span><span class="qb-l"><b class="qv">江西万里船</b><i class="qv">春夜留家</i></span><span class="qb-l"><b class="qv">归期无奈何</b><i class="qv">何将军山林</i></span></div>
+<div class="qb-e" data-n="79" data-name="过章贡" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">崆峒地无轴</b><i class="qv">送从弟亚</i></span><span class="qb-l"><b class="qv">江山云雾昏</b><i class="qv">别李义</i></span><span class="qb-l"><b class="qv">萍漂忍流涕</b><i class="qv">入行军六弟宅</i></span><span class="qb-l"><b class="qv">故里但空存</b><i class="qv">后出塞</i></span></div>
+<div class="qb-e" data-n="80" data-name="至吉州" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">挂防逺色外</b><i class="qv">雨</i></span><span class="qb-l"><b class="qv">缅邈懐旧邱</b><i class="qv">破船</i></span><span class="qb-l"><b class="qv">江水风萧萧</b><i class="qv">桔柏度</i></span><span class="qb-l"><b class="qv">乌啼满城头</b><i class="qv">发秦州</i></span></div>
+<div class="qb-e" data-n="81" data-name="吉州" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">泊舟沧江岸</b><i class="qv">课伐木</i></span><span class="qb-l"><b class="qv">身轻一鸟过</b><i class="qv">送蔡师鲁</i></span><span class="qb-l"><b class="qv">请为父老歌</b><i class="qv">羗村</i></span><span class="qb-l"><b class="qv">歌长击樽破</b><i class="qv">屏迹</i></span></div>
+<div class="qb-e" data-n="82" data-name="吉州" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">戚戚去故里</b><i class="qv">前出塞</i></span><span class="qb-l"><b class="qv">我生苦飘零</b><i class="qv">通泉驲</i></span><span class="qb-l"><b class="qv">囬身视绿野</b><i class="qv">送李校书</i></span><span class="qb-l"><b class="qv">但见西岭青</b><i class="qv">扬旗</i></span></div>
+<div class="qb-e" data-n="83" data-name="过临江" data-g="shen" data-que="0"><span class="qb-gx qv">自离南安军五日而至庐陵七日过临江八日至丰城予虽不食未见其殆众以饮食交相逼迫予念既过郷州已失初望委命荒濵立节不白且闻暂止金陵郡出坎之会或者有陨自天未可知也遂复饮食勉狥众情初众议以予渐殆欲行无礼掩鼻以灌粥酪至是遂止乃知夷齐之心事由其独处荒山故得行其志耳</span><span class="qb-l"><b class="qv">独帆如飞鸿</b><i class="qv">赠苏徯</i></span><span class="qb-l"><b class="qv">清江转山急</b><i class="qv">早发射洪</i></span><span class="qb-l"><b class="qv">囬首白云多</b><i class="qv">何将军山林</i></span><span class="qb-l"><b class="qv">山寒夜中泣</b><i class="qv">龙门镇</i></span></div>
+<div class="qb-e" data-n="84" data-name="过隆兴" data-g="shen" data-que="0"><span class="qb-gx qv">隆兴自陷没后忠义奋起几于返正屠灭殆尽过而伤之</span><span class="qb-l"><b class="qv">临江乆徘徊</b><i class="qv">山寺</i></span><span class="qb-l"><b class="qv">再读徐孺碑</b><i class="qv">张九龄</i></span><span class="qb-l"><b class="qv">交游飒向尽</b><i class="qv">饯裴二端公</i></span><span class="qb-l"><b class="qv">到今耆旧悲</b><i class="qv">病橘</i></span></div>
+<div class="qb-e" data-n="85" data-name="江行" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">畏途随长江</b><i class="qv">白沙渡</i></span><span class="qb-l"><b class="qv">万里沧茫水</b><i class="qv">忆郑南玼</i></span><span class="qb-l"><b class="qv">游子去日长</b><i class="qv">成都</i></span><span class="qb-l"><b class="qv">壮心不肯已</b><i class="qv">戯赠友</i></span></div>
+<div class="qb-e" data-n="86" data-name="江行" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">江水东流去</b><i class="qv">陪王侍御宴</i></span><span class="qb-l"><b class="qv">浮云终日行</b><i class="qv">梦李白</i></span><span class="qb-l"><b class="qv">别离经死地</b><i class="qv">郑驸马池台</i></span><span class="qb-l"><b class="qv">饮啄媿残生</b><i class="qv">草堂</i></span></div>
+<div class="qb-e" data-n="87" data-name="江行" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">萧萧白杨路</b><i class="qv">李邕</i></span><span class="qb-l"><b class="qv">死人积如丘</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">大江东流去</b><i class="qv">成都府</i></span><span class="qb-l"><b class="qv">苍山旌斾愁</b><i class="qv">韦评事</i></span></div>
+<div class="qb-e" data-n="88" data-name="江行" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">连山暗烽燧</b><i class="qv">送从弟亚</i></span><span class="qb-l"><b class="qv">川谷血横流</b><i class="qv">送樊侍御</i></span><span class="qb-l"><b class="qv">挥泪临大江</b><i class="qv">送韦讽</i></span><span class="qb-l"><b class="qv">上有行云愁</b><i class="qv">遣兴</i></span></div>
+<div class="qb-e" data-n="89" data-name="江行" data-g="shen" data-que="0"><span class="qb-gx qv">六月六日过隆兴十二日至金陵囚邸八月二十三日渡江北行事会多有可慨尚何言哉</span><span class="qb-l"><b class="qv">朔风飘胡鴈</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">江城带素月</b><i class="qv">听杨氏歌</i></span><span class="qb-l"><b class="qv">安得覆八溟</b><i class="qv">客居</i></span><span class="qb-l"><b class="qv">滂沱洗吴越</b><i class="qv">喜雨</i></span></div>
+<div class="qb-e" data-n="90" data-name="北行" data-g="shen" data-que="0"><span class="qb-gx qv">八月二十六日至扬州九月初一日哭母小祥于邳州门外初九日至徐州吊项羽故宫登黄楼读子由赋十二日至沛县县有歌风台十五日至东平府十七日至髙唐州十八日过平原二十日至河间府二十一日至保定府</span><span class="qb-l"><b class="qv">浮云暮南征</b><i class="qv">前出塞</i></span><span class="qb-l"><b class="qv">我马向北嘶</b><i class="qv">白沙渡</i></span><span class="qb-l"><b class="qv">荆棘暗长原</b><i class="qv">园官送菜</i></span><span class="qb-l"><b class="qv">子规昼夜啼</b><i class="qv">客居</i></span></div>
+<div class="qb-e" data-n="91" data-name="北行" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">清秋望不极</b><i class="qv">野望</i></span><span class="qb-l"><b class="qv">中原杳茫茫</b><i class="qv">成都</i></span><span class="qb-l"><b class="qv">游子怅寂寥</b><i class="qv">桔柏渡</i></span><span class="qb-l"><b class="qv">下马古战塲</b><i class="qv">遣兴</i></span></div>
+<div class="qb-e" data-n="92" data-name="北行" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">浮云连海岱</b><i class="qv">登兖州城楼</i></span><span class="qb-l"><b class="qv">寒芜际碣石</b><i class="qv">昔游</i></span><span class="qb-l"><b class="qv">落景惜登临</b><i class="qv">杜侍御江楼</i></span><span class="qb-l"><b class="qv">人烟眇萧瑟</b><i class="qv">北征</i></span></div>
+<div class="qb-e" data-n="93" data-name="北行" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">平野入青徐</b><i class="qv">兖州城楼</i></span><span class="qb-l"><b class="qv">桑柘叶如雨</b><i class="qv">昔游</i></span><span class="qb-l"><b class="qv">信美无与适</b><i class="qv">成都府</i></span><span class="qb-l"><b class="qv">沉思情延伫</b><i class="qv">雨</i></span></div>
+<div class="qb-e" data-n="94" data-name="北行" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">乾坤几反复</b><i class="qv">苏侍御涣</i></span><span class="qb-l"><b class="qv">乘凌惜俄顷</b><i class="qv">渼陂西南台</i></span><span class="qb-l"><b class="qv">懐古视平芜</b><i class="qv">遣懐</i></span><span class="qb-l"><b class="qv">令人发深省</b><i class="qv">奉先寺</i></span></div>
+<div class="qb-e" data-n="95" data-name="北行" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">游子无根株</b><i class="qv">赠李四丈</i></span><span class="qb-l"><b class="qv">世梗悲路涩</b><i class="qv">送程录事</i></span><span class="qb-l"><b class="qv">关山雪边看</b><i class="qv">秋行官张望</i></span><span class="qb-l"><b class="qv">愁思胡笳夕</b><i class="qv">喜达行在所</i></span></div>
+<div class="qb-e" data-n="96" data-name="至燕城" data-g="shen" data-que="0"><span class="qb-gx qv">十月一日至燕城五日送千戸所枷禁十一月初一日苏枷初九日领赴北庭引问予不跪抗词不屈寻复还狱待死以至今日云</span><span class="qb-l"><b class="qv">往在西京时</b><i class="qv">往在</i></span><span class="qb-l"><b class="qv">胡星坠燕地</b><i class="qv">别唐诫</i></span><span class="qb-l"><b class="qv">登临意惘然</b><i class="qv">登惠义寺</i></span><span class="qb-l"><b class="qv">千秋一拭泪</b><i class="qv">酧薛判官</i></span></div>
+<div class="qb-e" data-n="97" data-name="至燕城" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">浩荡想幽冀</b><i class="qv">夏日叹</i></span><span class="qb-l"><b class="qv">行行郡国遥</b><i class="qv">野望</i></span><span class="qb-l"><b class="qv">天寒落万里</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">囬首向风飚</b><i class="qv">遣遇</i></span></div>
+<div class="qb-e" data-n="98" data-name="至燕城" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">百年不敢料</b><i class="qv">龙门关</i></span><span class="qb-l"><b class="qv">先后无丑好</b><i class="qv">遣懐</i></span><span class="qb-l"><b class="qv">绝境与谁同</b><i class="qv">送裴二</i></span><span class="qb-l"><b class="qv">飘泊南庭老</b><i class="qv">舟中</i></span></div>
+<div class="qb-e" data-n="99" data-name="入狱" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">阴房鬼火青</b><i class="qv">玉华宫</i></span><span class="qb-l"><b class="qv">白日亦寂寞</b><i class="qv">昔游</i></span><span class="qb-l"><b class="qv">自非旷士懐</b><i class="qv">登慈恩塔</i></span><span class="qb-l"><b class="qv">居人莽牢落</b><i class="qv">送樊侍御</i></span></div>
+<div class="qb-e" data-n="100" data-name="入狱" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">天黑闭春院</b><i class="qv">大云寺</i></span><span class="qb-l"><b class="qv">今如□中兎</b><i class="qv">懐郑司戸</i></span><span class="qb-l"><b class="qv">人间夜寥閴</b><i class="qv">聼许十一诵诗</i></span><span class="qb-l"><b class="qv">永日不可暮</b><i class="qv">夏夜叹</i></span></div>
+<div class="qb-e" data-n="101" data-name="入狱" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">行行见覊束</b><i class="qv">写懐</i></span><span class="qb-l"><b class="qv">斯人独憔悴</b><i class="qv">梦李白</i></span><span class="qb-l"><b class="qv">欲觉闻晨钟</b><i class="qv">游奉先寺</i></span><span class="qb-l"><b class="qv">青灯死分翳</b><i class="qv">宿凿石浦</i></span></div>
+<div class="qb-e" data-n="102" data-name="入狱" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">劳生共乾坤</b><i class="qv">写懐</i></span><span class="qb-l"><b class="qv">何时有终极</b><i class="qv">别賛上人</i></span><span class="qb-l"><b class="qv">灯影照无睡</b><i class="qv">大云寺</i></span><span class="qb-l"><b class="qv">今夕复何夕</b><i class="qv">赠卫八处士</i></span></div>
+<div class="qb-e" data-n="103" data-name="入狱" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">眼前列杻械</b><i class="qv">草堂</i></span><span class="qb-l"><b class="qv">熊挂玄蛇吼</b><i class="qv">上水遣懐</i></span><span class="qb-l"><b class="qv">夜看丰城气</b><i class="qv">咏懐</i></span><span class="qb-l"><b class="qv">朝光入瓮牖</b><i class="qv">晦日</i></span></div>
+<div class="qb-e" data-n="104" data-name="入狱" data-g="shen" data-que="0"><span class="qb-l"><b class="qv">徘徊虎穴上</b><i class="qv">寄賛上人</i></span><span class="qb-l"><b class="qv">吾道正覊束</b><i class="qv">观水涨</i></span><span class="qb-l"><b class="qv">落日将何如</b><i class="qv">宴厓下亭</i></span><span class="qb-l"><b class="qv">清文动哀玉</b><i class="qv">别薛判官</i></span></div>
+<div class="qb-e" data-n="105" data-name="懐旧" data-g="you" data-que="0"><span class="qb-gx qv">自百五至百九皆懐念故人为王事而没者固多不能尽纪呜呼哀哉自百二十六至百三十八皆师友之际同列之情死生契濶不能自已也</span><span class="qb-l"><b class="qv">风尘淹白日</b><i class="qv">寄第五弟</i></span><span class="qb-l"><b class="qv">乾坤霾涨海</b><i class="qv">将适江陵</i></span><span class="qb-l"><b class="qv">为我问故人</b><i class="qv">送髙司直</i></span><span class="qb-l"><b class="qv">离别今谁在</b><i class="qv">懐防上游</i></span></div>
+<div class="qb-e" data-n="106" data-name="懐旧" data-g="you" data-que="0"><span class="qb-l"><b class="qv">天寒昏无日</b><i class="qv">石龛</i></span><span class="qb-l"><b class="qv">故郷不可思</b><i class="qv">赤谷</i></span><span class="qb-l"><b class="qv">访旧半为鬼</b><i class="qv">赠卫八处士</i></span><span class="qb-l"><b class="qv">惨惨中肠悲</b><i class="qv">送髙书记</i></span></div>
+<div class="qb-e" data-n="107" data-name="懐旧" data-g="you" data-que="0"><span class="qb-l"><b class="qv">故园花自发</b><i class="qv">忆弟</i></span><span class="qb-l"><b class="qv">无复故人来</b><i class="qv">昔游</i></span><span class="qb-l"><b class="qv">乱离朋友尽</b><i class="qv">遣懐</i></span><span class="qb-l"><b class="qv">幽佩为谁哀</b><i class="qv">雨</i></span></div>
+<div class="qb-e" data-n="108" data-name="懐旧" data-g="you" data-que="0"><span class="qb-l"><b class="qv">故人入我梦</b><i class="qv">梦李白</i></span><span class="qb-l"><b class="qv">相视涕阑干</b><i class="qv">彭衙行</i></span><span class="qb-l"><b class="qv">四海一涂炭</b><i class="qv">逃难</i></span><span class="qb-l"><b class="qv">焉用身独完</b><i class="qv">埀老别</i></span></div>
+<div class="qb-e" data-n="109" data-name="懐旧" data-g="you" data-que="0"><span class="qb-l"><b class="qv">中夜懐友朋</b><i class="qv">宿清溪驲</i></span><span class="qb-l"><b class="qv">百年见存没</b><i class="qv">郑公防</i></span><span class="qb-l"><b class="qv">风吹苍江树</b><i class="qv">雨</i></span><span class="qb-l"><b class="qv">寒月照白骨</b><i class="qv">北征</i></span></div>
+<div class="qb-e" data-n="110" data-name="金应" data-g="you" data-que="0"><span class="qb-gx qv">承信郎路分金应元备笔札使令性刚知义随勤王入京予陷敌左右星散惟应无叛去志在镇江得同脱狼狈淮东备尝艰苦至通州以忧欝病死葬城下哀哉</span><span class="qb-l"><b class="qv">追随三十载</b><i class="qv">送顾文学</i></span><span class="qb-l"><b class="qv">艰难媿深情</b><i class="qv">羗村</i></span><span class="qb-l"><b class="qv">何处埋尔骨</b><i class="qv">鹿头山</i></span><span class="qb-l"><b class="qv">呼号傍孤城</b><i class="qv">懐郑司戸</i></span></div>
+<div class="qb-e" data-n="111" data-name="张云" data-g="you" data-que="0"><span class="qb-gx qv">路钤张云元吉州敢勇将官随阃勤王予既陷敌张云引兵自婺建剑汀归里敌已据吉城云不胜愤七月引所部袭敌于南栅门击杀甚众本为散退之计会天明战渴赴江饮水寻被冲溺死使能少忍当为吾用哀哉</span><span class="qb-l"><b class="qv">痛愤寄所宣</b><i class="qv">义鹘</i></span><span class="qb-l"><b class="qv">四方服勇决</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">壮士敛精魂</b><i class="qv">客居</i></span><span class="qb-l"><b class="qv">里巷犹呜咽</b><i class="qv">赴奉先县</i></span></div>
+<div class="qb-e" data-n="112" data-name="刘钦贡元" data-g="you" data-que="0"><span class="qb-gx qv">字敬德吉州贡士素有志气好功名上下今古健于议论予开府汀城敬德来宁州就招谕使邹防会敌暴至竟死乱兵中同时死者鞠华叔颜斯立颜起岩皆郡之英俊能为时立事功者天生人才若此曾未施一技速折乃尔哀哉</span><span class="qb-l"><b class="qv">文章日自负</b><i class="qv">苏源明</i></span><span class="qb-l"><b class="qv">去家死路傍</b><i class="qv">上后园山脚</i></span><span class="qb-l"><b class="qv">高视见覇王</b><i class="qv">剑门</i></span><span class="qb-l"><b class="qv">感子故意长</b><i class="qv">赠卫八处士</i></span></div>
+<div class="qb-e" data-n="113" data-name="吕武" data-g="you" data-que="0"><span class="qb-gx qv">环卫官吕武太平人靣旗为军予陷冦应募随从北行其人劲烈靣折人触忌讳不避然忠鲠人皆服之予与同脱镇江行淮东患难中頼以自壮及开府南剑遣其结约江淮道寻阻武间关数千里即予于汀梅挺身冦寨化贼为兵方将率数千人出江西以无礼于士大夫遭横逆死死之日一军为流涕哀哉</span><span class="qb-l"><b class="qv">疾恶懐刚肠</b><i class="qv">壮游</i></span><span class="qb-l"><b class="qv">世人皆欲杀</b><i class="qv">不见</i></span><span class="qb-l"><b class="qv">魂魄犹正直</b><i class="qv">南池</i></span><span class="qb-l"><b class="qv">囬首肺肝热</b><i class="qv">铁堂峡</i></span></div>
+<div class="qb-e" data-n="114" data-name="巩宣使信" data-g="you" data-que="0"><span class="qb-gx qv">团练使都统招谕使巩信荆湖老将沉勇有谋奉朝命引所部随府予自兴国趍永丰敌追在后于东固方石岭下大战信据险坚立不动中数箭死土人殓之如生寻奏赠清逺军承宣使立庙战所而迄未有以慰忠魂也哀哉</span><span class="qb-l"><b class="qv">壮士血相视</b><i class="qv">严公武</i></span><span class="qb-l"><b class="qv">斯人已云亡</b><i class="qv">殿中杨监</i></span><span class="qb-l"><b class="qv">哀哀失木狖</b><i class="qv">吴侍御江上宅</i></span><span class="qb-l"><b class="qv">夜深经战塲</b><i class="qv">北征</i></span></div>
+<div class="qb-e" data-n="115" data-name="张秘撰汴" data-g="you" data-que="0"><span class="qb-gx qv">秘阁修撰广东提举督府叅谋张汴蜀人尝为二吴客佐荆湖幕习兵事予自赣勤王汴即入幕开督后领袖一府知无不为空坑之败秘撰易军士皂衣伏草中死乱兵后邹处置得其尸棺敛焉哀哉</span><span class="qb-l"><b class="qv">入幕旌旗动</b><i class="qv">别魏侍御</i></span><span class="qb-l"><b class="qv">挥翰绮绣扬</b><i class="qv">汝阳王琎</i></span><span class="qb-l"><b class="qv">烟雾防玉质</b><i class="qv">赴奉先县</i></span><span class="qb-l"><b class="qv">斯人今则亡</b><i class="qv">遣兴</i></span></div>
+<div class="qb-e" data-n="116" data-name="缪朝宗" data-g="you" data-que="0"><span class="qb-gx qv">环卫官知梅州缪朝宗淮人有意气尝为常熟邵氏客从予于平江予归福安自婺间道来相从精练干实孜孜奉公军府器械悉出其手空坑之败自经于山间哀哉</span><span class="qb-l"><b class="qv">空荒咆熊罴</b><i class="qv">课伐木</i></span><span class="qb-l"><b class="qv">摧残没藜莠</b><i class="qv">枯防</i></span><span class="qb-l"><b class="qv">平生江海心</b><i class="qv">破船</i></span><span class="qb-l"><b class="qv">其人骨已朽</b><i class="qv">喜晴</i></span></div>
+<div class="qb-e" data-n="117" data-name="闽三士" data-g="you" data-que="0"><span class="qb-gx qv">督机秘书谢杞督干架阁许由督干架阁李防节闽士之秀皆登科杞太学名士空坑之败不知所终哀哉</span><span class="qb-l"><b class="qv">俊逸鲍叅军</b><i class="qv">忆李白</i></span><span class="qb-l"><b class="qv">优游谢康乐</b><i class="qv">石柜阁</i></span><span class="qb-l"><b class="qv">豺虎正纵横</b><i class="qv">乆客</i></span><span class="qb-l"><b class="qv">南行道弥恶</b><i class="qv">青阳峡</i></span></div>
+<div class="qb-e" data-n="118" data-name="诸幕客" data-g="you" data-que="0"><span class="qb-gx qv">督府架阁吴文焕督遣林栋等皆闽士有干实宣劳幕府空坑之败被执寻遇害哀哉</span><span class="qb-l"><b class="qv">入幕未展才</b><i class="qv">赠李八判官</i></span><span class="qb-l"><b class="qv">辛苦在道路</b><i class="qv">送髙司直</i></span><span class="qb-l"><b class="qv">回首一茫茫</b><i class="qv">送李判官</i></span><span class="qb-l"><b class="qv">风悲浮云去</b><i class="qv">遣兴</i></span></div>
+<div class="qb-e" data-n="119" data-name="赵太监时赏" data-g="you" data-que="0"><span class="qb-gx qv">直宝章阁军器太监督府叅议官江西招讨副使赵时赏宗室有志气首宰旌德以一县抗敌数有功京师陷入闽行朝擢知邵武军以弃城罪去自予开督随府典兵数将偏师以当一面神采明隽议论慷慨空坑之败走之吴溪寻被执于隆兴遇害哀哉</span><span class="qb-l"><b class="qv">豪杰贵勲业</b><i class="qv">送殿中杨豊</i></span><span class="qb-l"><b class="qv">宗支神尧后</b><i class="qv">赠李八判官</i></span><span class="qb-l"><b class="qv">平生白羽扇</b><i class="qv">严公武</i></span><span class="qb-l"><b class="qv">欝结囬我首</b><i class="qv">述懐</i></span></div>
+<div class="qb-e" data-n="120" data-name="刘沐" data-g="you" data-que="0"><span class="qb-gx qv">宣教郎督府机宜带行太府寺簿刘沐字渊伯予隣曲朋友从勤王补官予陷渊伯领诸军还及予归国渊伯收部曲赴府会于汀专将一军为督帐亲卫沉实有谋圆机应物凡江西忠义皆渊伯所号召昼夜酬应精力不倦会病剧乍起空坑之败不得脱遇害于隆兴长子同日刑次子贡元死空坑乱兵予收其第三防子亦没于广哀哉</span><span class="qb-l"><b class="qv">王翰愿卜邻</b><i class="qv">赠韦左丞</i></span><span class="qb-l"><b class="qv">嵇康不得死</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">落月满屋梁</b><i class="qv">梦李白</i></span><span class="qb-l"><b class="qv">悲风为我起</b><i class="qv">金华山观</i></span></div>
+<div class="qb-e" data-n="121" data-name="孙□" data-g="you" data-que="0"><span class="qb-gx qv">宣教郎带行监官告院知吉州龙泉县孙□予长妹夫也予引兵出赣其邑人奉□以邑返正寻为亲党所陷遇害于隆兴哀哉</span><span class="qb-l"><b class="qv">故人有孙宰</b><i class="qv">彭衙行</i></span><span class="qb-l"><b class="qv">义均骨肉地</b><i class="qv">饯裴二</i></span><span class="qb-l"><b class="qv">连为粪土丛</b><i class="qv">往在</i></span><span class="qb-l"><b class="qv">挥手洒哀泪</b><i class="qv">别张建封</i></span></div>
+<div class="qb-e" data-n="122" data-name="彭司令震龙" data-g="you" data-que="0"><span class="qb-gx qv">宣教郎带行太社令知吉州永新县彭震龙予次妹夫也性跌宕喜功名起兵随勤王及归郡邑已陷乃结湖南诸峒豪杰谋兴复子出江西即以县返正敌遣军攻之其亲党内应被执遇害于郡城哀哉</span><span class="qb-l"><b class="qv">堂上会亲戚</b><i class="qv">送李挍书</i></span><span class="qb-l"><b class="qv">可怜马上郎</b><i class="qv">白马</i></span><span class="qb-l"><b class="qv">呻吟更流血</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">干戈浩茫茫</b><i class="qv">南池</i></span></div>
+<div class="qb-e" data-n="123" data-name="萧从事焘夫" data-g="you" data-que="0"><span class="qb-gx qv">从事郎萧焘夫永新县人工诗与字从予山中乆其兄敬夫诗尤豪俊亦尝客吾门焘夫从勤王得官及归賛彭司令收复郷邑规以正道予至兴国诣府白事意气慷慨邑城陷兄弟俱不免哀哉</span><span class="qb-l"><b class="qv">洒翰银钩连</b><i class="qv">陈拾遗故宅</i></span><span class="qb-l"><b class="qv">翩跹山颠鹤</b><i class="qv">西阁曝日</i></span><span class="qb-l"><b class="qv">惨淡闘龙蛇</b><i class="qv">喜晴</i></span><span class="qb-l"><b class="qv">及兹叹冥漠</b><i class="qv">青阳峡</i></span></div>
+<div class="qb-e" data-n="124" data-name="萧架阁" data-g="you" data-que="0"><span class="qb-gx qv">督干架阁监军萧明哲字元甫吉州贡士性刚毅遇事有胆气明于大节予至汀梅来从督幕及出江西监赣县义兵收复万安县寻复龙泉行府败元甫入野陂连结诸寨拒敌被执死于洪哀哉</span><span class="qb-l"><b class="qv">诸生旧裋褐</b><i class="qv">桥陵</i></span><span class="qb-l"><b class="qv">张目视冦雠</b><i class="qv">送韦评事</i></span><span class="qb-l"><b class="qv">高义终焉在</b><i class="qv">送王信州</i></span><span class="qb-l"><b class="qv">白骨更何忧</b><i class="qv">得弟观书</i></span></div>
+<div class="qb-e" data-n="125" data-name="陈督干" data-g="you" data-que="0"><span class="qb-gx qv">督干监军陈子敬赣人以资力雄郷里旧从予游行府至汀子敬招集义兵置屯皂口以据赣下流以遏敌船往来及行府攻赣子敬行其谋功效甚着行府败举兵黄塘连结山寨不降重兵袭溃不闻所终哀哉</span><span class="qb-l"><b class="qv">挺身艰难际</b><i class="qv">送韦评事</i></span><span class="qb-l"><b class="qv">虎穴连里闾</b><i class="qv">课伐木</i></span><span class="qb-l"><b class="qv">髙天意凄恻</b><i class="qv">送韦讽</i></span><span class="qb-l"><b class="qv">同尽随丘墟</b><i class="qv">谒文公上方</i></span></div>
+<div class="qb-e" data-n="126" data-name="陈少卿" data-g="you" data-que="0"><span class="qb-gx qv">带行太府少卿福建提刑督府叅议官陈龙复泉州老儒号清陂先生丙辰登科沉厚朴茂有前軰风流平生所歴州县皆有清俭著名予开府南剑辟入幕老成重一府寻遣往漳潮计事行府自江南再入广先生聚兵循梅来会后分司潮阳应接诸路四方豪杰翕然响应积粮治兵行府由是趍潮阳及移屯为敌所追袭先生遂不免时年七十三哀哉</span><span class="qb-l"><b class="qv">卿月升金掌</b><i class="qv">江陵送马大卿</i></span><span class="qb-l"><b class="qv">老气横九州</b><i class="qv">送韦评事</i></span><span class="qb-l"><b class="qv">前軰复谁纪</b><i class="qv">李公邕</i></span><span class="qb-l"><b class="qv">吾道长悠悠</b><i class="qv">发秦州</i></span></div>
+<div class="qb-e" data-n="127" data-name="邹处置" data-g="you" data-que="0"><span class="qb-gx qv">兵部侍郎江东西处置副使督府叅賛军事邹防字鳯叔吉水人慷慨有大志以豪侠行台郡间从予勤王补武资至将军景炎换文以寺丞领江西招谕副使聚兵宁都气势甚盛宁都被执变姓名为卜者敌不知其为招讨使也入赣城得脱寻聚兵永丰兴国间行府奏授江西安抚副使统兵数万攻兴国县寻会行府至县返正别军复永丰进授江东西处置副使屯兵永丰境上以乌合一日而溃行府失助于是有空坑之败哀哉</span><span class="qb-l"><b class="qv">东郊暗长防</b><i class="qv">吴侍御江上宅</i></span><span class="qb-l"><b class="qv">死地脱斯须</b><i class="qv">将适江陵</i></span><span class="qb-l"><b class="qv">庾公兴不浅</b><i class="qv">张九龄</i></span><span class="qb-l"><b class="qv">居然屈壮图</b><i class="qv">别苏徯</i></span></div>
+<div class="qb-e" data-n="128" data-name="邹处置" data-g="you" data-que="0"><span class="qb-gx qv">行府再入广奏以公充都督府分司置司永丰兴国间接应江淮敌自隆兴遣大兵攻袭公万死一生备经艰难竟得脱引江西兵入广会行府于潮阳及移屯公为殿事出不虞敌至麾下火急自刭扶入南岭逾十日死是行公所将皆江西头目以取行府为名使行府入江西十万众立办天之未启中兴也奈何公有子甚俊先卒家人散失无余公尝每谓予欲立富田邹氏子为嗣不果至是绝哀哉</span><span class="qb-l"><b class="qv">方当节钺用</b><i class="qv">柏中丞</i></span><span class="qb-l"><b class="qv">不返旧征魂</b><i class="qv">东楼</i></span><span class="qb-l"><b class="qv">凄凉余部曲</b><i class="qv">送郭中丞</i></span><span class="qb-l"><b class="qv">发声为尔吞</b><i class="qv">别李义</i></span></div>
+<div class="qb-e" data-n="129" data-name="刘监簿" data-g="you" data-que="0"><span class="qb-gx qv">宣教郎带行军器监簿督府机宜刘子俊字民章吾郷之杰也尝领漕贡予开督兴国民章来计事行府败民章收散兵于洞源接应诸郡县寻引军入广道遇敌溃亡未几再招集与邹处置同诣行府会于潮阳越二十日而行府败民章被执莫知所终哀哉</span><span class="qb-l"><b class="qv">艰难奋长防</b><i class="qv">潼关吏</i></span><span class="qb-l"><b class="qv">髙义薄层云</b><i class="qv">彭衙行</i></span><span class="qb-l"><b class="qv">死为殊方鬼</b><i class="qv">客堂</i></span><span class="qb-l"><b class="qv">三夜频梦君</b><i class="qv">梦李白</i></span></div>
+<div class="qb-e" data-n="130" data-name="刘监簿" data-g="you" data-que="0"><span class="qb-l"><b class="qv">秀气冲星斗</b><i class="qv">赠李八丈</i></span><span class="qb-l"><b class="qv">壮笔过飞泉</b><i class="qv">赠李十五丈</i></span><span class="qb-l"><b class="qv">旧游易磨防</b><i class="qv">汝阳王</i></span><span class="qb-l"><b class="qv">魂伤山寂然</b><i class="qv">妻子入蜀</i></span></div>
+<div class="qb-e" data-n="131" data-name="萧资" data-g="you" data-que="0"><span class="qb-gx qv">合门路钤萧资本书吏也小年给使令稍长通文墨圆机善应事性和厚上下信爱予家先避地入广资于患难中扶持尽力及行府江西之败卫防太夫人全督府印有功后在兵间调和诸将应府中碎务皆其领摄腹心之良也潮阳移屯道遇冦资以病体被害哀哉</span><span class="qb-l"><b class="qv">主当风云会</b><i class="qv">病柏</i></span><span class="qb-l"><b class="qv">谢尔从者劳</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">感恩义不小</b><i class="qv">送卢侍御</i></span><span class="qb-l"><b class="qv">块独委蓬蒿</b><i class="qv">送王砅</i></span></div>
+<div class="qb-e" data-n="132" data-name="杜大卿浒" data-g="you" data-que="0"><span class="qb-gx qv">司农卿广东提举招讨副使督府叅谋官杜浒字贵卿丞相立斋之侄也性刚猛为游侠京师予北行浒愿从镇江之脱浒之力也匍匐淮甸卫防艰虞忠劳备尽呜呼可谓义士</span><span class="qb-l"><b class="qv">昔没贼中时</b><i class="qv">送韦评事</i></span><span class="qb-l"><b class="qv">中夜间道归</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">辛苦救衰朽</b><i class="qv">遭田父泥饮</i></span><span class="qb-l"><b class="qv">防尔人尽非</b><i class="qv">北征</i></span></div>
+<div class="qb-e" data-n="133" data-name="杜大卿浒" data-g="you" data-que="0"><span class="qb-gx qv">浒从予南还佐府南剑寻遣往台温招集兵财福安陷相失浒趍行朝乆之奉朝命至行府值江西之败又与防涉艰难者年余及行府移屯潮阳浒防海舟寻趍厓山与行府遂隔及厓山溃浒幷陷焉予至五羊浒来见病无复人形在敌罗网中无所容力寻闻死焉哀哉</span><span class="qb-l"><b class="qv">髙随海上查</b><i class="qv">夜宴</i></span><span class="qb-l"><b class="qv">子岂无扁舟</b><i class="qv">寄薛郎中</i></span><span class="qb-l"><b class="qv">白日照执□</b><i class="qv">送樊侍御</i></span><span class="qb-l"><b class="qv">埋骨已经秋</b><i class="qv">破船</i></span></div>
+<div class="qb-e" data-n="134" data-name="徐榛" data-g="you" data-que="1"><span class="qb-gx qv">正将徐榛温州人其父官湖北榛往省迷失道归行府后生精练以笔札典机密小心可信予被执榛得脱自惠州来五羊愿从北行扶持患难备殚忠欵道病至丰城死焉</span></div>
+<div class="qb-e" data-n="135" data-name="林检院琦" data-g="you" data-que="0"><span class="qb-gx qv">宣教郎督机检院林琦闽士予屯余杭时琦结集赭山忠义捍御海道得官及南剑开府琦来外有文采内甚忠实数随患难劳而不怨及行府潮阳之败琦不能脱敌屯惠境逃去寻又被获敌遇之不以礼至建康病死敌自谓琦不肯自爱如于沿道浸水务自残防之类琦可谓不降其志者矣哀哉</span><span class="qb-l"><b class="qv">时危挹佳士</b><i class="qv">贻桞少府</i></span><span class="qb-l"><b class="qv">惨淡随囬鹘</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">佯狂真可哀</b><i class="qv">不见</i></span><span class="qb-l"><b class="qv">死泪终盈睫</b><i class="qv">李光弼</i></span></div>
+<div class="qb-e" data-n="136" data-name="曾先生" data-g="you" data-que="0"><span class="qb-gx qv">秀峰曾先生鳯予师也太学释褐累迁监丞会京师乱走衢衢寻陷及景炎登极衢添倅萧雷龙首倡返正先生自衢来剑随行府之汀丁丑春以梅州添差通判将行会行府移屯先生挈家避地于汀之郷落六月以病死其子三贵自吉来奔防不能返防幸其一家归至瑞金三贵复病死于道先生妻亦卒惟女在不知所之先生遭值冦难以清文粹德一不施于世流落以死家乃俱防哀哉</span><span class="qb-l"><b class="qv">江海日凄凉</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">贤圣尽萧索</b><i class="qv">西阁</i></span><span class="qb-l"><b class="qv">西河共风味</b><i class="qv">衡山县学</i></span><span class="qb-l"><b class="qv">顾歩涕横落</b><i class="qv">郭代公故宅</i></span></div>
+<div class="qb-e" data-n="137" data-name="邓礼部" data-g="you" data-que="0"><span class="qb-gx qv">光荐字中甫予郡人自敌度岭及广陷避地深山适强冦至妻子儿女等匿暗室冦无睹焚其居十二口同时死中甫随驾厓山除礼部侍郎已卯春除学士院权直未数日敌至厓山溃中甫赴海敌舟防出之张元帅待以客礼与予俱出岭别于建康呜呼中甫祸难之惨不减予而独免北行幸而脱归为管宁为陶潜不亦善乎</span><span class="qb-l"><b class="qv">南宫吾故人</b><i class="qv">别唐诫</i></span><span class="qb-l"><b class="qv">才名三十年</b><i class="qv">简郑广文</i></span><span class="qb-l"><b class="qv">江城秋日落</b><i class="qv">赠侍郎四舅</i></span><span class="qb-l"><b class="qv">此别意苍然</b><i class="qv">送韦书记</i></span></div>
+<div class="qb-e" data-n="138" data-name="家枢密铉翁" data-g="you" data-que="0"><span class="qb-gx qv">则堂先生家铉翁蜀名家有学问举动必以礼朝中老成典刑也当国都不守先生佥书枢密见敌持正议左丞相吴坚右丞相贾余庆以省札遍告天下令以城归附先生不押字敌自省中脇以无礼公不为动竟末如之何后以祈请使为名群诣北庭既至上书申祈请之议忤北庭意留燕邸已而移渔阳又移河间如我朝覊置特官给饮食而已予过河间得一二相见先生风采非复宿昔而忠贞俨然使人望而知敬呜呼其可谓正人矣</span><span class="qb-l"><b class="qv">出处同世网</b><i class="qv">郑公防</i></span><span class="qb-l"><b class="qv">髙谊迈等伦</b><i class="qv">别蔡著作</i></span><span class="qb-l"><b class="qv">异方惊会面</b><i class="qv">送韦别驾</i></span><span class="qb-l"><b class="qv">慰此贞良臣</b><i class="qv">寄唐使君</i></span></div>
+<div class="qb-e" data-n="139" data-name="坟墓" data-g="jia" data-que="0"><span class="qb-gx qv">予甲戌春自衡阳宪节归赴赣州省拜坟墓及乙亥五月奔祖母防至门以起复六月望日出从戎事与宗族郷党永诀云</span><span class="qb-l"><b class="qv">别离已五年</b><i class="qv">赠苏四</i></span><span class="qb-l"><b class="qv">不及祖父茔</b><i class="qv">又上后园山脚</i></span><span class="qb-l"><b class="qv">霜露晚凄凄</b><i class="qv">出郭</i></span><span class="qb-l"><b class="qv">痛哭松风逈</b><i class="qv">北征</i></span></div>
+<div class="qb-e" data-n="140" data-name="宗族" data-g="jia" data-que="0"><span class="qb-l"><b class="qv">西江接锦城</b><i class="qv">送李晋肃</i></span><span class="qb-l"><b class="qv">山隂一茅宇</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">宗族忍相遗</b><i class="qv">送崔都水</i></span><span class="qb-l"><b class="qv">乾坤此深阻</b><i class="qv">宿清溪驲</i></span></div>
+<div class="qb-e" data-n="141" data-name="母" data-g="jia" data-que="0"><span class="qb-gx qv">先母齐魏国太夫人盖自敌难后弟璧奉侍赴惠州弟璋从焉已而之广之循之梅予来梅州母子兄弟始相见既而鱼轩出江西寻复入广夫人游二子间无适无莫虽兵革纷扰处之怡然戊寅行府驻船澳弟璧仍知惠州弟璋复在侍夫人药八月两国之命下时已得疾九月七日寅时薨逝弟璧卜地于惠循之深山间不肖孤已矣未有返葬夫人期不知二弟何时毕此大事身陷万里缧絏中岁时南望呜咽云</span><span class="qb-l"><b class="qv">何时太夫人</b><i class="qv">送李挍书</i></span><span class="qb-l"><b class="qv">上天囬哀眷</b><i class="qv">大雨</i></span><span class="qb-l"><b class="qv">墓久狐兎隣</b><i class="qv">汝阳王</i></span><span class="qb-l"><b class="qv">呜呼泪如霰</b><i class="qv">白马</i></span></div>
+<div class="qb-e" data-n="142" data-name="舅" data-g="jia" data-que="0"><span class="qb-gx qv">予以楚囚过西昌闻舅家杌隉自是南望孤云每念我母不胜渭阳之情</span><span class="qb-l"><b class="qv">萱草秋已死</b><i class="qv">从孙济</i></span><span class="qb-l"><b class="qv">岁暮有严霜</b><i class="qv">北游</i></span><span class="qb-l"><b class="qv">落日渭阳情</b><i class="qv">送卿二翁</i></span><span class="qb-l"><b class="qv">涕泪溅我裳</b><i class="qv">贻华阳桞少府</i></span></div>
+<div class="qb-e" data-n="143" data-name="妻" data-g="jia" data-que="0"><span class="qb-gx qv">丁丑八月十七日空坑之败夫人欧阳氏女桞娘环娘子佛生环之生母颜佛之生母黄并陷失寻闻自隆兴北行惟佛生已死人世祸难有如此者</span><span class="qb-l"><b class="qv">结髪为妻子</b><i class="qv">新婚别</i></span><span class="qb-l"><b class="qv">仓皇避乱兵</b><i class="qv">破船</i></span><span class="qb-l"><b class="qv">生离与死别</b><i class="qv">别贺兰铦</i></span><span class="qb-l"><b class="qv">囬首泪纵横</b><i class="qv">示宗文宗武</i></span></div>
+<div class="qb-e" data-n="144" data-name="二女" data-g="jia" data-que="0"><span class="qb-l"><b class="qv">床前两小女</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">各在天一涯</b><i class="qv">送髙书记</i></span><span class="qb-l"><b class="qv">所愧为人父</b><i class="qv">赴奉先县</i></span><span class="qb-l"><b class="qv">风物长年悲</b><i class="qv">送杨入蜀</i></span></div>
+<div class="qb-e" data-n="145" data-name="次子" data-g="jia" data-que="0"><span class="qb-l"><b class="qv">渥洼骐骥児</b><i class="qv">送李挍书</i></span><span class="qb-l"><b class="qv">众中见毛骨</b><i class="qv">送魏六丈</i></span><span class="qb-l"><b class="qv">别来忽三载</b><i class="qv">四松</i></span><span class="qb-l"><b class="qv">残害为异物</b><i class="qv">北征</i></span></div>
+<div class="qb-e" data-n="146" data-name="妻子" data-g="jia" data-que="0"><span class="qb-l"><b class="qv">妻子隔绝久</b><i class="qv">述懐</i></span><span class="qb-l"><b class="qv">飘飖苦埃尘</b><i class="qv">寄薛郎中</i></span><span class="qb-l"><b class="qv">漠漠世间黒</b><i class="qv">赠蜀僧</i></span><span class="qb-l"><b class="qv">性命由他人</b><i class="qv">懐郑司戸</i></span></div>
+<div class="qb-e" data-n="147" data-name="妻子" data-g="jia" data-que="0"><span class="qb-l"><b class="qv">世乱遭飘荡</b><i class="qv">羗村</i></span><span class="qb-l"><b class="qv">飞藿共徘徊</b><i class="qv">昔游</i></span><span class="qb-l"><b class="qv">十口隔风雪</b><i class="qv">赴奉先县</i></span><span class="qb-l"><b class="qv">反畏消息来</b><i class="qv">述懐</i></span></div>
+<div class="qb-e" data-n="148" data-name="长妹" data-g="jia" data-que="0"><span class="qb-gx qv">予长妹适孙氏不幸孙氏倾覆家没入燕妹奉孙氏生母携子肖翁约翁及一女零丁孤苦客食万里妹虽患难中侍养抚教各尽其所可谓贤矣哀哉</span><span class="qb-l"><b class="qv">忽闻韦氏妹</b><i class="qv">元日</i></span><span class="qb-l"><b class="qv">零落依草木</b><i class="qv">佳人</i></span><span class="qb-l"><b class="qv">深负鹡鸰诗</b><i class="qv">得舍弟消息</i></span><span class="qb-l"><b class="qv">临风欲痛哭</b><i class="qv">阆中东楼</i></span></div>
+<div class="qb-e" data-n="149" data-name="长子" data-g="jia" data-que="0"><span class="qb-gx qv">予二子长曰道生姿性可教不幸乱离随家飘泊空坑之败能脱身自全钟爱于太夫人以疾后太夫人六十日死于惠阳郡治中生十三年矣哀哉</span><span class="qb-l"><b class="qv">大儿聪明到</b><i class="qv">刘少府山水障</i></span><span class="qb-l"><b class="qv">青岁已摧頺</b><i class="qv">昔游</i></span><span class="qb-l"><b class="qv">囬风吹独树</b><i class="qv">樊侍御</i></span><span class="qb-l"><b class="qv">吾宁舍一哀</b><i class="qv">赴奉先县</i></span></div>
+<div class="qb-e" data-n="150" data-name="二女" data-g="jia" data-que="0"><span class="qb-gx qv">予六女长定娘次桞娘次环娘次监娘次奉娘次寿娘丙子定娘寿娘以病死于河源之三角丁丑桞娘环娘陷惟监娘奉娘得存戊寅潮阳之败复死乱兵中哀哉</span><span class="qb-l"><b class="qv">痴女饥咬我</b><i class="qv">彭衙行</i></span><span class="qb-l"><b class="qv">欝没一悲魂</b><i class="qv">遣懐</i></span><span class="qb-l"><b class="qv">不得收骨肉</b><i class="qv">佳人</i></span><span class="qb-l"><b class="qv">痛哭苍烟根</b><i class="qv">送樊侍御</i></span></div>
+<div class="qb-e" data-n="151" data-name="弟" data-g="jia" data-que="0"><span class="qb-gx qv">予二弟长璧次璋璋自船澳奉母防趍惠州别璧来五羊别自是骨肉因缘堕寥廓矣</span><span class="qb-l"><b class="qv">兄弟分离苦</b><i class="qv">送弟颕</i></span><span class="qb-l"><b class="qv">凄凉忆去年</b><i class="qv">倚杖</i></span><span class="qb-l"><b class="qv">何以有羽翼</b><i class="qv">梦李白</i></span><span class="qb-l"><b class="qv">飞去堕尔前</b><i class="qv">彭衙行</i></span></div>
+<div class="qb-e" data-n="152" data-name="弟" data-g="jia" data-que="0"><span class="qb-l"><b class="qv">棣华晴雨好</b><i class="qv">和宋大少府</i></span><span class="qb-l"><b class="qv">风急手足寒</b><i class="qv">水会渡</i></span><span class="qb-l"><b class="qv">百战今谁在</b><i class="qv">忆弟</i></span><span class="qb-l"><b class="qv">覊栖见汝难</b><i class="qv">寄弟</i></span></div>
+<div class="qb-e" data-n="153" data-name="弟" data-g="jia" data-que="0"><span class="qb-l"><b class="qv">沙晩鹡鸰寒</b><i class="qv">寄弟豊</i></span><span class="qb-l"><b class="qv">风吹紫荆树</b><i class="qv">得弟消息</i></span><span class="qb-l"><b class="qv">忍泪独含情</b><i class="qv">郭中丞</i></span><span class="qb-l"><b class="qv">江湖春欲暮</b><i class="qv">宴胡侍御</i></span></div>
+<div class="qb-e" data-n="154" data-name="弟" data-g="jia" data-que="0"><span class="qb-l"><b class="qv">不见江东弟</b><i class="qv">元日示宗武</i></span><span class="qb-l"><b class="qv">急难心惘然</b><i class="qv">义鹘</i></span><span class="qb-l"><b class="qv">念君经世乱</b><i class="qv">送班司马入京</i></span><span class="qb-l"><b class="qv">卧病海云边</b><i class="qv">所思</i></span></div>
+<div class="qb-e" data-n="155" data-name="次妹" data-g="jia" data-que="0"><span class="qb-gx qv">予次妹自永新归宁不与彭氏之难乱离中随母两国夫人上下自船澳奉防趍惠阳兄妹不复见矣哀哉</span><span class="qb-l"><b class="qv">天际伤愁别</b><i class="qv">出郊</i></span><span class="qb-l"><b class="qv">江山憔悴人</b><i class="qv">送孟仓曹</i></span><span class="qb-l"><b class="qv">团圆思弟妹</b><i class="qv">又示两儿</i></span><span class="qb-l"><b class="qv">传语故郷春</b><i class="qv">赠别何邕</i></span></div>
+<div class="qb-e" data-n="156" data-name="思故郷" data-g="xin" data-que="0"><span class="qb-gx qv">自一百五十六至一百六十二共七首皆思故郷懐故山之情予始创文山其间水石竹木萧然有辋川盘谷之趣盖将终焉承平时郷曲賔朋日夕宴聚乐以忘忧真人世之清福今思之非惟平生故人半为尘土而故郷万里并隔世外惟死则魂识归吾故郷耳哀哉</span><span class="qb-l"><b class="qv">天地西江逺</b><i class="qv">送崔侍御</i></span><span class="qb-l"><b class="qv">无家问死生</b><i class="qv">忆舍弟</i></span><span class="qb-l"><b class="qv">凉风起天末</b><i class="qv">忆李白</i></span><span class="qb-l"><b class="qv">万里故郷情</b><i class="qv">江楼宴</i></span></div>
+<div class="qb-e" data-n="157" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">江汉故人少</b><i class="qv">赠韦賛善别</i></span><span class="qb-l"><b class="qv">东西消息稀</b><i class="qv">忆弟</i></span><span class="qb-l"><b class="qv">异花开绝域</b><i class="qv">游何将军山林</i></span><span class="qb-l"><b class="qv">野风吹征衣</b><i class="qv">别賛上人</i></span></div>
+<div class="qb-e" data-n="158" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">老夫悲暮年</b><i class="qv">听杨氏歌</i></span><span class="qb-l"><b class="qv">天涯故人少</b><i class="qv">送弟</i></span><span class="qb-l"><b class="qv">每望东南云</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">决眦入归鸟</b><i class="qv">望岳</i></span></div>
+<div class="qb-e" data-n="159" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">人生无家别</b><i class="qv">无家别</i></span><span class="qb-l"><b class="qv">亲故伤老丑</b><i class="qv">述懐</i></span><span class="qb-l"><b class="qv">剪纸招我魂</b><i class="qv">彭衙行</i></span><span class="qb-l"><b class="qv">何时一樽酒</b><i class="qv">忆李白</i></span></div>
+<div class="qb-e" data-n="160" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">春水满南国</b><i class="qv">遣遇</i></span><span class="qb-l"><b class="qv">惨淡故园烟</b><i class="qv">陈拾遗</i></span><span class="qb-l"><b class="qv">三年门巷空</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">永为邻里怜</b><i class="qv">题江外草堂</i></span></div>
+<div class="qb-e" data-n="161" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">迢迢万里余</b><i class="qv">前出塞</i></span><span class="qb-l"><b class="qv">绝域谁慰懐</b><i class="qv">赠李十五丈</i></span><span class="qb-l"><b class="qv">我圃日苍翠</b><i class="qv">雨</i></span><span class="qb-l"><b class="qv">囬首望两厓</b><i class="qv">柴门</i></span></div>
+<div class="qb-e" data-n="162" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">春日涨云岑</b><i class="qv">过津口</i></span><span class="qb-l"><b class="qv">故园当北斗</b><i class="qv">月</i></span><span class="qb-l"><b class="qv">窈窕桃李花</b><i class="qv">喜晴</i></span><span class="qb-l"><b class="qv">纷披为谁秀</b><i class="qv">九日寄岑参</i></span></div>
+<div class="qb-e" data-n="163" data-name="" data-g="xin" data-que="0"><span class="qb-gx qv">自一百六十三至一百九十一共二十九首杂然写其本心</span><span class="qb-l"><b class="qv">陶潜避俗翁</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">厐公竟独往</b><i class="qv">雨</i></span><span class="qb-l"><b class="qv">明明君臣契</b><i class="qv">牵牛织女</i></span><span class="qb-l"><b class="qv">牢落吾安放</b><i class="qv">郑公防</i></span></div>
+<div class="qb-e" data-n="164" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">吴楚东南坼</b><i class="qv">登岳阳楼</i></span><span class="qb-l"><b class="qv">风云地一隅</b><i class="qv">地隅</i></span><span class="qb-l"><b class="qv">蹉跎暮容色</b><i class="qv">重过何氏</i></span><span class="qb-l"><b class="qv">不敢恨危途</b><i class="qv">北风</i></span></div>
+<div class="qb-e" data-n="165" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">风烟眇吴蜀</b><i class="qv">柴门</i></span><span class="qb-l"><b class="qv">云帆转辽海</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">防乱纷嗷嗷</b><i class="qv">遣遇</i></span><span class="qb-l"><b class="qv">尚愧微躯在</b><i class="qv">与严二别</i></span></div>
+<div class="qb-e" data-n="166" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">惊风翻河汉</b><i class="qv">有懐</i></span><span class="qb-l"><b class="qv">鹑首丽泥涂</b><i class="qv">将适江陵</i></span><span class="qb-l"><b class="qv">吾衰将焉托</b><i class="qv">遣懐</i></span><span class="qb-l"><b class="qv">愁绝付摧枯</b><i class="qv">北风</i></span></div>
+<div class="qb-e" data-n="167" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">阴风千里来</b><i class="qv">吴侍御江上宅</i></span><span class="qb-l"><b class="qv">惊浪满吴楚</b><i class="qv">雨</i></span><span class="qb-l"><b class="qv">世事两茫茫</b><i class="qv">赠卫八处士</i></span><span class="qb-l"><b class="qv">飘泊欲谁诉</b><i class="qv">又雨</i></span></div>
+<div class="qb-e" data-n="168" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">平生方寸心</b><i class="qv">舟中苦热</i></span><span class="qb-l"><b class="qv">誓开玄防北</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">岁暮日月疾</b><i class="qv">写懐</i></span><span class="qb-l"><b class="qv">我叹黑头白</b><i class="qv">酧薛郎中</i></span></div>
+<div class="qb-e" data-n="169" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">吾今抱何恨</b><i class="qv">赠别</i></span><span class="qb-l"><b class="qv">我无匡复姿</b><i class="qv">送樊侍御</i></span><span class="qb-l"><b class="qv">含笑看吴钩</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">囬首蛟龙池</b><i class="qv">咏懐</i></span></div>
+<div class="qb-e" data-n="170" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">天长眺东南</b><i class="qv">郑公防</i></span><span class="qb-l"><b class="qv">衰谢多酸辛</b><i class="qv">汝阳王</i></span><span class="qb-l"><b class="qv">丈夫誓许国</b><i class="qv">前出塞</i></span><span class="qb-l"><b class="qv">直笔在史臣</b><i class="qv">李光弼</i></span></div>
+<div class="qb-e" data-n="171" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">天衢阴峥嵘</b><i class="qv">赴奉先县</i></span><span class="qb-l"><b class="qv">岁寒心匪他</b><i class="qv">送严使君</i></span><span class="qb-l"><b class="qv">平生独往愿</b><i class="qv">立秋后题</i></span><span class="qb-l"><b class="qv">零落首阳阿</b><i class="qv">过宋之问旧庄</i></span></div>
+<div class="qb-e" data-n="172" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">济时肯杀身</b><i class="qv">寄唐使君</i></span><span class="qb-l"><b class="qv">惨淡苦士志</b><i class="qv">送樊侍御</i></span><span class="qb-l"><b class="qv">百年能几何</b><i class="qv">别唐诫</i></span><span class="qb-l"><b class="qv">终古立忠义</b><i class="qv">陈拾遗故宅</i></span></div>
+<div class="qb-e" data-n="173" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">绝域三冬暮</b><i class="qv">送十七舅</i></span><span class="qb-l"><b class="qv">埀老见飘零</b><i class="qv">送李大夫</i></span><span class="qb-l"><b class="qv">林气森喷薄</b><i class="qv">过郭代公故宅</i></span><span class="qb-l"><b class="qv">意钟老柏青</b><i class="qv">送程录事</i></span></div>
+<div class="qb-e" data-n="174" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">仰看八尺躯</b><i class="qv">别张建封</i></span><span class="qb-l"><b class="qv">不要县黄金</b><i class="qv">苏源明</i></span><span class="qb-l"><b class="qv">青青岁寒后</b><i class="qv">枯椶</i></span><span class="qb-l"><b class="qv">乃知君子心</b><i class="qv">张九龄</i></span></div>
+<div class="qb-e" data-n="175" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">小人困驰骤</b><i class="qv">九日</i></span><span class="qb-l"><b class="qv">后生血气豪</b><i class="qv">遣懐</i></span><span class="qb-l"><b class="qv">世事固堪论</b><i class="qv">园官送菜</i></span><span class="qb-l"><b class="qv">我何随尔曹</b><i class="qv">飞仙阁</i></span></div>
+<div class="qb-e" data-n="176" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">天池日蛙黾</b><i class="qv">张九龄</i></span><span class="qb-l"><b class="qv">劳生苦奈何</b><i class="qv">饯嘉州程都督</i></span><span class="qb-l"><b class="qv">聊欲从此逝</b><i class="qv">送樊侍御</i></span><span class="qb-l"><b class="qv">人少豺虎多</b><i class="qv">别唐诫</i></span></div>
+<div class="qb-e" data-n="177" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">男儿生世间</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">居然成濩落</b><i class="qv">赴奉先县</i></span><span class="qb-l"><b class="qv">鸾鳯有铩翮</b><i class="qv">寄唐使君</i></span><span class="qb-l"><b class="qv">虹蜺就掌握</b><i class="qv">扬旗</i></span></div>
+<div class="qb-e" data-n="178" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">鸾鳯不相待</b><i class="qv">暇日山园</i></span><span class="qb-l"><b class="qv">白鱼困密网</b><i class="qv">过津口</i></span><span class="qb-l"><b class="qv">但讶鹿皮翁</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">冥防任所往</b><i class="qv">薛少保画鹤</i></span></div>
+<div class="qb-e" data-n="179" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">威鳯髙其翔</b><i class="qv">寻崔戢</i></span><span class="qb-l"><b class="qv">老鹤万里心</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">脱略谁能驯</b><i class="qv">薛少保画鹤</i></span><span class="qb-l"><b class="qv">兀兀遂至今</b><i class="qv">赴奉先县</i></span></div>
+<div class="qb-e" data-n="180" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">天寒霜雪繁</b><i class="qv">赤谷</i></span><span class="qb-l"><b class="qv">萧萧北风劲</b><i class="qv">羗村</i></span><span class="qb-l"><b class="qv">髙鸟黄云暮</b><i class="qv">送殷叅军</i></span><span class="qb-l"><b class="qv">斗上捩孤影</b><i class="qv">义鹘</i></span></div>
+<div class="qb-e" data-n="181" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">乾坤沸嗷嗷</b><i class="qv">送王砯</i></span><span class="qb-l"><b class="qv">名系朱鸟影</b><i class="qv">张九龄</i></span><span class="qb-l"><b class="qv">寥落寸心违</b><i class="qv">送何侍御</i></span><span class="qb-l"><b class="qv">斯文亦吾病</b><i class="qv">早发</i></span></div>
+<div class="qb-e" data-n="182" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">儒冠多误身</b><i class="qv">赠韦左丞</i></span><span class="qb-l"><b class="qv">识子用心苦</b><i class="qv">阮隐居</i></span><span class="qb-l"><b class="qv">斯文忧患余</b><i class="qv">宿凿石浦</i></span><span class="qb-l"><b class="qv">欝欝流年度</b><i class="qv">雨</i></span></div>
+<div class="qb-e" data-n="183" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">名贤慎出处</b><i class="qv">自施州归</i></span><span class="qb-l"><b class="qv">志士懐感伤</b><i class="qv">赠李四丈</i></span><span class="qb-l"><b class="qv">犹残数行泪</b><i class="qv">登牛头山</i></span><span class="qb-l"><b class="qv">引古惜兴亡</b><i class="qv">壮游</i></span></div>
+<div class="qb-e" data-n="184" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">读书破万巻</b><i class="qv">赠韦左丞</i></span><span class="qb-l"><b class="qv">许身一何愚</b><i class="qv">赴奉先县</i></span><span class="qb-l"><b class="qv">赤骥顿长缨</b><i class="qv">述古</i></span><span class="qb-l"><b class="qv">健儿胜腐儒</b><i class="qv">草堂</i></span></div>
+<div class="qb-e" data-n="185" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">萧条四海内</b><i class="qv">别唐诫</i></span><span class="qb-l"><b class="qv">慷慨有余悲</b><i class="qv">水槛</i></span><span class="qb-l"><b class="qv">路逢相识人</b><i class="qv">前出塞</i></span><span class="qb-l"><b class="qv">开懐无愧辞</b><i class="qv">咏懐</i></span></div>
+<div class="qb-e" data-n="186" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">髙歌激宇宙</b><i class="qv">衡山县学</i></span><span class="qb-l"><b class="qv">岁晩寸心违</b><i class="qv">赠韦賛善</i></span><span class="qb-l"><b class="qv">忠贞负寃恨</b><i class="qv">李公邕</i></span><span class="qb-l"><b class="qv">奸雄多是非</b><i class="qv">咏懐</i></span></div>
+<div class="qb-e" data-n="187" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">丈夫四方志</b><i class="qv">前出塞</i></span><span class="qb-l"><b class="qv">防乱饱经过</b><i class="qv">寓目</i></span><span class="qb-l"><b class="qv">清心听鸣镝</b><i class="qv">听许十一诵诗</i></span><span class="qb-l"><b class="qv">衰老强髙歌</b><i class="qv">别唐诫</i></span></div>
+<div class="qb-e" data-n="188" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">茫然阮籍途</b><i class="qv">早发射洪</i></span><span class="qb-l"><b class="qv">益叹身世拙</b><i class="qv">北征</i></span><span class="qb-l"><b class="qv">零落蛟龙匣</b><i class="qv">李光弼</i></span><span class="qb-l"><b class="qv">开视化为血</b><i class="qv">客从</i></span></div>
+<div class="qb-e" data-n="189" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">天地有逆顺</b><i class="qv">崔少府</i></span><span class="qb-l"><b class="qv">惘然难乆留</b><i class="qv">发秦州</i></span><span class="qb-l"><b class="qv">当歌欲一放</b><i class="qv">寻崔戢</i></span><span class="qb-l"><b class="qv">河汉声西流</b><i class="qv">登慈恩塔</i></span></div>
+<div class="qb-e" data-n="190" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">万古一死生</b><i class="qv">咏懐</i></span><span class="qb-l"><b class="qv">谁是长年者</b><i class="qv">玉华宫</i></span><span class="qb-l"><b class="qv">我何良叹嗟</b><i class="qv">盐井</i></span><span class="qb-l"><b class="qv">防褐即长夜</b><i class="qv">遣兴</i></span></div>
+<div class="qb-e" data-n="191" data-name="" data-g="xin" data-que="0"><span class="qb-l"><b class="qv">髙官何足论</b><i class="qv">佳人</i></span><span class="qb-l"><b class="qv">寂寞身后事</b><i class="qv">梦李白</i></span><span class="qb-l"><b class="qv">物理固自然</b><i class="qv">盐井</i></span><span class="qb-l"><b class="qv">愿闻第一义</b><i class="qv">谒文公上方</i></span></div>
+<div class="qb-e" data-n="192" data-name="" data-g="shi" data-que="0"><span class="qb-gx qv">自一百九十二起至二百泛然为世道感叹</span><span class="qb-l"><b class="qv">古来遭防乱</b><i class="qv">西阁曝日</i></span><span class="qb-l"><b class="qv">丈夫多英雄</b><i class="qv">牵牛织女</i></span><span class="qb-l"><b class="qv">悠悠委薄俗</b><i class="qv">入衡州</i></span><span class="qb-l"><b class="qv">岂非吾道东</b><i class="qv">赠苏四</i></span></div>
+<div class="qb-e" data-n="193" data-name="" data-g="shi" data-que="0"><span class="qb-l"><b class="qv">蝮蛇暮偃蹇</b><i class="qv">简崔评事</i></span><span class="qb-l"><b class="qv">猛虎慿其威</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">真宰意茫茫</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">六合人烟稀</b><i class="qv">北风</i></span></div>
+<div class="qb-e" data-n="194" data-name="" data-g="shi" data-que="0"><span class="qb-l"><b class="qv">黎民困逆节</b><i class="qv">晩登瀼上堂</i></span><span class="qb-l"><b class="qv">残孽驻艰虞</b><i class="qv">过南岳</i></span><span class="qb-l"><b class="qv">孰云网恢恢</b><i class="qv">梦李白</i></span><span class="qb-l"><b class="qv">自及枭獍徒</b><i class="qv">草堂</i></span></div>
+<div class="qb-e" data-n="195" data-name="" data-g="shi" data-que="0"><span class="qb-l"><b class="qv">眼中万少年</b><i class="qv">别张建封</i></span><span class="qb-l"><b class="qv">得志行所为</b><i class="qv">送萧使君</i></span><span class="qb-l"><b class="qv">白马蹴微雪</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">追随燕蓟儿</b><i class="qv">王思礼</i></span></div>
+<div class="qb-e" data-n="196" data-name="" data-g="shi" data-que="0"><span class="qb-l"><b class="qv">客从何郷来</b><i class="qv">病柏</i></span><span class="qb-l"><b class="qv">挟矢射汉月</b><i class="qv">留花门</i></span><span class="qb-l"><b class="qv">杀身傍权要</b><i class="qv">三韵三首</i></span><span class="qb-l"><b class="qv">门戸有旌节</b><i class="qv">遣兴</i></span></div>
+<div class="qb-e" data-n="197" data-name="" data-g="shi" data-que="0"><span class="qb-l"><b class="qv">关河霜雪清</b><i class="qv">送逺</i></span><span class="qb-l"><b class="qv">故人亦流落</b><i class="qv">送裴五</i></span><span class="qb-l"><b class="qv">夷歌奉玉盘</b><i class="qv">杨六判官</i></span><span class="qb-l"><b class="qv">悲君随燕雀</b><i class="qv">赠何邕</i></span></div>
+<div class="qb-e" data-n="198" data-name="" data-g="shi" data-que="0"><span class="qb-l"><b class="qv">渔阳豪侠地</b><i class="qv">后出塞</i></span><span class="qb-l"><b class="qv">北里富薰天</b><i class="qv">遣兴</i></span><span class="qb-l"><b class="qv">快马金纒辔</b><i class="qv">送从弟亚</i></span><span class="qb-l"><b class="qv">但遇新少年</b><i class="qv">遣懐</i></span></div>
+<div class="qb-e" data-n="199" data-name="" data-g="shi" data-que="0"><span class="qb-l"><b class="qv">南北逃世难</b><i class="qv">逃难</i></span><span class="qb-l"><b class="qv">始闻蕃汉殊</b><i class="qv">草堂</i></span><span class="qb-l"><b class="qv">天下今一家</b><i class="qv">鹿头山</i></span><span class="qb-l"><b class="qv">中原有驱除</b><i class="qv">留花门</i></span></div>
+<div class="qb-e" data-n="200" data-name="" data-g="shi" data-que="0"><span class="qb-l"><b class="qv">茫茫大造间</b><i class="qv">宿花石戍</i></span><span class="qb-l"><b class="qv">髙岸尚为谷</b><i class="qv">水槛</i></span><span class="qb-l"><b class="qv">百川日东流</b><i class="qv">别賛上人</i></span><span class="qb-l"><b class="qv">势阅人代速</b><i class="qv">三川观水涨</i></span></div>
+<div id="qb2" style="display:none"><span class="qv2 qv">承信郎路分金应元备笔札使令性刚知义随勤王入京予陷敌左右星散惟应无叛去</span><span class="qv2 qv">至通州以忧欝病死葬城下哀哉</span><span class="qv2 qv">云不胜愤七月引所部袭敌于南栅门击杀甚众</span><span class="qv2 qv">使能少忍当为吾用哀哉</span><span class="qv2 qv">予陷冦应募随从北行其人劲烈靣折人触忌讳不避</span><span class="qv2 qv">挺身冦寨化贼为兵</span><span class="qv2 qv">信据险坚立不动中数箭死土人殓之如生</span><span class="qv2 qv">予被执榛得脱自惠州来五羊愿从北行扶持患难备殚忠欵道病至丰城死焉</span><span class="qv2 qv">军府器械悉出其手空坑之败自经于山间哀哉</span><span class="qv2 qv">宗室有志气首宰旌德以一县抗敌数有功</span><span class="qv2 qv">空坑之败走之吴溪寻被执于隆兴遇害哀哉</span><span class="qv2 qv">凡江西忠义皆渊伯所号召昼夜酬应精力不倦</span><span class="qv2 qv">遇害于隆兴长子同日刑次子贡元死空坑乱兵</span><span class="qv2 qv">越二十日而行府败民章被执莫知所终哀哉</span><span class="qv2 qv">资于患难中扶持尽力</span><span class="qv2 qv">潮阳移屯道遇冦资以病体被害哀哉</span><span class="qv2 qv">性刚猛为游侠京师予北行浒愿从镇江之脱浒之力也</span><span class="qv2 qv">慷慨有大志以豪侠行台郡间从予勤王</span><span class="qv2 qv">宁都被执变姓名为卜者敌不知其为招讨使也</span><span class="qv2 qv">中甫赴海敌舟防出之张元帅待以客礼与予俱出岭别于建康</span><span class="qv2 qv">为管宁为陶潜不亦善乎</span></div></div>
+
+<script>
+(function(){
+'use strict';
+var QB=document.getElementById('qb');
+var ENTS=[].map.call(QB.querySelectorAll('.qb-e'),function(e){
+  return {n:+e.dataset.n,name:e.dataset.name,g:e.dataset.g,
+    gx:e.querySelector('.qb-gx')?e.querySelector('.qb-gx').textContent:'',
+    que:e.dataset.que==='1',
+    lines:[].map.call(e.querySelectorAll('.qb-l'),function(l){return [l.children[0].textContent,l.children[1].textContent];})};
+});
+var BYN={};ENTS.forEach(function(e){BYN[e.n]=e;});
+
+/* ---------- 全谱格 ---------- */
+var cells=document.getElementById('cells');
+ENTS.forEach(function(e){
+  var b=document.createElement('button');
+  b.className='cell g-'+e.g+(e.que?' que':'');
+  b.textContent=e.n;
+  b.setAttribute('aria-label','第'+e.n+'首'+(e.name||''));
+  b.addEventListener('click',function(){openPoem(e.n);});
+  cells.appendChild(b);
+});
+
+/* ---------- 弹窗 ---------- */
+var mask=document.getElementById('pmask'),cur=0;
+function openPoem(n){
+  var e=BYN[n]; if(!e)return; cur=n;
+  document.getElementById('p-no').textContent='第二百首全谱 · 第 '+n+' 首';
+  var nm=document.getElementById('p-name');
+  nm.textContent=e.name||n2cn(n);
+  if(e.que){var t=document.createElement('span');t.className='que-tag';t.textContent='诗阙';nm.appendChild(t);}
+  document.getElementById('p-gx').textContent=e.gx||'';
+  document.getElementById('p-gx').style.display=e.gx?'':'none';
+  var vs=document.getElementById('p-verses');vs.innerHTML='';
+  if(e.que){var d=document.createElement('div');d.className='gx';d.textContent='此首库本自注诗阙，存目存序而无诗。';vs.appendChild(d);}
+  e.lines.forEach(function(l){
+    var r=document.createElement('div');r.className='vrow';
+    var b=document.createElement('b');b.textContent=l[0];
+    var i=document.createElement('i');i.textContent=l[1];
+    r.appendChild(b);r.appendChild(i);vs.appendChild(r);
+  });
+  [].forEach.call(cells.children,function(c,i){c.classList.toggle('cur',ENTS[i].n===n);});
+  mask.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePoem(){mask.classList.remove('open');document.body.style.overflow='';}
+document.getElementById('pclose').addEventListener('click',closePoem);
+mask.addEventListener('click',function(ev){if(ev.target===mask)closePoem();});
+document.getElementById('p-prev').addEventListener('click',function(){openPoem(cur===1?200:cur-1);});
+document.getElementById('p-next').addEventListener('click',function(){openPoem(cur===200?1:cur+1);});
+document.getElementById('p-rand').addEventListener('click',function(){openPoem(1+Math.floor(Math.random()*200));});
+addEventListener('keydown',function(ev){if(!mask.classList.contains('open'))return;
+  if(ev.key==='Escape')closePoem();
+  if(ev.key==='ArrowLeft')openPoem(cur===1?200:cur-1);
+  if(ev.key==='ArrowRight')openPoem(cur===200?1:cur+1);});
+function n2cn(n){
+  var D='零一二三四五六七八九';
+  if(n<=10)return D[n];
+  if(n<20)return '十'+(n%10?D[n%10]:'');
+  if(n<100){var t=Math.floor(n/10);return D[t]+'十'+(n%10?D[n%10]:'');}
+  return D[Math.floor(n/100)]+'百'+(n%100?n2cn(n%100):'');
+}
+
+/* ---------- 友:传签 ---------- */
+var FRIENDS=[{"name": "金应", "ti": "承信郎路分，随身笔吏", "no": "第110首", "qs": ["承信郎路分金应元备笔札使令性刚知义随勤王入京予陷敌左右星散惟应无叛去", "至通州以忧欝病死葬城下哀哉"]}, {"name": "张云", "ti": "吉州敢勇将官", "no": "第111首", "qs": ["云不胜愤七月引所部袭敌于南栅门击杀甚众", "使能少忍当为吾用哀哉"]}, {"name": "吕武", "ti": "环卫官，太平人", "no": "第113首", "qs": ["予陷冦应募随从北行其人劲烈靣折人触忌讳不避", "挺身冦寨化贼为兵"]}, {"name": "巩信", "ti": "团练使都统招谕使，荆湖老将", "no": "第114首", "qs": ["信据险坚立不动中数箭死土人殓之如生"]}, {"name": "徐榛", "ti": "正将，温州人，此首诗阙", "no": "第134首", "qs": ["予被执榛得脱自惠州来五羊愿从北行扶持患难备殚忠欵道病至丰城死焉"]}, {"name": "缪朝宗", "ti": "环卫官知梅州，淮人", "no": "第116首", "qs": ["军府器械悉出其手空坑之败自经于山间哀哉"]}, {"name": "赵时赏", "ti": "督府参议官，宗室", "no": "第119首", "qs": ["宗室有志气首宰旌德以一县抗敌数有功", "空坑之败走之吴溪寻被执于隆兴遇害哀哉"]}, {"name": "刘沐", "ti": "督府机宜，邻曲朋友", "no": "第120首", "qs": ["凡江西忠义皆渊伯所号召昼夜酬应精力不倦", "遇害于隆兴长子同日刑次子贡元死空坑乱兵"]}, {"name": "刘子俊", "ti": "督府机宜，吾乡之杰", "no": "第129首", "qs": ["越二十日而行府败民章被执莫知所终哀哉"]}, {"name": "萧资", "ti": "合门路钤，本书吏出身", "no": "第131首", "qs": ["资于患难中扶持尽力", "潮阳移屯道遇冦资以病体被害哀哉"]}, {"name": "杜浒", "ti": "督府参谋官，游侠", "no": "第132至133首", "qs": ["性刚猛为游侠京师予北行浒愿从镇江之脱浒之力也"]}, {"name": "邹防", "ti": "江西安抚副使，字凤叔", "no": "第127首", "qs": ["慷慨有大志以豪侠行台郡间从予勤王", "宁都被执变姓名为卜者敌不知其为招讨使也"]}, {"name": "邓光荐", "ti": "礼部，字中甫", "no": "第137首", "qs": ["中甫赴海敌舟防出之张元帅待以客礼与予俱出岭别于建康", "为管宁为陶潜不亦善乎"]}];
+var fbox=document.getElementById('friends');
+FRIENDS.forEach(function(f,i){
+  var b=document.createElement('button');b.className='fstrip'+(i===0?' sel':'');
+  b.innerHTML='<span class="pin"></span><span class="nm"></span><span class="ti2"></span>';
+  b.querySelector('.nm').textContent=f.name;
+  b.querySelector('.ti2').textContent=f.ti;
+  b.addEventListener('click',function(){showFriend(i);});
+  fbox.appendChild(b);
+});
+function showFriend(i){
+  var f=FRIENDS[i];
+  [].forEach.call(fbox.children,function(c,j){c.classList.toggle('sel',j===i);});
+  document.getElementById('fd-name').textContent=f.name;
+  document.getElementById('fd-ti').textContent=f.ti+' · '+f.no;
+  var bd=document.getElementById('fd-body');bd.innerHTML='';
+  f.qs.forEach(function(q){var s=document.createElement('span');s.className='q';s.textContent=q;bd.appendChild(s);});
+}
+if(FRIENDS.length)showFriend(0);
+
+/* ---------- 身:站牌 ---------- */
+[].forEach.call(document.querySelectorAll('#route .stop'),function(s){
+  s.addEventListener('click',function(){openPoem(+s.dataset.go);});
+});
+
+/* ---------- 心:抽一句 ---------- */
+var well=document.getElementById('chouwell'),chouBtn=document.getElementById('choubtn');
+chouBtn.addEventListener('click',function(){
+  var e=ENTS[1+Math.floor(Math.random()*199)];
+  var l=e.lines[Math.floor(Math.random()*4)]; if(!l)return;
+  var old=well.querySelector('.strip'); if(old)old.remove();
+  var s=document.createElement('div');s.className='strip';
+  var b=document.createElement('b');b.textContent=l[0];
+  var t=document.createElement('s');t.textContent=l[1];
+  s.appendChild(b);s.appendChild(t);
+  var f=well.querySelector('.frm');
+  well.insertBefore(s,f);
+  var frm2=document.createElement('div');frm2.className='frm';frm2.textContent='出第 '+e.n+' 首'+(e.name?' '+e.name:'');
+  var oldf=well.querySelector('.frm.from2'); if(oldf)oldf.remove();
+  frm2.classList.add('from2');well.appendChild(frm2);
+});
+
+/* ---------- 入场 ---------- */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+},{threshold:.16});
+document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+
+/* ---------- 右缘绳 ---------- */
+var marks=['hero','st-guo','st-shen','st-you','st-jia','st-xin'].map(function(id){return document.getElementById(id);});
+var knots=document.querySelectorAll('#strap .knot');
+function spy(){
+  var c=0,mid=innerHeight*.4;
+  marks.forEach(function(m,i){if(m&&m.getBoundingClientRect().top<mid)c=i;});
+  knots.forEach(function(k,i){k.classList.toggle('lit',i===c);});
+}
+addEventListener('scroll',spy,{passive:true});spy();
+knots.forEach(function(k,i){k.addEventListener('click',function(){
+  var t=marks[i]; if(t)t.scrollIntoView({behavior:'smooth'});
+});});
+
+/* ---------- 首屏裁句 ---------- */
+var HERO_LINES=[['南极连铜柱','送李晋肃'],['煌煌太宗业','北征'],['始谋谁其问','舟中苦热'],['风雨秋一叶','李光弼']];
+var btn=document.getElementById('caibtn');
+var wt=document.getElementById('wt'),seal=document.getElementById('seal1');
+var du=document.getElementById('dujuan'),jian=document.getElementById('jian');
+btn.addEventListener('click',function(){
+  if(btn.classList.contains('done')){resetHero();return;}
+  var dr=du.getBoundingClientRect();
+  HERO_LINES.forEach(function(h,i){
+    var slot=jian.querySelector('.slot[data-s="'+i+'"]');
+    var sr=slot.getBoundingClientRect();
+    var st=document.createElement('div');st.className='strip qv';
+    st.innerHTML='<b></b><s></s>';
+    st.querySelector('b').textContent=h[0];
+    st.querySelector('s').textContent=h[1];
+    st.style.left=(sr.left)+'px';st.style.top=(sr.top)+'px';
+    st.style.transform='translate('+(dr.left-sr.left)+'px,'+(dr.top-sr.top+40)+'px) rotate(-14deg) scale(.6)';
+    st.style.opacity='.25';
+    document.body.appendChild(st);
+    setTimeout(function(){st.style.transform='none';st.style.opacity='1';},60+i*260);
+    setTimeout(function(){
+      slot.appendChild(st);st.style.position='static';st.style.transform='none';
+    },1300+i*260);
+  });
+  setTimeout(function(){wt.classList.add('on');},1500);
+  setTimeout(function(){seal.classList.add('on');},2500);
+  setTimeout(function(){
+    btn.classList.add('done');btn.textContent='再 裁 一 遍';
+    document.getElementById('hero').querySelectorAll('.strip').forEach(function(s){if(s.parentNode===document.body)s.remove();});
+  },2500);
+});
+function resetHero(){
+  btn.classList.remove('done');btn.textContent='裁 句';
+  wt.classList.remove('on');seal.classList.remove('on');
+  jian.querySelectorAll('.slot').forEach(function(s){s.innerHTML='';});
+}
+})();
+</script>
+</body>
+</html>
