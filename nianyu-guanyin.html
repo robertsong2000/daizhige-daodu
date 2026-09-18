@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>碾玉观音 · 殆知阁古代文献导读</title>
+<style>
+:root{
+  --bg:#191917;
+  --bg2:#1d1f1f;
+  --paper:#e8e4dc;
+  --dim:#9a948a;
+  --faint:#6e6a61;
+  --jade:#5e8fbb;
+  --jade-soft:rgba(94,143,187,.45);
+  --jade-faint:rgba(94,143,187,.13);
+  --fire:#c9703f;
+  --seal:#a83a30;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--paper);
+  font-family:"Noto Serif CJK SC","Source Han Serif SC","Songti SC",SimSun,serif;
+  line-height:1.95;
+  overflow-x:hidden;
+}
+.mono{font-family:var(--mono)}
+a{color:var(--jade);text-decoration:none}
+q{quotes:none}
+q.q{
+  display:block;
+  background:rgba(232,228,220,.05);
+  border-left:2px solid var(--jade);
+  padding:12px 18px;
+  margin:14px 0;
+  color:#dcd6c8;
+  font-size:16px;
+}
+q.inline{
+  color:var(--jade);
+  border-bottom:1px solid var(--jade-soft);
+  padding:0 3px;
+}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px}
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:5;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px);
+  opacity:.5;
+}
+
+/* ============ hero:玉料面试 ============ */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;
+  padding:60px 20px 40px;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 30%,var(--jade-faint),transparent 70%),
+    var(--bg);
+}
+.kicker{
+  font-size:13px;letter-spacing:.5em;color:var(--faint);
+  text-indent:.5em;margin-bottom:44px;white-space:nowrap;
+}
+.stone-stage{position:relative;text-align:center;margin-bottom:34px}
+.stone{
+  width:150px;height:196px;margin:0 auto;
+  background:
+    radial-gradient(ellipse 60% 40% at 34% 26%,rgba(255,255,255,.30),transparent 58%),
+    radial-gradient(ellipse 80% 60% at 62% 78%,rgba(94,143,187,.34),transparent 70%),
+    linear-gradient(160deg,#cfd6d2 0%,#a8bdb6 34%,#7fa3a8 62%,#5e8fbb 100%);
+  border-radius:48% 52% 50% 50% / 38% 42% 58% 62%;
+  box-shadow:0 24px 60px rgba(94,143,187,.22),inset 0 -14px 30px rgba(25,25,23,.34);
+  position:relative;
+  transition:box-shadow .9s,filter .9s;
+}
+.stone::after{
+  content:"";position:absolute;left:22%;top:12%;width:26%;height:15%;
+  background:rgba(255,255,255,.5);border-radius:50%;
+  filter:blur(4px);transform:rotate(-24deg);
+}
+.guanyin-svg{
+  position:absolute;inset:0;width:100%;height:100%;
+  opacity:0;transition:opacity 1.4s ease .3s;pointer-events:none;
+}
+.stone.lit{filter:brightness(1.14);box-shadow:0 24px 70px rgba(94,143,187,.4)}
+.stone.lit .guanyin-svg{opacity:.9}
+.guanyin-svg path,.guanyin-svg circle,.guanyin-svg ellipse{fill:rgba(25,25,23,.78)}
+.verdict{
+  min-height:3.2em;max-width:34em;margin:22px auto 18px;
+  font-size:15px;color:var(--dim);
+}
+.choices{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.choice{
+  background:none;border:1px solid rgba(232,228,220,.28);color:var(--paper);
+  font-family:inherit;font-size:15px;letter-spacing:.14em;
+  padding:10px 22px;cursor:pointer;transition:all .3s;
+}
+.choice:hover{border-color:var(--jade);color:var(--jade)}
+.choice.picked{border-color:var(--jade);background:var(--jade-faint);color:var(--jade)}
+.hero-name{margin-top:46px;text-align:center}
+.hero-name h1{
+  font-size:clamp(38px,7vw,58px);font-weight:600;letter-spacing:.18em;
+  text-indent:.18em;
+}
+.hero-name .src{
+  margin-top:10px;font-size:14px;color:var(--dim);letter-spacing:.22em;
+}
+.goseal{
+  margin-top:34px;font-size:14px;color:var(--faint);letter-spacing:.3em;
+  cursor:pointer;opacity:.35;transition:opacity .6s;text-indent:.3em;
+}
+.goseal.lit{opacity:1;color:var(--jade)}
+.hero-note{
+  margin-top:26px;max-width:33em;text-align:center;
+  font-size:13.5px;color:var(--faint);line-height:1.85;
+}
+
+/* ============ folds ============ */
+.fold{padding:84px 0 60px;position:relative}
+.foldhead{display:flex;align-items:baseline;gap:18px;margin-bottom:10px;flex-wrap:wrap}
+.foldno{
+  font-family:var(--mono);font-size:13px;color:var(--jade);
+  border:1px solid var(--jade-soft);padding:2px 9px;letter-spacing:.1em;
+  flex:none;
+}
+.foldname{font-size:26px;letter-spacing:.2em;font-weight:600}
+.foldsub{font-size:13.5px;color:var(--faint);letter-spacing:.1em}
+.prose{font-size:16px;color:#d8d2c4;margin:20px 0}
+.prose b{color:var(--jade);font-weight:600}
+.lede{font-size:17px;color:var(--paper)}
+
+/* 折壹 推诿链 */
+.chain{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 18px}
+.chip{
+  background:none;border:1px solid rgba(232,228,220,.22);color:var(--dim);
+  font-family:inherit;font-size:14px;padding:7px 14px;cursor:pointer;
+  letter-spacing:.08em;transition:all .3s;
+}
+.chip:hover{border-color:var(--jade-soft);color:var(--paper)}
+.chip.lit{border-color:var(--jade);color:var(--jade);background:var(--jade-faint)}
+.blame-stage{border:1px solid rgba(232,228,220,.14);padding:22px 24px;min-height:150px;background:var(--bg2)}
+.blame-stage .who{font-size:13px;color:var(--faint);letter-spacing:.16em;margin-bottom:8px}
+.blame-stage .line{font-size:16px;color:var(--paper)}
+.blame-stage q.q{border-left-color:var(--jade-soft);font-size:15px}
+.chain-done{
+  margin-top:18px;display:none;
+  border-top:1px dashed rgba(232,228,220,.2);padding-top:16px;
+}
+.chain-done.show{display:block}
+
+/* 折贰 献状 */
+.offer{display:grid;grid-template-columns:1fr;gap:20px}
+.doc{
+  border:1px solid rgba(232,228,220,.24);background:rgba(232,228,220,.045);
+  padding:26px 28px;position:relative;
+}
+.doc .dochead{
+  font-size:14px;letter-spacing:.4em;color:var(--dim);
+  border-bottom:1px solid rgba(232,228,220,.18);padding-bottom:10px;margin-bottom:16px;
+}
+.bigchar{
+  float:right;font-size:74px;line-height:1;color:var(--jade);
+  opacity:.5;margin:4px 0 8px 20px;font-weight:600;
+}
+
+/* 折叁 遗漏 */
+.fireband{
+  height:120px;margin:26px 0;position:relative;overflow:hidden;
+  border:1px solid rgba(201,112,63,.3);pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 80% at 22% 110%,rgba(201,112,63,.5),transparent 65%),
+    radial-gradient(ellipse 50% 70% at 52% 120%,rgba(169,72,44,.55),transparent 70%),
+    radial-gradient(ellipse 46% 66% at 80% 112%,rgba(201,150,63,.4),transparent 68%),
+    var(--bg2);
+}
+.fireband::before,.fireband::after{
+  content:"";position:absolute;inset:-40% 0 0 0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 30% 26% at 20% 100%,rgba(232,228,220,.14),transparent 70%),
+    radial-gradient(ellipse 26% 22% at 55% 100%,rgba(232,228,220,.1),transparent 70%),
+    radial-gradient(ellipse 30% 24% at 84% 100%,rgba(232,228,220,.12),transparent 70%);
+  animation:flick 2.2s ease-in-out infinite alternate;
+}
+.fireband::after{animation-duration:3.4s;animation-delay:.8s;opacity:.7}
+@keyframes flick{
+  from{transform:translateY(0) scaleY(1)}
+  to{transform:translateY(-13%) scaleY(1.16)}
+}
+.firecap{font-size:13px;color:var(--faint);letter-spacing:.16em;margin:-12px 0 20px}
+.road{display:flex;flex-wrap:wrap;gap:0;margin:24px 0;align-items:stretch}
+.stop{
+  flex:1;min-width:96px;border:1px solid rgba(232,228,220,.16);
+  padding:12px 8px;text-align:center;background:var(--bg2);
+}
+.stop .nm{font-size:15px;color:var(--paper);letter-spacing:.1em}
+.stop .no{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:3px}
+.stop.first{border-color:var(--jade-soft)}
+.stop.last{border-color:var(--jade);background:var(--jade-faint)}
+.boardsign{
+  display:inline-block;margin:18px 0 6px;
+  border:1px solid var(--jade-soft);padding:14px 18px;
+  background:rgba(232,228,220,.04);
+}
+.boardsign q{
+  font-size:19px;letter-spacing:.3em;color:var(--jade);
+}
+
+/* 折肆 小青大青 */
+.hall{
+  border:1px solid rgba(232,228,220,.2);background:var(--bg2);
+  padding:30px 26px;position:relative;margin:24px 0;
+}
+.blades{display:flex;gap:34px;justify-content:center;margin:6px 0 18px}
+.blade{
+  writing-mode:vertical-rl;height:max-content;
+  font-size:17px;letter-spacing:.4em;color:var(--fire);
+  border-left:2px solid rgba(201,112,63,.5);padding-left:10px;
+}
+.blankcard{
+  background:#101010;border:1px solid rgba(232,228,220,.1);
+  padding:58px 20px;text-align:center;margin:24px 0;
+}
+.blankcard .three{
+  font-size:30px;letter-spacing:.5em;text-indent:.5em;color:var(--paper);opacity:.85;
+}
+.blankcard .why{
+  margin-top:16px;font-size:13.5px;color:var(--faint);letter-spacing:.06em;
+}
+.birdnote{
+  border-left:2px solid rgba(232,228,220,.2);padding:4px 0 4px 18px;margin:20px 0;
+  color:var(--dim);font-size:15px;
+}
+
+/* 折伍 轿中无人 */
+.sedan{
+  margin:28px auto;max-width:420px;text-align:center;
+}
+.sedanbox{
+  position:relative;height:230px;border:1px solid rgba(232,228,220,.22);
+  background:var(--bg2);overflow:hidden;
+}
+.curtain{
+  position:absolute;inset:0;z-index:3;
+  background:
+    repeating-linear-gradient(90deg,rgba(94,143,187,.32) 0 26px,rgba(94,143,187,.16) 26px 52px),
+    var(--bg2);
+  border-bottom:1px solid var(--jade-soft);
+  display:flex;align-items:flex-end;justify-content:center;
+  transition:transform .9s ease;
+  cursor:pointer;
+}
+.curtain span{
+  display:block;margin-bottom:14px;font-size:13px;letter-spacing:.34em;
+  color:var(--paper);text-indent:.34em;
+}
+.sedanbox.open .curtain{transform:translateY(-102%)}
+.sedan-empty{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:22px;letter-spacing:.4em;text-indent:.4em;color:var(--faint);
+  opacity:0;transition:opacity .8s .3s;
+}
+.sedanbox.open .sedan-empty{opacity:1}
+.sedanbtn{
+  margin-top:16px;background:none;border:1px solid rgba(232,228,220,.28);
+  color:var(--paper);font-family:inherit;font-size:14px;letter-spacing:.2em;
+  padding:9px 24px;cursor:pointer;
+}
+.sedanbtn:hover{border-color:var(--jade);color:var(--jade)}
+.endfour{margin:34px 0 8px;display:grid;gap:8px}
+.endfour q{
+  display:block;font-size:clamp(17px,2.6vw,22px);letter-spacing:.1em;
+  color:var(--paper);border-left:3px solid var(--jade);padding-left:16px;
+  background:none;
+}
+
+/* ============ coda ============ */
+.coda{
+  margin-top:70px;border-top:1px solid rgba(232,228,220,.12);
+  padding:70px 0 46px;background:
+    radial-gradient(ellipse 60% 70% at 50% 0,rgba(94,143,187,.08),transparent 70%);
+  text-align:center;
+}
+.duet{
+  display:flex;justify-content:center;gap:clamp(24px,6vw,70px);
+  margin:26px 0 30px;flex-wrap:wrap;
+}
+.duet div{font-size:clamp(24px,4.4vw,34px);letter-spacing:.3em;text-indent:.3em}
+.duet .a{color:var(--jade)}
+.duet .b{color:var(--dim)}
+.finalnote{max-width:36em;margin:0 auto 34px;font-size:15px;color:var(--dim)}
+.sealbig{
+  width:92px;height:92px;margin:0 auto 26px;border:2px solid var(--jade);
+  display:flex;align-items:center;justify-content:center;
+  writing-mode:vertical-rl;
+  font-size:21px;letter-spacing:.16em;color:var(--jade);
+}
+.meta{
+  max-width:640px;margin:0 auto;text-align:left;
+  border-top:1px dashed rgba(232,228,220,.2);padding-top:20px;
+  font-size:12.5px;color:var(--faint);line-height:2;
+}
+
+/* 固定小印 */
+.fixedseal{
+  position:fixed;right:16px;bottom:16px;z-index:9;
+  width:54px;height:54px;border:1px solid rgba(232,228,220,.25);
+  background:rgba(25,25,23,.86);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;letter-spacing:.08em;color:var(--faint);
+  cursor:pointer;transition:all .6s;line-height:1.5;text-align:center;
+  writing-mode:vertical-rl;
+}
+.fixedseal.lit{
+  border-color:var(--jade);color:var(--jade);
+  box-shadow:0 0 22px rgba(94,143,187,.3);
+}
+.sealtip{
+  position:fixed;right:80px;bottom:20px;z-index:9;max-width:240px;
+  background:var(--bg2);border:1px solid var(--jade-soft);
+  padding:12px 16px;font-size:13px;color:var(--paper);
+  display:none;
+}
+.sealtip.show{display:block}
+@media(max-width:640px){
+  .fixedseal{width:46px;height:46px;font-size:11px;right:10px;bottom:10px}
+  .sealtip{right:64px;left:auto;max-width:200px}
+  .blades{gap:20px}
+  .fold{padding:60px 0 44px}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<!-- ============ 首屏:玉料面试 ============ -->
+<header class="hero">
+  <div class="kicker">殆知阁古籍导读 · 集藏话本</div>
+  <div class="stone-stage">
+    <div class="stone" id="stone">
+      <svg class="guanyin-svg" viewBox="0 0 100 130" aria-hidden="true">
+        <circle cx="50" cy="16" r="5"/>
+        <circle cx="50" cy="6" r="2.4"/>
+        <path d="M50 23 C38 28 34 40 34 52 L30 96 L38 96 L42 62 L42 108 L58 108 L58 62 L62 96 L70 96 L66 52 C66 40 62 28 50 23 Z"/>
+        <ellipse cx="50" cy="114" rx="26" ry="7"/>
+      </svg>
+    </div>
+    <div class="verdict" id="verdict">郡王得了块羊脂美玉,浑然透明。这块玉,该拿做甚么?</div>
+  </div>
+  <div class="choices">
+    <button class="choice" data-p="cup">劝杯</button>
+    <button class="choice" data-p="mhl">摩侯罗儿</button>
+    <button class="choice" data-p="gy">南海观音</button>
+  </div>
+  <div class="hero-name">
+    <h1>碾玉观音</h1>
+    <div class="src">宋元话本 · 京本通俗小说旧目,一块玉与一个养娘</div>
+  </div>
+  <div class="hero-note">话本开口先替你把这块玉试了两遍。第三遍,才有正文。</div>
+  <div class="goseal" id="goseal">进上御前 · 开卷</div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ 折壹 春归 ============ -->
+  <section class="fold" id="f1">
+    <div class="foldhead">
+      <span class="foldno">折壹</span>
+      <span class="foldname">春归</span>
+      <span class="foldsub">入话 · 一架吵了八百年的官司</span>
+    </div>
+    <p class="prose lede">话本开口不讲正事,先吵一架。春天要走了,怪谁?八位各执一词,从东风一路怪到燕子,最后一位收场:谁也不怪。</p>
+    <p class="prose">点一家,看他的断语和诗。八家都点过,才轮得到说书人开口。</p>
+    <div class="chain" id="chain">
+      <button class="chip" data-n="0">王荆公 · 风</button>
+      <button class="chip" data-n="1">苏东坡 · 雨</button>
+      <button class="chip" data-n="2">秦少游 · 柳絮</button>
+      <button class="chip" data-n="3">邵尧夫 · 蝴蝶</button>
+      <button class="chip" data-n="4">曾两府 · 黄莺</button>
+      <button class="chip" data-n="5">朱希真 · 杜鹃</button>
+      <button class="chip" data-n="6">苏小妹 · 燕子</button>
+      <button class="chip" data-n="7">王岩叟 · 都不怪</button>
+    </div>
+    <div class="blame-stage" id="blame">
+      <div class="pane" data-n="0">
+        <div class="who">王荆公先开口</div>
+        <div class="line"><q>原来这春归去,是东风断送的</q></div>
+        <q class="q">春日春风有时好,春日春风有时恶。不得春风花不开,花开又被风吹落。</q>
+      </div>
+      <div class="pane" data-n="1" hidden>
+        <div class="who">苏东坡道</div>
+        <div class="line"><q>不是东风断送春归去,是春雨断送春归去。</q></div>
+        <q class="q">雨前初见花间蕊,雨后全无叶底花。蜂蝶纷纷过墙去,却疑春色在邻家。</q>
+      </div>
+      <div class="pane" data-n="2" hidden>
+        <div class="who">秦少游道</div>
+        <div class="line"><q>也不干风事,也不干雨事,是柳絮飘将春色去。</q></div>
+        <q class="q">三月柳花轻复散,飘扬澹荡送春归。此花本是无情物,一向东飞一向西。</q>
+      </div>
+      <div class="pane" data-n="3" hidden>
+        <div class="who">邵尧夫道</div>
+        <div class="line"><q>也不干柳絮事,是蝴蝶采将春色去。</q></div>
+        <q class="q">花正开时当三月,蝴蝶飞来忙劫劫。采将春色向天涯,行人路上添凄切。</q>
+      </div>
+      <div class="pane" data-n="4" hidden>
+        <div class="who">曾两府道</div>
+        <div class="line"><q>也不干蝴蝶事,是黄莺啼得春归去。</q></div>
+        <q class="q">花正开时艳正浓,春宵何事老芳丛?黄鹂啼得春归去,无限园林转首空。</q>
+      </div>
+      <div class="pane" data-n="5" hidden>
+        <div class="who">朱希真道</div>
+        <div class="line"><q>也不干黄莺事,是杜鹃啼得春归去。</q></div>
+        <q class="q">杜鹃叫得春归去,物边啼血尚犹存。庭院日长空悄悄,教人生怕到黄昏。</q>
+      </div>
+      <div class="pane" data-n="6" hidden>
+        <div class="who">苏小妹道</div>
+        <div class="line"><q>是燕子衔将春色去。</q></div>
+        <q class="q">燕子衔将春色去,纱窗几阵黄梅雨。</q>
+      </div>
+      <div class="pane" data-n="7" hidden>
+        <div class="who">王岩叟收场</div>
+        <div class="line"><q>是九十日春光已过,春归去。</q></div>
+        <q class="q">怨风怨雨两俱非,风雨不来春亦归。</q>
+      </div>
+    </div>
+    <div class="chain-done" id="chaindone">
+      <p class="prose">八家吵完,官司没有输赢。说书人这才发问:<q class="inline">说话的因甚说这春归词?</q></p>
+      <p class="prose">那是绍兴年间,朝廷驻跸临安。怕春归去的,是轿子里的那位<b>咸安郡王</b>。他带着满府家眷去游春,天晚回城,轿子进钱塘门,过车桥,听见桥下一间裱铺里有人喊了一声。</p>
+      <q class="q">我儿出来看郡王!</q>
+      <p class="prose">轿里那位看得真切,是裱铺老璩家的女儿。他把帮总虞候叫到轿前,只留下一句话:</p>
+      <q class="q">我从前要寻这个人,今日却在这里!只在你身上,明日要这个人入府中来!</q>
+    </div>
+  </section>
+
+  <!-- ============ 折贰 献状 ============ -->
+  <section class="fold" id="f2">
+    <div class="foldhead">
+      <span class="foldno">折贰</span>
+      <span class="foldname">献状</span>
+      <span class="foldsub">一个名字的来路</span>
+    </div>
+    <p class="prose lede">第二天,虞候坐在裱铺对门的茶坊里,请璩大夫过来说话。问得很客气:<q class="inline">小娘子如今要嫁人,却是趋奉官员?</q></p>
+    <div class="offer">
+      <div class="doc">
+        <div class="dochead">璩公的回话</div>
+        <div class="bigchar">献</div>
+        <q class="q">老拙家寒,那讨钱来嫁人?将来也只是献与官员府第。</q>
+        <p class="prose">这个女孩儿会绣作。轿里那位看上的,正是她身上那条绣裹肚。虞候替府里把话挑明:<q class="inline">老丈何不献与郡王?</q>于是:</p>
+        <q class="q">到明日写一纸献状,献来府中。郡王给与身价,因此取名秀秀养娘。</q>
+        <p class="prose">嫁人要婚书,入府是<b>献状</b>。一纸献状,一个新名字。从这一刻起,璩家女儿在书里只剩两个称呼:秀秀,养娘。</p>
+      </div>
+      <div class="doc">
+        <div class="dochead">她的手艺 · 寄调眼儿媚</div>
+        <q class="q">深闺小院日初长,娇女绮罗裳。不做东君造化,金针刺绣群芳样。斜枝嫩叶包开蕊,唯只欠馨香。曾向园林深处,引教蝶乱蜂狂。</q>
+        <p class="prose">词里说她绣的花<q class="inline">唯只欠馨香</q>。绣得出群芳,绣不出自己的去处。</p>
+      </div>
+    </div>
+    <p class="prose">入府不数日,朝廷赐下战袍,秀秀照着绣出一件。郡王欢喜,想着回礼,从库里取出一块羊脂美玉,叫碾玉的待诏们来问:这块玉,该做甚么。</p>
+    <p class="prose">这就是首屏那块玉。有人说好做劝杯,郡王嫌可惜;有人说做摩侯罗儿,又被驳:七月七才用得着。数中一个二十五岁的后生,姓崔名宁,建康府人氏,叉手向前:</p>
+    <q class="q">告恩王:这块玉上尖下圆,甚是不好,只好碾一个南海观音。</q>
+    <q class="q">不过两个月,碾成了这个玉观音。郡王即时写表进上御前,龙颜大喜。</q>
+    <p class="prose">观音底下碾着三个小字。此刻按下不表,折伍再说。崔宁从此在府里加了请给,书里叫他崔待诏。</p>
+  </section>
+
+  <!-- ============ 折叁 遗漏 ============ -->
+  <section class="fold" id="f3">
+    <div class="foldhead">
+      <span class="foldno">折叁</span>
+      <span class="foldname">遗漏</span>
+      <span class="foldsub">一夜火,二千里</span>
+    </div>
+    <p class="prose lede">又是一年春天,崔宁游春回来,在酒楼上吃酒,听见街上乱哄哄:<q class="inline">井亭桥有遗漏!</q>话本里的遗漏,是走了水,失火。</p>
+    <div class="fireband" aria-hidden="true"></div>
+    <div class="firecap">赋曰 · 库本原赞,读一遍火势</div>
+    <q class="q">初如萤火,次若灯火。千条蜡烛焰难当,万座糁盆敌不住</q>
+    <p class="prose">崔宁赶回府前,府里早搬空了,静悄悄没一个人影。火光把满府照得透亮,左廊下走出来一个女子,摇摇摆摆,自言自语,和他撞了个满怀。是秀秀。手里提着一包金珠,开口便托身:</p>
+    <q class="q">崔大夫!我出来得迟了,府中养娘,各自四散,管顾不得。你如今没奈何,只得将我去躲避则个。</q>
+    <p class="prose">到了石灰桥,脚疼了;到了崔宁住处,肚里饥;三杯两盏下肚,话本自己都念了一句:</p>
+    <q class="q">三杯竹叶穿心过,两朵桃花上脸来。</q>
+    <p class="prose">秀秀把当年月台上那句许婚翻出来,崔宁只会应喏。于是:</p>
+    <q class="q">比似只管等待,何不今夜我和你先做夫妻,不知你意下何如?</q>
+    <p class="prose">崔宁说岂敢。秀秀把话挑到明处:</p>
+    <q class="q">你知道不敢,我叫将起来,教坏了你。你却如何将我到家中?我明日府里去说!</q>
+    <p class="prose">这一段是全篇最有生气的半页。逃亡是秀秀提的金珠,婚事是秀秀开的口,连要挟都带着火场余温。书里的崔宁从头到尾被动,像个被推着走的碾轮。这一夜,两个成了夫妻。四更出门,一路往南:</p>
+    <div class="road">
+      <div class="stop first"><div class="nm">钱塘门</div><div class="no">失火之夜</div></div>
+      <div class="stop"><div class="nm">衢州</div><div class="no">五路总头</div></div>
+      <div class="stop"><div class="nm">信州</div><div class="no">怕有相识</div></div>
+      <div class="stop last"><div class="nm">潭州</div><div class="no">二千余里</div></div>
+    </div>
+    <p class="prose">两人在潭州城里赁了间屋,门前挂出一面招牌:</p>
+    <div class="boardsign"><q>行在崔待诏碾玉生活</q></div>
+    <p class="prose">手艺还是那门手艺。可是招牌上「行在」两个字,把他们从哪儿来的写得清清楚楚。崔宁说这里离得远,尽可安心:</p>
+    <q class="q">这里离行在有二千余里了,料得无事。你我安心,好做长久夫妻。</q>
+  </section>
+
+  <!-- ============ 折肆 小青大青 ============ -->
+  <section class="fold" id="f4">
+    <div class="foldhead">
+      <span class="foldno">折肆</span>
+      <span class="foldname">小青大青</span>
+      <span class="foldsub">撞破、升厅、一场没有写出的刑</span>
+    </div>
+    <p class="prose lede">住了一年之上。潭州道上过来一条汉子,白布衫,腿缠青白行缠,麻鞋,挑一副高肩担儿。崔宁不认得他,他认得崔宁。</p>
+    <p class="prose">这是郡王府的郭排军,奉命给寄居潭州的刘两府送钱。路过铺前,一眼看见柜身子里坐着的秀秀。夫妻两个请他吃酒,只求一句:<q class="inline">千万莫说与郡王知道。</q>郭排军满口应承,回府当天,一字不落全说了。</p>
+    <p class="prose">郡王升厅。话本在这里给了一笔闲中带杀的交代:这位郡王当年杀番人,左手一口刀叫小青,右手一口刀叫大青,两口刀就在壁上挂着。当下:</p>
+    <div class="hall">
+      <div class="blades" aria-hidden="true">
+        <div class="blade">小青</div>
+        <div class="blade">大青</div>
+      </div>
+      <p class="prose">秀秀和崔宁被押到厅前跪下。当下:</p>
+      <q class="q">郡王好生焦躁,左手去壁牙上取下小青,右手一掣,掣刀在手,睁起杀番人的眼儿,咬得牙齿剥剥地响</q>
+      <p class="prose">是夫人从屏风背后开口:</p>
+      <q class="q">郡王!这里是帝辇之下,不比边庭上面,若有罪过,只消解去临安府施行,如何胡乱凯得人?</q>
+      <p class="prose">库本「凯」字当是砍之讹,照录。夫人一句话,救了崔宁,没有救秀秀。判决是:崔宁解临安府,杖,发去建康府安置;秀秀,捉入后花园。</p>
+      <div class="blankcard">
+        <div class="three">后花园</div>
+        <div class="why">话本写到府门为止,一个字也没有跟进去。</div>
+      </div>
+      <p class="prose"><q class="inline">方出北关门,到鹅项头</q>,后面一顶轿儿追上来。轿里下来的人,自称在后花园挨了三十竹篦,赶出来同去建康。崔宁疑心,惊弓之鸟,不敢多事,还是同上了船。</p>
+    </div>
+    <div class="birdnote">这一段,读者此刻也不必多想。轿子里坐的是谁,折伍自会分说。</div>
+    <p class="prose">到建康,两口又开起碾玉铺子。浑家提议把爹妈接来同住,便派人去行在寻。来人寻到璩家门首:</p>
+    <q class="q">只见两扇门关着,一把锁锁着,一条竹竿封着</q>
+    <p class="prose">邻舍说,老夫妻俩见女儿被捉,当时就要寻短见,后来不知去向。来人空手回建康。可建康屋里,璩公璩婆早就坐在那里了。两条线对不上的一处,话本不点破。</p>
+  </section>
+
+  <!-- ============ 折伍 轿中无人 ============ -->
+  <section class="fold" id="f5">
+    <div class="foldhead">
+      <span class="foldno">折伍</span>
+      <span class="foldname">轿中无人</span>
+      <span class="foldsub">三字印 · 一纸军令状</span>
+    </div>
+    <p class="prose lede"><q class="inline">且说朝廷宫里,一日到偏殿看玩宝器</q>。偏殿里拿起这尊观音,身上一个铃儿,失手掉下来了。官员反复看,看到底下:</p>
+    <q class="q">看到底下,下面碾着三字崔宁造。</q>
+    <p class="prose">折贰按下不表的三个小字,在这里把崔宁从建康召回了行在。他配了个新铃,碾好交上,官家留他住在行在。崔宁争得一口气,在清湖河下赁了间屋,开起碾玉铺子。才开三两日,郭排军打门外过,抬头看见柜身子里立着的浑家,吃了一惊,抬脚就走,嘴里喃喃两个字:</p>
+    <q class="q">作怪!作怪!</q>
+    <p class="prose">这一回郡王先骂他胡说:<q class="inline">秀秀被我打杀了。埋在后花园。你须也看见。</q>郭立赌咒,真个写下一纸军令状。郡王叫两个轿番抬轿去取人,话说在前头:真个在,把来砍取;不在,郭立替她砍取一刀。</p>
+    <p class="prose">秀秀梳洗换衣上轿,吩咐过丈夫。轿番抬到王府门前,郭立先进去了。郡王教她进来。掀帘:</p>
+    <div class="sedan">
+      <div class="sedanbox" id="sedanbox">
+        <div class="curtain" id="curtain"><span>话本 · 掀帘</span></div>
+        <div class="sedan-empty">轿中无人</div>
+      </div>
+      <button class="sedanbtn" id="sedanbtn">掀帘看一看</button>
+    </div>
+    <p class="prose" id="pail" hidden><q class="inline">掀起帘子看一看,便是一桶水倾在身上,开着口则合不得。</q>轿子里,人没了。轿番只说亲眼看着上轿,一路不曾转动。五十背花棒落在郭立背上。崔宁听得浑家是鬼,回家问两位老人,老两口面面相觑,走出门,望着清湖河,扑通跳了下去。打捞,连尸首都没有。原来当年秀秀被处死时,两个老的已跳河自尽。这两个,也都是鬼。</p>
+    <p class="prose">崔宁回到家里,没了主意。房里坐着浑家,最后一段话,是她自己说的:</p>
+    <q class="q">我因为你,吃郡王打死了,埋在后花园里。却恨郭排军多口,今日已报了冤仇,郡王已将他打了五十背花棒。如今都知道我是鬼,容身不得了。</q>
+    <p class="prose"><q class="inline">道罢,起身双手揪住崔宁,叫得一声,四肢倒地。</q>邻舍来看时,崔宁也被扯了去,一家四个,同做鬼去了。后来那位评话人收梢,四句,一句一个人:</p>
+    <div class="endfour">
+      <q>咸安王捺不下烈火性,</q>
+      <q>郭排军禁不住闲磕牙,</q>
+      <q>璩秀娘舍不得生眷属,</q>
+      <q>崔待诏撇不脱鬼冤家。</q>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ coda ============ -->
+<footer class="coda">
+  <div class="wrap">
+    <div class="sealbig">崔宁造</div>
+    <div class="duet">
+      <div class="a">玉在御前</div>
+      <div class="b">人在后园</div>
+    </div>
+    <p class="finalnote">一块玉,先被说做劝杯,又嫌它只配做乞巧的摩侯罗儿,末了碾成观音进上御前,靠底下三个小字,把碾玉的人从建康召回行在。一个养娘,一纸献状进府,一场火里自己拣了人,两千里外开铺子挂招牌,末了连做鬼,都要先把仇报完。玉有落款,人没有。</p>
+    <div class="meta">
+      <p>文本来源:殆知阁简体库集藏话本〈碾玉观音〉 · <a href="https://github.com/robertsong2000/daizhigev20" target="_blank" rel="noopener">github.com/robertsong2000/daizhigev20</a></p>
+      <p>本页引文经脚本与库内文件去标点、归一逐字比对通过;导读系列总目见 <a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">daizhige-daodu</a> 仓库 mulu.html</p>
+      <p>本篇为宋元旧话本,奴婢献纳、私刑决罚、冥报冤仇诸事皆彼时社会与说话人观念的实录,属时代局限,仅作史料与文本呈现,不代表今日之立场。</p>
+    </div>
+  </div>
+</footer>
+
+<div class="fixedseal" id="fixedseal">观音印</div>
+<div class="sealtip" id="sealtip">观音底下,碾着三个小字:崔宁造。</div>
+
+<script>
+(function(){
+  var v=document.getElementById('verdict');
+  var stone=document.getElementById('stone');
+  var goseal=document.getElementById('goseal');
+  var said={cup:false,mhl:false};
+  var msgs={
+    cup:'郡王道:可惜!恁般一块玉,如何将来只做得一副劝杯。',
+    mhl:'郡王道:摩侯罗儿只是七月七日乞巧使得,寻常间又无用处。'
+  };
+  var btns=document.querySelectorAll('.choice');
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      var p=b.getAttribute('data-p');
+      if(p==='gy'){
+        b.classList.add('picked');
+        v.textContent='郡王道:好!正合我意。就叫崔宁下手。';
+        stone.classList.add('lit');
+        goseal.classList.add('lit');
+        return;
+      }
+      v.textContent=msgs[p];
+      b.classList.add('picked');
+      said[p]=true;
+      if(said.cup&&said.mhl){
+        v.textContent='两个方案都被郡王驳了。数中一个后生叉手向前:只好碾一个南海观音。';
+      }
+    });
+  });
+  goseal.addEventListener('click',function(){
+    document.getElementById('f1').scrollIntoView({behavior:'smooth'});
+  });
+
+  /* 折壹 推诿链 */
+  var chips=document.querySelectorAll('#chain .chip');
+  var panes=document.querySelectorAll('#blame .pane');
+  var done=document.getElementById('chaindone');
+  var litN=0;
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      var n=c.getAttribute('data-n');
+      chips.forEach(function(x){x.classList.remove('lit')});
+      c.classList.add('lit');
+      panes.forEach(function(p){
+        if(p.getAttribute('data-n')===n){p.removeAttribute('hidden')}
+        else{p.setAttribute('hidden','')}
+      });
+      if(!c.dataset.done){c.dataset.done='1';litN++;}
+      if(litN===chips.length){done.classList.add('show');}
+    });
+  });
+
+  /* 折伍 掀帘 */
+  var box=document.getElementById('sedanbox');
+  var btn=document.getElementById('sedanbtn');
+  var pail=document.getElementById('pail');
+  function lift(){box.classList.add('open');pail.removeAttribute('hidden');}
+  btn.addEventListener('click',lift);
+  document.getElementById('curtain').addEventListener('click',lift);
+
+  /* 小印:到折伍点亮 */
+  var seal=document.getElementById('fixedseal');
+  var tip=document.getElementById('sealtip');
+  var f5=document.getElementById('f5');
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){seal.classList.add('lit');}
+    });
+  },{threshold:.12});
+  io.observe(f5);
+  seal.addEventListener('click',function(){tip.classList.toggle('show');});
+})();
+</script>
+</body>
+</html>
