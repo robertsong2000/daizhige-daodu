@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新序 · 殆知阁导读</title>
+<style>
+:root{
+  --mo:#191917; --mo2:#121211; --paper:#e8e4dc; --paper2:#efe9dd; --ink:#26241f;
+  --zg:#c9963f; --zg2:#d9b26b; --zg3:#8a6a34; --cinnabar:#c0453c;
+  --dim:#948f85; --line:rgba(232,228,220,.15);
+  --serif:"Songti SC","STSong","SimSun","Noto Serif SC",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--mo);color:var(--paper);font-family:var(--serif);line-height:1.85;-webkit-font-smoothing:antialiased}
+q{quotes:none} q::before,q::after{content:none}
+a{color:var(--zg2)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.rv.vin{opacity:1;transform:none}
+.slab{position:relative;padding:84px 0 72px;border-top:1px solid var(--line)}
+.slab-lb{position:absolute;left:22px;top:30px;writing-mode:vertical-rl;font-size:12px;letter-spacing:.34em;color:var(--zg)}
+.slab-h{font-size:15px;letter-spacing:.3em;color:var(--dim);margin-bottom:6px}
+.slab-t{font-size:30px;letter-spacing:.12em;font-weight:700;margin-bottom:16px}
+.lead{max-width:760px;color:var(--dim);font-size:15px;margin-bottom:30px}
+.lead b{color:var(--paper);font-weight:400}
+q{color:var(--paper)}
+.src{font-size:12px;color:var(--dim);letter-spacing:.18em}
+
+/* ============ 首屏：天禄阁灯案 ============ */
+.hero{min-height:92vh;display:flex;align-items:center;position:relative;overflow:hidden;
+  background:radial-gradient(1100px 640px at 74% 34%,rgba(201,150,63,.10),transparent 62%),var(--mo)}
+.hero .wrap{display:grid;grid-template-columns:200px 1fr;gap:44px;width:100%;align-items:center;padding-top:54px;padding-bottom:54px}
+.kick{font-size:13px;letter-spacing:.32em;color:var(--dim)}
+.kick b{display:block;font-weight:400}
+.kick .jd{color:var(--zg2);letter-spacing:.2em;margin-top:6px;display:block}
+.vtitle{writing-mode:vertical-rl;height:max-content;white-space:nowrap;
+  font-size:64px;letter-spacing:.16em;font-weight:700;color:var(--paper);
+  border-right:1px solid var(--line);padding-right:26px;margin:30px 0 22px;line-height:1.2}
+.vsub{font-size:14px;color:var(--dim);letter-spacing:.14em;margin-top:14px}
+.vsub i{font-style:normal;color:var(--zg2)}
+.lampstage{position:relative;height:380px;border:1px solid var(--line);border-radius:6px;overflow:hidden;
+  background:linear-gradient(165deg,rgba(232,228,220,.025),rgba(232,228,220,0) 58%)}
+.lampstage svg{position:absolute;inset:0;width:100%;height:100%}
+#halo{opacity:0;transition:opacity 1.6s ease}
+#flame{opacity:0;transform-origin:center 78%;transition:opacity .5s ease}
+#flame.lit{opacity:1;animation:flick 1.6s ease-in-out infinite}
+@keyframes flick{0%,100%{transform:scaleY(1)}30%{transform:scaleY(1.14) scaleX(.94)}60%{transform:scaleY(.9) scaleX(1.05)}}
+#slipbundle{transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.lampstage.lit #slipbundle{transform:rotate(-14deg)}
+.lampstage.lit #halo{opacity:1}
+#lampbtn{position:absolute;right:18px;bottom:16px;background:transparent;border:1px solid var(--zg3);color:var(--zg2);
+  font-family:var(--serif);font-size:14px;letter-spacing:.3em;padding:9px 20px 9px 24px;border-radius:3px;cursor:pointer;transition:.3s}
+#lampbtn:hover{border-color:var(--zg);background:rgba(201,150,63,.1)}
+.herofact{margin-top:22px;opacity:0;transform:translateY(14px);transition:opacity 1s ease .4s,transform 1s ease .4s;pointer-events:none}
+.herofact.show{opacity:1;transform:none;pointer-events:auto}
+.herofact q{display:block;font-size:21px;letter-spacing:.06em;line-height:1.9}
+.herofact .src{display:block;margin-top:8px}
+.herofact p{margin-top:12px;font-size:14px;color:var(--dim);max-width:640px}
+
+/* ============ 辑者案 ============ */
+.an{display:grid;grid-template-columns:1fr 280px;gap:44px;align-items:start}
+.paper{background:var(--paper);color:var(--ink);border-radius:4px;padding:34px 36px;box-shadow:0 14px 40px rgba(0,0,0,.42)}
+.paper h4{font-size:13px;letter-spacing:.3em;color:var(--zg3);margin-bottom:14px}
+.paper p{font-size:15px;line-height:2;text-align:justify}
+.paper p b{font-weight:700;color:var(--ink)}
+.paper .seal{float:right;width:52px;height:52px;border:2px solid var(--cinnabar);color:var(--cinnabar);
+  border-radius:4px;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;
+  font-size:17px;letter-spacing:.1em;transform:rotate(4deg);margin:0 0 8px 14px;opacity:.85}
+.juanrail{display:flex;flex-direction:column;gap:8px}
+.juantab{display:flex;align-items:center;gap:10px;background:rgba(232,228,220,.04);border:1px solid var(--line);
+  border-radius:3px;padding:8px 12px;transition:.3s}
+.juantab:hover{border-color:var(--zg3);transform:translateX(4px)}
+.juantab .jn{writing-mode:vertical-rl;font-size:13px;letter-spacing:.22em;color:var(--zg2)}
+.juantab .jd2{font-size:13px;color:var(--dim)}
+.juantab .cnt{margin-left:auto;font-size:12px;color:var(--dim);opacity:.7}
+
+/* ============ 典源墙 ============ */
+.wall{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.cert{perspective:1200px;height:268px;cursor:pointer}
+.cert-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.4,.1,.2,1)}
+.cert.flipped .cert-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:4px;padding:22px 24px;
+  background:linear-gradient(170deg,var(--paper2),var(--paper));color:var(--ink);display:flex;flex-direction:column}
+.face.back{transform:rotateY(180deg);background:linear-gradient(170deg,#23211d,#1d1b18);color:var(--paper);border:1px solid var(--line)}
+.cert-top{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.2em;color:var(--zg3)}
+.cert-top .dot{width:7px;height:7px;background:var(--zg);border-radius:50%}
+.cert-name{font-size:29px;font-weight:700;letter-spacing:.1em;margin:10px 0 6px}
+.cert-name small{font-size:13px;color:var(--dim);font-weight:400;letter-spacing:.08em;margin-left:8px}
+.cert q{font-size:13.5px;line-height:1.9;color:#4c463c;display:block;margin-top:2px}
+.cert .flip-hint{margin-top:auto;font-size:11.5px;letter-spacing:.26em;color:var(--dim)}
+.face.back h5{font-size:12px;letter-spacing:.3em;color:var(--zg2);margin-bottom:10px;font-weight:400}
+.face.back p{font-size:13.5px;line-height:1.95;color:#b9b2a4;text-align:justify}
+.face.back .seals{margin-top:auto;align-self:flex-end;width:40px;height:40px;border:2px solid var(--zg3);color:var(--zg2);
+  border-radius:3px;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;font-size:13px;transform:rotate(-4deg)}
+
+/* ============ 好龙台 ============ */
+.dragon-stage{position:relative;border:1px solid var(--line);border-radius:6px;background:linear-gradient(180deg,rgba(232,228,220,.03),transparent 70%);overflow:hidden}
+.dragon-stage svg{display:block;width:100%;height:auto}
+.writemark{cursor:pointer}
+.writemark circle,.writemark rect{fill:rgba(201,150,63,.08);stroke:var(--zg3);stroke-dasharray:3 3}
+.writemark text{fill:var(--dim);font-size:14px;letter-spacing:.1em}
+.writemark.on circle,.writemark.on rect{fill:rgba(201,150,63,.22);stroke:var(--zg)}
+.writemark.on text{fill:var(--zg2)}
+.wm-state{position:absolute;left:16px;top:12px;font-size:12px;letter-spacing:.22em;color:var(--dim)}
+.wm-inline{position:static;font-size:12px;letter-spacing:.22em;color:var(--dim)}
+#truedragon{opacity:0;transition:opacity 1.6s ease,transform 1.6s ease;transform:translateY(-46px)}
+.dragon-stage.arrived #truedragon{opacity:1;transform:none}
+#yegong{transition:transform 1.4s ease .5s,opacity 1.4s ease .5s}
+.dragon-stage.arrived #yegong{transform:translateX(190px);opacity:0}
+#flee{opacity:0;transition:opacity .8s ease 1.2s}
+.dragon-stage.arrived #flee{opacity:1}
+.dragon-steps{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;align-items:center;padding:0 4px 4px}
+.dstep{border:1px solid var(--line);border-radius:3px;background:rgba(232,228,220,.03);color:var(--dim);
+  font-family:var(--serif);font-size:14px;letter-spacing:.14em;padding:9px 16px;cursor:pointer;transition:.3s}
+.dstep:hover{border-color:var(--zg3);color:var(--paper)}
+.dstep.done{border-color:var(--zg);color:var(--zg2);background:rgba(201,150,63,.08)}
+.verdict{margin-top:24px;background:var(--paper);color:var(--ink);border-radius:4px;padding:26px 30px;max-width:660px;position:relative}
+.verdict::before{content:"判";position:absolute;right:18px;top:14px;width:38px;height:38px;border:2px solid var(--cinnabar);
+  color:var(--cinnabar);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:17px;transform:rotate(6deg)}
+.verdict q{display:block;font-size:18px;line-height:1.9}
+.verdict .src{display:block;margin-top:10px;color:var(--zg3)}
+.verdict p{font-size:13.5px;color:#5a5347;margin-top:10px;line-height:1.95}
+
+/* ============ 解网台 ============ */
+.netbox{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.netstage{border:1px solid var(--line);border-radius:6px;position:relative;background:radial-gradient(420px 300px at 50% 60%,rgba(201,150,63,.07),transparent 70%)}
+.netstage svg{display:block;width:100%;height:auto}
+#net-n,#net-e,#net-w{transition:opacity 1.4s ease,transform 1.4s ease}
+.netstage.open #net-n{opacity:0;transform:translateY(-26px)}
+.netstage.open #net-e{opacity:0;transform:translateX(26px)}
+.netstage.open #net-w{opacity:0;transform:translateX(-26px)}
+#states{opacity:0;transition:opacity 1.2s ease .8s}
+.netstage.open #states{opacity:1}
+.netnote{font-size:14.5px;color:var(--dim);line-height:2}
+.netnote q{display:block;font-size:16px;color:var(--paper);line-height:2;margin:14px 0 4px}
+.netnote .src{display:block;margin-bottom:14px}
+.btnline{margin-top:6px}
+.btn{background:transparent;border:1px solid var(--zg3);color:var(--zg2);font-family:var(--serif);
+  font-size:14px;letter-spacing:.26em;padding:9px 22px 9px 26px;border-radius:3px;cursor:pointer;transition:.3s}
+.btn:hover{border-color:var(--zg);background:rgba(201,150,63,.1)}
+
+/* ============ 简帘 ============ */
+.curtain{display:flex;gap:14px;overflow-x:auto;padding:26px 4px 34px;scrollbar-width:thin}
+.slip{flex:0 0 auto;width:96px;background:linear-gradient(180deg,#2a2723,#211f1b);
+  border:1px solid var(--line);border-radius:3px;padding:16px 10px 12px;display:flex;flex-direction:column;align-items:center;
+  transition:transform .35s ease,border-color .35s ease;position:relative}
+.slip::before{content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:var(--zg3)}
+.slip:hover{transform:translateY(-8px);border-color:var(--zg3)}
+.slip-t{writing-mode:vertical-rl;font-size:15px;letter-spacing:.3em;color:var(--zg2);font-weight:700;margin-bottom:10px}
+.slip q{writing-mode:vertical-rl;font-size:13px;line-height:2.1;color:#b9b2a4}
+.slip .slip-j{margin-top:14px;writing-mode:vertical-rl;font-size:11px;letter-spacing:.24em;color:var(--dim);opacity:.75}
+
+/* ============ 台面通用 ============ */
+.duo{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:start}
+.stagebox{border:1px solid var(--line);border-radius:6px;padding:26px 28px;background:linear-gradient(180deg,rgba(232,228,220,.03),transparent 75%)}
+.stagebox h5{font-size:13px;letter-spacing:.28em;color:var(--zg);margin-bottom:16px;font-weight:400}
+.pai{display:flex;gap:12px;margin-bottom:18px}
+.paicard{flex:1;border:1px dashed var(--zg3);border-radius:4px;padding:14px 14px 16px;cursor:pointer;transition:.35s;background:rgba(232,228,220,.02)}
+.paicard .ph{font-size:15px;letter-spacing:.2em;color:var(--dim);margin-bottom:8px}
+.paicard q{display:none;font-size:13.5px;line-height:2;color:var(--paper)}
+.paicard .psrc{display:none;margin-top:6px}
+.paicard.open{border-style:solid;border-color:var(--zg)}
+.paicard.open .ph{color:var(--zg2)}
+.paicard.open q,.paicard.open .psrc{display:block}
+.stagenote{font-size:14px;color:var(--dim);line-height:2.05}
+.stagenote q{display:block;font-size:16px;line-height:2;margin:12px 0 2px}
+.stagenote .src{display:block;margin-bottom:12px}
+.nightgrid{display:flex;gap:10px;margin-bottom:8px}
+.ncell{flex:1;height:44px;border:1px solid var(--line);border-radius:3px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:var(--dim);transition:.5s}
+.ncell.fill{background:rgba(192,69,60,.24);border-color:var(--cinnabar);color:#e6c9c5}
+.nrow{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.nrow .nlb{writing-mode:vertical-rl;font-size:12px;letter-spacing:.2em;color:var(--dim);height:64px}
+.sidepops{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+.popcard{border:1px solid var(--line);border-radius:4px;padding:16px 18px;background:rgba(232,228,220,.02)}
+.popcard h6{font-size:12.5px;letter-spacing:.24em;color:var(--zg2);margin-bottom:8px;font-weight:400}
+.popcard q{display:block;font-size:13.5px;line-height:1.95;color:#b9b2a4}
+.popcard .src{display:block;margin-top:6px}
+.mapslips{display:flex;flex-direction:column;gap:12px}
+.mapslip{border:1px solid var(--line);border-left:3px solid var(--zg3);border-radius:3px;padding:13px 16px;cursor:pointer;transition:.35s;background:rgba(232,228,220,.02)}
+.mapslip .mh{font-size:14px;letter-spacing:.18em;color:var(--dim)}
+.mapslip q{display:none;font-size:14px;line-height:2;color:var(--paper);margin-top:8px}
+.mapslip.open{border-left-color:var(--zg)}
+.mapslip.open .mh{color:var(--zg2)}
+.mapslip.open q{display:block}
+.zhuge-stage #qinarmy,.zhuge-stage #jinarmy{transition:transform 1.6s ease,opacity 1.6s ease}
+.zhuge-stage.done #qinarmy{transform:translateX(-130px);opacity:.12}
+.zhuge-stage.done #jinarmy{transform:translateX(130px);opacity:.12}
+
+/* ============ 读记签 ============ */
+#duji{position:fixed;left:20px;bottom:20px;z-index:50;width:74px;background:linear-gradient(180deg,#2a2723,#211f1b);
+  border:1px solid var(--line);border-radius:3px;padding:14px 8px 12px;text-align:center;transition:.4s}
+#duji .djt{writing-mode:vertical-rl;font-size:13px;letter-spacing:.3em;color:var(--zg2);margin:0 auto}
+#duji .djn{font-size:22px;color:var(--paper);margin-top:8px}
+#duji .djl{font-size:10.5px;color:var(--dim);letter-spacing:.1em;margin-top:2px}
+#duji .djdone{display:none;font-size:11px;color:var(--zg2);margin-top:8px;line-height:1.9}
+#duji.done{width:230px;padding:18px 16px;text-align:left}
+#duji.done .djdone{display:block}
+#duji.min .djdone{display:none}
+#duji.min{width:74px;padding:14px 8px 12px;text-align:center;cursor:pointer}
+#duji.done{cursor:pointer}
+
+/* ============ 尾屏 ============ */
+.coda{padding:110px 0 60px;border-top:1px solid var(--line)}
+.coda .wrap{display:grid;grid-template-columns:auto 1fr;gap:56px;align-items:start}
+.bigv{writing-mode:vertical-rl;font-size:66px;letter-spacing:.3em;font-weight:700;color:var(--paper);
+  border-right:1px solid var(--line);padding-right:30px;height:300px}
+.coda .vline{font-size:15px;color:var(--dim);letter-spacing:.06em;max-width:620px;line-height:2.1}
+.coda .fin{margin-top:26px;font-size:14.5px;color:#b9b2a4;max-width:640px;line-height:2.05}
+.coda .fina q{display:block;margin-top:22px;font-size:19px;line-height:2;letter-spacing:.04em}
+.vsealq{display:inline-flex;margin-top:26px;width:56px;height:56px;border:2px solid var(--cinnabar);color:var(--cinnabar);
+  border-radius:4px;align-items:center;justify-content:center;writing-mode:vertical-rl;font-size:18px;letter-spacing:.1em;transform:rotate(3deg);opacity:.9}
+
+/* ============ 页脚 ============ */
+.fnotes{border-top:1px solid var(--line);padding:34px 0 46px;font-size:12.5px;color:var(--dim);line-height:2}
+.fnotes p{margin-bottom:10px;max-width:920px}
+.fnotes a{color:var(--zg2)}
+
+@media (max-width:860px){
+  .hero .wrap{grid-template-columns:1fr;gap:26px}
+  .vtitle{writing-mode:horizontal-tb;border-right:none;border-bottom:1px solid var(--line);
+    padding:0 0 14px;margin:16px 0 10px;font-size:44px;height:auto}
+  .kick .jd{display:inline;margin-left:10px}
+  .an{grid-template-columns:1fr}
+  .wall{grid-template-columns:repeat(2,1fr)}
+  .netbox,.duo{grid-template-columns:1fr;gap:26px}
+  .sidepops{grid-template-columns:1fr}
+  .coda .wrap{grid-template-columns:1fr;gap:30px}
+  .bigv{writing-mode:horizontal-tb;border-right:none;border-bottom:1px solid var(--line);padding:0 0 14px;height:auto;font-size:46px}
+  .slab-lb{display:none}
+  #duji{left:12px;bottom:12px;width:60px}
+  #duji.done{width:min(240px,calc(100vw - 24px))}
+}
+@media (max-width:520px){
+  .wall{grid-template-columns:1fr}
+  .cert-name{font-size:25px}
+  .lampstage{height:300px}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 ================= -->
+<header class="hero" id="s-hero">
+  <div class="wrap">
+    <div>
+      <div class="kick"><b>殆知阁导读</b><b>卷三百一十三</b><span class="jd">典源</span></div>
+      <h1 class="vtitle">新序</h1>
+      <div class="vsub">西汉<i>刘向</i> 辑</div>
+    </div>
+    <div>
+      <div class="lampstage" id="lampstage">
+        <span class="wm-state">天禄阁 校书房</span>
+        <svg viewBox="0 0 760 380" aria-hidden="true">
+          <defs>
+            <radialGradient id="halog" cx="46%" cy="52%" r="46%">
+              <stop offset="0%" stop-color="rgba(217,178,107,.34)"/>
+              <stop offset="55%" stop-color="rgba(201,150,63,.10)"/>
+              <stop offset="100%" stop-color="rgba(201,150,63,0)"/>
+            </radialGradient>
+          </defs>
+          <circle id="halo" cx="350" cy="200" r="330" fill="url(#halog)"/>
+          <rect x="60" y="300" width="640" height="14" rx="3" fill="#2a2723" stroke="rgba(232,228,220,.14)"/>
+          <rect x="90" y="314" width="14" height="46" fill="#23211d"/>
+          <rect x="656" y="314" width="14" height="46" fill="#23211d"/>
+          <g id="slipbundle">
+            <g transform="rotate(0 420 268)">
+              <rect x="404" y="196" width="16" height="104" rx="7" fill="#3a352c" stroke="rgba(232,228,220,.18)"/>
+              <rect x="424" y="206" width="16" height="96" rx="7" fill="#353028" stroke="rgba(232,228,220,.15)"/>
+              <rect x="444" y="214" width="16" height="88" rx="7" fill="#302b24" stroke="rgba(232,228,220,.12)"/>
+              <rect x="464" y="224" width="16" height="78" rx="7" fill="#2b2721" stroke="rgba(232,228,220,.10)"/>
+            </g>
+          </g>
+          <g id="lamp">
+            <rect x="300" y="286" width="104" height="8" rx="3" fill="#23211d" stroke="rgba(232,228,220,.16)"/>
+            <path d="M352 286 L346 236 L358 236 Z" fill="#2e2a23"/>
+            <ellipse cx="352" cy="232" rx="34" ry="9" fill="#3a352c" stroke="rgba(232,228,220,.2)"/>
+            <path d="M318 232 q34 -16 68 0" fill="none" stroke="rgba(232,228,220,.25)"/>
+            <path id="flame" d="M352 226 q9 -14 0 -30 q-9 16 0 30 Z" fill="#e8b45a"/>
+            <circle id="flame-core" cx="352" cy="214" r="4" fill="#f4d9a0" opacity="0"/>
+          </g>
+        </svg>
+        <button id="lampbtn">掌 灯</button>
+      </div>
+      <div class="herofact" id="herofact">
+        <q>叶公子高好龙，钩以写龙，凿以写龙，屋室雕文以写龙。</q>
+        <span class="src">库本卷五 · 杂事第五</span>
+        <p>这句你可能背过。但它署名的出处，是西汉末年一册由宫廷校书人辑成的旧案汇编。这一篇导读，就去那间藏书阁里，替你把成语们的出生登记翻出来。</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= 辑者案 ================= -->
+<section class="slab" id="s-an">
+  <div class="wrap">
+    <span class="slab-lb">辑者案</span>
+    <div class="an">
+      <div class="paper rv">
+        <span class="seal">典源</span>
+        <h4>辑 者 案</h4>
+        <p><b>刘向</b>，西汉宗室，经学家，也给皇帝当过图书总管。他奉命校理宫廷藏书，每校完一类，就写成一篇叙录，中国目录学的祖师爷就是他。校书之余，他把散在各国旧籍里的故事挑出来，按类排好，编成几部书献给皇帝看：本意不是消遣，是拿古人的行事当镜子，劝人主学好。〈新序〉便是其中一部，分<b>杂事五卷</b>，另有<b>刺奢、节士、义勇、善谋</b>四个专题，共十卷。今天课本里的许多成语和典故，第一份完整记录就存放在这里。</p>
+        <p style="margin-top:12px">库本无序，径以杂事第一开篇；十条卷帙，去空白约五万九千字。下文先开一堵<b>典源墙</b>，再进两座台：好龙台看一场直接吓走主人的恶作剧，解网台看一次改变宣传学的历史操作；随后一挂简帘、三节短台，读几个只此一家的名场面。</p>
+      </div>
+      <div class="juanrail rv">
+        <div class="juantab"><span class="jn">卷一</span><span class="jd2">杂事第一</span><span class="cnt">臣下与君王</span></div>
+        <div class="juantab"><span class="jn">卷二</span><span class="jd2">杂事第二</span><span class="cnt">谗言与危局</span></div>
+        <div class="juantab"><span class="jn">卷三</span><span class="jd2">杂事第三</span><span class="cnt">招贤与书信</span></div>
+        <div class="juantab"><span class="jn">卷四</span><span class="jd2">杂事第四</span><span class="cnt">游猎与善言</span></div>
+        <div class="juantab"><span class="jn">卷五</span><span class="jd2">杂事第五</span><span class="cnt">解网与叶公</span></div>
+        <div class="juantab"><span class="jn">卷六</span><span class="jd2">刺奢第六</span><span class="cnt">亡国的倒数</span></div>
+        <div class="juantab"><span class="jn">卷七</span><span class="jd2">节士第七</span><span class="cnt">让名与守节</span></div>
+        <div class="juantab"><span class="jn">卷八</span><span class="jd2">义勇第八</span><span class="cnt">赴难的胆量</span></div>
+        <div class="juantab"><span class="jn">卷九</span><span class="jd2">善谋第九</span><span class="cnt">存亡的算术</span></div>
+        <div class="juantab"><span class="jn">卷十</span><span class="jd2">善谋第十</span><span class="cnt">邦交的分寸</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 典源墙 ================= -->
+<section class="slab" id="s-wall">
+  <div class="wrap">
+    <span class="slab-lb">典源墙</span>
+    <div class="slab-h rv">成语出生登记处</div>
+    <div class="slab-t rv">九 张 出 生 证 明</div>
+    <p class="lead rv">每张卡正面是<b>库本里的原文登记</b>，点开翻面，看它两千年里活成了什么样子。读音与释义你早就会，这里只办一件事：把出处钉死在卷架上。</p>
+    <div class="wall rv">
+      <div class="cert">
+        <div class="cert-in">
+          <div class="face">
+            <div class="cert-top"><span class="dot"></span>卷五 · 杂事第五</div>
+            <div class="cert-name">叶公好龙<small>卷五</small></div>
+            <q>钩以写龙，凿以写龙，屋室雕文以写龙。</q>
+            <div class="flip-hint">翻 面 查 后 世</div>
+          </div>
+          <div class="face back">
+            <h5>后 世</h5>
+            <p>叶公姓沈，名诸梁，字子高，是楚国真实存在过的名臣，治水开田，政绩俱在。经子张借他讽谏鲁哀公这一转述，好龙的粉丝从此背了两千年名不副实的锅。</p>
+            <span class="seals">典源</span>
+          </div>
+        </div>
+      </div>
+      <div class="cert">
+        <div class="cert-in">
+          <div class="face">
+            <div class="cert-top"><span class="dot"></span>卷二 · 杂事第二</div>
+            <div class="cert-name">狐假虎威<small>卷二</small></div>
+            <q>虎不知兽畏己而走也，以为畏狐也。</q>
+            <div class="flip-hint">翻 面 查 后 世</div>
+          </div>
+          <div class="face back">
+            <h5>后 世</h5>
+            <p>楚国名将昭奚恤被北方诸国怕出了名声，楚王起疑，谋士江乙讲了这则寓言：走兽怕的是老虎，老虎却以为怕的是狐狸。一句提醒，说破借势者的底牌。</p>
+            <span class="seals">典源</span>
+          </div>
+        </div>
+      </div>
+      <div class="cert">
+        <div class="cert-in">
+          <div class="face">
+            <div class="cert-top"><span class="dot"></span>卷二 · 杂事第二</div>
+            <div class="cert-name">一鸣惊人<small>卷二</small></div>
+            <q>是鸟虽不蜚，蜚必冲天；虽不鸣，鸣必惊人。</q>
+            <div class="flip-hint">翻 面 查 后 世</div>
+          </div>
+          <div class="face back">
+            <h5>后 世</h5>
+            <p>楚庄王即位三年不理政务，还偏爱猜谜。大夫士庆入宫出了一道鸟谜，君臣借谜底完成一次心照不宣的交接：装睡的人醒了，睡在他身边的人就得收拾。</p>
+            <span class="seals">典源</span>
+          </div>
+        </div>
+      </div>
+      <div class="cert">
+        <div class="cert-in">
+          <div class="face">
+            <div class="cert-top"><span class="dot"></span>卷二 · 杂事第二</div>
+            <div class="cert-name">亡羊补牢<small>卷二</small></div>
+            <q>亡羊而固牢未为迟，见兔而呼狗未为晚。</q>
+            <div class="flip-hint">翻 面 查 后 世</div>
+          </div>
+          <div class="face back">
+            <h5>后 世</h5>
+            <p>庄辛劝楚襄王提防四个宠臣，襄王不听，半年后丢了郢都，逃到城阳才把庄辛请回来。这套从蜻蜓、黄雀、黄鹄一路排到蔡侯的连环比喻，是全书最漂亮的劝谏工程。</p>
+            <span class="seals">典源</span>
+          </div>
+        </div>
+      </div>
+      <div class="cert">
+        <div class="cert-in">
+          <div class="face">
+            <div class="cert-top"><span class="dot"></span>卷二 · 杂事第二</div>
+            <div class="cert-name">讳疾忌医<small>卷二</small></div>
+            <q>君有疾在腠理，不治，将恐深。</q>
+            <div class="flip-hint">翻 面 查 后 世</div>
+          </div>
+          <div class="face back">
+            <h5>后 世</h5>
+            <p>扁鹊四见蔡桓侯，病位从腠理到肌肤、肠胃，一路深入骨髓；第五次见面他掉头就走，因为已经无可请医。病是这样，事也是这样，刘向在卷末替所有人点破。</p>
+            <span class="seals">典源</span>
+          </div>
+        </div>
+      </div>
+      <div class="cert">
+        <div class="cert-in">
+          <div class="face">
+            <div class="cert-top"><span class="dot"></span>卷二 · 杂事第二</div>
+            <div class="cert-name">三人成虎<small>卷二</small></div>
+            <q>夫市之无虎明矣，三人言而成虎。</q>
+            <div class="flip-hint">翻 面 查 后 世</div>
+          </div>
+          <div class="face back">
+            <h5>后 世</h5>
+            <p>庞恭陪太子去邯郸作人质，临行问魏王：一个人说街上有虎，你信吗？两人呢？三人呢？等他从邯郸回来，谗言果然堆过了三人，魏王果然不再见他。</p>
+            <span class="seals">典源</span>
+          </div>
+        </div>
+      </div>
+      <div class="cert">
+        <div class="cert-in">
+          <div class="face">
+            <div class="cert-top"><span class="dot"></span>卷一 · 杂事第一</div>
+            <div class="cert-name">曲高和寡<small>卷一</small></div>
+            <q>是其曲弥高者，其和弥寡。</q>
+            <div class="flip-hint">翻 面 查 后 世</div>
+          </div>
+          <div class="face back">
+            <h5>后 世</h5>
+            <p>宋玉在郢都唱过四级歌单：下里巴人，和者数千；阳春白雪，和者数十。这番自我辩护连凤与鲸都请了出来，是被同僚弹劾之后的优雅回击。</p>
+            <span class="seals">典源</span>
+          </div>
+        </div>
+      </div>
+      <div class="cert">
+        <div class="cert-in">
+          <div class="face">
+            <div class="cert-top"><span class="dot"></span>卷三 · 杂事第三</div>
+            <div class="cert-name">千金买骨<small>卷三</small></div>
+            <q>死马且市之五百金，况生马乎？天下必以王为能市马，马今至矣。</q>
+            <div class="flip-hint">翻 面 查 后 世</div>
+          </div>
+          <div class="face back">
+            <h5>后 世</h5>
+            <p>燕昭王想报齐国之仇，郭隗不讲大道理，只讲了一个买马骨的故事，末了补一句：要招贤，请从我这块马骨开始。于是乐毅、邹衍、剧辛排队入燕。</p>
+            <span class="seals">典源</span>
+          </div>
+        </div>
+      </div>
+      <div class="cert">
+        <div class="cert-in">
+          <div class="face">
+            <div class="cert-top"><span class="dot"></span>卷五 · 杂事第五</div>
+            <div class="cert-name">泽及枯骨<small>卷五</small></div>
+            <q>文王贤矣，泽及枯骨，又况于人乎？</q>
+            <div class="flip-hint">翻 面 查 后 世</div>
+          </div>
+          <div class="face back">
+            <h5>后 世</h5>
+            <p>周文王修灵台，挖出无主的枯骨，吩咐好生改葬：有了天下，天下人都是我的主。消息传开，四方的归心先于他的兵力抵达，这是一笔收益最高的慈善。</p>
+            <span class="seals">典源</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 好龙台 ================= -->
+<section class="slab" id="s-dragon">
+  <div class="wrap">
+    <span class="slab-lb">好龙台</span>
+    <div class="slab-h rv">卷五 · 杂事第五</div>
+    <div class="slab-t rv">一 场 恶 作 剧 的 事 故 现 场</div>
+    <p class="lead rv">事情本是一场求职：士人子张远道投奔鲁哀公，七天没人搭理，临走留下这则寓言。点完屋子里三处<b>写龙</b>的痕迹，看看真龙来了会发生什么。</p>
+    <div class="dragon-stage rv" id="dragonstage">
+      <svg viewBox="0 0 900 380" aria-hidden="true">
+        <g id="house">
+          <rect x="80" y="90" width="620" height="240" fill="#211f1b" stroke="rgba(232,228,220,.16)"/>
+          <path d="M50 90 L390 40 L730 90 Z" fill="#2a2723" stroke="rgba(232,228,220,.18)"/>
+          <rect x="150" y="150" width="90" height="80" fill="#181713" stroke="rgba(232,228,220,.22)"/>
+          <line x1="195" y1="150" x2="195" y2="230" stroke="rgba(232,228,220,.14)"/>
+          <line x1="150" y1="190" x2="240" y2="190" stroke="rgba(232,228,220,.14)"/>
+          <rect x="540" y="180" width="90" height="150" fill="#181713" stroke="rgba(232,228,220,.22)"/>
+          <line x1="585" y1="180" x2="585" y2="330" stroke="rgba(232,228,220,.14)"/>
+          <rect x="120" y="264" width="360" height="26" fill="#262320" stroke="rgba(201,150,63,.35)"/>
+          <path d="M150 277 q14 -12 28 0 q14 12 28 0 q14 -12 28 0 q14 12 28 0 q14 -12 28 0 q14 12 28 0 q14 -12 28 0 q14 12 28 0 q14 -12 28 0 q14 12 28 0 q14 -12 28 0" fill="none" stroke="rgba(201,150,63,.5)"/>
+          <text x="120" y="310" font-size="13" fill="#8a6a34" letter-spacing="2">屋室雕文</text>
+          <text x="640" y="368" font-size="13" fill="#5a5347" letter-spacing="3">堂</text>
+          <text x="160" y="140" font-size="13" fill="#5a5347" letter-spacing="3">牖</text>
+        </g>
+        <g id="truedragon">
+          <path d="M60 120 q60 -36 130 -6 q40 16 82 6 q70 -16 120 22 q26 20 6 44 q-18 22 -52 12 q-30 -8 -22 -34" fill="none" stroke="#c9963f" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="72" cy="126" r="17" fill="none" stroke="#c9963f" stroke-width="6"/>
+          <circle cx="66" cy="121" r="3" fill="#c9963f"/>
+          <path d="M60 132 l-22 12 M62 138 l-18 18" stroke="#c9963f" stroke-width="5" stroke-linecap="round"/>
+          <path d="M120 112 q8 -18 24 -20 M150 104 q8 -18 24 -20 M180 104 q8 -18 24 -20" fill="none" stroke="#c9963f" stroke-width="5" stroke-linecap="round"/>
+          <path d="M390 176 q60 8 96 40 q28 26 64 28" fill="none" stroke="#c9963f" stroke-width="7" stroke-linecap="round" stroke-dasharray="1 14"/>
+          <text x="96" y="86" font-size="14" fill="#d9b26b" letter-spacing="4">窥头于牖</text>
+          <text x="520" y="212" font-size="14" fill="#d9b26b" letter-spacing="4">拖尾于堂</text>
+        </g>
+        <g id="writemarks">
+          <g class="writemark" id="wm1">
+            <circle cx="430" cy="120" r="26"/>
+            <text x="430" y="126" text-anchor="middle">钩</text>
+          </g>
+          <g class="writemark" id="wm2">
+            <circle cx="520" cy="120" r="26"/>
+            <text x="520" y="126" text-anchor="middle">凿</text>
+          </g>
+          <g class="writemark" id="wm3">
+            <rect x="292" y="252" width="120" height="46" rx="6"/>
+            <text x="352" y="280" text-anchor="middle">雕文</text>
+          </g>
+        </g>
+        <g id="yegong">
+          <circle cx="780" cy="212" r="13" fill="none" stroke="rgba(232,228,220,.7)" stroke-width="3"/>
+          <path d="M780 225 v52 M780 244 l-20 18 M780 244 l20 14 M780 277 l-16 34 M780 277 l16 34" stroke="rgba(232,228,220,.7)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <text x="744" y="345" font-size="13" fill="#948f85" letter-spacing="3">叶公</text>
+        </g>
+        <g id="flee">
+          <text x="668" y="168" font-size="13" fill="#948f85" letter-spacing="2">弃而还走 · 五色无主</text>
+        </g>
+      </svg>
+      <div class="dragon-steps">
+        <button class="dstep" id="ds1">钩以写龙</button>
+        <button class="dstep" id="ds2">凿以写龙</button>
+        <button class="dstep" id="ds3">雕文以写龙</button>
+        <span class="wm-inline" id="wmcount">已点 0 / 3</span>
+      </div>
+      <div style="padding:6px 22px 18px"><span class="wm-inline" id="dragonmsg">衣带钩、凿具、屋壁，处处是龙。点齐三处，真龙登场。</span></div>
+    </div>
+    <div class="stagenote rv" style="margin-top:26px;max-width:720px">
+      <q>于是夫龙闻而下之，窥头于牖，拖尾于堂。</q>
+      <span class="src">库本卷五 · 杂事第五</span>
+      <q>叶公见之，弃而还走，失其魂魄，五色无主。</q>
+      <span class="src">同卷</span>
+      <p>子张讲完这个故事，才图穷匕见：他说自己百舍重趼赶来投奔，七天不被理睬，哀公的好士，和叶公的好龙是同一种好法。</p>
+      <q>今臣闻君好士，不远千里之外以见君，七日不礼，君非好士也，好夫似士而非士者也。</q>
+      <span class="src">同卷</span>
+    </div>
+    <div class="verdict rv">
+      <q>是叶公非好龙也，好夫似龙而非龙者也。</q>
+      <span class="src">库本卷五 · 杂事第五</span>
+      <p>成语出生登记：钩、凿、雕文，三件道具；牖、堂，两处现场；一句判词。后世凡言口惠而实不至，皆发此卷。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 解网台 ================= -->
+<section class="slab" id="s-net">
+  <div class="wrap">
+    <span class="slab-lb">解网台</span>
+    <div class="slab-h rv">卷五 · 杂事第五</div>
+    <div class="slab-t rv">一 张 网 的 宣 传 学</div>
+    <div class="netbox">
+      <div class="netstage rv" id="netstage">
+        <svg viewBox="0 0 460 340" aria-hidden="true">
+          <rect x="70" y="60" width="320" height="220" fill="none" stroke="rgba(232,228,220,.2)"/>
+          <g id="net-n">
+            <line x1="70" y1="60" x2="390" y2="60" stroke="#c9963f" stroke-width="2.5"/>
+            <line x1="110" y1="60" x2="110" y2="72" stroke="#c9963f"/><line x1="150" y1="60" x2="150" y2="72" stroke="#c9963f"/>
+            <line x1="190" y1="60" x2="190" y2="72" stroke="#c9963f"/><line x1="230" y1="60" x2="230" y2="72" stroke="#c9963f"/>
+            <line x1="270" y1="60" x2="270" y2="72" stroke="#c9963f"/><line x1="310" y1="60" x2="310" y2="72" stroke="#c9963f"/><line x1="350" y1="60" x2="350" y2="72" stroke="#c9963f"/>
+          </g>
+          <g id="net-w">
+            <line x1="70" y1="60" x2="70" y2="280" stroke="#c9963f" stroke-width="2.5"/>
+            <line x1="70" y1="100" x2="82" y2="100" stroke="#c9963f"/><line x1="70" y1="140" x2="82" y2="140" stroke="#c9963f"/>
+            <line x1="70" y1="180" x2="82" y2="180" stroke="#c9963f"/><line x1="70" y1="220" x2="82" y2="220" stroke="#c9963f"/><line x1="70" y1="260" x2="82" y2="260" stroke="#c9963f"/>
+          </g>
+          <g id="net-e">
+            <line x1="390" y1="60" x2="390" y2="280" stroke="#c9963f" stroke-width="2.5"/>
+            <line x1="378" y1="100" x2="390" y2="100" stroke="#c9963f"/><line x1="378" y1="140" x2="390" y2="140" stroke="#c9963f"/>
+            <line x1="378" y1="180" x2="390" y2="180" stroke="#c9963f"/><line x1="378" y1="220" x2="390" y2="220" stroke="#c9963f"/><line x1="378" y1="260" x2="390" y2="260" stroke="#c9963f"/>
+          </g>
+          <line x1="70" y1="280" x2="390" y2="280" stroke="rgba(232,228,220,.25)" stroke-width="2.5"/>
+          <g id="birds" fill="#d9b26b">
+            <path d="M180 150 q10 -9 20 0 q-10 -3 -20 0 Z"/>
+            <path d="M240 130 q10 -9 20 0 q-10 -3 -20 0 Z"/>
+            <path d="M205 190 q10 -9 20 0 q-10 -3 -20 0 Z"/>
+            <path d="M270 170 q10 -9 20 0 q-10 -3 -20 0 Z"/>
+            <path d="M150 200 q10 -9 20 0 q-10 -3 -20 0 Z"/>
+            <path d="M300 210 q10 -9 20 0 q-10 -3 -20 0 Z"/>
+          </g>
+          <g id="states" font-size="15" fill="#d9b26b" letter-spacing="3">
+            <text x="118" y="70">汉南之国</text>
+          </g>
+        </svg>
+        <div class="btnline" style="padding:0 18px 18px">
+          <button class="btn" id="netbtn">解 其 三 面</button>
+        </div>
+      </div>
+      <div class="netnote rv">
+        <p>商汤在路上看见有人四面张网捕鸟，祝词把天地四方一网打尽。汤把三面解开，只留一面，重新教了一段祝词。</p>
+        <q>昔蛛蝥作网，今之人循序，欲左则左，欲右则右，欲高则高，欲下则下，吾取其犯命者。</q>
+        <span class="src">库本卷五 · 杂事第五</span>
+        <q>汉南之国闻之曰：汤之德及禽兽矣。四十国归之。</q>
+        <span class="src">同卷</span>
+        <p>刘向算完这笔账，补了一句点评：四面张网未必多得鸟，三面解开的网，网住的是四十个国家。</p>
+        <q>人置四面，未必得鸟，汤去三面，置其一面，以网四十国，非徒网鸟也。</q>
+        <span class="src">同卷</span>
+      </div>
+    </div>
+    <div class="stagenote rv" style="margin-top:34px;max-width:760px">
+      <h5 style="font-size:13px;letter-spacing:.28em;color:var(--zg);margin-bottom:14px">同 卷 另 一 张 网</h5>
+      <p>同一卷里还埋着一场更安静的收购：文王挖出枯骨肯出钱改葬，理由只有两组对称句。</p>
+      <q>有天下者，天下之主也；有一国者，一国之主也。</q>
+      <span class="src">库本卷五 · 杂事第五</span>
+      <p>墙上那张出生证明，登记的就是这一段。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 简帘 ================= -->
+<section class="slab" id="s-curtain">
+  <div class="wrap">
+    <span class="slab-lb">补简帘</span>
+    <div class="slab-h rv">散在各卷的补简</div>
+    <div class="slab-t rv">十 八 支 未 编 入 墙 的 名 句</div>
+    <p class="lead rv">下列各简均为库本原文，<b>横向滑动</b>翻阅；悬停可抽出半寸。引文后的小字注明卷次。</p>
+    <div class="curtain rv">
+      <div class="slip"><div class="slip-t">遗令</div><q>常侍莞苏与我处，常忠我以道，正我以义，吾与处不安也，不见不思也。</q><div class="slip-j">卷一</div></div>
+      <div class="slip"><div class="slip-t">霸忧</div><q>诸侯自择师者王，自择友者霸，足己而群臣莫之若者亡。</q><div class="slip-j">卷一</div></div>
+      <div class="slip"><div class="slip-t">民上</div><q>天之爱民甚矣，岂使一人肆于民上。</q><div class="slip-j">卷一</div></div>
+      <div class="slip"><div class="slip-t">三不为</div><q>智者不为谋，辩者不为使，勇者不为斗。</q><div class="slip-j">卷一</div></div>
+      <div class="slip"><div class="slip-t">樽俎</div><q>夫不出于樽俎之间，而知千里之外。</q><div class="slip-j">卷一</div></div>
+      <div class="slip"><div class="slip-t">六翮</div><q>夫腹下之毳，背上之毛，增去一把，飞不为高下。</q><div class="slip-j">卷一</div></div>
+      <div class="slip"><div class="slip-t">祝诅</div><q>一人祝之，一国诅之，一祝不胜万诅，国亡不亦宜乎。</q><div class="slip-j">卷一</div></div>
+      <div class="slip"><div class="slip-t">五墨墨</div><q>国有五墨墨而不危者，未之有也。</q><div class="slip-j">卷一</div></div>
+      <div class="slip"><div class="slip-t">投杼</div><q>其母投杼下机，逾墙而走。</q><div class="slip-j">卷二</div></div>
+      <div class="slip"><div class="slip-t">谤书</div><q>此非臣之功也，主君之力也。</q><div class="slip-j">卷二</div></div>
+      <div class="slip"><div class="slip-t">息壤</div><q>息壤在彼。</q><div class="slip-j">卷二</div></div>
+      <div class="slip"><div class="slip-t">海大鱼</div><q>君独不闻海大鱼乎？网弗能止，缴不能牵。</q><div class="slip-j">卷二</div></div>
+      <div class="slip"><div class="slip-t">卵石</div><q>譬之若以卵投石，若以指绕沸，若羽蹈烈火。</q><div class="slip-j">卷三</div></div>
+      <div class="slip"><div class="slip-t">同好</div><q>民唯恐王之不好色也。</q><div class="slip-j">卷三</div></div>
+      <div class="slip"><div class="slip-t">白头新</div><q>有白头而新，倾盖而故。</q><div class="slip-j">卷三</div></div>
+      <div class="slip"><div class="slip-t">铄金</div><q>众口铄金，积毁销骨。</q><div class="slip-j">卷三</div></div>
+      <div class="slip"><div class="slip-t">回车</div><q>里名胜母，而曾子不入；邑号朝歌，墨子回车。</q><div class="slip-j">卷三</div></div>
+      <div class="slip"><div class="slip-t">善始</div><q>善作者不必善成，善始者不必善终。</q><div class="slip-j">卷三</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 义勇台 ================= -->
+<section class="slab" id="s-yong">
+  <div class="wrap">
+    <span class="slab-lb">义勇台</span>
+    <div class="slab-h rv">卷八 · 义勇第八</div>
+    <div class="slab-t rv">最 怕 死 的 人 ， 死 得 最 体 面</div>
+    <div class="duo">
+      <div class="stagebox rv">
+        <h5>陈 不 占 的 三 拍</h5>
+        <div class="pai">
+          <div class="paicard" id="pc1">
+            <div class="ph">一 拍 · 离 席</div>
+            <q>比去，餐则失匕，上车失轼。</q>
+            <span class="src psrc">库本卷八</span>
+          </div>
+          <div class="paicard" id="pc2">
+            <div class="ph">二 拍 · 对 驭 者</div>
+            <q>死君，义也；无勇，私也。不以私害公。</q>
+            <span class="src psrc">库本卷八</span>
+          </div>
+          <div class="paicard" id="pc3">
+            <div class="ph">三 拍 · 阵 前</div>
+            <q>闻战斗之声，恐骇而死。</q>
+            <span class="src psrc">库本卷八</span>
+          </div>
+        </div>
+        <div class="stagenote">齐国崔杼弑君，小人物陈不占听说国君有难，决定去赴死。他吓到手抖，一路上先把这三拍走完。车里传出的最后一句话，把私德与公义拆得干干净净。</div>
+        <div class="verdict" style="margin-top:20px">
+          <q>不占可谓仁者之勇也。</q>
+          <span class="src">库本卷八</span>
+          <p>胆量归胆量，账目归账目。全书为勇气下的这条定义，比多数哲学书都清楚。</p>
+        </div>
+      </div>
+      <div>
+        <div class="stagebox rv">
+          <h5>卞 庄 子 的 三 冲</h5>
+          <div class="stagenote">为了让战死的资格配得上孝子的身份，他给自己定了三次冲锋的额度。当年他战而三逃，只为留命奉养老母。</div>
+          <q style="display:block;font-size:15.5px;line-height:2;margin:12px 0 2px">初与母处，是以三北，今母死，请塞责而神有所归。</q>
+          <span class="src" style="display:block;margin-bottom:12px">库本卷八</span>
+          <div class="nightgrid" style="margin-top:6px">
+            <div class="ncell" id="bz1">冲</div>
+            <div class="ncell" id="bz2">冲</div>
+            <div class="ncell" id="bz3">冲</div>
+          </div>
+          <div id="bznotes" style="margin-top:12px">
+            <div class="stagenote" id="bzn1" style="display:none">首冲告捷。<q>役一甲首而献之。曰：此塞一北。</q><span class="src">库本卷八</span></div>
+            <div class="stagenote" id="bzn2" style="display:none">再入敌阵。<q>又入，获一甲首而献之。曰：此塞再北。</q><span class="src">库本卷八</span></div>
+            <div class="stagenote" id="bzn3" style="display:none">三冲之后，将军劝他见好就收。<q>毋没尔家，宜止之，请为兄弟。</q><span class="src">库本卷八</span>他不肯收，旧账销清，人留在阵里。</div>
+          </div>
+        </div>
+        <div class="stagebox rv" style="margin-top:20px">
+          <h5>另 一 种 极 端</h5>
+          <div class="stagenote">卷八还有一位卫国的弘演。国君战死，尸身被狄人吃剩一副肝；弘演出使归来，<q style="display:inline;font-size:14.5px">因自刺其腹，内懿公之肝而死。</q>以身作棺，把君主的肝安葬在自己腹中。义勇卷收的从来不是表演，是把身体也记进账里的硬账。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 饮夜台 ================= -->
+<section class="slab" id="s-night">
+  <div class="wrap">
+    <span class="slab-lb">饮夜台</span>
+    <div class="slab-h rv">卷六 · 刺奢第六</div>
+    <div class="slab-t rv">一 场 酒 的 倒 数 计 时</div>
+    <p class="lead rv">赵襄子连饮五日五夜不自知，优人优莫在旁边劝酒。<b>点一次，替他再饮一夜</b>，看这句劝怎么收场。</p>
+    <div class="duo">
+      <div class="stagebox rv">
+        <h5>七 夜 之 局</h5>
+        <div class="nrow"><span class="nlb">纣 七 夜</span>
+          <div class="nightgrid" style="flex:1">
+            <div class="ncell fill">一</div><div class="ncell fill">二</div><div class="ncell fill">三</div><div class="ncell fill">四</div><div class="ncell fill">五</div><div class="ncell fill">六</div><div class="ncell fill">七</div>
+          </div>
+        </div>
+        <div class="nrow"><span class="nlb">君 五 夜</span>
+          <div class="nightgrid" style="flex:1">
+            <div class="ncell fill">一</div><div class="ncell fill">二</div><div class="ncell fill">三</div><div class="ncell fill">四</div><div class="ncell fill">五</div>
+            <div class="ncell" id="n6">六</div><div class="ncell" id="n7">七</div>
+          </div>
+        </div>
+        <div class="stagenote">优莫先说的是一句听上去像夸奖的话。</div>
+        <q>君勉之，不及纣二日耳。</q>
+        <span class="src">库本卷六</span>
+        <div id="drink6" style="display:none">
+          <div class="stagenote">襄子吓醒了，问那我是不是要亡国。优莫答得更绝。</div>
+          <q>桀纣之亡也遇汤武，今天下尽桀也，而君纣也。</q>
+          <span class="src">库本卷六</span>
+        </div>
+        <div id="drink7" style="display:none">
+          <q>桀纣并世，焉能相亡，然亦殆矣。</q>
+          <span class="src">库本卷六</span>
+          <p>亡国需要对手，可满天下都是桀，你就是纣，两个昏君碰不上头，只是危险到极点了。捧人与杀人，用了同一张嘴。</p>
+        </div>
+        <div class="btnline" style="margin-top:16px"><button class="btn" id="drinkbtn">再 饮 一 夜</button></div>
+      </div>
+      <div class="sidepops">
+        <div class="popcard rv">
+          <h6>桀 的 日 子</h6>
+          <q>吾有天下，如天之有日也，日有亡乎？日亡吾亦亡矣。</q>
+          <span class="src">库本卷六</span>
+        </div>
+        <div class="popcard rv">
+          <h6>鹿 台 的 尺 寸</h6>
+          <q>纣为鹿台，七年而成，其大三里，高千尺。</q>
+          <span class="src">库本卷六</span>
+        </div>
+        <div class="popcard rv">
+          <h6>裘 毛 与 里 子</h6>
+          <q>君则不寒，民则寒矣。</q>
+          <span class="src">库本卷六</span>
+        </div>
+        <div class="popcard rv">
+          <h6>两 种 富 贵</h6>
+          <q>彼君子也，以养贤为富。我鄙人也，以钟石金玉为富。</q>
+          <span class="src">库本卷六</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 烛夜台 ================= -->
+<section class="slab" id="s-zhuge">
+  <div class="wrap">
+    <span class="slab-lb">烛夜台</span>
+    <div class="slab-h rv">卷九 · 善谋第九</div>
+    <div class="slab-t rv">一 位 老 人 ， 一 句 话 拆 掉 一 支 联 军</div>
+    <p class="lead rv">秦晋两国围郑，郑国派烛之武夜里出城见秦君。先听听他怎么推辞，再看他的说辞分<b>四步</b>逐步点亮，看秦军如何退走。</p>
+    <div class="duo">
+      <div class="stagebox rv" style="padding:0;overflow:hidden">
+        <svg class="zhuge-stage" id="zhugestage" viewBox="0 0 760 300" style="display:block;width:100%;height:auto">
+          <rect x="300" y="90" width="160" height="110" fill="#211f1b" stroke="rgba(232,228,220,.25)"/>
+          <text x="380" y="152" text-anchor="middle" font-size="26" fill="#e8e4dc" letter-spacing="8">郑</text>
+          <text x="380" y="228" text-anchor="middle" font-size="12" fill="#948f85" letter-spacing="3">存郑之利</text>
+          <g id="qinarmy">
+            <text x="80" y="100" font-size="20" fill="#c9963f" letter-spacing="6">秦</text>
+            <circle cx="70" cy="130" r="6" fill="#c9963f"/><circle cx="98" cy="130" r="6" fill="#c9963f"/><circle cx="126" cy="130" r="6" fill="#c9963f"/><circle cx="154" cy="130" r="6" fill="#c9963f"/><circle cx="182" cy="130" r="6" fill="#c9963f"/>
+            <line x1="200" y1="130" x2="292" y2="130" stroke="#c9963f" stroke-width="2" stroke-dasharray="6 6"/>
+          </g>
+          <g id="jinarmy">
+            <text x="648" y="100" font-size="20" fill="#c9963f" letter-spacing="6">晋</text>
+            <circle cx="700" cy="130" r="6" fill="#c9963f"/><circle cx="672" cy="130" r="6" fill="#c9963f"/><circle cx="644" cy="130" r="6" fill="#c9963f"/><circle cx="616" cy="130" r="6" fill="#c9963f"/><circle cx="588" cy="130" r="6" fill="#c9963f"/>
+            <line x1="470" y1="130" x2="580" y2="130" stroke="#c9963f" stroke-width="2" stroke-dasharray="6 6"/>
+          </g>
+          <text x="380" y="52" text-anchor="middle" font-size="12" fill="#948f85" letter-spacing="2">夜缒而出，见秦君</text>
+        </svg>
+        <div class="btnline" style="padding:0 18px 18px"><span class="wm-inline" id="zhugemsg">四步未完，联军围城。</span></div>
+      </div>
+      <div class="mapslips">
+        <div class="mapslip" id="ms0">
+          <div class="mh">序 幕 · 辞 行</div>
+          <q>臣之壮也，犹不如人，今老矣，无能为也。</q>
+          <q>吾不能蚤用子，今急而求子，是寡人之过也。</q>
+        </div>
+        <div class="mapslip" id="ms1">
+          <div class="mh">第 一 步 · 亡 郑 无 益</div>
+          <q>越晋而取郑，君知其难也，焉用亡郑以陪晋。</q>
+        </div>
+        <div class="mapslip" id="ms2">
+          <div class="mh">第 二 步 · 舍 郑 有 利</div>
+          <q>若舍郑以为东道主，行李之往来，共其资粮，亦无所害。</q>
+        </div>
+        <div class="mapslip" id="ms3">
+          <div class="mh">第 三 步 · 阙 秦 利 晋</div>
+          <q>夫晋何厌之有，既东取郑，又欲广其西境，不阙秦将焉取之？</q>
+        </div>
+        <div class="mapslip" id="ms4">
+          <div class="mh">第 四 步 · 秦 师 退 兵</div>
+          <q>秦君说，引兵而还。</q>
+          <q>以乱易整，不武。吾其还矣。</q>
+        </div>
+      </div>
+    </div>
+    <div class="stagenote rv" style="margin-top:26px;max-width:720px">
+      <q>烛之武可谓善谋，一言而存郑安秦。</q>
+      <span class="src">库本卷九</span>
+      <p>顺带办成一件语言史上的大事：招待过客的"东道主"三个字，出生登记也压在这一卷。库本行文用"蚤"字，是通"早"的古人写法，照录。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 尾屏 ================= -->
+<footer class="coda" id="s-coda">
+  <div class="wrap">
+    <div class="bigv">典源</div>
+    <div>
+      <div class="vline">正史记成与败，这册书记人心的账目：谁在劝，谁在逃，谁把体面留到了最后。刘向把这些旧案编成十卷递到皇帝案头，本意是照人主，照着照着，先照亮了汉语。</div>
+      <div class="fin rv">你今天说的许多四字话，出生登记都在这册书里，卷次齐全。而编它的人想说的其实只有一句：故事是旧故事，账目要新算。</div>
+      <div class="fina rv"><q>此十一圣人，未遭此师，则功业不着乎天下，名号不传乎千世。</q></div>
+      <span class="vsealq">刘向</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= 页脚 ================= -->
+<div class="fnotes">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库儒藏语录〈新序〉（题西汉刘向撰，库本十卷，去空白约五万九千字）。仓库：<a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">github.com/robertsong2000/daizhige-daodu</a>。</p>
+    <p>页面引文均经脚本与库内文件去标点、归一后逐字比对核验通过；白话部分经反扫描，不与库本成串相撞。刘向生平与编纂体例，据《汉书·楚元王传》附传与艺文志通行记载叙写；库本无序，径以杂事第一开篇。卷四杂事第四之游猎三案与卷七节士诸传未及展开，读者可径检原文。</p>
+    <p class="xiaoji">时代局限：全书为劝诫而编，人物言行经过剪裁润饰，与《左传》《国语》《史记》等原始记载多有出入，读时当把每条当作西汉人重述的戏剧场景，不宜径作信史；叶公、扁鹊诸条属传说层，与本卷诸人事迹互见小异。校字记：无盐女条盐字库本作缺字符，引文一律避让该名号，仅采其外貌描写；师旷条五墨墨之墨字、烛之武条蚤字、申徒狄条沈字均照录；白头如新一条库本作有白头而新，通行引作如字，从库本。</p>
+  </div>
+</div>
+
+<!-- ================= 读记签 ================= -->
+<aside id="duji" aria-label="读记">
+  <div class="djt">读记</div>
+  <div class="djn"><span id="dujin">0</span><span style="font-size:12px;color:var(--dim)"> / 6</span></div>
+  <div class="djl">日有记也</div>
+  <div class="djdone">
+    周舍已到。
+    <q style="display:block;font-size:12.5px;color:var(--paper);margin-top:6px">愿为谔谔之臣，墨笔操牍，随君之后，司君之过而书之。</q>
+    <q style="display:block;font-size:12.5px;color:var(--paper);margin-top:6px">百羊之皮，不如一狐之腋。众人之唯唯，不如周舍之谔谔。</q>
+    <q style="display:block;font-size:12.5px;color:var(--paper);margin-top:6px">自周舍之死后，吾未尝闻吾过也。</q>
+  </div>
+</aside>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var stage=$('lampstage'),btn=$('lampbtn'),fact=$('herofact');
+  btn.addEventListener('click',function(){
+    var lit=stage.classList.toggle('lit');
+    btn.textContent=lit?'吹 灯':'掌 灯';
+    fact.classList.toggle('show',lit);
+    $('flame').classList.toggle('lit',lit);
+    $('flame-core').setAttribute('opacity',lit?'1':'0');
+  });
+  document.querySelectorAll('.cert').forEach(function(c){
+    c.addEventListener('click',function(){c.classList.toggle('flipped')});
+  });
+  var litcnt=0;
+  [['ds1','wm1'],['ds2','wm2'],['ds3','wm3']].forEach(function(pair){
+    $(pair[0]).addEventListener('click',function(){
+      var m=$(pair[1]);
+      if(m.classList.contains('on'))return;
+      m.classList.add('on');this.classList.add('done');
+      litcnt++;$('wmcount').textContent='已点 '+litcnt+' / 3';
+      if(litcnt===3){
+        $('dragonstage').classList.add('arrived');
+        $('dragonmsg').textContent='龙闻而下之。真龙进屋，叶公弃而还走。';
+      }
+    });
+  });
+  $('netbtn').addEventListener('click',function(){
+    $('netstage').classList.add('open');
+    this.style.display='none';
+  });
+  ['pc1','pc2','pc3'].forEach(function(id){$(id).addEventListener('click',function(){$(id).classList.toggle('open')})});
+  var bzi=0;
+  ['bz1','bz2','bz3'].forEach(function(id){
+    $(id).addEventListener('click',function(){
+      if(this.classList.contains('fill'))return;
+      this.classList.add('fill');
+      bzi++;
+      $('bzn'+bzi).style.display='block';
+    });
+  });
+  var nights=0;
+  $('drinkbtn').addEventListener('click',function(){
+    nights++;
+    if(nights===1){$('n6').classList.add('fill');$('drink6').style.display='block';}
+    if(nights===2){$('n7').classList.add('fill');$('drink7').style.display='block';this.style.display='none';}
+  });
+  ['ms0','ms1','ms2','ms3','ms4'].forEach(function(id){
+    $(id).addEventListener('click',function(){
+      if(this.classList.contains('open'))return;
+      this.classList.add('open');
+      if($('ms3').classList.contains('open')&&$('ms4').classList.contains('open')){
+        $('zhugestage').classList.add('done');
+        $('zhugemsg').textContent='说辞点齐，秦师先退，晋亦收兵。';
+      }
+    });
+  });
+  var seen={},TOTAL=6;
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting&&!seen[e.target.id]){
+        seen[e.target.id]=1;
+        var n=Object.keys(seen).length;
+        $('dujin').textContent=n;
+        if(n>=TOTAL)$('duji').classList.add('done');
+      }
+    });
+  },{threshold:.3});
+  ['s-wall','s-dragon','s-net','s-curtain','s-yong','s-night'].forEach(function(id){obs.observe($(id))});
+  $('duji').addEventListener('click',function(){this.classList.toggle('min')});
+  document.querySelectorAll('.rv').forEach(function(el){
+    var o=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){el.classList.add('vin');o.disconnect()}});
+    },{threshold:.18});
+    o.observe(el);
+  });
+})();
+</script>
+</body>
+</html>
