@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>行在阳秋 · 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917;
+    --paper: #e8e4dc;
+    --gold: #c9963f;
+    --gold-soft: #a37c34;
+    --red: #c0453c;
+    --dim: #8f897c;
+    --dim2: #6b665c;
+    --line: #35332c;
+    --pline: #c9c2b2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", SimSun, serif;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 26px; }
+  q { quotes: none; }
+  button { font-family: inherit; cursor: pointer; }
+  ::selection { background: rgba(201,150,63,.35); }
+
+  /* ---------- hero ---------- */
+  header.hero { position: relative; padding: 74px 0 66px; border-bottom: 1px solid var(--line); }
+  .sundial { position: absolute; right: 4%; top: 60px; width: 168px; opacity: .9; pointer-events: none; }
+  .kicker { font-size: 13px; letter-spacing: .35em; color: var(--gold); }
+  .herogrid { display: flex; gap: 44px; align-items: flex-start; margin-top: 34px; flex-wrap: wrap; }
+  .titlebox { position: relative; flex: 0 0 auto; }
+  .vtitle {
+    writing-mode: vertical-rl; text-orientation: upright;
+    font-size: 66px; font-weight: 700; letter-spacing: .22em;
+    color: var(--paper); line-height: 1.18; white-space: nowrap;
+    height: max-content; min-height: 300px;
+    transition: text-shadow 1.4s ease;
+  }
+  .flip .vtitle { text-shadow: 0 0 38px rgba(201,150,63,.35); }
+  .vtitle .ghost { color: #23221e; transition: color 1.2s ease .3s; }
+  .flip .vtitle .ghost { color: var(--gold); }
+  .cover {
+    position: absolute; inset: -14px -20px; background: var(--paper);
+    border: 1px solid var(--pline); box-shadow: 0 14px 34px rgba(0,0,0,.5);
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 20px 14px; z-index: 2; backface-visibility: hidden;
+    transform-origin: 50% 0; transition: transform 1.15s cubic-bezier(.6,.05,.3,1), opacity .9s ease .5s;
+    writing-mode: horizontal-tb;
+  }
+  .cover .cal-head { font-size: 15px; color: #4c463a; letter-spacing: .18em; }
+  .cover .cal-day { font-size: 17px; color: var(--ink); letter-spacing: .1em; line-height: 2; }
+  .cover .cal-note { font-size: 12.5px; color: #7a7466; line-height: 1.9; }
+  .flip .cover { transform: rotateX(-168deg); opacity: 0; pointer-events: none; }
+  .ignite {
+    margin-top: 30px; background: none; border: 1px solid var(--gold); color: var(--gold);
+    padding: 10px 30px; font-size: 15px; letter-spacing: .5em; text-indent: .5em;
+    transition: background .3s, color .3s;
+  }
+  .ignite:hover { background: var(--gold); color: var(--ink); }
+  .ignite.hidden { visibility: hidden; }
+  .herotext { flex: 1 1 340px; max-width: 520px; }
+  .lede { margin-top: 6px; font-size: 16.5px; color: #cfc9bb; }
+  .lede q { color: var(--paper); border-bottom: 1px solid rgba(201,150,63,.55); }
+  .byline { margin-top: 26px; font-size: 13.5px; letter-spacing: .28em; color: var(--dim); }
+  .seal {
+    display: inline-block; writing-mode: vertical-rl; white-space: nowrap;
+    background: var(--gold); color: #221c10; font-weight: 700;
+    padding: 8px 5px; font-size: 15px; letter-spacing: .12em;
+    border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.4) inset;
+  }
+  .heroseal { position: absolute; right: -46px; bottom: -6px; opacity: 0; transition: opacity 1s ease 1s; }
+  .flip .heroseal { opacity: 1; }
+
+  /* ---------- section commons ---------- */
+  section { padding: 72px 0; }
+  .sechead { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+  .shi {
+    display: inline-block; border: 1px solid var(--gold); color: var(--gold);
+    width: 34px; height: 34px; line-height: 32px; text-align: center;
+    font-size: 17px; border-radius: 50%;
+  }
+  .sechead h2 { font-size: 27px; letter-spacing: .3em; font-weight: 700; }
+  .seclead { margin-top: 14px; max-width: 700px; color: #b9b3a4; font-size: 15.5px; }
+  .seclead q { color: var(--paper); border-bottom: 1px solid rgba(201,150,63,.55); }
+  .rv { opacity: 0; transform: translateY(16px); transition: opacity .8s ease, transform .8s ease; }
+  .rv.on { opacity: 1; transform: none; }
+
+  /* ---------- 行在谱 ---------- */
+  .strip {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+    gap: 12px; margin-top: 40px;
+  }
+  .stop {
+    background: #201f1b; border: 1px solid var(--line); padding: 14px 8px 10px;
+    text-align: center; cursor: pointer; transition: border-color .25s, transform .25s;
+  }
+  .stop:hover { transform: translateY(-3px); }
+  .stop.cur { border-color: var(--gold); }
+  .stop .pl { writing-mode: vertical-rl; text-orientation: upright; margin: 0 auto;
+    font-size: 17px; letter-spacing: .2em; height: 74px; color: var(--paper); white-space: nowrap; }
+  .stop .gz { display: block; margin-top: 9px; font-size: 11.5px; color: var(--dim); letter-spacing: .08em; }
+  .stop.s1 { background: #26241e; }
+  .stop.s2 { background: #211f1a; }
+  .stop.s3 { background: #1d1c18; }
+  .stop.s4 { background: #191813; }
+  .stop.s4 .pl { color: #b7b1a2; }
+  .stopdetail {
+    margin-top: 22px; border-left: 2px solid var(--gold); padding: 12px 20px;
+    background: #1d1c18; min-height: 86px; font-size: 15.5px; color: #cfc9bb;
+  }
+  .stopdetail q { color: var(--paper); border-bottom: 1px solid rgba(201,150,63,.5); }
+  .stopdetail .sd { display: none; }
+  .stopdetail .sd.cur { display: block; }
+  .neizheng {
+    margin-top: 44px; border: 1px dashed var(--line); padding: 18px 22px; font-size: 15px; color: #b0aa9b;
+  }
+  .neizheng b { color: var(--red); font-weight: 700; letter-spacing: .2em; }
+  .neizheng q { color: var(--paper); border-bottom: 1px solid rgba(192,69,60,.6); }
+
+  /* ---------- 守土者（纸白段） ---------- */
+  section.paper { background: var(--paper); color: var(--ink); }
+  section.paper .sechead h2 { color: var(--ink); }
+  section.paper .shi { border-color: var(--gold-soft); color: var(--gold-soft); }
+  section.paper .seclead { color: #55503f; }
+  section.paper q { color: #26231c; border-bottom: 1px solid rgba(163,124,52,.75); }
+  .guardgrid { display: flex; gap: 40px; margin-top: 40px; flex-wrap: wrap; }
+  .guardside { flex: 0 0 118px; writing-mode: vertical-rl; text-orientation: upright;
+    font-size: 30px; font-weight: 700; letter-spacing: .4em; color: var(--ink);
+    border-right: 3px solid var(--gold); padding-right: 14px; height: 320px; white-space: nowrap; }
+  .guardside small { font-size: 13px; letter-spacing: .3em; color: #7a7466; margin-top: 22px; }
+  .guardmain { flex: 1 1 480px; min-width: 300px; }
+  .act { border-top: 1px solid var(--pline); padding: 20px 0 24px; }
+  .act h3 { font-size: 17px; letter-spacing: .24em; color: #6d5322; margin-bottom: 10px; }
+  .act p { font-size: 15.5px; color: #3c382e; margin-bottom: 8px; }
+  .poemline { display: flex; flex-direction: row-reverse; justify-content: center; gap: 34px; margin: 26px 0 8px; }
+  .poemline q {
+    writing-mode: vertical-rl; text-orientation: upright; display: inline-block;
+    font-size: 23px; font-weight: 700; letter-spacing: .34em; line-height: 1;
+    color: #26231c; border: 0; padding: 18px 12px; background: #f4f1ea;
+    border-left: 1px solid var(--pline); box-shadow: 2px 3px 0 rgba(0,0,0,.06);
+    height: max-content;
+  }
+  .poemsrc { text-align: center; font-size: 13.5px; color: #8a8375; }
+  .thunder { margin-top: 18px; font-size: 15px; color: #6d5322; }
+  .thunder q { border-bottom-color: var(--red); }
+
+  /* ---------- 荒诞档 ---------- */
+  .absurd { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 40px; }
+  .acard { background: #201f1b; border: 1px solid var(--line); border-top: 3px solid var(--gold); padding: 22px 22px 18px; }
+  .acard h3 { font-size: 16.5px; letter-spacing: .22em; color: var(--gold); margin-bottom: 10px; }
+  .acard p { font-size: 15px; color: #c4beaf; margin-bottom: 8px; }
+  .acard q { color: var(--paper); border-bottom: 1px solid rgba(201,150,63,.5); }
+  .paibian {
+    display: inline-block; margin: 6px 0 10px; background: #f0ebdf; color: #26231c;
+    font-size: 30px; font-weight: 700; letter-spacing: .4em; text-indent: .2em;
+    padding: 10px 22px; border: 2px solid #5c5140; box-shadow: 0 6px 16px rgba(0,0,0,.45);
+  }
+  .paibian q { border: 0; color: #26231c; }
+
+  /* ---------- 称帝者 时间线 ---------- */
+  .tl { margin-top: 44px; border-left: 1px solid var(--line); padding-left: 30px; }
+  .node { position: relative; padding-bottom: 34px; }
+  .node::before {
+    content: ""; position: absolute; left: -35px; top: 12px;
+    width: 9px; height: 9px; background: var(--gold); transform: rotate(45deg);
+  }
+  .node h3 { font-size: 16.5px; letter-spacing: .2em; color: var(--paper); }
+  .node h3 small { font-size: 12.5px; color: var(--dim); letter-spacing: .12em; margin-left: 12px; }
+  .node p { font-size: 15.2px; color: #b9b3a4; margin-top: 7px; max-width: 660px; }
+  .node q { color: var(--paper); border-bottom: 1px solid rgba(201,150,63,.5); }
+  .node.fall::before { background: var(--red); }
+  .node.fall h3 { color: #d8a5a0; }
+
+  /* ---------- 咒水（朱砂段） ---------- */
+  section.blood { background: #151312; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  section.blood .sechead h2 { color: #d8a5a0; }
+  section.blood .shi { border-color: var(--red); color: var(--red); }
+  section.blood .seclead { color: #a89f92; }
+  section.blood .seclead q { color: var(--paper); border-bottom-color: rgba(192,69,60,.7); }
+  .shui { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 14px; margin-top: 42px; }
+  .scard { perspective: 900px; min-height: 250px; cursor: pointer; }
+  .scard .inner { position: relative; width: 100%; height: 100%; min-height: 250px; transition: transform .8s cubic-bezier(.5,.05,.3,1); transform-style: preserve-3d; }
+  .scard.open .inner { transform: rotateY(180deg); }
+  .face {
+    position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border: 1px solid #4a2a26; background: #1d1a19; padding: 16px 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .face.front { align-items: center; }
+  .face.front .no { font-size: 12px; color: #8a5b55; letter-spacing: .3em; margin-bottom: 12px; }
+  .face.front .ft { writing-mode: vertical-rl; text-orientation: upright; font-size: 20px; font-weight: 700;
+    letter-spacing: .3em; color: #d8a5a0; height: max-content; white-space: nowrap; }
+  .face.front .hint { margin-top: 14px; font-size: 11.5px; color: #6e675c; letter-spacing: .2em; }
+  .face.back { transform: rotateY(180deg); justify-content: flex-start; overflow: auto; }
+  .face.back p { font-size: 13.8px; color: #cfc4b8; line-height: 1.95; }
+  .face.back q { color: var(--paper); border-bottom: 1px solid rgba(192,69,60,.65); }
+  .aftermath {
+    margin-top: 34px; border: 1px solid #4a2a26; padding: 22px 26px; font-size: 15.5px; color: #b9afa2;
+  }
+  .aftermath q { color: var(--paper); border-bottom: 1px solid rgba(192,69,60,.7); }
+
+  /* ---------- 旧晚坡 ---------- */
+  .duel { display: flex; gap: 22px; margin-top: 44px; flex-wrap: wrap; }
+  .duel .side { flex: 1 1 340px; border: 1px solid var(--line); padding: 26px 24px; background: #1d1c18; }
+  .duel .side h3 { font-size: 17px; letter-spacing: .3em; color: var(--gold); margin-bottom: 14px; }
+  .duel .side p { font-size: 15.3px; color: #c4beaf; margin-bottom: 9px; }
+  .duel q { color: var(--paper); border-bottom: 1px solid rgba(201,150,63,.5); }
+  .stairs .step { border-left: 2px solid #3f3a30; padding: 6px 0 6px 16px; margin-bottom: 12px; }
+  .stairs .step:nth-child(2) { border-left-color: #6d5322; }
+  .stairs .step:nth-child(3) { border-left-color: #9c6c2c; }
+  .stairs .step:nth-child(4) { border-left-color: var(--red); }
+  .stairs .tag { font-size: 12.5px; letter-spacing: .25em; color: var(--dim); }
+  .gongyi { margin-top: 24px; border-top: 1px dashed var(--line); padding-top: 20px; }
+  .gongyi h4 { font-size: 15px; letter-spacing: .3em; color: var(--dim); margin-bottom: 10px; }
+  .bow { text-align: center; margin-top: 54px; }
+  .bowbtn {
+    background: none; border: 1px solid var(--gold); color: var(--gold);
+    padding: 11px 40px; font-size: 16px; letter-spacing: .6em; text-indent: .6em;
+    transition: all .3s;
+  }
+  .bowbtn:hover { background: var(--gold); color: var(--ink); }
+  .bowbtn.done { visibility: hidden; }
+  .nightbox { margin-top: 30px; opacity: 0; transform: translateY(18px); transition: opacity 1.6s ease, transform 1.6s ease; }
+  section.dusk { transition: background 2.4s ease; }
+  section.dusk.night { background: #0c0b0a; }
+  section.dusk.night .nightbox { opacity: 1; transform: none; }
+  .nightbox .nrow { text-align: center; margin-bottom: 16px; }
+  .nightbox q { color: var(--paper); border-bottom: 1px solid rgba(192,69,60,.7); font-size: 16.5px; }
+  .nightbox .big q { font-size: 21px; font-weight: 700; border-bottom: 0; }
+  .nightbox .faint { font-size: 13px; color: #6e675c; margin-top: 14px; }
+
+  /* ---------- coda 历犹在编（纸白） ---------- */
+  .codahead { text-align: center; margin-top: 8px; }
+  .threefold { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 40px; }
+  .tcard { background: #f4f1ea; border: 1px solid var(--pline); border-left: 3px solid var(--gold-soft); padding: 20px 20px 16px; }
+  .tcard h4 { font-size: 14.5px; letter-spacing: .3em; color: #6d5322; margin-bottom: 9px; }
+  .tcard p { font-size: 14.8px; color: #3c382e; }
+  .tcard q { color: #26231c; border-bottom: 1px solid rgba(163,124,52,.75); }
+  .codaend { display: flex; justify-content: flex-end; gap: 26px; margin-top: 56px; align-items: flex-start; }
+  .codaend .cols { writing-mode: vertical-rl; height: 240px; }
+  .codaend .cols p { display: inline-block; font-size: 16.5px; letter-spacing: .34em; color: #3c382e; margin-left: 22px; line-height: 1.4; }
+  .codaseal { margin-top: 150px; }
+
+  /* ---------- footer ---------- */
+  footer { border-top: 1px solid var(--line); padding: 44px 0 60px; }
+  footer p { font-size: 13px; color: var(--dim); margin-bottom: 10px; line-height: 2; }
+  footer a { color: var(--gold); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    .vtitle { font-size: 52px; min-height: 240px; }
+    .sundial { width: 120px; right: 2%; top: 18px; opacity: .5; }
+    .herogrid { gap: 26px; }
+    .heroseal { right: -30px; }
+    .guardside { height: 250px; font-size: 25px; }
+    .codaend .cols { height: 300px; }
+    .codaseal { margin-top: 210px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero" id="hero">
+  <svg class="sundial" viewBox="0 0 200 200" aria-hidden="true">
+    <circle cx="100" cy="100" r="86" fill="none" stroke="#35332c" stroke-width="1.5"/>
+    <circle cx="100" cy="100" r="70" fill="none" stroke="#2a2823" stroke-width="1"/>
+    <g fill="#6b665c" font-size="11.5" text-anchor="middle">
+      <text x="100" y="24">子</text><text x="146" y="40">丑</text><text x="170" y="88">寅</text>
+      <text x="176" y="140">卯</text><text x="146" y="176">辰</text><text x="100" y="192">巳</text>
+      <text x="54" y="176">午</text><text x="26" y="140">未</text><text x="22" y="88">申</text>
+      <text x="54" y="40">酉</text>
+    </g>
+    <g stroke="#4a453b" stroke-width="1">
+      <line x1="100" y1="34" x2="100" y2="42"/><line x1="166" y1="100" x2="158" y2="100"/>
+      <line x1="100" y1="166" x2="100" y2="158"/><line x1="34" y1="100" x2="42" y2="100"/>
+    </g>
+    <polygon points="100,58 94,100 106,100" fill="#c9963f"/>
+    <line id="shdw" x1="100" y1="100" x2="100" y2="162" stroke="#8f897c" stroke-width="3" opacity=".8"/>
+    <circle cx="100" cy="100" r="4.5" fill="#c9963f"/>
+  </svg>
+  <div class="wrap">
+    <div class="kicker">殆知阁古代文献 · 史藏志存记录</div>
+    <div class="herogrid">
+      <div class="titlebox" id="titlebox">
+        <h1 class="vtitle">行在<span class="ghost">阳秋</span></h1>
+        <div class="cover">
+          <div class="cal-head">大明永历历日 · 残页</div>
+          <div class="cal-day">永历元年 正月癸卯朔<br>行在梧州</div>
+          <div class="cal-note">宜：移跸。忌：渡海、入缅。<br>历注：天下不可无君。</div>
+        </div>
+        <span class="seal heroseal">行在</span>
+      </div>
+      <div class="herotext">
+        <p class="lede">一部不知道明天皇帝在哪儿的史书。编年体，一年接一年，每一条纪事都得先报驻地：这一年，<q>永明王监国肇庆，以明年为永历元年</q>。劝进的人说的是实话：<q>谓天下不可一日无君；乃迎桂嗣王至肇庆立之</q>。此后十六年，这句话被现实反复修改。</p>
+        <button class="ignite" id="ignite">揭 历</button>
+        <p class="byline">撰人佚名 · 上下二卷 起丙戌讫壬寅</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="pu">
+  <div class="wrap">
+    <div class="sechead rv"><span class="shi">卯</span><h2>行在谱</h2></div>
+    <p class="seclead rv">「行在」即天子驻跸之所。把十六年的驻地连起来，就是这部书的骨架：从肇庆府署改起的行宫，一路点到缅甸竹篱围着的十间草房。点一枚牌，看那一年发生了什么。</p>
+    <div class="neizheng rv">
+      <b>先内讧</b> · 出发前先给自己树立了对面：<q>唐王自立于广东，改元绍武</q>。叔侄争位，同月同败。水战里<q>唐王兵伪降，诱其水师至海口，适东南风大作，唐王兵以火攻之，佳鼎等尽登岸列营，泥淖深三尺余，人马尽陷，兵大溃</q>，广西的兵马没等来北伐，先烧在了自家人的火攻里。皇帝的流亡，从这一刻就开始计时。
+    </div>
+    <div class="strip rv" id="strip">
+      <div class="stop s1" data-d="sd0"><span class="pl">肇庆</span><span class="gz">丙戌冬</span></div>
+      <div class="stop s1" data-d="sd1"><span class="pl">梧州</span><span class="gz">丁亥</span></div>
+      <div class="stop s1" data-d="sd2"><span class="pl">桂林</span><span class="gz">丁亥</span></div>
+      <div class="stop s2" data-d="sd3"><span class="pl">全州</span><span class="gz">丁亥</span></div>
+      <div class="stop s2" data-d="sd4"><span class="pl">武冈</span><span class="gz">丁亥</span></div>
+      <div class="stop s2" data-d="sd5"><span class="pl">柳州</span><span class="gz">丁亥秋</span></div>
+      <div class="stop s2" data-d="sd6"><span class="pl">南宁</span><span class="gz">戊子</span></div>
+      <div class="stop s1" data-d="sd7"><span class="pl">端州</span><span class="gz">己丑庚寅</span></div>
+      <div class="stop s3" data-d="sd8"><span class="pl">梧州</span><span class="gz">庚寅</span></div>
+      <div class="stop s3" data-d="sd9"><span class="pl">南宁</span><span class="gz">庚寅冬</span></div>
+      <div class="stop s3" data-d="sd10"><span class="pl">安隆</span><span class="gz">辛卯起四年</span></div>
+      <div class="stop s2" data-d="sd11"><span class="pl">滇都</span><span class="gz">乙未丁酉</span></div>
+      <div class="stop s4" data-d="sd12"><span class="pl">永昌</span><span class="gz">己亥</span></div>
+      <div class="stop s4" data-d="sd13"><span class="pl">井梗</span><span class="gz">己亥 缅境</span></div>
+      <div class="stop s4" data-d="sd14"><span class="pl">者梗</span><span class="gz">庚子 草城</span></div>
+      <div class="stop s4" data-d="sd15"><span class="pl">还滇</span><span class="gz">壬寅 即被囚</span></div>
+    </div>
+    <div class="stopdetail rv" id="stopdetail">
+      <div class="sd cur">点一枚驻地牌。</div>
+      <div class="sd" id="sd0">监国与即位都在这里。隆武殉国的消息传到，<q>上即皇帝位于肇庆</q>，府署当作行在，年号永历。三个月后清军破广州，绍武政权四十天而亡。</div>
+      <div class="sd" id="sd1">朝廷的第一反应是继续向西。司礼监王坤请驾再避，瞿式耜连夜驾小舟追着劝留，只留下一句<q>我兵水陆凫至三水，可上下扼也</q>。没争住。</div>
+      <div class="sd" id="sd2">此后几年桂林几番易手，皇帝几进几出。瞿式耜在这里立下全书的脊梁：守土者与城共存亡。详见「守土者」一节。</div>
+      <div class="sd" id="sd3">楚将刘承胤以护驾为名把朝廷往自己手里带。在全州的短暂停留里，皇帝还能给诸镇发敕，看起来像个朝廷。</div>
+      <div class="sd" id="sd4">军阀刘承胤<q>改武岗为奉天府</q>，把皇帝攥在手里。谏臣被廷杖于行在门外，大学士以去职相争。清兵一到，刘承胤举城降清，皇帝连夜再逃。</div>
+      <div class="sd" id="sd5">从武冈逃出的朝廷纡道穿苗峒入柳州，<q>朝官星散，不复存上下纲纪</q>。皇帝在这一年学会了不信任任何一路兵。</div>
+      <div class="sd" id="sd6">去南宁的路上被焦琏的乱兵拦道，<q>文武诸臣皆微服而行</q>。马吉翔在浅水里用肩膀扛御舟，皇帝看见，挥泪。此后他成了跟随皇帝最久的人。</div>
+      <div class="sd" id="sd7">李成栋以广东全省反正，迎驾东行。瞿式耜连疏劝阻：<q>今日江、广反正，则宜住桂以出楚</q>。皇帝没听。次年李成栋兵败信丰，渡河时甲重马溺，死在河里。</div>
+      <div class="sd" id="sd8">梧州。广州被围数月后陷落，史载城中百万生灵同日俱尽。皇帝再向西，朝廷在船上分成了两半。</div>
+      <div class="sd" id="sd9">往南宁的路上百官离散，有人妻妾被掠。皇帝决定接受孙可望的「保护」，去安隆。</div>
+      <div class="sd" id="sd10">安隆，滇黔边境一座小城。孙可望派兵「护驾」，实际软禁了四年。这四年朝廷的政令出不了城门，史称驻跸，实为人质。</div>
+      <div class="sd" id="sd11">李定国败孙可望后迎驾入滇都昆明。两年安稳日子，整军、铸钱、造历。皇帝在这里过了流亡路上唯一的太平年。</div>
+      <div class="sd" id="sd12">清军三路入滇，昆明不守。朝议吵到最后一刻，<q>驾离滇都，传幸永昌</q>。缅人开门迎了驾，没人知道等待的是什么。</div>
+      <div class="sd" id="sd13">井梗，缅境小村。朝廷遣使与缅王对敕，缅人抬出万历年间旧敕比对尺寸，疑其伪，直到<q>出沐国公印相对，乃信</q>。一个流亡朝廷的真伪，要靠一方旧印来证明。</div>
+      <div class="sd" id="sd14">者梗，缅王把皇帝安置在城外：<q>构草房十大间，上居依然以竹为城，每日百余兵守护</q>。大明皇帝最后的宫殿，是十间草房，一圈竹篱，百余缅兵看守。</div>
+      <div class="sd" id="sd15">被「送」回昆明，安置在故都督府：<q>令人奉上居滇故都督府等，严兵防守</q>。数月之后，弓弦。行在二字从此只在史书里。</div>
+    </div>
+  </div>
+</section>
+
+<section class="paper" id="shou">
+  <div class="wrap">
+    <div class="sechead rv"><span class="shi">巳</span><h2>守土者</h2></div>
+    <p class="seclead rv">皇帝一路向西，总得有人留在原地。首辅瞿式耜守着桂林，一次次把走远的皇帝请回来，最后把自己留成了城的一部分。兵部的张同敞本可以走，泅水过江，专门回来一起死。</p>
+    <div class="guardgrid rv">
+      <div class="guardside">守土者<small>瞿式耜 张同敞</small></div>
+      <div class="guardmain">
+        <div class="act">
+          <h3>幕一 · 枵腹守城</h3>
+          <p>清兵几十骑冲进文昌门，全城崩溃在即。老将焦琏从全州赶回，登城接战：<q>乘虚数十骑冲入文昌门，城中大惊</q><q>琏矢无虚发，应弦而毙者半</q>。城中断炊，士卒饿着肚子守了半日，<q>琏曰：枵号奈何！式耜括署中米，蒸饭分哺，士益乐用命</q>。守到雨天城塌，<q>式耜与琏分门婴守，用西洋铳击中胡骑</q>，硬是把桂林守成了这个流亡朝廷唯一没搬走的家底。</p>
+        </div>
+        <div class="act">
+          <h3>幕二 · 衣冠危坐</h3>
+          <p>庚寅冬，诸镇撤守，桂林成空城。部下劝走，他不走：<q>式耜衣冠危坐署中</q>。总督张同敞过江不入家门，<q>泅水过江入桂林，愿与式耜同殉国</q>。两人被执，劝降四十天，只回了一句<q>事已至此，一死足矣，夫复何言</q></p>
+        </div>
+        <div class="act">
+          <h3>幕三 · 绝命诗</h3>
+          <p>闰十一月就义。刑前瞿式耜笑对张同敞：<q>我二人多活了四十日，今日事毕矣</q>张同敞答：<q>今日得死所矣</q></p>
+          <div class="poemline">
+            <q>从容待死与城亡</q>
+            <q>头丝犹带满天香</q>
+          </div>
+          <p class="poemsrc">绝命诗摘句。中间一联库本自带校勘残留（「自主／主张」两读并存），照录不取。</p>
+          <p class="thunder">就义前后，<q>雷霆冬发，远近皆曰：征在公也</q>。冬天打雷，全书把这一笔留给读者自己判断。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="huangdan">
+  <div class="wrap">
+    <div class="sechead rv"><span class="shi">午</span><h2>荒诞档</h2></div>
+    <p class="seclead rv">败报与楼船并行，礼崩而仪式照旧。流亡朝廷的日常，一半是惨，一半是荒诞，而荒诞的那一半往往更接近真实。</p>
+    <div class="absurd">
+      <div class="acard rv">
+        <h3>水殿</h3>
+        <p>梧州江面，皇上与太后在楼船上置酒行乐：<q>置酒楼船，箫鼓于梧州系龙洲之上下</q>。宰相严起恒题了块小牌挂在船头：<q>起恒手书「水殿」二字，挂小牌于御舟前</q>。</p>
+        <p><span class="paibian"><q>「水殿」</q></span></p>
+        <p>百姓编了民谣唱给两位宰相听：<q>汉宫秋也，昭阳愁也</q>。酒喝到半夜，<q>上饮至中宵，不乐而罢，以清远峡及惠、莞间有败报也</q>荒诞的背后，全是战报。</p>
+      </div>
+      <div class="acard rv">
+        <h3>经筵</h3>
+        <p>朝廷只剩一栋竹城草房，御前讲学照开。讲官讲到《论语》一句，太子随口一问：<q>东宫问杨在曰：哀公何名？在不能对</q>。御史任国玺看不下去了，上奏说都这时候了还讲什么书，得到的批复是：那你来拿出险的方案。他答<q>能主入缅者，必能主乎出缅</q></p>
+      </div>
+      <div class="acard rv">
+        <h3>碎宝</h3>
+        <p>缅甸城里有人三天吃不上饭，马吉翔奏请砸了国玺分给众人。上不信，次日再奏，皇帝掷玺于地：<q>掷皇帝之宝，命掌玺太监李国用碎之</q>太监不敢砸，第三天马吉翔们自己砸了。皇帝骂出那句流亡朝廷最扎心的话：<q>你们要收门生，特把朕作人情耳</q></p>
+      </div>
+      <div class="acard rv">
+        <h3>假敕</h3>
+        <p>李定国的兵在境外等接驾，马吉翔不想放权，自己给缅甸关卡拟了道敕，内云<q>朕已航闽，复有一切官兵，都与截杀</q>。挡住的不止追兵，还有来救皇帝的人。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="chengdi">
+  <div class="wrap">
+    <div class="sechead rv"><span class="shi">未</span><h2>称帝者</h2></div>
+    <p class="seclead rv">流亡的朝廷养出了自己的军阀。张献忠的旧部孙可望接住了走投无路的皇帝，把行在安在自己檐下，然后开始要一个「秦王」；他的义弟李定国，则在前线替这个朝廷打下十余年间最大的一场胜仗。</p>
+    <div class="tl rv">
+      <div class="node">
+        <h3>一句戏词<small>戊子 永历二年</small></h3>
+        <p>驻江西的清提督金声桓暗通永历，酒宴演剧时叹了句<q>毕竟衣冠文物好看</q>同僚接话<q>于天曰：如此，便当代为疏请</q>第二天弹章就到了北京，告他「有反状」。江西全省，就这样被一句戏词推回了明朝。</p>
+      </div>
+      <div class="node">
+        <h3>求封秦王<small>庚寅前后</small></h3>
+        <p>孙可望自请封秦王，给事中金堡搬出祖制挡驾<q>金堡以祖制无有，阻之</q>挡下的是名号，挡不下的是兵。不久，<q>可望密遣人击起恒于邓州之滨，几殆</q></p>
+      </div>
+      <div class="node">
+        <h3>十八先生<small>甲午 永历八年</small></h3>
+        <p>安隆城里的大臣密谋联络李定国护驾，事泄。诏书给他们的罪名是<q>包藏祸心，内外连结，盗宝矫敕，擅行封赏，贻祸封疆</q>为首的吴贞毓被「赐」死，<q>除赐辅臣吴贞毓死外</q>，其余尽诛。史称十八先生之狱。</p>
+      </div>
+      <div class="node">
+        <h3>两王之役<small>壬辰 永历六年</small></h3>
+        <p>李定国出师，<q>定国偏师轻骑扼有德于桂林，旬日下数十城，有德自刎</q>清藩孔有德自尽，清军入关以来丧藩王之始，天下震动。</p>
+      </div>
+      <div class="node">
+        <h3>交水<small>丁酉 永历十一年</small></h3>
+        <p>孙可望终于撕破脸，移兵攻打滇都，<q>十九日战于交水，可望奔溃</q>。挟了十年的天子，一夜之间不再是筹码。</p>
+      </div>
+      <div class="node fall">
+        <h3>降清者<small>永历十一年冬</small></h3>
+        <p>孙可望带着几千家兵投降了清朝，被封义王，替清军画云贵的地图。没过几年，<q>后随出猎，被射死</q>为清朝立过大功的人，死在陪猎的箭下。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="blood" id="zhoushui">
+  <div class="wrap">
+    <div class="sechead rv"><span class="shi">酉</span><h2>咒水</h2></div>
+    <p class="seclead rv">永历十五年五月二十二日，缅甸新王杀兄夺位。次日，缅人请这群寄居竹城的明朝君臣赴盟「吃咒水」。前一晚他们刚听说，接驾的晋王兵马就在境外。点开七枚牌。</p>
+    <div class="shui rv">
+      <div class="scard"><div class="inner">
+        <div class="face front"><div class="no">其一</div><div class="ft">请盟</div><div class="hint">点开</div></div>
+        <div class="face back"><p>缅使来的理由听起来很周到：<q>我王初立，怕你们立心不好，请去吃咒水</q></p></div>
+      </div></div>
+      <div class="scard"><div class="inner">
+        <div class="face front"><div class="no">其二</div><div class="ft">围杀</div><div class="hint">点开</div></div>
+        <div class="face back"><p>大小官员都被带走赴盟。巳刻，<q>缅酋以兵三千围所扎处</q>，喊话说<q>尔等大汉，可出来吃咒水；一个不出来，即乱枪杀死</q>诸臣出来一个，被执一个。</p></div>
+      </div></div>
+      <div class="scard"><div class="inner">
+        <div class="face front"><div class="no">其三</div><div class="ft">夺刀</div><div class="hint">点开</div></div>
+        <div class="face back"><p>世镇云南二百余年的沐天波，最后一个动手：<q>有沐天波、王升、魏豹、王启隆，各伤缅兵数人而死</q></p></div>
+      </div></div>
+      <div class="scard"><div class="inner">
+        <div class="face front"><div class="no">其四</div><div class="ft">十三岁</div><div class="hint">点开</div></div>
+        <div class="face back"><p>皇亲家一个小厮名叫来安，十三岁，被缅兵擒住。他说<q>有银与你</q>手伸到腰间假装掏银子，<q>抵腰假作取银，乃拔小刀刺伤缅兵而死</q></p></div>
+      </div></div>
+      <div class="scard"><div class="inner">
+        <div class="face front"><div class="no">其五</div><div class="ft">劝止</div><div class="hint">点开</div></div>
+        <div class="face back"><p>宫里，皇帝与皇后要自缢。随驾总兵邓凯跪下劝：<q>太后年老，将谁为依</q>上乃止。史书在此处收笔，没有评论。</p></div>
+      </div></div>
+      <div class="scard"><div class="inner">
+        <div class="face front"><div class="no">其六</div><div class="ft">一楼</div><div class="hint">点开</div></div>
+        <div class="face back"><p>幸存者被赶进沐天波的小屋：<q>大小二百四十余人恰住一楼，母子啼哭，声闻里外</q>三天后，靠一个缅甸僧人偷偷送饭，才知道出去的人全死了。</p></div>
+      </div></div>
+      <div class="scard"><div class="inner">
+        <div class="face front"><div class="no">其七</div><div class="ft">锯解</div><div class="hint">点开</div></div>
+        <div class="face back"><p>缅人把沐天波押上城头：<q>缅酋将天波至城上，木板锯解，以示城外</q>城外的李定国全军望见。</p></div>
+      </div></div>
+    </div>
+    <div class="aftermath rv">皇帝隔城喊话，让城外各自散去求生。<q>王及诸将士皆下马罗拜，大呼痛哭，声振天地</q>。随后晋王复仇，<q>遂大剿孟坑城外，鸡犬不留而去</q>从这一天起，这个朝廷再没有大臣了。</div>
+  </div>
+</section>
+
+<section class="dusk" id="wanpo">
+  <div class="wrap">
+    <div class="sechead rv"><span class="shi">戌</span><h2>旧晚坡</h2></div>
+    <p class="seclead rv">咒水之难半年后，吴三桂兵临缅城。十二月初三，缅甸把皇帝连同太后、太子装船送出。交接的地方叫旧晚坡。君臣与故主在这里最后一次见面。</p>
+    <div class="duel rv">
+      <div class="side">
+        <h3>永历</h3>
+        <p>交割那天，<q>数蛮子将上连杌子抬去</q><q>太后等悲声震天</q>。到吴营，安顿下来，<q>上南面坐，达旦</q>。</p>
+        <p>次日清晨，总兵邓凯爬到帐前，劝皇帝自尽全节。皇帝答得很平静：<q>固然；有太后在</q></p>
+        <p>后来他向吴三桂提了最后一个请求<q>朕本北京人，欲还见十二陵死，尔能任之乎</q>对方应承了，没有兑现。</p>
+      </div>
+      <div class="side stairs">
+        <h3>吴三桂</h3>
+        <div class="step"><div class="tag">入见</div><p>开始很倨傲，<q>初甚倨傲，见上长揖</q></p></div>
+        <div class="step"><div class="tag">被问</div><p>皇帝问来者何人，<q>三桂噤不敢对</q>再问，<q>始称名应诏</q></p></div>
+        <div class="step"><div class="tag">跪伏</div><p>连问几次才敢报名，<q>色加死灰、汗流浃背</q></p></div>
+        <div class="step"><div class="tag">退场</div><p><q>自后，不复敢见</q></p></div>
+        <div class="gongyi">
+          <h4>同日 · 龚彝进酒</h4>
+          <p>旧臣龚彝带着酒食求见被拦，厉声说<q>此吾君也！我为其臣，君臣之义，南北皆然</q>获准入内，设宴请皇帝上座，劝酒。皇帝勉强饮了三杯，龚彝拜个不停，<q>上勉饮三爵，彝再拜不止，遂触地而死</q></p>
+        </div>
+      </div>
+    </div>
+    <div class="bow">
+      <button class="bowbtn" id="bowbtn">拉 弦</button>
+      <div class="nightbox">
+        <div class="nrow">押回昆明之前，营里的八旗将士望着这位皇帝呼万岁，说<q>此真主也</q>有人密谋劫走他，<q>满、汉诸大臣皆割辫而起</q>，事泄。</div>
+        <div class="nrow big"><q>黠贼！我朝何负于汝？我父子何仇于汝？乃至此耶</q></div>
+        <div class="nrow">行在最终的位置，不在任何一张舆图上：<q>以弓弦绞于市</q></div>
+        <div class="nrow"><q>是日，天大昏黑，风霾并作，人影不见</q></div>
+        <div class="nrow faint"><q>三桂使人炙尸扬灰，传赐诸将</q>。密谋迎驾的八旗官兵两千余人被处死，妻子入官。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="paper" id="coda">
+  <div class="wrap">
+    <div class="sechead rv"><span class="shi">亥</span><h2>历犹在编</h2></div>
+    <p class="seclead rv">被围在竹城草房里的第二年，这个朝廷还郑重其事地办过一件事：编历。永历十四年十月，<q>命造历日</q><q>从邓凯请也</q>国将亡，历日还在给天下人标注朔望。历法是一个王朝最固执的官署，它比宫殿活得久。</p>
+    <div class="threefold rv">
+      <div class="tcard"><h4>编历的人</h4><p>请造历日的随驾总兵邓凯，亲眼看着这一切走到最后。清军要把他编入旗籍，他<q>不受，为僧去</q>。这部书的最后几页，可能就出自这群出家人之手。</p></div>
+      <div class="tcard"><h4>最后的大将</h4><p>接驾无望的李定国退入边地，忧愤成疾。<q>晋王李定国薨于景线</q>。他死后，余部降清，抗清的旗帜无人再举。</p></div>
+      <div class="tcard"><h4>写史的人</h4><p>皇帝的死期，本书纪在壬寅，卷末附记却引当时人李君调的说法<q>而龙驭宾天、皇太子遇害，则辛丑三月十八日也</q>随即自己承认<q>此云壬寅，未知何据</q>编年者给不了皇帝一个确切的忌日，史书在最后一行承认存疑。阳秋者，寓褒贬而不出声。</p></div>
+    </div>
+    <div class="codaend rv">
+      <div class="cols">
+        <p>天子蒙尘</p>
+        <p>行在无定处</p>
+        <p>历日有朔望</p>
+        <p>青史无声处</p>
+        <p>自有人评说</p>
+      </div>
+      <span class="seal codaseal">阳秋</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>本篇为殆知阁导读系列第482篇。文本来源：殆知阁简体库〈行在阳秋〉（史藏志存记录，撰人佚名，卷中时有「施氏曰」史论与「杂录」「附记」考异，去空白约二万九千字：上卷起丙戌冬监国肇庆，讫永历五年；下卷起永历六年，讫康熙壬寅。行在者，天子驻跸之所；阳秋即春秋，晋人避讳改「春」为「阳」，史家寓褒贬而不直书之称）。仓库：<a href="https://github.com/rongyiwei/daizhige" target="_blank" rel="noopener">github.com/rongyiwei/daizhige</a>；导读页在 <a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">github.com/robertsong2000/daizhige-daodu</a>。</p>
+    <p>引文经脚本自库本锚点切片生成，去标点、异体归一后与库内文件逐字比对通过；白话部分经六字滑窗反扫，与库本零重合。库本「枵号」（疑为枵腹之讹）、「雷霆冬发」（疑为雷动之讹）及绝命诗校勘残留均照录不归一。</p>
+    <p>时代局限：书中对缅甸君臣与边地各族多用「缅酋」「蛮」「猺獞」一类蔑称，忠君死节被视为最高价值，屠城、锯解、炙尸等暴力皆直笔照录，均系原书时代底色。照录立此存照，不代今人立论。</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var ignite = document.getElementById('ignite');
+  var titlebox = document.getElementById('titlebox');
+  if (ignite) ignite.addEventListener('click', function () {
+    titlebox.classList.add('flip');
+    ignite.classList.add('hidden');
+  });
+
+  var strip = document.getElementById('strip');
+  var stopdetail = document.getElementById('stopdetail');
+  strip.addEventListener('click', function (e) {
+    var el = e.target.closest('.stop');
+    if (!el) return;
+    strip.querySelectorAll('.stop').forEach(function (o) { o.classList.remove('cur'); });
+    el.classList.add('cur');
+    stopdetail.querySelectorAll('.sd').forEach(function (d) {
+      d.classList.toggle('cur', d.id === el.dataset.d);
+    });
+  });
+
+  document.querySelectorAll('.scard').forEach(function (c) {
+    c.addEventListener('click', function () { c.classList.toggle('open'); });
+  });
+
+  var bowbtn = document.getElementById('bowbtn');
+  var dusk = document.getElementById('wanpo');
+  if (bowbtn) bowbtn.addEventListener('click', function () {
+    dusk.classList.add('night');
+    bowbtn.classList.add('done');
+  });
+
+  var shdw = document.getElementById('shdw');
+  function sun() {
+    var h = document.documentElement.scrollHeight - innerHeight;
+    var p = h > 0 ? Math.min(1, Math.max(0, scrollY / h)) : 0;
+    if (shdw) {
+      shdw.setAttribute('transform', 'rotate(' + (-120 + 240 * p) + ' 100 100)');
+      shdw.setAttribute('opacity', p > 0.92 ? String(0.8 * (1 - (p - 0.92) / 0.08)) : '0.8');
+    }
+  }
+  addEventListener('scroll', sun, { passive: true });
+  sun();
+
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+})();
+</script>
+</body>
+</html>
