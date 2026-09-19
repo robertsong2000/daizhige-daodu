@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>海棠谱 · 红妆</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --shi:#5e8fbb; --shid:#3a5f83;
+  --zhu:#c0453c; --faint:#a8a294; --panel:#1d2126; --line:#3a3f45; --night:#12151a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","SimSun",serif;
+  line-height:1.95;letter-spacing:.04em}
+q{quotes:none;font-style:normal}
+button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit}
+.sec{max-width:1020px;margin:0 auto;padding:84px 26px 64px}
+.shead{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:30px}
+.shead .no{font-size:13px;color:var(--shi);letter-spacing:.2em}
+.shead h2{font-size:26px;font-weight:600;letter-spacing:.12em}
+.shead .gloss{font-size:13px;color:var(--faint);margin-left:auto;letter-spacing:.06em}
+.lead{color:var(--faint);font-size:15px;max-width:760px;margin-bottom:26px}
+.rv{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+.rv.on{opacity:1;transform:none}
+
+/* hero */
+#top{min-height:100vh;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 18px 40px;overflow:hidden;background:var(--night)}
+.glow{position:absolute;left:50%;top:58%;width:900px;height:900px;transform:translate(-50%,-38%);border-radius:50%;
+  background:radial-gradient(circle,rgba(232,196,150,.16) 0%,rgba(232,196,150,.05) 38%,transparent 66%);
+  opacity:0;transition:opacity 2.2s ease;pointer-events:none}
+#top.lit .glow{opacity:1}
+.arena{position:relative;width:min(660px,94vw)}
+.arena svg{display:block;width:100%;height:auto}
+.bud{transition:r 1.4s ease .5s,opacity 1.4s ease .5s}
+#top.lit .bud{r:7}
+.petal{opacity:0}
+#top.lit .petal{animation:fall 3.4s ease-in forwards;animation-delay:1.3s}
+@keyframes fall{0%{opacity:0;transform:translate(0,0) rotate(0deg)}12%{opacity:.85}100%{opacity:0;transform:translate(-26px,150px) rotate(120deg)}}
+.flame path{transform-origin:50% 100%;transform-box:fill-box;opacity:.4;transition:opacity .8s ease}
+#top.lit .flame path{opacity:1;animation:fl 1s ease-in-out infinite alternate}
+@keyframes fl{from{transform:scaleY(.88) scaleX(1.05)}to{transform:scaleY(1.08) scaleX(.95)}}
+.candlebtn{margin-top:26px;font-size:15px;letter-spacing:.3em;color:var(--paper);border:1px solid var(--shi);padding:11px 34px 11px 40px;background:rgba(94,143,187,.1);transition:background .3s,opacity .4s}
+.candlebtn:hover{background:rgba(94,143,187,.24)}
+#top.lit .candlebtn{opacity:0;pointer-events:none}
+.title{margin-top:34px;text-align:center;position:relative}
+.title .kick{font-size:13px;color:var(--faint);letter-spacing:.34em;opacity:0;transition:opacity .9s ease 1s}
+.title h1{font-size:clamp(46px,9vw,72px);font-weight:700;letter-spacing:.18em;margin:6px 0 4px}
+.title h1 span{display:inline-block;opacity:.05;transform:translateY(10px);transition:opacity .7s ease,transform .7s ease}
+.title .by{font-size:14px;color:var(--faint);letter-spacing:.2em;opacity:0;transition:opacity .9s ease 1.7s}
+#top.lit .title .kick,#top.lit .title .by{opacity:1}
+#top.lit .title h1 span{opacity:1;transform:none}
+#top.lit .title h1 span:nth-child(2){transition-delay:.4s}
+#top.lit .title h1 span:nth-child(3){transition-delay:.8s}
+.seal{position:absolute;right:-58px;top:30px;writing-mode:vertical-rl;font-size:20px;color:var(--zhu);
+  border:2px solid var(--zhu);border-radius:4px;padding:9px 5px;letter-spacing:.16em;
+  transform:rotate(-4deg) scale(1.7);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+#top.lit .seal{opacity:.92;transform:rotate(-4deg) scale(1);transition:opacity .16s cubic-bezier(.2,2,.4,1) 1.5s,transform .16s cubic-bezier(.2,2,.4,1) 1.5s}
+
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:4px 16px 58px;background:var(--night)}
+.chips a{font-size:13px;letter-spacing:.18em;color:var(--faint);border:1px solid var(--line);padding:6px 15px;text-decoration:none;transition:color .3s,border-color .3s}
+.chips a:hover{color:var(--paper);border-color:var(--shi)}
+
+/* S1 公案 */
+.case{border:1px solid var(--line);background:var(--panel);padding:22px 24px;margin-bottom:16px;cursor:pointer;transition:border-color .3s}
+.case:hover,.case.open{border-color:var(--shi)}
+.case .cn{font-size:12.5px;letter-spacing:.3em;color:var(--shi);display:block;margin-bottom:8px}
+.case q{font-size:15.5px;line-height:2.1;display:block;color:var(--paper)}
+.case .fold{max-height:0;overflow:hidden;transition:max-height .6s ease}
+.case.open .fold{max-height:340px}
+.case .fold q{margin-top:12px;font-size:14.5px;color:#d0cabb}
+.case .hint{font-size:12px;color:var(--faint);margin-top:10px;letter-spacing:.2em}
+.verdict{border-left:3px solid var(--shi);background:var(--panel);padding:20px 22px;margin-top:16px}
+.verdict .vn{font-size:12px;letter-spacing:.3em;color:var(--shi);display:block;margin-bottom:8px}
+.verdict q{font-size:15px;line-height:2.1;display:block}
+
+/* S2 花容 */
+.stages{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.stg{background:var(--panel);border:1px solid var(--line);padding:20px 18px 16px;text-align:center}
+.stg .dot{width:46px;height:46px;border-radius:50%;margin:0 auto 12px;box-shadow:0 0 22px rgba(0,0,0,.4)}
+.stg .st{font-size:14px;letter-spacing:.24em;display:block;margin-bottom:10px}
+.stg q{font-size:13.5px;line-height:2;color:#d0cabb;display:block}
+.gr{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.grc{background:var(--panel);border:1px solid var(--line);padding:16px 18px}
+.grc .k{font-size:12px;letter-spacing:.28em;color:var(--shi);display:block;margin-bottom:8px}
+.grc q{font-size:14px;line-height:2.05;color:#d0cabb;display:block}
+.grc .gs{font-size:12.5px;color:var(--faint);margin-top:8px}
+
+/* S3 春睡 */
+.shui{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:start}
+.nightq{background:var(--night);border:1px solid var(--line);padding:26px 24px;position:relative}
+.nightq .k{font-size:12px;letter-spacing:.3em;color:var(--faint);display:block;margin-bottom:12px}
+.nightq q{font-size:15.5px;line-height:2.15;display:block;color:var(--paper)}
+.nightq .note{font-size:12.5px;color:var(--faint);margin-top:12px;line-height:1.9}
+.inkbox{background:var(--paper);color:#26221e;padding:22px 24px}
+.inkbox .k{font-size:12px;letter-spacing:.3em;color:var(--shid);display:block;margin-bottom:10px}
+.inkbox q{font-size:15px;line-height:2.1;display:block}
+.inkbox table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px}
+.inkbox td{border-top:1px solid #cfc7b9;padding:7px 4px;line-height:1.8}
+.inkbox td:first-child{color:#8a7f70;width:34%}
+
+/* S4 诗墙 */
+.poems{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+.pm{background:var(--panel);border:1px solid var(--line);padding:18px 16px 16px;position:relative;transition:border-color .3s,transform .3s}
+.pm:hover{border-color:var(--shi);transform:translateY(-3px)}
+.pm .who{font-size:12.5px;letter-spacing:.24em;color:var(--shi);display:block;margin-bottom:4px}
+.pm .pt{font-size:11.5px;color:var(--faint);letter-spacing:.14em;display:block;margin-bottom:12px}
+.pm .body{writing-mode:vertical-rl;height:218px;margin:0 auto}
+.pm .body p{display:block;margin:0 .9em 0 0;font-size:13.5px;line-height:2.05;letter-spacing:.1em;color:#d5cec2}
+.pm .body p:last-child{margin-left:.9em}
+.pm .body .ti{color:var(--faint);font-size:11.5px}
+
+/* S5 逸事 */
+.stories{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.story{background:var(--panel);border:1px solid var(--line);padding:20px 22px;cursor:pointer;transition:border-color .3s}
+.story:hover{border-color:var(--shi)}
+.story .sn{font-size:12px;letter-spacing:.3em;color:var(--zhu);display:block;margin-bottom:8px}
+.story .st2{font-size:17px;letter-spacing:.14em;display:block;margin-bottom:10px}
+.story q{font-size:13.8px;line-height:2.1;color:#d0cabb;display:block}
+.story .gl{max-height:0;overflow:hidden;transition:max-height .6s ease;font-size:12.8px;color:var(--faint);line-height:1.95}
+.story.open .gl{max-height:220px;margin-top:10px}
+
+/* S6 花政 */
+.farm{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.slip{background:var(--paper);color:#26221e;padding:18px 17px 14px;box-shadow:0 3px 12px rgba(0,0,0,.35)}
+.slip:nth-child(odd){transform:rotate(-1deg)}
+.slip:nth-child(even){transform:rotate(.9deg)}
+.slip .ft{font-size:13px;letter-spacing:.22em;color:var(--shid);border-bottom:1px solid #c8c0b2;padding-bottom:7px;margin-bottom:10px;display:block}
+.slip q{font-size:13.8px;line-height:2.05;display:block}
+.slip .gs{font-size:12px;color:#6b6156;margin-top:9px;line-height:1.8}
+
+/* S7 书坊 */
+.shufang{display:grid;grid-template-columns:.9fr 1.1fr;gap:26px;align-items:start}
+.sfcard{background:var(--night);border:1px solid var(--line);padding:24px 24px 20px}
+.sfcard .shop{writing-mode:vertical-rl;font-size:21px;letter-spacing:.3em;color:var(--paper);height:120px;margin:0 auto;display:block}
+.sfcard .shopname{text-align:center;font-size:12px;color:var(--faint);letter-spacing:.24em;margin-top:14px;line-height:2}
+.sftext{font-size:14.5px;color:#d0cabb;line-height:2.1}
+.sftext b{color:var(--paper);font-weight:600}
+.sftext .crit{border-left:2px solid var(--shi);padding:10px 16px;background:var(--panel);margin-top:14px;font-size:13.5px;color:var(--faint)}
+
+/* coda */
+#coda{min-height:74vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 20px 60px;position:relative}
+.codaq{writing-mode:vertical-rl;margin:0 auto 30px}
+.codaq q{font-size:clamp(17px,3vw,21px);letter-spacing:.3em;color:var(--paper)}
+.codaq .src{font-size:12px;color:var(--faint);margin-top:1.4em;display:block}
+.codabtn{font-size:14px;letter-spacing:.26em;color:var(--faint);border-bottom:1px dashed var(--line);padding-bottom:5px;transition:color .3s}
+.codabtn:hover{color:var(--zhu)}
+.cseal{margin-top:28px;writing-mode:vertical-rl;font-size:19px;color:var(--zhu);border:2px solid var(--zhu);border-radius:4px;padding:8px 5px;letter-spacing:.18em;opacity:0;transform:rotate(-5deg) scale(1.6);transition:opacity .2s,transform .2s}
+.cseal.go{opacity:.9;transform:rotate(-5deg) scale(1);transition:opacity .16s cubic-bezier(.2,2,.4,1),transform .16s cubic-bezier(.2,2,.4,1)}
+
+footer{border-top:1px solid var(--line);padding:34px 26px 44px;text-align:center}
+footer p{font-size:12.5px;color:var(--faint);line-height:2.1;max-width:820px;margin:0 auto}
+
+@media (max-width:760px){
+  .shui,.shufang{grid-template-columns:1fr}
+  .stages{grid-template-columns:1fr}
+  .seal{right:2px;top:14px;font-size:16px}
+  .shead .gloss{display:none}
+}
+</style>
+</head>
+<body>
+
+<header id="top">
+  <div class="glow"></div>
+  <div class="arena">
+    <svg viewBox="0 0 900 520" aria-hidden="true">
+      <defs>
+        <linearGradient id="wallg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a1e24"/><stop offset="100%" stop-color="#12151a"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="330" width="900" height="190" fill="url(#wallg)"/>
+      <line x1="0" y1="330" x2="900" y2="330" stroke="#2a2f36" stroke-width="2"/>
+      <g stroke="#23272d" stroke-width="1"><line x1="60" y1="380" x2="60" y2="520"/><line x1="180" y1="380" x2="180" y2="520"/><line x1="720" y1="380" x2="720" y2="520"/><line x1="840" y1="380" x2="840" y2="520"/></g>
+      <g class="branch" stroke="#4a4139" fill="none" stroke-width="3.4" stroke-linecap="round">
+        <path d="M60,300 C220,270 340,250 470,215 C580,186 680,140 830,96"/>
+        <path d="M470,215 C500,180 520,160 560,140"/>
+        <path d="M300,258 C320,230 350,215 390,205"/>
+        <path d="M640,150 C660,130 690,118 724,112"/>
+      </g>
+      <g fill="#8e3b42" opacity=".55">
+        <circle class="bud" cx="360" cy="216" r="3.4"/><circle class="bud" cx="428" cy="204" r="3.8"/>
+        <circle class="bud" cx="548" cy="146" r="3.4"/><circle class="bud" cx="612" cy="132" r="3.6"/>
+        <circle class="bud" cx="700" cy="118" r="3.8"/><circle class="bud" cx="770" cy="106" r="3.4"/>
+        <circle class="bud" cx="250" cy="248" r="3.2"/><circle class="bud" cx="500" cy="188" r="3.2"/>
+      </g>
+      <g fill="#e8a7a0" opacity="0">
+        <circle class="petal" cx="360" cy="222" r="3.2"/><circle class="petal" cx="428" cy="210" r="3.6"/>
+        <circle class="petal" cx="548" cy="152" r="3.2"/><circle class="petal" cx="612" cy="138" r="3.4"/>
+        <circle class="petal" cx="700" cy="124" r="3.6"/><circle class="petal" cx="770" cy="112" r="3.2"/>
+      </g>
+      <g class="flame">
+        <path d="M450,470 C457,455 465,446 464,432 C463,420 456,414 450,406 C444,414 437,420 436,432 C435,446 443,455 450,470 Z" fill="#e8c496"/>
+        <path d="M450,462 C454,453 459,447 458,438 C458,431 453,427 450,422 C447,427 442,431 442,438 C441,447 446,453 450,462 Z" fill="#f6ecd9" opacity=".9"/>
+      </g>
+      <rect x="440" y="470" width="20" height="30" rx="3" fill="#3a3f45"/>
+      <rect x="424" y="498" width="52" height="8" rx="3" fill="#2a2f36"/>
+    </svg>
+    <div style="text-align:center;margin-top:18px">
+      <p style="font-size:14px;color:var(--faint);letter-spacing:.14em;margin-bottom:16px">夜园墙下，一枝海棠睡在暗处。银烛一点，花容自现</p>
+      <button class="candlebtn" id="lit">点 烛 见 花</button>
+    </div>
+  </div>
+  <div class="title">
+    <div class="kick">殆知阁导读 · 第四百九十三篇</div>
+    <h1><span>海</span><span>棠</span><span>谱</span></h1>
+    <div class="by">宋人陈思编于临安书坊 · 一朵被诗人沉默过的花</div>
+    <div class="seal">红妆</div>
+  </div>
+</header>
+
+<nav class="chips">
+  <a href="#an">公案</a><a href="#hr">花容</a><a href="#ss">春睡</a><a href="#po">诗墙</a><a href="#ys">逸事</a><a href="#fz">花政</a><a href="#sf">书坊</a>
+</nav>
+
+<section class="sec" id="an">
+  <div class="shead rv"><span class="no">壹</span><h2>公案</h2><span class="gloss">杜甫为何不写海棠</span></div>
+  <p class="lead rv">杜甫在蜀州住了多年，写遍了那里的花，偏偏不提最艳的海棠。这桩沉默成了一桩千年公案，宋人一代代替他补卷宗。</p>
+  <div class="case rv" id="c1">
+    <span class="cn">原问</span>
+    <q>杜子美居蜀累年，吟咏殆遍，海棠奇艳而诗章独不及，何耶</q>
+    <div class="fold"><q>自杜陵入蜀，绝吟于是花，世因以此薄之</q><p class="hint">点此合卷</p></div>
+  </div>
+  <div class="case rv" id="c2">
+    <span class="cn">郑谷翻案</span>
+    <q>浓淡方春满蜀乡，半随风雨断莺肠。浣花溪上空惆怅，子美无情为发扬。</q>
+    <div class="fold">
+      <q>杜工部旅两蜀诗集中无海棠之题</q>
+      <p class="hint">原书注：杜工部两蜀诗里确实没有海棠题</p>
+    </div>
+  </div>
+  <div class="case rv" id="c3">
+    <span class="cn">诸家续审</span>
+    <q>倚风莫怨唐工部，后裔谁知不解诗</q>
+    <div class="fold">
+      <q>曾不若东坡柯丘，海棠长篇冠古绝今，虽不指名老杜，而补亡之意，盖使来世自晓也</q>
+      <p class="hint">东坡的柯丘长篇一出，此案才算有了下文</p>
+    </div>
+  </div>
+  <div class="verdict rv">
+    <span class="vn">王荆公判词</span>
+    <q>独王荆公诗用此作梅花诗，最为有意，所谓，少陵为尔牵诗兴，可是无心赋海棠，末句云，多谢许昌传雅什，蜀都曾未识诗人。</q>
+    <p class="hint" style="font-size:12px;color:var(--faint);margin-top:10px">荆公把这句公案化用进梅花诗，不点破老杜，编者认为这是最高明的写法</p>
+  </div>
+</section>
+
+<section class="sec" id="hr">
+  <div class="shead rv"><span class="no">贰</span><h2>花容</h2><span class="gloss">一朵花的三段色变</span></div>
+  <p class="lead rv">庆历年间沈立在洪雅做官，给海棠写了份观察报告，从初开写到落尽，像一张分期的色卡。</p>
+  <div class="stages">
+    <div class="stg rv"><span class="dot" style="background:#a03038"></span><span class="st">色变</span><q>初极红，如胭脂点点然，及开则渐成缬晕，至落则若宿妆淡粉矣</q></div>
+    <div class="stg rv"><span class="dot" style="background:#c96a72"></span><span class="st">垂丝</span><q>柔枝长蒂，颜色浅红，垂英向下如日蔫者，谓之垂丝海棠，全与此不相类盖强名耳</q></div>
+    <div class="stg rv"><span class="dot" style="background:#d9b8b4"></span><span class="st">品秩</span><q>重叶海棠曰花命妇，又云多叶海棠曰花戚里</q></div>
+  </div>
+  <div class="gr">
+    <div class="grc rv"><span class="k">身世</span><q>蜀花称美者，有海棠焉。然记牒多所不录，盖恐近代有之</q><p class="gs"> opener 一句就把花的出身交代了：蜀中美色，而记牒不录</p></div>
+    <div class="grc rv"><span class="k">翻案</span><q>尝闻真宗皇帝御制后苑杂花十题，以海棠为首章，赐近臣唱和，则知海棠足与牡丹抗衡，而可独步于西州矣，因搜择前志，惟唐相贾元靖耽著百花谱，以海棠为花中神仙，诚不虚美耳</q><p class="gs">真宗御题十花，海棠列首章；唐相贾耽的百花谱早封它花中神仙</p></div>
+    <div class="grc rv"><span class="k">洋名</span><q>唐赞皇李德裕尝言，花名中之带海者，悉从海外来</q><p class="gs">李德裕说带海字的花都从海外来，海棕海石榴皆是同侪</p></div>
+    <div class="grc rv"><span class="k">行情</span><q>海棠虽盛称于蜀，而蜀人不甚重，今京师江淮尤竞植之，每一本价不下数十金</q><p class="gs">蜀人见惯不贵，传到汴京江淮，一本炒到几十金，名园抢着栽</p></div>
+    <div class="grc rv"><span class="k">催花</span><q>都下接花工，多以嫩枝附梨而赘之，则易茂矣</q><p class="gs">实生苗十年才开花，汴京的花匠把嫩枝接到梨树上，易茂早花</p></div>
+  </div>
+</section>
+
+<section class="sec" id="ss">
+  <div class="shead rv"><span class="no">叁</span><h2>春睡</h2><span class="gloss">海棠睡未足的来历</span></div>
+  <div class="shui">
+    <div class="nightq rv">
+      <span class="k">太真外传</span>
+      <q>上皇笑曰，岂妃子醉，是海棠睡未足耳</q>
+      <p class="note">唐明皇一句话，把杨妃的醉颜永久抵押给了这朵花。海棠春睡从此成为它最广为人知的名字。</p>
+      <q style="margin-top:14px;color:#d5cec2">东坡海棠诗曰，只恐夜深花睡去，更烧银烛照红妆。</q>
+      <p class="note">苏东坡接住这个典故，深夜里为花点起蜡烛。全书书名页外的第一主角由此登场。</p>
+    </div>
+    <div class="inkbox rv">
+      <span class="k">墨迹本对照</span>
+      <q>东风袅袅泛崇光，香雾霏霏月转廊。只恐夜深花睡去，高烧银烛照红妆。</q>
+      <table>
+        <tr><td>通行集本</td><td><q>东风袅袅泛崇光，香雾霏霏月转廊。</q></td></tr>
+        <tr><td>东坡墨迹</td><td><q>袅袅作渺渺，霏霏作空蒙</q>（今从墨迹）</td></tr>
+      </table>
+      <p style="font-size:12.5px;color:#6b6156;margin-top:10px;line-height:1.9">编者见过墨迹真本，注明从墨迹。一句诗的两个版本，在纸上一并传了下来。</p>
+    </div>
+  </div>
+  <div class="verdict rv" style="margin-top:22px">
+    <span class="vn">定惠院那一株</span>
+    <q>杂花满山而独海棠一株，土人不知贵</q>
+    <p style="font-size:13px;color:var(--faint);margin-top:8px">谪居黄州的东坡为它写了平生自认最得意的长篇。<q>平生喜为人写人间刻石者自有五六本云，吾平生最得意诗也</q></p>
+  </div>
+</section>
+
+<section class="sec" id="po">
+  <div class="shead rv"><span class="no">肆</span><h2>诗墙</h2><span class="gloss">三卷里的九张诗笺</span></div>
+  <p class="lead rv">上卷故实，中下两卷全是题咏：三朝御题在前，唐宋名家在后。竖排诗笺，右起读。</p>
+  <div class="poems">
+    <div class="pm rv"><span class="who">太宗</span><span class="pt">御题</span><div class="body"><p><q>每至春园独有名，天然与染半红深。芳菲占得歌台地，妖艳谁怜向日临。莫道无情闲笑脸，任从折戴上冠簪。偏宜雨后看颜色，几处金杯为尔斟。</q></p></div></div>
+    <div class="pm rv"><span class="who">真宗</span><span class="pt">御题</span><div class="body"><p><q>春律行将半，繁枝忽竞芳。霏霏含宿雾，灼灼艳朝阳。戏蝶栖轻蕊，游蜂逐远香。物华留赋咏，非独务雕章。</q></p></div></div>
+    <div class="pm rv"><span class="who">真宗</span><span class="pt">又一首</span><div class="body"><p><q>翠萼凌晨绽，清香逐处飘。高低临曲槛，红白间纤条。润比攒温玉，繁如簇绛绡。尽堪图画取，名笔在僧繇。</q></p></div></div>
+    <div class="pm rv"><span class="who">光宗</span><span class="pt">赏花偶咏</span><div class="body"><p><q>浓淡名花产蜀乡，半含风露浥新妆。娇娆不减旧时态，谁与丹青为发扬。</q></p></div></div>
+    <div class="pm rv"><span class="who">郑谷</span><span class="pt">唐人第一咏</span><div class="body"><p><q>春风用意匀颜色，销得携觞与赋诗。浓丽最宜新著雨，娇娆全在欲开时。莫愁粉黛临窗懒，梁广丹青点笔迟。朝醉暮吟看不足，羡他蝴蝶宿深枝。</q></p></div></div>
+    <div class="pm rv"><span class="who">苏轼</span><span class="pt">定惠院</span><div class="body"><p><q>嫣然一笑竹篱间，桃李漫山总麄俗。</q></p><p><q>也知造物有深意，故遣佳人在空谷。</q></p></div></div>
+    <div class="pm rv"><span class="who">苏轼</span><span class="pt">同上</span><div class="body"><p><q>朱唇得酒晕生脸，翠袖卷纱红映肉。</q></p><p><q>林深雾暗晓光迟，日暖风轻春睡足。</q></p></div></div>
+    <div class="pm rv"><span class="who">陆游</span><span class="pt">海棠</span><div class="body"><p><q>横陈锦幛阑干外，尽吸红云酒醆中。</q></p><p><q>贪看不辞持夜烛，倚狂直欲擅春风。</q></p></div></div>
+    <div class="pm rv"><span class="who">杨万里</span><span class="pt">怀故园</span><div class="body"><p><q>故园今日海棠开，梦入江西锦绣堆。万物皆春人独老，一年过社燕方回。似青如白天浓淡，欲坠还飞絮往来。无那风光消不得，遣诗招入翠琼杯。</q></p></div></div>
+  </div>
+</section>
+
+<section class="sec" id="ys">
+  <div class="shead rv"><span class="no">伍</span><h2>逸事</h2><span class="gloss">五件关于花的小案子</span></div>
+  <p class="lead rv">卷上故实里藏着几则宋人段子，点击翻开案底。</p>
+  <div class="stories">
+    <div class="story rv"><span class="sn">其一</span><span class="st2">平生五恨</span><q>第一恨鲥鱼多骨，二恨金橘太酸，三恨莼菜性冷，四恨海棠无香，五恨曾子固不能诗</q><p class="gl">刘渊材的著名清单。鲥鱼金橘莼菜都是口腹之憾，夹在第四位的花，和曾巩的诗并列成了文人心病。</p></div>
+    <div class="story rv"><span class="sn">其二</span><span class="st2">昌州独香</span><q>海棠无香，昌州海棠独香，非佳郡乎</q><p class="gl">为了一座州城的海棠香，渊材吐了饭跑去劝朋友别调任。天下海棠不香，昌州独香，这一条被地方志记了几百年。</p></div>
+    <div class="story rv"><span class="sn">其三</span><span class="st2">花间姻缘</span><q>黎举常云，欲令梅聘海棠，枨子臣樱桃</q><p class="gl">黎举常想给花做媒：让梅聘海棠，拿枨子臣属樱桃。花的婚配官僚制，宋人玩笑开得一本正经。</p></div>
+    <div class="story rv"><span class="sn">其四</span><span class="st2">吞蕊而生</span><q>蜀潘炕有嬖妾解愁，姓赵氏，其母梦吞海棠花蕊而生，颇有国色</q><p class="gl">蜀帅潘炕的爱妾解愁，母亲梦见吞下海棠花蕊才怀了她。以花得名命的一位歌者。</p></div>
+    <div class="story rv"><span class="sn">其五</span><span class="st2">载酒日饮</span><q>有海棠两株，持国每花开辄载酒日饮其下</q><p class="gl">刚正的风节大臣韩持国，每年花开就带着酒坐到人家厅后小亭里，日日饮到花谢，岁岁如此。</p></div>
+    <div class="story rv"><span class="sn">其六</span><span class="st2">醉卧题柱</span><q>瘴雨过，海棠开，春色又添多少</q><p class="gl">秦少游醉宿海棠丛，醒来在柱上题了如梦令。半破椰瓢舀酒，瘴雨过后花又开了，东坡喜欢得恨不得抢过来。</p></div>
+  </div>
+</section>
+
+<section class="sec" id="fz">
+  <div class="shead rv"><span class="no">陆</span><h2>花政</h2><span class="gloss">散落卷上的三条养花方</span></div>
+  <p class="lead rv">四库馆臣说这书栽种之法仅散见四五条。捡出来的三条，都是硬规定。</p>
+  <div class="farm">
+    <div class="slip rv"><span class="ft">冬至水方</span><q>海棠花欲鲜而盛，于冬至日早，以糟水浇根下</q><p class="gs">想开得鲜盛，冬至一早拿酒糟水浇根。节气一天不能差。</p></div>
+    <div class="slip rv"><span class="ft">剪子方</span><q>海棠侯花谢结子剪去，来年花盛而无叶</q><p class="gs">花谢结子就剪，来年花盛叶少。舍果求花，算得极清。</p></div>
+    <div class="slip rv"><span class="ft">比量方</span><q>雨过温泉浴妃子，露浓汤饼试何郎</q><p class="gs">渊材的海棠诗：拿温泉浴妃子对汤饼试何郎，美女与美男子比着用，花诗里开了新对法。</p></div>
+  </div>
+</section>
+
+<section class="sec" id="sf">
+  <div class="shead rv"><span class="no">柒</span><h2>书坊</h2><span class="gloss">卖书人编的花谱</span></div>
+  <div class="shufang">
+    <div class="sfcard rv">
+      <span class="shop">临安陈氏书籍铺</span>
+      <p class="shopname">陈思，约理宗朝临安书坊主<br>又编宝刻丛编、书小史</p>
+    </div>
+    <div class="sftext rv">
+      <p>编这部花谱的不是达官，也不是隐士，是南宋临安城里一位<b>开书铺的老板</b>。他在开庆元年自序里交代得坦白：<q>今采取诸家杂录及彚次唐以来诸人诗句，以为一编目，曰海棠谱，虽繤集未能详尽，聊预众谱之列云</q>抄诸家杂录，汇次唐以来诗句，凑成一部自谦的「聊预众谱」花账。</p>
+      <p style="margin-top:12px">他在序里先替花鸣不平：<q>世之花卉种类不一，或以色而艳，或以香而妍，是皆钟天地之秀，为人所钦羡也，梅花占于春前，牡丹殿于春后，骚人墨客特注意焉，独海棠一种，风姿艳质固不在二花下</q>；又把翻案的功劳记给朝廷：<q>本朝列圣品题云章奎画烜耀千古，此花始得显闻于时盛传于世矣</q>。为花立传的动机，一半是生意，一半真是不平。</p>
+      <p class="crit">四库馆臣点评：这书没进正史的艺文志目录，靠明人焦竑的经籍志留名；搜罗不算广博，栽种之法只散见四五条，算数典之书。但一部坊贾编的花谱，让三朝御题与百家诗同册共存，宋代市籍文化的胃口由此可见。</p>
+    </div>
+  </div>
+</section>
+
+<section id="coda">
+  <div class="codaq rv"><q>蜀地名花擅古今，一枝气可压千林。</q><q style="margin-top:0">讥弹更到无香处，常恨人言太刻深。</q><span class="src">陆游海棠诗 · 库本</span></div>
+  <button class="codabtn" id="sq">替 花 说 一 句 话</button>
+  <div class="cseal" id="cseal">红妆</div>
+</section>
+
+<footer>
+  <p>文本来源：殆知阁古代文献简体库 〈海棠谱〉艺藏草木鸟兽虫鱼本 · github.com/robertsong/daizhige-daodu</p>
+  <p>引文经脚本自库本锚点切片生成，去标点归一后逐字比对通过；白话行文与库本六字窗反扫零撞。</p>
+  <p>以花拟人、花命妇花戚里诸条皆宋人品花风尚底色，照录存照，不代今人立论。</p>
+</footer>
+
+<script>
+(function(){
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
+  }, {threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  var top = document.getElementById('top');
+  document.getElementById('lit').addEventListener('click', function(){
+    top.classList.add('lit');
+  });
+
+  document.querySelectorAll('.case').forEach(function(c){
+    c.addEventListener('click', function(){
+      c.classList.toggle('open');
+      var h = c.querySelector('.hint');
+      if(h) h.textContent = c.classList.contains('open') ? '点此合卷' : '点此开卷';
+    });
+  });
+  document.querySelectorAll('.story').forEach(function(s){
+    s.addEventListener('click', function(){ s.classList.toggle('open'); });
+  });
+
+  var sq = document.getElementById('sq');
+  sq.addEventListener('click', function(){
+    document.getElementById('cseal').classList.toggle('go');
+  });
+})();
+</script>
+</body>
+</html>
