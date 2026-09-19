@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>听雨丛谈 · 衣冠镜</title>
+<style>
+:root{
+  --bg:#191917; --bg2:#1f1e1b; --paper:#e8e4dc; --paper2:#dcd6c9;
+  --gold:#c9963f; --gold-dim:#8a6a30; --ink:#22211e;
+  --ming:#e2c14f; --jinh:#b8862d; --coral:#d4573b; --pearl:#ece7db;
+  --ling:#3f8f8a; --lapis:#3d5a8f; --crystal:#cfd8e3; --silver:#b9b9b9;
+  --dim:#8f897c; --dim2:#6b665c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--paper);font-family:"Songti SC","Noto Serif SC","SimSun",serif;line-height:1.9;overflow-x:hidden}
+q{quotes:"「" "」" "『" "』"}
+.mono{font-family:"SFMono-Regular",Menlo,Consolas,monospace}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+section{padding:84px 0}
+.kicker-bar{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid #2c2a25;font-size:13px;letter-spacing:.2em;color:var(--dim)}
+.kicker-bar b{color:var(--gold);font-weight:normal}
+a{color:var(--gold)}
+h2.sec{font-size:30px;font-weight:normal;letter-spacing:.12em;margin-bottom:8px}
+h2.sec em{font-style:normal;color:var(--gold)}
+.sec-sub{color:var(--dim);font-size:14px;letter-spacing:.14em;margin-bottom:38px}
+.paper{background:var(--paper);color:var(--ink);border-radius:4px;padding:34px 36px}
+.paper .cap{font-size:13px;letter-spacing:.25em;color:#7a6a45;margin-bottom:14px}
+.lead{font-size:17px}
+.lead b{font-weight:normal;border-bottom:1px solid var(--gold-dim)}
+.gold{color:var(--gold)}
+.dimtxt{color:var(--dim)}
+.small{font-size:13.5px}
+/* ============ HERO 衣冠镜 ============ */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:70px 0 50px;position:relative}
+.hero-grid{display:grid;grid-template-columns:400px 1fr;gap:56px;align-items:center}
+.mirror-box{position:relative}
+.mirror{width:340px;height:470px;margin:0 auto;border-radius:170px 170px 22px 22px;border:2px solid #3a3323;background:radial-gradient(120% 90% at 50% 20%,#26241f 0%,#191917 70%);position:relative;overflow:hidden;transition:box-shadow .8s}
+.mirror::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 42%,rgba(232,228,220,.045) 50%,transparent 58%);pointer-events:none}
+.mirror.fog::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(25,25,23,.55),rgba(25,25,23,.75));backdrop-filter:blur(1px);transition:opacity 1s;z-index:5}
+.mirror.clear::before{opacity:0}
+.name-reveal{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;opacity:0;transition:opacity 1.2s;z-index:6;pointer-events:none}
+body.named .name-reveal{opacity:1}
+.name-reveal .bookname{writing-mode:vertical-rl;font-size:52px;letter-spacing:.35em;color:var(--paper);text-shadow:0 0 24px rgba(201,150,63,.4)}
+.seal{writing-mode:vertical-rl;background:var(--coral);color:var(--paper);font-size:17px;padding:9px 5px;letter-spacing:.2em;border-radius:3px;box-shadow:0 0 0 1px rgba(232,228,220,.25) inset;transform:rotate(-4deg)}
+body.named .seal{animation:stamp .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes stamp{0%{transform:rotate(-4deg) scale(1.9);opacity:0}100%{transform:rotate(-4deg) scale(1);opacity:1}}
+.hint{text-align:center;color:var(--dim2);font-size:13px;letter-spacing:.2em;margin-top:16px;transition:opacity .5s}
+body.named .hint{opacity:0}
+.prog{color:var(--gold)}
+/* rank dials */
+.dials{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
+.dial{display:flex;align-items:center;gap:14px;border:1px solid #2e2b24;background:var(--bg2);padding:10px 16px;cursor:pointer;border-radius:3px;transition:.25s}
+.dial:hover{border-color:var(--gold-dim)}
+.dial.on{border-color:var(--gold);background:#241f14}
+.dial .no{font-size:12px;color:var(--dim2);width:18px}
+.dial .nm{font-size:18px;letter-spacing:.2em;min-width:96px}
+.dial .ds{font-size:12.5px;color:var(--dim)}
+.dial.on .ds{color:var(--paper2)}
+.rule-card{border-left:2px solid var(--gold);background:var(--bg2);padding:20px 24px;min-height:178px;position:relative}
+.rule-card{display:none}
+.rule-card.on{display:block;animation:fadein .4s}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.rc-head{font-size:20px;letter-spacing:.24em;margin-bottom:12px;color:var(--gold)}
+.slot{display:flex;gap:12px;font-size:14.5px;margin:5px 0}
+.slot .k{color:var(--dim);letter-spacing:.3em;flex:0 0 34px}
+.rcq{margin-top:12px;font-size:14.5px;color:var(--paper2);display:block}
+.rcq q{color:var(--gold)}
+/* svg scene */
+#scene .bust{opacity:.96}
+#scene [data-g]{opacity:0;transition:opacity .5s}
+#scene .base{opacity:1}
+.r-qinwang [data-g="k-oval"],.r-beile [data-g="k-oval"],.r-gong [data-g="k-oval"]{opacity:1}
+.r-yipin [data-g="k-hex"]{opacity:1}
+.r-wupin [data-g="k-cry"]{opacity:1}
+.r-beile [data-g="l3"],.r-gong [data-g="l2"]{opacity:1}
+.r-qinwang [data-g="l0"]{opacity:.28}
+.r-yipin [data-g="z-yipin"],.r-wupin [data-g="z-wupin"],.r-qinwang [data-g="z-wang"],.r-beile [data-g="z-wang"],.r-gong [data-g="z-wang"]{opacity:1}
+/* ============ 顶戴 ============ */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin:30px 0}
+.obj-card{background:var(--bg2);border:1px solid #2e2b24;border-radius:4px;padding:26px;text-align:center}
+.obj-card h4{font-size:19px;font-weight:normal;letter-spacing:.2em;color:var(--gold);margin:12px 0 4px}
+.obj-card p{font-size:13.5px;color:var(--dim)}
+.knobsvg{display:block;margin:0 auto}
+.quotebar{border-left:2px solid var(--gold-dim);padding:10px 20px;margin:22px 0;font-size:15.5px;color:var(--paper2)}
+.quotebar q{color:var(--gold)}
+.quotebar .src{display:block;font-size:12px;color:var(--dim2);margin-top:6px;letter-spacing:.15em}
+.tray{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:26px}
+.tray-cell{border:1px solid #2e2b24;background:var(--bg2);border-radius:4px;padding:20px 12px 16px;text-align:center;cursor:pointer;transition:.25s}
+.tray-cell:hover{border-color:var(--gold-dim)}
+.tray-cell.lit{border-color:var(--gold);background:#241f14;box-shadow:0 0 18px rgba(201,150,63,.12)}
+.knob-dot{width:44px;height:44px;border-radius:50%;margin:0 auto 14px;opacity:.45;transition:.3s;box-shadow:inset -4px -6px 10px rgba(0,0,0,.5)}
+.tray-cell.lit .knob-dot{opacity:1;box-shadow:0 0 16px rgba(232,228,220,.25),inset -4px -6px 10px rgba(0,0,0,.5)}
+.tray-cell .tn{font-size:17px;letter-spacing:.15em}
+.tray-cell .tc{font-size:12.5px;color:var(--dim);margin-top:6px}
+.tray-note{margin-top:18px;font-size:14px;color:var(--dim);text-align:center;transition:.3s}
+.rongjie{margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.rongjie .paper q{color:#8a5a20}
+/* ============ 花翎 ============ */
+.feather-row{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:30px 0}
+.feather-card{background:var(--bg2);border:1px solid #2e2b24;border-radius:4px;padding:22px;text-align:center;transition:.3s}
+.feather-card:hover{border-color:var(--gold-dim)}
+.feather-card .fc-n{font-size:21px;letter-spacing:.25em;color:var(--gold)}
+.feather-card .fc-w{font-size:13px;color:var(--dim);margin-top:8px;line-height:1.8}
+.paradox{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:34px 0}
+.paradox .pz{border:1px dashed #4a4130;border-radius:4px;padding:22px 26px;font-size:16px}
+.paradox .pz .tag{display:inline-block;font-size:12px;letter-spacing:.25em;color:var(--coral);border:1px solid rgba(212,87,59,.4);border-radius:20px;padding:1px 12px;margin-bottom:12px}
+.paradox q{color:var(--gold)}
+.duilu{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:34px 0}
+.duilu .du{background:var(--bg2);border:1px solid #2e2b24;border-radius:4px;padding:24px}
+.duilu .du h5{font-weight:normal;letter-spacing:.2em;font-size:15px;color:var(--dim);margin-bottom:10px}
+.duilu .du.ming-t h5{color:#9a8}
+.duilu q{color:var(--gold);font-size:15px}
+.rail{margin:56px 0 10px;position:relative;padding-top:8px}
+.rail-line{height:2px;background:#332e24;position:relative}
+.rail-fill{position:absolute;left:0;top:0;height:2px;background:var(--gold);width:0;transition:width .7s}
+.rail-stops{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.rail-stop{cursor:pointer;padding-top:20px;position:relative}
+.rail-stop::before{content:"";position:absolute;top:0;left:50%;transform:translate(-50%,-50%) translateY(-1px);width:13px;height:13px;border-radius:50%;background:var(--bg);border:2px solid #55503f;transition:.3s}
+.rail-stop.lit::before{background:var(--gold);border-color:var(--gold);box-shadow:0 0 12px rgba(201,150,63,.5)}
+.rail-stop .rs-t{font-size:17px;letter-spacing:.15em;text-align:center}
+.rail-stop .rs-d{font-size:13px;color:var(--dim);text-align:center;margin-top:4px}
+.payoff{margin-top:34px;border:1px solid #332e24;border-radius:4px;padding:24px 28px;opacity:.28;transition:opacity .8s;background:var(--bg2)}
+.payoff.show{opacity:1;border-color:var(--gold-dim)}
+.payoff .ptag{font-size:12px;letter-spacing:.3em;color:var(--coral);margin-bottom:10px}
+.payoff q{color:var(--gold);font-size:16.5px}
+.chiprow{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.chiprow span{border:1px solid rgba(201,150,63,.45);color:var(--gold);font-size:13.5px;letter-spacing:.15em;border-radius:20px;padding:2px 14px;opacity:0;transform:translateY(6px);transition:.5s}
+.payoff.show .chiprow span{opacity:1;transform:none}
+.payoff .chiprow span:nth-child(2){transition-delay:.15s}
+.payoff .chiprow span:nth-child(3){transition-delay:.3s}
+.payoff .chiprow span:nth-child(4){transition-delay:.45s}
+/* ============ 朝珠 ============ */
+.zhu-grid{display:grid;grid-template-columns:420px 1fr;gap:48px;align-items:start}
+.zhu-stage{background:radial-gradient(90% 80% at 50% 30%,#23211c,#191917);border:1px solid #2e2b24;border-radius:4px;padding:18px}
+.zhu-rows{display:flex;flex-direction:column;gap:10px}
+.zhu-row{display:flex;align-items:baseline;gap:14px;border:1px solid #2e2b24;background:var(--bg2);padding:12px 18px;cursor:pointer;border-radius:3px;transition:.25s}
+.zhu-row.on{border-color:var(--gold);background:#241f14}
+.zhu-row .zn{font-size:16.5px;letter-spacing:.12em;min-width:150px}
+.zhu-row .zd{font-size:12.5px;color:var(--dim)}
+.zhu-cards{margin-top:16px;position:relative;min-height:130px}
+.zhu-card{display:none;border-left:2px solid var(--gold);padding:14px 22px;background:var(--bg2);font-size:15px}
+.zhu-card.on{display:block;animation:fadein .4s}
+.zhu-card q{color:var(--gold)}
+.zhu-card .zc-x{display:block;font-size:13px;color:var(--dim);margin-top:6px}
+.jin-toggle{display:flex;gap:0;border:1px solid #3a3323;border-radius:3px;overflow:hidden;width:max-content;margin:18px 0}
+.jin-toggle button{background:none;border:none;color:var(--dim);font-family:inherit;font-size:15px;letter-spacing:.2em;padding:8px 26px;cursor:pointer;transition:.25s}
+.jin-toggle button.on{background:var(--gold);color:var(--ink)}
+.jin-note{min-height:56px;font-size:15.5px;color:var(--paper2)}
+.jin-note q{color:var(--gold)}
+.swatches{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:26px 0}
+.swatch{border-radius:4px;overflow:hidden;border:1px solid #2e2b24}
+.swatch .sw{height:92px;position:relative}
+.swatch .sw::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.16) 47%,transparent 62%)}
+.swatch .swl{background:var(--bg2);padding:12px 18px;display:flex;justify-content:space-between;align-items:baseline}
+.swatch .swl b{font-weight:normal;font-size:17px;letter-spacing:.25em}
+.swatch .swl i{font-style:normal;font-size:12.5px;color:var(--dim)}
+.ming-sw{background:linear-gradient(160deg,#e5c34a,#cfa838)}
+.jinh-sw{background:linear-gradient(160deg,#b8862d,#8f6620)}
+/* ============ 八旗 ============ */
+.qi-rows{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin:34px 0}
+.qi-col .qh{display:flex;justify-content:space-between;font-size:13.5px;color:var(--dim);letter-spacing:.2em;margin-bottom:14px;border-bottom:1px solid #2e2b24;padding-bottom:8px}
+.qi-line{display:flex;flex-direction:column;gap:10px}
+.qi{display:flex;align-items:center;gap:12px;border:1px solid #2e2b24;background:var(--bg2);padding:9px 16px;border-radius:3px;cursor:pointer;transition:.25s}
+.qi:hover{border-color:var(--gold-dim)}
+.qi.lit{border-color:var(--gold);background:#241f14}
+.qi .flag{width:12px;height:30px;border-radius:2px;flex:0 0 12px;opacity:.5;transition:.3s}
+.qi.lit .flag{opacity:1;box-shadow:0 0 10px rgba(232,228,220,.25)}
+.qi .qn{font-size:16.5px;letter-spacing:.2em}
+.qi .qx{font-size:12px;color:var(--dim2);margin-left:auto;letter-spacing:.15em}
+.flag.b-huang{background:linear-gradient(#d8a93c,#c9963f)}
+.flag.b-bai{background:var(--pearl)}
+.flag.b-hong{background:#b23a2e}
+.flag.b-lan{background:var(--lapis)}
+.flag.x{background:transparent;border:2.5px solid #d8a93c}
+.flag.xbai{border-color:var(--pearl)}
+.flag.xhong{border-color:#b23a2e}
+.flag.xlan{border-color:var(--lapis)}
+/* ============ 笔帖式 ============ */
+.bitie{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+.stepv{border-left:2px solid var(--gold-dim);padding-left:22px;margin:26px 0;display:flex;flex-direction:column;gap:14px}
+.stepv .st{position:relative}
+.stepv .st::before{content:"";position:absolute;left:-27px;top:12px;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.stepv .st b{font-weight:normal;color:var(--gold);letter-spacing:.1em}
+/* ============ coda ============ */
+#coda{border-top:1px solid #2c2a25;background:#161513}
+.coda-flex{display:flex;gap:56px;justify-content:center;align-items:flex-start;padding:70px 22px 40px}
+.vpassage{writing-mode:vertical-rl;font-size:23px;letter-spacing:.32em;line-height:2.4;color:var(--paper);height:max-content}
+.vpassage q{color:var(--paper)}
+.vpassage .vsrc{font-size:12.5px;color:var(--dim2);letter-spacing:.25em;margin-top:0;margin-left:20px}
+.coda-seal{writing-mode:vertical-rl;background:var(--coral);color:var(--paper);font-size:16px;padding:10px 5px;letter-spacing:.25em;border-radius:3px;transform:rotate(3deg);margin-top:120px}
+footer{border-top:1px solid #2c2a25;padding:34px 0 60px;color:var(--dim2);font-size:13px;line-height:2.1}
+footer p{margin:6px 0}
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:34px}
+  .mirror{width:280px;height:400px}
+  .split,.paradox,.duilu,.rongjie,.bitie,.zhu-grid,.qi-rows,.swatches{grid-template-columns:1fr}
+  .tray{grid-template-columns:repeat(2,1fr)}
+  .feather-row{grid-template-columns:1fr}
+  .rail-stops{grid-template-columns:1fr;gap:26px}
+  .coda-flex{flex-direction:row;gap:30px}
+  .vpassage{font-size:17px}
+}
+</style>
+</head>
+<body>
+<div class="kicker-bar">
+  <span>殆知阁古代文献导读 <b>卷三百七十一</b> · 史藏志存记录</span>
+  <span class="mono">TINGYU CONGTAN</span>
+</div>
+
+<!-- ================= HERO ================= -->
+<section id="hero">
+  <div class="wrap hero-grid">
+    <div class="mirror-box">
+      <div class="mirror fog" id="mirror">
+        <svg id="scene" viewBox="0 0 300 420" width="100%" height="100%" aria-label="衣冠镜">
+          <defs>
+            <linearGradient id="gRed" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#e06a4a"/><stop offset="1" stop-color="#a03020"/>
+            </linearGradient>
+            <linearGradient id="gRobe" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#2c3a46"/><stop offset="1" stop-color="#1d2730"/>
+            </linearGradient>
+            <linearGradient id="g5c" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#d4573b"/><stop offset=".35" stop-color="#e2c14f"/>
+              <stop offset=".7" stop-color="#3f8f8a"/><stop offset="1" stop-color="#3d5a8f"/>
+            </linearGradient>
+          </defs>
+          <g class="bust">
+            <path d="M38,420 C56,330 100,300 150,300 C200,300 244,330 262,420 Z" fill="url(#gRobe)" class="base"/>
+            <path d="M126,306 L150,346 L174,306" fill="none" stroke="#c9963f" stroke-width="2" class="base" opacity=".8"/>
+            <circle cx="150" cy="242" r="36" fill="#0f0e0c" stroke="#3a352c" stroke-width="1.5" class="base"/>
+            <path d="M96,262 Q150,286 204,262 L164,192 Q150,186 136,192 Z" fill="#15130f" stroke="#453d2c" stroke-width="1.5" class="base"/>
+            <g data-g="l0">
+              <path d="M196,232 C232,196 248,130 236,74" fill="none" stroke="#5a5344" stroke-width="3.5" stroke-dasharray="7 6"/>
+            </g>
+            <g data-g="l3">
+              <path d="M196,232 C232,196 248,130 236,74" fill="none" stroke="url(#g5c)" stroke-width="3.5"/>
+              <ellipse cx="236" cy="84" rx="8.5" ry="12" fill="#2c5a56" stroke="#3f8f8a" stroke-width="2"/>
+              <ellipse cx="240" cy="128" rx="7.5" ry="10.5" fill="#2c5a56" stroke="#3f8f8a" stroke-width="2"/>
+              <ellipse cx="237" cy="170" rx="6.5" ry="9" fill="#2c5a56" stroke="#3f8f8a" stroke-width="2"/>
+            </g>
+            <g data-g="l2">
+              <path d="M196,232 C232,196 248,130 236,74" fill="none" stroke="url(#g5c)" stroke-width="3.5"/>
+              <ellipse cx="236" cy="84" rx="8.5" ry="12" fill="#2c5a56" stroke="#3f8f8a" stroke-width="2"/>
+              <ellipse cx="240" cy="130" rx="7.5" ry="10.5" fill="#2c5a56" stroke="#3f8f8a" stroke-width="2"/>
+            </g>
+            <g data-g="k-oval">
+              <ellipse cx="150" cy="178" rx="11" ry="18" fill="url(#gRed)" stroke="#e8b08a" stroke-width="1"/>
+            </g>
+            <g data-g="k-hex">
+              <polygon points="150,160 162,168 162,186 150,194 138,186 138,168" fill="url(#gRed)" stroke="#e8b08a" stroke-width="1"/>
+            </g>
+            <g data-g="k-cry">
+              <polygon points="150,160 161,177 150,194 139,177" fill="#cfd8e3" opacity=".92" stroke="#eef3f8" stroke-width="1"/>
+            </g>
+            <g id="zhuMain" class="base"></g>
+            <g data-g="z-wang" id="zhuWang"></g>
+            <g data-g="z-yipin" id="zhuYipin"></g>
+            <g data-g="z-wupin" id="zhuWupin"></g>
+          </g>
+        </svg>
+        <div class="name-reveal">
+          <div class="bookname">听雨丛谈</div>
+          <div class="seal">衣冠</div>
+        </div>
+      </div>
+      <div class="hint">对镜五级，一一试过，书名自现　<span class="prog mono" id="prog">0 / 5</span></div>
+    </div>
+    <div>
+      <p class="sec-sub" style="margin-bottom:20px">一件官服，三处机关。点级试衣，看顶、翎、珠如何跟着换。</p>
+      <div class="dials">
+        <div class="dial" data-r="r-qinwang"><span class="no mono">壹</span><span class="nm">亲王</span><span class="ds">爵秩最高的一档，镜子先给他最难堪的一格</span></div>
+        <div class="dial" data-r="r-beile"><span class="no mono">贰</span><span class="nm">贝勒</span><span class="ds">翎上三眼的两种主人之一</span></div>
+        <div class="dial" data-r="r-gong"><span class="no mono">叁</span><span class="nm">镇国公</span><span class="ds">双眼翎的独一份</span></div>
+        <div class="dial" data-r="r-yipin"><span class="no mono">肆</span><span class="nm">一品大臣</span><span class="ds">顶上红宝石与王爷同料，差别只在形状</span></div>
+        <div class="dial" data-r="r-wupin"><span class="no mono">伍</span><span class="nm">五品文官</span><span class="ds">旧制水晶顶，珠串另是一路</span></div>
+      </div>
+      <div class="rule-card rc-qinwang">
+        <div class="rc-head">亲王</div>
+        <div class="slot"><span class="k">顶</span><span>红宝石，琢作长圆</span></div>
+        <div class="slot"><span class="k">翎</span><span>例不得戴，虚位以待特恩</span></div>
+        <div class="slot"><span class="k">珠</span><span>珊瑚正珠，记念用珍珠</span></div>
+        <span class="rcq"><q>亲郡王爵秩虽崇，非蒙特赐，转不能戴。</q><q>凡皇子分封之亲郡王，皆不赐翎也。</q></span>
+      </div>
+      <div class="rule-card rc-beile">
+        <div class="rc-head">贝勒</div>
+        <div class="slot"><span class="k">顶</span><span>红宝石，同为长圆</span></div>
+        <div class="slot"><span class="k">翎</span><span>三眼，翎眼最多的一档</span></div>
+        <div class="slot"><span class="k">珠</span><span>珊瑚正珠，记念用珍珠</span></div>
+        <span class="rcq"><q>其例应随秩戴翎者，宗室中贝勒、贝子三眼花翎，镇国公双眼花翎，辅国公、镇国将军、辅国将军单眼花翎。</q></span>
+      </div>
+      <div class="rule-card rc-gong">
+        <div class="rc-head">镇国公</div>
+        <div class="slot"><span class="k">顶</span><span>宝石顶</span></div>
+        <div class="slot"><span class="k">翎</span><span>双眼</span></div>
+        <div class="slot"><span class="k">珠</span><span>库本此条未及，镜中不装</span></div>
+        <span class="rcq"><q>其例应随秩戴翎者，宗室中贝勒、贝子三眼花翎，镇国公双眼花翎，辅国公、镇国将军、辅国将军单眼花翎。</q></span>
+      </div>
+      <div class="rule-card rc-yipin">
+        <div class="rc-head">一品大臣</div>
+        <div class="slot"><span class="k">顶</span><span>同用红宝石，琢作六楞，与王爷分形</span></div>
+        <div class="slot"><span class="k">翎</span><span>非军功不得保荐</span></div>
+        <div class="slot"><span class="k">珠</span><span>珊瑚珠，记念五色</span></div>
+        <span class="rcq"><q>诸王、贝勒之朝冠，用红宝石，一品大臣亦用红宝石，其分别处在一用长圆如苞，一用六楞</q>。<q>此外翎枝最为难得，非军功不准保荐。</q>。<q>诸王用珊瑚朝珠，珍珠记念。一品大臣许用珊瑚朝珠，五色记念。</q></span>
+      </div>
+      <div class="rule-card rc-wupin">
+        <div class="rc-head">五品文官（雍正五年旧制）</div>
+        <div class="slot"><span class="k">顶</span><span>水晶</span></div>
+        <div class="slot"><span class="k">翎</span><span>无</span></div>
+        <div class="slot"><span class="k">珠</span><span>杂宝诸香串珠，记念用珊瑚宝石</span></div>
+        <span class="rcq"><q>初制一二三品皆用珊瑚，四品用青金石，五六品均用水晶，七品以下俱用金顶，生监用银顶。</q>。<q>文职五品、武职四品以上，许用杂宝诸香朝珠，珊瑚宝石记念。</q></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 楔子 ================= -->
+<section id="intro">
+  <div class="wrap">
+    <div class="paper">
+      <div class="cap">楔子 · 一部当时人的体制说明书</div>
+      <p class="lead">清人福格的笔记，十二卷、一百九十七条，去空白约十一万六千字。满洲源起、八旗方位、冠服顶戴、品级朝珠、科场官制，条条都是当时人要懂的规矩，今天读来，恰是一部<b>清宫剧常识勘误表</b>：亲王未必戴得了花翎，一品大员的顶戴和王爷同料不同形，明黄与金黄差一字就是两种身份。书名听雨，写的却全是白天的事。</p>
+      <p class="small dimtxt" style="margin-top:14px">校字记：库本「干降二年」即乾隆二年之讹、「雍正午间」即雍正年间之讹，照录不代改；褡衤、衤契等拆字残形所在条目整体避引；库内另散见三百余处残字，引文全部避开。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 顶戴 ================= -->
+<section id="dingdai">
+  <div class="wrap">
+    <h2 class="sec">顶戴 · <em>形状比颜色要紧</em></h2>
+    <p class="sec-sub">同一块红宝石，王爷和大臣怎么分尊卑：看琢形。</p>
+    <div class="split">
+      <div class="obj-card">
+        <svg class="knobsvg" width="120" height="150" viewBox="0 0 120 150">
+          <ellipse cx="60" cy="96" rx="14" ry="24" fill="url(#gRed2)" stroke="#e8b08a"/>
+          <defs><linearGradient id="gRed2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e06a4a"/><stop offset="1" stop-color="#a03020"/></linearGradient></defs>
+          <path d="M28,130 Q60,142 92,130" fill="none" stroke="#453d2c" stroke-width="3"/>
+        </svg>
+        <h4>长圆如苞</h4>
+        <p>诸王、贝勒之顶</p>
+      </div>
+      <div class="obj-card">
+        <svg class="knobsvg" width="120" height="150" viewBox="0 0 120 150">
+          <polygon points="60,70 76,80 76,102 60,112 44,102 44,80" fill="url(#gRed2)" stroke="#e8b08a"/>
+          <path d="M28,130 Q60,142 92,130" fill="none" stroke="#453d2c" stroke-width="3"/>
+        </svg>
+        <h4>六楞</h4>
+        <p>一品大臣之顶</p>
+      </div>
+    </div>
+    <div class="quotebar"><q>诸王、贝勒之朝冠，用红宝石，一品大臣亦用红宝石，其分别处在一用长圆如苞，一用六楞</q>。<span class="src">卷一 · 帽顶</span></div>
+    <p class="lead">冠顶之制起于崇德元年，亲王冠上东珠颗数皆有定数。平日所戴的那颗顶，雍正五年才初创，头一版是这个价目。</p>
+    <div class="tray" id="tray">
+      <div class="tray-cell" data-i="0"><div class="knob-dot" style="background:radial-gradient(circle at 35% 30%,#e06a4a,#a03020)"></div><div class="tn">珊瑚</div><div class="tc">一二三品</div></div>
+      <div class="tray-cell" data-i="1"><div class="knob-dot" style="background:radial-gradient(circle at 35% 30%,#5478b8,#2c4066)"></div><div class="tn">青金石</div><div class="tc">四品</div></div>
+      <div class="tray-cell" data-i="2"><div class="knob-dot" style="background:radial-gradient(circle at 35% 30%,#eef3f8,#aebbc9)"></div><div class="tn">水晶</div><div class="tc">五六品</div></div>
+      <div class="tray-cell" data-i="3"><div class="knob-dot" style="background:radial-gradient(circle at 35% 30%,#e2b45a,#9a7226)"></div><div class="tn">金</div><div class="tc">七品以下</div></div>
+      <div class="tray-cell" data-i="4"><div class="knob-dot" style="background:radial-gradient(circle at 35% 30%,#d8d8d8,#8f8f8f)"></div><div class="tn">银</div><div class="tc">生监</div></div>
+    </div>
+    <div class="tray-note" id="trayNote">点一格，亮一格。三年之后另定新制，此版只行了三年。</div>
+    <div class="quotebar" style="margin-top:18px"><q>初制一二三品皆用珊瑚，四品用青金石，五六品均用水晶，七品以下俱用金顶，生监用银顶。</q>。<span class="src">卷一 · 帽顶</span></div>
+    <div class="rongjie">
+      <div class="paper">
+        <div class="cap">绒结的专利</div>
+        <p class="lead"><q>御用常冠、皇子常冠皆用红绒结顶（俗谓算盘结）。</q></p>
+        <p class="small dimtxt" style="margin-top:10px">帽顶一撮红绒怎么打结，也是身份：御用与皇子用算盘结，官民皆不得僭。</p>
+      </div>
+      <div class="obj-card" style="display:flex;flex-direction:column;justify-content:center">
+        <p class="small dimtxt">《通礼》还有反向的一条，管到庶民头上：</p>
+        <p class="lead" style="margin-top:10px"><q>民人冬夏帽上不得用红绒大结顶。</q></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 花翎 ================= -->
+<section id="hualing">
+  <div class="wrap">
+    <h2 class="sec">花翎 · <em>最贵的一根毛</em></h2>
+    <p class="sec-sub">孔雀尾上的翎眼，是清代官方认证的稀缺品：看眼数。</p>
+    <div class="feather-row">
+      <div class="feather-card">
+        <svg width="90" height="170" viewBox="0 0 90 170">
+          <path d="M20,165 C40,120 55,70 62,18" fill="none" stroke="url(#g5c)" stroke-width="3"/>
+          <ellipse cx="62" cy="26" rx="9" ry="13" fill="#2c5a56" stroke="#3f8f8a" stroke-width="2"/>
+          <ellipse cx="58" cy="70" rx="8" ry="11" fill="#2c5a56" stroke="#3f8f8a" stroke-width="2"/>
+          <ellipse cx="50" cy="112" rx="7" ry="10" fill="#2c5a56" stroke="#3f8f8a" stroke-width="2"/>
+        </svg>
+        <div class="fc-n"><q>三眼</q></div>
+        <div class="fc-w"><q>贝勒、贝子</q></div>
+      </div>
+      <div class="feather-card">
+        <svg width="90" height="170" viewBox="0 0 90 170">
+          <path d="M20,165 C40,120 55,70 62,18" fill="none" stroke="url(#g5c)" stroke-width="3"/>
+          <ellipse cx="62" cy="26" rx="9" ry="13" fill="#2c5a56" stroke="#3f8f8a" stroke-width="2"/>
+          <ellipse cx="58" cy="70" rx="8" ry="11" fill="#2c5a56" stroke="#3f8f8a" stroke-width="2"/>
+        </svg>
+        <div class="fc-n"><q>双眼</q></div>
+        <div class="fc-w"><q>镇国公</q></div>
+      </div>
+      <div class="feather-card">
+        <svg width="90" height="170" viewBox="0 0 90 170">
+          <path d="M20,165 C40,120 55,70 62,18" fill="none" stroke="url(#g5c)" stroke-width="3"/>
+          <ellipse cx="62" cy="26" rx="9" ry="13" fill="#2c5a56" stroke="#3f8f8a" stroke-width="2"/>
+        </svg>
+        <div class="fc-n"><q>单眼</q></div>
+        <div class="fc-w"><q>辅国公、镇国将军、辅国将军</q></div>
+      </div>
+    </div>
+    <div class="quotebar"><q>其例应随秩戴翎者，宗室中贝勒、贝子三眼花翎，镇国公双眼花翎，辅国公、镇国将军、辅国将军单眼花翎。</q><span class="src">卷一 · 花翎</span></div>
+    <div class="paradox">
+      <div class="pz"><span class="tag">亲王的难堪</span><br><q>亲郡王爵秩虽崇，非蒙特赐，转不能戴。</q></div>
+      <div class="pz"><span class="tag">皇子的待遇</span><br><q>凡皇子分封之亲郡王，皆不赐翎也。</q></div>
+    </div>
+    <p class="lead">这根毛不是清代发明。明人先拿鸟羽饰冠，公侯插雉尾，得宠的武将帽子上缀染色的天鹅翎，飘几根记几功。</p>
+    <div class="duilu">
+      <div class="du"><h5>明制 · 鹅翎</h5><q>《明舆服志》载，公侯伯朝服，皆加笼巾貂蝉，插雉尾</q><q>贵者飘三英，次者二英，兵部尚书王琼得赐一英，冠以下教场，自谓殊遇。</q></div>
+      <div class="du ming-t"><h5>清制 · 孔翠</h5><q>惟雉尾、鹅翎，不及本朝之孔翠壮观多矣。</q></div>
+    </div>
+    <div class="rail" id="rail">
+      <div class="rail-line"><div class="rail-fill" id="railFill"></div></div>
+      <div class="rail-stops">
+        <div class="rail-stop" data-i="0"><div class="rs-t">国初</div><div class="rs-d">随爵位配翎，眼数即身份</div></div>
+        <div class="rail-stop" data-i="1"><div class="rs-t">稍后</div><div class="rs-d">臣下想戴，只剩军功一条路</div></div>
+        <div class="rail-stop" data-i="2"><div class="rs-t">道光戊申</div><div class="rs-d">一次修谱的酬庸，口子开了</div></div>
+      </div>
+    </div>
+    <div class="quotebar"><q>此外翎枝最为难得，非军功不准保荐。</q>。<span class="src">卷一 · 花翎</span></div>
+    <div class="payoff" id="payoff">
+      <div class="ptag">口子开过之后</div>
+      <q>道光二十八年，恭修玉牒告成，提调官宗室增庆，经定亲王载铨奏奖赏戴花翎，此为别项劳绩保翎之始。</q>。<q>此例一开，则山陵奉安、海运事宜、劝捐、抽厘，均相率奉行矣。</q>
+      <div class="chiprow"><q><span>山陵奉安</span><span>海运事宜</span><span>劝捐</span><span>抽厘</span></q></div>
+    </div>
+    <p class="small dimtxt" style="margin-top:14px">点满三站，看这根毛怎么一步步掉价。</p>
+  </div>
+</section>
+
+<!-- ================= 朝珠 ================= -->
+<section id="chaozhu">
+  <div class="wrap">
+    <h2 class="sec">朝珠 · <em>记念见等差</em></h2>
+    <p class="sec-sub">一串一百零八颗的珠子，身份写在主串与三串小记念的颜色里。</p>
+    <div class="zhu-grid">
+      <div class="zhu-stage">
+        <svg id="zhuScene" viewBox="0 0 360 250" width="100%">
+          <g id="zhuBig"></g>
+          <g id="zhuJn"></g>
+        </svg>
+      </div>
+      <div>
+        <div class="zhu-rows">
+          <div class="zhu-row on" data-z="0"><span class="zn">诸王</span><span class="zd">主串珊瑚，记念用珍珠</span></div>
+          <div class="zhu-row" data-z="1"><span class="zn">一品大臣</span><span class="zd">主串珊瑚，记念五色</span></div>
+          <div class="zhu-row" data-z="2"><span class="zn">文五品、武四品以上</span><span class="zd">杂宝诸香串，记念珊瑚宝石</span></div>
+        </div>
+        <div class="zhu-cards">
+          <div class="zhu-card on"><q>诸王用珊瑚朝珠，珍珠记念。一品大臣许用珊瑚朝珠，五色记念。</q><span class="zc-x">卷一 · 朝珠</span></div>
+          <div class="zhu-card"><q>文职五品、武职四品以上，许用杂宝诸香朝珠，珊瑚宝石记念。</q><span class="zc-x">卷一 · 朝珠</span></div>
+          <div class="zhu-card"><q>惟东珠、珍珠者，上用而外，余皆禁之。</q><span class="zc-x">卷一 · 朝珠。东珠珍珠专属御用，臣下碰不得</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 黄马褂 ================= -->
+<section id="magua">
+  <div class="wrap">
+    <h2 class="sec">黄马褂 · <em>明黄与金黄之辨</em></h2>
+    <p class="sec-sub">两种黄，一字之差：一种跟着皇上走，一种跟着旗籍走。</p>
+    <div class="swatches">
+      <div class="swatch"><div class="sw ming-sw"></div><div class="swl"><b>明黄</b><i>扈从大臣所服之色</i></div></div>
+      <div class="swatch"><div class="sw jinh-sw"></div><div class="swl"><b>金黄</b><i>正黄旗官兵马褂之色</i></div></div>
+    </div>
+    <div class="quotebar"><q>巡行扈从大臣，如御前大臣、内大臣、内廷王大臣、侍卫什长，皆例准穿黄马褂，用明黄色。</q>。<q>正黄旗官员、兵丁之马褂，用金黄色。</q>。<span class="src">卷一 · 黄马褂</span></div>
+    <p class="lead">军功赏的黄马褂还分两等，差别不在颜色，在能不能再做。</p>
+    <div class="jin-toggle" id="jinToggle">
+      <button class="on" data-j="0">赏给</button>
+      <button data-j="1">赏穿</button>
+    </div>
+    <div class="jin-note" id="jinNote0">只得所赐那一件，供起来，穿坏一件少一件。</div>
+    <div class="jin-note" id="jinNote1" style="display:none">可按时节照式自制，常年有得穿，是活的荣誉。</div>
+    <div class="quotebar"><q>勋臣军功有赏给黄马褂、赏穿黄马褂之分，赏给只所赐一件，赏穿则可按时自做服用，亦明黄色。</q>。<span class="src">卷一 · 黄马褂</span></div>
+  </div>
+</section>
+
+<!-- ================= 八旗方位 ================= -->
+<section id="baqi">
+  <div class="wrap">
+    <h2 class="sec">八旗方位 · <em>星罗棋布</em></h2>
+    <p class="sec-sub">八旗在北京城里怎么站：两翼镶先正后，从东北、西北向城南排开。点旗点亮。</p>
+    <div class="quotebar"><q>八旗分两翼，左翼镶黄旗在东北，依次而南曰正白、镶白、正蓝；右翼正黄旗在西北，依次而南曰正红、镶红、镶蓝。</q>。<span class="src">卷一 · 八旗方位</span></div>
+    <div class="qi-rows">
+      <div class="qi-col">
+        <div class="qh"><span>左翼 · 起东北</span><span>往南排</span></div>
+        <div class="qi-line">
+          <div class="qi" data-q="1"><span class="flag x"></span><span class="qn">镶黄</span><span class="qx">东北</span></div>
+          <div class="qi" data-q="2"><span class="flag b-bai"></span><span class="qn">正白</span><span class="qx">东直门内</span></div>
+          <div class="qi" data-q="3"><span class="flag b-bai xbai"></span><span class="qn">镶白</span><span class="qx">朝阳门内</span></div>
+          <div class="qi" data-q="4"><span class="flag b-lan"></span><span class="qn">正蓝</span><span class="qx">东南</span></div>
+        </div>
+      </div>
+      <div class="qi-col">
+        <div class="qh"><span>右翼 · 起西北</span><span>往南排</span></div>
+        <div class="qi-line">
+          <div class="qi" data-q="5"><span class="flag b-huang"></span><span class="qn">正黄</span><span class="qx">西北</span></div>
+          <div class="qi" data-q="6"><span class="flag b-hong"></span><span class="qn">正红</span><span class="qx">西直门内</span></div>
+          <div class="qi" data-q="7"><span class="flag b-hong xhong"></span><span class="qn">镶红</span><span class="qx">阜成门内</span></div>
+          <div class="qi" data-q="8"><span class="flag b-lan xlan"></span><span class="qn">镶蓝</span><span class="qx">西南</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="lead dimtxt"><q>镶黄、正黄、正白为上三旗，护从御营</q>；下五旗隶诸王统带。内务府三旗另在皇城之内。</p>
+    <div class="quotebar"><q>若内务府三旗，则列在皇城以内。各按旗分，星罗棋布，拱绕宸居也。</q>。<span class="src">卷一 · 八旗方位</span></div>
+  </div>
+</section>
+
+<!-- ================= 笔帖式 ================= -->
+<section id="biteishi">
+  <div class="wrap">
+    <h2 class="sec">笔帖式 · <em>从抄写员到将相</em></h2>
+    <p class="sec-sub">制度之外，此书也记人的上升通道。这是一条最不起眼的。</p>
+    <div class="bitie">
+      <div>
+        <p class="lead">笔帖式，各衙门里做翻译、抄写的文职小官。书中却许它储才之名，将相大员偏偏多从这里起步。天聪五年一道谕旨，给这个名目定了型。</p>
+        <div class="quotebar"><q>笔帖式为文臣储材之地，是以将相大僚，多由此途历阶。</q>。<span class="src">卷一 · 笔帖式</span></div>
+      </div>
+      <div>
+        <div class="stepv">
+          <div class="st"><b>天命年间</b><br><span class="small dimtxt">文馆的大学士都加巴克什的名号，此号本是谙习文墨的意思</span></div>
+          <div class="st"><b>天聪五年</b><br><span class="small dimtxt"><q>文臣称巴克什者，俱停止，均称笔帖式</q>，此后笔帖式成为定名</span></div>
+          <div class="st"><b>其后</b><br><span class="small dimtxt">入关前制诰簿籍皆出其手，雍正年间尚可转翰林编修</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CODA ================= -->
+<section id="coda">
+  <div class="coda-flex">
+    <div class="vpassage"><q>本朝最重花翎，如古之珥貂也。</q></div>
+    <div class="vpassage vsrc">卷一 · 花翎</div>
+    <div class="coda-seal">衣冠</div>
+  </div>
+</section>
+
+<div class="wrap">
+<footer>
+  <p>文本来源：殆知阁古代文献简体库〈听雨丛谈〉（清人福格撰，史藏志存记录）· 仓库 <a href="https://github.com/robertsong/daizhige-daodu">github.com/robertsong/daizhige-daodu</a>。引文经脚本自库本锚点切片生成，去标点、空白归一后逐字比对通过。</p>
+  <p>时代局限：书中八旗尊卑、满汉之别与天命授受的叙事，皆当时制度与观念底色，照录立此存照，不代今人立论。</p>
+</footer>
+</div>
+
+<script>
+(function(){
+  var visited={},need=5;
+  function dress(cls){
+    var s=document.getElementById('scene');
+    ['r-qinwang','r-beile','r-gong','r-yipin','r-wupin'].forEach(function(c){s.classList.remove(c);});
+    s.classList.add(cls);
+    document.querySelectorAll('.rule-card').forEach(function(c){c.classList.remove('on');});
+    document.querySelector('.rc-'+cls.slice(2)).classList.add('on');
+    document.querySelectorAll('.dial').forEach(function(d){d.classList.toggle('on',d.dataset.r===cls);});
+    if(!visited[cls]){
+      visited[cls]=1;
+      var n=Object.keys(visited).length;
+      document.getElementById('prog').textContent=n+' / '+need;
+      if(n>=need){
+        document.getElementById('mirror').classList.add('clear');
+        document.body.classList.add('named');
+      }
+    }
+  }
+  document.querySelectorAll('.dial').forEach(function(d){
+    d.addEventListener('click',function(){dress(d.dataset.r);});
+  });
+  dress('r-beile');
+  visited={};document.getElementById('prog').textContent='0 / '+need;
+  document.getElementById('mirror').classList.remove('clear');
+  document.body.classList.remove('named');
+
+  document.querySelectorAll('#tray .tray-cell').forEach(function(c){
+    c.addEventListener('click',function(){c.classList.add('lit');});
+  });
+
+  var litN=0;
+  document.querySelectorAll('.rail-stop').forEach(function(st,i){
+    st.addEventListener('click',function(){
+      if(st.classList.contains('lit'))return;
+      st.classList.add('lit');litN++;
+      document.getElementById('railFill').style.width=(litN/3*100)+'%';
+      if(litN>=3)document.getElementById('payoff').classList.add('show');
+    });
+  });
+
+  var cols=[['#d4573b','#ece7db'],['#d4573b','#e2c14f'],['#c9a86a','#d4573b']];
+  function strand(g,x0,y0,x1,y1,n,r,col,curve){
+    for(var i=0;i<n;i++){
+      var t=i/(n-1),x=x0+(x1-x0)*t,y=y0+(y1-y0)*t+Math.sin(t*Math.PI)*curve;
+      var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',r);
+      c.setAttribute('fill',typeof col==='function'?col(t):col);
+      g.appendChild(c);
+    }
+  }
+  var big=document.getElementById('zhuBig');
+  strand(big,70,90,290,90,17,6.5,'#d4573b',46);
+  function jnSet(el,cMain,cBack){
+    while(el.firstChild)el.removeChild(el.firstChild);
+    var spec=[[100,108,104,166],[114,112,118,180],[128,116,132,190]];
+    spec.forEach(function(sp,i){
+      strand(el,sp[0],sp[1],sp[2],sp[3],5,3.2,i===0?cMain:cBack,6);
+    });
+  }
+  function zset(i){
+    document.querySelectorAll('.zhu-row').forEach(function(r,k){r.classList.toggle('on',k===i);});
+    document.querySelectorAll('.zhu-card').forEach(function(c,k){c.classList.toggle('on',k===i);});
+    var bigcol=i===2?'#c9a86a':'#d4573b';
+    while(big.firstChild)big.removeChild(big.firstChild);
+    strand(big,70,90,290,90,17,6.5,bigcol,46);
+    jnSet(document.getElementById('zhuJn'),
+      i===0?'#ece7db':(i===1?'#e2c14f':'#d4573b'),
+      i===0?'#ece7db':(i===1?'#3f8f8a':'#3d5a8f'));
+  }
+  document.querySelectorAll('.zhu-row').forEach(function(r){
+    r.addEventListener('click',function(){zset(+r.dataset.z);});
+  });
+  zset(0);
+
+  document.querySelectorAll('#jinToggle button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#jinToggle button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      document.getElementById('jinNote0').style.display=b.dataset.j==='0'?'':'none';
+      document.getElementById('jinNote1').style.display=b.dataset.j==='1'?'':'none';
+    });
+  });
+
+  document.querySelectorAll('.qi').forEach(function(q){
+    q.addEventListener('click',function(){q.classList.toggle('lit');});
+  });
+
+  var heroMain=document.getElementById('zhuMain');
+  strand(heroMain,118,318,182,318,9,3.6,'#d4573b',30);
+  var heroWang=document.getElementById('zhuWang');
+  strand(heroWang,128,330,140,368,4,2.6,'#ece7db',-16);
+})();
+</script>
+</body>
+</html>
