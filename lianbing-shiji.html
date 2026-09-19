@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>导读 · 练兵实纪</title>
+<style>
+:root{
+  --ink:#191917;
+  --ink2:#222120;
+  --paper:#e8e4dc;
+  --paper-dim:#cfc9bd;
+  --cinnabar:#c0453c;
+  --cinnabar-dim:#8f3730;
+  --line:#3a3733;
+  --line2:#514c45;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif SC","STSong","SimSun",serif;
+  line-height:1.85;
+  overflow-x:hidden;
+}
+q{quotes:none}
+.qv{font-style:normal}
+.mono{font-family:"Courier New",monospace}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+
+/* ===== 五方旗进度轨 ===== */
+#rail{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  height:44px;display:flex;align-items:center;gap:0;
+  background:rgba(25,25,23,.92);
+  border-bottom:1px solid var(--line);
+  padding:0 18px;
+}
+#rail .rl-name{
+  font-size:12px;letter-spacing:2px;color:var(--paper-dim);
+  margin-right:14px;white-space:nowrap;
+}
+#rail .rl-track{
+  position:relative;flex:1;height:2px;background:var(--line);
+}
+#rail .rl-fill{
+  position:absolute;left:0;top:0;height:2px;width:0;
+  background:var(--cinnabar);transition:width .15s linear;
+}
+#rail .rl-flag{
+  position:absolute;top:-11px;left:0;width:14px;height:22px;
+  background:var(--cinnabar);
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);
+  transition:left .15s linear;
+}
+#rail .rl-pct{
+  font-size:11px;color:var(--paper-dim);margin-left:12px;
+  min-width:34px;text-align:right;
+}
+
+/* ===== 首屏 敌台 ===== */
+#hero{
+  position:relative;min-height:100vh;
+  display:flex;align-items:flex-end;justify-content:center;
+  overflow:hidden;
+  cursor:pointer;
+}
+#hero svg{position:absolute;inset:0;width:100%;height:100%}
+.hero-inner{
+  position:relative;z-index:5;text-align:center;
+  padding:0 22px 9vh;
+}
+.hero-kicker{
+  font-size:13px;letter-spacing:6px;color:var(--paper-dim);
+  margin-bottom:14px;
+}
+.hero-title{
+  font-size:clamp(52px,10vw,96px);
+  letter-spacing:14px;text-indent:14px;
+  color:var(--paper);
+  opacity:0;transform:translateY(16px);
+  transition:opacity 1.1s ease,transform 1.1s ease;
+}
+.hero-title .ht-red{color:var(--cinnabar)}
+.hero-sub{
+  margin-top:10px;font-size:16px;letter-spacing:4px;color:var(--paper-dim);
+  opacity:0;transition:opacity 1.1s ease .25s;
+}
+.hero-seal{
+  display:inline-block;margin-top:22px;
+  border:2px solid var(--cinnabar);color:var(--cinnabar);
+  padding:8px 14px;font-size:15px;letter-spacing:6px;text-indent:6px;
+  transform:rotate(-4deg) scale(.6);opacity:0;
+  transition:all .7s cubic-bezier(.2,1.6,.4,1) .6s;
+}
+#hero.open .hero-title{opacity:1;transform:none}
+#hero.open .hero-sub{opacity:1}
+#hero.open .hero-seal{opacity:1;transform:rotate(-4deg) scale(1)}
+.hero-hint{
+  position:absolute;bottom:26px;left:0;right:0;z-index:6;
+  text-align:center;font-size:12px;letter-spacing:3px;color:var(--paper-dim);
+  animation:hintpulse 2.4s ease-in-out infinite;
+  pointer-events:none;
+}
+#hero.open .hero-hint{opacity:0;transition:opacity .8s}
+@keyframes hintpulse{0%,100%{opacity:.4}50%{opacity:1}}
+/* 炮窗 */
+.slit{fill:#0c0c0b;transition:fill .12s}
+.slit.fire{fill:#e8a13c}
+@keyframes boom{
+  0%{fill:#e8a13c;filter:drop-shadow(0 0 10px #e8a13c)}
+  100%{fill:#0c0c0b}
+}
+.slit.boom{animation:boom 1.1s ease-out forwards}
+.flash{opacity:0}
+.flash.go{animation:flashfade .5s ease-out forwards}
+@keyframes flashfade{0%{opacity:.85}100%{opacity:0}}
+
+/* ===== 分节通用 ===== */
+section{padding:86px 0 30px;position:relative}
+.sechead{display:flex;align-items:baseline;gap:16px;margin-bottom:8px}
+.secno{
+  font-size:13px;color:var(--cinnabar);letter-spacing:2px;
+  border:1px solid var(--cinnabar-dim);padding:2px 9px;white-space:nowrap;
+}
+.sechead h2{
+  font-size:clamp(26px,4vw,38px);letter-spacing:8px;font-weight:normal;
+}
+.secsub{font-size:14px;color:var(--paper-dim);letter-spacing:2px;margin-bottom:30px}
+q{color:var(--paper)}
+.qnote{font-size:12px;color:var(--paper-dim)}
+
+/* ===== 发书 凡例 ===== */
+.bookflow{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 20px}
+.bf-card{
+  flex:1 1 150px;border:1px solid var(--line);background:var(--ink2);
+  padding:16px 14px;position:relative;min-width:150px;
+}
+.bf-card .ord{
+  font-size:11px;color:var(--cinnabar);letter-spacing:2px;
+}
+.bf-card .nm{font-size:19px;letter-spacing:3px;margin:6px 0 4px}
+.bf-card .to{font-size:12px;color:var(--paper-dim)}
+.bf-card::after{
+  content:"";position:absolute;right:-8px;top:50%;width:8px;height:1px;
+  background:var(--line2);
+}
+.bf-card:last-child::after{display:none}
+.recite{
+  margin-top:26px;border-left:3px solid var(--cinnabar);
+  background:var(--ink2);padding:20px 24px;
+}
+.recite p{font-size:16px}
+.recite .big{font-size:20px;letter-spacing:1px;display:block;margin-bottom:8px}
+.recite .big q{color:var(--cinnabar)}
+
+/* ===== 点验场 阵位 ===== */
+.muster{
+  margin-top:20px;
+  border:1px solid var(--line);background:var(--ink2);
+  padding:34px 20px 26px;
+}
+.duizong{
+  width:120px;margin:0 auto 20px;text-align:center;
+}
+.duizong .dz-tag{
+  border:1px solid var(--paper-dim);padding:6px 0;font-size:15px;letter-spacing:4px;text-indent:4px;
+  background:var(--ink);
+}
+.formation{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;max-width:760px;margin:0 auto;justify-content:center;
+}
+.soldier{
+  border:1px solid var(--line);background:var(--ink);
+  padding:12px 12px 10px;cursor:pointer;position:relative;
+  transition:border-color .2s,transform .2s;
+}
+.soldier:hover{transform:translateY(-2px)}
+.soldier.lit{border-color:var(--cinnabar)}
+.soldier .rank{
+  position:absolute;top:-9px;left:10px;background:var(--ink2);
+  font-size:11px;color:var(--paper-dim);padding:0 6px;letter-spacing:1px;
+}
+.soldier .snm{font-size:18px;letter-spacing:2px}
+.soldier .sel{font-size:12px;color:var(--cinnabar);letter-spacing:1px}
+.soldier .wea{font-size:12px;color:var(--paper-dim);margin-top:3px}
+.hubing{
+  margin:14px auto 0;max-width:326px;
+}
+.muster-detail{
+  margin-top:24px;border-top:1px dashed var(--line2);padding-top:18px;
+  min-height:88px;
+}
+.muster-detail .md-src{font-size:12px;color:var(--paper-dim);letter-spacing:1px}
+.muster-detail p{margin-top:8px;font-size:15px}
+.gun-notes{margin-top:26px;display:grid;gap:12px}
+.gun-notes p{font-size:15px}
+
+/* ===== 旗鼓台 ===== */
+.drumdeck{
+  margin-top:20px;border:1px solid var(--line);background:var(--ink2);
+  padding:30px 24px;
+  display:grid;grid-template-columns:220px 1fr;gap:26px;align-items:start;
+}
+.dd-keys{display:grid;gap:14px}
+.dd-key{
+  border:1px solid var(--line2);background:var(--ink);
+  color:var(--paper);font-family:inherit;
+  font-size:18px;letter-spacing:6px;text-indent:6px;
+  padding:18px 0;cursor:pointer;transition:all .15s;
+}
+.dd-key:hover{border-color:var(--cinnabar)}
+.dd-key:active,.dd-key.hit{
+  background:var(--cinnabar);color:var(--ink);
+  box-shadow:0 0 0 3px var(--cinnabar-dim);
+}
+.dd-screen{
+  min-height:190px;border:1px dashed var(--line2);padding:18px 20px;
+  font-size:15px;position:relative;
+}
+.dd-screen .line{
+  opacity:0;transform:translateY(8px);
+  transition:all .5s ease;
+}
+.dd-screen .line.on{opacity:1;transform:none}
+.dd-screen .line q{color:var(--cinnabar)}
+.dd-screen .dd-tip{
+  color:var(--paper-dim);font-size:13px;letter-spacing:1px;
+}
+.instruments{
+  margin-top:18px;display:flex;flex-wrap:wrap;gap:8px;
+}
+.inst{
+  border:1px solid var(--line);padding:5px 12px;font-size:13px;
+  letter-spacing:2px;color:var(--paper-dim);background:var(--ink);
+}
+.inst b{color:var(--paper);font-weight:normal}
+
+/* ===== 止止堂 ===== */
+#zhizhi{background:linear-gradient(180deg,var(--ink) 0%,#1e1c1a 12%,#1e1c1a 88%,var(--ink) 100%)}
+.zz-stage{
+  margin-top:24px;border:1px solid var(--line2);background:#232019;
+  position:relative;
+}
+.zz-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 20px;border-bottom:1px solid var(--line);
+}
+.zz-head .zz-t{
+  font-size:14px;letter-spacing:4px;color:var(--paper-dim);
+}
+.zz-next{
+  background:none;border:1px solid var(--cinnabar);color:var(--cinnabar);
+  font-family:inherit;font-size:13px;letter-spacing:3px;text-indent:3px;
+  padding:7px 16px;cursor:pointer;transition:all .15s;
+}
+.zz-next:hover{background:var(--cinnabar);color:var(--ink)}
+.zz-next:disabled{opacity:.25;cursor:default;background:none;color:var(--cinnabar)}
+.zz-beats{padding:26px 26px 30px;display:grid;gap:22px}
+.zz-beat{opacity:.18;transition:opacity .7s ease;pointer-events:none}
+.zz-beat.on{opacity:1;pointer-events:auto}
+.zz-beat .bt-no{font-size:12px;color:var(--cinnabar);letter-spacing:3px}
+.zz-beat h3{font-size:20px;letter-spacing:4px;font-weight:normal;margin:4px 0 8px}
+.zz-beat p{font-size:15px}
+.zz-beat p q{color:var(--paper)}
+.zz-beat .zh-b{color:var(--cinnabar)}
+.qi-notes{
+  margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;
+}
+.qi-note{
+  border:1px solid var(--line);background:var(--ink2);padding:18px 20px;
+}
+.qi-note .who{
+  font-size:12px;color:var(--cinnabar);letter-spacing:3px;margin-bottom:6px;
+}
+.qi-note p{font-size:14px}
+
+/* ===== 军器簿 ===== */
+.ledger{margin-top:24px;border-top:2px solid var(--line2)}
+.ledger-row{
+  display:grid;grid-template-columns:150px 1fr;gap:0 22px;
+  padding:16px 4px;border-bottom:1px solid var(--line);
+  align-items:baseline;
+}
+.ledger-row .lr-name{
+  font-size:19px;letter-spacing:3px;color:var(--paper);
+}
+.ledger-row .lr-name small{
+  display:block;font-size:11px;color:var(--paper-dim);letter-spacing:1px;margin-top:2px;
+}
+.ledger-row p{font-size:14.5px}
+.ledger-row p q{color:var(--paper)}
+.ledger-row .lr-note{color:var(--paper-dim);font-size:13px}
+.qigan{
+  margin-top:26px;border:1px solid var(--cinnabar-dim);background:var(--ink2);
+  padding:22px 26px;text-align:center;
+}
+.qigan .qg-k{font-size:12px;letter-spacing:4px;color:var(--cinnabar)}
+.qigan p{font-size:19px;letter-spacing:2px;margin-top:8px}
+.qigan p q{color:var(--cinnabar)}
+.qigan .qg-sub{font-size:13px;color:var(--paper-dim);margin-top:10px}
+.animal{
+  margin-top:22px;border-left:3px solid var(--line2);padding:14px 20px;
+  background:var(--ink2);font-size:14px;color:var(--paper-dim);
+}
+.animal q{color:var(--paper-dim)}
+
+/* ===== 敌台解 剖面 ===== */
+.cutaway{
+  margin-top:24px;display:grid;grid-template-columns:1.05fr 1fr;gap:26px;align-items:start;
+}
+.cutaway svg{width:100%;height:auto;display:block}
+.hs{cursor:pointer}
+.hs circle{transition:all .2s}
+.hs.lit circle{fill:var(--cinnabar);fill-opacity:.9}
+.hs.lit text{fill:var(--ink)}
+.ct-quotes{display:grid;gap:10px}
+.ct-q{
+  border:1px solid var(--line);background:var(--ink2);padding:14px 18px;
+  font-size:14.5px;opacity:.4;transition:all .25s;cursor:pointer;
+}
+.ct-q.lit{opacity:1;border-color:var(--cinnabar)}
+.ct-q .cq-tag{font-size:11px;color:var(--cinnabar);letter-spacing:2px;display:block;margin-bottom:4px}
+.gear{
+  margin-top:22px;display:flex;flex-wrap:wrap;gap:8px;
+}
+.beacon{
+  margin-top:24px;border-top:1px dashed var(--line2);padding-top:18px;
+  font-size:14.5px;
+}
+
+/* ===== 戒牌墙 ===== */
+.walls{margin-top:24px}
+.wall-title{font-size:13px;letter-spacing:3px;color:var(--paper-dim);margin:18px 0 10px}
+.taboo-wall{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;
+}
+.taboo{
+  border:1px solid var(--line);background:#241d1b;
+  padding:14px 8px;text-align:center;cursor:pointer;
+  transition:all .2s;
+}
+.taboo .tb-x{
+  display:block;font-size:22px;color:var(--cinnabar);line-height:1;
+  transform:rotate(8deg);
+}
+.taboo .tb-nm{font-size:15px;letter-spacing:2px;margin-top:6px}
+.taboo:hover{border-color:var(--cinnabar)}
+.virtues{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.virtue{
+  border:1px solid var(--line);background:var(--ink2);padding:18px 20px;
+}
+.virtue .vt-nm{font-size:16px;letter-spacing:3px;color:var(--cinnabar);margin-bottom:6px}
+.virtue p{font-size:14px}
+
+/* ===== 尾屏 ===== */
+#coda{
+  padding:110px 0 60px;position:relative;
+}
+.coda-vert{
+  display:flex;flex-direction:row-reverse;justify-content:center;gap:34px;
+  min-height:420px;
+  padding:30px 10px;
+}
+.coda-col{
+  writing-mode:vertical-rl;
+  font-size:clamp(17px,2.4vw,22px);
+  letter-spacing:9px;line-height:2.4;
+  max-height:440px;
+}
+.coda-col q{color:var(--paper)}
+.coda-col.cdim{font-size:15px;color:var(--paper-dim);letter-spacing:7px;line-height:2}
+.coda-seal{
+  writing-mode:horizontal-tb;
+  align-self:flex-end;
+  border:2px solid var(--cinnabar);color:var(--cinnabar);
+  font-size:15px;letter-spacing:4px;text-indent:4px;
+  padding:9px 12px;transform:rotate(3deg);
+  margin-top:auto;
+}
+.coda-end{
+  margin-top:34px;text-align:center;font-size:13px;color:var(--paper-dim);letter-spacing:3px;
+}
+
+/* ===== 页脚 ===== */
+footer{
+  border-top:1px solid var(--line);
+  padding:30px 0 40px;font-size:12.5px;color:var(--paper-dim);
+}
+footer p{margin-bottom:4px}
+footer a{color:var(--paper-dim)}
+footer .fy{color:var(--cinnabar)}
+
+@media (max-width:720px){
+  .drumdeck{grid-template-columns:1fr}
+  .cutaway{grid-template-columns:1fr}
+  .ledger-row{grid-template-columns:1fr;gap:6px}
+  .coda-vert{gap:18px;min-height:340px}
+  .coda-col{max-height:320px}
+  #rail .rl-name{display:none}
+  .hero-title{letter-spacing:8px;text-indent:8px}
+}
+</style>
+</head>
+<body>
+
+<!-- 进度轨 -->
+<div id="rail" aria-hidden="true">
+  <span class="rl-name">练兵实纪 · 蓟门台墙</span>
+  <div class="rl-track">
+    <div class="rl-fill" id="rlfill"></div>
+    <div class="rl-flag" id="rlflag"></div>
+  </div>
+  <span class="rl-pct mono" id="rlpct">0%</span>
+</div>
+
+<!-- 首屏 -->
+<header id="hero">
+  <svg viewBox="0 0 1200 640" preserveAspectRatio="xMidYMid slice" role="img" aria-label="敌台夜色">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#101012"/>
+        <stop offset=".62" stop-color="#1b1a1c"/>
+        <stop offset="1" stop-color="#26221f"/>
+      </linearGradient>
+      <linearGradient id="wallg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2e2b27"/>
+        <stop offset="1" stop-color="#191917"/>
+      </linearGradient>
+    </defs>
+    <rect width="1200" height="640" fill="url(#sky)"/>
+    <circle cx="950" cy="120" r="46" fill="#d8d2c6" opacity=".82"/>
+    <circle cx="935" cy="112" r="42" fill="#101012" opacity=".55"/>
+    <!-- 远山 -->
+    <path d="M0,430 L140,360 L260,420 L420,340 L560,425 L720,355 L880,420 L1030,360 L1200,430 L1200,640 L0,640 Z" fill="#141413"/>
+    <!-- 边墙 -->
+    <path d="M0,505 L120,505 L120,470 L1230,470 L1230,640 L0,640 Z" fill="url(#wallg)"/>
+    <g stroke="#23211e" stroke-width="2">
+      <line x1="0" y1="505" x2="1230" y2="505"/>
+      <path d="M0,470 L40,470 L40,448 L80,448 L80,470 L160,470 L160,448 L200,448 L200,470 L280,470 L280,448 L320,448 L320,470 L400,470 L400,448 L440,448 L440,470 L520,470 L520,448 L560,448 L560,470 L640,470 L640,448 L680,448 L680,470 L760,470 L760,448 L800,448 L800,470 L880,470 L880,448 L920,448 L920,470 L1000,470 L1000,448 L1040,448 L1040,470 L1120,470 L1120,448 L1160,448 L1160,470 L1230,470" fill="none" stroke-width="3"/>
+    </g>
+    <!-- 空心敌台 -->
+    <g id="tower">
+      <rect x="470" y="300" width="260" height="230" fill="#262320"/>
+      <rect x="470" y="300" width="260" height="230" fill="none" stroke="#33302b" stroke-width="3"/>
+      <rect x="458" y="282" width="284" height="22" fill="#2b2824"/>
+      <rect x="470" y="304" width="260" height="6" fill="#1c1a18"/>
+      <!-- 中层箭窗 -->
+      <g>
+        <rect class="slit" id="slit1" x="520" y="360" width="26" height="40" rx="2"/>
+        <rect class="slit" id="slit2" x="587" y="360" width="26" height="40" rx="2"/>
+        <rect class="slit" id="slit3" x="654" y="360" width="26" height="40" rx="2"/>
+      </g>
+      <!-- 台门 -->
+      <rect x="576" y="452" width="48" height="78" fill="#121110"/>
+      <rect x="576" y="452" width="48" height="78" fill="none" stroke="#33302b" stroke-width="2"/>
+      <!-- 上层楼橹 -->
+      <rect x="494" y="216" width="212" height="66" fill="#2b2824"/>
+      <rect x="494" y="216" width="212" height="66" fill="none" stroke="#3a3630" stroke-width="2"/>
+      <g fill="#211f1c">
+        <rect x="502" y="196" width="18" height="20"/><rect x="530" y="196" width="18" height="20"/>
+        <rect x="558" y="196" width="18" height="20"/><rect x="586" y="196" width="18" height="20"/>
+        <rect x="614" y="196" width="18" height="20"/><rect x="642" y="196" width="18" height="20"/>
+        <rect x="670" y="196" width="28" height="20"/>
+      </g>
+      <rect x="560" y="238" width="80" height="24" fill="#141312"/>
+      <!-- 旗 -->
+      <line x1="600" y1="150" x2="600" y2="196" stroke="#4a453d" stroke-width="3"/>
+      <path d="M600,150 L664,162 L600,176 Z" fill="#c0453c"/>
+    </g>
+    <!-- 炮口闪光 -->
+    <g class="flash" id="flash1"><circle cx="533" cy="380" r="30" fill="#e8a13c"/></g>
+    <g class="flash" id="flash2"><circle cx="600" cy="380" r="30" fill="#e8a13c"/></g>
+    <g class="flash" id="flash3"><circle cx="667" cy="380" r="30" fill="#e8a13c"/></g>
+    <!-- 前景烟 -->
+    <rect x="0" y="560" width="1200" height="80" fill="#161514"/>
+  </svg>
+  <div class="hero-inner">
+    <div class="hero-kicker">殆知阁导读 · 四百八十七</div>
+    <h1 class="hero-title">练兵<span class="ht-red">实纪</span></h1>
+    <div class="hero-sub">戚继光 撰于蓟镇 · 一部发给队伍逐条背诵的操典</div>
+    <div><span class="hero-seal">束伍之教</span></div>
+  </div>
+  <div class="hero-hint">点台窗 · 燃号炮开卷</div>
+</header>
+
+<main class="wrap">
+
+<!-- 一 发书 -->
+<section id="fashu">
+  <div class="sechead"><span class="secno">壹</span><h2>发书</h2></div>
+  <p class="secsub">凡例十五条，先讲这本书怎么用：不是放着读的，是发下去背的。</p>
+  <p>隆庆二年，戚继光北调蓟州练兵。他面对的难题不止是北边的骑兵，还有一支久疏战阵、习气已成的边军。他的办法土得很：把练兵的道理拆成条款，印成小册，一级一级发下去。将领读<span class="qv">练将册</span>，士卒读练卒册，<q>每队一册，每一旗择一识字人诵训讲解，全队口念心记。</q></p>
+  <div class="bookflow">
+    <div class="bf-card"><span class="ord">第一发</span><div class="nm">练伍</div><div class="to">选兵编伍之将全习</div></div>
+    <div class="bf-card"><span class="ord">第二发</span><div class="nm">练耳目</div><div class="to">给将卒通习</div></div>
+    <div class="bf-card"><span class="ord">第三发</span><div class="nm">练手足</div><div class="to">教师分教武艺</div></div>
+    <div class="bf-card"><span class="ord">第四发</span><div class="nm">营阵行伍</div><div class="to">场操行营野营</div></div>
+    <div class="bf-card"><span class="ord">第五发</span><div class="nm">战约</div><div class="to">临阵节制</div></div>
+  </div>
+  <div class="recite">
+    <p class="big"><q>寻常比较武艺，点卯不到，小有过失，事干人众，应责治者，即以条约为赏罚。凡能诵五条免打一棍，如此行去，不待戒而自熟。</q></p>
+    <p>背书抵棍：军法与课本缝在了一起。他的算盘写在凡例末尾，<q>行伍之卒，愚夫也；介胃之士，未闲文墨者也</q>，所以条文必须<q>鄙近通俗，条约贵简</q>，士兵每次只发一册，<q>一日限定短条记三条</q>，一月记完两册。目标也放得很远：<q>兵法斗万众如一人，臂指节制之根要，咸属于此</q>，练到头，<q>一年之内，节制数十万，可以立就云。</q></p>
+  </div>
+</section>
+
+<!-- 二 点验场 -->
+<section id="muster">
+  <div class="sechead"><span class="secno">贰</span><h2>点验场</h2></div>
+  <p class="secsub">练伍法第一：一队十一人怎么挑、挑来用什么。点牌位看拣选与器械。</p>
+  <div class="muster">
+    <div class="duizong"><div class="dz-tag">队总 · 拣兵十一名</div></div>
+    <div class="formation" id="formation"></div>
+    <div class="soldier hubing" data-s="huo">
+      <span class="rank">第十一名</span>
+      <div class="snm">火兵</div>
+      <div class="sel">拣选 · 庸碌可役</div>
+      <div class="wea">铁尖扁担 · 肩挑击刺</div>
+    </div>
+    <div class="muster-detail" id="musterDetail">
+      <p class="dd-tip">点阵位牌，看这一兵怎么挑、拿什么。</p>
+    </div>
+  </div>
+  <div class="gun-notes">
+    <p>册式解里他把道理挑明：<q>鸟铳远射极准，长刀近用先及</q>，一兵两器，远近都占。再看旧习，他就毫不客气：<q>弓矢远不如火器，命中不如鸟铳，而敌以坚甲当之，每每射不能入</q>，可大家照样不肯换，因为他看得穿：<q>缘上司抄阅偏于此耳</q>。</p>
+    <p>火器是命根，所以火器要有火器的纪律：<q>火器不精，不如无，今知以火器当敌而不知精，亦无埒也。</q>好汉也有去处，虽各部同属一营，<q>骁健伶俐好汉，须多归各头司，即暗寓选锋法矣</q>，选锋不立名目，藏在编制里。</p>
+  </div>
+</section>
+
+<!-- 三 旗鼓台 -->
+<section id="qigu">
+  <div class="sechead"><span class="secno">叁</span><h2>旗鼓台</h2></div>
+  <p class="secsub">练耳目：耳只听金鼓，目只看旗帜。亲手试试这道军令。</p>
+  <div class="drumdeck">
+    <div class="dd-keys">
+      <button class="dd-key" id="keyGu">擂鼓</button>
+      <button class="dd-key" id="keyJin">鸣金</button>
+    </div>
+    <div class="dd-screen" id="ddScreen">
+      <p class="dd-tip">旗鼓台演令。先立总纲：<q>各官兵，耳只听金鼓之声，目只看旗帜之色。</q><q>不拘何项人员，口来分付，决不许听之。</q></p>
+      <p class="line" id="lineGu">鼓声不绝，<q>便前面是水火，也须跳入。</q></p>
+      <p class="line" id="lineJin">鸣金该止，<q>就前面贝财缎帛好马匹，亦不许一回顾。</q>门禁放行只认信物：<q>应查令旗、令箭、令票者，便是主将自来，三件物内必有一件方放，无亦不准放。</q></p>
+    </div>
+  </div>
+  <p style="margin-top:20px">一套嗓子管一营进退，所以他给声音立户口：笛号第二，喇叭第三，哱啰第四，铜锣第五，羯鼓第六，摔钹、炮号、釭号各占一条，一声一义，不许混用。</p>
+  <div class="instruments">
+    <span class="inst"><q>明笛号</q></span>
+    <span class="inst"><q>明喇叭</q></span>
+    <span class="inst"><q>明哱啰</q></span>
+    <span class="inst"><q>明铜锣</q></span>
+    <span class="inst"><q>明羯鼓</q></span>
+    <span class="inst"><q>明摔钹</q></span>
+    <span class="inst"><q>明炮号</q></span>
+  </div>
+</section>
+
+<!-- 四 止止堂 -->
+<section id="zhizhi">
+  <div class="sechead"><span class="secno">肆</span><h2>止止堂</h2></div>
+  <p class="secsub">杂集里的登坛口授：庚午年夏，他给麾下将领上课，先分扇，再讲船。</p>
+  <div class="zz-stage">
+    <div class="zz-head">
+      <span class="zz-t">登坛口授 · 三幕</span>
+      <button class="zz-next" id="zzNext">开讲</button>
+    </div>
+    <div class="zz-beats">
+      <div class="zz-beat" id="zzBeat1">
+        <span class="bt-no">第一幕 · 分扇</span>
+        <h3><q>位有贵贱，身无贵贱</q></h3>
+        <p><q>时惟庚午夏六月，诸边新台，肇建过半</q>，练兵之事重新提起。六月廿一日，东路西路协守、各路游击参将齐聚三屯。当日<q>辰鼓戒严，我兵主肃整冠服，盛列威仪，升帐启辕门</q>，诸将戎装趋跪，礼毕闭门，兵主降容悦色，延入止止堂。<q>坐顷。天气正暑，诸将士汗下如雨，莫敢有挥之者。</q>他也不训话，先<q>出吴扇百千余柄，自超以至吹鼓手，各给一把</q>，又摘园中瓜分切，随后一句定分寸：<q>位有贵贱，身无贵贱，自兵主而下以至士识皆两叶。</q>满堂这才弃热就凉，把这一课当成了异数。</p>
+      </div>
+      <div class="zz-beat" id="zzBeat2">
+        <span class="bt-no">第二幕 · 一只船</span>
+        <h3><q>此非三间房子</q></h3>
+        <p>坐定开讲，他指着共坐之处发问，自己作答：<q>此非三间房子，乃是一只船，且漏，又当风波之中，若睡的自睡，坐的自坐，仇人反目，各不同心，将船被风浪飘冲打碎，彼时无分贤愚，无分恩仇，都是溺死。</q>同船之谊不讲情面，<q>遭此之际，便是异心仇人，既在一船，说不得平日不相识，说不得平日仇怨</q>，只有共患共难一条路。</p>
+      </div>
+      <div class="zz-beat" id="zzBeat3">
+        <span class="bt-no">第三幕 · 带罪的鬼</span>
+        <h3>还是谁便益</h3>
+        <p>有人拿阵亡与偷生算账，他答得极冷：<q>死是免不得死，只是多活几日，做了个带罪的鬼。</q>偷活者<q>夸他便益</q>，可<q>立庙祭祀，天报忠臣，子孙兴旺，还是谁便益？</q>诸将默然。课这才转入正题：蓟镇之形与八边不同，先说地形，再说将官之习。</p>
+      </div>
+    </div>
+  </div>
+  <div class="qi-notes">
+    <div class="qi-note">
+      <div class="who">储练通论 · 论将</div>
+      <p><q>将之于兵，殆人身之有心乎？</q><q>心蔽于物，将蔽于心，一而已矣。</q></p>
+    </div>
+    <div class="qi-note">
+      <div class="who">储练通论 · 文武</div>
+      <p><q>夫人无二身，则文武无二道</q>，<q>材艺之美，必有不二之心</q>，昼夜在公，<q>即有一尺之材，必尽一尺之用</q>。</p>
+    </div>
+    <div class="qi-note">
+      <div class="who">储练通论 · 练将胆</div>
+      <p><q>理明而后识定，识定而后利害不挠，利害不挠而胆不壮者，未之有也。</q>胆不是吼出来的，是教明白的。为将之才短缺，他叹<q>夫天下危，注意将，今固其时矣</q>，故请开武学，立师长，<q>师道立而善人多</q>。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 五 军器簿 -->
+<section id="junqi">
+  <div class="sechead"><span class="secno">伍</span><h2>军器簿</h2></div>
+  <p class="secsub">军器制解：一册武器台账，条条写造法，页页嫌匠人偷工。</p>
+  <div class="qigan">
+    <span class="qg-k">军中秘诀</span>
+    <p><q>称干比戈，用众首务。</q></p>
+    <p class="qg-sub"><q>一向边塞不较量异用之术，惟以敌为师，彼以何器，我即以本器当之。</q>他不服这条老路：俗谚说伤敌三千、自折八百，那是硬碰的算法，他要的是<q>杀人三千，我不损一</q>。</p>
+  </div>
+  <div class="ledger">
+    <div class="ledger-row">
+      <div class="lr-name">鸟铳<small>附长刀</small></div>
+      <p>远则举放，近则刀砍，一卒两用。册式解给的评价是<q>鸟铳远射极准</q>，可惜药子旧制粗谬，以致不准，他手里存着新法。</p>
+    </div>
+    <div class="ledger-row">
+      <div class="lr-name">虎蹲炮<small>骑兵营驮骡随行</small></div>
+      <p><q>火药每出八两，共备药三十出</q>，石子铅子分大小定数，两炮合用一副驮架，骡子驮着走。营里专设一名把总看管，书上就叫他管神器把总。</p>
+    </div>
+    <div class="ledger-row">
+      <div class="lr-name">镋钯<small>兼火箭</small></div>
+      <p><q>此器柄长八尺，粗可寸半，上用利刀，横以弯股</q>，两锋一脊；钯股能托火箭，所以钯箭并作一卒。</p>
+    </div>
+    <div class="ledger-row">
+      <div class="lr-name">线枪<small>透甲枪</small></div>
+      <p>北边旧器柄短刃秃，他改<q>铁头长二尺</q>，柄长七尺防砍防夺，<q>形稍扁，至锋稍薄，一谓之透甲枪。</q></p>
+    </div>
+    <div class="ledger-row">
+      <div class="lr-name">腰刀<small>造法辨工</small></div>
+      <p><q>铁要多炼，刃用纯钢</q>，平铲平削、削到刃口无肩，<q>妙尤在尖</q>。他顺手记账：近时匠役打厚刃、不肯平磨，侧锉了事，<q>砍入不深，刃芒一秃，即为顽铁</q>。</p>
+    </div>
+    <div class="ledger-row">
+      <div class="lr-name">大棒<small>鸭嘴头</small></div>
+      <p>马上加个鸭嘴头，<q>马上则戳，步下则击，罔不利矣</q>，农人扁担加装铁尖，也算农中战器。</p>
+    </div>
+    <div class="ledger-row">
+      <div class="lr-name">弓矢<small>存而不废</small></div>
+      <p>明知<q>弓矢远不如火器</q>，仍列在册，只因习难变，先记后改。</p>
+    </div>
+  </div>
+  <div class="animal">
+    练马的道理他讲得好玩：<q>习惯人与马意相通</q>，便如<q>使马如臂使指</q>。且看世人<q>有教虾蟆读书者，有令巨象声似喇叭吹者，有驯狮子者，有弄蝼蚁摆阵者</q>，蝼蚁极微，尚且习于人，何况战马。
+  </div>
+</section>
+
+<!-- 六 敌台解 -->
+<section id="ditai">
+  <div class="sechead"><span class="secno">陆</span><h2>敌台解</h2></div>
+  <p class="secsub">卷六开篇不谈阵，先谈墙：空心敌台，蓟门台墙上的碉楼。点图上圆点，看各层功效。</p>
+  <div class="cutaway">
+    <svg viewBox="0 0 520 420" role="img" aria-label="敌台剖面">
+      <rect width="520" height="420" fill="#1d1b19"/>
+      <path d="M0,360 L520,360 L520,420 L0,420 Z" fill="#232019"/>
+      <rect x="60" y="330" width="400" height="30" fill="#2b2824"/>
+      <path d="M60,330 L100,330 L100,312 L140,312 L140,330 L180,330 L180,312 L220,312 L220,330 L300,330 L300,312 L340,312 L340,330 L380,330 L380,312 L420,312 L420,330 L460,330 L460,312 L500,312 L500,330 L520,330" fill="none" stroke="#3a3630" stroke-width="3"/>
+      <!-- 台体剖面 -->
+      <rect x="190" y="120" width="140" height="210" fill="#2e2a25"/>
+      <rect x="205" y="170" width="110" height="90" fill="#191917"/>
+      <rect x="240" y="282" width="40" height="48" fill="#121110"/>
+      <rect x="176" y="104" width="168" height="18" fill="#332f29"/>
+      <rect x="200" y="60" width="120" height="44" fill="#2b2824"/>
+      <g fill="#211f1c">
+        <rect x="206" y="48" width="12" height="12"/><rect x="226" y="48" width="12" height="12"/>
+        <rect x="246" y="48" width="12" height="12"/><rect x="266" y="48" width="12" height="12"/>
+        <rect x="286" y="48" width="12" height="12"/><rect x="306" y="48" width="12" height="12"/>
+      </g>
+      <g fill="#0e0d0c">
+        <rect x="216" y="196" width="10" height="24"/><rect x="252" y="196" width="10" height="24"/><rect x="290" y="196" width="10" height="24"/>
+      </g>
+      <!-- 火炮示意 -->
+      <rect x="238" y="252" width="40" height="10" fill="#4a453d"/>
+      <circle cx="240" cy="300" r="5" fill="#c0453c"/>
+      <!-- 热点 -->
+      <g class="hs" data-q="ctq1" id="hs1">
+        <circle cx="160" cy="330" r="14" fill="#514c45"/>
+        <text x="160" y="335" text-anchor="middle" font-size="13" fill="#e8e4dc">基</text>
+      </g>
+      <g class="hs" data-q="ctq2" id="hs2">
+        <circle cx="160" cy="215" r="14" fill="#514c45"/>
+        <text x="160" y="220" text-anchor="middle" font-size="13" fill="#e8e4dc">窗</text>
+      </g>
+      <g class="hs" data-q="ctq3" id="hs3">
+        <circle cx="160" cy="82" r="14" fill="#514c45"/>
+        <text x="160" y="87" text-anchor="middle" font-size="13" fill="#e8e4dc">橹</text>
+      </g>
+      <g class="hs" data-q="ctq4" id="hs4">
+        <circle cx="365" cy="257" r="14" fill="#514c45"/>
+        <text x="365" y="262" text-anchor="middle" font-size="13" fill="#e8e4dc">炮</text>
+      </g>
+    </svg>
+    <div class="ct-quotes">
+      <div class="ct-q" id="ctq1" data-hs="hs1">
+        <span class="cq-tag">台基</span>
+        <q>下筑基与过墙平，外出一丈四五尺有余，内出五尺有余</q>，台身凸出墙外，火力可以打及墙根。
+      </div>
+      <div class="ct-q" id="ctq2" data-hs="hs2">
+        <span class="cq-tag">中层</span>
+        <q>中层空豁。四面箭窗</q>，士卒藏在台里，<q>军士暴立暑雨霜雪之下，无所藉庇</q>的旧苦从此免了。
+      </div>
+      <div class="ct-q" id="ctq3" data-hs="hs3">
+        <span class="cq-tag">上层</span>
+        <q>上层建楼橹，环以垛口</q>，内卫战卒，居高瞭望调度。
+      </div>
+      <div class="ct-q" id="ctq4" data-hs="hs4">
+        <span class="cq-tag">火效</span>
+        <q>下发火炮，外击敌人，敌矢不能及，敌骑不敢近。</q>一堵即溃、各队相望而走的旧局面，被这堵墙里的楼改掉了。
+      </div>
+    </div>
+  </div>
+  <div class="gear">
+    <span class="inst"><q>佛狼机八架</q></span>
+    <span class="inst"><q>子铳七十二门</q></span>
+    <span class="inst"><q>神快枪八杆</q></span>
+    <span class="inst"><q>合口铅子二千一百六十个</q></span>
+    <span class="inst"><q>每台百总一名，专管调度攻打</q></span>
+  </div>
+  <div class="beacon">
+    台之外还有墩。烽堠解开头是一声叹息：<q>自古守边，不过远斥堠，谨烽火。蓟镇以险可恃，烽火不修久矣。</q>如今墩台重修，小房隔作两半间，<q>向边外半间墩军住，向内半间百总住</q>，炕、米、锅灶、水缸、大木梆、发火草，一一开列，守边守成了过日子的清单。
+  </div>
+</section>
+
+<!-- 七 戒牌墙 -->
+<section id="jiepai">
+  <div class="sechead"><span class="secno">柒</span><h2>戒牌墙</h2></div>
+  <p class="secsub">练胆气四十三款，一半是军令，一半是体贴。</p>
+  <div class="walls">
+    <div class="wall-title">禁条六面 · 点牌见禁</div>
+    <div class="taboo-wall">
+      <div class="taboo"><span class="tb-x">禁</span><span class="tb-nm"><q>禁争殴</q></span></div>
+      <div class="taboo"><span class="tb-x">禁</span><span class="tb-nm"><q>禁喧哗</q></span></div>
+      <div class="taboo"><span class="tb-x">禁</span><span class="tb-nm"><q>禁窃盗</q></span></div>
+      <div class="taboo"><span class="tb-x">禁</span><span class="tb-nm"><q>禁博奕</q></span></div>
+      <div class="taboo"><span class="tb-x">禁</span><span class="tb-nm"><q>禁妖妄</q></span></div>
+      <div class="taboo"><span class="tb-x">禁</span><span class="tb-nm"><q>禁乖异</q></span></div>
+    </div>
+    <div class="wall-title">体恤三签</div>
+    <div class="virtues">
+      <div class="virtue">
+        <div class="vt-nm">辨真操</div>
+        <p>教场之外，处处是操：<q>平时在各歇家之时，若肯心心在当兵，起念一心，以杀贼为计，蓄养锐气，修治军装，讲明法令</q>，歇家也是课堂。</p>
+      </div>
+      <div class="virtue">
+        <div class="vt-nm">循士情</div>
+        <p><q>主将常察士卒饥饱劳逸，强弱勇怯，材技动静之情，使之依如父母。则和气生，气和则心齐。兵虽百万，指呼如一人。</q></p>
+      </div>
+      <div class="virtue">
+        <div class="vt-nm">公赏罚</div>
+        <p><q>如犯军令，便是亲子侄亦要依法施行，决不许报施恩仇。</q>拿军法报私怨的，按他所报的罪反坐。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 尾屏 -->
+<section id="coda">
+  <div class="coda-vert">
+    <div class="coda-col"><q>诚为有足之城，不秣之马也。</q></div>
+    <div class="coda-col cdim">敌要战，躲不开<br>敌不战，急不得</div>
+    <div class="coda-col"><q>一年之内，节制数十万，可以立就云。</q></div>
+    <div class="coda-seal">束伍</div>
+  </div>
+  <p class="coda-end">车营一成，行伍便是城墙自己长出了脚</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库 · 子藏兵家，引文经脚本与库内文件去标点归一逐字比对核验。</p>
+    <p>校字记：库本贝财缎帛、介胃、明金鼓号金、一语足该矣等形照录不归一。</p>
+    <p>仓库：<a href="https://github.com/robertsong/daizhige-daodu" target="_blank" rel="noopener">daizhige-daodu</a> · 上一篇：<a href="guitian-shihua.html">归田诗话</a></p>
+    <p class="fy">时代局限：本书为明代边镇练兵操典，所记军法赏罚、火器杀伐皆十六世纪边镇之实，照录存真，不代今人立论。</p>
+  </div>
+</footer>
+
+<noscript><style>.hero-title,.hero-sub,.hero-seal{opacity:1;transform:none}</style></noscript>
+<script>
+(function(){
+  "use strict";
+  /* 首屏 */
+  var hero=document.getElementById('hero');
+  var boomed=false;
+  function fire(){
+    if(hero.classList.contains('open'))return;
+    var ids=['slit1','slit2','slit3'];
+    var fl=['flash1','flash2','flash3'];
+    ids.forEach(function(id,i){
+      setTimeout(function(){
+        var s=document.getElementById(id);
+        s.classList.add('fire');
+        var f=document.getElementById(fl[i]);
+        f.classList.add('go');
+        setTimeout(function(){s.classList.remove('fire');s.classList.add('boom');},130);
+      },260*i);
+    });
+    setTimeout(function(){hero.classList.add('open');},820);
+  }
+  hero.addEventListener('click',fire);
+
+  /* 进度轨 */
+  var fill=document.getElementById('rlfill'),flag=document.getElementById('rlflag'),pct=document.getElementById('rlpct');
+  function onScroll(){
+    var h=document.documentElement;
+    var max=h.scrollHeight-h.clientHeight;
+    var p=max>0?h.scrollTop/max:0;
+    fill.style.width=(p*100)+'%';
+    flag.style.left='calc('+(p*100)+'% - 7px)';
+    pct.textContent=Math.round(p*100)+'%';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* 点验场 */
+  var roster=[
+    {n:'一二',rank:'第一、二名',nm:'鸟铳手',sel:'有力伶俐',wea:'鸟铳为长兵 · 双手刀短兵',
+     q:'以有力伶俐者二名，为一伍、二伍长，充鸟铳手，以鸟铳为长兵，仍习双手刀为短兵。',odd:true},
+    {n:'三四',rank:'第三、四名',nm:'快枪手',sel:'有力伶俐',wea:'长柄快枪 · 柄代棍',
+     q:'以有力伶俐者二名，为第三、第四，充快枪手，各执长柄快枪为长兵，近用柄代棍为短兵。',odd:false},
+    {n:'五六',rank:'第五、六名',nm:'镋钯手',sel:'有杀气',wea:'镋钯短兵 · 火箭长兵',
+     q:'以有杀气者二名，为第五、第六，各充镋钯手，以镋钯为短兵，兼火箭为长兵。',odd:true},
+    {n:'七八',rank:'第七、八名',nm:'刀棍手',sel:'有杀气能射',wea:'刀棍短兵 · 弓矢长兵',
+     q:'以有杀气能射者二名，为第七、第八，充刀棍手，以刀棍为短兵，以射为长兵。',odd:false},
+    {n:'九十',rank:'第九、十名',nm:'大棒手',sel:'有力习射',wea:'大棒短兵 · 弓矢长兵',
+     q:'以有力习射者二名，为第九、第十，充大棒手，以大棒为短兵，弓矢为长兵。',odd:true},
+    {n:'十一',rank:'第十一名',nm:'火兵',sel:'庸碌可役',wea:'铁尖扁担 · 听队长管束',
+     q:'以庸碌可役者一名，为第十一名，充火兵，听队长管束。',odd:false}
+  ];
+  var form=document.getElementById('formation');
+  var detail=document.getElementById('musterDetail');
+  roster.forEach(function(r,idx){
+    if(idx===roster.length-1)return;
+    var d=document.createElement('div');
+    d.className='soldier';
+    d.innerHTML='<span class="rank">'+r.rank+'</span><div class="snm">'+r.nm+'</div><div class="sel">拣选 · '+r.sel+'</div><div class="wea">'+r.wea+'</div>';
+    d.addEventListener('click',function(){
+      Array.prototype.forEach.call(form.children,function(c){c.classList.remove('lit');});
+      d.classList.add('lit');
+      detail.innerHTML='<span class="md-src">练伍法第一 · 选骑兵</span><p><q>'+r.q+'</q></p>';
+    });
+    form.appendChild(d);
+  });
+  var huo=document.querySelector('[data-s="huo"]');
+  huo.addEventListener('click',function(){
+    Array.prototype.forEach.call(form.children,function(c){c.classList.remove('lit');});
+    huo.classList.add('lit');
+    detail.innerHTML='<span class="md-src">练伍法第一 · 选骑兵</span><p><q>以庸碌可役者一名，为第十一名，充火兵，听队长管束。</q>火兵挑一根铁尖扁担，肩挑兼击刺。</p>';
+  });
+
+  /* 旗鼓台 */
+  var kg=document.getElementById('keyGu'),kj=document.getElementById('keyJin');
+  var lg=document.getElementById('lineGu'),lj=document.getElementById('lineJin');
+  kg.addEventListener('click',function(){
+    kg.classList.add('hit');kj.classList.remove('hit');
+    lg.classList.add('on');lj.classList.remove('on');
+  });
+  kj.addEventListener('click',function(){
+    kj.classList.add('hit');kg.classList.remove('hit');
+    lj.classList.add('on');lg.classList.remove('on');
+  });
+
+  /* 止止堂 */
+  var beats=[document.getElementById('zzBeat1'),document.getElementById('zzBeat2'),document.getElementById('zzBeat3')];
+  var btn=document.getElementById('zzNext');
+  var step=0;
+  var labels=['开讲','第二幕','第三幕','听完'];
+  btn.textContent=labels[0];
+  btn.addEventListener('click',function(){
+    if(step<beats.length){
+      beats[step].classList.add('on');
+      step++;
+      btn.textContent=labels[step]||'听完';
+      if(step===beats.length)btn.disabled=true;
+    }
+  });
+
+  /* 敌台解 */
+  Array.prototype.forEach.call(document.querySelectorAll('.hs'),function(h){
+    h.addEventListener('click',function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.hs'),function(x){x.classList.remove('lit');});
+      Array.prototype.forEach.call(document.querySelectorAll('.ct-q'),function(x){x.classList.remove('lit');});
+      h.classList.add('lit');
+      var q=document.getElementById(h.getAttribute('data-q'));
+      q.classList.add('lit');
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.ct-q'),function(q){
+    q.addEventListener('click',function(){
+      var hs=document.getElementById(q.getAttribute('data-hs'));
+      if(hs)hs.click();
+    });
+  });
+})();
+</script>
+</body>
+</html>
