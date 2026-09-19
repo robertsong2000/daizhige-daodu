@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>真灵位业图 · 仙衙</title>
+<style>
+:root{
+  --ink:#191917; --paper:#e8e4dc; --zhu:#c0453c; --zhud:#8e3630; --zhul:#d97b6c;
+  --faint:#a29a8b; --dim:#c7bfb0; --dimmer:#8f887a;
+  --panel:#201b19; --panel2:#262020; --line:#453a35; --night:#141010;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);
+  font-family:"Songti SC","STSong","Noto Serif CJK SC","SimSun",serif;
+  line-height:1.95;letter-spacing:.04em}
+q{quotes:none;font-style:normal}
+button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit}
+.sec{max-width:1020px;margin:0 auto;padding:80px 26px 60px}
+.shead{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:30px}
+.shead .no{font-size:13px;color:var(--zhu);letter-spacing:.2em}
+.shead h2{font-size:26px;font-weight:600;letter-spacing:.12em}
+.shead .gloss{font-size:13px;color:var(--faint);margin-left:auto;letter-spacing:.06em}
+.lead{color:var(--faint);font-size:15px;max-width:780px;margin-bottom:26px}
+.lead b{color:var(--dim);font-weight:600}
+.rv{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+.rv.on{opacity:1;transform:none}
+
+/* ===== hero ===== */
+#top{min-height:100vh;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:48px 18px 40px;overflow:hidden;background:var(--night)}
+#top::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,rgba(232,228,220,.022) 0 1px,transparent 1px 5px);pointer-events:none}
+.glow{position:absolute;left:50%;top:52%;width:760px;height:760px;transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(circle,rgba(192,69,60,.17) 0%,rgba(192,69,60,.05) 40%,transparent 68%);
+  opacity:0;transition:opacity 1.8s ease;pointer-events:none}
+#top.stamped .glow{opacity:1}
+.holder{position:relative;width:min(680px,94vw);min-height:300px;display:flex;align-items:center;justify-content:center}
+/* the seal block */
+.sealbig{width:150px;height:150px;border:4px solid var(--zhu);border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--zhu);font-size:52px;font-weight:700;letter-spacing:.06em;
+  writing-mode:vertical-rl;line-height:1.15;
+  filter:grayscale(.9);opacity:.16;transform:translateY(-150px) scale(1.22) rotate(-7deg);
+  transition:transform .5s cubic-bezier(.5,0,.8,.4),filter .3s,opacity .3s;position:relative}
+.sealbig::after{content:"";position:absolute;inset:7px;border:1px solid rgba(192,69,60,.5);border-radius:4px}
+.sealbig.go{transform:translateY(0) scale(1) rotate(-3deg);filter:grayscale(0);opacity:1;transition:transform .3s cubic-bezier(.2,.9,.3,1.2),filter .1s ease .28s,opacity .1s ease .28s}
+#top.stamped .sealbig{transform:translate(-200px,-16px) scale(.34) rotate(-14deg);filter:grayscale(.25);opacity:.8;transition:transform .65s cubic-bezier(.3,.7,.2,1) .55s,filter .45s ease .55s,opacity .45s ease .55s}
+/* stamped book title, appears like an ink print */
+.stitle{position:absolute;text-align:center;opacity:0;pointer-events:none}
+#top.stamped .stitle{opacity:1;transition:opacity .1s ease .42s}
+.stitle h1{font-size:clamp(34px,7.2vw,58px);font-weight:700;letter-spacing:.14em;color:var(--zhu);
+  text-shadow:0 0 22px rgba(192,69,60,.35)}
+#top.stamped .stitle h1{animation:inkout .95s cubic-bezier(.2,.7,.3,1) .45s both}
+@keyframes inkout{0%{clip-path:inset(0 100% 0 0);filter:blur(6px);opacity:.2}60%{filter:blur(.6px)}100%{clip-path:inset(0 0 0 0);filter:blur(0);opacity:1}}
+.stitle .kick{font-size:13px;color:var(--faint);letter-spacing:.5em;text-indent:.5em}
+.stitle .by{font-size:14px;color:var(--dim);letter-spacing:.2em;margin-top:10px}
+#top.stamped .stitle .kick,#top.stamped .stitle .by{animation:fadein 1.2s ease 1.15s both}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.stampbtn{margin-top:40px;font-size:15px;letter-spacing:.34em;text-indent:.34em;color:var(--paper);
+  border:1px solid var(--zhud);padding:11px 36px;background:rgba(192,69,60,.1);transition:background .3s,opacity .3s}
+.stampbtn:hover{background:rgba(192,69,60,.24)}
+#top.stamped .stampbtn{opacity:0;pointer-events:none}
+.hint0{margin-top:16px;font-size:12px;color:var(--dimmer);letter-spacing:.24em}
+#top.stamped .hint0{opacity:0}
+.sealmin{position:absolute;right:6px;bottom:6px;writing-mode:vertical-rl;font-size:17px;color:var(--zhu);
+  border:2px solid var(--zhu);border-radius:4px;padding:8px 4px;letter-spacing:.14em;
+  transform:rotate(-4deg) scale(1.8);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
+#top.stamped .sealmin{opacity:.9;transform:rotate(-4deg) scale(1);transition:opacity .14s cubic-bezier(.2,2,.4,1) 1.35s,transform .14s cubic-bezier(.2,2,.4,1) 1.35s}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:4px 16px 56px;background:var(--night)}
+.chips a{font-size:13px;letter-spacing:.18em;color:var(--faint);border:1px solid var(--line);padding:6px 15px;text-decoration:none;transition:color .3s,border-color .3s}
+.chips a:hover{color:var(--paper);border-color:var(--zhu)}
+
+/* ===== S1 章程 ===== */
+.gaoshen{border:3px double var(--zhud);background:var(--panel);padding:24px 26px 20px;margin-bottom:18px;position:relative}
+.gaoshen::before{content:"章程";position:absolute;top:-12px;left:22px;background:var(--ink);padding:0 10px;
+  font-size:12.5px;letter-spacing:.4em;color:var(--zhu)}
+.gaoshen .gn{font-size:13px;letter-spacing:.26em;color:var(--zhul);display:block;margin-bottom:8px}
+.gaoshen q{font-size:15.5px;line-height:2.15;display:block;color:var(--paper)}
+.gaoshen .note{font-size:13.5px;color:var(--faint);margin-top:10px;line-height:2}
+.gaoshen .note em{color:var(--dim);font-style:normal}
+.jiaozq{border:1px dashed var(--line);background:transparent;padding:16px 20px;font-size:13px;color:var(--faint);line-height:2.1;letter-spacing:.03em}
+.jiaozq b{color:var(--dim);font-weight:600}
+
+/* ===== S2 七阶衙署 ===== */
+.tiers{position:relative}
+.tiers::before{content:"";position:absolute;left:37px;top:10px;bottom:10px;width:2px;
+  background:linear-gradient(180deg,rgba(217,123,108,.75),rgba(192,69,60,.12));pointer-events:none}
+.flr{position:relative;margin:0 0 18px 0;border:1px solid var(--line);background:var(--panel);transition:border-color .3s}
+.flr::before{content:"";position:absolute;left:-6px;top:26px;width:14px;height:14px;border-radius:50%;
+  background:var(--ink);border:3px solid var(--lc);z-index:1}
+.flr-hd{display:flex;align-items:baseline;gap:16px;width:100%;text-align:left;padding:20px 22px;border-left:5px solid var(--lc);transition:background .3s}
+.flr-hd:hover{background:var(--panel2)}
+.flr-hd .rank{font-size:30px;font-weight:700;color:var(--lc);line-height:1;letter-spacing:0}
+.flr-hd .gname{font-size:18px;font-weight:600;letter-spacing:.1em}
+.flr-hd .post{font-size:13px;color:var(--dim);letter-spacing:.06em}
+.flr-hd .tog{margin-left:auto;font-size:13px;color:var(--dimmer);letter-spacing:.2em;white-space:nowrap}
+.flr-body{display:none;padding:6px 24px 26px;border-top:1px solid var(--line)}
+.flr.open .flr-body{display:block}
+.master{margin:18px 0 6px;padding:16px 18px;background:var(--panel2);border:1px solid var(--line)}
+.master .mn{font-size:12px;letter-spacing:.34em;color:var(--zhu);display:block;margin-bottom:6px}
+.master q{font-size:16.5px;line-height:2.05;color:var(--paper);display:block}
+.master .mnote{font-size:13px;color:var(--faint);margin-top:8px;line-height:2}
+.lanes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.lane{border:1px solid var(--line);padding:14px 16px 16px;min-width:0}
+.lane h4{font-size:12.5px;letter-spacing:.34em;color:var(--dim);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:12px;font-weight:600}
+.lane h4 span{color:var(--zhul)}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{border:1px solid var(--line);background:var(--ink);padding:7px 12px;font-size:13px;line-height:1.9;color:var(--dim)}
+.tag q{color:var(--paper)}
+.tag .ts{font-size:12px;color:var(--faint);margin-left:6px}
+.lanenote{font-size:13px;color:var(--faint);line-height:2;margin-top:12px}
+.lanenote b{color:var(--dim);font-weight:600}
+/* 圣王入籍牒 */
+.pu{margin-top:16px;border:1px solid var(--zhud);background:var(--panel2);padding:18px 20px}
+.pu h4{font-size:14px;letter-spacing:.3em;color:var(--zhul);margin-bottom:10px;font-weight:600}
+.pu .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pu .pi{border:1px solid var(--line);background:var(--ink);padding:10px 14px;font-size:13.5px;line-height:2}
+.pu .pi q{color:var(--paper)}
+.pu .pnote{font-size:13px;color:var(--faint);margin-top:12px;line-height:2}
+/* 太清则例 */
+.zeli{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.zl{border:1px solid var(--line);border-top:3px solid var(--zhu);background:var(--panel2);padding:14px 16px}
+.zl .zn{font-size:12px;letter-spacing:.3em;color:var(--zhul);display:block;margin-bottom:6px}
+.zl q{font-size:14px;line-height:2.05;color:var(--paper);display:block}
+.zl .zd{font-size:12.5px;color:var(--faint);margin-top:8px;line-height:2}
+/* 档案/点将杂签 */
+.arch{margin-top:14px;border-left:3px solid var(--zhu);background:var(--panel2);padding:14px 18px}
+.arch .an{font-size:12px;letter-spacing:.3em;color:var(--zhul);display:block;margin-bottom:8px}
+.arch q{font-size:14px;line-height:2.05;color:var(--paper);display:block;margin-bottom:6px}
+.arch .ad{font-size:13px;color:var(--faint);line-height:2}
+.total{margin-top:14px;text-align:center;font-size:15px;letter-spacing:.1em;color:var(--dim)}
+.total q{color:var(--zhul);font-size:17px}
+
+/* ===== S3 死后再业 ===== */
+.jobs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.jc{cursor:pointer}
+.jf,.jb{border:1px solid var(--line);padding:16px 16px 14px;display:flex;flex-direction:column;min-height:190px}
+.jf{background:var(--panel);border-top:3px solid var(--zhu)}
+.jf .jn{font-size:11.5px;letter-spacing:.3em;color:var(--dimmer);margin-bottom:8px}
+.jf q{font-size:14px;line-height:2;color:var(--paper)}
+.jf .jhint{margin-top:auto;font-size:11.5px;color:var(--dimmer);letter-spacing:.2em;text-align:right}
+.jb{display:none;background:var(--panel2);border-top:3px solid var(--zhud)}
+.jc.flip .jf{display:none}
+.jc.flip .jb{display:flex}
+.jb .jn{font-size:11.5px;letter-spacing:.3em;color:var(--zhul);margin-bottom:8px}
+.jb p{font-size:13px;color:var(--dim);line-height:2.05}
+.jb p b{color:var(--paper);font-weight:600}
+.jnote{margin-top:18px;border:1px dashed var(--line);padding:14px 18px;font-size:13px;color:var(--faint);line-height:2.1}
+.jnote b{color:var(--dim);font-weight:600}
+
+/* ===== 尾屏 ===== */
+#wei{min-height:78vh;display:flex;align-items:center;justify-content:center;background:var(--night);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden;padding:70px 18px}
+.finv{writing-mode:vertical-rl;height:max-content;max-height:78vh;display:flex;flex-direction:column-reverse;align-items:flex-start;gap:34px}
+.fcol{writing-mode:vertical-rl;height:max-content;font-size:clamp(24px,4.4vw,34px);letter-spacing:.28em;line-height:1.9;color:var(--paper);white-space:nowrap}
+.fcol q{color:var(--paper)}
+.fk{writing-mode:vertical-rl;height:max-content;font-size:13px;color:var(--faint);letter-spacing:.4em;white-space:nowrap;margin-top:8px}
+.fseal{writing-mode:vertical-rl;font-size:19px;color:var(--zhu);border:2px solid var(--zhu);border-radius:4px;
+  padding:10px 5px;letter-spacing:.16em;white-space:nowrap;transform:rotate(-3deg);margin-top:6px;align-self:flex-start}
+
+footer{border-top:1px solid var(--line);margin-top:0;padding:30px 26px 44px;max-width:1020px;margin:0 auto;
+  font-size:12.5px;color:var(--dimmer);line-height:2.2}
+footer a{color:var(--dim)}
+
+@media (max-width:860px){
+  .jobs{grid-template-columns:repeat(2,1fr)}
+  .lanes{grid-template-columns:1fr}
+  .pu .pgrid{grid-template-columns:1fr}
+  .zeli{grid-template-columns:1fr}
+  .flr-hd .post{display:none}
+}
+@media (max-width:520px){
+  .jobs{grid-template-columns:1fr}
+  .flr-hd .rank{font-size:24px}
+  #top.stamped .sealbig{opacity:0;transform:translateY(0) scale(.6);transition:opacity .5s ease .6s}
+}
+</style>
+</head>
+<body>
+
+<header id="top">
+  <div class="glow"></div>
+  <div class="holder">
+    <div class="sealbig" id="sealbig">位业</div>
+    <div class="stitle">
+      <div class="kick">神界也有一张编制表</div>
+      <h1>%%Q:qtitle%%</h1>
+      <div class="by">梁 陶弘景纂 / 唐末 闾丘方远重校</div>
+    </div>
+  </div>
+  <button class="stampbtn" id="btnStamp">启 匣 钤 印</button>
+  <div class="hint0">一册给神仙排座次的官簿</div>
+  <div class="sealmin">仙衙</div>
+</header>
+<nav class="chips">
+  <a href="#zhang">铨选章程</a>
+  <a href="#jie">七阶衙署</a>
+  <a href="#feng">酆都点将</a>
+  <a href="#ye">死后再业</a>
+  <a href="#wei">卷尾钤印</a>
+</nav>
+
+<section class="sec" id="zhang">
+  <div class="shead rv"><span class="no">壹</span><h2>铨选章程</h2><span class="gloss">序 · 自述修谱之法</span></div>
+  <p class="lead rv">天上有多少位神仙，谁先谁后，六朝以前没人说清过。陶弘景的办法很直接：<b>照着人间的朝廷来</b>。朝堂有品序，神界也该有；他把自己当成吏部的考功郎，把满天神灵编成一册官簿。下面三条，是他写在卷首的规矩。</p>
+
+  <div class="gaoshen rv">
+    <span class="gn">其一 · 修谱缘起</span>
+    <q>%%Q:qxu1%%</q>
+    <div class="note">上观天象，下看山海，都不如先把<b>神界的班序</b>弄清楚。这句自白把全书的性质挑明：这不是神话合集，是一张官阶表。</div>
+  </div>
+  <div class="gaoshen rv">
+    <span class="gn">其二 · 下笔自惧</span>
+    <q>%%Q:qxu3%%</q>
+    <div class="note">排座次的人自己也发怵：万一品序排错、高下失当，怕是要被玄府问责、冥司记过。给神仙排座次排到<b>自己先写检讨</b>，六朝人认真起来颇可爱。</div>
+  </div>
+  <div class="gaoshen rv">
+    <span class="gn">其三 · 品级有别</span>
+    <q>%%Q:qxu4%%</q>
+    <q>%%Q:qxu5%%</q>
+    <div class="note">同叫真人，品第差着好几个台阶；同叫仙人，等级以千亿计。他打了个刻薄的比方：乡巴佬头一回进京城，把穿朱衣的小吏当成大官，好比句骊人初到中国，逢人便喊参军。</div>
+  </div>
+  <div class="jiaozq rv"><b>照录之例</b>：库本经过历代传抄与扫描，讹字不少，像荀或（彧）、老聘（聃）、颛项（顼）、部鉴（郄鉴）诸形，本页引文一律照录不改，另见文末说明。</div>
+</section>
+
+<section class="sec" id="jie">
+  <div class="shead rv"><span class="no">贰</span><h2>七阶衙署</h2><span class="gloss">自玉清至酆都 · 层层开门</span></div>
+  <p class="lead rv">全谱一纵七层：最上层天尊端坐，往下每层一位主官，左右两廊列班。神奇的是，往下走到第三层开始出现熟面孔，走到第七层，几乎就是一份<b>三国两晋名人名册</b>。点开每一层，看看谁的编制落在哪一层。</p>
+
+  <div class="tiers rv">
+
+    <div class="flr open" style="--lc:#d97b6c">
+      <button class="flr-hd"><span class="rank">壹</span><span class="gname">玉清三元宫</span><span class="post">天尊首座 · 下不与下界相通</span><span class="tog">点此开层</span></button>
+      <div class="flr-body">
+        <div class="master">
+          <span class="mn">第一阶</span>
+          <q>%%Q:q1a%%</q>
+          <div class="mnote">全书最高一阶。主官一人占着两套名号，即后世熟知的元始天尊，头衔之繁复从第一行就开始。</div>
+        </div>
+        <div class="lanes">
+          <div class="lane">
+            <h4>左位 <span>道君诸君</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q1b1%%</q></span>
+              <span class="tag"><q>%%Q:q1b2%%</q></span>
+              <span class="tag"><q>%%Q:q1b3%%</q></span>
+              <span class="tag"><q>%%Q:q1b4%%</q></span>
+            </div>
+          </div>
+          <div class="lane">
+            <h4>右位 <span>帝君诸君</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q1c1%%</q></span>
+              <span class="tag"><q>%%Q:q1c2%%</q></span>
+              <span class="tag"><q>%%Q:q1c3%%</q></span>
+            </div>
+            <div class="lanenote">留意最后一位：<b>后世独掌天庭的玉皇大帝，在这张榜上只是右位列名</b>，中位都没进。玉皇信仰要到唐宋才升格，此谱是更早的格局。</div>
+          </div>
+        </div>
+        <div class="arch">
+          <span class="an">层注</span>
+          <q>%%Q:q1d%%</q>
+          <div class="ad">玉清境自成衙门：下界诸事一概不接，太微天帝有事也得亲自上来办。九宫以上、上清以下的仙官，才有资格来赴宴。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flr" style="--lc:#c96f5c">
+      <button class="flr-hd"><span class="rank">贰</span><span class="gname">上清境</span><span class="post">万道之主 · 上清派祖师团列班</span><span class="tog">点此开层</span></button>
+      <div class="flr-body">
+        <div class="master">
+          <span class="mn">第二阶</span>
+          <q>%%Q:q2a%%</q>
+          <div class="mnote">这一层是全书最有私心的一层。陶弘景本人是上清派宗师，他把<b>本门师承整整齐齐写进了第二层</b>：茅盈、许穆、许翙父子，传道的杨君，还有魏夫人。三清里的太上老君要到第四层去。</div>
+        </div>
+        <div class="lanes">
+          <div class="lane">
+            <h4>左位 <span>师承连环注</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q2l%%</q></span>
+              <span class="tag"><q>%%Q:q2b%%</q></span>
+              <span class="tag"><q>%%Q:q2c%%</q></span>
+              <span class="tag"><q>%%Q:q2d%%</q></span>
+              <span class="tag"><q>%%Q:q2e%%</q></span>
+              <span class="tag"><q>%%Q:q2f%%</q></span>
+              <span class="tag"><q>%%Q:q2k%%</q></span>
+            </div>
+            <div class="lanenote">几乎每条小注都在标关系：<b>谁的弟子、谁又是谁的师父</b>，像一条荐举链。杨君即杨羲，许君即许穆，上清经就是靠杨许一系降授成书的。</div>
+          </div>
+          <div class="lane">
+            <h4>女真位 <span>独立编制</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q2w%%</q></span>
+              <span class="tag"><q>%%Q:q2h%%</q></span>
+              <span class="tag"><q>%%Q:q2i%%</q></span>
+              <span class="tag"><q>%%Q:q2j%%</q></span>
+            </div>
+            <div class="lanenote">女仙单开一廊。魏华存是上清派实际的开山祖师之一；九华真妃注明晋时降真于茅山，<b>降真事件直接写进编制表</b>；董双成等一串是西王母身边的侍女团。</div>
+          </div>
+        </div>
+        <div class="arch">
+          <span class="an">右位首条</span>
+          <q>%%Q:q3n%%</q>
+          <div class="ad">壬辰之年当再降生：一位预约了下凡日期的后圣。道教末世论里，这位后圣要在太平之世降临度人，等于给整个衙门挂了一块未来的招牌。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flr" id="wang" style="--lc:#ba6350">
+      <button class="flr-hd"><span class="rank">叁</span><span class="gname">太极宫</span><span class="post">太平主 · 圣王诸子入籍层</span><span class="tog">点此开层</span></button>
+      <div class="flr-body">
+        <div class="master">
+          <span class="mn">第三阶</span>
+          <q>%%Q:q3a%%</q>
+          <div class="mnote">这位主官姓李，又记壬辰之年下教、号太平主，指向的都是老君一系的神格在太极层的化身。而真正让这层出名的，是左右两廊的<b>凡间圣王</b>。</div>
+        </div>
+        <div class="pu">
+          <h4>圣王入籍牒</h4>
+          <div class="pgrid">
+            <div class="pi"><q>%%Q:q3b%%</q></div>
+            <div class="pi"><q>%%Q:q3c%%</q></div>
+            <div class="pi"><q>%%Q:q3d%%</q></div>
+            <div class="pi"><q>%%Q:q3e%%</q></div>
+            <div class="pi"><q>%%Q:q3o%%</q></div>
+          </div>
+          <div class="pnote">孔丘授太极上真公，颜回领三天司真的侍郎衔；轩辕黄帝挂玄圃真人；舜靠九转神丹入九疑山成道；夏禹受九跚法于锺山真人，治水记功，周穆王因昆仑之行的记载入编；帝尧只列一个名字，连小注都省了。<b>一部上古史，在神界集体落了编制</b>。诸子也没闲着：老聃（库本讹作老聘）排右位末尾，庄周领了个韦编郎的郎官衔。</div>
+        </div>
+        <div class="lanes">
+          <div class="lane">
+            <h4>左位 <span>方外诸公</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q3h%%</q></span>
+              <span class="tag"><q>%%Q:q3i%%</q></span>
+              <span class="tag"><q>%%Q:q3j%%</q></span>
+            </div>
+          </div>
+          <div class="lane">
+            <h4>右位 <span>伉俪与辩士</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q3p%%</q></span>
+              <span class="tag"><q>%%Q:q3q%%</q></span>
+              <span class="tag"><q>%%Q:q3k%%</q></span>
+              <span class="tag"><q>%%Q:q3g%%</q></span>
+            </div>
+            <div class="lanenote">萧史弄玉一对夫妻分列右位；司马季主是汉初长安有名的卜者，注明受剑解之道。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flr" id="ze" style="--lc:#a85a4c">
+      <button class="flr-hd"><span class="rank">肆</span><span class="gname">太清境</span><span class="post">太上老君坐镇，编制细则最密</span><span class="tog">点此开层</span></button>
+      <div class="flr-body">
+        <div class="master">
+          <span class="mn">第四阶</span>
+          <q>%%Q:q4a%%</q>
+          <div class="mnote">三清里名声最大的太上老君，在这张榜上只排第四，职掌倒是写得极实在：<b>下临万民</b>。天师道祖师天师道祖师张道陵列左位第一，正一之教与三天法师两个头衔齐全。</div>
+        </div>
+        <div class="zeli">
+          <div class="zl">
+            <span class="zn">则例一 · 任期</span>
+            <q>%%Q:q4c%%</q>
+            <div class="zd">五岳之君五百年一换届。神界不但有编制，还有<b>任期与换届</b>。</div>
+          </div>
+          <div class="zl">
+            <span class="zn">则例二 · 递补</span>
+            <div class="zd" style="margin-bottom:6px">河侯、河伯诸缺，库本注得直白：</div>
+            <q>%%Q:q4c2%%</q>
+            <div class="zd">河伯这个位子是<b>得道之人递补</b>的。凡人修仙修到最后，目标是拿一个神界事业编。</div>
+          </div>
+          <div class="zl">
+            <span class="zn">则例三 · 兵额</span>
+            <q>%%Q:q4d%%</q>
+            <div class="zd">四员将军名下<b>各领十万天兵</b>。神界武备也记账。</div>
+          </div>
+          <div class="zl">
+            <span class="zn">则例四 · 条奏</span>
+            <q>%%Q:q4g%%</q>
+            <div class="zd">太清东宫真官的职能：学道之人章奏通进，归他们受理。等于一张<b>公文流转图</b>。</div>
+          </div>
+        </div>
+        <div class="lanes">
+          <div class="lane">
+            <h4>散位名刺 <span>方术诸家</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q4f%%</q></span>
+              <span class="tag"><q>%%Q:q4h%%</q></span>
+              <span class="tag"><q>%%Q:q4i%%</q></span>
+              <span class="tag"><q>%%Q:q4j%%</q></span>
+              <span class="tag"><q>%%Q:q4k%%</q></span>
+              <span class="tag"><q>%%Q:q4e%%</q></span>
+            </div>
+            <div class="lanenote">读法全在小注里：元始天王注明是<b>西王母之师</b>，原来王母也有老师；墨翟条注宋大水解，彭铿即彭祖，注西入流沙；葛洪只在括号里补一句隐罗浮山，炼丹家本人入编，毫不张扬。</div>
+          </div>
+          <div class="lane">
+            <h4>左位首条 <span>天师</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q4b%%</q></span>
+            </div>
+            <div class="lanenote">鬼谷先生、张子房、东方朔等条亦在本层，方技、纵横、滑稽各色人等同列一廊。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flr" style="--lc:#96524a">
+      <button class="flr-hd"><span class="rank">伍</span><span class="gname">九宫</span><span class="post">尚书省 · 一位由司命升上来的主官</span><span class="tog">点此开层</span></button>
+      <div class="flr-body">
+        <div class="master">
+          <span class="mn">第五阶</span>
+          <q>%%Q:q5a%%</q>
+          <div class="mnote">九宫尚书张奉，履历写得一板一眼：河内人，先在河北做司命禁保侯，如今升任太极仙陟公，兼领北面职位。小注里还有召公奭：<b>周初名臣也在递补之列</b>。</div>
+        </div>
+        <div class="lanes">
+          <div class="lane">
+            <h4>右位 <span>老臣列班</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q5b%%</q></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flr" style="--lc:#844a45">
+      <button class="flr-hd"><span class="rank">陆</span><span class="gname">华阳洞天</span><span class="post">中茅君主治 · 地仙人事档案库</span><span class="tog">点此开层</span></button>
+      <div class="flr-body">
+        <div class="master">
+          <span class="mn">第六阶</span>
+          <q>%%Q:q6a%%</q>
+          <div class="mnote">茅家三兄弟里排第三位的中茅君主政华阳洞天。这层是<b>地仙散位</b>的大本营：没有显赫神职的修仙者，都挂在这里。</div>
+        </div>
+        <div class="lanes">
+          <div class="lane">
+            <h4>散位 <span>地仙杂录</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q6c%%</q></span>
+              <span class="tag"><q>%%Q:q6d%%</q></span>
+              <span class="tag"><q>%%Q:q6g%%</q></span>
+              <span class="tag"><q>%%Q:q6f%%</q></span>
+              <span class="tag"><q>%%Q:q6i%%</q></span>
+            </div>
+            <div class="lanenote">施存的注最妙：孔门三千弟子中得道的那一个。葛玄条自带小传，注明乘虎使鬼、位在太极宫；扁鹊门下五位弟子整整齐齐编成一班。</div>
+          </div>
+          <div class="lane">
+            <h4>女真宫 <span>集体户口</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q6b%%</q></span>
+            </div>
+            <div class="lanenote">一座易迁宫住着八十三人，一座含真台将近两百，<b>全是女仙</b>。按宫登记造册，像两座集体宿舍的名册。</div>
+          </div>
+        </div>
+        <div class="arch">
+          <span class="an">升转档案</span>
+          <q>%%Q:q6e%%</q>
+          <div class="ad">这是许肇的旧档案：早年在罗酆都做右司晨，隶属东明公。而第七层里另有一条：</div>
+          <q>%%Q:q6e2%%</q>
+          <div class="ad">同一个许肇，在谱里留下了迁转记录。一册神仙名单里藏着<b>人事调动</b>，此谱的官僚味到这个细节算是拉满了。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flr" id="feng" style="--lc:#6e3a3c">
+      <button class="flr-hd"><span class="rank">柒</span><span class="gname">酆都</span><span class="post">冥府之主，鬼神之宗，名人再就业层</span><span class="tog">点此开层</span></button>
+      <div class="flr-body">
+        <div class="master">
+          <span class="mn">第七阶</span>
+          <q>%%Q:q7a%%</q>
+          <div class="mnote">冥府之主同样有来历：出身炎帝一系的大庭氏，名履甲，以罗酆山为治所，<b>三千年一替</b>，任期比五岳还长六倍。</div>
+        </div>
+        <div class="lanes">
+          <div class="lane">
+            <h4>左位 <span>鬼官上卿</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q7b1%%</q></span>
+              <span class="tag"><q>%%Q:q7b2%%</q></span>
+              <span class="tag"><q>%%Q:q7c%%</q></span>
+              <span class="tag"><q>%%Q:q7d1%%</q></span>
+              <span class="tag"><q>%%Q:q7d2%%</q></span>
+              <span class="tag"><q>%%Q:q7d3%%</q></span>
+              <span class="tag"><q>%%Q:q7e%%</q></span>
+              <span class="tag"><q>%%Q:q7f%%</q></span>
+            </div>
+            <div class="lanenote">始皇做北帝上相，魏武帝做北帝太傅，周文王领北帝师，周武王管北斗，齐桓公晋文公各领一司。大禁晨一职，库本注明位比尚书令，在编者：<b>汉光武帝</b>。</div>
+          </div>
+          <div class="lane">
+            <h4>宾友侍从 <span>幕府残局</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q7l%%</q></span>
+              <span class="tag"><q>%%Q:q7t%%</q></span>
+              <span class="tag"><q>%%Q:q7u%%</q></span>
+              <span class="tag"><q>%%Q:q7g1%%</q></span>
+              <span class="tag"><q>%%Q:q7g2%%</q></span>
+              <span class="tag"><q>%%Q:q7h1%%</q></span>
+              <span class="tag"><q>%%Q:q7k%%</q></span>
+              <span class="tag"><q>%%Q:q7m%%</q></span>
+            </div>
+            <div class="lanenote">宾友是个微妙的衔：生前是谋臣名士，死后给鬼官做顾问。徐庶庞德同条并列，李广注汉将二字了事，郭嘉与刘封（刘备养子）一条同框。<b>曹魏与蜀汉的人物在冥府同殿称臣</b>，生前的仗，死后不打了。</div>
+          </div>
+        </div>
+        <div class="arch">
+          <span class="an">同僚记</span>
+          <q>%%Q:q7o%%</q>
+          <div class="ad">严白虎，被孙策所杀的吴地豪帅，死后领主非使者之职；而孙策自己就在同一层做宾友。<b>仇人同一个衙门</b>，名册读到这里难免会心。</div>
+        </div>
+        <div class="lanes">
+          <div class="lane">
+            <h4>武备杂职 <span>亦有人间名将</span></h4>
+            <div class="tags">
+              <span class="tag"><q>%%Q:q7i%%</q></span>
+              <span class="tag"><q>%%Q:q7n%%</q></span>
+              <span class="tag"><q>%%Q:q7p%%</q></span>
+              <span class="tag"><q>%%Q:q7s%%</q></span>
+              <span class="tag"><q>%%Q:q7r%%</q></span>
+              <span class="tag"><q>%%Q:q7q%%</q></span>
+            </div>
+            <div class="lanenote">四镇各领一万鬼兵，小镇数百再各领数千；东晋名臣陶侃死后封西河侯仍带兵数千；温峤领监海伯之职，治东海，位比大将军；南门亭长这个岗，先由郄鉴（库本讹作部鉴）出任，后来由周抚接替，<b>连门房岗哨都有交接班记录</b>。至于杀鬼三名，无名无姓，北帝常使。</div>
+          </div>
+        </div>
+        <div class="total">卷末总账：<q>%%Q:q7j%%</q></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="sec" id="ye">
+  <div class="shead rv"><span class="no">叁</span><h2>死后再业</h2><span class="gloss">酆都八席 · 生前身后对读</span></div>
+  <p class="lead rv">第七层里藏着全谱最好玩的一张表：六朝及前代的风云人物，死后在冥府各自领了一份差事。下面八席，<b>正面是死后的鬼职（照录库本），点开看生前身份</b>。</p>
+  <div class="jobs">
+    <div class="jc rv">
+      <div class="jf"><div class="jn">席一 · 鬼职</div><q>%%Q:q7b1%%</q><div class="jhint">点开对读</div></div>
+      <div class="jb"><div class="jn">生前</div><p><b>秦始皇</b>。扫六合的第一位皇帝，冥府官衔是北帝的上相。上相在鬼官里是顶格的职位，编者倒没亏待他。</p></div>
+    </div>
+    <div class="jc rv">
+      <div class="jf"><div class="jn">席二 · 鬼职</div><q>%%Q:q7b2%%</q><div class="jhint">点开对读</div></div>
+      <div class="jb"><div class="jn">生前</div><p><b>曹操</b>，魏武帝。生前挟天子，死后给北阴大帝当太傅，依旧做首席辅臣。陶弘景写此条时梁代去曹魏不过三百年。</p></div>
+    </div>
+    <div class="jc rv">
+      <div class="jf"><div class="jn">席三 · 鬼职</div><q>%%Q:q7t%%</q><div class="jhint">点开对读</div></div>
+      <div class="jb"><div class="jn">生前</div><p><b>汉高祖刘邦</b>。开国之君在冥府谋了个宾友的闲职，与谋臣名士同列，比秦始皇矮了不止一头。冥府的座次，也不完全照人间官衔。</p></div>
+    </div>
+    <div class="jc rv">
+      <div class="jf"><div class="jn">席四 · 鬼职</div><q>%%Q:q7u%%</q><div class="jhint">点开对读</div></div>
+      <div class="jb"><div class="jn">生前</div><p><b>孙策</b>，江东小霸王。死后在北明公帐下做宾友；被他杀掉的严白虎，在同一层当主非使者。冥府衙门里天天照面。</p></div>
+    </div>
+    <div class="jc rv">
+      <div class="jf"><div class="jn">席五 · 鬼职</div><q>%%Q:q7l%%</q><div class="jhint">点开对读</div></div>
+      <div class="jb"><div class="jn">生前</div><p><b>荀彧</b>（库本讹作荀或）。汉尚书令、曹操的首席谋臣，死后转任宾友，小注里那句魏武谋臣，像一句评语。</p></div>
+    </div>
+    <div class="jc rv">
+      <div class="jf"><div class="jn">席六 · 鬼职</div><q>%%Q:q7h1%%</q><div class="jhint">点开对读</div></div>
+      <div class="jb"><div class="jn">生前</div><p><b>刘备</b>，字玄德。昭烈皇帝在冥府领河北侯，与韩遂同衔。河北侯一职统属仙官，倒是给蜀汉留了体面。</p></div>
+    </div>
+    <div class="jc rv">
+      <div class="jf"><div class="jn">席七 · 鬼职</div><q>%%Q:q7m%%</q><div class="jhint">点开对读</div></div>
+      <div class="jb"><div class="jn">生前</div><p><b>李广</b>。飞将军的冥界待遇最简省：侍晨编制八人里的一个，小注只有汉将两个字。桃李不言，下自成蹊，名册上倒是一笔带过。</p></div>
+    </div>
+    <div class="jc rv">
+      <div class="jf"><div class="jn">席八 · 鬼职</div><q>%%Q:q7k%%</q><div class="jhint">点开对读</div></div>
+      <div class="jb"><div class="jn">生前</div><p><b>郭嘉</b>。曹操帐下最年轻的谋士，死后入中厩直事，编制四人，职如世间的尚书。同条的刘封，注明是刘备养子。</p></div>
+    </div>
+  </div>
+  <div class="jnote rv"><b>为什么是这些人</b>：这份鬼官名册几乎是一部三国两晋名人录，而编者陶弘景活在南朝宋齐梁之际。他把记忆里的权贵、名将、谋士一一安进冥府编制，既是对幽冥秩序的想象，也像给本朝的人事圈画一张去路图。谁做上相、谁做宾友、谁只配守门，这份<b>冥府人事学</b>，本身就是一份六朝人物评论。</div>
+</section>
+
+<section id="wei">
+  <div class="finv rv">
+    <div class="fcol"><q>%%Q:qend1%%</q></div>
+    <div class="fcol"><q>%%Q:qend2%%</q></div>
+    <div class="fk">神仙世界里最诚实的一句话</div>
+    <div class="fseal">位业印</div>
+  </div>
+</section>
+
+<footer>
+  <div>文本来源：殆知阁简体库 %%Q:qtitle%%，道藏洞真部之谱箓类，去空白约七千五百字，一卷</div>
+  <div>引文经脚本自库本锚点切片生成，去标点归一后逐字比对核验；白话部分为导读撰述；库本讹字照录不改，另见本页照录之例</div>
+  <div>时代局限：全谱以人间门第官阶拟神界秩序，教派本位与鬼官人事皆六朝观念底色，照录立此存照，不代今人立论</div>
+  <div>殆知阁导读系列 · <a href="https://github.com/robertsong/daizhige-daodu" target="_blank" rel="noopener">github.com/robertsong/daizhige-daodu</a></div>
+</footer>
+
+<script>
+(function(){
+  var top = document.getElementById('top');
+  document.getElementById('btnStamp').addEventListener('click', function(){
+    document.getElementById('sealbig').classList.add('go');
+    setTimeout(function(){ top.classList.add('stamped'); }, 360);
+  });
+  document.querySelectorAll('.flr-hd').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+  document.querySelectorAll('.jc').forEach(function(card){
+    card.addEventListener('click', function(){ card.classList.toggle('flip'); });
+  });
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
+  }, {threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(n){ io.observe(n); });
+})();
+</script>
+</body>
+</html>
