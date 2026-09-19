@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>饮流斋说瓷 · 一窑天青</title>
+<style>
+:root{
+  --bg:#191917; --paper:#e8e4dc; --dim:#6f695a; --faint:#4a463a;
+  --bamboo:#5f9270; --bamboo-soft:rgba(95,146,112,.13); --line:#2c2a22;
+  --card:#211f19; --card2:#26241c; --kilnfire:#d4572a; --glz:#8fb6c9;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--paper);font-family:"Songti SC","STSong","Noto Serif SC","SimSun",serif;line-height:1.9}
+q{quotes:none}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.wrap{max-width:980px;margin:0 auto;padding:0 26px}
+button{font-family:inherit;cursor:pointer}
+section{padding:74px 0 30px}
+.shead{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sno{font-size:12px;color:var(--bamboo);letter-spacing:.3em}
+.shead h2{font-size:27px;font-weight:600;letter-spacing:.14em}
+.snote{font-size:13.5px;color:var(--dim);margin-bottom:26px}
+.snote q{color:#b8b09c}
+.rv{opacity:0;transform:translateY(14px);transition:all .8s}
+.rv.on{opacity:1;transform:none}
+
+/* ---------- HERO 封窑开窑 ---------- */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;position:relative;overflow:hidden;padding:60px 20px 70px;
+  background:radial-gradient(1100px 560px at 50% -10%,#22201b 0%,var(--bg) 62%)}
+.hkick{font-size:13px;letter-spacing:.42em;color:var(--dim);margin-bottom:6px}
+.stage{width:min(470px,88vw);margin:4px auto 0}
+.stage svg{width:100%;display:block}
+.kilndoor{transition:opacity .9s ease .2s, transform .9s ease .2s}
+.lit .kilndoor{opacity:0;transform:translateY(-16px)}
+.kilnglow{opacity:0;transition:opacity 1.4s ease .8s}
+.lit .kilnglow{opacity:1}
+.saggarlid{transition:transform 1s cubic-bezier(.3,1.2,.4,1) var(--d,1.2s)}
+.lit .saggarlid{transform:translateY(-26px)}
+.risebowl{opacity:0;transform:translateY(24px);transition:all 1.1s cubic-bezier(.2,1,.3,1) var(--d,2.4s)}
+.lit .risebowl{opacity:1;transform:none}
+.ignite{margin-top:16px;background:transparent;border:1px solid var(--bamboo);color:var(--bamboo);
+  font-size:16px;letter-spacing:.5em;padding:12px 34px 12px 40px;border-radius:2px;
+  transition:all .5s;position:relative;z-index:5}
+.ignite:hover{background:var(--bamboo-soft)}
+.lit .ignite{opacity:0;pointer-events:none}
+.htitle{margin-top:12px;position:relative;display:inline-block}
+.htitle h1{font-size:clamp(54px,9.6vw,84px);letter-spacing:.2em;font-weight:600;line-height:1.2}
+.htitle h1 span{color:#262419;transition:color .9s, text-shadow .9s}
+.lit .htitle h1 span{color:var(--paper);text-shadow:0 0 20px rgba(95,146,112,.35)}
+.lit .htitle h1 span:nth-child(1){transition-delay:3s}
+.lit .htitle h1 span:nth-child(2){transition-delay:3.25s}
+.lit .htitle h1 span:nth-child(3){transition-delay:3.5s}
+.lit .htitle h1 span:nth-child(4){transition-delay:3.75s}
+.lit .htitle h1 span:nth-child(5){transition-delay:4s}
+.hseal{position:absolute;right:-72px;bottom:4px;width:50px;height:50px;background:var(--bamboo);color:#161a15;
+  display:flex;align-items:center;justify-content:center;font-size:19px;letter-spacing:2px;
+  writing-mode:vertical-rl;border-radius:3px;transform:rotate(-7deg) scale(1.7);opacity:0;
+  transition:all .45s cubic-bezier(.2,1.4,.4,1) 4.5s;box-shadow:0 2px 14px rgba(0,0,0,.5)}
+.lit .hseal{opacity:.94;transform:rotate(-7deg) scale(1)}
+.htag{max-width:640px;margin:16px auto 8px;font-size:16px;color:#b8b09c;line-height:2.2;opacity:0;transform:translateY(8px);transition:all .8s 4.9s}
+.lit .htag{opacity:1;transform:none}
+.htag q{color:var(--paper)}
+.hsub{font-size:13.5px;color:var(--dim);letter-spacing:.18em;opacity:0;transition:opacity .8s 5.2s}
+.lit .hsub{opacity:1}
+.scrolldown{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--faint);letter-spacing:.4em}
+
+/* ---------- 两笺 ---------- */
+.notes2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.note{background:var(--card);border:1px solid var(--line);border-top:2px solid var(--bamboo);
+  padding:26px 26px 22px;border-radius:3px}
+.note h3{font-size:15px;color:var(--bamboo);letter-spacing:.3em;margin-bottom:12px}
+.note p{font-size:14.5px;color:#c4bcab;line-height:2.1}
+.note p b{color:var(--paper)}
+.chaprow{margin-top:24px;background:var(--card2);border:1px solid var(--line);border-radius:3px;padding:20px 24px}
+.chaprow .lab{font-size:12.5px;color:var(--dim);letter-spacing:.3em;margin-bottom:12px}
+.chaprow q{display:flex;flex-wrap:wrap;gap:8px}
+.chaprow i{font-style:normal;font-size:13.5px;color:#b8b09c;border:1px solid #3a372c;
+  padding:3px 12px;border-radius:2px;letter-spacing:.1em}
+
+/* ---------- 五窑 ---------- */
+.pichbanner{background:linear-gradient(100deg,rgba(143,182,201,.16),rgba(143,182,201,.03));
+  border:1px solid rgba(143,182,201,.35);border-radius:3px;padding:22px 26px;text-align:center;margin-bottom:24px}
+.pichbanner .bq{font-size:clamp(20px,3.4vw,27px);letter-spacing:.18em;color:#cfe0ea;line-height:2}
+.pichbanner .bfrom{font-size:12.5px;color:var(--dim);letter-spacing:.24em;margin-top:6px}
+.pichbanner q{color:inherit}
+.kilns{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.kiln{background:var(--card);border:1px solid var(--line);border-radius:3px;overflow:hidden;
+  display:flex;flex-direction:column}
+.kiln .karch{height:64px;display:flex;align-items:center;justify-content:center;position:relative;
+  background:linear-gradient(180deg,#2a2820,#211f19)}
+.kiln .karch svg{width:54px;height:44px}
+.kiln h3{text-align:center;font-size:19px;letter-spacing:.3em;margin:12px 0 2px;color:var(--paper)}
+.kiln .kwhere{text-align:center;font-size:12px;color:var(--dim);letter-spacing:.2em;margin-bottom:10px}
+.kiln .kbody{padding:0 20px 18px;font-size:13.5px;color:#bdb5a4;line-height:2.05;flex:1}
+.kiln .kbody q{display:block;color:#d8d1c0;margin-bottom:6px}
+.tales{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.tale{background:var(--card2);border:1px solid var(--line);border-radius:3px;padding:20px 24px}
+.tale h4{font-size:14px;color:var(--bamboo);letter-spacing:.24em;margin-bottom:8px}
+.tale p{font-size:13.5px;color:#bdb5a4;line-height:2.05}
+.tale q{color:#d8d1c0}
+
+/* ---------- 胎釉 ---------- */
+.bodies{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.bodies .bd{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:8px 16px;
+  font-size:14px;color:#c4bcab}
+.bodies .bd b{color:var(--bamboo);font-weight:600;margin-right:8px}
+.glazeways{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.gway{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:20px 24px}
+.gway h4{font-size:15px;color:var(--bamboo);letter-spacing:.3em;margin-bottom:8px}
+.gway p{font-size:13.5px;color:#bdb5a4;line-height:2.05}
+.gway q{color:#d8d1c0}
+.crazes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.craze{background:var(--card2);border:1px solid var(--line);border-radius:3px;padding:20px 24px}
+.craze h4{font-size:14px;color:var(--paper);letter-spacing:.22em;margin-bottom:8px}
+.craze p{font-size:13.5px;color:#bdb5a4;line-height:2.05}
+.craze q{color:#d8d1c0}
+.eggshell{background:linear-gradient(115deg,#26241c,#211f19);border:1px solid var(--line);
+  border-radius:3px;padding:24px 26px;display:flex;gap:22px;align-items:center}
+.eggshell svg{width:120px;flex:none}
+.eggshell p{font-size:14px;color:#c4bcab;line-height:2.1}
+.eggshell q{color:var(--paper)}
+
+/* ---------- 釉色墙 ---------- */
+.glazewrap{display:grid;grid-template-columns:1fr 300px;gap:22px;align-items:start}
+.fams{display:flex;flex-direction:column;gap:14px}
+.fam{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:14px 16px 12px}
+.famhead{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.famname{font-size:19px;color:var(--paper);letter-spacing:.2em}
+.famnote{font-size:12px;color:var(--dim);flex:1}
+.famcount{font-size:11px;color:var(--faint);letter-spacing:.15em}
+.wall{display:flex;flex-wrap:wrap;gap:6px}
+.glz{font-style:normal;font-size:12.5px;letter-spacing:.06em;color:#f0ece2;
+  background:var(--c);padding:3px 9px;border-radius:2px;cursor:pointer;
+  border:1px solid rgba(0,0,0,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.14);
+  transition:transform .18s, outline .18s;opacity:.92}
+.glz:hover{transform:translateY(-2px);opacity:1}
+.glz.act{outline:1.5px solid var(--paper);opacity:1;transform:translateY(-2px)}
+.bowlside{position:sticky;top:26px;background:var(--card2);border:1px solid var(--line);
+  border-radius:3px;padding:20px 20px 16px;text-align:center}
+.bowlside svg{width:100%;display:block}
+#glazepool,#glazewallp{fill:var(--glz);transition:fill .55s}
+.bowlcap{font-size:13px;color:#c4bcab;line-height:2;margin-top:10px;min-height:96px;text-align:left}
+.bowlname{font-size:15px;color:var(--bamboo);letter-spacing:.3em;margin-top:4px}
+.yingruanbox{margin-top:22px;background:var(--card2);border:1px solid var(--line);border-radius:3px;padding:20px 24px;
+  font-size:13.5px;color:#bdb5a4;line-height:2.1}
+.yingruanbox q{color:#d8d1c0}
+.yingruanbox b{color:var(--paper)}
+
+/* ---------- 款识 ---------- */
+.gyx{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
+.gycard{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:18px 20px;cursor:pointer;
+  transition:border-color .3s}
+.gycard.open{border-color:var(--bamboo)}
+.gycard h4{font-size:13.5px;color:var(--bamboo);letter-spacing:.2em;margin-bottom:6px}
+.gycard .ghead{font-size:13.5px;color:#c4bcab;line-height:1.9}
+.gycard .gbody{max-height:0;overflow:hidden;transition:max-height .5s;font-size:13px;color:#a89f8d;line-height:2}
+.gycard.open .gbody{max-height:200px}
+.gyverdict{background:linear-gradient(100deg,var(--bamboo-soft),transparent);border:1px solid var(--line);
+  border-radius:3px;padding:18px 24px;font-size:14px;color:#c4bcab;line-height:2.1;margin-bottom:26px}
+.gyverdict q{color:var(--paper)}
+.feet{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.foot{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:18px 18px 16px;cursor:pointer;
+  transition:border-color .3s}
+.foot.open{border-color:var(--bamboo)}
+.footring{width:104px;height:104px;margin:0 auto 12px;border-radius:50%;
+  border:9px solid #3a372c;display:flex;align-items:center;justify-content:center;position:relative;
+  background:#1d1b16;transition:border-color .4s}
+.foot.open .footring{border-color:var(--bamboo)}
+.footring::after{content:"";position:absolute;inset:14px;border-radius:50%;border:1px dashed #33302a}
+.footring span{font-size:14px;color:var(--paper);letter-spacing:.14em}
+.foot .fcase{font-size:12.5px;color:var(--dim);text-align:center;letter-spacing:.18em}
+.foot .fbody{max-height:0;overflow:hidden;transition:max-height .5s;font-size:13px;color:#bdb5a4;line-height:2}
+.foot.open .fbody{max-height:230px;margin-top:10px}
+.foot q{color:#d8d1c0}
+
+/* ---------- 然犀镜 ---------- */
+.rhino{background:radial-gradient(900px 420px at 50% 0%,#22201b,var(--bg));border:1px solid var(--line);
+  border-radius:3px;padding:28px 26px;text-align:center;margin-bottom:20px}
+.rhstage{width:min(420px,84vw);margin:0 auto}
+.rhstage svg{width:100%;display:block}
+.vase .flaw{opacity:0;transition:opacity .7s .3s}
+.lamped .vase .flaw{opacity:1}
+.rhlampglow{opacity:0;transition:opacity .9s}
+.lamped .rhlampglow{opacity:1}
+.rhbtn{margin-top:14px;background:transparent;border:1px solid var(--kilnfire);color:var(--kilnfire);
+  font-size:15px;letter-spacing:.4em;padding:10px 28px 10px 34px;border-radius:2px;transition:all .4s}
+.rhbtn:hover{background:rgba(212,87,42,.1)}
+.flawtags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:16px}
+.flawtags i{font-style:normal;font-size:12.5px;color:#d8b8a8;border:1px solid rgba(212,87,42,.4);
+  padding:3px 12px;border-radius:2px;letter-spacing:.14em;opacity:0;transition:opacity .6s var(--d,0s)}
+.lamped .flawtags i{opacity:1}
+.forgery{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px}
+.fcard{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:20px 24px}
+.fcard h4{font-size:14px;color:var(--kilnfire);letter-spacing:.22em;margin-bottom:8px}
+.fcard p{font-size:13.5px;color:#bdb5a4;line-height:2.05}
+.fcard q{color:#d8d1c0}
+.rankrow{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 18px}
+.rank{background:var(--card2);border:1px solid var(--line);border-radius:2px;padding:8px 16px;
+  font-size:13.5px;color:#c4bcab}
+.rank b{color:var(--kilnfire);font-weight:600;margin-left:8px}
+.punch{background:linear-gradient(100deg,rgba(212,87,42,.12),transparent);border:1px solid var(--line);
+  border-radius:3px;padding:18px 24px;font-size:15px;color:#d8d1c0;line-height:2.1;text-align:center}
+.punch q{color:var(--paper);font-size:17px;letter-spacing:.1em}
+
+/* ---------- 尾屏 ---------- */
+.coda{padding:90px 0 60px;display:flex;justify-content:center}
+.vpanel{display:flex;gap:34px;align-items:flex-start;justify-content:center;padding:20px 10px}
+.vcol{writing-mode:vertical-rl;font-size:21px;letter-spacing:.42em;color:#c9c1ae;line-height:1.7;
+  max-height:340px}
+.vcol .vq1{color:var(--paper);font-size:20px;letter-spacing:.32em}
+.vseal{writing-mode:vertical-rl;background:var(--bamboo);color:#161a15;font-size:17px;letter-spacing:.3em;
+  padding:14px 9px;border-radius:3px;transform:rotate(-6deg);align-self:center;box-shadow:0 2px 12px rgba(0,0,0,.5)}
+
+footer{border-top:1px solid #2c2a22;padding:34px 0 44px;color:#6f695a;font-size:13px;line-height:2.1}
+footer p{margin:0}
+
+@media (max-width:760px){
+  .notes2,.kilns,.tales,.glazeways,.crazes,.gyx,.feet,.forgery{grid-template-columns:1fr}
+  .glazewrap{grid-template-columns:1fr}
+  .bowlside{position:static}
+  .hseal{right:-58px}
+  .vcol{font-size:17px;max-height:300px}
+  section{padding:56px 0 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HERO 封窑开窑 ================= -->
+<header class="hero" id="hero">
+  <div class="hkick">殆知阁古籍导读 · 第四八十篇</div>
+  <div class="stage">
+    <svg viewBox="0 0 470 300" aria-hidden="true">
+      <defs>
+        <radialGradient id="kfire" cx="50%" cy="72%" r="70%">
+          <stop offset="0%" stop-color="#e8873c" stop-opacity=".85"/>
+          <stop offset="45%" stop-color="#c2531f" stop-opacity=".4"/>
+          <stop offset="100%" stop-color="#c2531f" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="kbody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#33302a"/><stop offset="100%" stop-color="#232119"/>
+        </linearGradient>
+      </defs>
+      <!-- 窑体：斜置龙窑剖面 -->
+      <g transform="rotate(-7 235 190)">
+        <rect x="60" y="90" width="350" height="170" rx="8" fill="url(#kbody)" stroke="#3d3a30" stroke-width="2"/>
+        <rect x="60" y="90" width="350" height="14" rx="6" fill="#3d3a30"/>
+        <!-- 投柴孔 -->
+        <circle cx="130" cy="88" r="7" fill="#191713" stroke="#4a463a"/>
+        <circle cx="200" cy="88" r="7" fill="#191713" stroke="#4a463a"/>
+        <circle cx="270" cy="88" r="7" fill="#191713" stroke="#4a463a"/>
+        <circle cx="340" cy="88" r="7" fill="#191713" stroke="#4a463a"/>
+        <!-- 窑膛 -->
+        <rect x="88" y="122" width="294" height="120" rx="6" fill="#14120e"/>
+        <rect class="kilnglow" x="88" y="122" width="294" height="120" rx="6" fill="url(#kfire)"/>
+        <!-- 匣钵垛 -->
+        <g fill="#2c2924" stroke="#45413a">
+          <g><rect x="112" y="196" width="46" height="30" rx="4"/><rect class="saggarlid" style="--d:1.1s" x="108" y="188" width="54" height="10" rx="4" fill="#3a372c"/></g>
+          <g><rect x="170" y="196" width="46" height="30" rx="4"/><rect class="saggarlid" style="--d:1.35s" x="166" y="188" width="54" height="10" rx="4" fill="#3a372c"/></g>
+          <g><rect x="228" y="196" width="46" height="30" rx="4"/><rect class="saggarlid" style="--d:1.6s" x="224" y="188" width="54" height="10" rx="4" fill="#3a372c"/></g>
+          <g><rect x="286" y="196" width="46" height="30" rx="4"/><rect class="saggarlid" style="--d:1.85s" x="282" y="188" width="54" height="10" rx="4" fill="#3a372c"/></g>
+          <g><rect x="141" y="158" width="46" height="26" rx="4"/><rect class="saggarlid" style="--d:2.1s" x="137" y="150" width="54" height="10" rx="4" fill="#3a372c"/></g>
+          <g><rect x="255" y="158" width="46" height="26" rx="4"/><rect class="saggarlid" style="--d:2.35s" x="251" y="150" width="54" height="10" rx="4" fill="#3a372c"/></g>
+        </g>
+        <!-- 升起的一盏 -->
+        <g class="risebowl" style="--d:2.5s">
+          <path d="M196 150 Q200 178 235 181 Q270 178 274 150 L262 150 Q260 170 235 173 Q210 170 208 150 Z" fill="#ded9cc"/>
+          <path d="M208 150 Q235 161 262 150 L262 145 Q235 155 208 145 Z" fill="#8fb6c9"/>
+          <rect x="222" y="181" width="26" height="7" rx="2" fill="#b8b09c"/>
+        </g>
+        <!-- 窑火 -->
+        <g class="kilnglow">
+          <path d="M118 236 Q126 214 140 224 Q146 204 160 216 Q166 200 176 214 Q190 206 190 226 Q198 238 178 240 L128 240 Q114 240 118 236Z" fill="#e8873c" opacity=".8"/>
+        </g>
+        <!-- 封门砖 -->
+        <g class="kilndoor">
+          <g fill="#3a372c" stroke="#4a463a">
+            <rect x="96" y="126" width="26" height="12"/><rect x="96" y="140" width="26" height="12"/>
+            <rect x="96" y="154" width="26" height="12"/><rect x="96" y="168" width="26" height="12"/>
+            <rect x="96" y="182" width="26" height="12"/><rect x="96" y="196" width="26" height="12"/>
+            <rect x="96" y="210" width="26" height="12"/><rect x="96" y="224" width="26" height="12"/>
+          </g>
+        </g>
+        <!-- 烟囱 -->
+        <rect x="368" y="52" width="26" height="44" rx="4" fill="#2c2924" stroke="#3d3a30"/>
+        <text x="381" y="46" text-anchor="middle" font-size="11" fill="#4a463a">烟</text>
+      </g>
+    </svg>
+  </div>
+  <button class="ignite" id="ignite">启 窑</button>
+  <div class="htitle"><h1><span>饮</span><span>流</span><span>斋</span><span>说</span><span>瓷</span></h1>
+    <div class="hseal">饮流</div></div>
+  <p class="htag">瓷居百工之首，因为它从来不是独力做成：<q>独至于瓷虽亦由人工而火候之浅深釉胎之粗细则兼藉天时舆地力而人巧乃可施焉</q>。<br>窑火这一门手艺的通论，清末民初的许之衡写成了十章。</p>
+  <div class="hsub">清末民初 · 许之衡守白 艺藏器物 去空白约三万八千字</div>
+  <div class="scrolldown">沿 窑 而 下</div>
+</header>
+
+<!-- ================= 两笺 ================= -->
+<section>
+  <div class="wrap">
+    <div class="shead rv"><span class="sno">壹</span><h2>开卷两笺</h2></div>
+    <p class="snote rv">一书一人，先递上名帖。</p>
+    <div class="notes2">
+      <div class="note rv">
+        <h3>著者笺</h3>
+        <p><b>许之衡，字守白，广东广州人。</b>以曲学鸣世，讲律吕宫调是本行，讲瓷却全用赏鉴家的眼睛：不堆考据，直接教你看釉、看胎、看款、看伪。书成于民国初年，上距清亡不过数年，宫廷旧藏散入市肆，他见的真东西，多半就是那批。</p>
+      </div>
+      <div class="note rv">
+        <h3>书名笺</h3>
+        <p><b>饮流斋，书斋名；饮流，取饮水思源之意。</b>落在瓷上正合适：一只碗端在手里，你喝的是水，它盛过的却是千年窑火。全书十章，<q>吾华制瓷可分为三大时期曰宋曰明曰清</q>，宋以前只存名目，清又细分五期，断代先立好坐标。</p>
+      </div>
+    </div>
+    <div class="chaprow rv">
+      <div class="lab">十章目录（库本次序照录）</div>
+      <q><i>槪说第一</i><i>槪窑第二</i><i>说胎釉第三</i><i>说彩色第四</i><i>说花绘第五</i><i>说欵识第六</i><i>说瓶罐第七</i><i>说杯盘第八</i><i>说杂具第九</i><i>说疵伪第十</i></q>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 说窑 ================= -->
+<section>
+  <div class="wrap">
+    <div class="shead rv"><span class="sno">贰</span><h2>说窑：五座名窑，一桩错案</h2></div>
+    <p class="snote rv">宋瓷的名单，瓷学家翻来覆去只有一句话：<q>吾华美术以制瓷为第一</q>。唐人先见过越窑的翠色，<q>九秋风露越窑开夺得千峰翠色来</q>；到清高宗题诗，已是在叹旧物将尽：<q>李唐越器人间无赵宋官窑晨星看</q>。柴窑的批状最出名，四句天青，是皇帝给定下的色标。</p>
+    <div class="pichbanner rv">
+      <div class="bq">「<q>雨过天青云破处者般颜色作将来</q>」</div>
+      <div class="bfrom">柴世宗批器式 · 陶录又记四诀</div>
+      <div class="bq" style="font-size:clamp(15px,2.4vw,19px);margin-top:8px">「<q>青如天明如镜薄如纸声如磬</q>」</div>
+    </div>
+    <div class="kilns">
+      <div class="kiln rv"><div class="karch"><svg viewBox="0 0 54 44"><path d="M9 44 L9 24 Q27 2 45 24 L45 44 Z" fill="none" stroke="#8fb6c9" stroke-width="2.4"/><circle cx="27" cy="26" r="4" fill="#8fb6c9"/></svg></div>
+        <h3>柴</h3><div class="kwhere">郑州 · 柴世宗所创</div>
+        <div class="kbody"><q>滋润细媚为古来诸窑之冠</q>雨过天青是主色，却不止天青；薄如纸说的是釉汁，不是胎。明代已难见真物，作者只在别人席上遥遥望过一眼。</div></div>
+      <div class="kiln rv"><div class="karch"><svg viewBox="0 0 54 44"><path d="M9 44 L9 24 Q27 2 45 24 L45 44 Z" fill="none" stroke="#9cb584" stroke-width="2.4"/><path d="M17 30 Q27 22 37 30" fill="none" stroke="#9cb584" stroke-width="2"/></svg></div>
+        <h3>汝</h3><div class="kwhere">汝州 · 宋时所设</div>
+        <div class="kbody"><q>汁水莹润厚若堆脂</q><q>底有芝麻花细小挣钉乃真物也</q><q>其色纯静深穆</q>豆青虾青居多，也有天青茶末；无釉处色如羊肝，这羊肝色后来成了验真的暗记。</div></div>
+      <div class="kiln rv"><div class="karch"><svg viewBox="0 0 54 44"><path d="M9 44 L9 24 Q27 2 45 24 L45 44 Z" fill="none" stroke="#5e8fbb" stroke-width="2.4"/><path d="M13 18 L41 18 M13 24 L41 24" stroke="#5e8fbb" stroke-width="1.6"/></svg></div>
+        <h3>官</h3><div class="kwhere">汴京 · 大观政和间</div>
+        <div class="kbody">体薄色青，紫口铁足，蟹爪开片；南渡之后修内司再立新窑，一宋之内官窑已分三处，高下当时就有定评。</div></div>
+      <div class="kiln rv"><div class="karch"><svg viewBox="0 0 54 44"><path d="M9 44 L9 24 Q27 2 45 24 L45 44 Z" fill="none" stroke="#8fae6a" stroke-width="2.4"/><path d="M15 34 L21 26 L27 32 L33 22 L39 30" fill="none" stroke="#8fae6a" stroke-width="2"/></svg></div>
+        <h3>哥</h3><div class="kwhere">处州龙泉 · 章生一</div>
+        <div class="kbody"><q>历千年而莹泽如新</q>断纹隐裂如鱼子，米色豆绿居多；弟弟章生二的窑无纹，便是龙泉。哥窑有纹，弟窑无纹，兄弟俩靠这个相认。</div></div>
+      <div class="kiln rv"><div class="karch"><svg viewBox="0 0 54 44"><path d="M9 44 L9 24 Q27 2 45 24 L45 44 Z" fill="none" stroke="#e6ded0" stroke-width="2.4"/><path d="M19 12 L35 12 M23 8 L31 8" stroke="#e6ded0" stroke-width="1.8"/></svg></div>
+        <h3>定</h3><div class="kwhere">直隶定州 · 粉定</div>
+        <div class="kbody"><q>其妍细处几疑非人间所有乃古瓷中最精丽之品也</q>北定极薄极轻，花多牡丹萱草一路，兼有飞凤；南渡后景德镇所出称南定，釉色如粉，通称粉定。</div></div>
+      <div class="kiln rv"><div class="karch"><svg viewBox="0 0 54 44"><path d="M9 44 L9 24 Q27 2 45 24 L45 44 Z" fill="none" stroke="#7a3f63" stroke-width="2.4"/><circle cx="21" cy="26" r="3" fill="#7a3f63"/><circle cx="33" cy="20" r="3" fill="#7a3f63"/></svg></div>
+        <h3>均</h3><div class="kwhere">禹州 · 钧台</div>
+        <div class="kbody"><q>红若胭脂朱砂者为最</q><q>屈曲蟠折者谓之蚯蚓走泥印</q>釉厚而匀，蚯蚓走泥纹是它的暗记；<q>均窑以紫胜广窑以蓝胜</q>，底刻一二三四数字，六角花盆才按单双论色。</div></div>
+    </div>
+    <div class="tales">
+      <div class="tale rv"><h4>错案 · 郎窑不是郎世宁</h4>
+        <p>市井把深红宝石釉的器物叫郎窑，又讹传成那位善画的宫廷画师。作者把案翻了个底朝天：<q>郎为郎廷极康熙朝监督瓷业之官而肆人误为郎世寗</q>，画画的从未督陶，督陶的人官做到江西巡抚，事迹俱在。这桩误会积非成是，连作者落笔也只能照着俗称呼唤。</p></div>
+      <div class="tale rv"><h4>奇观 · 窑变</h4>
+        <p><q>窑变者乃烧窑时火候不匀偶然釉汁变色之故</q>。想要深红，火候一偏，红让位于他色，烧出谁也没料到的形状；后人索性照着偶然去追，<q>盖本偶然者后逐成为故然矣</q>。御窑画龙必五爪，<q>御窑画龙必作五爪尤其显著之识别欤</q>，官民之别连一笔都不肯含糊。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 胎釉 ================= -->
+<section>
+  <div class="wrap">
+    <div class="shead rv"><span class="sno">叁</span><h2>胎釉：识瓷先识骨</h2></div>
+    <p class="snote rv">看瓷先看胎，<q>有瓷胎有桨胎有缸胎有石胎有铁胎</q>；五种胎各管一类器物，轻薄的用桨胎，凝重的用缸胎石胎。</p>
+    <div class="bodies rv">
+      <span class="bd"><b>瓷胎</b>辗石成粉，寻常器物都算</span>
+      <span class="bd"><b>桨胎</b>撷取精华，澄之成泥</span>
+      <span class="bd"><b>缸胎</b>粗如瓦器，凝重厚实</span>
+      <span class="bd"><b>石胎</b>非真石，似大理石</span>
+      <span class="bd"><b>铁胎</b>非真铁，磁色近黑</span>
+    </div>
+    <div class="crazes">
+      <div class="craze rv"><h4>人为开片</h4>
+        <p>入窑之前就配好药料，烧出来裂多大裂多小，<q>配合药料烧之则出窑时成开片形一如人意之所欲出</q>，全在釉汁；此技始于宋哥窑，后来各代递相仿造。</p></div>
+      <div class="craze rv"><h4>自然开片</h4>
+        <p>年深日久釉面内裂，若隐若现，轩豁露形的反是假旧：<q>自然之开片则历年既久其釉渐渐内裂</q>。鉴别家还有一耳：叩缸胎听声，铜音一起，岁数就瞒不住了。</p></div>
+    </div>
+    <div class="glazeways">
+      <div class="gway rv"><h4>蘸 釉</h4><p><q>一日蘸以釉皿入缸荡匀其汁</q>。整器入缸荡匀，蘸不止一次，所以釉厚；均哥诸器厚若堆脂，就是这么堆出来的。</p></div>
+      <div class="gway rv"><h4>吹 釉</h4><p><q>一日吹釉截竹为筒嘘气匀之</q>。竹筒一节，嘘气匀喷，釉层极薄，薄到旧瓷里有玻璃釉、卵膜釉的名目。</p></div>
+    </div>
+    <div class="eggshell rv">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <circle cx="60" cy="52" r="34" fill="none" stroke="#5e8fbb" stroke-width="1.6" stroke-dasharray="4 4"/>
+        <path d="M28 64 Q60 46 92 64 L92 52 Q60 34 28 52 Z" fill="#8fb6c9" opacity=".5"/>
+        <path d="M36 70 Q42 84 60 86 Q78 84 84 70" fill="none" stroke="#6f695a" stroke-width="2"/>
+        <path d="M40 70 Q43 80 60 82 Q77 80 80 70" fill="none" stroke="#6f695a" stroke-width="1" opacity=".6"/>
+        <circle cx="60" cy="52" r="46" fill="none" stroke="#3a372c" stroke-width="1"/>
+      </svg>
+      <p>最奇的是脱胎：<q>其薄类于鸡卵之壳</q>，映着日光看，<q>映日光照之表裹能见手影</q>；胎薄得只剩一层釉，故曰不见胎只见面。始于永乐，康雍仿过，乾隆以后就仿不成了，<q>夺造化之天工极制作之能事矣</q>。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 釉色墙 ================= -->
+<section>
+  <div class="wrap">
+    <div class="shead rv"><span class="sno">肆</span><h2>釉色谱系：浅深二字总汇</h2></div>
+    <p class="snote rv">光红一族名目就上百，青衍为绿、绿衍为蓝一族数十；千头万绪，作者的断语只落在两个字上：<q>吾故谓浅深二字可分两大支流而为槪括之总汇也</q>。硬彩软彩之辨也是一句话的事：<q>硬彩华贵而深凝粉彩艳丽而清逸青花幽靓而雅洁</q>。<q>何谓豆彩盖所绘花纹以豆青色为最多占十分之五六故曰豆彩也</q>豆青色占五六分的就叫豆彩，斗彩逗彩都是市音讹转。下面按库本次序全量点灯，点一片，盏里看一色。</p>
+    <div class="glazewrap">
+      <div class="fams rv"><div class="fam"><div class="famhead"><b class="famname">红</b><span class="famnote">附紫：一族名目过百，书里点到名的先有三十九</span><span class="famcount">39 名</span></div><q class="wall"><i class="glz" data-c="#8e2f2a" data-t="祭红" data-cap="宣德为郊坛祭器发明的釉色，一名霁红、积红、醉红、鸡红，市人以音相呼，讹出一串名字。" style="--c:#8e2f2a">祭红</i><i class="glz" data-c="#87302e" data-t="霁红" data-cap="" style="--c:#87302e">霁红</i><i class="glz" data-c="#93392f" data-t="积红" data-cap="" style="--c:#93392f">积红</i><i class="glz" data-c="#a4453b" data-t="醉红" data-cap="" style="--c:#a4453b">醉红</i><i class="glz" data-c="#9c3a30" data-t="鸡红" data-cap="" style="--c:#9c3a30">鸡红</i><i class="glz" data-c="#7d2622" data-t="寳石红" data-cap="行话里的郎窑：红得像刚凝住的牛血，裹外开片，底足一道灯草边。" style="--c:#7d2622">寳石红</i><i class="glz" data-c="#c04a33" data-t="朱红" data-cap="" style="--c:#c04a33">朱红</i><i class="glz" data-c="#a53128" data-t="大红" data-cap="" style="--c:#a53128">大红</i><i class="glz" data-c="#b23a2e" data-t="鲜红" data-cap="" style="--c:#b23a2e">鲜红</i><i class="glz" data-c="#b0524a" data-t="抹红" data-cap="" style="--c:#b0524a">抹红</i><i class="glz" data-c="#c96a55" data-t="珊瑚" data-cap="" style="--c:#c96a55">珊瑚</i><i class="glz" data-c="#d98a94" data-t="胭脂水" data-cap="雍正发明乾隆接手，胎薄里釉白，外釉照出粉红；嘉道以后比之自桧。" style="--c:#d98a94">胭脂水</i><i class="glz" data-c="#a53a4a" data-t="胭脂红" data-cap="" style="--c:#a53a4a">胭脂红</i><i class="glz" data-c="#d995a0" data-t="粉红" data-cap="" style="--c:#d995a0">粉红</i><i class="glz" data-c="#cf8d92" data-t="美人祭" data-cap="祭红的淡粉色，西人叫桃花色；娃娃脸、杨妃色、桃花片都是这一族的近亲。" style="--c:#cf8d92">美人祭</i><i class="glz" data-c="#b3696b" data-t="豇豆红" data-cap="贵在莹润，居若鲜若黯之间，妙处说不出口；黯败的跌成乳鼠皮。" style="--c:#b3696b">豇豆红</i><i class="glz" data-c="#d78f96" data-t="桃花浪" data-cap="" style="--c:#d78f96">桃花浪</i><i class="glz" data-c="#d997a0" data-t="桃花片" data-cap="" style="--c:#d997a0">桃花片</i><i class="glz" data-c="#c05a62" data-t="海棠红" data-cap="" style="--c:#c05a62">海棠红</i><i class="glz" data-c="#d9908f" data-t="娃娃脸" data-cap="" style="--c:#d9908f">娃娃脸</i><i class="glz" data-c="#d4938c" data-t="美人脸" data-cap="" style="--c:#d4938c">美人脸</i><i class="glz" data-c="#cf8f93" data-t="杨妃色" data-cap="" style="--c:#cf8f93">杨妃色</i><i class="glz" data-c="#8a5570" data-t="淡茄" data-cap="" style="--c:#8a5570">淡茄</i><i class="glz" data-c="#7d5464" data-t="云豆" data-cap="" style="--c:#7d5464">云豆</i><i class="glz" data-c="#6e4a68" data-t="均紫" data-cap="" style="--c:#6e4a68">均紫</i><i class="glz" data-c="#4a3050" data-t="茄皮紫" data-cap="" style="--c:#4a3050">茄皮紫</i><i class="glz" data-c="#5e3a5c" data-t="葡萄紫" data-cap="" style="--c:#5e3a5c">葡萄紫</i><i class="glz" data-c="#7a3f63" data-t="玫瑰紫" data-cap="" style="--c:#7a3f63">玫瑰紫</i><i class="glz" data-c="#8a7a72" data-t="乳鼠皮" data-cap="" style="--c:#8a7a72">乳鼠皮</i><i class="glz" data-c="#b55a35" data-t="柿红" data-cap="" style="--c:#b55a35">柿红</i><i class="glz" data-c="#7e2f28" data-t="枣红" data-cap="" style="--c:#7e2f28">枣红</i><i class="glz" data-c="#c05a2e" data-t="橘红" data-cap="" style="--c:#c05a2e">橘红</i><i class="glz" data-c="#ab4a38" data-t="矾红" data-cap="" style="--c:#ab4a38">矾红</i><i class="glz" data-c="#983f33" data-t="翻红" data-cap="" style="--c:#983f33">翻红</i><i class="glz" data-c="#c08272" data-t="肉红" data-cap="" style="--c:#c08272">肉红</i><i class="glz" data-c="#6e3a33" data-t="羊肝" data-cap="" style="--c:#6e3a33">羊肝</i><i class="glz" data-c="#82423a" data-t="猪肝" data-cap="" style="--c:#82423a">猪肝</i><i class="glz" data-c="#8fae6a" data-t="苹果绿" data-cap="" style="--c:#8fae6a">苹果绿</i><i class="glz" data-c="#9db896" data-t="苹果青" data-cap="豇豆红烧变了色：深的成苹果绿，淡的成苹果青，当日反被当弃材。" style="--c:#9db896">苹果青</i></q></div><div class="fam"><div class="famhead"><b class="famname">青</b><span class="famnote">附蓝绿：青衍为绿，绿衍为蓝，一族数十</span><span class="famcount">34 名</span></div><q class="wall"><i class="glz" data-c="#8fb6c9" data-t="天青" data-cap="柴周遗制，宋明有人接，康雍集大成；淡隽里偶带秾蒨小点。" style="--c:#8fb6c9">天青</i><i class="glz" data-c="#9fbfae" data-t="东青" data-cap="" style="--c:#9fbfae">东青</i><i class="glz" data-c="#9cb584" data-t="豆青" data-cap="" style="--c:#9cb584">豆青</i><i class="glz" data-c="#a4bb8a" data-t="豆彩" data-cap="花纹五六分是豆青色，故曰豆彩；斗彩、逗彩都是市音讹转。" style="--c:#a4bb8a">豆彩</i><i class="glz" data-c="#b3c493" data-t="梨青" data-cap="" style="--c:#b3c493">梨青</i><i class="glz" data-c="#c4d2c2" data-t="蛋青" data-cap="" style="--c:#c4d2c2">蛋青</i><i class="glz" data-c="#5f7a63" data-t="蟹甲青" data-cap="" style="--c:#5f7a63">蟹甲青</i><i class="glz" data-c="#7a9490" data-t="虾青" data-cap="" style="--c:#7a9490">虾青</i><i class="glz" data-c="#3f6478" data-t="毡包青" data-cap="蓝紫相和而蓝尤浓厚，好奇者所嗜。" style="--c:#3f6478">毡包青</i><i class="glz" data-c="#c9d8dd" data-t="影青" data-cap="永乐绝品：胎薄得能映见背面的龙纹，微青，故曰影青。" style="--c:#c9d8dd">影青</i><i class="glz" data-c="#4a6a8a" data-t="青花夹紫" data-cap="" style="--c:#4a6a8a">青花夹紫</i><i class="glz" data-c="#d29a4e" data-t="新橘" data-cap="" style="--c:#d29a4e">新橘</i><i class="glz" data-c="#4f7a4a" data-t="瓜皮绿" data-cap="康窑有作整只西瓜状的小罐，盖带瓜藤，釉上满开牛毛小片。" style="--c:#4f7a4a">瓜皮绿</i><i class="glz" data-c="#6f8f62" data-t="哥绿" data-cap="" style="--c:#6f8f62">哥绿</i><i class="glz" data-c="#8fae72" data-t="果绿" data-cap="" style="--c:#8fae72">果绿</i><i class="glz" data-c="#2e7a68" data-t="孔雀绿" data-cap="深色诸绿里最可爱的一种，葱翠夺目，存世也稀。" style="--c:#2e7a68">孔雀绿</i><i class="glz" data-c="#2a6e5e" data-t="翠羽" data-cap="" style="--c:#2a6e5e">翠羽</i><i class="glz" data-c="#47825f" data-t="子母绿" data-cap="" style="--c:#47825f">子母绿</i><i class="glz" data-c="#43683c" data-t="菠菜绿" data-cap="" style="--c:#43683c">菠菜绿</i><i class="glz" data-c="#7aa864" data-t="鹦哥绿" data-cap="" style="--c:#7aa864">鹦哥绿</i><i class="glz" data-c="#a4b96e" data-t="秋葵绿" data-cap="" style="--c:#a4b96e">秋葵绿</i><i class="glz" data-c="#5f8a66" data-t="松花绿" data-cap="" style="--c:#5f8a66">松花绿</i><i class="glz" data-c="#a08ab8" data-t="葡萄水" data-cap="" style="--c:#a08ab8">葡萄水</i><i class="glz" data-c="#a9c6c2" data-t="西湖水" data-cap="" style="--c:#a9c6c2">西湖水</i><i class="glz" data-c="#4a6a9c" data-t="种蓝" data-cap="" style="--c:#4a6a9c">种蓝</i><i class="glz" data-c="#33518c" data-t="洒蓝" data-cap="先白釉、再蓝、再薄釉，最后画金花云龙，四道工序攒出一层洒蓝。" style="--c:#33518c">洒蓝</i><i class="glz" data-c="#24457e" data-t="宝石蓝" data-cap="" style="--c:#24457e">宝石蓝</i><i class="glz" data-c="#3f6aa8" data-t="玻璃蓝" data-cap="" style="--c:#3f6aa8">玻璃蓝</i><i class="glz" data-c="#3a5a8a" data-t="鱼子蓝" data-cap="" style="--c:#3a5a8a">鱼子蓝</i><i class="glz" data-c="#4a628f" data-t="抹蓝" data-cap="" style="--c:#4a628f">抹蓝</i><i class="glz" data-c="#5f6a62" data-t="海鼠色" data-cap="" style="--c:#5f6a62">海鼠色</i><i class="glz" data-c="#4a5248" data-t="龟裙" data-cap="" style="--c:#4a5248">龟裙</i><i class="glz" data-c="#4f5a44" data-t="绿褐" data-cap="" style="--c:#4f5a44">绿褐</i><i class="glz" data-c="#8f8574" data-t="粉色褐" data-cap="" style="--c:#8f8574">粉色褐</i></q></div><div class="fam"><div class="famhead"><b class="famname">黄</b><span class="famnote">深如密蜡，浅如鹅儿</span><span class="famcount">14 名</span></div><q class="wall"><i class="glz" data-c="#e0c26a" data-t="鹅黄" data-cap="" style="--c:#e0c26a">鹅黄</i><i class="glz" data-c="#d9b24e" data-t="蛋黄" data-cap="" style="--c:#d9b24e">蛋黄</i><i class="glz" data-c="#d3a94f" data-t="密蜡黄" data-cap="" style="--c:#d3a94f">密蜡黄</i><i class="glz" data-c="#dfb95c" data-t="鸡油黄" data-cap="" style="--c:#dfb95c">鸡油黄</i><i class="glz" data-c="#c9a04e" data-t="鱼子黄" data-cap="" style="--c:#c9a04e">鱼子黄</i><i class="glz" data-c="#ddc88f" data-t="牙色淡黄" data-cap="" style="--c:#ddc88f">牙色淡黄</i><i class="glz" data-c="#a2793a" data-t="金酱" data-cap="" style="--c:#a2793a">金酱</i><i class="glz" data-c="#8a6a3f" data-t="芝麻醤" data-cap="" style="--c:#8a6a3f">芝麻醤</i><i class="glz" data-c="#6e6a42" data-t="茶叶未" data-cap="茶末导源最古，色古雅幽穆，足当清供；偏黄偏绿都不算纯正。" style="--c:#6e6a42">茶叶未</i><i class="glz" data-c="#7a5f45" data-t="鼻烟" data-cap="" style="--c:#7a5f45">鼻烟</i><i class="glz" data-c="#8a8a55" data-t="莱尾" data-cap="" style="--c:#8a8a55">莱尾</i><i class="glz" data-c="#5f5f38" data-t="鳝鱼皮" data-cap="黑稍浓而黄碎点绕底足，纯是象形。" style="--c:#5f5f38">鳝鱼皮</i><i class="glz" data-c="#8a7040" data-t="黄褐色" data-cap="" style="--c:#8a7040">黄褐色</i><i class="glz" data-c="#6a5f45" data-t="老侩衣" data-cap="" style="--c:#6a5f45">老侩衣</i></q></div><div class="fam"><div class="famhead"><b class="famname">黑</b><span class="famnote">黑最难变化，仅数种</span><span class="famcount">6 名</span></div><q class="wall"><i class="glz" data-c="#1d1b18" data-t="黑彩" data-cap="" style="--c:#1d1b18">黑彩</i><i class="glz" data-c="#26241f" data-t="墨彩" data-cap="" style="--c:#26241f">墨彩</i><i class="glz" data-c="#221f1a" data-t="乌金" data-cap="黑彩里最莹亮的一种。" style="--c:#221f1a">乌金</i><i class="glz" data-c="#4a3826" data-t="古铜" data-cap="" style="--c:#4a3826">古铜</i><i class="glz" data-c="#2c251c" data-t="黑褐" data-cap="" style="--c:#2c251c">黑褐</i><i class="glz" data-c="#3d2f24" data-t="铁棕" data-cap="" style="--c:#3d2f24">铁棕</i></q></div><div class="fam"><div class="famhead"><b class="famname">白</b><span class="famnote">白亦有数种</span><span class="famcount">4 名</span></div><q class="wall"><i class="glz" data-c="#dfe5e2" data-t="月白" data-cap="青之最淡者；均窑的天青，肆人就叫它月白。" style="--c:#dfe5e2">月白</i><i class="glz" data-c="#e6e9e4" data-t="鱼肚白" data-cap="" style="--c:#e6e9e4">鱼肚白</i><i class="glz" data-c="#e6ded0" data-t="牙白" data-cap="" style="--c:#e6ded0">牙白</i><i class="glz" data-c="#e8e2d6" data-t="填白" data-cap="以纷料推填再蘸釉，讹成甜白就失之远矣。" style="--c:#e8e2d6">填白</i></q></div></div>
+      <div class="bowlside rv">
+        <svg viewBox="0 0 260 210" aria-hidden="true">
+          <defs>
+            <linearGradient id="glazeshine" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity=".5"/>
+              <stop offset="30%" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="130" cy="188" rx="86" ry="12" fill="#0d0c0a"/>
+          <path d="M34 56 Q40 158 130 168 Q220 158 226 56 L204 56 Q198 140 130 148 Q62 140 56 56 Z" fill="#ded9cc"/>
+          <path id="glazewallp" d="M34 56 Q40 116 130 122 Q220 116 226 56 Z"/>
+          <path d="M34 56 Q40 116 130 122 Q220 116 226 56 L226 56 Q130 96 34 56 Z" fill="url(#glazeshine)"/>
+          <path id="glazepool" d="M56 56 Q130 76 204 56 L204 50 Q130 68 56 50 Z"/>
+          <rect x="106" y="166" width="48" height="12" rx="3" fill="#b8b09c"/>
+        </svg>
+        <div class="bowlname" id="bowlname">点 一 片 看 一 色</div>
+        <div class="bowlcap" id="bowlcap">五族九十七枚釉名，皆是库本原序照录。猪肝羊肝也在红族，忘八绿也列青族，作者照单全收，因为名字本身就是窑火的户口。</div>
+      </div>
+    </div>
+    <div class="yingruanbox rv"><b>彩的发明史，一串坐标：</b><q>宣德发明祭红乃祭郊坛用品</q>，一名霁红，又叫积红、醉红，还有鸡红，全是按音叫出来的名字；永乐的影青，<q>瓷质极薄雕暗龙花表裹可以映见花纹微现青色故曰影青</q>。素三彩西人最嗜，<q>西人嗜此声价极高一瓶之値輙及万金</q>；<q>美人祭又曰美人齐祭红之淡粉色者也</q>，娃娃脸、杨妃之色、桃花片，都是这一族的近亲。豇豆红为何可贵？<q>豇红之所以可贵者在莹润无比居若鲜若黯之间妙在难以形容也</q></div>
+  </div>
+</section>
+
+<!-- ================= 款识 ================= -->
+<section>
+  <div class="wrap">
+    <div class="shead rv"><span class="sno">伍</span><h2>款识：底足上的玄案</h2></div>
+    <p class="snote rv">瓷器的署名全在底足，翻过来看，一色的釉底下藏着一代人的心思。最贵的是料款堆料，而料款之首古月轩，来历竟有三说，作者摆出三张口供，不下结论。</p>
+    <div class="gyx">
+      <div class="gycard rv" onclick="this.classList.toggle('open')"><h4>说一 · 轩名说</h4>
+        <div class="ghead">乾隆的内府有轩名古月轩，选画手最精者为它绘瓷。</div>
+        <div class="gbody">绘器带题句，上下钤胭脂水小印，引首印文曰佳丽、先春，下方两印曰金成、旭映，大抵就是画人的名号；仿品同出乾隆，价与真者相当。</div></div>
+      <div class="gycard rv" onclick="this.classList.toggle('open')"><h4>说二 · 料器说</h4>
+        <div class="ghead">说是胡姓人氏精于画料器，所绘多烟壶水盛一路，乾隆取其画意移入瓷。</div>
+        <div class="gbody">此人画工细到一时无两，曾否画过瓷器却无定论；款目有三形，一题轩名一题年制一题大清年号，说的都是料器。</div></div>
+      <div class="gycard rv" onclick="this.classList.toggle('open')"><h4>说三 · 藏瓷说</h4>
+        <div class="ghead">说是天家轩名，不系于乾隆一朝，历代精制都收在这座轩里。</div>
+        <div class="gbody">市人凡遇堆料款一概叫它古月轩，即由这一说而来。三说互相矛盾，作者两存之，只用一句总断收束。</div></div>
+    </div>
+    <div class="gyverdict rv">三说并存，作者只给一句总断：<q>凡属堆料款画极精细而侥有清气往来者皆为最名贵最瑰宝之品也</q></div>
+    <div class="feet">
+      <div class="foot rv" onclick="this.classList.toggle('open')">
+        <div class="footring"><span>狮子滚球</span></div>
+        <div class="fcase">永乐 · 球内藏款</div>
+        <div class="fbody"><q>永乐窑底绘狮子滚球球内藏欵字至为罕觏</q>。款字藏在绣球里，翻底也未必看得见，是明代题款最奇的一路。</div></div>
+      <div class="foot rv" onclick="this.classList.toggle('open')">
+        <div class="footring"><span>开元年制</span></div>
+        <div class="fcase">仿古 · 冒唐款</div>
+        <div class="fbody"><q>有开元年制四字者非唐代物也乃康窑之仿古铜者并仿其年号耳</q>。见着年号就断朝代，正落进圈套。</div></div>
+      <div class="foot rv" onclick="this.classList.toggle('open')">
+        <div class="footring"><span>书宣德款</span></div>
+        <div class="fcase">寄托款 · 清书明</div>
+        <div class="fbody">康雍两朝屡禁屡复，又常不书本朝：<q>康书宣德者为多雍书成化者为多</q>。宣成是明代瓷业极盛之期，清初拿它当轨范，寄托款由此成了惯例。</div></div>
+      <div class="foot rv" onclick="this.classList.toggle('open')">
+        <div class="footring"><span>大清年制</span></div>
+        <div class="fcase">同光 · 阙朝号</div>
+        <div class="fbody">器底不见任何年号，是肃顺当国的制品：<q>监督官窑者虑旦夕有改元事故阙朝号以媚肃顺</q>。督造的人在押注，年号随时要改，索性不写。</div></div>
+      <div class="foot rv" onclick="this.classList.toggle('open')">
+        <div class="footring"><span>有恒堂</span></div>
+        <div class="fcase">道光 · 最长款</div>
+        <div class="fbody"><q>道光某年定府行有恒堂珍赏凡十余字奇品也</q>。堂名四字，取行有恒之义连读成文，市肆图省事，叫成了有恒堂。</div></div>
+      <div class="foot rv" onclick="this.classList.toggle('open')">
+        <div class="footring"><span>晓岚雅制</span></div>
+        <div class="fcase">同治 · 一场误会</div>
+        <div class="fbody">绿地红字带开光，莹润无花，<q>骤覩之几疑为纪晓岚制也及阅底多有同治年欵不禁嗒然</q>。鉴藏家也有看走眼的时候，作者记下这一声叹，算是自嘲。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 然犀镜 ================= -->
+<section>
+  <div class="wrap">
+    <div class="shead rv"><span class="sno">陆</span><h2>疵伪：燃犀照瓷</h2></div>
+    <p class="snote rv"><q>物有纯必有疵有真必有伪</q>，只识真好不算真知。作者专辟末一章，<q>故特辟一门以作照夜之灯然犀之镜也</q>。真疵有等次：缩釉短釉是宋元的常客，有它反而坐实年代；小疵如窑缝冷纹，无伤大体。可怕的是人工造出的疵与伪。</p>
+    <div class="rhino rv" id="rhino">
+      <div class="rhstage">
+        <svg viewBox="0 0 420 250" aria-hidden="true">
+          <defs>
+            <radialGradient id="rhglow" cx="62%" cy="40%" r="55%">
+              <stop offset="0%" stop-color="#e8873c" stop-opacity=".5"/>
+              <stop offset="100%" stop-color="#e8873c" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <ellipse class="rhlampglow" cx="260" cy="100" rx="150" ry="110" fill="url(#rhglow)"/>
+          <g class="vase">
+            <path d="M215 70 Q208 96 218 112 Q190 128 186 170 Q184 196 200 204 L320 204 Q336 196 334 170 Q330 128 302 112 Q312 96 305 70 Q260 62 215 70Z" fill="#cfc9ba"/>
+            <path d="M188 150 Q260 168 332 150 L334 170 Q336 196 320 204 L200 204 Q184 196 186 170 Z" fill="#bdb6a6" class="flaw"/>
+            <ellipse cx="260" cy="70" rx="46" ry="9" fill="#8f8877" class="flaw"/>
+            <path d="M214 118 L246 186 M232 114 L262 182" stroke="#8f8877" stroke-width="1.4" class="flaw" fill="none"/>
+            <circle cx="290" cy="140" r="7" fill="none" stroke="#8f8877" stroke-width="1.6" class="flaw"/>
+          </g>
+          <g>
+            <path d="M96 196 Q84 150 96 112 Q104 92 118 96 Q108 118 112 148 Q116 178 126 196 Z" fill="#b08d57" stroke="#7a5f35" stroke-width="1.6"/>
+            <path d="M100 120 Q108 108 114 100" stroke="#e8d9b8" stroke-width="2" fill="none" opacity=".7"/>
+            <text x="110" y="220" text-anchor="middle" font-size="12" fill="#6f695a" letter-spacing="3">然犀</text>
+          </g>
+        </svg>
+      </div>
+      <button class="rhbtn" id="rhbtn">燃 犀</button>
+      <div class="flawtags">
+        <i style="--d:.1s">釉光外铄</i><i style="--d:.3s">底足旋痕新</i><i style="--d:.5s">假底嵌补</i><i style="--d:.7s">磨釉退光</i>
+      </div>
+    </div>
+    <div class="forgery">
+      <div class="fcard rv"><h4>真坯假彩</h4><p>旧白瓷不值钱，加彩就翻数倍：<q>真坯假彩者谓取旧瓷之白质无花者加以彩绘</q>。胎是老的，画是新的，最容易骗过只看胎的人。</p></div>
+      <div class="fcard rv"><h4>磨底托远</h4><p><q>磨底者因嫌底款年代不久磨去其款托于远代</q>。款磨得掉，器身的火气磨不掉。</p></div>
+      <div class="fcard rv"><h4>宝光新制</h4><p>有新瓷毫无浮光反发宝光，作者起先不解，<q>乃知系用重赀定制一切物料悉以旧物为标本毫髪无异</q>。有位洋客商出数百金定烧瓶一对，明知是新也肯掏钱。</p></div>
+      <div class="fcard rv"><h4>去光之术</h4><p>先用浆砣擦磨，怕留细痕，<q>复用牛皮胶砣沾油磨之使更平而且润</q>。骤看足乱真，细察终有迹象。</p></div>
+    </div>
+    <div class="rankrow rv">
+      <span class="rank">仿蓝<b>最成</b></span><span class="rank">仿红<b>六七</b></span><span class="rank">仿绿<b>最难</b></span><span class="rank">仿白<b>难辨</b></span>
+    </div>
+    <p class="snote rv">蓝仿得最好：<q>至近年摹仿康熙蓝竟得七八最乱真</q>；红也追上来了，<q>诸难仿效之色均无一不有仿效亦能颇得六七虽专家亦往往售其欺</q>。最后压轴的一问：新仿与真旧到底差在哪？作者答得干脆，差的只是一线光，<q>一则光由内发一则光由外铄相去终有径庭也</q>。</p>
+    <div class="punch rv">鉴家偶见一二特点便深信不疑，哪知特点之外另有破绽，一念之差，<q>弃周鼎而宝康瓠者</q>。</div>
+  </div>
+</section>
+
+<!-- ================= 尾屏 ================= -->
+<div class="coda">
+  <div class="vpanel">
+    <div class="vcol"><q class="vq1">物有纯必有疵有真必有伪</q></div>
+    <div class="vcol">知纯知真，未必真知</div>
+    <div class="vcol">知疵知伪，方见纯真</div>
+    <div class="vcol">一窑天青照千年</div>
+    <div class="vseal">饮流</div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>文本来源：殆知阁古代文献简体库〈饮流斋说瓷〉（艺藏器物类）。仓库：github.com/robertsong/daizhige-daodu</p>
+    <p>引文经脚本自库本锚点切片生成，去标点、异体归一后逐字比对通过；白话部分反扫六字窗零撞。库本讹字（槪、欵、舆、裹、寳、値等）照录不归一。</p>
+    <p>书成民国初年，赏鉴文字以御制珍品与价格高下为尚，涉及外洋贸易处沿用旧时口吻，照录立此存照，不代今人立论。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var hero=document.getElementById('hero');
+  document.getElementById('ignite').addEventListener('click',function(){hero.classList.add('lit');});
+  var rh=document.getElementById('rhino');
+  document.getElementById('rhbtn').addEventListener('click',function(){rh.classList.toggle('lamped');this.textContent=rh.classList.contains('lamped')?'熄 犀':'燃 犀';});
+  var pool=document.getElementById('glazepool'),wallp=document.getElementById('glazewallp'),
+      cap=document.getElementById('bowlcap'),bname=document.getElementById('bowlname');
+  var caps=document.querySelectorAll('.glz');
+  caps.forEach(function(ch){
+    ch.addEventListener('click',function(){
+      caps.forEach(function(o){o.classList.remove('act');});
+      ch.classList.add('act');
+      var c=ch.getAttribute('data-c');
+      pool.setAttribute('style','--glz:'+c);wallp.setAttribute('style','--glz:'+c);
+      document.documentElement.style.setProperty('--glz',c);
+      bname.textContent=ch.getAttribute('data-t');
+      var t=ch.getAttribute('data-cap');
+      cap.textContent=t?t:'一色一名，皆窑火与人工商量出来的名字。库本原序照录，点一片，盏里看一色。';
+    });
+  });
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('on');});},{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
