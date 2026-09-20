@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>荔镜记 · 殆知阁导读</title>
+<style>
+:root{
+  --bg:#191917;
+  --ink:#e8e4dc;
+  --dim:rgba(232,228,220,.62);
+  --dim2:rgba(232,228,220,.4);
+  --shi:#5e8fbb;
+  --shi-dim:rgba(94,143,187,.32);
+  --line:rgba(94,143,187,.28);
+  --red:#c0453c;
+  --paper:#e8e4dc;
+  --card:#1f2127;
+  --card2:#242833;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Songti SC","STSong","SimSun","Noto Serif CJK SC","Source Han Serif SC",serif;
+  line-height:1.9;
+  overflow-x:hidden;
+}
+q{quotes:none}
+.mono{font-family:"SF Mono",Consolas,"Courier New",monospace}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+/* ============ 入场动画通用 ============ */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.rv.on{opacity:1;transform:none}
+
+/* ============ 首屏：灯街彩楼 ============ */
+.hero{
+  position:relative;
+  min-height:96vh;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 900px 480px at 18% -6%, rgba(94,143,187,.10), transparent 62%),
+    linear-gradient(180deg,#141413 0%, var(--bg) 46%);
+}
+.moon{
+  position:absolute;top:5%;left:44%;
+  width:104px;height:104px;border-radius:50%;
+  background:radial-gradient(circle at 38% 34%, #f2efe6, #cfd8de 58%, #9fb3c1);
+  box-shadow:0 0 70px rgba(207,216,222,.22);
+  opacity:.86;
+}
+.stars{position:absolute;inset:0;pointer-events:none}
+.stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(232,228,220,.5)}
+.hero-inner{
+  position:relative;z-index:3;
+  max-width:1080px;margin:0 auto;padding:11vh 28px 0;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:30px;
+}
+.tblock{max-width:470px;padding-top:2vh}
+.kicker{
+  font-size:13px;letter-spacing:.35em;color:var(--shi);
+  border:1px solid var(--line);display:inline-block;padding:3px 14px 3px 17px;margin-bottom:26px;
+}
+.vtitle{
+  writing-mode:vertical-rl;
+  font-size:clamp(74px,9vw,118px);
+  letter-spacing:.14em;
+  color:var(--ink);
+  text-shadow:0 0 34px rgba(94,143,187,.18);
+  height:max-content;
+  margin:6px 0 8px;
+}
+.tsub{font-size:14px;color:var(--dim);max-width:430px;margin-top:20px}
+.tsub em{font-style:normal;color:var(--shi)}
+.tfact{font-size:12px;color:var(--dim2);margin-top:14px;letter-spacing:.08em}
+.tblock .hint{
+  margin-top:30px;font-size:13px;color:var(--red);letter-spacing:.12em;
+  display:flex;align-items:center;gap:9px;
+}
+.hint::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 9px var(--red);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.25}}
+
+/* 彩楼 */
+.towerbox{position:relative;flex:0 0 250px;height:470px;margin-top:1vh}
+.tier{position:absolute;left:50%;transform:translateX(-50%);border:1px solid var(--line);background:linear-gradient(180deg,#232730,#1c1f26)}
+.tier::before{content:'';position:absolute;top:-15px;left:-11px;right:-11px;height:15px;background:#2b3947;clip-path:polygon(0 100%,7% 0,93% 0,100% 100%)}
+.t1{bottom:34px;width:250px;height:122px}
+.t2{bottom:156px;width:196px;height:122px}
+.t3{bottom:278px;width:142px;height:112px}
+.rail{position:absolute;left:9px;right:9px;bottom:8px;height:24px;border-bottom:1px solid var(--line);
+  background:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 11px)}
+.win{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:58px;height:46px;
+  border:1px solid var(--line);background:#12151b;transition:all .8s}
+.win::after{content:'';position:absolute;inset:5px;border:1px dashed rgba(94,143,187,.2)}
+.t3 .win{background:rgba(94,143,187,.14)}
+.towerbox.lit .win{background:rgba(94,143,187,.42);box-shadow:0 0 22px rgba(94,143,187,.5)}
+.pillar{position:absolute;bottom:34px;width:100%;height:34px;border-top:1px solid var(--line);
+  background:repeating-linear-gradient(90deg,transparent 0 40px,var(--line) 40px 41px)}
+/* 荔枝按钮 */
+.lyz{
+  position:absolute;right:12px;bottom:236px;z-index:5;
+  width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;
+  background:radial-gradient(circle at 34% 30%, #d97a6c, var(--red) 62%);
+  box-shadow:0 0 14px rgba(192,69,60,.55);
+  transition:transform .3s;
+}
+.lyz::before{content:'';position:absolute;top:-7px;left:13px;width:2px;height:9px;background:#6d7f5e}
+.lyz::after{content:'';position:absolute;top:-8px;left:16px;width:12px;height:7px;border-radius:70% 30% 70% 30%;background:#57684c;transform:rotate(-24deg)}
+.lyz:hover{transform:scale(1.18)}
+.lyz.fall{animation:fall 1.15s cubic-bezier(.5,.05,.9,.6) forwards}
+@keyframes fall{
+  0%{transform:translate(0,0) rotate(0)}
+  70%{transform:translate(-46px,196px) rotate(150deg)}
+  100%{transform:translate(-52px,206px) rotate(190deg);opacity:.15}
+}
+/* 街与骑者 */
+.street{position:absolute;bottom:0;left:0;right:0;z-index:2}
+.streetline{height:1px;background:linear-gradient(90deg,transparent,rgba(94,143,187,.34) 12%,rgba(94,143,187,.34) 88%,transparent)}
+.farl{position:absolute;bottom:26px;left:0;right:0;height:1px;pointer-events:none}
+.farl i{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(94,143,187,.5);box-shadow:0 0 6px rgba(94,143,187,.5);animation:blink 3.4s infinite}
+.rider{position:absolute;bottom:6px;right:210px;width:96px}
+.rider svg{display:block;width:100%}
+.rider .pa{position:absolute;top:-2px;left:30px;width:9px;height:9px;border-radius:50%;background:var(--red);opacity:0;transition:opacity .5s}
+.rider.picked .pa{opacity:1}
+/* 西江月揭幕 */
+.xjy{
+  max-height:0;overflow:hidden;transition:max-height 1.2s ease;
+}
+.xjy.on{max-height:520px}
+.xjy-inner{
+  max-width:1080px;margin:34px auto 0;padding:0 28px 8vh;
+  display:flex;gap:26px;align-items:flex-start;
+}
+.xjy-tag{
+  writing-mode:vertical-rl;border:1px solid var(--line);padding:14px 8px;
+  font-size:15px;letter-spacing:.3em;color:var(--shi);height:max-content;flex:0 0 auto;
+}
+.xjy-body{flex:1}
+.xjy-body .line{font-size:17px;color:var(--ink);padding:3px 0;letter-spacing:.06em}
+.xjy-body .gap{color:var(--dim2);letter-spacing:.4em;font-size:12px;padding:2px 0}
+.xjy-note{font-size:12.5px;color:var(--dim2);margin-top:14px}
+
+/* ============ 出目牌 ============ */
+section{padding:86px 0 10px}
+.tagrow{display:flex;align-items:flex-end;gap:16px;margin-bottom:34px}
+.knot{
+  width:14px;height:14px;border-radius:50%;background:var(--red);flex:0 0 auto;
+  box-shadow:0 0 10px rgba(192,69,60,.5);position:relative;
+}
+.knot::after{content:'';position:absolute;top:13px;left:6px;width:1px;height:34px;background:var(--line)}
+.tagtxt{font-size:20px;letter-spacing:.14em;color:var(--ink);padding-bottom:30px}
+.tagtxt small{display:block;font-size:12px;color:var(--dim2);letter-spacing:.2em}
+.secp{font-size:14.5px;color:var(--dim);max-width:760px;margin-bottom:30px}
+.secp q{color:var(--ink)}
+
+/* ============ 五十五出折子 ============ */
+.groups{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.gb{font-size:12px;letter-spacing:.1em;color:var(--dim);border:1px solid var(--line);
+  background:transparent;padding:4px 12px;cursor:pointer;font-family:inherit;transition:all .3s}
+.gb:hover,.gb.sel{color:var(--ink);border-color:var(--shi);background:rgba(94,143,187,.12)}
+.foldgrid{display:flex;flex-wrap:wrap;gap:7px}
+.fc{border:1px solid var(--line);background:var(--card);padding:7px 10px;cursor:pointer;
+  font-family:inherit;font-size:12.5px;color:var(--dim);transition:all .25s;line-height:1.5}
+.fc b{font-weight:400;font-size:10.5px;color:var(--dim2);display:block;letter-spacing:.05em}
+.fc:hover{border-color:var(--shi);color:var(--ink)}
+.fc.sel{border-color:var(--red);color:var(--ink);background:rgba(192,69,60,.1)}
+.fc.hide{display:none}
+.gA{border-left:2px solid rgba(94,143,187,.55)}
+.gB{border-left:2px solid rgba(94,143,187,.38)}
+.gC{border-left:2px solid var(--red)}
+.gD{border-left:2px solid rgba(94,143,187,.3)}
+.gE{border-left:2px solid rgba(192,69,60,.5)}
+.gF{border-left:2px solid rgba(232,228,220,.42)}
+.gG{border-left:2px solid rgba(94,143,187,.24)}
+.gH{border-left:2px solid var(--paper)}
+.capline{
+  margin-top:26px;border-top:1px dashed var(--line);padding-top:18px;
+  font-size:15px;color:var(--ink);min-height:64px;
+}
+.capline .an{color:var(--shi);font-size:13px;margin-right:14px;letter-spacing:.15em}
+.capline .ghost{color:var(--dim2);font-size:13px}
+
+/* ============ 灯市 ============ */
+.duolu{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start;margin:10px 0 34px}
+.quote{border:1px solid var(--line);background:var(--card);padding:22px 26px;flex:1 1 380px}
+.quote .who{font-size:12px;color:var(--shi);letter-spacing:.22em;margin-bottom:10px}
+.quote p{font-size:16px;line-height:2.15;letter-spacing:.05em}
+.quote .src{font-size:11.5px;color:var(--dim2);margin-top:12px;letter-spacing:.1em}
+.lanrow{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;margin:44px 0 8px}
+.lan{
+  width:98px;height:70px;border-radius:48%/42%;border:1px solid var(--line);
+  background:linear-gradient(180deg,#232830,#1d2027);color:var(--dim);
+  font-family:inherit;font-size:14px;letter-spacing:.1em;cursor:pointer;
+  position:relative;transition:all .35s;
+}
+.lan::before,.lan::after{content:'';position:absolute;left:50%;transform:translateX(-50%);width:26px;height:5px;background:#2b3947}
+.lan::before{top:-5px}
+.lan::after{bottom:-5px}
+.lan::marker{content:''}
+.lan:hover,.lan.lit{border-color:var(--shi);color:var(--ink);
+  background:linear-gradient(180deg,#2c3947,#232a34);
+  box-shadow:0 0 24px rgba(94,143,187,.4);text-shadow:0 0 8px rgba(94,143,187,.8)}
+.lansrc{max-width:680px;margin:26px auto 0;border-left:2px solid var(--shi);padding:6px 0 6px 22px;
+  min-height:84px}
+.lansrc .st{display:none;font-size:15.5px;line-height:2.1;color:var(--ink)}
+.lansrc .st.show{display:block}
+.lansrc .swho{font-size:11.5px;color:var(--dim2);letter-spacing:.15em;display:block;margin-top:8px}
+
+/* ============ 无某歌 ============ */
+.wumou{position:relative;border:1px solid var(--line);background:var(--card);padding:46px 40px 40px;overflow:hidden}
+.wm-ghost{
+  position:absolute;right:-30px;top:-58px;font-size:300px;line-height:1;
+  color:transparent;-webkit-text-stroke:1px rgba(192,69,60,.16);pointer-events:none;user-select:none;
+}
+.wm-inner{position:relative;max-width:640px}
+.bigq{font-size:22px;line-height:2.3;letter-spacing:.08em;margin-bottom:26px}
+.wm-q{font-size:16.5px;line-height:2.2;color:var(--ink);padding:5px 0}
+.wm-note{font-size:13px;color:var(--dim2);margin-top:18px}
+.wm-note q{color:var(--dim)}
+
+/* ============ 抛荔 ============ */
+.paolia{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.paolia .quote{flex:none}
+.beats{grid-column:1 / -1;display:flex;gap:0;flex-wrap:wrap;border:1px solid var(--line)}
+.beat{flex:1 1 200px;padding:20px 22px;border-right:1px solid var(--line);position:relative}
+.beat:last-child{border-right:none}
+.beat small{display:block;font-size:11.5px;color:var(--red);letter-spacing:.2em;margin-bottom:8px}
+.beat p{font-size:14.5px;color:var(--dim)}
+
+/* ============ 磨镜 ============ */
+.mirrorrow{display:flex;gap:38px;align-items:center;flex-wrap:wrap;margin-bottom:34px}
+.mirrorbox{flex:0 0 240px;text-align:center}
+.mirrorbox svg{width:220px;display:block;margin:0 auto}
+.mcrack{stroke-dasharray:300;stroke-dashoffset:300;transition:stroke-dashoffset 1s ease}
+.mirrorbox.cracked .mcrack{stroke-dashoffset:0}
+.mstamp{opacity:0;transition:opacity .6s .7s}
+.mirrorbox.cracked .mstamp{opacity:1}
+.mbtn{
+  margin-top:16px;border:1px solid var(--line);background:transparent;color:var(--dim);
+  font-family:inherit;font-size:12.5px;letter-spacing:.2em;padding:7px 22px;cursor:pointer;transition:all .3s;
+}
+.mbtn:hover{border-color:var(--red);color:var(--ink)}
+.mq{flex:1 1 420px}
+.mq .quote{margin-bottom:18px}
+
+/* ============ 公堂 ============ */
+.gz-wrap{display:flex;gap:30px;flex-wrap:wrap;align-items:flex-start}
+.gz{
+  flex:1 1 520px;background:var(--paper);color:#322e28;padding:34px 38px;position:relative;
+  box-shadow:0 14px 44px rgba(0,0,0,.5);
+}
+.gz::before{content:'';position:absolute;top:0;bottom:0;left:14px;width:1px;background:rgba(50,46,40,.16)}
+.gz h3{
+  font-size:15px;letter-spacing:.5em;color:#8c3a32;font-weight:400;margin-bottom:18px;
+  border-bottom:1px solid rgba(50,46,40,.2);padding-bottom:12px;
+}
+.gz p{font-size:15.5px;line-height:2.25;text-indent:2em;letter-spacing:.03em}
+.gz .gq{color:#322e28}
+.gz .redline{color:#8c3a32}
+.side{flex:1 1 300px}
+.side .quote{margin-bottom:18px}
+
+/* ============ 词典 ============ */
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px}
+.dc{height:132px;perspective:700px;cursor:pointer}
+.dc .in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s}
+.dc.fl .in{transform:rotateY(180deg)}
+.fr,.bk{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--line);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--card)}
+.fr .w{font-size:32px;letter-spacing:.1em}
+.fr .h{font-size:10.5px;color:var(--dim2);letter-spacing:.3em}
+.bk{transform:rotateY(180deg);background:var(--card2)}
+.bk .g{font-size:17px;color:var(--shi)}
+.bk .s{font-size:11px;color:var(--dim2);letter-spacing:.12em}
+.dnote{font-size:12.5px;color:var(--dim2);margin-top:20px}
+
+/* ============ 收梢 ============ */
+.coda{position:relative;text-align:center;padding:100px 0 60px;
+  background:radial-gradient(ellipse 700px 340px at 50% 108%, rgba(94,143,187,.12), transparent 70%)}
+.coda .g1{font-size:clamp(19px,2.6vw,25px);line-height:2.5;letter-spacing:.1em;max-width:640px;margin:0 auto}
+.coda .g1 q{display:block}
+.couplets{display:flex;justify-content:center;gap:46px;margin:52px 0 40px;flex-wrap:wrap}
+.dl{display:flex;flex-direction:row-reverse;gap:20px}
+.vcol{
+  writing-mode:vertical-rl;height:max-content;
+  font-size:19px;letter-spacing:.34em;color:var(--ink);
+  border:1px solid var(--line);padding:20px 12px;background:var(--card);
+}
+.vcol.dim{color:var(--dim);font-size:15px;letter-spacing:.28em}
+.seal{
+  width:98px;height:98px;margin:0 auto;display:grid;
+  grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr);
+  border:2px solid var(--red);color:var(--red);
+  font-size:30px;transform:rotate(-3deg);
+  opacity:0;transition:opacity .9s ease .3s,transform .9s ease .3s;
+}
+.seal.on{opacity:1;transform:rotate(-3deg) scale(1)}
+.seal span{display:flex;align-items:center;justify-content:center}
+.seal .s1{grid-area:1/2}
+.seal .s2{grid-area:2/2}
+.seal .s3{grid-area:1/1}
+.seal .s4{grid-area:2/1}
+
+/* ============ 校记双栏 ============ */
+.notes{padding:70px 0 20px}
+.nwrap{max-width:1080px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.ncard{border:1px solid var(--line);background:var(--card);padding:28px 30px}
+.ncard h4{font-size:14px;letter-spacing:.4em;color:var(--shi);font-weight:400;margin-bottom:14px}
+.ncard p{font-size:13px;color:var(--dim);line-height:2.1}
+.ncard q{color:var(--ink)}
+.ncard.red h4{color:var(--red)}
+
+footer{border-top:1px solid var(--line);margin-top:50px;padding:34px 0 46px}
+footer .wrap{font-size:12.5px;color:var(--dim2);line-height:2.2}
+footer a{color:var(--shi);text-decoration:none}
+
+/* ============ 移动端 ============ */
+@media (max-width:860px){
+  .nwrap{grid-template-columns:1fr}
+  .hero-inner{flex-direction:column;padding-top:9vh}
+  .towerbox{flex:none;align-self:center;height:440px;margin-top:14px}
+  .rider{right:24px}
+  .tblock{max-width:none}
+  .vtitle{font-size:64px}
+  .moon{width:64px;height:64px;top:2.5%;left:72%}
+  .paolia{grid-template-columns:1fr}
+  .notes{grid-template-columns:1fr}
+  .xjy-inner{flex-direction:column;gap:18px}
+  .xjy-tag{writing-mode:horizontal-tb;padding:6px 14px}
+  .wm-ghost{font-size:190px;right:-40px}
+  .tagtxt{padding-bottom:36px}
+  .couplets{gap:24px}
+  .dl{flex-direction:column-reverse;align-items:center}
+  .vcol{padding:14px 10px}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 首屏 灯街彩楼 ================= -->
+<header class="hero">
+  <div class="moon"></div>
+  <div class="stars">
+    <i style="top:12%;left:24%"></i><i style="top:20%;left:38%"></i><i style="top:9%;left:55%"></i>
+    <i style="top:26%;left:70%"></i><i style="top:15%;left:84%"></i><i style="top:33%;left:30%"></i>
+    <i style="top:40%;left:12%"></i><i style="top:6%;left:72%"></i>
+  </div>
+  <div class="hero-inner">
+    <div class="tblock">
+      <span class="kicker">剧曲｜明·佚名</span>
+      <h1 class="vtitle">荔镜记</h1>
+      <p class="tsub">明嘉靖四十五年（1566）福建建阳书坊余氏新安堂刊。潮州、泉州两部声腔合编为一册，写泉州宦门公子陈三与潮州黄五娘元宵灯市一见、彩楼抛荔、磨镜卖身、私奔成讼、终得团圆的故事。学界多视为现存最早的闽语戏文刊本之一，原书今只存日本天理大学与英国牛津大学各一部，中国国内无存。</p>
+      <p class="tfact">全剧五十五出｜库本去空白约七万一千八百字｜潮州话泉州话混写</p>
+      <p class="hint">点击彩楼边的荔枝</p>
+    </div>
+    <div class="towerbox" id="towerbox">
+      <div class="tier t3"><div class="win"></div><div class="rail"></div></div>
+      <div class="tier t2"><div class="win"></div><div class="rail"></div></div>
+      <div class="tier t1"><div class="win"></div><div class="rail"></div></div>
+      <div class="pillar"></div>
+      <button class="lyz" id="lyz" aria-label="抛下荔枝"></button>
+    </div>
+  </div>
+  <div class="street">
+    <div class="farl">
+      <i style="left:8%;animation-delay:.2s"></i><i style="left:16%;animation-delay:1.1s"></i>
+      <i style="left:31%;animation-delay:.6s"></i><i style="left:47%;animation-delay:1.7s"></i>
+      <i style="left:58%;animation-delay:.9s"></i><i style="left:66%;animation-delay:.3s"></i>
+      <i style="left:79%;animation-delay:1.4s"></i><i style="left:90%;animation-delay:.7s"></i>
+    </div>
+    <div class="streetline"></div>
+    <div class="rider" id="rider">
+      <span class="pa"></span>
+      <svg viewBox="0 0 96 52" fill="rgba(232,228,220,.78)" aria-hidden="true">
+        <ellipse cx="44" cy="30" rx="24" ry="9"/>
+        <path d="M66 26l14-7 4 3-8 9-4 4-6-2z"/>
+        <rect x="24" y="34" width="3.4" height="15"/><rect x="36" y="35" width="3.4" height="14"/>
+        <rect x="54" y="35" width="3.4" height="14"/><rect x="64" y="34" width="3.4" height="15"/>
+        <circle cx="34" cy="16" r="5.5"/>
+        <rect x="30.5" y="20" width="7" height="10" rx="2"/>
+        <rect x="36" y="21" width="11" height="2.6" rx="1.3" transform="rotate(18 36 21)"/>
+        <rect x="12" y="21" width="24" height="2.4" rx="1.2" transform="rotate(-6 12 21)"/>
+      </svg>
+    </div>
+  </div>
+  <div class="xjy" id="xjy">
+    <div class="xjy-inner">
+      <span class="xjy-tag">第一出</span>
+      <div class="xjy-body">
+        <p class="line"><q>世事短如春梦，人情薄似秋云。不须计较苦劳心，万事自然由命。</q></p>
+        <p class="gap">…</p>
+        <p class="line"><q>却遇陈三游马过，荔枝抛下绿衣郎。</q></p>
+        <p class="line"><q>陈三会合无计，学为磨镜到中堂。益春递简，得交鸾凤。</q></p>
+        <p class="line"><q>荔枝为记成夫妇，一世风流万古扬。</q></p>
+        <p class="xjy-note">开场一曲【西江月】，末上自报家门，五十五出的全部情节先在此唱完，再从头慢慢演。中间略去的两句，库本正夹着两读对照的注记，见篇末校字记。</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ================= 五十五出折子 ================= -->
+<section id="fold">
+  <div class="wrap">
+    <div class="tagrow rv"><span class="knot"></span>
+      <span class="tagtxt">五十五出折子<small>全部出目，按八段剧情分组，点一格读出目名</small></span>
+    </div>
+    <div class="groups rv" id="groups"></div>
+    <div class="foldgrid rv" id="foldgrid">
+      <button class="fc gA" data-g="A" data-n="第一出"><b>01</b><span class="ghost">开场</span></button>
+      <button class="fc gA" data-g="A" data-n="第二出"><b>02</b><q>辞亲赴任</q></button>
+      <button class="fc gA" data-g="A" data-n="第三出"><b>03</b><q>花园游赏</q></button>
+      <button class="fc gA" data-g="A" data-n="第四出"><b>04</b><q>运使登途</q></button>
+      <button class="fc gA" data-g="A" data-n="第五出"><b>05</b><q>邀朋赏灯</q></button>
+      <button class="fc gA" data-g="A" data-n="第六出"><b>06</b><q>五娘赏灯</q></button>
+      <button class="fc gA" data-g="A" data-n="第七出"><b>07</b><q>灯下搭歌</q></button>
+      <button class="fc gA" data-g="A" data-n="第八出"><b>08</b><q>士女同游</q></button>
+      <button class="fc gB" data-g="B" data-n="第九出"><b>09</b><q>林郎托媒</q></button>
+      <button class="fc gB" data-g="B" data-n="第十出"><b>10</b><q>驿丞伺接</q></button>
+      <button class="fc gB" data-g="B" data-n="第十一出"><b>11</b><q>李婆求亲</q></button>
+      <button class="fc gB" data-g="B" data-n="第十二出"><b>12</b><q>辞兄归省</q></button>
+      <button class="fc gB" data-g="B" data-n="第十三出"><b>13</b><q>李婆送聘</q></button>
+      <button class="fc gB" data-g="B" data-n="第十四出"><b>14</b><q>责媒退聘</q></button>
+      <button class="fc gC" data-g="C" data-n="第十五出"><b>15</b><q>五娘投井</q></button>
+      <button class="fc gC" data-g="C" data-n="第十六出"><b>16</b><q>伯卿游马</q></button>
+      <button class="fc gC" data-g="C" data-n="第十七出"><b>17</b><q>登楼抛荔</q></button>
+      <button class="fc gC" data-g="C" data-n="第十八出"><b>18</b><q>陈三学磨镜</q></button>
+      <button class="fc gC" data-g="C" data-n="第十九出"><b>19</b><q>打破宝镜</q></button>
+      <button class="fc gC" data-g="C" data-n="第二十出"><b>20</b><q>祝告嫦娥</q></button>
+      <button class="fc gC" data-g="C" data-n="第二十一出"><b>21</b><q>陈三扫厅</q></button>
+      <button class="fc gD" data-g="D" data-n="第二十二出"><b>22</b><q>梳妆意懒</q></button>
+      <button class="fc gD" data-g="D" data-n="第二十三出"><b>23</b><q>求计达情</q></button>
+      <button class="fc gD" data-g="D" data-n="第二十四出"><b>24</b><q>园内花开</q></button>
+      <button class="fc gD" data-g="D" data-n="第二十五出"><b>25</b><q>陈三得病</q></button>
+      <button class="fc gD" data-g="D" data-n="第二十六出"><b>26</b><q>五娘刺绣</q></button>
+      <button class="fc gD" data-g="D" data-n="第二十七出"><b>27</b><q>益春退约</q></button>
+      <button class="fc gD" data-g="D" data-n="第二十八出"><b>28</b><q>再约佳期</q></button>
+      <button class="fc gD" data-g="D" data-n="第二十九出"><b>29</b><q>鸾凤和同</q></button>
+      <button class="fc gE" data-g="E" data-n="第三十出"><b>30</b><q>林大催亲</q></button>
+      <button class="fc gE" data-g="E" data-n="第三十一出"><b>31</b><q>李婆催亲</q></button>
+      <button class="fc gE" data-g="E" data-n="第三十二出"><b>32</b><q>赤水收租</q></button>
+      <button class="fc gE" data-g="E" data-n="第三十三出"><b>33</b><q>计议归宁</q></button>
+      <button class="fc gE" data-g="E" data-n="第三十四出"><b>34</b><q>走到花园</q></button>
+      <button class="fc gE" data-g="E" data-n="第三十五出"><b>35</b><q>闺房寻女</q></button>
+      <button class="fc gE" data-g="E" data-n="第三十六出"><b>36</b><q>途遇小七</q></button>
+      <button class="fc gE" data-g="E" data-n="第三十七出"><b>37</b><q>登门逼婚</q></button>
+      <button class="fc gF" data-g="F" data-n="第三十八出"><b>38</b><q>词告知州</q></button>
+      <button class="fc gF" data-g="F" data-n="第三十九出"><b>39</b><q>渡过溪洲</q></button>
+      <button class="fc gF" data-g="F" data-n="第四十出"><b>40</b><q>公人过渡</q></button>
+      <button class="fc gF" data-g="F" data-n="第四十一出"><b>41</b><q>旅馆叙情</q></button>
+      <button class="fc gF" data-g="F" data-n="第四十二出"><b>42</b><q>灵山说誓</q></button>
+      <button class="fc gF" data-g="F" data-n="第四十三出"><b>43</b><q>途中遇捉</q></button>
+      <button class="fc gF" data-g="F" data-n="第四十四出"><b>44</b><q>知州判词</q></button>
+      <button class="fc gG" data-g="G" data-n="第四十五出"><b>45</b><q>收监送饭</q></button>
+      <button class="fc gG" data-g="G" data-n="第四十六出"><b>46</b><q>叙别发配</q></button>
+      <button class="fc gG" data-g="G" data-n="第四十七出"><b>47</b><q>敕升都堂</q></button>
+      <button class="fc gG" data-g="G" data-n="第四十八出"><b>48</b><q>忆情自叹</q></button>
+      <button class="fc gG" data-g="G" data-n="第四十九出"><b>49</b><q>途遇佳音</q></button>
+      <button class="fc gG" data-g="G" data-n="第五十出"><b>50</b><q>小七递简</q></button>
+      <button class="fc gG" data-g="G" data-n="第五十一出"><b>51</b><q>驿递遇兄</q></button>
+      <button class="fc gG" data-g="G" data-n="第五十二出"><b>52</b><q>问革知州</q></button>
+      <button class="fc gH" data-g="H" data-n="第五十三出"><b>53</b><q>再续姻亲</q></button>
+      <button class="fc gH" data-g="H" data-n="第五十四出"><b>54</b><q>衣锦回乡</q></button>
+      <button class="fc gH" data-g="H" data-n="第五十五出"><b>55</b><q>合家团圆</q></button>
+    </div>
+    <div class="capline" id="capline"><span class="ghost">点任意一格，读这一出的名目。</span></div>
+  </div>
+</section>
+
+<!-- ================= 元宵灯市 ================= -->
+<section id="dengshi">
+  <div class="wrap">
+    <div class="tagrow rv"><span class="knot"></span>
+      <span class="tagtxt">元宵灯市<small>出自第五出至第八出</small></span>
+    </div>
+    <p class="secp rv">全剧的第一推手是元宵：林大邀友上街，李婆把五娘劝出门，两家在同一条灯街上照面。灯棚上有历史人物灯，街面上有人打秋千、弄狮、抽影戏。五娘本不肯夜行，一句礼记挡了一阵，终究让给了节日。</p>
+    <div class="duolu">
+      <div class="quote rv">
+        <div class="who">大迓鼓 · 五娘</div>
+        <p><q>正月十五冥，厝厝人点灯，是实可吝。三街六巷好灯棚，又兼月光风又静，来去得桃到五更。</q></p>
+        <div class="src">第六出 · 冥即夜，厝即家，得桃即游玩</div>
+      </div>
+      <div class="quote rv">
+        <div class="who">皂罗袍 · 五娘</div>
+        <p><q>妇人夜行以烛，无烛则止。</q></p>
+        <div class="src">第六出 · 益春劝灯，五娘引古礼自守，随后还是出了门</div>
+      </div>
+      <div class="quote rv">
+        <div class="who">三合 · 过场</div>
+        <p><q>楼台上下火照火，车马来去人看人。</q></p>
+        <div class="src">第六出 · 灯街的全景联语</div>
+      </div>
+    </div>
+    <div class="lanrow rv">
+      <button class="lan" data-show="st-h1">张珙莺莺</button>
+      <button class="lan" data-show="st-b4">王祥卧冰</button>
+      <button class="lan" data-show="st-b5">抽影戏</button>
+      <button class="lan" data-show="st-b4">丁兰刻母</button>
+      <button class="lan" data-show="st-b7">上街答歌</button>
+    </div>
+    <div class="lansrc rv">
+      <p class="st" id="st-b4"><q>扮出鳌山景致，抽出王祥卧冰、丁兰刻母，尽都会活。</q><span class="swho">第六出 · 鳌山上的灯彩人物</span></p>
+      <p class="st" id="st-h1"><q data-t="jq">张珙莺莺，围棋宛然。</q><span class="swho">第六出 · 西厢灯，夹注剔除后照录</span></p>
+      <p class="st" id="st-b5"><q>打锣鼓、动乐、抽影戏。</q><span class="swho">第六出 · 灯市节目单里的一场影戏</span></p>
+      <p class="st" id="st-b7"><q>今冥是元宵大闹，街上都是公子、王孙上街答歌，来去看也不畏。</q><span class="swho">第六出 · 益春怂恿出门</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 无某歌 ================= -->
+<section id="wumou">
+  <div class="wrap">
+    <div class="tagrow rv"><span class="knot"></span>
+      <span class="tagtxt">无某歌<small>第五出 · 净角林大自报家门</small></span>
+    </div>
+    <div class="wumou rv">
+      <span class="wm-ghost">某</span>
+      <div class="wm-inner">
+        <p class="bigq"><q>世上若无花共酒，任你千岁待如何？</q></p>
+        <p class="wm-q"><q data-t="jq">拙年无某守孤单，清清冷冷无人相伴。日来独自食，冥来独自宿。</q></p>
+        <p class="wm-q"><q data-t="jq">人说一某强十被，十被甲也寒。</q></p>
+        <p class="wm-note">反派林大在第五出自报家门：潮州富户，自夸家业，只是婚头迟，乞人说笑，得了个无尾牛的外号。他的唱段把闽语词<q>某</q>（妻）一路反复送到观众耳朵里；韵句中夹着的注音记号见篇末校字记。到第六出他还顺手调戏了卓家的丫头，被对方点破：<q>林大爹，食槟榔便食，捻人手痛痛，乜事？</q></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 抛荔 ================= -->
+<section id="paoli">
+  <div class="wrap">
+    <div class="tagrow rv"><span class="knot"></span>
+      <span class="tagtxt">登楼抛荔<small>出自第十七出</small></span>
+    </div>
+    <p class="secp rv">六月，五娘与益春在楼上摘荔枝闲话，陈三骑马楼下经过。一句俗谚接住这门姻缘，荔枝连着手帕抛下去，戏文从灯节的公共空间切进闺楼的私人时刻。</p>
+    <div class="paolia">
+      <div class="quote rv" style="grid-column:1/-1">
+        <p class="bigq" style="margin:0"><q>有缘千里来相见，无缘对面不相逢。</q></p>
+        <div class="src">第十七出 · 益春语，五娘接话还记得元宵灯下那人</div>
+      </div>
+      <div class="quote rv">
+        <div class="who">五娘掷荔祝告</div>
+        <p><q>幸逢六月时光，荔枝树尾正红，荔枝树尾正红。可惜亲浅手内捧，愿你做月下人，莫负只姻缘。</q></p>
+        <div class="src">第十七出 · 唱段</div>
+      </div>
+      <div class="quote rv">
+        <div class="who">陈三马上</div>
+        <p><q>伊今关门落楼去，惹得我闷如江海，恨不生翼飞入伊房内结托恩爱。</q></p>
+        <div class="src">第十七出 · 拾起手帕包荔枝之后</div>
+      </div>
+      <div class="beats rv">
+        <div class="beat"><small>楼上</small><p>端午后荔枝正红，姑嫂摘荔消夏，望见楼下过马。</p></div>
+        <div class="beat"><small>祝告</small><p>手帕包荔，祝告天地，掷向有缘人，一掷定情。</p></div>
+        <div class="beat"><small>楼下</small><p>安童说楼上并无一物，陈三亲自拾起，收做表记。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 磨镜 ================= -->
+<section id="mojing">
+  <div class="wrap">
+    <div class="tagrow rv"><span class="knot"></span>
+      <span class="tagtxt">磨镜计<small>出自第十八出至第十九出</small></span>
+    </div>
+    <p class="secp rv">陈三打听到位家在潮州做磨镜匠的李公，借师父名头，扮作磨镜客混进黄府。镜是故意打破的，卖身扫厅是蓄谋的；第四十四出的供状里，他把全程自己拆穿。</p>
+    <div class="mirrorrow">
+      <div class="mirrorbox rv" id="mirrorbox">
+        <svg viewBox="0 0 220 240" aria-hidden="true">
+          <circle cx="110" cy="104" r="82" fill="#20242c" stroke="rgba(94,143,187,.45)" stroke-width="3"/>
+          <circle cx="110" cy="104" r="66" fill="none" stroke="rgba(94,143,187,.2)" stroke-width="1"/>
+          <path d="M110 38a66 66 0 0 0 -46 19" fill="none" stroke="rgba(232,228,220,.28)" stroke-width="5" stroke-linecap="round"/>
+          <rect x="102" y="188" width="16" height="40" rx="6" fill="#2b3947" stroke="rgba(94,143,187,.35)"/>
+          <path class="mcrack" d="M110 30 L98 74 L118 96 L96 122 L116 150 L104 186" fill="none" stroke="#c0453c" stroke-width="2.4"/>
+          <path class="mcrack" d="M98 74 L74 60 M118 96 L146 84 M96 122 L68 130 M116 150 L144 164" fill="none" stroke="rgba(192,69,60,.75)" stroke-width="1.6"/>
+          <g class="mstamp">
+            <rect x="126" y="128" width="44" height="44" fill="none" stroke="#c0453c" stroke-width="2" transform="rotate(-8 148 150)"/>
+            <text x="148" y="160" text-anchor="middle" font-size="26" fill="#c0453c" transform="rotate(-8 148 150)" font-family="Songti SC,SimSun,serif">破</text>
+          </g>
+        </svg>
+        <button class="mbtn" id="mbtn">点击磨镜</button>
+      </div>
+      <div class="mq">
+        <div class="quote rv">
+          <div class="who">陈三应对</div>
+          <p><q>熟人也是生人做。</q></p>
+          <div class="src">第十九出 · 被认出生分，一句话把生疏说成了通路</div>
+        </div>
+        <div class="quote rv">
+          <div class="who">磨镜歌</div>
+          <p><q>磨镜工夫未是低，后生人爱学这工艺。</q></p>
+          <div class="src">第十九出 · 陈三操业时的唱词</div>
+        </div>
+        <div class="quote rv">
+          <div class="who">陈三自明来意</div>
+          <p><q data-t="jq">壮节丈夫谁得知，愿学温峤下玉镜台。</q></p>
+          <div class="src">第十九出 · 借温峤镜台聘女的典，把自己代入说亲人的位置；夹注剔除照录，见校字记</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 公堂 ================= -->
+<section id="gongtang">
+  <div class="wrap">
+    <div class="tagrow rv"><span class="knot"></span>
+      <span class="tagtxt">知州判词<small>出自第四十四出</small></span>
+    </div>
+    <p class="secp rv">私奔被告到官，知州过堂，先对益春动刑，五娘唱<q>打死益春，五娘替死。莫力三哥，胡相带累。</q>陈三画押的供状把全剧前半复述了一遍，是戏里最冷静的一段文字。</p>
+    <div class="gz-wrap">
+      <div class="gz rv">
+        <h3>供 状</h3>
+        <p class="gq"><q data-t="jq">供状人陈三，年二十岁，系泉州府晋江县朋山岭后官籍。因送哥嫂广南运使，伯延是我亲兄。歇在潮州驿内，因去赏灯闲行，遇见黄厝五娘，两边相看有情。一日骑马楼下过，五娘掞落荔枝为定。思量无路得见，设计伊厝磨镜，故意力镜打破，卖身伊厝扫厅。后因言来语去，两边相爱有情，思见终不落当，相共走去泉城。林大得知来告，差人力到公厅。万望老爹明镜，依律断问分明。并无捏词情意，伯卿是我正名。情愿所供是实，画号签名。</q></p>
+      </div>
+      <div class="side">
+        <div class="quote rv">
+          <div class="who">知州骂陈三</div>
+          <p><q>你叔西川洗厕池。</q></p>
+          <div class="src">第四十四出 · 上句讥其兄，库本缺一字，存照见校字记</div>
+        </div>
+        <div class="quote rv">
+          <div class="who">判语</div>
+          <p>发配崖州安置，收监候文。官府的世界里，荔枝与宝镜都不是证据，身份才是。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 泉潮词典 ================= -->
+<section id="cidian">
+  <div class="wrap">
+    <div class="tagrow rv"><span class="knot"></span>
+      <span class="tagtxt">泉潮小词典<small>点卡翻面</small></span>
+    </div>
+    <p class="secp rv">嘉靖本的价值一半在语言：潮州话与泉州话混写，是闽语最早的成篇文献之一。挑十五个高频词，翻面看按上下文所注的意思。</p>
+    <div class="dgrid rv">
+      <div class="dc"><div class="in"><div class="fr"><span class="w">冥</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">夜</span><span class="s">今冥元宵 · 第五出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">某</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">妻</span><span class="s">人说一某强十被 · 第五出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">厝</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">家</span><span class="s">厝厝人点灯 · 第六出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">呾</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">说</span><span class="s">共恁哑爹呾 · 第五出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">睇</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">看</span><span class="s">上街睇灯 · 第五出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">得桃</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">游玩</span><span class="s">得桃到五更 · 第六出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">娘仔</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">小姐</span><span class="s">楼上娘仔 · 第十七出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">简仔</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">丫头</span><span class="s">简仔在许内 · 第五出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">诸娘人</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">女人</span><span class="s">见恁诸娘人 · 第六出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">查某仔</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">姑娘</span><span class="s">只一查某仔不识物 · 第五出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">卜</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">要</span><span class="s">卜请你干事 · 第五出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">乞</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">给、被</span><span class="s">掞落乞伊 · 第十七出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">力</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">把、拿</span><span class="s">力荔枝便掞落 · 第十七出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">掞</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">抛掷</span><span class="s">掞落荔枝 · 第四十四出</span></div></div></div>
+      <div class="dc"><div class="in"><div class="fr"><span class="w">乜</span><span class="h">荔镜记</span></div><div class="bk"><span class="g">什么</span><span class="s">卜做乜 · 第十七出</span></div></div></div>
+    </div>
+    <p class="dnote rv">释义皆编者按上下文所注；词形照库本，注音与两读夹注的处理见校字记。</p>
+  </div>
+</section>
+</main>
+
+<!-- ================= 收梢 ================= -->
+<div class="coda" id="coda">
+  <p class="g1 rv">
+    <q>悲欢离合有四字，头着分开尾团圆。</q>
+    <q>乞人编做一场戏，合家安乐拜谢天。</q>
+  </p>
+  <div class="couplets">
+    <div class="dl rv">
+      <span class="vcol"><q>宝镜重圆今日会。</q></span>
+      <span class="vcol"><q>荔枝为记两意传。</q></span>
+    </div>
+    <div class="dl rv">
+      <span class="vcol dim"><q>潮阳隔别千山外。</q></span>
+      <span class="vcol dim"><q>闽泉会合旧姻缘。</q></span>
+    </div>
+  </div>
+  <div class="seal" id="seal"><span class="s1">荔</span><span class="s2">枝</span><span class="s3">为</span><span class="s4">记</span></div>
+</div>
+
+<!-- ================= 校记 ================= -->
+<section class="notes">
+  <div class="nwrap">
+    <div class="ncard rv">
+      <h4>校字记</h4>
+      <p>库本录文自<q>泉州传统戏曲丛书</q>系统而来，正文保留两读夹注：圆括号前为丛书用词，括号内为书影用词，如温峤下注乔、玉镜台下注王镜台。另有星号与方框标记缺字漶漫，引文一律避开。本页三条引文（无某歌两句、温峤玉镜台句）与供状，均按夹注剔除后比对照录。判词里骂陈三的一句，库本上句作广字后一字缺，以问号存照，本页只录下半句。开场西江月中间跳过的两句，正夹着两读注记，故整曲分四截照录。</p>
+    </div>
+    <div class="ncard red rv">
+      <h4>时代局限</h4>
+      <p>良贱不婚与主奴之防是全剧公案的底色：陈三自辩官荫仔儿，知州仍以奴奸家长女发配崖州；益春在公堂受刑，五娘以投井抗婚，都是当日身份制度与女性处境的直接记录，照录不代今论。林大以财势逼婚、李婆说合，属市井喜剧笔法，呈现不复制。大团圆结局是戏文套式与演出市场的产物，不等于当日制度的公道。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    文本来源：殆知阁简体库〈荔镜记荔枝记〉（诗藏 · 剧曲，明嘉靖本），仓库：<a href="https://github.com/robertsong/daizhige" target="_blank" rel="noopener">daizhige-daodu</a>。<br>
+    引文均经脚本自库本切片、去标点并剔除两读夹注后逐字比对；白话部分经六字窗反扫核验。本页为古籍导读，其中身份等级、逼婚断案诸情节皆属时代产物，请以今日眼光辨之。
+  </div>
+</footer>
+
+<script>
+(function(){
+  var $=function(s,c){return (c||document).querySelector(s)},
+      $$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+
+  /* 荔枝抛落：点荔枝，坠到马前，满街灯亮，西江月揭幕 */
+  var lyz=$('#lyz'),tower=$('#towerbox'),xjy=$('#xjy'),rider=$('#rider');
+  lyz.addEventListener('click',function(){
+    if(lyz.classList.contains('fall'))return;
+    lyz.classList.add('fall');
+    setTimeout(function(){
+      tower.classList.add('lit');
+      rider.classList.add('picked');
+      xjy.classList.add('on');
+      xjy.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },1050);
+  });
+
+  /* 出目牌分组筛选与读目 */
+  var groups=$('#groups'),foldgrid=$('#foldgrid'),capline=$('#capline');
+  var GNAMES={A:'元宵',B:'议媒',C:'抛荔磨镜',D:'递简佳期',E:'逼婚',F:'兴讼',G:'发配',H:'团圆'};
+  Object.keys(GNAMES).forEach(function(k){
+    var b=document.createElement('button');
+    b.className='gb';b.textContent=GNAMES[k];
+    b.addEventListener('click',function(){
+      var sel=b.classList.contains('sel');
+      $$('.gb').forEach(function(x){x.classList.remove('sel')});
+      $$('.fc').forEach(function(c){c.classList.toggle('hide',!sel&&c.dataset.g!==k)});
+      if(!sel)b.classList.add('sel');
+    });
+    groups.appendChild(b);
+  });
+  $$('.fc').forEach(function(c){
+    c.addEventListener('click',function(){
+      $$('.fc').forEach(function(x){x.classList.remove('sel')});
+      c.classList.add('sel');
+      var q=c.querySelector('q');
+      capline.innerHTML='';
+      var an=document.createElement('span');
+      an.className='an';an.textContent=c.dataset.n;
+      capline.appendChild(an);
+      if(q){var cl=document.createElement('span');cl.textContent=q.textContent;capline.appendChild(cl);}
+      else{var g=document.createElement('span');g.className='ghost';g.textContent='开场 · 西江月报家门';capline.appendChild(g);}
+    });
+  });
+
+  /* 灯彩点灯 */
+  $$('.lan').forEach(function(l){
+    l.addEventListener('click',function(){
+      $$('.lan').forEach(function(x){x.classList.remove('lit')});
+      l.classList.add('lit');
+      $$('.lansrc .st').forEach(function(s){s.classList.remove('show')});
+      var t=$(l.dataset.show);
+      if(t)t.classList.add('show');
+    });
+  });
+
+  /* 磨镜 */
+  var mbox=$('#mirrorbox'),mbtn=$('#mbtn');
+  mbtn.addEventListener('click',function(){
+    mbox.classList.toggle('cracked');
+    mbtn.textContent=mbox.classList.contains('cracked')?'再磨一次':'点击磨镜';
+  });
+
+  /* 词典翻面 */
+  $$('.dc').forEach(function(c){
+    c.addEventListener('click',function(){c.classList.toggle('fl')});
+  });
+
+  /* 入场显影与钤印 */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+    },{threshold:.14});
+    $$('.rv').forEach(function(el){io.observe(el)});
+    var io2=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){$('#seal').classList.add('on');io2.disconnect();}});
+    },{threshold:.5});
+    io2.observe($('#coda'));
+  }else{
+    $$('.rv').forEach(function(el){el.classList.add('on')});
+    $('#seal').classList.add('on');
+  }
+})();
+</script>
+</body>
+</html>
