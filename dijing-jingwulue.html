@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>帝京景物略 · 舆图巡城 | 殆知阁导读</title>
+<style>
+:root{
+  --bg:#191917; --paper:#e8e4dc; --gold:#c9963f; --dim:#8f897c;
+  --line:#37342c; --ink:#1c1b18; --ink2:#4a463c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--paper);
+  font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.85; font-size:16px;
+}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1140px;margin:0 auto;padding:0 26px}
+.mono{font-family:"JetBrains Mono","SFMono-Regular",Consolas,monospace}
+q{quotes:none}
+q::before{content:'「';color:var(--gold)}
+q::after{content:'」';color:var(--gold)}
+.qv{color:var(--dim);font-size:12.5px;letter-spacing:.12em}
+/* 顶带 */
+.strip{border-bottom:1px solid var(--line);font-size:13px;letter-spacing:.2em;color:var(--dim)}
+.strip .wrap{display:flex;justify-content:space-between;padding-top:14px;padding-bottom:14px}
+/* 首屏：舆图 */
+.cover{position:relative;padding:54px 0 40px;border-bottom:1px solid var(--line)}
+.cover .wrap{display:grid;grid-template-columns:150px 1fr 300px;gap:34px;align-items:start}
+.vtitle{writing-mode:vertical-rl;display:flex;gap:18px;justify-content:center;height:480px}
+.vtitle h1{font-size:52px;letter-spacing:.34em;font-weight:600}
+.vtitle .vsub{writing-mode:vertical-rl;color:var(--dim);font-size:15px;letter-spacing:.3em}
+.hook{color:var(--paper);font-size:15px}
+.hook b{color:var(--gold);font-weight:600}
+.luokuan{margin-top:18px;font-size:14px;color:var(--dim)}
+.luokuan q{color:var(--paper)}
+.mapcard{border:1px solid var(--line);background:rgba(232,228,220,.03);padding:14px;position:relative}
+.mapcap{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);letter-spacing:.18em;margin-bottom:6px}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:inherit}
+.gate{fill:var(--dim);font-size:11px;letter-spacing:1px}
+.wall{fill:rgba(232,228,220,.028);stroke:#6b6557;stroke-width:1.4}
+.axle{stroke:#4a463c;stroke-width:1;stroke-dasharray:3 5}
+.water{fill:rgba(94,143,187,.16);stroke:rgba(94,143,187,.4);stroke-width:1}
+.node{cursor:pointer}
+.node circle{fill:#26241f;stroke:var(--dim);stroke-width:1.4;transition:.25s}
+.node text{fill:var(--paper);font-size:12.5px;letter-spacing:1px;transition:.25s}
+.node:hover circle,.node.act circle{stroke:var(--gold);fill:rgba(201,150,63,.22)}
+.node:hover text,.node.act text{fill:var(--gold)}
+.node .dot{fill:var(--dim);transition:.25s}
+.node:hover .dot,.node.act .dot{fill:var(--gold)}
+.pane{border:1px solid var(--line);padding:20px 20px 16px;min-height:420px;position:sticky;top:20px;background:rgba(232,228,220,.02)}
+.pane h3{font-size:23px;letter-spacing:.12em;font-weight:600;margin-bottom:2px}
+.pane .pwho{margin-bottom:12px}
+.pane .pq{margin:10px 0 0}
+.pane .pq q{font-size:15.5px;line-height:2}
+.pane .pbai{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);color:var(--dim);font-size:13.8px;line-height:1.95}
+.panetip{color:var(--dim);font-size:12.5px;letter-spacing:.15em;margin-bottom:8px}
+/* 通用节 */
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.shead{display:flex;align-items:baseline;gap:14px;margin-bottom:26px}
+.sno{writing-mode:vertical-rl;font-size:12px;color:var(--gold);letter-spacing:.3em;border-right:1px solid var(--line);padding-right:10px}
+.shead h2{font-size:29px;letter-spacing:.14em;font-weight:600}
+.shead .slede{color:var(--dim);font-size:14px}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.rv.on{opacity:1;transform:none}
+/* 三人成书 */
+.fabang{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:30px}
+.fab{border:1px solid var(--line);padding:20px 18px 16px;cursor:pointer;transition:.3s;position:relative}
+.fab .fv{writing-mode:vertical-rl;position:absolute;top:18px;right:16px;font-size:12px;color:var(--dim);letter-spacing:.25em}
+.fab h4{font-size:20px;letter-spacing:.2em;font-weight:600;margin-bottom:6px}
+.fab .fr{color:var(--gold);font-size:13px;letter-spacing:.2em;margin-bottom:10px}
+.fab p{color:var(--dim);font-size:13.5px;line-height:1.95}
+.fab.act{border-color:var(--gold);background:rgba(201,150,63,.06)}
+.fab.act h4{color:var(--gold)}
+.faquote{border-left:2px solid var(--gold);padding:6px 0 6px 20px;margin-bottom:26px}
+.faquote q{font-size:16.5px;line-height:2}
+.weixiang{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0 18px}
+.wx{border:1px solid var(--line);text-align:center;padding:18px 10px 14px;background:rgba(232,228,220,.02)}
+.wx .wi{font-size:30px;color:var(--gold);font-weight:600}
+.wx h5{font-size:15px;letter-spacing:.2em;margin:4px 0 6px}
+.wx p{color:var(--dim);font-size:13px}
+.douyan{display:grid;grid-template-columns:auto 1fr;gap:34px;margin-top:34px;align-items:center}
+.dyq{writing-mode:vertical-rl;height:280px;font-size:22px;letter-spacing:.28em;line-height:2.1;border-left:1px solid var(--line);padding-left:22px}
+.dyq q::before,.dyq q::after{color:var(--dim)}
+.dynote{color:var(--dim);font-size:14.2px;line-height:2.05}
+.dynote b{color:var(--paper)}
+.houshi{margin-top:30px;border:1px dashed var(--line);padding:18px 22px;font-size:13.8px;color:var(--dim);line-height:2}
+.houshi b{color:var(--gold);font-weight:600}
+/* 岁时签墙 */
+.qwall{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.qcard{border:1px solid var(--line);padding:16px 16px 13px;cursor:pointer;transition:.28s;background:rgba(232,228,220,.02)}
+.qcard .qd{color:var(--gold);font-size:12.5px;letter-spacing:.22em}
+.qcard h5{font-size:18px;letter-spacing:.14em;margin:4px 0 8px;font-weight:600}
+.qcard p{color:var(--dim);font-size:13px;line-height:1.9}
+.qcard.act{border-color:var(--gold);background:rgba(201,150,63,.07)}
+.qcard.act h5{color:var(--gold)}
+.sstage{margin-top:22px;border:1px solid var(--line);padding:24px 26px;min-height:170px;background:rgba(232,228,220,.03)}
+.sstage .sq{margin-bottom:6px}
+.sstage .sq q{font-size:16px;line-height:2.05}
+.sstage .sbai{color:var(--dim);font-size:13.8px;margin-top:12px;line-height:1.95}
+.dengshi-big{margin-top:30px;display:grid;grid-template-columns:1.2fr .8fr;gap:20px}
+.dsbox{border:1px solid var(--line);padding:22px 24px;background:rgba(232,228,220,.02)}
+.dsbox h4{color:var(--gold);font-size:15px;letter-spacing:.25em;margin-bottom:10px}
+.dsbox q{font-size:15.5px;line-height:2.05}
+.dsbox .dn{color:var(--dim);font-size:13.5px;margin-top:10px;line-height:1.95}
+/* 燕九 */
+.yanjiu{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+.hua{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.hua button{
+  background:none;border:1px solid var(--line);color:var(--paper);
+  font-family:inherit;font-size:15px;letter-spacing:.18em;padding:9px 20px;cursor:pointer;transition:.25s}
+.hua button.act{border-color:var(--gold);color:var(--gold);background:rgba(201,150,63,.08)}
+.yjstage{border:1px solid var(--line);padding:22px 24px;min-height:150px;background:rgba(232,228,220,.02)}
+.yjstage q{font-size:16px;line-height:2.05}
+.yjstage .yb{color:var(--dim);font-size:13.8px;margin-top:12px;line-height:1.95}
+.zhaoshu{background:var(--paper);color:var(--ink);padding:26px 26px 20px;transform:rotate(-1.2deg);box-shadow:8px 10px 0 rgba(0,0,0,.35)}
+.zhaoshu .zt{font-size:13px;letter-spacing:.3em;color:#8a6b30;margin-bottom:10px}
+.zhaoshu q{color:var(--ink);font-size:15.5px;line-height:2.05}
+.zhaoshu q::before,.zhaoshu q::after{color:#8a6b30}
+.zhaoshu .zb{color:#6a6152;font-size:13.5px;margin-top:12px;line-height:1.95}
+.yjnote{color:var(--dim);font-size:14.2px;line-height:2.05;margin-top:22px}
+.yjnote b{color:var(--paper)}
+/* 忠祠展卷 */
+.zhenci{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.juan{border:1px solid var(--line);background:rgba(232,228,220,.02);overflow:hidden}
+.jhead{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;cursor:pointer;border-bottom:1px solid transparent;transition:.3s}
+.jhead h4{font-size:20px;letter-spacing:.18em;font-weight:600}
+.jhead .jtag{color:var(--gold);font-size:12.5px;letter-spacing:.2em}
+.jbody{max-height:0;overflow:hidden;transition:max-height .55s ease}
+.juan.open .jbody{max-height:760px;border-top:1px solid var(--line)}
+.jinner{padding:20px;display:grid;grid-template-columns:auto 1fr;gap:20px}
+.jv{writing-mode:vertical-rl;height:330px;font-size:15.5px;line-height:2.2;letter-spacing:.1em}
+.jv q::before,.jv q::after{color:var(--dim)}
+.jr{display:flex;flex-direction:column;gap:12px}
+.jr p{color:var(--dim);font-size:13.6px;line-height:1.95}
+.jr .jmore{border-top:1px dashed var(--line);padding-top:10px}
+.jmore q{font-size:14.5px}
+.zcnote{margin-top:24px;color:var(--dim);font-size:14.2px;line-height:2.05}
+.zcnote b{color:var(--paper)}
+/* 尾屏 */
+.fin{padding:90px 0 60px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.fin .wrap{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
+.finq{writing-mode:vertical-rl;height:430px;font-size:19px;letter-spacing:.22em;line-height:2.3}
+.finq q::before,.finq q::after{color:var(--dim)}
+.finq q{color:var(--paper)}
+.finleft h2{font-size:30px;letter-spacing:.16em;font-weight:600;margin-bottom:18px}
+.finleft p{color:var(--dim);font-size:14.4px;line-height:2.1;margin-bottom:12px}
+.finleft p b{color:var(--paper)}
+.seal{
+  writing-mode:horizontal-tb;width:86px;height:86px;border:2.5px solid #a5413a;color:#a5413a;
+  display:flex;align-items:center;justify-content:center;font-size:26px;letter-spacing:4px;
+  font-weight:700;transform:rotate(-4deg);white-space:nowrap;background:rgba(165,65,58,.06)}
+.finseal{display:flex;gap:20px;align-items:center;margin-top:26px}
+footer{padding:34px 0 44px}
+footer .xx{display:block;color:#7d776a;font-size:12.8px;line-height:2}
+@media (max-width:960px){
+  .cover .wrap{grid-template-columns:1fr}
+  .vtitle{height:auto;writing-mode:horizontal-tb;flex-direction:column;gap:8px}
+  .vtitle h1{font-size:38px}
+  .vtitle .vsub{writing-mode:horizontal-tb}
+  .pane{position:static;min-height:0}
+  .fabang,.qwall{grid-template-columns:repeat(2,1fr)}
+  .weixiang{grid-template-columns:repeat(2,1fr)}
+  .dengshi-big,.yanjiu,.zhenci{grid-template-columns:1fr}
+  .douyan{grid-template-columns:1fr}
+  .dyq{height:200px}
+  .fin .wrap{grid-template-columns:1fr}
+  .finq{height:300px}
+  .jv{height:260px}
+  .jinner{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="strip"><div class="wrap"><span>殆知阁导读 · 第伍佰贰拾陆篇</span><span>史藏地理｜明 刘侗 于奕正</span></div></div>
+
+<!-- ============ 首屏：舆图巡城 ============ -->
+<header class="cover" id="map">
+  <div class="wrap">
+    <div class="vtitle rv">
+      <h1>帝京景物略</h1>
+      <span class="vsub">明 刘侗 撰 于奕正 撰 周损 辑</span>
+    </div>
+    <div>
+      <p class="hook rv">一部<b>用脚核出来</b>的京城导览：八卷，一百三十余目，城内城外西山畿辅一一走到。书成于崇祯八年冬；九年余后，城破。这页做成一张可点的舆图，九处景物，点开即是原句。</p>
+      <div class="luokuan rv">落款照录：<q data-k="xu5">崇祯八年乙亥，冬至后二日，麻城刘侗撰</q></div>
+      <div class="mapcard rv" style="margin-top:18px">
+        <div class="mapcap"><span>京师城垣示意（内城九门 外城七门）</span><span>点击 ◈ 巡游</span></div>
+        <svg viewBox="0 0 960 700" role="img" aria-label="明代北京城垣示意图">
+          <rect class="wall" x="90" y="60" width="560" height="400" rx="10"/>
+          <rect class="wall" x="170" y="460" width="400" height="160" rx="8"/>
+          <line class="axle" x1="375" y1="40" x2="375" y2="640"/>
+          <path class="water" d="M232,132 C262,124 286,140 288,166 C290,192 274,206 258,214 C240,222 222,214 218,192 C214,168 210,140 232,132 Z"/>
+          <path class="water" d="M300,196 C312,192 320,198 320,214 L318,330 C318,344 306,348 300,342 C294,336 294,326 294,314 L294,214 C294,204 294,199 300,196 Z"/>
+          <rect class="wall" x="310" y="170" width="130" height="190" rx="4" style="stroke:#7a7361"/>
+          <text class="gate" x="340" y="262" text-anchor="end" style="fill:#5d574a">宫阙</text>
+          <text class="gate" x="255" y="118" style="fill:#5e8fbb">积水潭</text>
+          <!-- 内城九门 -->
+          <g class="gn"><circle cx="300" cy="60" r="3.5" fill="#8f897c"/><text class="gate" x="300" y="48" text-anchor="middle">安定门</text></g>
+          <g class="gn"><circle cx="218" cy="60" r="3.5" fill="#8f897c"/><text class="gate" x="218" y="48" text-anchor="middle">德胜门</text></g>
+          <g class="gn"><circle cx="90" cy="150" r="3.5" fill="#8f897c"/><text class="gate" x="76" y="142" text-anchor="end">西直门</text></g>
+          <g class="gn"><circle cx="90" cy="300" r="3.5" fill="#8f897c"/><text class="gate" x="76" y="294" text-anchor="end">阜成门</text></g>
+          <g class="gn"><circle cx="650" cy="150" r="3.5" fill="#8f897c"/><text class="gate" x="664" y="142">东直门</text></g>
+          <g class="gn"><circle cx="650" cy="300" r="3.5" fill="#8f897c"/><text class="gate" x="664" y="294">朝阳门</text></g>
+          <g class="gn"><circle cx="452" cy="460" r="3.5" fill="#8f897c"/><text class="gate" x="452" y="486" text-anchor="middle">崇文门</text></g>
+          <g class="gn"><circle cx="298" cy="460" r="3.5" fill="#8f897c"/><text class="gate" x="298" y="486" text-anchor="middle">宣武门</text></g>
+          <g class="gn"><circle cx="375" cy="460" r="4" fill="#c9963f"/><text class="gate" x="375" y="444" text-anchor="middle">正阳门</text></g>
+          <!-- 外城 -->
+          <g class="gn"><circle cx="375" cy="620" r="3.5" fill="#8f897c"/><text class="gate" x="375" y="644" text-anchor="middle">永定门</text></g>
+          <g class="gn"><circle cx="570" cy="540" r="3.5" fill="#8f897c"/><text class="gate" x="584" y="544">广渠门</text></g>
+          <g class="gn"><circle cx="170" cy="540" r="3.5" fill="#8f897c"/><text class="gate" x="156" y="544" text-anchor="end">广宁门</text></g>
+          <!-- 景物节点 -->
+          <g class="node" data-p="manjing" tabindex="0"><rect x="332" y="8" width="16" height="16" transform="rotate(45 340 16)" fill="none" stroke="#8f897c" stroke-width="1.3"/><circle cx="346" cy="14" r="14" fill="rgba(0,0,0,0)"/><text x="356" y="21">满井</text></g>
+          <g class="node" data-p="wenxiang" tabindex="0"><circle cx="430" cy="118" r="6"/><circle cx="436" cy="112" r="15" fill="rgba(0,0,0,0)"/><text x="444" y="123">文丞相祠</text></g>
+          <g class="node" data-p="shijing" tabindex="0"><circle cx="252" cy="176" r="6"/><circle cx="250" cy="172" r="15" fill="rgba(0,0,0,0)"/><text x="196" y="168" text-anchor="start">十刹海</text></g>
+          <g class="node" data-p="dengshi" tabindex="0"><circle cx="540" cy="238" r="6"/><circle cx="546" cy="232" r="15" fill="rgba(0,0,0,0)"/><text x="554" y="243">灯市</text></g>
+          <g class="node" data-p="yushaobao" tabindex="0"><circle cx="492" cy="418" r="6"/><circle cx="498" cy="412" r="15" fill="rgba(0,0,0,0)"/><text x="506" y="423">于少保祠</text></g>
+          <g class="node" data-p="gaoliang" tabindex="0"><circle cx="52" cy="212" r="6"/><circle cx="52" cy="212" r="15" fill="rgba(0,0,0,0)"/><text x="30" y="196">高梁桥</text></g>
+          <g class="node" data-p="baiyun" tabindex="0"><circle cx="104" cy="512" r="6"/><circle cx="106" cy="508" r="15" fill="rgba(0,0,0,0)"/><text x="60" y="540">白云观</text></g>
+          <g class="node" data-p="huangjintai" tabindex="0"><circle cx="706" cy="322" r="6"/><circle cx="712" cy="316" r="15" fill="rgba(0,0,0,0)"/><text x="720" y="327">黄金台</text></g>
+          <g class="node" data-p="juyantai" tabindex="0"><circle cx="612" cy="652" r="6"/><circle cx="618" cy="646" r="15" fill="rgba(0,0,0,0)"/><text x="626" y="657">聚燕台</text></g>
+        </svg>
+      </div>
+    </div>
+    <aside class="pane rv" id="pane">
+      <div class="panetip">景物签</div>
+      <div id="pane-body"></div>
+    </aside>
+  </div>
+</header>
+
+<!-- ============ 三人成书 ============ -->
+<section id="fa">
+  <div class="wrap">
+    <div class="shead rv"><span class="sno">成书</span><h2>三人，一脚书一步</h2><span class="slede">搜讨有职，摛辞有职，采诗有职</span></div>
+    <p class="rv" style="color:var(--dim);font-size:14.6px;max-width:820px">分工写在自序里，像一份田野作业的方法书。于奕正是宛平人，在燕地山水间走了二十年；刘侗是麻城人，在京城游了五年；采诗的是他们的朋友周损。</p>
+    <div class="fabang rv">
+      <div class="fab act" data-f="sou">
+        <span class="fv">宛平 于奕正</span><h4>搜讨</h4><div class="fr">职搜讨</div>
+        <p>管跑腿与事实：景一未详就裹粮过夜，事一未详就翻箱倒箧。疑者不滥收，信者不遗漏。</p>
+      </div>
+      <div class="fab" data-f="ci">
+        <span class="fv">麻城 刘侗</span><h4>摛辞</h4><div class="fr">职摛辞</div>
+        <p>管下笔：事不典不经不敢写，语一未详就拉着路人追问，字一未详跟人争到脸红。</p>
+      </div>
+      <div class="fab" data-f="shi">
+        <span class="fv">周损</span><h4>采诗</h4><div class="fr">职之</div>
+        <p>管诗：每篇之末各系一诗，选目严格，只取雅南颂一路，其余不收。</p>
+      </div>
+    </div>
+    <div class="faquote rv" id="fabox"><q data-k="xu1">侗北学而燕游者五年，侗之友于奕正，燕人也，二十年燕山水间</q> <span class="qv" data-who="自序"></span></div>
+    <div class="weixiang rv">
+      <div class="wx"><div class="wi">景</div><h5>裹粮宿舂</h5><p>没看仔细就带粮过夜</p></div>
+      <div class="wx"><div class="wi">事</div><h5>发箧细括</h5><p>没查清楚就翻遍书箧</p></div>
+      <div class="wx"><div class="wi">语</div><h5>逢襟捉问</h5><p>没听确切就扯住人问</p></div>
+      <div class="wx"><div class="wi">字</div><h5>动色执争</h5><p>没辨明白就变脸力争</p></div>
+    </div>
+    <div class="faquote rv"><q data-k="fl1">景一未详，裹粮宿舂；事一未详，发箧细括；语一未详，逢襟捉问；字一未详，动色执争。历春徂冬，铢铢緉緉而帙成</q> <span class="qv" data-who="凡例"></span></div>
+    <div class="douyan rv">
+      <div class="dyq"><q data-k="xu7">雒不如关，关不如蓟。守雒以天下，守关以关，守天下必以蓟</q></div>
+      <div class="dynote">
+        <p><b>书前还有一篇定都论。</b>序文把北京放进天下棋局：守中原要以天下守洛阳，守关中要靠一道关，而守天下，必须以北京。成祖定都，是天子亲自守边。写到都人的日常，只有八个字的底色，说全城红尘白日，忙得没有闲人。</p>
+        <p style="margin-top:10px"><q data-k="xu6">红尘白日，无有闲人</q></p>
+      </div>
+    </div>
+    <div class="houshi rv"><b>书后事</b>　书成时，刘侗已是前一年的甲戌新科进士（1634），随后外放吴县知县，未及到任，病故于途（1637）。半个世纪后朱彝尊编〈日下旧闻〉考北京掌故，四库提要讥此书文风幺弦侧调、只配覆瓿，却也承认日下旧闻以它为椎轮。一座城后来换了无数本新的导览，第一本仍是这个没到任的县令写的。</div>
+  </div>
+</section>
+
+<!-- ============ 正月签墙 ============ -->
+<section id="sushi">
+  <div class="wrap">
+    <div class="shead rv"><span class="sno">岁时</span><h2>正月，签墙八签</h2><span class="slede">春场一目的民俗账，点签开原句</span></div>
+    <p class="rv" style="color:var(--dim);font-size:14.6px;max-width:820px">凡例说明过它的体例：岁时附在春场目下。这一笔账从元旦记到填仓，惊蛰前的北京，一半是灯，一半是孩子。</p>
+    <div class="qwall rv" id="qwall">
+      <div class="qcard act" data-s="tiandeng"><div class="qd">元日</div><h5>天灯</h5><p>家家门前立竿，松柏枝扎楼阁，夜夜点灯</p></div>
+      <div class="qcard" data-s="dengshikai"><div class="qd">初八</div><h5>灯市开</h5><p>东华门外集市场，连开十一天</p></div>
+      <div class="qcard" data-s="zouqiao"><div class="qd">上元</div><h5>走桥摸钉</h5><p>白绫衫夜行过桥祛病，摸门钉求男</p></div>
+      <div class="qcard" data-s="jiugu"><div class="qd">十一至十六</div><h5>黄河九曲灯</h5><p>秫秸扎迷宫，悬灯误径，久迷不出</p></div>
+      <div class="qcard" data-s="sandeng"><div class="qd">十三</div><h5>散灯</h5><p>小盏一百零八枚，撒遍全院每个角落</p></div>
+      <div class="qcard" data-s="dagui"><div class="qd">不拘日</div><h5>打鬼替鬼</h5><p>孩子以绳系腰互击互捉，驱傩余音</p></div>
+      <div class="qcard" data-s="moxier"><div class="qd">不拘日</div><h5>摸虾儿</h5><p>绳围作城，蒙眼摸人，敲声换位</p></div>
+      <div class="qcard" data-s="tiancang"><div class="qd">廿五</div><h5>填仓</h5><p>大吃饼饵，把仓填满</p></div>
+    </div>
+    <div class="sstage rv" id="sstage"></div>
+    <div class="dengshi-big rv">
+      <div class="dsbox">
+        <h4>灯市十一天</h4>
+        <p><q data-k="ds1">今北都灯市，起初八，至十三而盛，迄十七乃罢也</q></p>
+        <p style="margin-top:10px"><q data-k="ds2">市之日，省直之商旅，夷蛮闽貊之珍异，三代八朝之骨董，五等四民之服用物，皆集</q></p>
+        <p class="dn">白日是市，入夜是灯：珍宝、骨董与日用百货同场，楼阁租赁一日数百缗，楼价高则岁丰。今天北京的灯市口地名，就是这十一天留下的。</p>
+      </div>
+      <div class="dsbox">
+        <h4>放偷三日</h4>
+        <p><q data-k="ds3">妇女相率宵行，以消疾病，曰走百病，又曰走桥</q></p>
+        <p class="dn">书末顺手记了一笔辽金旧俗：元宵前后官府许偷三日，偷了也不问罪，偷到妻女也一笑放过。作者只批三个字，夷俗哉。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 燕九会神仙 ============ -->
+<section id="yanyan">
+  <div class="wrap">
+    <div class="shead rv"><span class="sno">燕九</span><h2>正月十九，赌一场相遇</h2><span class="slede">白云观会神仙</span></div>
+    <div class="yanjiu">
+      <div class="rv">
+        <p style="color:var(--dim);font-size:14.6px">长春真人丘处机的道场在西便门外。观里塑像与右边的藏蜕塔，作者偏要较真：像是假的，蜕也是假的，真的只剩一个问题，真人还在吗。燕九这天的白云观是一场合神仙的赌局。</p>
+        <p style="margin-top:12px"><q data-k="cs8">十九日，集白云观，曰耍燕九，弹射走马焉</q></p>
+        <p style="margin-top:10px;color:var(--dim);font-size:14px">传说这一天真人必来，没人知道他化成什么模样：</p>
+        <div class="hua" style="margin-top:18px">
+          <button data-h="0" class="act">化冠绅</button>
+          <button data-h="1">化游士冶女</button>
+          <button data-h="2">化乞丐</button>
+        </div>
+        <div class="yjstage" id="yjstage"></div>
+        <p style="margin-top:14px"><q data-k="by4">故羽士十百，结圜松下，冀幸一遇之</q></p>
+        <div class="yjnote"><p>于是道士们结圜松下，等一个认不出的仙人。全书给这场民俗的注脚只有一句话：<b>像假，蜕假，人不可知</b>，但全城照赌不误。</p></div>
+      </div>
+      <div class="rv">
+        <div class="zhaoshu">
+          <div class="zt">成吉思汗手诏（节录照录）</div>
+          <q data-k="zhao">朕居北野，嗜欲莫生，每一衣一食，与牛竖马圉，共弊同享</q>
+          <p class="zb">诏书自陈住在大漠，衣食用度与牧马人无异，听闻丘师先生之风，备轻骑素车相邀。</p>
+        </div>
+        <div class="dsbox" style="margin-top:24px">
+          <h4>雪山答问</h4>
+          <p><q data-k="by5">设座黄幄东，与讲钧礼而不名，延问至道</q></p>
+          <p style="margin-top:8px"><q data-k="by6">真人大略答以节欲保躬，天道恶杀，治尚无为之理</q></p>
+          <p class="dn">行营设座黄幄之东，行对君之礼而不称名。真人答以三件事：省嗜欲，戒杀戮，行无为。太祖录之策成书，赐号神仙，掌天下道教。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 忠祠展卷 ============ -->
+<section id="zhongci">
+  <div class="wrap">
+    <div class="shead rv"><span class="sno">忠祠</span><h2>城里先立好的碑</h2><span class="slede">导览册里的两座祠</span></div>
+    <div class="zhenci rv">
+      <div class="juan" id="jwx">
+        <div class="jhead"><h4>文丞相祠</h4><span class="jtag">展卷</span></div>
+        <div class="jbody"><div class="jinner">
+          <div class="jv"><q data-k="wx1">今顺天府学，因宋文丞相义尽之柴市，祠丞相学宫中，曰教忠坊</q></div>
+          <div class="jr">
+            <p>顺天府学就设在文天祥就义的柴市旧地，祠入学宫，坊名教忠：让上学的孩子每天路过殉国者。</p>
+            <p class="jmore">传说至元壬午年他受刑那天，白日风沙大作，宫中只好点烛行走。元廷追封他，神主初奠时旋风卷走，雷声如怒，直到改回宋室官爵，天才放晴。</p>
+            <p class="jmore"><q data-k="wx2">至元壬午十二月初九日，风沙昼晦，宫中皆秉烛行</q></p>
+          </div>
+        </div></div>
+      </div>
+      <div class="juan" id="jys">
+        <div class="jhead"><h4>于少保祠</h4><span class="jtag">展卷</span></div>
+        <div class="jbody"><div class="jinner">
+          <div class="jv"><q data-k="yu1">公一臂一肩，定正统己巳之变</q></div>
+          <div class="jr">
+            <p>崇文门内东，忠节祠祀于谦。土木之变他力排南迁、决战守城，保住了北京；夺门之变后却被杀于西市。从冤死到改谥忠肃，一百三十三年。</p>
+            <p class="jmore">书里引了政敌徐有贞的原话，那句话成了这桩冤案最好的自供状。</p>
+            <p class="jmore"><q data-k="yu3">不杀于谦，今日之事无名</q></p>
+            <p class="jmore"><q data-k="yu2">凡百有三十三年而论定</q></p>
+          </div>
+        </div></div>
+      </div>
+    </div>
+    <p class="zcnote rv">两座祠都在导览的寻常线路上。写书的人不知道，九年余后都城会蹈他们守过的城的覆辙；书的读者后来知道，书里早把<b>守与殉</b>两件事都写全了。</p>
+  </div>
+</section>
+
+<!-- ============ 尾屏：聚燕台 ============ -->
+<section class="fin" id="fin">
+  <div class="wrap">
+    <div class="finleft rv">
+      <h2>全书最后一个去处</h2>
+      <p>不在城里，在京城东南采育的野地里：一座丈高的土台。每年秋社，京畿城村的燕子带着当年的雏鸟在此集结，呢喃两日，然后各自南去。</p>
+      <p>写城的书，结尾是一部<b>离别手册</b>：燕来有巢，燕去有台。九年余后城破，都人四散如燕，这本导览成了纸上最后的完整京城。</p>
+      <div class="finseal rv">
+        <div class="seal">景物略</div>
+        <span class="qv" style="max-width:220px;display:inline-block">崇祯八年乙亥 冬至后二日 麻城刘侗撰</span>
+      </div>
+    </div>
+    <div class="finq rv"><q data-k="jy1">岁秋社，燕辞巢日，京畿城村燕，必各将其成雏数千百聚此台，呢喃竟二日，然后乃能去之</q><q data-k="jy2">为话将别，为语约所群归也</q> <span class="qv" data-who="卷八 畿辅名迹"></span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="xx">文本来源:殆知阁简体库,史藏地理部〈帝京景物略〉一册,明刘侗、于奕正撰,周损辑,<a href="https://github.com/daizhige/daizhige-simplified" rel="noopener">仓库链接</a>;系列总目见 daizhige-daodu 仓库。</span>
+    <span class="xx">引文均经脚本与库本去标点、归一后逐字比对核验;落款、卷属签照录库本;地图为示意,方位为约略,不作测绘。</span>
+    <span class="xx">时代局限:篇中进香酬神、束草迎姑娘、摸钉求男、男尊女卑与旧式忠节观念皆晚明日俗现场,照录不代今人立论;刘侗、于奕正生平及书后事据四库提要、地方志与今人考述整理。</span>
+  </div>
+</footer>
+
+<!-- ============ 引文库（页面交互数据，静态隐藏区） ============ -->
+<div id="bank" hidden>
+  <div data-b="manjing"><h3>满井</h3><div class="pwho qv" data-who="卷一 城北内外"></div><div class="pq"><q data-k="mj1">井高于地，泉高于井，四时不落，百亩一润，所谓滥泉也</q></div><div class="pbai">出安定门往东五里的一眼旧井：泉比井高，井比地高，四时不涸，润着百亩田。藤老藓深，藏着小亭。京城人的初春第一游，从这里开始。</div></div>
+  <div data-b="wenxiang"><h3>文丞相祠</h3><div class="pwho qv" data-who="卷一 城北内外"></div><div class="pq"><q data-k="wx1">今顺天府学，因宋文丞相义尽之柴市，祠丞相学宫中，曰教忠坊</q></div><div class="pq"><q data-k="wx2">至元壬午十二月初九日，风沙昼晦，宫中皆秉烛行</q></div><div class="pbai">府学建在文天祥就义的柴市，祠挂在学宫里，坊名教忠。柴市化作书声，殉国者成了童子上学路上的第一课。</div></div>
+  <div data-b="shijing"><h3>十刹海</h3><div class="pwho qv" data-who="卷一 城北内外"></div><div class="pq"><q data-k="sch1">京师梵宇，莫十刹海若者</q></div><div class="pq"><q data-k="sch2">终身一衲，终身未尝寝</q></div><div class="pbai">评全城梵宇，不比殿宇比功课。方丈三藏师终身一件衲衣、终身不曾躺卧，日出乞食；门前一瓢，瓢口朝天城里人便知道师父没吃饭，抢着供饭。</div></div>
+  <div data-b="dengshi"><h3>灯市</h3><div class="pwho qv" data-who="卷二 城东内外"></div><div class="pq"><q data-k="ds1">今北都灯市，起初八，至十三而盛，迄十七乃罢也</q></div><div class="pq"><q data-k="ds2">市之日，省直之商旅，夷蛮闽貊之珍异，三代八朝之骨董，五等四民之服用物，皆集</q></div><div class="pbai">东华门外二里，白日是百货大会，入夜是灯与烟火。地上是市，楼上是勋戚家眷的看席：丝竹光影里，照得人无妍媸。</div></div>
+  <div data-b="yushaobao"><h3>于少保祠</h3><div class="pwho qv" data-who="卷二 城东内外"></div><div class="pq"><q data-k="yu1">公一臂一肩，定正统己巳之变</q></div><div class="pq"><q data-k="yu2">凡百有三十三年而论定</q></div><div class="pq"><q data-k="yu3">不杀于谦，今日之事无名</q></div><div class="pbai">土木之变他保住北京，夺门之变他死于西市。冤案到改谥，一百三十三年。政敌那句狠话，成了他冤案的自供状。</div></div>
+  <div data-b="gaoliang"><h3>高梁桥</h3><div class="pwho qv" data-who="卷五 西城外"></div><div class="pq"><q data-k="gl1">辞山而平，未到城而净，轻风感之，作青罗纹纸痕</q></div><div class="pq"><q data-k="gl2">西山入座，涧水入厨</q></div><div class="pq"><q data-k="gl3">小似钱塘西湖然</q></div><div class="pbai">西直门外踏青首选：水面起细纹，堤柳高十丈，三里外即极乐寺，山色都进了宴席。士大夫的考语：像极了杭州西湖。</div></div>
+  <div data-b="baiyun"><h3>白云观</h3><div class="pwho qv" data-who="卷五 西城外"></div><div class="pq"><q data-k="by1">中塑白晰皴皱无须眉者，长春丘真人像也</q></div><div class="pq"><q data-k="by2">像假也，蜕者亦假也，真人其存欤</q></div><div class="pbai">长春真人道场。塑像白面皴皱无须眉；右边土阜藏蜕。像是假的，蜕也是假的，留下的只有那个问句：真人还在吗。详见下节燕九。</div></div>
+  <div data-b="huangjintai"><h3>黄金台</h3><div class="pwho qv" data-who="卷二 城东内外"></div><div class="pq"><q data-k="hj1">有台名，无黄金名</q></div><div class="pq"><q data-k="hj2">三黄金台，岿然皆土阜</q></div><div class="pbai">燕昭王千金延士的传说之地。作者较真：经史只说筑宫，不说筑台；易水边两处、朝阳门外一处，三座黄金台，其实都是土阜。</div></div>
+  <div data-b="juyantai"><h3>聚燕台</h3><div class="pwho qv" data-who="卷八 畿辅名迹"></div><div class="pq"><q data-k="jy1">岁秋社，燕辞巢日，京畿城村燕，必各将其成雏数千百聚此台，呢喃竟二日，然后乃能去之</q></div><div class="pq"><q data-k="jy2">为话将别，为语约所群归也</q></div><div class="pbai">京畿的燕子每年秋社在此集结两日再南去，像一场约好的告别。全书八卷收束在一个离字的风景上。</div></div>
+
+  <div data-b="f:sou"><div class="pq"><q data-k="xu3">所未经过者，分往而必实之，出门各向，归相报也</q></div><div class="pbai" style="margin-top:8px">分头实地去走，回来互相报告：没亲自到过的地方，宁可不写。这四个未详，是全书的方法论。</div></div>
+  <div data-b="f:ci"><div class="pq"><q data-k="xu2">奕正职搜讨，侗职摛辞</q></div><div class="pbai" style="margin-top:8px">事实关由搜讨的人把，文笔关由执笔的人把：双向否决，谁也不能单独定稿。</div></div>
+  <div data-b="f:shi"><div class="pq"><q data-k="zhou">所采古今诗歌，以雅、以南、以颂，舍是无取焉，侗之友周损职之</q></div><div class="pbai" style="margin-top:8px">选诗只取雅正一路：一百三十余目，每目系诗，是这部风物志的另一半。</div></div>
+
+  <div data-b="s:tiandeng"><div class="sq"><q data-k="cs11">家家竿标楼阁，松柏枝荫之，夜灯之，曰天灯</q></div><div class="sbai">元旦起家家立竿，松柏枝扎成楼阁罩着灯，从初一点到正月尾。</div></div>
+  <div data-b="s:dengshikai"><div class="sq"><q data-k="cs1">八日至十八日，集东华门外，曰灯市</q></div><div class="sbai">与灯市目互证：初八开市，十三最盛，十七收罢。</div></div>
+  <div data-b="s:zouqiao"><div class="sq"><q data-k="cs2">妇女着白绫衫，队而宵行，谓无腰腿诸疾，曰走桥</q></div><div class="sq" style="margin-top:8px"><q data-k="cs3">至城各门，手暗触钉，谓男子祥，曰摸钉儿</q></div><div class="sbai">过桥消百病，摸钉求男丁：两件事都在夜里，都在桥上城下。</div></div>
+  <div data-b="s:jiugu"><div class="sq"><q data-k="cs4">入者误不得迳，即久迷不出，曰黄河九曲灯也</q></div><div class="sbai">秫秸扎棚占地二亩，门径曲折藏三四里，乡人叫它黄河九曲灯。</div></div>
+  <div data-b="s:sandeng"><div class="sq"><q data-k="cs5">家以小盏一百八枚，夜灯之，遍散井灶门户砧石，曰散灯也</q></div><div class="sbai">小盏一百零八枚，满院散放，像一地碎星：富家点四夜，穷家一夜，再穷的无灯，贫富也记进灯里。</div></div>
+  <div data-b="s:dagui"><div class="sq"><q data-k="cs6">小儿共以绳系一儿腰，牵焉，相距寻丈，迭于不意中，拳之以去，曰打鬼</q></div><div class="sbai">被系的孩子若捉住别人换身，便由新的当鬼：一轮驱傩，永远轮不完。</div></div>
+  <div data-b="s:moxier"><div class="sq"><q data-k="cs7">又绳以为城，二儿帕蒙以摸，一儿执敲城中，辄敲一声，而辄易其地以误之，为摸者得，则蒙执敲儿，曰摸虾儿</q></div><div class="sbai">敲一声就换地方，声东击西；摸着了就换人蒙眼。</div></div>
+  <div data-b="s:tiancang"><div class="sq"><q data-k="cs9">廿五日大啖饼饵，曰填仓</q></div><div class="sbai">正月最后的节目是吃：把仓填满，年才算过完。</div></div>
+
+  <div data-b="h:0"><div class="sq"><q data-k="by3">相传是日，真人必来，或化冠绅，或化游士冶女，或化乞丐</q></div><div class="yb">传说里他化作做官人模样，混在香客的冠带里。</div></div>
+  <div data-b="h:1"><div class="sq"><q data-k="by3">相传是日，真人必来，或化冠绅，或化游士冶女，或化乞丐</q></div><div class="yb">或化作游学的士子，或化作冶游的女子：越寻常越认不出。</div></div>
+  <div data-b="h:2"><div class="sq"><q data-k="by3">相传是日，真人必来，或化冠绅，或化游士冶女，或化乞丐</q></div><div class="yb">或干脆化作乞丐：全城的眼睛都在找贵人，没人低头看泥地。</div></div>
+</div>
+
+<script>
+(function(){
+  var pane = document.getElementById('pane-body');
+  var bank = document.getElementById('bank');
+  function show(sel){
+    var src = bank.querySelector(sel);
+    if(!src) return;
+    pane.innerHTML = '';
+    Array.prototype.forEach.call(src.children,function(c){pane.appendChild(c.cloneNode(true));});
+  }
+  var nodes = document.querySelectorAll('.node');
+  nodes.forEach(function(n){
+    function act(){
+      nodes.forEach(function(m){m.classList.remove('act');});
+      n.classList.add('act');
+      show('[data-b="'+n.getAttribute('data-p')+'"]');
+    }
+    n.addEventListener('click',act);
+    n.addEventListener('keydown',function(e){if(e.key==='Enter')act();});
+  });
+  show('[data-b="dengshi"]');
+  nodes[3].classList.add('act');
+
+  var fabs = document.querySelectorAll('.fab');
+  var fabox = document.getElementById('fabox');
+  function setfa(k,el){
+    fabs.forEach(function(f){f.classList.remove('act');});
+    el.classList.add('act');
+    var src = bank.querySelector('[data-b="f:'+k+'"]');
+    fabox.innerHTML='';
+    Array.prototype.forEach.call(src.children,function(c){fabox.appendChild(c.cloneNode(true));});
+  }
+  fabs.forEach(function(f){f.addEventListener('click',function(){setfa(f.getAttribute('data-f'),f);});});
+  setfa('sou',fabs[0]);
+
+  var qc = document.querySelectorAll('#qwall .qcard');
+  var st = document.getElementById('sstage');
+  function sets(key,el){
+    qc.forEach(function(x){x.classList.remove('act');});
+    el.classList.add('act');
+    var src = bank.querySelector('[data-b="s:'+key+'"]');
+    st.innerHTML='';
+    Array.prototype.forEach.call(src.children,function(c){st.appendChild(c.cloneNode(true));});
+  }
+  qc.forEach(function(x){x.addEventListener('click',function(){sets(x.getAttribute('data-s'),x);});});
+  sets('tiandeng',qc[0]);
+
+  var hb = document.querySelectorAll('.hua button');
+  var yj = document.getElementById('yjstage');
+  function seth(i,el){
+    hb.forEach(function(x){x.classList.remove('act');});
+    el.classList.add('act');
+    var src = bank.querySelector('[data-b="h:'+i+'"]');
+    yj.innerHTML='';
+    Array.prototype.forEach.call(src.children,function(c){yj.appendChild(c.cloneNode(true));});
+  }
+  hb.forEach(function(x){x.addEventListener('click',function(){seth(x.getAttribute('data-h'),x);});});
+  seth(0,hb[0]);
+
+  document.querySelectorAll('.jhead').forEach(function(h){
+    h.addEventListener('click',function(){h.parentElement.classList.toggle('open');});
+  });
+
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
