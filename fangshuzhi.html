@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日本访书志 · 殆知阁导读</title>
+<style>
+:root{--bg:#191917;--paper:#e8e4dc;--ink:#26241f;--jin:#c9963f;--jin-l:#e0b86e;--jin-d:#8a6526;--sea:#232b30;--sea-l:#3d4c55;--mut:#8a857a;--line:#3a382f}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--paper);font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;line-height:1.9;font-size:16px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+a{color:var(--jin-l)}
+q{quotes:none}
+.fp{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.fp.on{opacity:1;transform:none}
+h2{font-size:25px;font-weight:600;letter-spacing:.08em}
+.bai{font-size:15px;color:#c9c4b8}
+
+/* ===== hero 夜海 ===== */
+.hero{min-height:96vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:30px;position:relative;z-index:2;margin-bottom:8px}
+.kick{color:var(--jin-l);font-size:13px;letter-spacing:.34em;margin-bottom:18px}
+.ht{display:flex;gap:16px}
+.vtitle{writing-mode:vertical-rl;font-size:88px;line-height:1.06;font-weight:600;letter-spacing:.16em;height:max-content;white-space:nowrap}
+.vtitle b{color:var(--jin-l);font-weight:inherit}
+.vsub{writing-mode:vertical-rl;font-size:15px;letter-spacing:.5em;color:var(--mut);height:200px}
+.hmeta{margin-top:18px;color:var(--mut);font-size:14px;letter-spacing:.14em;border-top:1px solid var(--line);padding-top:12px;width:190px}
+.hnote{max-width:520px;font-size:14.5px;color:#c9c4b8;text-align:right;margin-top:10px;align-self:flex-end}
+.hnote b{color:var(--jin-l);font-weight:600}
+.seabox{position:relative;z-index:2;cursor:pointer;border:1px solid var(--line);background:#141a1e}
+.seabox svg{display:block;width:100%}
+.seatip{display:flex;gap:20px;align-items:baseline;justify-content:space-between;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--mut);letter-spacing:.12em}
+.ccount-w{color:var(--jin-l);letter-spacing:.18em}
+.ccount-w em{font-style:normal;font-size:17px;font-weight:600}
+.man{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.man a{appearance:none;text-decoration:none;border:1px solid var(--line);color:var(--paper);font-family:inherit;font-size:13px;letter-spacing:.22em;padding:7px 16px;transition:border-color .3s,color .3s}
+.man a:hover{border-color:var(--jin);color:var(--jin-l)}
+.man a i{font-style:normal;color:var(--jin-l);margin-right:8px}
+
+/* ===== 行账挂笺 ===== */
+.ledger{border-top:1px solid var(--line)}
+.ledger .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;padding-top:72px;padding-bottom:78px;align-items:start}
+.ledger h2{margin-bottom:20px}
+.ledger .bai p{margin-bottom:16px}
+.ledger .bai b{color:var(--jin-l);font-weight:600}
+.rail2{border-top:3px solid var(--jin-d);position:relative;padding:34px 6px 0;display:grid;gap:26px}
+.slip{background:var(--paper);color:var(--ink);padding:22px 24px 18px;position:relative;box-shadow:0 12px 30px rgba(0,0,0,.42)}
+.slip::before{content:"";position:absolute;top:-34px;left:26px;width:2px;height:34px;background:#6b5a38}
+.slip::after{content:"";position:absolute;top:-39px;left:22px;width:10px;height:10px;border-radius:50%;border:2px solid var(--jin-d);background:var(--bg)}
+.slip:nth-child(odd){transform:rotate(-.7deg)}
+.slip:nth-child(even){transform:rotate(.6deg)}
+.slip q{display:block;font-size:16px;line-height:2;color:#2c2c26;letter-spacing:.03em}
+.slip q::before{content:"「";color:var(--jin-d)}
+.slip q::after{content:"」";color:var(--jin-d)}
+.slip .who{margin-top:10px;font-size:12.5px;color:#7a7263;letter-spacing:.2em;border-top:1px dashed #c9c2b2;padding-top:8px}
+
+/* ===== 点验墙 ===== */
+.check{border-top:1px solid var(--line);background:#1b1a17}
+.check .wrap{padding-top:72px;padding-bottom:78px}
+.check-lead{max-width:760px;margin-bottom:26px}
+.check-lead b{color:var(--jin-l);font-weight:600}
+.bignum{border:1px solid var(--line);background:var(--bg);padding:22px 26px;margin-bottom:34px;position:relative}
+.bignum .bn-tag{position:absolute;top:-11px;left:20px;background:var(--jin);color:#1d1a12;font-size:11.5px;letter-spacing:.22em;padding:3px 12px}
+.bignum q{display:block;font-size:15.5px;line-height:2.05;color:#d8d2c4}
+.bignum q::before{content:"「";color:var(--jin-d)}
+.bignum q::after{content:"」";color:var(--jin-d)}
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin-bottom:30px}
+.tag{appearance:none;background:var(--bg);border:1px solid #4d4227;color:var(--paper);cursor:pointer;font-family:inherit;font-size:14.5px;letter-spacing:.06em;padding:13px 14px;text-align:left;transition:border-color .3s,background .3s}
+.tag:hover,.tag.sel{border-color:var(--jin);background:#241f14}
+.tag.sel{box-shadow:inset 0 0 0 1px var(--jin)}
+.tag .det{display:none}
+.book{border:1px solid var(--line);background:var(--bg);display:grid;grid-template-columns:1fr auto;min-height:110px}
+.book-main{padding:18px 22px}
+.book-no{font-size:12px;color:var(--mut);letter-spacing:.24em;margin-bottom:6px}
+.book-txt{font-size:15px;color:#d8d2c4;line-height:1.9}
+.book-badge{writing-mode:vertical-rl;background:#241f14;border-left:1px solid var(--line);color:var(--jin-l);font-size:13px;letter-spacing:.3em;padding:12px 10px;display:flex;align-items:center}
+
+/* ===== 展卷 ===== */
+.unroll{border-top:1px solid var(--line)}
+.unroll .wrap{padding-top:72px}
+.unroll-lead{max-width:760px;margin-bottom:30px}
+.unroll-lead b{color:var(--jin-l);font-weight:600}
+.strip{display:flex;flex-direction:row-reverse;overflow-x:auto;gap:0;border:1px solid var(--line);background:#14181b;scrollbar-width:thin}
+.panel{flex:0 0 min(660px,86vw);border-left:1px solid var(--line);padding:30px 30px 34px;display:grid;grid-template-columns:1fr 86px;gap:24px}
+.panel:first-child{border-left:none}
+.pv{writing-mode:vertical-rl;font-size:34px;font-weight:600;letter-spacing:.26em;color:var(--jin-l);height:max-content;white-space:nowrap;border-left:1px solid #4d4227;padding-left:12px}
+.pv small{display:block;font-size:12.5px;color:var(--mut);letter-spacing:.32em;margin-top:14px;font-weight:400}
+.panel .bai p{margin-bottom:14px}
+.panel .bai b{color:var(--jin-l);font-weight:600}
+.pslip{background:var(--paper);color:var(--ink);padding:16px 18px 12px;margin-top:14px}
+.pslip q{display:block;font-size:15px;line-height:2;color:#2c2c26}
+.pslip q::before{content:"「";color:var(--jin-d)}
+.pslip q::after{content:"」";color:var(--jin-d)}
+.pslip .who{margin-top:8px;font-size:12px;color:#7a7263;letter-spacing:.18em;border-top:1px dashed #c9c2b2;padding-top:6px}
+.strip-hint{margin-top:12px;font-size:13px;color:var(--mut);letter-spacing:.16em}
+
+/* ===== 归棹 ===== */
+.coda{border-top:1px solid var(--line);text-align:center;background:#171512}
+.coda .wrap{padding-top:88px;padding-bottom:80px}
+.coda-bai{max-width:700px;margin:0 auto 24px;text-align:left}
+.coda-bai q{color:var(--jin-l)}
+.coda-vert{display:flex;justify-content:center;align-items:flex-start;gap:50px;margin:40px 0 30px}
+.big-vert{writing-mode:vertical-rl;font-size:44px;font-weight:600;letter-spacing:.24em;line-height:1.34;height:max-content;white-space:nowrap;color:var(--paper)}
+.big-vert b{color:var(--jin-l);font-weight:inherit}
+.chonen{max-width:640px;margin:0 auto 30px;text-align:left;border:1px dashed #4d4227;padding:18px 24px;font-size:14px;color:#b5ad9c}
+.chonen b{color:var(--jin-l);font-weight:600}
+.todaq{max-width:620px;margin:0 auto 30px}
+.seal{display:inline-grid;place-items:center;width:84px;height:84px;border:3px solid var(--jin);color:var(--jin-l);font-size:30px;font-weight:600;letter-spacing:.1em;transform:rotate(-3deg);margin-top:26px;line-height:1.2;padding:8px}
+
+footer{border-top:1px solid var(--line);padding:34px 0 44px;color:var(--mut);font-size:13px;line-height:2}
+footer a{color:var(--jin-l)}
+
+@media (max-width:860px){
+  .hero-top{flex-direction:column-reverse;gap:22px}
+  .ht{flex-direction:column;gap:8px}
+  .vtitle{font-size:56px}
+  .vsub{height:auto;writing-mode:horizontal-tb;letter-spacing:.4em;align-self:flex-start}
+  .hnote{text-align:left}
+  .ledger .wrap{grid-template-columns:1fr;gap:38px;padding-top:52px;padding-bottom:56px}
+  .panel{grid-template-columns:1fr;padding:22px 20px 28px}
+  .pv{writing-mode:horizontal-tb;font-size:26px;border-left:none;border-bottom:1px solid #4d4227;padding:0 0 8px}
+  .pv small{margin-top:6px}
+  .coda-vert{gap:22px}
+  .big-vert{font-size:30px}
+}
+</style>
+</head>
+<body>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-top">
+      <div>
+        <div class="kick">史藏 ｜ 目录</div>
+        <div class="ht">
+          <h1 class="vtitle">日本<b>访书</b>志</h1>
+          <div class="vsub">光绪庚辰 东渡扶桑</div>
+        </div>
+        <div class="hmeta">清 ｜ 宜都 杨守敬</div>
+      </div>
+      <p class="hnote">一八八〇年，一位以金石之学闻名的学者跟着首任驻日公使东渡，本职原是抄写文书的随员，他却在东京的书街上泡了四年。中国打没了的书，他在对岸一箱一箱找了回来。库本自序、缘起加正文十六卷，去空白约十七万字。</p>
+    </div>
+    <div class="seabox" id="seabox" title="点一点海面">
+      <svg viewBox="0 0 760 300" aria-hidden="true">
+        <rect x="0" y="0" width="760" height="300" fill="#141a1e"/>
+        <g opacity=".5" stroke="#3d4c55" stroke-width="1.6" fill="none">
+          <path d="M0 208 Q95 198 190 208 T380 208 T570 208 T760 208"/>
+          <path d="M0 244 Q95 234 190 244 T380 244 T570 244 T760 244"/>
+          <path d="M0 276 Q95 266 190 276 T380 276 T570 276 T760 276" opacity=".6"/>
+        </g>
+        <path id="route" d="M96 176 Q380 96 664 176" fill="none" stroke="#c9963f" stroke-width="1.6" stroke-dasharray="3 9" opacity=".55"/>
+        <g id="shoreL">
+          <path d="M22 188 Q60 158 98 188 Z" fill="#2c353b"/>
+          <path d="M42 152 Q60 132 78 152 Z" fill="#2c353b"/>
+          <rect x="57" y="146" width="6" height="18" fill="#2c353b"/>
+          <rect x="34" y="186" width="7" height="40" fill="#2c353b"/>
+          <rect x="79" y="186" width="7" height="40" fill="#2c353b"/>
+          <rect x="24" y="224" width="72" height="8" fill="#2c353b"/>
+          <rect x="104" y="204" width="32" height="28" fill="#232b30"/>
+          <rect x="110" y="212" width="20" height="4" fill="#c9963f" opacity=".55"/>
+          <rect x="110" y="221" width="20" height="4" fill="#c9963f" opacity=".35"/>
+          <text x="22" y="262" fill="#8a857a" font-size="14" letter-spacing="5" font-family="serif">东瀛书肆</text>
+        </g>
+        <g id="shoreR">
+          <path d="M662 188 Q700 158 738 188 Z" fill="#2c353b"/>
+          <path d="M682 152 Q700 132 718 152 Z" fill="#2c353b"/>
+          <rect x="697" y="146" width="6" height="18" fill="#2c353b"/>
+          <rect x="674" y="186" width="7" height="40" fill="#2c353b"/>
+          <rect x="719" y="186" width="7" height="40" fill="#2c353b"/>
+          <rect x="664" y="224" width="72" height="8" fill="#2c353b"/>
+          <rect x="624" y="204" width="32" height="28" fill="#232b30"/>
+          <rect x="630" y="212" width="20" height="4" fill="#c9963f" opacity=".55"/>
+          <rect x="630" y="221" width="20" height="4" fill="#c9963f" opacity=".35"/>
+          <text x="664" y="262" fill="#8a857a" font-size="14" letter-spacing="5" font-family="serif">中土书楼</text>
+        </g>
+        <g id="lanes"></g>
+        <g>
+          <animateTransform attributeName="transform" type="translate" values="0 0;0 4;0 0" dur="3.8s" repeatCount="indefinite"/>
+          <path d="M300 164 Q314 170 328 164 L322 172 Q314 175 306 172 Z" fill="#26241f" stroke="#c9963f" stroke-width="1.4"/>
+          <line x1="314" y1="164" x2="314" y2="128" stroke="#c9963f" stroke-width="1.8"/>
+          <path d="M314 130 Q340 138 336 156 L314 152 Z" fill="#c9963f" opacity=".8"/>
+        </g>
+        <text x="330" y="60" fill="#6b675c" font-size="12" letter-spacing="4" font-family="serif">书自海上来</text>
+      </svg>
+    </div>
+    <div class="seatip">
+      <span class="ccount-w">箧中书 <em id="cc">0</em> ／ 30000 卷</span>
+      <span id="ctip">点一点海面，送一箱书过海</span>
+      <nav class="man" role="navigation" aria-label="行程">
+        <a href="#yuanqi"><i>壹</i>缘起</a>
+        <a href="#dianyan"><i>贰</i>点验</a>
+        <a href="#zhanjuan"><i>叁</i>展卷</a>
+        <a href="#guizhao"><i>肆</i>归棹</a>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<section class="ledger" id="yuanqi">
+  <div class="wrap">
+    <div>
+      <h2 class="fp">缘起 ｜ 使馆随员的私活</h2>
+      <div class="bai">
+        <p class="fp">一八八〇年的夏天，公使何如璋一纸召书把杨守敬叫去了东京。使馆随员本是抄抄写写的差事，他却一头扎进书肆，凭着一部日本学者写的访古目录按图索骥，一年之间，箧中已经堆了三万多卷。</p>
+        <p class="fp">真正的宝贝不在店里，在日本藏家的楼上，<b>拿钱买不动</b>。杨守敬的运气在于，他从国内带去的东西恰好是对岸没有的：一箱金石文字的拓本。两边各取所需，一桩桩交易做下来，堆成山的孤本就这么易了主。</p>
+        <p class="fp">继任公使黎庶昌听得眼热，索性立了个丛书计划，把这批访得的珍本大批刻印回流，就是后来鼎鼎大名的古逸丛书。杨守敬自己则把每一部书的来历随手记在别纸上，积了二十多册，后来整理成十六卷，就是这部书。</p>
+      </div>
+    </div>
+    <div class="rail2">
+      <div class="slip fp"><q>光绪庚辰之夏，守敬应大埔何公使如璋之召，赴日本充当随员。</q><div class="who">自序 ｜ 出发的年份，1880</div></div>
+      <div class="slip fp"><q>乃日游市上。凡板已毁坏者皆购之，不一年遂有三万馀卷。</q><div class="who">缘起 ｜ 书肆扫货的速度</div></div>
+      <div class="slip fp"><q>而藏在其好古家者，不可以金币得。</q><div class="who">自序 ｜ 好东西不在店里</div></div>
+      <div class="slip fp"><q>守敬所携古金石文字，乃多日本所未见者，彼此交易。</q><div class="who">自序 ｜ 拓本换孤本</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="check" id="dianyan">
+  <div class="wrap">
+    <p class="check-lead bai fp">全志的心脏，是他在缘起末尾亲手圈出的一份名单：这些书在中国<b>已经没有了</b>，全靠对岸的旧钞旧刻活着。原文一句读完，名单就在里面。点一点下方的书牌，翻开点验簿。</p>
+    <div class="bignum fp">
+      <span class="bn-tag">卷一 ｜ 争宜刊布</span>
+      <q>经部之《易》单疏，《书》单疏，万卷堂之《谷梁传》、十卷本之《论语疏》；小学类之蜀本《尔雅》，顾野王原本《玉篇》，宋本《隶释》；子部之台州本《荀子》，类书之杜台卿《玉烛宝典》，邵思《姓解》，医家之李英公《新修本草》，杨上善之《太素经》；集部之《文馆词林》十卷。</q>
+    </div>
+    <div class="wall fp" id="wall">
+      <button class="tag" data-no="经部" data-vol="卷一" type="button"><q>《易》单疏</q><span class="det">宋刻单疏本，只有正义正文不带经注，中土早就没了传本，杨守敬设法影抄携归。</span></button>
+      <button class="tag" data-no="经部" data-vol="卷一" type="button"><q>《书》单疏</q><span class="det">《尚书》正义的宋刻单行本，藏在枫山官库里，端拱年间的经进原帙。</span></button>
+      <button class="tag" data-no="经部" data-vol="卷一" type="button"><q>万卷堂之《谷梁传》</q><span class="det">宋万卷堂刻本，与两种单疏并列经部头牌。</span></button>
+      <button class="tag" data-no="经部" data-vol="卷一" type="button"><q>十卷本之《论语疏》</q><span class="det">南朝皇侃的讲义，唐人怎么读《论语》，全在这十卷里，宋以后中土失传。</span></button>
+      <button class="tag" data-no="小学" data-vol="卷一" type="button"><q>蜀本《尔雅》</q><span class="det">蜀刻本，经部小学类的存古之种。</span></button>
+      <button class="tag" data-no="小学" data-vol="卷三" type="button"><q>顾野王原本《玉篇》</q><span class="det">南朝字书原典，宋人重编时删掉的旧注，全靠日本残卷保全。故事见下节。</span></button>
+      <button class="tag" data-no="小学" data-vol="卷一" type="button"><q>宋本《隶释》</q><span class="det">宋代金石学名著的宋刻原帙。</span></button>
+      <button class="tag" data-no="子部" data-vol="卷一" type="button"><q>台州本《荀子》</q><span class="det">台州公使库本，后世公认的荀子善本。</span></button>
+      <button class="tag" data-no="类书" data-vol="卷一" type="button"><q>杜台卿《玉烛宝典》</q><span class="det">隋人编的岁时月令总汇，讲一年十二个月怎么过，中土久佚。</span></button>
+      <button class="tag" data-no="类书" data-vol="卷一" type="button"><q>邵思《姓解》</q><span class="det">宋人编的姓氏工具书。</span></button>
+      <button class="tag" data-no="医家" data-vol="卷一" type="button"><q>李英公《新修本草》</q><span class="det">唐代官修的国家药典，本草学第一部定本，国内早已无完帙。</span></button>
+      <button class="tag" data-no="医家" data-vol="卷一" type="button"><q>杨上善之《太素经》</q><span class="det">《黄帝内经》的早期注本，国内亡佚数百年，此书回归补上医经一段空白。</span></button>
+      <button class="tag" data-no="集部" data-vol="卷十二" type="button"><q>《文馆词林》十卷</q><span class="det">唐代千卷文学总集的日本残帙，见下节，是四段故事里最像寻宝的一段。</span></button>
+      <button class="tag" data-no="释藏" data-vol="卷一" type="button"><q>《一切经音义》百卷</q><span class="det">唐释慧琳的百卷佛经音义，一部书撑起半部中古文字音韵学。</span></button>
+      <button class="tag" data-no="释藏" data-vol="卷一" type="button"><q>《续一切经音义》十卷</q><span class="det">辽释希麟续慧琳之缺，两编合璧，汉唐音义之学才有全貌。</span></button>
+    </div>
+    <div class="book fp" id="book">
+      <div class="book-main">
+        <div class="book-no" id="bno">点验簿 ｜ 待选</div>
+        <div class="book-txt" id="btxt">点左侧任意书牌，这里翻开这一部的来历。</div>
+      </div>
+      <div class="book-badge" id="bvol">库本</div>
+    </div>
+  </div>
+</section>
+
+<section class="unroll" id="zhanjuan">
+  <div class="wrap">
+    <p class="unroll-lead bai fp">名单只是账目，故事在每一条背后。日本存这批书的形态多是<b>卷子</b>：长纸一卷，自右向左展开。下面四段就是四个卷子，按住横拖，或者用滚轮，自右向左读过去。</p>
+    <div class="strip" id="strip">
+      <div class="panel">
+        <div>
+          <p class="bai fp">武则天亲自执笔的一部臣子守则，颁行天下，还下令科举考生人手一册习业，顺手把《老子》从考试科目里顶掉了。就是这份曾让天下读书人背得滚瓜烂熟的御撰，在中国失传了一千多年。</p>
+          <p class="bai fp">杨守敬对着两种日本藏本核验卷末的年款，确认那五个字不是日本人后添的，书才坐实了身份。他顺手还考订出：写书和颁令习业是两个年份，唐会要把两件事记混了。</p>
+          <div class="pslip fp"><q>长寿二年三月，则天自制《臣轨》两卷，令贡举人习业，停《老子》。</q><div class="who">卷五 ｜ 一部女皇的公务员手册</div></div>
+          <div class="pslip fp"><q>皆有“垂拱元年撰”五字，笔迹亦相同，绝非此邦人所臆增。</q><div class="who">卷五 ｜ 五个字验明正身</div></div>
+        </div>
+        <div class="pv">臣轨<small>库本卷五</small></div>
+      </div>
+      <div class="panel">
+        <div>
+          <p class="bai fp">984年，日本的针博士丹波康赖把传入日本的中国医方编成三十卷，上起神农黄帝，下收唐代各家，大量方书的中土原本后来都散了，唯独在这部书里留着全文。</p>
+          <p class="bai fp">这一条大半是丹波家后人进呈全帙的奏表：书稿在半井家秘藏数百年，<b>若存若亡</b>，幕府出面传旨才借了出来。杨守敬把它记进志里，等于把一整个唐以前的医方世界附了张提货单。</p>
+          <div class="pslip fp"><q>实为圆融帝永观二年十一月廿八日</q><div class="who">卷十 ｜ 成书的准确日期，984年</div></div>
+          <div class="pslip fp"><q>秘府所藏，人间莫得而窥焉。</q><div class="who">卷十 ｜ 秘藏数百年的家传本</div></div>
+          <div class="pslip fp"><q>是书在若存若亡之间者，盖数百有馀年矣。</q><div class="who">卷十 ｜ 差一点就没有了</div></div>
+        </div>
+        <div class="pv">医心方<small>库本卷十</small></div>
+      </div>
+      <div class="panel">
+        <div>
+          <p class="bai fp">南朝顾野王的字典，原本只剩卷子残卷在日本。宋人重编增订本时把引经旧注几乎删光，只留自家案语。旧账就此对不上：唐宋著录都说原书注文有四十万字，宋本却只有二十万出头，一桩悬了近千年的<b>数字疑案</b>。</p>
+          <p class="bai fp">杨守敬把残卷捧在手里，账对上了：四十万是顾氏原本的数，宋人删注又增字，各记各的账，后人拿着删剩的本子去猜原本，自然怎么算都不对。</p>
+          <div class="pslip fp"><q>其自下已意者，则加“野王按”三字。</q><div class="who">卷三 ｜ 作者亲手留下的署名按语</div></div>
+          <div class="pslip fp"><q>始悟其所云“注四十万”者，为顾氏原本之数</q><div class="who">卷三 ｜ 见到原本，悬案结案</div></div>
+        </div>
+        <div class="pv">玉篇<small>库本卷三</small></div>
+      </div>
+      <div class="panel">
+        <div>
+          <p class="bai fp">唐代一千卷的文章总集，北宋官修的那部《文苑英华》网罗极博，却没见过它的全书；宋人书目里只剩零残几种。这样一部在国内<b>整体消失</b>的大书，日本存着三十卷残帙。</p>
+          <p class="bai fp">前人刻过四卷；杨守敬按着日本学者的目录一路追踪，又寻到十四卷刻进古逸丛书；离任前再从浅草文库抄出五卷带走。残卷卷尾的唐人书手题记，连抄写的衙门和年月都在，作不得假。</p>
+          <div class="pslip fp"><q>其不传者十居八、九，可不谓希世珍乎？</q><div class="who">卷十二 ｜ 十之八九靠它独存</div></div>
+          <div class="pslip fp"><q>校书殿写，弘仁十四年岁次癸卯二月为冷然院书</q><div class="who">卷十二 ｜ 抄于唐长庆三年，藏于皇家书库</div></div>
+          <div class="pslip fp"><q>仪凤二年书手李神福写</q><div class="who">卷十二 ｜ 唐人书手的落款</div></div>
+        </div>
+        <div class="pv">文馆词林<small>库本卷十二</small></div>
+      </div>
+    </div>
+    <p class="strip-hint">自右向左展读 ←　四段分别出自库本卷五、卷十、卷三、卷十二</p>
+  </div>
+</section>
+
+<section class="coda" id="guizhao">
+  <div class="wrap">
+    <p class="coda-bai bai fp">书的自序写于晚年：稿子在家里束了多年高阁，他自认精力已衰，身边又没有帮手，这部志还有惊人的秘笈没来得及录出，只留下一句愿望。</p>
+    <div class="todaq fp">
+      <div class="pslip"><q>倘天假之年，或当并出所得异本，尽以告世人也。</q><div class="who">自序 ｜ 一位目录学家的遗嘱</div></div>
+    </div>
+    <p class="coda-bai bai fp">缘起里有一句自评，是全书最漂亮的一句账：他清点这一年抢购的所得，说其中虽没有焚书浩劫里救出的秘籍，却有当年日本僧人奝然献给宋廷、此后再未西渡的那一类书。两种横渡的方向，隔着九百年，在同一个书架上相遇了。</p>
+    <div class="coda-vert fp">
+      <div class="big-vert"><q>其中虽无秦火不焚<b>之籍</b></q></div>
+      <div class="big-vert"><q>实有奝然未献<b>之书</b></q></div>
+    </div>
+    <div class="chonen fp"><b>奝然是谁：</b>北宋初年来华的日本僧人，他把一批中国已经缺佚的古籍献给了宋廷，是这批书第一次东渡归来。杨守敬用他的名字对仗焚书，意思是：我带回的，正是九百年前就有人想还而未及还的。</div>
+    <p class="coda-bai bai fp">又过了一百多年，他的愿望以另一种方式兑现：当年要靠官船、交情和一箱拓本才换得到的海那边孤本，连同更多中土失传的汉籍，如今躺在数字库里。访书不必再渡海，打开浏览器就是码头。</p>
+    <div class="seal fp">守敬</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    文本来源：殆知阁简体库目录类〈日本访书志〉（史藏），仓库：<a href="https://github.com/robertsong/daizhige" target="_blank" rel="noopener">daizhige-daodu</a>。<br>
+    引文均经脚本自库本切片、去标点归一逐字比对；白话部分经六字窗反扫核验。本页为古籍导读：以「中土」「彼国」相对而称的华夷口吻、视典籍为一人一姓之私藏的时代观念，皆时代产物，请以今日眼光辨之。
+  </div>
+</footer>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});},{threshold:.12});
+  document.querySelectorAll('.fp').forEach(function(el){io.observe(el);});
+
+  var box=document.getElementById('seabox'),lanes=document.getElementById('lanes');
+  var cc=document.getElementById('cc'),ctip=document.getElementById('ctip');
+  var total=0,NS='http://www.w3.org/2000/svg';
+  box.addEventListener('click',function(){
+    if(total>=30000){ctip.textContent='箧已满，改日再访';return;}
+    var g=document.createElementNS(NS,'g');
+    var boat=document.createElementNS(NS,'path');
+    boat.setAttribute('d','M0 0 Q14 6 28 0 L22 8 Q14 11 6 8 Z');
+    boat.setAttribute('fill','#26241f');boat.setAttribute('stroke','#c9963f');boat.setAttribute('stroke-width','1.4');
+    var mast=document.createElementNS(NS,'line');
+    mast.setAttribute('x1','14');mast.setAttribute('y1','0');mast.setAttribute('x2','14');mast.setAttribute('y2','-36');
+    mast.setAttribute('stroke','#c9963f');mast.setAttribute('stroke-width','1.8');
+    var sail=document.createElementNS(NS,'path');
+    sail.setAttribute('d','M14 -34 Q40 -26 36 -8 L14 -12 Z');
+    sail.setAttribute('fill','#c9963f');sail.setAttribute('opacity','.85');
+    var glow=document.createElementNS(NS,'circle');
+    glow.setAttribute('cx','14');glow.setAttribute('cy','-22');glow.setAttribute('r','26');
+    glow.setAttribute('fill','#c9963f');glow.setAttribute('opacity','.14');
+    g.appendChild(glow);g.appendChild(boat);g.appendChild(mast);g.appendChild(sail);
+    var mv=document.createElementNS(NS,'animateTransform');
+    mv.setAttribute('attributeName','transform');mv.setAttribute('type','translate');
+    mv.setAttribute('values','70 176;660 150');mv.setAttribute('dur','3.4s');mv.setAttribute('fill','freeze');
+    var bob=document.createElementNS(NS,'animateTransform');
+    bob.setAttribute('attributeName','transform');bob.setAttribute('type','translate');
+    bob.setAttribute('values','0 0;0 5;0 0');bob.setAttribute('dur','1.1s');bob.setAttribute('repeatCount','3');bob.setAttribute('additive','sum');
+    g.appendChild(mv);g.appendChild(bob);lanes.appendChild(g);
+    setTimeout(function(){if(g.parentNode)g.parentNode.removeChild(g);},3500);
+    total+=1000;cc.textContent=total;
+    if(total>=30000){ctip.textContent='三万馀卷，箧为之满。一年，一个人，一条书街';}
+    else{ctip.textContent='已收 '+total+' 卷，再点';}
+  });
+
+  var wall=document.getElementById('wall');
+  var bno=document.getElementById('bno'),btxt=document.getElementById('btxt'),bvol=document.getElementById('bvol');
+  wall.addEventListener('click',function(ev){
+    var t=ev.target.closest('.tag');
+    if(!t)return;
+    wall.querySelectorAll('.tag').forEach(function(x){x.classList.remove('sel');});
+    t.classList.add('sel');
+    bno.textContent='点验簿 ｜ '+t.dataset.no;
+    btxt.textContent=t.querySelector('.det').textContent;
+    bvol.textContent='库本'+t.dataset.vol;
+  });
+
+  var strip=document.getElementById('strip');
+  requestAnimationFrame(function(){strip.scrollLeft=strip.scrollWidth;});
+})();
+</script>
+</body>
+</html>
