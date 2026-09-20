@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>〈甲乙日历〉导读（止水）· 殆知阁导读</title>
+<style>
+:root{
+  --bg:#191917;
+  --paper:#e8e4dc;
+  --gold:#c9963f;
+  --gold-soft:rgba(201,150,63,.32);
+  --gold-faint:rgba(201,150,63,.10);
+  --dim:rgba(232,228,220,.62);
+  --faint:rgba(232,228,220,.38);
+  --line:rgba(232,228,220,.14);
+  --card:rgba(232,228,220,.045);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.9;
+  letter-spacing:.02em;
+  overflow-x:hidden;
+}
+.mono{font-family:ui-monospace,"SF Mono",Consolas,monospace;letter-spacing:.08em;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+q{quotes:none;font-style:normal;}
+.q{display:block;border-left:2px solid var(--gold);padding:6px 0 6px 16px;margin:14px 0;font-size:15.5px;}
+.q i{font-style:normal;color:var(--faint);font-size:13px;}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease;}
+.rv.on{opacity:1;transform:none;}
+
+/* ---------- hero:历签墙 ---------- */
+.hero{position:relative;padding:72px 0 60px;border-bottom:1px solid var(--line);overflow:hidden;}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 46% 38% at 18% 26%,var(--gold-faint),transparent 65%),
+    radial-gradient(ellipse 34% 34% at 88% 80%,rgba(201,150,63,.05),transparent 60%);
+  pointer-events:none;
+}
+.kicker{font-size:12.5px;color:var(--gold);letter-spacing:.34em;margin-bottom:30px;}
+.htitle{font-size:clamp(52px,8.6vw,96px);font-weight:700;letter-spacing:.08em;line-height:1.12;}
+.htitle em{font-style:normal;color:var(--gold);}
+.lead{font-size:16px;color:var(--dim);margin:20px 0 6px;max-width:620px;}
+.lead b{color:var(--paper);font-weight:600;}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 8px;}
+.chip{border:1px solid var(--line);background:var(--card);font-size:12.5px;color:var(--dim);padding:6px 14px;letter-spacing:.1em;}
+.chip b{color:var(--gold);font-weight:600;}
+.sig-wall{margin:44px 0 10px;position:relative;}
+.sig-rail{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 14px;scrollbar-width:thin;}
+.sig{
+  flex:0 0 46px;height:238px;position:relative;cursor:pointer;
+  border:1px solid var(--line);background:var(--card);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  transition:.4s;opacity:0;transform:translateY(18px);
+}
+.sig.in{opacity:1;transform:none;}
+.sig:hover{border-color:var(--gold-soft);background:var(--gold-faint);}
+.sig .wx{position:absolute;top:12px;left:0;right:0;text-align:center;font-size:13px;color:var(--gold);letter-spacing:.1em;}
+.sig .wx.none{color:var(--faint);}
+.sig .d{
+  writing-mode:vertical-rl;white-space:nowrap;
+  font-size:12.5px;color:var(--dim);letter-spacing:.22em;line-height:1;
+  margin-bottom:14px;height:max-content;
+}
+.sig.dark{background:#0f0e0d;border-color:rgba(201,150,63,.36);}
+.sig.dark .d{color:var(--gold);}
+.sig.dark::after{content:"";position:absolute;inset:auto 8px 8px 8px;height:1px;background:var(--gold-soft);}
+.sig-rail .fin{flex:0 0 46px;height:238px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;}
+.sig-rail .fin span{writing-mode:vertical-rl;font-size:11.5px;color:var(--faint);letter-spacing:.3em;}
+.sig-panel{min-height:86px;border-top:1px solid var(--line);margin-top:8px;padding-top:14px;}
+.sig-panel .q{margin:4px 0;}
+.sig-panel .src{font-size:12.5px;color:var(--faint);letter-spacing:.14em;}
+.hero-note{font-size:13px;color:var(--faint);margin-top:18px;}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 34px;border-bottom:1px solid var(--line);}
+.sec-k{font-size:12px;color:var(--gold);letter-spacing:.4em;margin-bottom:12px;}
+h2{font-size:30px;font-weight:700;letter-spacing:.1em;margin-bottom:10px;}
+.sub{font-size:14px;color:var(--dim);max-width:660px;margin-bottom:26px;}
+.sub b{color:var(--paper);font-weight:600;}
+
+/* 天气签卡 */
+.stamps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0 18px;}
+.stamp{
+  border:1px solid var(--line);background:var(--card);padding:22px 18px 16px;position:relative;
+}
+.stamp::before{
+  content:attr(data-wx);position:absolute;top:14px;right:14px;
+  font-size:12px;color:var(--gold);border:1px solid var(--gold-soft);
+  padding:2px 8px;letter-spacing:.2em;text-indent:.2em;
+}
+.stamp em{display:block;font-style:normal;font-size:11.5px;color:var(--faint);letter-spacing:.2em;margin-bottom:10px;}
+.stamp p{font-size:13.5px;color:var(--dim);line-height:1.9;}
+
+/* 四月日轨 */
+.daytrack{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:30px 0 12px;position:relative;}
+.daytrack::before{content:"";position:absolute;left:4%;right:4%;top:11px;height:1px;background:var(--line);}
+.dt{
+  position:relative;text-align:center;padding:0 8px 6px;
+}
+.dt::before{
+  content:"";display:block;width:9px;height:9px;border-radius:50%;
+  background:var(--faint);margin:8px auto 12px;position:relative;z-index:1;
+}
+.dt.hot::before{background:var(--gold);box-shadow:0 0 16px rgba(201,150,63,.8);}
+.dt em{display:block;font-style:normal;font-size:12px;color:var(--gold);letter-spacing:.16em;margin-bottom:6px;}
+.dt p{font-size:13px;color:var(--dim);line-height:1.85;}
+.dt.hot p{color:var(--paper);}
+
+/* 监国之辩 */
+.debate{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0 8px;}
+.db{
+  border:1px solid var(--line);background:var(--card);padding:20px 18px;cursor:pointer;transition:.4s;
+}
+.db h4{font-size:16px;letter-spacing:.2em;color:var(--dim);margin-bottom:4px;font-weight:600;}
+.db small{font-size:12px;color:var(--faint);letter-spacing:.1em;}
+.db.on{border-color:var(--gold-soft);background:var(--gold-faint);}
+.db.on h4{color:var(--gold);}
+.db-body{display:none;padding:14px 0 2px;}
+.db.on .db-body{display:block;}
+
+/* 官署图 */
+.yamen{display:grid;grid-template-columns:320px 1fr;gap:34px;align-items:center;margin:26px 0 10px;}
+.svk{width:100%;height:auto;display:block;}
+.svk text{fill:var(--dim);font-size:12px;letter-spacing:.2em;}
+.svk .hall{fill:none;stroke:var(--line);stroke-width:1.4;}
+.svk .mark{fill:var(--gold-faint);stroke:var(--gold-soft);}
+.svk .me{fill:var(--gold);}
+
+/* 年谱牌 */
+.pu-card{border:1px solid var(--line);background:var(--card);padding:20px 22px;margin:20px 0;}
+.pu-card em{display:block;font-style:normal;font-size:11.5px;color:var(--gold);letter-spacing:.26em;margin-bottom:8px;}
+.pu-card p{font-size:14px;color:var(--dim);}
+
+/* 瓶隐灯 */
+.vase{display:grid;grid-template-columns:280px 1fr;gap:36px;align-items:center;margin:26px 0 8px;}
+.vroom{border:1px solid var(--line);background:var(--card);padding:16px;cursor:pointer;transition:.6s;}
+.vroom svg{width:100%;height:auto;display:block;}
+.vroom .glow{transition:opacity .8s;}
+.vroom.off .glow{opacity:0;}
+.vroom .vcap{display:block;text-align:center;font-size:12px;color:var(--faint);letter-spacing:.2em;margin-top:8px;}
+
+/* 邸报竖条 */
+.gazette{display:flex;gap:12px;margin:28px 0 10px;overflow-x:auto;padding-bottom:12px;}
+.gz{
+  flex:0 0 128px;min-height:300px;border:1px solid var(--line);background:var(--card);
+  padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.gz em{font-style:normal;writing-mode:vertical-rl;white-space:nowrap;font-size:11.5px;color:var(--gold);letter-spacing:.24em;height:max-content;}
+.gz .gq{
+  writing-mode:vertical-rl;font-size:13.5px;color:var(--paper);line-height:2;letter-spacing:.08em;
+  max-height:210px;height:max-content;
+}
+.gz.rain{border-color:rgba(232,228,220,.2);}
+.gz .drop{font-size:11px;color:var(--dim);letter-spacing:.3em;}
+.zhisui{border:1px solid var(--gold-soft);background:var(--gold-faint);padding:16px 20px;margin:18px 0 4px;}
+.zhisui em{display:block;font-style:normal;font-size:11.5px;color:var(--gold);letter-spacing:.26em;margin-bottom:8px;}
+.zhisui p{font-size:14px;color:var(--dim);}
+
+/* 断章 */
+.brk{margin:34px 0 8px;position:relative;}
+.brk .last-q{font-size:16px;}
+.brk .void{
+  height:150px;position:relative;
+}
+.brk .void::before{content:"";position:absolute;left:12%;right:12%;top:50%;height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);}
+.brk .ed{
+  border-left:2px solid var(--faint);padding:4px 0 4px 16px;
+  font-size:14px;color:var(--dim);
+}
+.brk .ed i{font-style:normal;display:block;font-size:12px;color:var(--faint);letter-spacing:.18em;margin-top:6px;}
+
+/* 瓶隐之夜 stepper */
+.night{margin:26px 0 6px;}
+.rail{display:flex;gap:0;align-items:flex-end;margin-bottom:22px;flex-wrap:wrap;}
+.tick{
+  flex:1;min-width:76px;text-align:center;cursor:pointer;padding:8px 2px 12px;position:relative;transition:.3s;
+}
+.tick::before{content:"";display:block;width:8px;height:8px;border-radius:50%;background:var(--faint);margin:0 auto 8px;transition:.3s;}
+.tick::after{content:"";position:absolute;left:50%;top:15px;right:-50%;height:1px;background:var(--line);}
+.tick:last-child::after{display:none;}
+.tick span{font-size:12.5px;color:var(--faint);letter-spacing:.14em;}
+.tick.on::before{background:var(--gold);box-shadow:0 0 14px rgba(201,150,63,.9);}
+.tick.on span{color:var(--gold);}
+.tick.done::before{background:var(--gold-soft);}
+.stage{border:1px solid var(--line);background:var(--card);padding:24px 26px;min-height:210px;}
+.stage em{display:block;font-style:normal;font-size:11.5px;color:var(--gold);letter-spacing:.3em;margin-bottom:10px;}
+.stage .st-body{display:none;}
+.stage .st-body.on{display:block;}
+.stage p{font-size:13.5px;color:var(--dim);margin-bottom:4px;}
+
+/* 绝命诗 */
+.poem-wrap{margin:44px 0 8px;display:flex;justify-content:center;}
+.poem{
+  writing-mode:vertical-rl;
+  font-size:23px;line-height:2.2;letter-spacing:.26em;font-weight:600;
+  border-right:1px solid var(--gold-soft);border-left:1px solid var(--gold-soft);
+  padding:30px 34px;height:600px;background:var(--gold-faint);
+}
+.poem small{display:block;font-size:12px;color:var(--faint);letter-spacing:.2em;margin-top:18px;}
+.poem q{border:0;padding:0;margin:0;font-weight:600;}
+.four-no{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:26px 0 6px;}
+.fn{border:1px solid var(--line);background:#0f0e0d;text-align:center;padding:18px 6px;}
+.fn b{display:block;font-size:15px;letter-spacing:.3em;text-indent:.3em;color:var(--paper);font-weight:600;}
+.fn small{font-size:11px;color:var(--faint);letter-spacing:.2em;}
+
+/* 三谥 */
+.shi{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0 8px;}
+.seal{
+  border:1px solid var(--gold-soft);padding:22px 16px;text-align:center;position:relative;
+}
+.seal b{
+  display:inline-block;font-size:26px;letter-spacing:.24em;text-indent:.24em;font-weight:700;
+  color:var(--gold);border:2px solid var(--gold);padding:10px 14px;transform:rotate(-2deg);
+}
+.seal:nth-child(2) b{transform:rotate(1.5deg);}
+.seal:nth-child(3) b{transform:rotate(-1deg);}
+.seal em{display:block;font-style:normal;font-size:12px;color:var(--dim);letter-spacing:.18em;margin-top:14px;}
+.seal small{display:block;font-size:11.5px;color:var(--faint);margin-top:4px;}
+
+/* 消散带 */
+.fadeband{margin:40px 0 0;height:44px;position:relative;overflow:hidden;}
+.fadeband::before{
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 9px);
+  -webkit-mask-image:linear-gradient(90deg,#000 0%,rgba(0,0,0,.4) 45%,transparent 78%);
+  mask-image:linear-gradient(90deg,#000 0%,rgba(0,0,0,.4) 45%,transparent 78%);
+}
+.closing{font-size:15px;color:var(--dim);max-width:620px;margin:18px 0 0;}
+.closing b{color:var(--paper);font-weight:600;}
+
+/* 时代局限 */
+.limit{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin:34px 0 0;}
+.limit h3{font-size:15px;letter-spacing:.3em;color:var(--gold);margin-bottom:10px;font-weight:600;}
+.limit p,.limit li{font-size:13px;color:var(--dim);line-height:2;}
+.limit ul{list-style:none;}
+.limit li{padding-left:14px;position:relative;}
+.limit li::before{content:"";position:absolute;left:0;top:.95em;width:5px;height:5px;background:var(--gold-soft);}
+
+/* 书牌 */
+.shupai{
+  border:1px solid var(--line);background:var(--card);display:inline-block;
+  padding:10px 22px;font-size:13px;color:var(--dim);letter-spacing:.14em;margin:8px 0 0;
+}
+
+footer{margin-top:80px;border-top:1px solid var(--line);padding:34px 0 60px;}
+footer .xx{display:block;font-size:12.5px;color:var(--faint);line-height:2;margin-bottom:4px;}
+footer a{color:var(--dim);}
+
+.qbank{position:absolute;left:-9999px;top:0;width:10px;height:10px;overflow:hidden;}
+.pu-card q,.sub q,.ed q,.limit q{display:inline;border:0;padding:0;margin:0;color:var(--paper);}
+.shupai q{font-style:normal;}
+
+@media (max-width:760px){
+  .wrap{padding:0 18px;}
+  .stamps,.four-no,.shi{grid-template-columns:1fr 1fr;}
+  .stamps{grid-template-columns:1fr;}
+  .daytrack{grid-template-columns:1fr 1fr;gap:18px 0;}
+  .daytrack::before{display:none;}
+  .debate{grid-template-columns:1fr;}
+  .yamen,.vase{grid-template-columns:1fr;}
+  .limit{grid-template-columns:1fr;}
+  .sig{flex-basis:42px;height:210px;}
+  .poem{font-size:19px;padding:20px 20px;}
+  h2{font-size:25px;}
+}
+</style>
+</head>
+<body>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="kicker">逐日日记 · 明人祁彪佳</div>
+    <h1 class="htitle">甲乙日历<em>。</em></h1>
+    <p class="lead">一部停在半句话上的日记：山阴祁彪佳逐日记录甲申、乙酉两年，从新年的种树扫墓，记到清军征聘的聘书送进村里。日记在<b>闰六月初四</b>戛然而止；两天后五鼓，作者自沉于寓园池水。天下塌下来的那一年半里，他照旧记天气。</p>
+    <div class="chips">
+      <span class="chip">去空白 <b>八万零三百三十六字</b></span>
+      <span class="chip">日记 <b>五百三十三则</b></span>
+      <span class="chip">上卷甲申、下卷乙酉、附年谱</span>
+    </div>
+    <div class="sig-wall">
+      <div class="sig-rail" id="sigRail">
+        <div class="fin"><span>十二日签 · 点看</span></div>
+      </div>
+      <div class="sig-panel" id="sigPanel">
+        <div class="src">甲申正月初一 · 晴霁</div>
+        <q class="q">晴霁。肃拜已，因日辰不佳，不复出。</q>
+      </div>
+    </div>
+    <p class="hero-note">签上天气字，均照日记当日原文；黑签是没有留下记录的日子。</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="sec-k">上卷 · 甲申正月</div>
+    <h2>天气如常</h2>
+    <p class="sub">崇祯十七年元旦，祁彪佳在家乡山阴过年。日记的头几个月几乎全是小事：扫墓、种树、督乡兵操演、陪朋友看新凿的竹林。<b>这是全书最平静的一段，也是最长的一段伏笔。</b>北方一路塘报传来，他照旧记晴雨。</p>
+    <div class="stamps rv">
+      <div class="stamp" data-wx="晴霁">
+        <em>正月初一日</em>
+        <q class="q">晴霁。肃拜已，因日辰不佳，不复出。</q>
+        <p>开年第一天，因为日子不吉利，连门都不出。</p>
+      </div>
+      <div class="stamp" data-wx="雨">
+        <em>正月初二日</em>
+        <q class="q">与兄弟子侄至社庙及弥陀寺谒神佛。</q>
+        <p>冒雨去庙里，是一家人新年例行的事。</p>
+      </div>
+      <div class="stamp" data-wx="晴">
+        <em>正月初三日</em>
+        <q class="q">午后，出寓山，种树于新堤，郁然成林。</q>
+        <p>他的寓园还在添新堤新树，几个月后这片新林会记进讣闻一样的文字里。</p>
+      </div>
+    </div>
+    <p class="sub rv">年节里也不是没有消息，初四那天他收到一份塘报：</p>
+    <q class="q rv">得塘报，知陈卧子公祖督兵剿许贼已捷于龙潭口，擒斩甚众。</q>
+    <p class="sub rv">乡居日记与军事塘报混在同一页上，是这一年半的常态。</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-k">上卷 · 甲申四月</div>
+    <h2>北信</h2>
+    <p class="sub">三月中旬京城失陷，消息在驿路上走了很久。四月初九，祁彪佳南下赴任途中，收到的家报还停在十天前的世界；再过十八天，噩耗才砸到他面前。</p>
+    <div class="daytrack rv">
+      <div class="dt">
+        <em>四月初九</em>
+        <p>舟行途中得吴祖洲书</p>
+      </div>
+      <div class="dt">
+        <em>四月二十七</em>
+        <p>句容巡抚衙门，噩耗南来</p>
+      </div>
+      <div class="dt">
+        <em>四月二十八</em>
+        <p>同日闻两位友人殉难</p>
+      </div>
+      <div class="dt">
+        <em>四月三十</em>
+        <p>燕子矶迎福藩舟</p>
+      </div>
+    </div>
+    <q class="q rv">都门家报，贼尚未至畿南，刘帅亦未叛；群臣有议迁都者，皇上坚持不允。</q>
+    <p class="sub rv">这封信在路上走了半个月，写信人不知道收信人的世界即将换掉。十九天后：</p>
+    <q class="q rv">道三月十九日燕都之变甚确，先帝与后皆身殉社稷；为之旁徨彻夜。</q>
+    <q class="q rv">乃知倪鸿宝、李懋明诸公有殉难者。</q>
+    <p class="sub rv">次日他赶到江边，江上已是新君的船：</p>
+    <q class="q rv">传福藩舟已抵观音门。</q>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-k">上卷 · 甲申五月</div>
+    <h2>监国之辩</h2>
+    <p class="sub">五月初三，福王在南京行监国礼。登极还是监国，新朝廷吵成一团，祁彪佳在廊房里拦住史可法的人说了一段话。<b>点开两条路线，都是他的原话。</b></p>
+    <div class="debate rv">
+      <div class="db" id="dbA">
+        <h4>催登极</h4>
+        <small>他所批评的众议</small>
+        <div class="db-body">
+          <q class="q">前日竟登大位可也。今日监国，后日即登极，事同儿戏矣。</q>
+        </div>
+      </div>
+      <div class="db on" id="dbB">
+        <h4>且监国</h4>
+        <small>他主张的路线</small>
+        <div class="db-body">
+          <q class="q">且江北诸将劝进表未到，彼必耻不预定策之功；其中有变，社稷存亡在此。</q>
+          <q class="q">且监国之名极正，王之贤德益彰；君臣分谊已定矣。宜俟发丧服满之后，使德泽及人、大将推戴，乃中兴之机。</q>
+        </div>
+      </div>
+    </div>
+    <p class="sub rv">他判断的核心是定策之功：江北四镇若没赶上拥立，必生变。后来的局，几乎是他这句预言的执行清单。他还递了个四事揭帖，末一条主张速设报房，先把瘫痪的奏报管道接起来。初七颁哀诏，他在班子里挨个辞别：</p>
+    <q class="q rv">百官礼罢，痛哭震天。予于班中辞大老及五府勋臣，且哭且别。</q>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-k">上卷 · 甲申五月至十月</div>
+    <h2>抚吴</h2>
+    <p class="sub">会推他巡抚苏松，他力辞不脱，五月中旬就任。兵变、奴变、抢犯、旱灾，一样样来。常州府衙的大堂上还设着崇祯的灵位。</p>
+    <div class="yamen rv">
+      <svg class="svk" viewBox="0 0 320 210" role="img" aria-label="府署示意：大堂设先帝之位，他在二门侧坐">
+        <rect class="hall" x="24" y="24" width="272" height="70"></rect>
+        <text x="132" y="52">大堂</text>
+        <rect class="mark" x="128" y="62" width="64" height="22"></rect>
+        <text x="136" y="78" font-size="10">先帝之位</text>
+        <line class="hall" x1="24" y1="118" x2="296" y2="118"></line>
+        <rect class="mark" x="30" y="110" width="52" height="16"></rect>
+        <text x="36" y="122" font-size="10">二门之侧</text>
+        <circle class="me" cx="96" cy="118" r="5"></circle>
+        <text x="108" y="123" font-size="10">公座在此</text>
+        <rect class="hall" x="24" y="150" width="272" height="36"></rect>
+        <text x="140" y="173">仪门</text>
+      </svg>
+      <div>
+        <q class="q">府堂尚设先帝之位，乃坐二门之侧。</q>
+        <p class="sub">录囚审案那天，他不肯坐大堂公座，把座位移到二门旁边，隔着院子给先帝的牌位留出上首。六月初久旱祈雨，仪式刚毕：</p>
+        <q class="q">久旱之后，是时得大雨。</q>
+      </div>
+    </div>
+    <p class="sub rv">秋天，麻烦从朝廷内部来。他起用过一位得罪过阮大铖的举人：</p>
+    <q class="q rv">不知顾生曾以讨檄得罪阮圆海，而予独取用，又触忌甚矣。</q>
+    <p class="sub rv">弹劾随之而来，罪名一路升格到奸贪，他的反应写在日记里只有半句。同僚杨龙友带来马士英的口信，把这套逻辑说得更直白：</p>
+    <q class="q rv">言予力争皇上监国、阻建年号，请与吴鹿友、郑玄岳同诛而末之，诬予者无所不至，甚且指为奸贪；予唯一笑置之，以其疏送杨龙友阅。</q>
+    <q class="q rv">但论其做官甚好，不必问意见异同也。</q>
+    <div class="pu-card rv">
+      <em>年谱补记 · 一口池塘</em>
+      <p>年谱追记了一桩当时没人看懂的工程：他抚吴时，官署后有一口淤塘，偏偏在军务最忙的时候派人挖清了。家人问他，他说：<q>吾战死，妻子其归此乎！</q>年谱的断语只有一句：<q>盖是时已蓄心死志矣。</q></p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-k">上卷冬 · 下卷春</div>
+    <h2>瓶隐</h2>
+    <p class="sub">年底他获准卸事回乡。乙酉年春天，日记回到种树凿石的老节奏。他给自己在寓园的一间厅事起名<b>瓶隐</b>，二月里刚督工改造完。</p>
+    <div class="vase rv">
+      <div class="vroom" id="vroom" role="button" tabindex="0" aria-label="点灯看瓶隐">
+        <svg viewBox="0 0 240 150" role="img" aria-label="瓶隐小屋，一盏灯">
+          <rect x="10" y="118" width="220" height="6" class="hall" fill="none" stroke="rgba(232,228,220,.3)"></rect>
+          <rect x="52" y="46" width="136" height="72" fill="none" stroke="rgba(232,228,220,.3)" stroke-width="1.4"></rect>
+          <path d="M44 46 L120 16 L196 46" fill="none" stroke="rgba(232,228,220,.3)" stroke-width="1.4"></path>
+          <rect x="102" y="80" width="36" height="38" fill="none" stroke="rgba(232,228,220,.3)" stroke-width="1.2"></rect>
+          <g class="glow">
+            <circle cx="120" cy="66" r="4" fill="#c9963f"></circle>
+            <circle cx="120" cy="66" r="16" fill="rgba(201,150,63,.18)"></circle>
+            <circle cx="120" cy="66" r="34" fill="rgba(201,150,63,.08)"></circle>
+          </g>
+          <text x="176" y="66" font-size="11" fill="rgba(232,228,220,.4)">瓶隐</text>
+        </svg>
+        <span class="vcap" id="vcap">寓园厅事，灯在，点灭</span>
+      </div>
+      <div>
+        <q class="q">暄热之极，遂用夹衣。</q>
+        <q class="q">连日多暇，督工役竣瓶隐改造之工，以此为乐。</q>
+        <p class="sub">三月十九，他照例扫墓，日记里补了一句去年今日。天下已经换了主人，他的日子照旧过。<b>点灭那盏灯，这间屋在几个月后的用处，后面会看到。</b></p>
+      </div>
+    </div>
+    <q class="q rv">去年此日，逢国变，先帝殉难；予设香案行礼，不胜哀感。</q>
+    <div class="pu-card rv">
+      <em>年谱补记 · 一个梦</em>
+      <p>年谱把他出生时的一个梦翻出来：<q>世母金太恭人梦异僧趺化金盆，方掬水浴之</q>，家里正赶上他出生。年谱接了一句：<q>及先生殉节，趺坐浅水中；盖豫兆也。</q>谶语是后人追认的，但追认得再整齐，也没有那口池塘早。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-k">下卷 · 乙酉五六月</div>
+    <h2>崩</h2>
+    <p class="sub">乙酉年五月起，消息一条比一条短，一条比一条近。竖条照邸报的读法，从右往左。</p>
+    <div class="gazette rv">
+      <div class="gz">
+        <em>五月二十五</em>
+        <q class="gq">又得林国栋禀，则云姑苏亦已纳款矣。</q>
+      </div>
+      <div class="gz">
+        <em>五月二十五</em>
+        <q class="gq">史道邻亦投水死矣。</q>
+        <span class="drop">传闻如此</span>
+      </div>
+      <div class="gz rain">
+        <em>六月初一</em>
+        <q class="gq">因南都报警，左帅以援立太子为名，破安庆、围池州。</q>
+        <span class="drop">是日雨</span>
+      </div>
+      <div class="gz">
+        <em>六月十四</em>
+        <q class="gq">吴思行自武林探归，亲见北兵于十三日午后入城。</q>
+      </div>
+      <div class="gz">
+        <em>六月十四</em>
+        <q class="gq">九如云：『监国已议降；予意不欲，故收各兵归定海。予亦旋欲遁矣』。</q>
+      </div>
+    </div>
+    <p class="sub rv">杭州陷落当天，祁彪佳举家出逃，那一夜的宿处记在日记里：</p>
+    <q class="q rv">予易道服，辞家庙，及叔父、婶母、文载弟、奕远侄将自南塘行。</q>
+    <q class="q rv">乃同内子行，夜宿于止水庵。</q>
+    <div class="zhisui rv">
+      <em>止水</em>
+      <p>南宋亡时，江万里凿池自沉，池名止水。祁彪佳记下这个名字的时候，去国投水的典故已经等在那里。他此后二十多天里的动作，都在向那个名字靠拢。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-k">下卷 · 乙酉六月至闰六月</div>
+    <h2>贝勒致书</h2>
+    <p class="sub">清军过江后开出征聘名单，刘念台这个级别的名字都在列，祁彪佳排在末尾。日记里连来使的规格都记着：</p>
+    <q class="q rv">北师已征聘刘念台、高硁斋、钱御冷、方书田、徐虞求及予矣。</q>
+    <p class="sub rv">六月二十四那天，他还记了一笔南京来的消息：逃降之际被清军拿住的弘光帝，<q>监国时在北师营中，即寿日亦不令归。</q>出仕新朝还是保节，留给他的时间不多了。</p>
+    <q class="q rv">予欲阳应之，而潜图引诀。季超兄力阻，谓且婉辞；辞之不得，就死未晚。</q>
+    <p class="sub rv">次日，贝勒的聘书送到：</p>
+    <q class="q rv">过城中，则已赍贝勒之书，内称「大清国贝勒致书祁先生」，词多四六语也。</q>
+    <p class="sub rv">他一面以病足推辞，一面安排后事。亲族的信一封封来，劝他见一见，安顿全家：</p>
+    <q class="q rv">止祥兄、文载弟书，则劝予宜远避，而予则惟以病足实辞也。</q>
+    <div class="brk">
+      <q class="q last-q">叔父及文载弟、奕远侄皆有书来，力劝予出武林一见；云一见则舒亲族之祸，而不受官仍可以保臣节。</q>
+      <div class="void" aria-hidden="true"></div>
+      <div class="ed">
+        <q>先祖忠敏公所纪止于是日。初六日五鼓，殉节。</q>
+        <i>库本日记至此断开，此行是后人附记。以下出自年谱。</i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-k">附录 · 年谱原编王思任</div>
+    <h2>瓶隐之夜</h2>
+    <p class="sub">年谱把他最后一夜拆成八个时辰。点漏刻推进。</p>
+    <div class="night rv">
+      <div class="rail" id="rail">
+        <div class="tick on" data-s="0"><span>迎谒</span></div>
+        <div class="tick" data-s="1"><span>绐亲</span></div>
+        <div class="tick" data-s="2"><span>四负堂</span></div>
+        <div class="tick" data-s="3"><span>命酒</span></div>
+        <div class="tick" data-s="4"><span>瓶隐</span></div>
+        <div class="tick" data-s="5"><span>二鼓</span></div>
+        <div class="tick" data-s="6"><span>烛纸</span></div>
+        <div class="tick" data-s="7"><span>天晓</span></div>
+      </div>
+      <div class="stage" id="stage">
+        <div class="st-body on">
+          <em>闰六月初四</em>
+          <q class="q">闰六月初四日，闻有渡江迎谒者；先生密谓季兄曰：『此其时矣』！</q>
+          <p>清军来人过江要迎他见面。他对兄长只说了四个字。</p>
+          <q class="q">先，已绝粒三日。</q>
+        </div>
+        <div class="st-body">
+          <em>辞家</em>
+          <q class="q">绐夫人、公子曰：『举国趋降，吾不能安卧；不若面辞以疾，当得归』。</q>
+          <p>他对妻儿说的是去告病，很快回来。家人信了。</p>
+        </div>
+        <div class="st-body">
+          <em>四负堂</em>
+          <q class="q">昔文信国临终贻书其弟，嘱以所居文山为寺；吾欲效之，汝当成吾志！</q>
+          <p>登堂后他交代儿子：学文天祥，把住宅舍作寺院。</p>
+        </div>
+        <div class="st-body">
+          <em>入夜</em>
+          <q class="q">晚，乃命酒，偕幼弟翁艾、犹子奕远、山人祝季远饮数卮。</q>
+          <p>他把最亲近的三个人留下来陪酒，年谱记他神色怡然。</p>
+        </div>
+        <div class="st-body">
+          <em>厅事</em>
+          <q class="q">遂携两人至厅事曰「瓶隐」者。</q>
+          <p>地点正是他冬天改造取乐的那间屋。</p>
+          <q class="q">忽诘奕远曰：『倘吾遂死，汝将如何』？答曰：『殓忠骨、妥忠魂，诸弟、幼侄之责也』。</q>
+        </div>
+        <div class="st-body">
+          <em>二鼓</em>
+          <q class="q">坐槛上，再啜茶；问漏下几刻？曰：『二鼓』。</q>
+          <q class="q">山川、人物，皆属幻影；山川无改，而人生已焂忽一世矣！</q>
+          <q class="q">吾所交，惟君差朴愿。日后殉节，子能为我一助乎？因手作投缳状示之。季远谢不敢；先生笑曰：『固知子不能耳』！</q>
+          <q class="q">遂趺坐一榻，闭目良久；曰：『死果难如此耶』！</q>
+        </div>
+        <div class="st-body">
+          <em>烛与纸</em>
+          <q class="q">季远梦中闻启户声，起视，祠门已开，一烛置门后，像前炷香三。</q>
+          <q class="q">案留一纸，则告别先祖文也。</q>
+          <p>他起身出门，替祖宗祠堂点上香烛，留下一纸告文，走到水边。</p>
+        </div>
+        <div class="st-body">
+          <em>天晓</em>
+          <q class="q">急呼渔舟求之深水，不可得。</q>
+          <q class="q">见梅花阁前石梯水际，露角巾数寸。</q>
+          <q class="q">趋视先生正襟垂手敛足坐，水才及额，有笑容。</q>
+          <p>他在浅水里端坐自沉，水只没到额头。</p>
+        </div>
+      </div>
+    </div>
+    <div class="poem-wrap rv">
+      <div class="poem"><q>图功为其难，洁身为其易；吾为其易者，聊存洁身志。含笑入九泉，浩气留天地。<small>殉节之夕，题所居案曰</small></q></div>
+    </div>
+    <div class="four-no rv">
+      <div class="fn"><b>勿悬旌</b><small>遗命之一</small></div>
+      <div class="fn"><b>勿求志传</b><small>遗命之二</small></div>
+      <div class="fn"><b>勿受吊殓</b><small>遗命之三</small></div>
+      <div class="fn"><b>勿用冠裳</b><small>遗命之四</small></div>
+    </div>
+    <p class="sub rv">遗言的原文带着一句自判：<q>遭大变，死有余愧！</q>四件事都不要，连为他立传都不要。这册日记大概是他没算进「勿」字里的东西。</p>
+  </div>
+</section>
+
+<section style="border-bottom:none;">
+  <div class="wrap">
+    <div class="sec-k">收梢</div>
+    <h2>三个谥号与一册没敢刻的书</h2>
+    <p class="sub">他死后，南明两朝与清廷先后给了他三个谥号，一字之差隔着一百年。</p>
+    <div class="shi rv">
+      <div class="seal"><b>忠毅</b><em>鲁王监国赠</em><small>少保衔</small></div>
+      <div class="seal"><b>忠敏</b><em>隆武立闽中晋赠</em><small>少傅衔</small></div>
+      <div class="seal"><b>忠惠</b><em>乾隆朝赐专谥</em><small>清廷定评</small></div>
+    </div>
+    <p class="sub rv">书比人等得更久。长子记下这部日记与文集的命运：</p>
+    <q class="q rv">初则以畏祸避仇，不敢刻；继则以遭难破家，不能刻。</q>
+    <p class="sub rv">直到民国丁丑年，他的十一世孙在跋里写：<q>幸逢国权光复，已无亡清忌讳</q>，<q>正可全部付梓，以了先世未了之心。</q>这册日记印成书的那年春天，离另一场国变只有四个月。</p>
+    <div class="fadeband" aria-hidden="true"></div>
+    <p class="closing rv">日历停在闰六月初四。此后山阴的晴雨，再没有人逐日去记。</p>
+    <div class="limit rv">
+      <div>
+        <h3>时代局限</h3>
+        <ul>
+          <li>日记称清军为「虏」「北师」，称农民军为「贼」，是当时士大夫口吻，照录不代今人立论。</li>
+          <li>殉节自沉是那个时代忠君伦理的极致形态，本页呈现其记录，不作效法提倡。</li>
+          <li>梦兆、浚池等谶兆叙事出自年谱追认，属义烈传记笔法，非史实必然。</li>
+          <li>史可法死状一节系当时传闻，与通行记载不合，照录以存消息原貌。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>本页说明</h3>
+        <p>版式为止水历签壳：首屏十二枚日签取自日记原文日期与天气，点签读原文；监国之辩双路线点开；府署图为示意；瓶隐灯可点灭；末夜漏刻八格推进；绝命诗竖排居中钤三谥。库本署名两家，日记正文出自祁彪佳手笔，附录年谱系王思任原编、后人增补。</p>
+      </div>
+    </div>
+    <div class="shupai rv"><q>甲乙日历 明 祁彪佳、王思任 撰</q></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="xx">文本来源:殆知阁简体库,史藏志存记录〈甲乙日历〉一册,明祁彪佳撰,附录年谱王思任原编,<a href="https://github.com/daizhige/daizhige-simplified" rel="noopener">仓库链接</a>;系列总目见 daizhige-daodu 仓库。</span>
+    <span class="xx">引文均经脚本与库本去标点、归一后逐字比对核验;府署图与瓶隐小屋为示意画,非原建筑图样。</span>
+    <span class="xx">时代局限见上栏;日记为历史文献,殉节叙事反映当时伦理观念,不代表本页立场。</span>
+  </div>
+</footer>
+
+<div class="qbank" aria-hidden="true">
+  <q data-sig="s1">晴霁。肃拜已，因日辰不佳，不复出。</q>
+  <q data-sig="s2">午后，出寓山，种树于新堤，郁然成林。</q>
+  <q data-sig="s3">都门家报，贼尚未至畿南，刘帅亦未叛；群臣有议迁都者，皇上坚持不允。</q>
+  <q data-sig="s4">道三月十九日燕都之变甚确，先帝与后皆身殉社稷；为之旁徨彻夜。</q>
+  <q data-sig="s5">前日竟登大位可也。今日监国，后日即登极，事同儿戏矣。</q>
+  <q data-sig="s6">百官礼罢，痛哭震天。</q>
+  <q data-sig="s7">久旱之后，是时得大雨。</q>
+  <q data-sig="s8">暄热之极，遂用夹衣。</q>
+  <q data-sig="s9">去年此日，逢国变，先帝殉难；予设香案行礼，不胜哀感。</q>
+  <q data-sig="s10">因南都报警，左帅以援立太子为名，破安庆、围池州。</q>
+  <q data-sig="s11">吴思行自武林探归，亲见北兵于十三日午后入城。</q>
+  <q data-sig="s12">叔父及文载弟、奕远侄皆有书来，力劝予出武林一见。</q>
+</div>
+
+<script>
+(function(){
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
+  }, {threshold:.15});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  var sigs = [
+    {k:'s1', wx:'晴霁', wxn:false, d:'甲申正月初一'},
+    {k:'s2', wx:'晴',   wxn:false, d:'甲申正月初三'},
+    {k:'s3', wx:'无记', wxn:true,  d:'甲申四月初九'},
+    {k:'s4', wx:'无记', wxn:true,  d:'甲申四月二十七'},
+    {k:'s5', wx:'无记', wxn:true,  d:'甲申五月初三'},
+    {k:'s6', wx:'无记', wxn:true,  d:'甲申五月初七'},
+    {k:'s7', wx:'大雨', wxn:false, d:'甲申六月初二'},
+    {k:'s8', wx:'暄热', wxn:false, d:'乙酉二月十七'},
+    {k:'s9', wx:'无记', wxn:true,  d:'乙酉三月十九'},
+    {k:'s10',wx:'雨',   wxn:false, d:'乙酉五月初一'},
+    {k:'s11',wx:'无记', wxn:true,  d:'乙酉六月十四'},
+    {k:'s12',wx:'无记', wxn:true,  d:'乙酉闰六月初四'}
+  ];
+  var rail = document.getElementById('sigRail');
+  var fin = rail.querySelector('.fin');
+  var bank = {};
+  document.querySelectorAll('.qbank q').forEach(function(q){ bank[q.getAttribute('data-sig')] = q.innerHTML; });
+  sigs.forEach(function(s, idx){
+    var el = document.createElement('div');
+    el.className = 'sig' + (s.k === 's12' ? ' dark' : '');
+    el.setAttribute('data-k', s.k);
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('role', 'button');
+    var label = s.wxn ? '无记' : s.wx;
+    var wxHtml = '<span class="wx' + (s.wxn ? ' none' : '') + '">' + label + '</span>';
+    el.innerHTML = wxHtml + '<span class="d">' + s.d + '</span>';
+    el.addEventListener('click', function(){ showSig(s); });
+    el.addEventListener('keydown', function(ev){ if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); showSig(s); } });
+    rail.insertBefore(el, fin);
+    setTimeout(function(){ el.classList.add('in'); }, 120 + idx * 90);
+  });
+  function showSig(s){
+    var panel = document.getElementById('sigPanel');
+    var src = s.d + (s.wxn ? ' · 是日无天气字' : ' · ' + s.wx);
+    var txt = bank[s.k] || '';
+    panel.innerHTML = '<div class="src">' + src + '</div><q class="q">' + txt + '</q>';
+  }
+
+  var dbA = document.getElementById('dbA'), dbB = document.getElementById('dbB');
+  dbA.addEventListener('click', function(){ dbA.classList.add('on'); dbB.classList.remove('on'); });
+  dbB.addEventListener('click', function(){ dbB.classList.add('on'); dbA.classList.remove('on'); });
+
+  var vroom = document.getElementById('vroom'), vcap = document.getElementById('vcap');
+  function flipLamp(){
+    vroom.classList.toggle('off');
+    vcap.textContent = vroom.classList.contains('off') ? '灯灭 · 年谱记，祠南一门去水近' : '寓园厅事，灯在，点灭';
+  }
+  vroom.addEventListener('click', flipLamp);
+  vroom.addEventListener('keydown', function(ev){ if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); flipLamp(); } });
+
+  var ticks = document.querySelectorAll('#rail .tick');
+  var bodies = document.querySelectorAll('#stage .st-body');
+  ticks.forEach(function(t){
+    t.addEventListener('click', function(){
+      var n = parseInt(t.getAttribute('data-s'), 10);
+      ticks.forEach(function(x, i){
+        x.classList.toggle('on', i === n);
+        x.classList.toggle('done', i < n);
+      });
+      bodies.forEach(function(b, i){ b.classList.toggle('on', i === n); });
+    });
+  });
+})();
+</script>
+</body>
+</html>
