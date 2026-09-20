@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>玉山名胜集 · 殆知阁导读</title>
+<style>
+:root{
+  --bg:#191917; --paper:#e8e4dc; --blue:#5e8fbb; --bluedim:#3c5a74;
+  --dim:#8f897c; --line:#37342c; --ink:#1c1b18; --ink2:#4a463c;
+  --seal:#c0453c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{
+  background:var(--bg); color:var(--paper);
+  font-family:"Songti SC","STSong","NSimSun","SimSun","Noto Serif CJK SC",serif;
+  line-height:1.9; font-size:16px;
+  background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.012) 3px 4px);
+}
+q{quotes:"「" "」"}
+.mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+.wrap{max-width:1020px;margin:0 auto;padding:0 22px}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.kicker{
+  font-size:13px;letter-spacing:.35em;color:var(--blue);
+  border:1px solid var(--bluedim);display:inline-block;padding:4px 14px 4px 18px;
+}
+/* ---------- hero ---------- */
+.hero{padding:64px 0 30px;position:relative}
+.hero-grid{display:flex;gap:34px;align-items:flex-start;flex-wrap:wrap}
+.hero-title{writing-mode:vertical-rl;font-size:64px;letter-spacing:.18em;
+  color:var(--paper);font-weight:400;line-height:1.15;border-right:1px solid var(--line);
+  padding-right:26px;height:524px;flex:none}
+.hero-title q{quotes:none}
+.hero-title .vt-sub{font-size:15px;letter-spacing:.5em;color:var(--dim);margin-top:20px}
+.hero-side{flex:1;min-width:280px}
+.hero-side p.lead{margin:22px 0 6px;font-size:17px;color:var(--paper)}
+.hero-side p.lead2{color:var(--dim);font-size:15px;margin-bottom:8px}
+.seal{
+  display:inline-block;border:2px solid var(--seal);color:var(--seal);
+  font-size:13px;padding:3px 9px;letter-spacing:.25em;border-radius:3px;
+  transform:rotate(-4deg);margin-top:16px;opacity:.92;
+}
+/* map */
+.map{margin-top:30px;border:1px solid var(--line);background:#141311;padding:8px;position:relative}
+.map svg{display:block;width:100%;height:auto}
+.map-cap{
+  border-top:1px dashed var(--line);padding:9px 6px 5px;font-size:14.5px;color:var(--dim);
+  min-height:44px;
+}
+.map-cap b{color:var(--blue);font-weight:400}
+.mnode{cursor:pointer}
+.mnode circle{fill:#211f1b;stroke:var(--dim);stroke-width:1}
+.mnode text{fill:var(--paper);font-size:13px;font-family:inherit}
+.mnode:hover circle,.mnode.on circle{stroke:var(--blue);fill:#26313c}
+.mnode:hover text,.mnode.on text{fill:var(--blue)}
+.map-note{font-size:12.5px;color:#6d675c;padding:2px 6px 6px}
+.hint{font-size:13px;color:var(--dim);margin-top:8px}
+/* ---------- sections ---------- */
+section{padding:52px 0 8px}
+.sec-head{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:24px}
+.sec-no{font-size:13px;color:var(--seal);letter-spacing:.2em;flex:none}
+.sec-head h2{font-size:26px;font-weight:400;letter-spacing:.12em;color:var(--paper)}
+.sec-head .sec-sub{font-size:13.5px;color:var(--dim);margin-left:auto}
+.prose{max-width:780px;color:#cfc9bd;font-size:15.5px}
+.prose .qi{display:block;margin:14px 0;padding-left:14px;border-left:2px solid var(--bluedim);
+  color:var(--paper);font-size:17px;line-height:2}
+.qwho{display:block;font-size:12.5px;color:var(--dim);letter-spacing:.2em;margin-top:2px}
+/* ---------- moon gates ---------- */
+.legend{font-size:13px;color:var(--dim);margin-bottom:18px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 5px 0 16px;vertical-align:middle}
+.legend i.dot-zhao{background:var(--blue)}
+.legend i.dot-ok{border:1px solid var(--dim)}
+.legend i.dot-miss{background:#4a463c}
+.gates{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:20px 14px}
+.gate{display:contents}
+.gate-face{
+  width:100%;aspect-ratio:1/1;border-radius:50%;
+  border:1px solid #4c4759;background:radial-gradient(circle at 50% 42%,#232028 0%,#191917 72%);
+  color:var(--paper);font-family:inherit;font-size:15.5px;letter-spacing:.1em;
+  cursor:pointer;transition:border-color .25s,transform .25s;position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.5;
+  padding:8px;
+}
+.gate-face .gname{display:block}.gate-face small{display:block;font-size:11px;color:var(--dim);letter-spacing:.15em;margin-top:2px}
+.gate .dot{position:absolute;top:12px;right:16px;width:7px;height:7px;border-radius:50%}
+.gate[data-kind=zhao] .dot{background:var(--blue)}
+.gate[data-kind=ok] .dot{border:1px solid var(--dim)}
+.gate[data-kind=miss] .dot{background:#4a463c}
+.gate-face:hover{border-color:var(--blue)}
+.gate.open .gate-face{border-color:var(--blue);background:radial-gradient(circle at 50% 42%,#26313c 0%,#191917 78%)}
+.gate-body{
+  grid-column:1/-1;display:none;margin-top:2px;
+  background:var(--paper);color:var(--ink);
+  border:1px solid #b8b2a4;border-radius:4px;padding:16px 20px 13px;
+  box-shadow:0 10px 26px rgba(0,0,0,.5);
+}
+.gate.open .gate-body{display:block}
+.gate-body .g-who{font-size:12.5px;letter-spacing:.18em;color:#7a7466;margin-bottom:4px}
+.gate-body .g-q{font-size:16.5px;line-height:2;color:var(--ink);display:block}
+.gate-body .g-n{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.8}
+.gate-body .g-q q{quotes:"「" "」"}
+.gate-body .g-q::before{content:"额句或记句：";font-size:12px;color:#8a8477;display:block;letter-spacing:.15em}
+/* ---------- scrolls ---------- */
+.scrolls{display:flex;flex-direction:column;gap:16px;max-width:820px}
+.scroll{border:1px solid var(--line);background:#161511}
+.scroll-head{
+  display:flex;align-items:center;gap:14px;padding:13px 18px;cursor:pointer;user-select:none;
+}
+.scroll-head .s-who{font-size:18px;letter-spacing:.2em;color:var(--paper)}
+.scroll-head .s-role{font-size:12.5px;color:var(--dim);letter-spacing:.2em}
+.scroll-head .s-arrow{margin-left:auto;color:var(--blue);font-size:13px;transition:transform .25s}
+.scroll.open .s-arrow{transform:rotate(90deg)}
+.scroll-body{display:none;padding:4px 22px 18px;border-top:1px dashed var(--line)}
+.scroll.open .scroll-body{display:block}
+.scroll-body .qi{display:block;margin:12px 0 4px;color:var(--paper);font-size:17px;line-height:2}
+.scroll-body p{font-size:14.5px;color:#b9b3a6;margin-top:6px}
+/* ---------- white cloud ---------- */
+.cloud{background:#12110e;border:1px solid #232016;margin-top:10px;padding:30px 24px 34px;position:relative;overflow:hidden}
+.cloud::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 46% at 78% 0%,rgba(94,143,187,.10),transparent 65%);pointer-events:none}
+.cloud .prose{position:relative}
+.tower{margin-top:26px;position:relative}
+.tcard{border:1px solid #2c2a20;background:#171611;margin-bottom:12px;max-width:860px}
+.tcard-head{display:flex;gap:14px;align-items:baseline;padding:12px 18px;cursor:pointer}
+.tcard-head .t-who{font-size:13px;color:var(--blue);letter-spacing:.2em;flex:none}
+.tcard-head .t-line{color:var(--paper);font-size:17px;letter-spacing:.06em}
+.tcard-head .t-plus{margin-left:auto;color:var(--dim);font-size:15px}
+.tcard.open .t-plus{transform:rotate(45deg)}
+.tcard-body{display:none;padding:0 20px 14px 20px}
+.tcard.open .tcard-body{display:block}
+.tcard-body .qi{display:block;border-left:2px solid var(--seal);padding-left:13px;margin-top:6px;
+  color:#e3ded2;font-size:16.5px;line-height:2}
+.tcard-body p{font-size:13px;color:#8b8577;margin-top:8px}
+/* ---------- stone timeline ---------- */
+.stone-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:22px 0 6px}
+.stone{
+  border:1px solid var(--line);background:#161511;cursor:pointer;min-height:120px;
+  padding:12px 10px;position:relative;transition:border-color .2s;
+}
+.stone:hover{border-color:var(--bluedim)}
+.stone.open{border-color:var(--blue)}
+.stone .st-era{font-size:11.5px;color:var(--dim);letter-spacing:.14em;display:block}
+.stone .st-ti{font-size:16px;color:var(--paper);margin-top:6px;display:block;letter-spacing:.08em}
+.stone .st-no{position:absolute;bottom:8px;right:10px;font-size:11px;color:#5c5749}
+.stone-blank{border-style:dashed;color:var(--dim)}
+.stone-blank .st-ti{color:var(--dim)}
+.stone-detail{display:none;border:1px solid var(--line);border-left:3px solid var(--blue);
+  background:#161511;padding:16px 20px;margin:8px 0 18px;max-width:860px}
+.stone-detail.show{display:block}
+.stone-detail .qi{display:block;margin:8px 0;color:var(--paper);font-size:16.5px;line-height:2}
+.stone-detail p{font-size:14px;color:#b9b3a6;margin-top:6px}
+/* ---------- coda ---------- */
+.coda{margin-top:54px;border-top:1px solid var(--line);padding:44px 0 30px;position:relative}
+.coda-grid{display:flex;gap:40px;flex-wrap:wrap}
+.coda-poem{
+  writing-mode:vertical-rl;font-size:24px;line-height:2.2;letter-spacing:.14em;
+  color:var(--paper);height:340px;flex:none;
+  background:#141311;border:1px solid var(--line);padding:26px 22px;
+}
+.coda-poem q{quotes:none}
+.coda-side{flex:1;min-width:300px}
+.coda-side .prose{margin-top:4px}
+.coda-end{margin-top:26px;font-size:15px;color:var(--dim)}
+.coda-seal{
+  display:inline-block;border:2px solid var(--seal);color:var(--seal);border-radius:4px;
+  padding:6px 10px;font-size:15px;letter-spacing:.3em;transform:rotate(3deg);margin-top:18px;
+}
+/* ---------- footer ---------- */
+footer{margin-top:64px;border-top:1px solid var(--line);padding:26px 0 46px}
+footer .xx{display:block;font-size:12.5px;color:#7d7768;line-height:2}
+footer .xx a{color:#7f97ad}
+footer q,.st-era q{quotes:none}
+/* reveal */
+.rv{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+.rv.on{opacity:1;transform:none}
+@media (max-width:760px){
+  .hero{padding-top:40px}
+  .hero-title{height:400px;font-size:44px;padding-right:16px}
+  .stone-row{grid-template-columns:repeat(3,1fr)}
+  .coda-poem{height:300px;font-size:20px}
+  .gates{grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:16px 10px}
+  .gate-face{font-size:13px;padding:4px;letter-spacing:.02em}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">集部总集｜元·顾瑛编</div>
+    <div class="hero-grid">
+      <h1 class="hero-title"><q>玉山名胜集</q><span class="vt-sub">界溪纸上园</span></h1>
+      <div class="hero-side">
+        <p class="lead">元末昆山界溪，一座园子开宴二十余年。园主顾瑛把每一处楼馆的题额人、自作题咏与宾客唱和，一处处编成账册。</p>
+        <p class="lead2">四库馆臣说，一部唱和集能有多好，没有超过它的。宴席的结局不在书里：书成不久，兵到吴中，园毁，主人徙死濠上。楼馆早已无存，这本账册成了园子唯一的原样。</p>
+        <span class="seal">园在纸上</span>
+        <div class="map" id="map">
+          <svg viewBox="0 0 920 360" role="img" aria-label="玉山佳处示意图">
+            <defs>
+              <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#5e8fbb" stop-opacity=".14"/>
+                <stop offset="1" stop-color="#5e8fbb" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <text x="18" y="30" fill="#6d675c" font-size="12" letter-spacing="4">玉山佳处 · 示意</text>
+            <!-- 界溪 -->
+            <path d="M0,318 C160,300 300,330 460,314 C620,298 760,326 920,308" fill="none" stroke="#3c5a74" stroke-width="14" opacity=".35"/>
+            <text x="30" y="345" fill="#54718c" font-size="13" letter-spacing="6">界溪</text>
+            <!-- 浣花溪 -->
+            <path d="M700,100 C740,130 730,170 770,196" fill="none" stroke="#3c5a74" stroke-width="6" opacity=".4"/>
+            <text x="712" y="86" fill="#54718c" font-size="11" letter-spacing="2">浣花溪</text>
+            <!-- 累石山 -->
+            <ellipse cx="170" cy="160" rx="86" ry="52" fill="url(#wg)" stroke="#37342c"/>
+            <ellipse cx="196" cy="132" rx="40" ry="26" fill="#211f1b" stroke="#37342c"/>
+            <text x="150" y="222" fill="#6d675c" font-size="11" letter-spacing="3">累石为山</text>
+            <!-- 池 -->
+            <ellipse cx="612" cy="252" rx="56" ry="22" fill="#1c2430" stroke="#3c5a74" stroke-opacity=".5"/>
+            <text x="668" y="256" fill="#54718c" font-size="11" letter-spacing="2">池</text>
+            <g id="mnodes"></g>
+          </svg>
+          <div class="map-cap" id="mapcap">点楼馆一名，认它的题额之人。</div>
+          <div class="map-note">园图据〈玉山佳处〉杨维桢记所列诸馆相对方位示意，非实测。</div>
+        </div>
+        <p class="hint">本页游园路线：认额（一）读序（二）听白云（三）访石与帖（四）。</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= 幕一 认额 ================= -->
+<section id="s1">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">幕一</span><h2>认额</h2><span class="sec-sub">二十六处楼馆，各归其主</span></div>
+    <p class="prose rv">全书体例是一本账：每一地，先记谁题的额，再录园主自作题咏，后附宾客序记诗辞。点击月洞门，看这一处的落款。</p>
+    <p class="legend rv"><i class="dot-zhao"></i>赵家一门六额<i class="dot-ok"></i>题额可考<i class="dot-miss"></i>缺名缺句</p>
+    <div class="gates" id="gates">
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">玉山草堂</span><small>额·虞集</small></button>
+        <div class="gate-body"><span class="g-who">题句 · 虞集</span>
+          <span class="g-q"><q>痩影在窗梅得月，凉阴满席竹笼烟</q></span>
+          <p class="g-n">堂名取自杜甫诗语。馆阁老手书额，是园子第一块金字招牌。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">玉山佳处</span><small>额·马九霄</small></button>
+        <div class="gate-body"><span class="g-who">记 · 杨维桢</span>
+          <span class="g-q"><q>若仲瑛氏之有仕才而素无仕志</q></span>
+          <p class="g-n">全园总名。额句库本首字讹码，存照不录；杨维桢替他分辩：不是终南捷径的隐居。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">种玉亭</span><small>额·杜本</small></button>
+        <div class="gate-body"><span class="g-who">记 · 杨维桢</span>
+          <span class="g-q"><q>后累石为山山前之亭曰种玉</q></span>
+          <p class="g-n">假山脚下的第一亭，玉出昆冈之意。</p></div></div>
+
+      <div class="gate" data-kind="zhao"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">小蓬莱</span><small>额·赵孟頫</small></button>
+        <div class="gate-body"><span class="g-who">记 · 杨维桢</span>
+          <span class="g-q"><q>登山而憩注者曰小蓬莱</q></span>
+          <p class="g-n">假山顶上的仙名。赵孟頫为园中四处题额。</p></div></div>
+
+      <div class="gate" data-kind="zhao"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">碧梧翠竹堂</span><small>额·赵孟頫</small></button>
+        <div class="gate-body"><span class="g-who">记 · 杨维桢</span>
+          <span class="g-q"><q>最后之堂曰碧梧翠竹</q></span>
+          <p class="g-n">主堂，进深最末、体量最大；白云海楼就筑在它后面。</p></div></div>
+
+      <div class="gate" data-kind="zhao"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">湖光山色楼</span><small>额·赵奕</small></button>
+        <div class="gate-body"><span class="g-who">记 · 杨维桢</span>
+          <span class="g-q"><q>又见湖光山色之楼</q></span>
+          <p class="g-n">题额的赵奕是赵孟頫之子，赵家一门在园中留了六块字。</p></div></div>
+
+      <div class="gate" data-kind="zhao"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">读书舍</span><small>额·赵雍</small></button>
+        <div class="gate-body"><span class="g-who">记 · 杨维桢</span>
+          <span class="g-q"><q>东曰可诗斋西曰读书舍</q></span>
+          <p class="g-n">题额的赵雍也是赵孟頫之子。杨维桢那篇总记，就写在读书舍里。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">可诗斋</span><small>额·杜本</small></button>
+        <div class="gate-body"><span class="g-who">位置</span>
+          <p class="g-n">与读书舍东西相对。斋以可诗为名，园中唱和多半从这一类屋子领题出去。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">白云海</span><small>额·卢熊</small></button>
+        <div class="gate-body"><span class="g-who">记 · 郑元祐</span>
+          <span class="g-q"><q>仲瑛念母不见结楼于碧梧翠竹之堂后而名楼曰白云海</q></span>
+          <p class="g-n">思亲之楼，取白云孤飞之意。见幕三。</p></div></div>
+
+      <div class="gate" data-kind="miss"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">来龟轩</span><small>额·佚</small></button>
+        <div class="gate-body"><span class="g-who">记 · 卢昭</span>
+          <span class="g-q"><q>避乱归来两鬓霜春风依旧满门墙</q></span>
+          <p class="g-n">兵后归家，一龟出墀，义犬护主，遂以名轩。龟字库本多处缺码，题句佚，存照。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">雪巢</span><small>额·达兼善</small></button>
+        <div class="gate-body"><span class="g-who">题额人</span>
+          <p class="g-n">达兼善即白野御史，一人包了园中五额，又篆拜石坛，见幕四。</p></div></div>
+
+      <div class="gate" data-kind="miss"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">春草池</span><small>额·佚名</small></button>
+        <div class="gate-body"><span class="g-who">存照</span>
+          <p class="g-n">额句篆颜俱缺名，池与绿波亭相邻。</p></div></div>
+
+      <div class="gate" data-kind="miss"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">绿波亭</span><small>额·佚名</small></button>
+        <div class="gate-body"><span class="g-who">存照</span>
+          <p class="g-n">库本题头径注篆颜缺名。</p></div></div>
+
+      <div class="gate" data-kind="miss"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">绛雪亭</span><small>额·佚名</small></button>
+        <div class="gate-body"><span class="g-who">存照</span>
+          <p class="g-n">亭名像一场不肯化的红雪，额人无名。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">柳塘春</span><small>马九霄篆颜</small></button>
+        <div class="gate-body"><span class="g-who">记 · 杨维桢</span>
+          <span class="g-q"><q>所谓桞堂春渔荘者又其东偏之景也</q></span>
+          <p class="g-n">东偏春景。库本桞荘等形照录。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">渔庄</span><small>达兼善篆颜</small></button>
+        <div class="gate-body"><span class="g-who">题句</span>
+          <span class="g-q"><q>渔庄无岁不丰年三十六陂多似田</q></span>
+          <p class="g-n">东偏水田气象，庄与田相连，不只是布景。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">书画舫</span><small>额·吴孟思</small></button>
+        <div class="gate-body"><span class="g-who">位置</span>
+          <p class="g-n">水上书斋。园主藏法书名画，舫是它们停泊的码头。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">春晖楼</span><small>额·沈明远</small></button>
+        <div class="gate-body"><span class="g-who">记 · 陈敬初</span>
+          <span class="g-q"><q>春晖楼者呉下顾君仲瑛就养读书之所也</q></span>
+          <p class="g-n">奉母之楼，取寸草春晖之意；楼上寿宴与诗会同开。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">秋华亭</span><small>额·鲜于伯机</small></button>
+        <div class="gate-body"><span class="g-who">存照</span>
+          <p class="g-n">库本题头如此著录，额自旧迹。</p></div></div>
+
+      <div class="gate" data-kind="miss"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">淡香亭</span><small>额·未见</small></button>
+        <div class="gate-body"><span class="g-who">存照</span>
+          <p class="g-n">卷内未见题头行，存照。</p></div></div>
+
+      <div class="gate" data-kind="zhao"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">君子亭</span><small>额·赵孟頫</small></button>
+        <div class="gate-body"><span class="g-who">位置</span>
+          <p class="g-n">竹间之亭，以君子为号。赵家六额之末。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">钓月轩</span><small>额·杜本</small></button>
+        <div class="gate-body"><span class="g-who">记 · 杨维桢</span>
+          <span class="g-q"><q>名其前之轩曰钓月</q></span>
+          <p class="g-n">前轩，宾客人园的第一进。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">拜石坛</span><small>额·达兼善</small></button>
+        <div class="gate-body"><span class="g-who">记 · 顾瑛自述</span>
+          <span class="g-q"><q>瑛素有米颠之癖</q></span>
+          <p class="g-n">一方东坡题识石的家，石与帖的故事见幕四。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">寒翠所</span><small>额·达兼善</small></button>
+        <div class="gate-body"><span class="g-who">记 · 顾瑛自述</span>
+          <p class="g-n">篆拜石二字之后顺手又隶寒翠二字，与拜石坛同日得书。</p></div></div>
+
+      <div class="gate" data-kind="zhao"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">芝云堂</span><small>额·赵孟頫</small></button>
+        <div class="gate-body"><span class="g-who">记 · 杨维桢</span>
+          <span class="g-q"><q>中之室曰芝云</q></span>
+          <p class="g-n">主室，宴集的重镇。</p></div></div>
+
+      <div class="gate" data-kind="ok"><button class="gate-face" type="button"><span class="dot"></span><span class="gname">金粟影</span><small>额·达兼善</small></button>
+        <div class="gate-body"><span class="g-who">记 · 杨维桢</span>
+          <span class="g-q"><q>临池之轩曰金粟影</q></span>
+          <p class="g-n">临池小轩。园主自号金粟道人，落款用的就是它。</p></div></div>
+
+    </div>
+    <p class="prose rv" style="margin-top:22px;font-size:14px;color:var(--dim)">四库提要开列二十八处，库本卷内可点出题头二十六处：醉雪斋、浣华馆两家题头未见，存照。另有小游仙等名目散见于记文，未单独立卷。</p>
+  </div>
+</section>
+
+<!-- ================= 幕二 序辩 ================= -->
+<section id="s2">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">幕二</span><h2>序辩</h2><span class="sec-sub">兰亭的对手</span></div>
+    <p class="prose rv">为一本唱和集作序，两位序作者都不约而同地拉来古人作对手。点击展开三轴。</p>
+    <div class="scrolls">
+      <div class="scroll rv"><div class="scroll-head"><span class="s-who">黄溍</span><span class="s-role">原序之一</span><span class="s-arrow">▶</span></div>
+        <div class="scroll-body">
+          <span class="qi"><q>后之视今亦犹今之视昔</q></span>
+          <span class="qi"><q>使异日玉山之胜与两川别墅并存于文字间则斯集也讵可少哉</q></span>
+          <p>他拿辋川、樊川作比：王维的庄、杜牧的墅，是靠当场的诗文才活的。怕的不是宴散，是文字不传。</p>
+        </div></div>
+      <div class="scroll rv"><div class="scroll-head"><span class="s-who">李祁</span><span class="s-role">原序之二</span><span class="s-arrow">▶</span></div>
+        <div class="scroll-body">
+          <span class="qi"><q>岂若艸堂之会有其人人有其诗而诗皆可诵耶</q></span>
+          <p>他说得更直白：兰亭传世靠一篇序撑着，诗早亡了；草堂之会人人有诗，诗皆可诵，不必靠一支名笔救场。这本账册是冲着兰亭去的。</p>
+        </div></div>
+      <div class="scroll rv"><div class="scroll-head"><span class="s-who">四库提要</span><span class="s-role">馆臣总评</span><span class="s-arrow">▶</span></div>
+        <div class="scroll-body">
+          <span class="qi"><q>賔客之佳文辞之富则未有过于是集者</q></span>
+          <span class="qi"><q>虽遭逢衰世有托而逃而文采风流照映一世</q></span>
+          <p>馆臣把账认了：金谷、兰亭开了宴集的头，辋川、云溪开了题咏的头，而论客人之好、文字之富，无过此集。又点破底色：衰世里一群人有托而逃。</p>
+        </div></div>
+    </div>
+    <p class="prose rv" style="margin-top:18px">十之八九的元季名流，都在这本账册里挂过号。<q>元季知名之士列其间者十之八九</q><span class="qwho">四库提要</span></p>
+  </div>
+</section>
+
+<!-- ================= 幕三 白云 ================= -->
+<section id="s3">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">幕三</span><h2>白云深</h2><span class="sec-sub">兵声入书</span></div>
+    <div class="cloud">
+      <p class="prose rv">兵不是最后才打进园子的。至正年间吴中事起，顾瑛奉母避地商溪，老母客死旅次，归葬绰墩先陇。他在主堂后面起了一座楼，登楼四顾，替自己留一个望云的地方。官府这时反而要授他爵秩，他披着斩衰，削发居家，日诵大乘经荐母。</p>
+      <span class="qi rv"><q>君以斩然衰绖辞之弗获乃祝髪家居日诵大乗经以荐母</q><span class="qwho">白云海记 · 郑元祐</span></span>
+      <p class="prose rv">楼成之后，主人和客人抓着同一个开头，你一叠我一叠地唱下去。一座思亲的楼，唱成了战地的高音部。点一层，看底下压着什么。</p>
+      <div class="tower">
+        <div class="tcard rv"><div class="tcard-head"><span class="t-who">次韵·顾瑛</span><span class="t-line"><q>白云深，白云深，白云飞来知我心</q></span><span class="t-plus">＋</span></div>
+          <div class="tcard-body"><q>楼下鸡鸣夜枕戈楼头开宴招李何</q><p>枕戈与开宴同在一联，楼下戒严，楼上点客人。</p></div></div>
+        <div class="tcard rv"><div class="tcard-head"><span class="t-who">文质·歌行</span><span class="t-line"><q>白云深，白云深，白云深处元无心</q></span><span class="t-plus">＋</span></div>
+          <div class="tcard-body"><q>风尘眯目横干戈龙吞虎噬奈尔何</q><p>歌行唱到一半，直接转成对时局的哀音。</p></div></div>
+        <div class="tcard rv"><div class="tcard-head"><span class="t-who">和韵·陆仁</span><span class="t-line"><q>白云深，白云深，白云觧结山人心</q></span><span class="t-plus">＋</span></div>
+          <div class="tcard-body"><q>方今海内正风尘萧条千里无鸡狗</q><p>千里无鸡狗，写的是兵后无人烟。</p></div></div>
+        <div class="tcard rv"><div class="tcard-head"><span class="t-who">和韵·袁华</span><span class="t-line"><q>白云楼居深复深</q></span><span class="t-plus">＋</span></div>
+          <div class="tcard-body"><q>君不见茂苑长洲荒草里豪杰消沉呼不起</q><p>门客的眼睛看向园墙外：豪杰消沉，呼之不起。</p></div></div>
+        <div class="tcard rv"><div class="tcard-head"><span class="t-who">四叠·顾瑛</span><span class="t-line"><q>玉山盘盘窈且深，中有楼兮居山心</q></span><span class="t-plus">＋</span></div>
+          <div class="tcard-body"><q>战国纷纷竞挽戈</q><p>四叠收到战国，他把当下直接写进了古战局。</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 幕四 石与帖 ================= -->
+<section id="s4">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">幕四</span><h2>石与帖</h2><span class="sec-sub">园子最后一篇记</span></div>
+    <p class="prose rv">园主自己招认：见了奇峰怪石就挪不动步。中庭里那方拜石坛，供着一壁从废园淘来的假山石，石上有苏东坡的题识；后来又来了一纸东坡手帖。他为此写了一篇记，是园子最后一篇完整的文字。点一格，读一段。</p>
+    <div class="stone-row" id="stonerow">
+      <div class="stone" data-k="0"><span class="st-era"><q>后至正戊寅四月</q></span><span class="st-ti">废园得石</span><span class="st-no">一</span></div>
+      <div class="stone" data-k="1"><span class="st-era">明年</span><span class="st-ti">柯九思再拜</span><span class="st-no">二</span></div>
+      <div class="stone" data-k="2"><span class="st-era">后三月</span><span class="st-ti">达兼善篆额</span><span class="st-no">三</span></div>
+      <div class="stone" data-k="3"><span class="st-era">至正乙未冬</span><span class="st-ti">手帖来归</span><span class="st-no">四</span></div>
+      <div class="stone" data-k="4"><span class="st-era"><q>至正丙申正月五日</q></span><span class="st-ti">记成</span><span class="st-no">五</span></div>
+      <div class="stone stone-blank" data-k="5"><span class="st-era">其后</span><span class="st-ti">无字</span><span class="st-no">六</span></div>
+    </div>
+    <div class="stone-detail" id="stonedetail"></div>
+    <div id="stonetexts" style="display:none">
+      <div data-k="0"><span class="qi"><q>断垣之外燕麦中有假山在焉</q></span><span class="qi"><q>独存一壁而失其左股</q></span><span class="qi"><q>上有老坡题识觞咏之语易之以粟归而立诸中庭</q></span><p>东城一座宋代老宅的废园，断垣外燕麦齐腰，诸峰早被好事者载走，只剩一壁假山倒在梧桐下。石上带着东坡当年题识的字迹，他用粟米换回，立在自家院子里。干支库本照录，年次存疑。</p></div>
+      <div data-k="1"><span class="qi"><q>明年奎章阁鉴书博士丹丘柯敬仲下访见而竒之再拜题名而去</q></span><span class="qi"><q>丹丘词翰鉴博有元之元章也</q></span><p>柯九思下访见石，一拜再拜才走。米芾字元章，以元章拟之，是把这位鉴书博士当成了当代米颠。</p></div>
+      <div data-k="2"><span class="qi"><q>后三月而御史白野达兼善来观嘉丹丘之逸致为作古篆拜石二字于坛</q></span><p>达兼善来观，篆书拜石两个字落在坛上，又隶寒翠两字美其所。石的名声自此愈重。</p></div>
+      <div data-k="3"><span class="qi"><q>至正乙未冬周履道秀才自梁鸿山擕赠老坡手帖</q></span><span class="qi"><q>上有贾秋壑私印</q></span><p>又一年冬，一位姓周的秀才从梁鸿山来，送来一纸东坡手帖，上面盖着贾似道的私印。石与帖，一件从残火里滚过几百年，一件流落人手，他说<q>今一旦二美并来</q>。</p></div>
+      <div data-k="4"><span class="qi"><q>时至正丙申正月五日金粟道人顾瑛书于玉山草堂</q></span><span class="qi"><q>兵残火毁辗转流落人手</q></span><p>拜石坛记写成，落款金粟道人。落笔这天，离兵到自己家门口还有两个月。</p></div>
+      <div data-k="5"><span class="qi"><q>至正十六年三月廿日玉山顾君仲瑛自避地呉兴复归故第</q></span><p>这一格没有字。两月后张士诚兵入平江，主人避地吴兴；三月二十日回家，园子居然完好，一龟出墀，义犬护主，遂添一座来龟轩。园子还开着门，账册的宴席却到此为止。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 尾声 ================= -->
+<section class="coda" id="coda">
+  <div class="wrap">
+    <div class="coda-grid">
+      <div class="coda-poem rv"><q>儒衣僧帽道人鞋天下青山骨可埋若说旧时豪侠兴五陵衣马洛阳街</q></div>
+      <div class="coda-side">
+        <div class="sec-head"><span class="sec-no">尾声</span><h2>濠上</h2></div>
+        <p class="prose rv">他是昆山人家里的少年，<q>少轻财结客年三十始折节读书</q>；四十岁把家产整个交给儿子元臣，<q>年四十即以家产尽付其子元臣</q>，腾出身来起园待客，园林声伎图书器玩之盛，<q>池馆声伎图画器玩甲于江左</q>，一时倾动。</p>
+        <p class="prose rv">书里的宴席停在丙申正月。此后的事书上不说：儿子元臣出仕领水军；元亡之后，父子被迁去临濠，他跟去，洪武二年死在那里。<q>元亡随例徙临濠瑛亦偕往洪武二年卒</q><span class="qwho">玉山璞稿提要</span></p>
+        <p class="coda-end rv">园子后来怎样，账册不记。纸上这二十六扇月洞门都还开着，额在，主在，诗在。</p>
+        <span class="coda-seal">金粟道人</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="xx">文本来源:殆知阁简体库,诗藏诗集部〈<q>玉山名胜集</q>〉八卷外集一卷,元顾瑛编,<a href="https://github.com/daizhige/daizhige-simplified" rel="noopener">仓库链接</a>;顾瑛生平与书后事并据同库〈玉山璞稿〉四库提要、杨循吉苏谈引文。系列总目见 daizhige-daodu 仓库。</span>
+    <span class="xx">引文均经脚本与库本去标点、归一后逐字比对核验;库本连书无标点,引文标点为导读所加;痩艸呉冩竒乗髙乆逺渇賔觧桞荘诸异体照录;防字为库本讹码,引文回避;来龟轩龟字多处缺码,题句佚;戊寅干支照录,年次存疑;园图为示意,不作实测。</span>
+    <span class="xx">时代局限:篇中祝发荐母、以家产付子、衰世行乐与旧式孝思皆元末士人现场,照录不代今人立论。</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---- map nodes: 名称与题额人（简注，非库本句） ---- */
+  var nodes=[
+    [452,70,'碧梧翠竹堂','赵孟頫篆颜'],
+    [530,44,'白云海','卢熊篆颜'],
+    [646,84,'湖光山色楼','赵奕篆颜'],
+    [170,150,'小蓬莱','赵孟頫篆颜'],
+    [238,196,'种玉亭','杜本篆颜'],
+    [430,152,'芝云堂','赵孟頫篆颜'],
+    [318,180,'读书舍','赵雍篆颜'],
+    [556,178,'可诗斋','杜本篆颜'],
+    [456,228,'钓月轩','杜本篆颜'],
+    [560,240,'金粟影','达兼善题'],
+    [452,282,'玉山佳处','马九霄篆颜'],
+    [760,236,'渔庄','达兼善篆颜'],
+    [770,118,'玉山草堂','虞集书颜'],
+    [366,140,'拜石坛','达兼善篆']
+  ];
+  var g=document.getElementById('mnodes');
+  var NS='http://www.w3.org/2000/svg';
+  nodes.forEach(function(n){
+    var c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',n[0]);c.setAttribute('cy',n[1]);c.setAttribute('r',17);
+    var t=document.createElementNS(NS,'text');
+    t.setAttribute('x',n[0]);t.setAttribute('y',n[1]+5);t.setAttribute('text-anchor','middle');
+    t.textContent=n[2].length>4?n[2].slice(0,4):n[2];
+    var grp=document.createElementNS(NS,'g');
+    grp.setAttribute('class','mnode');
+    grp.appendChild(c);grp.appendChild(t);
+    grp.addEventListener('click',function(){
+      document.querySelectorAll('.mnode.on').forEach(function(x){x.classList.remove('on')});
+      grp.classList.add('on');
+      document.getElementById('mapcap').innerHTML='<b>'+n[2]+'</b>｜题额：'+n[3];
+    });
+    g.appendChild(grp);
+  });
+  /* ---- moon gates accordion ---- */
+  document.querySelectorAll('.gate-face').forEach(function(f){
+    f.addEventListener('click',function(){
+      var gate=f.parentNode, was=gate.classList.contains('open');
+      document.querySelectorAll('.gate.open').forEach(function(x){x.classList.remove('open')});
+      if(!was)gate.classList.add('open');
+    });
+  });
+  /* ---- scrolls ---- */
+  document.querySelectorAll('.scroll-head').forEach(function(h){
+    h.addEventListener('click',function(){h.parentNode.classList.toggle('open')});
+  });
+  /* ---- tower cards ---- */
+  document.querySelectorAll('.tcard-head').forEach(function(h){
+    h.addEventListener('click',function(){h.parentNode.classList.toggle('open')});
+  });
+  /* ---- stone timeline ---- */
+  var bank=document.getElementById('stonetexts');
+  var row=document.getElementById('stonerow'), det=document.getElementById('stonedetail');
+  row.querySelectorAll('.stone').forEach(function(s){
+    s.addEventListener('click',function(){
+      var was=s.classList.contains('open');
+      row.querySelectorAll('.stone.open').forEach(function(x){x.classList.remove('open')});
+      if(was){det.classList.remove('show');det.innerHTML='';return;}
+      s.classList.add('open');
+      det.innerHTML=bank.querySelector('[data-k="'+s.dataset.k+'"]').innerHTML;
+      det.classList.add('show');
+    });
+  });
+  /* ---- reveal ---- */
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+})();
+</script>
+</body>
+</html>
