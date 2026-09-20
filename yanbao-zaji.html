@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>檐曝杂记 · 檐下五牖</title>
+<style>
+  :root {
+    --ink: #191917;
+    --ink-2: #211f1c;
+    --paper: #e8e4dc;
+    --paper-dim: #b7b1a4;
+    --paper-faint: #7c766a;
+    --gold: #c9963f;
+    --gold-deep: #a5762c;
+    --dusk: #b46a37;
+    --hairline: rgba(25,25,23,0.16);
+    --goldline: rgba(201,150,63,0.38);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.95; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* ============ 檐口 ============ */
+  .eave { position: relative; height: 210px; }
+  .eave svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* ============ 纸墙 ============ */
+  .wall {
+    position: relative;
+    background: var(--paper); color: var(--ink);
+    max-width: 1060px; margin: 0 auto;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+  }
+  .wall::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 3;
+    background:
+      radial-gradient(560px 300px at 78% 240px, rgba(201,150,63,0.16), transparent 68%),
+      radial-gradient(430px 260px at 12% 1350px, rgba(201,150,63,0.10), transparent 70%),
+      radial-gradient(500px 280px at 85% 68%, rgba(180,106,55,0.0), transparent 70%);
+    transition: opacity 1.6s;
+  }
+  body.dusk .wall::before { opacity: 0.35; }
+
+  /* 首屏：光斑里的书名 */
+  .hero { position: relative; padding: 64px 30px 46px; overflow: hidden; }
+  .hero .patch {
+    position: absolute; right: 6%; top: 36px;
+    width: 340px; height: 300px; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(201,150,63,0.34), rgba(201,150,63,0.10) 62%, transparent 78%);
+    filter: blur(2px);
+    transition: opacity 1.6s;
+  }
+  body.dusk .hero .patch { opacity: 0.25; }
+  .kicker {
+    font-size: 13px; letter-spacing: 0.42em; color: var(--gold-deep);
+    position: relative; z-index: 2;
+  }
+  h1 {
+    position: relative; z-index: 2;
+    font-size: clamp(52px, 9vw, 108px); font-weight: 700;
+    letter-spacing: 0.10em; line-height: 1.14; margin: 10px 0 6px;
+    color: var(--ink);
+  }
+  h1 span { color: var(--gold-deep); }
+  .hero .sub {
+    position: relative; z-index: 2;
+    font-size: 17px; color: #4c463b; max-width: 34em; margin-top: 14px;
+  }
+  .hero .sub b { color: var(--ink); }
+
+  /* 五牖导航 */
+  .wins { position: relative; z-index: 2; display: flex; gap: 14px; margin-top: 40px; flex-wrap: wrap; }
+  .win {
+    background: none; border: 1px solid rgba(25,25,23,0.35);
+    width: 96px; padding: 10px 6px 8px; text-align: center;
+    color: #4c463b; transition: all 0.45s; position: relative;
+  }
+  .win svg { display: block; width: 54px; height: 46px; margin: 0 auto 6px; }
+  .win .glow { opacity: 0; transition: opacity 0.45s; }
+  .win b { display: block; font-size: 15px; font-weight: 600; letter-spacing: 0.22em; }
+  .win small { display: block; font-size: 11px; color: var(--paper-faint); letter-spacing: 0.06em; margin-top: 2px; }
+  .win:hover { border-color: var(--gold-deep); color: var(--ink); }
+  .win.lit { border-color: var(--gold-deep); color: var(--ink); box-shadow: inset 0 0 0 1px var(--goldline); }
+  .win.lit .glow { opacity: 1; }
+  .win.lit b { color: var(--gold-deep); }
+
+  /* 日晷 */
+  .sundial { position: fixed; right: 20px; top: 0; height: 100vh; width: 46px; pointer-events: none; z-index: 50; }
+  .sundial .line {
+    position: absolute; left: 50%; top: 12vh; width: 0;
+    border-left: 1px dashed var(--goldline);
+    height: 0; transition: height 0.25s linear;
+  }
+  .sundial .disc {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    top: 10vh; width: 26px; height: 26px; border-radius: 50%;
+    background: radial-gradient(circle at 38% 34%, #e6c37c, var(--gold) 58%, var(--gold-deep));
+    box-shadow: 0 0 22px rgba(201,150,63,0.55);
+    transition: top 0.25s linear, background 1.2s, box-shadow 1.2s;
+  }
+  body.dusk .sundial .disc { background: radial-gradient(circle at 38% 34%, #dda472, var(--dusk) 60%, #8c4f28); box-shadow: 0 0 18px rgba(180,106,55,0.45); }
+  @media (max-width: 900px) { .sundial { display: none; } }
+
+  /* 正文段 */
+  .station { padding: 66px 30px 30px; position: relative; }
+  .winhole {
+    background: var(--ink); color: var(--paper);
+    padding: 26px 26px 22px; position: relative; overflow: hidden;
+    border: 1px solid rgba(201,150,63,0.28);
+  }
+  .winhole svg.lattice { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.30; pointer-events: none; }
+  .winhole h2 {
+    position: relative; z-index: 2; font-size: clamp(24px, 3.4vw, 34px);
+    letter-spacing: 0.3em; color: var(--gold); font-weight: 600;
+  }
+  .winhole .hole-sub { position: relative; z-index: 2; font-size: 13.5px; color: var(--paper-dim); letter-spacing: 0.14em; margin-top: 6px; }
+  .station .prose { margin-top: 22px; font-size: 16.5px; color: #33302a; max-width: 46em; }
+  .station .prose p + p { margin-top: 12px; }
+  .prose b { color: var(--ink); }
+
+  q {
+    display: block; quotes: none;
+    margin: 18px 0 6px; padding: 14px 18px 12px 20px;
+    border-left: 3px solid var(--gold);
+    background: rgba(201,150,63,0.075);
+    font-size: 16.5px; color: #2c2a25; line-height: 1.9;
+  }
+  q::after {
+    content: attr(data-who);
+    display: block; margin-top: 6px;
+    font-size: 12px; letter-spacing: 0.18em; color: var(--gold-deep);
+  }
+
+  .divider { display: flex; align-items: center; gap: 14px; margin: 58px 30px 0; color: var(--gold-deep); }
+  .divider::before, .divider::after { content: ""; flex: 1; border-top: 1px solid var(--goldline); }
+  .divider i { width: 8px; height: 8px; background: var(--gold); transform: rotate(45deg); }
+
+  /* 交互件通用 */
+  .rig {
+    margin: 26px 0 6px; border: 1px solid var(--hairline);
+    background: rgba(25,25,23,0.035); padding: 20px;
+  }
+  .rig .cap { font-size: 13px; color: var(--paper-faint); letter-spacing: 0.1em; margin-bottom: 12px; }
+  .btn {
+    background: var(--ink); color: var(--paper); border: none;
+    padding: 9px 20px; font-size: 14.5px; letter-spacing: 0.2em;
+    transition: all 0.3s;
+  }
+  .btn:hover { background: var(--gold-deep); color: #fff; }
+  .btn[aria-pressed="true"] { background: var(--gold-deep); color: #fff; }
+  .chip {
+    background: none; border: 1px solid rgba(25,25,23,0.4); color: #4c463b;
+    padding: 7px 16px; font-size: 14px; letter-spacing: 0.14em; margin-right: 10px;
+    transition: all 0.3s;
+  }
+  .chip[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: #221c10; }
+
+  /* 一、直庐：驿传 */
+  .postTrack { position: relative; height: 74px; margin: 8px 0 4px; }
+  .postTrack .route {
+    position: absolute; left: 0; right: 0; top: 34px;
+    border-top: 2px dashed rgba(25,25,23,0.4);
+  }
+  .postTrack .route i {
+    position: absolute; top: -6px; width: 10px; height: 10px;
+    background: #4c463b; transform: rotate(45deg);
+  }
+  .postTrack .route i.a { left: -3px; } .postTrack .route i.b { right: -3px; border-radius: 50%; transform: none; }
+  .postTrack .horse {
+    position: absolute; top: 20px; left: 0; font-size: 15px; color: var(--gold-deep);
+    transition: left 0.2s linear; will-change: left;
+  }
+  .postTrack .mile { position: absolute; top: 46px; font-size: 12px; color: var(--paper-faint); letter-spacing: 0.08em; }
+  .postRead { font-size: 14px; color: #4c463b; margin-top: 14px; min-height: 24px; }
+  .postRead b { color: var(--gold-deep); font-size: 17px; }
+
+  /* 二、秋闱：两体 */
+  .examSheet {
+    background: #ddd5c4; border: 1px solid rgba(25,25,23,0.25);
+    padding: 26px 22px 20px; text-align: center; position: relative;
+  }
+  .examSheet::before {
+    content: ""; position: absolute; inset: 8px; pointer-events: none;
+    border: 1px solid rgba(165,118,44,0.4);
+  }
+  .scriptSample {
+    display: inline-block; font-size: 30px; letter-spacing: 0.16em; color: #3a3323;
+    font-weight: 700; transform: none; transition: all 0.55s;
+  }
+  .examSheet.t2 .scriptSample {
+    font-weight: 400; letter-spacing: 0.05em;
+    transform: skewX(-7deg) scaleY(1.05); color: #2e2c22;
+  }
+  .examSheet .styleName { margin-top: 10px; font-size: 12.5px; color: #7c766a; letter-spacing: 0.2em; }
+
+  /* 三、塞外：虎档 */
+  .tigerRig { display: flex; gap: 22px; align-items: flex-start; flex-wrap: wrap; }
+  .tigerRig svg { flex: 0 0 auto; }
+  .tt { display: block; background: none; border: none; text-align: left; padding: 6px 0; color: #4c463b; }
+  .tt i {
+    display: inline-block; width: 9px; height: 9px; background: var(--gold);
+    transform: rotate(45deg); margin-right: 10px; transition: all 0.3s;
+  }
+  .tt b { font-size: 15px; letter-spacing: 0.14em; }
+  .tt .ans { display: block; max-height: 0; overflow: hidden; opacity: 0; transition: all 0.5s; }
+  .tt.show .ans { max-height: 120px; opacity: 1; margin-top: 4px; }
+  .tt.show i { background: var(--gold-deep); }
+  .tt.show b { color: var(--gold-deep); }
+
+  /* 四、边徼：树海风 */
+  .grove { display: block; }
+  .grove .f { transform-origin: 50% 100%; }
+  .grove.windy .f1 { animation: sway 2.4s ease-in-out infinite alternate; }
+  .grove.windy .f2 { animation: sway 2.1s ease-in-out 0.18s infinite alternate; }
+  .grove.windy .f3 { animation: sway 2.7s ease-in-out 0.34s infinite alternate; }
+  .grove.windy .f4 { animation: sway 2.3s ease-in-out 0.1s infinite alternate; }
+  .grove.windy .f5 { animation: sway 2.5s ease-in-out 0.26s infinite alternate; }
+  @keyframes sway { from { transform: rotate(-2.4deg); } to { transform: rotate(2.6deg); } }
+
+  /* 五、海口：转帆 + 见骨 */
+  .sailScene { position: relative; }
+  .sailScene .windNow { position: absolute; right: 14px; top: 12px; font-size: 13px; letter-spacing: 0.2em; color: var(--gold-deep); }
+  #sail { transition: transform 1.2s ease; transform-origin: 300px 150px; }
+  .sailScene.tacked #sail { transform: rotate(16deg) scaleX(0.82); }
+  .sailScene .w1 { opacity: 1; transition: opacity 0.8s; }
+  .sailScene .w2 { opacity: 0; transition: opacity 0.8s; }
+  .sailScene.tacked .w1 { opacity: 0; }
+  .sailScene.tacked .w2 { opacity: 1; }
+
+  .boneFig { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+  .boneFig svg { flex: 0 0 auto; }
+  .boneFig .muscle { transition: opacity 0.9s; }
+  .boneFig.cut .muscle { opacity: 0; }
+  .boneFig .note { font-size: 15px; color: #33302a; max-width: 24em; }
+
+  /* 余话：暮灯 */
+  .coda { padding: 70px 30px 56px; position: relative; }
+  .coda .lampwrap { text-align: center; margin-bottom: 8px; }
+  #lamp { opacity: 0.12; transition: opacity 1.8s; }
+  body.dusk #lamp { opacity: 1; animation: flick 3.2s ease-in-out infinite; }
+  @keyframes flick { 0%,100% { opacity: 1; } 46% { opacity: 0.86; } 62% { opacity: 0.97; } }
+  .coda .prose { max-width: 46em; margin: 0 auto; font-size: 16.5px; color: #33302a; }
+  .coda h2 { text-align: center; font-size: 22px; letter-spacing: 0.4em; color: var(--gold-deep); margin-bottom: 18px; font-weight: 600; }
+
+  footer {
+    border-top: 1px solid rgba(201,150,63,0.3);
+    margin-top: 20px; padding: 26px 30px 40px;
+    font-size: 12.5px; color: var(--paper-faint); line-height: 2.1;
+  }
+  footer b { color: var(--paper-dim); font-weight: 600; }
+
+  /* 入场显现 */
+  .rv { opacity: 0; transform: translateY(16px); transition: opacity 0.9s, transform 0.9s; }
+  .rv.show { opacity: 1; transform: none; }
+
+  @media (max-width: 640px) {
+    .station, .hero, .coda, footer { padding-left: 20px; padding-right: 20px; }
+    .wins { gap: 10px; }
+    .win { width: 84px; }
+    .scriptSample { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 檐口 -->
+<div class="eave" aria-hidden="true">
+  <svg viewBox="0 0 1200 210" preserveAspectRatio="xMidYMax slice">
+    <g stroke="#c9963f" fill="none" opacity="0.85">
+      <line x1="0" y1="150" x2="1200" y2="150" stroke-width="5"/>
+      <path d="M0 150 Q 30 178 60 150 T 120 150 T 180 150 T 240 150 T 300 150 T 360 150 T 420 150 T 480 150 T 540 150 T 600 150 T 660 150 T 720 150 T 780 150 T 840 150 T 900 150 T 960 150 T 1020 150 T 1080 150 T 1140 150 T 1200 150" stroke-width="3.4"/>
+      <line x1="0" y1="122" x2="1200" y2="122" stroke-width="2" opacity="0.6"/>
+    </g>
+    <g stroke="#c9963f" stroke-width="4" opacity="0.5">
+      <line x1="40" y1="122" x2="12" y2="60"/><line x1="140" y1="122" x2="112" y2="60"/>
+      <line x1="240" y1="122" x2="212" y2="60"/><line x1="340" y1="122" x2="312" y2="60"/>
+      <line x1="440" y1="122" x2="412" y2="60"/><line x1="540" y1="122" x2="512" y2="60"/>
+      <line x1="640" y1="122" x2="612" y2="60"/><line x1="740" y1="122" x2="712" y2="60"/>
+      <line x1="840" y1="122" x2="812" y2="60"/><line x1="940" y1="122" x2="912" y2="60"/>
+      <line x1="1040" y1="122" x2="1012" y2="60"/><line x1="1140" y1="122" x2="1112" y2="60"/>
+    </g>
+    <g stroke="#c9963f" opacity="0.35" stroke-width="1.4">
+      <line x1="90" y1="163" x2="90" y2="196"/><line x1="330" y1="163" x2="330" y2="210"/>
+      <line x1="570" y1="163" x2="570" y2="196"/><line x1="810" y1="163" x2="810" y2="210"/>
+      <line x1="1050" y1="163" x2="1050" y2="196"/>
+    </g>
+  </svg>
+</div>
+
+<!-- 纸墙 -->
+<main class="wall">
+
+  <header class="hero">
+    <div class="patch" aria-hidden="true"></div>
+    <div class="kicker rv">史藏志存｜清 赵翼</div>
+    <h1 class="rv">檐曝<span>杂记</span></h1>
+    <p class="sub rv">赵翼，字云崧，阳湖人。二十六岁入军机，此后一生五站：京师直庐、木兰塞外、粤西边徼、滇缅军营、广州口岸。晚年归田，把各站见闻写成这部六卷杂记。<b>书名取檐下晒太阳之义</b>：不成史乘的零碎现场，一百余条，长则千言，短则百余字，记的是盛世砖缝里的物与人。</p>
+    <nav class="wins rv" aria-label="五牖导航">
+      <button class="win" data-t="st1">
+        <svg viewBox="0 0 54 46"><rect x="4" y="4" width="46" height="38" fill="none" stroke="#4c463b" stroke-width="2"/><rect x="16" y="4" width="3" height="38" fill="#4c463b"/><rect x="30" y="4" width="3" height="38" fill="#4c463b"/><rect x="4" y="4" width="46" height="38" fill="rgba(201,150,63,0.5)" class="glow"/></svg>
+        <b>直庐</b><small>军机十年</small>
+      </button>
+      <button class="win" data-t="st2">
+        <svg viewBox="0 0 54 46"><rect x="4" y="4" width="46" height="38" fill="none" stroke="#4c463b" stroke-width="2"/><line x1="4" y1="42" x2="50" y2="4" stroke="#4c463b" stroke-width="2.4"/><line x1="4" y1="23" x2="27" y2="4" stroke="#4c463b" stroke-width="2"/><line x1="27" y1="42" x2="50" y2="23" stroke="#4c463b" stroke-width="2"/><rect x="4" y="4" width="46" height="38" fill="rgba(201,150,63,0.5)" class="glow"/></svg>
+        <b>秋闱</b><small>殿试变体</small>
+      </button>
+      <button class="win" data-t="st3">
+        <svg viewBox="0 0 54 46"><rect x="4" y="4" width="46" height="38" fill="none" stroke="#4c463b" stroke-width="2"/><line x1="27" y1="4" x2="27" y2="42" stroke="#4c463b" stroke-width="2"/><line x1="4" y1="23" x2="50" y2="23" stroke="#4c463b" stroke-width="2"/><line x1="15" y1="23" x2="27" y2="11" stroke="#4c463b" stroke-width="1.6"/><line x1="27" y1="35" x2="39" y2="23" stroke="#4c463b" stroke-width="1.6"/><rect x="4" y="4" width="46" height="38" fill="rgba(201,150,63,0.5)" class="glow"/></svg>
+        <b>塞外</b><small>木兰秋狝</small>
+      </button>
+      <button class="win" data-t="st4">
+        <svg viewBox="0 0 54 46"><rect x="4" y="4" width="46" height="38" fill="none" stroke="#4c463b" stroke-width="2"/><path d="M14 42 V 14 M14 14 L 8 20 M14 14 L 20 20 M27 42 V 8 M27 8 L 21 14 M27 8 L 33 14 M40 42 V 16 M40 16 L 34 22 M40 16 L 46 22" stroke="#4c463b" stroke-width="1.8" fill="none"/><rect x="4" y="4" width="46" height="38" fill="rgba(201,150,63,0.5)" class="glow"/></svg>
+        <b>边徼</b><small>镇安树海</small>
+      </button>
+      <button class="win" data-t="st5">
+        <svg viewBox="0 0 54 46"><circle cx="27" cy="23" r="19" fill="none" stroke="#4c463b" stroke-width="2"/><circle cx="27" cy="23" r="12" fill="none" stroke="#4c463b" stroke-width="1.6"/><rect x="4" y="4" width="46" height="38" fill="rgba(201,150,63,0.5)" class="glow" opacity="0.9"/></svg>
+        <b>海口</b><small>番舶满港</small>
+      </button>
+    </nav>
+  </header>
+
+  <div class="divider" aria-hidden="true"><i></i></div>
+
+  <!-- 一、直庐 -->
+  <section class="station" id="st1">
+    <div class="winhole rv">
+      <svg class="lattice" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+        <g stroke="#c9963f" stroke-width="1.2">
+          <line x1="30" y1="0" x2="30" y2="120"/><line x1="70" y1="0" x2="70" y2="120"/>
+          <line x1="110" y1="0" x2="110" y2="120"/><line x1="150" y1="0" x2="150" y2="120"/>
+          <line x1="190" y1="0" x2="190" y2="120"/><line x1="230" y1="0" x2="230" y2="120"/>
+          <line x1="270" y1="0" x2="270" y2="120"/><line x1="310" y1="0" x2="310" y2="120"/>
+          <line x1="350" y1="0" x2="350" y2="120"/><line x1="390" y1="0" x2="390" y2="120"/>
+        </g>
+      </svg>
+      <h2>一牖 · 直庐</h2>
+      <div class="hole-sub">隆宗门内的几间板屋，雍正朝因怕泄密而生</div>
+    </div>
+    <div class="prose rv">
+      <p>西北两路用兵，内阁远在太和门外，谕旨走一趟容易漏风，雍正便在隆宗门内设军需房，选内阁中书里谨慎的进去缮写，后来定名军机处。赵翼入直时，名臣重臣在此承旨出政，章京们伏地起草，以奏事黄匣当书案，悬腕而书；夜无灯架，拿铁丝灯笼当座，蜡泪流得满身。机件文书不便明发，就封入纸函钤军机处银印，交兵部加封，由驿路按公里数分级飞递：</p>
+    </div>
+    <q data-who="卷一 · 廷寄">曰马上飞递者，不过日行三百里。有紧急则另判日行里数，或四五百里，或六百里，并有六百里加快者。</q>
+    <div class="rig rv">
+      <div class="cap">驿传试速：选一档，点按发递（示意）</div>
+      <button class="chip" id="lane300" aria-pressed="false">马上飞递 · 日三百里</button>
+      <button class="chip" id="lane600" aria-pressed="false">廷寄加急 · 日六百里</button>
+      <div class="postTrack">
+        <div class="route"><i class="a"></i><i class="b"></i></div>
+        <div class="horse" id="horse">➤</div>
+        <div class="mile" style="left:0">京师</div>
+        <div class="mile" style="right:0">边镇</div>
+      </div>
+      <div class="postRead" id="postRead">二千四百里驿程。选档后点按「发递」。</div>
+      <button class="btn" id="postBtn">发递</button>
+    </div>
+    <div class="prose rv">
+      <p>这条路线上跑的不只是军情。皇帝每天卯刻起床，长夏时天光已亮，到了冬天五更还没走完；腊月二十四以后，御驾一出寝宫，每过一道门就放一响爆竹，直舍里的章京听声辨位，知道御驾到了哪重宫门。皇子比他们起得更早，天没亮，五鼓入直的章京在黑暗里倚柱打盹：</p>
+    </div>
+    <q data-who="卷一 · 圣躬勤政">余辈在直舍，遥闻爆竹声自远渐近，则知圣驾已至干清宫，计是时，尚须燃烛寸许始天明也。</q>
+    <q data-who="卷一 · 皇子读书">黑暗中残睡未醒，时复倚柱假寐，然已隐隐望见有白纱灯一点入隆宗门，则皇子进书房也。</q>
+    <div class="prose rv">
+      <p>章京们五六天才轮一回早班就喊吃不消，而书房里那盏白纱灯天天如此。赶写谕旨也讲究快：巡幸在途，皇上马上降旨，章京歇马缮写，追到中途休息的尖营进奏；有人想夸自己手脚快，抢在中途打尖的「乌墩」就递上去，结果文字来不及推敲，常要劳御笔改定：</p>
+    </div>
+    <q data-who="卷一 · 军机撰拟之速">司员欲夸捷，遂仓猝缮就，急飞驰至乌墩进奏，名曰赶乌墩。</q>
+  </section>
+
+  <div class="divider" aria-hidden="true"><i></i></div>
+
+  <!-- 二、秋闱 -->
+  <section class="station" id="st2">
+    <div class="winhole rv">
+      <svg class="lattice" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+        <g stroke="#c9963f" stroke-width="1.2" fill="none">
+          <path d="M0 60 L60 0 M60 0 L120 60 M120 60 L180 0 M180 0 L240 60 M240 60 L300 0 M300 0 L360 60 M360 60 L420 0"/>
+          <path d="M0 60 L60 120 M60 120 L120 60 M120 60 L180 120 M180 120 L240 60 M240 60 L300 120 M300 120 L360 60"/>
+        </g>
+      </svg>
+      <h2>二牖 · 秋闱</h2>
+      <div class="hole-sub">一场殿试，一次自证清白的变体</div>
+    </div>
+    <div class="prose rv">
+      <p>乾隆二十六年辛巳殿试之前，风声已经很坏：前一科庚辰的状元、榜眼都是军机中书，外间传说鼎甲被军机包揽；会上又出了军机御史请复回避卷的案子，下狱论罪，军机处上下人人自危。赵翼自己正是军机中书，平日起草不楷书，偶然写楷书就仿刘石庵体。他索性改用欧阳率更体答卷，让读卷大臣认不出。可刘纶遍检两百多卷找不到他的字，认定必是变体；刘统勋大笑，说不至于。那卷面九人皆圈、独得九圈，以第一进呈。拆封之后，乾隆看见头两卷都是内阁中书，第三卷王杰是陕西籍，便问本朝陕西可出过状元，随即将两卷互易。赵翼丢了状元，得了探花，也得了此后一辈子的人主眷顾：外放镇安知府、入滇从戎、改官广州、擢贵西道，件件都是特简。</p>
+    </div>
+    <div class="rig rv">
+      <div class="cap">答卷示意：同一行字，两种写法（点按切换）</div>
+      <div class="examSheet" id="examSheet">
+        <span class="scriptSample">辛巳科策问卷　赵翼谨对</span>
+        <div class="styleName" id="styleName">仿刘石庵体（平日习惯）</div>
+      </div>
+      <p style="margin-top:14px"><button class="btn" id="styleBtn" aria-pressed="false">改用率更体</button></p>
+    </div>
+    <q data-who="卷二 · 辛巳殿试">赵云崧字迹虽烧灰亦可认，此必非也。</q>
+    <q data-who="卷二 · 辛巳殿试">上因以王卷与翼互易焉。</q>
+    <q data-who="卷二 · 辛巳殿试（谕语）">赵翼文自佳，然江、浙多状元，无足异。陕西则本朝尚未有。</q>
+  </section>
+
+  <div class="divider" aria-hidden="true"><i></i></div>
+
+  <!-- 三、塞外 -->
+  <section class="station" id="st3">
+    <div class="winhole rv">
+      <svg class="lattice" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+        <g stroke="#c9963f" stroke-width="1.2">
+          <line x1="0" y1="30" x2="400" y2="30"/><line x1="0" y1="60" x2="400" y2="60"/><line x1="0" y1="90" x2="400" y2="90"/>
+          <line x1="100" y1="0" x2="100" y2="120"/><line x1="200" y1="0" x2="200" y2="120"/><line x1="300" y1="0" x2="300" y2="120"/>
+        </g>
+      </svg>
+      <h2>三牖 · 塞外</h2>
+      <div class="hole-sub">围场是一座行走的考场</div>
+    </div>
+    <div class="prose rv">
+      <p>木兰秋狝名义上是打猎，实际是年年把近边蒙古王公聚到行营里操演：进围的兵一千三百人，全是蒙古人，王公侍立御前听指挥；宴会上演布库、诈马，上千匹生驹放进场，好手甩绳套住驹首，丢了自己的马骑上光背驹，直到它帖伏为止。丁丑年（一七五七）秋天，赵翼扈从木兰，赶上一次即兴的虎试：两王的营盘白天闯进一头虎，扑咬马匹，皇帝立刻止乐出猎，探得虎窝只有两只小虎；侍卫去捉，小虎作势，侍卫手一软，当场被褫了翎顶。这时随驾的一个小蒙古孩子冲了出来：</p>
+    </div>
+    <q data-who="卷一 · 木兰杀虎">适有小蒙古突出，攫一虎挟入左腋，又攫一虎挟入右腋。</q>
+    <div class="rig rv">
+      <div class="cap">虎档：点按三项，看这只虎的尺寸</div>
+      <div class="tigerRig">
+        <svg width="250" height="130" viewBox="0 0 250 130" aria-hidden="true">
+          <g stroke="#4c463b" fill="none" stroke-width="2.4">
+            <ellipse cx="105" cy="72" rx="72" ry="34"/>
+            <circle cx="196" cy="52" r="20"/>
+            <path d="M182 38 L178 26 L190 32 M210 38 L214 26 L202 32"/>
+            <path d="M52 100 L40 122 M78 104 L72 124 M132 104 L138 124 M156 100 L168 122"/>
+            <path d="M226 50 Q 244 56 240 72"/>
+          </g>
+          <g fill="#c9963f" opacity="0.55">
+            <circle cx="86" cy="62" r="4"/><circle cx="110" cy="54" r="4"/><circle cx="134" cy="64" r="4"/>
+            <circle cx="96" cy="84" r="4"/><circle cx="122" cy="82" r="4"/><circle cx="146" cy="80" r="4"/>
+            <circle cx="198" cy="46" r="2.6"/><circle cx="206" cy="58" r="2.6"/>
+          </g>
+          <text x="30" y="22" font-size="11" fill="#7c766a">虎，长八九尺（示意）</text>
+        </svg>
+        <div>
+          <button class="tt" aria-expanded="false"><i></i><b>长短</b><span class="ans"><q style="display:block;margin:6px 0 0;padding:8px 12px 6px 14px;font-size:15px">用橐驼负而归，列于幔城，自头至尻长八九尺</q></span></button>
+          <button class="tt" aria-expanded="false"><i></i><b>毛色</b><span class="ans"><q style="display:block;margin:6px 0 0;padding:8px 12px 6px 14px;font-size:15px">自头至尻长八九尺，毛已浅红色</q></span></button>
+          <button class="tt" aria-expanded="false"><i></i><b>蹄爪</b><span class="ans"><q style="display:block;margin:6px 0 0;padding:8px 12px 6px 14px;font-size:15px">毛已浅红色，蹄粗至三四围</q></span></button>
+        </div>
+      </div>
+    </div>
+    <q data-who="卷一 · 蒙古诈马戏">行围兵一千三百名，皆蒙古也。</q>
+  </section>
+
+  <div class="divider" aria-hidden="true"><i></i></div>
+
+  <!-- 四、边徼 -->
+  <section class="station" id="st4">
+    <div class="winhole rv">
+      <svg class="lattice" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+        <g stroke="#c9963f" stroke-width="1.1" fill="none">
+          <path d="M20 120 Q 40 40 20 10 M50 120 Q 78 50 60 4 M84 120 Q 100 60 92 16 M120 120 Q 146 46 132 6 M156 120 Q 172 58 168 12 M196 120 Q 220 44 206 8 M232 120 Q 250 56 244 14 M268 120 Q 292 42 280 10 M304 120 Q 318 62 314 18 M340 120 Q 362 48 352 6 M372 120 Q 388 58 384 16"/>
+        </g>
+      </svg>
+      <h2>四牖 · 边徼</h2>
+      <div class="hole-sub">出守镇安，地在广西极西，与安南接壤</div>
+    </div>
+    <div class="prose rv">
+      <p>沿边全是高山深箐，斧头砍不进去，老藤古树还带着洪荒的长势，冬不落叶。风过时万叶翻掀，赵翼给它起名树海，专门作歌记下；林底终年不见日光，所以虺蛇最毒。他在归顺州道上见过七十余株大五六抱的紫楠木，没人看一眼，只供路人拿刀斫竹当锅，倚着树根做饭，火慢慢从外向里烧，一个多月树就倒了。边地传闻也怪：说普尔边外有人能变虎，新任孟艮土官叭先捧就是，将军命他演示，竟变不出。诱野象的法子是掘坑布席覆土，锣鼓驱象来陷，饿上几天再问肯不肯服役，象一点头，终身受人驱策不变：</p>
+    </div>
+    <div class="rig rv">
+      <div class="cap">点按起风，看树海翻叶（示意）</div>
+      <svg class="grove" id="grove" width="100%" height="150" viewBox="0 0 400 150" aria-hidden="true">
+        <g fill="none" stroke="#4c463b" stroke-width="2">
+          <path class="f f1" d="M60 150 Q 52 90 20 30 M60 150 Q 68 84 96 36 M60 150 Q 60 96 56 22"/>
+          <path class="f f2" d="M140 150 Q 132 80 108 26 M140 150 Q 150 88 176 30 M140 150 Q 140 90 140 16"/>
+          <path class="f f3" d="M224 150 Q 216 92 190 34 M224 150 Q 234 86 258 24 M224 150 Q 224 94 220 20"/>
+          <path class="f f4" d="M304 150 Q 296 84 272 28 M304 150 Q 314 90 340 32 M304 150 Q 304 92 300 18"/>
+          <path class="f f5" d="M368 150 Q 362 94 344 40 M368 150 Q 376 88 394 36"/>
+        </g>
+        <line x1="0" y1="150" x2="400" y2="150" stroke="#c9963f" stroke-width="2"/>
+      </svg>
+      <p style="margin-top:12px"><button class="btn" id="windBtn" aria-pressed="false">风起</button></p>
+    </div>
+    <q data-who="卷三 · 树海">如山之鳞甲，全身皆动，真奇观也，余尝名之曰“树海”，作歌记之。</q>
+    <q data-who="卷三 · 树海">其下荫翳，殆终古不见天日，故虺蛇之类最毒。</q>
+  </section>
+
+  <div class="divider" aria-hidden="true"><i></i></div>
+
+  <!-- 五、海口 -->
+  <section class="station" id="st5">
+    <div class="winhole rv">
+      <svg class="lattice" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+        <g stroke="#c9963f" stroke-width="1.2" fill="none">
+          <circle cx="70" cy="60" r="26"/><circle cx="160" cy="60" r="26"/><circle cx="250" cy="60" r="26"/><circle cx="340" cy="60" r="26"/>
+          <line x1="96" y1="60" x2="134" y2="60"/><line x1="186" y1="60" x2="224" y2="60"/><line x1="276" y1="60" x2="314" y2="60"/>
+        </g>
+      </svg>
+      <h2>五牖 · 海口</h2>
+      <div class="hole-sub">调守广州，番舶满港</div>
+    </div>
+    <div class="prose rv">
+      <p>广东是海外各国商舶聚齐的码头：白番眉发皆白，少年也皓如霜雪；黑奴老实又有力气，下海取物不避蛟蛇；红毛夷面白而发赤，其国乃荷兰。澳门一地久归番人僦住，香山人多通番语，有人贪利索性入赘番家。西洋船的帆最让这位内地来的知府开眼：本国的帆上下一样宽，西洋帆却是上宽下窄，一条帆上千百条绳索各有条理，还能变风向为顺风：</p>
+    </div>
+    <div class="rig rv">
+      <div class="cap">转帆示意：点按，看帆面吃风的变化</div>
+      <div class="sailScene" id="sailScene">
+        <span class="windNow" id="windNow">顺风</span>
+        <svg width="100%" height="190" viewBox="0 0 460 190" aria-hidden="true">
+          <g stroke="#c9963f" fill="none" stroke-width="1.6">
+            <g class="w1"><path d="M20 40 q 30 6 60 0 M20 70 q 30 6 60 0 M20 100 q 30 6 60 0" opacity="0.8"/></g>
+            <g class="w2"><path d="M440 40 q -30 6 -60 0 M440 70 q -30 6 -60 0 M440 100 q -30 6 -60 0" opacity="0.8"/></g>
+          </g>
+          <g id="sail">
+            <path d="M300 150 L300 40 Q 360 60 396 150 Z" fill="rgba(201,150,63,0.28)" stroke="#4c463b" stroke-width="2"/>
+            <line x1="300" y1="40" x2="300" y2="158" stroke="#4c463b" stroke-width="3"/>
+          </g>
+          <g stroke="#4c463b" fill="none" stroke-width="2.2">
+            <path d="M120 168 Q 220 140 300 158"/>
+            <path d="M96 160 L120 168 L100 178"/>
+          </g>
+          <line x1="60" y1="170" x2="430" y2="170" stroke="#c9963f" stroke-width="2"/>
+        </svg>
+      </div>
+      <p style="margin-top:12px"><button class="btn" id="sailBtn" aria-pressed="false">转帆</button></p>
+    </div>
+    <q data-who="卷四 · 西洋船">西洋帆则上阔下窄，如折扇展开之状，远而望之几如垂天之云，盖阔处几及百丈云。</q>
+    <div class="prose rv">
+      <p>市井里还流传着一桩断骨案：某家买来的黑奴被同僚取笑，说新生的小儿不黑、必非亲生，黑奴信了，竟斫儿胫验骨，见胫骨纯黑，才抱着孩子大恸。骨属父，肌肉属母，这条当时人拿来当常识讲的「例证」，今天读来只剩残忍：</p>
+    </div>
+    <div class="rig rv">
+      <div class="cap">削肌见骨（示意）</div>
+      <div class="boneFig" id="boneFig">
+        <svg width="200" height="120" viewBox="0 0 200 120" aria-hidden="true">
+          <g class="muscle">
+            <rect x="76" y="12" width="48" height="96" rx="22" fill="#ddd5c4" stroke="#4c463b" stroke-width="2"/>
+          </g>
+          <g class="bone">
+            <rect x="88" y="16" width="24" height="88" rx="8" fill="#2b2823"/>
+            <circle cx="100" cy="14" r="9" fill="#2b2823"/>
+            <circle cx="100" cy="106" r="9" fill="#2b2823"/>
+          </g>
+          <text x="140" y="64" font-size="12" fill="#7c766a">胫骨</text>
+        </svg>
+        <p class="note">肌覆于骨，骨色沉黑；点按剥开肌层，即库本所谓验骨之事。</p>
+      </div>
+      <p style="margin-top:12px"><button class="btn" id="boneBtn" aria-pressed="false">削肌</button></p>
+    </div>
+    <q data-who="卷四 · 诸番">黑奴果疑，以刀斫儿胫死，而胫骨乃纯黑，于是大恸。始知骨属父，而肌肉则母体也。</q>
+  </section>
+
+  <div class="divider" aria-hidden="true"><i></i></div>
+
+  <!-- 余话 -->
+  <section class="coda" id="coda">
+    <div class="lampwrap" aria-hidden="true">
+      <svg id="lamp" width="64" height="84" viewBox="0 0 64 84">
+        <line x1="32" y1="0" x2="32" y2="18" stroke="#c9963f" stroke-width="2"/>
+        <path d="M20 18 H44 L40 30 H24 Z" fill="#c9963f"/>
+        <ellipse cx="32" cy="40" rx="10" ry="14" fill="#e6c37c"/>
+        <path d="M22 40 q 10 10 20 0" fill="none" stroke="#a5762c" stroke-width="1.6"/>
+        <ellipse cx="32" cy="62" rx="16" ry="4" fill="rgba(201,150,63,0.25)"/>
+      </svg>
+    </div>
+    <h2 class="rv">负暄余话</h2>
+    <div class="prose rv">
+      <p>嘉庆十四年的冬天，几名久踞库上的蠹吏私雕假印、伪传谕旨，前后向三库和内务府的广储司骗领银两十四次，直到商人领银时认出印文才败露；同年冬天，广东海盗郭婆带、张保仔先后受抚投诚。盛世账面的这一面，赵翼都收在檐下。他归田后另成《廿二史札记》，与钱大昕、王鸣盛并称考史三大家；而这部杂记，正是那部严整史著背后的一册现场笔记：晒太阳时讲出来的亲见亲闻。</p>
+    </div>
+    <q data-who="卷五 · 假印大案">私雕假印，凭空捏造事由，向三库及内务府广储司库共十四次。</q>
+  </section>
+
+  <footer>
+    <p>文本来源：殆知阁古代文献简体库〈檐曝杂记〉史藏志存记录本　<b>github.com/robertsong/daizhige-daodu</b></p>
+    <p>引文经脚本自库本逐字比对通过（去标点归一）；白话行文与库本六字窗反扫零撞。</p>
+    <p>本书为清代官员见闻录，其中对蒙古、苗倮、黑奴与番人的记述，以及驭边、奴役等叙事，皆系时代观念的产物，照录存照，不代今人立论。</p>
+  </footer>
+</main>
+
+<!-- 日晷 -->
+<div class="sundial" aria-hidden="true">
+  <div class="line" id="shadowLine"></div>
+  <div class="disc" id="sunDisc"></div>
+</div>
+
+<script>
+(function(){
+  /* 入场显现 */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  /* 日晷随滚动：日盘下行，日影伸长，至末屏入暮点灯 */
+  var disc = document.getElementById('sunDisc');
+  var shadow = document.getElementById('shadowLine');
+  var tick = false;
+  function onScroll(){
+    if(tick) return; tick = true;
+    requestAnimationFrame(function(){
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      var p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+      disc.style.top = (10 + p * 66) + 'vh';
+      shadow.style.height = (p * 58) + 'vh';
+      document.body.classList.toggle('dusk', p > 0.9);
+      tick = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* 五牖导航 + 滚动高亮 */
+  var wins = Array.prototype.slice.call(document.querySelectorAll('.win'));
+  wins.forEach(function(w){
+    w.addEventListener('click', function(){
+      var t = document.getElementById(w.getAttribute('data-t'));
+      if(t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  var spy = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        wins.forEach(function(w){
+          w.classList.toggle('lit', w.getAttribute('data-t') === e.target.id);
+        });
+      } else {
+        var r = e.target.getBoundingClientRect();
+        if(r.bottom < 0 || r.top > window.innerHeight){
+          var anyVisible = ['st1','st2','st3','st4','st5'].some(function(id){
+            var s = document.getElementById(id);
+            var b = s.getBoundingClientRect();
+            return b.top < window.innerHeight && b.bottom > 0;
+          });
+          if(!anyVisible) wins.forEach(function(w){ w.classList.remove('lit'); });
+        }
+      }
+    });
+  }, { threshold: 0.18 });
+  ['st1','st2','st3','st4','st5'].forEach(function(id){
+    var s = document.getElementById(id); if(s) spy.observe(s);
+  });
+
+  /* 驿传试速 */
+  var lane = 0; /* 0 未选 1 三百 2 六百 */
+  var lane300 = document.getElementById('lane300');
+  var lane600 = document.getElementById('lane600');
+  var horse = document.getElementById('horse');
+  var postRead = document.getElementById('postRead');
+  var postBtn = document.getElementById('postBtn');
+  var postTimer = null;
+  function setLane(n){
+    lane = n;
+    lane300.setAttribute('aria-pressed', n === 1 ? 'true' : 'false');
+    lane600.setAttribute('aria-pressed', n === 2 ? 'true' : 'false');
+    postRead.innerHTML = '京师至边镇二千四百里，日行' + (n === 1 ? '三百里，约八日可达' : '六百里，约四日可达') + '。点「发递」。';
+  }
+  lane300.addEventListener('click', function(){ setLane(1); });
+  lane600.addEventListener('click', function(){ setLane(2); });
+  postBtn.addEventListener('click', function(){
+    if(!lane){ postRead.textContent = '先选一档驿速。'; return; }
+    if(postTimer) clearInterval(postTimer);
+    var days = lane === 1 ? 8 : 4, dur = lane === 1 ? 4000 : 2000;
+    var t0 = performance.now();
+    horse.style.transition = 'none';
+    horse.style.left = '0px';
+    void horse.offsetWidth;
+    horse.style.transition = 'left ' + dur + 'ms linear';
+    horse.style.left = 'calc(100% - 18px)';
+    postTimer = setInterval(function(){
+      var elapsed = performance.now() - t0;
+      var d = Math.min(days, Math.max(1, Math.ceil(elapsed / dur * days)));
+      postRead.innerHTML = '在途第 <b>' + d + '</b> 日' + (d >= days ? '　已抵边镇' : '');
+      if(elapsed >= dur){
+        clearInterval(postTimer); postTimer = null;
+        setTimeout(function(){ horse.style.transition = 'none'; horse.style.left = '0px'; }, 900);
+      }
+    }, 120);
+  });
+
+  /* 秋闱两体 */
+  var sheet = document.getElementById('examSheet');
+  var styleBtn = document.getElementById('styleBtn');
+  var styleName = document.getElementById('styleName');
+  styleBtn.addEventListener('click', function(){
+    var to2 = !sheet.classList.contains('t2');
+    sheet.classList.toggle('t2', to2);
+    styleBtn.setAttribute('aria-pressed', to2 ? 'true' : 'false');
+    styleBtn.textContent = to2 ? '改回石庵体' : '改用率更体';
+    styleName.textContent = to2 ? '欧阳率更体（考场变体避嫌）' : '仿刘石庵体（平日习惯）';
+  });
+
+  /* 虎档 */
+  document.querySelectorAll('.tt').forEach(function(t){
+    t.addEventListener('click', function(){
+      var show = t.classList.toggle('show');
+      t.setAttribute('aria-expanded', show ? 'true' : 'false');
+    });
+  });
+
+  /* 树海风起 */
+  var grove = document.getElementById('grove');
+  var windBtn = document.getElementById('windBtn');
+  windBtn.addEventListener('click', function(){
+    var w = grove.classList.toggle('windy');
+    windBtn.setAttribute('aria-pressed', w ? 'true' : 'false');
+    windBtn.textContent = w ? '风息' : '风起';
+  });
+
+  /* 转帆 */
+  var scene = document.getElementById('sailScene');
+  var sailBtn = document.getElementById('sailBtn');
+  var windNow = document.getElementById('windNow');
+  sailBtn.addEventListener('click', function(){
+    var t = scene.classList.toggle('tacked');
+    sailBtn.setAttribute('aria-pressed', t ? 'true' : 'false');
+    windNow.textContent = t ? '逆风折为顺风' : '顺风';
+  });
+
+  /* 削肌见骨 */
+  var boneFig = document.getElementById('boneFig');
+  var boneBtn = document.getElementById('boneBtn');
+  boneBtn.addEventListener('click', function(){
+    var c = boneFig.classList.toggle('cut');
+    boneBtn.setAttribute('aria-pressed', c ? 'true' : 'false');
+    boneBtn.textContent = c ? '覆肌' : '削肌';
+  });
+})();
+</script>
+</body>
+</html>
