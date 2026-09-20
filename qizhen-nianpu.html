@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>七真年谱 · 殆知阁导读 518</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#20201d; --ink3:#262622;
+  --paper:#e8e4dc; --dim:#9a968c; --dim2:#6e6a60;
+  --bam:#5f9270; --bamhi:#8cc19a; --bamdim:rgba(95,146,112,.38);
+  --line:#2e2b24;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:16px}
+a{color:inherit}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px}
+.mono{font-family:"SFMono-Regular",Consolas,"Courier New",monospace}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:94vh;overflow:hidden;
+  background:radial-gradient(1100px 520px at 68% 18%,#22261f 0%,var(--ink) 62%)}
+.sky{position:absolute;inset:0}
+.sky svg{width:100%;height:100%;display:block}
+.star{cursor:pointer}
+.star circle.core{fill:#3a4438;transition:fill .5s,r .5s}
+.star.lit circle.core{fill:var(--bamhi)}
+.star circle.halo{fill:none;stroke:var(--bam);stroke-width:1;opacity:0;transition:opacity .8s}
+.star.lit circle.halo{opacity:.55}
+.star text{fill:var(--dim);font-size:15px;letter-spacing:2px;transition:fill .5s}
+.star.lit text{fill:var(--paper)}
+.vein{stroke:#2f332c;stroke-width:1;transition:stroke 1.2s}
+.vein.lit{stroke:var(--bamdim)}
+.hero-text{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:70px 40px 0;
+  display:flex;gap:46px;align-items:flex-start;justify-content:flex-end}
+.kicker{writing-mode:vertical-rl;text-orientation:upright;color:var(--bam);font-size:14px;
+  letter-spacing:6px;border-left:1px solid var(--bamdim);padding-left:14px;height:230px;white-space:nowrap}
+.kicker small{color:var(--dim);font-size:12px;letter-spacing:4px}
+h1{writing-mode:vertical-rl;text-orientation:upright;font-size:64px;font-weight:700;
+  letter-spacing:16px;line-height:1.15;white-space:nowrap;height:330px}
+.lede{position:absolute;left:22px;bottom:120px;max-width:520px;z-index:2;
+  font-size:17px;color:var(--dim)}
+.lede b{color:var(--bamhi);font-weight:400}
+.scrolltip{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);z-index:2;
+  color:var(--dim2);font-size:12px;letter-spacing:4px}
+.scrolltip::after{content:"";display:block;width:1px;height:34px;background:var(--bamdim);
+  margin:10px auto 0;animation:drip 2.2s infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}100%{opacity:0}}
+
+/* ---------- section / acts ---------- */
+section{padding:86px 0 30px}
+.sechead{display:flex;align-items:baseline;gap:18px;margin-bottom:10px}
+.secno{font-size:52px;color:var(--ink3);font-weight:700;line-height:1;
+  -webkit-text-stroke:1px var(--bamdim)}
+.secti{font-size:26px;letter-spacing:4px}
+.secsub{color:var(--dim);font-size:14px;margin-bottom:34px;max-width:640px}
+.actmark{display:flex;align-items:center;gap:14px;margin:70px 0 8px;color:var(--bam);font-size:14px;letter-spacing:5px}
+.actmark::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---------- gantt axis ---------- */
+.axis{border:1px solid var(--line);background:var(--ink2);padding:26px 20px 18px;border-radius:4px}
+.axis-scale{position:relative;height:20px;color:var(--dim2);font-size:11px}
+.axis-scale span{position:absolute;transform:translateX(-50%)}
+.axis-row{display:flex;align-items:center;gap:10px;margin-top:12px}
+.axis-name{width:74px;flex:none;font-size:14px;color:var(--dim);text-align:right;white-space:nowrap}
+.axis-name em{display:block;font-style:normal;color:var(--dim2);font-size:10px;letter-spacing:0}
+.axis-lane{position:relative;flex:1;height:26px}
+.axis-bar{position:absolute;top:6px;height:14px;border-radius:3px;
+  background:linear-gradient(90deg,rgba(95,146,112,.28),rgba(95,146,112,.72));
+  transform:scaleX(0);transform-origin:left;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.vis .axis-bar{transform:scaleX(1)}
+.axis-bar.dead{background:linear-gradient(90deg,rgba(95,146,112,.16),rgba(95,146,112,.34))}
+.ev{position:absolute;top:2px;width:11px;height:11px;border-radius:50%;background:var(--ink);
+  border:2px solid var(--bam);cursor:help;transform:scale(0);transition:transform .5s}
+.vis .ev{transform:scale(1)}
+.ev:hover{background:var(--bam)}
+.axis-note{margin-top:18px;color:var(--dim2);font-size:12px}
+
+/* ---------- cards ---------- */
+.card{position:relative;border:1px solid var(--line);background:var(--ink2);border-radius:4px;
+  padding:30px 32px;margin:26px 0;overflow:hidden}
+.card .yr{position:absolute;right:14px;top:2px;font-size:64px;font-weight:700;color:transparent;
+  -webkit-text-stroke:1px #33362e;line-height:1;pointer-events:none}
+.card h3{font-size:20px;letter-spacing:3px;margin-bottom:12px;color:var(--paper)}
+.card h3 i{font-style:normal;color:var(--bam);margin-right:10px;font-size:15px}
+.card p{color:var(--dim);font-size:15px;margin:10px 0;max-width:640px}
+.card p b{color:var(--paper);font-weight:400}
+q{display:block;color:var(--paper);font-size:16px;border-left:2px solid var(--bam);
+  background:rgba(95,146,112,.07);padding:10px 16px;margin:14px 0;quotes:"「" "」"}
+qv{display:block;color:var(--bamhi);font-size:13px;letter-spacing:1px;margin:8px 0}
+q::before,q::after{color:var(--bam)}
+.fineword{color:var(--dim2);font-size:12px;margin-top:6px}
+
+/* gate */
+.fig{margin:6px 0 2px}
+.gatebox{position:relative;width:210px;height:230px;cursor:pointer;margin:0 auto}
+.gatebox svg{width:100%;height:100%}
+.gate-leaf{transform-origin:105px 205px;transition:transform 1.2s cubic-bezier(.6,0,.3,1)}
+.gatebox.ungated .gate-leaf{transform:rotate(72deg)}
+.gate-q{opacity:0;transition:opacity .9s .6s}
+.gatebox.ungated + .gate-q, .card .gatebox.ungated ~ .gate-q{opacity:1}
+.bloom{opacity:0;transition:opacity 1.2s .8s}
+.gatebox.ungated .bloom{opacity:1}
+.gatehint{color:var(--dim2);font-size:12px;letter-spacing:2px}
+.gatebox.ungated ~ .gatehint{visibility:hidden}
+
+/* burn */
+.burnrow{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.burnbox{width:230px;height:190px;cursor:pointer;flex:none}
+.burnbox svg{width:100%;height:100%}
+.hut{transition:filter 2.8s}
+.burnbox.burnt .hut{filter:brightness(.28) saturate(.2)}
+.flame{opacity:0}
+.burnbox.burnt .flame{animation:flick 1.1s infinite alternate}
+@keyframes flick{from{opacity:.75;transform:translateY(0)}to{opacity:.35;transform:translateY(-3px)}}
+.burnbtn{display:inline-block;border:1px solid var(--bamdim);color:var(--bam);padding:6px 18px;
+  font-size:14px;letter-spacing:3px;cursor:pointer;border-radius:3px;user-select:none}
+.burnbtn:hover{background:rgba(95,146,112,.12)}
+.burnbox.burnt ~ .burnq{opacity:1}
+.burnq{opacity:0;transition:opacity 1.4s 1.8s;flex:1;min-width:250px}
+
+/* name cards */
+.namerow{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:14px;margin-top:20px}
+.ncard{border:1px solid var(--line);background:var(--ink2);border-radius:4px;padding:18px 16px 14px;
+  opacity:0;transform:translateY(14px);transition:opacity .7s,transform .7s}
+.vis .ncard{opacity:1;transform:none}
+.ncard .hao{writing-mode:vertical-rl;text-orientation:upright;font-size:22px;color:var(--bamhi);
+  letter-spacing:6px;float:right;height:96px;margin-left:10px;white-space:nowrap}
+.ncard b{display:block;font-size:18px;letter-spacing:2px;margin-bottom:2px}
+.ncard span{display:block;color:var(--dim2);font-size:12px;margin-bottom:6px}
+.ncard p{color:var(--dim);font-size:13px;line-height:1.7}
+
+/* road */
+.roadbox{border:1px solid var(--line);background:var(--ink2);border-radius:4px;padding:20px 14px 8px;margin:20px 0}
+.roadbox svg{width:100%;height:auto;display:block}
+.stn{cursor:pointer}
+.stn circle{fill:var(--ink);stroke:var(--dim2);stroke-width:2;transition:stroke .4s,fill .4s}
+.stn:hover circle{stroke:var(--bam)}
+.stn.got circle{fill:var(--bam);stroke:var(--bamhi)}
+.stn text{fill:var(--dim);font-size:13px;transition:fill .4s}
+.stn.got text{fill:var(--paper)}
+.roadpath{stroke:#33362e;stroke-width:1.5;stroke-dasharray:5 6;pointer-events:none}
+.roadinfo{min-height:52px;padding:10px 8px 16px;color:var(--dim);font-size:14px;border-top:1px dashed var(--line)}
+.roadinfo b{color:var(--bamhi);font-weight:400;margin-right:10px}
+
+/* fin panel */
+.finpanel{background:var(--paper);color:#2a2822;border-radius:4px;padding:44px 46px;margin-top:40px;position:relative}
+.finpanel .ptag{display:inline-block;border:1px solid #5f9270;color:#417654;font-size:12px;
+  letter-spacing:4px;padding:3px 12px;margin-bottom:18px}
+.finpanel q{color:#2a2822;border-left-color:#5f9270;background:rgba(95,146,112,.08);font-size:16.5px}
+.finpanel q::before,.finpanel q::after{color:#5f9270}
+.finpanel p{color:#5c5850;font-size:14px;max-width:640px}
+.sealrow{display:flex;align-items:center;gap:16px;margin-top:26px}
+.seal{width:56px;height:56px;border:2px solid #417654;border-radius:4px;color:#417654;
+  display:flex;align-items:center;justify-content:center;font-size:20px;letter-spacing:2px;
+  writing-mode:vertical-rl;transform:rotate(-2deg)}
+.finsig{color:#417654;font-size:13px;line-height:1.9}
+
+footer{border-top:1px solid var(--line);margin-top:60px;padding:34px 0 50px;font-size:13px;color:var(--dim)}
+footer p{margin:7px 0;max-width:780px}
+footer a{color:var(--bamhi)}
+
+.vis{opacity:1}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .8s,transform .8s}
+.rv.vis{opacity:1;transform:none}
+
+@media (max-width:640px){
+  h1{font-size:44px;height:230px;letter-spacing:10px}
+  .kicker{height:170px;font-size:12px}
+  .hero-text{padding-top:40px}
+  .lede{position:static;margin:20px 22px 0;max-width:none}
+  .hero{min-height:0;padding-bottom:40px}
+  .card{padding:22px 18px}
+  .axis-name{width:58px;font-size:12px}
+  .finpanel{padding:30px 22px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="sky">
+  <svg viewBox="0 0 900 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g id="dipper">
+      <line class="vein" x1="196" y1="170" x2="276" y2="148"/>
+      <line class="vein" x1="276" y1="148" x2="318" y2="220"/>
+      <line class="vein" x1="318" y1="220" x2="238" y2="252"/>
+      <line class="vein" x1="238" y1="252" x2="196" y2="170"/>
+      <line class="vein" x1="238" y1="252" x2="338" y2="292"/>
+      <line class="vein" x1="338" y1="292" x2="428" y2="322"/>
+      <line class="vein" x1="428" y1="322" x2="520" y2="362"/>
+      <g class="star" data-go="act1"><circle class="halo" cx="140" cy="84" r="15"/><circle class="core" cx="140" cy="84" r="8"/><text x="160" y="76">重阳</text></g>
+      <g class="star" data-go="muren"><circle class="halo" cx="196" cy="170" r="12"/><circle class="core" cx="196" cy="170" r="6"/><text x="156" y="192">清静</text></g>
+      <g class="star" data-go="muren"><circle class="halo" cx="276" cy="148" r="12"/><circle class="core" cx="276" cy="148" r="6"/><text x="262" y="126">丹阳</text></g>
+      <g class="star" data-go="muren"><circle class="halo" cx="318" cy="220" r="12"/><circle class="core" cx="318" cy="220" r="6"/><text x="336" y="228">长真</text></g>
+      <g class="star" data-go="muren"><circle class="halo" cx="238" cy="252" r="12"/><circle class="core" cx="238" cy="252" r="6"/><text x="196" y="276">广宁</text></g>
+      <g class="star" data-go="muren"><circle class="halo" cx="338" cy="292" r="12"/><circle class="core" cx="338" cy="292" r="6"/><text x="356" y="300">玉阳</text></g>
+      <g class="star" data-go="muren"><circle class="halo" cx="428" cy="322" r="12"/><circle class="core" cx="428" cy="322" r="6"/><text x="446" y="330">长生</text></g>
+      <g class="star" data-go="muren"><circle class="halo" cx="520" cy="362" r="12"/><circle class="core" cx="520" cy="362" r="6"/><text x="538" y="370">长春</text></g>
+    </g>
+  </svg>
+  </div>
+  <div class="hero-text">
+    <p class="kicker">道藏 · 谱箓类<br>
+    <small>元 · 李道谦 编</small></p>
+    <h1>七真年谱</h1>
+  </div>
+  <p class="lede">一部道教年谱，把 <b>116 年</b>写成一条直线：王重阳怎样把自己埋进墓穴，七个弟子怎样各奔东西，而丘处机又怎样在七十二岁那年动身，走了万里去见成吉思汗。</p>
+  <p class="scrolltip">点星入谱</p>
+</header>
+
+<main class="wrap">
+
+<section>
+  <div class="sechead"><span class="secno">壹</span><span class="secti">把 116 年摊在一条线上</span></div>
+  <p class="secsub">年谱的规矩是逐年记事，无事可记的年份只写一句谁多少岁。也正是这种笨功夫，让八个名字第一次可以被摆上同一条时间线。</p>
+  <div class="axis rv" id="axis">
+    <div class="axis-scale">
+      <span style="left:5.4%">1112</span><span style="left:26.9%">1140</span><span style="left:42.3%">1160</span><span style="left:57.7%">1180</span><span style="left:73.1%">1200</span><span style="left:88.5%">1220</span>
+    </div>
+    <div class="axis-row"><span class="axis-name">重阳<em>1112-1170</em></span>
+      <div class="axis-lane"><div class="axis-bar" style="left:5.4%;width:44.6%"></div>
+        <span class="ev" style="left:41.5%" title="甘河遇仙"></span>
+        <span class="ev" style="left:43%" title="入活死人墓"></span>
+        <span class="ev" style="left:47.7%" title="焚庵东行"></span>
+        <span class="ev" style="left:50%" title="临终传位"></span>
+      </div></div>
+    <div class="axis-row"><span class="axis-name">清静<em>孙不二 1119-1182</em></span>
+      <div class="axis-lane"><div class="axis-bar" style="left:10.8%;width:48.5%"></div></div></div>
+    <div class="axis-row"><span class="axis-name">丹阳<em>马钰 1123-1183</em></span>
+      <div class="axis-lane"><div class="axis-bar" style="left:13.8%;width:46.2%"></div></div></div>
+    <div class="axis-row"><span class="axis-name">长真<em>谭处端 1123-1185</em></span>
+      <div class="axis-lane"><div class="axis-bar" style="left:13.8%;width:47.7%"></div></div></div>
+    <div class="axis-row"><span class="axis-name">广宁<em>郝大通 1140-1212</em></span>
+      <div class="axis-lane"><div class="axis-bar" style="left:26.9%;width:55.4%"></div></div></div>
+    <div class="axis-row"><span class="axis-name">玉阳<em>王处一 1142-1217</em></span>
+      <div class="axis-lane"><div class="axis-bar" style="left:28.5%;width:57.7%"></div></div></div>
+    <div class="axis-row"><span class="axis-name">长生<em>刘处玄 1147-1203</em></span>
+      <div class="axis-lane"><div class="axis-bar" style="left:32.3%;width:43.1%"></div></div></div>
+    <div class="axis-row"><span class="axis-name">长春<em>丘处机 1148-1227</em></span>
+      <div class="axis-lane"><div class="axis-bar" style="left:33.1%;width:60.8%"></div>
+        <span class="ev" style="left:87.7%" title="应成吉思汗之召"></span>
+        <span class="ev" style="left:88.5%" title="自莱州启程"></span>
+        <span class="ev" style="left:90%" title="抵达行在"></span>
+        <span class="ev" style="left:91.5%" title="入居燕京"></span>
+        <span class="ev" style="left:93.8%" title="留颂离世"></span>
+      </div></div>
+    <p class="axis-note">横条为各人在世区间，圆点是谱中着墨最重的九件事，悬停可看。</p>
+  </div>
+</section>
+
+<section id="act1">
+  <div class="actmark">第一幕 · 捉马</div>
+  <div class="sechead"><span class="secno">贰</span><span class="secti">王重阳，1112 至 1170</span></div>
+  <p class="secsub">谱主王重阳，咸阳人。先考文举，再应武举，改名世雄，四十多岁还是个不得志的小吏。1159 年夏天，他在甘河镇喝酒，遇上了改变一切的两个陌生人。</p>
+
+  <div class="card rv"><span class="yr">1159</span>
+    <h3><i>甘河</i>河畔的两位披毡人</h3>
+    <p>两位怪人相貌完全相同，看完他只说了四个字，随即传授口诀。中秋他再度遇仙，得到五篇秘语，临别留下一句任务。</p>
+    <q>六月望日，师饮酒于终南甘河镇，会二仙人被发披毡，而年貌同一，其人徐曰：此子可教。因授以口诀。</q>
+    <q>中秋日，师于醴泉县再遇真仙传秘语五篇，且曰：速去束海，投谭捉马。已而真仙忽失所在。</q>
+    <p class="fineword">束海即东海；所捉之马，是还没见过他的马钰，谭即谭处端。</p>
+  </div>
+
+  <div class="card rv"><span class="yr">1161</span>
+    <h3><i>终南</i>他给自己挖了一座墓</h3>
+    <p>1161 年，他在终南山下挖了墓穴住进去，自称里头住的是活死人，一住近三年。墓的四角各种一株海棠，有人问缘故，他的回答像一句预言。点门入墓。</p>
+    <div class="fig">
+      <div class="gatebox" id="gate">
+        <svg viewBox="0 0 210 230" aria-hidden="true">
+          <ellipse cx="105" cy="205" rx="92" ry="14" fill="#22251f"/>
+          <path d="M33 205 A72 96 0 0 1 177 205 Z" fill="#2a2f27" stroke="#4a5142" stroke-width="1.5"/>
+          <path d="M52 205 A53 74 0 0 1 158 205" fill="none" stroke="#3c4136" stroke-width="1"/>
+          <g class="bloom" stroke="#5f9270" stroke-width="1.5" fill="none">
+            <line x1="44" y1="205" x2="44" y2="186"/><circle cx="44" cy="182" r="5" fill="#8cc19a" stroke="none"/>
+            <line x1="166" y1="205" x2="166" y2="186"/><circle cx="166" cy="182" r="5" fill="#8cc19a" stroke="none"/>
+            <line x1="58" y1="208" x2="52" y2="222"/><circle cx="51" cy="225" r="4" fill="#5f9270" stroke="none"/>
+            <line x1="152" y1="208" x2="158" y2="222"/><circle cx="159" cy="225" r="4" fill="#5f9270" stroke="none"/>
+          </g>
+          <g class="gate-leaf">
+            <path d="M65 205 A40 62 0 0 1 145 205 Z" fill="#1b1e19" stroke="#5a6355" stroke-width="1.5"/>
+            <text x="105" y="172" text-anchor="middle" fill="#8cc19a" font-size="17" letter-spacing="4">活死人</text>
+            <line x1="118" y1="185" x2="118" y2="200" stroke="#5a6355" stroke-width="2"/>
+          </g>
+        </svg>
+      </div>
+      <p class="gatehint">点击墓门</p>
+      <div class="gate-q">
+        <q>于终南南时村凿圹丈余，封高数尺，以活死人目之，坐于墓中。又于四隅各植海棠一株，人问其故，答曰：吾将来使四海教风为一家耳。</q>
+        <p class="fineword">出墓后他迁到刘蒋村结庵，那座庵就是后来的重阳万寿宫。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card rv"><span class="yr">1167</span>
+    <h3><i>刘蒋村</i>一把火烧掉自己的庵</h3>
+    <div class="burnrow">
+      <div class="burnbox" id="burn">
+        <svg viewBox="0 0 230 190" aria-hidden="true">
+          <g class="hut">
+            <path d="M42 108 L115 56 L188 108 Z" fill="#2b2f28" stroke="#3c4136"/>
+            <rect x="58" y="108" width="114" height="58" fill="#23271f" stroke="#33362e"/>
+            <rect x="100" y="126" width="30" height="40" fill="#171a15" stroke="#3c4136"/>
+          </g>
+          <g class="flame">
+            <path d="M115 52 q-10 -16 0 -30 q16 12 8 30 q10 -6 8 -18 q10 14 -2 26 Z" fill="#c9803f"/>
+            <path d="M115 50 q-5 -9 0 -17 q8 7 4 17 Z" fill="#e0b055"/>
+            <path d="M62 60 q-6 -10 0 -19 q9 7 5 19 Z" fill="#a5622f"/>
+            <path d="M168 60 q-6 -10 0 -19 q9 7 5 19 Z" fill="#a5622f"/>
+          </g>
+          <ellipse cx="115" cy="172" rx="96" ry="8" fill="#20241e"/>
+        </svg>
+      </div>
+      <div class="burnq">
+        <p>1167 年四月二十六，他把住了几年的茅庵点火烧掉，自己绕着火起舞。烧完往东走，去海上捉马。</p>
+        <q>于四月二十六日将刘蒋村茅庵自焚之，婆娑舞于火边。人问，答：茅庵烧了事休休，次有人人却要修。</q>
+      </div>
+    </div>
+    <p style="margin-top:14px"><span class="burnbtn" id="burnbtn">点火</span>&nbsp;&nbsp;<span class="fineword">那年在宁海人家的怡老亭里等着他的，是马钰。</span></p>
+  </div>
+
+  <div class="card rv"><span class="yr">1170</span>
+    <h3><i>汴梁</i>旅邸里的最后交代</h3>
+    <p>四年后，王重阳在汴梁旅邸病倒，召弟子立于榻前，只有刘处玄跑开了。几句话定下了此后全真门的次序。</p>
+    <q>丹阳已得道，长真已知道，吾无虑矣。处机所学，一听丹阳。处玄，长真当管领之。吾今赴师真之约耳。</q>
+    <p>说完便走了，终年五十八，与他早年在宫墙上给自己的批语分毫不差。</p>
+    <q>害风害风旧病发，寿命不过五十八。</q>
+    <p class="fineword">害风是他的自称，疯疯癫癫之意，也是全真门人惯用的自贬号。</p>
+  </div>
+</section>
+
+<section id="act2">
+  <div class="actmark">第二幕 · 各言其志</div>
+  <div class="sechead"><span class="secno">叁</span><span class="secti">七真散开，1170 至 1219</span></div>
+  <p class="secsub">师父归山后，弟子们扶柩西还，把他葬回刘蒋村的祖庵，居丧守坟。此后各选一处隐修，再没有同住过。谱中最动人的一幕，发生在分别前夜。</p>
+
+  <div class="card rv"><span class="yr">1174</span>
+    <h3><i>秦渡镇</i>一夜，四个人说了四个方向</h3>
+    <p>马钰、谭处端、刘处玄、丘处机在秦渡镇的真武庙里共坐一夜，各自说了今后的去向。天亮就分头走：马钰回刘蒋村闭关，谭处端去洛阳，刘处玄留在洛阳市井，丘处机西入磻溪。</p>
+    <q>丹阳、长真、长生、长春于鄂县秦渡镇真武庙月夜共坐，各言其志</q>
+    <p class="fineword">这一夜之后，四人果然再没有同住一处。</p>
+  </div>
+
+  <div class="card rv"><span class="yr">1170</span>
+    <h3><i>金莲堂</i>七真里唯一的女性</h3>
+    <p>孙不二，宁海富室之女，马钰的妻子。丈夫出家两年后，1170 年端午，她也到金莲堂随重阳出家。夫妻从此以道侣相称。</p>
+    <q>重午日，孙仙姑诣金莲堂出家，祖师训名不二，号清今散人，时年五十一。</q>
+    <p class="fineword">库本号作「清今散人」，通行本作清静散人，此处照录。</p>
+  </div>
+
+  <div class="rv" id="muren">
+    <div class="actmark">七子名刺</div>
+    <p class="secsub" style="margin-top:14px">按生年排序。生卒皆据本谱干支折算公元。</p>
+    <div class="namerow">
+      <div class="ncard"><span class="hao">清静散人</span><b>孙不二</b><span>1119 至 1182</span><p>宁海人，马钰之妻。七真中唯一的女性，也是最早离开的，卒于洛阳，寿六十四。</p></div>
+      <div class="ncard"><span class="hao">丹阳子</span><b>马钰</b><span>1123 至 1183</span><p>头号弟子，掌门十一年，把刘蒋村祖庵守成了全真根基。</p></div>
+      <div class="ncard"><span class="hao">长真子</span><b>谭处端</b><span>1123 至 1185</span><p>幼年坠井，救起时安坐水面。这段六岁奇事，被写进了碑传。</p></div>
+      <div class="ncard"><span class="hao">广宁子</span><b>郝大通</b><span>1140 至 1212</span><p>市集摆卦摊出身，曾于沃州石桥之下长坐不起。</p></div>
+      <div class="ncard"><span class="hao">玉阳子</span><b>王处一</b><span>1142 至 1217</span><p>自述七岁在空中遇东华帝君。一生多次奉诏入金廷问对，得过大师名号。</p></div>
+      <div class="ncard"><span class="hao">长生子</span><b>刘处玄</b><span>1147 至 1203</span><p>继马钰、谭处端之后掌教，洛阳市井中修行多年。</p></div>
+      <div class="ncard"><span class="hao">长春子</span><b>丘处机</b><span>1148 至 1227</span><p>走得最远的一个。他的后半生，是下一幕。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="act3">
+  <div class="actmark">第三幕 · 西行</div>
+  <div class="sechead"><span class="secno">肆</span><span class="secti">丘处机，1219 至 1227</span></div>
+  <p class="secsub">十三世纪初的东亚，三个政权都想要这位道士。金主召他赴汴京，他不肯动身；宋主遣使来召，他同样推辞，还断言此地不久将不可居。1219 年，蒙古使者刘仲禄带着成吉思汗的诏书穿过战区找到莱州。这一次，年过七旬的丘处机起身了。</p>
+
+  <div class="card rv"><span class="yr">1210</span>
+    <h3><i>蓟州</i>动身九年前的谶语</h3>
+    <p>王处一在蓟州做完法事，对众人说过一段奇怪的话。两年后，蒙古人的马蹄踏进华北。</p>
+    <q>北方道气将回，空中有神明往来，刀剑击触之象，莫非生灵将受苦耶。</q>
+  </div>
+
+  <div class="card rv"><span class="yr">1219</span>
+    <h3><i>两诏</i>前两次都止于两句话</h3>
+    <p>1216 年金主之召，1219 年宋主之召，各得一句回答，都止于「不起」。</p>
+    <q>我循天理而行，天使行处无敢违也。乃不起。</q>
+    <q>吾之出处，非若辈可知也，他日恐不能留居此耳。</q>
+  </div>
+
+  <div class="rv">
+    <div class="actmark">西行十一站</div>
+    <p class="secsub" style="margin-top:14px">1220 年正月从莱州动身北上，1222 年春抵达行在，往返近四年。点站名看注。</p>
+    <div class="roadbox">
+      <svg viewBox="0 0 860 200" id="road" aria-hidden="true">
+        <path class="roadpath" d="M40 150 C120 130 150 90 220 92 C290 94 300 140 370 138 C440 136 460 84 530 80 C600 76 620 128 690 126 C740 124 780 100 824 72" fill="none"/>
+        <g class="stn" data-n="0"><circle cx="40" cy="150" r="7"/><text x="28" y="180">壹 莱州</text></g>
+        <g class="stn" data-n="1"><circle cx="130" cy="112" r="7"/><text x="108" y="94">贰 燕都</text></g>
+        <g class="stn" data-n="2"><circle cx="220" cy="92" r="7"/><text x="196" y="72">叁 德兴府</text></g>
+        <g class="stn" data-n="3"><circle cx="370" cy="138" r="7"/><text x="348" y="168">肆 宣德州</text></g>
+        <g class="stn" data-n="4"><circle cx="440" cy="106" r="7"/><text x="418" y="88">伍 陆局河</text></g>
+        <g class="stn" data-n="5"><circle cx="530" cy="80" r="7"/><text x="508" y="62">陆 阿不罕山</text></g>
+        <g class="stn" data-n="6"><circle cx="596" cy="92" r="7"/><text x="578" y="122">柒 金山</text></g>
+        <g class="stn" data-n="7"><circle cx="660" cy="120" r="7"/><text x="640" y="152">捌 白骨甸</text></g>
+        <g class="stn" data-n="8"><circle cx="726" cy="118" r="7"/><text x="700" y="150">玖 邪迷思干</text></g>
+        <g class="stn" data-n="9"><circle cx="790" cy="92" r="7"/><text x="770" y="120">拾 铁门</text></g>
+        <g class="stn" data-n="10"><circle cx="824" cy="72" r="9"/><text x="790" y="48">行在</text></g>
+      </svg>
+      <div class="roadinfo" id="roadinfo"><b>壹 莱州</b>点任意一站，看看谱里怎么记行程。</div>
+    </div>
+  </div>
+
+  <div class="card rv"><span class="yr">1222</span>
+    <h3><i>行在</i>被史官记进国档的对答</h3>
+    <p>丘处机在行在停留近一年，屡次被召问。他反复说的，不出清心寡欲、保全民命八个字。大汗听得很高兴，命史官写进档册。后世道教史称此行「一言止杀」。</p>
+    <q>师大略对以节欲保躬，天道好生恶杀，治尚无为清静之理。上悦，乃命左史书诸策。</q>
+    <p class="fineword">东还时得赐神仙之号，天下道门事务一概由他处置。</p>
+  </div>
+
+  <div class="card rv"><span class="yr">1227</span>
+    <h3><i>长春宫</i>山崩水涸之年</h3>
+    <p>1224 年丘处机回住燕京太极宫，1227 年宫改称长春宫。同年夏天大旱，祈雨应验；而太液池干涸、北口山崩的消息传来时，八十岁的他只是笑。</p>
+    <q>山摧水枯，吾将与之俱乎。</q>
+    <p>七月初九，他登上宝玄堂，留下颂辞离世。五天前他刚对门人说，师父马钰当年的预言一一应验，自己可以安心走了。</p>
+  </div>
+</section>
+
+<section id="fin">
+  <div class="sechead"><span class="secno">伍</span><span class="secti">后序的规矩</span></div>
+  <p class="secsub">编者李道谦在卷尾交代了一条明确的方法论：文集与传记打架时，信文集。这行小字，是全谱最现代的一句。</p>
+  <div class="finpanel rv">
+    <span class="ptag">后序</span>
+    <q>起重阳祖师降世之岁，讫长春真人升仙之秋，一百一十六年之问出处事迹，详节编次，通为一谱。其或一二传记所载与各师真文集不相同者，舍传记而取文集也，盖文集纪录之真，传记有所未详也。</q>
+    <p>「之问」是「之间」的讹字，库本如此，照录。</p>
+    <div class="sealrow">
+      <span class="seal">七真</span><span class="seal">年谱</span>
+      <span class="finsig"><qv>至元辛未岁中元日天乐道人李道谦书于终南祖庭之筠溪道院。</qv>至元辛未即 1271 年，落笔在终南祖庭，距丘处机离世已四十四年。</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap fin">
+    <p>文本来源：殆知阁古代文献简体库（道藏正统道藏之洞真部谱箓类〈七真年谱〉全一卷，元人李道谦编，去空白约七千二百字）· 仓库 <a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">daizhige-daodu</a></p>
+    <p>引文经脚本与库本去标点、归一逐字比对通过；库本「昆箭山」（昆嵛）、「墦溪」（磻溪）、「束海」（东海）、「清今散人」（清静）、「责诏」（赍诏）、「之问」（之间）诸讹形照录存照；卷末「七＋1二」一处数字讹乱，未引。</p>
+    <p>本书为金元全真教内年谱，堕井安坐、空中遇仙、醮坛祈雨、谶语预言诸事皆教内记述，照录不代今人立论；书中「大元」「圣武皇帝」等易代称谓亦依当日立场用语，阅读请存时代之照。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target);}});
+  },{threshold:.18});
+  document.querySelectorAll('.rv,.axis').forEach(function(el){io.observe(el);});
+
+  /* 北斗点灯 */
+  var stars=[].slice.call(document.querySelectorAll('#dipper .star'));
+  stars.forEach(function(s,i){setTimeout(function(){s.classList.add('lit');},260*i+340);});
+  stars.forEach(function(s){
+    s.addEventListener('click',function(){
+      var t=document.getElementById(s.getAttribute('data-go'));
+      if(t)t.scrollIntoView({behavior:'smooth'});
+    });
+  });
+  /* 连线随点亮渐染 */
+  setTimeout(function(){document.querySelectorAll('.vein').forEach(function(v){v.classList.add('lit');});},2300);
+
+  /* 名刺错落显形 */
+  var cards=[].slice.call(document.querySelectorAll('.ncard'));
+  cards.forEach(function(c,i){c.style.transitionDelay=(i*90)+'ms';});
+
+  /* 墓门 */
+  var gate=document.getElementById('gate');
+  gate.addEventListener('click',function(){gate.classList.add('ungated');});
+
+  /* 焚庵 */
+  var burnt=false;
+  document.getElementById('burnbtn').addEventListener('click',function(){
+    if(burnt)return;burnt=true;
+    document.getElementById('burn').classList.add('burnt');
+    this.style.opacity='.25';this.style.pointerEvents='none';
+  });
+
+  /* 西行路线 */
+  var info=document.getElementById('roadinfo');
+  var notes=[
+    ['1220 年正月','从莱州动身北上，这一年他虚岁七十二。'],
+    ['1220 年二月','行经燕都，官僚请他在太极宫做法事。'],
+    ['1220 年五月','抵达德兴府，居龙阳观。'],
+    ['1220 年八月','抵达宣德州，居朝元观过冬。'],
+    ['1221 年五月','朔日抵达陆局河，即今呼伦湖。'],
+    ['1221 年七月','到阿不罕山，留下弟子九人建观等候。'],
+    ['1221 年中秋','抵达金山，即今阿尔泰山。'],
+    ['1221 年秋','过白骨甸西行。'],
+    ['1221 年十一月','抵达邪迷思干城，即今撒马尔罕。'],
+    ['1222 年三月','经铁门天险，行在将近。'],
+    ['1222 年春','大汗驻夏之地，召问自此始。']
+  ];
+  document.querySelectorAll('#road .stn').forEach(function(st){
+    st.addEventListener('click',function(){
+      document.querySelectorAll('#road .stn').forEach(function(x){x.classList.remove('got');});
+      st.classList.add('got');
+      var n=notes[+st.getAttribute('data-n')];
+      info.innerHTML='<b>'+st.querySelector('text').textContent+'</b>'+n[0]+'，'+n[1];
+    });
+  });
+})();
+</script>
+</body>
+</html>
