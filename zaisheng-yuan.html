@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>再生缘 · 殆知阁导读</title>
+<style>
+  :root{
+    --ink:#191917; --ink2:#201f1d; --paper:#e8e4dc; --dim:#a39e93; --faint:#6e6a61;
+    --qing:#5e8fbb; --qing-deep:#3c5f80; --hairline:rgba(232,228,220,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink); color:var(--paper);
+    font-family:"Songti SC","STSong","Noto Serif SC","SimSun",serif;
+    line-height:1.9; overflow-x:hidden;
+  }
+  q{quotes:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+  .kicker{font-size:13px;letter-spacing:.42em;color:var(--faint)}
+  .mono{font-variant-numeric:tabular-nums}
+
+  /* ---------- 首屏：翻面 ---------- */
+  .hero{min-height:96vh;position:relative;display:flex;flex-direction:column;
+    background:
+      radial-gradient(1200px 500px at 78% 18%, rgba(94,143,187,.07), transparent 60%),
+      var(--ink);
+  }
+  .hero .top{display:flex;justify-content:space-between;align-items:center;
+    padding:26px 0;border-bottom:1px solid var(--hairline)}
+  .hero .top .r{letter-spacing:.3em;font-size:13px;color:var(--faint)}
+  .hero .stage3{flex:1;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;padding:30px 0}
+  .vtitle{
+    writing-mode:vertical-rl;font-size:clamp(64px,9vw,116px);letter-spacing:.22em;
+    font-weight:400;line-height:1.15;height:min(58vh,520px);
+  }
+  .vtitle em{font-style:normal;color:var(--qing)}
+  .vsub2{writing-mode:vertical-rl;color:var(--dim);letter-spacing:.5em;font-size:15px;margin-right:18px}
+  .heroq{justify-self:end;display:flex;gap:26px;height:min(52vh,460px)}
+  .heroq q{
+    writing-mode:vertical-rl;font-size:clamp(17px,1.7vw,21px);letter-spacing:.34em;
+    color:var(--paper);border-right:1px solid var(--hairline);padding-right:22px;line-height:2.2;
+  }
+  .heroq .who{writing-mode:vertical-rl;color:var(--faint);font-size:13px;letter-spacing:.4em;align-self:flex-end}
+  .heroq q::after{content:"";display:inline-block;width:8px;height:8px;background:var(--qing);
+    border-radius:50%;margin-top:16px}
+
+  /* 翻面牌 */
+  .stage{perspective:1600px;justify-self:center}
+  .card{position:relative;width:min(300px,64vw);height:430px;cursor:pointer;
+    transform-style:preserve-3d;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+  .card.on{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--hairline);
+    display:flex;flex-direction:column;justify-content:space-between;padding:26px 22px;overflow:hidden}
+  .face.f{background:linear-gradient(170deg,#efeae1,#ddd6c9);color:#22201d}
+  .face.b{background:linear-gradient(165deg,#2c3e50,#22303f 55%,var(--ink2));
+    color:var(--paper);transform:rotateY(180deg);border-color:rgba(94,143,187,.4)}
+  .face .name{writing-mode:vertical-rl;align-self:center;font-size:56px;letter-spacing:.3em;line-height:1.2}
+  .face.f .name{color:#22201d}
+  .face.b .name{color:#dfe9f2;text-shadow:0 0 26px rgba(94,143,187,.45)}
+  .face .tag{font-size:13px;letter-spacing:.4em}
+  .face.f .tag{color:#7b7466}
+  .face.b .tag{color:var(--qing)}
+  .face .seal{position:absolute;right:18px;bottom:18px;width:46px;height:46px;border:2px solid;
+    display:flex;align-items:center;justify-content:center;font-size:17px;letter-spacing:0;
+    transform:rotate(-6deg)}
+  .face.f .seal{border-color:#a2554e;color:#a2554e}
+  .face.b .seal{border-color:var(--qing);color:var(--qing)}
+  .face .cloud{position:absolute;left:-30px;top:-30px;width:150px;height:150px;border-radius:50%;
+    border:1px solid rgba(0,0,0,.08)}
+  .face.b .cloud{border-color:rgba(94,143,187,.18)}
+  .flip-hint{text-align:center;color:var(--faint);font-size:13px;letter-spacing:.4em;margin-top:16px}
+  .flip-hint .sw{display:inline-block;width:34px;height:1px;background:var(--qing);
+    vertical-align:middle;margin:0 10px}
+
+  /* ---------- 通用节 ---------- */
+  section{padding:110px 0;border-top:1px solid var(--hairline)}
+  .shead{display:flex;align-items:baseline;gap:22px;margin-bottom:14px}
+  .shead .no{color:var(--qing);font-size:14px;letter-spacing:.3em}
+  h2{font-size:clamp(26px,3.2vw,38px);font-weight:400;letter-spacing:.14em}
+  h2 small{display:block;font-size:13px;letter-spacing:.34em;color:var(--faint);margin-bottom:10px;font-weight:400}
+  .prose{color:var(--dim);max-width:62ch;font-size:16.5px}
+  .prose b{color:var(--paper);font-weight:400}
+  .cap{font-size:13px;color:var(--faint);letter-spacing:.22em;margin-top:12px}
+  .cap i{font-style:normal;color:var(--qing);margin-right:.6em}
+
+  /* ---------- 一 · 挑灯 ---------- */
+  .dengbox{display:grid;grid-template-columns:300px 1fr;gap:56px;align-items:center;margin-top:44px}
+  .lampwrap{cursor:pointer;user-select:none;position:relative;text-align:center}
+  .lampwrap svg{width:100%;max-width:260px;overflow:visible}
+  .flame{transform-origin:50% 90%;animation:flick 2.2s ease-in-out infinite}
+  @keyframes flick{
+    0%,100%{transform:scale(1) rotate(-1.5deg)}
+    30%{transform:scale(1.08,1.14) rotate(2deg)}
+    60%{transform:scale(.94,.96) rotate(-2deg)}
+  }
+  .glow{opacity:.25;transition:opacity .8s}
+  .lampwrap .lbl{margin-top:10px;font-size:13px;letter-spacing:.4em;color:var(--faint);transition:color .6s}
+  .lit .glow{opacity:.85}
+  .lit .lbl{color:var(--qing)}
+  .lines{display:flex;flex-direction:column;gap:20px}
+  .lines q{
+    display:block;font-size:clamp(17px,1.8vw,21px);letter-spacing:.18em;color:#4a463f;
+    transition:color 1s, text-shadow 1s;cursor:default;
+  }
+  .lit .lines q{color:var(--paper)}
+  .lit .lines q:nth-child(2){transition-delay:.25s}
+  .lit .lines q:nth-child(3){transition-delay:.5s}
+  .lit .lines q:nth-child(4){transition-delay:.75s}
+  .lit .lines q:nth-child(5){transition-delay:1s}
+  .lit .lines q.key{color:#cfe0ef;text-shadow:0 0 22px rgba(94,143,187,.5)}
+  .dengnote{margin-top:34px;color:var(--dim);max-width:62ch}
+
+  /* ---------- 二 · 阶梯 ---------- */
+  .stairs{display:flex;align-items:flex-end;gap:10px;margin:56px 0 26px}
+  .step{
+    flex:1;border:1px solid var(--hairline);background:var(--ink2);cursor:pointer;
+    color:var(--dim);font-family:inherit;font-size:15px;letter-spacing:.28em;
+    display:flex;align-items:flex-start;justify-content:center;padding-top:14px;
+    transition:all .35s;position:relative;
+  }
+  .step:hover{border-color:rgba(94,143,187,.5);color:var(--paper)}
+  .step.sel{color:var(--paper);border-color:var(--qing);
+    background:linear-gradient(180deg,rgba(94,143,187,.24),rgba(94,143,187,.04))}
+  .step small{position:absolute;bottom:8px;font-size:11px;color:var(--faint);letter-spacing:.1em}
+  .s1{height:120px}.s2{height:158px}.s3{height:196px}.s4{height:234px}.s5{height:272px}.s6{height:310px}
+  .jpanel{border:1px solid var(--hairline);background:var(--ink2);padding:30px 34px;min-height:170px}
+  .jpanel .qs{display:flex;flex-direction:column;gap:10px}
+  .jpanel q{font-size:clamp(17px,1.9vw,21px);letter-spacing:.16em;line-height:2}
+  .jpanel .cap{margin-top:16px}
+  .jpanel .cap b{color:var(--dim);font-weight:400}
+
+  /* ---------- 三 · 两支笔 ---------- */
+  .rail{position:relative;margin:64px 0 30px;height:2px;background:var(--hairline)}
+  .nodes{display:flex;justify-content:space-between;margin-top:-9px}
+  .node{cursor:pointer;background:none;border:none;color:var(--dim);font-family:inherit;text-align:center;width:120px}
+  .node .dot{display:block;width:16px;height:16px;border-radius:50%;border:2px solid var(--faint);
+    background:var(--ink);margin:0 auto 12px;transition:all .3s}
+  .node .yr{display:block;font-size:14px;letter-spacing:.1em;color:var(--faint)}
+  .node .nm{display:block;font-size:17px;letter-spacing:.3em;margin-top:4px}
+  .node:hover .dot,.node.sel .dot{border-color:var(--qing);background:var(--qing);
+    box-shadow:0 0 16px rgba(94,143,187,.55)}
+  .node.sel .yr,.node.sel .nm{color:var(--paper)}
+  .bdetail{border-left:2px solid var(--qing);padding:6px 0 6px 26px;min-height:130px;margin-top:34px}
+  .bdetail p{color:var(--dim);max-width:60ch}
+  .bdetail q{display:block;margin-top:14px;font-size:clamp(16px,1.7vw,19px);letter-spacing:.14em;color:var(--paper)}
+  .bdetail .cap{margin-top:10px}
+
+  /* ---------- 四 · 两种结局 ---------- */
+  .duo{display:flex;gap:0;border:1px solid var(--hairline);margin-top:48px}
+  .duo .half{flex:1;padding:34px 36px;cursor:pointer;transition:background .4s;position:relative}
+  .duo .half + .half{border-left:1px solid var(--hairline)}
+  .duo .half h3{font-size:19px;letter-spacing:.3em;font-weight:400;color:var(--dim);margin-bottom:18px;transition:color .4s}
+  .duo .half p{color:var(--faint);font-size:15.5px;transition:color .4s}
+  .duo .half q{display:none;margin:16px 0 0;font-size:clamp(16px,1.7vw,19px);letter-spacing:.12em;line-height:2;color:var(--paper)}
+  .duo .half .cap{margin-top:14px;display:none}
+  .duo .half.on{background:rgba(94,143,187,.09)}
+  .duo .half.on h3{color:var(--qing)}
+  .duo .half.on p{color:var(--dim)}
+  .duo .half.on q{display:block}
+  .duo .half.on .cap{display:block}
+  .duo .half.on::after{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--qing)}
+
+  /* ---------- 尾屏 ---------- */
+  .wei{min-height:82vh;display:flex;align-items:center;justify-content:center;position:relative;
+    border-top:1px solid var(--hairline);
+    background:radial-gradient(900px 420px at 50% 40%, rgba(94,143,187,.08), transparent 65%)}
+  .weicore{display:flex;gap:44px;align-items:center;height:min(52vh,440px)}
+  .weiq{writing-mode:vertical-rl;font-size:clamp(16px,1.8vw,20px);letter-spacing:.5em;color:var(--dim)}
+  .weiq.q2{color:var(--faint)}
+  .weititle{writing-mode:vertical-rl;font-size:clamp(70px,10vw,130px);letter-spacing:.28em;line-height:1.1;
+    color:transparent;-webkit-text-stroke:1.5px var(--qing);position:relative}
+  .weititle .dotseal{position:absolute;right:-74px;bottom:0;width:58px;height:58px;background:var(--qing);
+    color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:22px;
+    letter-spacing:0;transform:rotate(-7deg);-webkit-text-stroke:0}
+  .wfoot{position:absolute;bottom:30px;left:0;right:0;text-align:center;font-size:13px;color:var(--faint);letter-spacing:.14em;line-height:2.1;padding:0 24px}
+  .wfoot a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--hairline)}
+  .wfoot a:hover{color:var(--qing)}
+
+  @media (max-width:900px){
+    .hero .top{flex-direction:column;align-items:flex-start;gap:6px}
+    .hero .stage3{grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:30px}
+    .vtitle{height:300px;font-size:56px}
+    .heroq{display:none}
+    .dengbox{grid-template-columns:1fr;gap:30px}
+    .lampwrap{max-width:200px;margin:0 auto}
+    .stairs{flex-wrap:wrap}
+    .step{min-width:30%;}
+    .nodes{flex-wrap:wrap;gap:18px 0}
+    .duo{flex-direction:column}
+    .duo .half + .half{border-left:none;border-top:1px solid var(--hairline)}
+    .weicore{gap:22px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ 首屏 ═══════════ -->
+<header class="hero">
+  <div class="wrap top">
+    <span class="kicker">殆知阁导读 · 五一三</span>
+    <span class="r">清 · 陈端生弹词</span>
+  </div>
+  <div class="wrap stage3">
+    <div>
+      <h1 class="vtitle">再生<em>缘</em></h1>
+      <div class="vsub2">二十卷八十回 · 十七卷止笔</div>
+    </div>
+    <div class="stage">
+      <div class="card" id="card">
+        <div class="face f">
+          <div class="cloud"></div>
+          <div class="tag">闺中待字</div>
+          <div class="name">孟丽君</div>
+          <div class="seal">丽</div>
+        </div>
+        <div class="face b">
+          <div class="cloud"></div>
+          <div class="tag">官居相国</div>
+          <div class="name">郦明堂</div>
+          <div class="seal">郦</div>
+        </div>
+      </div>
+      <div class="flip-hint">点牌<span class="sw"></span>易装</div>
+    </div>
+    <div class="heroq">
+      <q>说一番，悲欢离合新奇语。《再生缘》，三字为名不等闲。</q>
+      <span class="who">开篇自述</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ 一 · 挑灯 ═══════════ -->
+<section id="deng">
+  <div class="wrap">
+    <div class="shead"><span class="no mono">壹</span>
+      <h2><small>第十七卷末 · 收卷辞</small>频挑一盏灯</h2>
+    </div>
+    <p class="prose">甲辰年春，她把搁了十二年的故事重新接上，一年写满一卷，写到雪压残腊、梅迎新春。收卷时她向读者交底：<b>闲时定续</b>。这一卷停在一个进退两难的清晨，而闲时，再也没有来。这一段是她留在纸上的最后一批字。</p>
+    <div class="dengbox">
+      <div class="lampwrap" id="lamp">
+        <svg viewBox="0 0 200 210" aria-hidden="true">
+          <defs>
+            <radialGradient id="gg" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#5e8fbb" stop-opacity=".55"/>
+              <stop offset="100%" stop-color="#5e8fbb" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle class="glow" cx="100" cy="74" r="86" fill="url(#gg)"/>
+          <g stroke="#a39e93" stroke-width="2.5" fill="none" stroke-linecap="round">
+            <path d="M30 176 Q100 196 170 176"/>
+            <path d="M46 176 L58 132 L142 132 L154 176"/>
+          </g>
+          <path d="M70 132 Q66 108 100 104 Q134 108 130 132 Z" fill="none" stroke="#a39e93" stroke-width="2.5"/>
+          <rect x="94" y="96" width="12" height="12" rx="2" fill="#6e6a61"/>
+          <g class="flame">
+            <path d="M100 44 Q112 66 106 82 Q103 90 100 90 Q97 90 94 82 Q88 66 100 44Z"
+                  fill="#c9963f" opacity=".9"/>
+            <path d="M100 58 Q106 70 102 80 Q101 84 100 84 Q99 84 98 80 Q94 70 100 58Z"
+                  fill="#e8e4dc" opacity=".85"/>
+          </g>
+        </svg>
+        <div class="lbl">点灯 · 挑亮灯芯</div>
+      </div>
+      <div class="lines">
+        <q>八十张完成一卷，慢慢地，冰弦重拨待来春。</q>
+        <q>知音爱我休催促，在下闲时定续成。</q>
+        <q>白雪霏霏将送腊，江梅灼灼欲迎春。</q>
+        <q class="key">向阳为趁三竿日，入夜频挑一盏灯。</q>
+        <q>仆本愁人愁不已，殊非是，拈毫弄墨旧时心。</q>
+        <div class="cap"><i>卷十七末</i>收卷辞 · 她的绝笔</div>
+      </div>
+    </div>
+    <p class="dengnote">十二年前她写得飞快，接连攒出十六卷；十二年后这最后一卷，写满了一年。灯下的人换了心境：前十六卷的收梢诗是少年得意，这一卷开口便是劫后余音，后来的读者一听便知。</p>
+  </div>
+</section>
+
+<!-- ═══════════ 二 · 阶梯 ═══════════ -->
+<section id="jie">
+  <div class="wrap">
+    <div class="shead"><span class="no mono">贰</span>
+      <h2><small>她的路 · 一级一级往上</small>六级阶梯</h2>
+    </div>
+    <p class="prose">待嫁的闺秀在花烛前夜出逃，把才华折进一件男装里，一路考到朝堂顶端。每一级台阶都踩在刀口上：<b>身份一旦拆穿，满盘皆输</b>。点一级，看她走到哪一步。</p>
+    <div class="stairs" id="stairs">
+      <button class="step s1" data-i="0">受聘<small>闺中</small></button>
+      <button class="step s2 sel" data-i="1">改妆<small>出逃</small></button>
+      <button class="step s3" data-i="2">及第<small>状元</small></button>
+      <button class="step s4" data-i="3">入朝<small>尚书</small></button>
+      <button class="step s5" data-i="4">验看<small>赌局</small></button>
+      <button class="step s6" data-i="5">抗婚<small>顶点</small></button>
+    </div>
+    <div class="jpanel" id="jpanel">
+      <div class="qs" data-i="0">
+        <q>射柳夺袍曾受聘，实指望，良缘直到百年时。</q>
+        <div class="cap"><i>闺中</i>比箭定了婚约，少年心气，以为一生就是这样了</div>
+      </div>
+      <div class="qs" data-i="1">
+        <q>此时若配刘奎璧，倒只怕，万古千秋骂丽君。</q>
+        <q>倘若夫家俱被害，孟丽君，何妨做了报仇人。</q>
+        <q>奴若不，轰轰烈烈为奇女，要此才华待怎生。</q>
+        <div class="cap"><i>花烛前夜</i>夫家蒙冤，嫁过去是守节，逃出去是赌命，她选了后者</div>
+      </div>
+      <div class="qs" data-i="2">
+        <q>金殿承恩点状元，少年高拔占风流。</q>
+        <div class="cap"><i>科场</i>男装应试，一笔过关，从此朝堂上多了一个年轻人</div>
+      </div>
+      <div class="qs" data-i="3">
+        <q>药石犹言百病除，早闻玉诏拜尚书。</q>
+        <div class="cap"><i>官途</i>由状元而尚书，再入相府，位极人臣只用数年</div>
+      </div>
+      <div class="qs" data-i="4">
+        <q>郦相酒后疏防，醉眠于清风阁内。都美儿脱靴验看，复命来万寿宫中。</q>
+        <div class="cap"><i>赌局</i>天子设局灌酒，宫女验靴，身世悬在一只靴子上</div>
+      </div>
+      <div class="qs" data-i="5">
+        <q>心如铁石真难转，至死无他不二天。</q>
+        <div class="cap"><i>顶点</i>赐婚的旨意压下来，她当廷顶住，宁死不应</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 三 · 两支笔 ═══════════ -->
+<section id="bi">
+  <div class="wrap">
+    <div class="shead"><span class="no mono">叁</span>
+      <h2><small>写作与打捞的年表</small>两支笔的接力</h2>
+    </div>
+    <p class="prose">第一支笔停在十七卷。之后近两百年里，续书的、刊书的、考书的，都是来接笔的人。<b>点一个年份，看笔到了谁手里。</b></p>
+    <div class="rail"></div>
+    <div class="nodes" id="nodes">
+      <button class="node" data-i="0"><span class="dot"></span><span class="yr mono">1768</span><span class="nm">动笔</span></button>
+      <button class="node" data-i="1"><span class="dot"></span><span class="yr mono">1769</span><span class="nm">宦游</span></button>
+      <button class="node sel" data-i="2"><span class="dot"></span><span class="yr mono">1784</span><span class="nm">重拾</span></button>
+      <button class="node" data-i="3"><span class="dot"></span><span class="yr mono">约1796</span><span class="nm">绝笔</span></button>
+      <button class="node" data-i="4"><span class="dot"></span><span class="yr mono">1822</span><span class="nm">刊行</span></button>
+      <button class="node" data-i="5"><span class="dot"></span><span class="yr mono">1954</span><span class="nm">重光</span></button>
+    </div>
+    <div class="bdetail" id="bdetail">
+      <div data-i="0" style="display:none">
+        <p>年未二十，在北京的宅子里开卷，九个月写出八卷。快到什么程度？写到后来自己都笑是少年戏笔。</p>
+      </div>
+      <div data-i="1" style="display:none">
+        <p>随父宦游山东登州，在同知官舍里继续写，八个月又成八卷。这两段岁月是她自己的黄金年代，笔下全是闲适自负的收梢诗。</p>
+      </div>
+      <div data-i="2">
+        <p>停笔十二年之后，重新提笔，一年写成第十七卷。此时她经历丧母、成婚、丈夫远戍，笔下少年意气换成了劫后口吻。</p>
+        <q>岁次甲辰春二月，芸窗仍写再生缘。悠悠十二年来事，尽在明堂一醉间。</q>
+        <div class="cap"><i>卷十七</i>重拾之笔</div>
+      </div>
+      <div data-i="3" style="display:none">
+        <p>书写到僵局收卷，此后再没有下文。据库本卷首介绍，她此后数年间病卒；丈夫遇赦归来，人已不在。</p>
+      </div>
+      <div data-i="4" style="display:none">
+        <p>梁德绳补完末三卷，侯芝整理为八十回本，道光二年宝仁堂刊行。闺阁里的传抄本，从此成了坊间的书。</p>
+      </div>
+      <div data-i="5" style="display:none">
+        <p>双目已盲的陈寅恪口授而成《论再生缘》，为这位无名女作者立传；郭沫若随后校勘全书、连作数文。一部弹词被抬进了文学史。</p>
+        <q>端生此等自由及自尊即独立之思想，在当日及其后百余年间，俱足惊世骇俗</q>
+        <div class="cap"><i>陈寅恪</i>《论再生缘》</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 四 · 两种结局 ═══════════ -->
+<section id="ju">
+  <div class="wrap">
+    <div class="shead"><span class="no mono">肆</span>
+      <h2><small>同一部书 · 两个收梢</small>两种结局</h2>
+    </div>
+    <div class="duo">
+      <div class="half on" data-i="0">
+        <h3>她停笔的地方</h3>
+        <p>女主角被逼到墙角，故事戛然而止。后来替她推演的人说，这本没有第二种写法。</p>
+        <q>根据作者的性格和作品发展的逻辑，《再生缘》的结束只能是悲剧的结束。</q>
+        <div class="cap"><i>郭沫若</i>评前十七卷</div>
+        <q>端生心中于吾国当日奉为金科玉律之君父夫三纲，皆欲借此等描写以摧破之也。</q>
+        <div class="cap"><i>陈寅恪</i>《论再生缘》</div>
+      </div>
+      <div class="half" data-i="1">
+        <h3>续笔给的地方</h3>
+        <p>十八年后另一位女作者接手，让长辈板起脸把这位儿媳训了一顿，再把所有婚事一一排齐。</p>
+        <q>习成骄傲凌夫子，目无姑舅乱胡行。</q>
+        <div class="cap"><i>第二十卷</i>长辈训词</div>
+        <q>业已词登十七卷，未曾了结这前缘。既续前缘缘未了，空题名目再生缘。</q>
+        <div class="cap"><i>续笔</i>梁德绳自道</div>
+        <q>二十卷中缘分足，缘深缘浅总团圆。</q>
+        <div class="cap"><i>卷末</i>大团圆收梢</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 尾屏 ═══════════ -->
+<div class="wei">
+  <div class="weicore">
+    <q class="weiq">白雪霏霏将送腊</q>
+    <div class="weititle">缘未了
+      <span class="dotseal">端生</span>
+    </div>
+    <q class="weiq q2">江梅灼灼欲迎春</q>
+  </div>
+  <div class="wfoot">
+    来源：殆知阁古代文献简体库（集藏小说〈再生缘〉，二十卷八十回本，前十七卷陈端生撰，末三卷梁德绳续）·
+    仓库 <a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">github.com/robertsong2000/daizhige-daodu</a><br>
+    引文经脚本与库本去标点、归一逐字比对通过 · 书中神仙谪降、忠孝节义与三纲性别观念系时代产物，照录不代今人立论
+  </div>
+</div>
+
+<script>
+(function(){
+  /* 翻面 */
+  var card=document.getElementById('card');
+  card.addEventListener('click',function(){card.classList.toggle('on');});
+
+  /* 挑灯 */
+  var lamp=document.getElementById('lamp');
+  lamp.addEventListener('click',function(){
+    var on=lamp.classList.toggle('lit');
+    lamp.querySelector('.lbl').textContent=on?'灯亮 · 再点即收':'点灯 · 挑亮灯芯';
+  });
+
+  /* 阶梯 */
+  var stairs=document.getElementById('stairs');
+  var jpanel=document.getElementById('jpanel');
+  stairs.addEventListener('click',function(ev){
+    var b=ev.target.closest('.step');if(!b)return;
+    stairs.querySelectorAll('.step').forEach(function(x){x.classList.remove('sel');});
+    b.classList.add('sel');
+    var i=b.getAttribute('data-i');
+    jpanel.querySelectorAll('.qs').forEach(function(q){
+      q.style.display=(q.getAttribute('data-i')===i)?'':'none';
+    });
+  });
+  jpanel.querySelectorAll('.qs').forEach(function(q){
+    if(q.getAttribute('data-i')!=='1')q.style.display='none';
+  });
+
+  /* 年表 */
+  var nodes=document.getElementById('nodes');
+  var bdetail=document.getElementById('bdetail');
+  nodes.addEventListener('click',function(ev){
+    var b=ev.target.closest('.node');if(!b)return;
+    nodes.querySelectorAll('.node').forEach(function(x){x.classList.remove('sel');});
+    b.classList.add('sel');
+    var i=b.getAttribute('data-i');
+    bdetail.querySelectorAll('[data-i]').forEach(function(d){
+      d.style.display=(d.getAttribute('data-i')===i)?'':'none';
+    });
+  });
+  bdetail.querySelectorAll('[data-i]').forEach(function(d){
+    if(d.getAttribute('data-i')!=='2')d.style.display='none';
+  });
+
+  /* 双结局 */
+  var duo=document.querySelector('.duo');
+  duo.addEventListener('click',function(ev){
+    var h=ev.target.closest('.half');if(!h)return;
+    duo.querySelectorAll('.half').forEach(function(x){x.classList.remove('on');});
+    h.classList.add('on');
+  });
+})();
+</script>
+</body>
+</html>
