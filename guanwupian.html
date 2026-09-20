@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>观物篇导读（旦暮）</title>
+<style>
+:root{
+  --ink:#191917; --ink2:#1e1c1a; --deep:#12100e;
+  --paper:#e8e4dc; --paper-dim:#b4aea1; --paper-faint:#8a8375;
+  --acc:#c0453c; --acc-deep:#8e3630; --acc-soft:#33231f;
+  --line:#33302b; --spring:#5f9270; --gold:#c9963f; --blue:#5e8fbb;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--paper);
+  font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.9; overflow-x:hidden;
+}
+q{quotes:none;font-style:normal}
+.mono{font-family:"SFMono-Regular",Menlo,Consolas,monospace}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.sec{padding:96px 0 84px;border-top:1px solid var(--line);position:relative}
+.kicker{
+  font-size:12.5px;letter-spacing:.42em;color:var(--acc);
+  border:1px solid var(--acc-deep);display:inline-block;
+  padding:5px 14px 5px 18px;margin-bottom:26px;background:rgba(192,69,60,.07)
+}
+h2.st{font-size:33px;font-weight:600;letter-spacing:.14em;margin-bottom:14px}
+h2.st small{display:block;font-size:13px;letter-spacing:.3em;color:var(--paper-faint);font-weight:400;margin-top:8px}
+.prose{color:var(--paper-dim);font-size:15.5px;max-width:780px;margin-bottom:32px}
+.prose b{color:var(--paper);font-weight:600}
+.qline{display:block;border-left:2px solid var(--acc-deep);padding:4px 0 4px 16px;margin:16px 0;color:var(--paper);font-size:16px}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.rv.on{opacity:1;transform:none}
+
+#rail{position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:16px}
+#rail a{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--paper-faint);font-size:11px;letter-spacing:.24em;flex-direction:row-reverse}
+#rail a i{width:8px;height:8px;border:1px solid var(--paper-faint);transform:rotate(45deg);transition:.25s;flex:none}
+#rail a.act{color:var(--acc)}
+#rail a.act i{background:var(--acc);border-color:var(--acc)}
+@media (max-width:1180px){#rail{display:none}}
+
+/* ============ 旦暮盘 ============ */
+#hero{min-height:100vh;position:relative;overflow:hidden;border-top:none}
+#hero .glow{position:absolute;inset:0;background:
+  radial-gradient(ellipse 52% 46% at 68% 46%, rgba(192,69,60,.11), transparent 62%),
+  radial-gradient(ellipse 26% 22% at 30% 74%, rgba(192,69,60,.05), transparent 60%),
+  var(--ink)}
+.hero-grid{position:relative;display:flex;align-items:center;gap:46px;width:100%;max-width:1120px;margin:0 auto;padding:60px 26px}
+.hero-copy{flex:1;min-width:0}
+.vbox{display:flex;align-items:flex-start;gap:22px;height:max-content}
+.vwho{writing-mode:vertical-rl;text-orientation:upright;font-size:13px;letter-spacing:.5em;color:var(--paper-dim);margin-top:8px}
+.vtitle{
+  writing-mode:vertical-rl;text-orientation:upright;
+  font-size:58px;letter-spacing:.3em;font-weight:600;height:max-content;color:var(--paper)
+}
+.sealw{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:72px;height:72px;border:2px solid var(--paper);color:var(--paper);
+  font-size:17px;letter-spacing:.08em;line-height:1.3;text-align:center;
+  transform:rotate(4deg);margin-top:26px;writing-mode:vertical-rl;background:rgba(232,228,220,.05)
+}
+.h-kick{font-size:13px;letter-spacing:.5em;color:var(--acc);margin-bottom:18px}
+.h-line{font-size:16.5px;color:var(--paper-dim);max-width:470px;margin-top:4px}
+.h-line b{color:var(--paper);font-weight:600}
+.epigraph{margin-top:22px;border-left:2px solid var(--acc-deep);padding-left:16px}
+.epigraph q{font-size:16px;color:var(--paper)}
+.epigraph span{display:block;font-size:12px;letter-spacing:.28em;color:var(--paper-faint);margin-top:8px}
+.h-meta{margin-top:26px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--paper-faint);letter-spacing:.2em}
+.h-meta b{color:var(--acc);font-weight:600}
+#disk{width:min(470px,84vw);height:auto;display:block;flex:none;cursor:pointer}
+#disk text{font-family:inherit}
+.dcap{font-size:12px;letter-spacing:.24em;color:var(--paper-faint);text-align:center;margin-top:10px}
+.blink{animation:bl 3.6s ease-in-out infinite}
+.blink2{animation:bl 4.8s 1.6s ease-in-out infinite}
+@keyframes bl{0%,100%{opacity:.15}50%{opacity:.9}}
+.hint{font-size:11.5px;letter-spacing:.3em;color:var(--paper-faint);text-align:center;margin-top:6px}
+
+/* ============ 通用牌格 ============ */
+.qhide{opacity:.28;transition:opacity .35s ease;display:block;font-size:12.5px;color:var(--paper-dim);line-height:1.7}
+.lit .qhide,.lit q.qhide{opacity:1;color:var(--paper)}
+button{font-family:inherit;background:none;border:none;color:inherit;cursor:pointer;text-align:left}
+
+/* 三层镜 */
+.lens-row{display:flex;gap:16px;flex-wrap:wrap}
+.lens{
+  flex:1;min-width:220px;border:1px solid var(--line);background:var(--ink2);
+  padding:22px 20px 18px;transition:.35s;position:relative
+}
+.lens .zi{font-size:44px;color:var(--paper);line-height:1.2}
+.lens h3{font-size:14px;letter-spacing:.3em;color:var(--paper-dim);margin:10px 0 12px;font-weight:600}
+.lens q{font-size:13.5px;color:var(--paper-dim);display:block;line-height:1.9}
+.lens:hover{border-color:var(--acc-deep)}
+.lens.lit{border-color:var(--acc);background:var(--acc-soft)}
+.lens.lit .zi{color:var(--acc)}
+.lens.lit q{color:var(--paper)}
+
+/* 万物矩阵 */
+.mx{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;max-width:860px}
+.mh{display:flex;align-items:center;justify-content:center;font-size:15px;letter-spacing:.2em;color:var(--acc);border-bottom:1px solid var(--acc-deep);padding-bottom:6px;font-weight:600}
+.mh.corner{border-bottom:none}
+.cell{
+  border:1px solid var(--line);background:var(--ink2);padding:12px 10px 10px;min-height:96px;
+  transition:.3s;position:relative
+}
+.cell .big{display:block;font-size:21px;letter-spacing:.12em;color:var(--paper);margin-bottom:8px}
+.cell q{font-size:11.5px}
+.cell:hover{border-color:var(--acc-deep)}
+.cell.lit{border-color:var(--acc);background:var(--acc-soft)}
+.cell.lit .big{color:var(--acc)}
+.mnote{max-width:780px;margin-top:26px}
+
+/* 叠字牌 */
+.ptiles{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;max-width:860px;margin-top:8px}
+.ptile{border:1px solid var(--line);background:var(--ink2);padding:14px 12px 10px;min-height:100px;transition:.3s}
+.ptile .pw{display:block;font-size:23px;letter-spacing:.14em;color:var(--paper);margin-bottom:8px}
+.ptile q{font-size:11.5px}
+.ptile:hover{border-color:var(--acc-deep)}
+.ptile.lit{border-color:var(--acc);background:var(--acc-soft)}
+.ptile.lit .pw{color:var(--acc)}
+.fq{display:flex;flex-direction:column;gap:10px;max-width:780px;margin-bottom:26px}
+.fq q{border-left:2px solid var(--acc-deep);padding-left:16px;font-size:15.5px;color:var(--paper)}
+
+/* 数字阶梯 */
+.ladder{max-width:820px;margin-top:8px}
+.step{
+  display:flex;align-items:baseline;gap:18px;padding:7px 0 7px 14px;
+  border-left:2px solid var(--line);margin-left:6px
+}
+.step .sn{font-size:12px;color:var(--paper-faint);min-width:130px;text-align:right}
+.step .sc{font-size:16px;letter-spacing:.14em;color:var(--paper);min-width:96px}
+.step q{font-size:12.5px;color:var(--paper-faint)}
+.step:nth-child(4n){border-left-color:var(--acc-deep)}
+.bignum{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px}
+.bn{border:1px solid var(--line);background:var(--ink2);padding:20px 24px;min-width:220px;flex:1}
+.bn .lab{font-size:12.5px;letter-spacing:.34em;color:var(--paper-faint);margin-bottom:8px}
+.bn .num{font-size:26px;color:var(--acc);letter-spacing:.04em}
+.bn q{display:block;font-size:12.5px;color:var(--paper-dim);margin-top:10px;line-height:1.8}
+
+/* 史季 */
+.band{display:flex;gap:10px;max-width:860px;margin-top:8px}
+.sblock{flex:1;border-top:3px solid var(--acc-deep);padding:14px 12px 12px;background:var(--ink2);border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.sblock .j{font-size:30px;color:var(--paper)}
+.sblock .who{font-size:12px;letter-spacing:.26em;color:var(--paper-dim);margin:6px 0 10px}
+.sblock q{font-size:12px;color:var(--paper-faint);display:block;line-height:1.8}
+.sblock:nth-child(1){border-top-color:var(--spring)}
+.sblock:nth-child(2){border-top-color:var(--gold)}
+.sblock:nth-child(3){border-top-color:var(--paper-dim)}
+.sblock:nth-child(4){border-top-color:var(--blue)}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px;max-width:880px}
+.chip{
+  border:1px solid var(--line);background:var(--ink2);padding:10px 14px;transition:.3s;max-width:100%
+}
+.chip .cl{font-size:14px;letter-spacing:.18em;color:var(--paper);display:block;margin-bottom:4px}
+.chip q{font-size:11.5px}
+.chip:hover{border-color:var(--acc-deep)}
+.chip.lit{border-color:var(--acc);background:var(--acc-soft)}
+.chip.lit .cl{color:var(--acc)}
+
+/* 风向 */
+.windbar{display:flex;gap:12px;margin-bottom:26px}
+.wbtn{
+  border:1px solid var(--line);padding:10px 30px;font-size:17px;letter-spacing:.4em;color:var(--paper-dim);transition:.3s;background:var(--ink2)
+}
+.wbtn.act{border-color:var(--acc);color:var(--acc);background:var(--acc-soft)}
+.wpanel{display:none}
+.wpanel.act{display:block}
+.flags{display:flex;gap:16px;flex-wrap:wrap}
+.flag{flex:1;min-width:260px;border:1px solid var(--line);background:var(--ink2);padding:20px;position:relative;overflow:hidden}
+.flag::before{content:"";position:absolute;left:20px;top:0;width:2px;height:54px;background:var(--paper-faint)}
+.flag::after{content:"";position:absolute;left:22px;top:2px;border-style:solid;border-width:0 0 34px 66px;border-color:transparent transparent transparent var(--acc-deep)}
+.flag .fw{font-size:22px;letter-spacing:.3em;color:var(--paper);margin:52px 0 8px}
+.flag q{font-size:13px;color:var(--paper-dim);display:block;line-height:1.85}
+.windtail{max-width:760px;margin-top:28px}
+
+/* 地契 */
+.deeds{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;max-width:880px}
+.deed{flex:1;min-width:150px;border:1px solid var(--line);background:var(--ink2);padding:18px 16px 14px;transition:.3s}
+.deed:nth-child(1){min-height:120px}
+.deed:nth-child(2){min-height:146px}
+.deed:nth-child(3){min-height:172px}
+.deed:nth-child(4){min-height:198px}
+.deed:nth-child(5){min-height:224px;border-style:dashed;position:relative}
+.deed:nth-child(5)::after{content:"";position:absolute;left:100%;top:50%;width:70px;border-top:1px dashed var(--acc-deep)}
+.deed:hover{border-color:var(--acc-deep)}
+.deed.lit{border-color:var(--acc);background:var(--acc-soft)}
+.deed .dw{font-size:20px;letter-spacing:.18em;color:var(--paper);display:block;margin-bottom:8px}
+.deed q{font-size:12px}
+.deed.lit .dw{color:var(--acc)}
+.landtail{max-width:780px;margin-top:30px}
+
+/* 收梢 */
+.fin-grid{display:flex;gap:44px;align-items:flex-start;flex-wrap:wrap}
+.fin-vq{display:flex;flex-direction:row-reverse;gap:26px;height:500px;flex:none}
+.fin-vq .vcol{
+  writing-mode:vertical-rl;text-orientation:upright;
+  border-right:1px solid var(--line);padding-right:18px;height:100%;max-height:100%
+}
+.fin-vq q{font-size:23px;letter-spacing:.3em;line-height:2;color:var(--paper);height:max-content;display:block}
+.fin-vq .src{font-size:12px;letter-spacing:.3em;color:var(--paper-faint);margin-top:18px;display:block}
+.colnote{flex:1;min-width:280px}
+.colnote h3{font-size:14px;letter-spacing:.34em;color:var(--acc);margin:20px 0 8px;font-weight:600}
+.colnote p{font-size:13.5px;color:var(--paper-dim);line-height:2}
+.stamp{
+  margin-top:34px;width:112px;height:112px;border:2px solid var(--acc);color:var(--acc);
+  display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  transform:rotate(3deg);background:rgba(192,69,60,.06)
+}
+.stamp i{
+  display:flex;align-items:center;justify-content:center;font-style:normal;
+  font-size:30px;font-weight:600
+}
+footer{border-top:1px solid var(--line);padding:34px 0 44px;font-size:12.5px;color:var(--paper-faint);line-height:2.2}
+footer a{color:var(--acc);text-decoration:none}
+
+@media (max-width:760px){
+  .hero-grid{flex-direction:column;gap:30px;padding:48px 20px}
+  .vtitle{font-size:44px}
+  #disk{width:min(340px,88vw)}
+  .sec{padding:70px 0 60px}
+  h2.st{font-size:26px}
+  .mx{gap:4px}
+  .cell{padding:8px 6px;min-height:74px}
+  .cell .big{font-size:16px;margin-bottom:4px}
+  .cell q,.ptile q,.chip q{font-size:10px}
+  .ptiles{grid-template-columns:repeat(2,1fr)}
+  .ptile{min-height:84px;padding:10px}
+  .ptile .pw{font-size:19px}
+  .step{gap:10px;padding-left:8px}
+  .step .sn{min-width:0;font-size:11px}
+  .step .sc{min-width:0;font-size:14px}
+  .step q{display:none}
+  .band{flex-wrap:wrap}
+  .sblock{min-width:45%}
+  .fin-vq{height:420px;gap:16px}
+  .fin-vq q{font-size:17px;letter-spacing:.2em}
+  .deeds{flex-direction:column;align-items:stretch}
+  .deed{min-height:0!important}
+  .deed:nth-child(5)::after{display:none}
+  .bn .num{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<nav id="rail">
+  <a href="#hero" data-t="hero"><i></i>盘</a>
+  <a href="#read" data-t="read"><i></i>读法</a>
+  <a href="#grid" data-t="grid"><i></i>户口</a>
+  <a href="#four" data-t="four"><i></i>四府</a>
+  <a href="#count" data-t="count"><i></i>发条</a>
+  <a href="#seasons" data-t="seasons"><i></i>节气</a>
+  <a href="#wind" data-t="wind"><i></i>风向</a>
+  <a href="#land" data-t="land"><i></i>量地</a>
+  <a href="#fin" data-t="fin"><i></i>收梢</a>
+</nav>
+
+<main>
+
+<!-- ================= 首屏 ================= -->
+<section id="hero">
+  <div class="glow"></div>
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="h-kick">殆知阁导读 · 卷五百四十二</div>
+      <div class="vbox">
+        <div class="vtitle">观物篇</div>
+        <div class="vwho">北宋邵雍撰</div>
+        <div class="sealw">尧夫</div>
+      </div>
+      <p class="h-line">公元十一世纪，一位住在洛阳的读书人给整个宇宙编了一份说明书：天地由什么零件组成，万物各自登记在哪一格，天地能运行多少年，一个朝代算哪种天气。这份说明书传下来，就是<b>〈观物篇〉</b>。</p>
+      <div class="epigraph">
+        <q>物之大者，无若天地，然而亦有所尽也。</q>
+        <span>开篇第一句，天地再大，也有到头的一天</span>
+      </div>
+      <div class="h-meta">
+        <span>道藏 · 藏外｜去空白一万三千七百一十三字</span>
+        <span>一卷十二块｜宇宙大周期 <b class="mono">129,600</b> 年</span>
+      </div>
+    </div>
+    <div>
+      <svg id="disk" viewBox="0 0 520 520" role="img" aria-label="旦暮盘">
+        <circle cx="260" cy="260" r="246" fill="none" stroke="#33302b" stroke-width="1"/>
+        <circle cx="260" cy="260" r="214" fill="none" stroke="#33302b" stroke-width="1"/>
+        <circle cx="260" cy="260" r="178" fill="none" stroke="#33302b" stroke-width="1"/>
+        <circle cx="260" cy="260" r="126" fill="none" stroke="#33302b" stroke-width="1"/>
+        <circle cx="260" cy="260" r="60" fill="#1e1c1a" stroke="#8e3630" stroke-width="1.5"/>
+        <g stroke="#4a453d" stroke-width="1" opacity=".55">
+          <line x1="260" y1="18" x2="260" y2="34"/><line x1="260" y1="486" x2="260" y2="502"/>
+          <line x1="18" y1="260" x2="34" y2="260"/><line x1="486" y1="260" x2="502" y2="260"/>
+          <line x1="90" y1="90" x2="101" y2="101"/><line x1="430" y1="90" x2="419" y2="101"/>
+          <line x1="90" y1="430" x2="101" y2="419"/><line x1="430" y1="430" x2="419" y2="419"/>
+        </g>
+        <g fill="#8a8375" font-size="17" text-anchor="middle">
+          <animateTransform attributeName="transform" type="rotate" from="0 260 260" to="360 260 260" dur="200s" repeatCount="indefinite"/>
+          <text x="260" y="235">子</text>
+          <text x="365" y="265">丑</text>
+          <text x="330" y="362">寅</text>
+          <text x="222" y="390">卯</text>
+          <text x="135" y="312">辰</text>
+          <text x="140" y="205">巳</text>
+          <text x="215" y="132">午</text>
+          <text x="322" y="140">未</text>
+          <text x="386" y="212">申</text>
+          <text x="382" y="322">酉</text>
+          <text x="292" y="374">戌</text>
+          <text x="186" y="340">亥</text>
+        </g>
+        <g fill="#c9963f" font-size="16" text-anchor="middle">
+          <animateTransform attributeName="transform" type="rotate" from="360 260 260" to="0 260 260" dur="120s" repeatCount="indefinite"/>
+          <text x="260" y="166">日</text>
+          <text x="354" y="260">月</text>
+          <text x="260" y="354">星</text>
+          <text x="166" y="260">辰</text>
+        </g>
+        <g fill="#5f9270" font-size="15" text-anchor="middle">
+          <animateTransform attributeName="transform" type="rotate" from="0 260 260" to="360 260 260" dur="90s" repeatCount="indefinite"/>
+          <text x="260" y="204">水</text>
+          <text x="316" y="260">火</text>
+          <text x="260" y="316">土</text>
+          <text x="204" y="260">石</text>
+        </g>
+        <circle class="blink" cx="150" cy="130" r="2.4" fill="#e8e4dc"/>
+        <circle class="blink2" cx="404" cy="380" r="2" fill="#e8e4dc"/>
+        <circle class="blink" cx="420" cy="118" r="1.7" fill="#e8e4dc"/>
+        <text x="260" y="272" text-anchor="middle" font-size="30" fill="#e8e4dc">理</text>
+      </svg>
+      <div class="dcap">外环十二辰｜中环天之四象｜内环地之四象</div>
+      <div class="hint">点盘心，诸环停转</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 读法 ================= -->
+<section id="read" class="sec">
+  <div class="wrap">
+    <div class="kicker rv">读法</div>
+    <h2 class="st rv">观物的三层镜子<small>书名两个字，方法在全书最后一段</small></h2>
+    <p class="prose rv">看东西谁不会？邵雍说：多数人一辈子只用到第一层。他在收梢处交代了自己看世界的方法，一共三级，一级比一级深：先用<b>眼睛</b>，眼睛收到的是样子；再换<b>心</b>，心收到的是好恶；最后用<b>理</b>，理收到的，是它为什么会是这个样子。他给这套方法起了名字，叫以物观物：把自己往后让半步，让事物自己开口。</p>
+    <q class="qline rv">天下之物莫不有理焉，莫不有性焉，莫不有命焉。</q>
+    <div class="lens-row">
+      <button class="lens rv" type="button">
+        <div class="zi">目</div><h3>一层，看样子</h3>
+        <q>非观之以目而观之以心也</q>
+      </button>
+      <button class="lens rv" type="button">
+        <div class="zi">心</div><h3>二层，看好恶</h3>
+        <q>非观之以心而观之以理也</q>
+      </button>
+      <button class="lens rv lit" type="button">
+        <div class="zi">理</div><h3>三层，看所以然</h3>
+        <q>不以我观物者，以物观物之谓也</q>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 万物矩阵 ================= -->
+<section id="grid" class="sec">
+  <div class="wrap">
+    <div class="kicker rv">户口册</div>
+    <h2 class="st rv">给天下万物登记户口<small>一张四乘四的表，兜住所有生物</small></h2>
+    <p class="prose rv">邵雍先拆天：天上的零件是<b>日、月、星、辰</b>；再拆地：地上的零件是<b>水、火、土、石</b>。零件相互交流，天上有了暑寒昼夜，地上有了雨风露雷。然后他做了一件很像造户口册的事：会跑的、会飞的、草本的、木本的，各领一行；性情形体四样属性，各领一列。每种生物再按出身配一行一列，钉死在格子里。点一格，看它的登记项。</p>
+    <div class="mx rv">
+      <span class="mh corner"></span>
+      <span class="mh">日</span>
+      <span class="mh">月</span>
+      <span class="mh">星</span>
+      <span class="mh">辰</span>
+      <span class="mh">日</span>
+      <button class="cell" type="button"><span class="big">日日</span><q class="qhide">日日物者，飞飞也</q></button>
+      <button class="cell" type="button"><span class="big">日月</span><q class="qhide">日月物者，飞走也</q></button>
+      <button class="cell" type="button"><span class="big">日星</span><q class="qhide">日星物者，飞木也</q></button>
+      <button class="cell" type="button"><span class="big">日辰</span><q class="qhide">日辰物者，飞草也</q></button>
+      <span class="mh">月</span>
+      <button class="cell" type="button"><span class="big">月日</span><q class="qhide">月日物者，走飞也</q></button>
+      <button class="cell" type="button"><span class="big">月月</span><q class="qhide">月月物者，走走也</q></button>
+      <button class="cell" type="button"><span class="big">月星</span><q class="qhide">月星物者，走木也</q></button>
+      <button class="cell" type="button"><span class="big">月辰</span><q class="qhide">月辰物者，走草也</q></button>
+      <span class="mh">星</span>
+      <button class="cell" type="button"><span class="big">星日</span><q class="qhide">星日物者，木飞也</q></button>
+      <button class="cell" type="button"><span class="big">星月</span><q class="qhide">星月物者，木走也</q></button>
+      <button class="cell" type="button"><span class="big">星星</span><q class="qhide">星星物者，木木也</q></button>
+      <button class="cell" type="button"><span class="big">星辰</span><q class="qhide">星辰物者，木草也</q></button>
+      <span class="mh">辰</span>
+      <button class="cell" type="button"><span class="big">辰日</span><q class="qhide">辰日物者，草飞也</q></button>
+      <button class="cell" type="button"><span class="big">辰月</span><q class="qhide">辰月物者，草走也</q></button>
+      <button class="cell" type="button"><span class="big">辰星</span><q class="qhide">辰星物者，草木也</q></button>
+      <button class="cell" type="button"><span class="big">辰辰</span><q class="qhide">辰辰物者，草草也</q></button>
+    </div>
+    <div class="mnote">
+      <q class="qline rv">夫人也者，暑寒昼夜无不变，雨风露雷无不化，性情形体无不感，走飞草木无不应。以目善万物之色，耳善万物之声，鼻善万物之气，口善万物之味。灵于万物，不亦宜乎。</q>
+      <p class="prose rv" style="margin-bottom:0">整张表只有一行例外：人。四时他全经历，四象他全沾边，十六个格子通吃。邵雍给的理由很简单：人的耳目口鼻，把万物的声色气味全收得回来。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 四府 ================= -->
+<section id="four" class="sec">
+  <div class="wrap">
+    <div class="kicker rv">四府</div>
+    <h2 class="st rv">一年四季，四部经<small>天拿季节管万物，人拿经书管自己</small></h2>
+    <p class="prose rv">拆完天地拆文明。邵雍说，天用四季管理万物：春生、夏长、秋收、冬藏；人也有一套对应的四府，就是四部经：<b>《易》管生，《书》管长，《诗》管收，《春秋》管藏</b>。两套四府再两两相乘，又铺出一张十六格的表，他给每一格起了一个叠字名字。</p>
+    <div class="fq rv">
+      <q>春为生物之府，夏为长物之府，秋为收物之府，冬为藏物之府。</q>
+      <q>《易》为生民之府，《书》长民之府，《诗》为收民之府，《春秋》为藏民之府。</q>
+    </div>
+    <div class="ptiles rv">
+      <button class="ptile" type="button"><span class="pw">易易</span><q class="qhide">《易》之《易》者，生生之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">易书</span><q class="qhide">《易》之《书》者，生长之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">易诗</span><q class="qhide">《易》之《诗》者，生收之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">易春秋</span><q class="qhide">《易》之《春秋》者，生藏之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">书易</span><q class="qhide">《书》之《易》者，长生之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">书书</span><q class="qhide">《书》之《书》者，长长之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">书诗</span><q class="qhide">《书》之《诗》者，长收之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">书春秋</span><q class="qhide">《书》之《春秋》者，长藏之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">诗易</span><q class="qhide">《诗》之《易》者，收生之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">诗书</span><q class="qhide">《诗》之《书》者，收长之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">诗诗</span><q class="qhide">《诗》之《诗》者，收收之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">诗春秋</span><q class="qhide">《诗》之《春秋》者，收藏之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">春秋易</span><q class="qhide">《春秋》之《易》者，藏生之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">春秋书</span><q class="qhide">《春秋》之《书》者，藏长之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">春秋诗</span><q class="qhide">《春秋》之《诗》者，藏收之谓也</q></button>
+      <button class="ptile" type="button"><span class="pw">春秋春秋</span><q class="qhide">《春秋》之《春秋》者，藏藏之谓也</q></button>
+    </div>
+    <p class="prose rv" style="margin-top:26px;margin-bottom:0">叠字不是文字游戏：把天的季节和人的经书对齐，文明史就被他当成一茬庄稼来读。哪朝哪代在生，哪朝哪代在藏，后面每一幕都从这张表里取词。</p>
+  </div>
+</section>
+
+<!-- ================= 元会运世 ================= -->
+<section id="count" class="sec">
+  <div class="wrap">
+    <div class="kicker rv">上发条</div>
+    <h2 class="st rv">给宇宙上发条<small>元会运世，从一到一千八百万</small></h2>
+    <p class="prose rv">现在到了全书最大胆的部分：报数字。年里有月，月里有日；邵雍把这套刻度一路放大：<b>三十年算一世，十二世算一运，三十运算一会，十二会算一元</b>。一元即 <span class="mono">129,600</span> 年，是宇宙的一个完整周期。他列了一张十六格的乘法表，从一格小数字，一路乘到一千八百多万。</p>
+    <q class="qline rv">此四者，天地始则始焉，天地终则终焉。</q>
+    <div class="ladder">
+      <div class="step rv"><span class="sn mono">1</span><span class="sc">元之元</span><q>元之元一</q></div>
+      <div class="step rv" style="transition-delay:90ms"><span class="sn mono">12</span><span class="sc">元之会</span><q>元之会十二</q></div>
+      <div class="step rv" style="transition-delay:180ms"><span class="sn mono">360</span><span class="sc">元之运</span><q>元之运三百六十</q></div>
+      <div class="step rv" style="transition-delay:270ms"><span class="sn mono">4,320</span><span class="sc">元之世</span><q>元之世四千三百二十</q></div>
+      <div class="step rv" style="transition-delay:360ms"><span class="sn mono">12</span><span class="sc">会之元</span><q>会之元十二</q></div>
+      <div class="step rv" style="transition-delay:450ms"><span class="sn mono">144</span><span class="sc">会之会</span><q>会之会一百四十四</q></div>
+      <div class="step rv" style="transition-delay:540ms"><span class="sn mono">4,320</span><span class="sc">会之运</span><q>会之运四千三百二十</q></div>
+      <div class="step rv" style="transition-delay:630ms"><span class="sn mono">51,840</span><span class="sc">会之世</span><q>会之世五万一千八百四十</q></div>
+      <div class="step rv" style="transition-delay:720ms"><span class="sn mono">360</span><span class="sc">运之元</span><q>运之元三百六十</q></div>
+      <div class="step rv" style="transition-delay:810ms"><span class="sn mono">4,320</span><span class="sc">运之会</span><q>运之会四千三百二十</q></div>
+      <div class="step rv" style="transition-delay:900ms"><span class="sn mono">129,600</span><span class="sc">运之运</span><q>运之运一十二万九千六百</q></div>
+      <div class="step rv" style="transition-delay:990ms"><span class="sn mono">1,555,200</span><span class="sc">运之世</span><q>运之世一百五十五万五千二百</q></div>
+      <div class="step rv" style="transition-delay:1080ms"><span class="sn mono">4,320</span><span class="sc">世之元</span><q>世之元四千三百二十</q></div>
+      <div class="step rv" style="transition-delay:1170ms"><span class="sn mono">51,840</span><span class="sc">世之会</span><q>世之会五万一千八百四十</q></div>
+      <div class="step rv" style="transition-delay:1260ms"><span class="sn mono">1,555,200</span><span class="sc">世之运</span><q>世之运一百五十五万五千二百</q></div>
+      <div class="step rv" style="transition-delay:1350ms"><span class="sn mono">18,662,400</span><span class="sc">世之世</span><q>世之世一千八百六十六万二千四百</q></div>
+    </div>
+    <div class="bignum">
+      <div class="bn rv">
+        <div class="lab">动数</div>
+        <div class="num mono">17,024</div>
+        <q>日月星辰之变数一万七千二十四，谓之动数</q>
+      </div>
+      <div class="bn rv">
+        <div class="lab">植数</div>
+        <div class="num mono">17,024</div>
+        <q>水火土石之化数一万七千二十四，谓之植数</q>
+      </div>
+      <div class="bn rv">
+        <div class="lab">通数</div>
+        <div class="num mono" id="tnum">0</div>
+        <q>再唱和日月星辰水火土石之变化通数二万八千九百八十一万六千五百七十六，谓之动植通数</q>
+      </div>
+    </div>
+    <p class="prose rv" style="margin-top:28px;margin-bottom:0">最后一步，他把天上的变量和地上的变量相乘，得到两亿八千九百多万，管它叫动植通数，意思是天地间一切变化的总量。一个北宋人，在没有计算机的年代，用手算出了他心目中这个世界的分辨率。</p>
+  </div>
+</section>
+
+<!-- ================= 史季 ================= -->
+<section id="seasons" class="sec">
+  <div class="wrap">
+    <div class="kicker rv">节气表</div>
+    <h2 class="st rv">给三千年定气温<small>把中国史写成一张节气表</small></h2>
+    <p class="prose rv">数字之后，邵雍把这套刻度反过来用：给真实历史定性质。三皇的天下像春天，五帝像夏天，三王像秋天，五伯像冬天。往下再分，战国是冬天的余寒，隋是晋朝的儿子，唐是汉朝的弟弟，五代是太阳还没出来时的星星。一部几千年的兴亡史，被他写成了物候记录。</p>
+    <q class="qline rv">三皇春也，五帝夏也，三王秋也，五伯冬也。</q>
+    <div class="band rv">
+      <div class="sblock"><div class="j">春</div><div class="who">三皇之世</div><q>三皇之世如春</q></div>
+      <div class="sblock"><div class="j">夏</div><div class="who">五帝之世</div><q>五帝之世如夏</q></div>
+      <div class="sblock"><div class="j">秋</div><div class="who">三王之世</div><q>三王之世如秋</q></div>
+      <div class="sblock"><div class="j">冬</div><div class="who">五伯之世</div><q>五伯之世如冬</q></div>
+    </div>
+    <div class="chips">
+      <button class="chip" type="button"><span class="cl">七国</span><q class="qhide">七国，冬之余冽也</q></button>
+      <button class="chip" type="button"><span class="cl">汉晋</span><q class="qhide">汉王而不足，晋伯而有余</q></button>
+      <button class="chip" type="button"><span class="cl">三国</span><q class="qhide">三国，伯之雄者也</q></button>
+      <button class="chip" type="button"><span class="cl">十六国</span><q class="qhide">十六国，伯之丛者也</q></button>
+      <button class="chip" type="button"><span class="cl">南五代</span><q class="qhide">南五代，伯之借乘也</q></button>
+      <button class="chip" type="button"><span class="cl">北五朝</span><q class="qhide">北五朝，伯之传舍也</q></button>
+      <button class="chip" type="button"><span class="cl">隋</span><q class="qhide">隋，晋之子也</q></button>
+      <button class="chip" type="button"><span class="cl">唐</span><q class="qhide">唐，汉之弟也</q></button>
+      <button class="chip" type="button"><span class="cl">隋末诸郡</span><q class="qhide">隋季诸郡之伯，江汉之余波也</q></button>
+      <button class="chip" type="button"><span class="cl">唐末藩镇</span><q class="qhide">唐季诸镇之伯，日月之余光也</q></button>
+      <button class="chip" type="button"><span class="cl">后五代</span><q class="qhide">后五代之伯，日未出之星也</q></button>
+    </div>
+    <p class="prose rv" style="margin-top:26px;margin-bottom:0">点每一块牌子，看邵雍给的考语。最狠的一句给了七国：冬天都过完了，还残留的那点冷。</p>
+  </div>
+</section>
+
+<!-- ================= 风向 ================= -->
+<section id="wind" class="sec">
+  <div class="wrap">
+    <div class="kicker rv">风向标</div>
+    <h2 class="st rv">世道的风向标<small>不看朝廷看风气，听街面上在夸谁</small></h2>
+    <p class="prose rv">邵雍还有一个更顺手的观测点：不猜局势，看风气。他的判据简单到近乎残忍：<b>天下将治，人人敬重实干的人；天下将乱，人人围观说漂亮话的人</b>。九百年前没有民调，他给的替代方案是，出门听听大家在夸谁。拨一下旗，看两种世道。</p>
+    <div class="windbar rv">
+      <button class="wbtn act" type="button" data-w="zhi">治</button>
+      <button class="wbtn" type="button" data-w="luan">乱</button>
+    </div>
+    <div class="wpanel act" id="wzhi">
+      <div class="flags">
+        <div class="flag"><div class="fw">尚行</div><q>夫天下将治，则人必尚行也；天下将乱，则人必尚言也</q></div>
+        <div class="flag"><div class="fw">尚义</div><q>尚行则笃实之风行焉；尚言则诡谲之风行焉</q></div>
+        <div class="flag"><div class="fw">谦让</div><q>尚义则谦让之风行焉；尚利则攘夺之风行焉</q></div>
+      </div>
+    </div>
+    <div class="wpanel" id="wluan">
+      <div class="flags">
+        <div class="flag"><div class="fw">尚言</div><q>夫天下将治，则人必尚行也；天下将乱，则人必尚言也</q></div>
+        <div class="flag"><div class="fw">诡谲</div><q>尚行则笃实之风行焉；尚言则诡谲之风行焉</q></div>
+        <div class="flag"><div class="fw">攘夺</div><q>尚义则谦让之风行焉；尚利则攘夺之风行焉</q></div>
+      </div>
+    </div>
+    <div class="windtail">
+      <q class="qline rv">无愧于口不若无愧于身，无愧于身不若无愧于心。</q>
+      <p class="prose rv" style="margin-bottom:0">顺着风向标往下走，他给出了个人版本的三级检查：嘴上没毛病，不如身上没毛病；身上没毛病，不如心里没毛病。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 量地 ================= -->
+<section id="land" class="sec">
+  <div class="wrap">
+    <div class="kicker rv">量地</div>
+    <h2 class="st rv">史上最大的一笔地产<small>孔子的国土，不在地图上，在时间里</small></h2>
+    <p class="prose rv">书里最漂亮的一句恭维，是给孔子量地。邵雍先摆出四个量级：匹夫的地以百亩计，大夫的地以百里计，诸侯的地以四境计，天子的地以四海计。到孔子，他换了一个量纲：<b>万世</b>。点一块地契，看原文。</p>
+    <div class="deeds rv">
+      <button class="deed" type="button"><span class="dw">为土</span><q class="qhide">匹夫以百亩为土</q></button>
+      <button class="deed" type="button"><span class="dw">为土</span><q class="qhide">大夫以百里为土</q></button>
+      <button class="deed" type="button"><span class="dw">为土</span><q class="qhide">诸侯以四境为土</q></button>
+      <button class="deed" type="button"><span class="dw">为土</span><q class="qhide">天子以四海为土</q></button>
+      <button class="deed" type="button"><span class="dw">为土</span><q class="qhide">仲尼以万世为土</q></button>
+    </div>
+    <div class="landtail">
+      <p class="prose rv" style="margin-bottom:12px">邵雍甚至给自己在这块地上也标了个位置：他算过，孔子之后一千五百年轮到孟子出来接话，再过一千五百年轮到自己。他不敢比孔子，但自认可以学孟子，接着往下赞。</p>
+      <q class="qline rv">虽不敢比德仲尼，上赞尧、舜、禹，岂不敢如孟子上赞仲尼乎</q>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 收梢 ================= -->
+<section id="fin" class="sec">
+  <div class="wrap">
+    <div class="kicker rv">收梢</div>
+    <h2 class="st rv">旦暮<small>古未必为古，今未必为今</small></h2>
+    <div class="fin-grid">
+      <div class="fin-vq rv">
+        <div class="vcol"><q>夫古今者，在天地间犹旦暮也</q><span class="src">旦暮</span></div>
+        <div class="vcol"><q>古亦未必为古，今亦未必为今</q></div>
+        <div class="vcol"><q>不以我观物者，以物观物之谓也</q></div>
+        <div class="vcol"><q>既能以物观物，又安有我于其间哉</q></div>
+      </div>
+      <div class="colnote rv">
+        <h3>何以是旦暮</h3>
+        <p>邵雍算过：三千年的全部中国史，在天地的一个周期里只占极小一段。于是全书最壮阔的一句话出现了：古今放在天地之间，不过是一个早晨到一个小傍晚。既然古和今都只是谁在看、从哪儿看的问题，那么看世界的正确姿势只剩一个：把「我」从镜头前挪开。</p>
+        <h3>读它如同读什么</h3>
+        <p>读一份北宋的万物编码表，读一台手工计算出来的宇宙时钟，也读一个把自己活成观测仪器的人。这套盘面今天看当然不是科学，但它示范了一件事：用一套有限的刻度，接住无限的世界。</p>
+        <h3>校字记</h3>
+        <p>库本<q>运之以秋春行冬之时也</q>句当依上文补「世」字，照录；<q>如秋凄如如也</q>衍一如字，照录；<q>同礼而异皆者</q>之皆当作教，照录；<q>百百之走当百物</q>之走当作木，照录；一处书名号间留四空格，去空白后核验不受影响，存照。</p>
+        <h3>时代局限</h3>
+        <p>元会运世的宇宙周期是前现代的数理想象，不能当宇宙学读；皇帝王伯的退化史观与华夷之辨是宋人立场，照录不代今人立论；以孔子为万世之极，是儒家理想国的自我投影；数理定命之说，勿用于推步占验。</p>
+        <div class="stamp">
+          <i style="grid-area:1/2">以</i><i style="grid-area:1/1">物</i><i style="grid-area:2/2">观</i><i style="grid-area:2/1">物</i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    文本来源：殆知阁简体库〈观物篇〉（道藏 · 藏外），仓库：<a href="https://github.com/robertsong/daizhige" target="_blank" rel="noopener">daizhige-daodu</a>。<br>
+    引文均经脚本自库本切片、去标点归一逐字比对；白话部分经六字窗反扫核验。本页为古籍导读，其中宇宙周期、数理定命之说属前现代想象，华夷之辨与退化史观皆宋人立场，请以今日眼光辨之。
+  </div>
+</footer>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target);} });
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  document.getElementById('disk').addEventListener('click',function(){
+    var d=this;
+    if(d.getAttribute('data-p')==='1'){ d.unpauseAnimations(); d.removeAttribute('data-p'); }
+    else { d.pauseAnimations(); d.setAttribute('data-p','1'); }
+  });
+
+  document.querySelectorAll('.lens,.ptile,.cell,.chip,.deed').forEach(function(el){
+    el.addEventListener('click',function(){ el.classList.toggle('lit'); });
+  });
+
+  var wb=document.querySelectorAll('.wbtn');
+  wb.forEach(function(b){
+    b.addEventListener('click',function(){
+      wb.forEach(function(x){ x.classList.remove('act'); });
+      b.classList.add('act');
+      document.querySelectorAll('.wpanel').forEach(function(p){ p.classList.remove('act'); });
+      document.getElementById('w'+b.getAttribute('data-w')).classList.add('act');
+    });
+  });
+
+  var links=document.querySelectorAll('#rail a');
+  var secs=[].map.call(links,function(a){ return document.getElementById(a.getAttribute('data-t')); });
+  function pick(){
+    var y=window.scrollY+window.innerHeight*0.4, cur=0;
+    secs.forEach(function(s,i){ if(s&&s.offsetTop<=y) cur=i; });
+    links.forEach(function(a,i){ a.classList.toggle('act',i===cur); });
+  }
+  window.addEventListener('scroll',pick,{passive:true});
+  pick();
+
+  var tn=document.getElementById('tnum'), target=289816576, done=false;
+  var tio=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting&&!done){ done=true; tio.disconnect();
+        var t0=null;
+        function tick(ts){
+          if(!t0)t0=ts;
+          var p=Math.min((ts-t0)/2200,1), v=Math.floor(target*(p*p*(3-2*p)));
+          tn.textContent=v.toLocaleString('en-US');
+          if(p<1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+    });
+  },{threshold:.4});
+  tio.observe(tn);
+})();
+</script>
+</body>
+</html>
