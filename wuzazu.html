@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>五杂俎 · 攒盒</title>
+<style>
+:root{
+  --ink:#191917;
+  --ink2:#201f1c;
+  --ink3:#26251f;
+  --paper:#e8e4dc;
+  --dim:#a49d8e;
+  --dim2:#6e685c;
+  --bam:#5f9270;
+  --bam-dk:#3d5f49;
+  --bam-glow:rgba(95,146,112,.28);
+  --line:rgba(232,228,220,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  line-height:1.9;
+  letter-spacing:.04em;
+  overflow-x:hidden;
+}
+q{quotes:none}
+.mono{font-family:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace}
+::selection{background:var(--bam);color:var(--ink)}
+
+/* ---------- hero ---------- */
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  padding:8vh 6vw 10vh;
+}
+.hero-grid{
+  display:flex;
+  align-items:center;
+  gap:clamp(24px,6vw,90px);
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.vtitle{
+  writing-mode:vertical-rl;
+  height:max-content;
+  font-size:clamp(44px,7vw,74px);
+  font-weight:700;
+  letter-spacing:.28em;
+  color:var(--paper);
+  border-right:1px solid var(--line);
+  border-left:1px solid var(--line);
+  padding:14px 18px;
+  position:relative;
+}
+.vtitle::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-46px;
+  width:1px;
+  height:34px;
+  background:var(--bam);
+}
+.hero-kicker{
+  font-size:13px;
+  letter-spacing:.5em;
+  color:var(--bam);
+  margin-bottom:18px;
+}
+.hero-side{max-width:300px}
+.hero-side p{
+  font-size:14px;
+  color:var(--dim);
+  margin-top:12px;
+}
+.hero-side .say{
+  display:block;
+  margin-top:26px;
+  padding:14px 16px;
+  border-left:2px solid var(--bam);
+  background:var(--ink2);
+  font-size:13px;
+  color:var(--dim);
+}
+.q2{color:var(--paper);font-style:normal}
+
+/* the box */
+.boxwrap{position:relative;width:min(78vw,460px)}
+.boxwrap svg{width:100%;height:auto;display:block}
+.sector{
+  fill:var(--ink2);
+  stroke:rgba(232,228,220,.16);
+  stroke-width:1.4;
+  transition:fill .9s ease, stroke .9s ease;
+  pointer-events:auto;
+}
+.sector:hover{fill:var(--ink3)}
+.hero.open .sector{stroke:rgba(95,146,112,.5)}
+.hero.open .sector.lit{fill:var(--bam-dk)}
+.hero.open .sector.lit:hover{fill:var(--bam)}
+.slabel{
+  fill:var(--dim2);
+  font-size:34px;
+  font-weight:700;
+  text-anchor:middle;
+  dominant-baseline:central;
+  pointer-events:none;
+  transition:fill .8s ease;
+}
+.hero.open .slabel{fill:var(--paper)}
+.corec{fill:var(--ink);stroke:rgba(95,146,112,.55);stroke-width:1.4}
+.coret{fill:var(--bam);font-size:30px;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.lid{transition:transform 1.1s cubic-bezier(.22,.9,.3,1), opacity 1.1s ease;transform-origin:230px 230px}
+.hero.open .lid{transform:translateY(-64px) scale(.97);opacity:.05;pointer-events:none}
+.lid{cursor:pointer}
+.lidface{fill:#232219;stroke:rgba(232,228,220,.22);stroke-width:1.6}
+.lidslip{fill:var(--paper)}
+.lidtext{fill:var(--ink);font-size:30px;font-weight:700;letter-spacing:10px;text-anchor:middle}
+.lidsmall{fill:var(--ink);font-size:11px;letter-spacing:4px;text-anchor:middle;opacity:.75}
+.hint{
+  position:absolute;
+  left:50%;
+  bottom:-52px;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  font-size:12px;
+  letter-spacing:.4em;
+  color:var(--dim2);
+  transition:color .6s;
+}
+.hero.open .hint{color:var(--bam)}
+
+/* ---------- generic section ---------- */
+section{position:relative}
+.wrap{max-width:1060px;margin:0 auto;padding:0 6vw}
+.tag{
+  display:inline-block;
+  font-size:12px;
+  letter-spacing:.45em;
+  color:var(--bam);
+  border:1px solid rgba(95,146,112,.4);
+  padding:5px 14px 5px 18px;
+  margin-bottom:30px;
+}
+h2{
+  font-size:clamp(24px,3.4vw,34px);
+  font-weight:700;
+  letter-spacing:.14em;
+  margin-bottom:26px;
+}
+p.note{font-size:15px;color:var(--dim);max-width:640px}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.rv.on{opacity:1;transform:none}
+
+/* ---------- bio ---------- */
+.bio{padding:14vh 0 10vh;border-top:1px solid var(--line)}
+.bio-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:56px;align-items:start}
+.bio-name{
+  font-size:clamp(40px,6vw,64px);
+  font-weight:700;
+  letter-spacing:.18em;
+  line-height:1.2;
+}
+.bio-zi{
+  display:inline-block;
+  margin-top:10px;
+  font-size:14px;
+  color:var(--bam);
+  letter-spacing:.3em;
+}
+.bio p{font-size:15px;color:var(--dim);margin-bottom:16px}
+.bio p b{color:var(--paper);font-weight:700}
+.seal{
+  margin-top:26px;
+  display:inline-block;
+  background:var(--bam);
+  color:var(--ink);
+  font-weight:700;
+  font-size:15px;
+  letter-spacing:.22em;
+  padding:10px 16px;
+  line-height:1.6;
+}
+.vphrase{
+  writing-mode:vertical-rl;
+  height:max-content;
+  margin:0 auto;
+  font-size:clamp(22px,3vw,30px);
+  font-weight:700;
+  color:var(--paper);
+  letter-spacing:.42em;
+  border-left:1px solid var(--line);
+  border-right:1px solid var(--line);
+  padding:22px 16px;
+  background:var(--ink2);
+}
+.vphrase .src{font-size:12px;color:var(--dim2);letter-spacing:.2em;margin-top:20px;font-weight:400}
+.phrase-cell{text-align:center}
+
+/* ---------- skeleton 五签 ---------- */
+.skeleton{padding:0 0 12vh}
+.skel-row{display:flex;gap:14px;flex-wrap:wrap}
+.sk{
+  flex:1;
+  min-width:120px;
+  background:var(--ink2);
+  border:1px solid var(--line);
+  border-top:3px solid var(--bam-dk);
+  padding:18px 16px 14px;
+  transition:border-color .5s, transform .5s;
+}
+.sk:hover{border-top-color:var(--bam);transform:translateY(-4px)}
+.sk .k{
+  font-size:26px;
+  font-weight:700;
+  color:var(--paper);
+}
+.sk .n{
+  display:block;
+  margin-top:6px;
+  font-size:12px;
+  color:var(--bam);
+  letter-spacing:.2em;
+}
+.sk .d{font-size:12.5px;color:var(--dim2);margin-top:8px;line-height:1.7}
+
+/* ---------- bands ---------- */
+.bands{border-top:1px solid var(--line)}
+.band{
+  padding:11vh 0 9vh;
+  border-bottom:1px solid var(--line);
+  display:grid;
+  grid-template-columns:170px minmax(0,1fr);
+  gap:clamp(26px,5vw,70px);
+}
+.bchar{
+  position:sticky;
+  top:16vh;
+  height:max-content;
+  text-align:center;
+}
+.bchar .big{
+  font-size:clamp(64px,9vw,110px);
+  font-weight:700;
+  color:var(--bam);
+  line-height:1.1;
+  display:block;
+  text-shadow:0 0 44px var(--bam-glow);
+}
+.bchar .sub{
+  display:block;
+  margin-top:14px;
+  font-size:12px;
+  letter-spacing:.4em;
+  color:var(--dim2);
+}
+.bitem{margin-bottom:40px}
+.bitem:last-child{margin-bottom:0}
+.bitem h3{
+  font-size:17px;
+  letter-spacing:.16em;
+  color:var(--paper);
+  margin-bottom:12px;
+  font-weight:700;
+}
+.bitem h3::before{
+  content:"";
+  display:inline-block;
+  width:14px;height:1px;
+  background:var(--bam);
+  vertical-align:middle;
+  margin-right:12px;
+}
+.bitem p{font-size:14.5px;color:var(--dim);margin-bottom:14px}
+.qt{
+  display:block;
+  background:var(--ink2);
+  border-left:2px solid var(--bam);
+  padding:16px 20px;
+  font-size:15px;
+  color:var(--paper);
+  line-height:2.05;
+  transition:border-color .4s;
+}
+.qt:hover{border-left-color:var(--paper)}
+.who{
+  display:block;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--dim2);
+  letter-spacing:.24em;
+}
+.who::before{content:"";display:inline-block;width:8px;height:8px;background:var(--bam-dk);margin-right:10px}
+/* 地 band marquee */
+.proverb{
+  border:1px solid var(--line);
+  background:var(--ink2);
+  padding:22px 24px;
+  margin-bottom:40px;
+  overflow:hidden;
+  position:relative;
+}
+.proverb .pv{
+  font-size:clamp(17px,2.4vw,22px);
+  letter-spacing:.14em;
+  color:var(--paper);
+  white-space:nowrap;
+  display:inline-block;
+  padding-left:100%;
+  animation:slide 17s linear infinite;
+}
+@keyframes slide{to{transform:translateX(-100%)}}
+.proverb .cap{font-size:12px;color:var(--dim2);letter-spacing:.3em;margin-top:10px}
+/* 人 band story */
+.story{
+  border:1px solid rgba(95,146,112,.35);
+  background:linear-gradient(160deg,var(--ink2),#1d241f);
+  padding:26px 28px;
+}
+.story h3 em{color:var(--bam);font-style:normal}
+/* 物 band offset */
+.offset{padding-left:clamp(0px,6vw,80px)}
+/* 事 band cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.card{
+  background:var(--ink2);
+  border:1px solid var(--line);
+  border-bottom:2px solid var(--bam-dk);
+  padding:20px;
+  transition:border-color .4s;
+}
+.card:hover{border-bottom-color:var(--bam)}
+.card h3{margin-bottom:10px}
+.card p{margin-bottom:12px}
+
+/* ---------- origin ---------- */
+.origin{padding:12vh 0 10vh}
+.origin-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:start}
+.origin .qt{border-left-color:var(--bam-dk)}
+.flow{
+  margin-top:34px;
+  border-top:1px dashed var(--line);
+  padding-top:22px;
+  font-size:13.5px;
+  color:var(--dim);
+}
+.flow li{
+  list-style:none;
+  padding-left:20px;
+  position:relative;
+  margin-bottom:12px;
+}
+.flow li::before{
+  content:"";
+  position:absolute;
+  left:0;top:.85em;
+  width:9px;height:9px;
+  background:var(--bam-dk);
+  transform:rotate(45deg);
+}
+
+/* ---------- caveat + footer ---------- */
+.caveat{
+  margin:0 6vw 8vh;
+  border:1px solid rgba(192,69,60,.35);
+  padding:22px 26px;
+  font-size:13.5px;
+  color:var(--dim);
+}
+.caveat b{color:var(--paper)}
+footer{
+  border-top:1px solid var(--line);
+  padding:5vh 6vw 7vh;
+  font-size:12.5px;
+  color:var(--dim2);
+  line-height:2.1;
+}
+footer a{color:var(--bam);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+@media (max-width:820px){
+  .band{grid-template-columns:1fr;gap:18px}
+  .bchar{position:static;display:flex;align-items:baseline;gap:16px;text-align:left}
+  .bchar .big{font-size:44px}
+  .bio-grid,.origin-grid{grid-template-columns:1fr;gap:30px}
+  .vphrase{display:none}
+  .offset{padding-left:0}
+  .hint{position:static;transform:none;display:block;text-align:center;margin-top:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 首屏：攒盒 ============ -->
+<section class="hero" id="top">
+  <div class="hero-grid">
+    <div class="vtitle">五杂俎</div>
+    <div class="boxwrap">
+      <svg viewBox="0 0 460 460" aria-label="五格攒盒">
+        <path class="sector" data-g="tian" d="M 230 100 A 130 130 0 0 1 353.64 189.83 L 283.26 212.70 A 56 56 0 0 0 230 174 Z"/>
+        <path class="sector" data-g="di"  d="M 353.64 189.83 A 130 130 0 0 1 306.41 335.17 L 262.92 275.30 A 56 56 0 0 0 283.26 212.70 Z"/>
+        <path class="sector" data-g="ren" d="M 306.41 335.17 A 130 130 0 0 1 153.59 335.17 L 197.08 275.30 A 56 56 0 0 0 262.92 275.30 Z"/>
+        <path class="sector" data-g="wu"  d="M 153.59 335.17 A 130 130 0 0 1 106.36 189.83 L 176.74 212.70 A 56 56 0 0 0 197.08 275.30 Z"/>
+        <path class="sector" data-g="shi" d="M 106.36 189.83 A 130 130 0 0 1 230 100 L 230 174 A 56 56 0 0 0 176.74 212.70 Z"/>
+        <text class="slabel" x="284" y="156">天</text>
+        <text class="slabel" x="317" y="258">地</text>
+        <text class="slabel" x="230" y="322">人</text>
+        <text class="slabel" x="143" y="258">物</text>
+        <text class="slabel" x="176" y="156">事</text>
+        <circle class="corec" cx="230" cy="230" r="44"/>
+        <text class="coret" x="230" y="230">杂</text>
+        <g class="lid">
+          <circle class="lidface" cx="230" cy="230" r="150"/>
+          <rect class="lidslip" x="150" y="196" width="160" height="68"/>
+          <text class="lidtext" x="235" y="222">五杂俎</text>
+          <text class="lidsmall" x="235" y="248">明 · 谢在杭 撰</text>
+        </g>
+      </svg>
+      <div class="hint">点 盒 开 格</div>
+    </div>
+    <div class="hero-side">
+      <div class="hero-kicker">万历杂家小百科</div>
+      <p>一部按天、地、人、物、事分成五格的笔记，什么都往里放：星象、京师、风水、牡蛎、税监，一共十六卷，约二十五万字。</p>
+      <span class="say">作者谢在杭，万历年间闽人。同乡先达李维桢替他作序，说这书<q class="q2">总九流而出之</q>，当杂家读也好，当儒家读也好。</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 盒中人 ============ -->
+<section class="bio">
+  <div class="wrap">
+    <div class="bio-grid rv">
+      <div>
+        <div class="tag">盒 中 人</div>
+        <div class="bio-name">谢肇淛</div>
+        <div class="bio-zi">字在杭 · 福建长乐人</div>
+        <p style="margin-top:26px">万历年间进士，做过工部都水司的官，所以序里称他<b>水部</b>；外放管过河流、刑名，最后做到广西右布政使。宦辙南北，见闻极杂，正好喂给这部书。</p>
+        <p>他是有名的藏书家，插架极富；又是肯把<b>亲见亲闻</b>写进笔记的人。少年时在长沙官邸亲眼见过彗星，做官时眼看着矿税太监在地方作恶，谈倭患、谈海禁，谈的全是他脚下这个万历。</p>
+        <p>这本笔记最特别的脾气，是<b>疑</b>：星象应验、相面贵贱、风水发福、推背图谶，他一条条翻旧账、找反例。不是不信天，是不信拿天说事的人。</p>
+        <span class="seal">疑 而 后 信</span>
+      </div>
+      <div class="phrase-cell">
+        <div class="vphrase">
+          <q>物相杂故曰文</q>
+          <div class="src">李维桢序中语</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 十六卷骨架 ============ -->
+<section class="skeleton">
+  <div class="wrap">
+    <div class="skel-row rv">
+      <div class="sk"><span class="k">天</span><span class="n">二卷</span><div class="d">星象、历法、灾异，附历代五行怪谈一堆</div></div>
+      <div class="sk"><span class="k">地</span><span class="n">二卷</span><div class="d">建都形势、南北风气、水泉茶味、四夷海道</div></div>
+      <div class="sk"><span class="k">人</span><span class="n">四卷</span><div class="d">形貌寿夭、相术堪舆、性情习气、官场众生</div></div>
+      <div class="sk"><span class="k">物</span><span class="n">四卷</span><div class="d">龙凤鳞介、草木果瓜、纸墨器用，万物定价</div></div>
+      <div class="sk"><span class="k">事</span><span class="n">四卷</span><div class="d">国朝掌故、铨政矿税、倭患河工，当下之事</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 五格 ============ -->
+<section class="bands">
+  <div class="wrap">
+
+    <!-- 天 -->
+    <div class="band" id="tian">
+      <div class="bchar"><span class="big">天</span><span class="sub">格 一</span></div>
+      <div>
+        <div class="bitem rv">
+          <h3>他见过彗星</h3>
+          <p>万历五年十月，一颗异星挂在西南。那年他十来岁，跟父亲住在长沙官邸，亲眼看的。后来张居正夺情、言官挨杖，他在笔记里把星和朝局写在一起，不下断语，只记下时间。</p>
+          <span class="qt"><q>万历丁丑十月，异星见西南方，光芒亘天，时余十余岁，在长沙官邸，亦竟见之。</q><span class="who">天部一 · 卷一</span></span>
+        </div>
+        <div class="bitem rv">
+          <h3>严子陵的脚不该压在帝座上吗</h3>
+          <p>汉光武与严光同榻、客星犯帝座，是流传千年的星象美谈。他不接这个梗，翻出两桩更过分的旧账：皇帝和弄臣同床共寝都多少回了，帝座怎么一点动静没有。</p>
+          <span class="qt"><q>即汉文帝之于邓通，哀帝之于董贤，同卧起者数矣，未闻帝座之有犯也。</q><span class="who">天部一 · 卷一</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 地 -->
+    <div class="band" id="di">
+      <div class="bchar"><span class="big">地</span><span class="sub">格 二</span></div>
+      <div>
+        <div class="proverb rv">
+          <div class="pv"><q>天无时不风，地无处不尘，物无所不有，人无所不为。</q></div>
+          <div class="cap">地部一（卷三）· 引长安谚语</div>
+        </div>
+        <div class="bitem rv">
+          <h3>京师的四种人多</h3>
+          <p>他写万历的北京，不留情面：帝都荟萃的不是五方豪杰，是太监、命妇、娼妓、乞丐。各多过各的对立面，城市就靠这些人撑起来。</p>
+          <span class="qt"><q>燕云只有四种人多：奄竖多于缙绅，妇女多于男子，娼妓多于良家，乞丐多于商贾。</q><span class="who">地部一 · 卷三</span></span>
+        </div>
+        <div class="bitem rv">
+          <h3>靠天喝的茶</h3>
+          <p>福建临海，井水苦咸，没法入口。福州人家的屋顶接着雨水，存进大瓮，专供茶炉；讲究的还要挑梅雨季节的水。喝水这件事，他写了整整几条，认真得可爱。</p>
+          <span class="qt"><q>闽地近海，井泉多咸，人家惟用雨水烹茶，盖取其易致而不臭腐，然须梅雨者佳。</q><span class="who">地部一 · 卷三</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 人 -->
+    <div class="band" id="ren">
+      <div class="bchar"><span class="big">人</span><span class="sub">格 三</span></div>
+      <div>
+        <div class="bitem rv">
+          <h3>重瞳子不管用</h3>
+          <p>舜是重瞳，所以圣人？他把项羽、王莽、李煜这些同样重瞳的人物排成一列：半数不得善终。相书那一套，在他的笔记里挨个过堂。</p>
+          <span class="qt"><q>后世君则项羽、王莽、吕光、李煜，臣则沈约、鱼俱、萧罗、友孜，皆云重瞳，而不克终者过半，相何足据哉？</q><span class="who">人部一 · 卷五</span></span>
+        </div>
+        <div class="bitem story rv">
+          <h3><em>风水先生家的祖坟</em></h3>
+          <p>人格二里有一段最狠的记录。他家一位做过观察的长辈，一辈子以替人择地自负，退官后在西湖边挑了块四面是水的「绝地」盖宅，谁劝都不听；传到孙辈，家产卖尽，宅子改成了宗祠。他白纸黑字记下这件事，不替自家长辈遮羞。</p>
+          <span class="qt"><q>致政归，筑室于西湖之上，面城背水，四面巨浸，人以为绝地，公不听也。传及子孙，贫落日甚，孤丁孑然几斩，竟不能有，鬻为宗祠。</q><span class="who">人部二 · 卷六</span></span>
+          <p style="margin-top:14px">所以他说得那样重：</p>
+          <span class="qt"><q>谓生者之命脉，其权尽制于死者之朽骨，不亦可笑之甚耶？</q><span class="who">人部二 · 卷六</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 物 -->
+    <div class="band" id="wu">
+      <div class="bchar"><span class="big">物</span><span class="sub">格 四</span></div>
+      <div>
+        <div class="bitem rv offset">
+          <h3>物部第一句，先泼冷水</h3>
+          <p>龙再灵，人养得；虎再猛，人关得。他给整部「物」定调的不是博物趣味，是一句冷话：灵与猛，都拴在欲上。</p>
+          <span class="qt"><q>莫灵于龙，人得而豢之；莫猛于虎，人得而槛之。有欲故也。</q><span class="who">物部一 · 卷九</span></span>
+        </div>
+        <div class="bitem rv offset">
+          <h3>牡蛎山</h3>
+          <p>说到吃他就换了个人。闽海四美，他首推牡蛎：成房成山，肉好吃，壳烧灰比石灰还好用。博物笔记写到这个份上，是过日子的写法。</p>
+          <span class="qt"><q>蛎负石作房，累累若山，所谓蚝也。</q><span class="who">物部一 · 卷九</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 事 -->
+    <div class="band" id="shi">
+      <div class="bchar"><span class="big">事</span><span class="sub">格 五</span></div>
+      <div>
+        <div class="bitem rv">
+          <h3>连海瑞也不全捧</h3>
+          <p>海瑞死时只有布被，他敬其清；但海瑞在南京的施政，他把下属受不了的细节也照记。笔下人物两面都有，这是这本笔记的可信之处。</p>
+          <span class="qt"><q>卒之日，布被萧然而已，其清而狷，其天性也。</q><span class="who">事部二 · 卷十四</span></span>
+        </div>
+        <div class="bitem rv">
+          <h3>矿税之祸，谁在分赃</h3>
+          <p>万历末年矿税太监四出，他看得比骂太监更深一层：真正把中人之家逼破的，是投靠太监的本地绅棍。太监未去，这批人先败，账算得清清楚楚。</p>
+          <span class="qt"><q>故天下不怨内使之掊克，而恨此辈深入骨髓也。</q><span class="who">事部三 · 卷十五</span></span>
+        </div>
+        <div class="bitem rv">
+          <h3>倭患的另一半</h3>
+          <p>谈嘉靖倭患，他不喊口号，直接点破生意经：没有沿海商民带路带货，倭船根本靠不了岸。海禁越严，走私越肥，八个字写尽常态，胜过十篇海防论。</p>
+          <span class="qt"><q>我既明往，彼亦潜来。</q><span class="who">地部二 · 卷四</span></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 名由与流传 ============ -->
+<section class="origin">
+  <div class="wrap">
+    <div class="origin-grid rv">
+      <div>
+        <div class="tag">名 由 与 流 传</div>
+        <h2>五色编组，杂而成文</h2>
+        <p class="note">书名取自乐府三言体「五杂俎」。作序的李维桢解释得很老实：五，是天、地、人、物、事五部；杂，是<q>物相杂故曰文</q>的杂。本书库本分十六卷。</p>
+        <p class="note" style="margin-top:14px">序里交代了刊刻缘起：好友潘方凯见了喜欢，不肯让它压在书帐里，赶紧付梓，与天下共宝。一位水部郎官的杂学，就这样靠朋友传了下来。</p>
+      </div>
+      <div>
+        <span class="qt"><q>五杂俎诗三言，盖诗之一体耳，而水部谢在杭著书取名之。</q><span class="who">李维桢 序</span></span>
+        <ul class="flow">
+          <li>万历间成书，同里李维桢作序，潘方凯刻之，是为早本。</li>
+          <li>全书按天地人物事分五部，天、地各二卷，人、物、事各四卷，共十六卷。</li>
+          <li>清代书禁中被列入禁毁书目，流传反而靠抄本与民间刻本续了命。</li>
+          <li>今天读它，最好当一部万历社会的现场记录：官方史书给骨架，它给血肉。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 时代局限 ============ -->
+<div class="caveat">
+  <b>读前须知：</b>书中星占灾异、相人术数、风水发福诸条，仍是十六世纪的认识边界，照录存照，不代表今日之科学结论；涉及倭寇、四夷诸条的表述，亦带有当时士人的时代局限，请以史料眼光辨析观之。
+</div>
+
+<footer>
+  <div>文本来源：殆知阁简体库（子藏笔记《五杂俎》十六卷）· 仓库 <a href="https://github.com/robertsong/daizhige" target="_blank" rel="noopener">daizhige</a></div>
+  <div>本页引文已用脚本与库内文件逐字比对（去标点、归一后核验），通过后方可发布。</div>
+  <div>殆知阁导读 · 第 502 篇（系列总目 mulu.html）</div>
+</footer>
+
+<script>
+(function(){
+  var hero=document.querySelector('.hero');
+  var hint=document.querySelector('.hint');
+  var sectors=document.querySelectorAll('.sector');
+  var order=['tian','di','ren','wu','shi'];
+  function openBox(){
+    if(hero.classList.contains('open'))return false;
+    hero.classList.add('open');
+    hint.textContent='点 格 取 事';
+    order.forEach(function(g,i){
+      var s=document.querySelector('.sector[data-g="'+g+'"]');
+      setTimeout(function(){s.classList.add('lit')},420+i*180);
+    });
+    return true;
+  }
+  sectors.forEach(function(s){
+    s.style.cursor='pointer';
+    s.addEventListener('click',function(){
+      if(openBox())return;
+      var el=document.getElementById(s.getAttribute('data-g'));
+      if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+  var lid=document.querySelector('.lid');
+  lid.addEventListener('click',openBox);
+  var vtitle=document.querySelector('.vtitle');
+  vtitle.style.cursor='pointer';
+  vtitle.addEventListener('click',openBox);
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target)}
+    });
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){obs.observe(el)});
+})();
+</script>
+</body>
+</html>
