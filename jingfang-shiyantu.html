@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一剂知二剂已 · 复诊簿导读</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --bam:#5f9270;
+  --bam-deep:#3d6b4e;
+  --bam-ghost:rgba(95,146,112,.16);
+  --err:#a4573f;
+  --dim:#9c968a;
+  --line:rgba(232,228,220,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"Songti SC","Noto Serif CJK SC","STSong","SimSun",serif;
+  line-height:1.9;
+  letter-spacing:.02em;
+  overflow-x:hidden;
+}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+a{color:var(--bam)}
+q{quotes:none}
+qv{quotes:none;font-style:normal}
+.mono{font-variant-numeric:tabular-nums}
+
+/* 入场 */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+.rv.on{opacity:1;transform:none}
+
+/* kicker */
+.kicker{
+  font-size:13px;letter-spacing:.34em;color:var(--bam);
+  border-left:3px solid var(--bam);padding-left:12px;margin-bottom:18px;
+}
+
+/* 首屏 */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;
+  background:
+    radial-gradient(ellipse 620px 340px at 82% 24%,var(--bam-ghost),transparent 68%),
+    radial-gradient(ellipse 500px 300px at 12% 88%,rgba(232,228,220,.05),transparent 70%);
+}
+.hero-g{display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:center;width:100%}
+.h-title{display:flex;gap:26px;align-items:flex-start}
+.vt{
+  writing-mode:vertical-rl;
+  font-size:clamp(56px,7.4vw,88px);
+  font-weight:700;letter-spacing:.16em;line-height:1.18;
+  color:var(--paper);
+  text-shadow:0 0 34px rgba(95,146,112,.28);
+}
+.vt qv{background:linear-gradient(180deg,var(--paper) 58%,#cfd8cf);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.vside{
+  writing-mode:vertical-rl;
+  font-size:15px;color:var(--dim);letter-spacing:.28em;line-height:2.1;
+  padding-top:10px;border-right:1px solid var(--line);padding-right:16px;
+}
+.h-slip{display:flex;flex-direction:column;align-items:center;gap:14px}
+.slip{
+  position:relative;width:min(430px,100%);min-height:420px;
+  perspective:1200px;cursor:pointer;outline:none;
+}
+.slip .face{
+  position:absolute;inset:0;
+  background:var(--paper);color:#26241f;
+  border-radius:4px;
+  padding:30px 30px 24px;
+  box-shadow:0 24px 60px rgba(0,0,0,.5);
+  backface-visibility:hidden;
+  transition:transform .7s cubic-bezier(.2,.7,.2,1);
+  display:flex;flex-direction:column;
+}
+.slip .face::before{
+  content:"";position:absolute;inset:10px;
+  border:1px solid rgba(38,36,31,.22);border-radius:2px;pointer-events:none;
+}
+.slip .f-back{transform:rotateY(180deg)}
+.slip.flip .f-front{transform:rotateY(180deg)}
+.slip.flip .f-back{transform:rotateY(0deg)}
+.s-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #26241f;padding-bottom:10px;margin-bottom:18px}
+.s-ti{font-size:26px;font-weight:700;letter-spacing:.3em}
+.s-date{font-size:14px;color:#5b574d}
+.s-ma{font-size:17px;line-height:2.2;text-align:justify;display:block}
+.s-ma b{color:var(--bam-deep)}
+.s-drugs{
+  margin-top:auto;border-top:1px dashed rgba(38,36,31,.4);padding-top:16px;
+  font-size:19px;letter-spacing:.12em;line-height:2;
+}
+.s-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:14px}
+.s-dots{font-size:12px;color:#5b574d;letter-spacing:.1em}
+.stamp{
+  width:74px;height:74px;border-radius:50%;
+  border:3px solid var(--bam-deep);color:var(--bam-deep);
+  background:transparent;font-family:inherit;font-size:20px;font-weight:700;
+  letter-spacing:.08em;line-height:1.3;
+  transform:rotate(-10deg);
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.slip.flip .stamp{display:none}
+.stamp:active{transform:rotate(-10deg) scale(.9)}
+.f-back .b-lab{font-size:13px;letter-spacing:.3em;color:var(--bam-deep);margin-bottom:12px}
+.f-back q{display:block;font-size:16px;line-height:2.1;margin-bottom:12px}
+.b-cap{margin-top:auto;font-size:12px;color:#8a857a;text-align:right}
+.hint{font-size:13px;color:var(--dim);letter-spacing:.14em}
+.scroll-cue{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  font-size:12px;letter-spacing:.4em;color:var(--dim);
+  animation:cue 2.4s ease-in-out infinite;
+}
+@keyframes cue{0%,100%{opacity:.35;transform:translate(-50%,0)}50%{opacity:1;transform:translate(-50%,8px)}}
+
+/* 通用屏 */
+.sec{padding:110px 0}
+.sec.alt{background:rgba(232,228,220,.03)}
+h2{font-size:clamp(28px,3.6vw,40px);font-weight:700;letter-spacing:.06em;margin-bottom:14px}
+.lead{color:var(--dim);max-width:640px;margin-bottom:48px;font-size:16px}
+.lead b{color:var(--paper)}
+
+/* S1 三场大病 */
+.bing-g{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.bing{position:relative;min-height:430px;perspective:1100px;cursor:pointer;outline:none}
+.bing .bf,.bing .bb{
+  position:absolute;inset:0;backface-visibility:hidden;
+  background:rgba(232,228,220,.05);
+  border:1px solid var(--line);border-radius:6px;
+  padding:24px 22px;display:flex;flex-direction:column;gap:14px;
+  transition:transform .7s cubic-bezier(.2,.7,.2,1),border-color .3s;
+}
+.bing .bb{transform:rotateY(180deg);background:rgba(95,146,112,.1);border-color:rgba(95,146,112,.4)}
+.bing.flip .bf{transform:rotateY(180deg)}
+.bing.flip .bb{transform:rotateY(0)}
+.bing:hover .bf,.bing:focus-visible .bf{border-color:rgba(95,146,112,.5)}
+.b-k{font-size:13px;letter-spacing:.26em;color:var(--bam)}
+.bing .bb .b-k{color:var(--paper)}
+.bing q{font-size:15px;line-height:2.15;color:var(--paper);opacity:.94}
+.bing q.small{font-size:13.5px;opacity:.72}
+.stamp-err{
+  align-self:flex-start;margin-top:auto;
+  width:58px;height:58px;border-radius:50%;
+  border:3px solid var(--err);color:var(--err);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;font-weight:700;transform:rotate(-12deg);
+}
+.stamp-ok{
+  align-self:flex-start;margin-top:auto;
+  width:58px;height:58px;border-radius:50%;
+  border:3px solid var(--bam);color:var(--bam);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;font-weight:700;transform:rotate(-12deg);
+}
+.flip-hint{position:absolute;right:14px;bottom:10px;font-size:11px;color:var(--dim);letter-spacing:.2em}
+.bing.solo{cursor:default}
+.pull{
+  margin:56px auto 0;max-width:760px;text-align:center;
+  font-size:clamp(20px,2.6vw,27px);line-height:2;
+  color:var(--paper);padding:34px 20px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.pull .who{display:block;margin-top:14px;font-size:13px;color:var(--bam);letter-spacing:.3em}
+
+/* S2 成书 */
+.cheng-g{display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:start}
+.big-q{
+  background:rgba(232,228,220,.04);border-left:3px solid var(--bam);
+  padding:28px 26px;font-size:18px;line-height:2.2;border-radius:0 6px 6px 0;
+}
+.q-card{
+  border:1px solid var(--line);border-radius:6px;padding:24px 24px;margin-bottom:20px;
+  font-size:15px;line-height:2.15;background:rgba(232,228,220,.02);
+}
+.q-card .c-lab{font-size:12px;letter-spacing:.26em;color:var(--bam);display:block;margin-bottom:10px}
+.q-note{font-size:13.5px;color:var(--dim);line-height:2;margin-top:10px}
+
+/* S3 标本 */
+.bb-g{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
+.bb-g .big-q{font-size:16px}
+.chip{
+  display:inline-block;font-size:12px;letter-spacing:.16em;color:var(--bam);
+  border:1px solid rgba(95,146,112,.5);border-radius:999px;
+  padding:3px 12px;margin:6px 8px 0 0;
+}
+.chip-w{color:var(--err);border-color:rgba(164,87,63,.55)}
+
+/* S4 复诊簿 */
+.ledger{border-top:2px solid var(--paper)}
+.lrow{
+  width:100%;background:none;border:none;border-bottom:1px solid var(--line);
+  color:var(--paper);font-family:inherit;cursor:pointer;
+  display:grid;grid-template-columns:56px 130px 1fr 150px 90px;
+  gap:14px;align-items:center;text-align:left;
+  padding:20px 6px;font-size:17px;transition:background .25s;
+}
+.lrow:hover,.lrow:focus-visible{background:rgba(232,228,220,.05);outline:none}
+.l-no{color:var(--bam);font-size:15px;letter-spacing:.1em}
+.l-name{font-weight:700;font-size:19px;letter-spacing:.08em}
+.l-zheng{color:var(--dim);font-size:14.5px}
+.l-eff{color:var(--bam);font-size:14.5px;letter-spacing:.1em;text-align:right}
+.l-x{justify-self:end;color:var(--dim);font-size:20px;transition:transform .35s}
+.lrow[aria-expanded="true"] .l-x{transform:rotate(45deg);color:var(--bam)}
+.l-body{
+  overflow:hidden;max-height:0;transition:max-height .5s ease;
+  border-bottom:1px solid var(--line);
+}
+.l-in{padding:8px 6px 30px 76px;display:grid;grid-template-columns:1.2fr 1fr;gap:26px}
+.l-body q{display:block;font-size:15px;line-height:2.15;opacity:.95}
+.l-in .col2{font-size:14px;color:var(--dim);line-height:2.1;border-left:1px solid var(--line);padding-left:22px}
+.l-in .col2 .c-lab{font-size:12px;letter-spacing:.26em;color:var(--bam);display:block;margin-bottom:8px}
+.l-dots{font-size:12px;color:var(--dim)}
+
+/* S5 王女特写 */
+.wang-g{display:grid;grid-template-columns:170px 1fr;gap:38px;align-items:start}
+.wtabs{display:flex;flex-direction:column;gap:10px}
+.wtab{
+  background:none;border:1px solid var(--line);border-radius:6px;color:var(--dim);
+  font-family:inherit;font-size:16px;padding:14px 10px;cursor:pointer;text-align:center;
+  letter-spacing:.16em;transition:all .3s;
+}
+.wtab.act{background:var(--bam);border-color:var(--bam);color:#fff;font-weight:700}
+.wpan{display:none}
+.wpan.act{display:block;animation:fadein .5s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.wpan q{display:block;font-size:16px;line-height:2.2;margin-bottom:18px;opacity:.95}
+.wpan .w-note{font-size:13.5px;color:var(--dim);border-left:2px solid var(--bam);padding-left:14px;line-height:2.05;margin-top:6px}
+
+/* S6 一剂知 */
+.thesis{text-align:center}
+.thesis-board{
+  background:var(--paper);color:#26241f;border-radius:6px;
+  max-width:820px;margin:0 auto;padding:52px 46px;
+  box-shadow:0 24px 60px rgba(0,0,0,.45);
+  position:relative;
+}
+.thesis-board::before{content:"";position:absolute;inset:12px;border:1px solid rgba(38,36,31,.22);border-radius:3px;pointer-events:none}
+.thesis-board .t-big{font-size:clamp(22px,3vw,30px);line-height:2.1;font-weight:700}
+.t-sub{margin-top:20px;font-size:14px;color:#5b574d;letter-spacing:.24em}
+.twin{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:820px;margin:26px auto 0;text-align:left}
+.twin .q-card{margin-bottom:0}
+
+/* S7 失手 */
+.dark{background:#131311;position:relative;
+  background-image:radial-gradient(ellipse 560px 320px at 78% 30%,rgba(164,87,63,.1),transparent 70%);}
+.fail-g{display:grid;grid-template-columns:1fr auto;gap:52px;align-items:start}
+.fail-left{padding-top:8px}
+.fail-left q{display:block;font-size:16px;line-height:2.2;opacity:.92;margin-bottom:20px}
+.fail-left .q-note{line-height:2.1}
+.fail-v{
+  writing-mode:vertical-rl;font-size:clamp(30px,4vw,42px);line-height:1.9;
+  letter-spacing:.2em;color:var(--paper);
+  border-right:1px solid rgba(164,87,63,.5);padding-right:26px;
+  height:520px;max-width:620px;
+}
+
+/* S8 收梢 */
+.coda{padding:120px 0 60px;text-align:center}
+.luo{
+  writing-mode:vertical-rl;margin:0 auto 40px;
+  font-size:clamp(20px,2.6vw,26px);letter-spacing:.3em;line-height:2.4;
+  color:var(--paper);height:300px;
+}
+.seal{
+  width:92px;height:92px;margin:0 auto;border-radius:10px;
+  border:3px solid var(--bam);color:var(--bam);
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-weight:700;letter-spacing:.06em;
+  transform:rotate(-6deg);line-height:1.15;
+}
+.bookout{
+  max-width:640px;margin:56px auto 0;font-size:14.5px;color:var(--dim);
+  border:1px solid var(--line);border-radius:6px;padding:22px 24px;text-align:left;line-height:2.1;
+}
+.bookout b{color:var(--bam)}
+
+footer{border-top:1px solid var(--line);padding:44px 0 60px;font-size:13px;color:var(--dim);line-height:2.2}
+footer b{color:var(--paper)}
+
+@media (max-width:860px){
+  .hero-g{grid-template-columns:1fr;gap:40px;padding-top:70px}
+  .h-title{justify-content:center}
+  .bing-g{grid-template-columns:1fr}
+  .bing{min-height:0}
+  .bing .bf,.bing .bb{position:relative;min-height:360px}
+  .bing .bb{position:absolute;inset:0;min-height:0}
+  .cheng-g,.bb-g,.twin,.fail-g{grid-template-columns:1fr}
+  .fail-v{border-right:none;border-top:1px solid rgba(164,87,63,.5);padding:26px 0 0;height:auto;max-height:460px;max-width:100%;font-size:26px}
+  .lrow{grid-template-columns:40px 90px 1fr 70px;font-size:15px}
+  .l-zheng{display:none}
+  .l-in{grid-template-columns:1fr;padding-left:46px}
+  .wang-g{grid-template-columns:1fr}
+  .wtabs{flex-direction:row}
+  .sec{padding:80px 0}
+}
+</style>
+</head>
+<body>
+
+<!-- 首屏 -->
+<section class="hero">
+  <div class="wrap hero-g">
+    <div class="h-title rv">
+      <h1 class="vt"><qv>经方实验录</qv></h1>
+      <p class="vside">江阴曹家达原诊<br>门人姜佐景辑按<br>民国丙子年成书</p>
+    </div>
+    <div class="h-slip rv">
+      <div class="slip" id="slip" tabindex="0" role="button" aria-pressed="false" aria-label="处方笺，点击翻面">
+        <div class="face f-front">
+          <div class="s-head"><span class="s-ti">处方笺</span><span class="s-date">开卷第一纸</span></div>
+          <q class="s-ma">汤左二月十八日太阳，中风，发热，有汗，恶风，头痛，鼻塞，脉浮而缓，桂枝汤主之</q>
+          <div class="s-drugs"><q>川桂枝三钱生白芍三钱生甘草钱半生姜三片红枣六枚</q></div>
+          <div class="s-foot">
+            <span class="s-dots">复诊 一剂<br>再剂</span>
+            <button class="stamp" type="button" aria-label="翻看大论出处">经方</button>
+          </div>
+        </div>
+        <div class="face f-back">
+          <p class="b-lab">大论出处</p>
+          <q>太阳病，发热，汗出，恶风，脉缓者，名曰中风</q>
+          <q>太阳病，头痛，发热，汗出，恶风，桂枝汤主之</q>
+          <p class="b-cap">再点一次，翻回正面</p>
+        </div>
+      </div>
+      <p class="hint">点处方笺翻面，看仲景原文。</p>
+    </div>
+  </div>
+  <div class="scroll-cue">往下 先看他自己生的病</div>
+</section>
+
+<!-- 一 三场大病 -->
+<section class="sec" id="xu">
+  <div class="wrap">
+    <p class="kicker rv">原序｜三场大病</p>
+    <h2 class="rv">三场大病，换出一个医者</h2>
+    <p class="lead rv">曹颖甫本是读书种子，自己没想行医。十六岁那年<b>父亲</b>大病一场，被时医用寒凉药推到死界边上；后来他上金陵赶考，<b>自己</b>又病倒在路上，同样被时方耽误。直到科举废止、父亲故去，他才回头把仲景那两部书从头读起。这本医案，是拿三条命换来的一门手艺。</p>
+    <div class="bing-g">
+      <div class="bing rv" tabindex="0" role="button" aria-pressed="false" aria-label="父病案，点击翻面">
+        <div class="bf">
+          <p class="b-k">其一｜父病洞泄</p>
+          <q>年十六，会先君子病洞泄寒中，医者用芩连十余剂，病益不支，汗凝若膏，肤冷若石，魂恍恍而欲飞，体摇摇而若堕，一夕数惊，去死者盖无几矣</q>
+          <span class="stamp-err">误</span>
+          <span class="flip-hint">翻面</span>
+        </div>
+        <div class="bb">
+          <p class="b-k">赵云泉至</p>
+          <q>最后赵云泉先生来，投以大剂附子理中加吴萸丁香之属，甫进一剂，汗敛体温，泄止神定，累进之病乃告痊</q>
+          <q class="small">今年太岁在辰，为湿土司天，又当长夏之令，累日阴雨，天人交困，证多寒湿，时医不读《伤寒·太阴篇》，何足与论活人方治哉</q>
+          <span class="stamp-ok">起</span>
+        </div>
+      </div>
+      <div class="bing rv" tabindex="0" role="button" aria-pressed="false" aria-label="自病案，点击翻面">
+        <div class="bf">
+          <p class="b-k">其二｜自病金陵途中</p>
+          <q>偕行者略知医方，日以藿香、佩兰进之，汗出而热不除，抵金陵，病益殆</q>
+          <span class="stamp-err">误</span>
+          <span class="flip-hint">翻面</span>
+        </div>
+        <div class="bb">
+          <p class="b-k">表伯陈葆厚</p>
+          <q>因向药肆中购荷叶露花大瓶，及哀家梨十余枚，曰：渴即饮之，饥即啖之</q>
+          <q class="small">问其方，则曰：桂枝白虎汤也。予至是，全体舒畅，呼粥尽二碗，安眠达旦，非复病夫之故态矣</q>
+          <span class="stamp-ok">起</span>
+        </div>
+      </div>
+      <div class="bing solo rv">
+        <div class="bf">
+          <p class="b-k">其三｜转行</p>
+          <q>自甲辰礼闱后，诏罢科举，家君子亦于是年弃养，然后流览《伤寒》《金匮》全文，予年已三十有八矣</q>
+          <p class="q-note">科场一废，家严一故，三十八岁才正式回头看仲景的书。半生举业，至此折账。</p>
+          <span class="stamp-ok">学</span>
+        </div>
+      </div>
+    </div>
+    <blockquote class="pull rv">
+      <q>予自闻此语，然后知仲景方治果足脱人于险也</q>
+      <span class="who">曹颖甫自述学医缘起</span>
+    </blockquote>
+  </div>
+</section>
+
+<!-- 二 成书 -->
+<section class="sec alt" id="chengshu">
+  <div class="wrap">
+    <p class="kicker rv">成书｜甲戌至丙子</p>
+    <h2 class="rv">门生拾账，四年成集</h2>
+    <p class="lead rv">曹颖甫自己「性疏懒、耽吟咏」，治好的病随手就忘。甲戌年，门生姜佐景开始替他把散落的脉案一张张拾起来，配上按语解说，前后四年，攒成一部书。案是曹家的手笔，账是姜生记的。</p>
+    <div class="cheng-g">
+      <div class="big-q rv"><q>甲戌年，姜生佐景来，掇拾方案，佐以解说，名之曰《经方实验录》，数载中，裒然成集</q>
+        <p class="q-note">先录一案，再缀一段按语讲理，是这本书的基本格式，也是它比寻常医案好读的地方。</p>
+      </div>
+      <div class="rv">
+        <div class="q-card">
+          <span class="c-lab">手上功夫何来</span>
+          <q>用十枣汤，则自母氏病痰饮始；用甘草粉蜜汤，则自家婢病蛔厥始；用大黄牡丹汤，则自若华母潘氏病肠痈始。莫不随时取效，其应如响</q>
+        </div>
+        <div class="q-card">
+          <span class="c-lab">一句不客气的比较</span>
+          <q>然则，仲景之书，岂金元四家所能窥见万一哉</q>
+        </div>
+        <p class="q-note">母亲、家婢、亲眷：他最早的几个方，都是先用在自家人身上试出手感的。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 三 标本 -->
+<section class="sec" id="biaoben">
+  <div class="wrap">
+    <p class="kicker rv">标本｜桂枝汤案</p>
+    <h2 class="rv">全书第一纸，就是一张标准的方</h2>
+    <p class="lead rv">开卷第一案，病家只记两个字：汤左。脉案一句话，药味五行，完事。这是曹门的记案格式，也是全书的度量衡：后面几十案，都拿这一纸作标尺。</p>
+    <div class="bb-g">
+      <div class="rv">
+        <div class="big-q"><q>桂技汤一方，予用之而取效者屡矣。尝于高长顺先生家，治其子女，一方治二人，皆愈</q></div>
+        <p class="q-note">一方同治姐弟两人皆愈。库本首字作「桂技」，形讹照录，正是这批医案从手稿直接排印的痕迹。</p>
+        <span class="chip chip-w">校字｜桂技汤照录</span><span class="chip chip-w">校字｜佳枝汤照录</span><span class="chip chip-w">校字｜三饯照录</span>
+      </div>
+      <div class="q-card rv">
+        <span class="c-lab">按语里的一句妙文</span>
+        <q>然则佳枝汤实为夏日好冷饮而得表证者之第一效方，又岂惟治冬日北地之伤寒而已哉</q>
+        <p class="q-note">姜佐景拿夏天贪凉吃出表证的病人反问：谁说桂枝汤只能治冬天北方的伤寒？库本「佳枝」二字照录。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 四 复诊簿 -->
+<section class="sec alt" id="fucai">
+  <div class="wrap">
+    <p class="kicker rv">复诊簿｜四案</p>
+    <h2 class="rv">疗效写在案尾，几剂就是几剂</h2>
+    <p class="lead rv">曹门记案有一样好处：<b>不许含糊</b>。每案案尾必记效果，几剂，几愈，谁注的，一笔一笔记着。点开一行，看脉案、看方、看结账。</p>
+    <div class="ledger rv">
+      <button class="lrow" aria-expanded="false" aria-controls="lb1">
+        <span class="l-no">其一</span><span class="l-name">方左</span>
+        <span class="l-zheng">八日不便、阙上痛、脉实</span>
+        <span class="l-eff">一剂顿宽<br>再剂即愈</span><span class="l-x">+</span>
+      </button>
+      <div class="l-body" id="lb1"><div class="l-in">
+        <div><q>病延二候，阙上痛，渴饮，大便八日不行，脉实，虽今见心痛彻背，要以大承气汤主治</q></div>
+        <div class="col2"><span class="c-lab">拙巢注</span><q>下后胸隔顿宽，惟余邪未尽，头尚晕，乃去硝黄，再剂投之，即愈</q></div>
+      </div></div>
+
+      <button class="lrow" aria-expanded="false" aria-controls="lb2">
+        <span class="l-no">其二</span><span class="l-name">若华</span>
+        <span class="l-zheng">满头剧痛，恶见火光</span>
+        <span class="l-eff">约三小时<br>一下而除</span><span class="l-x">+</span>
+      </button>
+      <div class="l-body" id="lb2"><div class="l-in">
+        <div><q>若华忽病头痛，干呕，服吴茱萸汤，痛益甚，眠则稍轻，坐则满头剧痛，咳嗽引腹中痛，按之，则益不可忍，身无热，脉微弱，但恶见火光，口中燥</q><q>及其身无热，脉微弱之时，而急下之，所谓釜底抽薪也。若身有大热，脉大而实，然后论治，晚矣</q></div>
+        <div class="col2"><span class="c-lab">佐景按</span><q>若华女士服本方后约三小时，即下，所下非燥矢，盖水浊也，而恙乃悉除，不须再诊</q><p class="q-note">头痛治肠，上病下取，这一案是姜佐景当日随师在侧，亲眼看着下药收账的。</p></div>
+      </div></div>
+
+      <button class="lrow" aria-expanded="false" aria-controls="lb3">
+        <span class="l-no">其三</span><span class="l-name">姚建</span>
+        <span class="l-zheng">执业律师，脉有歇止</span>
+        <span class="l-eff">十余剂<br>而瘥</span><span class="l-x">+</span>
+      </button>
+      <div class="l-body" id="lb3"><div class="l-in">
+        <div><q>律师姚建现住小西门外大兴街，尝来请诊，眠食无恙，按其脉结代，约十余至一停，或二三十至一停不等，又以事繁，心常跳跃不宁，此仲师所谓心动悸，脉结代，炙甘草汤主之之证是也，因书经方与之，服十余剂而瘥</q></div>
+        <div class="col2"><span class="c-lab">曹颖甫曰</span><q>代之为言，贷也，恒产告罄，而称贷以为生，其能久乎</q><p class="q-note">把「代」脉说成借债过日子：恒产告罄，靠称贷为生，能长久么。医案里的比喻也带法官气。</p></div>
+      </div></div>
+
+      <button class="lrow" aria-expanded="false" aria-controls="lb4">
+        <span class="l-no">其四</span><span class="l-name">顾右</span>
+        <span class="l-zheng">产后，经行必腹痛</span>
+        <span class="l-eff">一剂痛止<br>连服全愈</span><span class="l-x">+</span>
+      </button>
+      <div class="l-body" id="lb4"><div class="l-in">
+        <div><q>顾右十月二十六日产后，月事每四十日一行，饭后则心下胀痛，日来行经，腹及少腹俱痛，痛必大下，下后忽然中止，或至明日午后再痛，痛则经水又来，又中止，至明日却又来又去，两脉俱弦，此为肝胆乘脾藏之虚，宜小建中加柴芩</q></div>
+        <div class="col2"><span class="c-lab">拙巢注</span><q>一剂痛止，经停，病家因连服二剂，全愈</q></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 五 王女特写 -->
+<section class="sec" id="wangnv">
+  <div class="wrap">
+    <p class="kicker rv">特写｜王女士一案</p>
+    <h2 class="rv">全书写得最细的一笔账</h2>
+    <p class="lead rv">十六岁少女，经停九个月，咳了四个月，中西医都看过，越看病势越沉。这一案姜佐景从初诊记到三诊，连药铺伙计的一句笑话都记了进去。</p>
+    <div class="wang-g rv">
+      <div class="wtabs" role="tablist">
+        <button class="wtab act" data-p="w1" role="tab" aria-selected="true">初诊</button>
+        <button class="wtab" data-p="w2" role="tab" aria-selected="false">二诊</button>
+        <button class="wtab" data-p="w3" role="tab" aria-selected="false">三诊</button>
+      </div>
+      <div>
+        <div class="wpan act" id="w1" role="tabpanel">
+          <q>王女士初诊经停九月，咳呛四月，屡医未效</q>
+          <q>诘其所以，答谓多进果品所致</q>
+          <q>每分钟得一百四十余至，合常人之脉搏恰强二倍</q>
+          <p class="w-note">少女自答：果子吃多了。脉一分钟跳一百四十多下，是常人的两倍，中西医都收过诊金，病势照旧往上走。姜佐景笔下，这就是流俗口中的「干血痨」。</p>
+        </div>
+        <div class="wpan" id="w2" role="tabpanel">
+          <q>病家持此方笺以购药，药铺中人又笑曰糖可以为药，此医可谓幽默矣</q>
+          <p class="w-note">方里用「粽子糖」代替入药的饴糖，药铺伙计笑出了声。三日后复诊，这一笑变成了账本里的一行。</p>
+        </div>
+        <div class="wpan" id="w3" role="tabpanel">
+          <q>越三日，病者来覆诊，喜出望外，欣然告谢</q>
+          <q>吾初每夜稍稍动作，即觉喘息不胜，自服前方三小时后，喘息即定，虽略略行动，无损矣。三服之后，恙乃大减。向吾进饭半盅，今已加至一全盅矣</q>
+          <p class="w-note">病家自己的话最要紧：从前动一动就喘，服药三小时喘定；饭量从半盅到一全盅。三诊那日，气色又爽利了一层。这场账，从死界边上往回记。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 六 一剂知 -->
+<section class="sec thesis" id="yiji">
+  <div class="wrap">
+    <p class="kicker rv" style="text-align:left">立论｜一剂知二剂已</p>
+    <h2 class="rv">一剂知二剂已</h2>
+    <p class="lead rv" style="text-align:left">这是姜佐景替老师下的断语，口气大得吓人，却押着整个复诊簿作保：方证对上，一剂见效，二剂收工，本是寻常事。</p>
+    <div class="thesis-board rv">
+      <q class="t-big">凡仲圣所称某某汤主之云者，此皆一剂知，二剂已之方也，倘能药量适合，则一帖愈病，原属平淡无奇之事，安足怪者</q>
+      <p class="t-sub">姜佐景按语</p>
+    </div>
+    <div class="twin">
+      <div class="q-card rv"><span class="c-lab">底账</span><q>吾师善用诸承气汤，历年治阳明实证，十九全愈</q></div>
+      <div class="q-card rv"><span class="c-lab">药量的秘密</span><q>吾师之用量，大抵为原方之什一，例如桂枝、芍药原作三两者，师常用三钱是也。余视证之较轻者，病之可疑者，更减半用之，例如桂、芍各用钱半是也。以此为准，利多弊少</q></div>
+    </div>
+  </div>
+</section>
+
+<!-- 七 失手 -->
+<section class="sec dark" id="shishou">
+  <div class="wrap">
+    <p class="kicker rv">失手｜阳明不起</p>
+    <h2 class="rv">这本簿子里也有死人</h2>
+    <div class="fail-g">
+      <div class="fail-left rv">
+        <q>壮热，证属阳明，予调胃承气汤</q>
+        <q>故治若此之病，理当医者不离病人，一医之不足恃，会数医而共图之，随脉证之传变，作迅捷之处置</q>
+        <p class="q-note">药下过了，脉反大，阳脱于上，人没有救回来。曹、姜两人不讳言失败，败因照写，一句推托也没有。全书最有分量的，反而是这几行。</p>
+      </div>
+      <div class="fail-v rv"><q>此证卒以不起，大约以下后脉大，阳气外张。与前所治之甘姓相似，盖阴从下竭，阳从上脱，未有不死者也</q></div>
+    </div>
+  </div>
+</section>
+
+<!-- 八 收梢 -->
+<section class="sec coda">
+  <div class="wrap">
+    <div class="luo rv"><q>丙子立秋后二日，江阴曹家达序于上海寓斋</q></div>
+    <div class="seal rv">拙巢</div>
+    <div class="bookout rv">
+      <b>书外一笔</b>：落款两年后，八一三沪战起，曹颖甫归返江阴，据史载拒受敌伪之事，遇害，年逾七十。一部教人救人的书，作者死在没得救的年月。
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    文本来源:殆知阁古代文献简体库(医藏,<qv>经方实验录</qv>),民国曹颖甫原诊、姜佐景辑按,去空白约九万五千字。仓库:<a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener"><b>daizhige-daodu</b></a><br>
+    本篇引文经脚本自库本锚点切片生成,逐字比对通过;库本「桂技汤」「佳枝汤」「三饯」「搪泄」等形讹均照录立此存照。源码:<a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">github.com/robertsong2000/daizhige-daodu</a><br>
+    时代局限提醒:书中所载汤方药量为历史文献记录,中医辨证与现代医学诊断体系不同,所记个案疗效不可复制推广,切勿照方仿用;医案中「干血痨」等当日病名与现代医学概念不对应;对时方温病诸家的贬语亦存当日门户之争,照录不代今人立论。
+  </div>
+</footer>
+
+<script>
+(function(){
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); }
+    });
+  },{threshold:.14});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  var slip = document.getElementById('slip');
+  function flipSlip(){
+    var f = slip.classList.toggle('flip');
+    slip.setAttribute('aria-pressed', f ? 'true' : 'false');
+  }
+  slip.addEventListener('click', flipSlip);
+  slip.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); flipSlip(); }
+  });
+
+  document.querySelectorAll('.bing:not(.solo)').forEach(function(c){
+    function f(){
+      var v = c.classList.toggle('flip');
+      c.setAttribute('aria-pressed', v ? 'true' : 'false');
+    }
+    c.addEventListener('click', f);
+    c.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); f(); }
+    });
+  });
+
+  document.querySelectorAll('.lrow').forEach(function(r){
+    r.addEventListener('click', function(){
+      var body = document.getElementById(r.getAttribute('aria-controls'));
+      var open = r.getAttribute('aria-expanded') === 'true';
+      if(open){
+        r.setAttribute('aria-expanded','false');
+        body.style.maxHeight = '0px';
+      } else {
+        r.setAttribute('aria-expanded','true');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
+  });
+
+  var tabs = document.querySelectorAll('.wtab');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(x){
+        x.classList.remove('act'); x.setAttribute('aria-selected','false');
+      });
+      t.classList.add('act'); t.setAttribute('aria-selected','true');
+      document.querySelectorAll('.wpan').forEach(function(p){ p.classList.remove('act'); });
+      document.getElementById(t.getAttribute('data-p')).classList.add('act');
+    });
+  });
+})();
+</script>
+</body>
+</html>
