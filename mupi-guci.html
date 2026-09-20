@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>木皮鼓词导读 · 捶皮书场</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #242320;
+    --paper: #e8e4dc; --dim: #a39e93; --faint: #6e6a61;
+    --qing: #5e8fbb; --qing-dim: rgba(94,143,187,.34);
+    --zhu: #c0453c;
+    --hair: rgba(232,228,220,.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, "PingFang SC", monospace; }
+  a { color: var(--qing); text-decoration: none; }
+  q { quotes: none; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 26px; }
+
+  /* ============ hero：书场 ============ */
+  .hero { min-height: 100dvh; display: grid; grid-template-columns: 1fr auto; align-items: stretch; position: relative; }
+  .stage {
+    position: relative; display: grid; place-items: center; cursor: pointer;
+    background:
+      radial-gradient(ellipse 62% 46% at 46% 58%, rgba(94,143,187,.10), transparent 68%),
+      radial-gradient(ellipse 90% 60% at 50% 110%, rgba(0,0,0,.55), transparent 60%);
+    border-right: 1px solid var(--hair);
+    overflow: hidden;
+  }
+  .stage .floor {
+    position: absolute; left: 10%; right: 10%; bottom: 19%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--hair) 22%, var(--hair) 78%, transparent);
+  }
+  .gavelbox { position: relative; z-index: 2; text-align: center; }
+  .gavelbox svg { width: min(320px, 58vw); display: block; margin: 0 auto; }
+  .gavel-wood { fill: none; stroke: var(--paper); stroke-width: 2.2; }
+  .gavel-grain { stroke: var(--faint); stroke-width: 1.2; fill: none; }
+  .stage.struck .gavel-swing { transform-origin: 128px 96px; animation: swing .42s ease-out; }
+  @keyframes swing {
+    0% { transform: rotate(0deg); }
+    30% { transform: rotate(-24deg) translateY(14px); }
+    52% { transform: rotate(4deg); }
+    100% { transform: rotate(0deg); }
+  }
+  .stage.struck { animation: shake .42s ease-out; }
+  @keyframes shake {
+    0%,100% { transform: translate(0,0); }
+    30% { transform: translate(-3px,2px); }
+    55% { transform: translate(2px,-2px); }
+    78% { transform: translate(-1px,1px); }
+  }
+  .flash {
+    position: absolute; inset: 0; background: rgba(232,228,220,.85);
+    opacity: 0; pointer-events: none; z-index: 3;
+  }
+  .stage.struck .flash { animation: flash .5s ease-out; }
+  @keyframes flash { 0% { opacity: .5; } 100% { opacity: 0; } }
+  .pa {
+    position: absolute; left: 50%; top: 66%; z-index: 4; transform: translateX(-50%);
+    font-size: 40px; font-weight: 700; letter-spacing: .1em; color: var(--qing);
+    opacity: 0; pointer-events: none;
+  }
+  .stage.struck .pa { animation: parise .9s ease-out; }
+  @keyframes parise {
+    0% { opacity: 0; transform: translateX(-50%) scale(.6); }
+    22% { opacity: 1; transform: translateX(-50%) scale(1.15); }
+    100% { opacity: 0; transform: translateX(-50%) scale(1.4) translateY(-26px); }
+  }
+  .gavel-hint { margin-top: 20px; font-size: 13px; color: var(--faint); letter-spacing: .34em; }
+  .stage.struck .gavel-hint { color: var(--dim); }
+
+  .plate { width: min(46%, 430px); display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: 64px 42px; position: relative; }
+  .kicker { font-size: 13px; letter-spacing: .4em; color: var(--faint); }
+  .hgroup { display: flex; gap: 26px; align-items: flex-start; }
+  h1.vt {
+    writing-mode: vertical-rl; text-orientation: upright; height: max-content;
+    font-size: clamp(30px, 4.6vh, 44px); font-weight: 700; letter-spacing: .16em; line-height: 1.22;
+  }
+  .hside { display: flex; flex-direction: column; gap: 14px; padding-top: 6px; }
+  .author { writing-mode: vertical-rl; text-orientation: upright; font-size: 15px; color: var(--dim); letter-spacing: .3em; height: max-content; }
+  .seal { width: 64px; height: 64px; }
+  .lead { font-size: 15.5px; color: var(--dim); max-width: 30em; }
+  .lead em { font-style: normal; color: var(--paper); }
+  .opening { display: none; border-left: 2px solid var(--qing); padding: 4px 0 4px 18px; }
+  .opening.on { display: block; }
+  .opening q { display: block; font-size: 16.5px; color: var(--paper); }
+  .opening q + q { margin-top: 8px; color: var(--dim); }
+  .hintline { font-size: 13px; color: var(--faint); }
+  .hintline b { color: var(--qing); font-weight: 400; letter-spacing: .2em; }
+  .hero.struck .lead { display: none; }
+
+  /* ============ 场次公共 ============ */
+  section.sec { border-top: 1px solid var(--hair); padding: 88px 0 72px; position: relative; }
+  .shead { display: flex; align-items: baseline; gap: 22px; margin-bottom: 14px; }
+  .qian {
+    font-size: 12px; letter-spacing: .3em; color: var(--qing);
+    border: 1px solid var(--qing-dim); padding: 5px 12px 5px 15px; white-space: nowrap;
+  }
+  .shead h2 { font-size: clamp(24px, 3.4vw, 32px); font-weight: 700; letter-spacing: .14em; }
+  .slead { color: var(--dim); max-width: 58ch; margin-bottom: 44px; font-size: 15px; }
+  .slead b { color: var(--paper); font-weight: 400; }
+  .slead q { color: var(--paper); border-bottom: 1px solid var(--qing-dim); }
+
+  /* ============ 第一场 / 冤家账 ============ */
+  .ledger { border: 1px solid var(--hair); }
+  .ledger-head {
+    display: grid; grid-template-columns: 150px 1fr 1fr; gap: 14px;
+    padding: 12px 20px; font-size: 12.5px; letter-spacing: .26em; color: var(--faint);
+    border-bottom: 1px solid var(--hair); background: var(--ink-2);
+  }
+  .lrow {
+    display: grid; grid-template-columns: 150px 1fr; gap: 18px; align-items: center;
+    width: 100%; text-align: left; padding: 16px 20px; border: 0; border-bottom: 1px solid var(--hair);
+    background: transparent; color: var(--dim); font: inherit; line-height: 1.9; cursor: pointer;
+    transition: background .25s ease; position: relative;
+  }
+  .lrow:last-child { border-bottom: 0; }
+  .lrow:hover { background: var(--ink-2); }
+  .lrow .key { font-size: 15px; letter-spacing: .12em; color: var(--faint); }
+  .lrow .key small { display: block; font-size: 11px; letter-spacing: .2em; margin-top: 2px; color: var(--faint); }
+  .lrow .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .lrow q { display: block; font-size: 15.5px; opacity: .34; transition: opacity .3s ease, color .3s ease; }
+  .lrow q.late { text-align: right; }
+  .lrow.on q { opacity: 1; color: var(--paper); }
+  .lrow.on q.win { color: var(--qing); }
+  .lrow .stamp {
+    position: absolute; right: 20px; top: 12px; font-size: 11.5px; letter-spacing: .24em; color: var(--zhu);
+    border: 1px solid rgba(192,69,60,.5); padding: 3px 8px 3px 11px; opacity: 0; transform: rotate(-6deg);
+    transition: opacity .3s ease;
+  }
+  .lrow.on .stamp { opacity: 1; }
+  .ledger-fin { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 10px 34px; }
+  .ledger-fin q { font-size: 19px; color: var(--paper); letter-spacing: .05em; }
+  .ledger-fin q + q { color: var(--dim); }
+  .ledger-tip { margin-top: 18px; font-size: 12.5px; color: var(--faint); letter-spacing: .12em; }
+
+  /* ============ 第二场 / 长卷 ============ */
+  .rail { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin-bottom: 40px; }
+  .rail button {
+    background: transparent; border: 1px solid var(--hair); color: var(--dim);
+    font: inherit; font-size: 14.5px; letter-spacing: .1em; padding: 9px 0; cursor: pointer;
+    flex: 1 1 auto; min-width: 64px; transition: all .25s ease; position: relative;
+  }
+  .rail button + button { border-left: 0; }
+  .rail button:hover { color: var(--paper); }
+  .rail button.on { background: var(--qing); color: #14202c; border-color: var(--qing); font-weight: 700; }
+  .rail button.seen { color: var(--qing); }
+  .beatline { height: 3px; background: var(--hair); position: relative; margin-bottom: 46px; }
+  .beatline i { position: absolute; left: 0; top: 0; height: 100%; background: var(--qing); width: 0; transition: width .4s ease; }
+  .stops { position: relative; min-height: 300px; }
+  .stop { display: none; grid-template-columns: 1fr; gap: 20px; }
+  .stop.on { display: grid; }
+  .stop .sq {
+    font-size: clamp(19px, 2.6vw, 25px); line-height: 2; color: var(--paper); max-width: 34em;
+    border-left: 2px solid var(--qing); padding-left: 22px;
+  }
+  .stop .sq small { display: block; font-size: 13px; color: var(--faint); margin-top: 10px; letter-spacing: .06em; }
+  .stop .gl { color: var(--dim); max-width: 56ch; font-size: 14.5px; }
+  .stop .gl b { color: var(--qing); font-weight: 400; }
+  .stopnav { display: flex; justify-content: space-between; margin-top: 42px; }
+  .stopnav button {
+    background: transparent; border: 1px solid var(--hair); color: var(--dim); font: inherit;
+    font-size: 14px; letter-spacing: .3em; padding: 10px 22px 10px 26px; cursor: pointer; transition: all .25s ease;
+  }
+  .stopnav button:hover { border-color: var(--qing-dim); color: var(--paper); }
+  .counter { font-size: 12.5px; color: var(--faint); align-self: center; letter-spacing: .2em; }
+
+  /* ============ 第三场 / 两把刀 ============ */
+  .knives { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .knife { border: 1px solid var(--hair); padding: 30px 28px; background: var(--ink-2); position: relative; }
+  .knife h3 { font-size: 17px; letter-spacing: .22em; color: var(--qing); margin-bottom: 18px; font-weight: 700; }
+  .knife q { display: block; font-size: 16.5px; line-height: 2.05; margin-bottom: 14px; }
+  .knife p { color: var(--dim); font-size: 14px; }
+  .knife .notebtn {
+    background: transparent; border: 0; color: var(--qing); font: inherit; font-size: 13px;
+    letter-spacing: .2em; cursor: pointer; padding: 0; border-bottom: 1px solid var(--qing-dim);
+  }
+  .knife .note { display: none; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--hair); font-size: 13px; color: var(--dim); }
+  .knife .note.on { display: block; }
+  .knife.mirror { background: transparent; }
+  .knife.mirror .kstack { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px dashed var(--hair); }
+  .knife.mirror .kstack q { font-size: 14.5px; padding: 14px 16px; margin: 0; }
+  .knife.mirror .kstack q + q { border-left: 1px dashed var(--hair); color: var(--dim); }
+
+  /* ============ 尾声 / 停槌 ============ */
+  .finale { display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; align-items: center; }
+  .drumzone { text-align: center; }
+  .drumzone svg { width: min(250px, 60vw); cursor: pointer; }
+  .drumzone .rim { stroke: var(--faint); }
+  .drumzone .drum-pulse { transform-origin: 130px 130px; animation: pulse 2.2s ease-out infinite; }
+  @keyframes pulse { 0% { transform: scale(.86); opacity: .8; } 100% { transform: scale(1.28); opacity: 0; } }
+  .drumzone.stopped .drum-pulse { animation: none; opacity: 0; }
+  .drumzone .dtip { font-size: 13px; color: var(--faint); letter-spacing: .22em; margin-top: 16px; }
+  .drumzone.stopped .dtip { color: var(--dim); }
+  .lastq { display: none; }
+  .lastq.on { display: block; }
+  .lastq .pq { font-size: clamp(18px, 2.4vw, 23px); line-height: 2.1; border-left: 2px solid var(--qing); padding-left: 22px; margin-bottom: 24px; }
+  .lastq .pq small { display: block; font-size: 13px; color: var(--faint); margin-top: 8px; }
+  .lastq .pq.dimq { color: var(--dim); font-size: 16px; }
+  .lastq p { color: var(--dim); font-size: 14.5px; max-width: 54ch; }
+
+  /* ============ 散场 ============ */
+  .coda { border-top: 1px solid var(--hair); padding: 72px 0 64px; }
+  .coda h2 { font-size: 21px; letter-spacing: .26em; color: var(--dim); margin-bottom: 26px; }
+  .coda p { color: var(--dim); font-size: 14px; max-width: 62ch; margin-bottom: 16px; }
+  .coda p b { color: var(--paper); font-weight: 700; }
+  .coda .jiao { color: var(--faint); font-size: 13px; }
+  .foot { border-top: 1px solid var(--hair); padding: 34px 0 60px; color: var(--faint); font-size: 12.8px; }
+  .foot p { margin-bottom: 6px; max-width: 70ch; }
+  .foot a { color: var(--dim); border-bottom: 1px solid var(--hair); }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; }
+    .stage { min-height: 46dvh; border-right: 0; border-bottom: 1px solid var(--hair); }
+    .plate { width: 100%; padding: 40px 26px 48px; }
+    h1.vt { writing-mode: horizontal-tb; height: auto; max-height: none; font-size: 34px; line-height: 1.4; }
+    .hgroup { flex-direction: column-reverse; gap: 18px; }
+    .author { writing-mode: horizontal-tb; height: auto; }
+    .ledger-head { display: none; }
+    .lrow { grid-template-columns: 1fr; gap: 6px; }
+    .lrow .duo { grid-template-columns: 1fr; gap: 4px; }
+    .lrow q.late { text-align: left; }
+    .lrow .stamp { display: none; }
+    .knives { grid-template-columns: 1fr; }
+    .finale { grid-template-columns: 1fr; gap: 34px; }
+    .knife.mirror .kstack { grid-template-columns: 1fr; }
+    .knife.mirror .kstack q + q { border-left: 0; border-top: 1px dashed var(--hair); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 书场 ============ -->
+<header class="hero">
+  <div class="stage" id="stage" role="button" tabindex="0" aria-label="醒木，点击开书">
+    <div class="floor"></div>
+    <div class="gavelbox">
+      <svg viewBox="0 0 256 190" aria-hidden="true">
+        <g class="gavel-swing">
+          <rect class="gavel-wood" x="88" y="20" width="82" height="58" rx="9"/>
+          <path class="gavel-grain" d="M100 38 h58 M100 50 h44 M100 62 h52"/>
+          <rect class="gavel-wood" x="166" y="42" width="62" height="14" rx="7" transform="rotate(18 166 42)"/>
+        </g>
+        <rect class="gavel-wood" x="64" y="148" width="128" height="16" rx="4"/>
+        <path class="gavel-grain" d="M64 156 h128"/>
+        <text x="128" y="140" text-anchor="middle" fill="#6e6a61" font-size="11" letter-spacing="6" font-family="Songti SC,SimSun,serif">醒  木  一  方</text>
+      </svg>
+      <p class="gavel-hint">点 醒 木 · 开 书</p>
+    </div>
+    <div class="flash"></div>
+    <div class="pa" aria-hidden="true">啪</div>
+  </div>
+  <div class="plate">
+    <p class="kicker">诗藏剧曲 ｜ 明末 贾凫西</p>
+    <div class="hgroup">
+      <div class="hside">
+        <svg class="seal" viewBox="0 0 80 80" aria-hidden="true">
+          <rect x="3" y="3" width="74" height="74" rx="7" fill="#c0453c"/>
+          <text x="40" y="36" text-anchor="middle" fill="#e8e4dc" font-size="27" font-family="Songti SC,SimSun,serif">木</text>
+          <text x="40" y="68" text-anchor="middle" fill="#e8e4dc" font-size="27" font-family="Songti SC,SimSun,serif">皮</text>
+        </svg>
+        <p class="author">明 末 曲 阜 贾 凫 西 撰</p>
+      </div>
+      <h1 class="vt"><q>木皮散人鼓词</q></h1>
+    </div>
+    <p class="lead">一面鼓，一块木头。一个孔府脚下的落第贡生，把三百万年的帝王账搬到十字街口，当街翻出来数：好人为什么没好报，江山为什么轮流换。木皮是他的诨号，人说就是他说书那面鼓。</p>
+    <div class="opening" id="opening">
+      <q>释闷怀，破岑寂，只照着热闹处说来。</q>
+      <q>十字街坊，几下捶皮千古快；八仙桌上，一声醒木万人惊。</q>
+    </div>
+    <p class="hintline" id="hintline"><b>未开书</b>　醒木还没响，先敲它一下。</p>
+  </div>
+</header>
+
+<!-- ============ 第一场 · 冤家账 ============ -->
+<section class="sec" id="s1">
+  <div class="wrap">
+    <div class="shead"><span class="qian">第一场</span><h2>冤家账</h2></div>
+    <p class="slead">书一开场，他先撕合同：好人有好报这一页，被他整页揭走。账面七行，行行都是<b>安分的吃亏，下手的有赏</b>。点一行，揭一行。</p>
+    <div class="ledger">
+      <div class="ledger-head"><span>账头</span><span>安分的</span><span>得意的</span></div>
+      <button class="lrow" type="button">
+        <span class="key">太仓鼠<small>仓库里吃饱的</small></span>
+        <span class="duo">
+        <q>老牛耕地使死倒把皮来剥！</q>
+        <q class="late win">太仓里的老鼠吃的撑撑饱，</q>
+        </span>
+        <span class="stamp">不平</span>
+      </button>
+      <button class="lrow" type="button">
+        <span class="key">河中鱼<small>刮鳞去刺的</small></span>
+        <span class="duo">
+        <q>河里的游鱼犯下什么罪？</q>
+        <q class="late win">刮净鲜鳞还嫌刺扎。</q>
+        </span>
+        <span class="stamp">不平</span>
+      </button>
+      <button class="lrow" type="button">
+        <span class="key">老虎<small>生嚼人肉的</small></span>
+        <span class="duo">
+        <q>野鸡兔子不敢惹祸，</q>
+        <q class="late win">那老虎前生修下几般福？生嚼人肉不怕塞牙。</q>
+        </span>
+        <span class="stamp">不平</span>
+      </button>
+      <button class="lrow" type="button">
+        <span class="key">草鞋<small>垫脚的</small></span>
+        <span class="duo">
+        <q>垫脚的草鞋丢在山洼。</q>
+        <q class="late win">古剑杀人还称至宝，</q>
+        </span>
+        <span class="stamp">不平</span>
+      </button>
+      <button class="lrow" type="button">
+        <span class="key">两位将军<small>一个挂印一个挨打</small></span>
+        <span class="duo">
+        <q>顶灯的裴瑾挨些嘴巴。</q>
+        <q class="late win">杀妻的吴起倒挂了元帅印，</q>
+        </span>
+        <span class="stamp">不平</span>
+      </button>
+      <button class="lrow" type="button">
+        <span class="key">两位古人<small>一个善终一个短命</small></span>
+        <span class="duo">
+        <q>颜渊短命是为的什么？</q>
+        <q class="late win">活吃人的盗跖得了好死，</q>
+        </span>
+        <span class="stamp">不平</span>
+      </button>
+      <button class="lrow" type="button">
+        <span class="key">总账<small>查无此页</small></span>
+        <span class="duo">
+        <q>莫不是玉皇爷受了张三的哄！</q>
+        <q class="late win">黑洞洞的本帐簿那里去查？</q>
+        </span>
+        <span class="stamp">存照</span>
+      </button>
+    </div>
+    <p class="ledger-tip">行行点完，账没对上，他收榜：天上那位，怕是也叫人哄了。</p>
+    <div class="ledger-fin">
+      <q>忠臣孝子是冤家，</q>
+      <q>杀人放火享荣华。</q>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 第二场 · 长卷 ============ -->
+<section class="sec" id="s2">
+  <div class="wrap">
+    <div class="shead"><span class="qian">第二场</span><h2>长卷</h2></div>
+    <p class="slead">冤账记完，他报名目：上起盘古，下到崇祯，一部通史要当街唱完。唱法只有一种：<q>从古来三百二十八万载，几句街谈要讲上来。</q>十一站，站站一槌。</p>
+    <div class="rail" id="rail" role="tablist" aria-label="历代长卷十一站">
+      <button type="button" data-i="0" class="on">上古</button>
+      <button type="button" data-i="1">尧舜</button>
+      <button type="button" data-i="2">商周</button>
+      <button type="button" data-i="3">秦汉</button>
+      <button type="button" data-i="4">三国</button>
+      <button type="button" data-i="5">魏晋</button>
+      <button type="button" data-i="6">隋唐</button>
+      <button type="button" data-i="7">五代</button>
+      <button type="button" data-i="8">两宋</button>
+      <button type="button" data-i="9">元</button>
+      <button type="button" data-i="10">明</button>
+    </div>
+    <div class="beatline"><i id="beat"></i></div>
+    <div class="stops">
+      <article class="stop on">
+        <blockquote class="sq"><q>自古道“牝鸡司晨家业败”，可怎么伏羲的妹子坐了金銮！</q><small>上古一节</small></blockquote>
+        <p class="gl">开场先拆远古的庙：女娲补天，他嫌补丁至今没验过货；有巢氏不肯睡山窝，害得榆林遭殃；神农伸着牛头尝百草，<b>好端端的孩子先被他记成病号</b>。圣王功业，在他嘴里是一场草台。</p>
+      </article>
+      <article class="stop">
+        <blockquote class="sq"><q>从今后天下成了个子孙货，不按旧例把样子翻。</q><small>尧舜禅让一节</small></blockquote>
+        <p class="gl">禅让被他讲成家产交接：尧把江山当陪嫁送了女婿，舜又转手给禹。禹一接班，公天下改祖传。<b>家天下这条线，他画在一句话上</b>。库本此节帝挚的名字缺了一字，只有小注存形，见篇末校字记。</p>
+      </article>
+      <article class="stop">
+        <blockquote class="sq"><q>现成成的天下送给周家坐，不道个生受也没赏过钱。</q><small>商周鼎革一节</small></blockquote>
+        <p class="gl">成汤网开一面算仁主，转头大旱七年，剪爪当牲他直呼歪缠。到商纣亡国，他反着算账：<b>真让老纣留一口气，七十万雄兵回头，孟津那一夜未必走得通</b>。说书人敢给失败者重开一局，是全书的胆。</p>
+      </article>
+      <article class="stop">
+        <blockquote class="sq"><q>他只说化家为国王作了帝，而其实是以吕易嬴李代了桃。</q><small>秦一节</small></blockquote>
+        <p class="gl">始皇的血统，他一路查到阳翟大贾头上。刘邦对项羽说分我一杯羹，他记成要把人家亲爹下滚油熬；乌江边上，<b>连那匹乌骓都替旧主哀号</b>。王莽篡汉，他记作白蛇讨还当年那一刀。</p>
+      </article>
+      <article class="stop">
+        <blockquote class="sq"><q>出茅庐生致了一个三分鼎，似这样难得的王佐远胜管萧。</q><small>三国一节</small></blockquote>
+        <blockquote class="sq"><q>倒不如俺这捶皮的江湖替他吐口气，当街上借得渔阳大鼓敲。</q><small>替蜀汉出场</small></blockquote>
+        <p class="gl">通史一路嘲到底，只在一个人面前缓了槌。有人笑诸葛亮六出祁山不晓兵法，他顶回去：<b>那双只看成败的肉眼，不配评价这份苦劳</b>，说着真把场面借来，当街替蜀汉敲了一通。</p>
+      </article>
+      <article class="stop">
+        <blockquote class="sq"><q>巧机关小吏通奸牛换了马，大翻案白版登舟蛇做了龙。</q><small>两晋一节</small></blockquote>
+        <p class="gl">司马家的天下怎么来的？他两句问完：曹家欺人寡妇孤儿，司马家照抄；东晋皇统，民间传说牛家借种，他照单唱进鼓词，<b>龙生龙，蛇生蛇，牛来了就换马</b>。</p>
+      </article>
+      <article class="stop">
+        <blockquote class="sq"><q>玄武门谋杀建成和元吉，全不念一母同胞兄弟仨！</q><small>唐一节</small></blockquote>
+        <p class="gl">大唐开国第一槌，他敲在玄武门上：十个功劳遮不住兄弟阋墙。往后数，则天戴冲天帽，明皇递洗儿钱，<b>直到砀山贼子坐上御座</b>，一代比一代不像话。</p>
+      </article>
+      <article class="stop">
+        <blockquote class="sq"><q>石敬瑭夺了他丈人的碗，倒踏门的女婿靠着娇娃。</q><small>五代一节</small></blockquote>
+        <p class="gl">五代八姓十四君，他排成一台倒灶亲戚：女婿、妻侄、螟蛉，轮着坐庄。柴世宗贩伞出身，他还给了句公道话；<b>转眼陈桥驿里黄袍一件，柴家孩子懂什么</b>。</p>
+      </article>
+      <article class="stop">
+        <blockquote class="sq"><q>净落得烛影斧声响嗑叉！</q><small>宋一节</small></blockquote>
+        <blockquote class="sq"><q>十二道金牌害了岳武穆，那讲和的秦桧他不打死蛇。</q><small>南渡一节</small></blockquote>
+        <p class="gl">宋朝两槌：开局烛影斧声，兄弟阋墙重演一遍；收梢五国城，父子掳北。南渡之后他最恨的不是金人，<b>是朝堂上那批咬文嚼字的嘴</b>，三百年江山，塌了半边。</p>
+      </article>
+      <article class="stop">
+        <blockquote class="sq"><q>看他八十八年也只是闰了个大月，</q><small>元一节</small></blockquote>
+        <p class="gl">元朝九十多年，他只肯记成一个闰月，一笔带过，鼓点不停。下一槌落下，<b>皇觉寺里走出来的好汉，又把中华主了回去</b>。</p>
+      </article>
+      <article class="stop">
+        <blockquote class="sq"><q>铁铉死守济南府，还坑上一对女娇娥。</q><small>明一节</small></blockquote>
+        <p class="gl">本朝这一段他敲得最重：靖难夺位，方孝孺十族连朋友一起拐上，景清的人皮架在草楦上，于谦冤死漫坡。一路数到彰义门开，<b>槌子停在煤山底下，不动了</b>。</p>
+      </article>
+    </div>
+    <div class="stopnav">
+      <button type="button" id="prev">上一槌</button>
+      <span class="counter" id="counter">第一槌 ｜ 共十一槌</span>
+      <button type="button" id="next">下一槌</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 第三场 · 两把刀 ============ -->
+<section class="sec" id="s3">
+  <div class="wrap">
+    <div class="shead"><span class="qian">第三场</span><h2>两把刀</h2></div>
+    <p class="slead">全卷漫骂如雨，真正出鞘的只有两件兵器。一件砍历史，一件照人心。</p>
+    <div class="knives">
+      <div class="knife">
+        <h3>软刀子</h3>
+        <q>多少年软刀子割头不知死，直等到太白旗悬才把口吧！</q>
+        <p>这句是说商纣的江山怎么丢的：周家人不硬砍，软刀子慢慢割，割了六百年。刀法后来出了名：鲁迅在香港讲演，说这套老调子唱起来舒服，头掉了都不觉得，还特地声明这刀的名目不是他发明的，借的正是贾凫西说纣王的一句。</p>
+        <button class="notebtn" type="button" aria-expanded="false">展异文注</button>
+        <div class="note">校字记：鲁迅引来时，这句子头上多两个字，句尾换一个觉字，旗下又添半句才知命有差；库本句尾作不知死。刀是同一把，库本的刃口更钝一层，照库本录。</div>
+      </div>
+      <div class="knife mirror">
+        <h3>照影</h3>
+        <q>曹操当年相汉时，欺他寡妇与孤儿。</q>
+        <div class="kstack">
+          <q>他作了场奸雄又照出个影，</q>
+          <q>照样的来了一个司马师。</q>
+        </div>
+        <p>奸雄的报应，他不用因果讲，用镜子讲：门神印板，左右各印一张，披挂分毫不差。欺负人家寡妇孤儿的，转头自家寡妇孤儿也被人欺负，<b>历史在他鼓上是一面照妖镜</b>。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 尾声 · 停槌 ============ -->
+<section class="sec" id="s4">
+  <div class="wrap">
+    <div class="shead"><span class="qian">尾声</span><h2>停槌</h2></div>
+    <div class="finale">
+      <div class="drumzone" id="drumzone">
+        <svg id="drum" viewBox="0 0 260 260" role="button" tabindex="0" aria-label="鼓，点击停槌">
+          <circle class="drum-pulse" cx="130" cy="130" r="86" fill="none" stroke="#5e8fbb" stroke-width="1.4"/>
+          <circle cx="130" cy="130" r="96" fill="none" stroke="#6e6a61" stroke-width="2" class="rim"/>
+          <circle cx="130" cy="130" r="78" fill="none" stroke="rgba(232,228,220,.4)" stroke-width="1"/>
+          <circle cx="130" cy="130" r="52" fill="#201f1d" stroke="rgba(232,228,220,.4)" stroke-width="1"/>
+          <circle cx="130" cy="130" r="10" fill="none" stroke="#6e6a61" stroke-width="1.4"/>
+          <g id="sticks" opacity="0">
+            <rect x="58" y="124" width="144" height="7" rx="3.5" fill="none" stroke="#e8e4dc" stroke-width="1.6" transform="rotate(24 130 130)"/>
+            <rect x="58" y="124" width="144" height="7" rx="3.5" fill="none" stroke="#6e6a61" stroke-width="1.6" transform="rotate(-24 130 130)"/>
+          </g>
+        </svg>
+        <p class="dtip">这 面 鼓 一 直 在 响 · 你 点 它 一 下</p>
+      </div>
+      <div class="lastq" id="lastq">
+        <blockquote class="pq"><q>莫不是他强梁的老祖阴骘少，活该在龙子龙孙受折磨！</q><small>说书人自问</small></blockquote>
+        <blockquote class="pq"><q>为什么说到这里便住了手？只恐怕你铁打的心肠也泪如梭！</q><small>全书末二句</small></blockquote>
+        <p>长卷唱到煤山，槌落，鼓歇。说白散尽，库本只剩括号里一句旧的，还是殷周那一刀：<q>所以武王就下了个毒手，一刀斫下纣王的头来</q>。入清以后的事，这位穿优伶衣冠说书的贡生，一个字也不肯往下唱。他不是唱不动，是知道再往后，就轮到听书的人接槌了。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 散场 ============ -->
+<section class="coda">
+  <div class="wrap">
+    <h2>散 场</h2>
+    <p><b>说书人</b>　贾应宠，号凫西，别号木皮散客，山东曲阜人，约生于万历十八年。屡试不第，四十岁上下才补贡生；崇祯末做过固安知县，升刑部郎中。明亡后一度仕清复职，借着公差南下绕道故乡，把当年欺他的曲阜知县参倒，随即挂冠而去。此后一鼓一板，说于街坊市肆，也说于塾堂官署；晚年移居滋阳，约康熙十四、十五年间客死兖州。卒年两说并存，不写死。</p>
+    <p class="jiao">说书人生平参据大众网山东文史资料与维基百科条目，与库本无涉，取其通行说法。</p>
+    <p><b>这个本子</b>　库本标题自带韵文部分四字：通篇是唱，说白散在场上，随口生发，各本不同，这册只把韵文钉在纸上，全篇仅存括号里一句散白。所谓鼓词，即鼓板击节、说唱相间的长篇，这部是现存最早以此得名的一部。</p>
+    <p class="jiao">校字记：库本帝挚名字缺字作方框，小注上执下手，照录不补；活象即活像，俗写照录；软刀子句库本与通行引文异，见第三场注。</p>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>文本来源：殆知阁简体库 诗藏剧曲册（github.com/robertsong2000/daizhigev20）。引文经脚本与库本去标点、异体归一后逐字比对通过。</p>
+    <p>时代局限：篇中以旧时代口吻谈农民起事、妇女与异姓处，皆是说书人当日的声口，照录不代表今人立场。</p>
+    <p>殆知阁导读 · 第 516 篇　<a href="mulu.html">返回总目</a></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var opening = document.getElementById('opening');
+  var hintline = document.getElementById('hintline');
+  var opened = false;
+  function strike() {
+    stage.classList.remove('struck');
+    void stage.offsetWidth;
+    stage.classList.add('struck');
+    document.querySelector('.hero').classList.add('struck');
+    if (!opened) {
+      opened = true;
+      opening.classList.add('on');
+      hintline.innerHTML = '<b>已开书</b>　醒木已响，往第一场去。';
+    }
+  }
+  stage.addEventListener('click', strike);
+  stage.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); strike(); }
+  });
+
+  document.querySelectorAll('.lrow').forEach(function (row) {
+    row.addEventListener('click', function () { row.classList.toggle('on'); });
+  });
+
+  var stops = document.querySelectorAll('.stop');
+  var tabs = document.querySelectorAll('#rail button');
+  var beat = document.getElementById('beat');
+  var counter = document.getElementById('counter');
+  var nums = ['第一槌','第二槌','第三槌','第四槌','第五槌','第六槌','第七槌','第八槌','第九槌','第十槌','第十一槌'];
+  var cur = 0;
+  function show(i) {
+    cur = Math.max(0, Math.min(stops.length - 1, i));
+    stops.forEach(function (s, k) { s.classList.toggle('on', k === cur); });
+    tabs.forEach(function (t, k) {
+      t.classList.toggle('on', k === cur);
+      t.classList.toggle('seen', k < cur);
+      t.setAttribute('aria-selected', k === cur ? 'true' : 'false');
+    });
+    beat.style.width = ((cur + 1) / stops.length * 100) + '%';
+    counter.textContent = nums[cur] + ' ｜ 共十一槌';
+  }
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () { show(parseInt(t.dataset.i, 10)); });
+  });
+  document.getElementById('prev').addEventListener('click', function () { show(cur - 1); });
+  document.getElementById('next').addEventListener('click', function () { show(cur + 1); });
+  show(0);
+
+  var notebtn = document.querySelector('.notebtn');
+  var note = document.querySelector('.knife .note');
+  notebtn.addEventListener('click', function () {
+    note.classList.toggle('on');
+    notebtn.setAttribute('aria-expanded', note.classList.contains('on') ? 'true' : 'false');
+  });
+
+  var drumzone = document.getElementById('drumzone');
+  var lastq = document.getElementById('lastq');
+  var drumStopped = false;
+  function stopDrum() {
+    if (drumStopped) return;
+    drumStopped = true;
+    drumzone.classList.add('stopped');
+    document.getElementById('sticks').setAttribute('opacity', '1');
+    lastq.classList.add('on');
+    drumzone.querySelector('.dtip').textContent = '槌 落 · 鼓 歇';
+  }
+  document.getElementById('drum').addEventListener('click', stopDrum);
+  document.getElementById('drum').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); stopDrum(); }
+  });
+})();
+</script>
+</body>
+</html>
