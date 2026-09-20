@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>齐东野语导读 · 拾穗问答</title>
+<style>
+:root{
+  --ink:#191917;
+  --paper:#e8e4dc;
+  --jin:#c9963f;
+  --jin-dim:rgba(201,150,63,.16);
+  --faint:rgba(232,228,220,.14);
+  --dim:rgba(232,228,220,.55);
+  --dark:rgba(232,228,220,.82);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--dark);
+  font-family:"Songti SC","Noto Serif SC","SimSun",serif;
+  line-height:1.9;
+  overflow-x:hidden;
+}
+.wrap{max-width:980px;margin:0 auto;padding:0 22px}
+q{quotes:none}
+q{color:var(--jin)}
+.mono{font-family:"Courier New",monospace}
+
+/* ---------- hero : 问答成书 ---------- */
+.hero{
+  position:relative;
+  min-height:92vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:70px 0 56px;
+  border-bottom:1px solid var(--faint);
+}
+.hero .fields{position:absolute;inset:0;opacity:.5;pointer-events:none}
+.kicker{
+  font-size:13px;letter-spacing:.45em;
+  color:var(--jin);margin-bottom:26px;
+}
+.h1row{display:flex;align-items:baseline;gap:.06em;flex-wrap:wrap}
+.h1row span{
+  font-size:min(21vw,132px);
+  color:var(--paper);
+  line-height:1.05;
+  letter-spacing:.02em;
+}
+.h1sub{margin:18px 0 40px;color:var(--dim);font-size:14.5px;letter-spacing:.12em}
+.stage{position:relative;min-height:150px}
+.mu{
+  border-left:2px solid var(--jin);
+  padding:14px 20px;
+  margin-bottom:14px;
+  max-width:560px;
+  background:linear-gradient(90deg,var(--jin-dim),transparent 70%);
+  opacity:0;transform:translateX(-14px);
+  transition:opacity .5s,transform .5s;
+  display:none;
+}
+.mu.on{display:block}
+.mu.vis{opacity:1;transform:none}
+.mu .who{font-size:12px;letter-spacing:.35em;color:var(--jin);display:block;margin-bottom:4px}
+.mu q{font-size:17.5px;color:var(--paper)}
+.mu .who-self{color:var(--dim)}
+.hint{font-size:12.5px;color:var(--dim);letter-spacing:.3em;margin-top:6px}
+.hint.done{display:none}
+.seal{
+  display:none;
+  width:74px;height:74px;
+  border:2px solid var(--jin);
+  color:var(--jin);
+  font-size:20px;line-height:1.3;
+  display:none;place-items:center;
+  text-align:center;
+  transform:rotate(-6deg);
+  margin-top:8px;
+  letter-spacing:.1em;
+}
+.seal.on{display:grid;animation:stamp .5s ease}
+@keyframes stamp{0%{transform:rotate(-6deg) scale(1.7);opacity:0}100%{transform:rotate(-6deg) scale(1);opacity:1}}
+
+/* ---------- section chrome ---------- */
+.sec{padding:84px 0;border-bottom:1px solid var(--faint)}
+.sec-head{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+.sec-no{
+  width:44px;height:44px;flex:none;
+  border:1px solid var(--jin);
+  color:var(--jin);
+  display:grid;place-items:center;
+  font-size:15px;
+  transform:rotate(45deg);
+}
+.sec-no b{transform:rotate(-45deg);font-weight:normal}
+.sec-head h2{font-size:25px;color:var(--paper);font-weight:normal;letter-spacing:.14em}
+.sec-lead{color:var(--dim);font-size:15px;max-width:640px;margin-bottom:40px}
+
+/* ---------- s1 : 对开册 ---------- */
+.album{perspective:1400px;max-width:760px;margin:0 auto}
+.album-inner{
+  position:relative;
+  display:grid;grid-template-columns:1fr 1fr;
+  transition:transform .8s;
+}
+.leaf{
+  min-height:330px;
+  padding:34px 28px;
+  background:#20201e;
+  border:1px solid var(--faint);
+  transition:background .6s;
+}
+.leaf.right{background:var(--paper);color:#33302a;border-color:transparent}
+.leaf h3{font-size:15px;letter-spacing:.4em;margin-bottom:18px;font-weight:normal}
+.leaf.left h3{color:var(--jin)}
+.leaf p{font-size:14.5px;margin-bottom:14px}
+.leaf q{color:var(--jin)}
+.leaf.right q{color:#8a6420}
+.leaf .tag{font-size:12px;letter-spacing:.3em;opacity:.6;display:block;margin-top:8px}
+.seam-btn{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:52px;height:52px;border-radius:50%;
+  border:1px solid var(--jin);
+  background:var(--ink);
+  color:var(--jin);
+  cursor:pointer;
+  font-family:inherit;font-size:13px;letter-spacing:.1em;
+  z-index:2;
+  transition:transform .3s;
+}
+.seam-btn:hover{transform:translate(-50%,-50%) scale(1.08)}
+.album.stitched .leaf{background:#26251f}
+.album.stitched .leaf.right{background:#2b2718}
+.album.stitched .leaf,.album.stitched .leaf.right{color:var(--dark)}
+.album.stitched .leaf.right q{color:var(--jin)}
+.album .verdict{
+  grid-column:1 / -1;
+  text-align:center;
+  padding:26px 20px 8px;
+  font-size:16px;
+  opacity:0;transition:opacity .8s;
+}
+.album.stitched .verdict{opacity:1}
+.verdict q{font-size:18px}
+
+/* ---------- s2 : 四过沈园 ---------- */
+.visit-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:30px}
+.visit-head .yr{font-size:13px;color:var(--jin);letter-spacing:.25em}
+.stream{position:relative;padding-left:0}
+.wave{width:100%;height:26px;display:block;margin-bottom:26px;opacity:.7}
+.jian{border-top:1px solid var(--faint)}
+.jian summary{
+  list-style:none;cursor:pointer;
+  display:flex;align-items:baseline;gap:18px;
+  padding:20px 6px;
+  transition:padding-left .3s;
+}
+.jian summary::-webkit-details-marker{display:none}
+.jian summary:hover{padding-left:16px}
+.jian .order{
+  flex:none;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--jin);color:var(--jin);
+  display:grid;place-items:center;font-size:14px;
+}
+.jian .t{font-size:17.5px;color:var(--paper);letter-spacing:.06em}
+.jian .g{font-size:12.5px;color:var(--dim);letter-spacing:.2em;margin-left:auto}
+.jian[open] .order{background:var(--jin);color:var(--ink)}
+.jian .body{padding:4px 6px 30px 64px;max-width:680px}
+.jian .body p{font-size:14px;color:var(--dim);margin-bottom:12px}
+.jian .body q{
+  display:block;font-size:17px;line-height:2.1;
+  padding:14px 18px;margin-bottom:14px;
+  background:var(--jin-dim);
+  border-left:2px solid var(--jin);
+}
+
+/* ---------- s3 : 王魁封条 ---------- */
+.dossier{
+  max-width:640px;margin:0 auto;
+  border:1px solid var(--faint);
+  background:#20201e;
+  position:relative;
+  overflow:hidden;
+}
+.dos-top{padding:30px 30px 24px;border-bottom:1px dashed var(--faint)}
+.dos-top h3{font-size:19px;color:var(--paper);font-weight:normal;letter-spacing:.1em;margin-bottom:10px}
+.dos-top p{font-size:14.5px;color:var(--dim)}
+.dos-inner{
+  max-height:0;overflow:hidden;
+  transition:max-height .9s ease;
+}
+.dossier.open .dos-inner{max-height:1400px}
+.dos-inner .in{padding:28px 30px 34px}
+.dos-inner p{font-size:14.5px;margin-bottom:16px}
+.dos-inner q{
+  display:block;font-size:16.5px;line-height:2.05;
+  padding:14px 18px;margin-bottom:16px;
+  background:var(--jin-dim);border-left:2px solid var(--jin);
+}
+.seal-strip{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#a23b32,#8c2f27);
+  color:#f0e6dc;
+  padding:13px 0;
+  cursor:pointer;
+  letter-spacing:.5em;
+  font-size:15px;
+  transition:opacity .6s,transform .7s;
+}
+.seal-strip::before,.seal-strip::after{
+  content:"";position:absolute;top:0;bottom:0;width:22px;
+  background:repeating-linear-gradient(45deg,rgba(240,230,220,.25) 0 6px,transparent 6px 12px);
+}
+.seal-strip::before{left:0}
+.seal-strip::after{right:0}
+.dossier.open .seal-strip{opacity:0;transform:translateY(-8px) rotate(-2deg);pointer-events:none}
+.dos-verdict{
+  text-align:center;padding:18px 0 4px;
+  font-size:13px;letter-spacing:.4em;color:var(--jin);
+  opacity:0;transition:opacity .8s .4s;
+}
+.dossier.open .dos-verdict{opacity:1}
+
+/* ---------- s4 : 拾穗墙 ---------- */
+.wall{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:22px;
+}
+.su{
+  background:var(--paper);color:#3a362e;
+  padding:26px 24px 20px;
+  border-top:5px solid var(--jin);
+  transform:rotate(-.5deg);
+  transition:transform .3s,box-shadow .3s;
+}
+.su:nth-child(2n){transform:rotate(.6deg)}
+.su:hover{transform:rotate(0) translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.45)}
+.su h3{font-size:18px;font-weight:normal;letter-spacing:.14em;margin-bottom:6px}
+.su .sub{font-size:12px;letter-spacing:.3em;color:#8a6420;display:block;margin-bottom:12px}
+.su p{font-size:13.8px;margin-bottom:12px}
+.su q{
+  display:block;font-size:15px;line-height:2;
+  padding:10px 14px;margin:10px 0;
+  background:rgba(201,150,63,.13);
+  border-left:2px solid #a97c2c;
+  color:#6e4f16;
+}
+
+/* ---------- fin ---------- */
+.finale{padding:100px 0 70px;text-align:center}
+.finale .vtitle{
+  writing-mode:vertical-rl;
+  margin:0 auto;
+  height:280px;
+  width:max-content;
+}
+.finale .vtitle q{
+  display:block;
+  font-size:30px;letter-spacing:.28em;
+  color:var(--paper);
+  line-height:1.7;
+}
+.finale .vtitle q:nth-child(2){color:var(--jin)}
+.finale .seal2{
+  margin:34px auto 0;width:66px;height:66px;
+  border:2px solid var(--jin);color:var(--jin);
+  display:grid;place-items:center;
+  font-size:17px;letter-spacing:.06em;
+  transform:rotate(-5deg);
+}
+.limit{
+  max-width:720px;margin:64px auto 0;
+  border:1px solid var(--faint);
+  padding:22px 26px;
+  text-align:left;
+  font-size:13.5px;color:var(--dim);
+}
+.limit b{color:var(--jin);font-weight:normal;letter-spacing:.2em;display:block;margin-bottom:8px;font-size:13px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--faint);padding:38px 0 54px}
+footer .fin{max-width:900px;margin:0 auto;text-align:center;font-size:13px;color:var(--dim);line-height:2.2;padding:0 22px}
+footer a{color:var(--jin);text-decoration:none;border-bottom:1px solid rgba(201,150,63,.4)}
+
+@media (max-width:640px){
+  .album-inner{grid-template-columns:1fr}
+  .seam-btn{position:static;justify-self:center;margin:6px auto 2px}
+  .album .verdict{padding-top:14px}
+  .wall{grid-template-columns:1fr}
+  .jian .g{display:none}
+  .jian .body{padding-left:6px}
+  .h1row span{font-size:19vw}
+  .finale .vtitle{height:240px}
+  .finale .vtitle q{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="fields" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g stroke="#c9963f" stroke-opacity=".1" fill="none">
+      <path d="M0 520 Q 300 500 600 520 T 1200 520"/>
+      <path d="M0 570 Q 300 550 600 570 T 1200 570"/>
+      <path d="M0 620 Q 300 600 600 620 T 1200 620"/>
+    </g>
+    <g stroke="#c9963f" stroke-opacity=".22" fill="none">
+      <path d="M120 520 q6 -26 0 -44 M120 520 q-14 -18 -12 -38 M120 520 q16 -16 14 -40"/>
+      <path d="M300 545 q6 -26 0 -44 M300 545 q-14 -18 -12 -38 M300 545 q16 -16 14 -40"/>
+      <path d="M520 520 q6 -26 0 -44 M520 520 q-14 -18 -12 -38 M520 520 q16 -16 14 -40"/>
+      <path d="M760 545 q6 -26 0 -44 M760 545 q-14 -18 -12 -38 M760 545 q16 -16 14 -40"/>
+      <path d="M980 520 q6 -26 0 -44 M980 520 q-14 -18 -12 -38 M980 520 q16 -16 14 -40"/>
+    </g>
+  </svg>
+  <div class="wrap">
+    <p class="kicker">子藏笔记 · 南宋周密撰</p>
+    <div class="h1row"><span>齐</span><span>东</span><span>野</span><span>语</span></div>
+    <p class="h1sub">书名是一场抬杠抬出来的：有人笑他说的都是齐国乡野粗人的话，他认了，书就这么叫</p>
+    <div class="stage">
+      <div class="mu" id="mu1">
+        <span class="who">客 噱 曰</span>
+        <q>野哉言乎，子真齐人也。</q>
+      </div>
+      <div class="mu" id="mu2">
+        <span class="who who-self">余 对 曰</span>
+        <q>客知言哉！余故齐，欲不齐不可。</q>
+      </div>
+      <div class="mu" id="mu3">
+        <span class="who">结 局</span>
+        <q>客大笑，吾因以名其书。</q>
+      </div>
+      <div class="seal" id="seal1">因以<br>名书</div>
+      <p class="hint" id="hint1">点 击 推 演 这 场 对 话</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="sec" id="s1">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no"><b>壹</b></span><h2>家乘对国史</h2></div>
+    <p class="sec-lead">周密家世代做史官，靖康之后南渡，家里攒下几十箱手稿笔记。他从小听长辈拆解传闻：哪句是讹传，哪句是国史夹私货。国史改了几轮，家里那部账不许动。</p>
+    <div class="album" id="album">
+      <div class="album-inner">
+        <div class="leaf left">
+          <h3>国 史</h3>
+          <p><q>定、哀多微词，有所辟也。牛、李有异议，有所党也。爱憎一衰，论议乃公。</q></p>
+          <p>官修的历史有忌讳，有党派，改一版换一副面孔。</p>
+          <span class="tag">愈修愈不敢写</span>
+        </div>
+        <div class="leaf right">
+          <h3>家 乘</h3>
+          <p><q>朝野之故，耳闻目接，岁编日纪，可信不诬。</q></p>
+          <p>自家人记的流水账，当天的事当天落笔，靠的是在场。</p>
+          <span class="tag">家传不可删</span>
+        </div>
+        <button class="seam-btn" id="seambtn" aria-label="合缝">合</button>
+        <p class="verdict"><q>国史凡几修，是非凡几易，而吾家乘不可删也，小子识之。</q></p>
+      </div>
+    </div>
+    <p class="sec-lead" style="margin:34px auto 0;text-align:center">老年追忆，散佚的文稿只捞回百中之一二，他的办法是：<q>务求事之实，不计言之野也。</q></p>
+  </div>
+</section>
+
+<section class="sec" id="s2">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no"><b>贰</b></span><h2>四过沈园</h2></div>
+    <p class="sec-lead">卷一收<q>放翁钟情前室</q>一条，把陆游和唐氏的沈园往事按年份钉成一串：题壁、重游、梦游，前后五十年。园子后来几度易主，句子留下了。</p>
+    <div class="stream">
+      <svg class="wave" viewBox="0 0 900 26" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 13 Q 56 0 112 13 T 224 13 T 336 13 T 448 13 T 560 13 T 672 13 T 784 13 T 896 13" stroke="#c9963f" stroke-opacity=".45" fill="none" stroke-width="1.2"/>
+      </svg>
+      <details class="jian">
+        <summary><span class="order">一</span><span class="t">题壁 · 钗头凤</span><span class="g">绍兴乙亥</span></summary>
+        <div class="body">
+          <p>春日出游，禹迹寺南沈氏园，两人打了照面。唐氏遣人送来酒肴，陆游怅然久之，一首词题在园壁上。</p>
+          <q>红酥手，黄藤酒，满城春色宫墙柳。东风恶，欢情薄，一怀愁绪，几年离索。错！错！错！春如旧，人空瘦，泪痕红鲛绡透。桃花落，闲池阁，山盟虽在，锦书难托。莫！莫！莫！</q>
+        </div>
+      </details>
+      <details class="jian">
+        <summary><span class="order">二</span><span class="t">重游 · 两绝</span><span class="g">庆元己未</span></summary>
+        <div class="body">
+          <p>四十多年后，陆游住在鉴湖三山，晚年每进城必登禹迹寺眺望，写了两首绝句。</p>
+          <q>梦断香销四十年，沈园柳老不飞绵。此身行作稽山土，犹吊遗踪一怅然。</q>
+          <q>城上斜阳画角哀，沈园无复旧池台。伤心桥下春波绿，曾是惊鸿照影来。</q>
+        </div>
+      </details>
+      <details class="jian">
+        <summary><span class="order">三</span><span class="t">再至 · 怅然</span><span class="g">绍熙壬子</span></summary>
+        <div class="body">
+          <p>又去了一次，园子已经三易其主，旧题还在壁上。周密记年份的先后有参差，这里照库本次序排。</p>
+          <q>年来妄念消除尽，回向蒲龛一炷香。</q>
+        </div>
+      </details>
+      <details class="jian">
+        <summary><span class="order">四</span><span class="t">梦游 · 梅花</span><span class="g">开禧乙丑</span></summary>
+        <div class="body">
+          <p>岁暮夜里梦见自己又走进沈氏园，醒来又得了两首绝句。</p>
+          <q>城南小陌又逢春，只见梅花不见人。玉骨久成泉下土，墨痕犹锁壁间尘。</q>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s3">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no"><b>叁</b></span><h2>王魁翻案</h2></div>
+    <p class="sec-lead">戏台上唱了几百年的负心汉王魁，被妓女桂英的鬼魂索命，是宋元以降最红的负心故事。周密在卷六立了一条，说这案子从头到尾是假的，还给出了被告的真名实姓。</p>
+    <div class="dossier" id="dossier">
+      <div class="dos-top">
+        <h3>市井所传</h3>
+        <p>书生落第，妓女倾囊相助；得官之后翻脸休妻，女方自尽，冤魂活捉负心人。因果爽利，听众解气。</p>
+      </div>
+      <div class="seal-strip" id="sealstrip" role="button" tabindex="0" aria-label="揭封条">市 井 传 闻 · 揭 封 验 案</div>
+      <div class="dos-inner">
+        <div class="in">
+          <p>周密搬出与被告当年同场应试的老朋友初虞世的亲历记录：真有其人，王俊民，莱州人，嘉祐年间高中第一，在应天府做发解官时得了狂疾，误服药而死，年仅二十七。有人冒名编故事卖钱。</p>
+          <q>有妄人托夏噩姓名作《王魁传》，实欲市利于少年狎邪辈，其事皆不然。</q>
+          <p>替死者作证的那段话，是这则笔记的骨头：</p>
+          <q>康侯性刚峭不可犯，有志力学，爱身如冰玉，不知猥巷俚人语。不幸为匪人厚诬，弟辈又不为辨明，惧日久无知者。</q>
+          <p class="dos-verdict">翻 案 · 借 戒 药 方 之 名 存 一 人 之 白</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s4">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no"><b>肆</b></span><h2>拾穗四穗</h2></div>
+    <p class="sec-lead">二百七十七条里随手拾四穗：一穗不祥之瑞，一穗笑脱的下巴，一穗没见过的东西，一穗一支香烛。</p>
+    <div class="wall">
+      <article class="su">
+        <h3>祥瑞</h3>
+        <span class="sub">卷六 · 不祥之瑞</span>
+        <p>王蜀治下祥瑞年年出，麟凤龟龙甘露白雀轮着来，随后太子叛死、宫室大火、国亡。政和年间芝草遍地，一州采三十万本装成一纲进京，没过几年狄难就到。他引先儒的话收尾。</p>
+        <q>未有丧仁而久者也，未有恃祥而寿者也。</q>
+      </article>
+      <article class="su">
+        <h3>解颐</h3>
+        <span class="sub">卷六 · 笑掉下巴考</span>
+        <p>俗谚说人大笑叫兜不上下巴。盛度考了第二名，他父亲大笑，下巴脱了臼，人没了；岐山樊纪登第，他父亲也脱了下巴，声音像破瓮。他引医经作结。</p>
+        <q>喜则气缓，能令致脱颐。</q>
+        <q>兜不上下颏。</q>
+      </article>
+      <article class="su">
+        <h3>寒焰野婆</h3>
+        <span class="sub">卷一、卷七 · 耳目之外</span>
+        <p>世人说有温泉无寒火，他翻董仲舒、抱朴子的旧记，认了寒焰可以有。岭南深谷里的野婆，力大、护着一方玉印，出使的人亲眼见过。两句结论一个意思。</p>
+        <q>然则寒火亦有之矣，特以耳目所未及，故以为无耳。</q>
+        <q>是知穷荒绝徼，天奇地怪，亦何所不有？未可以见闻所未及，遂以为诞也。</q>
+      </article>
+      <article class="su">
+        <h3>香炬</h3>
+        <span class="sub">卷八 · 一支蜡烛的贿赂</span>
+        <p>广东帅臣给权相送特制蜡烛，众香实其中。相府宴客烛尽，管事的取出这批不敢先点的贡烛，点上一屋异香，一数四十九支：工匠试烧了一支，不敢拿别的充数。权相大喜，从此厚待他。</p>
+        <q>俄而异香满坐，察之，则自烛中出也。</q>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="finale" id="fin">
+  <div class="wrap">
+    <div class="vtitle">
+      <q>客大笑</q>
+      <q>余故齐</q>
+      <q>欲不齐不可</q>
+      <q>吾因以名其书</q>
+    </div>
+    <div class="seal2">草窗</div>
+    <div class="limit">
+      <b>读 前 须 知 · 时 代 局 限</b>
+      冤魂索命的果报框架、祥瑞灾异的天人感应、对岭外部族的猎奇笔法，皆是十三世纪笔记体的底色；替王俊民翻案所据仍是传状传闻，考信有边界。照录存照，不代今人立论。
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="fin">
+    <p>文本来源：殆知阁古代文献简体库（子藏笔记〈齐东野语〉二十卷）· 仓库 <a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">daizhige-daodu</a></p>
+    <p>引文经脚本与库本去标点、归一逐字比对通过；库本「黄藤酒」通行本作縢、「泪痕红」下有一残字（通行本作浥），均照录存照。</p>
+    <p>本篇为古人笔记导读，含果报、灾异等旧时代观念，阅读请存时代之照。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var step=0;
+  var mus=[document.getElementById('mu1'),document.getElementById('mu2'),document.getElementById('mu3')];
+  var seal=document.getElementById('seal1');
+  var hint=document.getElementById('hint1');
+  var hero=document.querySelector('.hero');
+  hero.addEventListener('click',function(){
+    if(step<mus.length){
+      var el=mus[step];
+      el.classList.add('on');
+      requestAnimationFrame(function(){requestAnimationFrame(function(){el.classList.add('vis');});});
+      step++;
+      if(step===mus.length){
+        seal.classList.add('on');
+        hint.classList.add('done');
+      }
+    }
+  });
+  var album=document.getElementById('album');
+  document.getElementById('seambtn').addEventListener('click',function(){
+    album.classList.toggle('stitched');
+    this.textContent=album.classList.contains('stitched')?'拆':'合';
+  });
+  var dossier=document.getElementById('dossier');
+  function tear(){dossier.classList.add('open');}
+  var strip=document.getElementById('sealstrip');
+  strip.addEventListener('click',tear);
+  strip.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();tear();}
+  });
+})();
+</script>
+</body>
+</html>
