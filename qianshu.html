@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>潜书 · 烛下问对</title>
+<style>
+:root{--bg:#191917;--paper:#e8e4dc;--paper2:#ded8ca;--ink:#191917;--c:#c0453c;--cd:#7e2b24;--cl:#d98a80;--dim:#8d8a80;--line:#2e2d29;--wood:#33302a;}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--paper);font-family:'Songti SC','STSong','SimSun','Noto Serif CJK SC',serif;line-height:1.95;overflow-x:hidden}
+q{quotes:none;font-style:normal}
+::selection{background:var(--c);color:var(--paper)}
+
+/* 首屏 */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1.1fr;gap:30px;align-items:center;max-width:1120px;margin:0 auto;padding:70px 26px 60px;position:relative}
+.kick{font-size:13px;letter-spacing:.35em;color:var(--cl);margin-bottom:18px}
+h1{font-size:clamp(64px,9vw,110px);line-height:1.1;letter-spacing:.08em;font-weight:600}
+h1 b{color:var(--c);font-weight:600}
+.hsub{margin:22px 0 8px;font-size:19px;color:var(--paper)}
+.hmeta{font-size:13px;color:var(--dim);letter-spacing:.12em}
+.hintro{margin-top:26px;font-size:14.5px;color:#b9b5a9;max-width:40ch}
+.cue{margin-top:30px;font-size:13px;color:var(--cl);letter-spacing:.3em;animation:cuef 2.4s infinite}
+@keyframes cuef{0%,100%{opacity:.35}50%{opacity:1}}
+
+/* 饭桌场景 */
+.scene{position:relative;display:flex;flex-direction:column;align-items:center;gap:26px}
+.ta{position:relative;width:min(360px,78vw);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 38% 30%,#3a362e,#282520 68%,#1f1d19);
+  border:7px double #46423a;box-shadow:0 30px 60px rgba(0,0,0,.55),inset 0 0 60px rgba(0,0,0,.5)}
+.candle{position:absolute;top:-16px;right:14%;width:10px;height:46px;background:linear-gradient(#4a453c,#332f28);border-radius:3px;z-index:3}
+.candle i{position:absolute;left:50%;top:-16px;width:12px;height:20px;transform:translateX(-50%);
+  background:radial-gradient(circle at 50% 75%,#ffd9a0,#e8a34c 55%,rgba(192,69,60,.15) 80%);
+  border-radius:50% 50% 45% 45%;filter:blur(.4px);animation:flick 1.6s infinite}
+@keyframes flick{0%,100%{transform:translateX(-50%) scale(1)}30%{transform:translateX(-46%) scale(1.12,.94) skewX(3deg)}60%{transform:translateX(-54%) scale(.9,1.1) skewX(-4deg)}}
+.seat{position:absolute;width:58px;height:58px;border-radius:50%;background:var(--paper);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;z-index:2;
+  box-shadow:0 6px 14px rgba(0,0,0,.45);opacity:.28;transition:opacity .8s,transform .8s;transform:scale(.92)}
+.seat small{position:absolute;bottom:-24px;font-size:11px;color:var(--dim);letter-spacing:.1em;opacity:0;transition:opacity .8s .5s;white-space:nowrap}
+.sT{right:-26px;top:50%;margin-top:-29px}
+.sQ{left:-26px;top:50%;margin-top:-29px}
+.sN{left:50%;top:-24px;margin-left:-29px}
+.sW{left:-6px;top:-10px;margin-left:-58px}
+
+.hero.lit .seat{opacity:1;transform:scale(1)}
+.hero.lit .seat small{opacity:1}
+.dish{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:52%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 42% 34%,#efeae0,#cfc9ba 78%);border:1px solid #a49e8e;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(0,0,0,.5);transition:transform .3s}
+.dish:hover{transform:translate(-50%,-50%) scale(1.04)}
+.dish svg{width:74%;display:block;color:#9c382f}
+.dish .fb,.dish .ft{fill:currentColor}
+.dish .fe{fill:#e8e4dc}
+.dishlab{position:absolute;bottom:-34px;left:50%;transform:translateX(-50%);font-size:12.5px;color:var(--cl);letter-spacing:.22em;white-space:nowrap}
+.hero.lit .dishlab{opacity:0;transition:opacity .5s}
+.hero.lit .ta{animation:tabletap .9s ease}
+@keyframes tabletap{0%,100%{transform:none}18%{transform:rotate(-1.1deg) translateY(3px)}40%{transform:rotate(.7deg)}65%{transform:rotate(-.4deg)}}
+.slines{min-height:150px;width:min(430px,84vw);text-align:center}
+.slines .sq{opacity:0;transform:translateY(14px);transition:opacity .9s,transform .9s;font-size:15.5px;color:var(--paper2)}
+.slines .sq.s2{transition-delay:.55s;font-size:17px;color:var(--cl);margin-top:10px}
+.slines .cue{opacity:0;transition:opacity 1s 1.3s;animation:none;margin-top:18px}
+.hero.lit .sq{opacity:1;transform:none}
+.hero.lit .cue{opacity:1}
+
+/* 通用节 */
+.sec{max-width:920px;margin:0 auto;padding:96px 26px 30px;position:relative}
+.shead{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:26px}
+.rn{font-size:13px;letter-spacing:.3em;color:var(--cl);border:1px solid #4a2a24;padding:3px 10px 2px;border-radius:2px}
+.shead h2{font-size:30px;letter-spacing:.14em;font-weight:600}
+.shead h2 b{color:var(--c);font-weight:600}
+.src{margin-left:auto;font-size:12.5px;color:var(--dim);letter-spacing:.2em}
+.lead{font-size:15px;color:#b9b5a9;max-width:62ch;margin-bottom:30px}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .9s,transform .9s}
+.rv.on{opacity:1;transform:none}
+
+/* 巡一 问答梯 */
+.ladder{display:flex;flex-direction:column;gap:16px}
+.step{opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s}
+.step.on{opacity:1;transform:none}
+.ask{align-self:flex-start;max-width:66ch;background:var(--paper);color:var(--ink);padding:14px 20px;border-radius:2px 10px 10px 10px;position:relative}
+.ans{align-self:flex-end;max-width:70ch;border-left:3px solid var(--c);padding:6px 20px;color:var(--paper)}
+.who{display:block;font-size:12px;letter-spacing:.3em;color:var(--cl);margin-bottom:6px}
+.ask .who{color:var(--cd)}
+.ans q{font-size:16.5px}
+.ask q{font-size:15.5px}
+.dec{align-self:center;text-align:center;padding:10px 0}
+.dec q{display:block;font-size:clamp(24px,3.6vw,34px);color:var(--c);letter-spacing:.1em;line-height:1.7;font-weight:600}
+.gow{display:flex;justify-content:center;margin-top:26px}
+.go{font-family:inherit;background:none;border:1px solid #4a2a24;color:var(--cl);padding:9px 30px;font-size:14px;letter-spacing:.4em;cursor:pointer;border-radius:2px;transition:all .3s}
+.go:hover{background:var(--c);border-color:var(--c);color:var(--paper)}
+.go.done{opacity:.35;pointer-events:none}
+
+/* 巡二 屠城账 */
+.ledger{margin:6px 0 30px}
+.lrow{display:flex;align-items:center;gap:14px;border-bottom:1px dashed #3a3830;padding:13px 4px;position:relative}
+.lrow .no{font-size:12px;color:var(--dim);width:2.4em;letter-spacing:.1em}
+.lrow .cty{font-size:17px;letter-spacing:.06em}
+.lrow .stamp{margin-left:auto;font-size:13px;color:var(--c);border:1.5px solid var(--c);border-radius:2px;padding:2px 10px;transform:rotate(-4deg) scale(1.3);opacity:0;transition:all .45s;letter-spacing:.1em;white-space:nowrap}
+.lrow.st .stamp{opacity:.92;transform:rotate(-4deg) scale(1)}
+.lrow.st .cty{color:var(--cl)}
+.stampall{text-align:center;margin:26px 0 34px;font-size:20px;color:var(--c);letter-spacing:.16em;opacity:0;transition:opacity .8s}
+.stampall.on{opacity:1}
+.handwall{border:1px solid var(--line);border-radius:4px;padding:26px 24px;background:#1e1d19}
+.hlead{font-size:14px;color:var(--dim);margin-bottom:16px}
+.hands{display:flex;flex-wrap:wrap;gap:12px}
+.hand{font-family:inherit;background:none;border:1px solid #4a463c;color:var(--paper);font-size:15px;padding:8px 22px;border-radius:2px;cursor:pointer;letter-spacing:.2em;transition:all .3s}
+.hand.on{background:var(--c);border-color:var(--c)}
+.hout{margin-top:20px;opacity:0;transform:translateY(10px);transition:all .8s}
+.hout.on{opacity:1;transform:none}
+.hout q{font-size:17.5px;color:var(--cl);line-height:2}
+.cimu{text-align:center;font-size:17px;color:var(--paper2);margin-top:34px;line-height:2.1}
+
+/* 巡三 案板 */
+.board{border:1px solid var(--line);border-radius:4px;padding:30px 24px;background:#1e1d19}
+.bwrap{position:relative;height:150px;display:flex;align-items:center;justify-content:center;margin:6px 0 22px}
+.bwrap svg{width:min(300px,70vw);display:block}
+.bf{fill:#3c3a33;transition:fill .6s}
+.bt{fill:#3c3a33;transition:transform .6s,opacity .6s,fill .6s;transform-origin:78% 50%}
+.beye{fill:#191917}
+.bknife{stroke:var(--cl);stroke-width:2.5;opacity:0;transition:opacity .5s}
+.bplate{fill:none;stroke:#4a463c;stroke-width:1.5;transition:stroke .6s}
+.bwrap[data-st="2"] .bf,.bwrap[data-st="2"] .bt{fill:#57534a}
+.bwrap[data-st="3"] .bt{transform:rotate(38deg) translate(14px,-10px);opacity:.85}
+.bwrap[data-st="3"] .bknife{opacity:1}
+.bwrap[data-st="4"] .bknife{opacity:1;transform:translateX(26px);transition:transform .5s,opacity .5s}
+.bwrap[data-st="5"] .bf,.bwrap[data-st="5"] .bt{fill:#7e2b24;opacity:.85}
+.bwrap[data-st="5"] .bknife{opacity:0}
+.bwrap[data-st="5"] .bplate{stroke:var(--c)}
+.steps{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.stp{font-family:inherit;width:52px;height:52px;border-radius:50%;border:1px solid #4a463c;background:none;color:var(--dim);font-size:19px;cursor:pointer;transition:all .4s}
+.stp.done{border-color:var(--c);color:var(--c)}
+.stp.cur{background:var(--c);border-color:var(--c);color:var(--paper)}
+.bgo{display:block;margin:22px auto 0}
+.wif{text-align:center;margin-top:24px;opacity:0;transition:opacity 1s;transform:translateY(8px)}
+.wif.on{opacity:1;transform:none}
+.wif .who{display:inline;letter-spacing:.3em;margin-right:12px}
+.wif q{font-size:19px;color:var(--c);letter-spacing:.1em}
+.yu2{margin-top:40px;font-size:17.5px;line-height:2.2;color:var(--paper);max-width:60ch}
+.bei{margin:34px auto 0;font-size:15.5px;color:var(--dim);max-width:56ch;text-align:center;line-height:2.2}
+.dimnote{margin-top:26px;font-size:14px;color:var(--dim);max-width:58ch}
+
+/* 鲜君 */
+.jun1{text-align:center;font-size:22px;letter-spacing:.14em;color:var(--cl);margin-bottom:26px}
+.jun2{text-align:center;font-size:clamp(20px,3vw,27px);line-height:2.1;color:var(--paper);max-width:26em;margin:0 auto 34px}
+.jun2 em{font-style:normal;color:var(--c)}
+.jrow{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-bottom:30px}
+.jchip{border:1px solid #4a2a24;color:var(--cl);padding:7px 20px;font-size:15.5px;letter-spacing:.14em;border-radius:2px;cursor:pointer;transition:all .35s;user-select:none}
+.jchip.on{background:var(--cd);border-color:var(--c);color:var(--paper);transform:translateY(-3px)}
+.jdim{text-align:center;font-size:14px;color:var(--dim);max-width:52ch;margin:0 auto}
+
+/* 抑尊 */
+.tout{margin-top:26px;opacity:0;transform:translateY(12px);transition:all .8s;text-align:center}
+.tout.on{opacity:1;transform:none}
+.tout q{font-size:clamp(18px,2.6vw,23px);line-height:2.2;color:var(--paper);max-width:30em;display:inline-block}
+.tout .tb2{color:var(--c)}
+.stairs{margin:40px 0 8px;padding-left:6px;border-left:3px solid var(--c)}
+.stairs q{font-size:17px;line-height:2.2;color:var(--cl)}
+.duan{margin-top:46px;background:var(--paper);color:var(--ink);border-radius:3px;padding:30px 30px 26px}
+.duan .dt{font-size:13px;letter-spacing:.3em;color:var(--cd);margin-bottom:12px}
+.duan p{font-size:15px;max-width:62ch}
+.duan q{display:block;margin-top:14px;font-size:15.5px;line-height:2.1;color:#5a3029}
+
+/* 富民 */
+.cai{text-align:center;font-size:24px;letter-spacing:.2em;color:var(--c);margin-bottom:34px}
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px}
+.case{perspective:1100px;min-height:230px;cursor:pointer}
+.cin{position:relative;width:100%;height:100%;transition:transform .8s;transform-style:preserve-3d}
+.case.flip .cin{transform:rotateY(180deg)}
+.cf,.cb{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--line);border-radius:4px;padding:22px 20px}
+.cf{background:#1e1d19;display:flex;flex-direction:column;gap:8px}
+.cb{background:var(--paper);color:var(--ink);transform:rotateY(180deg)}
+.cno{font-size:12px;letter-spacing:.3em;color:var(--cl)}
+.cf h3{font-size:20px;letter-spacing:.1em}
+.cf p{font-size:13.5px;color:var(--dim)}
+.fliphint{margin-top:auto;font-size:12px;color:var(--cl);letter-spacing:.2em}
+.cb q{display:block;font-size:14.5px;line-height:2}
+.cver{margin-top:12px;font-size:16px;color:var(--c);letter-spacing:.14em;border-top:1px dashed #b5ad9b;padding-top:10px}
+.dao{text-align:center;font-size:clamp(21px,3vw,28px);line-height:2;color:var(--c);max-width:24em;margin:44px auto 10px}
+.zhidao{text-align:center;font-size:14px;color:var(--dim);margin-bottom:30px}
+.zhiq{max-width:56ch;margin:0 auto;font-size:15.5px;color:var(--cl);line-height:2.2;text-align:center}
+
+/* 自家账 */
+.acct{border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-bottom:30px}
+.ar{display:flex;justify-content:space-between;align-items:baseline;padding:12px 22px;border-bottom:1px solid var(--line);font-size:15px}
+.ar:last-child{border-bottom:none}
+.ar span{color:var(--dim);letter-spacing:.1em;font-size:13.5px}
+.ar b{font-family:'Menlo','Consolas',monospace;font-size:19px;font-weight:400}
+.ar.hi{background:#241f1c}
+.ar.hi b{color:var(--c)}
+.qrow{max-width:64ch;margin-bottom:14px;font-size:15.5px;color:var(--paper2);line-height:2.1}
+.coda{margin-top:50px;background:var(--paper);color:var(--ink);border-radius:3px;padding:34px 32px 30px}
+.coda .dt{font-size:13px;letter-spacing:.3em;color:var(--cd);margin-bottom:14px}
+.coda p{font-size:15px;max-width:64ch}
+.coda .ask{background:var(--paper2);box-shadow:none;border:1px solid #cfc8b8}
+.coda .who{color:var(--cd)}
+.coda q{display:block;margin-top:12px;font-size:15.5px;line-height:2.1;color:#3c3a33;max-width:66ch}
+.thirty{display:flex;align-items:baseline;gap:18px;margin:30px 0 6px;flex-wrap:wrap}
+.thirty b{font-size:44px;color:var(--c);font-weight:600;letter-spacing:.02em}
+.thirty span{font-size:13.5px;color:#7a766b;letter-spacing:.08em}
+
+/* 尾屏 */
+.fin{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center;padding:80px 24px;position:relative;transition:background 1.4s}
+.cnd{position:relative;width:56px;height:150px;background:none;border:none;cursor:pointer}
+.wk{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:34px;height:104px;background:linear-gradient(#e5dfd2,#b8b1a0);border-radius:8px 8px 5px 5px;box-shadow:0 12px 26px rgba(0,0,0,.5)}
+.wk::after{content:"";position:absolute;left:50%;top:-8px;transform:translateX(-50%);width:4px;height:12px;background:#332f28}
+.fl2{position:absolute;left:50%;top:6px;transform:translateX(-50%);width:20px;height:34px;background:radial-gradient(circle at 50% 78%,#ffe2ae,#e8a34c 52%,rgba(192,69,60,.2) 82%);border-radius:50% 50% 44% 44%;animation:flick 1.5s infinite;transition:opacity 1.2s,transform 1.2s;filter:drop-shadow(0 0 26px rgba(232,163,76,.5))}
+.fhint{font-size:13px;letter-spacing:.5em;color:var(--dim)}
+.flines{opacity:0;transform:translateY(16px);transition:opacity 1.4s .8s,transform 1.4s .8s;max-width:60ch}
+.flines q{display:block;font-size:17.5px;line-height:2.3;color:var(--paper2);margin-bottom:18px}
+.flines .xiliu{color:var(--cl);font-size:19px}
+.fin.off .fl2{opacity:0;transform:translateX(-50%) scale(.4)}
+.fin.off{background:#121110}
+.fin.off .flines{opacity:1;transform:none}
+.fin.off .fhint{opacity:0}
+.sealrow{display:flex;justify-content:center;gap:16px;margin-top:16px}
+.seal{border:2px solid var(--c);color:var(--c);padding:8px 10px;font-size:15px;letter-spacing:.18em;transform:rotate(-3deg);border-radius:2px;opacity:.9}
+.seal.s2{transform:rotate(2.5deg);font-size:12.5px;padding:7px 8px}
+
+footer{border-top:1px solid var(--line);padding:30px 22px 44px;font-size:13px;color:var(--dim);line-height:2.1;max-width:920px;margin:0 auto}
+footer b{color:#b9b5a9}
+
+/* 侧栏航标 */
+.rail{position:fixed;right:16px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:9}
+.rail a{width:26px;height:26px;border-radius:50%;border:1px solid #4a463c;color:var(--dim);font-size:11px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-family:'Menlo','Consolas',monospace;transition:all .3s}
+.rail a:hover{background:var(--c);border-color:var(--c);color:var(--paper)}
+
+@media(max-width:920px){
+  .hero{grid-template-columns:1fr;gap:70px;padding-top:60px}
+  .scene{order:-1}
+  .cases{grid-template-columns:1fr}
+  .rail{display:none}
+}
+@media(max-width:560px){
+  .sec{padding:70px 18px 20px}
+  .ask,.ans{max-width:100%}
+  .seat{width:46px;height:46px;font-size:19px}
+  .sT{right:-14px}.sQ{left:-14px}.sN{margin-left:-23px}.sW{left:-8px;top:-16px;margin-left:0}
+}
+</style>
+</head>
+<body id="top">
+
+<header class="hero">
+  <div>
+    <p class="kick">子藏政论｜唐甄</p>
+    <h1>潜<b>书</b></h1>
+    <p class="hsub">三十年攒成的一部账，从一张夜饭桌上问起</p>
+    <p class="hmeta">清初 · 上篇言学五十篇，下篇言治四十七篇</p>
+    <p class="hintro">康熙年间，苏州城里有个卖过田、贩过布的老举人，夜夜点灯写文章。文章多半从饭桌上的小事说起，说到最后，账全记在坐北朝南那个人头上。</p>
+    <p class="cue">点盘中之鱼 · 开席</p>
+  </div>
+  <div class="scene">
+    <div class="ta">
+      <div class="candle"><i></i></div>
+      <span class="seat sN">女<small>女安 · 北向</small></span>
+      <span class="seat sW">妾<small>西北隅</small></span>
+      <span class="seat sQ">妻<small>东向</small></span>
+      <span class="seat sT">唐<small>西向</small></span>
+      <button class="dish" id="dish" aria-label="盘中之鱼">
+        <svg viewBox="0 0 120 70" aria-hidden="true">
+          <path class="fb" d="M16 36 Q44 8 78 27 Q86 32 86 36 Q86 40 78 45 Q44 64 16 36 Z"/>
+          <path class="ft" d="M84 36 L108 16 L108 56 Z"/>
+          <circle class="fe" cx="32" cy="31" r="3.2"/>
+        </svg>
+        <span class="dishlab">盘中之鱼</span>
+      </button>
+    </div>
+    <div class="slines">
+      <p class="sq s1"><q>唐子居于内，夜饮酒。己西向坐，妻东向坐，女安北向坐，妾坐于西北隅。执壶以酌，相与笑语</q></p>
+      <p class="sq s2"><q>吾欲有言，未尝以语人，恐人之骇异吾言也。今食是鱼而念及之，是以叹也</q></p>
+      <p class="cue">顺烛光往下</p>
+    </div>
+  </div>
+</header>
+
+<nav class="rail" aria-label="页内导航">
+  <a href="#r1">1</a><a href="#r2">2</a><a href="#r3">3</a><a href="#r4">4</a><a href="#r5">5</a><a href="#r6">6</a><a href="#r7">7</a>
+</nav>
+
+<section class="sec" id="r1">
+  <div class="shead"><span class="rn">巡一</span><h2>皆<b>贼</b></h2><span class="src">室语</span></div>
+  <p class="lead">酒过一巡，唐子夹了一箸鱼，忽然按着桌沿叹气。妻子问他缘故，他说憋了半生的那句话，今天借这盘鱼说出口。</p>
+  <div class="ladder" id="ladder">
+    <div class="ask step"><span class="who">妻问</span><q>今也有负数匹布、或担数斗粟而行于涂者，或杀之而有其布粟，是贼乎，非贼乎</q></div>
+    <div class="ans step"><span class="who">唐子</span><q>是贼矣</q></div>
+    <div class="dec step"><q>大清有天下，仁矣。自秦以来，凡为帝王者皆贼也</q></div>
+    <div class="ans step"><span class="who">唐子</span><q>杀一人而取其匹布斗粟，犹谓之贼，杀天下之人而尽有其布粟之富，乃反不谓之贼乎</q></div>
+  </div>
+  <div class="gow"><button class="go" id="go1">续问</button></div>
+</section>
+
+<section class="sec" id="r2">
+  <div class="shead"><span class="rn">巡二</span><h2>屠城<b>账</b></h2><span class="src">室语</span></div>
+  <p class="lead rv">妻子替君主分辩：大乱之际，哪能一个不杀就定天下。唐子不谈空理，先报账，一笔一笔，报完随手批注。</p>
+  <div class="ledger rv">
+    <div class="lrow"><span class="no">一笔</span><span class="cty"><span class="qv">高帝屠城阳</span></span><span class="stamp"><span class="qv">必痛哭而去之矣</span></span></div>
+    <div class="lrow"><span class="no">二笔</span><span class="cty"><span class="qv">屠颖阳</span></span><span class="stamp"><span class="qv">必痛哭而去之矣</span></span></div>
+    <div class="lrow"><span class="no">三笔</span><span class="cty"><span class="qv">光武帝屠城三百</span></span><span class="stamp"><span class="qv">必痛哭而去之矣</span></span></div>
+  </div>
+  <p class="stampall" id="stampall"><q>使我而事高帝，当其屠城阳之时，必痛哭而去之矣；使我而事光武帝，当其屠一城之始，必痛哭而去之矣。吾不忍为之臣也</q></p>
+  <div class="ask rv"><span class="who">妻问</span><q>当大乱之时，岂能不杀一人而定天下</q></div>
+  <div class="ans rv"><span class="who">唐子</span><q>定乱岂能不杀乎，古之王者有不得已而杀者二，有罪不得不杀，临战不得不杀。有罪而杀，尧舜之所不能免也；临战而杀，汤武之所不能免也。非是，奚以杀为</q></div>
+  <div class="ans rv"><span class="who">唐子</span><q>若过里而墟其里，过市而窜其市，入城而屠其城，此何为者</q></div>
+  <div class="handwall rv" id="hw">
+    <p class="hlead">杀人的手太多，他把手一只只数给你看：</p>
+    <div class="hands">
+      <button class="hand">大将</button><button class="hand">偏将</button><button class="hand">卒伍</button><button class="hand">官吏</button>
+    </div>
+    <p class="hout" id="hout"><q>大将杀人，非大将杀之，天子实杀之；偏将杀人，非偏将杀之，天子实杀之；卒伍杀人，非卒伍杀之，天子实杀之；官吏杀人，非官吏杀之，天子实杀之。杀人者众手，实天子为之大手</q></p>
+  </div>
+  <p class="cimu rv"><q>天子者，天下之慈母也，人所仰望以乳育者也，乃无故而杀之，其罪岂不重于匹夫</q></p>
+</section>
+
+<section class="sec" id="r3">
+  <div class="shead"><span class="rn">巡三</span><h2>一<b>鱼</b></h2><span class="src">室语</span></div>
+  <p class="lead rv">道理说到这里，妻子没了话。唐子指着她面前那盘鱼，把刚才那口鲜味拆开给她看。</p>
+  <div class="board rv">
+    <div class="bwrap" id="bwrap" data-st="0">
+      <svg viewBox="0 0 320 120" aria-hidden="true">
+        <ellipse class="bplate" cx="160" cy="88" rx="120" ry="18"/>
+        <path class="bf" d="M60 56 Q112 18 176 46 Q188 52 188 58 Q188 64 176 70 Q112 96 60 56 Z"/>
+        <path class="bt" d="M182 58 L242 30 L242 84 Z"/>
+        <circle class="beye" cx="92" cy="48" r="4"/>
+        <line class="bknife" x1="150" y1="18" x2="236" y2="98"/>
+      </svg>
+    </div>
+    <div class="steps" id="steps3">
+      <button class="stp">钓</button><button class="stp">脱</button><button class="stp">椹</button><button class="stp">刳</button><button class="stp">烹</button>
+    </div>
+    <button class="go bgo" id="bgo">过刀</button>
+    <p class="wif" id="wif"><span class="who">妻</span><q>吾不忍食也</q></p>
+  </div>
+  <p class="yu2 rv"><q>于鱼则不忍，于人则忍之；杀一鱼而甘一鱼之味则不忍，杀天下之人而甘天下之味则忍之。是岂人之本心哉！尧舜之道，不失其本心而已矣</q></p>
+  <p class="bei rv"><q>妾，微者也；女安，童而无知者也。闻唐子之言，亦皆悄然而悲，咨嗟欲泣，若不能自释焉</q></p>
+  <p class="dimnote rv">一桌四口，连妾和未成年的女儿都听懂了，都悲了。话从这张桌子上起头，往后三十年没有停。</p>
+</section>
+
+<section class="sec" id="r4">
+  <div class="shead"><span class="rn">续谈一</span><h2>鲜<b>君</b></h2><span class="src">鲜君</span></div>
+  <p class="lead rv">从那张桌子往外看，才看清他骂的不是哪一个皇帝，是那个位置本身。四千年里他数来数去，治世少，乱世多，根子都在一个人手里。</p>
+  <p class="jun1 rv"><q>治天下者惟君，乱天下者惟君</q></p>
+  <p class="jun2 rv"><q>海内百亿万之生民，握于一人之手，抚之则安居，置之则死亡，天乎君哉，地乎君哉</q></p>
+  <div class="jrow rv">
+    <span class="jchip"><span class="qv">懦君蓄乱</span></span>
+    <span class="jchip"><span class="qv">辟君生乱</span></span>
+    <span class="jchip"><span class="qv">暗君召乱</span></span>
+    <span class="jchip"><span class="qv">暴君激乱</span></span>
+  </div>
+  <p class="jdim rv">连"天命"他都替君主卸了责：乱不乱在人不在天，可人也拿它没办法，这才是古今同叹。</p>
+</section>
+
+<section class="sec" id="r5">
+  <div class="shead"><span class="rn">续谈二</span><h2>抑<b>尊</b></h2><span class="src">抑尊</span></div>
+  <p class="lead rv">既然乱源在君，先得把君从神坛上请下来。他挑了三样最寻常的东西作比，一句比一句平实：</p>
+  <div class="tri rv">
+    <div class="steps">
+      <button class="stp tb">山</button><button class="stp tb">海</button><button class="stp tb">人</button>
+    </div>
+    <p class="tout" id="tout"><q>太山之高，非金玉丹青也，皆土也；江海之大，非甘露醴泉也，皆水也；天子之尊，非天帝大神也，皆人也</q></p>
+  </div>
+  <div class="stairs rv">
+    <q>位在十人之上者，必处十人之下；位在百人之上者，必处百人之下；位在天下之上者，必处天下之下</q>
+  </div>
+  <div class="duan rv">
+    <p class="dt">蜀地的巫</p>
+    <p>他讲过川人跳神的事：神不接人，人不接神，中间全凭一个端公做手脚，福祸都由他一张嘴。君主端得太高，权臣近侍就是那个端公。</p>
+    <q>人君之尊，其犹土神乎？权臣嬖侍，其犹端公乎？无闻无见，大权下移，诛及伯夷，赏及盗跖，海内怨叛，宼及寝门，宴然不知。岂人之能蔽其耳目哉？势尊自蔽也</q>
+  </div>
+</section>
+
+<section class="sec" id="r6">
+  <div class="shead"><span class="rn">续谈三</span><h2>富<b>民</b></h2><span class="src">富民</span></div>
+  <p class="lead rv">骂完坐上面的，他转头护住下面做小买卖的。两桩案子，都在他眼前发生，他记下前后账，让读者自己翻过来看。</p>
+  <p class="cai rv"><q>财者，国之宝也，民之命也</q></p>
+  <div class="cases">
+    <div class="case rv" tabindex="0">
+      <div class="cin">
+        <div class="cf"><span class="cno">案一</span><h3>卖羊汤的</h3><p>兖州东门外一家小馆，两代人的营生，全家十几口指着它吃饭。有人诬赖他偷羊，罚粟三石。</p><span class="fliphint">点看后账</span></div>
+        <div class="cb"><q>上猎其一，下攘其十，尽鬻其釜甑之器而未足也，遂失业而乞于道</q><p class="cver"><span class="qv">取之一金丧其百金</span></p></div>
+      </div>
+    </div>
+    <div class="case rv" tabindex="0">
+      <div class="cin">
+        <div class="cf"><span class="cno">案二</span><h3>潞府的铁场</h3><p>西山里苗家的铁冶，开了几代，四方客商靠它吃饭的上百人。有人诬告场主盗矿。</p><span class="fliphint">点看后账</span></div>
+        <div class="cb"><q>潞之西山之中有苗氏者，富于铁冶，业之数世矣。多致四方之贾，椎凿鼓泻担挽，所藉而食之者常百余人。或诬其主盗，上猎其一下攘其十，其冶遂废，向之藉而食之者无所得食，皆流亡于河漳之上</q><p class="cver"><span class="qv">取之一室丧其百室</span></p></div>
+      </div>
+    </div>
+  </div>
+  <p class="qrow rv">强盗隔几年才来一回，贪官天天在任上。他把这两笔并成一句：</p>
+  <p class="dao rv"><q>彼为吏者，星列于天下，日夜猎人之财</q></p>
+  <p class="zhidao rv">所以官府真正该防的不是响马，是坐衙门里的人。</p>
+  <p class="dao rv"><q>夫盗不尽人，宼不尽世，而民之毒于贪吏者，无所逃于天地之间</q></p>
+  <p class="zhiq rv"><q>不扰民者，植枝者也，生不已也；虐取于民者，拔枝者也，绝其生也</q></p>
+  <p class="dimnote rv">他不反对人发财，反对的是官家的手伸进别人的口袋。柳树的比方同此：不扰民是栽枝，虐取是拔苗。</p>
+</section>
+
+<section class="sec" id="r7">
+  <div class="shead"><span class="rn">末巡</span><h2>自家<b>账</b></h2><span class="src">食难 · 潜存</span></div>
+  <p class="lead rv">骂君骂吏的人，自己过得怎样？他把自家的田账也摊在桌上，一笔不瞒。</p>
+  <div class="acct rv">
+    <div class="ar"><span>长泾下田</span><b>30 亩</b></div>
+    <div class="ar"><span>谢庄下田</span><b>10 亩</b></div>
+    <div class="ar"><span>佃入（两处合计）</span><b>41 石</b></div>
+    <div class="ar"><span>赋与加耗诸费</span><b>23 石</b></div>
+    <div class="ar hi"><span>大熟年所余，供六口人吃半年</span><b>18 石</b></div>
+  </div>
+  <p class="qrow rv"><q>大熟则余十八石，可为六口半年之用；半熟则尽税无余，岁凶则典物以纳</q></p>
+  <p class="qrow rv"><q>尝通七岁计之，赋一百五十四石，丰凶相半，佃之所获不足于赋，典物以益之者六斛，而典息不与焉</q></p>
+  <p class="dimnote rv">丰年凶年对半算，七个年头下来，佃收抵不上赋，年年典东西贴补。他动了卖田的心思，想散了家各自谋条活路，妻子头一个不肯：</p>
+  <div class="ask rv"><span class="who">妻</span><q>吾老矣，岂能复俛首于他人之宇下，察颜观色，以求无拂于人？吾不能也。所欲多违，所恶多受，吾不堪也</q></div>
+  <p class="dimnote rv">田到底贱卖了，得六十多两银子，打发养子和老仆去震泽贩布，自己搬进城东，做起了书铺的牙人。有旧客当面下不来，讥他丢人：</p>
+  <div class="ask rv"><span class="who">客</span><q>今春秋高矣，乃自污于贾市，窃为先生不取也</q></div>
+  <div class="ans rv"><span class="who">唐子</span><q>天下岂有无故而可以死者哉！伯夷叔齐饿死于首阳之下，所以成义也。非其义也，生为重矣</q></div>
+  <div class="ans rv"><span class="who">唐子</span><q>吾虽不贵、不高、不贤，亦父母之身也，其不可以饿死也明矣</q></div>
+  <div class="ans rv"><span class="who">唐子</span><q>今者贾客满堂，酒脯在厨，日得微利以活家人，妻奴相保，居于市廛，日食不匮，此救死之术也</q></div>
+  <div class="coda rv">
+    <p class="dt">晚年自订</p>
+    <p>书写成，他给自己下过考语：</p>
+    <q>甄下士也，貌朴而言讷，人皆易之</q>
+    <div class="ask"><span class="who">婿问</span><q>先生可以为相乎？曰：不能也。吾褊而不能忍，隘而不能容，明而迟于决，不足以任之矣</q></div>
+    <q>使我立于明主之侧，从容咨询，舍其短而用其长，以授之能者而善行之，可以任官，可以足民，可以弭乱，不出十年天下，大治矣</q>
+    <p>而写书那些年，家里过的是什么日子：</p>
+    <q>凶岁食糠粞，奴仆离散，志气销亡</q>
+    <div class="thirty"><b>30 年</b><span>上篇言学 50 篇，下篇言治 47 篇，号曰潜书</span></div>
+    <q>历三十年，累而存之，分为上下篇，言学者系于上篇，凡五十篇。言治者系于下篇，凡四十七篇。号曰潜书</q>
+  </div>
+</section>
+
+<section class="fin" id="fin">
+  <button class="cnd" id="cnd" aria-label="吹灯"><span class="wk"></span><i class="fl2"></i></button>
+  <p class="fhint">吹灯</p>
+  <div class="flines">
+    <q>勤于诵读，笃于筹策，鸡鸣而兴，夜分而寝</q>
+    <q class="xiliu">譬细流之赴江海，小大虽殊，其为水则一也</q>
+    <div class="sealrow"><span class="seal">潜书</span><span class="seal s2">铸万</span></div>
+  </div>
+</section>
+
+<footer>
+  <p>文本来源：殆知阁古代文献简体库〈潜书〉子藏诸子本　<b>github.com/robertsong/daizhige-daodu</b></p>
+  <p>引文经脚本自库本锚点切片生成、去标点归一逐字比对通过；白话行文与库本六字窗反扫零撞。校字记：库本颖阳（即颍阳）、宼（即寇）、俛首（即俯）、椹（即砧）诸形照录；库本有后人所加官职年代夹注，引文均避而不取。</p>
+  <p>本书为清初政论，篇中妻妾婢仆同席之记述、视起事者为盗贼之旧称、以及以忠孝纲常立论之处，皆系当日社会结构与立场的产物，照录存照，不代今人立论。</p>
+</footer>
+
+<script>
+(function(){
+  var hero=document.querySelector('.hero');
+  document.getElementById('dish').addEventListener('click',function(){hero.classList.add('lit');});
+  var steps=document.querySelectorAll('#ladder .step'),gi=0;
+  document.getElementById('go1').addEventListener('click',function(){
+    gi=Math.min(gi+1,steps.length);
+    for(var i=0;i<gi;i++)steps[i].classList.add('on');
+    if(gi>=steps.length)this.classList.add('done');
+  });
+  var rows=document.querySelectorAll('.lrow'),rc=0;
+  rows.forEach(function(r){r.addEventListener('click',function(){
+    if(!r.classList.contains('st'))rc++;
+    r.classList.add('st');
+    if(rc>=rows.length)document.getElementById('stampall').classList.add('on');
+  });});
+  var hs=document.querySelectorAll('.hand');
+  hs.forEach(function(h){h.addEventListener('click',function(){h.classList.add('on');
+    var all=true;hs.forEach(function(x){if(!x.classList.contains('on'))all=false;});
+    if(all)document.getElementById('hout').classList.add('on');
+  });});
+  var stp=document.querySelectorAll('#steps3 .stp'),bw=document.getElementById('bwrap'),st=0;
+  document.getElementById('bgo').addEventListener('click',function(){
+    st=Math.min(st+1,5);bw.dataset.st=st;
+    stp.forEach(function(s,i){s.classList.toggle('done',i<st);s.classList.toggle('cur',i===st-1);});
+    if(st>=5)document.getElementById('wif').classList.add('on');
+  });
+  var tbs=document.querySelectorAll('.tb'),tout=document.getElementById('tout');
+  tbs.forEach(function(b){b.addEventListener('click',function(){b.classList.add('done');tout.classList.add('on');});});
+  document.querySelectorAll('.case').forEach(function(c){
+    c.addEventListener('click',function(){c.classList.toggle('flip');});
+    c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();c.classList.toggle('flip');}});
+  });
+  document.querySelectorAll('.jchip').forEach(function(j){j.addEventListener('click',function(){j.classList.toggle('on');});});
+  document.getElementById('cnd').addEventListener('click',function(){document.getElementById('fin').classList.add('off');});
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});},{threshold:.16});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
