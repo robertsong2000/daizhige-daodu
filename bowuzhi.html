@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>博物志 · 殆知阁导读</title>
+<style>
+:root{--bg:#191917;--paper:#e8e4dc;--ink:#26241f;--bamboo:#5f9270;--bamboo-l:#82b394;--zhu:#b8433a;--mut:#8a857a;--line:#3a382f}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--paper);font-family:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:16px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+a{color:var(--bamboo-l)}
+q{quotes:none}
+section .wrap{padding-top:74px;padding-bottom:74px}
+.fp{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.fp.on{opacity:1;transform:none}
+h2{font-size:26px;font-weight:600;letter-spacing:.06em;margin-bottom:8px}
+h2 i{font-style:normal;display:inline-grid;place-items:center;width:38px;height:38px;border:1px solid var(--bamboo);color:var(--bamboo-l);border-radius:50%;font-size:17px;margin-right:12px;vertical-align:-6px}
+.sec-sub{color:var(--mut);font-size:14px;letter-spacing:.08em;margin-bottom:34px}
+.bai{font-size:15px;color:#c9c4b8}
+.sec-bai{max-width:760px;margin-bottom:34px}
+
+/* hero */
+.hero{min-height:92vh;display:flex;align-items:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-140px;top:-140px;width:420px;height:420px;border:1px solid var(--bamboo);border-radius:50%;opacity:.14;pointer-events:none}
+.hero::before{content:"";position:absolute;right:-60px;top:-60px;width:420px;height:420px;border:1px solid var(--bamboo);border-radius:50%;opacity:.08;pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:280px 1fr;gap:56px;align-items:center;width:100%}
+.kick{color:var(--bamboo-l);font-size:13px;letter-spacing:.3em;margin-bottom:22px}
+.vtitle{writing-mode:vertical-rl;font-size:104px;line-height:1.12;font-weight:600;letter-spacing:.14em;color:var(--paper);height:390px}
+.vtitle b{color:var(--bamboo-l);font-weight:inherit}
+.hauth{margin-top:26px;color:var(--mut);font-size:14px;letter-spacing:.12em;border-top:1px solid var(--line);padding-top:16px;width:180px}
+.hcard{position:relative;padding:44px 42px 38px;box-shadow:0 18px 50px rgba(0,0,0,.45)}
+.hcard>q{font-size:25px;letter-spacing:.1em;color:#1e3d2a;font-weight:600;display:block;line-height:1.7}
+.hcard .xu-tag{display:inline-block;font-size:12px;color:var(--mut);letter-spacing:.2em;margin-top:12px}
+.hcard .bai{margin-top:20px;color:#4a463c}
+.zhu-chip{position:absolute;top:-16px;right:26px;background:var(--zhu);color:var(--paper);font-size:13px;letter-spacing:.14em;padding:7px 16px;transform:rotate(2deg);box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.htease{margin-top:26px;border-top:1px dashed #b9b3a5;padding-top:18px;display:flex;gap:14px;align-items:baseline}
+.tease-tag{flex:none;font-size:12px;color:var(--bamboo-l);border:1px solid var(--bamboo);padding:2px 10px;letter-spacing:.16em;align-self:center}
+.htease q{color:#3d6b4c;font-size:15px}
+
+/* stages 删书记 */
+.stages{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;position:relative;margin:10px 0 40px}
+.stage{padding:26px 30px 26px 0;position:relative}
+.stage:not(:last-child)::after{content:"";position:absolute;right:0;top:30px;bottom:30px;width:1px;background:var(--line)}
+.stage b{display:block;font-size:21px;color:var(--bamboo-l);letter-spacing:.12em;margin-bottom:10px;font-weight:600}
+.stage b::before{content:"";display:inline-block;width:9px;height:9px;background:var(--bamboo);margin-right:12px;transform:rotate(45deg);vertical-align:2px}
+.stage p{font-size:14.5px;color:#c9c4b8}
+.dui{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.qbox{padding:26px 28px 22px;background:var(--paper)}
+.qbox q{display:block;color:#1e3d2a;font-size:16.5px;line-height:2}
+.qbox .who{display:inline-block;margin-top:14px;font-size:12px;letter-spacing:.18em;color:var(--paper);background:#1e3d2a;padding:3px 12px}
+.qbox .bai{margin-top:12px;color:#4a463c}
+
+/* spines 卷架 */
+.rack{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.spine{border:1px solid var(--line);background:#1f1e1b;padding:18px 16px 14px;transition:border-color .3s,background .3s}
+.spine:hover{border-color:var(--bamboo)}
+.spine b{display:block;color:var(--bamboo-l);font-size:16px;letter-spacing:.14em;margin-bottom:10px;font-weight:600}
+.spine i{display:block;font-style:normal;font-size:12.5px;color:var(--mut);line-height:1.9;letter-spacing:.06em}
+.spine .sn2{color:#6d6858}
+.rack-note{margin-top:22px;font-size:13px;color:var(--mut)}
+
+/* cabinets 异产三验 */
+.cabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px}
+.cab{position:relative;overflow:hidden;min-height:300px;border:1px solid var(--line)}
+.cab-in{position:absolute;inset:0;padding:30px 28px;overflow:auto;background:var(--paper);color:var(--ink)}
+.cab-in q{display:block;color:#1e3d2a;font-size:15.5px;line-height:2.05}
+.cab-in .bai{margin-top:14px;color:#4a463c}
+.cab-in .pn{font-size:19px;color:#1e3d2a;letter-spacing:.2em;font-weight:600;margin-bottom:14px}
+.cab-in .pn::after{content:"";display:block;width:44px;height:2px;background:var(--bamboo);margin-top:10px}
+.curtain{position:absolute;inset:0;width:100%;border:0;cursor:pointer;background:linear-gradient(160deg,#2b3b30,#22301f 55%,#1d2919);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:transform .65s cubic-bezier(.7,0,.3,1);z-index:2}
+.curtain::before,.curtain::after{content:"";position:absolute;left:14%;right:14%;height:1px;background:rgba(130,179,148,.35)}
+.curtain::before{top:16%}.curtain::after{bottom:16%}
+.cab.open .curtain{transform:translateY(-102%);pointer-events:none}
+.curtain .cv{writing-mode:vertical-rl;font-size:30px;letter-spacing:.4em;color:var(--paper);font-weight:600}
+.curtain .hint{font-size:12px;color:var(--bamboo-l);letter-spacing:.3em}
+.cab-note{margin-top:20px;font-size:13px;color:var(--mut)}
+
+/* flip cards 验物四牌 */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.fcard{perspective:1100px;min-height:250px;cursor:pointer}
+.fin{position:relative;width:100%;height:100%;min-height:250px;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.6,0,.3,1)}
+.fcard.flip .fin{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:28px;display:flex;flex-direction:column}
+.face.front{background:#1f1e1b;border:1px solid var(--line);align-items:flex-start;justify-content:center;gap:14px}
+.face.front b{font-size:22px;letter-spacing:.18em;color:var(--paper);font-weight:600}
+.face.front b::after{content:"";display:block;width:40px;height:2px;background:var(--bamboo);margin-top:12px}
+.face.front span{font-size:13px;color:var(--mut)}
+.face.back{background:var(--paper);color:var(--ink);transform:rotateY(180deg);overflow:auto}
+.face.back q{display:block;color:#1e3d2a;font-size:15px;line-height:2}
+.face.back .bai{margin-top:10px;color:#4a463c;font-size:13.5px}
+
+/* 眉批廊 */
+.mei-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:30px}
+#nzbtn{background:none;border:1px solid var(--zhu);color:var(--paper);font-family:inherit;font-size:13px;letter-spacing:.2em;padding:8px 20px;cursor:pointer;transition:background .3s}
+#nzbtn:hover{background:rgba(184,67,58,.18)}
+.mei{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.mcell{border:1px solid var(--line);background:#1f1e1b;padding:26px 26px 22px;display:flex;flex-direction:column;gap:14px}
+.mcell .mtag{align-self:flex-start;font-size:12px;letter-spacing:.2em;color:var(--bamboo-l);border:1px solid var(--bamboo);padding:2px 10px}
+.mcell .mtxt{font-size:14.5px;color:#c9c4b8}
+.zbox{border-left:3px solid var(--zhu);background:rgba(184,67,58,.09);padding:14px 18px;transition:opacity .4s}
+.zbox .zwho{display:inline-block;font-size:12px;color:var(--zhu);letter-spacing:.16em;margin-bottom:8px;font-weight:600}
+.zbox q{color:#d8b7b2;font-size:14.5px;line-height:2}
+.zbox .znote{font-size:13px;color:#a08581;margin-top:8px}
+#meipi.nz .zbox{opacity:.06;pointer-events:none}
+
+/* 夜话 rows */
+.rows{display:flex;flex-direction:column;gap:26px}
+.row{display:grid;grid-template-columns:96px 1fr;gap:26px;border:1px solid var(--line);background:#1f1e1b;padding:30px 32px}
+.row .num{writing-mode:vertical-rl;font-size:26px;letter-spacing:.34em;color:var(--bamboo-l);border-right:1px solid var(--line);padding-right:18px;align-self:start}
+.row h3{font-size:19px;letter-spacing:.14em;margin-bottom:12px;font-weight:600}
+.row h3 small{font-size:12px;color:var(--mut);letter-spacing:.2em;margin-left:12px;font-weight:400}
+.row q{display:block;color:var(--bamboo-l);font-size:15px;line-height:2.05;margin:4px 0}
+.row .row-in q{color:#82b394}
+.row .bai{margin-top:10px}
+.guest{border-color:rgba(184,67,58,.45)}
+.guest .num{color:#d8b7b2;border-right-color:rgba(184,67,58,.4)}
+.guest q{color:#d8b7b2}
+
+/* coda */
+.coda{border-top:1px solid var(--line)}
+.coda-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:60px;align-items:center}
+.coda-v{writing-mode:vertical-rl;height:330px;font-size:30px;letter-spacing:.24em;line-height:2.1}
+.coda-v q{color:var(--paper)}
+.coda-side .bai{margin-bottom:34px}
+.seal{display:inline-grid;place-items:center;width:74px;height:74px;background:var(--zhu);color:#f2e8dc;font-size:27px;letter-spacing:0;font-weight:600;transform:rotate(-4deg);border-radius:8px;box-shadow:0 10px 24px rgba(0,0,0,.4)}
+
+footer{border-top:1px solid var(--line);padding:34px 0 44px;font-size:13px;color:var(--mut);line-height:2}
+
+@media (max-width:880px){
+  .wrap{padding:0 18px}
+  .hero{min-height:auto;padding:64px 0}
+  .hero-grid{grid-template-columns:1fr;gap:34px}
+  .vtitle{writing-mode:horizontal-tb;height:auto;font-size:64px;letter-spacing:.1em}
+  .hauth{width:auto}
+  .stages{grid-template-columns:1fr}
+  .stage:not(:last-child)::after{display:none}
+  .dui,.cabs,.cards,.mei,.coda-grid{grid-template-columns:1fr}
+  .rack{grid-template-columns:repeat(2,1fr)}
+  .row{grid-template-columns:1fr;padding:24px 20px}
+  .row .num{writing-mode:horizontal-tb;border-right:0;border-bottom:1px solid var(--line);padding:0 0 10px;letter-spacing:.3em}
+  .coda-v{height:300px;font-size:26px}
+  section .wrap{padding-top:56px;padding-bottom:56px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kick">西晋 ｜ 张华 ｜ 博物之祖</div>
+      <h1 class="vtitle">博物<b>志</b></h1>
+      <div class="hauth">旧题十卷 ｜ 剪自四百卷</div>
+    </div>
+    <div class="hcard">
+      <span class="zhu-chip">旧本四百卷，奉诏删存十卷</span>
+      <q><q>博物之士，览而鉴焉。</q></q>
+      <span class="xu-tag">卷首小序</span>
+      <p class="bai">西晋的重臣张华，把一辈子攒下的天下奇闻打成一部总账上呈御览，换回来一道删书诏。如今这十卷是从四百卷巨部里剪出的残本，骨架却全：山川、异域、异物、物性、方士、考证、异闻，样样占一格，堪称中国第一部博物学通志。</p>
+      <div class="htease"><span class="tease-tag">随手一格</span><q><q>南海外有鲛人，水居如鱼，不废织绩，其眼能泣珠。</q></q></div>
+    </div>
+  </div>
+</header>
+
+<section id="shan" class="fp">
+  <div class="wrap">
+    <h2><i>壹</i>删书记：四百卷进去，十卷出来</h2>
+    <p class="sec-sub">据王嘉《拾遗记》与四库提要合考</p>
+    <div class="stages">
+      <div class="stage"><b>四百卷</b><p>东晋王嘉《拾遗记》讲得热闹：张华好观秘异，捃采天下遗逸，从上古书契一直考到街谈巷说，攒成四百卷，奏上晋武帝。</p></div>
+      <div class="stage"><b>一道诏</b><p>武帝的批复先扬后抑：夸他博识无双，转头嫌记事采言多浮妄，命他剪去浮疑，只留十卷。四百卷的百科，一夜变薄本。</p></div>
+      <div class="stage"><b>十卷残本</b><p>四库提要替我们验了货：今本卷四写着晋武帝年号里发生的武库火灾，可见这十卷也是后人辗转辑补的样子，并非张华原稿原貌。</p></div>
+    </div>
+    <div class="dui">
+      <div class="qbox"><q><q>余视《山海经》及《禹贡》、《尔雅》、《说文》、地志，虽曰悉备，各有所不载者，作略说。</q></q><span class="who">卷首小序</span><p class="bai">写了几车材料，落到卷首只敢自称略说两字，姿态放得极低。</p></div>
+      <div class="qbox"><q><q>积油满万石，则自然生火。武帝泰始中武库火，积油所致。</q></q><span class="who">卷四内证</span><p class="bai">正是这句带年号的火灾记录，被提要当作今本晚出的铁证。一条引文，两头都用上了。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="rack" class="fp">
+  <div class="wrap">
+    <h2><i>贰</i>十格卷架：给万物分抽屉</h2>
+    <p class="sec-sub">依库本目录</p>
+    <div class="rack">
+      <div class="spine"><b>卷一</b><i>地理略</i><i>地 山 水</i><i>山水总论</i><i>五方人民</i><i>物产</i></div>
+      <div class="spine"><b>卷二</b><i>外国</i><i>异人</i><i>异俗</i><i>异产</i></div>
+      <div class="spine"><b>卷三</b><i>异兽 异鸟</i><i>异虫 异鱼</i><i>异草木</i></div>
+      <div class="spine"><b>卷四</b><i>物性 物理</i><i>物类 药物</i><i>药论 食忌</i><i>药术 戏术</i></div>
+      <div class="spine"><b>卷五</b><i>方士</i><i>服食</i><i>辨方士</i></div>
+      <div class="spine"><b>卷六</b><i>人名考</i><i>文籍考</i><i>地理考</i><i>典礼考</i><i>乐考</i><i>服饰考</i><i>器名考</i><i>物名考</i></div>
+      <div class="spine"><b>卷七</b><i>异闻</i></div>
+      <div class="spine"><b>卷八</b><i>史补</i></div>
+      <div class="spine"><b>卷九</b><i>杂说上</i></div>
+      <div class="spine"><b>卷十</b><i>杂说下</i></div>
+    </div>
+    <p class="rack-note">十格抽屉，后世类书、医书、小说各取所需。前五格记物，中间一格记人记制度，后四格记事，一部通志的骨架一目了然。</p>
+  </div>
+</section>
+
+<section id="yan" class="fp">
+  <div class="wrap">
+    <h2><i>叁</i>异产三验：点帘验物</h2>
+    <p class="sec-sub">卷二贡品验收记录里最像科幻的三件</p>
+    <div class="cabs">
+      <figure class="cab">
+        <div class="cab-in">
+          <div class="pn">火浣布</div>
+          <q><q>《周书》曰：西域献火浣布，昆吾氏献切玉刀。火浣布污则烧之则洁，刀切玉如脂。布，汉世有献者，刀则未闻。</q></q>
+          <p class="bai">布不怕火，脏了直接烧，烧完更白；配套的昆吾刀切玉如泥。他补了句内行话：布汉代真献过，刀只闻其名。</p>
+        </div>
+        <button class="curtain" type="button"><span class="cv">火浣布</span><span class="hint">点帘验物</span></button>
+      </figure>
+      <figure class="cab">
+        <div class="cab-in">
+          <div class="pn">续弦胶</div>
+          <q><q>西使乃以口濡胶为水注断弦两头，相连注弦，遂相着。帝乃使力士各引其一头，终不相离。</q></q>
+          <p class="bai">弓弦当众拉断，西使用口水润胶接上，两名力士对拉不断。武帝当场命名续弦胶，这件贡品的估值直接拉满。</p>
+        </div>
+        <button class="curtain" type="button"><span class="cv">续弦胶</span><span class="hint">点帘验物</span></button>
+      </figure>
+      <figure class="cab">
+        <div class="cab-in">
+          <div class="pn">奇肱飞车</div>
+          <q><q>奇肱民善为拭扛，以杀百禽，能为飞车，从风远行。汤时西风至，吹其车至豫州。汤破其车，不以视民，十年东风至，乃复作车遣返，而其国去玉门关四万里。</q></q>
+          <p class="bai">奇肱国人会造飞车，顺风远行。商汤的时候被西风吹到豫州，汤怕人学坏砸了车，隔十年东风来时才修好送客。</p>
+        </div>
+        <button class="curtain" type="button"><span class="cv">奇肱飞车</span><span class="hint">点帘验物</span></button>
+      </figure>
+    </div>
+    <p class="cab-note">验收笔法一味老实：见过的说见过，没见过的写明未闻。</p>
+  </div>
+</section>
+
+<section id="wu4" class="fp">
+  <div class="wrap">
+    <h2><i>肆</i>验物四牌：卷四的科学课</h2>
+    <p class="sec-sub">物性 物理 药论 戏术，每格都像实验记录（点牌翻面）</p>
+    <div class="cards">
+      <div class="fcard" tabindex="0"><div class="fin">
+        <div class="face front"><b>月晕随灰</b><span>卷四 · 物理</span></div>
+        <div class="face back"><q><q>凡月晕，随灰画之，随所画而阙。</q></q><p class="bai">月晕的缺口能随灰笔画出来？他记下做法，又老实承认原书说未详其法，自己也未试成。一本百科最可爱处，是把做不到也记下来。</p></div>
+      </div></div>
+      <div class="fcard" tabindex="0"><div class="fin">
+        <div class="face front"><b>鲸死彗出</b><span>卷四 · 物理</span></div>
+        <div class="face back"><q><q>麒麟斗而日蚀，鲸鱼死则彗星出，婴儿号妇乳出，蚕弭丝而商弦绝。</q></q><p class="bai">兽打架太阳蚀，鲸死彗星出，婴儿一啼奶水就来，蚕一吐丝琴弦就断。万物互感的感应物理学，是那个时代的因果律。</p></div>
+      </div></div>
+      <div class="fcard" tabindex="0"><div class="fin">
+        <div class="face front"><b>龙肉文章</b><span>卷四 · 物理</span></div>
+        <div class="face back"><q><q>龙肉以醢渍之，则文章生。</q></q><p class="bai">龙肉泡在肉酱里会自己生出纹样。信不信由你，他只管记档。</p></div>
+      </div></div>
+      <div class="fcard" tabindex="0"><div class="fin">
+        <div class="face front"><b>守宫砂</b><span>卷四 · 戏术</span></div>
+        <div class="face back"><q><q>蜥蜴或名蝘蜒。以器养之，以朱砂，体尽赤，所食满七斤，治捣万杵，点女人支体，终年不灭。唯房室事则灭，故号守宫。</q></q><p class="bai">吃朱砂吃到通体赤红的蜥蜴，捣万杵点在女子肢体上，终年不褪，房事一有就掉。这是守宫砂最早的配方与原理页，还附一句东方朔讲给武帝听、据说灵验的传闻。</p></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section id="meipi" class="fp">
+  <div class="wrap">
+    <div class="mei-head">
+      <div>
+        <h2><i>伍</i>眉批廊：页边那两个读者</h2>
+        <p class="sec-sub">旧题周日用、卢氏两家注，存世仅二十余条，注家生平成谜，一说唐人一说宋人</p>
+      </div>
+      <button id="nzbtn" type="button">藏批本</button>
+    </div>
+    <p class="sec-bai bai">他们比正文晚了几百年，却在页边抬杠、纠错、补见闻，像坐在你旁边一起读书的人。中文古籍里，这样夹带读者评论的传本相当少见。点右上按钮可藏起朱批，看看净本是什么样。</p>
+    <div class="mei">
+      <div class="mcell">
+        <span class="mtag">卷二 · 异俗</span>
+        <p class="mtxt">越东有个骇沐之国，头胎儿子要被亲族分食，名目叫宜弟；父亲亡故，母亲就被送走，理由是鬼妻不得同住。</p>
+        <div class="zbox"><span class="zwho">周日用曰</span><q><q>既其母为鬼妻，则其为鬼子，亦合弃之矣。</q></q><p class="znote">注家顺着逻辑补刀：既然母亲成了鬼妻，孩子岂不成了鬼子，也该一并扔掉。骂完还不解气，说连禽兽都干不出这事。</p></div>
+      </div>
+      <div class="mcell">
+        <span class="mtag">卷八 · 史补</span>
+        <p class="mtxt">两小儿辩日的故事在这里重演：一个说早晚近中午远，一个说早晚凉中午热，孔子答不上，被两个小孩笑了一顿。</p>
+        <div class="zbox"><span class="zwho">周日用曰</span><q><q>是明初出近而当中远矣，岂圣人肯对乎？</q></q><p class="znote">一千多年后的读者不劝架，直接站小孩：按他的推算，日初出近而日中远，圣人答不上来也不奇怪。</p></div>
+      </div>
+      <div class="mcell">
+        <span class="mtag">卷五 · 方士</span>
+        <p class="mtxt">天老答黄帝：吃黄精可以长生，吃钩吻入口立死；可惜世人只信毒草杀人，不信仙草延寿。</p>
+        <div class="zbox"><span class="zwho">周日用曰</span><q><q>草既杀人，仍无益寿者也，若杀人无验，则益寿不可信矣。</q></q><p class="znote">冷冷回敬：草既然能杀人，又何来延寿之验？两件事凭什么只信一件。</p></div>
+      </div>
+      <div class="mcell">
+        <span class="mtag">卷一 · 五方人民</span>
+        <p class="mtxt">卷一说山中居民多瘿肿之疾，怪饮水不流。卢氏在页边开口就是两个字：不对。他拿南北人群分布顶回去，说是黑水水土的问题。</p>
+        <div class="zbox"><span class="zwho">卢氏曰</span><q><q>不然也。在山南人有之，北人及吴楚无此病，盖南出黑水，水土然也。</q></q><p class="znote">一注一句不对，页边吵架的第一名。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ye3" class="fp">
+  <div class="wrap">
+    <h2><i>陆</i>卷十夜话：三条名段</h2>
+    <p class="sec-sub">杂说下，全书故事密度最高的一卷</p>
+    <div class="rows">
+      <div class="row row-in">
+        <div class="num">其一</div>
+        <div>
+          <h3>千日酒<small>醉者为亡</small></h3>
+          <q><q>昔刘玄石于中山酒家酤酒，酒家与千日酒，忘言其节度。归至家当醉，而家人不知，以为死也，权葬之。酒家计千日满，乃忆玄石前来酤酒，醉向醒耳。往视之，云玄石亡来三年，已葬。于是开棺，醉始醒，俗云：“玄石饮酒，一醉千日。</q></q>
+          <p class="bai">忘言节度四个字，险些值一条人命：家人当他醉死，下葬了。三年后酒家掐指一算登门开棺，主人刚好酒醒。一桩乌龙，喝成一句俗谚。</p>
+        </div>
+      </div>
+      <div class="row row-in">
+        <div class="num">其二</div>
+        <div>
+          <h3>乘槎犯牛<small>八月海筏</small></h3>
+          <q><q>旧说云天河与海通。近世有人居海渚者，年年八月有浮槎去来，不失期，人有奇志，立飞阁于查上，多赍粮，乘槎而去。</q></q>
+          <q><q>后至蜀，问君平，曰：“某年月日有客星犯牵牛宿。”计年月，正是此人到天河时也。</q></q>
+          <p class="bai">准点往返的八月海筏，被人装上飞阁、带足干粮开走；十余日望见城郭宫阙与牵牛人，不敢上岸，原路返回。回蜀郡找星象家严君平对账：他报出的年月日，正对上客人抵达天河的那一晚。中国古人最漂亮的一次星际往返，就这么记进了百科。</p>
+        </div>
+      </div>
+      <div class="row row-in">
+        <div class="num">其三</div>
+        <div>
+          <h3>仙谷巨蟒<small>疑者破局</small></h3>
+          <q><q>有乐道好事者，入此谷中洗沐，以求飞仙，往往得去。有长生意思人，疑必以妖怪。乃以大石自坠，牵一犬入谷中，犬复飞去。</q></q>
+          <q><q>遥见一物长数十丈，其高隐人，耳如簸箕。格射刺杀之。所吞人骨积此左右，已成封。</q></q>
+          <p class="bai">过谷者腾空而去，乡人称作仙谷，求仙的排队进谷洗沐。直到有个人起疑，绑上大石、带着一条狗跳下去验证：狗飞了，人没飞。数十人持杖上山，找到一条耳朵大如簸箕的巨蟒，格杀之后，谷边堆着吃剩的人骨。怀疑精神加一条实验狗，破了一桩神仙局。</p>
+        </div>
+      </div>
+      <div class="row row-in guest">
+        <div class="num">加演</div>
+        <div>
+          <h3>王母的宴席<small>卷八 · 史补客串</small></h3>
+          <p class="mtxt" style="font-size:14.5px;color:#c9c4b8">王母赴宴，弹丸大的仙桃分了五枚给武帝；他偷偷把核收在膝前想种，王母笑言：</p>
+          <q><q>此桃三千年一生实</q></q>
+          <p class="mtxt" style="font-size:14.5px;color:#c9c4b8">转头又朝窗外努嘴：那个趴在窗洞的小儿，偷过我三回桃。到卷十，武帝讨得君山不死之酒，又被东方朔一口喝干，武帝要杀他，他答：</p>
+          <q><q>杀朔若死，此为不验。以其有验，杀亦不死。</q></q>
+          <p class="bai">杀了我要是死，这酒就是假的；既然有效，杀我也死不了。武帝只好赦免。全书最会说话的人。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="coda" class="coda fp">
+  <div class="wrap coda-grid">
+    <div class="coda-v"><q><q>地常动不止，譬如人在舟而坐，舟行而人不觉。</q></q></div>
+    <div class="coda-side">
+      <h2>收梢</h2>
+      <p class="bai">张华在传说里管过丰城的剑气，演义里挂着他名字的断剑重光故事流传了一千多年；可他真正留在纸面上的，是这一句把地球写活了的话。四百卷没了，十卷存世：鲛人的泪珠还悬着，山川异域、虫鱼草木也都在各自的格子里睡着。翻完这十格，记得住的正事其实只有一件：地在动，我们坐得稳，只是没察觉。</p>
+      <span class="seal">博物</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    文本来源：殆知阁简体库〈博物志〉（史藏 ｜ 志存记录），仓库：<a href="https://github.com/robertsong/daizhige" target="_blank" rel="noopener">daizhige-daodu</a>。<br>
+    引文均经脚本自库本切片、去标点归一逐字比对；白话部分经六字窗反扫核验。本页为古籍导读，感应物理、飞升尸解、祥瑞灾异之说属前现代想象，方术胎教诸条亦含时代偏见，请以今日眼光辨之。
+  </div>
+</footer>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});},{threshold:.12});
+  document.querySelectorAll('.fp').forEach(function(el){io.observe(el);});
+  document.querySelectorAll('.curtain').forEach(function(b){b.addEventListener('click',function(){b.parentElement.classList.add('open');});});
+  document.querySelectorAll('.fcard').forEach(function(c){
+    c.addEventListener('click',function(){c.classList.toggle('flip');});
+    c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();c.classList.toggle('flip');}});
+  });
+  var tb=document.getElementById('nzbtn');
+  if(tb){tb.addEventListener('click',function(){
+    var s=document.getElementById('meipi');
+    s.classList.toggle('nz');
+    tb.textContent=s.classList.contains('nz')?'展批本':'藏批本';
+  });}
+})();
+</script>
+</body>
+</html>
