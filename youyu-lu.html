@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>优语录 · 氍毹折子 | 殆知阁导读</title>
+<style>
+:root{
+  --mo:#191917; --zhi:#e8e4dc; --qing:#5e8fbb; --qing-an:#3c6285;
+  --dai:#232321; --zhu:#c0453c; --hui:#8f8b82;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--mo); color:var(--zhi);
+  font-family:"Songti SC","STSong","SimSun","Noto Serif CJK SC",serif;
+  line-height:1.9; overflow-x:hidden;
+}
+.mono{font-family:"JetBrains Mono",Consolas,monospace}
+q{quotes:none}
+a{color:inherit;text-decoration:none}
+
+/* ── 檐枋 ── */
+.yan{
+  position:fixed; top:0; left:0; right:0; height:10px; z-index:50;
+  background:repeating-linear-gradient(90deg,var(--qing-an) 0 26px,var(--qing) 26px 34px);
+  border-bottom:1px solid #000;
+}
+
+/* ── 幕布首屏 ── */
+.hero{
+  position:relative; min-height:92vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; overflow:hidden;
+}
+.bian{
+  position:relative; z-index:6; text-align:center;
+  padding:2.6rem 3.4rem; border:1px solid var(--qing-an);
+  background:linear-gradient(180deg,#1d1d1b,#191917);
+  box-shadow:0 0 0 6px #141412, 0 0 0 7px #2c2c28;
+}
+.bian h1{
+  font-size:clamp(3rem,9vw,5.2rem); letter-spacing:.34em; margin-right:-.34em;
+  color:var(--zhi); font-weight:700;
+}
+.bian .fu{color:var(--qing); font-size:1rem; letter-spacing:.28em; margin-top:.9rem}
+.bian .zhu-xiao{color:var(--hui); font-size:.8rem; letter-spacing:.2em; margin-top:.5rem}
+.qu{position:absolute; top:0; bottom:0; width:51%; z-index:8; transition:transform 1.5s cubic-bezier(.7,0,.3,1); cursor:default}
+.qu-l{left:0; background:linear-gradient(105deg,#20221f,#272a26 55%,#1f211e); border-right:3px solid var(--qing-an)}
+.qu-r{right:0; background:linear-gradient(255deg,#20221f,#272a26 55%,#1f211e); border-left:3px solid var(--qing-an)}
+.qu::after{
+  content:""; position:absolute; inset:0;
+  background:repeating-linear-gradient(0deg,transparent 0 54px,rgba(94,143,187,.09) 54px 56px);
+}
+.hero.kai .qu-l{transform:translateX(-102%)}
+.hero.kai .qu-r{transform:translateX(102%)}
+.hero.kai .qu{pointer-events:none}
+.kai-btn{
+  position:absolute; z-index:9; left:50%; top:50%; transform:translate(-50%,-50%);
+  background:var(--qing); color:#10130f; border:none; cursor:pointer;
+  font-family:inherit; font-size:1.05rem; letter-spacing:.5em; text-indent:.5em;
+  padding:.85rem 1.9rem; transition:opacity .5s;
+}
+.kai-btn:hover{background:#79a8d2}
+.hero.kai .kai-btn{opacity:0; pointer-events:none}
+/* 氍毹 */
+.ta{position:relative; z-index:5; width:min(880px,94vw); height:300px; margin-top:2.4rem; perspective:640px; opacity:0; transform:translateY(26px); transition:opacity 1.2s .9s, transform 1.2s .9s}
+.hero.kai .ta{opacity:1; transform:none}
+.qushu{
+  position:absolute; inset:0 0 -40px 0; transform:rotateX(56deg); transform-origin:bottom center;
+  background:linear-gradient(180deg,#3f6488,#2c4a66 45%,#22394f);
+  box-shadow:0 0 60px rgba(94,143,187,.25) inset;
+}
+.qushu::before{
+  content:""; position:absolute; inset:18px;
+  border:1px solid rgba(232,228,220,.22);
+}
+.yong{position:absolute; bottom:74px; z-index:6}
+.yong svg{display:block}
+.yong.cangjian{left:calc(50% - 168px)}
+.yong.canjun{left:calc(50% + 60px)}
+.yong .lei{font-size:.72rem; color:var(--hui); text-align:center; letter-spacing:.3em; margin-top:.35rem}
+.hero-xia{position:relative; z-index:6; color:var(--hui); font-size:.86rem; letter-spacing:.24em; margin:4.6rem 0 3rem}
+.hero-xia b{color:var(--qing); font-weight:400}
+
+/* ── 通用节 ── */
+.wrap{width:min(920px,92vw); margin:0 auto}
+.jieji{display:flex; align-items:center; gap:1.1rem; margin:4.4rem 0 1.6rem}
+.jieji .xian{flex:1; height:1px; background:#33332f}
+.jieji h2{font-size:1.18rem; letter-spacing:.42em; margin-right:-.42em; color:var(--qing); font-weight:700; white-space:nowrap}
+.jieji .mu{font-size:.78rem; color:var(--hui); letter-spacing:.18em; white-space:nowrap}
+
+/* ── 辑话(自序) ── */
+.jihua{display:grid; grid-template-columns:1fr 128px; gap:1.6rem; align-items:stretch}
+.jihua .wen{
+  background:var(--dai); border-left:3px solid var(--qing); padding:1.7rem 2rem;
+}
+.jihua .wen q{font-size:1.06rem; display:block}
+.jihua .zhu{color:var(--hui); font-size:.92rem; margin-top:1.1rem}
+.luo{writing-mode:vertical-rl; height:max-content; align-self:stretch; display:flex; align-items:center; justify-content:center; background:#202019; border:1px solid #33332f; padding:1.4rem .9rem; gap:.8rem}
+.luo q{font-size:1.02rem; letter-spacing:.34em; color:var(--zhi)}
+.luo .yin{
+  writing-mode:vertical-rl; width:34px; height:66px; background:var(--zhu); color:#f3ece2;
+  display:flex; align-items:center; justify-content:center; font-size:.72rem; letter-spacing:.12em;
+  border-radius:3px; box-shadow:0 0 0 1px rgba(0,0,0,.4) inset;
+}
+
+/* ── 折子 ── */
+.zhe{margin:3.2rem 0; position:relative; border:1px solid #2e2e2a; background:#1c1c1a}
+.zhe-top{display:flex; align-items:stretch; border-bottom:1px solid #2e2e2a}
+.chao{
+  writing-mode:vertical-rl; padding:1rem .55rem; font-size:.92rem; letter-spacing:.4em;
+  color:#0f1113; background:var(--qing); display:flex; align-items:center;
+}
+.zhe-tt{flex:1; display:flex; align-items:baseline; gap:1rem; padding:1rem 1.4rem; flex-wrap:wrap}
+.zhe-tt h3{font-size:1.32rem; letter-spacing:.18em; font-weight:700}
+.zhe-tt .ren{color:var(--qing); font-size:.86rem; letter-spacing:.12em}
+.zhe-tt .ci-yuan{margin-left:auto; color:var(--hui); font-size:.8rem}
+.xiwen{padding:1.7rem 2rem 1.2rem; font-size:1.05rem}
+.xiwen q{display:block}
+.xiwen q + q{margin-top:1rem}
+.xiwen .tui{color:var(--hui); font-size:.88rem; margin-top:1.2rem; display:block}
+.xiwen .jie{color:var(--qing); border-bottom:1px dotted var(--qing-an); cursor:help}
+.zhe-wei{display:flex; align-items:center; gap:1rem; padding:.9rem 2rem 1.3rem}
+.xiao-btn{
+  background:transparent; border:1px solid var(--qing); color:var(--qing);
+  font-family:inherit; font-size:.9rem; letter-spacing:.3em; text-indent:.3em;
+  padding:.45rem 1.2rem; cursor:pointer; position:relative; z-index:3; transition:.3s;
+}
+.xiao-btn:hover{background:var(--qing); color:#10130f}
+.chu{margin-left:.2rem; font-size:.8rem; color:var(--hui)}
+.chu q{font-size:.8rem; color:var(--hui)}
+.ci{
+  max-height:0; overflow:hidden; transition:max-height .7s ease;
+  border-top:1px dashed transparent; background:#171715;
+}
+.ci-n{padding:1.3rem 2rem; color:#c9c4ba; font-size:.95rem}
+.ci-n b{color:var(--qing); font-weight:400; letter-spacing:.2em}
+.ci.shan{max-height:420px; border-top-color:#2e2e2a}
+/* 笑声涟漪 */
+.lian{
+  position:absolute; width:14px; height:14px; border-radius:50%;
+  border:1px solid var(--qing); pointer-events:none; opacity:0; z-index:2;
+}
+.lian.bo{animation:bo 1.5s ease-out forwards}
+@keyframes bo{
+  0%{opacity:.9; transform:scale(1)}
+  100%{opacity:0; transform:scale(46)}
+}
+
+/* ── 三教论衡问答 ── */
+.wenda{display:grid; grid-template-columns:repeat(3,1fr); gap:.9rem; margin-top:1.4rem}
+.wd{
+  border:1px solid #33332f; background:#171715; padding:.9rem 1rem; cursor:pointer; transition:.3s;
+}
+.wd:hover{border-color:var(--qing)}
+.wd .s{font-size:.82rem; color:var(--hui); letter-spacing:.1em}
+.wd .m{font-size:1.06rem; color:var(--zhi); margin:.3rem 0}
+.wd .po{
+  display:block; max-height:0; overflow:hidden; transition:max-height .5s; color:var(--qing);
+  font-size:.85rem;
+}
+.wd.po-kai .po{max-height:140px}
+.wd-po-tip{font-size:.78rem; color:var(--hui); margin-top:.7rem; letter-spacing:.14em}
+
+/* ── 二圣环 ── */
+.huan-row{display:flex; align-items:center; gap:1.6rem; margin-top:1.4rem; flex-wrap:wrap}
+.huan-box{flex:0 0 190px; display:flex; justify-content:center}
+.huan-box svg{display:block}
+.huan-zhuan{
+  background:transparent; border:1px solid var(--qing); color:var(--qing); cursor:pointer;
+  font-family:inherit; font-size:.85rem; letter-spacing:.24em; text-indent:.24em; padding:.4rem 1.1rem;
+}
+.huan-zhuan:hover{background:var(--qing); color:#10130f}
+.huan-shuo{flex:1; min-width:230px; color:var(--hui); font-size:.9rem}
+.huan-shuo b{color:var(--zhi); font-weight:400}
+.huan-wrap .huo{transition:opacity 1.1s}
+.huan-wrap.zhuan .huo{opacity:.16}
+.huan-wrap .nao{opacity:.25; transition:opacity 1.1s}
+.huan-wrap.zhuan .nao{opacity:1}
+
+/* ── 尾屏 ── */
+.final{margin-top:5rem; border-top:1px solid #2e2e2a; padding:3rem 0 1rem; text-align:center}
+.final .biao{font-size:1.05rem; letter-spacing:.4em; margin-right:-.4em; color:var(--qing)}
+.jiyuan{display:flex; flex-wrap:wrap; gap:.55rem; justify-content:center; margin:1.8rem auto 0; max-width:760px}
+.jiyuan q{
+  font-size:.8rem; color:#a8a49a; border:1px solid #2e2e2a; padding:.18rem .7rem;
+  background:#1c1c1a; letter-spacing:.08em;
+}
+.zui{color:var(--hui); font-size:.86rem; margin-top:1.6rem; letter-spacing:.14em}
+footer{border-top:1px solid #2e2e2a; margin-top:3.4rem; padding:1.6rem 0 2.6rem; font-size:.78rem; color:var(--hui); line-height:2}
+footer a{color:var(--qing)}
+footer .xx{display:block}
+
+@media (max-width:640px){
+  .jihua{grid-template-columns:1fr}
+  .luo{writing-mode:horizontal-tb; height:auto; flex-direction:row; padding:1rem}
+  .luo q{writing-mode:horizontal-tb; letter-spacing:.14em}
+  .luo .yin{writing-mode:vertical-rl}
+  .wenda{grid-template-columns:1fr}
+  .yong.cangjian{left:6%}
+  .yong.canjun{left:auto; right:6%}
+  .xiwen{padding:1.3rem 1.2rem 1rem}
+  .zhe-wei{padding:.8rem 1.2rem 1.2rem}
+  .ci-n{padding:1.1rem 1.2rem}
+}
+</style>
+</head>
+<body>
+<div class="yan"></div>
+
+<!-- 首屏 · 幕布 -->
+<header class="hero" id="hero">
+  <div class="qu qu-l"></div>
+  <div class="qu qu-r"></div>
+  <button class="kai-btn" id="kaiBtn" onclick="kaiMu()">开戏</button>
+
+  <div class="bian">
+    <h1>优语录</h1>
+    <div class="fu">优人戏语一卷 · 王国维辑</div>
+    <div class="zhu-xiao"><q>俳优侏儒,周伎之最下且贱者,然亦能因戏语而箴讽时政</q></div>
+  </div>
+
+  <div class="ta">
+    <div class="qushu"></div>
+    <div class="yong cangjian">
+      <svg width="72" height="112" viewBox="0 0 72 112" fill="none">
+        <circle cx="36" cy="20" r="12" fill="#2b2f33" stroke="#5e8fbb" stroke-width="1.5"/>
+        <path d="M24 16 L20 8 L28 12 Z" fill="#5e8fbb"/>
+        <path d="M48 16 L52 8 L44 12 Z" fill="#5e8fbb"/>
+        <path d="M20 38 Q36 30 52 38 L56 86 Q36 94 16 86 Z" fill="#23282d" stroke="#5e8fbb" stroke-width="1.5"/>
+        <path d="M52 44 L64 58 M64 58 L58 62" stroke="#5e8fbb" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="65" cy="60" r="4" fill="#c0453c"/>
+      </svg>
+      <div class="lei">苍鹘</div>
+    </div>
+    <div class="yong canjun">
+      <svg width="72" height="112" viewBox="0 0 72 112" fill="none">
+        <circle cx="36" cy="20" r="13" fill="#2b2f33" stroke="#5e8fbb" stroke-width="1.5"/>
+        <rect x="22" y="4" width="28" height="9" rx="3" fill="#5e8fbb"/>
+        <path d="M18 40 Q36 32 54 40 L60 90 Q36 100 12 90 Z" fill="#39434d" stroke="#5e8fbb" stroke-width="1.5"/>
+        <rect x="30" y="40" width="12" height="30" fill="#4a5763"/>
+      </svg>
+      <div class="lei">参军</div>
+    </div>
+  </div>
+
+  <p class="hero-xia">宣统元年冬辑成,收唐至明优人俳语四十余条,每条皆<b>以笑为谏</b></p>
+</header>
+
+<main class="wrap">
+
+  <!-- 辑话 -->
+  <div class="jieji"><span class="xian"></span><h2>辑话</h2><span class="mu">卷首自序</span><span class="xian"></span></div>
+  <div class="jihua">
+    <div class="wen">
+      <q>余览唐宋传说,复辑优人戏语为一篇。顾辑录之意稍与晔殊:盖优人俳语大都出于演剧之际,故戏剧之源与其迁变之迹可以考焉,非徒其辞之足以裨阙失、供谐笑而已。</q>
+      <p class="zhu">元代王晔编过一部《优谏录》,由杨维桢作序,后来其书不传。六百年后,王国维重做这件事,用意却不同:优人的滑稽台词大多出自演戏现场,戏的源头与流变,正可以从这些笑料里考出来。这本小册子辑成于一九〇九年冬,次年他在《人间词话》里提出境界说,几年后又写成《宋元戏曲史》,中国戏曲研究的开山之作,门径就藏在这一卷笑声里。</p>
+    </div>
+    <div class="luo">
+      <q>宣统改元冬十月海宁王国维识</q>
+      <span class="yin">王国维印</span>
+    </div>
+  </div>
+
+  <!-- 第一折 唐 -->
+  <div class="jieji"><span class="xian"></span><h2>第一折</h2><span class="mu">三教论衡</span><span class="xian"></span></div>
+  <section class="zhe" id="zhe1">
+    <div class="zhe-top">
+      <div class="chao">唐 · 咸通</div>
+      <div class="zhe-tt"><h3>三教俱是妇人</h3><span class="ren">优人李可及</span></div>
+    </div>
+    <div class="xiwen">
+      <q>尝因延庆节,缁黄讲论毕,次及倡优为戏。可及乃儒服险巾,襃衣博带,摄齐以升崇坐,自称三教论衡。其隅坐问曰:既言博通三教,释迦如来是何人?曰:是妇人。问者惊曰:何也?对曰:金刚经云「敷坐而坐」,或非妇人,何烦夫坐然后儿坐也。上为之启齿。又问曰:太上老君何人也?对曰:亦妇人也。问者益所不喻,乃曰:道徳经云「吾有大患,是吾有身;及吾无身,吾复何患」。倘非妇人,何患乎有娠乎?上大悦。又曰:文宣王何人也?对曰:妇人也。问者曰:何以知之?对曰:论语云「沽之哉,沽之哉,吾待贾者也」。向非妇人,待嫁奚为?上意极欢,宠锡甚厚。</q>
+      <div class="wenda">
+        <div class="wd" onclick="po(this)"><span class="s">问 佛</span><div class="m">敷坐而坐</div><span class="po">把「敷」讹作「夫」:丈夫先坐,儿子跟着坐,这不是妇人是什么</span></div>
+        <div class="wd" onclick="po(this)"><span class="s">问 道</span><div class="m">是吾有身</div><span class="po">「有身」谐「有娠」:大患在于有孕,老子也就成了怀胎的妇人</span></div>
+        <div class="wd" onclick="po(this)"><span class="s">问 儒</span><div class="m">吾待贾者也</div><span class="po">「待贾」谐「待嫁」:孔子等的是出嫁,圣人也是女人家</span></div>
+      </div>
+      <div class="wd-po-tip">三处谐音皆以讹解经,点破即哄堂,点各牌看拆法</div>
+    </div>
+    <div class="zhe-wei">
+      <button class="xiao-btn" onclick="xiao(this,'zhe1')">满座笑</button>
+      <span class="chu">辑自 <q>唐阙史</q></span>
+    </div>
+    <div class="ci"><div class="ci-n"><b>刺</b> · 延庆节上僧道先登坛讲经,倡优压轴收场。李可及穿上儒服挤进讲席,把三教各判了一个「妇人」:佛、道、圣人都被当场开涮,皇帝不怒反笑,第二天赏了他一个员外官职。谐音全是歪解,笑点全在无理:台下的人都听得懂,也都笑得出,没有一个人敢较真。这正是一切优谏的底色:荒唐话里,一句正经也不能有,否则就不是戏了。</div></div>
+  </section>
+
+  <!-- 第二折 五代 -->
+  <div class="jieji"><span class="xian"></span><h2>第二折</h2><span class="mu">批颊</span><span class="xian"></span></div>
+  <section class="zhe" id="zhe2">
+    <div class="zhe-top">
+      <div class="chao">五代 · 同光</div>
+      <div class="zhe-tt"><h3>一记耳光打天子</h3><span class="ren">伶人敬新磨</span></div>
+    </div>
+    <div class="xiwen">
+      <q>庄宗尝与群优戏于庭,四顾而呼曰:李天下,李天下何在?新磨遽前以手批其颊。庄宗失色,左右皆恐,群伶亦大惊骇,共折新磨,诘曰:女奈何批天子颊?新磨对曰:李天下者一人而已,复谁呼邪!于是左右皆笑,庄宗大喜,赐与新磨甚厚。</q>
+      <q>新磨急呼曰:陛下无杀臣,臣与陛下为一体,杀之不祥。庄宗大惊,问其故,对曰:陛下开国,改元同光,天下皆谓陛下同光帝。且同,铜也;若杀敬新磨,则同无光矣。庄宗大笑,乃释之。</q>
+      <span class="tui">庄宗自取艺名「李天下」,常与伶人杂戏于庭;敬新磨两回急智,一回救县令,一回救自己。</span>
+    </div>
+    <div class="zhe-wei">
+      <button class="xiao-btn" onclick="xiao(this,'zhe2')">满座笑</button>
+      <span class="chu">辑自 <q>五代史伶官传</q></span>
+    </div>
+    <div class="ci"><div class="ci-n"><b>刺</b> · 一记耳光打在皇帝脸上,理由竟是恭维:天下只有一个李天下,您还喊谁?庄宗迷戏迷到自取艺名、宠伶人到亡国,唯独对敬新磨的笑话照单全收。同一段里还有他替中牟县令讨命的一幕:皇帝田猎踏了庄稼要杀县令,敬新磨押着县令骂「为什么不把百姓饿走、把地空出来给天子跑马」,皇帝一笑,人命就保住了。笑声开路,谏言才走得进去。</div></div>
+  </section>
+
+  <!-- 第三折 北宋末 -->
+  <div class="jieji"><span class="xian"></span><h2>第三折</h2><span class="mu">三十六髻</span><span class="xian"></span></div>
+  <section class="zhe" id="zhe3">
+    <div class="zhe-top">
+      <div class="chao">北宋 · 宣和</div>
+      <div class="zhe-tt"><h3>大王方用兵</h3><span class="ren">教坊进伎</span></div>
+    </div>
+    <div class="xiwen">
+      <q>宣和中,童贯用兵燕蓟,败而窜。一日内宴,教坊进伎为三四婢,首饰皆不同。其一当额为髻,曰:蔡太师家人也。其二髻偏坠,曰:郑太宰家人也。又一人满头为髻如小儿,曰:童大王家人也。问其故,蔡氏者曰:太师觐清光,此名朝天髻。郑氏者曰:吾太宰奉祠就第,此懒梳髻。至童氏者曰:大王方用兵,此三十六髻也。</q>
+    </div>
+    <div class="zhe-wei">
+      <button class="xiao-btn" onclick="xiao(this,'zhe3')">满座笑</button>
+      <span class="chu">辑自 <q>齐东野语</q></span>
+    </div>
+    <div class="ci"><div class="ci-n"><b>刺</b> · 满头小髻,谐「三十六计」:用兵的童大王,只剩走为上计。徽宗朝蔡京当国、童贯掌兵,这场宫宴上的发型秀把三个权臣挨个点了名,皇帝也只能笑纳。当时没人敢上的奏章,被几个梳妆的婢女在笑声里递了上去。</div></div>
+  </section>
+
+  <!-- 第四折 南宋 -->
+  <div class="jieji"><span class="xian"></span><h2>第四折</h2><span class="mu">二圣环</span><span class="xian"></span></div>
+  <section class="zhe" id="zhe4">
+    <div class="zhe-top">
+      <div class="chao">南宋 · 绍兴</div>
+      <div class="zhe-tt"><h3>只放在脑后</h3><span class="ren">内廷伶人</span></div>
+    </div>
+    <div class="xiwen">
+      <q>绍兴初,杨存中在建康,诸军之旗中有双胜交环,谓之二圣环,取两宫北还之意。因得美玉,琢成帽环,进高庙。日尚御裹,偶有伶者在旁,高庙指环示之:此环杨太尉进来,名二圣环。伶人接奏曰:可惜二圣环,只放在脑后。高宗亦为之改色。所谓工执艺事以谏。</q>
+      <div class="huan-row">
+        <div class="huan-box">
+          <svg width="170" height="170" viewBox="0 0 170 170">
+            <g class="huan-wrap" id="huanWrap">
+              <circle cx="85" cy="85" r="62" fill="none" stroke="#5e8fbb" stroke-width="13"/>
+              <circle cx="85" cy="85" r="62" fill="none" stroke="#3c6285" stroke-width="4"/>
+              <circle cx="85" cy="85" r="46" fill="none" stroke="#2c4a66" stroke-width="2"/>
+              <text class="huo" x="85" y="66" text-anchor="middle" font-size="17" fill="#e8e4dc" font-family="Songti SC,SimSun,serif">徽</text>
+              <text class="huo" x="85" y="118" text-anchor="middle" font-size="17" fill="#e8e4dc" font-family="Songti SC,SimSun,serif">钦</text>
+              <text class="nao" x="85" y="93" text-anchor="middle" font-size="13" fill="#e8e4dc" font-family="Songti SC,SimSun,serif">脑后</text>
+            </g>
+          </svg>
+        </div>
+        <button class="huan-zhuan" onclick="zhuanHuan()">它戴在哪里</button>
+        <p class="huan-shuo">帽环雕着双胜交环,名「二圣环」,取迎回二帝之意。环戴在帽上,位置恰在<b>脑后</b>。点一下,看看这个吉祥名目平时朝着哪边。</p>
+      </div>
+    </div>
+    <div class="zhe-wei">
+      <button class="xiao-btn" onclick="xiao(this,'zhe4')">满座笑</button>
+      <span class="chu">辑自 <q>贵耳集</q></span>
+    </div>
+    <div class="ci"><div class="ci-n"><b>刺</b> · 名为迎回二帝,实则戴在脑后。高宗当场变色,这一笑没笑出事来;十几年后秦桧寿宴上,伶人重演同款包袱,讥讽议和把二圣丢在脑后,当场被拿下,一坐失色。此后话禁越来越繁:笑声第一次是谏,第二次就是罪。</div></div>
+  </section>
+
+  <!-- 第五折 金 -->
+  <div class="jieji"><span class="xian"></span><h2>第五折</h2><span class="mu">凤凰四飞</span><span class="xian"></span></div>
+  <section class="zhe" id="zhe5">
+    <div class="zhe-top">
+      <div class="chao">金 · 章宗</div>
+      <div class="zhe-tt"><h3>凤凰向里飞</h3><span class="ren">优人瑇瑁头</span></div>
+    </div>
+    <div class="xiwen">
+      <q>一日宴宫中,优人瑇瑁头者戏于前。或问:上国有何符瑞?优曰:汝不闻凤凰见乎?曰:知之,而未闻其详。优曰:其飞有四,所应亦异:若向上飞,则风雨顺时;向下飞,则五榖丰登;向外飞,则四国来朝;向里飞,则加官进禄。上笑而罢。</q>
+    </div>
+    <div class="zhe-wei">
+      <button class="xiao-btn" onclick="xiao(this,'zhe5')">满座笑</button>
+      <span class="chu">辑自 <q>金史后妃传</q></span>
+    </div>
+    <div class="ci"><div class="ci-n"><b>刺</b> · 「里飞」谐「李妃」。章宗的元妃李氏权倾后宫,与皇后并肩,优人便现编一只四面飞的凤凰,把拍马的话说得比谁都响亮:凤凰朝里飞,正是李妃当权、满门加官进禄的祥瑞。捧得越响,刺得越深,皇帝听得懂,也只能笑。</div></div>
+  </section>
+
+  <!-- 尾声 明 -->
+  <div class="jieji"><span class="xian"></span><h2>尾声</h2><span class="mu">熟蹄</span><span class="xian"></span></div>
+  <section class="zhe" id="zhe6">
+    <div class="zhe-top">
+      <div class="chao">明 · 弘治</div>
+      <div class="zhe-tt"><h3>卖蹄呵,一千两一个</h3><span class="ren">内宴优人</span></div>
+    </div>
+    <div class="xiwen">
+      <q>尝闻事未发,孝皇内宴,优人扮出一人,以盘捧熟豚蹄七行,且号曰:卖蹄呵!一人就买,问价几何,曰:一千两一个。买者曰:何贵若是?卖者曰:此俱熟蹄,非生蹄也。哄堂而罢,孝皇顿悟。</q>
+    </div>
+    <div class="zhe-wei">
+      <button class="xiao-btn" onclick="xiao(this,'zhe6')">满座笑</button>
+      <span class="chu">辑自 <q>西园杂记</q></span>
+    </div>
+    <div class="ci"><div class="ci-n"><b>刺</b> · 「熟蹄」谐「熟题」:考的都是做过的旧题,一字一千两,买卖就在考前谈妥了。弘治会试舞弊案发,主考程敏政下狱,举子唐寅受牵连黜落。案子还压着没发,戏班已经端着一盘猪蹄进宫叫卖了。孝皇听完「顿悟」二字,是全卷最重的收梢:这一卷四十五条笑声,到明朝最后一条,皇帝终于笑着听懂了一句真话。</div></div>
+  </section>
+
+  <!-- 尾屏 -->
+  <section class="final">
+    <p class="biao">笑声的出处</p>
+    <p class="zui">王国维自唐宋人著述中辑得四十余条,逐条注明来源,近三十部书:</p>
+    <div class="jiyuan">
+      <q>资治通鉴</q><q>朝野佥载</q><q>酉阳杂俎续集</q><q>唐阙史</q><q>北梦琐言</q><q>易斋笑林</q><q>五代史伶官传</q><q>南部新书</q><q>中山诗话</q><q>东斋遗事</q><q>闻见前录</q><q>宋史</q><q>辽史伶官传</q><q>铁围山丛谈</q><q>渑水燕谈录</q><q>师友谈记</q><q>避暑录话</q><q>齐东野语</q><q>清波杂志</q><q>夷坚志</q><q>独醒杂志</q><q>寓简</q><q>贵耳集</q><q>桯史</q><q>四朝闻见录</q><q>金史后妃传</q><q>鹤林玉露</q><q>西园杂记</q><q>天中记</q>
+    </div>
+    <p class="zui" style="margin-top:1.2rem"><q>台官不如伶官</q> · 状元落第犹可谏,脑后置环不可闻</p>
+  </section>
+
+  <footer>
+    <span class="xx">文本来源:殆知阁简体库,子藏笔记部〈优语录〉,王国维辑,<a href="https://github.com/daizhige/daizhige-simplified" rel="noopener">仓库链接</a></span>
+    <span class="xx">引文均经脚本与库本去标点、异体归一后逐字比对核验;出处小签照录原书卷尾注。</span>
+    <span class="xx">时代局限:篇中「女」「夷狄」等称呼与对优伶身份的旧记录皆当日语汇,照录不代今人立论;优人结局诸条(如秦桧宴)系笔记转述,细节以史传为断。</span>
+  </footer>
+</main>
+
+<script>
+function kaiMu(){
+  document.getElementById('hero').classList.add('kai');
+}
+function xiao(btn,id){
+  var zhe=document.getElementById(id);
+  var r=btn.getBoundingClientRect(), z=zhe.getBoundingClientRect();
+  for(var i=0;i<3;i++){
+    var d=document.createElement('span');
+    d.className='lian';
+    d.style.left=(r.left-z.left+r.width/2-7)+'px';
+    d.style.top=(r.top-z.top+r.height/2-7)+'px';
+    d.style.animationDelay=(i*0.22)+'s';
+    zhe.appendChild(d);
+    setTimeout(function(el){return function(){el.remove()}}(d),1800+i*220);
+  }
+  var ci=zhe.querySelector('.ci');
+  setTimeout(function(){ci.classList.add('shan')},420);
+}
+function po(card){card.classList.toggle('po-kai')}
+function zhuanHuan(){
+  document.getElementById('huanWrap').classList.toggle('zhuan');
+}
+</script>
+</body>
+</html>
