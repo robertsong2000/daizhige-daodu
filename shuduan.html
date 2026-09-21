@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>书断 · 品第放榜 | 殆知阁导读</title>
+<style>
+  :root {
+    --ink: #191917; --ink-2: #201f1d; --ink-3: #26251f;
+    --paper: #e8e4dc; --paper-dim: #a39e93; --paper-faint: #6e6a61;
+    --acc: #5e8fbb; --acc-dim: rgba(94,143,187,0.16); --acc-line: rgba(94,143,187,0.45);
+    --hairline: rgba(232,228,220,0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    line-height: 1.85; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  q, .q { quotes: none; }
+  q::before, q::after { content: none; }
+  a { color: inherit; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 30px; }
+
+  /* hero */
+  .hero { min-height: 92dvh; display: flex; align-items: center; position: relative; overflow: hidden; }
+  .hero .wrap { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; width: 100%; }
+  .kicker { font-size: 13.5px; letter-spacing: 0.4em; color: var(--paper-faint); }
+  .kicker b { color: var(--acc); font-weight: 400; }
+  h1 { font-size: clamp(72px, 13vw, 158px); font-weight: 700; letter-spacing: 0.12em; line-height: 1.08; margin: 26px 0 8px; }
+  h1 em { font-style: normal; color: var(--acc); }
+  .dyn { font-size: 15px; letter-spacing: 0.3em; color: var(--paper-dim); margin-bottom: 26px; }
+  .lede { max-width: 30em; color: var(--paper-dim); font-size: 16.5px; }
+  .lede b { color: var(--paper); font-weight: 600; }
+  .hero-q { margin-top: 34px; padding: 14px 20px; border-left: 2px solid var(--acc-line); color: var(--paper); font-size: 15.5px; max-width: 34em; }
+  .hero-q .who { display: block; margin-top: 6px; font-size: 12.5px; letter-spacing: 0.2em; color: var(--paper-faint); }
+  .seals { writing-mode: vertical-rl; display: flex; flex-direction: column; gap: 18px; }
+  .seals span {
+    width: 74px; height: 190px; display: grid; place-items: center;
+    font-size: 44px; font-weight: 700; letter-spacing: 0.3em;
+    border: 1.5px solid var(--acc-line); color: var(--acc);
+  }
+  .seals span.s1 { background: var(--acc); color: #14202c; border-color: var(--acc); }
+  .seals span.s2 { opacity: 0.72; }
+  .seals span.s3 { opacity: 0.4; }
+  .hero-note { position: absolute; left: 30px; bottom: 26px; font-size: 12px; letter-spacing: 0.18em; color: var(--paper-faint); }
+
+  /* section chrome */
+  section { padding: 88px 0; }
+  section + section { border-top: 1px solid var(--hairline); }
+  .sec-head { display: flex; align-items: baseline; gap: 22px; margin-bottom: 14px; }
+  .sec-no { font-size: 13px; color: var(--acc); letter-spacing: 0.2em; }
+  h2 { font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spacing: 0.14em; }
+  .sec-sub { color: var(--paper-dim); font-size: 15.5px; max-width: 46em; margin-bottom: 44px; }
+  .sec-sub b { color: var(--paper); font-weight: 600; }
+
+  /* rv reveal */
+  .rv { opacity: 0; transform: translateY(22px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .rv.on { opacity: 1; transform: none; }
+
+  /* ten scripts */
+  .tt-row { display: flex; flex-direction: row-reverse; gap: 12px; overflow-x: auto; padding-bottom: 10px; }
+  .tti { flex: 0 0 auto; writing-mode: vertical-rl; background: var(--ink-2); border: 1px solid var(--hairline); padding: 20px 14px; display: flex; gap: 10px; min-height: 240px; }
+  .tti:nth-child(odd) { background: var(--ink-3); }
+  .tt-n { font-size: 30px; font-weight: 700; letter-spacing: 0.28em; color: var(--paper); }
+  .tt-o { font-size: 12.5px; color: var(--paper-dim); letter-spacing: 0.12em; max-height: 250px; }
+  .zan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 40px; }
+  .zan { border-left: 2px solid var(--acc-line); padding: 6px 20px; }
+  .zan .zl { font-size: 12.5px; letter-spacing: 0.3em; color: var(--acc); margin-bottom: 8px; }
+  .zan q { display: block; font-size: 16.5px; color: var(--paper); }
+  .yi-bo { margin-top: 34px; font-size: 15px; color: var(--paper-dim); max-width: 42em; }
+  .yi-bo q { color: var(--paper); }
+
+  /* leaderboard */
+  .tabs { display: flex; gap: 10px; margin-bottom: 30px; }
+  .tabs button {
+    font: inherit; cursor: pointer; background: var(--ink-2); color: var(--paper-dim);
+    border: 1px solid var(--hairline); padding: 12px 26px; font-size: 16px; letter-spacing: 0.12em;
+    transition: all 0.25s;
+  }
+  .tabs button em { font-style: normal; color: var(--paper-faint); font-size: 13px; margin-left: 8px; }
+  .tabs button.act { background: var(--acc); color: #14202c; border-color: var(--acc); font-weight: 700; }
+  .tabs button.act em { color: #2c3f52; }
+  .panel { display: none; }
+  .panel.on { display: block; animation: fadein 0.45s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+  .panel-note { font-size: 14.5px; color: var(--paper-dim); margin-bottom: 30px; max-width: 48em; }
+  .panel-note q { color: var(--paper); }
+  .shen-strip { border: 1px solid var(--acc-line); background: var(--acc-dim); padding: 16px 22px; margin-bottom: 32px; font-size: 16px; color: var(--paper); }
+  .grow { display: flex; align-items: baseline; gap: 18px; padding: 13px 0; border-top: 1px dashed var(--hairline); }
+  .gl { flex: 0 0 96px; font-size: 14px; color: var(--acc); letter-spacing: 0.08em; text-align: right; }
+  .gn { flex: 1; }
+  .chip { display: inline-block; border: 1px solid var(--hairline); padding: 2px 12px; margin: 4px 6px 4px 0; font-size: 15px; color: var(--paper); }
+  .p-shen .chip { border-color: rgba(94,143,187,0.4); }
+  .p-miao .chip { color: var(--paper-dim); }
+  .p-neng .chip { color: var(--paper-faint); border-style: dashed; }
+  .chip.hi { background: var(--acc); color: #14202c; border-color: var(--acc); font-weight: 700; }
+  .cnt-fix { margin-top: 26px; font-size: 13.5px; color: var(--paper-faint); }
+
+  /* stories */
+  .st-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .st { background: var(--ink-2); border: 1px solid var(--hairline); padding: 26px 28px 22px; position: relative; }
+  .st::after { content: ""; position: absolute; top: 0; left: 0; width: 44px; height: 3px; background: var(--acc); }
+  .st-no { font-size: 13px; letter-spacing: 0.3em; color: var(--acc); }
+  .st h3 { font-size: 21px; font-weight: 700; letter-spacing: 0.06em; margin: 8px 0 14px; }
+  .st q { display: block; font-size: 15.5px; color: var(--paper); border-left: 2px solid var(--hairline); padding-left: 16px; margin-bottom: 14px; }
+  .st q + q { margin-top: -4px; }
+  .st p { font-size: 14.5px; color: var(--paper-dim); }
+
+  /* xi-xian */
+  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; direction: rtl; }
+  .duel > div { direction: ltr; background: var(--ink-2); border: 1px solid var(--hairline); padding: 30px; }
+  .duel .d-name { font-size: 40px; font-weight: 700; letter-spacing: 0.2em; margin-bottom: 4px; }
+  .duel .d-tag { font-size: 13px; letter-spacing: 0.2em; color: var(--acc); margin-bottom: 20px; }
+  .duel q.vq { writing-mode: vertical-rl; display: block; margin: 0 auto 20px; height: 300px; max-width: 100%; font-size: 17px; color: var(--paper); letter-spacing: 0.16em; }
+  .duel .d-note { font-size: 14px; color: var(--paper-dim); }
+  .duel q.vq2 { display: block; font-size: 14.5px; color: var(--paper-dim); border-left: 2px solid var(--hairline); padding-left: 14px; margin-top: 16px; }
+  .verdict { margin-top: 26px; border: 1px solid var(--acc-line); background: var(--acc-dim); padding: 20px 26px; }
+  .verdict q { display: block; font-size: 17px; color: var(--paper); }
+  .verdict q + q { margin-top: 6px; font-size: 15px; color: var(--paper-dim); }
+  .verdict .v-note { margin-top: 10px; font-size: 14px; color: var(--paper-dim); }
+
+  /* fin */
+  .fin { padding: 110px 0 60px; display: flex; justify-content: center; }
+  .fin-v { writing-mode: vertical-rl; display: flex; flex-direction: column; align-items: center; gap: 30px; }
+  .fin-v q.big { font-size: clamp(30px, 4.6vw, 48px); font-weight: 700; letter-spacing: 0.34em; color: var(--paper); height: 460px; }
+  .fin-v .att { font-size: 13px; letter-spacing: 0.3em; color: var(--paper-faint); }
+  .fin-h { max-width: 40em; margin: 46px auto 0; font-size: 14.5px; color: var(--paper-dim); text-align: center; }
+  .fin-h q { color: var(--paper); }
+
+  footer { border-top: 1px solid var(--hairline); padding: 34px 0 44px; font-size: 13px; color: var(--paper-faint); line-height: 2; }
+  footer a { color: var(--paper-dim); }
+
+  @media (max-width: 760px) {
+    .hero { min-height: auto; padding: 90px 0 70px; }
+    .hero .wrap { grid-template-columns: 1fr; }
+    .seals { writing-mode: horizontal-tb; flex-direction: row; }
+    .seals span { width: 64px; height: 64px; font-size: 26px; letter-spacing: 0; }
+    .zan-grid, .st-grid, .duel { grid-template-columns: 1fr; }
+    .duel { direction: ltr; }
+    .duel q.vq { height: 240px; }
+    .gl { flex-basis: 76px; font-size: 13px; }
+    h1 { letter-spacing: 0.06em; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="kicker">殆知阁导读 <b>·</b> 第558篇 艺藏书法</div>
+      <h1>书<em>断</em></h1>
+      <div class="dyn">唐 开元 张怀瓘 撰</div>
+      <p class="lede">一部给书法家<b>排座次</b>的书。开元年间，张怀瓘把苍颉以来凡是会写字的人都拢到一张榜上：<b>十体源流，神妙能三品</b>，谁上神品，谁落能品，一人一传，逐个定评。</p>
+      <div class="hero-q"><q>爰自黄帝史苍颉，迄于皇朝黄门侍郎卢藏用，凡三千二百余年，书有十体源流，学有三品优劣</q><span class="who">书断序</span></div>
+    </div>
+    <div class="seals" aria-hidden="true"><span class="s1">神</span><span class="s2">妙</span><span class="s3">能</span></div>
+  </div>
+  <div class="hero-note">上卷十体 中卷神品 下卷妙能</div>
+</header>
+
+<section id="ti">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">壹</span><h2>十体源流</h2></div>
+    <p class="sec-sub">上卷把自古以来的字体归并为十体，每体述源流、系一赞。右起第一签为古文，最左为草书，恰好是一部<b>字体的家谱</b>。</p>
+    <div class="tt-row">
+        <div class="tti rv"><span class="tt-n">古文</span><span class="tt-o"><q>古文者，黄帝史苍颉所造也，颉首四目，通于神明。</q></span></div>
+        <div class="tti rv"><span class="tt-n">大篆</span><span class="tt-o"><q>大篆者，周宣王太史史籀所作也，或云柱下史始变古文，或同或异，谓之为“篆”。</q></span></div>
+        <div class="tti rv"><span class="tt-n">籀文</span><span class="tt-o"><q>籀文者，周太史史籀之所作也，与古文、大篆小异。</q></span></div>
+        <div class="tti rv"><span class="tt-n">小篆</span><span class="tt-o"><q>小篆者，秦始皇丞相李斯所作也。</q></span></div>
+        <div class="tti rv"><span class="tt-n">八分</span><span class="tt-o"><q>八分者，秦羽人上谷王次仲所作也。</q></span></div>
+        <div class="tti rv"><span class="tt-n">隶书</span><span class="tt-o"><q>隶书者，秦下邽人程邈所造也。</q></span></div>
+        <div class="tti rv"><span class="tt-n">章草</span><span class="tt-o"><q>章草者，汉黄门令史游所作也。</q></span></div>
+        <div class="tti rv"><span class="tt-n">行书</span><span class="tt-o"><q>行书者，后汉颍川刘德升所作也。</q></span></div>
+        <div class="tti rv"><span class="tt-n">飞白</span><span class="tt-o"><q>飞白者，后汉左中郎将蔡邕所作也。</q></span></div>
+        <div class="tti rv"><span class="tt-n">草书</span><span class="tt-o"><q>草书者，后汉征士张伯英之所造也。</q></span></div>
+    </div>
+    <div class="zan-grid">
+      <div class="zan rv"><div class="zl">行书赞</div><q>非草非真，发挥柔翰。星敛光芒，云虹照烂。鸾鹤婵娟，风行雨散。刘子滥觞，钟、胡弥漫。</q></div>
+      <div class="zan rv"><div class="zl">飞白赞</div><q>妙哉飞白，祖自八分。有美君子，润色斯文。丝萦箭激，电绕雪雰。浅如流雾，浓若屯云。举众仙之奕奕，舞群鹤之纷纷。谁其覃思，于戏蔡君。</q></div>
+    </div>
+    <p class="yi-bo rv">草书一签底下压着一句狠话：<q>好书，凡家之衣帛，皆书而后练。</q> 张芝家里所有布帛，都先拿来练字，写满了再送去煮练。韦诞叫他草圣，不算客套。</p>
+  </div>
+</section>
+
+<section id="bang">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">贰</span><h2>三品放榜</h2></div>
+    <p class="sec-sub">中下卷是全书正戏：仿班固九品论人、书评旧例而更精，把数百家书手分成<b>神、妙、能</b>三等，每等之内再按字体分组列名。卷首提要给出的总账是：<q>凡神品二十五人，除各体重复得十二人。妙品九十八人，除各体重复得三十九人。能品一百七人，除各体重复得三十五人。</q></p>
+    <div class="tabs" role="tablist">
+      <button class="act" data-p="shen" role="tab">神品<em>25人</em></button>
+      <button data-p="miao" role="tab">妙品<em>98人</em></button>
+      <button data-p="neng" role="tab">能品<em>107人</em></button>
+    </div>
+    <div class="panel p-shen on" id="p-shen">
+      <p class="panel-note">神品是超一流，全榜最贵。名额分配上一目了然，怀瓘自己点过账：</p>
+      <div class="shen-strip"><q>至如神品，则李斯、杜度、崔瑗、皇象、卫瓘、索靖，各惟得其一；史籀、蔡邕、钟繇得其二；张芝得其三；逸少、子敬并各得其五。</q></div>
+          <div class="grow p-shen"><q class="gl">大篆一人</q><span class="gn"><q><span class="chip">史籀</span></q></span></div>
+          <div class="grow p-shen"><q class="gl">籀文一人</q><span class="gn"><q><span class="chip">史籀</span></q></span></div>
+          <div class="grow p-shen"><q class="gl">小篆一人</q><span class="gn"><q><span class="chip">李斯</span></q></span></div>
+          <div class="grow p-shen"><q class="gl">八分一人</q><span class="gn"><q><span class="chip">蔡邕</span></q></span></div>
+          <div class="grow p-shen"><q class="gl">隶书三人</q><span class="gn"><q><span class="chip">钟繇</span><span class="chip">王羲之</span><span class="chip">王献之</span></q></span></div>
+          <div class="grow p-shen"><q class="gl">行书四人</q><span class="gn"><q><span class="chip">王羲之</span><span class="chip">钟繇</span><span class="chip">王献之</span><span class="chip">张芝</span></q></span></div>
+          <div class="grow p-shen"><q class="gl">章草八人</q><span class="gn"><q><span class="chip">张芝</span><span class="chip">杜度</span><span class="chip">崔瑗</span><span class="chip">索靖</span><span class="chip">卫瓘</span><span class="chip">王羲之</span><span class="chip">王献之</span><span class="chip">皇象</span></q></span></div>
+          <div class="grow p-shen"><q class="gl">飞白三人</q><span class="gn"><q><span class="chip">蔡邕</span><span class="chip">王羲之</span><span class="chip">王献之</span></q></span></div>
+          <div class="grow p-shen"><q class="gl">草书三人</q><span class="gn"><q><span class="chip">张芝</span><span class="chip">王羲之</span><span class="chip">王献之</span></q></span></div>
+      <p class="cnt-fix">注：名录照录库本。神品各体重复计，实得十二人。</p>
+    </div>
+    <div class="panel p-miao" id="p-miao">
+      <p class="panel-note">妙品是一流，九十八人。唐初的虞世南、褚遂良、欧阳询诸位大家，还有智永，都安放在这一层。</p>
+          <div class="grow p-miao"><q class="gl">古文四人</q><span class="gn"><q><span class="chip">杜林</span><span class="chip">卫宏</span><span class="chip">邯郸淳</span><span class="chip">卫恒</span></q></span></div>
+          <div class="grow p-miao"><q class="gl">大篆四人</q><span class="gn"><q><span class="chip">李斯</span><span class="chip">赵高</span><span class="chip">蔡邕</span><span class="chip">邯郸淳</span></q></span></div>
+          <div class="grow p-miao"><q class="gl">小篆五人</q><span class="gn"><q><span class="chip">曹喜</span><span class="chip">蔡邕</span><span class="chip">邯郸淳</span><span class="chip">崔瑗</span><span class="chip">卫瓘</span></q></span></div>
+          <div class="grow p-miao"><q class="gl">八分九人</q><span class="gn"><q><span class="chip">张昶</span><span class="chip">皇象</span><span class="chip">邯郸淳</span><span class="chip">韦诞</span><span class="chip">钟繇</span><span class="chip">师宜官</span><span class="chip">梁鹄</span><span class="chip">索靖</span><span class="chip">王羲之</span></q></span></div>
+          <div class="grow p-miao"><q class="gl">隶书二十五人</q><span class="gn"><q><span class="chip">张芝</span><span class="chip">钟会</span><span class="chip">蔡邕</span><span class="chip">邯郸淳</span><span class="chip">卫瓘</span><span class="chip">韦诞</span><span class="chip">荀舆</span><span class="chip">谢安</span><span class="chip">羊欣</span><span class="chip">王洽</span><span class="chip">王珉</span><span class="chip">薄绍之</span><span class="chip">萧子云</span><span class="chip">宋文帝</span><span class="chip">卫夫人</span><span class="chip">胡昭</span><span class="chip">曹喜</span><span class="chip">谢灵运</span><span class="chip">王僧虔</span><span class="chip">孔琳之</span><span class="chip">陆柬之</span><span class="chip">褚遂良</span><span class="chip">虞世南</span><span class="chip">释智永</span><span class="chip">欧阳询</span></q></span></div>
+          <div class="grow p-miao"><q class="gl">行书十六人</q><span class="gn"><q><span class="chip">刘德升</span><span class="chip">卫瓘</span><span class="chip">王珉</span><span class="chip">谢安</span><span class="chip">王僧虔</span><span class="chip">胡昭</span><span class="chip">钟会</span><span class="chip">孔琳之</span><span class="chip">虞世南</span><span class="chip">阮研</span><span class="chip">王洽</span><span class="chip">羊欣</span><span class="chip">薄绍之</span><span class="chip">欧阳询</span><span class="chip">陆柬之</span><span class="chip">褚遂良</span></q></span></div>
+          <div class="grow p-miao"><q class="gl">章草八人</q><span class="gn"><q><span class="chip">张昶</span><span class="chip">钟会</span><span class="chip">韦诞</span><span class="chip">卫恒</span><span class="chip">郗愔</span><span class="chip">张华</span><span class="chip">魏武帝</span><span class="chip">释智永</span></q></span></div>
+          <div class="grow p-miao"><q class="gl">飞白五人</q><span class="gn"><q><span class="chip">萧子云</span><span class="chip">张弘</span><span class="chip">韦诞</span><span class="chip">欧阳询</span><span class="chip">王廙</span></q></span></div>
+          <div class="grow p-miao"><q class="gl">书二十二人</q><span class="gn"><q><span class="chip">索靖</span><span class="chip">卫瓘</span><span class="chip">嵇康</span><span class="chip">张昶</span><span class="chip">钟繇</span><span class="chip">羊欣</span><span class="chip">薄绍之</span><span class="chip">钟会</span><span class="chip">卫恒</span><span class="chip">荀舆</span><span class="chip">桓玄</span><span class="chip">谢安</span><span class="chip">孔琳之</span><span class="chip">王珉</span><span class="chip">王洽</span><span class="chip">谢灵运</span><span class="chip">张融</span><span class="chip">阮研</span><span class="chip">王僧虔</span><span class="chip">欧阳询</span><span class="chip">虞世南</span><span class="chip">释智永</span></q></span></div>
+    </div>
+    <div class="panel p-neng" id="p-neng">
+      <p class="panel-note">能品是入流，一百零七人。孙过庭、嵇康、曹操（魏武帝）都在此列，王献之的八分书也只给了能品。</p>
+          <div class="grow p-neng"><q class="gl">古文四人</q><span class="gn"><q><span class="chip">张敞</span><span class="chip">卫觊</span><span class="chip">卫瓘</span><span class="chip">韦昶</span></q></span></div>
+          <div class="grow p-neng"><q class="gl">大篆五人</q><span class="gn"><q><span class="chip">胡昭</span><span class="chip">严延年</span><span class="chip">韦昶</span><span class="chip">班固</span><span class="chip">欧阳询</span></q></span></div>
+          <div class="grow p-neng"><q class="gl">小篆十二人</q><span class="gn"><q><span class="chip">卫觊</span><span class="chip">班固</span><span class="chip">皇象</span><span class="chip">张弘</span><span class="chip">许慎</span><span class="chip">韦诞</span><span class="chip">傅玄</span><span class="chip">萧子云</span><span class="chip">刘绍</span><span class="chip">张弘</span><span class="chip">范晔</span><span class="chip">欧阳询</span></q></span></div>
+          <div class="grow p-neng"><q class="gl">八分三人</q><span class="gn"><q><span class="chip">毛弘</span><span class="chip">左伯</span><span class="chip">王献之</span></q></span></div>
+          <div class="grow p-neng"><q class="gl">隶书二十三人</q><span class="gn"><q><span class="chip">卫恒</span><span class="chip">张昶</span><span class="chip">王廙</span><span class="chip">庾翼</span><span class="chip">郗愔</span><span class="chip">王蒙</span><span class="chip">卫觊</span><span class="chip">张彭祖</span><span class="chip">阮研</span><span class="chip">陶弘景</span><span class="chip">王修</span><span class="chip">王褒</span><span class="chip">王恬</span><span class="chip">李式</span><span class="chip">傅玄</span><span class="chip">杨肇</span><span class="chip">王承烈</span><span class="chip">庾肩吾</span><span class="chip">薛稷</span><span class="chip">孙过庭</span><span class="chip">高正臣</span><span class="chip">释智果</span><span class="chip">卢藏用</span></q></span></div>
+          <div class="grow p-neng"><q class="gl">行书十八人</q><span class="gn"><q><span class="chip">宋文帝</span><span class="chip">司马攸</span><span class="chip">释智永</span><span class="chip">萧子云</span><span class="chip">萧思话</span><span class="chip">齐高帝</span><span class="chip">陶弘景</span><span class="chip">汉王元昌</span><span class="chip">王导</span><span class="chip">王承烈</span><span class="chip">孙过庭</span><span class="chip">高正臣</span><span class="chip">裴行俭</span><span class="chip">王智敬</span><span class="chip">王修</span><span class="chip">卢藏用</span><span class="chip">薛稷</span><span class="chip">释智果</span></q></span></div>
+          <div class="grow p-neng"><q class="gl">章草十五人</q><span class="gn"><q><span class="chip">罗晖</span><span class="chip">赵袭</span><span class="chip">徐干</span><span class="chip">庾翼</span><span class="chip">张超</span><span class="chip">王蒙</span><span class="chip">卫觊</span><span class="chip">崔寔</span><span class="chip">萧子云</span><span class="chip">杜预</span><span class="chip">陆柬之</span><span class="chip">欧阳询</span><span class="chip">王承烈</span><span class="chip">王知敬</span><span class="chip">裴行俭</span></q></span></div>
+          <div class="grow p-neng"><q class="gl">飞白一人</q><span class="gn"><q><span class="chip">刘邵</span></q></span></div>
+          <div class="grow p-neng"><q class="gl">草书二十五人</q><span class="gn"><q><span class="chip">王导</span><span class="chip">何曾</span><span class="chip">杨肇</span><span class="chip">郗愔</span><span class="chip">庾翼</span><span class="chip">司马攸</span><span class="chip">李式</span><span class="chip">宋文帝</span><span class="chip">萧子云</span><span class="chip">陆柬之</span><span class="chip">宋令文</span><span class="chip">齐高帝</span><span class="chip">谢朓</span><span class="chip">庾肩吾</span><span class="chip">萧思话</span><span class="chip">范晔</span><span class="chip">孙过庭</span><span class="chip">梁武帝</span><span class="chip">王知敬</span><span class="chip">裴行俭</span><span class="chip">释智果</span><span class="chip">卢藏用</span><span class="chip">高正臣</span><span class="chip">王廙</span><span class="chip">王愔</span></q></span></div>
+      <p class="cnt-fix">注：名录照录库本。提要记一百零七人，正文逐格点数得一百零六人（张弘两见），或有夺文，存原貌。</p>
+    </div>
+  </div>
+</section>
+
+<section id="shi">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">叁</span><h2>墨坛四轶</h2></div>
+    <p class="sec-sub">品第之外，小传里藏着唐人转述的<b>书坛旧闻</b>，四则最生动。</p>
+    <div class="st-grid">
+      <div class="st rv">
+        <div class="st-no">其一</div>
+        <h3>垩帚扫出来的字体</h3>
+        <q>伯喈待诏门下，见役人以垩帚成字，心有悦焉，归而为飞白之书。</q>
+        <p>蔡邕在鸿都门等候召见，看见工人拿白土扫帚刷墙，扫出那种半干的白色笔道，看得心里一喜，回去就造出了飞白书。</p>
+      </div>
+      <div class="st rv">
+        <div class="st-no">其二</div>
+        <h3>五岁孩子的握笔测试</h3>
+        <q>子敬五六岁时学书，右军潜于后掣其笔，不脱，乃叹曰：“此儿当有大名。”遂书《乐毅论》与之。</q>
+        <p>王献之五六岁练字，父亲从背后突然抽他的笔，抽不动，由此断定这孩子将来有大名声，把乐毅论真迹给了他当教材。</p>
+      </div>
+      <div class="st rv">
+        <div class="st-no">其三</div>
+        <h3>给丞相题匾？不写</h3>
+        <q>仲将，魏之大臣，宁有此事？使其若此，知魏德之不长。</q>
+        <p>谢安想让献之为新落成的太极殿题榜，又不好意思直说，就讲韦诞被吊上凌云台题字、吓得头鬓皆白的老故事来暗示（<q>明帝时凌云台初成，令诞题榜，高下异好，宜就加点正，因致危惧，头鬓皆白。</q>）。献之当场翻脸：韦诞是魏国大臣，岂有此事；真要这样，魏的国运也长不了。谢安只好不再逼他。</p>
+      </div>
+      <div class="st rv">
+        <div class="st-no">其四</div>
+        <h3>酒馆墙面上的生意</h3>
+        <q>性嗜酒，或时空至酒家，书其壁以售之，观者云集，酤酒多售，则铲去之。</q>
+        <p>师宜官好酒，身上没钱就到酒馆墙上写八分书，围观的人一多，酒就卖得快；喝够了，把墙铲掉走人。大字径丈，小字方寸千言，全看心情。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="erya">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-no">肆</span><h2>羲献之辨</h2></div>
+    <p class="sec-sub">神品榜上王家父子各占五席，形影不离，也免不了被放到一起比。怀瓘给的<b>总评</b>相当克制。</p>
+    <div class="duel">
+      <div class="rv">
+        <div class="d-name">王羲之</div>
+        <div class="d-tag">逸少 右军</div>
+        <q class="vq">备精诸体，自成一家法，千变万化，得之神功，自非造化发灵，岂能登峰造极。</q>
+        <p class="d-note"><q>隶、行、草书、章草、飞白俱入神，八分入妙。</q> 五席之外，还多出一个八分妙品。</p>
+        <q class="vq2">然割析张公之草，而浓纤折衷，乃愧其精熟；损益钟君之隶，虽运用增华，而古雅不逮。</q>
+      </div>
+      <div class="rv">
+        <div class="d-name">王献之</div>
+        <div class="d-tag">子敬 大令</div>
+        <q class="vq">或大鹏抟风，长鲸喷浪。悬崖坠石，惊电遗光。</q>
+        <p class="d-note"><q>隶、行、草、章草、飞白五体俱入神，八分入能。</q> 少年时还劝过父亲改体：</p>
+        <q class="vq2">古之章草，未能宏逸，顿异真体。合穷伪略之理，极草纵之致，不若稿行之间，于往法固殊也，大人宜改体。</q>
+      </div>
+    </div>
+    <div class="verdict rv">
+      <q>若逸气纵横，则羲谢于献；若簪裾礼乐，则献不继羲。</q>
+      <q>总而言之，季孟差耳。</q>
+      <div class="v-note">论逸气，父亲输给儿子；论礼法气象，儿子接不上父亲。差距说大不大，不过伯仲之间。</div>
+    </div>
+  </div>
+</section>
+
+<section class="fin">
+  <div class="fin-v rv">
+    <q class="big">且二王既没，书或在兹。</q>
+    <span class="att">书断 总评</span>
+  </div>
+  <div class="fin-h">开元甲子那年张怀瓘在广陵抱病动笔，丁卯定稿。他自道著书之法：<q>其一字褒贬，微言劝戒，窃乎《春秋》之意也；其不虚美，不隐恶，近乎马迁之书也。</q> 给书法家排名次，他当的是史官的本分。</div>
+</section>
+
+<footer>
+  <div class="wrap">
+    文本来源:殆知阁简体库〈<q>书断</q>〉(艺藏 | 书法),仓库:<a href="https://github.com/robertsong2000/daizhige-daodu" target="_blank" rel="noopener">daizhige-daodu</a>。<br>
+    引文均经脚本自库本切片、去标点归一逐字比对;白话部分经六字窗反扫核验。本页为古籍导读。<br>
+    校字记:妙品名录「书二十二人」疑夺一字、能品提要与正文人数有一人之差,均照录库本;<q>或时空至酒家</q>一句如旧。<br>
+    时代局限:人品书品之评骘、君臣叙事均为古代语境,照录不代今论。<br>
+    导读第558篇 · 艺藏书法
+  </div>
+</footer>
+
+<script>
+(function(){
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
+  }, {threshold: 0.12});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  var tabs = document.querySelectorAll('.tabs button');
+  tabs.forEach(function(b){
+    b.addEventListener('click', function(){
+      tabs.forEach(function(x){ x.classList.remove('act'); });
+      b.classList.add('act');
+      document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+      document.getElementById('p-' + b.dataset.p).classList.add('on');
+    });
+  });
+
+  document.querySelectorAll('.p-shen .chip').forEach(function(c){
+    var n = c.textContent;
+    if (n === '王羲之' || n === '王献之' || n === '张芝' || n === '钟繇') c.classList.add('hi');
+  });
+})();
+</script>
+</body>
+</html>
